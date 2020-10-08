@@ -18,7 +18,7 @@ import org.lfenergy.operatorfabric.users.model.*;
 import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
 import org.lfenergy.operatorfabric.users.repositories.PerimeterRepository;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
-import org.lfenergy.operatorfabric.users.services.UserService;
+import org.lfenergy.operatorfabric.users.services.UserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.bus.ServiceMatcher;
 import org.springframework.context.ApplicationEventPublisher;
@@ -54,7 +54,7 @@ public class GroupsController implements GroupsApi {
     @Autowired
     private PerimeterRepository perimeterRepository;
     @Autowired
-    private UserService userService;
+    private UserServiceImp userService;
 
     /* These are Spring Cloud Bus beans used to fire an event (UpdatedUserEvent) every time a user is modified.
     *  Other services handle this event by clearing their user cache for the given user. See issue #64*/

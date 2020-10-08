@@ -87,7 +87,8 @@ export class State {
         readonly response?: Response,
         readonly acknowledgementAllowed?: boolean,
         readonly name?: string,
-        readonly color?: string
+        readonly color?: string,
+        readonly userCardTemplate?: string
     ) {
     }
 }

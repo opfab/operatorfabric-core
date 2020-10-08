@@ -9,14 +9,11 @@ import org.lfenergy.operatorfabric.avro.CommandType;
 import org.lfenergy.operatorfabric.cards.publication.kafka.command.CommandHandler;
 import org.lfenergy.operatorfabric.cards.publication.kafka.command.CreateCardCommandHandler;
 import org.lfenergy.operatorfabric.cards.publication.kafka.command.DeleteCardCommandHandler;
-import org.lfenergy.operatorfabric.cards.publication.kafka.command.UpdateCardCommandHandler;
-import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

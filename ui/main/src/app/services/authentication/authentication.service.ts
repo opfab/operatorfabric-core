@@ -34,6 +34,7 @@ import {implicitAuthenticationConfigFallback} from '@ofServices/authentication/a
 import {redirectToCurrentLocation} from '../../app-routing.module';
 import {Router} from '@angular/router';
 
+
 export enum LocalStorageAuthContent {
     token = 'token',
     expirationDate = 'expirationDate',
@@ -61,6 +62,7 @@ export class AuthenticationService {
     private mode: string;
     private authModeHandler: AuthenticationModeHandler;
     private implicitConf = implicitAuthenticationConfigFallback;
+    private authenticatedUser: User;
 
     /**
      * @constructor
@@ -244,6 +246,7 @@ export class AuthenticationService {
         return this.httpClient.get<User>(`${this.userDataUrl}/${auth.identifier}`)
             .pipe(
                 map(u => {
+                    this.authenticatedUser = u;
                     auth.firstName = u.firstName;
                     auth.lastName = u.lastName;
                     return auth;

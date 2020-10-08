@@ -9,5 +9,10 @@
 	"processState" : { "title":"Etat du processus"},
 	"question" : {"title": "⚡ Indisponibilité planifiée","button" : {"text" :"Envoyer votre réponse"}},
 	"contingencies": {"title" : "⚠️ Contraintes réseau ⚠️","summary":"Synthèse des contraintes sur le réseau français"},
-	"response" : { "title":"Indisponibilité planifiée - Choix de date"}
+	"response" : { "title":"Indisponibilité planifiée - Choix de date"},
+	"menu":{
+		"label": "Menu du Processus de Test",
+		"first":"Documentation Operator Fabric",
+		"second":"LF Energy"
+	}
 }

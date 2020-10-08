@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  org.lfenergy.operatorfabric.cards.autoconfiguration.ConsumerFactoryAutoConfiguration
+  org.lfenergy.operatorfabric.autoconfigure.kafka.ConsumerFactoryAutoConfiguration

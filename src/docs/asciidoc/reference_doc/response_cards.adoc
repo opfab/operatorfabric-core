@@ -36,6 +36,9 @@ externalRecipients-url: "{\
            }"
 ....
 
+The name to use for the third-party is the publisherId of the parent card.
+
+
 [WARNING]
 ====
 For the url, do not use localhost if you run OperatorFabric in a docker, as the publication-service will not be able to join your third party. 

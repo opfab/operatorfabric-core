@@ -1,0 +1,48 @@
+<div style="width:100%;display:flex;flex-wrap:wrap">  
+    <div style="flex-basis:0;width:100%;position:relative;flex-grow:1">
+Define the state of the process 
+    </div>
+
+    <div style="flex-basis:0;width:100%;position:relative;flex-grow:1">
+Status of the state 
+    </div>
+</div>
+<div style="width:100%;display:flex;flex-wrap:wrap">  
+    <div style="flex-basis:0;width:100%;position:relative;flex-grow:1">
+        <select name="state" id="state">
+            <option value="">--Please choose an option--</option>
+            <option value="start">Started </option>
+            <option value="calcul1">Calcul 1 done </option>
+            <option value="calcul2">Calcul 2 done </option>
+            <option value="calcul3">Calcul 3 done 
+            </option>
+        </select>
+
+    </div>
+
+   <div style="flex-basis:0;width:100%;position:relative;flex-grow:1">
+        <select name="status" id="status">
+            <option value="">--Please choose an option--</option>
+            <option value="ok"> Ok </option>
+            <option value="error">Error </option>
+        </select>
+
+    </div>
+</div>
+
+
+<script>
+    templateGateway.getSpecificCardInformation = function () {
+        const state = document.getElementById('state').value;
+        const card = {
+            summary: { key: "message.summary" },
+            title: { key: "processState.title" },
+            data: { state: state }
+        };
+        return {
+            valid: true,
+            card: card
+        };
+
+    }
+</script>

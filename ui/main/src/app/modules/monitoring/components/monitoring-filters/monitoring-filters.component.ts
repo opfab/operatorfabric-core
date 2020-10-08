@@ -7,58 +7,70 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {Observable, Subject} from 'rxjs';
+import {Component, Input,OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {FilterType} from '@ofServices/filter.service';
 import {ApplyFilter, ResetFilter} from '@ofActions/feed.actions';
-import {DateTimeNgb, getDateTimeNgbFromMoment, offSetCurrentTime} from '@ofModel/datetime-ngb.model';
+import {DateTimeNgb, offSetCurrentTime} from '@ofModel/datetime-ngb.model';
 import {ConfigService} from '@ofServices/config.service';
-import * as moment from 'moment';
+
 
 @Component({
     selector: 'of-monitoring-filters',
-    templateUrl: './monitoring-filters.component.html',
-    styleUrls: ['./monitoring-filters.component.scss']
+    templateUrl: './monitoring-filters.component.html'
 })
-export class MonitoringFiltersComponent implements OnInit, OnDestroy {
+export class MonitoringFiltersComponent implements OnInit{
 
     size = 10;
     monitoringForm: FormGroup;
-    unsubscribe$: Subject<void> = new Subject<void>();
+
+    dropdownList = [];
+    selectedItems = [];
+    dropdownSettings = {};
 
     @Input()
-    public processData: Observable<any>;
+    public processData: [];
 
     public submittedOnce = false;
 
     constructor(private store: Store<AppState>, private configService: ConfigService) {
+
+    }
+
+    ngOnInit() {
+        this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
         this.monitoringForm = new FormGroup(
             {
-                process: new FormControl(''),
+                process: new FormControl([]),
                 publishDateFrom: new FormControl(''),
                 publishDateTo: new FormControl(''),
                 activeFrom: new FormControl(''),
                 activeTo: new FormControl('')
             }
         );
-    }
+        this.dropdownList = this.processData;
 
-    ngOnInit() {
-        this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
+        this.dropdownSettings = {
+            text: 'Select a Process',
+            selectAllText: 'Select All',
+            unSelectAllText: 'UnSelect All',
+            enableSearchFilter: true,
+            classes: 'custom-class-example'
+        };
+
     }
 
     sendQuery() {
         this.store.dispatch(new ResetFilter());
-
-        const testProc = this.monitoringForm.get('process');
-        if (this.hasFormControlValueChanged(testProc)) {
+        const selectedProcesses = this.monitoringForm.get('process');
+        const processesId = Array.prototype.map.call(selectedProcesses.value, item => item.id);
+        if (this.hasFormControlValueChanged(selectedProcesses)) {
             const procFilter = {
                 name: FilterType.PROCESS_FILTER
                 , active: true
-                , status: {processes: testProc.value}
+                , status: {processes: processesId}
             };
             this.store.dispatch(new ApplyFilter(procFilter));
         }
@@ -132,8 +144,6 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
         this.store.dispatch(new ResetFilter());
     }
 

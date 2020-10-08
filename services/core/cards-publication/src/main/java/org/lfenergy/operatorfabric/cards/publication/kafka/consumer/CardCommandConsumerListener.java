@@ -22,7 +22,7 @@ public class CardCommandConsumerListener {
                 .collect(Collectors.toMap(CommandHandler::getCommandType, it -> it));
     }
 
-    @KafkaListener(topics = "${spring.kafka.topics.name:opfab}", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "${spoc.kafka.topics.topicname:opfab}", containerFactory = "kafkaListenerContainerFactory")
     public void receivedCommand(@Payload ConsumerRecord<String, CardCommand> record) {
         log.info("Key: {}, Value: {}, Partition: {}, Offset: {}",
                 record.key(), record.value(), record.partition(), record.offset());

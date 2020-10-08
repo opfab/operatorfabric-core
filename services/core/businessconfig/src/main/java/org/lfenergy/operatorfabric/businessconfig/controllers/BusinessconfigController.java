@@ -103,6 +103,11 @@ public class BusinessconfigController implements BusinessconfigApi {
     }
 
     @Override
+    public ProcessGroups getProcessgroups(HttpServletRequest request, HttpServletResponse response) {
+        return service.getProcessGroupsCache();
+    }
+
+    @Override
     public Process uploadBundle(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file) {
         try (InputStream is = file.getInputStream()) {
             Process result = service.updateProcess(is);
@@ -121,6 +126,36 @@ public class BusinessconfigController implements BusinessconfigApi {
                     , e);
         } catch (IOException e) {
             log.error("IOException while loading bundle file", e);
+            throw new ApiErrorException(
+                    ApiError.builder()
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message("unable to load submitted file")
+                            .error(e.getMessage())
+                            .build(),
+                    UNABLE_TO_LOAD_FILE_MSG
+                    , e);
+        }
+    }
+
+    @Override
+    public Void uploadProcessgroups(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file) {
+        try (InputStream is = file.getInputStream()) {
+            service.updateProcessGroupsFile(is);
+            response.addHeader("Location", request.getContextPath() + "/businessconfig/processgroups");
+            response.setStatus(201);
+            return null;
+        } catch (FileNotFoundException e) {
+            log.error("File not found while loading processgroups file", e);
+            throw new ApiErrorException(
+                    ApiError.builder()
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message("Incorrect inner file structure")
+                            .error(e.getMessage())
+                            .build(),
+                    UNABLE_TO_LOAD_FILE_MSG
+                    , e);
+        } catch (IOException e) {
+            log.error("IOException while loading processgroups file", e);
             throw new ApiErrorException(
                     ApiError.builder()
                             .status(HttpStatus.BAD_REQUEST)

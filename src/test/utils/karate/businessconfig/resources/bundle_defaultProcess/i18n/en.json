@@ -9,5 +9,10 @@
 	"processState" : { "title":"Process state"},
 	"question" : {"title": "⚡ Planned Outage","button" : {"text" :"Send your response"}},
 	"contingencies": {"title" : "⚠️ Network Contingencies ⚠️","summary":"Contingencies report for french network"},
-	"response" : { "title":"Planned outage date response"}
+	"response" : { "title":"Planned outage date response"},
+	"menu": {
+		"label": "Test Process Menu",
+		"first":"Operator Fabric Documentation",
+		"second":"LF Energy"
+	}
 }

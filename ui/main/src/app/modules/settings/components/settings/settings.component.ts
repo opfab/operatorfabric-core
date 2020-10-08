@@ -12,7 +12,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {ConfigService} from "@ofServices/config.service";
+import {ConfigService} from '@ofServices/config.service';
 
 @Component({
   selector: 'of-settings',

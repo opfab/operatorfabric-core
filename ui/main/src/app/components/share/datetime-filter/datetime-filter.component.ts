@@ -59,6 +59,7 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
             this.defaultTime = converted.time;
             this.disabled = false;
             this.dateInput.setValue(this.defaultDate);
+            this.timeInput.setValue(this.defaultTime);
 
             this.dateInput.updateValueAndValidity({onlySelf: false, emitEvent: false});
             this.datetimeForm.updateValueAndValidity({onlySelf: false, emitEvent: true});
@@ -75,16 +76,13 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
     public onTouched: () => void = () => {
     }
 
-    // Method call when archive-filter.component.ts set value to 0
+    // Method call when archive-filter.component.ts set value to null
     writeValue(val: any): void {
         if (!this.offset) {
             this.disabled = true;
         }
-        this.resetDateAndTime();
-
-        if (val) {
-            this.datetimeForm.setValue(val, {emitEvent: false});
-        }
+        if (!!val) this.datetimeForm.setValue(val, {emitEvent: false});
+        else this.resetDateAndTime();
     }
 
     registerOnChange(fn: any): void {
