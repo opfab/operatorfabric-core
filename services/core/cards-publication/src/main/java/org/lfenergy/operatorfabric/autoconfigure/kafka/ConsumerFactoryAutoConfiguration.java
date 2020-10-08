@@ -1,4 +1,4 @@
-package org.lfenergy.operatorfabric.cards.autoconfiguration;
+package org.lfenergy.operatorfabric.autoconfigure.kafka;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
