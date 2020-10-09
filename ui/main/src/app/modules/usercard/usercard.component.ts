@@ -18,7 +18,7 @@ import { I18n } from '@ofModel/i18n.model';
 import {  Subject } from 'rxjs';
 import { Process } from '@ofModel/processes.model';
 import { TimeService } from '@ofServices/time.service';
-import { Severity } from '@ofModel/light-card.model';
+import { Severity, TimeSpan } from '@ofModel/light-card.model';
 import { Guid } from 'guid-typescript';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
@@ -293,6 +293,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
         const title = (!!specificInformation.card.title) ? specificInformation.card.title : 'UNDEFINED';
         const summary = (!!specificInformation.card.summary) ? specificInformation.card.summary : 'UNDEFINED';
 
+        let timeSpans = {};
+        if  (!!specificInformation.viewCardInAgenda) timeSpans = [new TimeSpan(startDate , endDate )];
+
 
         const generatedId = Guid.create().toString();
 
@@ -314,6 +317,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
             externalRecipients: null,
             title: title,
             summary: summary,
+            timeSpans : timeSpans,
             data: specificInformation.card.data,
         } as Card;
 

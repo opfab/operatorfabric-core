@@ -37,7 +37,8 @@ export class Card {
         readonly externalRecipients?: string[],
         readonly entitiesAllowedToRespond?: string[],
         readonly recipient?: Recipient,
-        readonly parentCardUid?: string
+        readonly parentCardUid?: string,
+        readonly timeSpans?: TimeSpan[]
     ) {
     }
 }
@@ -75,6 +76,13 @@ export class CardData {
         readonly card: Card,
         readonly childCards: Card[]
     ) {}
+}
+
+export class TimeSpan {
+    constructor(
+        readonly start: number,
+        readonly end?: number
+    ) { }
 }
 
 export function fromCardToLightCard(card: Card): LightCard {
