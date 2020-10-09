@@ -228,13 +228,12 @@ public class ProcessesService implements ResourceLoaderAware {
 
         if (process == null)
             throw new FileNotFoundException("Unknown version (" + finalVersion + ") for " + processId);
-        validateResourceParameters(processId, type, name, finalVersion, locale);
-        String finalName;
-        if (type == ResourceTypeEnum.I18N) {
-            finalName = locale;
-        } else {
-            finalName = name;
-        }
+
+        if (type.isLocalized() && locale == null)
+            throw new FileNotFoundException("Unable to determine resource for undefined locale");
+
+        String finalName = (type == ResourceTypeEnum.I18N) ? locale : name;
+
         String resourcePath = PATH_PREFIX +
                 storagePath +
                 File.separator +
@@ -246,39 +245,13 @@ public class ProcessesService implements ResourceLoaderAware {
                 File.separator +
                 (type.isLocalized() && !type.equals(ResourceTypeEnum.I18N) ? (locale + File.separator) : "") +
                 finalName + type.getSuffix();
-        log.info("loading resource: {}", resourcePath);
-        return this.resourceLoader.getResource(resourcePath);        
-    }
 
-    /**
-     * Validates resource existence
-     *
-     * @param processId process id
-     * @param type      resource type
-     * @param name      resource name
-     * @param version   module version
-     * @param locale    resource locale
-     * @throws FileNotFoundException when resource does not exist
-     */
-    private void validateResourceParameters(String processId, ResourceTypeEnum type, String name, String version,
-                                            String locale) throws FileNotFoundException {
-        Process process = completeCache.get(processId,version);
-        if (type.isLocalized() && locale == null)
-            throw new FileNotFoundException("Unable to determine resource for undefined locale");
-        switch (type) {
-            case CSS:
-                if (!process.getCsses().contains(name))
-                    throw new FileNotFoundException("Unknown css resource for " + processId + ":" + version);
-                break;
-            case I18N:
-                break;
-            case TEMPLATE:
-                if (!process.getTemplates().contains(name))
-                    throw new FileNotFoundException("Unknown template " + name + " for " + processId + ":" + version);
-                break;
-            default:
-                throw new FileNotFoundException("Unable to find resource for unknown resource type");
+        log.info("loading resource: {}", resourcePath);
+        Resource resource = this.resourceLoader.getResource(resourcePath);
+        if (!resource.exists()) {
+            throw new FileNotFoundException("Unknown " + type + " resource for " + processId + ":" + version);
         }
+        return resource;        
     }
 
     /**

@@ -28,4 +28,5 @@ java -jar karate.jar                      \
       businessconfig/getBusinessconfig.feature            \
       businessconfig/getBusinessconfigTemplate.feature    \
       businessconfig/getProcessGroups.feature             \
-      businessconfig/uploadProcessGroupsFile.feature
+      businessconfig/uploadProcessGroupsFile.feature      \
+      businessconfig/security.feature

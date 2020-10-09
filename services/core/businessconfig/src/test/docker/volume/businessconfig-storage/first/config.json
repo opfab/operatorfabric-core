@@ -1,13 +1,6 @@
 {
   "id": "first",
   "version": "v1",
-  "templates": [
-    "template1"
-  ],
-  "csses": [
-    "style1",
-    "style2"
-  ],
   "locales": [
     "fr",
     "en"

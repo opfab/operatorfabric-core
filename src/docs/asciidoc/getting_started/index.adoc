@@ -196,8 +196,6 @@ The global configuration is defined in config.json :
 {
 	"id":"defaultProcess",
 	"version":"2",
-	"templates":["template"],
-	"csses":["style"],
 	"states":{
 		"messageState" : {
 			"details" : [{
@@ -261,7 +259,7 @@ You should received the following JSON in response, describing your bundle.
 
 [source,JSON]
 ----
-{"statesData":{"messageState":{"detailsData":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":["style"]}],"responseData":null,"acknowledgementAllowed":null,"color":null,"name":null,"details":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":["style"]}],"response":null,"acknowledgmentAllowed":null}},"id":"defaultProcess","name":null,"version":"2","templates":["template"],"csses":["style"],"menuLabel":null,"states":{"messageState":{"detailsData":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":["style"]}],"responseData":null,"acknowledgementAllowed":null,"color":null,"name":null,"details":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":["style"]}],"response":null,"acknowledgmentAllowed":null}},"menuEntries":null}
+{"statesData":{"messageState":{"detailsData":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":["style"]}],"responseData":null,"acknowledgementAllowed":null,"color":null,"name":null,"details":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":["style"]}],"response":null,"acknowledgmentAllowed":null}},"id":"defaultProcess","name":null,"version":"2","menuLabel":null,"states":{"messageState":{"detailsData":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":["style"]}],"responseData":null,"acknowledgementAllowed":null,"color":null,"name":null,"details":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":["style"]}],"response":null,"acknowledgmentAllowed":null}},"menuEntries":null}
 ----
 
 ==== Send a card 
@@ -319,8 +317,6 @@ of the bundle:
 {
 	"id":"criticalSituation",
 	"version":"1",
-	"templates":["criticalSituationTemplate","endCriticalSituationTemplate"],
-	"csses":["style"],
 	"states":{
 		"criticalSituation-begin" : {
 			"details" : [{

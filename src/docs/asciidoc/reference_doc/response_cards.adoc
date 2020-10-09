@@ -53,12 +53,6 @@ A card can have a response only if it's in a process/state that is configured fo
   "id": "defaultProcess",
   "name": "Test",
   "version": "1",
-  "templates": [
-    "question"
-  ],
-  "csses": [
-    "style"
-  ],
   "states": {
     "questionState": {
       "name": "question.title",
