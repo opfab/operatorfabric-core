@@ -118,7 +118,7 @@
   },
   "logging": {
     "filters": {
-      "process": "Service"
+      "process": "Processus"
     },
     "cardType": "Type de Carte",
     "timeOfAction": "Moment de l'action",

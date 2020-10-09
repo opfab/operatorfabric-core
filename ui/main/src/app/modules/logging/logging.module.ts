@@ -19,6 +19,7 @@ import {LoggingFiltersComponent} from './components/logging-filters/logging-filt
 import {DatetimeFilterModule} from '../../components/share/datetime-filter/datetime-filter.module';
 import {MultiFilterModule} from '../../components/share/multi-filter/multi-filter.module';
 import {LoggingPageComponent} from './components/logging-table/logging-page/logging-page.component';
+import {MultiFilter2Module} from '../../components/share/multi-filter-2/multi-filter-2.module';
 
 
 @NgModule({
@@ -28,9 +29,9 @@ import {LoggingPageComponent} from './components/logging-table/logging-page/logg
         ReactiveFormsModule,
         CardsModule,
         TranslateModule,
-        NgbModule
-        , DatetimeFilterModule
-        , MultiFilterModule
+        NgbModule,
+        DatetimeFilterModule,
+        MultiFilter2Module
     ],
     declarations: [
     LoggingComponent,

@@ -16,7 +16,6 @@ import {selectLinesOfLoggingResult} from '@ofSelectors/logging.selectors';
 import {map, takeUntil} from 'rxjs/operators';
 import {LoggingFiltersComponent} from './components/logging-filters/logging-filters.component';
 import { ProcessesService } from '@ofServices/processes.service';
-import { I18n } from '@ofModel/i18n.model';
 
 @Component({
     selector: 'of-logging',
@@ -37,8 +36,12 @@ export class LoggingComponent implements  AfterViewInit, OnDestroy {
     constructor(private store: Store<AppState>, private processesService: ProcessesService) {
         processesService.getAllProcesses().forEach( (process) => {
            const id = process.id;
-           if (process.uiVisibility && !!process.uiVisibility.logging)  {
-               this.processValueForFilter.push({value: id, label: new I18n(process.name), i18nPrefix: `${process.id}.${process.version}` });
+           if (!!process.uiVisibility && !!process.uiVisibility.logging)  {
+               let itemName = process.name;
+               if (!itemName) {
+                   itemName = id;
+               }
+               this.processValueForFilter.push({id: id, itemName: itemName, i18nPrefix: `${process.id}.${process.version}` });
            }
         });
     }
