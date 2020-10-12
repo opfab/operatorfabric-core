@@ -17,10 +17,7 @@ Scenario: Post two  Cards in one request
 	"process"  :"api_test",
 	"processInstanceId" : "process2card1",
 	"state": "messageState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"severity" : "COMPLIANT",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -33,10 +30,7 @@ Scenario: Post two  Cards in one request
 	"process"  :"api_test",
 	"processInstanceId" : "process2card2",
 	"state": "messageState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"severity" : "COMPLIANT",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},

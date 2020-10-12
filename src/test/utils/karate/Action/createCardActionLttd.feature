@@ -67,19 +67,7 @@ Scenario: Create a card with a valid lttd conditions
         "summary": "New test  the action processInstanceId1"
         }
     },
-    "recipient": {
-        "type": "UNION",
-        "recipients": [
-            {
-                "type": "GROUP",
-                "recipients": null,
-                "identity": "TSO1",
-                "preserveMain": null
-            }
-        ],
-        "identity": null,
-        "preserveMain": null
-    },
+    "groupRecipients": ["TSO1"],
     "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
     "mainRecipient": null,
@@ -161,19 +149,7 @@ Scenario: Create a card - entity of enitiesAllowedToRepond  in the card not matc
         "summary": "Test the action processInstanceId2"
         }
     },
-    "recipient": {
-        "type": "UNION",
-        "recipients": [
-            {
-                "type": "GROUP",
-                "recipients": null,
-                "identity": "TSO1",
-                "preserveMain": null
-            }
-        ],
-        "identity": null,
-        "preserveMain": null
-    },
+    "groupRecipients": ["TSO1"],
     "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["TSO","ENTITY2"],
     "mainRecipient": null,
@@ -252,19 +228,7 @@ Scenario: Create a card - with expired lttd
         "summary": "Test the action processInstanceId3"
         }
     },
-    "recipient": {
-        "type": "UNION",
-        "recipients": [
-            {
-                "type": "GROUP",
-                "recipients": null,
-                "identity": "TSO1",
-                "preserveMain": null
-            }
-        ],
-        "identity": null,
-        "preserveMain": null
-    },
+    "groupRecipients": ["TSO1"],
     "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
     "mainRecipient": null,
@@ -343,19 +307,7 @@ Scenario: Create a card - with expired lttd
         "summary": "Test the action processInstanceId4"
         }
     },
-    "recipient": {
-        "type": "UNION",
-        "recipients": [
-            {
-                "type": "GROUP",
-                "recipients": null,
-                "identity": "TSO1",
-                "preserveMain": null
-            }
-        ],
-        "identity": null,
-        "preserveMain": null
-    },
+    "groupRecipients": ["TSO1"],
     "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
     "mainRecipient": null,

@@ -19,9 +19,16 @@ Scenario: Post Card
 				"publisher" : "api_test",
 				"processVersion" : "1",
 				"process"  :"api_test",
-				"processInstanceId" : "process3users",
+				"processInstanceId" : "process3usersDep",
 				"state": "messageState",
-				"userRecipients": ["tso1-operator", "tso2-operator", "admin"],
+				"recipient": {
+							"type":"UNION",
+							"recipients":[
+								{ "type": "USER", "identity":"tso1-operator"},
+								{ "type": "USER", "identity":"tso2-operator"},
+								{ "type": "USER", "identity":"admin"}
+							]
+					},
 				"severity" : "INFORMATION",
 				"startDate" : startDate,
 				"summary" : {"key" : "defaultProcess.summary"},
@@ -47,7 +54,7 @@ Then status 201
 And match response.count == 1
 
 #get card with user tso1-operator
-Given url opfabUrl + 'cards/cards/api_test.process3users' 
+Given url opfabUrl + 'cards/cards/api_test.process3usersDep' 
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200

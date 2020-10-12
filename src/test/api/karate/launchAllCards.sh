@@ -22,11 +22,13 @@ java -jar karate.jar                              \
       cards/postCardWithNoProcess.feature         \
       cards/postCardWithNoState.feature           \
       cards/postCardFor3Users.feature             \
+      cards/postCardFor3UsersDeprecated.feature   \
       cards/deleteCardFor3Users.feature           \
       cards/post2CardsInOneRequest.feature        \
       cards/post1CardThenUpdateThenDelete.feature \
       cards/getArchive.feature                    \
       cards/post2CardsGroupRouting.feature        \
+      cards/post2CardsGroupRoutingDeprecated.feature  \
       cards/post1BigCards.feature                 \
       cards/deleteUserCard.feature
       #cards/updateCardSubscription.feature

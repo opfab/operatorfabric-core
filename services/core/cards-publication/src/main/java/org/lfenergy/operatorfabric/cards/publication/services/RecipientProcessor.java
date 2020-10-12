@@ -15,6 +15,8 @@ import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.Recipient;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
  * <p>
  */
 @Component
+@Slf4j
 public class RecipientProcessor {
 
     /**
@@ -38,8 +41,21 @@ public class RecipientProcessor {
      * @return computed recipient that were affected to card
      */
     public ComputedRecipient processAll(CardPublicationData card) {
-        Recipient recipient = card.getRecipient();
-        ComputedRecipient computedRecipient = processAll(recipient);
+        ComputedRecipient computedRecipient;
+        if ((card.getUserRecipients() != null && !card.getUserRecipients().isEmpty())
+                        || (card.getGroupRecipients() != null && !card.getGroupRecipients().isEmpty())) {
+            ComputedRecipient.BuilderEncapsulator result = ComputedRecipient.encapsulatedBuilder();
+            ComputedRecipient.ComputedRecipientBuilder builder = result.builder();
+
+            builder.users(card.getUserRecipients() == null ? Collections.emptyList() : card.getUserRecipients());
+            builder.groups(card.getGroupRecipients() == null ? Collections.emptyList() : card.getGroupRecipients());
+            computedRecipient = builder.build();
+        } else {
+            log.warn("Use of recipient field is deprecated. Please use usersRecipients and groupsRecipients fields (See documentation)");
+            Recipient recipient = card.getRecipient();
+            computedRecipient = processAll(recipient);
+        }
+
         card.setUserRecipients(new ArrayList<>(computedRecipient.getUsers()));
         card.setGroupRecipients(new ArrayList<>(computedRecipient.getGroups()));
         return computedRecipient;

@@ -15,10 +15,7 @@ Feature: Cards
 	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processInstanceId" : "process1WithNoStateField",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
