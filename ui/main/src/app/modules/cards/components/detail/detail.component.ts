@@ -8,7 +8,17 @@
  */
 
 
-import { AfterViewChecked, DoCheck, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import {
+    AfterViewChecked,
+    DoCheck,
+    Component,
+    ElementRef,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    ViewChild, TemplateRef
+} from '@angular/core';
 import { Card, Detail } from '@ofModel/card.model';
 import { ProcessesService } from '@ofServices/processes.service';
 import { HandlebarsService } from '../../services/handlebars.service';
@@ -33,6 +43,8 @@ import { UpdateALightCard } from '@ofStore/actions/light-card.actions';
 import { UserService } from '@ofServices/user.service';
 import { EntitiesService } from '@ofServices/entities.service';
 import { Entity } from '@ofModel/entity.model';
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {NgbModalRef} from "@ng-bootstrap/ng-bootstrap/modal/modal-ref";
 
 
 declare const templateGateway: any;
@@ -94,10 +106,13 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     @Input() user: User;
     @Input() currentPath: string;
 
+    @ViewChild('cardDeletedWithNoErrorPopup', null) cardDeletedWithNoErrorPopupRef: TemplateRef<any>;
+    @ViewChild('impossibleToDeleteCardPopup', null) impossibleToDeleteCardPopupRef: TemplateRef<any>;
+
     public active = false;
     public isActionEnabled = false;
     public lttdExpiredIsTrue: boolean;
-
+    public isDeleteCardAllowed = false;
 
     unsubscribe$: Subject<void> = new Subject<void>();
     readonly hrefsOfCssLink = new Array<SafeResourceUrl>();
@@ -109,11 +124,20 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private _acknowledgementAllowed: boolean;
     message: Message = {display: false, text: undefined, color: undefined};
 
-    constructor(private element: ElementRef, private businessconfigService: ProcessesService,
-        private handlebars: HandlebarsService, private sanitizer: DomSanitizer,
-        private store: Store<AppState>, private cardService: CardService,
-        private _appService: AppService, private userService: UserService,
-        private entitiesService: EntitiesService) {
+    modalRef: NgbModalRef;
+
+    public displayDeleteResult = false;
+
+    constructor(private element: ElementRef,
+                private businessconfigService: ProcessesService,
+                private handlebars: HandlebarsService,
+                private sanitizer: DomSanitizer,
+                private store: Store<AppState>,
+                private cardService: CardService,
+                private _appService: AppService,
+                private userService: UserService,
+                private entitiesService: EntitiesService,
+                private modalService: NgbModal) {
 
         this.store.select(selectAuthenticationState).subscribe(authState => {
             this._userContext = new UserContext(
@@ -124,6 +148,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             );
         });
         this.reloadTemplateWhenGlobalStyleChange();
+    }
+
+    open(content) {
+        this.modalRef = this.modalService.open(content);
     }
 
     // -------------------------- [OC-980] -------------------------- //
@@ -254,6 +282,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 id: null,
                 publishDate: null,
                 publisher: this.user.entities[0],
+                publisherType: 'ENTITY',
                 processVersion: this.card.processVersion,
                 process: this.card.process,
                 processInstanceId: `${this.card.processInstanceId}_${this.user.entities[0]}`,
@@ -372,6 +401,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.initializeHrefsOfCssLink();
         this.initializeHandlebarsTemplates();
         this.markAsReadIfNecessary();
+        this.setIsDeleteCardAllowed();
         this.message = {display: false, text: undefined, color: undefined};
         if (this._responseData != null && this._responseData !== undefined) {
             this.setEntitiesToRespond();
@@ -394,7 +424,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private setIsActionEnabled() {
-            this.isActionEnabled = (this.isUserInEntityAllowedToRespond() && this.doesTheUserHavePermissionToRespond());
+        this.isActionEnabled = (this.isUserInEntityAllowedToRespond() && this.doesTheUserHavePermissionToRespond());
+    }
+
+    private setIsDeleteCardAllowed() {
+        this.isDeleteCardAllowed = this.doesTheUserHavePermissionToDeleteCard();
     }
 
     private isUserInEntityAllowedToRespond(): boolean {
@@ -413,6 +447,27 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 return true;
             }
         });
+        return permission;
+    }
+
+    /* 1st check : card.publisherType == ENTITY
+       2nd check : the card has been sent by an entity of the user connected
+       3rd check : the user has the Write access to the process/state of the card */
+    private doesTheUserHavePermissionToDeleteCard(): boolean {
+        let   permission = false;
+        const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+
+        if ((this.card.publisherType === 'ENTITY') && (userWithPerimeters.userData.entities.includes(this.card.publisher))) {
+            userWithPerimeters.computedPerimeters.forEach(perim => {
+                if ((perim.process === this.card.process) &&
+                    (perim.state === this.card.state)
+                    && (this.compareRightAction(perim.rights, RightsEnum.Write)
+                        || this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
+                    permission = true;
+                    return true;
+                }
+            });
+        }
         return permission;
     }
 
@@ -486,6 +541,33 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             scriptCopy.async = false;
             script.parentNode.replaceChild(scriptCopy, script);
         }
+    }
+
+    confirmDeleteCard(): void {
+        this.cardService.deleteCard(this.card)
+            .subscribe(
+                resp => {
+                    const status = resp.status;
+
+                    this.modalRef.close();
+                    if (status === 200) {
+                        this.closeDetails();
+                        this.open(this.cardDeletedWithNoErrorPopupRef);
+                    } else {
+                        console.log('Impossible to delete card , error status from service : ', status);
+                        this.open(this.impossibleToDeleteCardPopupRef);
+                    }
+                },
+                err => {
+                    console.error('Error when deleting card :', err);
+                    this.modalRef.close();
+                    this.open(this.impossibleToDeleteCardPopupRef);
+                }
+            );
+    }
+
+    declineDeleteCard(): void {
+        this.modalRef.dismiss();
     }
 
     ngOnDestroy() {

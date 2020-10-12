@@ -144,7 +144,8 @@
   "button": {
     "ok": "OK",
     "cancel": "Cancel",
-    "reset": "Reset"
+    "reset": "Reset",
+    "delete": "Delete"
   },
   "userCard": {
     "title": "Create a new card",
@@ -177,7 +178,14 @@
     "processInstanceId": "Id",
     "state": "State",
     "send-another-one": "Send another Card",
-    "cardSendWithNoError": "Card sent"
+    "cardSendWithNoError": "Card sent",
+    "deleteCard": {
+      "doYouReallyWant": "Do you really want to delete this card ?",
+      "cardDeletedWithNoError": "Card deleted",
+      "error": {
+        "impossibleToDeleteCard": "Impossible to delete card for technical reasons"
+      }
+    }
   },
   "response": {
     "btnTitle": "VALIDATE ANSWERS",
