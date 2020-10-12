@@ -52,6 +52,10 @@ export class CardService {
     private firstSubscriptionInitDone = false;
     public initSubscription = new Subject<void>();
 
+    private startOfAlreadyLoadedPeriod: number;
+    private endOfAlreadyLoadedPeriod: number;
+
+
     constructor(private httpClient: HttpClient,
                 private notifyService: NotifyService,
                 private guidService: GuidService,
@@ -173,12 +177,38 @@ export class CardService {
 
     }
 
-    public setSubscriptionDates(rangeStart: number, rangeEnd: number) {
+    public setSubscriptionDates(start: number, end: number) {
+        console.log(new Date().toISOString(), 'CardService - Set subscription date', new Date(start), ' -', new Date(end));
+        if (!this.startOfAlreadyLoadedPeriod) { // First loading , no card loaded yet
+            this.askCardsForPeriod(start, end);
+            return;
+        }
+        if ((start < this.startOfAlreadyLoadedPeriod) && (end > this.endOfAlreadyLoadedPeriod)) {
+            this.askCardsForPeriod(start, end);
+            return;
+        }
+        if (start < this.startOfAlreadyLoadedPeriod) {
+            this.askCardsForPeriod(start, this.startOfAlreadyLoadedPeriod);
+            return;
+        }
+        if (end > this.endOfAlreadyLoadedPeriod) {
+            this.askCardsForPeriod(this.endOfAlreadyLoadedPeriod, end);
+            return;
+        }
+        console.log(new Date().toISOString(), 'CardService - Card already loaded for the chosen period');
+    }
 
-        console.log(new Date().toISOString(), 'CardService - Set subscription date', new Date(rangeStart), ' -', new Date(rangeEnd));
+    private askCardsForPeriod(start: number, end: number) {
+        console.log(new Date().toISOString(), 'CardService - Need to load card for period '
+            , new Date(start), ' -', new Date(end));
         this.httpClient.post<any>(
             `${this.cardOperationsUrl}`,
-            {rangeStart: rangeStart, rangeEnd: rangeEnd}).subscribe();
+            { rangeStart: start, rangeEnd: end }).subscribe(result => {
+                if ((!this.startOfAlreadyLoadedPeriod) || (start < this.startOfAlreadyLoadedPeriod))
+                    this.startOfAlreadyLoadedPeriod = start;
+                if ((!this.endOfAlreadyLoadedPeriod) || (end > this.endOfAlreadyLoadedPeriod)) this.endOfAlreadyLoadedPeriod = end;
+
+            });
 
     }
 
