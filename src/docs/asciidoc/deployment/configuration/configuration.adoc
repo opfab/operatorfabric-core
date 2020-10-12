@@ -37,6 +37,14 @@ while the *docker* sub-directory is a specific configuration meant for use in a 
 
 The configuration shared by all business services is in a yaml file, you can find an example with the file
 /config/docker/common-docker.yml.
+In this file you will find, among others, the parameters below :
+
+|===
+|name|default|mandatory?|Description
+
+|operatorfabric.businessLogActivated|false|no|Indicates whether or not operatorfabric should record business logs
+
+|===
 
 === Business service specific configurations
 
