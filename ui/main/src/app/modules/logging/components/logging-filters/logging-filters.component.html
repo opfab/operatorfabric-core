@@ -5,18 +5,19 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
-<form [formGroup]="loggingForm" #currentForm="ngForm">
+<form [formGroup]="loggingForm" #currentForm>
     <div class="container-fluid">
         <div class="form-row nomarginrow justify-content-center">
             <div class="col-lg-3 col-md-4 nopaddingrow">
-                <div class="row" style='margin-right:0;margin-left:0;'>
-                    <div [ngClass]="{ 'col-md-12':true}">
-                        <of-multi-filter i18nRootLabelKey="logging.filters."
-                                         [parentForm]="loggingForm"
-                                         filterPath="process"
-                                         [values]="processData"></of-multi-filter>
-                    </div>
-                </div>
+                <of-multi-filter-2 filterPath="process"
+                                   id="process"
+                                   formControlName="process"
+                                   [parentForm]="loggingForm"
+                                   [values]="dropdownList"
+                                   [(ngModel)]="dropdownList"
+                                   [dropdownSettings]="dropdownSettings"
+                                   i18nRootLabelKey="logging.filters."
+                ></of-multi-filter-2>
             </div>
             <div class="col-lg-2 col-md-4 archive-filter">
                 <of-datetime-filter filterPath="publishDateFrom" formControlName="publishDateFrom"
