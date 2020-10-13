@@ -22,7 +22,7 @@ Scenario: Post 6 Cards (2 INFORMATION, 1 COMPLIANT, 1 ACTION, 2 ALARM)
 			"process"  :"defaultProcess",
 			"processInstanceId" : "process1",
 			"state": "messageState",
-			"tags":["test","test2"],
+			"tags":["tag1"],
 			"recipient" : {
 						"type" : "GROUP",
 						"identity" : "TSO1"
@@ -76,7 +76,7 @@ And match response.count == 1
 			"process"  :"defaultProcess",
 			"processInstanceId" : "process2",
 			"state": "chartState",
-			"tags" : ["test2"],
+			"tags" : ["tag2"],
 			"recipient" : {
 						"type" : "GROUP",
 						"identity" : "TSO1"
@@ -127,6 +127,7 @@ And match response.count == 1
 			"process"  :"defaultProcess",
 			"processInstanceId" : "process3",
 			"state": "processState",
+			"tags":["tag1", "tag2"],
 			"recipient" : {
 						"type" : "GROUP",
 						"identity" : "TSO1"
