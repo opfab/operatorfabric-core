@@ -16,13 +16,14 @@ import {HttpClient} from '@angular/common/http';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {buildSettingsOrConfigSelector} from '@ofSelectors/settings.x.config.selectors';
-import {combineLatest} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import {environment} from '@env/environment';
+import { tap } from 'rxjs/operators';
 
 @Injectable()
 export class I18nService {
 
-    private static loadedLocales = new Set<string>();
+
     private static localUrl = '/assets/i18n/';
     private _locale: string;
     private _timeZone: string;
@@ -45,9 +46,6 @@ export class I18nService {
         } else {
             this._locale = 'en';
         }
-        if (!I18nService.loadedLocales.has(this._locale)) {
-            this.loadLocale(this._locale);
-        }
         moment.locale(this._locale);
         this.translate.use(this._locale);
         if (timeZone) {
@@ -66,13 +64,11 @@ export class I18nService {
         return this._timeZone;
     }
 
-
-    private loadLocale(locale: string) {
-        this.httpClient.get(`${I18nService.localUrl}${locale}.json`).subscribe(translation => {
-                I18nService.loadedLocales.add(locale);
-                this.translate.setTranslation(locale, translation, true);
-            },
-            error => console.log(new Date().toISOString(),`Error : impossible to load locale ${I18nService.localUrl}${locale}.json`));
+    public loadLocale(locale: string): Observable<any> {
+        return this.httpClient.get(`${I18nService.localUrl}${locale}.json`).pipe( tap(translation =>
+                this.translate.setTranslation(locale, translation, true)
+            ,
+            error => console.log(new Date().toISOString(),`Error : impossible to load locale ${I18nService.localUrl}${locale}.json`)));
     }
 
 
