@@ -1,0 +1,21 @@
+{
+  "type": "record",
+  "name": "Timespan",
+  "namespace": "org.lfenergy.operatorfabric.avro",
+  "fields": [
+    {
+      "name": "start",
+      "type": "int",
+      "logicalType": "date"
+    },
+    {
+      "name" : "end",
+      "type": [
+        "null",
+        "int"
+      ],
+      "logicalType": "date",
+      "default" : null
+    }
+  ]
+}
