@@ -20,10 +20,12 @@ import {HandlebarsService} from './services/handlebars.service';
 import {UtilitiesModule} from '../utilities/utilities.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountdownModule} from 'ngx-countdown';
+import {CloseableCardDetailsComponent} from './components/card-details/closeable-card-details.component';
 
 @NgModule({
   declarations: [CardComponent
       , CardDetailsComponent
+      , CloseableCardDetailsComponent
       , DetailsComponent
       , DetailComponent],
   imports: [
@@ -35,6 +37,7 @@ import {CountdownModule} from 'ngx-countdown';
   ],
     exports: [CardComponent
         , CardDetailsComponent
+        , CloseableCardDetailsComponent
         , DetailsComponent
         , DetailComponent
     ],
@@ -51,6 +54,6 @@ export class CardsModule {
         return {
             ngModule: CardsModule,
             providers: [ProcessesService]
-        }
+        };
     }
 }

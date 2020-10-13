@@ -32,7 +32,6 @@ import {User} from '@ofModel/user.model';
 export class CardPreviewComponent implements OnInit, OnDestroy {
 
     @Input() card: Card;
-    @Input() user: User;
     @Input() currentPath: string;
 
     public active = false;
