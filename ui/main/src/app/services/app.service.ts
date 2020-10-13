@@ -7,11 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { AppState } from '@ofStore/index';
-import { ClearLightCardSelection } from '@ofStore/actions/light-card.actions';
+import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {ClearLightCardSelection} from '@ofStore/actions/light-card.actions';
 
 export enum PageType {
     FEED, ARCHIVE, THIRPARTY, SETTING, ABOUT, CALENDAR

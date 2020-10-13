@@ -8,23 +8,21 @@
  */
 
 
-import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
-import { Card, Detail } from '@ofModel/card.model';
-import { ProcessesService } from '@ofServices/processes.service';
-import { HandlebarsService } from '../../../cards/services/handlebars.service';
-import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
-import { DetailContext } from '@ofModel/detail-context.model';
-import { Store } from '@ngrx/store';
-import { AppState } from '@ofStore/index';
-import { selectAuthenticationState } from '@ofSelectors/authentication.selectors';
-import { selectGlobalStyleState } from '@ofSelectors/global-style.selectors';
-import { UserContext } from '@ofModel/user-context.model';
-import {skip, switchMap, take, takeUntil } from 'rxjs/operators';
-import { Subject} from 'rxjs';
+import {Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
+import {Card, Detail} from '@ofModel/card.model';
+import {ProcessesService} from '@ofServices/processes.service';
+import {HandlebarsService} from '../../../cards/services/handlebars.service';
+import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
+import {DetailContext} from '@ofModel/detail-context.model';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
+import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
+import {UserContext} from '@ofModel/user-context.model';
+import {skip, switchMap, takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
-import { User } from '@ofModel/user.model';
-
-
+import {User} from '@ofModel/user.model';
 
 
 @Component({
@@ -60,7 +58,6 @@ export class CardPreviewComponent implements OnInit, OnDestroy {
         this.reloadTemplateWhenGlobalStyleChange();
     }
 
-
     ngOnInit() {
         this.getTemplateAndStyle();
 
@@ -73,27 +70,25 @@ export class CardPreviewComponent implements OnInit, OnDestroy {
                 if (!!businessconfig) {
                     const state = businessconfig.extractState(this.card);
                     if (!!state) {
-                        this.detail = state.details[0]; // Take the first detail , new card preview  non compatible with more than one detail  
+                        // Take the first detail, new card preview only compatible with one detail per card
+                        this.detail = state.details[0];
                     }
                     this.initializeHrefsOfCssLink();
                     this.initializeHandlebarsTemplates();
                 }
             },
-                error => console.log(`something went wrong while trying to fetch process for ${this.card.process}
-                            with ${this.card.processVersion} version.`)
+                error => console.log(`something went wrong while trying to fetch process for ${this.card.process}`
+                            + ` with ${this.card.processVersion} version.`)
             );
     }
 
-
-
-    // for certain types of template , we need to reload it to take into account
+    // for certain types of template, we need to reload it to take into account
     // the new css style (for example with chart done with chart.js)
     private reloadTemplateWhenGlobalStyleChange() {
         this.store.select(selectGlobalStyleState)
             .pipe(takeUntil(this.unsubscribe$), skip(1))
             .subscribe(style => this.initializeHandlebarsTemplates());
     }
- 
 
     private initializeHrefsOfCssLink() {
         if (!!this.detail && !!this.detail.styles) {
@@ -133,15 +128,12 @@ export class CardPreviewComponent implements OnInit, OnDestroy {
 
     reinsertScripts(): void {
         const scripts = <HTMLScriptElement[]>this.element.nativeElement.getElementsByTagName('script');
-        Array.prototype.forEach.call(scripts, script => {   //scripts.foreach does not work ... 
+        Array.prototype.forEach.call(scripts, script => { // scripts.foreach does not work...
             const scriptCopy = document.createElement('script');
-            scriptCopy.type = script.type ? script.type : 'text/javascript';
-            if (!!script.innerHTML) {
-                scriptCopy.innerHTML = script.innerHTML;
-            }
+            scriptCopy.type = !!script.type ? script.type : 'text/javascript';
+            if (!!script.innerHTML) scriptCopy.innerHTML = script.innerHTML;
             scriptCopy.async = false;
             script.parentNode.replaceChild(scriptCopy, script);
-
         });
     }
 

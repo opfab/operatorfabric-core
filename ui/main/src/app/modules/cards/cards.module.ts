@@ -8,19 +8,18 @@
  */
 
 
-
-import {ModuleWithProviders, NgModule,NO_ERRORS_SCHEMA,CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, ModuleWithProviders, NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {CardComponent} from "./components/card/card.component";
-import {CardDetailsComponent} from "./components/card-details/card-details.component";
-import {DetailsComponent} from "./components/details/details.component";
-import {DetailComponent} from "./components/detail/detail.component";
-import {TranslateModule} from "@ngx-translate/core";
-import {ProcessesService} from "@ofServices/processes.service";
-import {HandlebarsService} from "./services/handlebars.service";
-import {UtilitiesModule} from "../utilities/utilities.module";
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
-import { CountdownModule } from 'ngx-countdown';
+import {CardComponent} from './components/card/card.component';
+import {CardDetailsComponent} from './components/card-details/card-details.component';
+import {DetailsComponent} from './components/details/details.component';
+import {DetailComponent} from './components/detail/detail.component';
+import {TranslateModule} from '@ngx-translate/core';
+import {ProcessesService} from '@ofServices/processes.service';
+import {HandlebarsService} from './services/handlebars.service';
+import {UtilitiesModule} from '../utilities/utilities.module';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {CountdownModule} from 'ngx-countdown';
 
 @NgModule({
   declarations: [CardComponent

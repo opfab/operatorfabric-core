@@ -7,20 +7,18 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Card, Detail } from '@ofModel/card.model';
-import { Store } from '@ngrx/store';
-import { AppState } from '@ofStore/index';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Card, Detail} from '@ofModel/card.model';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
 import * as cardSelectors from '@ofStore/selectors/card.selectors';
-import { ProcessesService } from '@ofServices/processes.service';
-import { Subject } from 'rxjs';
-import { takeUntil, switchMap } from 'rxjs/operators';
-import { selectIdentifier } from '@ofStore/selectors/authentication.selectors';
-import { UserService } from '@ofServices/user.service';
-import { User } from '@ofModel/user.model';
-import { UserWithPerimeters } from '@ofModel/userWithPerimeters.model';
-import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
-import { AppService, PageType } from '@ofServices/app.service';
+import {ProcessesService} from '@ofServices/processes.service';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {UserService} from '@ofServices/user.service';
+import {User} from '@ofModel/user.model';
+import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
+import {AppService} from '@ofServices/app.service';
 
 @Component({
     selector: 'of-card-details',

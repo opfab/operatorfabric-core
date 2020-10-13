@@ -69,7 +69,7 @@ const routes: Routes = [
         redirectTo: defaultPath
     }
 ];
-// TODO manage visible path more gently
+// TODO manage visible path more gently
 const startIndex = 0;
 const numberOfHiddenRoutes = 5 ; // 'businessconfigparty', 'settings', 'navbar'  'admin' ,'about'
 const manageIndexesWhichBeginAtZero = 1;

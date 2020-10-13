@@ -8,7 +8,7 @@
 * This file is part of the OperatorFabric project.
 */
 
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import {Component, Input, OnInit, OnDestroy, ViewChild, ElementRef} from '@angular/core';
 import { LineOfMonitoringResult } from '@ofModel/line-of-monitoring-result.model';
 import { TimeService } from '@ofServices/time.service';
 import { Moment } from 'moment-timezone';
@@ -68,7 +68,7 @@ export class MonitoringTableComponent implements OnDestroy{
         });
     }
 
-    export(): void{
+    export(): void {
         this.initExportMonitoringData();
         this.exportService.exportAsExcelFile(this.exportMonitoringData, 'Monitoring');
     }

@@ -27,7 +27,7 @@ export class CardListComponent extends ResizableComponent implements OnInit {
   @Input() public lightCards: LightCard[];
   @Input() public selection: Observable<string>;
 
-  constructor(private store: Store<AppState>) {
+  constructor() {
     super();
   }
 
