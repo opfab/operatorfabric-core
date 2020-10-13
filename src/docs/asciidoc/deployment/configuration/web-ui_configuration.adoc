@@ -135,6 +135,7 @@ There will be two new routes with the release of the `[OC-936]`:
 
 - `logging`;
 - `monitoring`.
+|checkPerimeterForResponseCard|true|no|If false, OperatorFabric will not check that a user has write rights on a process/state to respond to a card.
 
 |===
 
