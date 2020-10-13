@@ -19,7 +19,7 @@ import java.util.Map;
 public abstract class BaseCommandHandler {
     private final ObjectMapper objectMapper;
 
-    public BaseCommandHandler(ObjectMapper objectMapper) {
+    protected BaseCommandHandler(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
         // REQUIRE_SETTERS_FOR_GETTERS is needed to prevent the AVRO getSchema() call from being serialized
         this.objectMapper.enable(MapperFeature.REQUIRE_SETTERS_FOR_GETTERS);
