@@ -50,16 +50,7 @@ Feature: API - creatCardAction
                 "summary": "Test the action with entity in entitiesAllowedToRespond"
                 }
             },
-            "recipient": {
-                "type": "UNION",
-                "recipients": [
-                    {
-                        "type": "GROUP",
-                        "identity": "TSO1"
-                    }
-                ],
-
-            },
+            "groupRecipients": ["TSO1"],
             "entityRecipients": ["ENTITY1"],
             "entitiesAllowedToRespond": ["TSO1","ENTITY1", "ENTITY2"],
             "data": {
@@ -128,16 +119,7 @@ Feature: API - creatCardAction
                 "summary": "Test the action with a long format"
                 }
             },
-            "recipient": {
-                "type": "UNION",
-                "recipients": [
-                    {
-                        "type": "GROUP",
-                        "identity": "TSO1"
-                    }
-                ],
-
-            },
+            "groupRecipients": ["TSO1"],
             "entityRecipients": ["ENTITY1", "ENTITY2"],
             "entitiesAllowedToRespond": ["TSO1","ENTITY1", "ENTITY2"],
             "data": {

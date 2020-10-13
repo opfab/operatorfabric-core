@@ -28,10 +28,7 @@ The following card contains only the mandatory attributes.
 	"severity":"INFORMATION",
 	"title":{"key":"card.title.key"},
 	"summary":{"key":"card.summary.key"},
-	"recipient":{
-		"type":"USER",
-		"identity":"tso1-operator"
-	}
+	"userRecipients": ["tso1-operator"]
 
 }
 ....
@@ -57,10 +54,7 @@ The following example is nearly the same as the previous one except for the reci
 	"severity":"INFORMATION",
 	"title":{"key":"card.title.key"},
 	"summary":{"key":"card.summary.key"},
-	"recipient":{
-		"type":"GROUP",
-		"identity":"TSO1"
-	}
+	"groupRecipients": ["TSO1"]
 }
 ....
 
@@ -83,10 +77,7 @@ The following example is nearly the same as the previous one except for the reci
 	"severity":"INFORMATION",
 	"title":{"key":"card.title.key"},
 	"summary":{"key":"card.summary.key"},
-	"recipient":{
-		"type":"GROUP",
-        "identity":"TSO1"
-	},
+	"groupRecipients": ["TSO1"],
 	"entityRecipients" : ["ENTITY1"]
 }
 ....
@@ -124,6 +115,24 @@ If this card need to be viewed by a user who is not in the `TSO1` group, it's po
 definition of the recipient. If the `tso2-operator` needs to see also this card, the recipient definition could be(the following code details only the recipient part):
 
 ....
+"groupRecipients": ["TSO1"],
+"userRecipients": ["tso2-operator"]
+....
+
+
+So here, all the users of the `TSO1` group will receive the `INFORMATION` as should the `tos2-operator` user.
+
+Another example, if a card is destined to the operators of `TSO1` and `TSO2` and needs to be also seen by the `admin`, the recipient configuration looks like:
+
+....
+"groupRecipients": ["TSO1", "TSO2"],
+"userRecipients": ["admin"]
+....
+
+
+There is and alternative way to declare recipients of card, this syntax is more complex and will be deprecated:
+
+....
 "recipient":{ 
 	"type":"UNION",
 	"recipients":[
@@ -132,23 +141,6 @@ definition of the recipient. If the `tso2-operator` needs to see also this card,
 		]
 	}
 ....
-
-So here, all the users of the `TSO1` group will receive the `INFORMATION` as should the `tos2-operator` user.
-
-Another example, if a card is destined to the operators of `TSO1` and `TSO2` and needs to be also seen by the `admin`, the recipient configuration looks like:
-
-....
-"recipient":{"type":"UNION",
-	"recipients":[
-		{"type":"GROUP","identity":"TSO1"},
-		{"type":"GROUP","identity":"TSO2"},
-		{"type":"USER","identity":"admin"}
-		]
-	}
-....
-
-
-
 
 
 
@@ -171,10 +163,7 @@ For this example we will use our previous example for the `TSO1` group with a `d
 	"severity":"INFORMATION",
 	"title":{"key":"card.title.key"},
 	"summary":{"key":"card.summary.key"},
-	"recipient":{
-		"type":"USER",
-		"identity":"tso1-operator"
-	},
+	"userRecipients": ["tso1-operator"],
 	"data":{
 		"stringExample":"This is a not so random string of characters.",
 		"numberExample":123
@@ -208,10 +197,7 @@ At the card level, the attributes in the card telling OperatorFabric which templ
 	"severity":"INFORMATION",
 	"title":{"key":"process.title"},
 	"summary":{"key":"process.summary"},
-	"recipient":{
-		"type":"USER",
-		"identity":"tso1-operator"
-	},
+	"userRecipients": ["tso1-operator"]
 	"data":{"rootProp":"Data displayed in the detail panel"},
 	"details":[{"title":{"key":"process.detail.tab.first"}, "templateName":"template1"}]
 

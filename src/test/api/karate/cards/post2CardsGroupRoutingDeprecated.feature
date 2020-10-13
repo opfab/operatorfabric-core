@@ -17,9 +17,12 @@ Scenario: Post Card only for group TSO1
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processInstanceId" : "process2",
+	"processInstanceId" : "process2dep",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"recipient": {
+		"type": "GROUP", 
+		"identity":"TSO1"
+	},
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -37,7 +40,7 @@ Then status 201
 And match response.count == 1
 
 #get card with user tso1-operator
-Given url opfabUrl + 'cards/cards/api_test.process2' 
+Given url opfabUrl + 'cards/cards/api_test.process2dep' 
 And header Authorization = 'Bearer ' + authTokenTso1 
 When method get
 Then status 200
@@ -54,7 +57,7 @@ And match response.data.message == 'a message for group TSO1'
 
 
 #get card with user tso2-operator should not be possible
-Given url opfabUrl + 'cards/cards/api_test.process2' 
+Given url opfabUrl + 'cards/cards/api_test.process2dep' 
 And header Authorization = 'Bearer ' + authTokenTso2 
 When method get
 Then status 404
@@ -76,9 +79,15 @@ Scenario: Post Card for groups TSO1 and TSO2
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processInstanceId" : "process2tso",
+	"processInstanceId" : "process2tsodep",
 	"state": "messageState",
-	"groupRecipients": ["TSO1", "TSO2"],
+	"recipient": {
+			"type":"UNION",
+			"recipients":[
+				{ "type": "GROUP", "identity":"TSO1"},
+				{ "type": "GROUP", "identity":"TSO2"}
+			]
+	},
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -96,7 +105,7 @@ Then status 201
 And match response.count == 1
 
 #get card with user tso1-operator
-Given url opfabUrl + 'cards/cards/api_test.process2tso' 
+Given url opfabUrl + 'cards/cards/api_test.process2tsodep' 
 And header Authorization = 'Bearer ' + authTokenTso1 
 When method get
 Then status 200
@@ -113,7 +122,7 @@ And match response.data.message == 'a message for groups TSO1 and TSO2'
 
 
 #get card with user tso2-operator should be possible
-Given url opfabUrl + 'cards/cards/api_test.process2tso' 
+Given url opfabUrl + 'cards/cards/api_test.process2tsodep' 
 And header Authorization = 'Bearer ' + authTokenTso2 
 When method get
 Then status 200

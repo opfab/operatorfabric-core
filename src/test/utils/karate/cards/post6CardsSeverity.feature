@@ -23,10 +23,7 @@ Scenario: Post 6 Cards (2 INFORMATION, 1 COMPLIANT, 1 ACTION, 2 ALARM)
 			"processInstanceId" : "process1",
 			"state": "messageState",
 			"tags":["tag1"],
-			"recipient" : {
-						"type" : "GROUP",
-						"identity" : "TSO1"
-					},
+			"groupRecipients": ["TSO1"],
 			"severity" : "INFORMATION",
 			"startDate" : startDate,
 			"summary" : {"key" : "message.summary"},
@@ -77,10 +74,7 @@ And match response.count == 1
 			"processInstanceId" : "process2",
 			"state": "chartState",
 			"tags" : ["tag2"],
-			"recipient" : {
-						"type" : "GROUP",
-						"identity" : "TSO1"
-					},
+			"groupRecipients": ["TSO1"],
 			"severity" : "INFORMATION",
 			"startDate" : startDate,
 			"summary" : {"key" : "message.summary"},
@@ -128,10 +122,7 @@ And match response.count == 1
 			"processInstanceId" : "process3",
 			"state": "processState",
 			"tags":["tag1", "tag2"],
-			"recipient" : {
-						"type" : "GROUP",
-						"identity" : "TSO1"
-					},
+			"groupRecipients": ["TSO1"],
 			"severity" : "COMPLIANT",
 			"startDate" : startDate,
 			"summary" : {"key" : "message.summary"},
@@ -174,13 +165,7 @@ And match response.count == 1
 			"process"  :"defaultProcess",
 			"processInstanceId" : "process4",
 			"state": "questionState",
-			"recipient" : {
-					"type":"UNION",
-					"recipients":[
-						{ "type": "GROUP", "identity":"TSO1"},
-						{ "type": "GROUP", "identity":"TSO2"}
-						]
-					},
+			"groupRecipients": ["TSO1", "TSO2"],
 			"entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
 			"severity" : "ACTION",
 			"startDate" : startDate,
@@ -220,13 +205,7 @@ And match response.count == 1
 			"process"  :"defaultProcess",
 			"processInstanceId" : "process5",
 			"state": "chartLineState",
-			"recipient" : {
-					"type":"UNION",
-					"recipients":[
-						{ "type": "GROUP", "identity":"TSO1"},
-						{ "type": "GROUP", "identity":"TSO2"}
-						]
-					},
+			"groupRecipients": ["TSO1", "TSO2"],
 			"severity" : "ALARM",
 			"startDate" : startDate,
 			"summary" : {"key" : "message.summary"},
@@ -264,10 +243,7 @@ And match response.count == 1
 			"process"  :"defaultProcess",
 			"processInstanceId" : "process6",
 			"state": "contingenciesState",
-			"recipient" : {
-						"type" : "USER",
-						"identity" : "tso1-operator"
-					},
+			"userRecipients": ["tso1-operator"],
 			"severity" : "ALARM",
 			"startDate" : startDate,
 			"lttd" : lttdDate,

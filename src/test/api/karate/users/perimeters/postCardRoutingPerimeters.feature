@@ -41,10 +41,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 	"process"  :"api_test",
 	"processInstanceId" : "cardForGroup",
 	"state": "messageState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -63,9 +60,6 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 	"process"  :"api_test",
 	"processInstanceId" : "cardForEntityWithoutPerimeter",
 	"state": "messageState",
-	"recipient" : {
-				"type" : "USER"
-			},
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -85,9 +79,6 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 	"process"  :"process1",
 	"processInstanceId" : "cardForEntityAndPerimeter",
 	"state": "state1",
-	"recipient" : {
-				"type" : "USER"
-			},
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -107,10 +98,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 	"process"  :"api_test",
 	"processInstanceId" : "cardForEntityAndGroup",
 	"state": "defaultState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -130,10 +118,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 	"process"  :"process1",
 	"processInstanceId" : "cardForEntityAndOtherGroupAndPerimeter",
 	"state": "state1",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO2"
-			},
+	"groupRecipients": ["TSO2"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
