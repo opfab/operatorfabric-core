@@ -124,9 +124,11 @@ To configure it in OperatorFabric , you need to make a POST of this json file to
 
 To add it to a group name for example "mygroup", you need to make a PATCH request  to end point 'users/groups/mygroup/perimeters' with payload ["perimeterQuestion"]
 
+NOTE: If you don't want OperatorFabric to check for user perimeter when responding to a card, you can add the variable "checkPerimeterForResponseCard" and set it to false, in the config file of cards-publication and in web-ui.json.
+
 == Send a question card
 
-The question card is like a usual card except that you have a the field "entitiesAllowedToRespond" to set with the entities allowed to respond to the card . If the user is not in the entity , he will not be able to respond . 
+The question card is like a usual card except that you have the field "entitiesAllowedToRespond" to set with the entities allowed to respond to the card. If the user is not in the entity, he will not be able to respond.
 ....
 
 ...

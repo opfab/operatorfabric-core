@@ -45,6 +45,7 @@ import { EntitiesService } from '@ofServices/entities.service';
 import { Entity } from '@ofModel/entity.model';
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {NgbModalRef} from "@ng-bootstrap/ng-bootstrap/modal/modal-ref";
+import {ConfigService} from "@ofServices/config.service";
 
 
 declare const templateGateway: any;
@@ -137,7 +138,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 private _appService: AppService,
                 private userService: UserService,
                 private entitiesService: EntitiesService,
-                private modalService: NgbModal) {
+                private modalService: NgbModal,
+                private configService: ConfigService) {
 
         this.store.select(selectAuthenticationState).subscribe(authState => {
             this._userContext = new UserContext(
@@ -424,7 +426,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private setIsActionEnabled() {
-        this.isActionEnabled = (this.isUserInEntityAllowedToRespond() && this.doesTheUserHavePermissionToRespond());
+        const checkPerimeterForResponseCard = this.configService.getConfigValue('checkPerimeterForResponseCard');
+
+        if (checkPerimeterForResponseCard === false)
+            this.isActionEnabled = this.isUserInEntityAllowedToRespond();
+        else
+            this.isActionEnabled = (this.isUserInEntityAllowedToRespond() && this.doesTheUserHavePermissionToRespond());
     }
 
     private setIsDeleteCardAllowed() {
