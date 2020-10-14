@@ -22,8 +22,6 @@ import {UserContext} from '@ofModel/user-context.model';
 import {skip, switchMap, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 
-import {User} from '@ofModel/user.model';
-
 
 @Component({
     selector: 'of-card-preview',
@@ -43,8 +41,8 @@ export class CardPreviewComponent implements OnInit, OnDestroy {
 
 
     constructor(private element: ElementRef, private businessconfigService: ProcessesService,
-        private handlebars: HandlebarsService, private sanitizer: DomSanitizer,
-        private store: Store<AppState>) {
+                private handlebars: HandlebarsService, private sanitizer: DomSanitizer,
+                private store: Store<AppState>) {
 
         this.store.select(selectAuthenticationState).subscribe(authState => {
             this._userContext = new UserContext(
@@ -66,18 +64,18 @@ export class CardPreviewComponent implements OnInit, OnDestroy {
         this.businessconfigService.queryProcess(this.card.process, this.card.processVersion)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(businessconfig => {
-                if (!!businessconfig) {
-                    const state = businessconfig.extractState(this.card);
-                    if (!!state) {
-                        // Take the first detail, new card preview only compatible with one detail per card
-                        this.detail = state.details[0];
+                    if (!!businessconfig) {
+                        const state = businessconfig.extractState(this.card);
+                        if (!!state) {
+                            // Take the first detail, new card preview only compatible with one detail per card
+                            this.detail = state.details[0];
+                        }
+                        this.initializeHrefsOfCssLink();
+                        this.initializeHandlebarsTemplates();
                     }
-                    this.initializeHrefsOfCssLink();
-                    this.initializeHandlebarsTemplates();
-                }
-            },
+                },
                 error => console.log(`something went wrong while trying to fetch process for ${this.card.process}`
-                            + ` with ${this.card.processVersion} version.`)
+                    + ` with ${this.card.processVersion} version.`)
             );
     }
 

@@ -8,28 +8,28 @@
  */
 
 
-
 import {Component, Input, OnInit} from '@angular/core';
 import {LightCard} from '@ofModel/light-card.model';
 import {Observable} from 'rxjs';
-import { ResizableComponent } from 'app/modules/utilities/components/resizable/resizable.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@ofStore/index';
-import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
+import {ResizableComponent} from 'app/modules/utilities/components/resizable/resizable.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 
 @Component({
-  selector: 'of-card-list',
-  templateUrl: './card-list.component.html',
-  styleUrls: ['./card-list.component.scss']
+    selector: 'of-card-list',
+    templateUrl: './card-list.component.html',
+    styleUrls: ['./card-list.component.scss']
 })
 export class CardListComponent extends ResizableComponent implements OnInit {
 
-  @Input() public lightCards: LightCard[];
-  @Input() public selection: Observable<string>;
+    @Input() public lightCards: LightCard[];
+    @Input() public selection: Observable<string>;
 
-  constructor() {
-    super();
-  }
+    constructor() {
+        super();
+    }
 
-  ngOnInit(): void { }
+    ngOnInit(): void {
+    }
 }

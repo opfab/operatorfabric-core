@@ -8,22 +8,22 @@
 * This file is part of the OperatorFabric project.
 */
 
-import {Component, Input, OnInit, OnDestroy, ViewChild, ElementRef} from '@angular/core';
-import { LineOfMonitoringResult } from '@ofModel/line-of-monitoring-result.model';
-import { TimeService } from '@ofServices/time.service';
-import { Moment } from 'moment-timezone';
-import { TranslateService } from '@ngx-translate/core';
-import { ExportService } from '@ofServices/export.service';
+import {Component, Input, OnDestroy} from '@angular/core';
+import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
+import {TimeService} from '@ofServices/time.service';
+import {Moment} from 'moment-timezone';
+import {TranslateService} from '@ngx-translate/core';
+import {ExportService} from '@ofServices/export.service';
 
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 @Component({
     selector: 'of-monitoring-table',
     templateUrl: './monitoring-table.component.html',
     styleUrls: ['./monitoring-table.component.scss']
 })
-export class MonitoringTableComponent implements OnDestroy{
+export class MonitoringTableComponent implements OnDestroy {
 
     @Input() result: LineOfMonitoringResult[];
     exportMonitoringData: Array<any> = [];
@@ -47,7 +47,7 @@ export class MonitoringTableComponent implements OnDestroy{
         this.exportMonitoringData = [];
         let time: string, businessPeriod: string, processName: any, title: any, summary: any, status: any;
 
-        this.result.forEach( (line: LineOfMonitoringResult) => {
+        this.result.forEach((line: LineOfMonitoringResult) => {
             if (typeof line !== undefined) {
                 time = this.displayTime(line.creationDateTime);
                 businessPeriod = this.displayTime(line.beginningOfBusinessPeriod).concat(this.displayTime(line.endOfBusinessPeriod));
@@ -78,7 +78,9 @@ export class MonitoringTableComponent implements OnDestroy{
 
         this.translate.get(key, interpolateParams)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((translate) => { translatedColomn = translate; });
+            .subscribe((translate) => {
+                translatedColomn = translate;
+            });
 
         return translatedColomn;
     }
