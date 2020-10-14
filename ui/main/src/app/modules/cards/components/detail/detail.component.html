@@ -25,7 +25,7 @@
   <div id="div-card-template" [hidden]="!active" [innerHtml]="htmlContent"></div>
 </div>
 
-<div class="my-3">
+<div class="my-3" *ngIf="areActionsDisplayed()">
   <div id='div-detail-msg' *ngIf='message.display'
         class="alert alert-dismissible fade show text-center {{message.color}}"
       role="alert">
