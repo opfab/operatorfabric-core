@@ -12,9 +12,6 @@ import {Component, Input, OnInit} from '@angular/core';
 import {LightCard} from '@ofModel/light-card.model';
 import {Observable} from 'rxjs';
 import {ResizableComponent} from 'app/modules/utilities/components/resizable/resizable.component';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 
 @Component({
     selector: 'of-card-list',
