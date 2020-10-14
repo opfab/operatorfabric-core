@@ -8,11 +8,10 @@
  */
 
 
-
 import {AfterViewInit, Component, ContentChildren, Input, OnChanges, QueryList, SimpleChanges} from '@angular/core';
-import {DetailComponent} from "../detail/detail.component";
-import {Card} from "@ofModel/card.model";
-import { ResizableComponent } from 'app/modules/utilities/components/resizable/resizable.component';
+import {DetailComponent} from '../detail/detail.component';
+import {Card} from '@ofModel/card.model';
+import {ResizableComponent} from 'app/modules/utilities/components/resizable/resizable.component';
 
 @Component({
     selector: 'of-details',
@@ -40,7 +39,7 @@ export class DetailsComponent extends ResizableComponent implements AfterViewIni
 
     private updateAsync() {
         setTimeout(() => {
-            let activeDetail = this.details.filter((tab) => tab.active)
+            const activeDetail = this.details.filter((tab) => tab.active);
             // if there is no active tab set, activate the first
             if (activeDetail.length === 0) {
                 this.selectDetail(this.details.first);
@@ -57,12 +56,12 @@ export class DetailsComponent extends ResizableComponent implements AfterViewIni
             detail.active = true;
     }
 
-    public get i18nPrefix(){
+    public get i18nPrefix() {
         return this._i18nPrefix;
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if(changes['card'].currentValue)
-            this._i18nPrefix = changes['card'].currentValue.process+'.'+changes['card'].currentValue.processVersion+'.';
+        if (changes['card'].currentValue)
+            this._i18nPrefix = changes['card'].currentValue.process + '.' + changes['card'].currentValue.processVersion + '.';
     }
 }

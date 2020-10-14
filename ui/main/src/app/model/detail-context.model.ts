@@ -9,11 +9,11 @@
 
 
 
-import {Card} from "@ofModel/card.model";
-import {UserContext} from "@ofModel/user-context.model";
+import {Card} from '@ofModel/card.model';
+import {UserContext} from '@ofModel/user-context.model';
 import { Response } from './processes.model';
 
-export class DetailContext{
+export class DetailContext {
     constructor(
         readonly card: Card,
         readonly userContext: UserContext,

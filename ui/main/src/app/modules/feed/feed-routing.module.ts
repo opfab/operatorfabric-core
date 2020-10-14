@@ -12,7 +12,7 @@ import {NgModule} from '@angular/core';
 import {FeedComponent} from './feed.component';
 import {RouterModule, Routes} from '@angular/router';
 import {DetailComponent} from '../cards/components/detail/detail.component';
-import {CardDetailsComponent} from '../cards/components/card-details/card-details.component';
+import {CloseableCardDetailsComponent} from '../cards/components/card-details/closeable-card-details.component';
 
 const routes: Routes = [
     {
@@ -24,11 +24,11 @@ const routes: Routes = [
                 children: [
                     {
                         path: '',
-                        component: CardDetailsComponent,
+                        component: CloseableCardDetailsComponent,
                     },
                     {
                         path: ':cid',
-                        component: CardDetailsComponent,
+                        component: CloseableCardDetailsComponent,
                         children: [
                             {
                                 path: 'details/:did',

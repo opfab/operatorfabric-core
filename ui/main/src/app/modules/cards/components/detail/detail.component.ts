@@ -99,7 +99,7 @@ const enum EntityMsgColor {
     templateUrl: './detail.component.html',
     styleUrls: ['./detail.component.scss']
 })
-export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewChecked,DoCheck {
+export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewChecked, DoCheck {
 
     @Input() detail: Detail;
     @Input() card: Card;
@@ -140,7 +140,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 private entitiesService: EntitiesService,
                 private modalService: NgbModal,
                 private configService: ConfigService) {
-
         this.store.select(selectAuthenticationState).subscribe(authState => {
             this._userContext = new UserContext(
                 authState.identifier,
@@ -518,7 +517,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 this._responseData = state.response;
                 this._acknowledgementAllowed = state.acknowledgementAllowed;
                 return this.handlebars.executeTemplate(this.detail.templateName,
-                    new DetailContext(this.card,this._userContext, this._responseData));
+                    new DetailContext(this.card, this._userContext, this._responseData));
             })
         )
             .subscribe(
