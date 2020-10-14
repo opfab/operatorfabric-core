@@ -294,7 +294,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 hasBeenAcknowledged: false,
                 hasBeenRead: false,
                 entityRecipients: this.card.entityRecipients,
-                externalRecipients: [this.card.publisher],
+                externalRecipients: this._responseData.externalRecipients,
                 title: this.card.title,
                 summary: this.card.summary,
                 data: formResult.formData,
