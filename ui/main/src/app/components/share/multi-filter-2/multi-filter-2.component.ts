@@ -24,7 +24,7 @@ export class MultiFilter2Component implements OnInit {
     @Input() public parentForm: FormGroup;
     @Input() public dropdownSettings = [];
     @Input() public filterPath: string;
-    @Input() public selectedItems = [];
+    @Input() public selectedItems ;
 
     constructor(private translateService: TranslateService) {
         this.parentForm = new FormGroup({
@@ -40,7 +40,7 @@ export class MultiFilter2Component implements OnInit {
             // should throws an error ?
             console.error('there is currently no values', this.values);
         }
-        this.selectedItems = this.dropdownList.map(item => item);
+        if (!this.selectedItems) this.selectedItems = this.dropdownList.map(item => item);
     }
 
     computeI18nLabelKey(): string {

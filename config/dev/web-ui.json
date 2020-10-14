@@ -1,5 +1,6 @@
 {
   "title": "OperatorFabric (Dev Mode)",
+  "checkPerimeterForResponseCard": true,
   "archive": {
     "filters": {
       "page": {

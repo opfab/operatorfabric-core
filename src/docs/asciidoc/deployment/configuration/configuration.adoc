@@ -95,6 +95,18 @@ The user service has these specific properties :
 |===
 
 
+==== Cards-publication service
+
+The cards-publication service has this specific property :
+
+|===
+|name|default|mandatory?|Description
+
+|checkPerimeterForResponseCard|true|no|If false, OperatorFabric will not check that a user has write rights on a process/state to respond to a card
+
+|===
+
+
 include::web-ui_configuration.adoc[leveloffset=+1]
 
 
