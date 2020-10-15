@@ -35,8 +35,10 @@ export class EntitiesService extends ErrorService implements CrudService {
     this.entitiesUrl = `${environment.urls.entities}`;
   }
   deleteById(id: string) {
-    const url = `${this.entitiesUrl}/` + id;
-    return this.httpClient.delete(url);
+      const url = `${this.entitiesUrl}/entities/${id}`;
+    return this.httpClient.delete(url).pipe(
+      catchError((error: Response) => this.handleError(error))
+    );
   }
 
   getAllEntities(): Observable<Entity[]> {

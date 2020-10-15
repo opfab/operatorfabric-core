@@ -1,7 +1,7 @@
 <!-- Modal-content -->
 <div class="modal-header bg-dark">
-  <h5 class="modal-title" *ngIf="user">{{user.login}}</h5>
-  <h5 class="modal-title" *ngIf="!user" translate>admin.input.user.add</h5>
+  <h5 class="modal-title" *ngIf="row">{{row.login}}</h5>
+  <h5 class="modal-title" *ngIf="!row" translate>admin.input.user.add</h5>
   <button (click)="activeModal.dismiss('Cross click')" type="button" class="close" data-dismiss="modal"
     aria-label="Close">
     <span aria-hidden="true">&times;</span>
@@ -10,7 +10,7 @@
 <div class="border border-primary p-4 bg-dark">
   <form [formGroup]="form">
     <div class="form-group">
-      <div *ngIf="!user">
+      <div *ngIf="!row">
         <mat-form-field appearance="fill" color="primary">
           <mat-label for="login" translate>admin.input.user.login</mat-label>
           <input matInput  formControlName="login" name="login" id="login" type="text"
@@ -61,8 +61,8 @@
 <div class="modal-footer bg-dark">
   <button type="button" (click)="activeModal.dismiss('Cross click')" class="btn btn-secondary" data-dismiss="modal"
     translate>admin.input.user.close</button>
-  <button [disabled]="!form.valid" *ngIf="!user" (click)="updateUser()" class="btn btn-primary"
+  <button [disabled]="!form.valid" *ngIf="!row" (click)="update()" class="btn btn-primary"
     translate>admin.input.user.add</button>
-  <button [disabled]="!form.valid" *ngIf="user" (click)="updateUser()" class="btn btn-primary"
+  <button [disabled]="!form.valid" *ngIf="row" (click)="update()" class="btn btn-primary"
     translate>admin.input.user.save</button>
 </div>

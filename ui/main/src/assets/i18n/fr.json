@@ -204,6 +204,14 @@
   },
   "admin": {
     "input": {
+       "group": {
+         "delete": "Voulez vous vraiment supprimer le group",
+         "add":"Ajouter un nouveau groupe"
+      },
+      "entity": {
+         "delete": "Voulez vous vraiment supprimer l'entité",
+         "add":"Ajouter une nouvelle entité"
+      },
       "user": {
         "login": "Identifiant",
         "lastname": "Nom",
@@ -215,7 +223,7 @@
         "delete": "Supprimer",
         "save": "Sauvegarder les changements",
         "close": "Fermer",
-        "cancel": "Abondonner",
+        "cancel": "Abandonner",
         "confirm":"Confirmez..",
         "user":"utilisateur",
         "filter": "filtrer par ",
@@ -223,20 +231,33 @@
       },
       "delete" :"Voulez vous vraiment supprimer l'utilisateur",
       "login": {
-        "required": "L'identifiant est obligatoire .",
-        "minLength": "L'identifiant doit avoir au moins 4 caractères .",
-        "maxLength": "L'identifiant doit avoir au maximum 20 caractères .",
+        "required": "L'identifiant est obligatoire.",
+        "minLength": "L'identifiant doit avoir au moins 4 caractères.",
+        "maxLength": "L'identifiant doit avoir au maximum 20 caractères.",
         "alreadyTaken": "Cet identifiant est déjà pris."
       },
       "firstname": {
-        "required": "Le prénom est obligatoire .",
-        "maxLength": "Le prénom doit avoir  au maximum 20 caractères ."
+        "required": "Le prénom est obligatoire.",
+        "maxLength": "Le prénom doit avoir  au maximum 20 caractères."
       },
       "lastname": {
-        "required": "Le nom est obligatoire .",
-        "maxLength": "Le nom doit avoir  au maximum 20 caractères ."
+        "required": "Le nom est obligatoire.",
+        "maxLength": "Le nom doit avoir  au maximum 20 caractères."
       },
-      "lines": "lignes"
+     "id": {
+        "required": "L'identifiant est obligatoire.",
+        "minLength": "L'identifiant doit avoir au moins 2 caractères.",
+        "maxLength": "L'identifiant doit avoir au maximum 20 caractères.",
+        "alreadyTaken": "Cet identifiant est déjà pris.",
+        "label":"Id"
+      },
+      "name": {
+        "required": "Le nom est obligatoire.",
+        "maxLength": "Le nom doit avoir  au maximum 20 caractères.",
+        "label":"Nom"
+      },
+      "description": "Description",
+      "lines": "lines"
     },
     "tabs": {
       "users": "Gestion des utilisateurs",
