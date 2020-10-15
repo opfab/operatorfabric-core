@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles(profiles = {"native", "test"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class UpdateCardCommandHandlerTest {
+class UpdateCardCommandHandlerShould {
     CardProcessingService cardProcessingService;
     ObjectMapper objectMapper;
     UpdateCardCommandHandler updateCardCommandHandler;
