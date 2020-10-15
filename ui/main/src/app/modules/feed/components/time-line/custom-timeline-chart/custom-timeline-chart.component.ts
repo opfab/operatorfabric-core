@@ -259,13 +259,24 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       if (!card.parentCardUid) {// is not child card
         if (card.timeSpans && card.timeSpans.length > 0) {
           card.timeSpans.forEach(timeSpan => {
-            const myCardTimelineTimespans = {
-              date: timeSpan.start,
-              id: card.id,
-              severity: card.severity, process: card.process,
-              processVersion: card.processVersion, summary: card.title
-            };
-            myCardsTimeline.push(myCardTimelineTimespans);
+            if (!!timeSpan.start) {
+              const myCardTimeline = {
+                date: timeSpan.start,
+                id: card.id,
+                severity: card.severity, process: card.process,
+                processVersion: card.processVersion, summary: card.title
+              };
+              myCardsTimeline.push(myCardTimeline);
+            }
+            if (!!timeSpan.end) {
+              const myCardTimeline = {
+                date: timeSpan.end,
+                id: card.id,
+                severity: card.severity, process: card.process,
+                processVersion: card.processVersion, summary: card.title
+              };
+              myCardsTimeline.push(myCardTimeline);
+            }
           });
         } else {
           const myCardTimeline = {
