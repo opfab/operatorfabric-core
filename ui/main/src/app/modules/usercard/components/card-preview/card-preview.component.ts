@@ -115,6 +115,9 @@ export class CardPreviewComponent implements OnInit, OnDestroy {
                     setTimeout(() => { // wait for DOM rendering
                         this.reinsertScripts();
                     }, 10);
+                }, () =>  {
+                    console.log('WARNING impossible to load template ', this.detail.templateName);
+                    this._htmlContent = this.sanitizer.bypassSecurityTrustHtml('');
                 }
             );
     }
