@@ -170,10 +170,13 @@ export class UserCardComponent implements OnDestroy, OnInit {
             perimeter => {
                 if ((perimeter.process === process.id) && this.userCanSendCard(perimeter)) {
                     const state = process.states[perimeter.state];
+                    if (!!state) {
                     const label = !!state.name ? (new I18n(this.getI18nPrefixFromProcess(process)
                         + state.name)) : perimeter.state;
                     const stateEntry = { value: perimeter.state, label: label };
                     statesList.push(stateEntry);
+                    } else console.log('WARNING : state', perimeter.state , 'is present in perimeter for process'
+                                    , process.id , 'but not in process definition');
 
                 }
             });
