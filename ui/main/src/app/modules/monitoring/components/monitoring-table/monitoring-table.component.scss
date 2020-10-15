@@ -21,7 +21,7 @@ table {
   clip-path: circle();
 }
 
-// not displayed by still read by VoiceOver
+// not displayed but still read by VoiceOver
 .hidden-caption {
   visibility: collapse;
 }
@@ -35,4 +35,19 @@ table {
 }
 .export-btn {
   float: right;
+}
+
+.modal-body{
+  background-color: var(--opfab-lightcard-detail-bgcolor);
+  color: var(--opfab-lightcard-detail-textcolor);
+}
+
+
+.modal-header{
+  background-color: var(--opfab-lightcard-detail-bgcolor);
+  color: var(--opfab-lightcard-detail-textcolor);
+}
+
+.btn{
+  color: var(--opfab-lightcard-detail-textcolor);
 }

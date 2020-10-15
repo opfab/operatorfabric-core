@@ -10,42 +10,43 @@
 
 import {
     AfterViewChecked,
-    DoCheck,
     Component,
+    DoCheck,
     ElementRef,
     Input,
     OnChanges,
     OnDestroy,
     OnInit,
-    ViewChild, TemplateRef
+    TemplateRef,
+    ViewChild
 } from '@angular/core';
-import { Card, Detail } from '@ofModel/card.model';
-import { ProcessesService } from '@ofServices/processes.service';
-import { HandlebarsService } from '../../services/handlebars.service';
-import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
-import { Response } from '@ofModel/processes.model';
-import { DetailContext } from '@ofModel/detail-context.model';
-import { Store } from '@ngrx/store';
-import { AppState } from '@ofStore/index';
-import { selectAuthenticationState } from '@ofSelectors/authentication.selectors';
-import { selectGlobalStyleState } from '@ofSelectors/global-style.selectors';
-import { UserContext } from '@ofModel/user-context.model';
-import { map, skip, switchMap, take, takeUntil } from 'rxjs/operators';
-import { fetchLightCard, selectLastCards } from '@ofStore/selectors/feed.selectors';
-import { CardService } from '@ofServices/card.service';
-import { Observable, Subject, zip } from 'rxjs';
-import { LightCard, Severity } from '@ofModel/light-card.model';
-import { AppService, PageType } from '@ofServices/app.service';
-import { User } from '@ofModel/user.model';
-import { Map } from '@ofModel/map';
-import { RightsEnum, userRight } from '@ofModel/userWithPerimeters.model';
-import { UpdateALightCard } from '@ofStore/actions/light-card.actions';
-import { UserService } from '@ofServices/user.service';
-import { EntitiesService } from '@ofServices/entities.service';
-import { Entity } from '@ofModel/entity.model';
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {NgbModalRef} from "@ng-bootstrap/ng-bootstrap/modal/modal-ref";
-import {ConfigService} from "@ofServices/config.service";
+import {Card, Detail} from '@ofModel/card.model';
+import {ProcessesService} from '@ofServices/processes.service';
+import {HandlebarsService} from '../../services/handlebars.service';
+import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
+import {Response} from '@ofModel/processes.model';
+import {DetailContext} from '@ofModel/detail-context.model';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
+import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
+import {UserContext} from '@ofModel/user-context.model';
+import {map, skip, switchMap, take, takeUntil} from 'rxjs/operators';
+import {fetchLightCard, selectLastCards} from '@ofStore/selectors/feed.selectors';
+import {CardService} from '@ofServices/card.service';
+import {Observable, Subject, zip} from 'rxjs';
+import {LightCard, Severity} from '@ofModel/light-card.model';
+import {AppService, PageType} from '@ofServices/app.service';
+import {User} from '@ofModel/user.model';
+import {Map} from '@ofModel/map';
+import {RightsEnum, userRight} from '@ofModel/userWithPerimeters.model';
+import {UpdateALightCard} from '@ofStore/actions/light-card.actions';
+import {UserService} from '@ofServices/user.service';
+import {EntitiesService} from '@ofServices/entities.service';
+import {Entity} from '@ofModel/entity.model';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
+import {ConfigService} from '@ofServices/config.service';
 
 
 declare const templateGateway: any;
@@ -89,6 +90,7 @@ const enum ResponseMsgColor {
     GREEN = 'alert-success',
     RED = 'alert-danger'
 }
+
 const enum EntityMsgColor {
     GREEN = 'green',
     ORANGE = '#ff6600'
@@ -230,8 +232,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.checkLttdExpired();
     }
 
-    checkLttdExpired():void {
-        this.lttdExpiredIsTrue =  (this.card.lttd != null && Math.floor((this.card.lttd - new Date().getTime()) / 1000) <= 0);
+    checkLttdExpired(): void {
+        this.lttdExpiredIsTrue = (this.card.lttd != null && Math.floor((this.card.lttd - new Date().getTime()) / 1000) <= 0);
     }
 
     get i18nPrefix() {
@@ -418,7 +420,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 const entityName = this.getEntityName(entity);
                 if (entityName) {
                     this._listEntitiesToRespond.push(
-                        { name: entityName.name, color: this.checkEntityAnswered(entity) ? EntityMsgColor.GREEN : EntityMsgColor.ORANGE });
+                        {
+                            name: entityName.name,
+                            color: this.checkEntityAnswered(entity) ? EntityMsgColor.GREEN : EntityMsgColor.ORANGE
+                        });
                 }
             });
         }
@@ -444,7 +449,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
 
     private doesTheUserHavePermissionToRespond(): boolean {
-        let permission = false ;
+        let permission = false;
         this.userService.getCurrentUserWithPerimeters().computedPerimeters.forEach(perim => {
             if ((perim.process === this.card.process) && (perim.state === this._responseData.state)
                 && (this.compareRightAction(perim.rights, RightsEnum.Write)
@@ -460,7 +465,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
        2nd check : the card has been sent by an entity of the user connected
        3rd check : the user has the Write access to the process/state of the card */
     private doesTheUserHavePermissionToDeleteCard(): boolean {
-        let   permission = false;
+        let permission = false;
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
 
         if ((this.card.publisherType === 'ENTITY') && (userWithPerimeters.userData.entities.includes(this.card.publisher))) {
@@ -579,5 +584,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
+    }
+
+    areActionsDisplayed(): boolean {
+        const currentPageType = this._appService.pageType;
+        return currentPageType !== PageType.MONITORING && currentPageType !== PageType.CALENDAR;
     }
 }

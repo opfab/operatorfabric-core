@@ -8,7 +8,7 @@
 * This file is part of the OperatorFabric project.
 */
 
-import {Component, Input, OnDestroy} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
 import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
 import {TimeService} from '@ofServices/time.service';
 import {Moment} from 'moment-timezone';
@@ -17,6 +17,11 @@ import {ExportService} from '@ofServices/export.service';
 
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
+import {SelectLightCard} from '@ofActions/light-card.actions';
+import {LoadCard} from '@ofActions/card.actions';
+import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
 
 @Component({
     selector: 'of-monitoring-table',
@@ -25,12 +30,19 @@ import {Subject} from 'rxjs';
 })
 export class MonitoringTableComponent implements OnDestroy {
 
+    @ViewChild('cardDetail', null) cardDetailTemplate: ElementRef;
     @Input() result: LineOfMonitoringResult[];
     exportMonitoringData: Array<any> = [];
     unsubscribe$: Subject<void> = new Subject<void>();
+    modalRef: NgbModalRef;
 
 
-    constructor(readonly timeService: TimeService, private translate: TranslateService, private exportService: ExportService) {
+    constructor(readonly timeService: TimeService
+                , private translate: TranslateService
+                , private exportService: ExportService
+                , private store: Store<AppState>
+                , private modalService: NgbModal
+    ) {
     }
 
 
@@ -90,5 +102,14 @@ export class MonitoringTableComponent implements OnDestroy {
         this.unsubscribe$.complete();
     }
 
+    selectCard(info) {
+        this.store.dispatch(new SelectLightCard({ selectedCardId: info }));
+        this.store.dispatch(new LoadCard({ id: info }));
+        const options: NgbModalOptions = {
+            size: 'fullscreen'
+        };
+        this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
+
+    }
 
 }
