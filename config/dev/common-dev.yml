@@ -21,13 +21,13 @@ security:
     enabled: false
 
 operatorfabric:
+  businessLogActivated: true
   security:
     oauth2:
       client-id: opfab-client
     jwt:
       login-claim: preferred_username
       expire-claim: exp
-  businessLogActivated: true
 
 ### activate the folLowing if you want the entities of the user to came from the token and not mongoDB   
 ### entitiesIdClaim is the name of the field in the token     
