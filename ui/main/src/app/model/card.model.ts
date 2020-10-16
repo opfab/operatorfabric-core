@@ -33,6 +33,8 @@ export class Card {
         readonly summary?: I18n,
         readonly data?: any,
         readonly details?: Detail[],
+        readonly userRecipients?: string[],
+        readonly groupRecipients?: string[],
         readonly entityRecipients?: string[],
         readonly externalRecipients?: string[],
         readonly entitiesAllowedToRespond?: string[],
