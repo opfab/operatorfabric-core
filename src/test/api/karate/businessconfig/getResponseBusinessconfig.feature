@@ -7,7 +7,7 @@ Feature: getResponseBusinessconfig
     * def signInAsTSO = call read('../common/getToken.feature') { username: 'tso1-operator'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
-    * def process = 'test_action'
+    * def process = 'processAction'
     * def state = 'response_full'
     * def version = 1
 
@@ -18,7 +18,7 @@ Feature: getResponseBusinessconfig
       When method get
       Then print response
       And status 200
-      And match response == {"btnText":{"parameters":null,"key":"action.text"},"btnColor":"RED","lock":true,"state":"responseState"}
+      And match response == {"btnText":{"parameters":null,"key":"action.text"},"btnColor":"RED","lock":true,"state":"responseState","externalRecipients":["externalRecipient1","externalRecipient2"]}
 
 
 

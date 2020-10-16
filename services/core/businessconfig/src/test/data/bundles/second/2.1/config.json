@@ -11,6 +11,15 @@
       "states": {
         "firstState": {
           "name": "process.title",
+          "response": {
+            "lock": true,
+            "state": "responseState",
+            "btnColor": "GREEN",
+            "btnText": {
+              "key": "question.button.text"
+            },
+            "externalRecipients": ["externalRecipient1", "externalRecipient2"]
+          },
           "details": [
             {
               "title": {

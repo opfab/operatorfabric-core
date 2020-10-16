@@ -32,7 +32,8 @@
         "btnColor": "RED",
         "btnText": {
           "key": "action.text"
-        }
+        },
+        "externalRecipients": ["externalRecipient1", "externalRecipient2"]
       },
       "details": [
         {
