@@ -76,7 +76,7 @@ server {
       return 204;
     }
     proxy_set_header Host $http_host;
-    proxy_pass http://172.17.0.1:2100;
+    proxy_pass http://${MY_DOCKER_HOST}:2100;
   }
 
   location /users {
@@ -93,7 +93,7 @@ server {
       return 204;
     }
     proxy_set_header Host $http_host;
-    proxy_pass http://172.17.0.1:2103/users;
+    proxy_pass http://${MY_DOCKER_HOST}:2103/users;
   }
 
   location ~ "^/users/(.*)" {
@@ -110,7 +110,7 @@ server {
       return 204;
     }
     proxy_set_header Host $http_host;
-    proxy_pass http://172.17.0.1:2103/$1;
+    proxy_pass http://${MY_DOCKER_HOST}:2103/$1;
   }
 
   location /groups {
@@ -127,7 +127,7 @@ server {
       return 204;
     }
     proxy_set_header Host $http_host;
-    proxy_pass http://172.17.0.1:2103/groups;
+    proxy_pass http://${MY_DOCKER_HOST}:2103/groups;
   }
 
   location ~ "^/groups/(.*)" {
@@ -144,7 +144,7 @@ server {
       return 204;
     }
     proxy_set_header Host $http_host;
-    proxy_pass http://172.17.0.1:2103/$1;
+    proxy_pass http://${MY_DOCKER_HOST}:2103/$1;
   }
 
   location /entities {
@@ -161,7 +161,7 @@ server {
       return 204;
     }
     proxy_set_header Host $http_host;
-    proxy_pass http://172.17.0.1:2103/entities;
+    proxy_pass http://${MY_DOCKER_HOST}:2103/entities;
   }
 
   location ~ "^/entities/(.*)" {
@@ -178,7 +178,7 @@ server {
       return 204;
     }
     proxy_set_header Host $http_host;
-    proxy_pass http://172.17.0.1:2103/$1;
+    proxy_pass http://${MY_DOCKER_HOST}:2103/$1;
   }
 
 
@@ -196,7 +196,7 @@ server {
       return 204;
     }
     proxy_set_header Host $http_host;
-    proxy_pass http://172.17.0.1:2104/;
+    proxy_pass http://${MY_DOCKER_HOST}:2104/;
   }
   location  /cardspub/cards/userCard {
     # enables `ng serve` mode
@@ -212,7 +212,7 @@ server {
       return 204;
     }
     proxy_set_header Host $http_host;
-    proxy_pass http://172.17.0.1:2102/cards/userCard;
+    proxy_pass http://${MY_DOCKER_HOST}:2102/cards/userCard;
   }
   location  /cardspub/cards/userAcknowledgement {
     # enables `ng serve` mode
@@ -228,7 +228,7 @@ server {
       return 204;
     }
     proxy_set_header Host $http_host;
-    proxy_pass http://172.17.0.1:2102/cards/userAcknowledgement;
+    proxy_pass http://${MY_DOCKER_HOST}:2102/cards/userAcknowledgement;
   }
   location /archives {
     # enables `ng serve` mode
@@ -244,7 +244,7 @@ server {
       return 204;
     }
     proxy_set_header Host $http_host;
-    proxy_pass http://172.17.0.1:2104;
+    proxy_pass http://${MY_DOCKER_HOST}:2104;
   }
   error_page 500 502 503 504 /50x.html;
   location = /50x.html {
