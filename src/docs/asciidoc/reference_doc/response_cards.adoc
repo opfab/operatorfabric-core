@@ -59,6 +59,7 @@ A card can have a response only if it's in a process/state that is configured fo
       "color": "#8bcdcd",
       "response": {
         "state": "responseState",
+        "externalRecipients":["externalRecipient1", "externalRecipient2"],
         "btnColor": "GREEN",
         "btnText": {
           "key": "question.button.text"
@@ -84,6 +85,7 @@ A card can have a response only if it's in a process/state that is configured fo
 We define here a state name "questionState" with a response field. Now, if we send a card with process "defaultProcess" and state "questionState" , the user will have the possibility to respond if he has the good privileges. 
 
 - The field "state" in the response field is used to define the state to use for the response (the child card).
+- The field "externalRecipients" define the recipients of the response card. These recipients are keys referenced in the config file of cards-publication service, in "externalRecipients-url" element. This field is optional.
 - The field "btnColor" define the color of the submit button for the response, it is optional and there is 3 possibilities : RED , GREEN , YELLOW 
 - The field "btnText"is the i18n key of the title of the submit button, it is optional.
 

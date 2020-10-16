@@ -97,7 +97,8 @@ export class Response {
         readonly lock?: boolean,
         readonly state?: string,
         readonly btnColor?: ResponseBtnColorEnum,
-        readonly btnText?: I18n
+        readonly btnText?: I18n,
+        readonly externalRecipients?: string[]
     ) {
     }
 }

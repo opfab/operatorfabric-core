@@ -12,6 +12,10 @@ package org.lfenergy.operatorfabric.businessconfig.model;
 
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * <p>Please use builder to instantiate</p>
  *
@@ -31,4 +35,17 @@ public class ResponseData implements Response {
     private String state;
     private ResponseBtnColorEnum btnColor;
     private I18n btnText;
+    private List<String> externalRecipients;
+
+    @Override
+    public void setExternalRecipients(List<String> externalRecipients) {
+        this.externalRecipients = new ArrayList<>(externalRecipients);
+    }
+
+    @Override
+    public List<String> getExternalRecipients() {
+        if (externalRecipients == null)
+            return Collections.emptyList();
+        return externalRecipients;
+    }
 }
