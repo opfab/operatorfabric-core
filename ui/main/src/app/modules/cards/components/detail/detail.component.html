@@ -8,79 +8,95 @@
 
 
 
-<link *ngFor="let cssUrl of hrefsOfCssLink" [href]="cssUrl" rel="stylesheet" type="text/css">
-<div class="opfab-card-detail-border">
-  <div  *ngIf='responseDataExists'>
-    <div style="font-size: 5pt;"> <br/></div>
-    <table>
-      <tr>
-        <td> <span class="h4" translate>response.answers</span> : </td>
-        <td *ngFor="let entity of listEntitiesToRespond; let isLast = last"
-          [ngStyle]="{'color': entity.color,'border-right': (!isLast) ? '3px solid white':'','width': '150px','font-size': '20px','text-align': 'center'}">
-          {{entity.name}}
-        </td>
-      </tr>
-    </table>
+
+<div calcHeightDirective parentId="parentFeedContent" fixedHeightClass="fixed-height-details" calcHeightClass="calc-height-details">
+  <ul class="nav nav-tabs fixed-height-details opfab-line-undertab">
+    <li class="nav-item opfab-tab " data-toggle="tab">
+      <span class="nav-link opfab-tab" translate [translateParams]="cardState.details[0].title.parameters">{{i18nPrefix+cardState.details[0].title.key}}</span> 
+    </li>
+  </ul>
+
+  <div class="calc-height-details">
+   <link *ngFor="let cssUrl of hrefsOfCssLink" [href]="cssUrl" rel="stylesheet" type="text/css">
+
+    <div class="opfab-card-detail-border">
+    
+      <div  *ngIf='responseDataExists'  style="text-align: right;">
+       
+
+            <span translate>response.answers</span> :
+            <span *ngFor="let entity of listEntitiesToRespond; let isLast = last"
+              [ngStyle]="{'color': entity.color,'border-right': (!isLast) ? '3px solid white':'','text-align': 'center'}">
+              &nbsp; {{entity.name}} &nbsp;
+            </span>
+
+      </div>
+
+      <div id="div-card-template" [innerHtml]="htmlContent"></div>
+    </div>
+    
+    <div class="my-3" *ngIf="areActionsDisplayed()">
+      <div id='div-detail-msg' *ngIf='message.display'
+            class="alert alert-dismissible fade show text-center {{message.color}}"
+          role="alert">
+        <span [innerHTML]='message.text' translate></span>
+        <button type="button" class="close" aria-label="Close" (click)="message.display = false">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    
+      <div id='div-detail-btn' *ngIf="isButtonsActivated" class="mb-3">
+        <button class="btn mr-3 {{btnColor}}" style="float: right;" *ngIf='responseDataExists'
+          translate [translateParams]="responseDataParameters" [disabled]='lttdExpiredIsTrue || !isActionEnabled'
+                (click)='submitResponse()'>{{btnText}}</button>
+    
+        <button class="btn mr-3 {{btnAckColor}}" style="float: right;" *ngIf='isAcknowledgementAllowed' translate
+          (click)='acknowledge()'>{{btnAckText}}</button>
+    
+        <button class="btn mr-3 btn-danger" style="float: right;" *ngIf='isDeleteCardAllowed' translate
+                (click)='open(doYouReallyWantToDeleteCardPopup)'>{{'button.delete'}}</button>
+      </div>
+    
+      <ng-template #doYouReallyWantToDeleteCardPopup let-modal>
+        <div class="modal-header">
+          <h4 translate> userCard.deleteCard.doYouReallyWant </h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-center">
+          <button type="button" class="btn mr-3 btn-secondary" (click)="declineDeleteCard()" translate>button.cancel</button>
+          <button type="button" class="btn mr-3 btn-danger " (click)="confirmDeleteCard()" translate>button.delete</button>
+        </div>
+      </ng-template>
+    
+      <ng-template #cardDeletedWithNoErrorPopup let-modal>
+        <div class="modal-header text-center">
+          <h4 class="modal-title w-100" translate> userCard.deleteCard.cardDeletedWithNoError </h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-center">
+          <button type="button" class="btn btn-success" (click)="modal.dismiss()" translate>button.ok</button>
+        </div>
+      </ng-template>
+    
+      <ng-template #impossibleToDeleteCardPopup let-modal>
+        <div class="modal-header text-center">
+          <h4 class="modal-title w-100" translate> userCard.deleteCard.error.impossibleToDeleteCard </h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-center">
+          <button type="button" class="btn btn-danger" (click)="modal.dismiss()" translate>button.ok</button>
+        </div>
+      </ng-template>
+    </div>
+  
+
   </div>
-  <div id="div-card-template" [hidden]="!active" [innerHtml]="htmlContent"></div>
 </div>
 
-<div class="my-3" *ngIf="areActionsDisplayed()">
-  <div id='div-detail-msg' *ngIf='message.display'
-        class="alert alert-dismissible fade show text-center {{message.color}}"
-      role="alert">
-    <span [innerHTML]='message.text' translate></span>
-    <button type="button" class="close" aria-label="Close" (click)="message.display = false">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
 
-  <div id='div-detail-btn' *ngIf="isButtonsActivated" class="mb-3">
-    <button class="btn mr-3 {{btnColor}}" style="float: right;" *ngIf='responseDataExists'
-      translate [translateParams]="responseDataParameters" [disabled]='lttdExpiredIsTrue || !isActionEnabled'
-            (click)='submitResponse()'>{{btnText}}</button>
-
-    <button class="btn mr-3 {{btnAckColor}}" style="float: right;" *ngIf='isAcknowledgementAllowed' translate
-      (click)='acknowledge()'>{{btnAckText}}</button>
-
-    <button class="btn mr-3 btn-danger" style="float: right;" *ngIf='isDeleteCardAllowed' translate
-            (click)='open(doYouReallyWantToDeleteCardPopup)'>{{'button.delete'}}</button>
-  </div>
-
-  <ng-template #doYouReallyWantToDeleteCardPopup let-modal>
-    <div class="modal-header">
-      <h4 translate> userCard.deleteCard.doYouReallyWant </h4>
-      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body text-center">
-      <button type="button" class="btn mr-3 btn-secondary" (click)="declineDeleteCard()" translate>button.cancel</button>
-      <button type="button" class="btn mr-3 btn-danger " (click)="confirmDeleteCard()" translate>button.delete</button>
-    </div>
-  </ng-template>
-
-  <ng-template #cardDeletedWithNoErrorPopup let-modal>
-    <div class="modal-header text-center">
-      <h4 class="modal-title w-100" translate> userCard.deleteCard.cardDeletedWithNoError </h4>
-      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body text-center">
-      <button type="button" class="btn btn-success" (click)="modal.dismiss()" translate>button.ok</button>
-    </div>
-  </ng-template>
-
-  <ng-template #impossibleToDeleteCardPopup let-modal>
-    <div class="modal-header text-center">
-      <h4 class="modal-title w-100" translate> userCard.deleteCard.error.impossibleToDeleteCard </h4>
-      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body text-center">
-      <button type="button" class="btn btn-danger" (click)="modal.dismiss()" translate>button.ok</button>
-    </div>
-  </ng-template>
-</div>
