@@ -1,6 +1,5 @@
 package org.lfenergy.operatorfabric.cards.publication.kafka.command;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.avro.CardCommand;
@@ -10,16 +9,12 @@ import org.lfenergy.operatorfabric.cards.publication.services.CardProcessingServ
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
-@Component
 @Slf4j
+@RequiredArgsConstructor
+@Component
 public class UpdateCardCommandHandler extends BaseCommandHandler implements CommandHandler {
 
     private final CardProcessingService cardProcessingService;
-
-    public UpdateCardCommandHandler(CardProcessingService cardProcessingService, ObjectMapper objectMapper) {
-        super(objectMapper);
-        this.cardProcessingService = cardProcessingService;
-    }
 
     @Override
     public CommandType getCommandType() {
