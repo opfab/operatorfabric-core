@@ -18,7 +18,7 @@ import { I18n } from '@ofModel/i18n.model';
 import {  Subject } from 'rxjs';
 import { Process } from '@ofModel/processes.model';
 import { TimeService } from '@ofServices/time.service';
-import { Severity } from '@ofModel/light-card.model';
+import { Severity, TimeSpan } from '@ofModel/light-card.model';
 import { Guid } from 'guid-typescript';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
@@ -45,6 +45,7 @@ class Message {
 export class UserCardComponent implements OnDestroy, OnInit {
 
     messageForm: FormGroup;
+    recipientForm: FormGroup;
     messageAfterSendingCard: string;
 
 
@@ -111,9 +112,13 @@ export class UserCardComponent implements OnDestroy, OnInit {
             state: new FormControl(''),
             startDate: new FormControl(''),
             endDate: new FormControl(''),
-            comment: new FormControl(''),
+            comment: new FormControl('')
+        });
+
+        this.recipientForm = new FormGroup({
             entities: new FormControl([])
         });
+
 
         this.changeSeverityToDefaultValue();
         this.changeStatesWhenSelectProcess();
@@ -165,10 +170,13 @@ export class UserCardComponent implements OnDestroy, OnInit {
             perimeter => {
                 if ((perimeter.process === process.id) && this.userCanSendCard(perimeter)) {
                     const state = process.states[perimeter.state];
-                    const label = !!state.name ? (new I18n(this.getI18nPrefixFromProcess(process)
-                        + state.name)) : perimeter.state;
-                    const stateEntry = { value: perimeter.state, label: label };
-                    statesList.push(stateEntry);
+                    if (!!state) {
+                        const label = !!state.name ? (new I18n(this.getI18nPrefixFromProcess(process)
+                            + state.name)) : perimeter.state;
+                        const stateEntry = { value: perimeter.state, label: label };
+                        statesList.push(stateEntry);
+                    } else console.log('WARNING : state', perimeter.state , 'is present in perimeter for process'
+                                    , process.id , 'but not in process definition');
 
                 }
             });
@@ -193,7 +201,6 @@ export class UserCardComponent implements OnDestroy, OnInit {
                     return processDefinition.id === process;
                 });
                 this.messageForm.get('state').setValue(this.selectedState);
-                this.loadTemplate();
             }
         });
     }
@@ -217,6 +224,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
                     setTimeout(() => { // wait for DOM rendering
                         this.reinsertScripts();
                     }, 10);
+                }, () =>  {
+                    console.log('WARNING impossible to load template ',templateName);
+                    this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
                 }
                 );
         } else this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
@@ -240,6 +250,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     onSubmitForm(template: TemplateRef<any>) {
         const formValue = this.messageForm.value;
+        const recipients = this.recipientForm.value['entities'];
         const processFormVal = formValue['process'];
         const selectedProcess = this.processesDefinition.find(process => {
             return process.id === processFormVal;
@@ -269,12 +280,12 @@ export class UserCardComponent implements OnDestroy, OnInit {
         }
 
         const entities = new Array();
-        if (formValue['entities'].length < 1) {
+        if (recipients.length < 1) {
             this.errorMessage.display = true;
             this.errorMessage.text = 'userCard.error.noRecipientSelected';
             return;
         } else {
-            formValue['entities'].forEach(entity => entities.push(entity.id));
+            recipients.forEach(entity => entities.push(entity.id));
         }
 
         let startDate = this.messageForm.get('startDate').value;
@@ -287,6 +298,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
         const title = (!!specificInformation.card.title) ? specificInformation.card.title : 'UNDEFINED';
         const summary = (!!specificInformation.card.summary) ? specificInformation.card.summary : 'UNDEFINED';
+
+        let timeSpans = [];
+        if  (!!specificInformation.viewCardInAgenda) timeSpans = [new TimeSpan(startDate , endDate )];
 
 
         const generatedId = Guid.create().toString();
@@ -309,12 +323,13 @@ export class UserCardComponent implements OnDestroy, OnInit {
             externalRecipients: null,
             title: title,
             summary: summary,
+            timeSpans : timeSpans,
             data: specificInformation.card.data,
         } as Card;
 
 
         const options: NgbModalOptions = {
-            size: 'lg'
+            size: 'fullscreen'
         };
         this.errorMessage.display = false;
         this.modalRef = this.modalService.open(template, options);

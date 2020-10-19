@@ -24,9 +24,8 @@ import bootstrapPlugin from '@fullcalendar/bootstrap';
 import { TranslateService } from '@ngx-translate/core';
 import { SelectLightCard } from '@ofActions/light-card.actions';
 import { LoadCard } from '@ofActions/card.actions';
-import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
-import { FullscreenCardViewComponent } from './cardView/fullscreen-card-view.component';
 import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
+import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'of-calendar',
@@ -36,6 +35,7 @@ import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.con
 export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('calendar', null) calendarComponent: FullCalendarComponent; // the #calendar in the template
+  @ViewChild('cardDetail', null) cardDetailTemplate: ElementRef; // the #calendar in the template
 
   private unsubscribe$ = new Subject<void>();
   calendarVisible = true;
@@ -43,10 +43,12 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
   locales = allLocales;
   themeSystem = 'bootstrap';
   calendarEvents: EventInput[] = [];
-  cardView: MatDialogRef<any>;
+  modalRef: NgbModalRef;
 
 
-  constructor(private store: Store<AppState>, private translate: TranslateService, private matDialog: MatDialog, private elRef: ElementRef
+  constructor(private store: Store<AppState>,
+              private translate: TranslateService,
+              private modalService: NgbModal
   ) { }
 
   ngOnInit() {
@@ -120,15 +122,10 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
   selectCard(info) {
     this.store.dispatch(new SelectLightCard({ selectedCardId: info.event.id }));
     this.store.dispatch(new LoadCard({ id: info.event.id }));
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.hasBackdrop = true;
-    const h = window.innerHeight - 150;
-    const w = window.innerWidth - 100;
-    dialogConfig.width = w + 'px';
-    dialogConfig.maxWidth = w + 'px';
-    dialogConfig.height = h + 'px';
-    dialogConfig.position = { top: '120px' };
-    this.cardView = this.matDialog.open(FullscreenCardViewComponent, dialogConfig);
+    const options: NgbModalOptions = {
+      size: 'fullscreen'
+  };
+  this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
 
   }
 

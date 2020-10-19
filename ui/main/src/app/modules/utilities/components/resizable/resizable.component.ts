@@ -12,8 +12,7 @@ import { Component, AfterViewInit, HostListener } from '@angular/core';
 
 @Component({
   selector: 'of-resizable',
-  templateUrl: './resizable.component.html',
-  styleUrls: ['./resizable.component.css']
+  template: ``
 })
 export class ResizableComponent implements AfterViewInit {
 

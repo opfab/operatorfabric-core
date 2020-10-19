@@ -141,11 +141,21 @@ class CardProcessServiceShould {
         currentUserWithPerimeters = new CurrentUserWithPerimeters();
         currentUserWithPerimeters.setUserData(user);
         ComputedPerimeter c1 = new ComputedPerimeter();
+        ComputedPerimeter c2 = new ComputedPerimeter();
+        ComputedPerimeter c3 = new ComputedPerimeter();
         c1.setProcess("PROCESS_CARD_USER") ;
         c1.setState("STATE1");
         c1.setRights(RightsEnum.RECEIVEANDWRITE);
+        c2.setProcess("PROCESS_CARD_USER") ;
+        c2.setState("STATE2");
+        c2.setRights(RightsEnum.RECEIVE);
+        c3.setProcess("PROCESS_CARD_USER") ;
+        c3.setState("STATE3");
+        c3.setRights(RightsEnum.WRITE);
         List list=new ArrayList<ComputedPerimeter>();
         list.add(c1);
+        list.add(c2);
+        list.add(c3);
         currentUserWithPerimeters.setComputedPerimeters(list);
     }
 
@@ -754,5 +764,126 @@ class CardProcessServiceShould {
                 .build();
 
         cardProcessingService.validate(card);
+    }
+
+    @Test
+    void isUserAllowedToDeleteThisCard() {
+        CardPublicationData cardExternal1 = CardPublicationData.builder()   //false because publisherType not ENTITY
+                .publisher("PUBLISHER_1")
+                .processVersion("O")
+                .process("PROCESS_1")
+                .processInstanceId("PROCESS_1")
+                .severity(SeverityEnum.ALARM)
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now())
+                .timeSpan(TimeSpanPublicationData.builder()
+                        .start(Instant.ofEpochMilli(123l)).build())
+                .process("process1")
+                .state("state1")
+                .build();
+
+        CardPublicationData cardExternal2 = CardPublicationData.builder()   //false because publisherType not ENTITY
+                .publisher("entity2")
+                .processVersion("O")
+                .process("PROCESS_1")
+                .processInstanceId("PROCESS_1")
+                .severity(SeverityEnum.ALARM)
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now())
+                .timeSpan(TimeSpanPublicationData.builder()
+                        .start(Instant.ofEpochMilli(123l)).build())
+                .process("process1")
+                .state("state1")
+                .build();
+
+        CardPublicationData cardFromAnEntity1 = CardPublicationData.builder() // false because publisher not an entity of the user
+                .publisher("entity3")
+                .publisherType(PublisherTypeEnum.ENTITY)
+                .processVersion("O")
+                .process("PROCESS_1")
+                .processInstanceId("PROCESS_1")
+                .severity(SeverityEnum.ALARM)
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now())
+                .timeSpan(TimeSpanPublicationData.builder()
+                        .start(Instant.ofEpochMilli(123l)).build())
+                .process("process1")
+                .state("state1")
+                .build();
+
+        CardPublicationData cardFromAnEntity2 = CardPublicationData.builder() // false because not process/state in the perimeter of the user
+                .publisher("entity2")
+                .publisherType(PublisherTypeEnum.ENTITY)
+                .processVersion("O")
+                .process("PROCESS_1")
+                .processInstanceId("PROCESS_1")
+                .severity(SeverityEnum.ALARM)
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now())
+                .timeSpan(TimeSpanPublicationData.builder()
+                        .start(Instant.ofEpochMilli(123l)).build())
+                .process("PROCESS_NOT_IN_PERIMETER")
+                .state("STATE_NOT_IN_PERIMETER")
+                .build();
+
+        CardPublicationData cardFromAnEntity3 = CardPublicationData.builder() // false because not write access for the user
+                .publisher("entity2")
+                .publisherType(PublisherTypeEnum.ENTITY)
+                .processVersion("O")
+                .process("PROCESS_1")
+                .processInstanceId("PROCESS_1")
+                .severity(SeverityEnum.ALARM)
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now())
+                .timeSpan(TimeSpanPublicationData.builder()
+                        .start(Instant.ofEpochMilli(123l)).build())
+                .process("PROCESS_CARD_USER")
+                .state("STATE2")
+                .build();
+
+        CardPublicationData cardFromAnEntity4 = CardPublicationData.builder() // true
+                .publisher("entity2")
+                .publisherType(PublisherTypeEnum.ENTITY)
+                .processVersion("O")
+                .process("PROCESS_1")
+                .processInstanceId("PROCESS_1")
+                .severity(SeverityEnum.ALARM)
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now())
+                .timeSpan(TimeSpanPublicationData.builder()
+                        .start(Instant.ofEpochMilli(123l)).build())
+                .process("PROCESS_CARD_USER")
+                .state("STATE1")
+                .build();
+
+        CardPublicationData cardFromAnEntity5 = CardPublicationData.builder() // true
+                .publisher("entity2")
+                .publisherType(PublisherTypeEnum.ENTITY)
+                .processVersion("O")
+                .process("PROCESS_1")
+                .processInstanceId("PROCESS_1")
+                .severity(SeverityEnum.ALARM)
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now())
+                .timeSpan(TimeSpanPublicationData.builder()
+                        .start(Instant.ofEpochMilli(123l)).build())
+                .process("PROCESS_CARD_USER")
+                .state("STATE3")
+                .build();
+
+        assertThat(cardProcessingService.isUserAllowedToDeleteThisCard(cardExternal1, currentUserWithPerimeters)).isFalse();
+        assertThat(cardProcessingService.isUserAllowedToDeleteThisCard(cardExternal2, currentUserWithPerimeters)).isFalse();
+        assertThat(cardProcessingService.isUserAllowedToDeleteThisCard(cardFromAnEntity1, currentUserWithPerimeters)).isFalse();
+        assertThat(cardProcessingService.isUserAllowedToDeleteThisCard(cardFromAnEntity2, currentUserWithPerimeters)).isFalse();
+        assertThat(cardProcessingService.isUserAllowedToDeleteThisCard(cardFromAnEntity3, currentUserWithPerimeters)).isFalse();
+        assertThat(cardProcessingService.isUserAllowedToDeleteThisCard(cardFromAnEntity4, currentUserWithPerimeters)).isTrue();
+        assertThat(cardProcessingService.isUserAllowedToDeleteThisCard(cardFromAnEntity5, currentUserWithPerimeters)).isTrue();
     }
 }

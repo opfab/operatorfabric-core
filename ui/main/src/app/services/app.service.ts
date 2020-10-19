@@ -7,36 +7,40 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { AppState } from '@ofStore/index';
-import { ClearLightCardSelection } from '@ofStore/actions/light-card.actions';
+import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {ClearLightCardSelection} from '@ofStore/actions/light-card.actions';
 
 export enum PageType {
-    FEED, ARCHIVE, THIRPARTY, SETTING, ABOUT, CALENDAR
+    UNKNOWN, FEED, ARCHIVE, THIRPARTY, SETTING, ABOUT, CALENDAR, MONITORING
 }
 
 @Injectable()
 export class AppService {
 
-    constructor(private store: Store<AppState>, private _router: Router) {}
+    private pageConf = new Map([
+        ['feed', PageType.FEED]
+        , ['archives', PageType.ARCHIVE]
+        , ['businessconfigparty', PageType.THIRPARTY]
+        , ['setting', PageType.SETTING]
+        , ['about', PageType.ABOUT]
+        , ['calendar', PageType.CALENDAR]
+        , ['monitoring', PageType.MONITORING]
+
+    ]);
+
+
+    constructor(private store: Store<AppState>, private _router: Router) {
+    }
 
     get pageType(): PageType {
-
-        if ( this._router.routerState.snapshot.url.startsWith("/feed") ) {
-            return PageType.FEED;
-        } else if ( this._router.routerState.snapshot.url.startsWith("/archives") ) {
-            return PageType.ARCHIVE;
-        } else if ( this._router.routerState.snapshot.url.startsWith("/businessconfigparty") ) {
-            return PageType.THIRPARTY;
-        } else if ( this._router.routerState.snapshot.url.startsWith("/setting") ) {
-            return PageType.SETTING;
-        } else if ( this._router.routerState.snapshot.url.startsWith("/about") ) {
-            return PageType.ABOUT;
-        } else if ( this._router.routerState.snapshot.url.startsWith("/calendar") ) {
-            return PageType.CALENDAR;
-        }
+        const UrlElements = this._router.routerState.snapshot.url.split('/');
+        const PAGE_NAME_INDEX = 1;
+        const pageName = UrlElements[PAGE_NAME_INDEX];
+        const currentPageType = this.pageConf.get(pageName);
+        return (!!currentPageType) ? currentPageType : PageType.UNKNOWN;
     }
 
     closeDetails(currentPath: string) {

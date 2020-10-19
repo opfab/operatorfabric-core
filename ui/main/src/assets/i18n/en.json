@@ -1,7 +1,7 @@
 {
   "menu": {
     "feed": "Card Feed",
-    "calendar" : "Calendar",
+    "calendar": "Calendar",
     "archives": "Archives",
     "logging": "Logging",
     "admin": "Administration",
@@ -9,7 +9,7 @@
     "logout": "Logout",
     "settings": "Settings",
     "about": "About",
-    "usercard": "New Card"
+    "usercard": "Card Creation"
   },
   "timeline": {
     "businessPeriod": "Business period",
@@ -25,7 +25,7 @@
   "feed": {
     "filters": {
       "title": "Filters",
-      "time":{
+      "time": {
         "titleIfFilterBasedOnPublishDate": "Receipt date",
         "titleIfFilterBasedOnBusinessDate": "Business period",
         "start.label": "Start",
@@ -118,7 +118,7 @@
   },
   "logging": {
     "filters": {
-      "process": "Service"
+      "process": "Process"
     },
     "cardType": "Card Type",
     "timeOfAction": "Time of Action",
@@ -144,23 +144,24 @@
   "button": {
     "ok": "OK",
     "cancel": "Cancel",
-    "reset": "Reset"
+    "reset": "Reset",
+    "delete": "Delete"
   },
   "userCard": {
-    "title": "New Card Edition",
+    "title": "Create a new card",
     "error": {
-      "noRecipientSelected" : "You must at least choose one recipient",
-      "templateError" : "Technical error : invalid template",
-      "impossibleToSendCard" : "Impossible to send card for technical reasons"
+      "noRecipientSelected": "You must at least choose one recipient",
+      "templateError": "Technical error : invalid template",
+      "impossibleToSendCard": "Impossible to send card for technical reasons"
     },
     "filters": {
       "severity": "Severity",
       "process": "Process",
       "state": "State",
-      "startDate":  "Validity Start Date",
-      "endDate":  "Validity End Date",
+      "startDate":  "Start Date",
+      "endDate":  "End Date",
       "comment": "Comment",
-      "entities": "Recipient"
+      "entities": "Recipients"
     },
     "options": {
       "severity": {
@@ -177,7 +178,14 @@
     "processInstanceId": "Id",
     "state": "State",
     "send-another-one": "Send another Card",
-    "cardSendWithNoError": "Card send"
+    "cardSendWithNoError": "Card sent",
+    "deleteCard": {
+      "doYouReallyWant": "Do you really want to delete this card ?",
+      "cardDeletedWithNoError": "Card deleted",
+      "error": {
+        "impossibleToDeleteCard": "Impossible to delete card for technical reasons"
+      }
+    }
   },
   "response": {
     "btnTitle": "VALIDATE ANSWERS",
@@ -197,6 +205,14 @@
   },
   "admin": {
     "input": {
+      "group": {
+        "delete": "Do you really want to delete group",
+        "add": "Add new group"
+      },
+      "entity": {
+        "delete": "Do you really want to delete entity",
+        "add": "Add new entity"
+      },
       "user": {
         "login": "Login",
         "lastname": "Last name",
@@ -209,26 +225,39 @@
         "save": "Save Changes",
         "close": "Close",
         "cancel": "cancel",
-        "confirm":"Please confirm..",
-        "user":"user",
+        "confirm": "Please confirm..",
+        "user": "user",
         "filter": "filter by ",
         "filterAll": "filter all columns"
       },
-      "delete" :"Do you really want to delete user",
+      "delete": "Do you really want to delete user",
       "login": {
         "required": "Login is required.",
-        "minLength": "Login should be minimum 4 characters .",
-        "maxLength": "Login should be maximum 20 characters .",
+        "minLength": "Login should be minimum 4 characters.",
+        "maxLength": "Login should be maximum 20 characters.",
         "alreadyTaken": "Login is already taken."
       },
       "firstname": {
         "required": "First name is required.",
-        "maxLength": "First name should be maximum 20 characters ."
+        "maxLength": "First name should be maximum 20 characters."
       },
       "lastname": {
         "required": "Last name is required.",
-        "maxLength": "Last name should be maximum 20 characters ."
+        "maxLength": "Last name should be maximum 20 characters."
       },
+      "id": {
+        "required": "Id is required.",
+        "minLength": "Id should be minimum 2 characters.",
+        "maxLength": "Id should be maximum 20 characters.",
+        "alreadyTaken": "ID is already taken.",
+        "label":"Id"
+      },
+      "name": {
+        "required": "Name is required.",
+        "maxLength": "Name should be maximum 20 characters.",
+        "label":"Name"
+      },
+      "description": "Description",
       "lines": "lines"
     },
     "tabs": {

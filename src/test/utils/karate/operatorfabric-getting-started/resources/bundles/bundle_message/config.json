@@ -1,8 +1,6 @@
 {
 	"id":"message-publisher",
 	"version":"1",
-	"templates":["template"],
-	"csses":["style"],
 	"states":{
 		"messageState" : {
 			"details" : [{

@@ -1,21 +1,49 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { User } from '@ofModel/user.model';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class DataTableShareService {
-  private user = new BehaviorSubject<User>(null);
-  private userData = this.user.asObservable();
 
-  constructor() {}
+  private userRow = new Subject<any>();
+  private groupRow = new Subject<any>();
+  private entityRow = new Subject<any>();
 
-  changeMessage(user: User) {
-    this.user.next(user);
+  private userRowData = this.userRow.asObservable();
+  private groupRowData = this.groupRow.asObservable();
+  private entityRowData = this.entityRow.asObservable();
+
+  private refreshUsers = new Subject<boolean>();
+
+
+
+
+  constructor() { }
+
+  changeUserRow(row: any) {
+    this.userRow.next(row);
+  }
+  changeGroupRow(row: any) {
+    this.groupRow.next(row);
+  }
+  changeEntityRow(row: any) {
+    this.entityRow.next(row);
   }
 
-  getUserEvent(): Observable<User> {
-    return this.userData;
+  getUserRowEvent(): Observable<any> {
+    return this.userRowData;
+  }
+  getGroupRowEvent(): Observable<any> {
+    return this.groupRowData;
+  }
+  getEntityRowEvent(): Observable<any> {
+    return this.entityRowData;
   }
 
+  changeUsers(user: boolean) {
+    this.refreshUsers.next(true);
+  }
+  getUsersEvent(): Observable<boolean> {
+    return this.refreshUsers;
+  }
 
 }

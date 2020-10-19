@@ -27,7 +27,7 @@ describe('InfoComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ InfoComponent ],
         imports: [
-            NgbModule.forRoot(),
+            NgbModule,
             RouterTestingModule,
             StoreModule.forRoot(appReducer)
         ],

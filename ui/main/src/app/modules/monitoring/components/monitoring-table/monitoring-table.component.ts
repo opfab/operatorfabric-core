@@ -8,29 +8,41 @@
 * This file is part of the OperatorFabric project.
 */
 
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { LineOfMonitoringResult } from '@ofModel/line-of-monitoring-result.model';
-import { TimeService } from '@ofServices/time.service';
-import { Moment } from 'moment-timezone';
-import { TranslateService } from '@ngx-translate/core';
-import { ExportService } from '@ofServices/export.service';
+import {Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
+import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
+import {TimeService} from '@ofServices/time.service';
+import {Moment} from 'moment-timezone';
+import {TranslateService} from '@ngx-translate/core';
+import {ExportService} from '@ofServices/export.service';
 
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import {SelectLightCard} from '@ofActions/light-card.actions';
+import {LoadCard} from '@ofActions/card.actions';
+import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
 
 @Component({
     selector: 'of-monitoring-table',
     templateUrl: './monitoring-table.component.html',
     styleUrls: ['./monitoring-table.component.scss']
 })
-export class MonitoringTableComponent implements OnDestroy{
+export class MonitoringTableComponent implements OnDestroy {
 
+    @ViewChild('cardDetail', null) cardDetailTemplate: ElementRef;
     @Input() result: LineOfMonitoringResult[];
     exportMonitoringData: Array<any> = [];
     unsubscribe$: Subject<void> = new Subject<void>();
+    modalRef: NgbModalRef;
 
 
-    constructor(readonly timeService: TimeService, private translate: TranslateService, private exportService: ExportService) {
+    constructor(readonly timeService: TimeService
+                , private translate: TranslateService
+                , private exportService: ExportService
+                , private store: Store<AppState>
+                , private modalService: NgbModal
+    ) {
     }
 
 
@@ -47,7 +59,7 @@ export class MonitoringTableComponent implements OnDestroy{
         this.exportMonitoringData = [];
         let time: string, businessPeriod: string, processName: any, title: any, summary: any, status: any;
 
-        this.result.forEach( (line: LineOfMonitoringResult) => {
+        this.result.forEach((line: LineOfMonitoringResult) => {
             if (typeof line !== undefined) {
                 time = this.displayTime(line.creationDateTime);
                 businessPeriod = this.displayTime(line.beginningOfBusinessPeriod).concat(this.displayTime(line.endOfBusinessPeriod));
@@ -68,7 +80,7 @@ export class MonitoringTableComponent implements OnDestroy{
         });
     }
 
-    export(): void{
+    export(): void {
         this.initExportMonitoringData();
         this.exportService.exportAsExcelFile(this.exportMonitoringData, 'Monitoring');
     }
@@ -78,7 +90,9 @@ export class MonitoringTableComponent implements OnDestroy{
 
         this.translate.get(key, interpolateParams)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((translate) => { translatedColomn = translate; });
+            .subscribe((translate) => {
+                translatedColomn = translate;
+            });
 
         return translatedColomn;
     }
@@ -88,5 +102,14 @@ export class MonitoringTableComponent implements OnDestroy{
         this.unsubscribe$.complete();
     }
 
+    selectCard(info) {
+        this.store.dispatch(new SelectLightCard({ selectedCardId: info }));
+        this.store.dispatch(new LoadCard({ id: info }));
+        const options: NgbModalOptions = {
+            size: 'fullscreen'
+        };
+        this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
+
+    }
 
 }

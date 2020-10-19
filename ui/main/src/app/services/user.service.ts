@@ -44,9 +44,7 @@ export class UserService extends ErrorService implements CrudService {
   }
 
   askUserApplicationRegistered(user: string): Observable<User> {
-    return this.httpClient.get<User>(`${this.userUrl}/users/${user}`).pipe(
-      catchError((error: Response) => this.handleError)
-    );
+    return this.httpClient.get<User>(`${this.userUrl}/users/${user}`);
   }
 
   askCreateUser(userData: User): Observable<User> {

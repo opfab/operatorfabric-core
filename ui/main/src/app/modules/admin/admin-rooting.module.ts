@@ -12,28 +12,11 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import { AdminComponent } from './admin.component';
-import { OfUsersTableComponent } from './components/ngtable/users/ofuserstable.component';
-import { OfGroupsTableComponent } from './components/ngtable/groups/of-groups-table/of-groups-table.component';
-import { OfEntitiesTableComponent } from './components/ngtable/entities/of-entities-table/of-entities-table.component';
 
 const routes: Routes = [
     {
         path: '**',
         component: AdminComponent
-          //  ,children: [
-          //    {
-          //               path: 'users',
-          //               component: AdminComponent,
-          //    },
-          //    {
-          //               path: 'groups',
-          //               component: AdminComponent,
-          //    },
-          //   // {
-          //   //             path: 'entities',
-          //   //             component: AdminComponent,
-          //   //  }
-        // ]
     }
 ];
 

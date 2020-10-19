@@ -7,16 +7,14 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <h2 translate style="text-align: center;">userCard.title</h2>
-<br/>
+<br />
 <div *ngIf="displayForm()" class="container">
     <form [formGroup]="messageForm">
         <div class="row">
 
             <div class="col">
-                <of-single-filter i18nRootLabelKey="userCard.filters."
-                                  [parentForm]="messageForm"
-                                  filterPath="process"
-                                  [values]="processOptions"></of-single-filter>
+                <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
+                    [values]="processOptions"></of-single-filter>
             </div>
             <div class="col">
                 <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="state"
@@ -40,18 +38,26 @@
         </div>
 
 
+
+    </form>
+
+    <div [innerHtml]="userCardTemplate"></div>
+
+    <br/>   
+
+
+    <form [formGroup]="recipientForm">
         <div class="row">
             <div class="col-12">
 
-                <of-multi-filter-2 filterPath="entities" id="entities"  [parentForm]="messageForm"
-                    [values]="entityOptions"  [dropdownSettings]="dropdownSettings"
-                    i18nRootLabelKey="userCard.filters."></of-multi-filter-2> 
+                <of-multi-filter-2 filterPath="entities" id="entities" [parentForm]="recipientForm"
+                    [values]="entityOptions" [dropdownSettings]="dropdownSettings" i18nRootLabelKey="userCard.filters." [selectedItems]="[]" >
+                </of-multi-filter-2>
             </div>
 
         </div>
     </form>
 
-    <div [innerHtml]="userCardTemplate"></div>
     <br />
     <div style="text-align: center;width:100%">
         <button type="button" class="btn btn-primary" (click)="onSubmitForm(resumeCardBeforeSend)" translate>
@@ -62,10 +68,10 @@
 </div>
 
 <div *ngIf="displaySendResult">
-    <br/>
-    <h2 translate style="text-align: center" > {{messageAfterSendingCard}} </h2>
-    <br/><br/>
-    <of-card  [lightCard]="card" [open]="true" [displayUnreadIcon]="false"></of-card>
+    <br />
+    <h2 translate style="text-align: center"> {{messageAfterSendingCard}} </h2>
+    <br /><br />
+    <of-card [lightCard]="card" [open]="true" [displayUnreadIcon]="false"></of-card>
     <br />
     <div style="text-align: center;">
         <button type="button" class="btn btn-primary" (click)="sendAnotherUserCard()"
@@ -73,13 +79,13 @@
     </div>
 </div>
 
-<br/>
+<br />
 <div id='div-detail-msg' *ngIf='errorMessage.display' class="alert alert-dismissible fade show text-center alert-danger"
-role="alert" translate>
-{{errorMessage.text}}
-<button type="button" class="close" aria-label="Close" (click)="errorMessage.display = false">
-<span aria-hidden="true">&times;</span>
-</button>
+    role="alert" translate>
+    {{errorMessage.text}}
+    <button type="button" class="close" aria-label="Close" (click)="errorMessage.display = false">
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
 
 <ng-template #resumeCardBeforeSend let-modal>
@@ -94,9 +100,9 @@ role="alert" translate>
         <div>
 
 
-            <of-card  [lightCard]="card" [open]="true" [displayUnreadIcon]="false"></of-card>
+            <of-card [lightCard]="card" [open]="true" [displayUnreadIcon]="false"></of-card>
 
-            <of-card-preview [card]="card" [user]="currentUser" [currentPath]="'test'"> </of-card-preview>
+            <of-card-preview [card]="card" [currentPath]="'test'"> </of-card-preview>
 
         </div>
         <div class="modal-footer">

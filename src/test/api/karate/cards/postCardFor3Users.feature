@@ -21,14 +21,7 @@ Scenario: Post Card
 				"process"  :"api_test",
 				"processInstanceId" : "process3users",
 				"state": "messageState",
-				"recipient": {
-							"type":"UNION",
-							"recipients":[
-								{ "type": "USER", "identity":"tso1-operator"},
-								{ "type": "USER", "identity":"tso2-operator"},
-								{ "type": "USER", "identity":"admin"}
-							]
-					},
+				"userRecipients": ["tso1-operator", "tso2-operator", "admin"],
 				"severity" : "INFORMATION",
 				"startDate" : startDate,
 				"summary" : {"key" : "defaultProcess.summary"},

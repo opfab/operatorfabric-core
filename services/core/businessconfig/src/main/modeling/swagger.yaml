@@ -414,18 +414,6 @@ definitions:
       version:
         type: string
         description: Process configuration version
-      templates:
-        type: array
-        description: List of templates name (without extension)
-        example: '"emergency", "security"'
-        items:
-          type: string
-      csses:
-        type: array
-        description: List of css file names (without extension)
-        example: tab-style
-        items:
-          type: string
       states:
         type: object
         additionalProperties:
@@ -480,12 +468,6 @@ definitions:
       id: some_business_process
       name: some_business_process.label
       version: v1.0
-      templates:
-        - "emergency"
-        - "info"
-      csses:
-        - "tab-style"
-        - "content-style"
       menuLabel: some_business_process.menu.label
       menuEntries:
         - id: website
@@ -582,6 +564,11 @@ definitions:
       state:
         description: The state of the card triggered by the action
         type: string
+      externalRecipients:
+        description: The recipients that should receive the response card
+        type: array
+        items:
+          type: string
   ResponseBtnColorEnum:
     type: string
     description: |-

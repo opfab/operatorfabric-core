@@ -1,0 +1,33 @@
+<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<br/>
+<br/>
+
+<h2>  You are invited to a conference call at {{dateFormat  card.startDate format="MMMM Do YYYY, h:mm: a"}}</h2>
+<br/>
+<br/>
+
+<center>
+<h1>
+Conference subject : {{card.data.conf_subject}}
+</h1>
+
+<br/>
+<br/>
+The conference call is available via : <a href="{{card.data.conf_link}}" target="_blank"> This link </a>
+
+<br/>
+<br/>
+Please consult the full report :  <a href="{{card.data.report_link}}" target="_blank"> {{card.data.report_title}}</a>
+
+</center>
+<br/>
+<p>
+Complementary information : {{keepSpacesAndEndOfLine card.data.message}}
+</p>

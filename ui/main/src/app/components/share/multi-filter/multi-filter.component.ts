@@ -34,9 +34,6 @@ export class MultiFilterComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.parentForm = new FormGroup({
-            [this.filterPath]: new FormControl()
-        });
         this.preparedList = [];
 
         if (!this.valuesInObservable && this.values) {

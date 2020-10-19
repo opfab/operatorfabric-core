@@ -1,5 +1,6 @@
 /* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
- * See AUTHORS.txt
+ * Copyright (c) 2020, RTEi (http://www.rte-international.com)
+ *  See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -33,16 +34,13 @@ import { LoggingModule } from './modules/logging/logging.module';
 import { MonitoringModule } from './modules/monitoring/monitoring.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { NgbModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
-import { EditUsermodalComponent } from './modules/admin/components/editmodal/users/editusermodal.component';
 import { CountdownModule, CountdownGlobalConfig, CountdownConfig } from 'ngx-countdown';
 import {CalendarModule} from './modules/calendar/calendar.module';
-import { ConfirmationDialogComponent } from './modules/admin/components/confirmation-dialog/confirmation-dialog.component';
 import { AppErrorHandler } from './common/error/app-error-handler';
-import { MatInputModule, MatSelectModule } from '@angular/material';
 
 export function countdownConfigFactory(): CountdownConfig {
-  return { format: `mm:ss` };
-}
+    return { format: `mm:ss` };
+  }
 
 @NgModule({
   imports: [
@@ -65,9 +63,7 @@ export function countdownConfigFactory(): CountdownConfig {
     AppRoutingModule,
     AdminModule,
     CountdownModule,
-    CalendarModule,
-    MatSelectModule,
-    MatInputModule
+    CalendarModule
   ],
   declarations: [AppComponent,
     NavbarComponent,
@@ -76,15 +72,9 @@ export function countdownConfigFactory(): CountdownConfig {
     InfoComponent,
     MenuLinkComponent,
     CustomLogoComponent,
-    AboutComponent,
-    EditUsermodalComponent,
-    ConfirmationDialogComponent
+    AboutComponent
   ],
 
-  entryComponents: [
-    EditUsermodalComponent,
-    ConfirmationDialogComponent
-  ],
 
   providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy },
   { provide: CountdownGlobalConfig, useFactory: countdownConfigFactory },

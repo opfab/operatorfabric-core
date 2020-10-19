@@ -39,7 +39,7 @@ export class FeedComponent implements OnInit {
     ngOnInit() {
         this.lightCards$ = this.store.pipe(
             select(feedSelectors.selectSortedFilteredLightCards),
-            delay(0), // Solve error  : 'Expression has changed after it was checked' --> See https://blog.angular-university.io/angular-debugging/
+            delay(0), // Solve error: 'Expression has changed after it was checked' --> See https://blog.angular-university.io/angular-debugging/
             map(lightCards => lightCards.filter(lightCard => !lightCard.parentCardUid)),
             catchError(err => of([]))
         );

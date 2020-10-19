@@ -19,10 +19,7 @@ Scenario: Post Card only for group TSO1
 	"process"  :"api_test",
 	"processInstanceId" : "process2",
 	"state": "messageState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -81,13 +78,7 @@ Scenario: Post Card for groups TSO1 and TSO2
 	"process"  :"api_test",
 	"processInstanceId" : "process2tso",
 	"state": "messageState",
-	"recipient": {
-				"type":"UNION",
-				"recipients":[
-					{ "type": "GROUP", "identity":"TSO1"},
-					{ "type": "GROUP", "identity":"TSO2"}
-				]
-		},
+	"groupRecipients": ["TSO1", "TSO2"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},

@@ -9,7 +9,7 @@
 
 
 
-import {LightCard, Severity} from '@ofModel/light-card.model';
+import {LightCard, PublisherType, Severity} from '@ofModel/light-card.model';
 import {I18n} from '@ofModel/i18n.model';
 
 export class Card {
@@ -33,11 +33,15 @@ export class Card {
         readonly summary?: I18n,
         readonly data?: any,
         readonly details?: Detail[],
+        readonly userRecipients?: string[],
+        readonly groupRecipients?: string[],
         readonly entityRecipients?: string[],
         readonly externalRecipients?: string[],
         readonly entitiesAllowedToRespond?: string[],
         readonly recipient?: Recipient,
-        readonly parentCardUid?: string
+        readonly parentCardUid?: string,
+        readonly publisherType?: PublisherType | string,
+        readonly timeSpans?: TimeSpan[]
     ) {
     }
 }
@@ -75,6 +79,13 @@ export class CardData {
         readonly card: Card,
         readonly childCards: Card[]
     ) {}
+}
+
+export class TimeSpan {
+    constructor(
+        readonly start: number,
+        readonly end?: number
+    ) { }
 }
 
 export function fromCardToLightCard(card: Card): LightCard {

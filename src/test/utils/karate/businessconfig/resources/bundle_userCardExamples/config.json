@@ -7,12 +7,6 @@
     "logging": true,
     "calendar": true
   },
-  "templates": [
-    "message",
-    "usercard_message"
-  ],
-  "csses": [
-  ],
   "states": {
     "messageState": {
       "name":  "message.title",
@@ -24,6 +18,22 @@
             "key": "message.title"
           },
           "templateName": "message",
+          "styles": [
+          ]
+        }
+      ],
+      "acknowledgementAllowed": true
+    },
+    "conferenceState": {
+      "name":  "conference.title",
+      "color": "#FAF0AF",
+      "userCardTemplate": "usercard_conference",
+      "details": [
+        {
+          "title": {
+            "key": "conference.title"
+          },
+          "templateName": "conference",
           "styles": [
           ]
         }

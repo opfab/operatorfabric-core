@@ -8,20 +8,6 @@
   },
   "name": "process.label",
   "defaultLocale": "fr",
-  "templates": [
-    "security",
-    "unschedulledPeriodicOp",
-    "operation",
-    "template1",
-    "template2"
-  ],
-  "csses": [
-    "tabs",
-    "accordions",
-    "filter",
-    "operations",
-    "security"
-  ],
   "menuLabel": "menu.label",
   "menuEntries": [
     {

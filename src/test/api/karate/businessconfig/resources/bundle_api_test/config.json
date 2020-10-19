@@ -6,8 +6,6 @@
 		"logging": true,
 		"calendar": true
 	},
-	"templates":["template"],
-	"csses":["style"],
 	"states":{
 		"messageState" : {
 			"details" : [{

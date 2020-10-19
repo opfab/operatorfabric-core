@@ -22,11 +22,8 @@ Scenario: Post 6 Cards (2 INFORMATION, 1 COMPLIANT, 1 ACTION, 2 ALARM)
 			"process"  :"defaultProcess",
 			"processInstanceId" : "process1",
 			"state": "messageState",
-			"tags":["test","test2"],
-			"recipient" : {
-						"type" : "GROUP",
-						"identity" : "TSO1"
-					},
+			"tags":["tag1"],
+			"groupRecipients": ["TSO1"],
 			"severity" : "INFORMATION",
 			"startDate" : startDate,
 			"summary" : {"key" : "message.summary"},
@@ -76,11 +73,8 @@ And match response.count == 1
 			"process"  :"defaultProcess",
 			"processInstanceId" : "process2",
 			"state": "chartState",
-			"tags" : ["test2"],
-			"recipient" : {
-						"type" : "GROUP",
-						"identity" : "TSO1"
-					},
+			"tags" : ["tag2"],
+			"groupRecipients": ["TSO1"],
 			"severity" : "INFORMATION",
 			"startDate" : startDate,
 			"summary" : {"key" : "message.summary"},
@@ -127,10 +121,8 @@ And match response.count == 1
 			"process"  :"defaultProcess",
 			"processInstanceId" : "process3",
 			"state": "processState",
-			"recipient" : {
-						"type" : "GROUP",
-						"identity" : "TSO1"
-					},
+			"tags":["tag1", "tag2"],
+			"groupRecipients": ["TSO1"],
 			"severity" : "COMPLIANT",
 			"startDate" : startDate,
 			"summary" : {"key" : "message.summary"},
@@ -173,13 +165,7 @@ And match response.count == 1
 			"process"  :"defaultProcess",
 			"processInstanceId" : "process4",
 			"state": "questionState",
-			"recipient" : {
-					"type":"UNION",
-					"recipients":[
-						{ "type": "GROUP", "identity":"TSO1"},
-						{ "type": "GROUP", "identity":"TSO2"}
-						]
-					},
+			"groupRecipients": ["TSO1", "TSO2"],
 			"entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
 			"severity" : "ACTION",
 			"startDate" : startDate,
@@ -219,13 +205,7 @@ And match response.count == 1
 			"process"  :"defaultProcess",
 			"processInstanceId" : "process5",
 			"state": "chartLineState",
-			"recipient" : {
-					"type":"UNION",
-					"recipients":[
-						{ "type": "GROUP", "identity":"TSO1"},
-						{ "type": "GROUP", "identity":"TSO2"}
-						]
-					},
+			"groupRecipients": ["TSO1", "TSO2"],
 			"severity" : "ALARM",
 			"startDate" : startDate,
 			"summary" : {"key" : "message.summary"},
@@ -253,6 +233,7 @@ And match response.count == 1
     function() {
 
       startDate = new Date().valueOf() + 2*60*60*1000;
+	  lttdDate = new Date().valueOf() + 60*1000*61;
 	  startDateTimeSpans = new Date().valueOf() + 24*60*60*1000;
 	  endDateTimeSpans = new Date().valueOf() + 26*60*60*1000;
 
@@ -262,12 +243,10 @@ And match response.count == 1
 			"process"  :"defaultProcess",
 			"processInstanceId" : "process6",
 			"state": "contingenciesState",
-			"recipient" : {
-						"type" : "USER",
-						"identity" : "tso1-operator"
-					},
+			"userRecipients": ["tso1-operator"],
 			"severity" : "ALARM",
 			"startDate" : startDate,
+			"lttd" : lttdDate,
 			"timeSpans" : [
 				{"start" : startDateTimeSpans ,"end" : endDateTimeSpans}
 				],

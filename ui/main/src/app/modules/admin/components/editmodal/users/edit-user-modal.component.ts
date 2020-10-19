@@ -1,3 +1,12 @@
+/* Copyright (c) 2018-2020, RTEI (http://www.rte-international.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { OnInit, Component, Input } from '@angular/core';
 import { User } from '@ofModel/user.model';
@@ -8,19 +17,19 @@ import { GroupsService } from '@ofServices/groups.service';
 import { EntitiesService } from '@ofServices/entities.service';
 import { Entity } from '@ofModel/entity.model';
 import { Group } from '@ofModel/group.model';
-import { LoginValidatorService } from 'app/modules/admin/services/login-validator.service';
+import { IdValidatorService } from 'app/modules/admin/services/id-validator.service';
 
 @Component({
   selector: 'of-editmodal',
-  templateUrl: './editusermodal.component.html',
-  styleUrls: ['./editusermodal.component.scss']
+  templateUrl: './edit-user-modal.component.html',
+  styleUrls: ['./edit-user-modal.component.scss']
 })
 export class EditUsermodalComponent implements OnInit {
 
   form = new FormGroup({
     login: new FormControl(''
       , [Validators.required, Validators.minLength(4), Validators.maxLength(20)]
-      , this.existsLogin.bind(this)),
+      , this.existsId.bind(this)),
     firstName: new FormControl('', [Validators.required, Validators.maxLength(20)]),
     lastName: new FormControl('', [Validators.required, Validators.maxLength(20)]),
     groups: new FormControl([]),
@@ -30,44 +39,43 @@ export class EditUsermodalComponent implements OnInit {
   entitiesList: Array<Entity>;
   groupsList: Array<Group>;
 
-  @Input() user: User;
+  @Input() row: User;
 
   constructor(
     public activeModal: NgbActiveModal,
-    private userService: UserService,
+    private crudService: UserService,
     private data: DataTableShareService,
     private groupsService: GroupsService,
-    private entitesService: EntitiesService,
-    private loginValidator: LoginValidatorService) {
+    private entitesService: EntitiesService) {
   }
 
   ngOnInit() {
-    if (this.user) {
-      this.form.patchValue(this.user, { onlySelf: true });
+    if (this.row) {
+      this.form.patchValue(this.row, { onlySelf: true });
     }
     this.initializeEntities();
     this.initializeGroups();
   }
 
-  updateUser() {
-  
-    this.cleanForm(); 
+  update() {
+
+    this.cleanForm();
     this.groups.setValue(this.groups.value.filter((item: string) => item.length > 0));
     this.entities.setValue(this.entities.value.filter((item: string) => item.length > 0));
-    this.userService.update(this.form.value).subscribe(() => {
-      this.data.changeMessage(this.form.value);
+    this.crudService.update(this.form.value).subscribe(() => {
+      this.data.changeUserRow(this.form.value);
       this.activeModal.dismiss('Update click');
     });
   }
 
   private cleanForm() {
-    if (this.user) {
-      this.form.value['login'] = this.user.login;
+    if (this.row) {
+      this.form.value['login'] = this.row.login;
     }
     this.login.setValue((this.login.value as string).trim());
     this.lastName.setValue((this.lastName.value as string).trim());
     this.firstName.setValue((this.firstName.value as string).trim());
-  
+
   }
 
   get login() {
@@ -106,10 +114,10 @@ export class EditUsermodalComponent implements OnInit {
 
   }
 
-  existsLogin(control: AbstractControl) {
+ existsId(control: AbstractControl) {
     // if create
-    if (!this.user) {
-      return this.loginValidator.isLoginAvailable(control);
+    if (!this.row) {
+      return new IdValidatorService(this.crudService).isIdAvailable(control);
     } else {
       return new Promise((resolve) => {
         resolve(null);

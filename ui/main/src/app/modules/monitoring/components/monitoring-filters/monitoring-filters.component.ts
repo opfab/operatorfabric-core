@@ -59,7 +59,6 @@ export class MonitoringFiltersComponent implements OnInit{
             enableSearchFilter: true,
             classes: 'custom-class-example'
         };
-
     }
 
     sendQuery() {
