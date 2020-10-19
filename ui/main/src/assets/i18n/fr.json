@@ -161,7 +161,7 @@
       "startDate": "Date de début ",
       "endDate": "Date de fin ",
       "comment": "Commentaire",
-      "entities": "Destinataire"
+      "recipients": "Destinataire"
     },
     "options": {
       "severity": {

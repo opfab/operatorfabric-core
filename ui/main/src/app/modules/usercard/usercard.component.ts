@@ -61,7 +61,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
     });
 
     stateOptions: any[];
-    entityOptions = new Array();
+    recipientsOptions = new Array();
     dropdownSettings = {};
     processOptions = new Array();
 
@@ -117,7 +117,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         });
 
         this.recipientForm = new FormGroup({
-            entities: new FormControl([])
+            recipients: new FormControl([])
         });
 
 
@@ -137,7 +137,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     loadAllEntities(): void {
         this.entitiesService.getEntities().forEach(entity =>
-            this.entityOptions.push({ id: entity.id, itemName: entity.name }));
+            this.recipientsOptions.push({ id: entity.id, itemName: entity.name }));
     }
 
 
@@ -251,10 +251,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     onSubmitForm(template: TemplateRef<any>) {
         const formValue = this.messageForm.value;
-        
-        const processFormVal = formValue['process'];
+
         const selectedProcess = this.processesDefinition.find(process => {
-            return process.id === processFormVal;
+            return process.id === formValue['process'];
         });
         const processVersion = selectedProcess.version;
         const state = formValue['state'];
@@ -280,7 +279,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
             return;
         }
 
-        const selectedRecipients = this.recipientForm.value['entities'];
+        const selectedRecipients = this.recipientForm.value['recipients'];
         const recipients = new Array();
         if (selectedRecipients.length < 1) {
             this.errorMessage.display = true;
