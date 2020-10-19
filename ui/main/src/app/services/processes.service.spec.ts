@@ -19,10 +19,10 @@ import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
 import {getRandomAlphanumericValue, BusinessconfigI18nLoaderFactory} from '@tests/helpers';
 import * as _ from 'lodash';
-import {LightCard} from '@ofModel/light-card.model';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 import {GuidService} from '@ofServices/guid.service';
-import {Menu, MenuEntry, Process, MenuEntryLinkTypeEnum} from '@ofModel/processes.model';
+import {ConfigService} from '@ofServices/config.service';
+import {Process} from '@ofModel/processes.model';
 import {EffectsModule} from '@ngrx/effects';
 import {MenuEffects} from '@ofEffects/menu.effects';
 
@@ -51,7 +51,8 @@ describe('Processes Services', () => {
                 {provide: store, useClass: Store},
                 ProcessesService,
                 AuthenticationService,
-                GuidService
+                GuidService,
+                ConfigService
             ]
         });
         injector = getTestBed();
@@ -73,51 +74,8 @@ describe('Processes Services', () => {
     it('should be created', () => {
         expect(processesService).toBeTruthy();
     });
-    describe('#computeMenu', () => {
-        it('should return message on network problem', () => {
-            processesService.computeMenu().subscribe(
-                result => fail('expected message not raised'),
-                error => expect(error.status).toBe(0));
-            const calls = httpMock.match(req => req.url === `${environment.urls.processes}/`);
-            expect(calls.length).toEqual(1);
-            calls[0].error(new ErrorEvent('Network message'));
-        });
-        it('should compute menu from processes data', () => {
-            processesService.computeMenu().subscribe(
-                result => {
-                    expect(result.length).toBe(2); // 2 Processes -> 2 Menus
-                    expect(result[0].label).toBe('process1.menu.label');
-                    expect(result[0].id).toBe('process1');
-                    expect(result[1].label).toBe('process2.menu.label');
-                    expect(result[1].id).toBe('process2');
-                    expect(result[0].entries.length).toBe(2);
-                    expect(result[1].entries.length).toBe(1);
-                    expect(result[0].entries[0].label).toBe('label1');
-                    expect(result[0].entries[0].id).toBe('id1');
-                    expect(result[0].entries[0].url).toBe('link1');
-                    expect(result[0].entries[1].label).toBe('label2');
-                    expect(result[0].entries[1].id).toBe('id2');
-                    expect(result[0].entries[1].url).toBe('link2');
-                    expect(result[1].entries[0].label).toBe('label3');
-                    expect(result[1].entries[0].id).toBe('id3');
-                    expect(result[1].entries[0].url).toBe('link3');
-                });
-            const calls = httpMock.match(req => req.url === `${environment.urls.processes}/`);
-            expect(calls.length).toEqual(1);
-            calls[0].flush([
-                new Process(
-                    'process1', '1',  'process1.label', [], 'process1.menu.label',
-                    [new MenuEntry('id1', 'label1', 'link1', MenuEntryLinkTypeEnum.BOTH),
-                        new MenuEntry('id2', 'label2', 'link2', MenuEntryLinkTypeEnum.BOTH)]
-                ),
-                new Process(
-                    'process2', '1', 'process2.label', [], 'process2.menu.label',
-                    [new MenuEntry('id3', 'label3', 'link3', MenuEntryLinkTypeEnum.BOTH)]
-                )
-            ]);
-        });
-    });
-        describe('#fetchHbsTemplate', () => {
+
+    describe('#fetchHbsTemplate', () => {
             const templates = {
                 en: 'English template {{card.data.name}}',
                 fr: 'Template Français {{card.data.name}}'

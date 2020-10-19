@@ -23,7 +23,6 @@ import org.lfenergy.operatorfabric.businessconfig.model.Process;
 public class BusinessconfigModule extends SimpleModule {
 
     public BusinessconfigModule() {
-        addAbstractTypeMapping(MenuEntry.class, MenuEntryData.class);
         addAbstractTypeMapping(Process.class,ProcessData.class);
         addAbstractTypeMapping(ProcessStates.class, ProcessStatesData.class);
         addAbstractTypeMapping(Detail.class,DetailData.class);

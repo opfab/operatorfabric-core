@@ -19,12 +19,12 @@ import {of} from "rxjs";
 describe('MenuEffects', () => {
     let effects: MenuEffects;
 
-    it('should return a LoadLightMenusSuccess when the Processes Service serve an array of menus', () => {
+    it('should return a LoadLightMenusSuccess when the Config Service serve an array of menus', () => {
         const expectedMenu =  getRandomMenus();
 
         const localActions$ = new Actions(hot('-a--', {a: new LoadMenu()}));
 
-        const localMockProcessesService = jasmine.createSpyObj('ProcessesService', ['computeMenu','loadI18nForMenuEntries']);
+        const localMockProcessesService = jasmine.createSpyObj('ConfigService', ['computeMenu','loadI18nForMenuEntries']);
         localMockProcessesService.loadI18nForMenuEntries.and.callFake(()=>of(true));
 
         const mockStore = jasmine.createSpyObj('Store',['dispatch']);

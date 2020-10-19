@@ -15,7 +15,6 @@ import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {AppState} from '@ofStore/index';
-import {ProcessesService} from "@ofServices/processes.service";
 import {
     LoadMenu,
     LoadMenuFailure,
@@ -23,6 +22,7 @@ import {
     MenuActionTypes,
 } from '@ofActions/menu.actions';
 import {Router} from '@angular/router';
+import { ConfigService } from '@ofServices/config.service';
 
 @Injectable()
 export class MenuEffects {
@@ -30,7 +30,7 @@ export class MenuEffects {
     /* istanbul ignore next */
     constructor(private store: Store<AppState>,
                 private actions$: Actions,
-                private service: ProcessesService,
+                private service: ConfigService,
                 private router: Router
     ) {
     }

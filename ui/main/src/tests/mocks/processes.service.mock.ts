@@ -9,15 +9,15 @@
 
 
 import {Observable, of} from "rxjs";
-import {Menu, MenuEntry, MenuEntryLinkTypeEnum} from "@ofModel/processes.model";
+import {Menu, MenuEntry, MenuEntryLinkTypeEnum} from "@ofModel/menu.model";
 
 export class ProcessesServiceMock {
     computeBusinessconfigMenu(): Observable<Menu[]>{
-        return of([new Menu('t1', '1', 'tLabel1', [
+        return of([new Menu('t1', 'tLabel1', [
             new MenuEntry('id1', 'label1', 'link1', MenuEntryLinkTypeEnum.BOTH),
             new MenuEntry('id2', 'label2', 'link2', MenuEntryLinkTypeEnum.BOTH),
         ]),
-            new Menu('t2', '1', 'tLabel2', [
+            new Menu('t2', 'tLabel2', [
                 new MenuEntry('id3', 'label3', 'link3', MenuEntryLinkTypeEnum.BOTH),
             ])])
     }

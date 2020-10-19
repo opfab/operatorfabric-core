@@ -26,6 +26,7 @@ export const environment = {
         archives: '',
         processes: 'http://localhost:2002/businessconfig/processes',
         config: 'http://localhost:2002/config/web-ui.json',
+        menuConfig: 'http://localhost:2002/config/ui-menu.json',
         time: 'http://localhost:2002/time'
     },
     paths: {

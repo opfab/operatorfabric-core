@@ -64,15 +64,6 @@ include::../../../../services/core/businessconfig/src/main/docker/volume/busines
 - version: enable the correct display, even the old ones as all versions are stored by the server. Your *card* has a version
 field that will be matched to businessconfig configuration for correct rendering ;
 - states  : list the available  states; actions and templates are associated to states, in the same way is the possibility of making the cards enabled for being acknowledged by user;
-- menuLabel in the main bar menu as `i18nLabelKey`: optional, used if the businessconfig service add one or several entry in
-the OperatorFabric main menu bar, see the
-ifdef::single-page-doc[<<menu_entries, menu entries>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#menu_entries, menu entries>>]
-section for details;
-- extra menu entries as `menuEntries`: optional, see below for the declaration format of objects of this array, see the
-ifdef::single-page-doc[<<menu_entries, menu entries>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#menu_entries, menu entries>>]
-section for details;
 
 The mandatory declarations are `id`,'name' and `version` attributes.
 
@@ -341,44 +332,9 @@ Where:
 These command line should return a `200 http status` response with the details of the of the bundle in the response body such as :
 ....
 {
-  "menuEntriesData": [
-    {
-      "id": "uid test 0",
-      "url": "https://opfab.github.io/whatisopfab/",
-      "label": "first-menu-entry"
-    },
-    {
-      "id": "uid test 0",
-      "url": "https://www.lfenergy.org/",
-      "label": "b-menu-entry"
-    },
-    {
-      "id": "uid test 1",
-      "url": "https://github.com/opfab/opfab.github.io",
-      "label": "the-other-menu-entry"
-    }
-  ],
   "id":"BUNDLE_TEST"
   "name": "BUNDLE_TEST",
-  "version": "1",
-  "i18nLabelKey": "businessconfig-name-in-menu-bar",
-  "menuEntries": [
-    {
-      "id": "uid test 0",
-      "url": "https://opfab.github.io/whatisopfab/",
-      "label": "first-menu-entry"
-    },
-    {
-      "id": "uid test 0",
-      "url": "https://www.lfenergy.org/",
-      "label": "b-menu-entry"
-    },
-    {
-      "id": "uid test 1",
-      "url": "https://github.com/opfab/opfab.github.io",
-      "label": "the-other-menu-entry"
-    }
-  ],
+  "version": "1",,
   "states" : {
           "start" : {
             "details" : [ {

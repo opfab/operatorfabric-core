@@ -9,7 +9,7 @@
 
 
 import {Component, Input, OnInit} from '@angular/core';
-import {Menu, MenuEntry, MenuEntryLinkTypeEnum} from "@ofModel/processes.model";
+import {Menu, MenuEntry, MenuEntryLinkTypeEnum} from "@ofModel/menu.model";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import { ConfigService} from "@ofServices/config.service";

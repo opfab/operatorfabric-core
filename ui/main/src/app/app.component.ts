@@ -69,10 +69,21 @@ export class AppComponent implements OnInit {
       console.error('Impossible to load configuration file web-ui.json', err);
       return caught;
     }));
+    
   }
+
   private setTitle() {
     const title = this.configService.getConfigValue('title');
     if (!!title) { this.titleService.setTitle(title); }
+  }
+
+  private loadTranslationForMenu() {
+    this.configService.loadMenuTranslations().subscribe(locales => locales.forEach(locale =>
+      this.translateService.setTranslation(locale.language, locale.i18n, true)))
+    catchError((err, caught) => {
+      console.error('Impossible to load configuration file ui-menu.json', err);
+      return caught;
+    });
   }
 
   private loadTranslationAndLaunchAuthenticationProcess(config) {
@@ -82,9 +93,11 @@ export class AppComponent implements OnInit {
       merge(...localeRequests$).pipe(skip(localeRequests$.length - 1)).subscribe(() => { // Wait for all request to complete
         console.log(new Date().toISOString(), 'All opfab translation loaded for locales:', config.i18n.supported.locales.toString());
         this.translateService.addLangs(config.i18n.supported.locales);
+        this.loadTranslationForMenu();
         this.launchAuthenticationProcess();
       });
     }
+    
   }
 
   private launchAuthenticationProcess() {

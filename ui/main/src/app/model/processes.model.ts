@@ -19,8 +19,6 @@ export class Process {
         readonly version: string,
         readonly name?: string,
         readonly locales?: string[],
-        readonly menuLabel?: string,
-        readonly menuEntries?: MenuEntry[],
         readonly states?: OfMap<State>,
         readonly uiVisibility?: UiVisibility
     ) { 
@@ -36,21 +34,8 @@ export class Process {
 }
 
 export const unfouundProcess: Process = new Process('', '', 'process.not-found',
-     [], '', [], null, null);
+     [], null, null);
 
-export class MenuEntry {
-
-    linkType: MenuEntryLinkTypeEnum = MenuEntryLinkTypeEnum.BOTH;
-
-    /* istanbul ignore next */
-    constructor(
-        readonly id: string,
-        readonly label: string,
-        readonly url: string,
-        linkType?: MenuEntryLinkTypeEnum
-    ) {
-    }
-}
 
 export class UiVisibility {
 
@@ -59,22 +44,6 @@ export class UiVisibility {
         readonly monitoring: boolean,
         readonly logging: boolean
     ) {
-    }
-}
-
-export enum MenuEntryLinkTypeEnum {
-    TAB = 'TAB',
-    IFRAME = 'IFRAME',
-    BOTH = 'BOTH'
-}
-
-export class Menu {
-    /* istanbul ignore next */
-    constructor(
-        readonly id: string,
-        readonly version: string,
-        readonly label: string,
-        readonly entries: MenuEntry[]) {
     }
 }
 
