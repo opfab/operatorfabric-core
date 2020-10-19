@@ -7,17 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {FlushLoggingResult} from '@ofActions/logging.actions';
 import {Observable, Subject} from 'rxjs';
 import {LineOfLoggingResult} from '@ofModel/line-of-logging-result.model';
 import {selectLinesOfLoggingResult} from '@ofSelectors/logging.selectors';
 import {map, takeUntil} from 'rxjs/operators';
 import {LoggingFiltersComponent} from './components/logging-filters/logging-filters.component';
-import {selectProcesses} from '@ofSelectors/process.selector';
-import {Process} from '@ofModel/processes.model';
+import { ProcessesService } from '@ofServices/processes.service';
 
 @Component({
     selector: 'of-logging',
@@ -33,28 +31,19 @@ export class LoggingComponent implements  AfterViewInit, OnDestroy {
     canDisplayNoResultMessage = false;
     unsubscribe$: Subject<void> = new Subject<void>();
 
-    processValueForFilter: Observable<any>;
+    processValueForFilter = new Array();
 
-    constructor(private store: Store<AppState>) {
-        this.store.dispatch(new FlushLoggingResult());
-        this.processValueForFilter = this.store.select(selectProcesses).pipe(
-            takeUntil(this.unsubscribe$),
-            map((allProcesses: Array<Process>) => {
-                /**
-                 * work around because allProcesses.forEach(…)
-                 * 'is not a function', for some reason.
-                 */
-                const filterValue = [];
-                Array.prototype.forEach.call(allProcesses, (proc: Process) => {
-                    const id = proc.id;
-
-                    if (proc.uiVisibility && !! proc.uiVisibility.logging) {
-                        filterValue.push({value: id, label: proc.name});
-                    }
-                });
-                return filterValue;
-            })
-        );
+    constructor(private store: Store<AppState>, private processesService: ProcessesService) {
+        processesService.getAllProcesses().forEach( (process) => {
+           const id = process.id;
+           if (!!process.uiVisibility && !!process.uiVisibility.logging)  {
+               let itemName = process.name;
+               if (!itemName) {
+                   itemName = id;
+               }
+               this.processValueForFilter.push({id: id, itemName: itemName, i18nPrefix: `${process.id}.${process.version}` });
+           }
+        });
     }
 
     ngAfterViewInit() {

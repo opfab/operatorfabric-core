@@ -23,10 +23,7 @@ Scenario: Post card with old version of bundle
 			"processInstanceId" : "processOld",
 			"state": "messageState",
 			"tags":["test","test2"],
-			"recipient" : {
-						"type" : "GROUP",
-						"identity" : "TSO1"
-					},
+			"groupRecipients": ["TSO1"],
 			"severity" : "INFORMATION",
 			"startDate" : startDate,
 			"summary" : {"key" : "defaultProcess.summary"},

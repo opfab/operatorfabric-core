@@ -7,11 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {FormControl, FormGroup} from '@angular/forms';
-import {Observable, Subject} from 'rxjs';
 import {
     checkElement,
     FilterDateTypes,
@@ -26,31 +25,43 @@ import {TimeService} from '@ofServices/time.service';
     templateUrl: './logging-filters.component.html',
     styleUrls: ['./logging-filters.component.scss']
 })
-export class LoggingFiltersComponent implements OnInit, OnDestroy {
+export class LoggingFiltersComponent implements OnInit {
 
     size = 10;
     loggingForm: FormGroup;
-    unsubscribe$: Subject<void> = new Subject<void>();
+
+    dropdownList = [];
+    dropdownSettings = {};
+
     public submittedOnce = false;
 
     @Input()
-    public processData: Observable<any>;
+    public processData: [];
 
     constructor(private store: Store<AppState>, private timeService: TimeService, private configService: ConfigService) {
+
+    }
+
+    ngOnInit() {
+        this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
         this.loggingForm = new FormGroup(
             {
-                process: new FormControl(''),
+                process: new FormControl([]),
                 publishDateFrom: new FormControl(''),
                 publishDateTo: new FormControl(''),
                 activeFrom: new FormControl(''),
                 activeTo: new FormControl('')
             }
         );
+        this.dropdownList = this.processData;
 
-    }
-
-    ngOnInit() {
-        this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
+        this.dropdownSettings = {
+            text: 'Select a Process',
+            selectAllText: 'Select All',
+            unSelectAllText: 'UnSelect All',
+            enableSearchFilter: true,
+            classes: 'custom-class-example'
+        };
     }
 
     sendQuery() {
@@ -81,17 +92,13 @@ export class LoggingFiltersComponent implements OnInit, OnDestroy {
                     }
                 } else {
                     if (element.length) {
-                        params.set(key, element);
+                        const idProcessArray = [];
+                        element.forEach(val => idProcessArray.push(val.id));
+                        params.set(key, idProcessArray);
                     }
                 }
             }
         });
         return params;
     }
-
-    ngOnDestroy() {
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
-    }
-
 }

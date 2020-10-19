@@ -122,10 +122,7 @@ Feature: UserCards tests
 	"process"  :"initial",
 	"processInstanceId" : "initialCardProcess",
 	"state": "state2",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+  "groupRecipients": ["TSO1"],
 	"externalRecipients" : ["api_test_externalRecipient1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -160,10 +157,7 @@ Feature: UserCards tests
 	"process"  :"process_1",
 	"processInstanceId" : "process_id_w",
 	"state": "state2",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"externalRecipients" : ["api_test_externalRecipient1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -208,10 +202,7 @@ Feature: UserCards tests
 	"process"  :"process_2",
 	"processInstanceId" : "process_o",
 	"state": "state2",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"externalRecipients" : ["api_test_externalRecipient1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -251,10 +242,7 @@ Feature: UserCards tests
 	"process"  :"initial",
 	"processInstanceId" : "initialCardProcess",
 	"state": "final",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"externalRecipients" : ["api_test_externalRecipient1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -294,10 +282,7 @@ Feature: UserCards tests
 	"process"  :"process_1",
 	"processInstanceId" : "process_id_4",
 	"state": "state2",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"externalRecipients" : ["api_test_externalRecipient1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -330,10 +315,7 @@ Feature: UserCards tests
 	"process"  :"process_1",
 	"processInstanceId" : "process_id_5",
 	"state": "state2",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"externalRecipients" : ["api_test_externalRecipient1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,

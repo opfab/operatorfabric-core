@@ -1,0 +1,34 @@
+<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
+<br/>
+<br/>
+
+<h2>  Vous êtes invité à une conference le {{dateFormat  card.startDate format="DD MMMM YYYY à HH:mm"}}</h2>
+<br/>
+<br/>
+
+<center>
+<h1>
+Sujet de la conférence : {{card.data.conf_subject}}
+</h1>
+
+<br/>
+<br/>
+La conférence est accessible via  <a href="{{card.data.conf_link}}" target="_blank"> ce lien </a>
+
+<br/>
+<br/>
+Consulter le rapport :  <a href="{{card.data.report_link}}" target="_blank"> {{card.data.report_title}}</a>
+
+</center>
+<br/>
+<p>
+Informations complémentaires : {{keepSpacesAndEndOfLine card.data.message}}
+</p>

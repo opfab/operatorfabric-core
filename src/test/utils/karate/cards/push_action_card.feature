@@ -20,7 +20,6 @@ Feature: Cards
     "processInstanceId": "processInstanceId1",
     "state": "response_full",
     "publishDate": 1589376144000,
-    "deletionDate": null,
     "lttd": 1596042927,
     "startDate": 1589580000000,
     "endDate": 1590184800000,
@@ -49,19 +48,7 @@ Feature: Cards
         "summary": "Test the action process"
         }
     },
-    "recipient": {
-        "type": "UNION",
-        "recipients": [
-            {
-                "type": "GROUP",
-                "recipients": null,
-                "identity": "TSO1",
-                "preserveMain": null
-            }
-        ],
-        "identity": null,
-        "preserveMain": null
-    },
+    "groupRecipients": ["TSO1"],
     "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
     "mainRecipient": null,
@@ -85,7 +72,6 @@ Feature: Cards
     "processInstanceId": "processInstanceId2",
     "state": "btnColor_missing",
     "publishDate": 1589376144000,
-    "deletionDate": null,
     "lttd": 1583733121994,
     "startDate": 1589580000000,
     "endDate": 1590184800000,
@@ -114,19 +100,7 @@ Feature: Cards
         "summary": "Test the action process"
         }
     },
-    "recipient": {
-        "type": "UNION",
-        "recipients": [
-            {
-                "type": "GROUP",
-                "recipients": null,
-                "identity": "TSO1",
-                "preserveMain": null
-            }
-        ],
-        "identity": null,
-        "preserveMain": null
-    },
+    "groupRecipients": ["TSO1"],
     "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
     "mainRecipient": null,
@@ -150,7 +124,6 @@ Feature: Cards
     "processInstanceId": "processInstanceId3",
     "state": "btnText_missing",
     "publishDate": 1589376144000,
-    "deletionDate": null,
     "lttd": 1583733121997,
     "startDate": 1589580000000,
     "endDate": 1590184800000,
@@ -179,19 +152,7 @@ Feature: Cards
         "summary": "Test the action process"
         }
     },
-    "recipient": {
-        "type": "UNION",
-        "recipients": [
-            {
-                "type": "GROUP",
-                "recipients": null,
-                "identity": "TSO1",
-                "preserveMain": null
-            }
-        ],
-        "identity": null,
-        "preserveMain": null
-    },
+    "groupRecipients": ["TSO1"],
     "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
     "mainRecipient": null,
@@ -215,7 +176,6 @@ Feature: Cards
     "processInstanceId": "processInstanceId4",
     "state": "btnColor_btnText_missings",
     "publishDate": 1589376144000,
-    "deletionDate": null,
     "lttd": 1583733121998,
     "startDate": 1589580000000,
     "endDate": 1590184800000,
@@ -244,19 +204,7 @@ Feature: Cards
         "summary": "Test the action process"
         }
     },
-    "recipient": {
-        "type": "UNION",
-        "recipients": [
-            {
-                "type": "GROUP",
-                "recipients": null,
-                "identity": "TSO1",
-                "preserveMain": null
-            }
-        ],
-        "identity": null,
-        "preserveMain": null
-    },
+    "groupRecipients": ["TSO1"],
     "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
     "mainRecipient": null,
@@ -279,7 +227,6 @@ Feature: Cards
     "processInstanceId": "processInstanceId1",
     "state": "response_full",
     "publishDate": 1589376144000,
-    "deletionDate": null,
     "lttd": 1583733121999,
     "startDate": 1589580000000,
     "endDate": 1590184800000,
@@ -308,19 +255,7 @@ Feature: Cards
         "summary": "Test the action without entity in entitiesAllowedToRespond"
         }
     },
-    "recipient": {
-        "type": "UNION",
-        "recipients": [
-            {
-                "type": "GROUP",
-                "recipients": null,
-                "identity": "TSO1",
-                "preserveMain": null
-            }
-        ],
-        "identity": null,
-        "preserveMain": null
-    },
+    "groupRecipients": ["TSO1"],
     "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["TSO1","ENTITY1"],
     "mainRecipient": null,

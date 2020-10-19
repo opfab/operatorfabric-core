@@ -82,6 +82,7 @@ class GivenAdminUserBusinessconfigControllerShould {
                 .apply(springSecurity())
                 .build();
         service.loadCache();
+        service.loadProcessGroupsCache();
     }
 
     @AfterAll
@@ -103,6 +104,15 @@ class GivenAdminUserBusinessconfigControllerShould {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
+        ;
+    }
+
+    @Test
+    void listProcessGroups() throws Exception {
+        mockMvc.perform(get("/businessconfig/processgroups"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.groups", hasSize(0)))
         ;
     }
 
@@ -280,7 +290,29 @@ class GivenAdminUserBusinessconfigControllerShould {
             mockMvc.perform(get("/businessconfig/processes/second/css/nostyle"))
                     .andExpect(status().isNotFound())
             ;
+        }
 
+        @Test
+        void createProcessGroups() throws Exception {
+            Path pathToProcessGroupsFile = Paths.get("./build/test-data/processgroups.json");
+
+            MockMultipartFile processGroupsFile = new MockMultipartFile("file", "processgroups.json", MediaType.TEXT_PLAIN_VALUE, Files
+                    .readAllBytes(pathToProcessGroupsFile));
+
+            mockMvc.perform(multipart("/businessconfig/processgroups").file(processGroupsFile))
+                    .andExpect(status().isCreated())
+                    .andExpect(header().string("Location", "/businessconfig/processgroups"));
+
+            mockMvc.perform(get("/businessconfig/processgroups"))
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.groups", hasSize(2)))
+                    .andExpect(jsonPath("$.groups[0].id", is("processgroup1")))
+                    .andExpect(jsonPath("$.groups[1].id", is("processgroup2")))
+                    .andExpect(jsonPath("$.locale.en.processgroup1", is("Process Group 1")))
+                    .andExpect(jsonPath("$.locale.en.processgroup2", is("Process Group 2")))
+                    .andExpect(jsonPath("$.locale.fr.processgroup1", is("Groupe de process 1")))
+                    .andExpect(jsonPath("$.locale.fr.processgroup2", is("Groupe de process 2")));
         }
         
         @Nested

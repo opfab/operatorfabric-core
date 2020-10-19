@@ -35,10 +35,6 @@ public class ProcessData implements Process {
   private String id;
   private String name;
   private String version;
-  @Singular
-  private List<String> templates;
-  @Singular
-  private List<String> csses;
   private String menuLabel;
   @Singular("menuEntryData")
   @JsonIgnore

@@ -6,13 +6,6 @@
     "logging": true,
     "calendar": true
   },
-  "templates": [
-    "template",
-    "template1"
-  ],
-  "csses": [
-    "style1"
-  ],
   "medias": {
     "bidon": {
       "name": "bidon",

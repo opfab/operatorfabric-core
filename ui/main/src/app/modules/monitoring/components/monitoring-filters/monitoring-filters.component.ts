@@ -7,33 +7,31 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {Observable, Subject} from 'rxjs';
+import {Component, Input,OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {FilterType} from '@ofServices/filter.service';
 import {ApplyFilter, ResetFilter} from '@ofActions/feed.actions';
-import {DateTimeNgb, getDateTimeNgbFromMoment, offSetCurrentTime} from '@ofModel/datetime-ngb.model';
+import {DateTimeNgb, offSetCurrentTime} from '@ofModel/datetime-ngb.model';
 import {ConfigService} from '@ofServices/config.service';
-import * as moment from 'moment';
+
 
 @Component({
     selector: 'of-monitoring-filters',
     templateUrl: './monitoring-filters.component.html'
 })
-export class MonitoringFiltersComponent implements OnInit, OnDestroy {
+export class MonitoringFiltersComponent implements OnInit{
 
     size = 10;
     monitoringForm: FormGroup;
-    unsubscribe$: Subject<void> = new Subject<void>();
 
     dropdownList = [];
     selectedItems = [];
     dropdownSettings = {};
 
     @Input()
-    public processData: Observable<any>;
+    public processData: [];
 
     public submittedOnce = false;
 
@@ -52,7 +50,7 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
                 activeTo: new FormControl('')
             }
         );
-        this.processData.subscribe(items => this.dropdownList = items);
+        this.dropdownList = this.processData;
 
         this.dropdownSettings = {
             text: 'Select a Process',
@@ -61,7 +59,6 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
             enableSearchFilter: true,
             classes: 'custom-class-example'
         };
-
     }
 
     sendQuery() {
@@ -146,8 +143,6 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
         this.store.dispatch(new ResetFilter());
     }
 

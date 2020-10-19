@@ -1,0 +1,40 @@
+
+.ng-valid[required], .ng-valid.required  {
+  border-left: 5px solid #42A948; /* green */
+}
+form, input, label, p {
+    color: white !important;
+}
+
+.tp-container {
+   display: flex;
+   flex-direction: column;
+}
+.tp-container > * {
+   width: 100%;
+}
+
+::ng-deep .mat-form-field {
+    .mat-form-field-label {
+        color: white;
+    }
+}
+
+::ng-deep .mat-form-field.mat-focused {
+    .mat-form-field-label {
+        color: #ff884d;
+    }
+}
+
+::ng-deep .not-empty-select.mat-selected {
+  color: green !important;
+  background-color: red;
+}
+
+::ng-deep .mat-option-text {
+    color: white;
+}
+
+::ng-deep .mat-select-value {
+    color: white;
+}

@@ -1,4 +1,5 @@
 <!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020, RTEi (http://www.rte-international.com)           -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -6,32 +7,57 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
+
+
 <table class="table table-dark">
     <caption class="hidden-caption">List of current cards filtered by process or by active dates</caption>
     <thead>
-    <tr>
-        <th scope="col" translate>monitoring.time</th>
-        <th colspan="2" scope="col" translate>monitoring.businessPeriod</th>
-        <th scope="col" translate>monitoring.filters.process</th>
-        <th scope="col" translate>monitoring.title</th>
-        <th scope="col" translate>monitoring.summary</th>
-        <th scope="col" translate>monitoring.status</th>
-        <th scope="col"></th>
-    </tr>
+        <tr>
+            <th scope="col" translate>monitoring.time</th>
+            <th colspan="2" scope="col" translate>monitoring.businessPeriod</th>
+            <th scope="col" translate>monitoring.filters.process</th>
+            <th scope="col" translate>monitoring.title</th>
+            <th scope="col" translate>monitoring.summary</th>
+            <th scope="col" translate>monitoring.status</th>
+            <th scope="col"></th>
+        </tr>
     </thead>
     <tbody>
-    <tr mdbTableCol *ngFor="let line of result">
-        <td>{{displayTime(line.creationDateTime)}}</td>
-        <td>{{displayTime(line.beginningOfBusinessPeriod)}}</td>
-        <td>{{displayTime(line.endOfBusinessPeriod)}}</td>
-        <td translate >{{line.processName}}</td>
-        <td translate [translateParams]="line.title.parameters">{{line.title.key}}</td>
-        <td translate [translateParams]="line.summary.parameters">{{line.summary.key}}</td>
-        <td  translate >{{line.coordinationStatus}}
-            <p class="status"
-               [ngStyle]="{'background-color': line.coordinationStatusColor, 'color': line.coordinationStatusColor}">.</p>
+        <tr mdbTableCol *ngFor="let line of result">
+            <td>{{displayTime(line.creationDateTime)}}</td>
+            <td>{{displayTime(line.beginningOfBusinessPeriod)}}</td>
+            <td>{{displayTime(line.endOfBusinessPeriod)}}</td>
+            <td translate>{{line.processName}}</td>
+            <td translate [translateParams]="line.title.parameters">{{line.title.key}}</td>
+            <td translate [translateParams]="line.summary.parameters">{{line.summary.key}}</td>
+            <td translate>{{line.coordinationStatus}}
+                <p class="status"
+                    [ngStyle]="{'background-color': line.coordinationStatusColor, 'color': line.coordinationStatusColor}">
+                    .</p>
             </td>
-        <td><a routerLink="../feed/cards/{{line.cardId}}" translate>monitoring.seeDetails</a></td>
-    </tr>
+            <td>
+                <button type="button" class="btn btn-primary" (click)="selectCard(line.cardId)"
+                        translate>monitoring.seeDetails   </button>
+            </td>
+        </tr>
     </tbody>
 </table>
+
+<div class="export-div">
+    <button class="btn btn-primary btn-sm export-btn" type="button" (click)="export()"
+        fileName="monitoringResults" translate>
+        <em class="fa fa-file-export"></em> monitoring.ExportTOExcel</button>
+</div>
+
+<ng-template #cardDetail let-modal>
+    <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div>
+            <of-card-details> </of-card-details>
+        </div>
+    </div>
+</ng-template>

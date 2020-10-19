@@ -18,10 +18,7 @@ Feature: CardsUserAcknowledgementUpdateCheck
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TRANS"
-			},
+	"groupRecipients": ["TRANS"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -77,10 +74,7 @@ Feature: CardsUserAcknowledgementUpdateCheck
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState2",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TRANS"
-			},
+	"groupRecipients": ["TRANS"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},

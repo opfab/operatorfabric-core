@@ -35,9 +35,8 @@ import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.validation.ConstraintViolation;
 
+import org.lfenergy.operatorfabric.businessconfig.model.*;
 import org.lfenergy.operatorfabric.businessconfig.model.Process;
-import org.lfenergy.operatorfabric.businessconfig.model.ProcessData;
-import org.lfenergy.operatorfabric.businessconfig.model.ResourceTypeEnum;
 import org.lfenergy.operatorfabric.utilities.PathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -70,6 +69,7 @@ public class ProcessesService implements ResourceLoaderAware {
     private Table<String,String, Process> completeCache;
     private ResourceLoader resourceLoader;
     private LocalValidatorFactoryBean validator;
+    private ProcessGroupsData processGroupsCache;
     
     @Autowired
     public ProcessesService(ObjectMapper objectMapper, LocalValidatorFactoryBean validator) {
@@ -82,6 +82,11 @@ public class ProcessesService implements ResourceLoaderAware {
     @PostConstruct
     private void init() {
     	loadCache();
+    	loadProcessGroupsCache();
+    }
+
+    public ProcessGroups getProcessGroupsCache() {
+        return processGroupsCache;
     }
 
     /**
@@ -92,7 +97,28 @@ public class ProcessesService implements ResourceLoaderAware {
 	public List<Process> listProcesses() {
 		return new ArrayList<>(defaultCache.values());		
 	}
-    
+
+    /**
+     * Loads processGroups data to processGroupsCache
+     */
+    public void loadProcessGroupsCache() {
+
+        this.processGroupsCache = new ProcessGroupsData(new ArrayList<>(), new ProcessGroupsLocaleData());
+        try {
+            Path rootPath = Paths
+                    .get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath())
+                    .normalize();
+
+            File f = new File(rootPath.toString() + "/processGroups.json");
+            if (f.exists() && f.isFile()) {
+                log.info("loading processGroups.json file from {}", new File(storagePath).getAbsolutePath());
+                this.processGroupsCache = objectMapper.readValue(f, ProcessGroupsData.class);
+            }
+        }
+        catch (IOException e) {
+            log.warn("Unreadable processGroups.json file at  {}", storagePath);
+        }
+    }
 
     /**
      * Loads process data to defaultCache (not thread safe)
@@ -202,13 +228,12 @@ public class ProcessesService implements ResourceLoaderAware {
 
         if (process == null)
             throw new FileNotFoundException("Unknown version (" + finalVersion + ") for " + processId);
-        validateResourceParameters(processId, type, name, finalVersion, locale);
-        String finalName;
-        if (type == ResourceTypeEnum.I18N) {
-            finalName = locale;
-        } else {
-            finalName = name;
-        }
+
+        if (type.isLocalized() && locale == null)
+            throw new FileNotFoundException("Unable to determine resource for undefined locale");
+
+        String finalName = (type == ResourceTypeEnum.I18N) ? locale : name;
+
         String resourcePath = PATH_PREFIX +
                 storagePath +
                 File.separator +
@@ -220,39 +245,13 @@ public class ProcessesService implements ResourceLoaderAware {
                 File.separator +
                 (type.isLocalized() && !type.equals(ResourceTypeEnum.I18N) ? (locale + File.separator) : "") +
                 finalName + type.getSuffix();
-        log.info("loading resource: {}", resourcePath);
-        return this.resourceLoader.getResource(resourcePath);        
-    }
 
-    /**
-     * Validates resource existence
-     *
-     * @param processId process id
-     * @param type      resource type
-     * @param name      resource name
-     * @param version   module version
-     * @param locale    resource locale
-     * @throws FileNotFoundException when resource does not exist
-     */
-    private void validateResourceParameters(String processId, ResourceTypeEnum type, String name, String version,
-                                            String locale) throws FileNotFoundException {
-        Process process = completeCache.get(processId,version);
-        if (type.isLocalized() && locale == null)
-            throw new FileNotFoundException("Unable to determine resource for undefined locale");
-        switch (type) {
-            case CSS:
-                if (!process.getCsses().contains(name))
-                    throw new FileNotFoundException("Unknown css resource for " + processId + ":" + version);
-                break;
-            case I18N:
-                break;
-            case TEMPLATE:
-                if (!process.getTemplates().contains(name))
-                    throw new FileNotFoundException("Unknown template " + name + " for " + processId + ":" + version);
-                break;
-            default:
-                throw new FileNotFoundException("Unable to find resource for unknown resource type");
+        log.info("loading resource: {}", resourcePath);
+        Resource resource = this.resourceLoader.getResource(resourcePath);
+        if (!resource.exists()) {
+            throw new FileNotFoundException("Unknown " + type + " resource for " + processId + ":" + version);
         }
+        return resource;        
     }
 
     /**
@@ -308,6 +307,29 @@ public class ProcessesService implements ResourceLoaderAware {
 		} finally {
 			PathUtils.silentDelete(outPath);
 		}
+    }
+
+    /**
+     * Updates or creates processgroups file from a file uploaded from POST /businessconfig/processgroups
+     *
+     * @param is processgroups file input stream
+     * @throws IOException if error arise during stream reading
+     */
+    public synchronized void updateProcessGroupsFile(InputStream is) throws IOException {
+        Path rootPath = Paths
+                .get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath())
+                .normalize();
+        if (!rootPath.toFile().exists())
+            throw new FileNotFoundException("No directory available to copy processgroups file");
+
+        ProcessGroupsData newProcessGroups = objectMapper.readValue(is, ProcessGroupsData.class);
+        is.reset();
+
+        //copy file
+        PathUtils.copyInputStreamToFile(is, rootPath.toString() + "/processGroups.json");
+
+        //update cache
+        processGroupsCache = newProcessGroups;
     }
 
     /**
@@ -451,10 +473,12 @@ public class ProcessesService implements ResourceLoaderAware {
             }finally {
                 this.completeCache.clear();
                 this.defaultCache.clear();
+                this.processGroupsCache.clear();
             }
         }else{
             this.completeCache.clear();
             this.defaultCache.clear();
+            this.processGroupsCache.clear();
         }
     }
         

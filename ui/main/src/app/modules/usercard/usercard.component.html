@@ -6,108 +6,108 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div class="text-center text-secondary py-3" translate xmlns="http://www.w3.org/1999/html">usercard.title</div>
+<h2 translate style="text-align: center;">userCard.title</h2>
+<br />
+<div *ngIf="displayForm()" class="container">
+    <form [formGroup]="messageForm">
+        <div class="row">
 
-<form *ngIf="displayForm()" [formGroup]="messageForm">
-    <div class="container">
-        <div class="row">
             <div class="col">
-                <of-single-filter i18nRootLabelKey="usercard.filters."
-                                  [parentForm]="messageForm"
-                                  filterPath="severity"
-                                  [values]="severityOptions"></of-single-filter>
+                <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
+                    [values]="processOptions"></of-single-filter>
             </div>
             <div class="col">
-                <of-single-filter i18nRootLabelKey="usercard.filters."
-                                  [parentForm]="messageForm"
-                                  filterPath="process"
-                                  [valuesInObservable]="processOptions$"></of-single-filter>
+                <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="state"
+                    [values]="stateOptions"></of-single-filter>
+
             </div>
             <div class="col">
-                <of-single-filter i18nRootLabelKey="usercard.filters."
-                                  [parentForm]="messageForm"
-                                  filterPath="state"
-                                  [valuesInObservable]="stateOptions$"></of-single-filter>
+                <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="severity"
+                    [values]="severityOptions"></of-single-filter>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <of-datetime-filter filterPath="startDate"
-                                    formControlName="startDate"
-                                    labelKey="usercard.filters."
-                                    [offset]="[{amount:1,unit:'minute'}]"
-                ></of-datetime-filter>
+                <of-datetime-filter filterPath="startDate" formControlName="startDate" labelKey="userCard.filters."
+                    [offset]="[{amount:1,unit:'minute'}]"></of-datetime-filter>
             </div>
             <div class="col">
-                <of-datetime-filter filterPath="endDate" formControlName="endDate"
-                                    labelKey="usercard.filters."></of-datetime-filter>
+                <of-datetime-filter filterPath="endDate" formControlName="endDate" labelKey="userCard.filters."
+                    [offset]="[{amount:60,unit:'minute'}]"></of-datetime-filter>
             </div>
         </div>
+
+
+
+    </form>
+
+    <div [innerHtml]="userCardTemplate"></div>
+
+    <br/>   
+
+
+    <form [formGroup]="recipientForm">
         <div class="row">
-            <div class="col">
-                <of-text-area i18nRootLabelKey="usercard.filters."
-                              [parentForm]="messageForm"
-                              filterPath="comment"
-                              lineNumber=4></of-text-area>
+            <div class="col-12">
+
+                <of-multi-filter-2 filterPath="entities" id="entities" [parentForm]="recipientForm"
+                    [values]="entityOptions" [dropdownSettings]="dropdownSettings" i18nRootLabelKey="userCard.filters." [selectedItems]="[]" >
+                </of-multi-filter-2>
             </div>
+
         </div>
-        <div class="row">
-            <div class="col">
-                <of-single-filter i18nRootLabelKey="usercard.filters."
-                                  [parentForm]="messageForm"
-                                  filterPath="entities"
-                                  [valuesInObservable]="entityOptions$"></of-single-filter>
-            </div>
-        </div>
+    </form>
+
+    <br />
+    <div style="text-align: center;width:100%">
         <button type="button" class="btn btn-primary" (click)="onSubmitForm(resumeCardBeforeSend)" translate>
-            usercard.prepareCard
+            userCard.prepareCard
 
         </button>
-        <button type="button" class="btn btn-secondary" (click)="reset()">
-            reset
-        </button>
     </div>
+</div>
 
-</form>
-
-    <div *ngIf="displaySendResult">
-        {{message}}{{error}}
-        <of-card *ngIf="noError()" [lightCard]="card"  [open]="true" [displayUnreadIcon]="false"></of-card>
-    <br/>
-        <button type="button" class="btn btn-primary" (click)="sendAnotherUserCard()" translate>usercard.send-another-one</button>
+<div *ngIf="displaySendResult">
+    <br />
+    <h2 translate style="text-align: center"> {{messageAfterSendingCard}} </h2>
+    <br /><br />
+    <of-card [lightCard]="card" [open]="true" [displayUnreadIcon]="false"></of-card>
+    <br />
+    <div style="text-align: center;">
+        <button type="button" class="btn btn-primary" (click)="sendAnotherUserCard()"
+            translate>userCard.send-another-one</button>
     </div>
+</div>
+
+<br />
+<div id='div-detail-msg' *ngIf='errorMessage.display' class="alert alert-dismissible fade show text-center alert-danger"
+    role="alert" translate>
+    {{errorMessage.text}}
+    <button type="button" class="close" aria-label="Close" (click)="errorMessage.display = false">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
 
 <ng-template #resumeCardBeforeSend let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Bootstrap Modal</h4>
+        <h4 translate> userCard.confirmSending </h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="modal-body">
-        <p translate translate>usercard.confirmSending</p>
+
         <div>
-            <p>Free Message</p>
-            <of-card [lightCard]="getLightCard()" [open]="true" [displayUnreadIcon]="false"></of-card>
-            <p>Complementary data</p>
-            <dl>
-                <dt  translate>usercard.filters.process</dt>
-                <dd>{{card.process}} </dd>
-                <dt  translate>usercard.filters.startDate</dt>
-                <dd>{{card.startDate}} </dd>
-                <dt  translate>usercard.state</dt>
-                <dd>{{card.state}} </dd>
-                <dt translate>usercard.processInstanceId</dt>
-                <dd>{{card.processInstanceId}} </dd>
-                <dt  translate>usercard.filters.entities</dt>
-                <dd>{{card.entityRecipients}}</dd>
-                <dt >UID</dt>
-                <dd>{{card.uid}}</dd>
-            </dl>
+
+
+            <of-card [lightCard]="card" [open]="true" [displayUnreadIcon]="false"></of-card>
+
+            <of-card-preview [card]="card" [currentPath]="'test'"> </of-card-preview>
+
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="decline()" translate>usercard.refuse</button>
-            <button type="button" class="btn btn-outline-dark" (click)="confirm()">Third</button>
+            <button type="button" class="btn btn-secondary" (click)="decline()" translate>userCard.refuse</button>
+            <button type="button" class="btn btn-outline-dark" (click)="confirm()" translate>userCard.accept</button>
         </div>
     </div>
 </ng-template>

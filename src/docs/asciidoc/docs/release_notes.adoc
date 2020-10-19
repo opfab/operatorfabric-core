@@ -5,44 +5,52 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-= Version 1.6.0.RELEASE
-
+= Version 1.7.0.RELEASE
 
 == Features
 
-- [OC-968] Add UI alert via a clock when ltdd time is approaching
-- [OC-967] When showing an action card with responses , view the list of entity that had respond or not in the top of the card
-- [OC-1098] When opening an external app in an iframe from business menu, the night/day mode (or style) is passed in the request via a param in the GET Request. When the user switch the mode, the iframe is reloaded
-- [OC-1116] Init hours and minutes to 00:00 in feed time filter instead of blank field
-- [OC-1121] New ack icons in feed filter
+- [OC-1109] As a user I want to see the lttd countdown on 'simple' card
+- [OC-1192] Add end of timespan on timeline
+- [OC-1169] Set business log as optional (use operatorfabric.businessLogActivated in yaml configuration files to activate or not the business logs)
+- [OC-1173] Add the possibility to not check for user perimeter when sending response (child card). You can find more information in documentation
+** https://opfab.github.io/documentation/current/reference_doc/#_define_permissions
+** https://opfab.github.io/documentation/current/deployment/#_business_service_specific_configurations
+** https://opfab.github.io/documentation/current/deployment/#ui_properties
 
-**Experimental features:**
-
-- [OC-1056] View card in an agenda style screen  
-- Monitoring and logging screens  
-  * [OC-1076] Add a filter to see only relevant process in monitoring and logging screen. Relevant processes are configured in the config.json of each process
-  * [OC-1079] Adjust Monitoring and Logging pages
-  * [OC-1118] Adds publisher type to cards and sets it to ENTITY when user card end point called and to EXTERNAL otherwise
-  * [OC-1119] Displays entity as sender in logging page for ENTITY publisher type
-  * [OC-1074] Implements new share multi-choice component
+- Work in progress
+** New version of userCard feature ([OC-1100] [OC-1143] [OC-1192][OC 1178][OC-1158][OC-1151][OC-1092])
+** New version of monitoring and Logging screens ( [OC-1130] [OC-1044] [OC-1077] [OC-1145])
+** First version of administration module for users, entities and groups management ([OC-1025] [OC-1088] [OC-1180] [OC-1026] [OC-1027] [OC-1028] [OC-1087] [OC-1181] [OC-1167])
 
 == Tasks
 
-- [OC-419] Correcting Publication Service Documentation (User Guide)
-- [OC-1080] When user has no right to respond to a card , instead of not showing response button , disable it
-- [OC-1095] UI - Load i18n for all processes at startup
-- [OC-1097] Remove unused vps env configuration
-- [OC-1082] UI - Remove use of method askUserApplicationRegistered
-- [OC-1072] UI - Load All Entities information in the UI when user is starting OpFab 
-- [OC-867] UI - Change time filter label, depending on the timeline hidden or not
-- [OC-1094] Add write access for defaultprocess with state message in standard config and bundle cleaning
-- SSE permanent connection for notification 
-  * [OC-1096] Add an heartbeat mechanism to avoid setting long timeout in nginx and to be compatible with the use of external proxies
-  * [OC-1122] "Robustify" reconnection mechanism when losing connection
-- [OC-1081] Add documentation for lttd and default config value for secondsBeforeLttdForClockDisplay
-- [OC-1124] Refactor card detail component to avoid unnecessary processing
-- [OC-1129] Modify storage directory for bundle in docker reference configuration (in config/docker)
-- [OC-1128] Add state as mandatory information in documentation
+- Configuration :
+** [OC-1187] Set the external recipient in the business process definition. You can find more information in the documentation : https://opfab.github.io/documentation/current/reference_doc/#_configure_the_response_in_config_json
+** [OC-1126] Add field userRecipients and groupRecipients when posting a card. Theses fields replace recipient field which is now deprecated. ( See documentation : https://opfab.github.io/documentation/current/reference_doc/#_cards_examples)
+** [OC-1117] Remove template and css arrays in bundle definition .This two arrays are not needed anymore in the config.json of the bundle
+
+- Refactoring :
+** [OC-1184] Refactors card-detail implementation
+** [OC-1155] Optimize loading card from the UI
+** [OC-1137] Improve UI initialization
+** [OC-411] Remove unused property deletionDate
+
+
+- Documentation :
+** [OC-1156] Add in documentation : How to check regression of a branch
+
+- Miscellaneous
+** [OC-1078] Implement notion of processGroup (WIP)
+** [OC-1147] Displays modal in full screen and upgrade boostrap and other libraries
+** [OC-1157] Colors modifications for day mode
 
 == Bugs
-- [OC-1125] Card are sometimes not marked as read
+
+- [OC-1149] Remove error in card detail
+- [OC-1175] Correct bug in datePicker : after opening the calendar, when clicking outside, the calendar shall disappear
+- [OC-1162] For the archives result, the tags and the processes chosen are not considered
+- [OC-1171] Load all translations during startup phase (Solve problem of translation after F5 action on admin screen)
+- [OC-1107] Lttd - only minutes and seconds are displayed in the countdown
+
+
+

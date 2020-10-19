@@ -7,19 +7,7 @@
     "logging": true,
     "calendar": true
   },
-  "templates": [
-    "template",
-    "chart",
-    "chart-line",
-    "process",
-    "question",
-    "contingencies",
-    "response"
-  ],
-  "csses": [
-    "style",
-    "contingencies"
-  ],  "menuLabel": "menu.label",
+  "menuLabel": "menu.label",
   "menuEntries": [
     {
       "id": "uid test 0",
@@ -38,6 +26,7 @@
     "messageState": {
       "name":  "message.title",
       "color": "#FAF0AF",
+      "userCardTemplate": "usercard_message",
       "details": [
         {
           "title": {
@@ -86,6 +75,7 @@
     "processState": {
       "name": "process.label",
       "color": "#8bcdcd",
+      "userCardTemplate": "usercard_process",
       "details": [
         {
           "title": {

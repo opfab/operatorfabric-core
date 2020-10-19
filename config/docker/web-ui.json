@@ -1,4 +1,5 @@
 {
+  "checkPerimeterForResponseCard": true,
   "archive": {
     "filters": {
       "page": {
@@ -33,7 +34,7 @@
         "display": "BUSINESS"
       },
       "hideAckFilter": false,
-      "secondsBeforeLttdForClockDisplay": 180
+      "secondsBeforeLttdForClockDisplay": 3700
     },
     "notify": false,
     "timeline": {
@@ -131,5 +132,8 @@
   "navbar": {
     "hidden": ["calendar","logging","monitoring","usercard"],
     "businessmenus" : {"type":"BOTH"}
+  },
+  "admin": {
+    "hidden": false
   }
 }

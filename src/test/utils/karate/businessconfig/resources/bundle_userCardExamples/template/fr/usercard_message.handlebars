@@ -1,0 +1,33 @@
+<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
+        <div style="width:100%">
+            <label for="message">Message</label>
+        </div>
+        <div style="width:100%">
+            <textarea  id="message" name="message" placeholder="Ecrire un message ..." style="width:100%" ></textarea>
+        </div>
+
+
+<script>
+    templateGateway.getSpecificCardInformation = function () {
+        const message = document.getElementById('message').value;
+        const card = {
+        summary : {key : "message.summary"},
+		title : {key : "message.title"},
+        data : {message: message}
+        };
+         if (message.length<1) return { valid:false , errorMsg:'Vous devez saisir un message'}
+        return {
+            valid: true,
+            card: card
+        };
+
+    }
+</script>

@@ -66,3 +66,6 @@ operatorfabric.users.default:
   user-settings:
     - login: rte-operator
       description: Da Operator Rulez
+#logging:
+#  level:
+#    ROOT: DEBUG

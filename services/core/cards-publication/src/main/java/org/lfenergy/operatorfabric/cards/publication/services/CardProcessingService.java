@@ -17,11 +17,17 @@ import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.model.PublisherTypeEnum;
 import org.lfenergy.operatorfabric.cards.publication.services.clients.impl.ExternalAppClientImpl;
 import org.lfenergy.operatorfabric.cards.publication.services.processors.UserCardProcessor;
+import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
+import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
+import org.lfenergy.operatorfabric.users.model.ComputedPerimeter;
 import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
+import org.lfenergy.operatorfabric.users.model.RightsEnum;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import reactor.core.publisher.Flux;
@@ -231,8 +237,27 @@ public class CardProcessingService {
         cardPublicationData.forEach(x->deleteCard(x.getId()));
     }
 
-    public Optional<CardPublicationData> deleteCard(String processInstanceId) {
-        CardPublicationData cardToDelete = cardRepositoryService.findCardById(processInstanceId);
+    public Optional<CardPublicationData> deleteCard(String id) {
+        CardPublicationData cardToDelete = cardRepositoryService.findCardById(id);
+        return deleteCard0(cardToDelete);
+    }
+
+    public Optional<CardPublicationData> deleteUserCard(String id, CurrentUserWithPerimeters user) {
+        CardPublicationData cardToDelete = cardRepositoryService.findCardById(id);
+        if (cardToDelete == null)
+            return Optional.empty();
+        if (isUserAllowedToDeleteThisCard(cardToDelete, user)){
+            return deleteCard0(cardToDelete);
+        }
+        else {
+            throw new ApiErrorException(ApiError.builder()
+                    .status(HttpStatus.FORBIDDEN)
+                    .message("User not allowed to delete this card")
+                    .build());
+        }
+    }
+
+    public Optional<CardPublicationData> deleteCard0(CardPublicationData cardToDelete) {
         Optional<CardPublicationData> deletedCard = Optional.ofNullable(cardToDelete);
         if (null != cardToDelete) {
             cardNotificationService.notifyOneCard(cardToDelete, CardOperationTypeEnum.DELETE);
@@ -245,6 +270,25 @@ public class CardProcessingService {
         return deletedCard;
     }
 
+    /* 1st check : card.publisherType == ENTITY
+       2nd check : the card has been sent by an entity of the user connected
+       3rd check : the user has the Write access to the process/state of the card */
+    public boolean isUserAllowedToDeleteThisCard(CardPublicationData card, CurrentUserWithPerimeters user) {
+        List<ComputedPerimeter> perimetersOfTheUserList = user.getComputedPerimeters();
+        List<String>            entitiesOfTheUserList   = user.getUserData().getEntities();
+
+        if ((card.getPublisherType() == PublisherTypeEnum.ENTITY) &&
+            (entitiesOfTheUserList.contains(card.getPublisher()))){
+
+            for (ComputedPerimeter perimeter : perimetersOfTheUserList) {
+                if ((perimeter.getProcess().equals(card.getProcess())) &&
+                    (perimeter.getState().equals(card.getState())) &&
+                    ((perimeter.getRights() == RightsEnum.WRITE) || (perimeter.getRights() == RightsEnum.RECEIVEANDWRITE)))
+                    return true;
+            }
+        }
+        return false;
+    }
 
 	public Mono<UserBasedOperationResult> processUserAcknowledgement(Mono<String> cardUid, User user) {
 		return cardUid.map(uid -> cardRepositoryService.addUserAck(user, uid));

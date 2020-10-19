@@ -18,10 +18,7 @@ Feature: Cards
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -50,10 +47,7 @@ Feature: Cards
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -115,10 +109,7 @@ Feature: Cards
 	"process"  :"api_test",
 	"processInstanceId" : "process2card1",
 	"state": "messageState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"severity" : "COMPLIANT",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -131,10 +122,7 @@ Feature: Cards
 	"process"  :"api_test",
 	"processInstanceId" : "process2card2",
 	"state": "messageState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"severity" : "COMPLIANT",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -163,10 +151,7 @@ Feature: Cards
 	"process"  :"api_test",
 	"processInstanceId" : "process2CardsIncludingOneCardKO1",
 	"state": "messageState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"severity" : "COMPLIANT",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -179,10 +164,7 @@ Feature: Cards
 	"process"  :"api_test",
 	"processInstanceId" : "process2CardsIncludingOneCardKO2",
 	"state": "messageState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
@@ -209,10 +191,7 @@ Feature: Cards
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"externalRecipients" : ["api_test2","api_test165"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -273,10 +252,7 @@ Scenario:  Post card with parentCardUid not correct
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -311,10 +287,7 @@ Scenario:  Post card with correct parentCardUid
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -342,10 +315,7 @@ Scenario: Push card and its two child cards, then get the parent card
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -378,10 +348,7 @@ Scenario: Push card and its two child cards, then get the parent card
 	"process"  :"api_test",
 	"processInstanceId" : "processChild1",
 	"state": "messageState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -399,10 +366,7 @@ Scenario: Push card and its two child cards, then get the parent card
 	"process"  :"api_test",
 	"processInstanceId" : "processChild2",
 	"state": "messageState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -447,10 +411,7 @@ Scenario: Push a card for a user with no group and no entity
 	"process"  :"api_test",
 	"processInstanceId" : "processForUserWithNoGroupNoEntity",
 	"state": "messageState",
-	"recipient" : {
-				"type" : "USER",
-				"identity" : "userwithnogroupnoentity"
-			},
+	"userRecipients": ["userwithnogroupnoentity"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},

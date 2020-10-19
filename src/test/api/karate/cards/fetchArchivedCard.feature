@@ -17,10 +17,7 @@ Feature: fetchArchive
 	"process"  :"api_test",
 	"processInstanceId" : "process_archive_1",
 	"state": "messageState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"severity" : "ALARM",
 	"startDate" : 1583943924000,
 	"endDate" : 1584943924000,
@@ -81,10 +78,7 @@ Feature: fetchArchive
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "TSO1"
-			},
+	"groupRecipients": ["TSO1"],
 	"externalRecipients" : ["api_test2","api_test16566111"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,

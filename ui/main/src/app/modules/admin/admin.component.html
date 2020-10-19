@@ -1,0 +1,35 @@
+<div id="tabs" #tabs>
+
+  <ul class="nav nav-pills">
+
+    <li class="nav-item">
+      <a class="nav-link" [ngClass]="{ 'active':activeTab==='users'}" data-toggle="tab" href="#admin/users" (click)="setActiveTab('users')" > {{usersLabel}} </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [ngClass]="{ 'active':activeTab==='entities'}" data-toggle="tab" href="#admin/entities" (click)="setActiveTab('entities')"> {{entitiesLabel}} </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [ngClass]="{ 'active':activeTab==='groups'}" data-toggle="tab" href="#admin/groups" (click)="setActiveTab('groups')"> {{groupsLabel}} </a>
+    </li>
+
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane active" id="admin/users" [ngClass]="{ 'active':activeTab==='users'}">
+      <br>
+      <br>
+      <of-users-table></of-users-table>
+    </div>
+    <div class="tab-pane" id="admin/entities" [ngClass]="{ 'active':activeTab==='entities'}">
+      <br>
+      <br>
+     <of-entities-table></of-entities-table>
+    </div>
+    <div class="tab-pane" id="admin/groups" [ngClass]="{ 'active':activeTab==='groups'}">
+      <br>
+      <br>
+      <of-groups-table></of-groups-table>
+    </div>
+  </div>
+
+</div>

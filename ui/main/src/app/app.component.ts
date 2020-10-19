@@ -15,86 +15,105 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
 import { AuthenticationService } from '@ofServices/authentication/authentication.service';
 import { LoadConfigSuccess } from '@ofActions/config.actions';
+import { LoadProcessesTranslation } from '@ofActions/translate.actions';
 import { selectIdentifier } from '@ofSelectors/authentication.selectors';
-import { ConfigService} from "@ofServices/config.service";
-import {TranslateService} from '@ngx-translate/core';
-import { catchError } from 'rxjs/operators';
+import { ConfigService } from '@ofServices/config.service';
+import { TranslateService } from '@ngx-translate/core';
+import { catchError, skip } from 'rxjs/operators';
+import { merge} from 'rxjs';
 import { I18nService } from '@ofServices/i18n.service';
 import { CardService } from '@ofServices/card.service';
 import { UserService } from '@ofServices/user.service';
 import { EntitiesService } from '@ofServices/entities.service';
+import { ProcessesService } from '@ofServices/processes.service';
 
 
 @Component({
-    selector: 'of-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+  selector: 'of-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-    readonly title = 'OperatorFabric';
-    isAuthenticated = false;
-    loaded = false;
-    useCodeOrImplicitFlow = true;
+  readonly title = 'OperatorFabric';
+  isAuthenticated = false;
+  loaded = false;
+  useCodeOrImplicitFlow = true;
 
-    /**
-     * NB: I18nService is injected to trigger its constructor at application startup
-     */
-    constructor(private store: Store<AppState>,
-        private titleService: Title
-        , private authenticationService: AuthenticationService
-        ,private  configService: ConfigService
-        , private translate: TranslateService
-        , private i18nService: I18nService
-        , private cardService: CardService
-        , private userService: UserService
-        ,private entitiesService: EntitiesService) {
+  /**
+   * NB: I18nService is injected to trigger its constructor at application startup
+   */
+  constructor(private store: Store<AppState>,
+    private titleService: Title
+    , private authenticationService: AuthenticationService
+    , private configService: ConfigService
+    , private translateService: TranslateService
+    , private i18nService: I18nService
+    , private cardService: CardService
+    , private userService: UserService
+    , private entitiesService: EntitiesService
+    , private processesService: ProcessesService) {
+  }
+
+  ngOnInit() {
+    this.loadConfiguration();
+    this.initApplicationWhenUserAuthenticated();
+  }
+
+  private loadConfiguration() {
+    this.configService.fetchConfiguration().subscribe(config => {
+      console.log(new Date().toISOString(), `Configuration loaded (web-ui.json)`);
+      this.store.dispatch(new LoadConfigSuccess({ config: config }));
+      this.setTitle();
+      this.loadTranslationAndLaunchAuthenticationProcess(config);
+      },
+    catchError((err, caught) => {
+      console.error('Impossible to load configuration file web-ui.json', err);
+      return caught;
+    }));
+  }
+  private setTitle() {
+    const title = this.configService.getConfigValue('title');
+    if (!!title) { this.titleService.setTitle(title); }
+  }
+
+  private loadTranslationAndLaunchAuthenticationProcess(config) {
+    if (!!config.i18n.supported.locales) {
+      const localeRequests$ = [];
+      (config.i18n.supported.locales as string[]).forEach(local => localeRequests$.push(this.i18nService.loadLocale(local)));
+      merge(...localeRequests$).pipe(skip(localeRequests$.length - 1)).subscribe(() => { // Wait for all request to complete
+        console.log(new Date().toISOString(), 'All opfab translation loaded for locales:', config.i18n.supported.locales.toString());
+        this.translateService.addLangs(config.i18n.supported.locales);
+        this.launchAuthenticationProcess();
+      });
     }
+  }
 
-    ngOnInit() {
-        this.loadConfiguration();
-        this.initCardSubsriptionWhenUserAuthenticated();
-    }
+  private launchAuthenticationProcess() {
+    console.log(new Date().toISOString(), `Launch authentication process`);
+    this.authenticationService.initializeAuthentication();
+    this.useCodeOrImplicitFlow = this.authenticationService.isAuthModeCodeOrImplicitFlow();
+  }
 
-    private loadConfiguration() {
-
-          this.configService.fetchConfiguration().subscribe(config => {
-            console.log(new Date().toISOString(),`Configuration loaded (web-ui.json)`);
-            if (config.i18n.supported.locales) this.translate.addLangs(config.i18n.supported.locales);
-            this.setTitle();
-            this.store.dispatch(new LoadConfigSuccess({config: config}));
-            this.launchAuthenticationProcess();
-        })
-            catchError((err,caught) => {
-                console.error("Impossible to load configuration file web-ui.json",err);
-                return caught;
+  private initApplicationWhenUserAuthenticated() {
+    this.store
+      .select(selectIdentifier)
+      .subscribe(identifier => {
+        if (identifier) {
+          console.log(new Date().toISOString(), `User ${identifier} logged`);
+          this.isAuthenticated = true;
+          this.cardService.initCardSubscription();
+          merge(
+            this.userService.loadUserWithPerimetersData(),
+            this.entitiesService.loadAllEntitiesData(),
+            this.processesService.loadAllProcesses(),
+            this.cardService.initSubscription)
+            .pipe(skip(3))
+            .subscribe(() => {
+              this.store.dispatch(new LoadProcessesTranslation());
+              this.loaded = true;
             });
+        }
+      });
+  }
 
-    }
-
-    private setTitle()
-    {
-        const title = this.configService.getConfigValue('title');
-        if (!!title) this.titleService.setTitle(title);
-    }
-
-    private launchAuthenticationProcess() {
-        console.log(new Date().toISOString(),`Launch authentification process`);
-        this.authenticationService.initializeAuthentication();
-        this.useCodeOrImplicitFlow = this.authenticationService.isAuthModeCodeOrImplicitFlow();
-    }
-
-    private initCardSubsriptionWhenUserAuthenticated() {
-        this.store
-            .select(selectIdentifier)
-            .subscribe(identifier => {
-                if (identifier) {
-                    console.log(new Date().toISOString(),`User ${identifier} logged`);
-                    this.isAuthenticated = true;
-                    this.userService.loadUserWithPerimetersData();
-                    this.entitiesService.loadAllEntitiesData();
-                    this.cardService.initCardSubscription();
-                    this.cardService.initSubscription.subscribe( ()=> this.loaded = true);
-                }
-            });
-    }
 }

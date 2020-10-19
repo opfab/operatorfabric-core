@@ -18,8 +18,6 @@ export class Process {
         readonly id: string,
         readonly version: string,
         readonly name?: string,
-        readonly templates?: string[],
-        readonly csses?: string[],
         readonly locales?: string[],
         readonly menuLabel?: string,
         readonly menuEntries?: MenuEntry[],
@@ -38,7 +36,7 @@ export class Process {
 }
 
 export const unfouundProcess: Process = new Process('', '', 'process.not-found',
-     [], [], [], '', [], null, null);
+     [], '', [], null, null);
 
 export class MenuEntry {
 
@@ -87,7 +85,8 @@ export class State {
         readonly response?: Response,
         readonly acknowledgementAllowed?: boolean,
         readonly name?: string,
-        readonly color?: string
+        readonly color?: string,
+        readonly userCardTemplate?: string
     ) {
     }
 }
@@ -98,7 +97,8 @@ export class Response {
         readonly lock?: boolean,
         readonly state?: string,
         readonly btnColor?: ResponseBtnColorEnum,
-        readonly btnText?: I18n
+        readonly btnText?: I18n,
+        readonly externalRecipients?: string[]
     ) {
     }
 }

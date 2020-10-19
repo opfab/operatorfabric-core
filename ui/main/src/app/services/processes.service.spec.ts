@@ -108,12 +108,12 @@ describe('Processes Services', () => {
             expect(calls.length).toEqual(1);
             calls[0].flush([
                 new Process(
-                    'process1', '1',  'process1.label', [], [], [], 'process1.menu.label',
+                    'process1', '1',  'process1.label', [], 'process1.menu.label',
                     [new MenuEntry('id1', 'label1', 'link1', MenuEntryLinkTypeEnum.BOTH),
                         new MenuEntry('id2', 'label2', 'link2', MenuEntryLinkTypeEnum.BOTH)]
                 ),
                 new Process(
-                    'process2', '1', 'process2.label', [], [], [], 'process2.menu.label',
+                    'process2', '1', 'process2.label', [], 'process2.menu.label',
                     [new MenuEntry('id3', 'label3', 'link3', MenuEntryLinkTypeEnum.BOTH)]
                 )
             ]);

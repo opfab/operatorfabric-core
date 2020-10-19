@@ -14,6 +14,7 @@ import {LoginComponent} from './components/login/login.component';
 import {AboutComponent} from './modules/about/about.component';
 import {LoggingComponent} from './modules/logging/logging.component';
 import {MonitoringComponent} from './modules/monitoring/monitoring.component';
+import { AdminComponent } from './modules/admin/admin.component';
 import {CalendarComponent} from './modules/calendar/calendar.component';
 
 const defaultPath = '/feed';
@@ -25,14 +26,6 @@ const routes: Routes = [
         loadChildren: () => import('./modules/feed/feed.module').then(m => m.FeedModule),
     },
     {
-        path: 'calendar',
-        component: CalendarComponent
-    },
-    {
-        path: 'monitoring',
-        component: MonitoringComponent
-    },
-    {
         path: 'usercard',
         loadChildren: () => import('./modules/usercard/usercard.module').then(m => m.UserCardModule),
     },
@@ -41,8 +34,16 @@ const routes: Routes = [
         loadChildren: () => import('./modules/archives/archives.module').then(m => m.ArchivesModule),
     },
     {
+        path: 'monitoring',
+        component: MonitoringComponent
+    },
+    {
         path: 'logging',
         component: LoggingComponent
+    },
+    {
+        path: 'calendar',
+        component: CalendarComponent
     },
     {
         path: 'businessconfigparty',
@@ -60,11 +61,17 @@ const routes: Routes = [
         path: 'about',
         component: AboutComponent
     },
-    {path: '**', redirectTo: defaultPath}
+    {
+        path: 'admin',
+         loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule),
+    },
+    {   path: '**',
+        redirectTo: defaultPath
+    }
 ];
-// TODO manage visible path more gently
+// TODO manage visible path more gently
 const startIndex = 0;
-const numberOfHiddenRoutes = 4 ; // 'businessconfigparty', 'settings', 'navbar' and 'about'
+const numberOfHiddenRoutes = 5 ; // 'businessconfigparty', 'settings', 'navbar'  'admin' ,'about'
 const manageIndexesWhichBeginAtZero = 1;
 const numberOfRoutes = routes.length;
 const lastIndexOfVisibleElements = numberOfRoutes - numberOfHiddenRoutes - manageIndexesWhichBeginAtZero;
