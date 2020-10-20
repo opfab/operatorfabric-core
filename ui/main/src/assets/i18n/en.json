@@ -161,7 +161,7 @@
       "startDate":  "Start Date",
       "endDate":  "End Date",
       "comment": "Comment",
-      "entities": "Recipients"
+      "recipients": "Recipients"
     },
     "options": {
       "severity": {

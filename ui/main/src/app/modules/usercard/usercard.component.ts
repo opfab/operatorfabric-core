@@ -28,6 +28,7 @@ import { UserWithPerimeters, RightsEnum, ComputedPerimeter } from '@ofModel/user
 import { EntitiesService } from '@ofServices/entities.service';
 import { transformToTimestamp } from '../archives/components/archive-filters/archive-filters.component';
 import { ProcessesService } from '@ofServices/processes.service';
+import { Entity } from '@ofModel/user.model';
 
 declare const templateGateway: any;
 
@@ -60,7 +61,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
     });
 
     stateOptions: any[];
-    entityOptions = new Array();
+    recipientsOptions = new Array();
     dropdownSettings = {};
     processOptions = new Array();
 
@@ -116,7 +117,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         });
 
         this.recipientForm = new FormGroup({
-            entities: new FormControl([])
+            recipients: new FormControl([])
         });
 
 
@@ -136,7 +137,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     loadAllEntities(): void {
         this.entitiesService.getEntities().forEach(entity =>
-            this.entityOptions.push({ id: entity.id, itemName: entity.name }));
+            this.recipientsOptions.push({ id: entity.id, itemName: entity.name }));
     }
 
 
@@ -250,10 +251,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     onSubmitForm(template: TemplateRef<any>) {
         const formValue = this.messageForm.value;
-        const recipients = this.recipientForm.value['entities'];
-        const processFormVal = formValue['process'];
+
         const selectedProcess = this.processesDefinition.find(process => {
-            return process.id === processFormVal;
+            return process.id === formValue['process'];
         });
         const processVersion = selectedProcess.version;
         const state = formValue['state'];
@@ -279,13 +279,20 @@ export class UserCardComponent implements OnDestroy, OnInit {
             return;
         }
 
-        const entities = new Array();
-        if (recipients.length < 1) {
+        const selectedRecipients = this.recipientForm.value['recipients'];
+        const recipients = new Array();
+        if (selectedRecipients.length < 1) {
             this.errorMessage.display = true;
             this.errorMessage.text = 'userCard.error.noRecipientSelected';
             return;
-        } else {
-            recipients.forEach(entity => entities.push(entity.id));
+        } else selectedRecipients.forEach(entity => recipients.push(entity.id));
+
+
+        const entitiesAllowedToRespond = [];
+        if (selectedProcess.states[state].response) {
+                recipients.forEach(entity => {
+                    if (!this.currentUserWithPerimeters.userData.entities.includes(entity)) entitiesAllowedToRespond.push(entity);
+                });
         }
 
         let startDate = this.messageForm.get('startDate').value;
@@ -310,7 +317,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
             publishDate: null,
             publisher: this.currentUserWithPerimeters.userData.entities[0],
             processVersion: processVersion,
-            process: processFormVal,
+            process: selectedProcess.id,
             processInstanceId: generatedId,
             state: state,
             startDate: startDate,
@@ -318,8 +325,8 @@ export class UserCardComponent implements OnDestroy, OnInit {
             severity: formValue['severity'],
             hasBeenAcknowledged: false,
             hasBeenRead: false,
-            entityRecipients: entities,
-            entitiesAllowedToRespond: [],
+            entityRecipients: recipients,
+            entitiesAllowedToRespond: entitiesAllowedToRespond,
             externalRecipients: null,
             title: title,
             summary: summary,

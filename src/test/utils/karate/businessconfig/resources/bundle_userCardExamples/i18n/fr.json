@@ -7,5 +7,10 @@
 	"conference":{
 		"title":"Conférence téléphonique ☏",
 		"summary":"You êtes invités à une conférence téléphonique"
+	},
+	"question":{
+		"title":"Question",
+		"summary":"Il y a une question pour vous"
 	}
+
 }

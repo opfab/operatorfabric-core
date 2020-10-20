@@ -39,6 +39,25 @@
         }
       ],
       "acknowledgementAllowed": true
-    }
+    },
+    "questionState": {
+      "name": "question.title",
+      "color": "#8bcdcd",
+      "userCardTemplate": "usercard_question",
+      "response": {
+        "state": "questionState"
+      },
+      "details": [
+        {
+          "title": {
+            "key": "question.title"
+          },
+          "templateName": "question",
+          "styles": [
+          ]
+        }
+      ],
+      "acknowledgementAllowed": false
+    }   
   }
 }
