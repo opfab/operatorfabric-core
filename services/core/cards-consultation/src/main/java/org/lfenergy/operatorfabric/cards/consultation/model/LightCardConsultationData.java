@@ -69,7 +69,9 @@ public class LightCardConsultationData implements LightCard {
     @Transient
     private Boolean hasBeenRead;
 
-    private String parentCardUid;
+    private String parentCardId;
+
+    private String initialParentCardUid;
 
     private List<String> entitiesAllowedToRespond;
 
@@ -99,7 +101,8 @@ public class LightCardConsultationData implements LightCard {
         LightCardConsultationDataBuilder builder = builder()
                 .uid(other.getUid())
                 .id(other.getId())
-                .parentCardUid(other.getParentCardUid())
+                .parentCardId(other.getParentCardId())
+                .initialParentCardUid(other.getInitialParentCardUid())
                 .publisher(other.getPublisher())
                 .process(other.getProcess())
                 .processVersion(other.getProcessVersion())

@@ -146,6 +146,7 @@ Feature: UserCards tests
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
+    And def cardId = response.card.id
     And def cardUid = response.card.uid
 
 
@@ -174,7 +175,7 @@ Feature: UserCards tests
     Then status 401
 
 
-# Push user card with good permiter ==> ReceiveAndWrite perimeter
+# Push user card with good perimeter ==> ReceiveAndWrite perimeter
     Given url opfabPublishCardUrl + 'cards/userCard'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card
@@ -196,9 +197,6 @@ Feature: UserCards tests
 {
 	"publisher" : "cardTest2",
 	"processVersion" : "1",
-	"process"  :"process_1",
-	"processInstanceId" : "process_id_x",
-	"state": "state1",
 	"process"  :"process_2",
 	"processInstanceId" : "process_o",
 	"state": "state2",
@@ -211,7 +209,7 @@ Feature: UserCards tests
 	"data" : {"message":"a message"}
 }
 """
-# Push user card with not authorized permiter ==> Receive perimeter
+# Push user card with not authorized perimeter ==> Receive perimeter
     Given url opfabPublishCardUrl + 'cards/userCard'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card
@@ -221,11 +219,12 @@ Feature: UserCards tests
 
 
 
-    * card.parentCardUid = cardUid
+    * card.parentCardId = cardId
+    * card.initialParentCardUid = cardUid
     * card.state = "state1"
 
 
-# Push user card with good permiter ==> Write perimeter
+# Push user card with good perimeter ==> Write perimeter
     Given url opfabPublishCardUrl + 'cards/userCard'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card
@@ -253,28 +252,29 @@ Feature: UserCards tests
 
 """
 
-# Push card
+# Push card (we update the parent card, which id is : initial.initialCardProcess)
     Given url opfabPublishCardUrl + 'cards'
     And request card
     When method post
     Then status 201
     And match response.count == 1
 
-# verifiy that child card was deleted after parent card update
+# verify that child card was deleted after parent card update
 
-    Given url opfabUrl + 'cards/cards/process_1.process_id_x'
+    Given url opfabUrl + 'cards/cards/process_2.process_o'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 404
 
-#get uid updted card with user tso1-operator
+#get the id of the updated parent card (with user tso1-operator)
     Given url opfabUrl + 'cards/cards/initial.initialCardProcess'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
+    And def cardId = response.card.id
     And def cardUid = response.card.uid
 
-    * def card =
+    * def childCard1 =
 """
 {
 	"publisher" : "cardTest4",
@@ -291,23 +291,28 @@ Feature: UserCards tests
 	"data" : {"message":"a message"}
 }
 """
-    * card.parentCardUid = cardUid
+    * childCard1.parentCardId = cardId
+    * childCard1.initialParentCardUid = cardUid
 
-# Push user card with good permiter ==> ReceiveAndWrite perimeter
+# Push user card (childCard1) with good perimeter ==> ReceiveAndWrite perimeter
     Given url opfabPublishCardUrl + 'cards/userCard'
     And header Authorization = 'Bearer ' + authTokenAsTSO
-    And request card
+    And request childCard1
     When method post
     Then status 201
     And match response.count == 1
 
+# We check that the child card exists (childCard1)
     Given url opfabUrl + 'cards/cards/process_1.process_id_4'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
+    And match response.card.parentCardId == cardId
+    And match response.card.initialParentCardUid == cardUid
 
 
-    * def card =
+
+    * def childCard2 =
 """
 {
 	"publisher" : "cardTest5",
@@ -324,20 +329,24 @@ Feature: UserCards tests
 	"data" : {"message":"a message"}
 }
 """
-    * card.parentCardUid = cardUid
+    * childCard2.parentCardId = cardId
+    * childCard2.initialParentCardUid = cardUid
 
-# Push user card with good permiter ==> ReceiveAndWrite perimeter
+# Push user card (childCard2) with good perimeter ==> ReceiveAndWrite perimeter
     Given url opfabPublishCardUrl + 'cards/userCard'
     And header Authorization = 'Bearer ' + authTokenAsTSO
-    And request card
+    And request childCard2
     When method post
     Then status 201
     And match response.count == 1
 
+# We check that the child card exists (childCard2)
     Given url opfabUrl + 'cards/cards/process_1.process_id_5'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
+    And match response.card.parentCardId == cardId
+    And match response.card.initialParentCardUid == cardUid
 
 
 
@@ -346,7 +355,7 @@ Feature: UserCards tests
     When method delete
     Then status 200
 
-# verifiy that the 2 child cards was deleted after parent card deletion
+# verify that the 2 child cards was deleted after parent card deletion
 
     Given url opfabUrl + 'cards/cards/process_1.process_id_4'
     And header Authorization = 'Bearer ' + authTokenAsTSO
@@ -359,15 +368,9 @@ Feature: UserCards tests
     Then status 404
 
 
-
 # delete user from group
   Scenario: Delete user tso1-operator from groupKarate
     Given url opfabUrl + 'users/groups/' + groupKarate.id  + '/users/tso1-operator'
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
-
-
-
-
-

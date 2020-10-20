@@ -36,7 +36,8 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
         LightCardConsultationData.LightCardConsultationDataBuilder builder = LightCardConsultationData.builder();
         builder
                 .publisher(source.getString("publisher"))
-                .parentCardUid(source.getString("parentCardUid"))
+                .parentCardId(source.getString("parentCardId"))
+                .initialParentCardUid(source.getString("initialParentCardUid"))
                 .processVersion(source.getString("processVersion"))
                 .uid(source.getString("uid"))
                 .id(source.getString("_id"))

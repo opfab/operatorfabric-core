@@ -30,7 +30,8 @@ export class LightCard {
         readonly timeSpans?: TimeSpan[],
         readonly process?: string,
         readonly state?: string,
-        readonly parentCardUid?: string,
+        readonly parentCardId?: string,
+        readonly initialParentCardUid?: string,
         readonly entitiesAllowedToRespond?: string[],
         readonly publisherType?: PublisherType | string
     ) {
