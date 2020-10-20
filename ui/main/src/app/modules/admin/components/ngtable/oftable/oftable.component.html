@@ -1,0 +1,48 @@
+<div class="row">
+  <div class="col-md-4">
+    <input *ngIf="config.filtering" placeholder={{filterAll}}
+           [ngTableFiltering]="config.filtering"
+           class="form-control"
+           (tableChanged)="onChangeTable(config)"/>
+  </div>
+  <div><a class="btn btn-primary" (click)="createNewItem()" id ="addUser">
+    <em class="fas fa-plus-circle"></em></a> 
+    <label for="addUser"> {{addLabel}} </label>
+  </div>
+</div>
+<br>
+<ng-table [config]="config"
+          (tableChanged)="onChangeTable(config)"
+          (cellClicked)="onCellClick($event)"
+          [rows]="rows" [columns]="columns">
+</ng-table>
+
+<pagination *ngIf="config.paging"
+            class="pagination-sm"
+            [(ngModel)]="page"
+            [totalItems]="length"
+            [itemsPerPage]="itemsPerPage"
+            [maxSize]="maxSize"
+            [boundaryLinks]="true"
+            [rotate]="false"
+            [firstText]="firstText" 
+            [lastText]="lastText"   
+            [previousText]="prevText"   
+            [nextText]="nextText"
+            (pageChanged)="onChangeTable(config, $event)"
+            (numPages)="numPages = $event">
+</pagination>
+
+
+
+<div class="form-group" class="bg-dark">
+      <select (change)="onChangeTable(config)" [(ngModel)]="itemsPerPage" >
+        <option [value]="5">5</option>
+        <option [value]="10">10</option>
+        <option [value]="25">25</option>
+        <option [value]="50">50</option>
+        <option [value]="75">75</option>
+        <option [value]="100">100</option>
+      </select>
+      <label for="itemsPerPage"> {{lineLabel}} </label>
+</div>

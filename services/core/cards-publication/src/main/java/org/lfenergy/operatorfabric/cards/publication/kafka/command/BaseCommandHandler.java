@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.avro.Card;
 import org.lfenergy.operatorfabric.avro.CardCommand;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -20,7 +19,7 @@ import java.util.Map;
 public abstract class BaseCommandHandler {
     private final ObjectMapper objectMapper;
 
-    public BaseCommandHandler(ObjectMapper objectMapper) {
+    protected BaseCommandHandler(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
         // REQUIRE_SETTERS_FOR_GETTERS is needed to prevent the AVRO getSchema() call from being serialized
         this.objectMapper.enable(MapperFeature.REQUIRE_SETTERS_FOR_GETTERS);

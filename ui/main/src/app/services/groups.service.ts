@@ -32,8 +32,10 @@ export class GroupsService extends ErrorService implements CrudService {
     this.groupsUrl = `${environment.urls.groups}`;
   }
   deleteById(id: string) {
-    const url = `${this.groupsUrl}/` + id;
-    return this.httpClient.delete(url);
+    const url = `${this.groupsUrl}/groups/${id}`;
+    return this.httpClient.delete(url).pipe(
+      catchError((error: Response) => this.handleError(error))
+    );
   }
 
   getAllGroups(): Observable<Group[]> {

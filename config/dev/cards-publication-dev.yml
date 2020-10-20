@@ -4,14 +4,18 @@ spring:
   application:
     name: cards-publication
 
-logging:
-  level:
-    org:
-      lfenergy:
-        operatorfabric:
-          cards:
-            publication: DEBUG
-
+#Uncomment the Kafka section to enable Kafka
+#  kafka:
+#    consumer:
+#      group-id: opfab-command
+#      auto-offset-reset: earliest
+#  deserializer:
+#    key:
+#      delegate:
+#        class: org.apache.kafka.common.serialization.StringDeserializer
+#    value:
+#      delegate:
+#        class: org.lfenergy.operatorfabric.cards.publication.kafka.consumer.CardCommandConsumerDeserializer
 
 #here we put urls for all feign clients
 users:
@@ -21,5 +25,10 @@ users:
 externalRecipients-url: "{\
            processAction: \"http://localhost:8090/test\", \
            api_test_externalRecipient1: \"http://localhost:8090/test\", \
-           api_test_externalRecipient2: \"http://localhost:8090/test\" \
+           api_test_externalRecipient2: \"http://localhost:8090/test\", \
+           externalRecipient1: \"http://localhost:8090/test\", \
+           externalRecipient2: \"http://localhost:8090/test\" \
            }"
+
+# WARNING : If you set this parameter to false , all users have the rights to respond to all cards
+checkPerimeterForResponseCard: true

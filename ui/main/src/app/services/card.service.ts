@@ -47,9 +47,14 @@ export class CardService {
     readonly cardsPubUrl: string;
     readonly userAckUrl: string;
     readonly userCardReadUrl: string;
+    readonly userCardUrl: string;
     private lastHeardBeatDate: number;
     private firstSubscriptionInitDone = false;
     public initSubscription = new Subject<void>();
+
+    private startOfAlreadyLoadedPeriod: number;
+    private endOfAlreadyLoadedPeriod: number;
+
 
     constructor(private httpClient: HttpClient,
                 private notifyService: NotifyService,
@@ -64,6 +69,7 @@ export class CardService {
         this.cardsPubUrl = `${environment.urls.cardspub}/cards`;
         this.userAckUrl = `${environment.urls.cardspub}/cards/userAcknowledgement`;
         this.userCardReadUrl = `${environment.urls.cardspub}/cards/userCardRead`;
+        this.userCardUrl = `${environment.urls.cardspub}/cards/userCard`;
     }
 
     loadCard(id: string): Observable<CardData> {
@@ -171,12 +177,38 @@ export class CardService {
 
     }
 
-    public setSubscriptionDates(rangeStart: number, rangeEnd: number) {
+    public setSubscriptionDates(start: number, end: number) {
+        console.log(new Date().toISOString(), 'CardService - Set subscription date', new Date(start), ' -', new Date(end));
+        if (!this.startOfAlreadyLoadedPeriod) { // First loading , no card loaded yet
+            this.askCardsForPeriod(start, end);
+            return;
+        }
+        if ((start < this.startOfAlreadyLoadedPeriod) && (end > this.endOfAlreadyLoadedPeriod)) {
+            this.askCardsForPeriod(start, end);
+            return;
+        }
+        if (start < this.startOfAlreadyLoadedPeriod) {
+            this.askCardsForPeriod(start, this.startOfAlreadyLoadedPeriod);
+            return;
+        }
+        if (end > this.endOfAlreadyLoadedPeriod) {
+            this.askCardsForPeriod(this.endOfAlreadyLoadedPeriod, end);
+            return;
+        }
+        console.log(new Date().toISOString(), 'CardService - Card already loaded for the chosen period');
+    }
 
-        console.log(new Date().toISOString(), 'CardService - Set subscription date', new Date(rangeStart), ' -', new Date(rangeEnd));
+    private askCardsForPeriod(start: number, end: number) {
+        console.log(new Date().toISOString(), 'CardService - Need to load card for period '
+            , new Date(start), ' -', new Date(end));
         this.httpClient.post<any>(
             `${this.cardOperationsUrl}`,
-            {rangeStart: rangeStart, rangeEnd: rangeEnd}).subscribe();
+            { rangeStart: start, rangeEnd: end }).subscribe(result => {
+                if ((!this.startOfAlreadyLoadedPeriod) || (start < this.startOfAlreadyLoadedPeriod))
+                    this.startOfAlreadyLoadedPeriod = start;
+                if ((!this.endOfAlreadyLoadedPeriod) || (end > this.endOfAlreadyLoadedPeriod)) this.endOfAlreadyLoadedPeriod = end;
+
+            });
 
     }
 
@@ -207,6 +239,10 @@ export class CardService {
 
     deleteUserAcnowledgement(card: Card): Observable<HttpResponse<void>> {
         return this.httpClient.delete<void>(`${this.userAckUrl}/${card.uid}`, {observe: 'response'});
+    }
+
+    deleteCard(card: Card): Observable<HttpResponse<void>> {
+        return this.httpClient.delete<void>(`${this.userCardUrl}/${card.id}`, {observe: 'response'});
     }
 
     postUserCardRead(card: Card): Observable<HttpResponse<void>> {

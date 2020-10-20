@@ -53,18 +53,13 @@ A card can have a response only if it's in a process/state that is configured fo
   "id": "defaultProcess",
   "name": "Test",
   "version": "1",
-  "templates": [
-    "question"
-  ],
-  "csses": [
-    "style"
-  ],
   "states": {
     "questionState": {
       "name": "question.title",
       "color": "#8bcdcd",
       "response": {
         "state": "responseState",
+        "externalRecipients":["externalRecipient1", "externalRecipient2"],
         "btnColor": "GREEN",
         "btnText": {
           "key": "question.button.text"
@@ -90,6 +85,7 @@ A card can have a response only if it's in a process/state that is configured fo
 We define here a state name "questionState" with a response field. Now, if we send a card with process "defaultProcess" and state "questionState" , the user will have the possibility to respond if he has the good privileges. 
 
 - The field "state" in the response field is used to define the state to use for the response (the child card).
+- The field "externalRecipients" define the recipients of the response card. These recipients are keys referenced in the config file of cards-publication service, in "externalRecipients-url" element. This field is optional.
 - The field "btnColor" define the color of the submit button for the response, it is optional and there is 3 possibilities : RED , GREEN , YELLOW 
 - The field "btnText"is the i18n key of the title of the submit button, it is optional.
 
@@ -130,9 +126,11 @@ To configure it in OperatorFabric , you need to make a POST of this json file to
 
 To add it to a group name for example "mygroup", you need to make a PATCH request  to end point 'users/groups/mygroup/perimeters' with payload ["perimeterQuestion"]
 
+NOTE: If you don't want OperatorFabric to check for user perimeter when responding to a card, you can add the variable "checkPerimeterForResponseCard" and set it to false, in the config file of cards-publication and in web-ui.json.
+
 == Send a question card
 
-The question card is like a usual card except that you have a the field "entitiesAllowedToRespond" to set with the entities allowed to respond to the card . If the user is not in the entity , he will not be able to respond . 
+The question card is like a usual card except that you have the field "entitiesAllowedToRespond" to set with the entities allowed to respond to the card. If the user is not in the entity, he will not be able to respond.
 ....
 
 ...

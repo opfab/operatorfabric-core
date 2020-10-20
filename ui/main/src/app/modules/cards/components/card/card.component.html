@@ -8,7 +8,7 @@
 
 
 
-<div class="card light-card-detail  rounded" [class.border-light]="open" (click)="select()">
+<div class="card light-card-detail  rounded" [class.light-card-detail-selected]="open" (click)="select()">
     <div class="d-flex card-header p-0 border-0 light-card-detail">
         <div class="badge-border rounded-top-left bg-sev-{{lightCard.severity.toString()|lowercase}} col-1">
         </div>
@@ -37,11 +37,11 @@
                 <div [hidden]="!this.enableLastTimeToAct">
                     <div [hidden]="this.stopTime">
                         <countdown #countdown class="lttd-timeleft" [config]='prettyConfig' (event)="onTimerFinished($event)" ></countdown>
-                        <em class="far fa-clock lttd-icon" style="color: yellow;"></em>
+                        <em class="far fa-clock lttd-icon lttd-timeleft"></em>
                     </div>
                     <div [hidden]="!this.stopTime">
                         <span><label class="lttd-text" translate>feed.filters.time.lttd.label</label></span>
-                        <span><em class="far fa-clock lttd-icon" style="color: white;"></em></span>
+                        <span><em class="far fa-clock lttd-icon" ></em></span>
                     </div>
                 </div>
             </div>

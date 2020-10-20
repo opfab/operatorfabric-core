@@ -3,5 +3,9 @@
 	"message":{
 		"title":"Message",
 		"summary":"Message reçu"
+	},
+	"conference":{
+		"title":"Conférence téléphonique ☏",
+		"summary":"You êtes invités à une conférence téléphonique"
 	}
 }

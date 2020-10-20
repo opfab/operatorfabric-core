@@ -133,6 +133,19 @@ class CardControllerShould extends CardControllerShouldBase {
 
     }
 
+    @Test
+    void deleteUserCardWithUnauthenticatedUser() throws Exception {
 
+        EasyRandom randomGenerator = instantiateEasyRandom();
+
+        int numberOfCards = 1;
+        List<CardPublicationData> cardsInRepository = instantiateCardPublicationData(randomGenerator, numberOfCards);
+
+        cardRepository.saveAll(cardsInRepository).subscribe();
+
+        String existingId = cardsInRepository.get(0).getId();
+
+        webTestClient.delete().uri("/cards/userCard/" + existingId).exchange().expectStatus().isUnauthorized();
+    }
 
 }

@@ -9,7 +9,7 @@
     "logout": "Déconnexion",
     "settings": "Paramètres",
     "about": "À propos",
-    "usercard": "Nouvelle Carte"
+    "usercard": "Création de cartes"
   },
   "timeline": {
     "businessPeriod": "Periode métier",
@@ -118,7 +118,7 @@
   },
   "logging": {
     "filters": {
-      "process": "Service"
+      "process": "Processus"
     },
     "cardType": "Type de Carte",
     "timeOfAction": "Moment de l'action",
@@ -144,10 +144,11 @@
   "button": {
     "ok": "OK",
     "cancel": "Annuler",
-    "reset": "Effacer"
+    "reset": "Effacer",
+    "delete": "Supprimer"
   },
   "userCard": {
-    "title": "Édition d'une nouvelle carte",
+    "title": "Création d'une nouvelle carte",
     "error": {
       "noRecipientSelected" : "Vous devez au moins choisir un destinataire",
       "templateError" : "Erreur technique : template non conforme",
@@ -157,8 +158,8 @@
       "severity": "Sévérité",
       "process": "Processus",
       "state": "État",
-      "startDate": "Date de début de validité",
-      "endDate": "Date de fin de validité",
+      "startDate": "Date de début ",
+      "endDate": "Date de fin ",
       "comment": "Commentaire",
       "entities": "Destinataire"
     },
@@ -177,7 +178,14 @@
     "processInstanceId": "Identifiant",
     "state": "État",
     "send-another-one": "Envoyer une autre carte",
-    "cardSendWithNoError": "Carte envoyée"
+    "cardSendWithNoError": "Carte envoyée",
+    "deleteCard": {
+      "doYouReallyWant": "Voulez-vous vraiment supprimer cette carte ?",
+      "cardDeletedWithNoError": "Carte supprimée",
+      "error": {
+        "impossibleToDeleteCard": "Impossible de supprimer la carte pour des raisons techniques"
+      }
+    }
   },
   "response": {
     "btnTitle": "VALIDER REPONSES",
@@ -196,18 +204,26 @@
   },
   "admin": {
     "input": {
+       "group": {
+         "delete": "Voulez vous vraiment supprimer le group",
+         "add":"Ajouter un nouveau groupe"
+      },
+      "entity": {
+         "delete": "Voulez vous vraiment supprimer l'entité",
+         "add":"Ajouter une nouvelle entité"
+      },
       "user": {
         "login": "Identifiant",
         "lastname": "Nom",
         "firstname": "Prénom",
         "groups": "Groupes",
         "entities": "Entitiés",
-        "add": "Ajouter un nouveau utilisateur",
+        "add": "Ajouter un nouvel utilisateur",
         "edit": "Editer",
         "delete": "Supprimer",
         "save": "Sauvegarder les changements",
         "close": "Fermer",
-        "cancel": "Abondonner",
+        "cancel": "Abandonner",
         "confirm":"Confirmez..",
         "user":"utilisateur",
         "filter": "filtrer par ",
@@ -215,20 +231,33 @@
       },
       "delete" :"Voulez vous vraiment supprimer l'utilisateur",
       "login": {
-        "required": "L'identifiant est obligatoire .",
-        "minLength": "L'identifiant doit avoir au moins 4 caractères .",
-        "maxLength": "L'identifiant doit avoir au maximum 20 caractères .",
+        "required": "L'identifiant est obligatoire.",
+        "minLength": "L'identifiant doit avoir au moins 4 caractères.",
+        "maxLength": "L'identifiant doit avoir au maximum 20 caractères.",
         "alreadyTaken": "Cet identifiant est déjà pris."
       },
       "firstname": {
-        "required": "Le prénom est obligatoire .",
-        "maxLength": "Le prénom doit avoir  au maximum 20 caractères ."
+        "required": "Le prénom est obligatoire.",
+        "maxLength": "Le prénom doit avoir  au maximum 20 caractères."
       },
       "lastname": {
-        "required": "Le nom est obligatoire .",
-        "maxLength": "Le nom doit avoir  au maximum 20 caractères ."
+        "required": "Le nom est obligatoire.",
+        "maxLength": "Le nom doit avoir  au maximum 20 caractères."
       },
-      "lines": "lignes"
+     "id": {
+        "required": "L'identifiant est obligatoire.",
+        "minLength": "L'identifiant doit avoir au moins 2 caractères.",
+        "maxLength": "L'identifiant doit avoir au maximum 20 caractères.",
+        "alreadyTaken": "Cet identifiant est déjà pris.",
+        "label":"Id"
+      },
+      "name": {
+        "required": "Le nom est obligatoire.",
+        "maxLength": "Le nom doit avoir  au maximum 20 caractères.",
+        "label":"Nom"
+      },
+      "description": "Description",
+      "lines": "lines"
     },
     "tabs": {
       "users": "Gestion des utilisateurs",

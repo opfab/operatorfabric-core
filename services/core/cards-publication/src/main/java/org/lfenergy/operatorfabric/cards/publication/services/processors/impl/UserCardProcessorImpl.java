@@ -5,6 +5,7 @@ import org.lfenergy.operatorfabric.cards.publication.services.processors.UserCar
 import org.lfenergy.operatorfabric.users.model.ComputedPerimeter;
 import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.lfenergy.operatorfabric.users.model.RightsEnum;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
@@ -14,9 +15,12 @@ import java.util.Optional;
 @Component
 public class UserCardProcessorImpl implements UserCardProcessor {
 
+    @Value("${checkPerimeterForResponseCard:true}")
+    private boolean checkPerimeterForResponseCard;
+
     public String processPublisher(CardPublicationData card, CurrentUserWithPerimeters user) {
 
-        if(!isAuthorizedCard(card,user)){
+        if ((checkPerimeterForResponseCard) && (!isAuthorizedCard(card,user))){
             throw new AccessDeniedException("user not authorized, the card is rejected");
         }
 

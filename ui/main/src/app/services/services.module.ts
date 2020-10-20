@@ -30,9 +30,7 @@ import { AppService } from './app.service';
 import { DataTableShareService } from 'app/modules/admin/services/data.service';
 import { GroupsService } from './groups.service';
 import { EntitiesService } from './entities.service';
-import { LoginValidatorService } from 'app/modules/admin/services/login-validator.service';
 import { ExportService } from './export.service';
-
 
 @NgModule({
     imports: [
@@ -62,7 +60,6 @@ import { ExportService } from './export.service';
         GlobalStyleService,
         AppService,
         DataTableShareService,
-        LoginValidatorService
     ]
 })
 export class ServicesModule {

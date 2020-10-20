@@ -95,8 +95,6 @@ export function getOneRandomProcess(processTemplate?:any): Process {
         processTemplate.id?processTemplate.id:getRandomAlphanumericValue(3,10),
         processTemplate.version?processTemplate.version:getRandomAlphanumericValue(3,10),
         processTemplate.name?processTemplate.name:getRandomAlphanumericValue(3,10),
-        processTemplate.templates?processTemplate.templates:undefined,
-        processTemplate.csses?processTemplate.csses:undefined,
         processTemplate.locales?processTemplate.locales:undefined,
         processTemplate.menuLabel?processTemplate.menuLabel:undefined,
         processTemplate.menuEntries?processTemplate.menuEntries:entries,

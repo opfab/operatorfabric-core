@@ -214,6 +214,7 @@ class ProcessesServiceShould {
         assertThat(process).hasFieldOrPropertyWithValue("version", "2.0");
         assertThat(process.getStates().size()).isEqualTo(1);
         assertThat(process.getStates().get("firstState").getDetails().size()).isEqualTo(1);
+        assertThat(process.getStates().get("firstState").getResponse().getExternalRecipients().size()).isEqualTo(2);
         assertThat(service.listProcesses()).hasSize(3);
       } catch (IOException e) {
         log.trace("rethrowing exception");

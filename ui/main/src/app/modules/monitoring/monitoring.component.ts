@@ -39,7 +39,9 @@ export class MonitoringComponent implements OnInit, OnDestroy, AfterViewInit {
     mapOfProcesses = new Map<string, Process>();
     processValueForFilter = new Array();
 
-    constructor(private store: Store<AppState>, private processesService: ProcessesService) {
+    constructor(private store: Store<AppState>
+                , private processesService: ProcessesService
+    ) {
          processesService.getAllProcesses().forEach( (process) => {
             const id = process.id;
             this.mapOfProcesses.set(id, process);
@@ -119,5 +121,7 @@ export class MonitoringComponent implements OnInit, OnDestroy, AfterViewInit {
     prefixForTranslation(card: LightCard, key: string): string {
         return `${card.process}.${card.processVersion}.${key}`;
     }
+
+
 
 }

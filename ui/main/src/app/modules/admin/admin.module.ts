@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2020, RTEI (http://www.rte-international.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,23 +9,23 @@
 
 import { ErrorHandler, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdminComponent } from './admin.component';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { AdminRoutingModule } from './admin-rooting.module';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { AppErrorHandler } from 'app/common/error/app-error-handler';
 import { OfUsersTableComponent } from './components/ngtable/users/ofuserstable.component';
-import { OfGroupsTableComponent } from './components/ngtable/groups/of-groups-table/of-groups-table.component';
-import { OfEntitiesTableComponent } from './components/ngtable/entities/of-entities-table/of-entities-table.component';
+import { OfGroupsTableComponent } from './components/ngtable/groups/of-groups-table.component';
+import { OfEntitiesTableComponent } from './components/ngtable/entities/of-entities-table.component';
 import { OfTableComponent } from './components/ngtable/oftable/oftable.component';
 import { Ng2TableModule } from 'ng2-table';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HttpClient } from '@angular/common/http';
+import { EditUsermodalComponent } from './components/editmodal/users/edit-user-modal.component';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
+import { MatInputModule, MatSelectModule } from '@angular/material';
+import { EditEntityGroupModalComponent } from './components/editmodal/groups-entities/edit-entity-group-modal.component';
 
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
-}
+
 
 @NgModule({
   declarations: [
@@ -33,24 +33,32 @@ export function HttpLoaderFactory(http: HttpClient) {
     OfUsersTableComponent,
     OfGroupsTableComponent,
     OfEntitiesTableComponent,
-    OfTableComponent
+    OfTableComponent,
+    EditUsermodalComponent,
+    ConfirmationDialogComponent,
+    EditEntityGroupModalComponent
   ],
+
+
+  entryComponents: [
+    EditUsermodalComponent,
+    ConfirmationDialogComponent,
+    EditEntityGroupModalComponent
+  ],
+
+
   imports: [
     FormsModule
     , ReactiveFormsModule
     , AdminRoutingModule
     , PaginationModule.forRoot()
     , CommonModule
-    , TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: HttpLoaderFactory,
-                deps: [HttpClient]
-            }
-        })
+    , MatSelectModule
+    , MatInputModule
+    , TranslateModule
     , Ng2TableModule
   ],
-  providers: [ { provide: ErrorHandler, useClass: AppErrorHandler }]
+  providers: [{ provide: ErrorHandler, useClass: AppErrorHandler }]
 })
 export class AdminModule { }
 

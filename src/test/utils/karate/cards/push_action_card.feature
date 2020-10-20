@@ -48,19 +48,7 @@ Feature: Cards
         "summary": "Test the action process"
         }
     },
-    "recipient": {
-        "type": "UNION",
-        "recipients": [
-            {
-                "type": "GROUP",
-                "recipients": null,
-                "identity": "TSO1",
-                "preserveMain": null
-            }
-        ],
-        "identity": null,
-        "preserveMain": null
-    },
+    "groupRecipients": ["TSO1"],
     "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
     "mainRecipient": null,
@@ -112,19 +100,7 @@ Feature: Cards
         "summary": "Test the action process"
         }
     },
-    "recipient": {
-        "type": "UNION",
-        "recipients": [
-            {
-                "type": "GROUP",
-                "recipients": null,
-                "identity": "TSO1",
-                "preserveMain": null
-            }
-        ],
-        "identity": null,
-        "preserveMain": null
-    },
+    "groupRecipients": ["TSO1"],
     "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
     "mainRecipient": null,
@@ -176,19 +152,7 @@ Feature: Cards
         "summary": "Test the action process"
         }
     },
-    "recipient": {
-        "type": "UNION",
-        "recipients": [
-            {
-                "type": "GROUP",
-                "recipients": null,
-                "identity": "TSO1",
-                "preserveMain": null
-            }
-        ],
-        "identity": null,
-        "preserveMain": null
-    },
+    "groupRecipients": ["TSO1"],
     "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
     "mainRecipient": null,
@@ -240,19 +204,7 @@ Feature: Cards
         "summary": "Test the action process"
         }
     },
-    "recipient": {
-        "type": "UNION",
-        "recipients": [
-            {
-                "type": "GROUP",
-                "recipients": null,
-                "identity": "TSO1",
-                "preserveMain": null
-            }
-        ],
-        "identity": null,
-        "preserveMain": null
-    },
+    "groupRecipients": ["TSO1"],
     "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
     "mainRecipient": null,
@@ -303,19 +255,7 @@ Feature: Cards
         "summary": "Test the action without entity in entitiesAllowedToRespond"
         }
     },
-    "recipient": {
-        "type": "UNION",
-        "recipients": [
-            {
-                "type": "GROUP",
-                "recipients": null,
-                "identity": "TSO1",
-                "preserveMain": null
-            }
-        ],
-        "identity": null,
-        "preserveMain": null
-    },
+    "groupRecipients": ["TSO1"],
     "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["TSO1","ENTITY1"],
     "mainRecipient": null,

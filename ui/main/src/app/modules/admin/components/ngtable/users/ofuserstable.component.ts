@@ -1,6 +1,14 @@
+/* Copyright (c) 2018-2020, RTEI (http://www.rte-international.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '@ofServices/user.service';
-import { EditUsermodalComponent } from '../../editmodal/users/editusermodal.component';
 import { DataTableShareService } from '../../../services/data.service';
 import { OfTableComponent } from '../oftable/oftable.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -8,19 +16,20 @@ import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationDialogService } from 'app/modules/admin/services/confirmation-dialog.service';
 import { AppState } from '@ofStore/index';
 import { Store } from '@ngrx/store';
-import { throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { AppError } from 'app/common/error/app-error';
+import { EditUsermodalComponent } from '../../editmodal/users/edit-user-modal.component';
 
 
 @Component({
   selector: 'of-users-table',
-  templateUrl: './ofuserstable.component.html'
+  templateUrl: '../oftable/oftable.component.html'
 })
 export class OfUsersTableComponent extends OfTableComponent implements OnInit {
 
-  addLabel: string;
-  lineLabel: string;
-  filterAll: any;
+
+  modalComponent = EditUsermodalComponent;
+  typeModal = 'user';
 
   constructor(
     protected crudService: UserService,
@@ -39,7 +48,7 @@ export class OfUsersTableComponent extends OfTableComponent implements OnInit {
       this.translate.get(['admin.input.user.login', 'admin.input.user.firstname', 'admin.input.user.lastname',
         'admin.input.user.groups', 'admin.input.user.entities', 'admin.input.user.edit', 'admin.input.user.delete',
         'admin.pagination.firstText', 'admin.pagination.lastText', 'admin.pagination.nextText', 'admin.pagination.prevText'
-        , 'admin.input.user.add', 'admin.input.lines', 'admin.input.user.filter' , 'admin.input.user.filterAll'])
+        , 'admin.input.user.add', 'admin.input.lines', 'admin.input.user.filter', 'admin.input.user.filterAll'])
         .subscribe(translations => {
           this.columns = [
             {
@@ -103,19 +112,7 @@ export class OfUsersTableComponent extends OfTableComponent implements OnInit {
     });
   }
 
-
-  onCellClick(data: any): any {
-    const column = data.column;
-    if (column === 'edit') {
-      const modalRef = this.modalService.open(EditUsermodalComponent);
-      modalRef.componentInstance.user = data['row'];
-    }
-    if (column === 'delete') {
-      this.openDeleteConfirmationDialog(data.row);
-    }
-  }
-
-  openDeleteConfirmationDialog(row: any) {
+  openDeleteConfirmationDialog(row: any): any {
     this.confirmationDialogService.confirm(
       this.translate.instant('admin.input.user.confirm'),
       this.translate.instant('admin.input.delete') + ' ' + row.login + '?',
@@ -123,26 +120,24 @@ export class OfUsersTableComponent extends OfTableComponent implements OnInit {
       this.translate.instant('admin.input.user.cancel')
     ).then((confirmed) => {
       if (confirmed) {
-        this.deleteItem(row);
+        this.deleteItem(row.login, 'login');
       }
     }).catch(() => throwError(new AppError(null)));
   }
 
-  createNewItem() {
-    this.modalService.open(EditUsermodalComponent);
+
+  protected subscribeTable(): void {
+    super.subscribeTable();
+    //regresh all users event
+    this.dataService.getUsersEvent().subscribe(() => {
+      this.crudService.getAll().subscribe((response) => {
+        this.data = response;
+        this.onChangeTable(this.config);
+      });
+    });
   }
 
-  subscribeTable(): void {
-    this.dataService.getUserEvent().subscribe((user) => {
-      if (user) {
-        const itemIndex = this.data.findIndex((item) => item.login === user.login);
-        if (itemIndex >= 0) {
-          this.data[itemIndex] = user;
-        } else {
-          this.data.push(user);
-        }
-        this.onChangeTable(this.config);
-      }
-    });
+  getObservableRow(): Observable<any> {
+    return this.dataService.getUserRowEvent();
   }
 }

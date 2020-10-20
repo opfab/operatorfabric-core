@@ -32,7 +32,7 @@ describe('TypeFilterComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
-                NgbModule.forRoot(),
+                NgbModule,
                 FormsModule,
                 ReactiveFormsModule,
                 StoreModule.forRoot(appReducer, storeConfig)],

@@ -29,26 +29,39 @@ export class LoggingFiltersComponent implements OnInit {
 
     size = 10;
     loggingForm: FormGroup;
+
+    dropdownList = [];
+    dropdownSettings = {};
+
     public submittedOnce = false;
 
     @Input()
     public processData: [];
 
     constructor(private store: Store<AppState>, private timeService: TimeService, private configService: ConfigService) {
+
+    }
+
+    ngOnInit() {
+        this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
         this.loggingForm = new FormGroup(
             {
-                process: new FormControl(''),
+                process: new FormControl([]),
                 publishDateFrom: new FormControl(''),
                 publishDateTo: new FormControl(''),
                 activeFrom: new FormControl(''),
                 activeTo: new FormControl('')
             }
         );
+        this.dropdownList = this.processData;
 
-    }
-
-    ngOnInit() {
-        this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
+        this.dropdownSettings = {
+            text: 'Select a Process',
+            selectAllText: 'Select All',
+            unSelectAllText: 'UnSelect All',
+            enableSearchFilter: true,
+            classes: 'custom-class-example'
+        };
     }
 
     sendQuery() {
@@ -79,14 +92,13 @@ export class LoggingFiltersComponent implements OnInit {
                     }
                 } else {
                     if (element.length) {
-                        params.set(key, element);
+                        const idProcessArray = [];
+                        element.forEach(val => idProcessArray.push(val.id));
+                        params.set(key, idProcessArray);
                     }
                 }
             }
         });
         return params;
     }
-
-
-
 }

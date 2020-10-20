@@ -21,6 +21,7 @@ security:
     enabled: false
 
 operatorfabric:
+  businessLogActivated: true
   security:
     oauth2:
       client-id: opfab-client

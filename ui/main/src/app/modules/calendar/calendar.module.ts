@@ -14,20 +14,16 @@ import {CommonModule} from '@angular/common';
 import {CalendarComponent} from './calendar.component';
 import {FullCalendarModule } from '@fullcalendar/angular';
 import {CardsModule} from '../cards/cards.module';
-import {MatDialogModule } from '@angular/material/dialog';
-import {FullscreenCardViewComponent} from './cardView/fullscreen-card-view.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
-  declarations: [CalendarComponent, FullscreenCardViewComponent],
+  declarations: [CalendarComponent],
   imports: [
     CommonModule,
     FullCalendarModule,
-    MatDialogModule,
-    CardsModule
-  ],
-  entryComponents: [
-    FullscreenCardViewComponent,
+    CardsModule,
+    NgbModule
   ]
 })
 export class CalendarModule { }

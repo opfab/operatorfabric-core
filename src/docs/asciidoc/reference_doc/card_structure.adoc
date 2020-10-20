@@ -102,7 +102,7 @@ OR
 
 ==== Last Time to Decide (`lttd`)
 
-Fixes the moment until when a `response` is possible for the card. After this moment, the response button won't be useable. When lttd time is approaching, a clock is visible on the card in the feed with the residual time.  
+Fixes the moment until when a `response` is possible for the card. After this moment, the response button won't be useable. When lttd time is approaching, a clock is visible on the card in the feed with the residual time.  The lttd time can be set for cards that don't expect any response
 
 === Business period 
 

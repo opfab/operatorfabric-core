@@ -35,7 +35,7 @@ describe('TimeFilterComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
-                NgbModule.forRoot(),
+                NgbModule,
                 FormsModule,
                 ReactiveFormsModule,
                 TranslateModule.forRoot(),

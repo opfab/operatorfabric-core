@@ -15,6 +15,7 @@ import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportDat
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.PublisherTypeEnum;
 import org.lfenergy.operatorfabric.cards.publication.services.CardProcessingService;
+import org.lfenergy.operatorfabric.cards.publication.services.CardRepositoryService;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,8 @@ public class CardController {
 
     @Autowired
     private CardProcessingService cardProcessingService;
+    @Autowired
+    private CardRepositoryService cardRepositoryService;
 
 
     /**
@@ -62,13 +65,35 @@ public class CardController {
             card.setPublisherType(PublisherTypeEnum.ENTITY);
             return card;
         }), user);
+    }
+
+    @DeleteMapping("/userCard/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Mono<Void> deleteUserCard(@PathVariable String id, ServerHttpResponse response, Principal principal) {
+
+        OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
+        CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
+
+        try {
+            Optional<CardPublicationData> deletedCard = cardProcessingService.deleteUserCard(id, user);
+            return Mono.just(deletedCard).doOnNext(dc -> {
+                if (!dc.isPresent()) {
+                    response.setStatusCode(HttpStatus.NOT_FOUND);
+                }
+            }).then();
+        }
+        catch (Exception e) {
+            return Mono.just(Mono.empty()).doOnNext(dc ->
+                    response.setStatusCode(HttpStatus.FORBIDDEN)
+            ).then();
+        }
 
     }
 
-    @DeleteMapping("/{processInstanceId}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Mono<Void> deleteCards(@PathVariable String processInstanceId, ServerHttpResponse response) {
-        Optional<CardPublicationData> deletedCard = cardProcessingService.deleteCard(processInstanceId);
+    public Mono<Void> deleteCards(@PathVariable String id, ServerHttpResponse response) {
+        Optional<CardPublicationData> deletedCard = cardProcessingService.deleteCard(id);
         return Mono.just(deletedCard).doOnNext(dc -> {
             if (!dc.isPresent()) {
                 response.setStatusCode(HttpStatus.NOT_FOUND);

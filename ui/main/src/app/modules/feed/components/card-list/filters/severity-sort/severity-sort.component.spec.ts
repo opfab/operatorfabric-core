@@ -26,7 +26,7 @@ describe('SeveritySortComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        NgbModule.forRoot(),
+        NgbModule,
         StoreModule.forRoot(appReducer, storeConfig),
         FontAwesomeIconsModule,
       ],
