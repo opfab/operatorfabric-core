@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class BaseCommandHandler {
+public class BaseCommandHandler {
 
     @Autowired
     private CardObjectMapper objectMapper;
@@ -37,11 +37,10 @@ public abstract class BaseCommandHandler {
                 cardData = objectMapper.readValue(cardDataString, new TypeReference<Map<String, Object>>() {
                 });
             }
-        card.setData(cardData);
+            card.setData(cardData);
         } catch (JsonProcessingException e) {
             log.error("Unable to serialize card {} into CardPublicationData. Message: {}", kafkaCard, e.getMessage());
         }
-
         return card;
     }
 }
