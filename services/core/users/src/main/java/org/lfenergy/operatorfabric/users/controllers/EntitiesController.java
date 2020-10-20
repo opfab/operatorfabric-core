@@ -45,6 +45,7 @@ public class EntitiesController implements EntitiesApi {
     public static final String USER_NOT_FOUND_MSG = "User %s not found";
     public static final String BAD_USER_LIST_MSG = "Bad user list : user %s not found";
     public static final String NO_MATCHING_ENTITY_ID_MSG = "Payload Entity id does not match URL Entity id";
+    public static final String CYCLE_DETECTION = "A cycle has been detected";
     @Autowired
     private EntityRepository entityRepository;
     @Autowired
@@ -81,7 +82,16 @@ public class EntitiesController implements EntitiesApi {
             response.addHeader("Location", request.getContextPath() + "/entities/" + entity.getId());
             response.setStatus(201);
         }
+        // let's do this quite mindlessly
+        List<EntityData> entities = entityRepository.findAll();
+        this.checkForCycleInEntityParenthood(entity, entities);
         return entityRepository.save((EntityData) entity);
+    }
+
+    // cycle detection
+    void checkForCycleInEntityParenthood(Entity current, List<? extends Entity> entities) throws ApiErrorException{
+        EntityCycleDetector cycleChecker = new EntityCycleDetector(current,entities);
+        cycleChecker.throwApiExceptionOnCycle();
     }
 
     @Override
