@@ -20,7 +20,7 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import {Card, Detail} from '@ofModel/card.model';
+import {Card} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../../services/handlebars.service';
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
@@ -47,6 +47,7 @@ import {Entity} from '@ofModel/entity.model';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {ConfigService} from '@ofServices/config.service';
+import {State as CardState, Detail} from '@ofModel/processes.model';
 
 
 declare const templateGateway: any;
@@ -103,7 +104,7 @@ const enum EntityMsgColor {
 })
 export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewChecked, DoCheck {
 
-    @Input() detail: Detail;
+    @Input() cardState: CardState;
     @Input() card: Card;
     @Input() childCards: Card[];
     @Input() user: User;
@@ -112,7 +113,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     @ViewChild('cardDeletedWithNoErrorPopup', null) cardDeletedWithNoErrorPopupRef: TemplateRef<any>;
     @ViewChild('impossibleToDeleteCardPopup', null) impossibleToDeleteCardPopupRef: TemplateRef<any>;
 
-    public active = false;
     public isActionEnabled = false;
     public lttdExpiredIsTrue: boolean;
     public isDeleteCardAllowed = false;
@@ -501,10 +501,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private initializeHrefsOfCssLink() {
-        if (this.detail && this.detail.styles) {
+        const styles = this.cardState.details[0].styles;
+        if (!!styles) {
             const process = this.card.process;
             const processVersion = this.card.processVersion;
-            this.detail.styles.forEach(style => {
+            styles.forEach(style => {
                 const cssUrl = this.businessconfigService.computeBusinessconfigCssUrl(process, style, processVersion);
                 // needed to instantiate href of link for css in component rendering
                 const safeCssUrl = this.sanitizer.bypassSecurityTrustResourceUrl(cssUrl);
@@ -513,31 +514,29 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         }
     }
 
+
+
     private initializeHandlebarsTemplates() {
 
         templateGateway.childCards = this.childCards;
-        this.businessconfigService.queryProcessFromCard(this.card).pipe(
-            takeUntil(this.unsubscribe$),
-            switchMap(process => {
-
-                const state = process.extractState(this.card);
-                this._responseData = state.response;
-                this._acknowledgementAllowed = state.acknowledgementAllowed;
-                return this.handlebars.executeTemplate(this.detail.templateName,
-                    new DetailContext(this.card, this._userContext, this._responseData));
-            })
-        )
-            .subscribe(
-                html => {
-                    this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
-                    setTimeout(() => { // wait for DOM rendering
-                        this.reinsertScripts();
-                    }, 10);
-                }, () =>  {
-                    console.log('WARNING impossible to load template ', this.detail.templateName);
-                    this._htmlContent = this.sanitizer.bypassSecurityTrustHtml('');
-                }
-            );
+        this._responseData = this.cardState.response;
+        this._acknowledgementAllowed = this.cardState.acknowledgementAllowed;
+        const templateName = this.cardState.details[0].templateName;
+        if (!!templateName) {
+            this.handlebars.executeTemplate(templateName,
+                new DetailContext(this.card, this._userContext, this._responseData))
+                .subscribe(
+                    html => {
+                        this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
+                        setTimeout(() => { // wait for DOM rendering
+                            this.reinsertScripts();
+                        }, 10);
+                    }, () => {
+                        console.log('WARNING impossible to load template ', templateName);
+                        this._htmlContent = this.sanitizer.bypassSecurityTrustHtml('');
+                    }
+                );
+        } else console.log('WARNING No template for state ', this.card.state);
     }
 
     get htmlContent() {

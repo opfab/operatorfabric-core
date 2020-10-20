@@ -32,7 +32,6 @@ export class Card {
         readonly title?: I18n,
         readonly summary?: I18n,
         readonly data?: any,
-        readonly details?: Detail[],
         readonly userRecipients?: string[],
         readonly groupRecipients?: string[],
         readonly entityRecipients?: string[],
@@ -51,16 +50,6 @@ export enum TitlePosition {
 
 }
 
-export class Detail {
-    /* istanbul ignore next */
-    constructor(
-        readonly titlePosition: TitlePosition,
-        readonly title: I18n,
-        readonly titleStyle: string,
-        readonly templateName: string,
-        readonly styles: string[]) {
-    }
-}
 
 export class Recipient {
     constructor(

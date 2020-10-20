@@ -8,7 +8,7 @@
  */
 
 
-import {Card, Detail} from '@ofModel/card.model';
+import {Card} from '@ofModel/card.model';
 import {I18n} from '@ofModel/i18n.model';
 import {Map as OfMap} from '@ofModel/map';
 
@@ -90,6 +90,16 @@ export class State {
     ) {
     }
 }
+
+export class Detail {
+    /* istanbul ignore next */
+    constructor(
+        readonly title: I18n,
+        readonly templateName: string,
+        readonly styles: string[]) {
+    }
+}
+
 
 export class Response {
     /* istanbul ignore next */

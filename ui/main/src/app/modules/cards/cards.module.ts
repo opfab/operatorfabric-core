@@ -12,7 +12,6 @@ import {CUSTOM_ELEMENTS_SCHEMA, ModuleWithProviders, NgModule, NO_ERRORS_SCHEMA}
 import {CommonModule} from '@angular/common';
 import {CardComponent} from './components/card/card.component';
 import {CardDetailsComponent} from './components/card-details/card-details.component';
-import {DetailsComponent} from './components/details/details.component';
 import {DetailComponent} from './components/detail/detail.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {ProcessesService} from '@ofServices/processes.service';
@@ -26,7 +25,6 @@ import {CloseableCardDetailsComponent} from './components/card-details/closeable
   declarations: [CardComponent
       , CardDetailsComponent
       , CloseableCardDetailsComponent
-      , DetailsComponent
       , DetailComponent],
   imports: [
     CommonModule,
@@ -38,7 +36,6 @@ import {CloseableCardDetailsComponent} from './components/card-details/closeable
     exports: [CardComponent
         , CardDetailsComponent
         , CloseableCardDetailsComponent
-        , DetailsComponent
         , DetailComponent
     ],
     schemas: [

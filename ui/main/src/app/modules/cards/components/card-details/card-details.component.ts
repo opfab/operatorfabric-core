@@ -8,7 +8,7 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Card, Detail} from '@ofModel/card.model';
+import {Card} from '@ofModel/card.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import * as cardSelectors from '@ofStore/selectors/card.selectors';
@@ -19,24 +19,25 @@ import {UserService} from '@ofServices/user.service';
 import {User} from '@ofModel/user.model';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {AppService} from '@ofServices/app.service';
+import {State as CardState, Detail} from '@ofModel/processes.model';
 
 @Component({
     selector: 'of-card-details',
     template: `
-        <of-details [card]="card">
-            <div *ngIf="card">
-                <of-detail *ngFor="let detail of (details)" [detail]="detail" [card]="card" [childCards]="childCards"
+
+            <div *ngIf="card && cardState">
+                <of-detail   [cardState]="cardState" [card]="card" [childCards]="childCards"
                            [user]="user" [currentPath]="_currentPath">
                 </of-detail>
             </div>
-        </of-details>`
+        `
 })
 export class CardDetailsComponent implements OnInit, OnDestroy {
 
     card: Card;
     childCards: Card[];
     user: User;
-    details: Detail[];
+    cardState: CardState;
     unsubscribe$: Subject<void> = new Subject<void>();
     protected _currentPath: string;
 
@@ -54,15 +55,11 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
                 this.card = card;
                 this.childCards = childCards;
                 if (!!card) {
-                    this.details = [];
-                    if (!!card.details) this.details = [...card.details];
                     this.businessconfigService.queryProcess(this.card.process, this.card.processVersion)
                         .pipe(takeUntil(this.unsubscribe$))
                         .subscribe(businessconfig => {
-                                if (!!businessconfig) {
-                                    const state = businessconfig.extractState(this.card);
-                                    if (!!state) this.details.push(...state.details);
-                                }
+                                if (!!businessconfig)  this.cardState = businessconfig.extractState(this.card);
+
                             },
                             error => console.log(`something went wrong while trying to fetch process for`
                                 + ` ${this.card.process} with ${this.card.processVersion} version.`)

@@ -9,7 +9,8 @@
 
 
 import {Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
-import {Card, Detail} from '@ofModel/card.model';
+import {Card} from '@ofModel/card.model';
+import {Detail} from '@ofModel/processes.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../../../cards/services/handlebars.service';
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
