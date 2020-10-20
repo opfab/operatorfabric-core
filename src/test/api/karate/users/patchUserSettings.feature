@@ -14,12 +14,9 @@ Feature: patch user settings
 """
 {
   "login" : "loginKarate1",
-  "email" : "user@user.com",
   "description" : "my dummy user",
   "timeZone" : "Europe/Dublin",
   "locale" : "en",
-  "timeFormat" : "LT",
-  "dateFormat" : "L",
   "defaultTags" : [ "tag 1", "tag 2" ]
 }
 """
@@ -28,12 +25,9 @@ Feature: patch user settings
 """
 {
   "login" : "tso1-operator",
-  "email" : "tso1-operator@user.com",
   "description" : "my dummy tso1-operator user",
   "timeZone" : "Australia/Melbourne",
   "locale" : "en",
-  "timeFormat" : "LT",
-  "dateFormat" : "L",
   "defaultTags" : [ "tag 3", "tag 4" ]
 }
 """
@@ -42,12 +36,9 @@ Feature: patch user settings
 """
 {
   "login" : "nonexistentUser",
-  "email" : "nonexistentUser@user.com",
   "description" : "my dummy nonexistentUser user",
   "timeZone" : "France/Paris",
   "locale" : "fr",
-  "timeFormat" : "LT",
-  "dateFormat" : "L",
   "defaultTags" : [ "tag 5", "tag 6" ]
 }
 """
@@ -80,12 +71,9 @@ Feature: patch user settings
     Then print response
     And status 200
     And match response.login == userSettings.login
-    And match response.email == userSettings.email
     And match response.description == userSettings.description
     And match response.timeZone == userSettings.timeZone
     And match response.locale == userSettings.locale
-    And match response.timeFormat == userSettings.timeFormat
-    And match response.dateFormat == userSettings.dateFormat
     And match response.defaultTags == userSettings.defaultTags
 
 
@@ -98,12 +86,9 @@ Feature: patch user settings
     Then print response
     And status 200
     And match response.login == userSettingsTSO1.login
-    And match response.email == userSettingsTSO1.email
     And match response.description == userSettingsTSO1.description
     And match response.timeZone == userSettingsTSO1.timeZone
     And match response.locale == userSettingsTSO1.locale
-    And match response.timeFormat == userSettingsTSO1.timeFormat
-    And match response.dateFormat == userSettingsTSO1.dateFormat
     And match response.defaultTags == userSettingsTSO1.defaultTags
 
 

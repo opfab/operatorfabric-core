@@ -123,8 +123,7 @@
       }
     },
     "infos": {
-      "description": true,
-      "disable": false
+      "description": true
     },
     "locale": "en",
     "nightDayMode": true,
