@@ -91,14 +91,9 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |settings.tags.hide||no|Control if you want to show or hide the tags filter in settings and feed page 
 |settings.nightDayMode|false|no|if you want to activate toggle for night or day mode 
 |settings.styleWhenNightDayModeDesactivated||no|style to apply if not using day night mode, possible value are DAY,NIGHT or LEGACY (black background and white timeline) 
-|settings.infos.disable||no|Control if we want to disable/enable editing user email, description in the settings page
-|settings.infos.email|false|no|Control if we want to hide(true) or display(false or not specified) the user email in the settings page
 |settings.infos.description|false|no|Control if we want to hide(true) or display(false or not specified) the user description in the settings page
 |settings.infos.language|false|no|Control if we want to hide(true) or display(false or not specified) the language in the settings page
 |settings.infos.timezone|false|no|Control if we want to hide(true) or display(false or not specified) the timezone in the settings page
-|settings.infos.timeformat|false|no|Control if we want to hide(true) or display(false or not specified) the timeformat in the settings page
-|settings.infos.dateformat|false|no|Control if we want to hide(true) or display(false or not specified) the dateformat in the settings page
-|settings.infos.datetimeformat|false|no|Control if we want to hide(true) or display(false or not specified) the datetimeformat in the settings page
 |settings.infos.tags|false|no|Control if we want to hide(true) or display(false or not specified) the tags in the settings page
 |settings.infos.sounds|false|no|Control if we want to hide(true) or display(false or not specified) the checkboxes for sound notifications in the settings page
 |settings.about
@@ -143,9 +138,7 @@ There will be two new routes with the release of the `[OC-936]`:
 
 |===
 |name|default|mandatory?|Description
-|settings.timeZone||no|Default user time zone for users (use|settings.timeFormat|LT|no|Default user time format (moment)
-|settings.dateFormat|LL|no|Default user date format (moment)
-|settings.dateTimeFormat|LL LT|no|Default user date format (moment)
+|settings.timeZone||no|Default user time zone for users 
 |settings.locale|en|no|Default user locale (use en if not set)
 |settings.default-tags||no|Default user list of filtered in tags
 

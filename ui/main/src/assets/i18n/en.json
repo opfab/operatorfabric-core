@@ -87,20 +87,15 @@
     }
   },
   "settings": {
-    "email": "Email address",
     "description": "Description",
     "locale": "Language",
     "timeZone": "Time zone",
-    "timeFormat": "Time format",
-    "dateFormat": "Date format",
-    "dateTimeFormat": "Date Time format",
     "defaultTags": "Default tags",
     "playSoundLabel": "Play sounds for cards with severity",
     "playSoundForAlarm": "Alarm",
     "playSoundForAction": "Action",
     "playSoundForCompliant": "Compliant",
-    "playSoundForInformation": "Information",
-    "invalidEmail": "Invalid email address"
+    "playSoundForInformation": "Information"
   },
   "archive": {
     "filters": {

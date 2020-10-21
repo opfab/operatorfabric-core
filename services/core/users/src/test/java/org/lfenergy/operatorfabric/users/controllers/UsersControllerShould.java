@@ -125,11 +125,9 @@ class UsersControllerShould {
                 .build();
         us2 = UserSettingsData.builder()
                 .login("gchapman")
-                .dateFormat("LL")
                 .build();
         us3 = UserSettingsData.builder()
                 .login("kkline")
-                .timeFormat("LT")
                 .build();
         userSettingsRepository.insert(us1);
         userSettingsRepository.insert(us2);
@@ -234,8 +232,6 @@ class UsersControllerShould {
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
-                    .andExpect(jsonPath("$.dateFormat", is("LL")))
-                    .andExpect(jsonPath("$.timeFormat", is(nullValue())))
             ;
         }
 
@@ -256,16 +252,11 @@ class UsersControllerShould {
             mockMvc.perform(put("/users/mpalin/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
-                            "\"login\": \"mpalin\"," +
-                            "\"dateFormat\": \"LL\"," +
-                            "\"timeFormat\": \"LT\"" +
-                            "}")
+                            "\"login\": \"mpalin\"}")
             )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
-                    .andExpect(jsonPath("$.dateFormat", is("LL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
             ;
 
@@ -273,30 +264,23 @@ class UsersControllerShould {
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
-                    .andExpect(jsonPath("$.dateFormat", is("LL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
             ;
 
             mockMvc.perform(put("/users/mpalin/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
-                            "\"login\": \"mpalin\"" +
-                            "}")
+                            "\"login\": \"mpalin\"}")
             )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
-                    .andExpect(jsonPath("$.dateFormat", is(nullValue())))
-                    .andExpect(jsonPath("$.timeFormat", is(nullValue())))
                     .andExpect(jsonPath("$.description", is(nullValue())))
             ;
             mockMvc.perform(get("/users/mpalin/settings"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
-                    .andExpect(jsonPath("$.dateFormat", is(nullValue())))
-                    .andExpect(jsonPath("$.timeFormat", is(nullValue())))
                     .andExpect(jsonPath("$.description", is(nullValue())))
             ;
 
@@ -307,16 +291,11 @@ class UsersControllerShould {
             mockMvc.perform(put("/users/mpalin/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
-                            "\"login\": \"mpalin\"," +
-                            "\"dateFormat\": \"LL\"," +
-                            "\"timeFormat\": \"LT\"" +
-                            "}")
+                            "\"login\": \"mpalin\"}")
             )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
-                    .andExpect(jsonPath("$.dateFormat", is("LL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
             ;
 
@@ -324,31 +303,23 @@ class UsersControllerShould {
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
-                    .andExpect(jsonPath("$.dateFormat", is("LL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
             ;
 
             mockMvc.perform(patch("/users/mpalin/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
-                            "\"login\": \"mpalin\"," +
-                            "\"dateFormat\": \"LLL\"" +
-                            "}")
+                            "\"login\": \"mpalin\"}")
             )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
-                    .andExpect(jsonPath("$.dateFormat", is("LLL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
             ;
             mockMvc.perform(get("/users/mpalin/settings"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
-                    .andExpect(jsonPath("$.dateFormat", is("LLL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
             ;
 
@@ -360,23 +331,17 @@ class UsersControllerShould {
             mockMvc.perform(patch("/users/tjones/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
-                            "\"login\": \"mpalin\"," +
-                            "\"dateFormat\": \"LLL\"" +
-                            "}")
+                            "\"login\": \"mpalin\"}")
             )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("tjones")))
-                    .andExpect(jsonPath("$.dateFormat", is("LLL")))
-                    .andExpect(jsonPath("$.timeFormat", is(nullValue())))
                     .andExpect(jsonPath("$.description", is(nullValue())))
             ;
             mockMvc.perform(get("/users/tjones/settings"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("tjones")))
-                    .andExpect(jsonPath("$.dateFormat", is("LLL")))
-                    .andExpect(jsonPath("$.timeFormat", is(nullValue())))
                     .andExpect(jsonPath("$.description", is(nullValue())))
             ;
 
@@ -926,8 +891,6 @@ class UsersControllerShould {
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
-                    .andExpect(jsonPath("$.dateFormat", is("LL")))
-                    .andExpect(jsonPath("$.timeFormat", is(nullValue())))
             ;
         }
 
@@ -945,16 +908,11 @@ class UsersControllerShould {
             mockMvc.perform(put("/users/gchapman/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
-                            "\"login\": \"gchapman\"," +
-                            "\"dateFormat\": \"LL\"," +
-                            "\"timeFormat\": \"LT\"" +
-                            "}")
+                            "\"login\": \"gchapman\"}")
             )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
-                    .andExpect(jsonPath("$.dateFormat", is("LL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
             ;
 
@@ -962,30 +920,23 @@ class UsersControllerShould {
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
-                    .andExpect(jsonPath("$.dateFormat", is("LL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
             ;
 
             mockMvc.perform(put("/users/gchapman/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
-                            "\"login\": \"gchapman\"" +
-                            "}")
+                            "\"login\": \"gchapman\"}")
             )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
-                    .andExpect(jsonPath("$.dateFormat", is(nullValue())))
-                    .andExpect(jsonPath("$.timeFormat", is(nullValue())))
                     .andExpect(jsonPath("$.description", is(nullValue())))
             ;
             mockMvc.perform(get("/users/gchapman/settings"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
-                    .andExpect(jsonPath("$.dateFormat", is(nullValue())))
-                    .andExpect(jsonPath("$.timeFormat", is(nullValue())))
                     .andExpect(jsonPath("$.description", is(nullValue())))
             ;
 
@@ -996,10 +947,7 @@ class UsersControllerShould {
             mockMvc.perform(put("/users/kkline/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
-                            "\"login\": \"mpalin\"," +
-                            "\"dateFormat\": \"LL\"," +
-                            "\"timeFormat\": \"LT\"" +
-                            "}")
+                            "\"login\": \"mpalin\"}")
             )
                     .andExpect(status().isForbidden())
             ;
@@ -1010,16 +958,11 @@ class UsersControllerShould {
             mockMvc.perform(put("/users/gchapman/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
-                            "\"login\": \"gchapman\"," +
-                            "\"dateFormat\": \"LLL\"," +
-                            "\"timeFormat\": \"LT\"" +
-                            "}")
+                            "\"login\": \"gchapman\"}")
             )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
-                    .andExpect(jsonPath("$.dateFormat", is("LLL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
             ;
 
@@ -1027,31 +970,23 @@ class UsersControllerShould {
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
-                    .andExpect(jsonPath("$.dateFormat", is("LLL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
             ;
 
             mockMvc.perform(patch("/users/gchapman/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
-                            "\"login\": \"gchapman\"," +
-                            "\"dateFormat\": \"LL\"" +
-                            "}")
+                            "\"login\": \"gchapman\"}")
             )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
-                    .andExpect(jsonPath("$.dateFormat", is("LL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
             ;
             mockMvc.perform(get("/users/gchapman/settings"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
-                    .andExpect(jsonPath("$.dateFormat", is("LL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
             ;
 
@@ -1062,10 +997,7 @@ class UsersControllerShould {
             mockMvc.perform(patch("/users/kkline/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
-                            "\"login\": \"kkline\"," +
-                            "\"dateFormat\": \"LL\"," +
-                            "\"timeFormat\": \"LT\"" +
-                            "}")
+                            "\"login\": \"kkline\"}")
             )
                     .andExpect(status().isForbidden())
             ;

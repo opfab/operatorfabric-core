@@ -37,24 +37,16 @@ public class UserSettingsDataShould {
     public void patch(){
         UserSettingsData userData = UserSettingsData.builder()
                 .defaultTag("test1").defaultTag("test2")
-                .timeFormat("LT")
-                .dateFormat("LL")
                 .login("test-login")
                 .description("test-description")
-                .email("test@test.tst")
                 .locale("fr")
                 .timeZone("Europe/Berlin")
                 .playSoundForAlarm(true)
                 .playSoundForAction(false)
                 //Not setting Compliant and Information to test patch on empty
                 .build();
-        UserSettingsData patched = userData.patch(UserSettingsData.builder().timeFormat("LLT").build().clearTags());
-        assertThat(patched).isEqualToIgnoringGivenFields(userData,"timeFormat");
-        assertThat(patched.getTimeFormat()).isEqualTo("LLT");
+        UserSettingsData patched = userData.patch(UserSettingsData.builder().build().clearTags());
 
-        patched = userData.patch(UserSettingsData.builder().dateFormat("LLT").build().clearTags());
-        assertThat(patched).isEqualToIgnoringGivenFields(userData,"dateFormat");
-        assertThat(patched.getDateFormat()).isEqualTo("LLT");
 
         patched = userData.patch(UserSettingsData.builder().login("new-login").build().clearTags());
         assertThat(patched).isEqualToIgnoringGivenFields(userData);
@@ -62,10 +54,6 @@ public class UserSettingsDataShould {
         patched = userData.patch(UserSettingsData.builder().description("patched-description").build().clearTags());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"description");
         assertThat(patched.getDescription()).isEqualTo("patched-description");
-
-        patched = userData.patch(UserSettingsData.builder().email("patched-email").build().clearTags());
-        assertThat(patched).isEqualToIgnoringGivenFields(userData,"email");
-        assertThat(patched.getEmail()).isEqualTo("patched-email");
 
         patched = userData.patch(UserSettingsData.builder().locale("patched-locale").build().clearTags());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"locale");
