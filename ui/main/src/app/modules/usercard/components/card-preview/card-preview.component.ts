@@ -23,7 +23,6 @@ import {UserContext} from '@ofModel/user-context.model';
 import {skip, switchMap, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 
-
 @Component({
     selector: 'of-card-preview',
     templateUrl: './card-preview.component.html'
@@ -58,7 +57,6 @@ export class CardPreviewComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.getTemplateAndStyle();
-
     }
 
     private getTemplateAndStyle() {

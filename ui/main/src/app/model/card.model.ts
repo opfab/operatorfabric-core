@@ -45,6 +45,33 @@ export class Card {
     }
 }
 
+export class CardForPublishing {
+    constructor(
+        readonly publisher: string,
+        readonly processVersion: string,
+        readonly startDate: number,
+        readonly endDate: number,
+        readonly severity: Severity,
+        readonly process?: string,
+        readonly processInstanceId?: string,
+        readonly state?: string,
+        readonly lttd?: number,
+        readonly title?: I18n,
+        readonly summary?: I18n,
+        readonly data?: any,
+        readonly userRecipients?: string[],
+        readonly groupRecipients?: string[],
+        readonly entityRecipients?: string[],
+        readonly externalRecipients?: string[],
+        readonly entitiesAllowedToRespond?: string[],
+        readonly recipient?: Recipient,
+        readonly parentCardUid?: string,
+        readonly publisherType?: PublisherType | string,
+        readonly timeSpans?: TimeSpan[]
+    ) {
+    }
+}
+
 export enum TitlePosition {
     UP, DOWN, NONE
 
@@ -81,4 +108,30 @@ export function fromCardToLightCard(card: Card): LightCard {
     return new LightCard(card.uid, card.id, card.publisher, card.processVersion, card.publishDate, card.startDate
         , card.endDate, card.severity, card.hasBeenAcknowledged, card.hasBeenRead, card.processInstanceId
         , card.lttd, card.title, card.summary, null, [], card.process, card.state, card.parentCardUid);
+}
+
+export function fromCardToCardForPublishing(card: Card): CardForPublishing {
+    return new CardForPublishing(
+        card.publisher,
+        card.processVersion,
+        card.startDate,
+        card.endDate,
+        card.severity,
+        card.process,
+        card.processInstanceId,
+        card.state,
+        card.lttd,
+        card.title,
+        card.summary,
+        card.data,
+        card.userRecipients,
+        card.groupRecipients,
+        card.entityRecipients,
+        card.externalRecipients,
+        card.entitiesAllowedToRespond,
+        card.recipient,
+        card.parentCardUid,
+        card.publisherType,
+        card.timeSpans
+    );
 }

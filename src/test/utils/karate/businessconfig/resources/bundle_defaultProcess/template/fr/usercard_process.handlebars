@@ -31,6 +31,8 @@ Status of the state
 
 
 <script>
+    selectedProcessState = "{{card.data.state}}";
+    if (selectedProcessState.length >0) document.getElementById('state').value = selectedProcessState;
     templateGateway.getSpecificCardInformation = function () {
         const state = document.getElementById('state').value;
         const card = {

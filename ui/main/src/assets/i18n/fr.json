@@ -145,10 +145,12 @@
     "ok": "OK",
     "cancel": "Annuler",
     "reset": "Effacer",
-    "delete": "Supprimer"
+    "delete": "Supprimer",
+    "edit" : "Editer"
   },
   "userCard": {
     "title": "Création d'une nouvelle carte",
+    "editTitle" : "Edition d'une carte",
     "error": {
       "noRecipientSelected" : "Vous devez au moins choisir un destinataire",
       "templateError" : "Erreur technique : template non conforme",
