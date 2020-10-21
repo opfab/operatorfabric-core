@@ -145,10 +145,12 @@
     "ok": "OK",
     "cancel": "Cancel",
     "reset": "Reset",
-    "delete": "Delete"
+    "delete": "Delete",
+    "edit": "Edit"
   },
   "userCard": {
     "title": "Create a new card",
+    "editTitle" : "Edit a card",
     "error": {
       "noRecipientSelected": "You must at least choose one recipient",
       "templateError": "Technical error : invalid template",

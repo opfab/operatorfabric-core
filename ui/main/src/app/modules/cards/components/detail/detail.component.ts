@@ -20,7 +20,7 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import {Card} from '@ofModel/card.model';
+import {Card, CardForPublishing} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../../services/handlebars.service';
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
@@ -47,7 +47,8 @@ import {Entity} from '@ofModel/entity.model';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {ConfigService} from '@ofServices/config.service';
-import {State as CardState, Detail} from '@ofModel/processes.model';
+import {State as CardState} from '@ofModel/processes.model';
+import { Router } from '@angular/router';
 
 
 declare const templateGateway: any;
@@ -115,7 +116,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     public isActionEnabled = false;
     public lttdExpiredIsTrue: boolean;
-    public isDeleteCardAllowed = false;
+    public isDeleteOrEditCardAllowed = false;
+
 
     unsubscribe$: Subject<void> = new Subject<void>();
     readonly hrefsOfCssLink = new Array<SafeResourceUrl>();
@@ -141,7 +143,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 private userService: UserService,
                 private entitiesService: EntitiesService,
                 private modalService: NgbModal,
-                private configService: ConfigService) {
+                private configService: ConfigService,
+                private router: Router) {
         this.store.select(selectAuthenticationState).subscribe(authState => {
             this._userContext = new UserContext(
                 authState.identifier,
@@ -280,10 +283,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
         if (formResult.valid) {
 
-            const card: Card = {
-                uid: null,
-                id: null,
-                publishDate: null,
+            const card: CardForPublishing = {
                 publisher: this.user.entities[0],
                 publisherType: 'ENTITY',
                 processVersion: this.card.processVersion,
@@ -293,8 +293,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 startDate: this.card.startDate,
                 endDate: this.card.endDate,
                 severity: Severity.INFORMATION,
-                hasBeenAcknowledged: false,
-                hasBeenRead: false,
                 entityRecipients: this.card.entityRecipients,
                 userRecipients: this.card.userRecipients,
                 groupRecipients: this.card.groupRecipients,
@@ -306,7 +304,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 parentCardUid: this.card.uid
             };
 
-            this.cardService.postResponseCard(card)
+            this.cardService.postCard(card)
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe(
                     rep => {
@@ -406,7 +404,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.initializeHrefsOfCssLink();
         this.initializeHandlebarsTemplates();
         this.markAsReadIfNecessary();
-        this.setIsDeleteCardAllowed();
+        this.setIsDeleteOrEditCardAllowed();
         this.message = {display: false, text: undefined, color: undefined};
         if (this._responseData != null && this._responseData !== undefined) {
             this.setEntitiesToRespond();
@@ -440,9 +438,13 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             this.isActionEnabled = (this.isUserInEntityAllowedToRespond() && this.doesTheUserHavePermissionToRespond());
     }
 
-    private setIsDeleteCardAllowed() {
-        this.isDeleteCardAllowed = this.doesTheUserHavePermissionToDeleteCard();
+    private setIsDeleteOrEditCardAllowed() {
+        this.isDeleteOrEditCardAllowed = this.doesTheUserHavePermissionToDeleteOrEditCard();
     }
+
+
+
+
 
     private isUserInEntityAllowedToRespond(): boolean {
         if (this.card.entitiesAllowedToRespond) return this.card.entitiesAllowedToRespond.includes(this.user.entities[0]);
@@ -466,7 +468,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     /* 1st check : card.publisherType == ENTITY
        2nd check : the card has been sent by an entity of the user connected
        3rd check : the user has the Write access to the process/state of the card */
-    private doesTheUserHavePermissionToDeleteCard(): boolean {
+    private doesTheUserHavePermissionToDeleteOrEditCard(): boolean {
         let permission = false;
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
 
@@ -585,7 +587,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.modalRef.dismiss();
     }
 
+    editCard(): void {
+        this.router.navigate(['/usercard', this.card.id]);
+    }
+
     ngOnDestroy() {
+        templateGateway.childCards = [];
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }

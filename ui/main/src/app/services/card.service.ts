@@ -13,7 +13,7 @@ import {Observable, Subject} from 'rxjs';
 import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
 import {EventSourcePolyfill} from 'ng-event-source';
 import {AuthenticationService} from './authentication/authentication.service';
-import {Card, CardData} from '@ofModel/card.model';
+import {Card, CardData, CardForPublishing} from '@ofModel/card.model';
 import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {GuidService} from '@ofServices/guid.service';
@@ -228,9 +228,9 @@ export class CardService {
         return params;
     }
 
-    postResponseCard(card: Card): any {
+    postCard(card: CardForPublishing): any {
         const headers = this.authService.getSecurityHeader();
-        return this.httpClient.post<Card>(`${this.cardsPubUrl}/userCard`, card, {headers});
+        return this.httpClient.post<CardForPublishing>(`${this.cardsPubUrl}/userCard`, card, {headers});
     }
 
     postUserAcnowledgement(card: Card): Observable<HttpResponse<void>> {

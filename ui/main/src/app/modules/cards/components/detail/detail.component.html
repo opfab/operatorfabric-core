@@ -53,8 +53,10 @@
         <button class="btn mr-3 {{btnAckColor}}" style="float: right;" *ngIf='isAcknowledgementAllowed' translate
           (click)='acknowledge()'>{{btnAckText}}</button>
     
-        <button class="btn mr-3 btn-danger" style="float: right;" *ngIf='isDeleteCardAllowed' translate
+        <button class="btn mr-3 btn-primary" style="float: right;" *ngIf='isDeleteOrEditCardAllowed' translate
                 (click)='open(doYouReallyWantToDeleteCardPopup)'>{{'button.delete'}}</button>
+        <button class="btn mr-3 btn-primary" style="float: right;" *ngIf='isDeleteOrEditCardAllowed' translate
+                (click)='editCard()'>{{'button.edit'}}</button>
       </div>
     
       <ng-template #doYouReallyWantToDeleteCardPopup let-modal>

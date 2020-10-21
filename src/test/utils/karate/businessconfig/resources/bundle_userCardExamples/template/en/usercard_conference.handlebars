@@ -15,13 +15,13 @@
                 Conference subject
             </td>
              <td style="width: 35%;padding:5px">
-                <input  id="conf_subject" name="conf_subject" style="width: 100%;"></input >
+                <input  id="conf_subject" name="conf_subject" style="width: 100%;" value="{{card.data.conf_subject}}"></input >
             </td>
              <td style="width: 15%;padding:5px">
                 Link for conference
             </td>
              <td style="width: 35%;padding:5px">
-                <input  id="conf_link" name="conf_link" placeholder="http://...." style="width: 100%"></input >
+                <input  id="conf_link" name="conf_link" placeholder="http://...." style="width: 100%" value="{{card.data.conf_link}}"></input >
             </td>
         </tr>
         <tr "padding:5px">
@@ -29,13 +29,13 @@
                 Report name 
             </td>
              <td style="width: 35%;padding:5px">
-                <input  id="report_title" name="report_title" style="width: 100%;"></input >
+                <input  id="report_title" name="report_title" style="width: 100%;" value="{{card.data.report_title}}"></input >
             </td>
              <td style="width: 15%;padding:5px">
                 Link for report 
             </td>
              <td style="width: 35%;padding:5px">
-                <input  id="report_link" name="report_link" placeholder="http://...." style="width: 100%;"></input >
+                <input  id="report_link" name="report_link" placeholder="http://...." style="width: 100%;" value="{{card.data.report_link}}"></input >
             </td>
         </tr>
 
@@ -43,7 +43,7 @@
 <br/>
         Complementary information :  
         <div style="width:100%">
-            <textarea  id="message" name="message"  style="width:100%" ></textarea>
+            <textarea  id="message" name="message"  style="width:100%" > {{card.data.message}}</textarea>
         </div>
 
 

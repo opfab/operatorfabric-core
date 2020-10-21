@@ -16,6 +16,10 @@ const routes: Routes = [
     {
         path: '',
         component: UserCardComponent
+    },
+    {
+        path: ':cardId',
+        component: UserCardComponent
     }
 ];
 

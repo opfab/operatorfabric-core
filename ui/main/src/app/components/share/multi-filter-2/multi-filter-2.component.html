@@ -14,7 +14,7 @@
             <!-- archive.filters.{{filterPath}} -->
             <label translate>{{computeI18nLabelKey()}}</label>
             <angular2-multiselect [data]="dropdownList"
-                                  [(ngModel)]="selectedItems"
+                                  [(ngModel)]="selection"
                                   [settings]="dropdownSettings"
                                   formControlName="{{filterPath}}"
             ></angular2-multiselect>
