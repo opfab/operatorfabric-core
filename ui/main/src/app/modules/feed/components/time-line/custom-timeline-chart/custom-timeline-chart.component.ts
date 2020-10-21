@@ -211,11 +211,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       case 'W':
         this.xTicks.forEach(tick => {
           this.xTicksOne.push(tick);
-          // [OC-797]
-          //  in case of a period containing the switch form winter/summer time
-          //  the tick are offset by one hour in a part of the timeline
-          // in this case , we put the date on the tick representing 01:00
-          if ((tick.hour() === 0) || (tick.hour() === 1)) {  this.xTicksTwo.push(tick); }
+          if (tick.hour() === 0)  this.xTicksTwo.push(tick);
         });
         break;
       default:
@@ -239,7 +235,18 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         } else {
           nextTick.add(1, 'month').startOf('month');
         }
-      } else { nextTick.add(tickSize.amount, tickSize.unit); }
+      }  else {
+        nextTick.add(tickSize.amount, tickSize.unit)
+         if ((this.domainId === '7D' || this.domainId === 'W')) {
+           // OC-1205 : Deal with winter/summer time changes
+           // if hour is 5, we are switching from winter to summer time, we subtract 1 hour to keep  ticks  to 04 / 08 / 12 ...
+           // if hour is 3, we are switching from summer to winter time, we add 1 hour to keep  ticks  to 04 / 08 / 12 ...
+           if (nextTick.hour() === 5)  nextTick.subtract(1, 'hour');
+           if (nextTick.hour() === 3)  nextTick.add(1, 'hour');
+         }
+
+
+        }
       this.xTicks.push(moment(nextTick));
     }
   }
