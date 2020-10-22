@@ -12,36 +12,103 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams, HttpUrlEncodingCodec} from '@angular/common/http';
 import {environment} from '@env/environment';
-import {from, Observable, of, throwError} from 'rxjs';
-import {TranslateLoader} from '@ngx-translate/core';
-import {catchError, filter, map, reduce, switchMap, tap} from 'rxjs/operators';
+import {from, Observable, of, Subject, throwError} from 'rxjs';
+import {TranslateService} from '@ngx-translate/core';
+import {catchError, filter, map, reduce, skip, switchMap, tap} from 'rxjs/operators';
 import {Process, Menu, ResponseBtnColorEnum} from '@ofModel/processes.model';
 import {Card} from '@ofModel/card.model';
+import {merge} from 'rxjs';
+import { Store, select } from '@ngrx/store';
+import { selectArchiveLightCards } from '@ofStore/selectors/archive.selectors';
+import { selectLinesOfLoggingResult } from '@ofStore/selectors/logging.selectors';
+import { AppState } from '@ofStore/index';
+import { selectFeed } from '@ofStore/selectors/feed.selectors';
+
 
 @Injectable()
 export class ProcessesService {
     readonly processesUrl: string;
     private urlCleaner: HttpUrlEncodingCodec;
     private processCache = new Map();
+    private translationsAlreadyLoaded = new Set<string>();
     private processes: Process[];
+    private translationsLoaded = new Subject();
 
-    constructor(private httpClient: HttpClient,
+    constructor(private httpClient: HttpClient, private translateService: TranslateService, private store: Store<AppState>
     ) {
         this.urlCleaner = new HttpUrlEncodingCodec();
         this.processesUrl = `${environment.urls.processes}`;
+        this.loadTranslationIfNeededAfterLoadingArchiveCard();
+        this.loadTranslationIfNeededAfterLoadingLoggingCard();
+        this.loadTranslationIfNeededAfterLoadingCard();
+    }
+
+    private loadTranslationIfNeededAfterLoadingCard() {
+        this.store.pipe(
+            select(selectFeed))
+            .subscribe(cards =>  cards.forEach(card => this.loadTranslationsForProcess(card.process, card.processVersion)));
+    }
+
+    private loadTranslationIfNeededAfterLoadingArchiveCard() {
+        this.store.pipe(
+            select(selectArchiveLightCards))
+            .subscribe(cards => cards.forEach(card => this.loadTranslationsForProcess(card.process, card.processVersion)));
+    }
+
+    private loadTranslationIfNeededAfterLoadingLoggingCard() {
+        this.store.pipe(
+            select(selectLinesOfLoggingResult))
+            .subscribe(lines => lines.forEach(loggingResult =>
+                this.loadTranslationsForProcess(loggingResult.process, loggingResult.processVersion)));
+    }
+
+    private loadTranslationsForProcess(process,version) {
+        this.translateService.getLangs().forEach(
+            local => this.addTranslationIfNeeded(local, process, version ));
+    }
+
+    public addTranslationIfNeeded(locale: string, process: string, version: string) {
+        if (!this.translationsAlreadyLoaded.has(locale + '/' + process + '/' + version)) {
+            this.translationsAlreadyLoaded.add(locale + '/' + process + '/' + version);
+            this.askForI18nJson(process, locale, version)
+                .pipe(map(i18n => this.translateService.setTranslation(locale, i18n, true))).subscribe();
+        }
     }
 
     public loadAllProcesses(): Observable<any> {
         return this.queryAllProcesses()
-          .pipe(tap(
-            (processesLoaded) => {
-              if (!!processesLoaded) {
-                this.processes = processesLoaded;
-                console.log(new Date().toISOString(), 'List of processes loaded');
-              }
-            }, (error) => console.error(new Date().toISOString(), 'an error occurred', error)
-          ));
-      }
+            .pipe(
+                map(processesLoaded => {
+                    if (!!processesLoaded) {
+                        this.processes = processesLoaded;
+                        this.loadAllTranslations();
+                        console.log(new Date().toISOString(), 'List of processes loaded');
+                    }
+                }, (error) => console.error(new Date().toISOString(), 'an error occurred', error)
+                ));
+    }
+
+    private loadAllTranslations() {
+        const requests$ = [];
+        this.processes.forEach(process => {
+            this.translateService.getLangs().forEach(
+                local => {
+                    this.translationsAlreadyLoaded.add(local + '/' + process.id + '/' + process.version);
+                    requests$.push(this.askForI18nJson(process.id, local, process.version)
+                        .pipe(map(i18n => this.translateService.setTranslation(local, i18n, true))));
+                }
+            );
+        });
+        // Wait for all translation request to complete before setting translations to load
+        merge(...requests$).pipe(skip(requests$.length - 1)).subscribe(() =>  {
+            this.translationsLoaded.next();
+            console.log(new Date().toISOString(), 'Translations for processes loaded');
+        });
+    }
+
+    public areTranslationsLoaded(): Observable<any> {
+        return this.translationsLoaded;
+    }
 
     public getAllProcesses(): Process[] {
         return this.processes;
@@ -119,14 +186,6 @@ export class ProcessesService {
         return `${resourceUrl}?${versionParam.toString()}`;
     }
 
-    private convertJsonToI18NObject(locale, process: string, version: string) {
-        return r => {
-            const object = {};
-            object[process] = {};
-            object[process][version] = r;
-            return object;
-        };
-    }
 
     askForI18nJson(process: string, locale: string, version?: string): Observable<any> {
         let params = new HttpParams().set('locale', locale);
@@ -140,7 +199,7 @@ export class ProcessesService {
         }
         return this.httpClient.get(`${this.processesUrl}/${process}/i18n`, {params})
             .pipe(
-                map(this.convertJsonToI18NObject(locale, process, version))
+                map(this.convertJsonToI18NObject(process, version))
                 , catchError(error => {
                     console.error(new Date().toISOString(),
                     `error trying fetch i18n of '${process}' version:'${version}' for locale: '${locale}'`);
@@ -148,6 +207,16 @@ export class ProcessesService {
                 })
             );
     }
+
+    private convertJsonToI18NObject(process: string, version: string) {
+        return r => {
+            const object = {};
+            object[process] = {};
+            object[process][version] = r;
+            return object;
+        };
+    }
+
 
     computeMenu(): Observable<Menu[]> {
         return this.httpClient.get<Process[]>(`${this.processesUrl}/`).pipe(
@@ -175,19 +244,5 @@ export class ProcessesService {
                 return 'btn-success';
         }
     }
-}
 
-export class BusinessconfigI18nLoader implements TranslateLoader {
-
-    constructor(businessconfigService: ProcessesService) {
-    }
-
-    getTranslation(lang: string): Observable<any> {
-        return of({});
-    }
-
-}
-
-export function BusinessconfigI18nLoaderFactory(businessconfigService: ProcessesService): TranslateLoader {
-    return new BusinessconfigI18nLoader(businessconfigService);
 }

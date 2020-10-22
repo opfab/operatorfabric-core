@@ -11,14 +11,14 @@
 
 import {getTestBed, TestBed} from '@angular/core/testing';
 
-import {BusinessconfigI18nLoaderFactory, ProcessesService} from '@ofServices/processes.service';
+import {ProcessesService} from '@ofServices/processes.service';
 import {HttpClientTestingModule, HttpTestingController, TestRequest} from '@angular/common/http/testing';
 import {environment} from '@env/environment';
 import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
 import {RouterTestingModule} from "@angular/router/testing";
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState} from "@ofStore/index";
-import {getOneRandomCard,AuthenticationImportHelperForSpecs} from "@tests/helpers";
+import {getOneRandomCard,AuthenticationImportHelperForSpecs, BusinessconfigI18nLoaderFactory} from "@tests/helpers";
 import {LightCard} from "@ofModel/light-card.model";
 import {ServicesModule} from "@ofServices/services.module";
 import {HandlebarsService} from "./handlebars.service";
@@ -47,11 +47,10 @@ describe('Handlebars Services', () => {
                 StoreModule.forRoot(appReducer),
                 HttpClientTestingModule,
                 RouterTestingModule,
-                TranslateModule.forRoot({
+               TranslateModule.forRoot({
                     loader: {
                         provide: TranslateLoader,
-                        useFactory: BusinessconfigI18nLoaderFactory,
-                        deps: [ProcessesService]
+                        useFactory: BusinessconfigI18nLoaderFactory
                     },
                     useDefaultLang: false
                 })

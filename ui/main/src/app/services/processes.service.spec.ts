@@ -10,14 +10,14 @@
 
 import {getTestBed, TestBed} from '@angular/core/testing';
 
-import {BusinessconfigI18nLoaderFactory, ProcessesService} from './processes.service';
+import {ProcessesService} from './processes.service';
 import {HttpClientTestingModule, HttpTestingController, TestRequest} from '@angular/common/http/testing';
 import {environment} from '@env/environment';
 import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
 import {RouterTestingModule} from '@angular/router/testing';
 import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
-import {getRandomAlphanumericValue} from '@tests/helpers';
+import {getRandomAlphanumericValue, BusinessconfigI18nLoaderFactory} from '@tests/helpers';
 import * as _ from 'lodash';
 import {LightCard} from '@ofModel/light-card.model';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
@@ -25,7 +25,6 @@ import {GuidService} from '@ofServices/guid.service';
 import {Menu, MenuEntry, Process, MenuEntryLinkTypeEnum} from '@ofModel/processes.model';
 import {EffectsModule} from '@ngrx/effects';
 import {MenuEffects} from '@ofEffects/menu.effects';
-import {TranslateEffects} from '@ofEffects/translate.effects';
 
 
 describe('Processes Services', () => {
@@ -38,14 +37,13 @@ describe('Processes Services', () => {
         TestBed.configureTestingModule({
             imports: [
                 StoreModule.forRoot(appReducer),
-                EffectsModule.forRoot([MenuEffects, TranslateEffects]),
+                EffectsModule.forRoot([MenuEffects]),
                 HttpClientTestingModule,
                 RouterTestingModule,
                 TranslateModule.forRoot({
                     loader: {
                         provide: TranslateLoader,
-                        useFactory: BusinessconfigI18nLoaderFactory,
-                        deps: [ProcessesService]
+                        useFactory: BusinessconfigI18nLoaderFactory
                     },
                     useDefaultLang: false
                 })],
@@ -220,17 +218,4 @@ describe('Processes Services', () => {
 })
 ;
 
-function flushI18nJson(request: TestRequest, json: any, prefix?: string) {
-    const locale = request.request.params.get('locale');
-    // console.debug(`flushing ${request.request.urlWithParams}`);
-    // console.debug(`request is ${request.cancelled ? '' : 'not'} canceled`);
-    request.flush(_.get(json, prefix ? `${locale}.${prefix}` : locale));
-}
 
-function cardPrefix(card: LightCard) {
-    return card.publisher + '.' + card.processVersion + '.';
-}
-
-function businessconfigPrefix(menu: Menu) {
-    return menu.id + '.' + menu.version + '.';
-}

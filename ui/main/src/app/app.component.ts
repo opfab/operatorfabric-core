@@ -15,7 +15,6 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
 import { AuthenticationService } from '@ofServices/authentication/authentication.service';
 import { LoadConfigSuccess } from '@ofActions/config.actions';
-import { LoadProcessesTranslation } from '@ofActions/translate.actions';
 import { selectIdentifier } from '@ofSelectors/authentication.selectors';
 import { ConfigService } from '@ofServices/config.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -106,10 +105,10 @@ export class AppComponent implements OnInit {
             this.userService.loadUserWithPerimetersData(),
             this.entitiesService.loadAllEntitiesData(),
             this.processesService.loadAllProcesses(),
+            this.processesService.areTranslationsLoaded(),
             this.cardService.initSubscription)
-            .pipe(skip(3))
+            .pipe(skip(4)) // Need to wait for all initialization to complete before loading main components of the application
             .subscribe(() => {
-              this.store.dispatch(new LoadProcessesTranslation());
               this.loaded = true;
             });
         }
