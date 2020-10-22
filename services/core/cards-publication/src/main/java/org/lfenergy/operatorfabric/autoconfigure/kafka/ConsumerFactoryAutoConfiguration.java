@@ -25,11 +25,10 @@ public class ConsumerFactoryAutoConfiguration {
 
     private final KafkaProperties kafkaProperties;
 
+    private String deserializerKeyClass = "org.apache.kafka.common.serialization.StringDeserializer";
+
     @Value("${spring.deserializer.value.delegate.class}")
     private String deserializerValueClass;
-
-    @Value("${spring.deserializer.key.delegate.class}")
-    private String deserializerKeyClass;
 
     private Map<String,Object> consumerConfig() {
         log.info("bootstrapServers: " + kafkaProperties.getBootstrapServers());
