@@ -23,31 +23,25 @@
     },
     {
       "name": "publishDate",
-      "type": ["null","int"],
-      "logicalType": "date",
-      "default": null
-    },
-    {
-      "name": "deletionDate",
-      "type": ["null","int"],
-      "logicalType": "date",
+      "type": ["null","long"],
+      "logicalType": "timestamp-millis",
       "default": null
     },
     {
       "name": "lttd",
-      "type": ["null","int"],
-      "logicalType": "date",
+      "type": ["null","long"],
+      "logicalType": "timestamp-millis",
       "default": null
     },
     {
       "name": "startDate",
       "type": "long",
-      "logicalType": "date"
+      "logicalType": "timestamp-millis"
     },
     {
       "name": "endDate",
       "type": ["null","long"],
-      "logicalType": "date",
+      "logicalType": "timestamp-millis",
       "default": null
     },
     {
@@ -70,7 +64,7 @@
       "default": null
     },
     {
-      "name": "timespans",
+      "name": "timeSpans",
       "type": [
         "null",
         {

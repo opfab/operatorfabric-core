@@ -3,19 +3,18 @@ server:
 spring:
   application:
     name: cards-publication
-
-#Uncomment the Kafka section to enable Kafka
-#  kafka:
-#    consumer:
+  kafka:
+    consumer:
+      #Uncomment the Kafka group-id to enable Kafka
 #      group-id: opfab-command
-#      auto-offset-reset: earliest
-#  deserializer:
-#    key:
-#      delegate:
-#        class: org.apache.kafka.common.serialization.StringDeserializer
-#    value:
-#      delegate:
-#        class: org.lfenergy.operatorfabric.cards.publication.kafka.consumer.CardCommandConsumerDeserializer
+      auto-offset-reset: earliest
+  deserializer:
+    key:
+      delegate:
+        class: org.apache.kafka.common.serialization.StringDeserializer
+    value:
+      delegate:
+        class: org.lfenergy.operatorfabric.cards.publication.kafka.consumer.CardCommandConsumerDeserializer
 
 #here we put urls for all feign clients
 users:

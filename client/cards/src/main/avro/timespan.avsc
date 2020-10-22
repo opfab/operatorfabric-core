@@ -5,16 +5,16 @@
   "fields": [
     {
       "name": "start",
-      "type": "int",
-      "logicalType": "date"
+      "type": "long",
+      "logicalType": "timestamp-millis"
     },
     {
       "name" : "end",
       "type": [
         "null",
-        "int"
+        "long"
       ],
-      "logicalType": "date",
+      "logicalType": "timestamp-millis",
       "default" : null
     }
   ]
