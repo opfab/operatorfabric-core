@@ -38,7 +38,8 @@ export class Card {
         readonly externalRecipients?: string[],
         readonly entitiesAllowedToRespond?: string[],
         readonly recipient?: Recipient,
-        readonly parentCardUid?: string,
+        readonly parentCardId?: string,
+        readonly initialParentCardUid?: string,
         readonly publisherType?: PublisherType | string,
         readonly timeSpans?: TimeSpan[]
     ) {
@@ -65,7 +66,8 @@ export class CardForPublishing {
         readonly externalRecipients?: string[],
         readonly entitiesAllowedToRespond?: string[],
         readonly recipient?: Recipient,
-        readonly parentCardUid?: string,
+        readonly parentCardId?: string,
+        readonly initialParentCardUid?: string,
         readonly publisherType?: PublisherType | string,
         readonly timeSpans?: TimeSpan[]
     ) {
@@ -107,7 +109,7 @@ export class TimeSpan {
 export function fromCardToLightCard(card: Card): LightCard {
     return new LightCard(card.uid, card.id, card.publisher, card.processVersion, card.publishDate, card.startDate
         , card.endDate, card.severity, card.hasBeenAcknowledged, card.hasBeenRead, card.processInstanceId
-        , card.lttd, card.title, card.summary, null, [], card.process, card.state, card.parentCardUid);
+        , card.lttd, card.title, card.summary, null, [], card.process, card.state, card.parentCardId, card.initialParentCardUid);
 }
 
 export function fromCardToCardForPublishing(card: Card): CardForPublishing {
@@ -130,7 +132,8 @@ export function fromCardToCardForPublishing(card: Card): CardForPublishing {
         card.externalRecipients,
         card.entitiesAllowedToRespond,
         card.recipient,
-        card.parentCardUid,
+        card.parentCardId,
+        card.initialParentCardUid,
         card.publisherType,
         card.timeSpans
     );

@@ -263,7 +263,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   getAllCardsToDrawOnTheTimeLine(cards) {
     const myCardsTimeline = [];
     for (const card of cards) {
-      if (!card.parentCardUid) {// is not child card
+      if (!card.parentCardId) {// is not child card
         if (card.timeSpans && card.timeSpans.length > 0) {
           card.timeSpans.forEach(timeSpan => {
             if (!!timeSpan.start) {

@@ -202,7 +202,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                     takeUntil(this.unsubscribe$),
                     map(lastCards =>
                         lastCards.filter(card =>
-                            card.parentCardUid === this.card.uid &&
+                            card.parentCardId === this.card.id &&
                             !this.childCards.map(childCard => childCard.uid).includes(card.uid))
                     ),
                     map(childCards => childCards.map(c => this.cardService.loadCard(c.id)))
@@ -301,7 +301,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 summary: this.card.summary,
                 data: formResult.formData,
                 recipient: this.card.recipient,
-                parentCardUid: this.card.uid
+                parentCardId: this.card.id,
+                initialParentCardUid: this.card.uid
             };
 
             this.cardService.postCard(card)

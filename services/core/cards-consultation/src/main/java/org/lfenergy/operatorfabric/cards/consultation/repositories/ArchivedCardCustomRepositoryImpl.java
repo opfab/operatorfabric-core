@@ -66,8 +66,11 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         return findByIdWithUser(template, id, currentUserWithPerimeters, ArchivedCardConsultationData.class);
     }
 
-    public Flux<ArchivedCardConsultationData> findByParentCardUid(String parentUid) {
-        return findByParentCardUid(template, parentUid, ArchivedCardConsultationData.class);
+    public Flux<ArchivedCardConsultationData> findByParentCardId(String parentId) {
+        return findByParentCardId(template, parentId, ArchivedCardConsultationData.class);
+    }
+    public Flux<ArchivedCardConsultationData> findByInitialParentCardUid(String initialParentCardUid) {
+        return findByInitialParentCardUid(template, initialParentCardUid, ArchivedCardConsultationData.class);
     }
 
     public Mono<Page<LightCard>> findWithUserAndParams(Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params) {

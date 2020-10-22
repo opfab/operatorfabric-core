@@ -50,7 +50,9 @@ public class CardPublicationData implements Card {
     @Id
     private String id;
 
-    private String parentCardUid;
+    private String parentCardId;
+
+    private String initialParentCardUid;
 
     private String publisher;
     
@@ -136,7 +138,8 @@ public class CardPublicationData implements Card {
         LightCardPublicationData.LightCardPublicationDataBuilder result = LightCardPublicationData.builder()
                 .id(this.getId())
                 .uid(this.getUid())
-                .parentCardUid(this.getParentCardUid())
+                .parentCardId(this.getParentCardId())
+                .initialParentCardUid(this.getInitialParentCardUid())
                 .publisher(this.getPublisher())
                 .processVersion(this.getProcessVersion())
                 .process(this.getProcess())
