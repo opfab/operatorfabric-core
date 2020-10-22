@@ -45,6 +45,8 @@ public class ArchivedCardConsultationData implements Card {
     private String id;
     private String parentCardId;
     private String initialParentCardUid;
+    @Builder.Default
+    private Boolean keepChildCards = false;
     private String publisher;
     private String processVersion;
     private String process;

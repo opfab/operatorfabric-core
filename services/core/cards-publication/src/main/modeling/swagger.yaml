@@ -296,6 +296,9 @@ definitions:
         type: string
         description: The uid of the initial parent card if it's a child card (optional). When a card is updated, its id is still the same but not its uid, that's why we store this field initialParentCardUid.
         readOnly: true
+      keepChildCards:
+        type: boolean
+        description: Is true if OperatorFabric must not delete child cards when their parent card is updated
       publisher:
         type: string
         description: Unique ID of the entity or service publishing the card
