@@ -3,7 +3,7 @@ Feature: Cards
 
 Background: 
 
-  * def signIn = call read('../common/getToken.feature') { username: 'tso1-operator'}
+  * def signIn = call read('../common/getToken.feature') { username: 'operator1'}
   * def authToken = signIn.authToken
 
 Scenario: Post card with old version of bundle 
@@ -23,7 +23,7 @@ Scenario: Post card with old version of bundle
 			"processInstanceId" : "processOld",
 			"state": "messageState",
 			"tags":["test","test2"],
-			"groupRecipients": ["TSO1"],
+			"groupRecipients": ["Dispatcher"],
 			"severity" : "INFORMATION",
 			"startDate" : startDate,
 			"summary" : {"key" : "defaultProcess.summary"},

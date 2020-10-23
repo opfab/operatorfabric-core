@@ -38,8 +38,8 @@ describe('EntitiesService', () => {
   describe('#getAllEntities', () => {
     it('should return an Observable<Entity[]>', () => {
       const listEntities: Entity[] = [];
-      const entity1 = new Entity('ENTITY1', 'Entity 1 name', 'Entity 1 short description');
-      const entity2 = new Entity('ENTITY2', 'Entity 2 name', 'Entity 2 short description');
+      const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1');
+      const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2');
       listEntities.push(entity1);
       listEntities.push(entity2);
       entitiesService.getAllEntities().subscribe(result => {

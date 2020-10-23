@@ -78,7 +78,7 @@ public class CardRepositoryShould {
 
     public CardRepositoryShould(){
         User user1 = new User();
-        user1.setLogin("rte-operator");
+        user1.setLogin("operator3");
         user1.setFirstName("Test");
         user1.setLastName("User");
         List<String> groups = new ArrayList<>();
@@ -92,7 +92,7 @@ public class CardRepositoryShould {
         rteUserEntity1.setUserData(user1);
 
         User user2 = new User();
-        user2.setLogin("rte-operator");
+        user2.setLogin("operator3");
         user2.setFirstName("Test");
         user2.setLastName("User");
         List<String> groups2 = new ArrayList<>();

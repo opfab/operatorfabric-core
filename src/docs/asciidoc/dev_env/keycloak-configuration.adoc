@@ -65,7 +65,7 @@ Used to map the user name to a field that suits services
  * 
  
 repeat process for other users:
-rte-operator, tso1-operator, tso2-operator
+operator3, operator1, operator2
 
 
 === Development-specific configuration

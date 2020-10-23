@@ -13,58 +13,55 @@ operatorfabric.users.default:
     - login: admin
       groups: ["ADMIN"]
       entities: ["ENTITY1","ENTITY2"]
-    - login: rte-operator
-      groups: ["RTE","ADMIN","TRANS","TSO1"]
+    - login: operator3
+      groups: ["RTE","ADMIN","ReadOnly","Dispatcher"]
       entities: ["ENTITY1"]
-    - login: tso1-operator-admin
-      groups: ["TSO1","TRANS","ADMIN"]
+    - login: operator1-admin
+      groups: ["Dispatcher","ReadOnly","ADMIN"]
       entities: ["ENTITY1"]
-    - login: tso1-operator
-      groups: ["TSO1","TRANS"]
+    - login: operator1
+      groups: ["Dispatcher","ReadOnly"]
       entities: ["ENTITY1"]
-    - login: tso2-operator
-      groups: ["TSO2", "TRANS"]
+    - login: operator2
+      groups: ["Planner", "ReadOnly"]
       entities: ["ENTITY2"]
   groups:
-    - id: ADMIN
-      name: ADMINISTRATORS
-      description: The admin group
     - id: ADMIN
       name: ADMINISTRATORS
       description: The admin group
     - id: RTE
       name: RTE France
       description: RTE TSO Group
-    - id: TSO1
-      name: TSO number 1
-      description: TSO 1 Group
-    - id: TSO2
-      name: TSO number 2
-      description: TSO 2 Group
-    - id: TSO3
-      name: TSO number 3
-      description: TSO 3 Group
-    - id: TSO4
-      name: TSO number 4
-      description: TSO 4 Group
-    - id: TRANS
-      name: TRANS name
-      description: Transnational Group
+    - id: Dispatcher
+      name: Dispatcher
+      description: Dispatcher Group
+    - id: Planner
+      name: Planner
+      description: Planner Group
+    - id: Supervisor
+      name: Supervisor
+      description: Supervisor Group
+    - id: Manager
+      name: Manager
+      description: Manager Group
+    - id: ReadOnly
+      name: ReadOnly
+      description: ReadOnly Group
   entities:
     - id: ENTITY1
-      name: Entity 1 name
-      description: Entity 1 short description
+      name: Control Room 1
+      description: Control Room 1
     - id: ENTITY2
-      name: Entity 2 name
-      description: Entity 2 short description
+      name: Control Room 2
+      description: Control Room 2
     - id: ENTITY3
-      name: Entity 3 name
-      description: Entity 3 short description
+      name: Control Room 3
+      description: Control Room 3
     - id: ENTITY4
-      name: Entity 4 name
-      description: Entity 4 short description
+      name: Control Room 4
+      description: Control Room 4
   user-settings:
-    - login: rte-operator
+    - login: operator3
       description: Da Operator Rulez
 #logging:
 #  level:

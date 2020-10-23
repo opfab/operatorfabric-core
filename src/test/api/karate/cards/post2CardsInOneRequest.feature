@@ -3,7 +3,7 @@ Feature: Cards
 
 Background:
 
-    * def signIn = call read('../common/getToken.feature') { username: 'tso1-operator'}
+    * def signIn = call read('../common/getToken.feature') { username: 'operator1'}
     * def authToken = signIn.authToken
 
 Scenario: Post two  Cards in one request
@@ -17,7 +17,7 @@ Scenario: Post two  Cards in one request
 	"process"  :"api_test",
 	"processInstanceId" : "process2card1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "COMPLIANT",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -30,7 +30,7 @@ Scenario: Post two  Cards in one request
 	"process"  :"api_test",
 	"processInstanceId" : "process2card2",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "COMPLIANT",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},

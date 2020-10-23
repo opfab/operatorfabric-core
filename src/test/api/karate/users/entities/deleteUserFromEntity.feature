@@ -1,10 +1,10 @@
 Feature: deleteUserFromEntity
 
   Background:
-   #Getting token for admin and tso1-operator user calling getToken.feature
+   #Getting token for admin and operator1 user calling getToken.feature
     * def signIn = call read('../../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = call read('../../common/getToken.feature') { username: 'tso1-operator'}
+    * def signInAsTSO = call read('../../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
 
@@ -65,7 +65,7 @@ Feature: deleteUserFromEntity
     Then status 200
 
 
-  Scenario: Delete user from an entity (with tso1-operator authentication)
+  Scenario: Delete user from an entity (with operator1 authentication)
     #Given url opfabUrl + 'users/entities/' + entityDeletedFrom + '/users/' + userToDelete
     Given url opfabUrl + 'users/entities/' + entityKarate2.id  + '/users/' + userKarate2.login
     And header Authorization = 'Bearer ' + authTokenAsTSO
@@ -81,7 +81,7 @@ Feature: deleteUserFromEntity
 
   Scenario: Delete user from a non-existent entity
   #  non-existent entity, expected response 404
-    Given def userToDelete = 'rte-operator'
+    Given def userToDelete = 'operator3'
     Given url opfabUrl + 'users/entities/' + 'entityNonExistent'  + '/users/' + userKarate2.login
     And header Authorization = 'Bearer ' + authToken
     When method delete

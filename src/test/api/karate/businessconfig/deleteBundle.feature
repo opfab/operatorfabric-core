@@ -1,13 +1,13 @@
 Feature: deleteBundle
 
   Background:
-   #Getting token for admin and tso1-operator user calling getToken.feature
+   #Getting token for admin and operator1 user calling getToken.feature
    #Using callonce to make the call just once at the beginning
     * def signIn = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken   
    #The "." in the middle of the following file path is just a trick to force 
    #karate to make a second and final call to getToken.feature
-    * def signInAsTSO = callonce read('../common/./getToken.feature') { username: 'tso1-operator'}
+    * def signInAsTSO = callonce read('../common/./getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
 

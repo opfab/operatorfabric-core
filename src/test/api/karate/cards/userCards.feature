@@ -1,10 +1,10 @@
 Feature: UserCards tests
 
   Background:
-   #Getting token for admin and tso1-operator user calling getToken.feature
+   #Getting token for admin and operator1 user calling getToken.feature
     * def signIn = call read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = call read('../common/getToken.feature') { username: 'tso1-operator'}
+    * def signInAsTSO = call read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
     * def groupKarate =
@@ -53,9 +53,9 @@ Feature: UserCards tests
 }
 """
 
-    * def tso1operatorArray =
+    * def operator1Array =
 """
-[   "tso1-operator"
+[   "operator1"
 ]
 """
     * def groupArray =
@@ -74,10 +74,10 @@ Feature: UserCards tests
     And match response.id == groupKarate.id
 
 
-  Scenario: Add tso1-operator to groupKarate
+  Scenario: Add operator1 to groupKarate
     Given url opfabUrl + 'users/groups/' + groupKarate.id + '/users'
     And header Authorization = 'Bearer ' + authToken
-    And request tso1operatorArray
+    And request operator1Array
     When method patch
     And status 200
 
@@ -122,7 +122,7 @@ Feature: UserCards tests
 	"process"  :"initial",
 	"processInstanceId" : "initialCardProcess",
 	"state": "state2",
-  "groupRecipients": ["TSO1"],
+  "groupRecipients": ["Dispatcher"],
 	"externalRecipients" : ["api_test_externalRecipient1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -141,7 +141,7 @@ Feature: UserCards tests
     And match response.count == 1
 
 
-#get card with user tso1-operator
+#get card with user operator1
     Given url opfabUrl + 'cards/cards/initial.initialCardProcess'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
@@ -158,7 +158,7 @@ Feature: UserCards tests
 	"process"  :"process_1",
 	"processInstanceId" : "process_id_w",
 	"state": "state2",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"externalRecipients" : ["api_test_externalRecipient1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -184,7 +184,7 @@ Feature: UserCards tests
     And match response.count == 1
 
 
-#get card with user tso1-operator
+#get card with user operator1
     Given url opfabUrl + 'cards/cards/process_1.process_id_w'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
@@ -200,7 +200,7 @@ Feature: UserCards tests
 	"process"  :"process_2",
 	"processInstanceId" : "process_o",
 	"state": "state2",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"externalRecipients" : ["api_test_externalRecipient1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -234,7 +234,7 @@ Feature: UserCards tests
 
 
   Scenario: We update the parent card (which id is : initial.initialCardProcess, with keepChildCards=true), then we check that child card was not deleted
-    #get card with user tso1-operator
+    #get card with user operator1
     Given url opfabUrl + 'cards/cards/initial.initialCardProcess'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
@@ -252,7 +252,7 @@ Feature: UserCards tests
 	"process"  :"initial",
 	"processInstanceId" : "initialCardProcess",
 	"state": "final",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"externalRecipients" : ["api_test_externalRecipient1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -297,7 +297,7 @@ Feature: UserCards tests
 	"process"  :"initial",
 	"processInstanceId" : "initialCardProcess",
 	"state": "final",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"externalRecipients" : ["api_test_externalRecipient1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -347,7 +347,7 @@ Feature: UserCards tests
 	"process"  :"process_1",
 	"processInstanceId" : "process_id_4",
 	"state": "state2",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"externalRecipients" : ["api_test_externalRecipient1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -385,7 +385,7 @@ Feature: UserCards tests
 	"process"  :"process_1",
 	"processInstanceId" : "process_id_5",
 	"state": "state2",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"externalRecipients" : ["api_test_externalRecipient1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -434,8 +434,8 @@ Feature: UserCards tests
 
 
 # delete user from group
-  Scenario: Delete user tso1-operator from groupKarate
-    Given url opfabUrl + 'users/groups/' + groupKarate.id  + '/users/tso1-operator'
+  Scenario: Delete user operator1 from groupKarate
+    Given url opfabUrl + 'users/groups/' + groupKarate.id  + '/users/operator1'
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200

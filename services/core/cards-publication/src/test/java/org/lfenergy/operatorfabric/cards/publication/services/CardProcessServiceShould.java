@@ -339,8 +339,8 @@ class CardProcessServiceShould {
         subdata.put("string", "test2");
         data.put("object", subdata);
         ArrayList<String> entityRecipients = new ArrayList<>();
-        entityRecipients.add("TSO1");
-        entityRecipients.add("TSO2");
+        entityRecipients.add("Dispatcher");
+        entityRecipients.add("Planner");
 
         CardPublicationData newCard = CardPublicationData.builder().publisher("PUBLISHER_1")
                 .processVersion("0.0.1").processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
