@@ -10,7 +10,8 @@
 
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
-import {Detail, Process, State, Menu, MenuEntry, MenuEntryLinkTypeEnum} from '@ofModel/processes.model';
+import {Detail, Process, State} from '@ofModel/processes.model';
+import {Menu, MenuEntry, MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
 import {Card} from '@ofModel/card.model';
 import {I18n} from '@ofModel/i18n.model';
 import {Map as OfMap, Map} from '@ofModel/map';
@@ -60,7 +61,6 @@ export function getOneRandomMenu(): Menu {
     return new Menu(
         getRandomAlphanumericValue(3,10),
         getRandomAlphanumericValue(3,10),
-        getRandomAlphanumericValue(3,10),
         entries);
 }
 
@@ -98,8 +98,6 @@ export function getOneRandomProcess(processTemplate?:any): Process {
         processTemplate.version?processTemplate.version:getRandomAlphanumericValue(3,10),
         processTemplate.name?processTemplate.name:getRandomAlphanumericValue(3,10),
         processTemplate.locales?processTemplate.locales:undefined,
-        processTemplate.menuLabel?processTemplate.menuLabel:undefined,
-        processTemplate.menuEntries?processTemplate.menuEntries:entries,
         processTemplate.states?processTemplate.states:states);
 
 }

@@ -12,10 +12,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams, HttpUrlEncodingCodec} from '@angular/common/http';
 import {environment} from '@env/environment';
-import {from, Observable, of, Subject, throwError} from 'rxjs';
+import {Observable, of, Subject} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
-import {catchError, filter, map, reduce, skip, switchMap, tap} from 'rxjs/operators';
-import {Process, Menu, ResponseBtnColorEnum} from '@ofModel/processes.model';
+import {catchError, map, skip, tap} from 'rxjs/operators';
+import {Process, ResponseBtnColorEnum} from '@ofModel/processes.model';
 import {Card} from '@ofModel/card.model';
 import {merge} from 'rxjs';
 import { Store, select } from '@ngrx/store';
@@ -151,23 +151,6 @@ export class ProcessesService {
             params
         });
     }
-    queryMenuEntryURL(id: string, version: string, menuEntryId: string): Observable<string> {
-        return this.queryProcess(id, version).pipe(
-            switchMap(process => {
-                const entry = process.menuEntries.filter(e => e.id === menuEntryId);
-                if (entry.length === 1) {
-                    return entry;
-                } else {
-                    throwError(new Error('No such menu entry.'));
-                }
-            }),
-            catchError((err, caught) => {
-                console.log(new Date().toISOString(),err);
-                return throwError(err);
-            }),
-            map(menuEntry => menuEntry.url)
-        );
-    }
 
     fetchHbsTemplate(process: string, version: string, name: string, locale: string): Observable<string> {
         const params = new HttpParams()
@@ -215,21 +198,6 @@ export class ProcessesService {
             object[process][version] = r;
             return object;
         };
-    }
-
-
-    computeMenu(): Observable<Menu[]> {
-        return this.httpClient.get<Process[]>(`${this.processesUrl}/`).pipe(
-            switchMap(processes => from(processes)),
-            filter((process: Process) => !(!process.menuEntries)),
-            map(process =>
-                new Menu(process.id, process.version, process.menuLabel, process.menuEntries)
-            ),
-            reduce((menus: Menu[], menu: Menu) => {
-                menus.push(menu);
-                return menus;
-            }, [])
-        );
     }
 
     getResponseBtnColorEnumValue(responseBtnColorEnum: ResponseBtnColorEnum): string {

@@ -12,13 +12,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { ProcessesService } from '@ofServices/processes.service';
 import { concatMap, map, takeUntil, skip } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
 import { selectGlobalStyleState } from '@ofSelectors/global-style.selectors';
 import { GlobalStyleService } from '@ofServices/global-style.service';
+import { ConfigService } from '@ofServices/config.service';
 
 
 @Component({
@@ -34,7 +34,7 @@ export class IframeDisplayComponent implements OnInit, OnDestroy {
   constructor(
     private sanitizer: DomSanitizer,
     private route: ActivatedRoute,
-    private businessconfigService: ProcessesService,
+    private businessconfigService: ConfigService,
     private store: Store<AppState>,
     private globalStyleService: GlobalStyleService
   ) {
@@ -49,7 +49,7 @@ export class IframeDisplayComponent implements OnInit, OnDestroy {
   private loadIframe() {
     this.iframeURL = this.route.paramMap.pipe(
     concatMap(paramMap =>
-      this.businessconfigService.queryMenuEntryURL(paramMap.get("menu_id"), paramMap.get("menu_version"), paramMap.get("menu_entry_id"))
+      this.businessconfigService.queryMenuEntryURL(paramMap.get("menu_id"), paramMap.get("menu_entry_id"))
     ),
     map((url) => this.addOpfabThemeParamToUrl(url)),
     map(this.sanitizer.bypassSecurityTrustResourceUrl));

@@ -10,7 +10,7 @@
 
 
 import {Action} from '@ngrx/store';
-import {Menu} from "@ofModel/processes.model";
+import {Menu} from "@ofModel/menu.model";
 
 export enum MenuActionTypes {
     LoadMenu = '[Menu] Load Menu',
