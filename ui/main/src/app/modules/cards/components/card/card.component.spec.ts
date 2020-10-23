@@ -13,13 +13,13 @@ import {async, ComponentFixture, getTestBed, TestBed} from '@angular/core/testin
 
 
 import {CardComponent} from './card.component';
-import {getOneRandomLightCard, getRandomAlphanumericValue} from '@tests/helpers';
+import {BusinessconfigI18nLoaderFactory} from '@tests/helpers';
 import {RouterTestingModule} from '@angular/router/testing';
 import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
 import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {BusinessconfigI18nLoaderFactory, ProcessesService} from '@ofServices/processes.service';
+import {ProcessesService} from '@ofServices/processes.service';
 import { CountdownModule, CountdownGlobalConfig, CountdownConfig } from 'ngx-countdown';
 import {ServicesModule} from '@ofServices/services.module';
 import {Router} from '@angular/router';
@@ -60,8 +60,7 @@ describe('CardComponent', () => {
                 TranslateModule.forRoot({
                     loader: {
                         provide: TranslateLoader,
-                        useFactory: BusinessconfigI18nLoaderFactory,
-                        deps: [ProcessesService]
+                        useFactory: BusinessconfigI18nLoaderFactory
                     },
                     useDefaultLang: false
                 }),
