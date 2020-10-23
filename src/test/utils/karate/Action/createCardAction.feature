@@ -3,7 +3,7 @@ Feature: API - creatCardAction
 
   Background:
 
-    * def signInAsTso = call read('../common/getToken.feature') { username: 'tso1-operator'}
+    * def signInAsTso = call read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTso = signInAsTso.authToken
 
   Scenario: Create a card
@@ -50,9 +50,9 @@ Feature: API - creatCardAction
                 "summary": "Test the action with entity in entitiesAllowedToRespond"
                 }
             },
-            "groupRecipients": ["TSO1"],
+            "groupRecipients": ["Dispatcher"],
             "entityRecipients": ["ENTITY1"],
-            "entitiesAllowedToRespond": ["TSO1","ENTITY1", "ENTITY2"],
+            "entitiesAllowedToRespond": ["Dispatcher","ENTITY1", "ENTITY2"],
             "data": {
                 "data1": "data1 content"
             }
@@ -119,9 +119,9 @@ Feature: API - creatCardAction
                 "summary": "Test the action with a long format"
                 }
             },
-            "groupRecipients": ["TSO1"],
+            "groupRecipients": ["Dispatcher"],
             "entityRecipients": ["ENTITY1", "ENTITY2"],
-            "entitiesAllowedToRespond": ["TSO1","ENTITY1", "ENTITY2"],
+            "entitiesAllowedToRespond": ["Dispatcher","ENTITY1", "ENTITY2"],
             "data": {
                 "data1": "data1 content"
             }

@@ -3,7 +3,7 @@ Feature: Cards
 
   Background:
 
-    * def signIn = call read('../common/getToken.feature') { username: 'tso1-operator'}
+    * def signIn = call read('../common/getToken.feature') { username: 'operator1'}
     * def authToken = signIn.authToken
     * def signInUserWithNoGroupNoEntity = call read('../common/getToken.feature') { username: 'userwithnogroupnoentity'}
     * def authTokenUserWithNoGroupNoEntity = signInUserWithNoGroupNoEntity.authToken
@@ -18,7 +18,7 @@ Feature: Cards
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -47,7 +47,7 @@ Feature: Cards
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -63,7 +63,7 @@ Feature: Cards
     Then status 201
     And match response.count == 1
 
-#get card with user tso1-operator
+#get card with user operator1
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
@@ -80,7 +80,7 @@ Feature: Cards
 
   Scenario: Delete the card
 
-#get card with user tso1-operator
+#get card with user operator1
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
@@ -109,7 +109,7 @@ Feature: Cards
 	"process"  :"api_test",
 	"processInstanceId" : "process2card1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "COMPLIANT",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -122,7 +122,7 @@ Feature: Cards
 	"process"  :"api_test",
 	"processInstanceId" : "process2card2",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "COMPLIANT",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -151,7 +151,7 @@ Feature: Cards
 	"process"  :"api_test",
 	"processInstanceId" : "process2CardsIncludingOneCardKO1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "COMPLIANT",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -164,7 +164,7 @@ Feature: Cards
 	"process"  :"api_test",
 	"processInstanceId" : "process2CardsIncludingOneCardKO2",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
@@ -191,7 +191,7 @@ Feature: Cards
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"externalRecipients" : ["api_test2","api_test165"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -208,7 +208,7 @@ Feature: Cards
     Then status 201
     And match response.count == 1
 
-#get card with user tso1-operator and new attribute externalRecipients
+#get card with user operator1 and new attribute externalRecipients
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
@@ -226,7 +226,7 @@ Scenario:  Post card with no recipient but entityRecipients
 	"process"  :"api_test",
 	"processInstanceId" : "process2",
 	"state": "messageState",
-	"entityRecipients" : ["TSO1"],
+	"entityRecipients" : ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -252,7 +252,7 @@ Scenario:  Post card with initialParentCardUid not correct
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -280,7 +280,7 @@ Scenario:  Post card with parentCardId not correct
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -315,7 +315,7 @@ Scenario:  Post card with correct parentCardId but initialParentCardUid not corr
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -352,7 +352,7 @@ Scenario:  Post card with correct parentCardId and initialParentCardUid
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -381,7 +381,7 @@ Scenario: Push card and its two child cards, then get the parent card
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -415,7 +415,7 @@ Scenario: Push card and its two child cards, then get the parent card
 	"process"  :"api_test",
 	"processInstanceId" : "processChild1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -434,7 +434,7 @@ Scenario: Push card and its two child cards, then get the parent card
 	"process"  :"api_test",
 	"processInstanceId" : "processChild2",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},

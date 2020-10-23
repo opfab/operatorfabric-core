@@ -3,7 +3,7 @@ Feature: API - creatCardAction
 
   Background:
 
-    * def signInAsTso = call read('../common/getToken.feature') { username: 'tso1-operator'}
+    * def signInAsTso = call read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTso = signInAsTso.authToken
 
 Scenario: Create a card with a valid lttd conditions
@@ -67,7 +67,7 @@ Scenario: Create a card with a valid lttd conditions
         "summary": "New test  the action processInstanceId1"
         }
     },
-    "groupRecipients": ["TSO1"],
+    "groupRecipients": ["Dispatcher"],
     "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
     "mainRecipient": null,
@@ -149,7 +149,7 @@ Scenario: Create a card - entity of enitiesAllowedToRepond  in the card not matc
         "summary": "Test the action processInstanceId2"
         }
     },
-    "groupRecipients": ["TSO1"],
+    "groupRecipients": ["Dispatcher"],
     "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["TSO","ENTITY2"],
     "mainRecipient": null,
@@ -228,7 +228,7 @@ Scenario: Create a card - with expired lttd
         "summary": "Test the action processInstanceId3"
         }
     },
-    "groupRecipients": ["TSO1"],
+    "groupRecipients": ["Dispatcher"],
     "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
     "mainRecipient": null,
@@ -307,7 +307,7 @@ Scenario: Create a card - with expired lttd
         "summary": "Test the action processInstanceId4"
         }
     },
-    "groupRecipients": ["TSO1"],
+    "groupRecipients": ["Dispatcher"],
     "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
     "mainRecipient": null,

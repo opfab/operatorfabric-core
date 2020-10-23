@@ -126,10 +126,10 @@ bin/run_all.sh status
 == Log into the UI
 
 *_URL:_* localhost:2002/ui/ +
-*_login:_* tso1-operator +
+*_login:_* operator1 +
 *_password:_* test
 
-The other users available in development mode are `rte-operator` and `admin`, both with `test` as password.
+The other users available in development mode are `operator3` and `admin`, both with `test` as password.
 
 WARNING: It might take a little while for the UI to load even after all services are running.
 

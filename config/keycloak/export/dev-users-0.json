@@ -34,12 +34,12 @@
   }, {
     "id" : "5e5a469f-8d21-4308-8229-3532fe6e52f6",
     "createdTimestamp" : 1557499482370,
-    "username" : "rte-operator",
+    "username" : "operator3",
     "enabled" : true,
     "totp" : false,
     "emailVerified" : false,
     "attributes" : {
-      "groups" : ["RTE;ADMIN;TRANS"]
+      "groups" : ["RTE;ADMIN;ReadOnly"]
     },
     "credentials" : [ {
       "type" : "password",
@@ -83,7 +83,7 @@
   }, {
     "id" : "793c4666-1162-44a0-b372-42fbaa348e78",
     "createdTimestamp" : 1557499736343,
-    "username" : "tso1-operator",
+    "username" : "operator1",
     "enabled" : true,
     "totp" : false,
     "emailVerified" : false,
@@ -91,7 +91,7 @@
     "lastName" : "",
     "attributes" : {
       "entitiesId" : [ "ENTITY1;ENTITY3" ],
-      "groups" : ["TSO1;TRANS;TSO3"]
+      "groups" : ["Dispatcher;ReadOnly;Supervisor"]
     },
     "credentials" : [ {
       "type" : "password",
@@ -116,13 +116,13 @@
   }, {
     "id" : "453436ad-ecdc-45c6-a57d-861d565c5eaa",
     "createdTimestamp" : 1557499764075,
-    "username" : "tso2-operator",
+    "username" : "operator2",
     "enabled" : true,
     "totp" : false,
     "emailVerified" : false,
     "attributes" : {
       "entitiesId" : [ "ENTITY2;ENTITY4" ],
-      "groups" : ["TSO2;TRANS;TSO4"]
+      "groups" : ["Planner;ReadOnly;Manager"]
     },
     "credentials" : [ {
       "type" : "password",

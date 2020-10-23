@@ -3,7 +3,7 @@ Feature: Cards
 
 Background: 
 
-  * def signIn = call read('../common/getToken.feature') { username: 'tso1-operator'}
+  * def signIn = call read('../common/getToken.feature') { username: 'operator1'}
   * def authToken = signIn.authToken
 
 Scenario: Post 6 Cards (2 INFORMATION, 1 COMPLIANT, 1 ACTION, 2 ALARM)
@@ -23,7 +23,7 @@ Scenario: Post 6 Cards (2 INFORMATION, 1 COMPLIANT, 1 ACTION, 2 ALARM)
 			"processInstanceId" : "process1",
 			"state": "messageState",
 			"tags":["tag1"],
-			"groupRecipients": ["TSO1"],
+			"groupRecipients": ["Dispatcher"],
 			"severity" : "INFORMATION",
 			"startDate" : startDate,
 			"summary" : {"key" : "message.summary"},
@@ -74,7 +74,7 @@ And match response.count == 1
 			"processInstanceId" : "process2",
 			"state": "chartState",
 			"tags" : ["tag2"],
-			"groupRecipients": ["TSO1"],
+			"groupRecipients": ["Dispatcher"],
 			"severity" : "INFORMATION",
 			"startDate" : startDate,
 			"summary" : {"key" : "message.summary"},
@@ -122,7 +122,7 @@ And match response.count == 1
 			"processInstanceId" : "process3",
 			"state": "processState",
 			"tags":["tag1", "tag2"],
-			"groupRecipients": ["TSO1"],
+			"groupRecipients": ["Dispatcher"],
 			"severity" : "COMPLIANT",
 			"startDate" : startDate,
 			"summary" : {"key" : "message.summary"},
@@ -165,7 +165,7 @@ And match response.count == 1
 			"process"  :"defaultProcess",
 			"processInstanceId" : "process4",
 			"state": "questionState",
-			"groupRecipients": ["TSO1", "TSO2"],
+			"groupRecipients": ["Dispatcher", "Planner"],
 			"entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
 			"severity" : "ACTION",
 			"startDate" : startDate,
@@ -205,7 +205,7 @@ And match response.count == 1
 			"process"  :"defaultProcess",
 			"processInstanceId" : "process5",
 			"state": "chartLineState",
-			"groupRecipients": ["TSO1", "TSO2"],
+			"groupRecipients": ["Dispatcher", "Planner"],
 			"severity" : "ALARM",
 			"startDate" : startDate,
 			"summary" : {"key" : "message.summary"},
@@ -243,7 +243,7 @@ And match response.count == 1
 			"process"  :"defaultProcess",
 			"processInstanceId" : "process6",
 			"state": "contingenciesState",
-			"userRecipients": ["tso1-operator"],
+			"userRecipients": ["operator1"],
 			"severity" : "ALARM",
 			"startDate" : startDate,
 			"lttd" : lttdDate,
@@ -375,3 +375,50 @@ And header Content-Type = 'application/json'
 When method post
 Then status 201
 And match response.count == 1
+
+
+
+##################################################################
+
+# Push a question card sent by a user from ENTITY1
+
+    * def getCard =
+    """
+    function() {
+
+      startDate = new Date().valueOf() + 4*60*60*1000;
+	  lttdDate = new Date().valueOf() + 60*1000*60;
+	  endDate = new Date().valueOf() + 8*60*60*1000;
+
+		var card = {
+			"publisher" : "ENTITY1",
+			"processVersion" : "1",
+			"process"  :"defaultProcess",
+			"processInstanceId" : "processInstanceSentByENTITY1",
+			"state": "questionState",
+			"groupRecipients": ["Dispatcher", "Planner"],
+			"entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
+			"severity" : "ACTION",
+			"startDate" : startDate,
+			"summary" : {"key" : "message.summary"},
+			"title" : {"key" : "question.title"},
+			"data" : {"message":" Action Card"},
+			"lttd" : lttdDate,
+			"timeSpans" : [
+				{"start" : startDate ,"end" : endDate}
+				],
+			"publisherType" : "ENTITY"
+		}
+
+	return JSON.stringify(card);
+
+      }
+    """
+    * def card = call getCard
+
+    Given url opfabPublishCardUrl + 'cards'
+    And request card
+    And header Content-Type = 'application/json'
+    When method post
+    Then status 201
+    And match response.count == 1

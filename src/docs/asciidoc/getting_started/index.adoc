@@ -26,7 +26,7 @@ git clone https://github.com/opfab/operatorfabric-getting-started.git
 ----
 Launch the `startserver.sh` in the server directory. You need to wait for all the services to start (it usually takes one minute to start), it is done when no more logs are written on the output (It could continue to log but slowly).
 
-Test the connection to the UI: to connect to OperatorFabric, open in a browser the following page: http://localhost:2002/ui/ and use `tso1-operator` as login and `test` as password.
+Test the connection to the UI: to connect to OperatorFabric, open in a browser the following page: http://localhost:2002/ui/ and use `operator1` as login and `test` as password.
 
 After connection, you should see the following screen
 
@@ -86,7 +86,7 @@ section of the reference documentation.
 	"state" : "messageState",
 	"recipient" : {
 				"type" : "GROUP",
-				"identity" : "TSO1"
+				"identity" : "Dispatcher"
 			},
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -114,7 +114,7 @@ We can send a new version of the card (updateCard.json):
 	"state" : "messageState",
 	"recipient" : {
 				"type" : "GROUP",
-				"identity" : "TSO1"
+				"identity" : "Dispatcher"
 			},
 	"severity" : "ALARM",
 	"startDate" : 1553186770681,
@@ -276,7 +276,7 @@ You can send the following card to test your new bundle:
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
-				"identity" : "TSO1"
+				"identity" : "Dispatcher"
 			},
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -382,7 +382,7 @@ We can now send cards and simulate the process, first we send a card at the begi
 	"state": "criticalSituation-begin",
 	"recipient" : {
 				"type" : "GROUP",
-				"identity" : "TSO1"
+				"identity" : "Dispatcher"
 			},
 	"severity" : "ALARM",
 	"startDate" : 1553186770681,
@@ -427,7 +427,7 @@ To view the card in the time line, you need to set times in the card using timeS
 	"state": "planned",
 	"recipient" : {
 				"type" : "GROUP",
-				"identity" : "TSO1"
+				"identity" : "Dispatcher"
 			},
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -559,10 +559,10 @@ The result should be a 201 Http status, and a json object such as:
 {"id":"getting-startedPerimeter","process":"defaultProcess","stateRights":[{"state":"messageState1","right":"Receive"},{"state":"messageState2","right":"ReceiveAndWrite"}]}
 ----
 
-Now let's attach this perimeter to the TSO1 group.
+Now let's attach this perimeter to the Dispatcher group.
 You can use this command line :
 ----
-curl -X PUT http://localhost:2103/perimeters/getting-startedPerimeter/groups -H "Content-type:application/json" -H "Authorization:Bearer $token" --data "[\"TSO1\"]"
+curl -X PUT http://localhost:2103/perimeters/getting-startedPerimeter/groups -H "Content-type:application/json" -H "Authorization:Bearer $token" --data "[\"Dispatcher\"]"
 ----
 
 or use the provided script :
@@ -580,7 +580,7 @@ If a card is sent to a group and an entity, then there are 2 possibilities to re
 - First possibility :
 the user is both a member of this entity and a member of this group.
 
-Let's send this card (for ENTITY1 and TSO1 group) :
+Let's send this card (for ENTITY1 and Dispatcher group) :
 [source,JSON]
 ----
 {
@@ -592,13 +592,13 @@ Let's send this card (for ENTITY1 and TSO1 group) :
 	"state": "messageState2",
 	"recipient" : {
 		"type" : "GROUP",
-		"identity" : "TSO1"
+		"identity" : "Dispatcher"
 	},
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
-	"data" : {"message" : "Hello World !!! Here is a message for ENTITY1 and group TSO1 - process/state not in tso1-operator perimeter "}
+	"data" : {"message" : "Hello World !!! Here is a message for ENTITY1 and group Dispatcher - process/state not in operator1 perimeter "}
 }
 ----
 
@@ -625,7 +625,7 @@ See the result in the UI, you should see the card.
 - Second possibility :
 the user is a member of this entity and have the process/state of the card within its perimeter. As the perimeters are attached to groups, the user must therefore be a member of a group attached to this perimeter.
 
-Let's send this card (for ENTITY1 and TSO2 group) :
+Let's send this card (for ENTITY1 and Planner group) :
 [source,JSON]
 ----
 {
@@ -637,13 +637,13 @@ Let's send this card (for ENTITY1 and TSO2 group) :
 	"state": "messageState",
 	"recipient" : {
 		"type" : "GROUP",
-		"identity" : "TSO2"
+		"identity" : "Planner"
 	},
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
-	"data" : {"message" : "Hello World !!! Here is a message for ENTITY1 and group TSO2 - process/state in tso1-operator perimeter "}
+	"data" : {"message" : "Hello World !!! Here is a message for ENTITY1 and group Planner - process/state in operator1 perimeter "}
 }
 ----
 

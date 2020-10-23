@@ -3,7 +3,7 @@ Feature: Cards
 
   Background:
 
-    * def signIn = call read('../common/getToken.feature') { username: 'tso1-operator'}
+    * def signIn = call read('../common/getToken.feature') { username: 'operator1'}
     * def authToken = signIn.authToken
 
   Scenario: Post card
@@ -15,7 +15,7 @@ Feature: Cards
 	"processVersion" : "1",
 	"processInstanceId" : "process1WithNoProcessField",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},

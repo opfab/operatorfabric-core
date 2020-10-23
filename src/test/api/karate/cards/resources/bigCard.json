@@ -62688,7 +62688,7 @@
         "processInstanceId": "SEA0",
         "publisher": "APOGEESEA",
         "processVersion": "1",
-        "groupRecipients": ["TSO1"],
+        "groupRecipients": ["Dispatcher"],
         "severity": "ALARM",
         "startDate": 1553186770681,
         "state": "APOGEESEA",

@@ -1,7 +1,7 @@
 Feature: Add perimeters/group for action test 
 
   Background:
-   #Getting token for admin and tso1-operator user calling getToken.feature
+   #Getting token for admin and operator1 user calling getToken.feature
     * def signIn = call read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
 
@@ -56,6 +56,6 @@ Feature: Add perimeters/group for action test
   Scenario: Add users to a group
     Given url opfabUrl + 'users/groups/groupAction/users'
     And header Authorization = 'Bearer ' + authToken
-    And request ["tso1-operator", "tso1-operator-admin", "rte-operator"]
+    And request ["operator1", "operator1-admin", "operator3"]
     When method patch
     And status 200

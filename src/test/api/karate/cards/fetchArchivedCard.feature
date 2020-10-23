@@ -2,9 +2,9 @@ Feature: fetchArchive
 
   Background:
 
-    * def signIn = call read('../common/getToken.feature') { username: 'tso1-operator'}
+    * def signIn = call read('../common/getToken.feature') { username: 'operator1'}
     * def authToken = signIn.authToken
-    * def signInTSO2 = call read('../common/getToken.feature') { username: 'tso2-operator'}
+    * def signInTSO2 = call read('../common/getToken.feature') { username: 'operator2'}
     * def authTokenTSO2 = signInTSO2.authToken
 
   Scenario: fetchArchive
@@ -17,7 +17,7 @@ Feature: fetchArchive
 	"process"  :"api_test",
 	"processInstanceId" : "process_archive_1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "ALARM",
 	"startDate" : 1583943924000,
 	"endDate" : 1584943924000,
@@ -35,7 +35,7 @@ Feature: fetchArchive
     And match response.count == 1
 
 
-#get card with user tso1-operator
+#get card with user operator1
     Given url opfabUrl + 'cards/cards/api_test.process_archive_1'
     And header Authorization = 'Bearer ' + authToken
     When method get
@@ -43,7 +43,7 @@ Feature: fetchArchive
     And match response.card.data.message == 'a message'
     And def cardUid = response.card.uid
 
-#get card form archives with user tso1-operator
+#get card form archives with user operator1
 
     Given url opfabUrl + 'cards/archives/' + cardUid
     And header Authorization = 'Bearer ' + authToken
@@ -59,7 +59,7 @@ Feature: fetchArchive
     Then status 401
 
 
-# get card form archives with user tso2-operator
+# get card form archives with user operator2
 
 
     Given url opfabUrl + 'cards/archives/' + cardUid
@@ -78,7 +78,7 @@ Feature: fetchArchive
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"externalRecipients" : ["api_test2","api_test16566111"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -96,7 +96,7 @@ Feature: fetchArchive
         And match response.count == 1
 
 
-#get card with user tso1-operator
+#get card with user operator1
         Given url opfabUrl + 'cards/cards/api_test.process1'
         And header Authorization = 'Bearer ' + authToken
         When method get
