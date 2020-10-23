@@ -63,7 +63,9 @@
     },
     "sort": {
       "severityPub": "Sorted by severity then publication",
-      "pub": "Sorted by publication"
+      "pub": "Sorted by publication",
+      "read": "Sorted by read",
+      "notsortedByRead": "Not sorted by read"
     }
   },
   "login": {

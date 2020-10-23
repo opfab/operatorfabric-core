@@ -14,6 +14,8 @@ import {emptyAppState4Test, getOneRandomCard, getSeveralRandomLightCards} from '
 import {
     CardFeedState,
     compareByPublishDate,
+    compareByReadPublishDate,
+    compareByReadSeverityPublishDate,
     compareBySeverityPublishDate,
     feedInitialState,
     LightCardAdapter
@@ -27,14 +29,15 @@ describe('FeedSelectors', () => {
         ...feedInitialState
     };
 
-    it('should be sorted by publishDate if sortBySeverity=false', () => {
+    it('should be sorted by publishDate if sortByRead=false and sortBySeverity=false', () => {
 
         const lightCards: LightCard[] = getSeveralRandomLightCards(6);
 
         const testAppState = { ...emptyAppState,
             feed: {
                 ...LightCardAdapter.upsertMany(lightCards, selectedState),
-                sortBySeverity: false
+                sortBySeverity: false,
+                sortByRead: false
             }
         }
 
@@ -44,14 +47,15 @@ describe('FeedSelectors', () => {
 
     });
 
-    it('should be sorted by severity,publishDate if sortBySeverity=true', () => {
+    it('should be sorted by severity,publishDate if sortByRead=false and sortBySeverity=true', () => {
 
         const lightCards: LightCard[] = getSeveralRandomLightCards(6);
 
         const testAppState = { ...emptyAppState,
             feed: {
                 ...LightCardAdapter.upsertMany(lightCards, selectedState),
-                sortBySeverity: true
+                sortBySeverity: true,
+                sortByRead: false
             }
         }
 
@@ -61,4 +65,39 @@ describe('FeedSelectors', () => {
 
     });
 
+    it('should be sorted by read,severity,publishDate if sortByRead=true and sortBySeverity=true', () => {
+
+        const lightCards: LightCard[] = getSeveralRandomLightCards(6);
+
+        const testAppState = { ...emptyAppState,
+            feed: {
+                ...LightCardAdapter.upsertMany(lightCards, selectedState),
+                sortBySeverity: true,
+                sortByRead: true
+            }
+        }
+
+        //Expected sort
+        const sortedLightCards: LightCard[] = lightCards.sort(compareByReadSeverityPublishDate)
+        expect(selectSortedFilteredLightCards(testAppState)).toEqual(sortedLightCards);
+
+    });
+
+    it('should be sorted by read,publishDate if sortByRead=true and sortBySeverity=false', () => {
+
+        const lightCards: LightCard[] = getSeveralRandomLightCards(6);
+
+        const testAppState = { ...emptyAppState,
+            feed: {
+                ...LightCardAdapter.upsertMany(lightCards, selectedState),
+                sortBySeverity: false,
+                sortByRead: true
+            }
+        }
+
+        //Expected sort
+        const sortedLightCards: LightCard[] = lightCards.sort(compareByReadPublishDate)
+        expect(selectSortedFilteredLightCards(testAppState)).toEqual(sortedLightCards);
+
+    });
 });
