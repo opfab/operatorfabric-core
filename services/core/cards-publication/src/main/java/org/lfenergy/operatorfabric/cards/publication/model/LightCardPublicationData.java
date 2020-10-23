@@ -71,6 +71,9 @@ public class LightCardPublicationData implements LightCard {
 
     private String initialParentCardUid;
 
+    @Builder.Default
+    private Boolean keepChildCards = false;
+
     private List<String> entitiesAllowedToRespond;
 
     private PublisherTypeEnum publisherType;

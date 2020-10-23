@@ -54,6 +54,9 @@ public class CardPublicationData implements Card {
 
     private String initialParentCardUid;
 
+    @Builder.Default
+    private Boolean keepChildCards = false;
+
     private String publisher;
     
     private String processVersion;
@@ -140,6 +143,7 @@ public class CardPublicationData implements Card {
                 .uid(this.getUid())
                 .parentCardId(this.getParentCardId())
                 .initialParentCardUid(this.getInitialParentCardUid())
+                .keepChildCards(this.getKeepChildCards())
                 .publisher(this.getPublisher())
                 .processVersion(this.getProcessVersion())
                 .process(this.getProcess())

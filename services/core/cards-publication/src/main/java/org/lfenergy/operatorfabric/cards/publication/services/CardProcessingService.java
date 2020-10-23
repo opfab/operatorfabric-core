@@ -91,11 +91,14 @@ public class CardProcessingService {
     }
 
     private Flux<CardPublicationData> deleteChildCardsProcess(Flux<CardPublicationData> cards) {
-        return cards.doOnNext(card->{
-            String idCard= card.getProcess()+"."+card.getProcessInstanceId();
-            Optional<List<CardPublicationData>> childCard=cardRepositoryService.findChildCard(cardRepositoryService.findCardById(idCard));
-            if(childCard.isPresent()){
-                deleteCards(childCard.get());
+        return cards.doOnNext(card -> {
+
+            if (! card.getKeepChildCards()) {
+                String idCard = card.getProcess() + "." + card.getProcessInstanceId();
+                Optional<List<CardPublicationData>> childCard = cardRepositoryService.findChildCard(cardRepositoryService.findCardById(idCard));
+                if (childCard.isPresent()) {
+                    deleteCards(childCard.get());
+                }
             }
         });
     }

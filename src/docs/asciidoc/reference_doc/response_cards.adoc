@@ -10,9 +10,9 @@
 
 Within your template, you can allow the user to perform some action (respond to a form, answer a question, ...). The user fills these information and then clicks on a submit button. When he submits this action, a new card is created and emitted to a third-party tool.
 
-This card is called "a child card" as it is attached to the card where the question came from : "the parent card". This child card is also send to the users that have received the parent card. From the ui point of view, the information of the child cards can be integrated in real time in the parent card if configured. 
+This card is called "a child card" as it is attached to the card where the question came from : "the parent card". This child card is also sent to the users that have received the parent card. From the ui point of view, the information of the child cards can be integrated in real time in the parent card if configured.
 
-The process can be represented as follow : 
+The process can be represented as follows :
 
 image::ResponseCardSequence.jpg[,align="center"]
 
@@ -142,6 +142,9 @@ The question card is like a usual card except that you have the field "entitiesA
 ...
 
 ....
+
+NOTE: By default, OperatorFabric considers that if the parent card (question card) is modified, then the child cards are deleted. If you want to keep the child cards when the parent card is changed, then you must add in the parent card the field "keepChildCards" and set it to true.
+
 
 
 == Integrate child cards 

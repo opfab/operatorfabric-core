@@ -233,6 +233,17 @@ Feature: UserCards tests
     And match response.count == 1
 
 
+  Scenario: We update the parent card (which id is : initial.initialCardProcess, with keepChildCards=true), then we check that child card was not deleted
+    #get card with user tso1-operator
+    Given url opfabUrl + 'cards/cards/initial.initialCardProcess'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 200
+    And def cardId = response.card.id
+    And def cardUid = response.card.uid
+    And assert response.childCards.length == 1
+    And match response.childCards[0].id == "process_2.process_o"
+
     * def card =
 """
 {
@@ -247,7 +258,52 @@ Feature: UserCards tests
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
-	"data" : {"message":"a message"}
+	"data" : {"message":"parent card updated with keepChildCards=true"},
+	"keepChildCards" : true
+}
+
+"""
+
+# Push card (we update the parent card, which id is : initial.initialCardProcess)
+    Given url opfabPublishCardUrl + 'cards'
+    And request card
+    When method post
+    Then status 201
+    And match response.count == 1
+
+# verify that child card was not deleted after parent card update
+    Given url opfabUrl + 'cards/cards/process_2.process_o'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 200
+    And match response.card.parentCardId == cardId
+    And match response.card.initialParentCardUid == cardUid
+
+# we check that the parent card still has its child card
+    Given url opfabUrl + 'cards/cards/initial.initialCardProcess'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 200
+    And assert response.childCards.length == 1
+    And match response.childCards[0].id == "process_2.process_o"
+
+
+  Scenario: We update the parent card (which id is : initial.initialCardProcess, without parameter keepChildCards), then we check that child card was deleted
+    * def card =
+"""
+{
+	"publisher" : "initial",
+	"processVersion" : "1",
+	"process"  :"initial",
+	"processInstanceId" : "initialCardProcess",
+	"state": "final",
+	"groupRecipients": ["TSO1"],
+	"externalRecipients" : ["api_test_externalRecipient1"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"parent card updated without parameter keepChildCards"}
 }
 
 """
@@ -260,13 +316,22 @@ Feature: UserCards tests
     And match response.count == 1
 
 # verify that child card was deleted after parent card update
-
     Given url opfabUrl + 'cards/cards/process_2.process_o'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 404
 
-#get the id of the updated parent card (with user tso1-operator)
+# we check that the parent card has no child card anymore
+    Given url opfabUrl + 'cards/cards/initial.initialCardProcess'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 200
+    And assert response.childCards.length == 0
+
+
+
+  Scenario: We push 2 child cards, then we delete the parent card, then we check that the 2 child cards are deleted
+    #get the id of the updated parent card (with user tso1-operator)
     Given url opfabUrl + 'cards/cards/initial.initialCardProcess'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get

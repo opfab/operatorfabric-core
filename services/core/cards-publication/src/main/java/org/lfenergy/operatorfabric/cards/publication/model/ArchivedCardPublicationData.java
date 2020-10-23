@@ -43,6 +43,7 @@ public class ArchivedCardPublicationData implements Card {
     private String id;
     private String parentCardId;
     private String initialParentCardUid;
+    private Boolean keepChildCards = false;
     private String publisher;
     private String processVersion;
     private String process;
@@ -89,6 +90,7 @@ public class ArchivedCardPublicationData implements Card {
         this.id = card.getUid();
         this.parentCardId = card.getParentCardId();
         this.initialParentCardUid = card.getInitialParentCardUid();
+        this.keepChildCards = card.getKeepChildCards();
         this.publisher = card.getPublisher();
         this.processVersion = card.getProcessVersion();
         this.publishDate = card.getPublishDate();
