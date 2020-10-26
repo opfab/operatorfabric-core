@@ -974,7 +974,7 @@ paths:
           description: Try to remove unexisting item
         '404':
           description: Try to remove item from unexisting card
-  '/cards/userRead/{uid}':
+  '/cards/userCardRead/{uid}':
     parameters:
       - in: path
         name: uid
@@ -989,6 +989,28 @@ paths:
         - read
       summary: update current card adding a user read
       description: update current card users reads, adding a new item, by card id and authenticated user
+      responses:
+        '201':
+          description: Created
+        '200':
+          description: No action done, the item already exists
+        '404':
+          description: Try to remove item from unexisting card
+  '/cards/userCardRead/{uid}':
+    parameters:
+      - in: path
+        name: uid
+        type: string
+        required: true
+        description: "The card uid"
+    delete:
+      operationId: deleteUserRead
+      tags:
+        - cards
+        - update
+        - read
+      summary: update current card removing a user read
+      description: update current card users reads, removing an item, by card id and authenticated user
       responses:
         '201':
           description: Created

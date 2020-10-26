@@ -307,6 +307,10 @@ public class CardProcessingService {
 
 	public Mono<UserBasedOperationResult> processUserRead(Mono<String> cardUid, String userName) {
 		return cardUid.map(uid -> cardRepositoryService.addUserRead(userName, uid));
+    }
+
+    public Mono<UserBasedOperationResult> deleteUserRead(Mono<String> cardUid, String userName) {
+		return cardUid.map(_cardUid -> cardRepositoryService.deleteUserRead(userName, _cardUid));
 	}
 
     /**

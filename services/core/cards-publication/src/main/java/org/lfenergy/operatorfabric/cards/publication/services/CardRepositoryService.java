@@ -109,7 +109,15 @@ public class CardRepositoryService {
 				cardUid);
 		return toUserBasedOperationResult(updateFirst);
 	}
-	
+
+    public UserBasedOperationResult deleteUserRead(String userName, String cardUid) {
+		UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
+				new Update().pull("usersReads", userName), CardPublicationData.class);
+		log.debug("removed {} occurrence of {}'s usersReads in the card with uid: {}", updateFirst.getModifiedCount(),
+				cardUid);
+		return toUserBasedOperationResult(updateFirst);
+    }
+
 	private UserBasedOperationResult toUserBasedOperationResult(UpdateResult updateResult) {
 		UserBasedOperationResult res = null;
 		if (updateResult.getMatchedCount() == 0) {

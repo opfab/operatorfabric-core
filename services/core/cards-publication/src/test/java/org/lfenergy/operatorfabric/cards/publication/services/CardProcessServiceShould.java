@@ -701,6 +701,48 @@ class CardProcessServiceShould {
     }
 
     @Test
+    void processDeleteUserRead() {
+        EasyRandom easyRandom = instantiateRandomCardGenerator();
+        int numberOfCards = 2;
+        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
+        cards.get(0).setUsersReads(Arrays.asList("someUser","someOtherUser"));
+        cards.get(1).setUsersReads(null);
+        cards.get(0).setParentCardId(null);
+        cards.get(0).setInitialParentCardUid(null);
+        cards.get(1).setParentCardId(null);
+        cards.get(1).setInitialParentCardUid(null);
+        cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
+                        .subscribe();
+
+        Long block = cardRepository.count().block();
+        Assertions.assertThat(block).withFailMessage(
+                        "The number of registered cards should be '%d' but is " + "'%d' actually",
+                        numberOfCards, block).isEqualTo(numberOfCards);
+
+        CardPublicationData firstCard = cardRepository.findById(cards.get(0).getId()).block();
+        Assertions.assertThat(firstCard.getUsersReads()).as("Expecting Card contains exactly 2 user reads").hasSize(2);
+        
+        String cardUid = firstCard.getUid();
+
+        UserBasedOperationResult res = cardProcessingService.deleteUserRead(Mono.just(cardUid), "someUser").block();
+        firstCard = cardRepository.findByUid(cardUid).block();
+        Assertions.assertThat(firstCard.getUsersReads()).as("Expecting Card1 doesn't contain someUser's card read").containsExactly("someOtherUser");
+        Assertions.assertThat(res.isCardFound() && res.getOperationDone()).isTrue();
+        
+        res = cardProcessingService.deleteUserRead(Mono.just(cardUid), "someUser").block();
+        firstCard = cardRepository.findByUid(cardUid).block();
+        Assertions.assertThat(firstCard.getUsersReads()).as("Expecting Card1 doesn't contain someUser card read").containsExactly("someOtherUser");
+        Assertions.assertThat(res.isCardFound() && !res.getOperationDone()).isTrue();
+        
+        CardPublicationData secondCard = cardRepository.findById(cards.get(1).getId()).block();;
+        String secondCardUid = secondCard.getUid();
+        res = cardProcessingService.deleteUserRead(Mono.just(secondCardUid), "someUser").block();
+        secondCard = cardRepository.findByUid(secondCardUid).block();
+        Assertions.assertThat(secondCard.getUsersReads()).as("Expecting no errors from deleting unexisting user read from a card(card2) not having any user read").isNullOrEmpty();
+        Assertions.assertThat(res.isCardFound() && !res.getOperationDone()).isTrue();
+    }
+
+    @Test
     void validate_processOk() {
 
         StepVerifier.create(cardProcessingService.processCards(Flux.just(

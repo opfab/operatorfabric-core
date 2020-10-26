@@ -85,6 +85,37 @@ Feature: CardsUserRead
     And match response.card.hasBeenRead == true
     And match response.card.uid == uid
 
+# Delete user read
+    Given url opfabUrl + 'cardspub/cards/userCardRead/' + uid
+    And header Authorization = 'Bearer ' + authToken
+    When method delete
+    Then status 200
+
+    Given url opfabUrl + 'cards/cards/api_test.process1'
+    And header Authorization = 'Bearer ' + authToken
+    When method get
+    Then status 200
+    And match response.card.hasBeenRead == false
+    And match response.card.uid == uid
+
+#get card with user operator2 and check hasBeenRead is still set to true
+    Given url opfabUrl + 'cards/cards/api_test.process1'
+    And header Authorization = 'Bearer ' + authToken2
+    When method get
+    Then status 200
+    And match response.card.hasBeenRead == true
+    And match response.card.uid == uid
+
+    Given url opfabUrl + 'cardspub/cards/userCardRead/' + uid
+    And header Authorization = 'Bearer ' + authToken
+    When method delete
+    Then status 204
+
+
+    Given url opfabUrl + 'cardspub/cards/userCardRead/unexisting_card____uid'
+    And header Authorization = 'Bearer ' + authToken
+    When method delete
+    Then status 404
     
   Scenario: Delete the test card
 
