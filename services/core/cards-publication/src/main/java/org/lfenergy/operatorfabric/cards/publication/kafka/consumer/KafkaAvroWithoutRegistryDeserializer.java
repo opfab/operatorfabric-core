@@ -11,7 +11,6 @@ import org.lfenergy.operatorfabric.avro.CardCommand;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-//public class KafkaAvroWithoutRegistryDeserializer<T extends SpecificRecord> implements Deserializer<T> {
 public class KafkaAvroWithoutRegistryDeserializer implements Deserializer<CardCommand> {
 
     private final DecoderFactory decoderFactory = DecoderFactory.get();
