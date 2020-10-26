@@ -13,7 +13,7 @@ class CardCommandConsumerDeserializerShould {
 
     @Test
     void forCodeCoverage() {
-        CardCommandConsumerDeserializer cut = new CardCommandConsumerDeserializer();
+        KafkaAvroWithoutRegistryDeserializer cut = new KafkaAvroWithoutRegistryDeserializer();
         assertNotNull(cut);
     }
 }
