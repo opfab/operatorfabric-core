@@ -57,35 +57,34 @@ When you dump the card to stdout, you should see something like the line below. 
 ----
 {
   "command": "CREATE_CARD",
-  "process": "FirstUserTask",
-  "processInstanceId": "92966c07-12c9-11eb-9858-acde48001122",
+  "process": "integrationTest",
+  "processInstanceId": "c7b1ac61-192b-11eb-b2f5-eea952defe56",
   "card": {
     "parentCardUid": null,
     "publisher": "myFirstPublisher",
     "processVersion": "2",
-    "state": "firstState",
+    "state": "FirstUserTask",
     "publishDate": null,
     "lttd": null,
-    "startDate": 1603870839000,
-    "endDate": 1604043639000,
+    "startDate": 1603896139000,
+    "endDate": 1604068947000,
     "severity": "ALARM",
     "tags": null,
     "timeSpans": null,
     "details": null,
     "title": {
-      "key": "FirstUserTask.summary",
+      "key": "FirstUserTask.title",
       "parameters": null
     },
     "summary": {
       "key": "FirstUserTask.summary",
       "parameters": null
     },
-    "recipient": {
-      "type": "GROUP",
-      "recipients": null,
-      "identity": "TSO1"
-    },
-    "userRecipients": null,
+    "recipient": null,
+    "userRecipients": [
+      "tso1-operator",
+      "tso2-operator"
+    ],
     "groupRecipients": null,
     "externalRecipients": null,
     "entitiesAllowedToRespond": [
@@ -93,7 +92,7 @@ When you dump the card to stdout, you should see something like the line below. 
     ],
     "entityRecipients": null,
     "hasBeenAcknowledged": null,
-    "data": null
+    "data": "{\"action\":\"Just do something\"}"
   }
 }
 ----
