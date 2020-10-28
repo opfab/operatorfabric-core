@@ -7,6 +7,7 @@
 
 :kafka_schema: https://docs.confluent.io/current/schema-registry/index.html
 :confluent: https://www.confluent.io/
+:spring_kafka_doc: https://docs.spring.io/spring-kafka/reference/html/
 
 = Kafka Implementation
 
@@ -47,4 +48,56 @@ By default, OperatorFabric uses the  `io.confluent.kafka.serializers.KafkaAvroDe
 deserializer. An example deserializer, which ignores the schema registry, is included. See `org.lfenergy.operatorfabric.cards.publication.kafka.consumer.KafkaAvroWithoutRegistryDeserializer`.
 
 == Kafka card producer
-To
+To send a CardCommand to OperatorFabric, start by implementing a simple Kafka producer by following for example link:{spring_kafka_doc}[Spring for Apache Kafka]
+Note that some properties of CardCommand or its embedded Card are required. If not set, the card will be rejected by OperatorFabric.
+
+When you dump the card to stdout, you should see something like the line below. Do ignore the actual values.
+
+[source, json]
+----
+{
+  "command": "CREATE_CARD",
+  "process": "FirstUserTask",
+  "processInstanceId": "92966c07-12c9-11eb-9858-acde48001122",
+  "card": {
+    "parentCardUid": null,
+    "publisher": "myFirstPublisher",
+    "processVersion": "2",
+    "state": "firstState",
+    "publishDate": null,
+    "lttd": null,
+    "startDate": 1603870839000,
+    "endDate": 1604043639000,
+    "severity": "ALARM",
+    "tags": null,
+    "timeSpans": null,
+    "details": null,
+    "title": {
+      "key": "FirstUserTask.summary",
+      "parameters": null
+    },
+    "summary": {
+      "key": "FirstUserTask.summary",
+      "parameters": null
+    },
+    "recipient": {
+      "type": "GROUP",
+      "recipients": null,
+      "identity": "TSO1"
+    },
+    "userRecipients": null,
+    "groupRecipients": null,
+    "externalRecipients": null,
+    "entitiesAllowedToRespond": [
+      "ENTITY1"
+    ],
+    "entityRecipients": null,
+    "hasBeenAcknowledged": null,
+    "data": null
+  }
+}
+----
+
+== Response Cards
+OperatorFabric <<response_cards>> are currently returned only via REST. At the time of writing it is not possible to return
+response cards via Kafka.
