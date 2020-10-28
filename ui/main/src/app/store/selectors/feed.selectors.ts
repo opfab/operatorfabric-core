@@ -9,7 +9,7 @@
 
 
 import {createSelector} from '@ngrx/store';
-import {compareByPublishDate, compareBySeverityPublishDate, LightCardAdapter} from '@ofStates/feed.state';
+import {compareByPublishDate, compareByReadPublishDate, compareByReadSeverityPublishDate, compareBySeverityPublishDate, LightCardAdapter} from '@ofStates/feed.state';
 import {AppState} from '@ofStore/index';
 import {Filter} from '@ofModel/feed-filter.model';
 import {LightCard} from '@ofModel/light-card.model';
@@ -60,19 +60,29 @@ export const fetchLightCard = lightCardId => (state: AppState) => selectFeedCard
 export const selectSortBySeverity = createSelector(selectLightCardsState,
     state => state.sortBySeverity);
 
+export const selectSortByRead = createSelector(selectLightCardsState,
+    state => state.sortByRead);
+
 export const selectSortedFilterLightCardIds = createSelector(
     selectFilteredFeed,
     selectSortBySeverity,
-    (entityArray, sortBySeverity) => {
-        function compareFn(needToSortBySeverity: boolean) {
-            if (needToSortBySeverity) {
+    selectSortByRead,
+    (entityArray, sortBySeverity, sortByRead) => {
+        function compareFn(needToSortBySeverity: boolean, needToSortByRead: boolean) {
+            if (needToSortByRead) {
+                if (needToSortBySeverity) {
+                    return compareByReadSeverityPublishDate;
+                } else {
+                    return compareByReadPublishDate;
+                }
+            } else if (needToSortBySeverity) {
                 return compareBySeverityPublishDate;
             }
             return compareByPublishDate;
         }
 
         return entityArray
-            .sort(compareFn(sortBySeverity))
+            .sort(compareFn(sortBySeverity, sortByRead))
             .map(entity => entity.id);
     });
 

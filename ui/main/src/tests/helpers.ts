@@ -156,7 +156,7 @@ export function getOneRandomLightCard(lightCardTemplate?: any): LightCard {
         lightCardTemplate.endDate ? lightCardTemplate.endDate : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
         lightCardTemplate.severity ? lightCardTemplate.severity : getRandomSeverity(),
         false,
-        false,
+        lightCardTemplate.hasBeenRead ? lightCardTemplate.hasBeenRead : false,
         getRandomAlphanumericValue(3, 24),
         lightCardTemplate.lttd ? lightCardTemplate.lttd : generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
         getRandomI18nData(),

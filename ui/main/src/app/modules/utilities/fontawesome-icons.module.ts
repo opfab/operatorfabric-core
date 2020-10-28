@@ -16,7 +16,9 @@ import {
     faSignOutAlt,
     faToggleOff,
     faToggleOn,
-    faUser
+    faUser,
+    faEye,
+    faEyeSlash
 } from '@fortawesome/free-solid-svg-icons';
 
 /* This module is a wrapper module for the FontAwesome module. It became necessary after migrating to the FaIconLibrary
@@ -36,6 +38,7 @@ export class FontAwesomeIconsModule {
         library.addIcons(faToggleOn);
         library.addIcons(faToggleOff);
         library.addIcons(faClock);
-
+        library.addIcons(faEye);
+        library.addIcons(faEyeSlash);
     }
 }

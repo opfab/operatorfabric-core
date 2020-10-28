@@ -61,6 +61,10 @@ export function severityOrdinal(severity: Severity) {
     return result;
 }
 
+export function readOrdinal(flag: boolean) {
+    return flag ? 1 : 0;
+}
+
 export enum Sound {
     INFORMATION, COMPLIANT
 }

@@ -34,6 +34,7 @@ import { SeveritySortComponent } from './components/card-list/filters/severity-s
 import {FontAwesomeIconsModule} from '../utilities/fontawesome-icons.module';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { AcknowledgementFilterComponent } from './components/card-list/filters/acknowledgement-filter/acknowledgement-filter.component';
+import { ReadSortComponent } from './components/card-list/filters/read-sort/read-sort.component';
 
 @NgModule({
     imports: [
@@ -62,7 +63,8 @@ import { AcknowledgementFilterComponent } from './components/card-list/filters/a
         MouseWheelDirective,
         TagsFilterComponent,
         SeveritySortComponent,
-        AcknowledgementFilterComponent],
+        AcknowledgementFilterComponent,
+        ReadSortComponent],
     exports: [FeedComponent],
     providers: [ {provide: TimeService, useClass: TimeService}]
 })

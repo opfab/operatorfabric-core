@@ -25,7 +25,7 @@ import {
     LoadLightCardsFailure,
     LoadLightCardsSuccess
 } from '@ofActions/light-card.actions';
-import {ApplyFilter, ChangeSort} from '@ofActions/feed.actions';
+import {ApplyFilter, ChangeReadSort, ChangeSort} from '@ofActions/feed.actions';
 import {Filter} from '@ofModel/feed-filter.model';
 import {FilterType} from '@ofServices/filter.service';
 
@@ -158,7 +158,8 @@ describe('LightCard Reducer', () => {
                     loading: false,
                     error: '',
                     filters: new Map(),
-                    sortBySeverity: false
+                    sortBySeverity: false,
+                    sortByRead: false
                 });
 
             const expectedState: CardFeedState = LightCardAdapter.getInitialState(
@@ -168,7 +169,8 @@ describe('LightCard Reducer', () => {
                     loading: false,
                     error: '',
                     filters: new Map(),
-                    sortBySeverity: false
+                    sortBySeverity: false,
+                    sortByRead: false
                 });
 
             const result = reducer(previousState, action);
@@ -192,7 +194,8 @@ describe('LightCard Reducer', () => {
                     loading: false,
                     error: '',
                     filters: new Map(),
-                    sortBySeverity: initialSort
+                    sortBySeverity: initialSort,
+                    sortByRead: false
                 });
 
             const expectedState: CardFeedState = LightCardAdapter.getInitialState(
@@ -202,7 +205,8 @@ describe('LightCard Reducer', () => {
                     loading: false,
                     error: '',
                     filters: new Map(),
-                    sortBySeverity: !initialSort
+                    sortBySeverity: !initialSort,
+                    sortByRead: false
                 });
 
             const result = reducer(previousState, action);
@@ -213,4 +217,39 @@ describe('LightCard Reducer', () => {
 
     });
 
+    describe('ChangeReadSort', () => {
+
+        it('should toggle the sortByRead property', () => {
+            const action = new ChangeReadSort();
+            const initialSort = getRandomBoolean();
+            const initialSelectedCardId = getRandomAlphanumericValue(5, 10);
+            const previousState: CardFeedState = LightCardAdapter.getInitialState(
+                {
+                    selectedCardId: initialSelectedCardId,
+                    lastCards: [],
+                    loading: false,
+                    error: '',
+                    filters: new Map(),
+                    sortBySeverity: false,
+                    sortByRead: initialSort
+                });
+
+            const expectedState: CardFeedState = LightCardAdapter.getInitialState(
+                {
+                    selectedCardId: initialSelectedCardId,
+                    lastCards: [],
+                    loading: false,
+                    error: '',
+                    filters: new Map(),
+                    sortBySeverity: false,
+                    sortByRead: !initialSort
+                });
+
+            const result = reducer(previousState, action);
+
+            expect(result).toEqual(expectedState);
+
+        });
+
+    });
 });
