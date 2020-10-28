@@ -100,11 +100,6 @@
       "type":  "I18n"
     },
     {
-      "name": "recipient",
-      "type": ["null","Recipient"],
-      "default": null
-    },
-    {
       "name": "userRecipients",
       "type": [
         "null",
