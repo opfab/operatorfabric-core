@@ -32,13 +32,19 @@ SPRING_KAFKA_CONSUMER_GROUP_ID=opfab-command
 Make sure you also set the registry to either an empty string (`""`) or to the server providing the schema registry service. See link:{kafka_schema}[Schema management].
 
 == OperatorFabric Kafka source code
-Most of the OperatorFabric Kafka source code implementation can be found at `org.lfenergy.operatorfabric.cards.publication.kafka` and `org.lfenergy.operatorfabric.autoconfigure.kafka`.
+== Listener / deserializer
+Most of the OperatorFabric Kafka implementation can be found at `org.lfenergy.operatorfabric.cards.publication.kafka` and `org.lfenergy.operatorfabric.autoconfigure.kafka`.
+
+=== Kafka OperatorFabric AVRO schema
+The AVRO schema, the byte format in which messages are transffered using Kafka topics, can be found at `client/src/main/avro`. Message are sent to topics using the CardCommand object.
+This object is an almost one-to-one mapping of the OperatorFabric card, see also <<card_structure>>. The exceptions are  `Process` and
+`Process Instance Identifier`, which are moved to the top-level CardCommand.
+
 
 == Configure Kafka
 === Setting a new deserializer
 By default, OperatorFabric uses the  `io.confluent.kafka.serializers.KafkaAvroDeserializer` from link:{confluent}[Confluent]. However, you can write your own
 deserializer. An example deserializer, which ignores the schema registry, is included. See `org.lfenergy.operatorfabric.cards.publication.kafka.consumer.KafkaAvroWithoutRegistryDeserializer`.
 
-
-
-
+== Kafka card producer
+To

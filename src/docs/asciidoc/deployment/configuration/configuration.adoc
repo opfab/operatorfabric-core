@@ -10,6 +10,7 @@
 
 :springboot_doc: https://docs.spring.io/spring-boot/docs/2.1.2.RELEASE/
 :mongo_doc: https://docs.mongodb.com/manual/reference/
+:spring_kafka_doc: https://docs.spring.io/spring-kafka/reference/html/
 //TODO Check if versions are correct
 
 = Configuration
@@ -144,8 +145,15 @@ change the value of the option of an existing index, you must drop the index fir
 == OperatorFabric Kafka configuration
 
 Next to publishing cards to OperatorFabric using the REST API, OperatorFabric also supports publishing cards via a Kafka Topic. In the default configuration Kafka is disabled.
-To enable Kafka you need to set the topic name for which the Kafka consumer can consume messages. You can do this be uncommenting the kafka.consumer.group_id in the cards-publication.yml
-file or by setting the TOPIC in the config/docker/kafka-env.properties file.
+To enable Kafka you need to set the topic name for which the Kafka consumer can consume messages. You can do this be uncommenting the `kafka.consumer.group_id` in the `cards-publication.yml`
+file or by setting the TOPIC in the `config/docker/kafka-env.properties` file :
+[source, yaml]
+----
+  kafka:
+    consumer:
+      group-id: opfab-command
+----
+See link:{spring_kafka_doc}[Spring for Apache Kafka] for more information on the Spring Kafka implementation.
 
 Response cards are not (yet) returned via Kafka, but by the URL specified in the cards-publication yml file.
 
