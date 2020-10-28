@@ -1,0 +1,44 @@
+// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+:kafka_schema: https://docs.confluent.io/current/schema-registry/index.html
+:confluent: https://www.confluent.io/
+
+= Kafka Implementation
+
+Next to publishing cards to OperatorFabric using the REST API, OperatorFabric also supports publishing cards via a Kafka Topic. In the default configuration Kafka is disabled.
+
+
+== Enabling Kafka
+
+To enable Kafka support you need to set the `kafka.consumer.group_id property` in the cards-publication yml file:
+[source,yaml]
+----
+  kafka:
+    consumer:
+      group-id: opfab-command
+----
+
+Alternatively you can set the group id in the `config/docker/kafka-env.properties` file:
+[source, shell script]
+----
+SPRING_KAFKA_CONSUMER_GROUP_ID=opfab-command
+----
+
+Make sure you also set the registry to either an empty string (`""`) or to the server providing the schema registry service. See link:{kafka_schema}[Schema management].
+
+== OperatorFabric Kafka source code
+Most of the OperatorFabric Kafka source code implementation can be found at `org.lfenergy.operatorfabric.cards.publication.kafka` and `org.lfenergy.operatorfabric.autoconfigure.kafka`.
+
+== Configure Kafka
+=== Setting a new deserializer
+By default, OperatorFabric uses the  `io.confluent.kafka.serializers.KafkaAvroDeserializer` from link:{confluent}[Confluent]. However, you can write your own
+deserializer. An example deserializer, which ignores the schema registry, is included. See `org.lfenergy.operatorfabric.cards.publication.kafka.consumer.KafkaAvroWithoutRegistryDeserializer`.
+
+
+
+

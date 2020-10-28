@@ -97,13 +97,17 @@ The user service has these specific properties :
 
 ==== Cards-publication service
 
-The cards-publication service has this specific property :
+The cards-publication service has these specific properties :
 
 |===
 |name|default|mandatory?|Description
 
 |checkPerimeterForResponseCard|true|no|If false, OperatorFabric will not check that a user has write rights on a process/state to respond to a card
-
+|spring.kafka.consumer.group-id |null|no| If set, support for receiving cards via Kafka is enabled
+|spring.deserializer.key.delegate.class |io.confluent.kafka.serializers.
+KafkaAvroDeserializer|yes| Deserializer used to convert the received bytes into objects
+|opfab.kafka.topics.topicname |opfab|no|Name of the topic to read the messages from
+|schema.registry.url|http://localhost:8081|yes|URL of the schema registry. Can be set to the empty string "" is no registry is used
 |===
 
 
@@ -136,3 +140,13 @@ db.archivedCards.createIndex( { "publishDate": 1 }, { expireAfterSeconds: 864000
 IMPORTANT: You cannot use createIndex() to change the value of expireAfterSeconds of an existing index.
 Instead use the link:https://docs.mongodb.com/manual/reference/command/collMod/#dbcmd.collMod[collMod] database command in conjunction with the index collection flag. Otherwise, to
 change the value of the option of an existing index, you must drop the index first and recreate.
+
+== OperatorFabric Kafka configuration
+
+Next to publishing cards to OperatorFabric using the REST API, OperatorFabric also supports publishing cards via a Kafka Topic. In the default configuration Kafka is disabled.
+To enable Kafka you need to set the topic name for which the Kafka consumer can consume messages. You can do this be uncommenting the kafka.consumer.group_id in the cards-publication.yml
+file or by setting the TOPIC in the config/docker/kafka-env.properties file.
+
+Response cards are not (yet) returned via Kafka, but by the URL specified in the cards-publication yml file.
+
+Note that enabling Kafka does not disable the REST interface.
