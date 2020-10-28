@@ -26,6 +26,8 @@ import { SelectLightCard } from '@ofActions/light-card.actions';
 import { LoadCard } from '@ofActions/card.actions';
 import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { ApplyFilter } from '@ofStore/actions/feed.actions';
+import { FilterType } from '@ofServices/filter.service';
 
 @Component({
   selector: 'of-calendar',
@@ -129,7 +131,12 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-
+  datesRangeChange(info) {
+    this.store.dispatch(new ApplyFilter({
+      name: FilterType.BUSINESSDATE_FILTER, active: true,
+      status: {start: info.view.activeStart.getTime(), end: info.view.activeEnd.getTime()}
+      }));
+  }
 
   ngOnDestroy() {
     this.unsubscribe$.next();

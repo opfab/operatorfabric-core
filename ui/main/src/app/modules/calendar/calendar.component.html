@@ -24,6 +24,7 @@
         [events]="calendarEvents"
         [locales]="locales"
         [themeSystem]="themeSystem"
+        (datesRender)="datesRangeChange($event)"
         (dateClick)="handleDateClick($event)"
         (eventClick)="selectCard($event)"
       ></full-calendar>
