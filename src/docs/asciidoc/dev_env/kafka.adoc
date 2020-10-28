@@ -24,7 +24,7 @@ To enable Kafka support you need to set the `kafka.consumer.group_id property` i
 ----
 
 Alternatively you can set the group id in the `config/docker/kafka-env.properties` file:
-[source, shell script]
+[source, shell]
 ----
 SPRING_KAFKA_CONSUMER_GROUP_ID=opfab-command
 ----
