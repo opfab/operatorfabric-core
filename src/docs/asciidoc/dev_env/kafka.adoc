@@ -30,14 +30,21 @@ Alternatively you can set the group id in the `config/docker/kafka-env.propertie
 SPRING_KAFKA_CONSUMER_GROUP_ID=opfab-command
 ----
 
-Make sure you also set the registry to either an empty string (`""`) or to the server providing the schema registry service. See link:{kafka_schema}[Schema management].
+Make sure you also set the registry to either an empty string (`""`) or to the server providing the schema registry service.
+See link:{kafka_schema}[Schema management] for detailed information on using and benefits of a schema registry.
 
 == OperatorFabric Kafka source code
 == Listener / deserializer
-Most of the OperatorFabric Kafka implementation can be found at `org.lfenergy.operatorfabric.cards.publication.kafka` and `org.lfenergy.operatorfabric.autoconfigure.kafka`.
+Most of the OperatorFabric Kafka implementation can be found at
+
+`org.lfenergy.operatorfabric.cards.publication.kafka`:: for
+the implementation of the deserializers and mapping of Kafka topics to OperatorFabric cards and
+`org.lfenergy.operatorfabric.autoconfigure.kafka` ::
+for the various Kafka configuration options.
 
 === Kafka OperatorFabric AVRO schema
-The AVRO schema, the byte format in which messages are transffered using Kafka topics, can be found at `client/src/main/avro`. Message are sent to topics using the CardCommand object.
+The AVRO schema, the byte format in which messages are transffered using Kafka topics, can be found at `client/src/main/avro`.
+Message are wrapped in a the CardCommand object before being sent to a Kafka topic.
 This object is an almost one-to-one mapping of the OperatorFabric card, see also <<card_structure>>. The exceptions are  `Process` and
 `Process Instance Identifier`, which are moved to the top-level CardCommand.
 
@@ -45,20 +52,23 @@ This object is an almost one-to-one mapping of the OperatorFabric card, see also
 == Configure Kafka
 === Setting a new deserializer
 By default, OperatorFabric uses the  `io.confluent.kafka.serializers.KafkaAvroDeserializer` from link:{confluent}[Confluent]. However, you can write your own
-deserializer. An example deserializer, which ignores the schema registry, is included. See `org.lfenergy.operatorfabric.cards.publication.kafka.consumer.KafkaAvroWithoutRegistryDeserializer`.
+deserializer. An example deserializer, which ignores the schema registry, is included.
+See `org.lfenergy.operatorfabric.cards.publication.kafka.consumer.KafkaAvroWithoutRegistryDeserializer` for a serializer which
+ignores the schema registry entries in the message.
 
 == Kafka card producer
-To send a CardCommand to OperatorFabric, start by implementing a simple Kafka producer by following for example link:{spring_kafka_doc}[Spring for Apache Kafka]
+To send a CardCommand to OperatorFabric, start by implementing a simple Kafka producer by following for example link:{spring_kafka_doc}[Spring for Apache Kafka].
 Note that some properties of CardCommand or its embedded Card are required. If not set, the card will be rejected by OperatorFabric.
 
-When you dump the card to stdout, you should see something like the line below. Do ignore the actual values.
+When you dump the card (which is about to be put on a topic) to stdout, you should see something like the line below. Do ignore the actual values from
+the dump below.
 
 [source, json]
 ----
 {
   "command": "CREATE_CARD",
   "process": "integrationTest",
-  "processInstanceId": "c7b1ac61-192b-11eb-b2f5-eea952defe56",
+  "processInstanceId": "fa6ce61f-192f-11eb-a6e3-eea952defe56",
   "card": {
     "parentCardUid": null,
     "publisher": "myFirstPublisher",
@@ -66,8 +76,8 @@ When you dump the card to stdout, you should see something like the line below. 
     "state": "FirstUserTask",
     "publishDate": null,
     "lttd": null,
-    "startDate": 1603896139000,
-    "endDate": 1604068947000,
+    "startDate": 1603897942000,
+    "endDate": 1604070742000,
     "severity": "ALARM",
     "tags": null,
     "timeSpans": null,
@@ -80,7 +90,6 @@ When you dump the card to stdout, you should see something like the line below. 
       "key": "FirstUserTask.summary",
       "parameters": null
     },
-    "recipient": null,
     "userRecipients": [
       "tso1-operator",
       "tso2-operator"
@@ -95,6 +104,7 @@ When you dump the card to stdout, you should see something like the line below. 
     "data": "{\"action\":\"Just do something\"}"
   }
 }
+
 ----
 
 == Response Cards
