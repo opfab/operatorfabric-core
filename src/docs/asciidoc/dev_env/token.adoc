@@ -220,13 +220,18 @@ transfer-encoding: chunked
 
 == Extract token
 
-The utility `jq`, not always available on every Linux distro, parse json input and can extract requested json path value. 
+The utility `jq`, sadly not always available on some Linux distro, parses json input and extracts requested json path value(`access_token` here).
 Here is a way to do so.
 
 [source,shell]
 ----
- curl -d "username=&dminpassword=test&grant_type=password&client_id=opfab-client&secret=opfab-keycloack-secret" "http://localhost:2002/auth/token" | jq -r .access_token
+ curl -d "username=${user}&password=${password}&grant_type=password&client_id=opfab-client" "http://localhost:2002/auth/token" | jq -r .access_token
 ----
 
+where:
+
+- `${user}`: login existing on keycloak for operatorfabric;
+- `${password}`: password for the previous login in keycloak;
+- `opfab-client`:  is the id of the client for OperatorFabric associated to the `dev` realm in Keycloak in a `dev`(`${OF_HOME/config/dev`) or `docker`(`${OF_HOME/config/docker`) configuration of operatorFabric.
  
-The `-r` opttion, for raw, leaves the output without any quotes.
+The `-r` option, for raw, leaves the output without any quotes.

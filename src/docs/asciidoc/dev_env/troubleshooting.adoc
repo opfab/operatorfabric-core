@@ -136,3 +136,92 @@ A `sudo` has been used before the `./gradlew assemble`.
 IMPORTANT: Don't use *sudo* to build OperatorFabric otherwise unexpected problems could arise.
 
 +++ </div></details> +++
+
+
+
++++ <details><summary> +++
+**curl get Failed to connect to localhost:2002: Connection refused**
++++ </summary><div> +++
+
+When using the following command line:
+[source]
+----
+curl http://localhost:2002/ui/
+----
+
+.Error message
+[source]
+----
+curl: (7) Failed to connect to localhost port 2002: Connexion refused
+----
+
+.Possible causes & resolution
+The `web-ui` docker container stops running. Check its configuration.
+
+
++++ </div></details> +++
+
+
++++ <details><summary> +++
+**curl 404 status return by ngnix**
++++ </summary><div> +++
+
+When using the following command line:
+[source]
+----
+curl http://localhost:2002/thirds/
+----
+
+The following error appears:
+
+.Error message
+[source]
+----
+<html>
+<head><title>404 Not Found</title></head>
+<body>
+<center><h1>404 Not Found</h1></center>
+<hr><center>nginx/1.17.10</center>
+</body>
+</html>
+----
+
+.Possible causes & resolution
+
+The requested page is not or no more mapped by the `nginx.conf` of `web-ui`.
+Update it or check for the new end point of the desired page.
+
+For this example, `businessconfig` replaces now the former `thirds` end-point.
+
++++ </div></details> +++
+
++++ <details><summary> +++
+**curl 404 status return by OperatorFabric**
++++ </summary><div> +++
+
+When using the following command line:
+[source]
+----
+curl http://localhost:2002/businessconfig/ -H "Authorization: Bearer ${token}"
+----
+
+where `${token}` is a valid OAuth2 JWT.
+
+The following error appears:
+
+.Error message
+[source]
+----
+{"timestamp":"XXXX-XX-XXTXX:XX:XX.XXX+00:00","status":404,"error":"Not Found","message":"","path":"/businessconfig"}
+----
+
+where `XXXX-XX-XXTXX:XX:XX.XXX+00:00` is a time stamp corresponding to the moment when the request has been sent.
+
+.Possible causes & resolution
+
+The requested end-point is not or no more valid in `OperatorFabric`.
+Check the API documentation for correct path.
+
+For this example, `businessconfig/processes` is a correct end-point whereas `businessconfig` alone is not.
+
++++ </div></details> +++
