@@ -30,8 +30,6 @@ public class KafkaAvroWithoutRegistryDeserializer implements Deserializer<CardCo
         if (payload == null) {
             return null;
         } else {
-            byte id = -1;
-
             try {
                 ByteBuffer buffer = this.getByteBuffer(payload);
                 buffer.getInt();   // read next 4 bytes
