@@ -1,3 +1,12 @@
+repositories {
+    maven { url "https://packages.confluent.io/maven/" }
+}
+
+ext {
+    kafkaSchemaRegistryClient = '5.3.0'
+    kafkaAvroSerializer = '5.3.0'
+}
+
 dependencies {
     swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
     swaggerUI generator.swaggerUI
@@ -9,6 +18,8 @@ dependencies {
     annotationProcessor boot.annotationConfiguration
 
     implementation 'org.springframework.kafka:spring-kafka'
+    implementation "io.confluent:kafka-schema-registry-client:${kafkaSchemaRegistryClient}"
+    implementation "io.confluent:kafka-avro-serializer:${kafkaAvroSerializer}"
 
     compile boot.starterWebflux
     compile project(':client:cards-client-data')
