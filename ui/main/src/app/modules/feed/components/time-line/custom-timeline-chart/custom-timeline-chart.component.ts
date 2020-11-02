@@ -28,7 +28,7 @@ import {select, Store} from '@ngrx/store';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {AppState} from '@ofStore/index';
 import { Router } from '@angular/router';
-import { Subscription, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
 
@@ -64,6 +64,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   public translateXTicksTwo: string;
   public xRealTimeLine: moment.Moment;
   private currentPath: string;
+  private isDestroyed = false ;
 
 
   // TOOLTIP
@@ -111,7 +112,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   ngOnDestroy() {
     this.ngUnsubscribe$.next();
     this.ngUnsubscribe$.complete();
-}
+    this.isDestroyed = true;
+  }
 
   // set inside ngx-charts library verticalSpacing variable to 10
   // library need to rotate ticks one time for set verticalSpacing to 10px on ngx-charts-x-axis-ticks
@@ -128,6 +130,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    * loop function for set xRealTimeLine at the actual time
    * xRealTimeLine is a vertical bar which represent the current time
    * update the domain if check follow clock tick is true
+   *  Stop it when destroying component to avoid memory leak
    */
   updateRealTimeDate(): void {
     this.xRealTimeLine = moment();
@@ -137,7 +140,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       }
     }
     setTimeout(() => {
-      this.updateRealTimeDate();
+      if (!this.isDestroyed) this.updateRealTimeDate();
     }, 1000);
   }
 
@@ -312,7 +315,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       return val1.date - val2.date;
     });
 
-    // seperate cards by severity
+    // separate cards by severity
     const cardsBySeverity = [];
     for (let i = 0; i < 4; i++) { cardsBySeverity.push([]); }
     for (const card of this.cardsData) {
