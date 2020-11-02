@@ -90,4 +90,4 @@ services:
     volumes:
       - "./web-ui.json:/usr/share/nginx/html/opfab/web-ui.json"
       - "./ui-menu.json:/usr/share/nginx/html/opfab/ui-menu.json"
-      - "./ngnix.conf:/etc/nginx/conf.d/default.conf"
+      - "./nginx.conf:/etc/nginx/conf.d/default.conf"
