@@ -85,7 +85,7 @@ First one by using l10n files located in the `i18n` folder, the second one throu
 
 The `i18n` folder contains one json file per l10n.
 
-The integration of the businessconfig service into OperatorFabric need this localisation, i.e. the label displayed for the process, the state, the label displayed for the details of the card, the label of the actions...
+The integration of the businessconfig service into OperatorFabric need this localisation, i.e. the label displayed for the process, the state, the label displayed for the details of the card...
 
 ===  Template folder
 
@@ -99,39 +99,14 @@ In the case where the bundle declares no i18n key corresponds to `missing-i18n-k
 
 The choice of i18n keys is up to the maintainer of the Businessconfig process.
 
-Location of the key references:
 
-* `config.json` file:
-** `i18nLabelKey`: key used for the label for the businessconfig service displayed in the main menu bar of OperatorFabric;
-** `label` of `menu entry declaration`: key used to l10n the `menu entries` declared by the Businessconfig party in the bundle;
-* `card data`: values of `card title` and `card summary` refer to `i18n keys` as well as `key attribute` in the `card detail` section of the card data.
-
-*example*
+*Example*
 
 For this example, the name of the process is  `Bundle Test` and its technical name is `BUNDLE_TEST`.
 The bundle provides an english and a french l10n.
 
-The example bundle defines a new menu entry giving access to 3 entries.
-Title and summary have to be localized, so need to be the title of the 2 tabs.
+Title and summary have to be localized.
 
-The name of the process is displayed in the main menu bar of OperatorFabric.
-It will have the key `"businessconfig-name-in-menu-bar"`.
-The english l10n will be `Bundle Test` and the french one will be `Bundle de test`.
-
-A name for the three entries in the process entry menu.
-Their keys will be in order `"first-menu-entry"`, `"b-menu-entry"` and `"the-other-menu-entry"`.
-Their translation are in english: "`Entry One`, `Entry Two` and `Entry Three`" and in french: "`Entrée une`, `Entrée deux` and `Entrée trois`".
-
-Card title and Card summary.
-
-The ones used are respectively `process.title` and `process.summary`.
-For english, the translations ar : `Card Title` and `Card short description`.
-FOr the french l10ns, the translation are: `Titre de la carte` and `Courte description de la carte`.
-
-A title for each (two of them) tab of the detail cards.
-As for card title and card summary, those keys are already defined by the test script.
-There are `"process.detail.tab.first"` and `"process.detail.tab.second"`.
-For english l10n, the values are `First Detail List` and `Second Detail List` and for the french l10n, the values are `Première liste de détails` and `Seconde liste de détails`.
 
 Here is the content of `en.json`
 
@@ -197,10 +172,6 @@ where:
 
 The process entry in the configuration file is a dictionary of processes, each key maps to a process definition.
 A process definition is itself a dictionary of states, each key maps to a state definition.
-A state defines:
-
-* a list of details: details are a combination of an internationalized title (title), css class styling element (titleStyle) and a template reference
-* a dictionary of actions: see actions description below
 
 ==== Templates
 
