@@ -31,7 +31,7 @@ import {AppState} from '@ofStore/index';
 import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
 import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {UserContext} from '@ofModel/user-context.model';
-import {map, skip, switchMap, take, takeUntil} from 'rxjs/operators';
+import {map, skip,take, takeUntil} from 'rxjs/operators';
 import {fetchLightCard, selectLastCards} from '@ofStore/selectors/feed.selectors';
 import {CardService} from '@ofServices/card.service';
 import {Observable, Subject, zip} from 'rxjs';
@@ -120,7 +120,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
 
     unsubscribe$: Subject<void> = new Subject<void>();
-    readonly hrefsOfCssLink = new Array<SafeResourceUrl>();
+    public hrefsOfCssLink = new Array<SafeResourceUrl>();
     private _listEntitiesToRespond = new Array<EntityMessage>();
     private _htmlContent: SafeHtml;
     private _userContext: UserContext;
@@ -505,6 +505,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     private initializeHrefsOfCssLink() {
         const styles = this.cardState.details[0].styles;
+        this.hrefsOfCssLink = new Array<SafeResourceUrl>();
         if (!!styles) {
             const process = this.card.process;
             const processVersion = this.card.processVersion;
