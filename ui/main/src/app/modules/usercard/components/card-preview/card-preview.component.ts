@@ -34,7 +34,7 @@ export class CardPreviewComponent implements OnInit, OnDestroy {
 
     public active = false;
     unsubscribe$: Subject<void> = new Subject<void>();
-    readonly hrefsOfCssLink = new Array<SafeResourceUrl>();
+    public hrefsOfCssLink = new Array<SafeResourceUrl>();
     private _htmlContent: SafeHtml;
     private _userContext: UserContext;
     private detail: Detail;
@@ -90,6 +90,7 @@ export class CardPreviewComponent implements OnInit, OnDestroy {
         if (!!this.detail && !!this.detail.styles) {
             const process = this.card.process;
             const processVersion = this.card.processVersion;
+            this.hrefsOfCssLink = new Array<SafeResourceUrl>();
             this.detail.styles.forEach(style => {
                 const cssUrl = this.businessconfigService.computeBusinessconfigCssUrl(process, style, processVersion);
                 // needed to instantiate href of link for css in component rendering
