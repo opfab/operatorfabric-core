@@ -11,8 +11,8 @@
 
 = Kafka Implementation
 
-Next to publishing cards to OperatorFabric using the REST API, OperatorFabric also supports publishing cards via a Kafka Topic. In the default configuration Kafka is disabled.
-
+Next to publishing cards to OperatorFabric using the REST API, OperatorFabric also supports publishing cards via a Kafka Topic.
+In the default configuration Kafka is disabled.
 
 == Enabling Kafka
 
@@ -29,8 +29,12 @@ Alternatively you can set the group id in the `config/docker/kafka-env.propertie
 ----
 SPRING_KAFKA_CONSUMER_GROUP_ID=opfab-command
 ----
+The default topic from which the messages are consumed is called 'opfab'. This setting can be modified by setting 'opfab.kafka.topics.topicname '.
 
 Make sure you also set the registry to either an empty string (`""`) or to the server providing the schema registry service.
+With the default settings, the Kafka consumer expects a broker running on http//127.0.0.1:9092 and a schema registry on http://127.0.0.1:8081.
+<<Cards-publication service>> for more settings.
+
 See link:{kafka_schema}[Schema management] for detailed information on using and benefits of a schema registry.
 
 == OperatorFabric Kafka source code
@@ -52,9 +56,9 @@ This object is an almost one-to-one mapping of the OperatorFabric card, see also
 == Configure Kafka
 === Setting a new deserializer
 By default, OperatorFabric uses the  `io.confluent.kafka.serializers.KafkaAvroDeserializer` from link:{confluent}[Confluent]. However, you can write your own
-deserializer. An example deserializer, which ignores the schema registry, is included.
-See `org.lfenergy.operatorfabric.cards.publication.kafka.consumer.KafkaAvroWithoutRegistryDeserializer` for a serializer which
-ignores the schema registry entries in the message.
+deserializer. To use your own deserializer, make sure
+`spring.kafka.deserializer.value` points to your deserializer.
+
 
 == Kafka card producer
 To send a CardCommand to OperatorFabric, start by implementing a simple Kafka producer by following for example link:{spring_kafka_doc}[Spring for Apache Kafka].
