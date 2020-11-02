@@ -3,22 +3,7 @@
     "title": "Test: Processus {{value}}",
     "summary": "Cela résume la carte: {{value}}",
     "detail": {
-      "tab": {
-        "first": "Premier onglet",
-        "second": "Deuxième onglet"
-      }
-    },
-    "action":{ "new":
-    {
-      "first": "Action {{value}}",
-      "second": "Deuxième action",
-      "businessconfig": "La troisième ({{value}})"
-    },
-      "clicked": {
-        "first": "{{value}} cliqué",
-        "second": "Résolution secondaire",
-        "businessconfig": "Pour ({{value}}, c'est fait.)"
-      }
+      "title": "Titre de la carte" 
     }
   },
   "process":{
