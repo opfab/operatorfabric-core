@@ -22,7 +22,7 @@ import { Store, select } from '@ngrx/store';
 import { selectArchiveLightCards } from '@ofStore/selectors/archive.selectors';
 import { selectLinesOfLoggingResult } from '@ofStore/selectors/logging.selectors';
 import { AppState } from '@ofStore/index';
-import { selectFeed } from '@ofStore/selectors/feed.selectors';
+import { selectFeed, selectLastCards } from '@ofStore/selectors/feed.selectors';
 
 
 @Injectable()
@@ -45,7 +45,7 @@ export class ProcessesService {
 
     private loadTranslationIfNeededAfterLoadingCard() {
         this.store.pipe(
-            select(selectFeed))
+            select(selectLastCards))
             .subscribe(cards =>  cards.forEach(card => this.loadTranslationsForProcess(card.process, card.processVersion)));
     }
 
