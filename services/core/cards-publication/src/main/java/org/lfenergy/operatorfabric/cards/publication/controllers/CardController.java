@@ -158,6 +158,25 @@ public class CardController {
         }).then();
     }
 
+        /**
+     * DELETE userRead for a card 
+     *
+     * @param cardUid Id of the card to update
+     */
+    @DeleteMapping("/userCardRead/{cardUid}")
+    @ResponseStatus(HttpStatus.OK)
+    public Mono<Void> deleteUserRead(Principal principal, @PathVariable("cardUid") String cardUid,
+                                                ServerHttpResponse response) {
+        return cardProcessingService.deleteUserRead(Mono.just(cardUid),
+                principal.getName()).doOnNext(result -> {
+            if (!result.isCardFound()) {
+                response.setStatusCode(HttpStatus.NOT_FOUND);
+            } else if (!result.getOperationDone()) {
+                response.setStatusCode(HttpStatus.NO_CONTENT);
+            }
+        }).then();
+    }
+
     @GetMapping("traces/ack/{cardUid}")
     @ResponseStatus(HttpStatus.OK)
     public @Valid Mono<UserActionTraceData> searchTraces(Principal principal, @PathVariable String cardUid) {

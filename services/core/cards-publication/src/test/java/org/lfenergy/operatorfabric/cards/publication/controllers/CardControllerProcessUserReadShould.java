@@ -60,6 +60,14 @@ public class CardControllerProcessUserReadShould extends CardControllerShouldBas
 		Assertions.assertThat(card).isNull();
 		webTestClient.post().uri("/cards/userCardRead/" + cardUid).exchange().expectStatus().isNotFound().expectBody().isEmpty();		
 	}
+
+	@Test
+	void deleteUserReadOfUnexistingCard() throws Exception {
+		String cardUid = "NotExistingCardUid";
+		CardPublicationData card = cardRepository.findByUid(cardUid).block();
+		Assertions.assertThat(card).isNull();
+		webTestClient.delete().uri("/cards/userCardRead/" + cardUid).exchange().expectStatus().isNotFound().expectBody().isEmpty();		
+	}
 	
 	@Test
 	void processUserRead() throws Exception {
@@ -107,7 +115,47 @@ public class CardControllerProcessUserReadShould extends CardControllerShouldBas
 				Assertions.assertThat(card.getUsersReads()).contains("someUser", "someOtherUser");
 				Assertions.assertThat(card.getUsersReads().size()).isEqualTo(initialNumOfReads);
 			}
+			@Nested
+			@WithMockOpFabUser(login = "someUser", roles = { "AROLE" })
+			@TestInstance(Lifecycle.PER_CLASS)
+			class ProcessDeleteUserRead {
 
+				@Test
+				void processUserRead() throws Exception {
+
+					Assertions.assertThat(cardRepository.count().block()).isEqualTo(cardNumber);
+					CardPublicationData card = cardRepository.findByUid(cardUid).block();
+					Assertions.assertThat(card.getUsersReads()).contains("someUser");
+					int initialNumOfReads = card.getUsersReads().size();
+					webTestClient.delete().uri("/cards/userCardRead/" + cardUid).exchange().expectStatus()
+							.isOk();
+					card = cardRepository.findByUid(cardUid).block();
+					Assertions.assertThat(card.getUsersReads()).doesNotContain("someUser");
+					Assertions.assertThat(card.getUsersReads().size()).isEqualTo(initialNumOfReads - 1);
+				}
+
+				@Nested
+				@WithMockOpFabUser(login = "someUser", roles = { "AROLE" })
+				@TestInstance(Lifecycle.PER_CLASS)
+				class ProcessDeleteUserReadSecond {
+
+					@Test
+					void processUserRead() throws Exception {
+
+						Assertions.assertThat(cardRepository.count().block()).isEqualTo(cardNumber);
+						CardPublicationData card = cardRepository.findByUid(cardUid).block();
+						Assertions.assertThat(card.getUsersReads()).doesNotContain("someUser");
+						int initialNumOfReads = card.getUsersReads().size();
+						webTestClient.delete().uri("/cards/userCardRead/" + cardUid).exchange()
+								.expectStatus().isNoContent();
+						card = cardRepository.findByUid(cardUid).block();
+						Assertions.assertThat(card.getUsersReads()).doesNotContain("someUser");
+						Assertions.assertThat(card.getUsersReads().size()).isEqualTo(initialNumOfReads);
+					}
+
+				}
+
+			}
 
 		}
 	}
