@@ -54,4 +54,4 @@ java -jar karate.jar                                         \
       users/entities/deleteEntity.feature                    \
       users/groups/deleteGroup.feature                       \
       users/perimeters/deletePerimeter.feature               \
-      users/checkEntityGroupManagement.feature
+      users/entities/checkEntityGroupManagement.feature

@@ -3,6 +3,7 @@ package org.lfenergy.operatorfabric.users.controllers;
 import org.junit.jupiter.api.Test;
 import org.lfenergy.operatorfabric.users.model.Entity;
 import org.lfenergy.operatorfabric.users.model.EntityData;
+import org.lfenergy.operatorfabric.users.utils.EntityCycleDetector;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -141,7 +142,7 @@ public class EntityCycleDetectorShould {
     }
 
     @Test
-    void OK__4__AddedEntityWithNoParent__In__AnEmptyEntityCollection () {
+    void OK__4__AddedEntityWithNoParent__In__Collection () {
         List<Entity> entities = Arrays.asList(
                 entityWithNoParent
                 , entityReferencingUnknownParents
@@ -155,7 +156,7 @@ public class EntityCycleDetectorShould {
     }
 
     @Test
-    void OK__4__AddedEntityReferringUnknownParent__In__AnEmptyCollection () {
+    void OK__4__AddedEntityReferringUnknownParent__In__Collection () {
         List<Entity> entities = Arrays.asList(
                 entityWithNoParent
                 , entityReferencingUnknownParents
