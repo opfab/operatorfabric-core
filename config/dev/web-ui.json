@@ -35,7 +35,9 @@
         "display": "BUSINESS"
       },
       "hideAckFilter": false,
-      "secondsBeforeLttdForClockDisplay": 3700
+      "secondsBeforeLttdForClockDisplay": 3700,
+      "hideReadSort": false,
+      "hideSeveritySort": false
     },
     "notify": false,
     "timeline": {
