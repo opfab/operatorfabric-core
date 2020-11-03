@@ -32,6 +32,7 @@ import java.util.*;
 public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters {
     private User userData;
     private Set<ComputedPerimeter> computedPerimeters;
+    private Map<String, List<String>> processesStatesNotNotified;
 
     @Override
     public User getUserData(){return userData;}

@@ -44,6 +44,10 @@ public class CurrentUserWithPerimetersController implements CurrentUserWithPerim
             List<String> groups = userData.getGroups(); //First, we recover the groups to which the user belongs
             currentUserWithPerimetersData.setUserData(userData);
 
+            //We recover the user_settings to have the process/state filters defined by the user, for his feed
+            currentUserWithPerimetersData.setProcessesStatesNotNotified(
+                    userService.retrieveUserSettings(userData.getLogin()).getProcessesStatesNotNotified());
+
             if ((groups != null) && (!groups.isEmpty())) {     //Then, we recover the groups data
                 List<GroupData> groupsData = userService.retrieveGroups(groups);
 
