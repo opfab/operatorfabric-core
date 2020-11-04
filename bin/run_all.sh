@@ -30,7 +30,9 @@ function join_by { local IFS="$1"; shift; echo "$*"; }
 function display_usage() {
 	echo -e "\nThis script runs OperatorFabric services."
 	echo -e "Usage:"
-	echo -e "\trun_all.sh [OPTIONS] (start, stop, restart, status)"
+	echo -e "\trun_all.sh [OPTIONS] (start, stop , hardstop, restart, status)\n"
+  echo -e "\tstop: soft kill of the processes"
+  echo -e "\thardstop: hard kill of the processes (with kill -9) \n"
 	echo -e "options:"
 	echo -e "\t-s, --services\t: list of comma separated services. Business services to run. Defaults to " $(join_by ","  "${businessServices[@]}")
 	echo -e "\t-r, --reset\t: true or false. Resets service data. Defaults to $resetConfiguration."
@@ -168,6 +170,32 @@ stopCommand(){
   done
 }
 
+
+
+hardstopProject() {
+    projectBuildPath="$2/build"
+    projectPidFilePath="$projectBuildPath/PIDFILE"
+    echo "##########################################################"
+    if [ -f "$projectPidFilePath" ]; then
+      pid=$(<"$projectPidFilePath")
+      echo "Stopping $1 (pid: $pid)"
+      if ! kill -9 $pid > /dev/null 2>&1; then
+          echo "$1: could not send SIGTERM to process $pid" >&2
+      fi
+    else
+      echo "'$projectPidFilePath' not found"
+    fi
+    echo "##########################################################"
+}
+
+hardstopCommand(){
+  for ((i=0; i<${#dependentProjects[*]}; ));
+  do
+    hardstopProject ${dependentProjects[i]} ${dependentProjects[i+1]}
+    i=$((i+"$PRJ_STRC_FIELDS"))
+  done
+}
+
 projectStatus() {
 #set -x
     projectBuildPath="$2/build"
@@ -206,6 +234,10 @@ case $command in
   ;;
   stop)
   stopCommand
+#  exit 0;
+  ;;
+  hardstop)
+  hardstopCommand
 #  exit 0;
   ;;
   restart)
