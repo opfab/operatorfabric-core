@@ -28,4 +28,4 @@ operatorfabric:
     jwt:
       login-claim: preferred_username
       expire-claim: exp
-  businessLogActivated: false
+  businessLogActivated: true
