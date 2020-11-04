@@ -197,7 +197,7 @@ card:
 
 ....
 {
-	"publisher":"TSO1",
+	"publisher":"Dispatcher",
 	"publisherVersion":"0.1",
 	"process":"process",
 	"processInstanceId":"process-000",

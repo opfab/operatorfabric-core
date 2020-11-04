@@ -15,7 +15,6 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
 import { AuthenticationService } from '@ofServices/authentication/authentication.service';
 import { LoadConfigSuccess } from '@ofActions/config.actions';
-import { LoadProcessesTranslation } from '@ofActions/translate.actions';
 import { selectIdentifier } from '@ofSelectors/authentication.selectors';
 import { ConfigService } from '@ofServices/config.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -70,10 +69,21 @@ export class AppComponent implements OnInit {
       console.error('Impossible to load configuration file web-ui.json', err);
       return caught;
     }));
+    
   }
+
   private setTitle() {
     const title = this.configService.getConfigValue('title');
     if (!!title) { this.titleService.setTitle(title); }
+  }
+
+  private loadTranslationForMenu() {
+    this.configService.loadMenuTranslations().subscribe(locales => locales.forEach(locale =>
+      this.translateService.setTranslation(locale.language, locale.i18n, true)))
+    catchError((err, caught) => {
+      console.error('Impossible to load configuration file ui-menu.json', err);
+      return caught;
+    });
   }
 
   private loadTranslationAndLaunchAuthenticationProcess(config) {
@@ -83,9 +93,11 @@ export class AppComponent implements OnInit {
       merge(...localeRequests$).pipe(skip(localeRequests$.length - 1)).subscribe(() => { // Wait for all request to complete
         console.log(new Date().toISOString(), 'All opfab translation loaded for locales:', config.i18n.supported.locales.toString());
         this.translateService.addLangs(config.i18n.supported.locales);
+        this.loadTranslationForMenu();
         this.launchAuthenticationProcess();
       });
     }
+    
   }
 
   private launchAuthenticationProcess() {
@@ -106,10 +118,10 @@ export class AppComponent implements OnInit {
             this.userService.loadUserWithPerimetersData(),
             this.entitiesService.loadAllEntitiesData(),
             this.processesService.loadAllProcesses(),
+            this.processesService.areTranslationsLoaded(),
             this.cardService.initSubscription)
-            .pipe(skip(3))
+            .pipe(skip(4)) // Need to wait for all initialization to complete before loading main components of the application
             .subscribe(() => {
-              this.store.dispatch(new LoadProcessesTranslation());
               this.loaded = true;
             });
         }

@@ -21,7 +21,6 @@ import {ConfigService} from '@ofServices/config.service';
 export class SettingsComponent implements OnInit {
   locales: string[];
   timeZones: string[];
-  disableInfos: boolean;
   displayInfo: SettingsInputs;
 
   constructor(private store: Store<AppState>,private  configService: ConfigService) { }
@@ -29,21 +28,15 @@ export class SettingsComponent implements OnInit {
   ngOnInit() {
     this.locales = this.configService.getConfigValue('i18n.supported.locales');
     this.timeZones = this.configService.getConfigValue('i10n.supported.time-zones');
-    this.disableInfos = this.configService.getConfigValue('settings.infos.disable');
     this.displayInfo = this.configService.getConfigValue('settings.infos');
-
   }
 
 }
 
 interface SettingsInputs {
-  email: boolean;
   description: boolean;
   language: boolean;
   timezone: boolean;
-  timeformat: boolean;
-  dateformat: boolean;
-  datetimeformat: boolean;
   tags: boolean;
   sounds: boolean;
 }

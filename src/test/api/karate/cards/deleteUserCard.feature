@@ -1,10 +1,10 @@
 Feature: deleteUserCards tests
 
   Background:
-   #Getting token for admin and tso1-operator user calling getToken.feature
+   #Getting token for admin and operator1 user calling getToken.feature
     * def signIn = call read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = call read('../common/getToken.feature') { username: 'tso1-operator'}
+    * def signInAsTSO = call read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
     * def groupKarate =
@@ -35,9 +35,9 @@ Feature: deleteUserCards tests
 }
 """
 
-    * def tso1operatorArray =
+    * def operator1Array =
 """
-[   "tso1-operator"
+[   "operator1"
 ]
 """
     * def groupArray =
@@ -56,10 +56,10 @@ Feature: deleteUserCards tests
     And match response.id == groupKarate.id
 
 
-  Scenario: Add tso1-operator to groupKarate
+  Scenario: Add operator1 to groupKarate
     Given url opfabUrl + 'users/groups/' + groupKarate.id + '/users'
     And header Authorization = 'Bearer ' + authToken
-    And request tso1operatorArray
+    And request operator1Array
     When method patch
     And status 200
 

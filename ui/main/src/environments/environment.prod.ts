@@ -22,6 +22,7 @@ export const environment = {
         archives : '',
         processes: '/businessconfig/processes',
         config: '/config/web-ui.json',
+        menuConfig: '/config/ui-menu.json',
         time: '/time'
 
     },

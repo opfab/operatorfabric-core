@@ -6,7 +6,9 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<h2 translate style="text-align: center;">userCard.title</h2>
+<h2 *ngIf="!editCardMode" translate style="text-align: center;">userCard.title</h2>
+<h2 *ngIf="editCardMode" translate style="text-align: center;">userCard.editTitle</h2>
+
 <br />
 <div *ngIf="displayForm()" class="container">
     <form [formGroup]="messageForm">
@@ -50,8 +52,8 @@
         <div class="row">
             <div class="col-12">
 
-                <of-multi-filter-2 filterPath="entities" id="entities" [parentForm]="recipientForm"
-                    [values]="entityOptions" [dropdownSettings]="dropdownSettings" i18nRootLabelKey="userCard.filters." [selectedItems]="[]" >
+                <of-multi-filter-2 filterPath="recipients" id="recipients" [parentForm]="recipientForm"
+                    [values]="recipientsOptions" [dropdownSettings]="dropdownSettings" i18nRootLabelKey="userCard.filters." [selectedItems]="selectedRecipients" >
                 </of-multi-filter-2>
             </div>
 

@@ -1,10 +1,10 @@
 Feature: patch user settings
 
   Background:
-   #Getting token for admin and tso1-operator user calling getToken.feature
+   #Getting token for admin and operator1 user calling getToken.feature
     * def signIn = call read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = call read('../common/getToken.feature') { username: 'tso1-operator'}
+    * def signInAsTSO = call read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
    # * def signInAsUser = call read('getToken.feature') { username: 'user'}
    # * def authTokenAsUser = signInAsUser.authToken
@@ -14,26 +14,20 @@ Feature: patch user settings
 """
 {
   "login" : "loginKarate1",
-  "email" : "user@user.com",
   "description" : "my dummy user",
   "timeZone" : "Europe/Dublin",
   "locale" : "en",
-  "timeFormat" : "LT",
-  "dateFormat" : "L",
   "defaultTags" : [ "tag 1", "tag 2" ]
 }
 """
 
-    * def userSettingsTSO1 =
+    * def userSettingsDispatcher =
 """
 {
-  "login" : "tso1-operator",
-  "email" : "tso1-operator@user.com",
-  "description" : "my dummy tso1-operator user",
+  "login" : "operator1",
+  "description" : "my dummy operator1 user",
   "timeZone" : "Australia/Melbourne",
   "locale" : "en",
-  "timeFormat" : "LT",
-  "dateFormat" : "L",
   "defaultTags" : [ "tag 3", "tag 4" ]
 }
 """
@@ -42,12 +36,9 @@ Feature: patch user settings
 """
 {
   "login" : "nonexistentUser",
-  "email" : "nonexistentUser@user.com",
   "description" : "my dummy nonexistentUser user",
   "timeZone" : "France/Paris",
   "locale" : "fr",
-  "timeFormat" : "LT",
-  "dateFormat" : "L",
   "defaultTags" : [ "tag 5", "tag 6" ]
 }
 """
@@ -80,31 +71,25 @@ Feature: patch user settings
     Then print response
     And status 200
     And match response.login == userSettings.login
-    And match response.email == userSettings.email
     And match response.description == userSettings.description
     And match response.timeZone == userSettings.timeZone
     And match response.locale == userSettings.locale
-    And match response.timeFormat == userSettings.timeFormat
-    And match response.dateFormat == userSettings.dateFormat
     And match response.defaultTags == userSettings.defaultTags
 
 
-  Scenario: Patch tso1-operator user settings with tso1-operator authentication
+  Scenario: Patch operator1 user settings with operator1 authentication
 
-    Given url opfabUrl + 'users/users/tso1-operator/settings'
+    Given url opfabUrl + 'users/users/operator1/settings'
     And header Authorization = 'Bearer ' + authTokenAsTSO
-    And request userSettingsTSO1
+    And request userSettingsDispatcher
     When method patch
     Then print response
     And status 200
-    And match response.login == userSettingsTSO1.login
-    And match response.email == userSettingsTSO1.email
-    And match response.description == userSettingsTSO1.description
-    And match response.timeZone == userSettingsTSO1.timeZone
-    And match response.locale == userSettingsTSO1.locale
-    And match response.timeFormat == userSettingsTSO1.timeFormat
-    And match response.dateFormat == userSettingsTSO1.dateFormat
-    And match response.defaultTags == userSettingsTSO1.defaultTags
+    And match response.login == userSettingsDispatcher.login
+    And match response.description == userSettingsDispatcher.description
+    And match response.timeZone == userSettingsDispatcher.timeZone
+    And match response.locale == userSettingsDispatcher.locale
+    And match response.defaultTags == userSettingsDispatcher.defaultTags
 
 
   #404 : return status not reproducible with karate

@@ -10,13 +10,10 @@
 
 package org.lfenergy.operatorfabric.businessconfig.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,10 +32,6 @@ public class ProcessData implements Process {
   private String id;
   private String name;
   private String version;
-  private String menuLabel;
-  @Singular("menuEntryData")
-  @JsonIgnore
-  private List<? extends MenuEntry> menuEntriesData;
   @Singular("stateData")
   private Map<String, ProcessStatesData> statesData;
   private ProcessUiVisibilityData uiVisibility;
@@ -61,21 +54,6 @@ public class ProcessData implements Process {
   @Override
   public void setUiVisibility(ProcessUiVisibility uiVisibilityData){
     this.uiVisibility = (ProcessUiVisibilityData) uiVisibilityData;
-  }
-
-  @Override
-  public List<? extends MenuEntry> getMenuEntries(){
-    return menuEntriesData;
-  }
-
-  @Override
-  public void setMenuEntries(List<? extends MenuEntry> menuEntries){
-    try {
-      this.menuEntriesData = new ArrayList<>((List <MenuEntryData>) menuEntries);
-    }
-    catch (ClassCastException exception) {
-      log.error("Unexpected Error arose ", exception);
-    }
   }
 
 }

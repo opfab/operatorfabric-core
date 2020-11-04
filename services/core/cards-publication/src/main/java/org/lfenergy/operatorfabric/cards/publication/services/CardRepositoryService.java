@@ -43,6 +43,12 @@ public class CardRepositoryService {
         query.addCriteria(Criteria.where("uid").is(uid));
         return Optional.ofNullable(template.findOne(query, CardPublicationData.class));
     }
+
+    public Optional<ArchivedCardPublicationData> findArchivedCardByUid(String uid) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("id").is(uid));
+        return Optional.ofNullable(template.findOne(query, ArchivedCardPublicationData.class));
+    }
 	
     public void saveCard(CardPublicationData card) {
         log.debug("preparing to write {}", card.toString());
@@ -72,14 +78,12 @@ public class CardRepositoryService {
     }
 
     public Optional<List<CardPublicationData>> findChildCard(CardPublicationData card) {
-
         if (Objects.isNull(card)) return Optional.empty();
-        Query findCardByParentCardUidWithoutDataField = new Query();
-        findCardByParentCardUidWithoutDataField.fields().exclude("data");
-        findCardByParentCardUidWithoutDataField.addCriteria(Criteria.where("parentCardUid").is(card.getUid()));
-        return Optional.ofNullable(template.find(findCardByParentCardUidWithoutDataField, CardPublicationData.class));
 
-
+        Query findCardByParentCardIdWithoutDataField = new Query();
+        findCardByParentCardIdWithoutDataField.fields().exclude("data");
+        findCardByParentCardIdWithoutDataField.addCriteria(Criteria.where("parentCardId").is(card.getId()));
+        return Optional.ofNullable(template.find(findCardByParentCardIdWithoutDataField, CardPublicationData.class));
     }
 
 	public UserBasedOperationResult addUserAck(User user, String cardUid) {
@@ -115,7 +119,4 @@ public class CardRepositoryService {
 		}
 		return res;
 	}
-    
-    
-
 }

@@ -10,8 +10,9 @@
 
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
-import {Process, State, Menu, MenuEntry, MenuEntryLinkTypeEnum} from '@ofModel/processes.model';
-import {Card, Detail, TitlePosition} from '@ofModel/card.model';
+import {Detail, Process, State} from '@ofModel/processes.model';
+import {Menu, MenuEntry, MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
+import {Card} from '@ofModel/card.model';
 import {I18n} from '@ofModel/i18n.model';
 import {Map as OfMap, Map} from '@ofModel/map';
 import {Page} from '@ofModel/page.model';
@@ -19,6 +20,8 @@ import {AppState} from '@ofStore/index';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 import {GuidService} from '@ofServices/guid.service';
 import {OAuthLogger, OAuthService, UrlHelperService} from 'angular-oauth2-oidc';
+import {TranslateLoader} from '@ngx-translate/core';
+import { Observable, of } from 'rxjs';
 
 export const emptyAppState4Test: AppState = {
     router: null,
@@ -58,7 +61,6 @@ export function getOneRandomMenu(): Menu {
     return new Menu(
         getRandomAlphanumericValue(3,10),
         getRandomAlphanumericValue(3,10),
-        getRandomAlphanumericValue(3,10),
         entries);
 }
 
@@ -87,7 +89,7 @@ export function getOneRandomProcess(processTemplate?:any): Process {
     let stateCount = getPositiveRandomNumberWithinRange(1,3);
     for(let j=0; j<stateCount;j++){
         states[getRandomAlphanumericValue(3,10)]=
-            new State(getRandomCardDetails());
+            new State([getRandomDetail()]);
     }
 
 
@@ -96,10 +98,15 @@ export function getOneRandomProcess(processTemplate?:any): Process {
         processTemplate.version?processTemplate.version:getRandomAlphanumericValue(3,10),
         processTemplate.name?processTemplate.name:getRandomAlphanumericValue(3,10),
         processTemplate.locales?processTemplate.locales:undefined,
-        processTemplate.menuLabel?processTemplate.menuLabel:undefined,
-        processTemplate.menuEntries?processTemplate.menuEntries:entries,
         processTemplate.states?processTemplate.states:states);
 
+}
+
+
+export function getRandomDetail(): Detail {
+    const titleKey =  getRandomI18nData();
+    const templateName = 'template1';
+    return new Detail(titleKey, templateName, ['style1','style2']);
 }
 
 
@@ -149,7 +156,7 @@ export function getOneRandomLightCard(lightCardTemplate?: any): LightCard {
         lightCardTemplate.endDate ? lightCardTemplate.endDate : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
         lightCardTemplate.severity ? lightCardTemplate.severity : getRandomSeverity(),
         false,
-        false,
+        lightCardTemplate.hasBeenRead ? lightCardTemplate.hasBeenRead : false,
         getRandomAlphanumericValue(3, 24),
         lightCardTemplate.lttd ? lightCardTemplate.lttd : generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
         getRandomI18nData(),
@@ -193,10 +200,7 @@ export function getOneRandomCard(cardTemplate?:any): Card {
         generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
         getRandomI18nData(),
         getRandomI18nData(),
-        cardTemplate.data ? cardTemplate.data : {data: "data"},
-        cardTemplate.details ? cardTemplate.details :
-            [new Detail(null, getRandomI18nData(), null, "template1", null),
-                new Detail(null, getRandomI18nData(), null, "template2", null),]
+        cardTemplate.data ? cardTemplate.data : {data: "data"}
     );
     return oneCard;
 }
@@ -204,38 +208,13 @@ export function getOneRandomCard(cardTemplate?:any): Card {
 //so there are lot of keys missing here. WHy suddently make them disappear ?
 
 export function getOneRandomCardWithRandomDetails(min = 2, max = 5, card?: any): Card {
-    const randomDetails = generateRandomArray(min, max, getOneRandomCardDetail);
+    const randomDetails = generateRandomArray(min, max, getRandomDetail);
     card = card ? card : {};
     card.details = card.details ? card.details : randomDetails;
     return getOneRandomCard(card);
 }
 
-export function getRandomCardDetails(...cardDetailTemplates: any[]) {
-    let detailCount;
-    if (cardDetailTemplates) {
-        detailCount = cardDetailTemplates.length;
-    } else {
-        detailCount = getPositiveRandomNumberWithinRange(1, 3);
-    }
-    const result = [];
-    for (let i = 0; i < detailCount; i++) {
-        result.push(getOneRandomCardDetail(cardDetailTemplates ? cardDetailTemplates[i] : null));
-    }
-    return result;
-}
 
-export function getOneRandomCardDetail(cardDetailTemplate?: any): Detail {
-    cardDetailTemplate = cardDetailTemplate ? cardDetailTemplate : {};
-    const titlePosition = cardDetailTemplate.titlePosition ? cardDetailTemplate.titlePosition : pickARandomItemOfAnEnum(TitlePosition);
-    const titleKey = cardDetailTemplate.title ? cardDetailTemplate.title : getRandomI18nData();
-    const titleStyle = cardDetailTemplate.titleStyle ? cardDetailTemplate.titleStyle : getRandomAlphanumericValue(5, 12);
-    // const templateName = cardDetail.templateName?cardDetail.templateName:getRandomAlphanumericValue(4,12);
-    const templateName = 'template1';
-    const genString = () => getRandomAlphanumericValue(5, 13);
-
-    const styles = generateRandomArray(1, 5, genString);
-    return new Detail(titlePosition, titleKey, titleStyle, templateName, styles);
-}
 
 export function generateRandomArray<T>(min = 1, max = 2, func: () => T): Array<T> {
     const size = generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(min, max);
@@ -347,3 +326,19 @@ export function generateBusinessconfigWithVersion(businessconfigName?: string, v
     result[businessconfig] = versionValues;
     return result;
 }
+
+export class BusinessconfigI18nLoader implements TranslateLoader {
+
+    constructor() {
+    }
+
+    getTranslation(lang: string): Observable<any> {
+        return of({});
+    }
+
+}
+
+export function BusinessconfigI18nLoaderFactory(): TranslateLoader {
+    return new BusinessconfigI18nLoader();
+}
+

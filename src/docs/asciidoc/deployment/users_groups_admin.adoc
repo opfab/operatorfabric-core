@@ -52,11 +52,11 @@ HTTP/1.1 200 OK
             "RTE",
             "ADMIN",
             "CORESO",
-            "TRANS",
+            "ReadOnly",
             "TEST"
         ],
         "lastName": null,
-        "login": "rte-operator"
+        "login": "operator3"
     },
     {
         "firstName": null,
@@ -77,27 +77,27 @@ HTTP/1.1 200 OK
     {
         "firstName": null,
         "groups": [
-            "TSO1",
-            "TRANS",
+            "Dispatcher",
+            "ReadOnly",
             "TEST"
         ],
         "entities": [
             "ENTITY1"
         ],
         "lastName": null,
-        "login": "tso1-operator"
+        "login": "operator1"
     },
     {
         "firstName": null,
         "groups": [
-            "TSO2",
-            "TRANS"
+            "Planner",
+            "ReadOnly"
         ],
         "entities": [
             "ENTITY2"
         ],
         "lastName": null,
-        "login": "tso2-operator"
+        "login": "operator2"
     },
 ]
 ....
@@ -236,19 +236,19 @@ HTTP/1.1 200 OK
         "id": "CORESO"
     },
     {
-        "description": "TSO 1 Group",
-        "name": "TSO1 group",
-        "id": "TSO1"
+        "description": "Dispatcher Group",
+        "name": "Dispatcher",
+        "id": "Dispatcher"
     },
     {
-        "description": "TSO 2 Group",
-        "name": "TSO2 group",
-        "id": "TSO2"
+        "description": "Planner Group",
+        "name": "Planner",
+        "id": "Planner"
     },
     {
-        "description": "Transnationnal Group",
-        "name": "TRANS group",
-        "id": "TRANS"
+        "description": "ReadOnly Group",
+        "name": "ReadOnly",
+        "id": "ReadOnly"
     }
 ]
 ....

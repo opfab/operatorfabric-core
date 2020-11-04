@@ -1,10 +1,10 @@
 Feature: deleteGroup
 
   Background:
-   #Getting token for admin and tso1-operator user calling getToken.feature
+   #Getting token for admin and operator1 user calling getToken.feature
     * def signIn = call read('../../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = call read('../../common/getToken.feature') { username: 'tso1-operator'}
+    * def signInAsTSO = call read('../../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
 
@@ -51,7 +51,7 @@ Feature: deleteGroup
     Then status 401
 
 
-  Scenario: delete group with no admin authentication (with tso1-operator authentication), expected response 403
+  Scenario: delete group with no admin authentication (with operator1 authentication), expected response 403
     Given url opfabUrl + 'users/groups/' + groupForEndpointDeleteGroup.id
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method delete

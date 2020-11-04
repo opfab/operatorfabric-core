@@ -9,15 +9,13 @@ import {AppService} from '@ofServices/app.service';
 @Component({
     selector: 'of-closeable-card-details',
     template: `
-        <of-details [card]="card" [style.visibility]="card ? 'visible' : 'hidden'">
-            <div *ngIf="card">
+        <div *ngIf="card && cardState">
                 <button type="button" class="close" aria-label="Close" (click)="closeDetails()">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <of-detail *ngFor="let detail of (details)" [detail]="detail" [card]="card" [childCards]="childCards"
+                <of-detail [cardState]="cardState" [card]="card" [childCards]="childCards"
                            [user]="user" [currentPath]="_currentPath"></of-detail>
-            </div>
-        </of-details>`,
+            </div>`,
     styleUrls: ['./closeable-card-details.component.scss']
 })
 export class CloseableCardDetailsComponent extends CardDetailsComponent {

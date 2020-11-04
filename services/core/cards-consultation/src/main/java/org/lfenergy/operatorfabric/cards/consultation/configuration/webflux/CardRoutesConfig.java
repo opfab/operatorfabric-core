@@ -57,7 +57,7 @@ public class CardRoutesConfig implements UserExtractor {
         return request ->
                 extractUserFromJwtToken(request)
                         .flatMap(currentUserWithPerimeters -> Mono.just(currentUserWithPerimeters).zipWith(cardRepository.findByIdWithUser(request.pathVariable("id"),currentUserWithPerimeters)))
-                        .flatMap(userCardT2 -> Mono.just(userCardT2).zipWith(cardRepository.findByParentCardUid(userCardT2.getT2().getUid()).collectList()))
+                        .flatMap(userCardT2 -> Mono.just(userCardT2).zipWith(cardRepository.findByParentCardId(userCardT2.getT2().getId()).collectList()))
                         .doOnNext(t2 -> {
                             CurrentUserWithPerimeters user = t2.getT1().getT1();
                             CardConsultationData card = t2.getT1().getT2();

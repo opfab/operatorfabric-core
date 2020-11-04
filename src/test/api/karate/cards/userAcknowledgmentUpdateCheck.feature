@@ -3,9 +3,9 @@ Feature: CardsUserAcknowledgementUpdateCheck
 
   Background:
 
-    * def signIn = callonce read('../common/getToken.feature') { username: 'tso1-operator'}
+    * def signIn = callonce read('../common/getToken.feature') { username: 'operator1'}
     * def authToken = signIn.authToken
-    * def signIn2 = callonce read('../common/./getToken.feature') { username: 'tso2-operator'}
+    * def signIn2 = callonce read('../common/./getToken.feature') { username: 'operator2'}
     * def authToken2 = signIn2.authToken
 
     Scenario: CardsUserAcknowledgementUpdateCheck
@@ -18,7 +18,7 @@ Feature: CardsUserAcknowledgementUpdateCheck
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"groupRecipients": ["TRANS"],
+	"groupRecipients": ["ReadOnly"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -42,14 +42,14 @@ Feature: CardsUserAcknowledgementUpdateCheck
     And match response.card.hasBeenAcknowledged == false
     And def uid = response.card.uid
 
-#make an acknoledgement to the card with tso1
+#make an acknoledgement to the card with operator1
     Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken
     And request ''
     When method post
     Then status 201
 
-#get card with user tso1-operator and check containing his ack
+#get card with user operator1 and check containing his ack
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
@@ -57,12 +57,12 @@ Feature: CardsUserAcknowledgementUpdateCheck
     And match response.card.hasBeenAcknowledged == true
     And match response.card.uid == uid
 
-#get card with user tso1-operator and check containing his ack
+#get card with user operator1 and check containing his ack
       Given url opfabPublishCardUrl + 'cards/traces/ack/' + uid
       And header Authorization = 'Bearer ' + authToken
       When method get
       Then status 200
-      And match response.userName == "tso1-operator"
+      And match response.userName == "operator1"
       And match response.action == "Acknowledgment"
 
 
@@ -74,7 +74,7 @@ Feature: CardsUserAcknowledgementUpdateCheck
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState2",
-	"groupRecipients": ["TRANS"],
+	"groupRecipients": ["ReadOnly"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -91,7 +91,7 @@ Feature: CardsUserAcknowledgementUpdateCheck
     Then status 201
     And match response.count == 1
 
-    #get card with user tso1-operator and check containing any ack
+    #get card with user operator1 and check containing any ack
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get

@@ -16,7 +16,7 @@ Scenario: Step1
 			"process"  :"api_test",
 			"processInstanceId" : "processProcess",
 			"state": "processState",
-			"groupRecipients": ["TSO1"],
+			"groupRecipients": ["Dispatcher"],
 			"severity" : "ALARM",
 			"startDate" : startDate,
 			"summary" : {"key" : "defaultProcess.summary"},

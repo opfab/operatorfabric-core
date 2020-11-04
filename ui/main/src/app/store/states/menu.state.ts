@@ -8,7 +8,7 @@
  */
 
 
-import {Menu} from '@ofModel/processes.model';
+import {Menu} from '@ofModel/menu.model';
 
 export interface MenuState {
     menu: Menu[];

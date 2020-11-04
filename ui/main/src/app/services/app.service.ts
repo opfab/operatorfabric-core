@@ -14,7 +14,7 @@ import {AppState} from '@ofStore/index';
 import {ClearLightCardSelection} from '@ofStore/actions/light-card.actions';
 
 export enum PageType {
-    UNKNOWN, FEED, ARCHIVE, THIRPARTY, SETTING, ABOUT, CALENDAR, MONITORING
+    UNKNOWN, FEED, ARCHIVE, THIRPARTY, SETTING, ABOUT, CALENDAR, MONITORING, USERCARD
 }
 
 @Injectable()
@@ -28,6 +28,7 @@ export class AppService {
         , ['about', PageType.ABOUT]
         , ['calendar', PageType.CALENDAR]
         , ['monitoring', PageType.MONITORING]
+        , ['usercard' , PageType.USERCARD]
 
     ]);
 

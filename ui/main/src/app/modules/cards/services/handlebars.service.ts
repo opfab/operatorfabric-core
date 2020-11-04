@@ -66,10 +66,10 @@ export class HandlebarsService {
 
     public executeTemplate(templateName: string, context: DetailContext):Observable<string> {
         return this.queryTemplate(context.card.process,context.card.processVersion,templateName).pipe(
-            map(t=>t(context)));
+            map(t => t(context)));
     }
 
-    private queryTemplate(process:string, version:string, name: string):Observable<Function> {
+    public  queryTemplate(process:string, version:string, name: string):Observable<Function> {
         const locale = this._locale;
         const key = `${process}.${version}.${name}.${locale}`;
         let template = this.templateCache[key];

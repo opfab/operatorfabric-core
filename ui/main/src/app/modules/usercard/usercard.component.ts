@@ -13,21 +13,26 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
 import { CardService } from '@ofServices/card.service';
 import { UserService } from '@ofServices/user.service';
-import { Card} from '@ofModel/card.model';
+import { Card, CardData,fromCardToCardForPublishing} from '@ofModel/card.model';
 import { I18n } from '@ofModel/i18n.model';
 import {  Subject } from 'rxjs';
 import { Process } from '@ofModel/processes.model';
 import { TimeService } from '@ofServices/time.service';
 import { Severity, TimeSpan } from '@ofModel/light-card.model';
 import { Guid } from 'guid-typescript';
-import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
-import { NewCardTemplateService } from './newcard-template.services';
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 import { UserWithPerimeters, RightsEnum, ComputedPerimeter } from '@ofModel/userWithPerimeters.model';
 import { EntitiesService } from '@ofServices/entities.service';
 import { transformToTimestamp } from '../archives/components/archive-filters/archive-filters.component';
 import { ProcessesService } from '@ofServices/processes.service';
+import { ActivatedRoute} from '@angular/router';
+import { getDateTimeNgbFromMoment } from '@ofModel/datetime-ngb.model';
+import * as moment from 'moment-timezone';
+import { HandlebarsService } from '../cards/services/handlebars.service';
+import { DetailContext } from '@ofModel/detail-context.model';
+import { map } from 'rxjs/operators';
 
 declare const templateGateway: any;
 
@@ -60,7 +65,8 @@ export class UserCardComponent implements OnDestroy, OnInit {
     });
 
     stateOptions: any[];
-    entityOptions = new Array();
+    recipientsOptions = new Array();
+    selectedRecipients = [];
     dropdownSettings = {};
     processOptions = new Array();
 
@@ -68,6 +74,8 @@ export class UserCardComponent implements OnDestroy, OnInit {
     selectedState: string;
     statesPerProcesses = new Map();
     userCardTemplate: SafeHtml;
+    editCardMode = false;
+    cardToEdit: CardData;
 
     public card: Card;
 
@@ -92,10 +100,11 @@ export class UserCardComponent implements OnDestroy, OnInit {
         private timeService: TimeService,
         private entitiesService: EntitiesService,
         private modalService: NgbModal,
-        private newCardTemplateService: NewCardTemplateService,
         private sanitizer: DomSanitizer,
         private element: ElementRef,
-        private processesService: ProcessesService
+        private processesService: ProcessesService,
+        private route: ActivatedRoute,
+        private handlebars: HandlebarsService
     ) {
     }
 
@@ -104,7 +113,6 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         this.loadAllEntities();
         this.loadAllProcessAndStateInUserPerimeter();
-
 
         this.messageForm = new FormGroup({
             severity: new FormControl(''),
@@ -116,7 +124,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         });
 
         this.recipientForm = new FormGroup({
-            entities: new FormControl([])
+            recipients: new FormControl([])
         });
 
 
@@ -131,12 +139,36 @@ export class UserCardComponent implements OnDestroy, OnInit {
             enableSearchFilter: true,
             classes: 'custom-class-example'
         };
-
+        this.loadCardForEdition();
     }
+
+
+
+    loadCardForEdition() {
+        this.route.paramMap.subscribe(
+            paramMap => {
+                const cardId = paramMap.get('cardId');
+                if (!!cardId) {
+                    this.editCardMode = true;
+                    this.cardService.loadCard(cardId).subscribe(card => {
+                        this.cardToEdit = card;
+                        this.messageForm.get('severity').setValue(this.cardToEdit.card.severity);
+                        this.messageForm.get('process').setValue(this.cardToEdit.card.process);
+                        this.messageForm.get('state').setValue(this.cardToEdit.card.state);
+                        this.messageForm.get('startDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.startDate)));
+                        this.messageForm.get('endDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.endDate)));
+                        this.selectedRecipients = this.cardToEdit.card.entityRecipients;
+                    });
+                }
+            }
+        );
+    }
+
+
 
     loadAllEntities(): void {
         this.entitiesService.getEntities().forEach(entity =>
-            this.entityOptions.push({ id: entity.id, itemName: entity.name }));
+            this.recipientsOptions.push({ id: entity.id, itemName: entity.name }));
     }
 
 
@@ -216,16 +248,18 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     loadTemplate() {
         this.errorMessage.display = false;
+        let card;
+        if  (!!this.cardToEdit) card = this.cardToEdit.card ;
         const templateName = this.selectedProcess.states[this.selectedState].userCardTemplate;
         if (!!templateName) {
-            this.newCardTemplateService.getTemplate(this.selectedProcess.id, this.selectedProcess.version, templateName)
-                .subscribe((template) => {
+            this.handlebars.queryTemplate(this.selectedProcess.id, this.selectedProcess.version, templateName)
+                .pipe(map(t => t(new DetailContext(card, null, null)))).subscribe((template) => {
                     this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml(template);
                     setTimeout(() => { // wait for DOM rendering
                         this.reinsertScripts();
                     }, 10);
-                }, () =>  {
-                    console.log('WARNING impossible to load template ',templateName);
+                }, (error) =>  {
+                    console.log('WARNING impossible to load template ', templateName , ', error = ' , error);
                     this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
                 }
                 );
@@ -250,10 +284,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     onSubmitForm(template: TemplateRef<any>) {
         const formValue = this.messageForm.value;
-        const recipients = this.recipientForm.value['entities'];
-        const processFormVal = formValue['process'];
+
         const selectedProcess = this.processesDefinition.find(process => {
-            return process.id === processFormVal;
+            return process.id === formValue['process'];
         });
         const processVersion = selectedProcess.version;
         const state = formValue['state'];
@@ -279,13 +312,20 @@ export class UserCardComponent implements OnDestroy, OnInit {
             return;
         }
 
-        const entities = new Array();
-        if (recipients.length < 1) {
+        const selectedRecipients = this.recipientForm.value['recipients'];
+        const recipients = new Array();
+        if (selectedRecipients.length < 1) {
             this.errorMessage.display = true;
             this.errorMessage.text = 'userCard.error.noRecipientSelected';
             return;
-        } else {
-            recipients.forEach(entity => entities.push(entity.id));
+        } else selectedRecipients.forEach(entity => recipients.push(entity.id));
+
+
+        const entitiesAllowedToRespond = [];
+        if (selectedProcess.states[state].response) {
+                recipients.forEach(entity => {
+                    if (!this.currentUserWithPerimeters.userData.entities.includes(entity)) entitiesAllowedToRespond.push(entity);
+                });
         }
 
         let startDate = this.messageForm.get('startDate').value;
@@ -303,23 +343,25 @@ export class UserCardComponent implements OnDestroy, OnInit {
         if  (!!specificInformation.viewCardInAgenda) timeSpans = [new TimeSpan(startDate , endDate )];
 
 
-        const generatedId = Guid.create().toString();
+        let processInstanceId ;
+        if (this.editCardMode) processInstanceId = this.cardToEdit.card.processInstanceId;
+        else processInstanceId  = Guid.create().toString();
 
         this.card = {
-            id: generatedId,
+            id: 'dummyId',
             publishDate: null,
             publisher: this.currentUserWithPerimeters.userData.entities[0],
             processVersion: processVersion,
-            process: processFormVal,
-            processInstanceId: generatedId,
+            process: selectedProcess.id,
+            processInstanceId: processInstanceId,
             state: state,
             startDate: startDate,
             endDate: endDate,
             severity: formValue['severity'],
             hasBeenAcknowledged: false,
             hasBeenRead: false,
-            entityRecipients: entities,
-            entitiesAllowedToRespond: [],
+            entityRecipients: recipients,
+            entitiesAllowedToRespond: entitiesAllowedToRespond,
             externalRecipients: null,
             title: title,
             summary: summary,
@@ -357,7 +399,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
     }
 
     confirm(): void {
-        this.cardService.postResponseCard(this.card)
+        this.cardService.postCard(fromCardToCardForPublishing(this.card))
             .subscribe(
                 resp => {
                     this.messageAfterSendingCard = '';
@@ -382,6 +424,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
             );
     }
 
+
     decline(): void {
         this.modalRef.dismiss(this.messageAfterSendingCard);
     }
@@ -390,6 +433,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.userCardTemplate = '';
         this.card = null;
         this.displaySendResult = false;
+        this.editCardMode = false;
+        this.cardToEdit = null;
+        this.selectedRecipients = [];
     }
 
 }

@@ -6,7 +6,7 @@ Feature: uploadBundleAction
     * def authToken = signIn.authToken
 
     # Get TSO-operator
-    * def signInAsTSO = call read('../common/getToken.feature') { username: 'tso1-operator'}
+    * def signInAsTSO = call read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
   

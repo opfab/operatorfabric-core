@@ -3,7 +3,7 @@ Feature: Cards
 
   Background:
 
-    * def signIn = call read('../common/getToken.feature') { username: 'tso1-operator'}
+    * def signIn = call read('../common/getToken.feature') { username: 'operator1'}
     * def authToken = signIn.authToken
     * def signInUserWithNoGroupNoEntity = call read('../common/getToken.feature') { username: 'userwithnogroupnoentity'}
     * def authTokenUserWithNoGroupNoEntity = signInUserWithNoGroupNoEntity.authToken
@@ -18,7 +18,7 @@ Feature: Cards
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -47,7 +47,7 @@ Feature: Cards
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -63,7 +63,7 @@ Feature: Cards
     Then status 201
     And match response.count == 1
 
-#get card with user tso1-operator
+#get card with user operator1
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
@@ -80,7 +80,7 @@ Feature: Cards
 
   Scenario: Delete the card
 
-#get card with user tso1-operator
+#get card with user operator1
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
@@ -109,7 +109,7 @@ Feature: Cards
 	"process"  :"api_test",
 	"processInstanceId" : "process2card1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "COMPLIANT",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -122,7 +122,7 @@ Feature: Cards
 	"process"  :"api_test",
 	"processInstanceId" : "process2card2",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "COMPLIANT",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -151,7 +151,7 @@ Feature: Cards
 	"process"  :"api_test",
 	"processInstanceId" : "process2CardsIncludingOneCardKO1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "COMPLIANT",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -164,7 +164,7 @@ Feature: Cards
 	"process"  :"api_test",
 	"processInstanceId" : "process2CardsIncludingOneCardKO2",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
@@ -191,7 +191,7 @@ Feature: Cards
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"externalRecipients" : ["api_test2","api_test165"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -208,7 +208,7 @@ Feature: Cards
     Then status 201
     And match response.count == 1
 
-#get card with user tso1-operator and new attribute externalRecipients
+#get card with user operator1 and new attribute externalRecipients
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
@@ -226,7 +226,7 @@ Scenario:  Post card with no recipient but entityRecipients
 	"process"  :"api_test",
 	"processInstanceId" : "process2",
 	"state": "messageState",
-	"entityRecipients" : ["TSO1"],
+	"entityRecipients" : ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -242,7 +242,7 @@ Scenario:  Post card with no recipient but entityRecipients
     Then status 201
     And match response.count == 1
 
-Scenario:  Post card with parentCardUid not correct
+Scenario:  Post card with initialParentCardUid not correct
 
     * def card =
 """
@@ -252,13 +252,41 @@ Scenario:  Post card with parentCardUid not correct
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title2"},
 	"data" : {"message":"test externalRecipients"},
-	"parentCardUid": "1"
+	"initialParentCardUid": "1"
+}
+"""
+
+# Push card
+        Given url opfabPublishCardUrl + 'cards'
+        And request card
+        When method post
+        Then status 201
+        And match response.count == 0
+        And match response.message contains "The initialParentCardUid 1 is not the uid of any card"
+
+Scenario:  Post card with parentCardId not correct
+
+    * def card =
+"""
+{
+	"publisher" : "api_test",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process1",
+	"state": "messageState",
+	"groupRecipients": ["Dispatcher"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title2"},
+	"data" : {"message":"test externalRecipients"},
+	"parentCardId": "1"
 }
 """
 
@@ -268,15 +296,52 @@ Scenario:  Post card with parentCardUid not correct
     When method post
     Then status 201
     And match response.count == 0
-    And match response.message contains "The parentCardUid 1 is not the uid of any card"
+    And match response.message contains "The parentCardId 1 is not the id of any card"
 
-Scenario:  Post card with correct parentCardUid
+Scenario:  Post card with correct parentCardId but initialParentCardUid not correct
 
-    #get parent card uid
+    #get parent card id
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
+    And def cardId = response.card.id
+
+    * def card =
+"""
+{
+	"publisher" : "api_test",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process1",
+	"state": "messageState",
+	"groupRecipients": ["Dispatcher"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title2"},
+	"data" : {"message":"test externalRecipients"},
+	"initialParentCardUid" : "1"
+}
+"""
+    * card.parentCardId = cardId
+
+# Push card
+    Given url opfabPublishCardUrl + 'cards'
+    And request card
+    When method post
+    Then status 201
+    And match response.count == 0
+    And match response.message contains "The initialParentCardUid 1 is not the uid of any card"
+
+Scenario:  Post card with correct parentCardId and initialParentCardUid
+
+    #get parent card id
+    Given url opfabUrl + 'cards/cards/api_test.process1'
+    And header Authorization = 'Bearer ' + authToken
+    When method get
+    Then status 200
+    And def cardId = response.card.id
     And def cardUid = response.card.uid
 
 	* def card =
@@ -287,7 +352,7 @@ Scenario:  Post card with correct parentCardUid
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -295,7 +360,8 @@ Scenario:  Post card with correct parentCardUid
 	"data" : {"message":"test externalRecipients"}
 }
 """
-	* card.parentCardUid = cardUid
+	* card.parentCardId = cardId
+    * card.initialParentCardUid = cardUid
 
 # Push card
     Given url opfabPublishCardUrl + 'cards'
@@ -315,7 +381,7 @@ Scenario: Push card and its two child cards, then get the parent card
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -332,11 +398,12 @@ Scenario: Push card and its two child cards, then get the parent card
     And match response.count == 1
     And match response.message == "All pushedCards were successfully handled"
 
-#get parent card uid
+#get parent card id
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
+    And def parentCardId = response.card.id
     And def parentCardUid = response.card.uid
 
 # Push two child cards
@@ -348,7 +415,7 @@ Scenario: Push card and its two child cards, then get the parent card
 	"process"  :"api_test",
 	"processInstanceId" : "processChild1",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -356,7 +423,8 @@ Scenario: Push card and its two child cards, then get the parent card
 	"data" : {"message":"test externalRecipients"}
 }
 """
-	* childCard1.parentCardUid = parentCardUid
+	* childCard1.parentCardId = parentCardId
+    * childCard1.initialParentCardUid = parentCardUid
 
 	* def childCard2 =
 """
@@ -366,7 +434,7 @@ Scenario: Push card and its two child cards, then get the parent card
 	"process"  :"api_test",
 	"processInstanceId" : "processChild2",
 	"state": "messageState",
-	"groupRecipients": ["TSO1"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -374,7 +442,8 @@ Scenario: Push card and its two child cards, then get the parent card
 	"data" : {"message":"test externalRecipients"}
 }
 """
-	* childCard2.parentCardUid = parentCardUid
+	* childCard2.parentCardId = parentCardId
+    * childCard2.initialParentCardUid = parentCardUid
 
 # Push the two child cards
     Given url opfabPublishCardUrl + 'cards'

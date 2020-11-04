@@ -1,7 +1,7 @@
 Feature: Add perimeters/group for action test 
 
   Background:
-   #Getting token for admin and tso1-operator user calling getToken.feature
+   #Getting token for admin and operator1 user calling getToken.feature
     * def signIn = call read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
 
@@ -20,6 +20,10 @@ Feature: Add perimeters/group for action test
     {
       "state" : "conferenceState",
       "right" : "ReceiveAndWrite"
+    },
+    {
+      "state" : "questionState",
+      "right" : "ReceiveAndWrite"
     }
   ]
 }
@@ -33,15 +37,15 @@ Feature: Add perimeters/group for action test
     Then status 201
 
 
-  Scenario: Add perimeterQuestion for groups TSO1
-    Given url opfabUrl + 'users/groups/TSO1/perimeters'
+  Scenario: Add perimeterQuestion for groups Dispatcher
+    Given url opfabUrl + 'users/groups/Dispatcher/perimeters'
     And header Authorization = 'Bearer ' + authToken
     And request ["perimeterUserCardExamples"]
     When method patch
     Then status 200
 
-  Scenario: Add perimeterQuestion for groups TSO2
-    Given url opfabUrl + 'users/groups/TSO2/perimeters'
+  Scenario: Add perimeterQuestion for groups Planner
+    Given url opfabUrl + 'users/groups/Planner/perimeters'
     And header Authorization = 'Bearer ' + authToken
     And request ["perimeterUserCardExamples"]
     When method patch

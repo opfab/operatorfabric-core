@@ -106,13 +106,13 @@ class EntitiesControllerShould {
         EntityData e1, e2;
         e1 = EntityData.builder()
            .id("ENTITY1")
-           .name("Entity 1")
-           .description("Entity 1 short description")
+           .name("Control Room 1")
+           .description("Control Room 1")
            .build();
         e2 = EntityData.builder()
            .id("ENTITY2")
-           .name("Entity 2")
-           .description("Entity 2 short description")
+           .name("Control Room 2")
+           .description("Control Room 2")
            .build();
         entityRepository.insert(e1);
         entityRepository.insert(e2);
@@ -145,8 +145,8 @@ class EntitiesControllerShould {
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.id", is("ENTITY1")))
-                    .andExpect(jsonPath("$.name", is("Entity 1")))
-                    .andExpect(jsonPath("$.description", is("Entity 1 short description")))
+                    .andExpect(jsonPath("$.name", is("Control Room 1")))
+                    .andExpect(jsonPath("$.description", is("Control Room 1")))
             ;
         }
 
@@ -168,30 +168,30 @@ class EntitiesControllerShould {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"id\": \"ENTITY3\"," +
-                            "\"name\": \"Entity 3\"," +
-                            "\"description\": \"Entity 3 short description\"" +
+                            "\"name\": \"Control Room 3\"," +
+                            "\"description\": \"Control Room 3\"" +
                             "}")
             )
                     .andExpect(status().isCreated())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.id", is("ENTITY3")))
-                    .andExpect(jsonPath("$.name", is("Entity 3")))
-                    .andExpect(jsonPath("$.description", is("Entity 3 short description")))
+                    .andExpect(jsonPath("$.name", is("Control Room 3")))
+                    .andExpect(jsonPath("$.description", is("Control Room 3")))
             ;
 
             mockMvc.perform(post("/entities")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"id\": \"ENTITY3\"," +
-                            "\"name\": \"Entity 3\"," +
-                            "\"description\": \"Entity 3 short description\"" +
+                            "\"name\": \"Control Room 3\"," +
+                            "\"description\": \"Control Room 3\"" +
                             "}")
             )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.id", is("ENTITY3")))
-                    .andExpect(jsonPath("$.name", is("Entity 3")))
-                    .andExpect(jsonPath("$.description", is("Entity 3 short description")))
+                    .andExpect(jsonPath("$.name", is("Control Room 3")))
+                    .andExpect(jsonPath("$.description", is("Control Room 3")))
             ;
 
             mockMvc.perform(get("/entities"))
@@ -203,8 +203,8 @@ class EntitiesControllerShould {
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.id", is("ENTITY3")))
-                    .andExpect(jsonPath("$.name", is("Entity 3")))
-                    .andExpect(jsonPath("$.description", is("Entity 3 short description")))
+                    .andExpect(jsonPath("$.name", is("Control Room 3")))
+                    .andExpect(jsonPath("$.description", is("Control Room 3")))
             ;
 
         }
@@ -215,15 +215,15 @@ class EntitiesControllerShould {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"id\": \"ENTITY2\"," +
-                            "\"name\": \"Entity 2\"," +
-                            "\"description\": \"Entity 2 very short description\"" +
+                            "\"name\": \"Control Room 2\"," +
+                            "\"description\": \"Control Room 2 very short description\"" +
                             "}")
             )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.id", is("ENTITY2")))
-                    .andExpect(jsonPath("$.name", is("Entity 2")))
-                    .andExpect(jsonPath("$.description", is("Entity 2 very short description")))
+                    .andExpect(jsonPath("$.name", is("Control Room 2")))
+                    .andExpect(jsonPath("$.description", is("Control Room 2 very short description")))
             ;
 
             mockMvc.perform(get("/entities"))
@@ -235,8 +235,8 @@ class EntitiesControllerShould {
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.id", is("ENTITY2")))
-                    .andExpect(jsonPath("$.name", is("Entity 2")))
-                    .andExpect(jsonPath("$.description", is("Entity 2 very short description")))
+                    .andExpect(jsonPath("$.name", is("Control Room 2")))
+                    .andExpect(jsonPath("$.description", is("Control Room 2 very short description")))
             ;
         }
 
@@ -247,16 +247,16 @@ class EntitiesControllerShould {
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.id", is("ENTITY2")))
-                    .andExpect(jsonPath("$.name", is("Entity 2")))
-                    .andExpect(jsonPath("$.description", is("Entity 2 short description")))
+                    .andExpect(jsonPath("$.name", is("Control Room 2")))
+                    .andExpect(jsonPath("$.description", is("Control Room 2")))
             ;
 
             mockMvc.perform(put("/entities/ENTITY2")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"id\": \"ENTITY1\"," +
-                            "\"name\": \"Entity 2\"," +
-                            "\"description\": \"Entity 2 very short description\"" +
+                            "\"name\": \"Control Room 2\"," +
+                            "\"description\": \"Control Room 2 very short description\"" +
                             "}")
             )
                     .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
@@ -270,8 +270,8 @@ class EntitiesControllerShould {
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.id", is("ENTITY2")))
-                    .andExpect(jsonPath("$.name", is("Entity 2")))
-                    .andExpect(jsonPath("$.description", is("Entity 2 short description")))
+                    .andExpect(jsonPath("$.name", is("Control Room 2")))
+                    .andExpect(jsonPath("$.description", is("Control Room 2")))
             ;
         }
 
@@ -684,8 +684,8 @@ class EntitiesControllerShould {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"id\": \"ENTITY3\","+
-                            "\"name\": \"Entity 3\","+
-                            "\"description\": \"Entity 3 short description\""+
+                            "\"name\": \"Control Room 3\","+
+                            "\"description\": \"Control Room 3\""+
                             "}")
             )
                     .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
@@ -698,8 +698,8 @@ class EntitiesControllerShould {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"id\": \"ENTITY2\","+
-                            "\"name\": \"Entity 2\","+
-                            "\"description\": \"Entity 2 very short description\""+
+                            "\"name\": \"Control Room 2\","+
+                            "\"description\": \"Control Room 2 very short description\""+
                             "}")
             )
                     .andExpect(status().is(HttpStatus.FORBIDDEN.value()))

@@ -7,9 +7,6 @@
     "calendar": true
   },
   "name":"process.label",
-  "menuEntries": [
-    {"id": "uid test 0","url": "https://opfab.github.io/","label": "menu.first", "linkType": "BOTH"}
-  ],
   "locales": [
     "fr",
     "en"

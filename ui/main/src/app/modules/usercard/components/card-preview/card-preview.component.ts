@@ -9,7 +9,8 @@
 
 
 import {Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
-import {Card, Detail} from '@ofModel/card.model';
+import {Card} from '@ofModel/card.model';
+import {Detail} from '@ofModel/processes.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../../../cards/services/handlebars.service';
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
@@ -21,7 +22,6 @@ import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {UserContext} from '@ofModel/user-context.model';
 import {skip, switchMap, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-
 
 @Component({
     selector: 'of-card-preview',
@@ -57,7 +57,6 @@ export class CardPreviewComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.getTemplateAndStyle();
-
     }
 
     private getTemplateAndStyle() {

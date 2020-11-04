@@ -18,13 +18,13 @@ link:../deployment/index.html#ui_properties[described here]
 [[menu_entries]]
 == Menu Entries
 
-It is possible to declare specific business menu in the upper part of  OperatorFabric. Those elements are declared  in the `config.json` file of the bundles. 
+The ui-menu.json file permit declare specific business menu in the upper part of  OperatorFabric.
 
-If there are several items to declare for a businessconfig service, a title for the businessconfig menu section need to be declared
-within the `i18nLabelKey` attribute, otherwise the first and only `menu entry` item is used to create an entry in the
-menu nav bar of OperatorFabric.
+If there are several items to declare for a businessc menu, a title for the menu section need to be declared within the `i18nLabelKey` attribute, otherwise the first and only `menu entry` item is used to create an entry in the menu nav bar of OperatorFabric.
 
-=== config.json declaration
+The ui-menu.json file contains also the declaration of i18n translations.
+
+=== ui-menu.json declaration
 
 This kind of objects contains the following attributes :
 
@@ -42,48 +42,89 @@ while clicking the icon opens in a new tab. This is also the default value.
 
 === Examples
 
-In the following examples, only the part relative to menu entries in the `config.json` file is detailed, the other parts are omitted and represented with a '…'.
+In following example is the configuration file to add two business menus: the first with only one entry, the second with two entries. The sample contain also the i18n translations in english anf french.
 
-*Single menu entry*
 
-....
 {
-	…
-	"menuEntries":[{
-			"id": "identifer-single-menu-entry",
-			"url": "https://opfab.github.io",
-			"label": "single-menu-entry-i18n-key",
-			"linkType": "BOTH"	
-		}],
+  "menus": [
+    {
+      "id": "menu1",
+      "label": "title.single",
+      "entries": [
+        {
+          "id": "uid_test_0",
+          "url": "https://opfab.github.io/",
+          "label": "entry.single",
+          "linkType": "BOTH"
+        }
+      ]
+    },
+    {
+      "id": "menu2",
+      "label": "title.multi",
+      "entries": [
+        {
+          "id": "uid_test_1",
+          "url": "https://opfab.github.io/",
+          "label": "entry.entry1",
+          "linkType": "BOTH"
+        },
+        {
+          "id": "uid_test_2",
+          "url": "https://www.wikipedia.org/",
+          "label": "entry.entry2",
+          "linkType": "BOTH"
+        }
+      ]
+    }
+  ],
+  "locales": [
+    {
+      "language": "en",
+      "i18n": {
+        "menu1": {
+          "title": {
+            "single": "First menu"
+          },
+          "entry": {
+            "single": "Single menu entry"
+          }
+        },
+        "menu2": {
+          "title": {
+            "multi": "Second menu"
+          },
+          "entry": {
+            "entry1": "First menu entry",
+            "entry2": "Second menu entry"
+          }
+        }
+      }
+    },
+    {
+      "language": "fr",
+      "i18n": {
+        "menu1": {
+          "title": {
+            "single": "Premiere menu"
+          },
+          "entry": {
+            "single": "Unique menu entry"
+          }
+        },
+        "menu2": {
+          "title": {
+            "multi": "Deuxieme menu"
+          },
+          "entry": {
+            "entry1": "Premiere menu entry",
+            "entry2": "Deuxieme menu entry"
+          }
+        }
+      }
+    }
+  ]
 }
-....
-
-*Several menu entries*
-
-Here a sample with 3 menu entries.
-
-....
-{
-	…
-	"i18nLabelKey":"businessconfig-name-in-menu-navbar",
-	"menuEntries": [{
-			"id": "firstEntryIdentifier",
-			"url": "https://opfab.github.io/whatisopfab/",
-			"label": "first-menu-entry",
-			"linkType": "BOTH"
-		},
-		{
-			"id": "secondEntryIdentifier",
-			"url": "https://www.lfenergy.org/",
-			"label": "second-menu-entry"
-		} ,
-		{
-			"id": "businessconfigEntryIdentifier",
-			"url": "https://opfab.github.io",
-			"label": "businessconfig-menu-entry"
-		}]
-}
-....
 
 === Operator Fabric theme
 

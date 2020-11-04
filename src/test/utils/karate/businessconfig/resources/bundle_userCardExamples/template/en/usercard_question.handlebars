@@ -1,0 +1,23 @@
+
+
+Question  : <input size="50" type="text" id="question" value="{{card.data.question}}"> </input> 
+
+<script>
+    templateGateway.getSpecificCardInformation = function () {
+        const question = document.getElementById('question').value;
+      
+        const card = {
+            summary: { key: "question.summary" },
+            title: { key: "question.title" },
+            data: {
+                question: question,
+            }
+        };
+        return {
+            valid: true,
+            card: card,
+            viewCardInAgenda: false
+        };
+
+    }
+</script>
