@@ -1,4 +1,4 @@
-package org.lfenergy.operatorfabric.autoconfigure.kafka;
+package org.lfenergy.operatorfabric.cards.publication.configuration.kafka;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

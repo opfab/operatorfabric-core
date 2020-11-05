@@ -4,7 +4,12 @@
   "namespace": "org.lfenergy.operatorfabric.avro",
   "fields": [
     {
-      "name": "parentCardUid",
+      "name": "parentCardId",
+      "type": ["null", "string"],
+      "default": null
+    },
+    {
+      "name": "initialParentCardUid",
       "type": ["null", "string"],
       "default": null
     },
@@ -152,14 +157,6 @@
           "items": "string"
         }
       ],
-      "default": null
-    },
-    {
-      "name": "hasBeenAcknowledged",
-      "type": [
-        "null",
-        "boolean"
-        ],
       "default": null
     },
     {

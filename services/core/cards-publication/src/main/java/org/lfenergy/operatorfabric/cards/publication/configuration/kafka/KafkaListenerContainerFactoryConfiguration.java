@@ -1,10 +1,11 @@
-package org.lfenergy.operatorfabric.autoconfigure.kafka;
+package org.lfenergy.operatorfabric.cards.publication.configuration.kafka;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.avro.CardCommand;
 import org.lfenergy.operatorfabric.cards.publication.kafka.command.CommandHandler;
 import org.lfenergy.operatorfabric.cards.publication.kafka.consumer.CardCommandConsumerListener;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
+@ConditionalOnProperty("spring.kafka.consumer.group-id")
 @Configuration
 public class KafkaListenerContainerFactoryConfiguration {
 
@@ -38,7 +40,7 @@ public class KafkaListenerContainerFactoryConfiguration {
         if (duration != null) {
             return duration.toMillis();
         }
-        return 1000l;
+        return 1000L;
     }
 
     @Bean

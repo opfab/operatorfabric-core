@@ -1,4 +1,4 @@
-package org.lfenergy.operatorfabric.autoconfigure.kafka;
+package org.lfenergy.operatorfabric.cards.publication.configuration.kafka;
 
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 import lombok.RequiredArgsConstructor;

@@ -8,23 +8,6 @@
       "type":"I18n"
     },
     {
-      "name": "titleStyle",
-      "type": ["null", "string" ],
-      "default": null
-    },
-    {
-      "name": "titlePosition",
-      "type": [
-        "null",
-        {
-          "name": "TitlePositionType",
-          "type": "enum",
-          "symbols" : ["UP", "DOWN", "NONE"]
-        }
-      ],
-      "default": null
-    },
-    {
       "name": "templateName",
       "type": "string"
     },
