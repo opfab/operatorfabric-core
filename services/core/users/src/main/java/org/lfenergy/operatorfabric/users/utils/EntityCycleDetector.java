@@ -17,10 +17,12 @@ This helper class presumes that stored Entities don't cycle (beware manual datab
  */
 @Slf4j
 public class EntityCycleDetector {
+
+    static final String CYCLE_DETECTION = "A cycle has been detected: ";
     final private List<String> visitedId;
     final private Map<String, List<String>> graph;
     final private String currentEntityId;
-    static final String CYCLE_DETECTION = "A cycle has been detected: ";
+    
 
     public EntityCycleDetector(Entity currentEntity, List<? extends Entity> allEntities) {
         this.currentEntityId = currentEntity.getId();
@@ -34,7 +36,7 @@ public class EntityCycleDetector {
         allEntitiesPlusNewOne.add(currentEntity);
             this.graph = allEntitiesPlusNewOne.stream()
                     .collect(Collectors.toMap(Entity::getId
-                                            , entity -> entity.getParents()));
+                                            , Entity::getParents));
         this.visitedId = new ArrayList<>(graph.size());
     }
 

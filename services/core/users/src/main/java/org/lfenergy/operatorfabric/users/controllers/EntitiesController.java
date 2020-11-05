@@ -86,7 +86,7 @@ public class EntitiesController implements EntitiesApi {
         return entityRepository.save((EntityData) entity);
     }
 
-    synchronized void checkForCycleInEntityParenthood(Entity current) throws ApiErrorException{
+    synchronized void checkForCycleInEntityParenthood(Entity current) {
         List<EntityData> entities = entityRepository.findAll();
         EntityCycleDetector cycleChecker = new EntityCycleDetector(current,entities);
         cycleChecker.throwApiExceptionOnCycle();
