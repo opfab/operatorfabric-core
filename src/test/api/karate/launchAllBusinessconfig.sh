@@ -8,7 +8,6 @@
 # SPDX-License-Identifier: MPL-2.0
 # This file is part of the OperatorFabric project.
 
-rm -rf target
 
 echo "Zip all bundles"
 cd businessconfig/resources
