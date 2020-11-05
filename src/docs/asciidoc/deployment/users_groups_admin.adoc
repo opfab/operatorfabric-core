@@ -10,8 +10,8 @@
 
 = Users, Groups and Entities Administration
 
-A new operator call John Doe, who has OAuth granted right to connect ot current `OperatorFabric` instance, need to receive cards within current `OperatorFabric` instance. As a user of OperatorFabric, he needs to be added to the system with a `login` (john-doe-operator), his `firstName` (John) and his `lastName` (Doe).
-operator
+A new operator call John Doe, who has OAuth granted right to connect ot current `OperatorFabric` instance, need to receive cards within current `OperatorFabric` instance.
+As a user of OperatorFabric, he needs to be added to the system with a `login` (john-doe-operator), his `firstName` (John) and his `lastName` (Doe).
 As there is no `Administration GUI` for the moment, it must be performed through command line, as detailed in the Users API.
 
 == Users 
@@ -104,7 +104,8 @@ HTTP/1.1 200 OK
 
 === Create a new User
 
-We are sure that no John-doe-operator exists in our OperatorFabric instance. We can add him in our OperatorFabric instance using the following command use httpie:
+We are sure that no John-doe-operator exists in our OperatorFabric instance.
+We can add him in our OperatorFabric instance using the following command use httpie:
 ....
 echo '{"login":"john-doe-operator","firstName":"Jahne","lastName":"Doe"}' | http POST http://localhost:2103/users "Authorization:Bearer $token" "Content-Type:application/json"
 ....
@@ -153,10 +154,12 @@ HTTP/1.1 200 OK
 === Update user details
 
 //TODO Check if it hasn't been replaced with create
-As shown by this result, the firstName of the new operator has been misspelled.We need
+As shown by this result, the firstName of the new operator has been misspelled.
+We need
 ifdef::single-page-doc[link:../api/users/index.html#/users/updateUser[to update the existing user]]
 ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/users/index.html#/users/updateUser[to update the existing user]]
-with `john-doe-operator` login. To correct this mistake, the following commands can be used :
+with `john-doe-operator` login.
+To correct this mistake, the following commands can be used:
 
 with httpie:
 ....
@@ -190,7 +193,7 @@ All the commands below :
 * Add a user to a group
 * Remove a user from a group
 
-are available for both groups and entities. In order not to overload the documentation, we will only detail groups endpoints.
+are available for both groups and entities. In order not to overload the documentation, we will only detail group endpoints.
 
 === List groups (or entities)
 
@@ -262,12 +265,12 @@ using the following command:
 
 using httpie:
 ....
-echo '{"id":"OPERATORS","decription":"This is the brand new  group of operator"}' | http POST http://localhost:2103/groups "Authorization:Bearer $token" "Content-Type:application/json"
+echo '{"id":"OPERATORS","decription":"This is the brand new group of operator"}' | http POST http://localhost:2103/groups "Authorization:Bearer $token" "Content-Type:application/json"
 ....
 
 using cURL:
 ....
-curl -X POST http://localhost:2103/groups -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"id":"OPERATORS","decription":"This is the brand new  group of operator"}'
+curl -X POST http://localhost:2103/groups -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"id":"OPERATORS","decription":"This is the brand new group of operator"}'
 ....
 
 response
@@ -275,6 +278,7 @@ response
 HTTP/1.1 200 OK
 
 {
+    "perimeters": [],
     "description": null,
     "name": null,
     "id": "OPERATORS"
@@ -303,6 +307,7 @@ response
 HTTP/1.1 200 OK
 
 {
+    "perimeters": [],
     "description": null,
     "name": null,
     "id": "OPERATORS"
@@ -330,6 +335,7 @@ curl -X PUT http://localhost:2103/groups/OPERATORS -H "Authorization:Bearer $tok
 response
 ....
 {
+    "perimeters": []
     "description": "This is the brand-new group of operator",
     "name": null,
     "id": "OPERATORS"
@@ -436,3 +442,62 @@ HTTP/1.1 200 OK
 
 }
 ....
+
+=== Entity parents
+
+Entities have a 'parents' attribute instead of a 'perimeters' one.
+This attribute is a string array.
+Each element of the array is the id of another Entity.
+When adding or patching an Entity into the system, operatorFabric performs a cycle detection.
+On a positive cycle detection cancels the addition or the patch.
+
+==== Add a new Entity without a cycle in the parent declaration
+
+using httpie:
+....
+echo '{"id":"NEW_ENTITY","name":"Last New Entity","description":"This is the last new entity","parents": ["ENTITY1"]}' \
+| http POST http://localhost:2103/entities "Authorization:Bearer $token" "Content-Type:application/json"
+....
+
+using cURL:
+....
+curl http://localhost:2103/entities -H "Authorization:Bearer $token" -H "Content-Type:application/json" \
+--data '{"id":"NEW_ENTITY","name":"Last New Entity","description":"This is the last new entity","parents": ["ENTITY1"]}'
+....
+
+response
+....
+HTTP/1.1 200 OK
+
+{
+    "id": "NEW_ENTITY",
+    "parents": ["ENTITY1"],
+    "name": "Last New Entity",
+    "description":"This is the last new entity"
+}
+....
+
+==== Add a new Entity with a cycle
+
+For simplicity, in this example the new entity will declare itself as a parent.
+This auto-referencing triggers a cycle detection.
+
+using httpie:
+
+....
+echo '{"id":"NEW_ENTITY","name":"Last New Entity","description":"This is the last new entity","parents": ["NEW_ENTITY"]}' | http POST http://localhost:2103/entities "Authorization:Bearer $token" "Content-Type:application/json"
+....
+
+using cURL:
+....
+curl http://localhost:2103/entities -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"id":"NEW_ENTITY","name":"Last New Entity","description":"This is the last new entity","parents": ["NEW_ENTITY"]}'
+....
+
+response
+....
+{
+    "status":"BAD_REQUEST",
+    "message":"A cycle has been detected: NEW_ENTITY->NEW_ENTITY"
+}
+....
+with a `400` as http status return.

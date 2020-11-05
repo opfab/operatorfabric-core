@@ -19,6 +19,7 @@ import org.lfenergy.operatorfabric.users.model.EntityData;
 import org.lfenergy.operatorfabric.users.model.UserData;
 import org.lfenergy.operatorfabric.users.repositories.EntityRepository;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
+import org.lfenergy.operatorfabric.users.utils.EntityCycleDetector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.bus.ServiceMatcher;
 import org.springframework.context.ApplicationEventPublisher;
@@ -81,7 +82,14 @@ public class EntitiesController implements EntitiesApi {
             response.addHeader("Location", request.getContextPath() + "/entities/" + entity.getId());
             response.setStatus(201);
         }
+        this.checkForCycleInEntityParenthood(entity);
         return entityRepository.save((EntityData) entity);
+    }
+
+    synchronized void checkForCycleInEntityParenthood(Entity current) {
+        List<EntityData> entities = entityRepository.findAll();
+        EntityCycleDetector cycleChecker = new EntityCycleDetector(current,entities);
+        cycleChecker.throwApiExceptionOnCycle();
     }
 
     @Override
