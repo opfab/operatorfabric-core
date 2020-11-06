@@ -98,5 +98,5 @@ export const feedInitialState: CardFeedState = LightCardAdapter.getInitialState(
         error: '',
         filters: getDefaultFilter(),
         sortBySeverity: false,
-        sortByRead: false
+        sortByRead: true
     });

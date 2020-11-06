@@ -18,7 +18,7 @@ import {ChangeReadSort, ChangeSort} from "@ofActions/feed.actions";
   templateUrl: './read-sort.component.html'
 })export class ReadSortComponent implements OnInit {
 
-  toggleActive = false;
+  toggleActive = true;
 
   constructor(private store: Store<AppState>) { }
 
