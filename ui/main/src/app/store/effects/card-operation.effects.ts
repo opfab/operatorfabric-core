@@ -16,7 +16,8 @@ import {catchError, filter, map, switchMap,withLatestFrom} from 'rxjs/operators'
 import {
     HandleUnexpectedError,
     LightCardActionTypes,
-    LoadLightCardsSuccess
+    LoadLightCardsSuccess,
+    UpdateALightCard
 } from '@ofActions/light-card.actions';
 import {Action, Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -27,10 +28,11 @@ import {LoadCard} from '@ofActions/card.actions';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {selectSortedFilterLightCardIds} from '@ofSelectors/feed.selectors';
 
+
 @Injectable()
 export class CardOperationEffects {
 
-    /* istanbul ignore next */
+
     constructor(private store: Store<AppState>,
                 private actions$: Actions,
                 private service: CardService,
@@ -55,6 +57,18 @@ export class CardOperationEffects {
                     this.soundNotificationService.handleCards(lightCards, currentlyVisibleIds);
                 }
             )
+        );
+
+
+    @Effect({dispatch: false})
+    triggerSoundNotificationsWhenRemind = this.actions$
+        .pipe(
+            ofType(LightCardActionTypes.UpdateALightCard),
+            map((updateCard: UpdateALightCard) => {
+                    const card = updateCard.payload.card;
+                    // in case it is a remind the card is update with hasBeenRead set to false
+                    if (!card.hasBeenRead) this.soundNotificationService.playSoundForCard(card);
+                })
         );
 
     @Effect()

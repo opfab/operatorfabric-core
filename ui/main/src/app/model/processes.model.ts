@@ -55,7 +55,8 @@ export class State {
         readonly acknowledgementAllowed?: boolean,
         readonly name?: string,
         readonly color?: string,
-        readonly userCardTemplate?: string
+        readonly userCardTemplate?: string,
+        readonly secondsBeforeTimeSpanForReminder?: number
     ) {
     }
 }

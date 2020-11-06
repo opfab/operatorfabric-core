@@ -1,0 +1,35 @@
+// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+
+= Card notification
+
+When a user receives a card, he is notified via a resume of the card on the left panel of the UI, what is called the "feed".
+
+== Sound notification 
+
+If the option is activated in the general configuration file web-ui.json, the user can choose to have a sound when a card is arriving. The configuration is to be set by the user with the settings menu.
+
+== Card read 
+
+When the user receives a new card, he see it in the feed with an eye icon on the right of the card resume. When he opens the cards, the icon disappears. 
+
+== Card acknowledgment 
+
+The user can set a card as "acknowledged" so he will not see it anymore by default in the feed. It is as well possible to cancel it and set a card to "unacknowledged" (a filter permit to see acknowledged cards). 
+
+To offer the possibility for the user to acknowledged card, it has to be configured in process definition. The configuration is set on a state based with the acknowledgementAllowed field set to true  (default is false). You can see examples in src/test/utils/karate/businessconfig/resources/bundle_defaultProcess/config.json
+
+== Card reminder (Experimental)
+
+For certain process and state, it is possible to configure a reminder. The reminder "reactivate" the card in the feed at a certain time before the beginning of the start date of the first timeSpan of the card. "Reactivate" means set the card to the status "unread" and "unacknowledged".
+
+
+The time for "reactivation" is defined with the parameter "secondsBeforeTimeSpanForReminder" in the definition of the state of the concerned process.
+You can see an example in /src/test/utils/karate/businessconfig/resources/bundle_userCardExamples/config.json
+
+This function is experimental and not production ready yet.

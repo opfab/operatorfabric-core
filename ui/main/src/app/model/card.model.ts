@@ -41,7 +41,7 @@ export class Card {
         readonly parentCardId?: string,
         readonly initialParentCardUid?: string,
         readonly publisherType?: PublisherType | string,
-        readonly timeSpans?: TimeSpan[]
+        public timeSpans?: TimeSpan[]
     ) {
     }
 }
