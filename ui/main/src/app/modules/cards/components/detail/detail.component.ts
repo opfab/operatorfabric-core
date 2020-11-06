@@ -341,7 +341,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     acknowledge() {
         if (this.card.hasBeenAcknowledged) {
-            this.cardService.deleteUserAcnowledgement(this.card).subscribe(resp => {
+            this.cardService.deleteUserAcknowledgement(this.card.uid).subscribe(resp => {
                 if (resp.status === 200 || resp.status === 204) {
                     this.card = {...this.card, hasBeenAcknowledged: false};
                     this.updateAcknowledgementOnLightCard(false);
@@ -351,7 +351,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 }
             });
         } else {
-            this.cardService.postUserAcnowledgement(this.card).subscribe(resp => {
+            this.cardService.postUserAcknowledgement(this.card.uid).subscribe(resp => {
                 if (resp.status === 201 || resp.status === 200) {
                     this.updateAcknowledgementOnLightCard(true);
                     this.closeDetails();
@@ -373,7 +373,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     markAsReadIfNecessary() {
         if (this.card.hasBeenRead === false) {
-            this.cardService.postUserCardRead(this.card).subscribe(resp => {
+            this.cardService.postUserCardRead(this.card.uid).subscribe(resp => {
                 if (resp.status === 201 || resp.status === 200) {
                     this.updateReadOnLightCard(true);
                 }

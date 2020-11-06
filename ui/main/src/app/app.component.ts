@@ -25,7 +25,7 @@ import { CardService } from '@ofServices/card.service';
 import { UserService } from '@ofServices/user.service';
 import { EntitiesService } from '@ofServices/entities.service';
 import { ProcessesService } from '@ofServices/processes.service';
-
+import { ReminderService } from '@ofServices/reminder/reminder.service';
 
 @Component({
   selector: 'of-root',
@@ -50,7 +50,8 @@ export class AppComponent implements OnInit {
     , private cardService: CardService
     , private userService: UserService
     , private entitiesService: EntitiesService
-    , private processesService: ProcessesService) {
+    , private processesService: ProcessesService
+    , private reminderService: ReminderService) {
   }
 
   ngOnInit() {
@@ -123,6 +124,7 @@ export class AppComponent implements OnInit {
             .pipe(skip(4)) // Need to wait for all initialization to complete before loading main components of the application
             .subscribe(() => {
               this.loaded = true;
+              this.reminderService.startService(identifier);
             });
         }
       });

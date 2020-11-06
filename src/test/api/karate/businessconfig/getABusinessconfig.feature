@@ -16,6 +16,7 @@ Feature: Bundle
     And match response.uiVisibility.monitoring == true
     And match response.uiVisibility.logging == true
     And match response.uiVisibility.calendar == true
+    And match response.states.messageState.secondsBeforeTimeSpanForReminder == 500
 
   Scenario: check bundle without authentication
 

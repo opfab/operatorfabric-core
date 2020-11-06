@@ -60,37 +60,45 @@ export class SoundNotificationService {
 
   }
 
-  handleCards(lightCards : LightCard[], currentlyVisibleIds : string[]) {
-    from(lightCards).subscribe( //There is no need to unsubscribe because this is by essence a finite observable
-        // TODO Possible improvement: all cards in an operation have the same publishDate (to be checked) so we could do this check only once by operation and either handle all cards or dismiss the batch entirely
-        (card : LightCard) => {
-          if (((new Date().getTime() - card.publishDate)<=this.recentThreshold)&&(currentlyVisibleIds.includes(card.id))) {
-            //Check whether card has just been published and whether it is currently visible in the feed
-            switch (card.severity) {
-              case Severity.ALARM:
-                if(this.playSoundForAlarm) {
-                  this.playSound(this.alarmSound);
-                }
-                break;
-              case Severity.ACTION:
-                if(this.playSoundForAction) {
-                  this.playSound(this.actionSound);
-                }
-                break;
-              case Severity.COMPLIANT:
-                if(this.playSoundForCompliant) {
-                  this.playSound(this.compliantSound);
-                }
-                break;
-              case Severity.INFORMATION:
-                if(this.playSoundForInformation) {
-                  this.playSound(this.informationSound);
-                }
-                break;
-            }
+  handleCards(lightCards: LightCard[], currentlyVisibleIds: string[]) {
+    from(lightCards).subscribe(
+        // There is no need to unsubscribe because this is by essence a finite observable
+        // TODO Possible improvement: all cards in an operation have the same publishDate (to be checked)
+        // so we could do this check only once by operation and either handle all cards or dismiss the batch entirely
+        (card: LightCard) => {
+              // Check whether card has just been published and whether it is currently visible in the feed
+          if (((new Date().getTime() - card.publishDate) <= this.recentThreshold) && (currentlyVisibleIds.includes(card.id))) {
+            this.playSoundForCard(card);
           }
         }
     );
+
+  }
+
+  playSoundForCard(card: LightCard) {
+
+    switch (card.severity) {
+      case Severity.ALARM:
+        if(this.playSoundForAlarm) {
+          this.playSound(this.alarmSound);
+        }
+        break;
+      case Severity.ACTION:
+        if(this.playSoundForAction) {
+          this.playSound(this.actionSound);
+        }
+        break;
+      case Severity.COMPLIANT:
+        if(this.playSoundForCompliant) {
+          this.playSound(this.compliantSound);
+        }
+        break;
+      case Severity.INFORMATION:
+        if(this.playSoundForInformation) {
+          this.playSound(this.informationSound);
+        }
+        break;
+    }
 
   }
 
@@ -98,10 +106,10 @@ export class SoundNotificationService {
   * playing when XXXX.play() is called, nothing happens.
   * */
 
-  playSound(sound : HTMLAudioElement) {
+  playSound(sound: HTMLAudioElement) {
     sound.play().catch(error => {
-      /* istanbul ignore next */
-      console.log(new Date().toISOString(),"Notification sound wasn't played because the user hasn't interacted with the app yet (autoplay policy).");
+      console.log(new Date().toISOString(),
+              `Notification sound wasn't played because the user hasn't interacted with the app yet (autoplay policy).`);
       /* This is to handle the exception thrown due to the autoplay policy on Chrome. See https://goo.gl/xX8pDD */
     });
   }
