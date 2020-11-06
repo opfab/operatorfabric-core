@@ -27,12 +27,12 @@ import {selectCardStateSelectedId} from '@ofSelectors/card.selectors';
 import {LoadCard} from '@ofActions/card.actions';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {selectSortedFilterLightCardIds} from '@ofSelectors/feed.selectors';
-import { LightCard } from '@ofModel/light-card.model';
+
 
 @Injectable()
 export class CardOperationEffects {
 
-    /* istanbul ignore next */
+
     constructor(private store: Store<AppState>,
                 private actions$: Actions,
                 private service: CardService,

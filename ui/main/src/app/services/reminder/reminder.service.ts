@@ -73,13 +73,13 @@ export class ReminderService {
         this.store.select(fetchLightCard(cardId)).pipe(take(1))
             .subscribe((lightCard: LightCard) => {
                 this.cardService.deleteUserAcknowledgement(lightCard.uid).subscribe(resp => {
-                    if (!((resp.status === 200 || resp.status === 204)))
+                    if (!(resp.status === 200 || resp.status === 204))
                          console.error(new Date().toISOString(),
                           'Reminder : the remote acknowledgement endpoint returned an error status(%d)', resp.status);
                     }
                 );
                 this.cardService.deleteUserCardRead(lightCard.uid).subscribe(resp => {
-                    if (!((resp.status === 200 || resp.status === 204)))
+                    if (!(resp.status === 200 || resp.status === 204))
                          console.error(new Date().toISOString(),
                           'Reminder : the remote acknowledgement endpoint returned an error status(%d)', resp.status);
                     }
