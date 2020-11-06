@@ -149,8 +149,7 @@ Next to publishing cards to OperatorFabric using the REST API, OperatorFabric al
 To enable Kafka you need to set the consumer group to the consumer group you assign to the OpFab Kafka consumer. This can be any group-id, as long as it isn't used by other consumers
 (unless you explicitly want multiple consumers for the same group).
 
-You can enable this by setting the TOPIC in the `config/docker/kafka-env.properties` file or by
-be uncommenting the `kafka.consumer.group_id` in the `cards-publication.yml`
+You can set the group_id by uncommenting the `kafka.consumer.group_id` in the `cards-publication.yml`
 
 [source, yaml]
 ----

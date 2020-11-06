@@ -24,12 +24,7 @@ To enable Kafka support you need to set the `kafka.consumer.group_id property` i
       group-id: opfab-command
 ----
 
-Alternatively you can set the group id in the `config/docker/kafka-env.properties` file:
-[source, shell]
-----
-SPRING_KAFKA_CONSUMER_GROUP_ID=opfab-command
-----
-The default topic from which the messages are consumed is called 'opfab'. This setting can be modified by setting 'opfab.kafka.topics.topicname '.
+The default topic from which the messages are consumed is called 'opfab'. This setting can be modified by setting 'opfab.kafka.topics.topicname'.
 
 Make sure you also set the registry to either an empty string (`""`) or to the server providing the schema registry service.
 With the default settings, the Kafka consumer expects a broker running on http//127.0.0.1:9092 and a schema registry on http://127.0.0.1:8081.
