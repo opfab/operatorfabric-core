@@ -196,19 +196,19 @@ export class InitChartComponent implements OnInit, OnDestroy {
         const date = moment(value);
         switch (this.domainId) {
             case 'TR':
-                return date.format('L LT');
+                return this.time.formatDateTime(value);
             case 'J':
-                return date.format('L');
+                return this.time.formatDate(value);
             case '7D':
-                return date.format('L LT');
+                return this.time.formatDateTime(value);
             case 'W':
-                return date.format('L');
+                return this.time.formatDate(value);;
             case 'M':
-                return date.format('L');
+                return this.time.formatDate(value);;
             case 'Y':
                 return date.format('yyyy');
             default:
-                return date.format('L LT');
+                return this.time.formatDate(value);
         }
     }
 
