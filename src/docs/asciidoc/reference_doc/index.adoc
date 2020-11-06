@@ -24,6 +24,8 @@ include::cards_publication_service.adoc[leveloffset=+1]
 
 include::card_rendering.adoc[leveloffset=+1]
 
+include::card_notification.adoc[leveloffset=+1]
+
 include::response_cards.adoc[leveloffset=+1]
 
 include::archives.adoc[leveloffset=+1]
