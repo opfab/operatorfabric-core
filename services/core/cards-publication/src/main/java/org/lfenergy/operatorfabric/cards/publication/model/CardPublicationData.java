@@ -13,7 +13,11 @@ package org.lfenergy.operatorfabric.cards.publication.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Singular;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -22,7 +26,6 @@ import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
@@ -122,6 +125,7 @@ public class CardPublicationData implements Card {
     private Boolean hasBeenRead;
     @Indexed
     private String processStateKey;
+    @Builder.Default
     private PublisherTypeEnum publisherType = PublisherTypeEnum.EXTERNAL;
 
     public void prepare(Instant publishDate) {

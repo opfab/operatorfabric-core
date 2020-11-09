@@ -1,3 +1,18 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "com.commercehub.gradle.plugin:gradle-avro-plugin:${versions['gradle.avro.plugin']}"
+    }
+}
+
+apply plugin: "com.commercehub.gradle.plugin.avro"
+
+dependencies {
+    compile "org.apache.avro:avro:${versions['avro']}"
+}
+
 jar {
     manifest {
         attributes( "Created-By"             : "Gradle ${gradle.gradleVersion}",
@@ -26,4 +41,9 @@ swaggerSources {
     }
 }
 
+avro {
+    createSetters = true
+    fieldVisibility = "PRIVATE"
+    stringType = "String"
+}
 

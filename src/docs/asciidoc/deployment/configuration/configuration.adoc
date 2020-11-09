@@ -10,6 +10,7 @@
 
 :springboot_doc: https://docs.spring.io/spring-boot/docs/2.1.2.RELEASE/
 :mongo_doc: https://docs.mongodb.com/manual/reference/
+:spring_kafka_doc: https://docs.spring.io/spring-kafka/reference/html/
 //TODO Check if versions are correct
 
 = Configuration
@@ -97,13 +98,18 @@ The user service has these specific properties :
 
 ==== Cards-publication service
 
-The cards-publication service has this specific property :
+The cards-publication service has these specific properties :
 
 |===
 |name|default|mandatory?|Description
 
 |checkPerimeterForResponseCard|true|no|If false, OperatorFabric will not check that a user has write rights on a process/state to respond to a card
-
+|spring.kafka.consumer.group-id |null|no| If set, support for receiving cards via Kafka is enabled
+|spring.deserializer.key.delegate.class |io.confluent.kafka.serializers.
+|KafkaAvroDeserializer|yes| Deserializer used to convert the received bytes into objects
+|opfab.kafka.topics.topicname |opfab|no|Name of the topic to read the messages from
+|schema.registry.url|http://localhost:8081|yes|URL of the schema registry. Can be set to the empty string "" is no registry is used
+|spring.kafka.producer.bootstrap-servers|http://localhost:9092|no|comma seperated list of URL(s) of the broker(s) / bootstrap server(s)
 |===
 
 
@@ -136,3 +142,26 @@ db.archivedCards.createIndex( { "publishDate": 1 }, { expireAfterSeconds: 864000
 IMPORTANT: You cannot use createIndex() to change the value of expireAfterSeconds of an existing index.
 Instead use the link:https://docs.mongodb.com/manual/reference/command/collMod/#dbcmd.collMod[collMod] database command in conjunction with the index collection flag. Otherwise, to
 change the value of the option of an existing index, you must drop the index first and recreate.
+
+== OperatorFabric Kafka configuration
+
+Next to publishing cards to OperatorFabric using the REST API, OperatorFabric also supports publishing cards via a Kafka Topic. In the default configuration Kafka is disabled.
+To enable Kafka you need to set the consumer group to the consumer group you assign to the OpFab Kafka consumer. This can be any group-id, as long as it isn't used by other consumers
+(unless you explicitly want multiple consumers for the same group).
+
+You can set the group_id by uncommenting the `kafka.consumer.group_id` in the `cards-publication.yml`
+
+[source, yaml]
+----
+  kafka:
+    consumer:
+      group-id: opfab-command
+----
+By default, the consumer will consume messages from the `opfab` topic.
+See link:{spring_kafka_doc}[Spring for Apache Kafka] for more information on the Spring Kafka implementation.
+
+With the default settings, the Kafka consumer expects a broker running on http//127.0.0.1:9092 and a schema registry on http://127.0.0.1:8081.
+
+Response cards are not (yet) returned via Kafka, but by the URL specified in the cards-publication yml file.
+
+Note that enabling Kafka does not disable the REST interface.
