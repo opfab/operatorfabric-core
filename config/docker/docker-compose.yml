@@ -35,7 +35,6 @@ services:
 #    Debug port closed for security reasons, be careful if you open it 
 #     - "4103:5005"
     volumes:
-    volumes:
     - "../certificates:/certificates_to_add"
     - "./users-docker.yml:/config/application.yml"
     - "./common-docker.yml:/config/common-docker.yml"
@@ -91,4 +90,4 @@ services:
     volumes:
       - "./web-ui.json:/usr/share/nginx/html/opfab/web-ui.json"
       - "./ui-menu.json:/usr/share/nginx/html/opfab/ui-menu.json"
-      - "./ngnix.conf:/etc/nginx/conf.d/default.conf"
+      - "./nginx.conf:/etc/nginx/conf.d/default.conf"

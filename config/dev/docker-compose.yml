@@ -35,5 +35,5 @@ services:
       - "./web-ui.json:/usr/share/nginx/html/opfab/web-ui.json"
       - "./ui-menu.json:/usr/share/nginx/html/opfab/ui-menu.json"
       - "../../ui/main/src/assets/i18n:/usr/share/nginx/html/assets/i18n/"
-      - "./ngnix.conf:/etc/nginx/conf.d/default.conf"
+      - "./nginx.conf:/etc/nginx/conf.d/default.conf"
       - "./loggingResults:/etc/nginx/html/logging"

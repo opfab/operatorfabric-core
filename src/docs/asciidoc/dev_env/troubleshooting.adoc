@@ -225,3 +225,97 @@ Check the API documentation for correct path.
 For this example, `businessconfig/processes` is a correct end-point whereas `businessconfig` alone is not.
 
 +++ </div></details> +++
+
++++ <details><summary> +++
+**`ERROR: for web-ui` when running docker-compose in `${OF_HOME}/config/dev`**
++++ </summary><div> +++
+
+When using the following commands:
+[source]
+----
+cd ${OF_HOME}/config/dev
+docker-compose up -d
+----
+
+The following error appears:
+
+.Error message
+[source]
+----
+ERROR: for web-ui  Cannot start service web-ui: OCI runtime create failed: container_linux.go:345: starting container process caused "process_linux.go:430: container init caused \"rootfs_linux.go:58: mounting \\\"/home/legallron/projects/operatorfabric-core/config/dev/nginx.conf\\\" to rootfs …
+----
+
+where `…` is specific to the runtime environment.
+
+.Possible causes & resolution
+
+There is no `nginx.conf` file in the `${OF_HOME}/conf/dev` directory.
+
+A first run of OperatorFabric `docker-compose` in dev config needs a `nginx.conf` file.
+To create it, and run a docker-compose environment use:
+[source]
+----
+cd ${OF_HOME}/config/dev
+./docker-compose.sh
+----
+
+If docker-compose has created a `nginx.conf` directory, delete it before running the previous commands.
+
+Once this `nginx.conf` file created a simple `docker-compose up -d` is enough to run a dev docker-compose environment.
+Sometimes a `nginx.conf` has been created as an attempt to launch the `web-ui` docker.
+See the following section to resolve this.
+
++++ </div></details> +++
+
++++ <details><summary> +++
+**`/docker-compose.sh: ligne 7: ./nginx.conf: is a folder` when running `${OF_HOME}/config/dev/docker-compose.sh`**
++++ </summary><div> +++
+
+When using the following commands:
+[source]
+----
+cd ${OF_HOME}/config/dev
+./docker-compose.sh
+----
+
+The following error appears:
+
+.Error message
+[source]
+----
+./docker-compose.sh: ligne 7: ./nginx.conf: is a folder
+----
+
+.Possible causes
+
+A `docker-compose up` has been run previously without `nginx.conf`.
+A folder named `nginx.conf` has been created by `docker-compose`.
+
+.Resolution
+
+You have rights to delete the folder:
+[source]
+----
+cd ${OF_HOME}/config/dev
+rm -rf nginx.conf
+./docker-compose.sh # if you want to run OperatorFabric directly after.
+cd ${OF_HOME}
+bin/run_all.sh start
+----
+
+You don't have the rights to delete the folder:
+[source]
+----
+cd ${OF_HOME}/config/dev
+docker run -ti --rm -v $(pwd):/current alpine # if there is no `alpine` docker available it will pull it from dockerHub
+# your are now in the alpine docker container
+cd /current
+rm -rf nginxconf
+<ctrl-d> # to exit the `alpine` container bash environement
+./docker-compose.sh # if you want to run OperatorFabric directly after.
+cd ${OF_HOME}
+bin/run_all.sh start
+----
+
+
++++ </div></details> +++
