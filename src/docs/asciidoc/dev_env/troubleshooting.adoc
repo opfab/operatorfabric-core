@@ -316,6 +316,40 @@ rm -rf nginxconf
 cd ${OF_HOME}
 bin/run_all.sh start
 ----
++++ </div></details> +++
 
+
++++ <details><summary> +++
+**`An unhandled exception occurred: Call retries were exceeded` occurs when using `ng build`**
++++ </summary><div> +++
+
+When using the following command line:
+[source]
+----
+cd ${OF_HOME}/ui/main
+ng build
+----
+
+The following error appears:
+
+.Error message
+[source]
+----
+Generating ES5 bundles for differential loading...
+An unhandled exception occurred: Call retries were exceeded
+See "/tmp/ng-<random-string>/angular-errors.log" for further details.
+----
+
+where `ng-<random-string>` is a temporary folder created by Angular to build the front-end.
+
+.Possible causes & resolution
+
+There is not enough allocated memory space to build the front-end.
+
+Use the following command to solve the problem:
+[source, shell]
+----
+node --max_old_space_size=4096 node_modules/@angular/cli/bin/ng build
+----
 
 +++ </div></details> +++
