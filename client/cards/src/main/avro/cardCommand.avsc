@@ -8,7 +8,7 @@
         {
           "name": "CommandType",
           "type": "enum",
-          "symbols" : ["UNKNOWN","CREATE_CARD", "UPDATE_CARD", "DELETE_CARD"],
+          "symbols" : ["UNKNOWN","CREATE_CARD", "UPDATE_CARD", "DELETE_CARD", "RESPONSE_CARD"],
           "default": "UNKNOWN"
         }
     },
