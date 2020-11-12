@@ -23,15 +23,17 @@ SPA:: stands for *Single Page Application*
 === Front End development
 //TODO Explain that the back needs to be running to be able to test in 4200. Replace steps below by link to appropriate doc
 
-OperatorFabric uses 4 external services to run properly :
+OperatorFabric uses 4 external services to run properly :
  
  * an event queue: RabbitMQ;
  * a no SQL database: MongoDB;
  * an authentication provider: keycloak;
  * a web server: Nginx.
-Those instances are available as docker images in the project. Use `docker-compose` and the `${OF_HOME}/config/dev/docker-compose.yml`
-to run them.
+
+Those instances are available as docker images in the project.
+se `docker-compose` and the `${OF_HOME}/config/dev/docker-compose.yml` to run them.
 After launching docker containers, use the following command line `$OF_HOME/bin/run_all.sh start` to run the application.
+
 Once the whole application is ready, you should have the following output in your terminal:
 
 [source, shell]
@@ -86,12 +88,26 @@ Once logged in, after one of those scripts have been running, you should be able
 
 == Build
 
-Run `ng build` to build the project. The build artifacts will be stored in :
+Within the folder `${OF_HOME}/ui/main`, run `ng build` to build the project.
+
+The build artifacts will be stored in:
 
 [source,shell]
 ----
 ${OF_HOME}/ui/main/build/distribution
 ----
+
+The previous command could lead to the following error:
+[source, shell]
+----
+Generating ES5 bundles for differential loading...
+An unhandled exception occurred: Call retries were exceeded
+See "/tmp/ng-<random-string>/angular-errors.log" for further details.
+----
+
+where `ng-<random-string>` is a temporary folder created by Angular to build the front-end.
+
+Use `node --max_old_space_size=4096 node_modules/@angular/cli/bin/ng build` instead to solve this problem.
 
 == Test
 
