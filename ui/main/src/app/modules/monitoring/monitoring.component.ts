@@ -19,8 +19,6 @@ import * as moment from 'moment';
 import {I18n} from '@ofModel/i18n.model';
 import {MonitoringFiltersComponent} from './components/monitoring-filters/monitoring-filters.component';
 import {Process} from '@ofModel/processes.model';
-import {ApplyFilter} from '@ofActions/feed.actions';
-import {BUSINESS_DATE_FILTER_INITIALISATION} from '@ofServices/filter.service';
 import { ProcessesService } from '@ofServices/processes.service';
 
 @Component({
@@ -104,8 +102,6 @@ export class MonitoringComponent implements OnInit, OnDestroy, AfterViewInit {
             ),
             catchError(err => of([]))
         );
-        this.store.dispatch(new ApplyFilter(BUSINESS_DATE_FILTER_INITIALISATION));
-
     }
 
     ngOnDestroy() {
