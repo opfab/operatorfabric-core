@@ -38,6 +38,7 @@ subprojects {
 
         dependencies {
             compile boot.actuator
+            compile boot.micrometer
             annotationProcessor misc.lombok
             implementation misc.lombok
 

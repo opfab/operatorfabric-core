@@ -7,9 +7,17 @@ function fn() {
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */ 
+
+    var  opfab_server = "http://localhost"
+    var opfab_port = "2002"
     var config = { // base config JSON
-      opfabUrl: 'http://localhost:2002/',
-      opfabPublishCardUrl: 'http://localhost:2102/'
+     
+      opfabUrl: opfab_server + ":" + opfab_port + "/",
+      opfabPublishCardUrl: opfab_server +":2102/",
+      opfabUserUrl: opfab_server +":2103/",
+      opfabBusinessConfigUrl: opfab_server +":2100/",
+      opfabCardsConsultationUrl: opfab_server +":2104/",
+      opfabCardsPublicationUrl: opfab_server +":2102/"
     };
 
     karate.log('url opfab :' + config.opfabUrl );
