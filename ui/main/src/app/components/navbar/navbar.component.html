@@ -102,6 +102,16 @@
                     translate
             >menu.settings</a>
           </div>
+
+          <div class="dropdown-item" [class.active]="currentPath && 'feedconfiguration' === currentPath[1]">
+            <a
+                    class="nav-link opfab-menu-link text-decoration-none"
+                    routerLink="/feedconfiguration"
+                    routerLinkActive #rla="routerLinkActive"
+                    translate
+            >menu.feedConfiguration</a>
+          </div>
+
           <div class="dropdown-item" [class.active]="currentPath && 'about' === currentPath[1]">
             <a
                     class="nav-link opfab-menu-link text-decoration-none"

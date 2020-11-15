@@ -65,6 +65,10 @@ const routes: Routes = [
         path: 'admin',
          loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule),
     },
+    {
+        path: 'feedconfiguration',
+        loadChildren: () => import('./modules/feedconfiguration/feedconfiguration.module').then(m => m.FeedconfigurationModule),
+    },
     {   path: '**',
         redirectTo: defaultPath
     }

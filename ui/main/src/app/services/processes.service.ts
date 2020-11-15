@@ -28,16 +28,19 @@ import { selectFeed, selectLastCards } from '@ofStore/selectors/feed.selectors';
 @Injectable()
 export class ProcessesService {
     readonly processesUrl: string;
+    readonly processGroupsUrl: string;
     private urlCleaner: HttpUrlEncodingCodec;
     private processCache = new Map();
     private translationsAlreadyLoaded = new Set<string>();
     private processes: Process[];
+    private processGroups: {idGroup: string, processes: string[]}[];
     private translationsLoaded = new Subject();
 
     constructor(private httpClient: HttpClient, private translateService: TranslateService, private store: Store<AppState>
     ) {
         this.urlCleaner = new HttpUrlEncodingCodec();
         this.processesUrl = `${environment.urls.processes}`;
+        this.processGroupsUrl = `${environment.urls.processGroups}`;
         this.loadTranslationIfNeededAfterLoadingArchiveCard();
         this.loadTranslationIfNeededAfterLoadingLoggingCard();
         this.loadTranslationIfNeededAfterLoadingCard();
@@ -88,6 +91,22 @@ export class ProcessesService {
                 ));
     }
 
+    public loadProcessGroups(): Observable<any> {
+        return this.queryProcessGroups()
+            .pipe(
+                map(processGroupsFile => {
+                        if (!!processGroupsFile) {
+                            this.processGroups = processGroupsFile.groups;
+
+                            for (const language in processGroupsFile.locale)
+                                 this.translateService.setTranslation(language, processGroupsFile.locale[language], true);
+
+                            console.log(new Date().toISOString(), 'List of process groups loaded');
+                        }
+                    }, (error) => console.error(new Date().toISOString(), 'an error occurred', error)
+                ));
+    }
+
     private loadAllTranslations() {
         const requests$ = [];
         this.processes.forEach(process => {
@@ -112,8 +131,11 @@ export class ProcessesService {
 
     public getAllProcesses(): Process[] {
         return this.processes;
-      }
+    }
 
+    public getProcessGroups(): {idGroup: string, processes: string[]}[] {
+        return this.processGroups;
+    }
 
     queryProcessFromCard(card: Card): Observable<Process> {
         return this.queryProcess(card.process, card.processVersion);
@@ -121,8 +143,12 @@ export class ProcessesService {
 
     queryAllProcesses(): Observable<Process[]> {
         return this.httpClient.get<Process[]>(this.processesUrl);
-
     }
+
+    queryProcessGroups(): Observable<any> {
+        return this.httpClient.get(this.processGroupsUrl);
+    }
+
     queryProcess(id: string, version: string): Observable<Process> {
         const key = `${id}.${version}`;
         const process = this.processCache.get(key);

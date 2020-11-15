@@ -8,6 +8,7 @@
     "monitoring": "Monitoring",
     "logout": "Logout",
     "settings": "Settings",
+    "feedConfiguration": "Feed configuration",
     "about": "About",
     "usercard": "Card Creation"
   },
@@ -143,7 +144,20 @@
     "cancel": "Cancel",
     "reset": "Reset",
     "delete": "Delete",
-    "edit": "Edit"
+    "edit": "Edit",
+    "yes": "YES"
+  },
+  "feedConfiguration": {
+    "title": "Notification reception configuration",
+    "confirmSettings": "Confirm settings",
+    "settingsSavedWithNoError": "Settings saved",
+    "popup": {
+      "title": "CONFIRMATION",
+      "areYouSure": "You have made some changes. Are you sure you want to save them ?"
+    },
+    "error": {
+      "impossibleToSaveSettings": "Impossible to save settings for technical reasons"
+    }
   },
   "userCard": {
     "title": "Create a new card",

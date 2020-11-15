@@ -14,7 +14,8 @@ export class UserWithPerimeters {
 
     public constructor(
         readonly userData: User,
-        readonly computedPerimeters?: Array<ComputedPerimeter>
+        readonly computedPerimeters?: Array<ComputedPerimeter>,
+        readonly processesStatesNotNotified?: Map<string, Array<string>>
     ) { }
 
 }

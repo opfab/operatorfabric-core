@@ -1,0 +1,81 @@
+<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
+<h2 translate style="text-align: center;">feedConfiguration.title</h2>
+<br />
+
+<div class="container-fluid">
+    <form [formGroup]="feedConfigurationForm">
+        <div *ngFor="let processGroup of processGroups; ">
+            <h5 class="font-weight-bold" translate>{{processGroup.id}}</h5>
+            <div class="row">
+                <div class="col-md" *ngFor="let processKey of processGroup.processes; ">
+                    <p class="font-weight-bold">{{processesStatesLabels.get(processKey).processLabel}}</p>
+
+                    <div class="custom-control custom-checkbox" >
+                        <div class="row" formArrayName="processesStates" *ngFor="let state of processesStatesLabels.get(processKey).states; ">
+
+                            <input type="checkbox" class="custom-control-input" [formControlName]=state.stateControlIndex [id]=state.stateControlIndex>
+                            <label class="custom-control-label" [for]=state.stateControlIndex >
+                                {{state.stateLabel}}
+                            </label>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <br />
+            <br />
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md" *ngFor="let processId of processesWithoutGroup; ">
+                <p class="font-weight-bold">{{processesStatesLabels.get(processId).processLabel}}</p>
+                <div class="custom-control custom-checkbox" >
+                    <div class="row" formArrayName="processesStates" *ngFor="let state of processesStatesLabels.get(processId).states; ">
+                        <input type="checkbox" class="custom-control-input" [formControlName]=state.stateControlIndex [id]=state.stateControlIndex>
+                        <label class="custom-control-label" [for]=state.stateControlIndex >
+                            {{state.stateLabel}}
+                        </label>
+                    </div>
+                </div>
+                <br />
+             </div>
+        </div>
+
+        <br />
+        <div *ngIf="displaySendResultOk">
+            <h2 translate style="text-align: center" class="text-success"> {{messageAfterSavingSettings}} </h2>
+        </div>
+
+        <div *ngIf="displaySendResultError">
+            <h2 translate style="text-align: center" class="text-danger"> {{messageAfterSavingSettings}} </h2>
+        </div>
+        <div style="text-align: center;width:100%">
+            <button type="button" class="btn btn-primary" (click)='open(confirmationPopup)' style="text-align: center;" translate>feedConfiguration.confirmSettings</button>
+        </div>
+    </form>
+</div>
+
+
+
+<div class="my-3">
+    <ng-template #confirmationPopup let-modal>
+        <div class="modal-header">
+            <h4 translate> feedConfiguration.popup.title </h4>
+            <button type="button" class="close" aria-label="Close" (click)="modalRef.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body text-center">
+            <p translate>feedConfiguration.popup.areYouSure</p>
+            <button type="button" class="btn btn-primary" (click)="confirmSaveSettings()" translate>button.yes</button>
+        </div>
+    </ng-template>
+</div>

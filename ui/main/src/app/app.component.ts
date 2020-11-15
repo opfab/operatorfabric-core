@@ -119,6 +119,7 @@ export class AppComponent implements OnInit {
             this.userService.loadUserWithPerimetersData(),
             this.entitiesService.loadAllEntitiesData(),
             this.processesService.loadAllProcesses(),
+            this.processesService.loadProcessGroups(),
             this.processesService.areTranslationsLoaded(),
             this.cardService.initSubscription)
             .pipe(skip(4)) // Need to wait for all initialization to complete before loading main components of the application
