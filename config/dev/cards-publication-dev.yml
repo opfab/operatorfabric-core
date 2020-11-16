@@ -7,6 +7,11 @@ spring:
     value:
       delegate:
         class: io.confluent.kafka.serializers.KafkaAvroDeserializer
+  serializer:
+    value:
+      delegate:
+        class: io.confluent.kafka.serializers.KafkaAvroSerializer
+
   # uncomment to enable Kafka
 #  kafka:
 #    consumer:
