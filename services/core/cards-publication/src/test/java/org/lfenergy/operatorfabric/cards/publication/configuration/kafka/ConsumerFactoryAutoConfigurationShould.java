@@ -3,7 +3,7 @@ package org.lfenergy.operatorfabric.cards.publication.configuration.kafka;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.avro.CardCommand;
-import org.lfenergy.operatorfabric.cards.publication.kafka.consumer.SchemaRegistryProperties;
+import org.lfenergy.operatorfabric.cards.publication.kafka.SchemaRegistryProperties;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;

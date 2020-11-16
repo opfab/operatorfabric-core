@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.lfenergy.operatorfabric.avro.CardCommand;
-import org.lfenergy.operatorfabric.cards.publication.kafka.consumer.SchemaRegistryProperties;
+import org.lfenergy.operatorfabric.cards.publication.kafka.SchemaRegistryProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
@@ -23,8 +23,8 @@ import java.util.Map;
 @EnableConfigurationProperties(SchemaRegistryProperties.class)
 @Configuration
 public class ProducerFactoryAutoConfiguration {
-    @Value("${spring.serializer.value.delegate.class}")
-    private String serializerValueClass;
+    @Value("${spring.kafka.producer.value-serializer}")
+    private String valueDeserializer;
 
     private final KafkaProperties kafkaProperties;
 
@@ -32,7 +32,7 @@ public class ProducerFactoryAutoConfiguration {
         Map<String,Object> props = kafkaProperties.buildProducerProperties();
         props.put(ProducerConfig.CLIENT_ID_CONFIG, "opfab-producer");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, serializerValueClass);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueDeserializer);
         return props;
     }
 

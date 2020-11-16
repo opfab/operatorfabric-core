@@ -7,13 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.lfenergy.operatorfabric.cards.publication.kafka.consumer;
+package org.lfenergy.operatorfabric.cards.publication.kafka;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
-@ConfigurationProperties(prefix="schema.registry")
+@ConfigurationProperties(prefix="opfab.kafka.schema.registry")
 public class SchemaRegistryProperties {
 
     private String url;
