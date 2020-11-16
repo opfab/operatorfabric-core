@@ -40,7 +40,7 @@ public class ConsumerFactoryAutoConfiguration {
 
     private String deserializerKeyClass = "org.apache.kafka.common.serialization.StringDeserializer";
 
-    @Value("${spring.kafka.consumer.value-deserializer}")
+    @Value("${spring.deserializer.value.delegate.class}")
     private String valueDeserializer;
 
     private Map<String,Object> consumerConfig() {

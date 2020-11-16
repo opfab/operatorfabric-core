@@ -23,7 +23,7 @@ import java.util.Map;
 @EnableConfigurationProperties(SchemaRegistryProperties.class)
 @Configuration
 public class ProducerFactoryAutoConfiguration {
-    @Value("${spring.kafka.producer.value-serializer}")
+    @Value("${spring.serializer.value.delegate.class}")
     private String valueDeserializer;
 
     private final KafkaProperties kafkaProperties;

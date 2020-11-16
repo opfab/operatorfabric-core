@@ -3,14 +3,19 @@ server:
 spring:
   application:
     name: cards-publication
+  deserializer:
+    value:
+      delegate:
+        class: io.confluent.kafka.serializers.KafkaAvroDeserializer
+  serializer:
+    value:
+      delegate:
+        class: io.confluent.kafka.serializers.KafkaAvroSerializer
 
-  # uncomment kafka.consumer.group-id to enable Kafka
-  kafka:
-    consumer:
+# uncomment kafka.consumer.group-id to enable Kafka
+#  kafka:
+#    consumer:
 #      group-id: opfab-command
-      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
-    producer:
-      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
 
 opfab:
   kafka:
