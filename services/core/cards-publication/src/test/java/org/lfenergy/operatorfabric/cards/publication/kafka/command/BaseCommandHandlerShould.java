@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles(profiles = {"native", "test"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class BaseCommandHandlerTest {
+class BaseCommandHandlerShould {
 
     private final String ANY_STRING = "any_string";
     private final String PROCESS = "a_process";
