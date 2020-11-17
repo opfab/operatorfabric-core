@@ -29,7 +29,7 @@ public class ResponseCardProducer {
     private final KafkaTemplate<String, CardCommand> kafkaTemplate;
     private final CardCommandFactory cardCommandFactory;
 
-    @Value("${spil.kafka.topics.topicname-reponse:opfab-response}")
+    @Value("${opfab.kafka.topics.response-card.topicname}")
     private String topic;
 
     public void send(CardPublicationData cardPublicationData) {
