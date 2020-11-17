@@ -14,6 +14,8 @@ import { getOneRandomCard } from '@tests/helpers';
 import { TimeSpan } from '@ofModel/card.model';
 
 
+const SIXTEEN_MINUTES =  60000 * 16;
+
 describe('ReminderList', () => {
 
   let remindList: ReminderList = new ReminderList('testUser');
@@ -30,7 +32,7 @@ describe('ReminderList', () => {
 
   it('should create and delete a reminder', () => {
     const testCard: Card = getOneRandomCard();
-    testCard.timeSpans = [new TimeSpan(new Date().valueOf() + 2000)];
+    testCard.timeSpans = [new TimeSpan(new Date().valueOf())];
     remindList.addAReminder(testCard, 10);
     expect(remindList.hasAReminder(testCard.id)).toBeTruthy();
     remindList.removeAReminder(testCard.id);
@@ -44,9 +46,9 @@ describe('ReminderList', () => {
   });
 
 
-  it('should not create a reminder if  timespan start date is < current date', () => {
+  it('should not create a reminder if  timespan current date > startDate + 15 min', () => {
     const testCard: Card = getOneRandomCard();
-    testCard.timeSpans = [new TimeSpan(new Date().valueOf() - 1000)];
+    testCard.timeSpans = [new TimeSpan(new Date().valueOf() - SIXTEEN_MINUTES)];
     remindList.addAReminder(testCard, 10);
     expect(remindList.hasAReminder(testCard.id)).toBeFalsy();
   });
@@ -54,8 +56,8 @@ describe('ReminderList', () => {
   it('should create and delete two reminder', () => {
     const testCard1: Card = getOneRandomCard();
     const testCard2: Card = getOneRandomCard();
-    testCard1.timeSpans = [new TimeSpan(new Date().valueOf() + 2000)];
-    testCard2.timeSpans = [new TimeSpan(new Date().valueOf() + 2000)];
+    testCard1.timeSpans = [new TimeSpan(new Date().valueOf())];
+    testCard2.timeSpans = [new TimeSpan(new Date().valueOf())];
     remindList.addAReminder(testCard1, 10);
     remindList.addAReminder(testCard2, 10);
     expect(remindList.hasAReminder(testCard1.id)).toBeTruthy();
@@ -82,7 +84,7 @@ describe('ReminderList', () => {
       - timespan start date - 15 min  is > current date 
       - card has already been remind `, () => {
     const testCard: Card = getOneRandomCard();
-    testCard.timeSpans = [new TimeSpan(new Date().valueOf() + 2000 )];
+    testCard.timeSpans = [new TimeSpan(new Date().valueOf())];
     remindList.addAReminder(testCard , 60 * 15);
     expect(remindList.hasAReminder(testCard.id)).toBeTruthy();
     const cardsToRemind: Array<string> = remindList.getCardIdsToRemindNow();
@@ -98,7 +100,7 @@ describe('ReminderList', () => {
       - we add again the same card to the reminder`
   , () => {
     const testCard: Card = getOneRandomCard();
-    testCard.timeSpans = [new TimeSpan(new Date().valueOf() + 2000 )];
+    testCard.timeSpans = [new TimeSpan(new Date().valueOf())];
     remindList.addAReminder(testCard, 60 * 15);
     remindList.setCardHasBeenRemind(testCard.id);
     remindList.addAReminder(testCard, 60 * 15);
@@ -144,8 +146,8 @@ describe('ReminderList', () => {
   it('should persist in local storage', () => {
     const testCard1: Card = getOneRandomCard();
     const testCard2: Card = getOneRandomCard();
-    testCard1.timeSpans = [new TimeSpan(new Date().valueOf() + 2000) ];
-    testCard2.timeSpans = [new TimeSpan(new Date().valueOf() + 2000) ];
+    testCard1.timeSpans = [new TimeSpan(new Date().valueOf()) ];
+    testCard2.timeSpans = [new TimeSpan(new Date().valueOf()) ];
     remindList.addAReminder(testCard1 , 10);
     remindList.addAReminder(testCard2 , 10);
     const storageString = localStorage.getItem("testUser.reminderList");
@@ -160,7 +162,7 @@ describe('ReminderList', () => {
 
   it('should persist in local storage when hasBeenRemind', () => {
     const testCard1: Card = getOneRandomCard();
-    testCard1.timeSpans = [new TimeSpan(new Date().valueOf() + 2000)];
+    testCard1.timeSpans = [new TimeSpan(new Date().valueOf())];
     remindList.addAReminder(testCard1, 10);
     remindList.setCardHasBeenRemind(testCard1.id);
     const storageString = localStorage.getItem("testUser.reminderList");
@@ -171,8 +173,8 @@ describe('ReminderList', () => {
   it('should load config form local storage', () => {
     const testCard1: Card = getOneRandomCard();
     const testCard2: Card = getOneRandomCard();
-    testCard1.timeSpans = [new TimeSpan(new Date().valueOf() + 2000) ];
-    testCard2.timeSpans = [new TimeSpan(new Date().valueOf() + 2000) ];
+    testCard1.timeSpans = [new TimeSpan(new Date().valueOf()) ];
+    testCard2.timeSpans = [new TimeSpan(new Date().valueOf()) ];
     remindList.addAReminder(testCard1, 10);
     remindList.addAReminder(testCard2, 10 );
 

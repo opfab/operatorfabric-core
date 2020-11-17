@@ -7,7 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { Card } from '@ofModel/card.model';
+import { Card, Recurrence } from '@ofModel/card.model';
+import { getNextTimeForRepeating } from './reminderUtils';
 
 export class ReminderList {
 
@@ -16,7 +17,8 @@ export class ReminderList {
         constructor(
             public cardUid: string,
             public timeForReminding: number,
-            public hasBeenRemind: boolean
+            public hasBeenRemind: boolean,
+            public recurrence?: Recurrence
         ) { }
     };
 
@@ -32,10 +34,12 @@ export class ReminderList {
         if (!!card) {
             const reminderItem = this.reminderList.get(card.id);
             if (!!reminderItem && (reminderItem.cardUid === card.uid)) return;
-            const dateForReminder: number = this.getDateForReminder(card);
-            if ((dateForReminder >= 0) && (dateForReminder > new Date().valueOf())) {
+            const dateForReminder: number = getNextTimeForRepeating(new Date().valueOf(), card);
+            if (dateForReminder >= 0) {
                 this.reminderList.set(card.id,
                     new ReminderList.reminderItem(card.uid, dateForReminder - secondsToRemindBeforeEvent * 1000, false));
+                console.log(new Date().toISOString(), `Will remind card ${card.id} at
+                         ${new Date(dateForReminder - secondsToRemindBeforeEvent * 1000)}`);
                 this.persistReminder();
             }
         }
@@ -65,13 +69,6 @@ export class ReminderList {
             reminderItem.hasBeenRemind = true;
             this.persistReminder();
         }
-    }
-
-    private getDateForReminder(card: Card): number {
-        if (!!card.timeSpans) {
-            return card.timeSpans[0].start;
-        }
-        return -1;
     }
 
     private loadRemindersFromLocalStorage() {
