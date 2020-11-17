@@ -114,6 +114,7 @@ export class AuthenticationService {
                 , issuer: this.delegateUrl
                 , clientId: this.clientId
                 , clearHashAfterLogin: false
+                , requireHttps: false
             };
             return new ImplicitAuthenticationHandler(this
                 , this.store
