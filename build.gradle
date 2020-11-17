@@ -27,6 +27,7 @@ ext {
             starterWeb              : "org.springframework.boot:spring-boot-starter-web:${versions['spring.boot']}",
             starterWebflux          : "org.springframework.boot:spring-boot-starter-webflux:${versions['spring.boot']}",
             actuator                : "org.springframework.boot:spring-boot-starter-actuator:${versions['spring.boot']}",
+            micrometer              : "io.micrometer:micrometer-registry-prometheus:latest.release",
             starterAop              : "org.springframework.boot:spring-boot-starter-aop:${versions['spring.boot']}",
             starterJetty            : "org.springframework.boot:spring-boot-starter-jetty:${versions['spring.boot']}",
             starterRabbitmq         : "org.springframework.boot:spring-boot-starter-amqp:${versions['spring.boot']}",
