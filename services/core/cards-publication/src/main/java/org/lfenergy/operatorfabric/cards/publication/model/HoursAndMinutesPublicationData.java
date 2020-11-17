@@ -8,20 +8,17 @@
  */
 
 
+
 package org.lfenergy.operatorfabric.cards.publication.model;
 
 import lombok.*;
-import java.time.Instant;
-
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TimeSpanPublicationData implements TimeSpan{
+public class HoursAndMinutesPublicationData implements HoursAndMinutes {
 
-    private Instant start;
-    private Instant end;
-    private Recurrence recurrence;
-
+    private Integer hours;
+    private Integer minutes;
 }
