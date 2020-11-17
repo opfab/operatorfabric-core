@@ -71,9 +71,9 @@ public class ExternalAppClientImpl implements ExternalAppClient {
     }
 
     private void callExternalKafkaApplication(CardPublicationData card, String externalRecipientUrl) {
-
         responseCardProducer.send(card);
     }
+
     private void callExternalHttpApplication(CardPublicationData card, String externalRecipientUrl) {
         try {
             log.debug("Start to Send card {} To {} ", card.getId(), card.getPublisher());
