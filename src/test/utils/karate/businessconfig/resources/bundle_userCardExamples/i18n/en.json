@@ -3,7 +3,6 @@
 	"message":{
 		"title":"Message",
 		"summary":"Message received"
-
 	},
 	"conference":{
 		"title":"Conference Call ☏",
@@ -12,6 +11,10 @@
 	"question":{
 		"title":"Question ",
 		"summary":"There is a question for you"
+	},
+	"incidentInProgress":{
+		"name":"IT Incident",
+		"title":"IT Incident ",
+		"summary":"IT incident in progress "
 	}
-
 }

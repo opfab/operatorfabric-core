@@ -9,7 +9,7 @@
   },
   "states": {
     "messageState": {
-      "name":  "message.title",
+      "name": "message.title",
       "color": "#FAF0AF",
       "userCardTemplate": "usercard_message",
       "details": [
@@ -18,25 +18,23 @@
             "key": "message.title"
           },
           "templateName": "message",
-          "styles": [
-          ]
+          "styles": []
         }
       ],
       "acknowledgementAllowed": true
     },
     "conferenceState": {
-      "name":  "conference.title",
+      "name": "conference.title",
       "color": "#FAF0AF",
       "userCardTemplate": "usercard_conference",
-      "secondsBeforeTimeSpanForReminder" : 300,
+      "secondsBeforeTimeSpanForReminder": 300,
       "details": [
         {
           "title": {
             "key": "conference.title"
           },
           "templateName": "conference",
-          "styles": [
-          ]
+          "styles": []
         }
       ],
       "acknowledgementAllowed": true
@@ -54,11 +52,28 @@
             "key": "question.title"
           },
           "templateName": "question",
-          "styles": [
-          ]
+          "styles": []
         }
       ],
       "acknowledgementAllowed": false
-    }   
+    },
+    "incidentInProgressState": {
+      "name": "incidentInProgress.name",
+      "userCardTemplate": "usercard_incidentInProgress",
+      "color": "#FAF0AF",
+      "response": {
+        "state": "incidentInProgressState"
+      },
+      "details": [
+        {
+          "title": {
+            "key": "incidentInProgress.name"
+          },
+          "templateName": "incidentInProgress",
+          "styles": []
+        }
+      ],
+      "acknowledgementAllowed": true
+    }
   }
 }
