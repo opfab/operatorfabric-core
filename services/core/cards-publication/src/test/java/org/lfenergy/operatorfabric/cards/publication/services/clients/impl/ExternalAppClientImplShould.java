@@ -50,7 +50,7 @@ class ExternalAppClientImplShould {
     private final String externalRecipientHttp = "http_recipient";
     private final Map<String, String> externalRecipientsMapping = new HashMap<String, String>() {
         {
-            put (externalRecipientKafka, "kafka://");
+            put (externalRecipientKafka, "kafka:");
             put (externalRecipientHttp, "http://");
         }
     };

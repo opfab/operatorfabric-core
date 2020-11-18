@@ -63,7 +63,7 @@ public class ExternalAppClientImpl implements ExternalAppClient {
     }
 
     private void callExternalApplication(CardPublicationData card, String externalRecipientUrl) {
-        if (externalRecipientUrl.startsWith("kafka://")) {
+        if (externalRecipientUrl.startsWith("kafka:")) {
             callExternalKafkaApplication(card, externalRecipientUrl);
         } else{
             callExternalHttpApplication(card, externalRecipientUrl);

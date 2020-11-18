@@ -24,7 +24,7 @@ To enable Kafka support you need to set the `kafka.consumer.group_id property` i
       group-id: opfab-command
 ----
 
-The default topic from which the messages are consumed is called 'opfab'. This setting can be modified by setting 'opfab.kafka.topics.topicname'.
+The default topic from which the messages are consumed is called 'opfab'. This setting can be modified by setting 'opfab.kafka.card.topics.topicname'.
 
 Make sure you also set the registry to either an empty string (`""`) or to the server providing the schema registry service.
 With the default settings, the Kafka consumer expects a broker running on http//127.0.0.1:9092 and a schema registry on http://127.0.0.1:8081.
@@ -42,8 +42,8 @@ the implementation of the deserializers and mapping of Kafka topics to OperatorF
 for the various Kafka configuration options.
 
 === Kafka OperatorFabric AVRO schema
-The AVRO schema, the byte format in which messages are transffered using Kafka topics, can be found at `client/src/main/avro`.
-Message are wrapped in a the CardCommand object before being sent to a Kafka topic.
+The AVRO schema, the byte format in which messages are transferred using Kafka topics, can be found at `client/src/main/avro`.
+Message are wrapped in a CardCommand object before being sent to a Kafka topic.
 This object is an almost one-to-one mapping of the OperatorFabric card, see also <<card_structure>>. The exceptions are  `Process` and
 `Process Instance Identifier`, which are moved to the top-level CardCommand.
 
@@ -52,7 +52,7 @@ This object is an almost one-to-one mapping of the OperatorFabric card, see also
 === Setting a new deserializer
 By default, OperatorFabric uses the  `io.confluent.kafka.serializers.KafkaAvroDeserializer` from link:{confluent}[Confluent]. However, you can write your own
 deserializer. To use your own deserializer, make sure
-`spring.kafka.deserializer.value` points to your deserializer.
+`spring.deserializer.value.delegate.class` points to your deserializer.
 
 
 == Kafka card producer
@@ -107,5 +107,16 @@ the dump below.
 ----
 
 == Response Cards
-OperatorFabric <<response_cards>> are currently returned only via REST. At the time of writing it is not possible to return
-response cards via Kafka.
+OperatorFabric <<response_cards>> can be sent by REST of put on a Kafka topic. The Kafka response card configuration follows the
+convention to configure a REST endpoint. Instead of setting the 'http://host/api' URL, you set it to 'kafka:response-topic' in the `externalRecipients-url:`
+section from the cards-publication.yml file:
+
+[source, yaml]
+----
+externalRecipients-url: "{\
+           processAction: \"http://localhost:8090/test\", \
+           mykafka: \"kafka:topicname\"
+           }"
+----
+
+Note that `topicname` is a placeholder for now. All response cards are returned via the same Kafka topic.
