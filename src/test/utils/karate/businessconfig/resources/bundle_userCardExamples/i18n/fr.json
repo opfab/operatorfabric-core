@@ -15,6 +15,10 @@
 	"task":{
 		"title":"Tâche ",
 		"summary":"Il y a quelque chose à faire "
+  },
+	"incidentInProgress":{
+		"name":"Incident SI",
+		"title":"Incident SI ",
+		"summary":"IT Incident SI en cours"
 	}
-
 }

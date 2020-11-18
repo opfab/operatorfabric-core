@@ -32,5 +32,6 @@ cd ../../src/test/api/karate
 ./launchAllBusinessconfig.sh
 ./launchAllUsers.sh
 ./launchAllCards.sh
+./launchAllAdmin.sh
 google-chrome target/cucumber-html-reports/overview-features.html &
 )

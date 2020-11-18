@@ -32,10 +32,16 @@ include::configuration/configuration.adoc[leveloffset=+1]
 
 include::RABBITMQ.adoc[leveloffset=+1]
 
+== Monitoring
+
+Operator Fabric provides end points for monitoring via link:https://prometheus.io/[prometheus]. The monitoring is available for the four following services: user, businessconfig, cards-consultation, cards-publication. You can start a test prometheus instance via `config/monitoring/startPrometheus.sh` , the monitoring will be accessible on http://localhost:9090/
+
 include::users_groups_admin.adoc[leveloffset=+1]
 
 
 include::port_table.adoc[leveloffset=+1]
+
+
 
 == Restricted operations (administration)
 

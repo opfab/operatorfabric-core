@@ -31,6 +31,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 @Slf4j
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    public static final String PROMETHEUS_PATH ="/actuator/prometheus**";
     public static final String USER_PATH = "/users/{login}";
     public static final String USERS_SETTINGS_PATH = "/users/{login}/settings";
     public static final String USERS_PERIMETERS_PATH = "/users/{login}/perimeters";
@@ -42,6 +43,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String IS_ADMIN_OR_OWNER = "hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)";
     public static final String IS_ADMIN_AND_NOT_OWNER = "hasRole('ADMIN') and ! @webSecurityChecks.checkUserLogin(authentication,#login)";
+    
     @Autowired
     WebSecurityChecks webSecurityChecks;
 
@@ -64,6 +66,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
                 .authorizeRequests()
+                .antMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll() 
                 .antMatchers(HttpMethod.GET, USER_PATH).access(IS_ADMIN_OR_OWNER)
                 .antMatchers(HttpMethod.PUT, USER_PATH).access(IS_ADMIN_OR_OWNER)
                 .antMatchers(HttpMethod.DELETE, USER_PATH).access(IS_ADMIN_AND_NOT_OWNER)

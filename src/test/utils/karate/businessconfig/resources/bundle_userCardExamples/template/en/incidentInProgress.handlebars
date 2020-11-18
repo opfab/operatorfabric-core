@@ -1,0 +1,142 @@
+<br/>
+<h2 style="text-align: center;"> IT Incident in progress </h2>
+
+
+<center>
+
+</center>
+<p>
+    
+    <strong> Incident description:</strong> {{keepSpacesAndEndOfLine card.data.message}}
+
+
+    <br />
+    <br />
+
+    <strong> Impacted services form IT perspective : </strong>   <span id="impacts"></span>
+
+
+    <br />
+
+
+
+<div style="text-align: center;">
+
+
+    <h3> Please fill in the impacts from your perspective  </h3>
+
+
+    <br />
+    <table width="100%">
+        <tr>
+            <td> <input type="checkbox" id="SA"> Service A  </input> </td>
+            <td> <input type="checkbox" id="SB"> Service B  </input> </td>
+            <td> <input type="checkbox" id="SC"> Service C </input> </td>
+            <td> <input type="checkbox" id="SD"> Service D </input> </td>
+            <td> <input type="checkbox" id="SE"> Service E </input> </td>
+            <td> <input type="checkbox" id="SF"> Service F </input> </td>
+          
+
+        </tr>
+    </table>
+
+</div>
+<br/>
+Other impacts : <input size="50" type="text" id="OTHERS"> </input> 
+
+<br/>
+<br/>
+<div id="childs-div"></div>
+
+
+<script>
+
+    var impact = "";
+    var SA = {{ card.data.impacts.SA }};
+    if (SA) impact += " Service A ";
+
+    var SB = {{ card.data.impacts.SB }};
+    if (SB) impact += " Service B ";
+
+    var SC = {{ card.data.impacts.SC }};
+    if (SC) impact += " Service C ";
+
+    var SD = {{ card.data.impacts.SD }};
+    if (SD) impact += " Service D ";
+
+    var SE = {{ card.data.impacts.SE }};
+    if (SE) impact += " Service E ";
+
+    var SF = {{ card.data.impacts.SF }};
+    if (SF) impact += " Service F ";
+
+    document.getElementById("impacts").innerHTML = impact;
+
+    templateGateway.applyChildCards = () => {
+
+        if (templateGateway.childCards[0]) {
+            let childsDiv = document.getElementById("childs-div");
+            let responses = ' <h3>Responses received </h3><center> <br/>'
+            responses += ' <table width="100%""> <tr> <th> Entity </th>';
+            responses += ' <th> Service A </th> <th> Service B </th> <th> Service C </th> <th> Service D </th> <th>Service E </th> <th> Service F </th>';
+            responses += ' </tr>';
+
+            templateGateway.childCards.forEach((c, i) => {
+                console.log("data child = ", c.data);
+                responses += `<tr> <td> ${c.publisher} </td>`
+                if (c.data.impacts.SA)  responses += `<td style="color:red;">  OUI </td>`;
+                else  responses += `<td>  NON </td>`;
+                if (c.data.impacts.SB)  responses += `<td style="color:red;">  OUI </td>`;
+                else  responses += `<td>  NON </td>`;
+                if (c.data.impacts.SC)  responses += `<td style="color:red;">  OUI </td>`;
+                else  responses += `<td>  NON </td>`;
+                if (c.data.impacts.SD)  responses += `<td style="color:red;">  OUI </td>`;
+                else  responses += `<td>  NON </td>`;
+                if (c.data.impacts.SE)  responses += `<td style="color:red;">  OUI </td>`;
+                else  responses += `<td>  NON </td>`;
+                if (c.data.impacts.SF)  responses += `<td style="color:red;">  OUI </td>`;
+                else  responses += `<td>  NON </td>`;
+                responses += `<td> ${c.data.impacts.OTHERS}</td>`;
+                responses += "</tr>";
+            });
+
+            responses += '</table> </center>';
+
+            childsDiv.innerHTML = responses;
+        }
+    }
+
+    templateGateway.applyChildCards();
+
+    templateGateway.validyForm = function () {
+
+        const S1 = document.getElementById('SA').checked;
+        const SB = document.getElementById('SB').checked;
+        const SC = document.getElementById('SC').checked;
+        const SD = document.getElementById('SD').checked;
+        const SE = document.getElementById('SE').checked;
+        const SF = document.getElementById('SF').checked;
+        const OTHERS = document.getElementById('OTHERS').value;
+
+        const formData = {
+            impacts:
+            {
+                SA: SA,
+                SB: SB,
+                SC: SC,
+                SD: SD,
+                SE: SE,
+                SF: SF,
+                OTHERS: OTHERS
+            }
+        }
+
+        return {
+            valid: true,
+            formData: formData
+        };
+    }
+</script>
+
+
+</p>

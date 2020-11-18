@@ -20,6 +20,7 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.http.HttpMethod;
 import reactor.core.publisher.Mono;
 
 
@@ -32,6 +33,8 @@ import reactor.core.publisher.Mono;
 @EnableWebFluxSecurity
 public class WebSecurityConfiguration {
 
+
+    public static final String PROMETHEUS_PATH ="/actuator/prometheus**";
     /**
      * Secures access (all uris are secured)
      *
@@ -61,6 +64,7 @@ public class WebSecurityConfiguration {
                 .headers().frameOptions().disable()
                 .and()
                 .authorizeExchange()
+                .pathMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll() 
                 .anyExchange().authenticated();
     }
 }

@@ -28,11 +28,11 @@ users:
 # for mac see https://docs.docker.com/docker-for-mac/networking/#use-cases-and-workarounds
 # for windows see https://docs.docker.com/docker-for-windows/networking/#use-cases-and-workarounds
 externalRecipients-url: "{\
-           processAction: \"http://172.17.0.1:8090/test\", \
-           api_test_externalRecipient1: \"http://172.17.0.1:8090/test\", \
-           api_test_externalRecipient2: \"http://172.17.0.1:8090/test\", \
-           externalRecipient1: \"http://172.17.0.1:8090/test\", \
-           externalRecipient2: \"http://172.17.0.1:8090/test\" \
+           processAction: \"http://ext-app:8090/test\", \
+           api_test_externalRecipient1: \"http://ext-app:8090/test\", \
+           api_test_externalRecipient2: \"http://ext-app:8090/test\", \
+           externalRecipient1: \"http://ext-app:8090/test\", \
+           externalRecipient2: \"http://ext-app:8090/test\" \
            }"
 
 # WARNING : If you set this parameter to false , all users have the rights to respond to all cards
