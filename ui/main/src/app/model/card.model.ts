@@ -40,6 +40,7 @@ export class Card {
         readonly recipient?: Recipient,
         readonly parentCardId?: string,
         readonly initialParentCardUid?: string,
+        readonly keepChildCards?: boolean,
         readonly publisherType?: PublisherType | string,
         public timeSpans?: TimeSpan[]
     ) {
@@ -68,6 +69,7 @@ export class CardForPublishing {
         readonly recipient?: Recipient,
         readonly parentCardId?: string,
         readonly initialParentCardUid?: string,
+        readonly keepChildCards?: boolean,
         readonly publisherType?: PublisherType | string,
         readonly timeSpans?: TimeSpan[]
     ) {
@@ -134,6 +136,7 @@ export function fromCardToCardForPublishing(card: Card): CardForPublishing {
         card.recipient,
         card.parentCardId,
         card.initialParentCardUid,
+        card.keepChildCards,
         card.publisherType,
         card.timeSpans
     );

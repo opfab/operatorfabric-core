@@ -338,6 +338,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
         const title = (!!specificInformation.card.title) ? specificInformation.card.title : 'UNDEFINED';
         const summary = (!!specificInformation.card.summary) ? specificInformation.card.summary : 'UNDEFINED';
+        const keepChildCards = (!!specificInformation.card.keepChildCards) ? specificInformation.card.keepChildCards : false;
 
         let timeSpans = [];
         if  (!!specificInformation.viewCardInAgenda) timeSpans = [new TimeSpan(startDate , endDate )];
@@ -366,6 +367,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
             title: title,
             summary: summary,
             timeSpans : timeSpans,
+            keepChildCards: keepChildCards,
             data: specificInformation.card.data,
         } as Card;
 
