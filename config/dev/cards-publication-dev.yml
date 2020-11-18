@@ -6,17 +6,17 @@ spring:
   deserializer:
     value:
       delegate:
-        class: org.lfenergy.operatorfabric.cards.publication.kafka.consumer.KafkaAvroWithoutRegistryDeserializer
-#        class: io.confluent.kafka.serializers.KafkaAvroDeserializer
+        class: io.confluent.kafka.serializers.KafkaAvroDeserializer
+#        class: org.lfenergy.operatorfabric.cards.publication.kafka.consumer.KafkaAvroWithoutRegistryDeserializer
   serializer:
     value:
       delegate:
         class: io.confluent.kafka.serializers.KafkaAvroSerializer
-
+#        class: org.lfenergy.operatorfabric.cards.publication.kafka.producer.KafkaAvroWithoutRegistrySerializer
 # uncomment kafka.consumer.group-id to enable Kafka
-  kafka:
-    consumer:
-      group-id: opfab-command
+#  kafka:
+#    consumer:
+#      group-id: opfab-command
 
 opfab:
   kafka:
@@ -43,4 +43,4 @@ externalRecipients-url: "{\
            }"
 
 # WARNING : If you set this parameter to false , all users have the rights to respond to all cards
-checkPerimeterForResponseCard: false
+checkPerimeterForResponseCard: true
