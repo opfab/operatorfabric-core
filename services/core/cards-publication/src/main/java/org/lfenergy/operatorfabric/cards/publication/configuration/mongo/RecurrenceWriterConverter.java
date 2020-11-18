@@ -24,6 +24,11 @@ public class RecurrenceWriterConverter {
 
     private static String defaultTimeZone = "Europe/Paris";
 
+    private RecurrenceWriterConverter() {
+        throw new IllegalStateException("Utility class");
+      }
+
+
     public static Document convert(RecurrencePublicationData source) {
         Document result = new Document();
 

@@ -14,6 +14,11 @@ import org.lfenergy.operatorfabric.cards.publication.model.HoursAndMinutes;
 
 public  class HoursAndMinutesWriterConverter {
 
+    private HoursAndMinutesWriterConverter() {
+        throw new IllegalStateException("Utility class");
+      }
+
+
     public static Document convert(HoursAndMinutes source) {
         Document result = new Document();
 

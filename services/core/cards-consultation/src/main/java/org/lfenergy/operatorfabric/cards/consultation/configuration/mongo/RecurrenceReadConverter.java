@@ -21,6 +21,10 @@ import java.util.ArrayList;
 
 public class RecurrenceReadConverter {
 
+    private RecurrenceReadConverter() {
+        throw new IllegalStateException("Utility class");
+      }
+
     public static Recurrence convert(Document source) {
         String timeZone= source.getString("timeZone");
         List<Integer> daysOfWeek = (List<Integer>) source.get("daysOfWeek");

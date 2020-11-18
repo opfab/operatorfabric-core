@@ -17,6 +17,11 @@ import org.lfenergy.operatorfabric.cards.publication.model.HoursAndMinutesPublic
 
 public  class  HoursAndMinutesReadConverter {
 
+
+    private HoursAndMinutesReadConverter() {
+        throw new IllegalStateException("Utility class");
+      }
+
     public static HoursAndMinutes convert(Document source) {
         Integer hours = source.getInteger("hours");
         Integer minutes = source.getInteger("minutes");
