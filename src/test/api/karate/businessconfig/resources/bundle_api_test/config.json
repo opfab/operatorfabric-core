@@ -8,12 +8,9 @@
 	},
 	"states":{
 		"messageState" : {
-			"details" : [{
-				"title" : { "key" : "detail.title"},
-				"templateName" : "template",
-				"styles" : [ "style" ]
-				
-			}]
+			"detailTitle" : { "key" : "detail.title"},
+			"templateName" : "template",
+			"styles" : [ "style" ]
 		}
 	}
 }

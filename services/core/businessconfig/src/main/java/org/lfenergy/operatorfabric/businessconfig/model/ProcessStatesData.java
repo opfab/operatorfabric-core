@@ -20,23 +20,15 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ProcessStatesData implements ProcessStates {
-    @Singular("detailsData")
-    private List<? extends Detail> detailsData;
     private ResponseData responseData;
     private Boolean acknowledgementAllowed;
     private String color;
     private String name;
     private String userCardTemplate;
-
-    @Override
-    public void setDetails(List<? extends Detail> details) {
-        this.detailsData = new ArrayList<>((List < DetailData >) details);
-    }
-
-    @Override
-    public List<? extends Detail> getDetails(){
-        return detailsData;
-    }
+    private I18n detailTitle;
+    private String templateName;
+    @Singular
+    private List<String> styles;
 
     @Override
     public Response getResponse() {

@@ -10,7 +10,7 @@
 
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
-import {Detail, Process, State} from '@ofModel/processes.model';
+import {Process, State} from '@ofModel/processes.model';
 import {Menu, MenuEntry, MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
 import {Card} from '@ofModel/card.model';
 import {I18n} from '@ofModel/i18n.model';
@@ -87,9 +87,12 @@ export function getOneRandomProcess(processTemplate?:any): Process {
     }
     let states = new OfMap();
     let stateCount = getPositiveRandomNumberWithinRange(1,3);
+
     for(let j=0; j<stateCount;j++){
+        const titleKey =  getRandomI18nData();
+        const templateName = 'template1';
         states[getRandomAlphanumericValue(3,10)]=
-            new State([getRandomDetail()]);
+            new State(titleKey, templateName, ['style1','style2']);
     }
 
 
@@ -101,14 +104,6 @@ export function getOneRandomProcess(processTemplate?:any): Process {
         processTemplate.states?processTemplate.states:states);
 
 }
-
-
-export function getRandomDetail(): Detail {
-    const titleKey =  getRandomI18nData();
-    const templateName = 'template1';
-    return new Detail(titleKey, templateName, ['style1','style2']);
-}
-
 
 // fully random without any control
 export function getOneRandomAddCardOperation(): CardOperation {
@@ -204,17 +199,6 @@ export function getOneRandomCard(cardTemplate?:any): Card {
     );
     return oneCard;
 }
-
-//so there are lot of keys missing here. WHy suddently make them disappear ?
-
-export function getOneRandomCardWithRandomDetails(min = 2, max = 5, card?: any): Card {
-    const randomDetails = generateRandomArray(min, max, getRandomDetail);
-    card = card ? card : {};
-    card.details = card.details ? card.details : randomDetails;
-    return getOneRandomCard(card);
-}
-
-
 
 export function generateRandomArray<T>(min = 1, max = 2, func: () => T): Array<T> {
     const size = generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(min, max);

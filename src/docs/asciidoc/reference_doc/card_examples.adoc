@@ -184,7 +184,7 @@ ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/i
 . To have an effective example without to many actions to performed, the following example will use an already existing
 configuration.The one presents in the development version of OperatorFabric, for test purpose(`TEST` bundle).
 
-At the card level, the attributes in the card telling OperatorFabric which template to use is the `details` attributes.
+At the card level, the attributes in the card telling OperatorFabric which template to use are the `process` and `state` attributes, the `templateName` can be retrieved from the definition of the bundle.
 
 ....
 {
@@ -197,16 +197,13 @@ At the card level, the attributes in the card telling OperatorFabric which templ
 	"severity":"INFORMATION",
 	"title":{"key":"process.title"},
 	"summary":{"key":"process.summary"},
-	"userRecipients": ["operator1"]
+	"userRecipients": ["operator1"],
 	"data":{"rootProp":"Data displayed in the detail panel"},
-	"details":[{"title":{"key":"process.detail.tab.first"}, "templateName":"template1"}]
 
 }
 ....
 
-So here a single custom data is defined and it's `rootProp`. This attribute is used by the template called by the
-`details` attribute. This attribute contains an array of `json` object containing an `i18n` key and a `template`
-reference. Each of those object is a tab in the detail panel of the GUI.
+So here a single custom data is defined and it's `rootProp`. This attribute is used by the template called by the `templateName` attribute.
 
 
 

@@ -28,7 +28,6 @@ public class LocalMongoConfiguration extends AbstractLocalMongoConfiguration {
     public List<Converter> converterList() {
         return CollectionUtils.createArrayList(
                 new I18nReadConverter(),
-                new DetailReadConverter(),
                 new RecipientReadConverter(),
                 new LightCardReadConverter(),
                 new CardOperationReadConverter(),

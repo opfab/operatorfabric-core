@@ -14,15 +14,11 @@
           "key": "action.text"
         }
       },
-      "details": [
-        {
-          "title": {
-            "key": "cardDetails.title"
-          },
-          "templateName": "long-card",
-          "styles": [
-          ]
-        }
+      "detailTitle": {
+        "key": "cardDetails.title"
+      },
+      "templateName": "long-card",
+      "styles": [
       ]
     },
     "response_full": {
@@ -35,16 +31,12 @@
         },
         "externalRecipients": ["externalRecipient1", "externalRecipient2"]
       },
-      "details": [
-        {
-          "title": {
-            "key": "cardDetails.title"
-          },
-          "templateName": "template1",
-          "styles": [
-            "main"
-          ]
-        }
+      "detailTitle": {
+        "key": "cardDetails.title"
+      },
+      "templateName": "template1",
+      "styles": [
+        "main"
       ]
     },
     "btnColor_missing": {
@@ -55,16 +47,12 @@
           "key": "action.text"
         }
       },
-      "details": [
-        {
-          "title": {
-            "key": "cardDetails.title"
-          },
-          "templateName": "template1",
-          "styles": [
-            "main"
-          ]
-        }
+      "detailTitle": {
+        "key": "cardDetails.title"
+      },
+      "templateName": "template1",
+      "styles": [
+        "main"
       ]
     },
     "btnText_missing": {
@@ -73,16 +61,12 @@
         "state": "responseState",
         "btnColor": "RED"
       },
-      "details": [
-        {
-          "title": {
-            "key": "cardDetails.title"
-          },
-          "templateName": "template1",
-          "styles": [
-            "main"
-          ]
-        }
+      "detailTitle": {
+        "key": "cardDetails.title"
+      },
+      "templateName": "template1",
+      "styles": [
+        "main"
       ]
     },
     "btnColor_btnText_missings": {
@@ -90,16 +74,12 @@
         "lock": true,
         "state": "responseState"
       },
-      "details": [
-        {
-          "title": {
-            "key": "cardDetails.title"
-          },
-          "templateName": "template1",
-          "styles": [
-            "main"
-          ]
-        }
+      "detailTitle": {
+        "key": "cardDetails.title"
+      },
+      "templateName": "template1",
+      "styles": [
+        "main"
       ]
     }
   }

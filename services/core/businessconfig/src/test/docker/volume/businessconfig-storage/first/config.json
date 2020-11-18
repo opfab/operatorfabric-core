@@ -7,14 +7,10 @@
   ],
   "states": {
     "testState": {
-      "details": [
-        {
-          "title": {
-            "key": "template.title"
-          },
-          "templateName": "template"
-        }
-      ],
+      "detailTitle": {
+        "key": "template.title"
+      },
+      "templateName": "template",
       "actions": {
         "testAction": {
           "type": "URL",

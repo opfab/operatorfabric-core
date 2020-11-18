@@ -54,6 +54,7 @@ public class CardConsultationData implements Card {
     private String state;
     private I18n title;
     private I18n summary;
+
     @CreatedDate
     private Instant publishDate;
     private Instant lttd;
@@ -68,9 +69,7 @@ public class CardConsultationData implements Card {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
     private List<String> tags;
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    @Singular
-    private List<? extends Detail> details;
+    
     private Recipient recipient;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;
