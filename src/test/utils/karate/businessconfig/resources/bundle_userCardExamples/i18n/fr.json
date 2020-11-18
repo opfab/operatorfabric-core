@@ -11,6 +11,11 @@
 	"question":{
 		"title":"Question",
 		"summary":"Il y a une question pour vous"
+	},
+	"incidentInProgress":{
+		"name":"Incident SI",
+		"title":"Incident SI ",
+		"summary":"IT Incident SI en cours"
 	}
-
+}
 }

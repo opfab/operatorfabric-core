@@ -13,13 +13,20 @@ operatorfabric.users.default:
       groups: ["ADMIN"]
       entities: ["ENTITY1","ENTITY2"]
     - login: operator3
-      groups: ["RTE","ADMIN","ReadOnly"]
+      groups: ["RTE","ADMIN","ReadOnly","Dispatcher"]
+      entities: ["ENTITY1"]
+    - login: operator1-admin
+      groups: ["Dispatcher","ReadOnly","ADMIN"]
+      entities: ["ENTITY1"]
     - login: operator1
       groups: ["Dispatcher","ReadOnly"]
       entities: ["ENTITY1"]
     - login: operator2
       groups: ["Planner", "ReadOnly"]
       entities: ["ENTITY2"]
+    - login: operator4
+      groups: ["Supervisor"]
+      entities: ["ENTITY4"]
   groups:
     - id: ADMIN
       name: ADMINISTRATORS
@@ -53,5 +60,5 @@ operatorfabric.users.default:
       name: Control Room 3
       description: Control Room 3
     - id: ENTITY4
-      name: Control Room 4
-      description: Control Room 4
+      name: IT Supervision Center 
+      description: IT Supervision Center
