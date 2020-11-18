@@ -18,6 +18,9 @@ import { Entity } from '@ofModel/entity.model';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { tap } from 'rxjs/operators';
 
+
+declare const templateGateway: any;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -71,6 +74,7 @@ export class EntitiesService extends ErrorService implements CrudService {
         (entities) => {
           if (!!entities) {
             this._entities = entities;
+            this.setEntityNamesInTemplateGateway();
             console.log(new Date().toISOString(), 'List of entities loaded');
           }
         }, (error) => console.error(new Date().toISOString(), 'an error occurred', error)
@@ -85,5 +89,11 @@ export class EntitiesService extends ErrorService implements CrudService {
       const name = this._entities.find(entity => entity.id === idEntity).name;
       return (name ? name : idEntity);
     }
+
+  private setEntityNamesInTemplateGateway(): void {
+    const entityNames  = new Map();
+    this._entities.forEach(entity =>  entityNames.set(entity.id, entity.name));
+    templateGateway.setEntityNames(entityNames);
+  }
 
 }

@@ -7,13 +7,31 @@
  * This file is part of the OperatorFabric project.
  */
 
-function ext_action(responseData){
-    console.log(new Date().toISOString(),`opfab action called - ${responseData.lock} - ${responseData.state}`)
-}
 
-let templateGateway = {
+const templateGateway = {
+    opfabEntityNames : null, 
+
     validyForm: function(formData=null) {
+        console.log(new Date().toISOString() , ` Template.js : no validyForm method define in template , valid set to true`);
         return this.isValid = undefined;
     },
+
+    setEntityNames: function(entityNames){
+        this.opfabEntityNames = entityNames;
+       },
+       
+    getEntityName: function(entityId) {
+        if (!this.opfabEntityNames) {
+            console.log(new Date().toISOString() , ` Template.js : no entities information loaded`);
+            return entityId;
+        }
+        if (!this.opfabEntityNames.has(entityId)) {
+            console.log(new Date().toISOString() , ` Template.js : entityId ${entityId} is unknown`);
+            return entityId;
+        }
+        return this.opfabEntityNames.get(entityId);
+    },
     childCards: []
+    
 };
+

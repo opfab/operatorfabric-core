@@ -82,8 +82,8 @@ Autres impacts : <input size="50" type="text" id="OTHERS"> </input>
             responses += ' </tr>';
 
             templateGateway.childCards.forEach((c, i) => {
-                console.log("data child = ", c.data);
-                responses += `<tr> <td> ${c.publisher} </td>`
+                const entityName = templateGateway.getEntityName(c.publisher);
+                responses += `<tr> <td> ${entityName} </td>`
                 if (c.data.impacts.SA)  responses += `<td style="color:red;">  OUI </td>`;
                 else  responses += `<td>  NON </td>`;
                 if (c.data.impacts.SB)  responses += `<td style="color:red;">  OUI </td>`;
