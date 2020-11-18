@@ -25,7 +25,9 @@ Se répète chaque  :
 <div style="text-align: center">
  A : &nbsp; 
  <input size="2" maxlength="2" type="text" id="hours"> </input>H  &nbsp;  
- <input size="2" maxlength="2" type="text" id="minutes"> </input> Min  
+ <input size="2" maxlength="2" type="text" id="minutes"> </input> Min , rappel de la tâche  
+
+ <input size="2" maxlength="2" type="text" id="minutesForReminder" value="5"> </input> minutes avant.
 </div>
 
 <script>
@@ -33,6 +35,7 @@ Se répète chaque  :
         const taskDescription = document.getElementById('taskDescription').value;
         const hours =  document.getElementById('hours').value;
         const minutes =  document.getElementById('minutes').value;
+         const minutesForReminder =  document.getElementById('minutesForReminder').value;
 
        const daysOfWeek = [];
         if (document.getElementById("Monday").checked) daysOfWeek.push(1);
@@ -51,11 +54,12 @@ Se répète chaque  :
         const card = {
             summary: { key: "task.summary" },
             title: { key: "task.title" },
+            secondsBeforeTimeSpanForReminder: minutesForReminder * 60,
             data: {
                 taskDescription: taskDescription,
                 hours: hours,
                 minutes: minutes,
-                daysOfWeek: daysOfWeek
+                daysOfWeek: daysOfWeek,
             }
         };
         return {

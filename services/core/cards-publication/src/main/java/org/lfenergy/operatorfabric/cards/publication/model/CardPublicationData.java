@@ -128,6 +128,8 @@ public class CardPublicationData implements Card {
     @Builder.Default
     private PublisherTypeEnum publisherType = PublisherTypeEnum.EXTERNAL;
 
+    private Integer  secondsBeforeTimeSpanForReminder;
+
     public void prepare(Instant publishDate) {
         this.publishDate = publishDate;
         this.id = process + "." + processInstanceId;
@@ -159,6 +161,7 @@ public class CardPublicationData implements Card {
                 .title(((I18nPublicationData) this.getTitle()).copy())
                 .summary(((I18nPublicationData) this.getSummary()).copy())
                 .publisherType(this.getPublisherType())
+                .secondsBeforeTimeSpanForReminder(this.secondsBeforeTimeSpanForReminder);
                 ;
         if(this.getTimeSpans()!=null)
             result.timeSpansSet(new HashSet<>(this.getTimeSpans()));

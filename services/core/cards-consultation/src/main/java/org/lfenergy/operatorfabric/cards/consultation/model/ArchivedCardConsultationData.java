@@ -101,4 +101,5 @@ public class ArchivedCardConsultationData implements Card {
     @Transient
     private Boolean hasBeenRead;
     private PublisherTypeEnum publisherType;
+    private Integer  secondsBeforeTimeSpanForReminder;
 }

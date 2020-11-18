@@ -21,6 +21,7 @@ Feature: Cards with timespans
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"a message"},
+	"secondsBeforeTimeSpanForReminder" :1000,
 	"timeSpans" : [
 		{"start" : 1553186770681 ,"end" :1553186770682 , "recurrence" :
 					{
@@ -52,6 +53,7 @@ Feature: Cards with timespans
 	And match response.card.data.message == 'a message'
 	And match response.card.timeSpans[0].start == 1553186770681
 	And match response.card.timeSpans[0].end == 1553186770682
+	And match response.card.secondsBeforeTimeSpanForReminder == 1000
 	And match response.card.timeSpans[0].recurrence.timeZone == "test"
 	And match response.card.timeSpans[0].recurrence.daysOfWeek[1] == 3
 	And match response.card.timeSpans[0].recurrence.hoursAndMinutes[1].hours == 12

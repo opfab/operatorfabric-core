@@ -30,16 +30,18 @@ export class ReminderList {
         this.loadRemindersFromLocalStorage();
     }
 
-    public addAReminder(card: Card, secondsToRemindBeforeEvent: number) {
+    public addAReminder(card: Card) {
         if (!!card) {
+            if (!card.secondsBeforeTimeSpanForReminder) return;
             const reminderItem = this.reminderList.get(card.id);
+            console.log(new Date().toISOString(), `Reminder : card ${card.id} has a reminder` );
             if (!!reminderItem && (reminderItem.cardUid === card.uid)) return;
             const dateForReminder: number = getNextTimeForRepeating(new Date().valueOf(), card);
             if (dateForReminder >= 0) {
                 this.reminderList.set(card.id,
-                    new ReminderList.reminderItem(card.uid, dateForReminder - secondsToRemindBeforeEvent * 1000, false));
-                console.log(new Date().toISOString(), `Will remind card ${card.id} at
-                         ${new Date(dateForReminder - secondsToRemindBeforeEvent * 1000)}`);
+                    new ReminderList.reminderItem(card.uid, dateForReminder - card.secondsBeforeTimeSpanForReminder * 1000, false));
+                console.log(new Date().toISOString(), `Reminder Will remind card ${card.id} at
+                         ${new Date(dateForReminder - card.secondsBeforeTimeSpanForReminder * 1000)}`);
                 this.persistReminder();
             }
         }

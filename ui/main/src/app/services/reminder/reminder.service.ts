@@ -51,21 +51,7 @@ export class ReminderService {
     private listenForCardsToAddInReminder() {
         this.store.pipe(
             select(selectLastCards))
-            .subscribe(cards => cards.forEach(card => {
-                this.processService.queryProcessFromCard(card).subscribe(process => {
-                    if (!!process) {
-                        const state = process.states[card.state];
-                        if (!!state) {
-                            const secondsBeforeRemind = state.secondsBeforeTimeSpanForReminder;
-                            if (!!secondsBeforeRemind) {
-                                console.log(new Date().toISOString(), ' Reminder : add a reminder for card ', card.id);
-                                this.reminderList.addAReminder(card, secondsBeforeRemind);
-                            }
-                        }
-                    }
-                }, () =>  console.log (new Date().toISOString(), ' Reminder : impossible to load process definition ' ,
-                                                                card.process , ' with version ' , card.processVersion));
-            }));
+            .subscribe(cards => cards.forEach(card => this.reminderList.addAReminder(card)));
     }
 
 
