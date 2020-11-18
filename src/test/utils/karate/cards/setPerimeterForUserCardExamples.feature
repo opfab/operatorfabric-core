@@ -24,6 +24,11 @@ Feature: Add perimeters/group for action test
     {
       "state" : "questionState",
       "right" : "ReceiveAndWrite"
+    },
+    ,
+    {
+      "state" : "taskState",
+      "right" : "ReceiveAndWrite"
     }
   ]
 }

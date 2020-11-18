@@ -12,6 +12,10 @@
 	"question":{
 		"title":"Question ",
 		"summary":"There is a question for you"
+	},
+	"task":{
+		"title":"Task ",
+		"summary":"There is something to do"
 	}
 
 }
