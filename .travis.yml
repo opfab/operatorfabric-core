@@ -1,5 +1,5 @@
 os: linux
-dist: trusty
+dist: xenial
 addons:
     sonarcloud:
         organization: "opfab"
@@ -15,43 +15,52 @@ if: tag IS blank
 before_install:
   - export OF_VERSION=$(<VERSION)
   - export GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx1024m"
+  - export SDKMAN_CONFIG_FILE=${HOME}/.sdkman/etc/config
   - ./CICD/travis/check_version.sh --branch $TRAVIS_BRANCH --version $OF_VERSION
   - nvm install $NODE_VERSION
 install:
   # first install needs to remove ~/.sdkman (empty in our case because created by cache step) otherwise SdkMan is not installed
   # then install sdkman
   # configures by default SdkMan to use new installed java directly and updates itself if needed.
-  - if [ -z "$(ls -A $HOME/.sdkman)" ]; then
-    rm -fr $HOME/.sdkman ;
+  - if [ -z "$(ls -A ${HOME}/.sdkman)" ]; then
+    rm -fr ${HOME}/.sdkman ;
     curl -s "https://get.sdkman.io" | bash ;
-    echo sdkman_auto_answer=true > ~/.sdkman/etc/config ;
-    echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config ;
+    echo sdkman_auto_answer=true > ${SDKMAN_CONFIG_FILE} ;
+    echo sdkman_auto_selfupdate=true >> ${SDKMAN_CONFIG_FILE} ;
     fi
   # needed in order to have sdk available into the current environment
-  - source "$HOME/.sdkman/bin/sdkman-init.sh" ;
+  - source "${HOME}/.sdkman/bin/sdkman-init.sh" ;
   - EXPECTED_NPM_VERSION="6.4.1"
   - CurrentNpmVersion="$(npm -version)"
   - if [ "${CurrentNpmVersion}" != "${EXPECTED_NPM_VERSION}" ] ; then npm i -g npm@${EXPECTED_NPM_VERSION} ; fi
-  # Should be synch with ${OF_HOME}/bin/load_environment_light.sh. It's the first part of the sdk reference without vendor name
-  # for example the current configured in sdk has the following reference `8.0.265-zulu`
-  # the value of the following variable is `8.0.265` and its vendor name part is `-zulu`
-  - CURRENT_JDK_VERSION="8.0.265"
-  # need to substitute last dot by an underscore. Example value for the following: "1.8.0_265"
+  # Uses JAVA_VERSION file content to be synchronised with ${OF_HOME}/bin/load_environment_light.sh.
+  # It's the first part of the sdk reference without vendor name
+  # for example the current configured in sdk has the following reference `8.0.272-zulu`
+  # the value of the following variable is `8.0.272` and its vendor name part is `-zulu`
+  - CURRENT_JDK_VERSION="$(<JAVA_VERSION)"
+  # need to substitute last dot by an underscore. Example value for the following: "1.8.0_272"
   # for java version higher than 8 the prefix `1.` should be removed
   - FULL_JDK_VERSION="1.${CURRENT_JDK_VERSION%.*}${CURRENT_JDK_VERSION/*./_}"
-  # example value for the following: "8.0.265-zulu"
+  # example value for the following: "8.0.272-zulu"
   - JDK_VERSION_4_SDKMAN="${CURRENT_JDK_VERSION}-zulu"
   # Use javac because the prompt is simpler than the java one
-  # skips the beginning should return 1.8.0_265. Here redirection '2>&1' needed to load prompt value otherwise variable is empty
+  # skips the beginning should return 1.8.0_272. Here redirection '2>&1' needed to load prompt value otherwise variable is empty
   - CurrentJavacVersionNumber="$(javac -version 2>&1 | cut -d ' ' -f 2)"
   # if javac version is different than expected then asks sdkman to use expected java version or install it if necessary
   # if sdkman can't use the expected java version then asks sdkman to install it. Sdkman is configured to use it as default (line 26)
   - if [ "${CurrentJavacVersionNumber}" != "${FULL_JDK_VERSION}" ] ;
     then
-    if ! sdk use java "${JDK_VERSION_4_SDKMAN}" ;
-    then
+    if ! sdk default java "${JDK_VERSION_4_SDKMAN}" ; then
     sdk install java "${JDK_VERSION_4_SDKMAN}" ;
     fi ;
+    fi
+  - if [ -s ${SDKMAN_CONFIG_FILE} ]; then
+    cat ${SDKMAN_CONFIG_FILE} ;
+    if [ $(cat ${SDKMAN_CONFIG_FILE} | wc -l) -gt 1 ]; then
+    echo sdkman_auto_selfupdate=true > ${SDKMAN_CONFIG_FILE} ;
+    fi
+    else
+    echo sdkman_auto_selfupdate=true > ${SDKMAN_CONFIG_FILE} ;
     fi
   - sudo apt-get install realpath
   # displays versions of useful tools for visual checks
@@ -62,17 +71,29 @@ jobs:
   include:
     - stage: test
       script:
+         - echo "==================> test only run"
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
+        - javac -version
         - ./gradlew --build-cache copyDependencies test
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
     - stage: test-sonar
       script:
+        - echo "==================> test and SONAR run"
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
+        - javac -version
         - ./gradlew --build-cache copyDependencies test jacocoTestReport
         # [OC-865] Dropping dependency messing with typescript version as a workaround until sonar bug is fixed
         # See https://github.com/SonarSource/SonarJS/issues/1928 and https://community.sonarsource.com/t/error-about-unsupported-ts-version-while-project-is-using-supported-version/15776
         - rm -r ui/main/node_modules/@compodoc/ngd-core
         - rm -r ui/main/node_modules/ts-simple-ast
+        # Sonar-scanner need java 11 to run properly [OC-1216]
+        # as sdk is used need to install java 11 if not available
+        - JDK_VERSION_4_SONAR="11.0.9-zulu"
+        - if ! sdk use java "${JDK_VERSION_4_SONAR}" ;
+          then
+          sdk install java "${JDK_VERSION_4_SONAR}" ;
+          fi ;
+        - javac -version
         - sonar-scanner
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
     - stage: doc
@@ -117,15 +138,15 @@ stages:
     if: (branch =~ .+release$) OR (NOT (branch IN (master,develop)) AND commit_message =~ ci_docker)
 before_cache:
   # cleanup gradle caches
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+  - rm -f  ${HOME}/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr ${HOME}/.gradle/caches/*/plugin-resolution/
 cache:
   bundler: true
   directories:
     # caches gradle caches
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-    - $HOME/.gradle/dependency-check-data/
+    - ${HOME}/.gradle/caches/
+    - ${HOME}/.gradle/wrapper/
+    - ${HOME}/.gradle/dependency-check-data/
     # cache ui dependencies
     - ui/main/nodes_modules
-    - $HOME/.sdkman
+    - ${HOME}/.sdkman
