@@ -9,9 +9,10 @@
 # This file is part of the OperatorFabric project.
  
 
-. ${BASH_SOURCE%/*}/load_variables.sh
+source ${BASH_SOURCE%/*}/load_variables.sh
 
 sdk use gradle 6.5.1
-sdk use java 8.0.265-zulu
+# the java version is externalized because also needed for travis configuration
+sdk use java $(<JAVA_VERSION)-zulu
 sdk use maven 3.5.3
 nvm use v10.16.3
