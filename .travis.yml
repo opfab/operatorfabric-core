@@ -1,5 +1,5 @@
 os: linux
-dist: trusty
+dist: xenial
 addons:
     sonarcloud:
         organization: "opfab"
@@ -32,17 +32,18 @@ install:
   - EXPECTED_NPM_VERSION="6.4.1"
   - CurrentNpmVersion="$(npm -version)"
   - if [ "${CurrentNpmVersion}" != "${EXPECTED_NPM_VERSION}" ] ; then npm i -g npm@${EXPECTED_NPM_VERSION} ; fi
-  # Should be synch with ${OF_HOME}/bin/load_environment_light.sh. It's the first part of the sdk reference without vendor name
-  # for example the current configured in sdk has the following reference `8.0.265-zulu`
-  # the value of the following variable is `8.0.265` and its vendor name part is `-zulu`
-  - CURRENT_JDK_VERSION="8.0.265"
-  # need to substitute last dot by an underscore. Example value for the following: "1.8.0_265"
+  # Uses JAVA_VERSION file content to be synchronised with ${OF_HOME}/bin/load_environment_light.sh.
+  # It's the first part of the sdk reference without vendor name
+  # for example the current configured in sdk has the following reference `8.0.272-zulu`
+  # the value of the following variable is `8.0.272` and its vendor name part is `-zulu`
+  - CURRENT_JDK_VERSION="$(<JAVA_VERSION)"
+  # need to substitute last dot by an underscore. Example value for the following: "1.8.0_272"
   # for java version higher than 8 the prefix `1.` should be removed
   - FULL_JDK_VERSION="1.${CURRENT_JDK_VERSION%.*}${CURRENT_JDK_VERSION/*./_}"
-  # example value for the following: "8.0.265-zulu"
+  # example value for the following: "8.0.272-zulu"
   - JDK_VERSION_4_SDKMAN="${CURRENT_JDK_VERSION}-zulu"
   # Use javac because the prompt is simpler than the java one
-  # skips the beginning should return 1.8.0_265. Here redirection '2>&1' needed to load prompt value otherwise variable is empty
+  # skips the beginning should return 1.8.0_272. Here redirection '2>&1' needed to load prompt value otherwise variable is empty
   - CurrentJavacVersionNumber="$(javac -version 2>&1 | cut -d ' ' -f 2)"
   # if javac version is different than expected then asks sdkman to use expected java version or install it if necessary
   # if sdkman can't use the expected java version then asks sdkman to install it. Sdkman is configured to use it as default (line 26)
@@ -73,6 +74,13 @@ jobs:
         # See https://github.com/SonarSource/SonarJS/issues/1928 and https://community.sonarsource.com/t/error-about-unsupported-ts-version-while-project-is-using-supported-version/15776
         - rm -r ui/main/node_modules/@compodoc/ngd-core
         - rm -r ui/main/node_modules/ts-simple-ast
+        # Sonar-scanner need java 11 to run properly [OC-1216]
+        # as sdk is used need to install java 11 if not available
+        - JDK_VERSION_4_SONAR="11.0.9-zulu"
+        - if ! sdk use java "${JDK_VERSION_4_SONAR}" ;
+          then
+          sdk install java "${JDK_VERSION_4_SONAR}" ;
+          fi ;
         - sonar-scanner
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
     - stage: doc
