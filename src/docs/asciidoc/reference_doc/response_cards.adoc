@@ -156,4 +156,10 @@ For each user response, a child card containing the response is emitted and stor
 - To integrate the child cards when loading the card you need to call to _templateGateway.applyChildCards()_. (OperatorFabric is not calling the method on card loading)
 
 
+=== Entity name 
+
+If you want to show the name of an entity that send the response, you need to get the id of the entity via the publisher field of the child card and then you  can get the name of the entity by calling _templateGateway.getEntityName(entityId)_
+
+=== Example 
+
 You can find an example in the file src/test/utils/karate/businessconfig/resources/bundle_defaultProcess/template/en/question.handlebars.
