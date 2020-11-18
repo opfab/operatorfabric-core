@@ -26,6 +26,10 @@ Feature: Add perimeters/group for action test
       "right" : "ReceiveAndWrite"
     },
     {
+      "state" : "taskState",
+      "right" : "ReceiveAndWrite"
+    },
+    {
       "state" : "incidentInProgressState",
       "right" : "ReceiveAndWrite"
     }

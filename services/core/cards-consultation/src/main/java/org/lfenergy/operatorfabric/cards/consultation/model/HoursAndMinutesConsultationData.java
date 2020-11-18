@@ -7,21 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-package org.lfenergy.operatorfabric.cards.publication.model;
+package org.lfenergy.operatorfabric.cards.consultation.model;
 
 import lombok.*;
-import java.time.Instant;
-
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TimeSpanPublicationData implements TimeSpan{
+public class HoursAndMinutesConsultationData implements HoursAndMinutes {
 
-    private Instant start;
-    private Instant end;
-    private Recurrence recurrence;
-
+    private Integer hours;
+    private Integer minutes;
 }

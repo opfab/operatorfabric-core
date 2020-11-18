@@ -13,12 +13,12 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
 import { CardService } from '@ofServices/card.service';
 import { UserService } from '@ofServices/user.service';
-import { Card, CardData,fromCardToCardForPublishing} from '@ofModel/card.model';
+import { Card, CardData,fromCardToCardForPublishing, TimeSpan} from '@ofModel/card.model';
 import { I18n } from '@ofModel/i18n.model';
 import {  Subject } from 'rxjs';
 import { Process } from '@ofModel/processes.model';
 import { TimeService } from '@ofServices/time.service';
-import { Severity, TimeSpan } from '@ofModel/light-card.model';
+import { Severity } from '@ofModel/light-card.model';
 import { Guid } from 'guid-typescript';
 import { NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
@@ -340,7 +340,10 @@ export class UserCardComponent implements OnDestroy, OnInit {
         const summary = (!!specificInformation.card.summary) ? specificInformation.card.summary : 'UNDEFINED';
 
         let timeSpans = [];
-        if  (!!specificInformation.viewCardInAgenda) timeSpans = [new TimeSpan(startDate , endDate )];
+        if  (!!specificInformation.viewCardInAgenda) {
+            if (!!specificInformation.recurrence) timeSpans = [new TimeSpan(startDate , endDate , specificInformation.recurrence )];
+            else timeSpans = [new TimeSpan(startDate , endDate )];
+        }
 
 
         let processInstanceId ;

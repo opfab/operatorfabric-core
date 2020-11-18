@@ -18,7 +18,6 @@
     "InputEnum": "org.lfenergy.operatorfabric.cards.model.InputEnum",
     "TitlePositionEnum": "org.lfenergy.operatorfabric.cards.model.TitlePositionEnum",
     "RecipientEnum": "org.lfenergy.operatorfabric.cards.model.RecipientEnum",
-    "TimeSpanDisplayModeEnum": "org.lfenergy.operatorfabric.cards.model.TimeSpanDisplayModeEnum",
     "EpochDate": "java.time.Instant",
     "PublisherTypeEnum": "org.lfenergy.operatorfabric.cards.model.PublisherTypeEnum"
   }

@@ -12,7 +12,8 @@
 package org.lfenergy.operatorfabric.cards.publication.configuration.mongo;
 
 import org.bson.Document;
-import org.lfenergy.operatorfabric.cards.model.TimeSpanDisplayModeEnum;
+import org.lfenergy.operatorfabric.cards.publication.model.Recurrence;
+import org.lfenergy.operatorfabric.cards.publication.model.RecurrencePublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.TimeSpan;
 import org.springframework.core.convert.converter.Converter;
 
@@ -36,10 +37,11 @@ public class TimeSpanWriterConverter implements Converter<TimeSpan, Document> {
         if (end != null) {
             result.append("end", Date.from(end));
         }
-         TimeSpanDisplayModeEnum display = source.getDisplay();
-        if (display != null) {
-            result.append("display", display.toString());
-        }
+
+
+        Recurrence recurrence = source.getRecurrence();
+        if (recurrence!=null) result.append("recurrence",RecurrenceWriterConverter.convert((RecurrencePublicationData)recurrence));
+
         return result;
 
     }

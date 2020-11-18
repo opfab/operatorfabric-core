@@ -102,9 +102,28 @@ export class CardData {
 export class TimeSpan {
     constructor(
         readonly start: number,
-        readonly end?: number
+        readonly end?: number,
+        readonly recurrence?: Recurrence
     ) { }
 }
+
+export class Recurrence {
+    constructor(
+        public hoursAndMinutes: HourAndMinutes[],
+        public daysOfWeek?: number[],
+        public timeZone?: string
+    ) {}
+
+}
+
+export class HourAndMinutes {
+    constructor(
+        public hours: number,
+        public minutes: number
+    ) {}
+
+}
+
 
 export function fromCardToLightCard(card: Card): LightCard {
     return new LightCard(card.uid, card.id, card.publisher, card.processVersion, card.publishDate, card.startDate

@@ -57,6 +57,23 @@
       ],
       "acknowledgementAllowed": false
     },
+    "taskState": {
+      "name": "task.title",
+      "color": "#8bcdcd",
+      "userCardTemplate": "usercard_task",
+      "secondsBeforeTimeSpanForReminder" : 300,
+      "details": [
+        {
+          "title": {
+            "key": "task.title"
+          },
+          "templateName": "task",
+          "styles": [
+          ]
+        }
+      ],
+      "acknowledgementAllowed": true
+    },    
     "incidentInProgressState": {
       "name": "incidentInProgress.name",
       "userCardTemplate": "usercard_incidentInProgress",

@@ -8,9 +8,20 @@
  */
 
 
-package org.lfenergy.operatorfabric.cards.model;
 
-public enum TimeSpanDisplayModeEnum {
+package org.lfenergy.operatorfabric.cards.consultation.model;
 
-    BUBBLE, LINE
+import lombok.*;
+import java.util.List;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class RecurrenceConsultationData implements Recurrence {
+
+    private String timeZone;
+    private List<Integer> daysOfWeek;
+    List<? extends HoursAndMinutes> hoursAndMinutes;
+
 }
