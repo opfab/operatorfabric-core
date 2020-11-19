@@ -21,14 +21,14 @@ install:
   # first install needs to remove ~/.sdkman (empty in our case because created by cache step) otherwise SdkMan is not installed
   # then install sdkman
   # configures by default SdkMan to use new installed java directly and updates itself if needed.
-  - if [ -z "$(ls -A $HOME/.sdkman)" ]; then
-    rm -fr $HOME/.sdkman ;
+  - if [ -z "$(ls -A ${HOME}/.sdkman)" ]; then
+    rm -fr ${HOME}/.sdkman ;
     curl -s "https://get.sdkman.io" | bash ;
     echo sdkman_auto_answer=true > ~/.sdkman/etc/config ;
-    echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config ;
+    echo sdkman_auto_selfupdate=true >> ${HOME}/.sdkman/etc/config ;
     fi
   # needed in order to have sdk available into the current environment
-  - source "$HOME/.sdkman/bin/sdkman-init.sh" ;
+  - source "${HOME}/.sdkman/bin/sdkman-init.sh" ;
   - EXPECTED_NPM_VERSION="6.4.1"
   - CurrentNpmVersion="$(npm -version)"
   - if [ "${CurrentNpmVersion}" != "${EXPECTED_NPM_VERSION}" ] ; then npm i -g npm@${EXPECTED_NPM_VERSION} ; fi
@@ -49,11 +49,13 @@ install:
   # if sdkman can't use the expected java version then asks sdkman to install it. Sdkman is configured to use it as default (line 26)
   - if [ "${CurrentJavacVersionNumber}" != "${FULL_JDK_VERSION}" ] ;
     then
-    if ! sdk use java "${JDK_VERSION_4_SDKMAN}" ;
-    then
+    if ! sdk default java "${JDK_VERSION_4_SDKMAN}" ; then
     sdk install java "${JDK_VERSION_4_SDKMAN}" ;
     fi ;
     fi
+  - if [ $(cat ${HOME}/.sdkman/etc/config | wc -l) -gt 1 ]; then
+    echo sdkman_auto_selfupdate=true > ${HOME}/.sdkman/etc/config ;
+    if
   - sudo apt-get install realpath
   # displays versions of useful tools for visual checks
   - npm -version
@@ -125,15 +127,15 @@ stages:
     if: (branch =~ .+release$) OR (NOT (branch IN (master,develop)) AND commit_message =~ ci_docker)
 before_cache:
   # cleanup gradle caches
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+  - rm -f  ${HOME}/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr ${HOME}/.gradle/caches/*/plugin-resolution/
 cache:
   bundler: true
   directories:
     # caches gradle caches
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-    - $HOME/.gradle/dependency-check-data/
+    - ${HOME}/.gradle/caches/
+    - ${HOME}/.gradle/wrapper/
+    - ${HOME}/.gradle/dependency-check-data/
     # cache ui dependencies
     - ui/main/nodes_modules
-    - $HOME/.sdkman
+    - ${HOME}/.sdkman
