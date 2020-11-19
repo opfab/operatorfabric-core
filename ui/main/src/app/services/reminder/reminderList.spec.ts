@@ -104,7 +104,7 @@ describe('ReminderList', () => {
     expect(remindList.hasAReminder(testCard.id)).toBeTruthy();
     const cardsToRemind: Array<string> = remindList.getCardIdsToRemindNow();
     expect(cardsToRemind[0]).toEqual(testCard.id);
-    remindList.setCardHasBeenRemind(testCard.id);
+    remindList.setCardHasBeenRemind(testCard);
     expect(remindList.getCardIdsToRemindNow().length).toEqual(0);
   });
 
@@ -118,7 +118,7 @@ describe('ReminderList', () => {
     testCard.timeSpans = [new TimeSpan(new Date().valueOf())];
     testCard.secondsBeforeTimeSpanForReminder = 60 * 15;
     remindList.addAReminder(testCard);
-    remindList.setCardHasBeenRemind(testCard.id);
+    remindList.setCardHasBeenRemind(testCard);
     remindList.addAReminder(testCard);
     expect(remindList.getCardIdsToRemindNow().length).toEqual(0);
   });
@@ -188,7 +188,7 @@ describe('ReminderList', () => {
     testCard.timeSpans = [new TimeSpan(new Date().valueOf())];
     testCard.secondsBeforeTimeSpanForReminder = 10;
     remindList.addAReminder(testCard);
-    remindList.setCardHasBeenRemind(testCard.id);
+    remindList.setCardHasBeenRemind(testCard);
     const storageString = localStorage.getItem("testUser.reminderList");
     const storageValue = JSON.parse(storageString);
     expect(storageValue[0][1].hasBeenRemind).toBeTruthy();
@@ -210,3 +210,4 @@ describe('ReminderList', () => {
   });
 
 });
+

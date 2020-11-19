@@ -11,12 +11,14 @@ import { Card, Recurrence, HourAndMinutes } from '@ofModel/card.model';
 import moment from 'moment';
 
 
-const FIFTEEN_MINUTES =  60000 * 15;
+const MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS =  60000 * 15; // 15 minutes
 
-export function getNextTimeForRepeating(startingDate: number, card: Card) {
+export function getNextTimeForRepeating(card: Card, startingDate?: number) {
+
     if (!!card.timeSpans) {
+        if (!startingDate) startingDate = new Date().valueOf();
         if (!card.timeSpans[0].recurrence) {
-            if (card.timeSpans[0].start + FIFTEEN_MINUTES < startingDate) return -1;
+            if (card.timeSpans[0].start + MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS < startingDate) return -1;
             return card.timeSpans[0].start;
         } else {
             if (startingDate > card.timeSpans[0].start) return getNextTimeFromRecurrence(startingDate, card.timeSpans[0].recurrence);

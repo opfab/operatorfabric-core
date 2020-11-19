@@ -22,7 +22,7 @@ import { ReminderList } from './reminderList';
 @Injectable()
 export class ReminderService {
 
-    private reminderList: ReminderList ;
+    private reminderList: ReminderList;
 
     constructor(private store: Store<AppState>, private processService: ProcessesService, private cardService: CardService) {
     }
@@ -42,11 +42,6 @@ export class ReminderService {
         cardsIdToRemind = null;
     }
 
-    private remindCard(cardId) {
-        console.log(new Date().toISOString(), ' Reminder : will remind card = ', cardId);
-        this.removeAcknowledgementAndRead(cardId);
-        this.reminderList.setCardHasBeenRemind(cardId);
-    }
 
     private listenForCardsToAddInReminder() {
         this.store.pipe(
@@ -55,23 +50,30 @@ export class ReminderService {
     }
 
 
-    removeAcknowledgementAndRead(cardId) {
+    private remindCard(cardId) {
+        console.log(new Date().toISOString(), ' Reminder : will remind card = ', cardId);
         this.store.select(fetchLightCard(cardId)).pipe(take(1))
             .subscribe((lightCard: LightCard) => {
-                this.cardService.deleteUserAcknowledgement(lightCard.uid).subscribe(resp => {
-                    if (!(resp.status === 200 || resp.status === 204))
-                         console.error(new Date().toISOString(),
-                          'Reminder : the remote acknowledgement endpoint returned an error status(%d)', resp.status);
+                if (!!lightCard) {
+
+                    this.reminderList.setCardHasBeenRemind(lightCard);
+                    this.cardService.deleteUserAcknowledgement(lightCard.uid).subscribe(resp => {
+                        if (!(resp.status === 200 || resp.status === 204))
+                            console.error(new Date().toISOString(),
+                                'Reminder : the remote acknowledgement endpoint returned an error status(%d)', resp.status);
                     }
-                );
-                this.cardService.deleteUserCardRead(lightCard.uid).subscribe(resp => {
-                    if (!(resp.status === 200 || resp.status === 204))
-                         console.error(new Date().toISOString(),
-                          'Reminder : the remote acknowledgement endpoint returned an error status(%d)', resp.status);
+                    );
+                    this.cardService.deleteUserCardRead(lightCard.uid).subscribe(resp => {
+                        if (!(resp.status === 200 || resp.status === 204))
+                            console.error(new Date().toISOString(),
+                                'Reminder : the remote acknowledgement endpoint returned an error status(%d)', resp.status);
                     }
-                );
-                const updatedLightCard = {...lightCard, hasBeenAcknowledged: false , hasBeenRead: false};
-                this.store.dispatch(new UpdateALightCard({card: updatedLightCard}));
+                    );
+                    const updatedLightCard = { ...lightCard, hasBeenAcknowledged: false, hasBeenRead: false };
+                    this.store.dispatch(new UpdateALightCard({ card: updatedLightCard }));
+                } else { // the card has been deleted in this case
+                    this.reminderList.removeAReminder(cardId);
+                }
             });
     }
 
