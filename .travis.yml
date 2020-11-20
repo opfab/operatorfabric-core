@@ -71,7 +71,7 @@ jobs:
   include:
     - stage: test
       script:
-         - echo "==================> test only run"
+        - echo "==================> test only run"
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
         - javac -version
         - ./gradlew --build-cache copyDependencies test
