@@ -26,6 +26,7 @@ public class KafkaAvroWithoutRegistrySerializer<T extends SpecificRecord> implem
 
     private final EncoderFactory encoderFactory = EncoderFactory.get();
 
+    @Override
     public byte[] serialize(String topic, T record) {
         if (record == null) {
             return null;
