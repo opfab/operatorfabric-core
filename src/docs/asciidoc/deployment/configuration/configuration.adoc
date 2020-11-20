@@ -105,11 +105,14 @@ The cards-publication service has these specific properties :
 
 |checkPerimeterForResponseCard|true|no|If false, OperatorFabric will not check that a user has write rights on a process/state to respond to a card
 |spring.kafka.consumer.group-id |null|no| If set, support for receiving cards via Kafka is enabled
-|spring.deserializer.key.delegate.class |io.confluent.kafka.serializers.
-|KafkaAvroDeserializer|yes| Deserializer used to convert the received bytes into objects
-|opfab.kafka.topics.topicname |opfab|no|Name of the topic to read the messages from
-|schema.registry.url|http://localhost:8081|yes|URL of the schema registry. Can be set to the empty string "" is no registry is used
+|spring.deserializer.value.delegate.class|io.confluent.kafka.serializers.
+KafkaAvroDeserializer|yes| Deserializer used to convert the received bytes into objects
+|spring.serializer.value.delegate.class |io.confluent.kafka.serializers.
+KafkaAvroSerializer|yes|Serializer used to convert cards to bytes
 |spring.kafka.producer.bootstrap-servers|http://localhost:9092|no|comma seperated list of URL(s) of the broker(s) / bootstrap server(s)
+|opfab.kafka.topics.card.topicname |opfab|no|Name of the topic to read the messages from
+|opfab.kafka.topics.response-card.topicname |opfab|no|Name of the topic to place the response cards to
+|opfab.kafka.schema.registry.url|http://localhost:8081|yes|URL of the schema registry. Can be set to the empty string "" is no registry is used
 |===
 
 
@@ -162,6 +165,17 @@ See link:{spring_kafka_doc}[Spring for Apache Kafka] for more information on the
 
 With the default settings, the Kafka consumer expects a broker running on http//127.0.0.1:9092 and a schema registry on http://127.0.0.1:8081.
 
-Response cards are not (yet) returned via Kafka, but by the URL specified in the cards-publication yml file.
+Operator Fabric is also able to publish response cards to a Kafka topic. The default topic name  `opfab-response`. You can specify which response cards
+are to be returned via Kafka by setting the `externalRecipients-url` in the `cards-publication` yaml file. Instead of setting `http://` URL you should set it to `kafka:`
 
-Note that enabling Kafka does not disable the REST interface.
+[source, yaml]
+----
+externalRecipients-url: "{\
+           processAction: \"http://localhost:8090/test\", \
+           mykafka: \"kafka:topicname\"
+           }"
+----
+
+Note that `topicname` is a placeholder for now. All response cards are returned via the same Kafka topic.
+
+Also note enabling Kafka does not disable the REST interface.

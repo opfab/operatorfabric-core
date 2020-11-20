@@ -1,9 +1,17 @@
+/* Copyright (c) 2020, Alliander (http://www.alliander.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
 package org.lfenergy.operatorfabric.cards.publication.configuration.kafka;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.avro.CardCommand;
-import org.lfenergy.operatorfabric.cards.publication.kafka.consumer.SchemaRegistryProperties;
+import org.lfenergy.operatorfabric.cards.publication.kafka.SchemaRegistryProperties;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;

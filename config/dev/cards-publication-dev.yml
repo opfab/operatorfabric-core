@@ -7,19 +7,27 @@ spring:
     value:
       delegate:
         class: io.confluent.kafka.serializers.KafkaAvroDeserializer
-  # uncomment to enable Kafka
+#        class: org.lfenergy.operatorfabric.cards.publication.kafka.consumer.KafkaAvroWithoutRegistryDeserializer
+  serializer:
+    value:
+      delegate:
+        class: io.confluent.kafka.serializers.KafkaAvroSerializer
+#        class: org.lfenergy.operatorfabric.cards.publication.kafka.producer.KafkaAvroWithoutRegistrySerializer
+# uncomment kafka.consumer.group-id to enable Kafka
 #  kafka:
 #    consumer:
 #      group-id: opfab-command
 
-schema:
-  registry:
-    url: http://localhost:8081
-
 opfab:
   kafka:
     topics:
-      topicname: opfab
+      card:
+        topicname: opfab
+      response-card:
+        topicname: opfab-response
+    schema:
+      registry:
+        url: http://localhost:8081
 
 #here we put urls for all feign clients
 users:

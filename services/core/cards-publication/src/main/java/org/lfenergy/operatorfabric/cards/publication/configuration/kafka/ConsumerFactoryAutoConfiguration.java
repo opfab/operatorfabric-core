@@ -1,3 +1,12 @@
+/* Copyright (c) 2020, Alliander (http://www.alliander.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
 package org.lfenergy.operatorfabric.cards.publication.configuration.kafka;
 
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
@@ -5,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.lfenergy.operatorfabric.avro.CardCommand;
-import org.lfenergy.operatorfabric.cards.publication.kafka.consumer.SchemaRegistryProperties;
+import org.lfenergy.operatorfabric.cards.publication.kafka.SchemaRegistryProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
@@ -32,7 +41,7 @@ public class ConsumerFactoryAutoConfiguration {
     private String deserializerKeyClass = "org.apache.kafka.common.serialization.StringDeserializer";
 
     @Value("${spring.deserializer.value.delegate.class}")
-    private String deserializerValueClass;
+    private String valueDeserializer;
 
     private Map<String,Object> consumerConfig() {
         log.info("bootstrapServers: " + kafkaProperties.getBootstrapServers());
@@ -40,7 +49,7 @@ public class ConsumerFactoryAutoConfiguration {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         props.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, deserializerKeyClass);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
-        props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, deserializerValueClass);
+        props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, valueDeserializer);
         props.put("specific.avro.reader", "true");
         return props;
     }

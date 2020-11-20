@@ -1,6 +1,7 @@
 package org.lfenergy.operatorfabric.cards.publication.services.clients.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.lfenergy.operatorfabric.cards.publication.kafka.producer.ResponseCardProducer;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.services.clients.ExternalAppClient;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
@@ -33,6 +34,9 @@ public class ExternalAppClientImpl implements ExternalAppClient {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private ResponseCardProducer responseCardProducer;
+
     public void sendCardToExternalApplication(CardPublicationData card) {
 
         Optional<List<String>> externalRecipientsFromCard = Optional.ofNullable(card.getExternalRecipients());
@@ -59,6 +63,18 @@ public class ExternalAppClientImpl implements ExternalAppClient {
     }
 
     private void callExternalApplication(CardPublicationData card, String externalRecipientUrl) {
+        if (externalRecipientUrl.startsWith("kafka:")) {
+            callExternalKafkaApplication(card);
+        } else{
+            callExternalHttpApplication(card, externalRecipientUrl);
+        }
+    }
+
+    private void callExternalKafkaApplication(CardPublicationData card) {
+        responseCardProducer.send(card);
+    }
+
+    private void callExternalHttpApplication(CardPublicationData card, String externalRecipientUrl) {
         try {
             log.debug("Start to Send card {} To {} ", card.getId(), card.getPublisher());
 

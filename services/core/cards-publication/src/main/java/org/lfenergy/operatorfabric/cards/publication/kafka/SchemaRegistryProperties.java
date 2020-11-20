@@ -7,14 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.lfenergy.operatorfabric.cards.publication.kafka.command;
+package org.lfenergy.operatorfabric.cards.publication.kafka;
 
-import org.lfenergy.operatorfabric.avro.CardCommand;
-import org.lfenergy.operatorfabric.avro.CommandType;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-public interface CommandHandler {
+@Data
+@ConfigurationProperties(prefix="opfab.kafka.schema.registry")
+public class SchemaRegistryProperties {
 
-    CommandType getCommandType();
+    private String url;
 
-    void executeCommand(CardCommand cardCommand);
 }
