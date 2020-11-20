@@ -1,0 +1,89 @@
+{
+	"name": "process.name",
+	"version": "3",
+	"id": "gridCooperation",
+	"uiVisibility": {
+		"monitoring": true,
+		"logging": true
+	  },
+	"states": {
+		"timeout-FrEs-IGCC": {
+			"name":  "timeout-FrEs-IGCC.title",
+			"acknowledgementAllowed": true,
+			"color": "red",
+			"details": [
+				{
+					"title": {
+						"key": "timeout-FrEs-IGCC.title"
+					},
+					"templateName": "timeout-FrEs-IGCC"
+				}
+			]
+		},
+		"action-FrEs-IGCC-export-0": {
+			"name":  "action-FrEs-IGCC-export-0.title",
+			"acknowledgementAllowed": true,
+			"color": "red",
+			"details": [
+				{
+					"title": {
+						"key": "action-FrEs-IGCC-export-0.title"
+					},
+					"templateName": "action-FrEs-IGCC-export-0"
+				}
+			]
+		},
+		"action-FrEs-IGCC-export-300": {
+			"name":  "action-FrEs-IGCC-export-300.title",
+			"acknowledgementAllowed": true,
+			"color": "orange",
+			"details": [
+				{
+					"title": {
+						"key": "action-FrEs-IGCC-export-300.title"
+					},
+					"templateName": "action-FrEs-IGCC-export-300"
+				}
+			]
+		},
+		"action-FrEs-IGCC-import-0": {
+			"name":  "action-FrEs-IGCC-import-0.title",
+			"acknowledgementAllowed": true,
+			"color": "red",
+			"details": [
+				{
+					"title": {
+						"key": "action-FrEs-IGCC-import-0.title"
+					},
+					"templateName": "action-FrEs-IGCC-import-0"
+				}
+			]
+		},
+		"action-FrEs-IGCC-import-300": {
+			"name":  "action-FrEs-IGCC-import-300.title",
+			"acknowledgementAllowed": true,
+			"color": "orange",
+			"details": [
+				{
+					"title": {
+						"key": "action-FrEs-IGCC-import-300.title"
+					},
+					"templateName": "action-FrEs-IGCC-import-300"
+				}
+			]
+		},
+		"compliant-FrEs-IGCC": {
+			"name":  "compliant-FrEs-IGCC.title",
+			"acknowledgementAllowed": true,
+			"color": "green",
+			"details": [
+				{
+					"title": {
+						"key": "compliant-FrEs-IGCC.title"
+					},
+					"templateName": "compliant-FrEs-IGCC"
+				}
+			]
+		}
+	}
+}
