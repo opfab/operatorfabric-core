@@ -29,7 +29,7 @@ public class KafkaAvroWithoutRegistrySerializer<T extends SpecificRecord> implem
     @Override
     public byte[] serialize(String topic, T record) {
         if (record == null) {
-            return null;
+            return new byte[0];
         } else {
             try {
                 Schema schema = record.getSchema();

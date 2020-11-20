@@ -18,8 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
@@ -43,8 +42,9 @@ class KafkaAvroWithoutRegistrySerializerShould {
     }
 
     @Test
-    void testFailure() {
-        assertThat (cut.serialize("ATopic", null), is(nullValue()));
+    void testNullRecord() {
+        byte[] result = cut.serialize("ATopic", null);
+        assertThat (result.length, is(0));
     }
 
     @Test
