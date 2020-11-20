@@ -27,7 +27,6 @@
       "name": "conference.title",
       "color": "#FAF0AF",
       "userCardTemplate": "usercard_conference",
-      "secondsBeforeTimeSpanForReminder": 300,
       "details": [
         {
           "title": {
@@ -61,7 +60,6 @@
       "name": "task.title",
       "color": "#8bcdcd",
       "userCardTemplate": "usercard_task",
-      "secondsBeforeTimeSpanForReminder" : 300,
       "details": [
         {
           "title": {

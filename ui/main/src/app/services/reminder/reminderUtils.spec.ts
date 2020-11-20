@@ -36,7 +36,7 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence  hour and minute
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2000-01-02 10:00', 'Europe/Paris').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -46,7 +46,7 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence  hour and minute
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2000-01-01 10:10', 'Europe/Paris').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -57,7 +57,7 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence  hour and minute
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2000-01-02 09:00', 'Europe/Paris').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -67,7 +67,7 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence  hour and minute
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2000-01-01 10:10', 'Europe/Paris').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -77,7 +77,7 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence  hour and minute
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2000-01-01 10:10', 'Europe/Paris').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -87,7 +87,7 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence  hour and minute
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2000-01-01 10:06', 'Europe/Paris').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -98,7 +98,7 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence  hour and minute
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2000-01-02 10:06', 'Europe/Paris').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -109,7 +109,7 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence  hour and minute
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2000-01-02 10:06', 'Europe/Paris').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -121,7 +121,7 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence  hour and minute
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2000-01-02 10:06', 'Europe/London').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -133,7 +133,7 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence  hour and minute
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2000-01-02 09:06', 'Europe/London').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -175,7 +175,7 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2020-11-09 10:30', 'Europe/Paris').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -190,7 +190,7 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2020-11-09 10:30', 'Europe/Paris').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -204,7 +204,7 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2020-11-09 15:45', 'Europe/Paris').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -215,7 +215,7 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2020-11-16 10:30', 'Europe/Paris').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -226,7 +226,7 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2020-11-16 10:30', 'Europe/Paris').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -237,7 +237,7 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2020-11-16 10:30', 'Europe/Paris').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -249,7 +249,7 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2020-11-10 10:30', 'Europe/Paris').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -260,7 +260,7 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2020-11-15 10:30', 'Europe/Paris').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -271,7 +271,7 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2020-11-14 10:30', 'Europe/Paris').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -282,7 +282,7 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2020-11-11 10:30', 'Europe/Paris').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -293,7 +293,7 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2020-11-11 05:20', 'Europe/Paris').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -305,7 +305,7 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2020-11-11 05:20', 'Europe/London').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -316,7 +316,7 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
     const expectedResponseDate = moment.tz('2020-11-11 04:20', 'Europe/London').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -344,7 +344,7 @@ describe('ReminderUtils:getNextTimeForRepeating without or invalid recurrence ',
     testCard.timeSpans = [new TimeSpan(cardStartdate)];
 
     const expectedResponseDate = moment.tz('2000-01-01 10:01', 'Europe/Paris').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -353,7 +353,7 @@ describe('ReminderUtils:getNextTimeForRepeating without or invalid recurrence ',
     const cardStartdate = moment.tz('2000-01-01 09:44', 'Europe/Paris').valueOf();
     testCard.timeSpans = [new TimeSpan(cardStartdate)];
 
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(-1);
   });
 
@@ -363,7 +363,7 @@ describe('ReminderUtils:getNextTimeForRepeating without or invalid recurrence ',
     testCard.timeSpans = [new TimeSpan(cardStartdate)];
 
     const expectedResponseDate = moment.tz('2000-01-01 09:46', 'Europe/Paris').valueOf();
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(expectedResponseDate);
   });
 
@@ -374,7 +374,7 @@ describe('ReminderUtils:getNextTimeForRepeating without or invalid recurrence ',
     recurrence.daysOfWeek = [0, 22];
     testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
-    const dateForRepeating = getNextTimeForRepeating(date, testCard);
+    const dateForRepeating = getNextTimeForRepeating(testCard, date);
     expect(dateForRepeating).toEqual(-1);
   });
 });

@@ -7,8 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.lfenergy.operatorfabric.cards.consultation.configuration.mongo;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,26 +21,27 @@ import org.springframework.core.convert.converter.Converter;
 import java.util.List;
 
 /**
- * <p>Spring converter registered in mongo conversions</p>
- * <p>Converts {@link Document} to {@link LightCard} using {@link LightCardConsultationData} builder.</p>
+ * <p>
+ * Spring converter registered in mongo conversions
+ * </p>
+ * <p>
+ * Converts {@link Document} to {@link LightCard} using
+ * {@link LightCardConsultationData} builder.
+ * </p>
  *
  */
 @Slf4j
 public class LightCardReadConverter implements Converter<Document, LightCardConsultationData> {
     private I18nReadConverter i18nReadConverter = new I18nReadConverter();
     private TimeSpanReadConverter timeSpanConverter = new TimeSpanReadConverter();
+
     @Override
     public LightCardConsultationData convert(Document source) {
         LightCardConsultationData.LightCardConsultationDataBuilder builder = LightCardConsultationData.builder();
-        builder
-                .publisher(source.getString("publisher"))
-                .parentCardId(source.getString("parentCardId"))
+        builder.publisher(source.getString("publisher")).parentCardId(source.getString("parentCardId"))
                 .initialParentCardUid(source.getString("initialParentCardUid"))
-                .processVersion(source.getString("processVersion"))
-                .uid(source.getString("uid"))
-                .id(source.getString("_id"))
-                .process(source.getString("process"))
-                .state(source.getString("state"))
+                .processVersion(source.getString("processVersion")).uid(source.getString("uid"))
+                .id(source.getString("_id")).process(source.getString("process")).state(source.getString("state"))
                 .processInstanceId(source.getString("processInstanceId"))
                 .lttd(source.getDate("lttd") == null ? null : source.getDate("lttd").toInstant())
                 .startDate(source.getDate("startDate") == null ? null : source.getDate("startDate").toInstant())
@@ -51,14 +50,14 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
                 .severity(SeverityEnum.valueOf(source.getString("severity")))
                 .usersAcks(source.getList("usersAcks", String.class))
                 .publisherType(PublisherTypeEnum.valueOf(source.getString("publisherType")))
-        ;
+                .secondsBeforeTimeSpanForReminder(source.getInteger("secondsBeforeTimeSpanForReminder"));       
 
         Document titleDoc = (Document) source.get("title");
-        if(titleDoc!=null)
+        if (titleDoc != null)
             builder.title(i18nReadConverter.convert(titleDoc));
 
         Document summaryDoc = (Document) source.get("summary");
-        if(summaryDoc!=null)
+        if (summaryDoc != null)
             builder.summary(i18nReadConverter.convert(summaryDoc));
 
         List<String> tags = (List<String>) source.get("tags");
@@ -67,7 +66,7 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
                 builder.tag(t);
             }
         List<String> entitiesAllowedToRespond = (List<String>) source.get("entitiesAllowedToRespond");
-        if (entitiesAllowedToRespond != null){
+        if (entitiesAllowedToRespond != null) {
             for (String entities : entitiesAllowedToRespond) {
                 builder.tag(entities);
             }
@@ -75,7 +74,7 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
         List<Document> timeSpans = (List<Document>) source.get("timeSpans");
         if (timeSpans != null)
             for (Document d : timeSpans) {
-                builder.timeSpan((TimeSpanConsultationData)timeSpanConverter.convert(d));
+                builder.timeSpan((TimeSpanConsultationData) timeSpanConverter.convert(d));
             }
         return builder.build();
     }

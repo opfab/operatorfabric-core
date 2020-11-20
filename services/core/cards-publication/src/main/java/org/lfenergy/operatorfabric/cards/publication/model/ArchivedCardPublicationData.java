@@ -86,6 +86,8 @@ public class ArchivedCardPublicationData implements Card {
 
     private PublisherTypeEnum publisherType;
 
+    private Integer  secondsBeforeTimeSpanForReminder;
+
     public ArchivedCardPublicationData(CardPublicationData card){
         this.id = card.getUid();
         this.parentCardId = card.getParentCardId();
@@ -115,6 +117,7 @@ public class ArchivedCardPublicationData implements Card {
         this.entitiesAllowedToRespond = card.getEntitiesAllowedToRespond() == null ? null : new ArrayList<>(card.getEntitiesAllowedToRespond());
         this.processStateKey = process + "." + state;
         this.publisherType = card.getPublisherType();
+        this.secondsBeforeTimeSpanForReminder = card.getSecondsBeforeTimeSpanForReminder();
     }
 
 }

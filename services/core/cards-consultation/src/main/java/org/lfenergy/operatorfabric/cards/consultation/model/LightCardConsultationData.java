@@ -77,6 +77,8 @@ public class LightCardConsultationData implements LightCard {
 
     private PublisherTypeEnum publisherType;
 
+    private Integer  secondsBeforeTimeSpanForReminder;
+
     /**
      * return timespans, may return null
      * @return
@@ -119,6 +121,7 @@ public class LightCardConsultationData implements LightCard {
                 .hasBeenRead(other.getHasBeenRead())
                 .entitiesAllowedToRespond(other.getEntitiesAllowedToRespond())
                 .publisherType(other.getPublisherType())
+                .secondsBeforeTimeSpanForReminder(other.getSecondsBeforeTimeSpanForReminder());    
                 ;
         if(other.getTags()!=null && ! other.getTags().isEmpty())
             builder.tags(other.getTags());

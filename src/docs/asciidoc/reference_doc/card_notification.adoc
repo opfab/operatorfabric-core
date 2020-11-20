@@ -29,7 +29,6 @@ To offer the possibility for the user to acknowledged card, it has to be configu
 For certain process and state, it is possible to configure a reminder. The reminder "reactivate" the card in the feed at a certain time before the beginning of the start date of the first timeSpan of the card. "Reactivate" means set the card to the status "unread" and "unacknowledged".
 
 
-The time for "reactivation" is defined with the parameter "secondsBeforeTimeSpanForReminder" in the definition of the state of the concerned process.
-You can see an example in /src/test/utils/karate/businessconfig/resources/bundle_userCardExamples/config.json
+The time for "reactivation" is defined with the parameter "secondsBeforeTimeSpanForReminder" in the card .
 
 This function is experimental and not production ready yet.

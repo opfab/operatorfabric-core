@@ -27,7 +27,6 @@ public class ProcessStatesData implements ProcessStates {
     private String color;
     private String name;
     private String userCardTemplate;
-    private Long secondsBeforeTimeSpanForReminder;
 
     @Override
     public void setDetails(List<? extends Detail> details) {

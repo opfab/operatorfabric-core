@@ -7,18 +7,19 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { Card, Recurrence } from '@ofModel/card.model';
+import { Card } from '@ofModel/card.model';
 import { getNextTimeForRepeating } from './reminderUtils';
 
-export class ReminderList {
 
+const MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS =  60000 * 15; // 15 minutes
+
+export class ReminderList {
 
     static reminderItem = class {
         constructor(
             public cardUid: string,
             public timeForReminding: number,
             public hasBeenRemind: boolean,
-            public recurrence?: Recurrence
         ) { }
     };
 
@@ -30,20 +31,22 @@ export class ReminderList {
         this.loadRemindersFromLocalStorage();
     }
 
-    public addAReminder(card: Card, secondsToRemindBeforeEvent: number) {
+    public addAReminder(card: Card, startingDate?: number) {
         if (!!card) {
+            if (!card.secondsBeforeTimeSpanForReminder) return;
             const reminderItem = this.reminderList.get(card.id);
             if (!!reminderItem && (reminderItem.cardUid === card.uid)) return;
-            const dateForReminder: number = getNextTimeForRepeating(new Date().valueOf(), card);
+            const dateForReminder: number = getNextTimeForRepeating(card, startingDate);
             if (dateForReminder >= 0) {
                 this.reminderList.set(card.id,
-                    new ReminderList.reminderItem(card.uid, dateForReminder - secondsToRemindBeforeEvent * 1000, false));
-                console.log(new Date().toISOString(), `Will remind card ${card.id} at
-                         ${new Date(dateForReminder - secondsToRemindBeforeEvent * 1000)}`);
+                    new ReminderList.reminderItem(card.uid, dateForReminder - card.secondsBeforeTimeSpanForReminder * 1000, false));
+                console.log(new Date().toISOString(), `Reminder Will remind card ${card.id} at
+                         ${new Date(dateForReminder - card.secondsBeforeTimeSpanForReminder * 1000)}`);
                 this.persistReminder();
             }
         }
     }
+
 
     public hasAReminder(cardId) {
         return this.reminderList.has(cardId);
@@ -63,12 +66,21 @@ export class ReminderList {
         return cardsIdToRemind;
     }
 
-    public setCardHasBeenRemind(cardId) {
-        const reminderItem = this.reminderList.get(cardId);
+    public setCardHasBeenRemind(card) {
+        const reminderItem = this.reminderList.get(card.id);
         if (!!reminderItem) {
-            reminderItem.hasBeenRemind = true;
+            if (!card.timeSpans[0].recurrence) reminderItem.hasBeenRemind = true;
+            else this.setNextRemindWhenRecurrenceAndRemindHasBeenDone(card, reminderItem);
             this.persistReminder();
+
         }
+    }
+
+    private setNextRemindWhenRecurrenceAndRemindHasBeenDone(card, reminderItem) {
+        const reminderDate: number  = reminderItem.timeForReminding;
+        this.removeAReminder(card.id);
+        this.addAReminder(card, reminderDate + card.secondsBeforeTimeSpanForReminder
+             + MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS);
     }
 
     private loadRemindersFromLocalStorage() {

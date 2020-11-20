@@ -42,6 +42,7 @@ export class Card {
         readonly initialParentCardUid?: string,
         readonly keepChildCards?: boolean,
         readonly publisherType?: PublisherType | string,
+        public secondsBeforeTimeSpanForReminder?: number,
         public timeSpans?: TimeSpan[]
     ) {
     }
@@ -71,6 +72,7 @@ export class CardForPublishing {
         readonly initialParentCardUid?: string,
         readonly keepChildCards?: boolean,
         readonly publisherType?: PublisherType | string,
+        readonly secondsBeforeTimeSpanForReminder?: number,
         readonly timeSpans?: TimeSpan[]
     ) {
     }
@@ -157,6 +159,7 @@ export function fromCardToCardForPublishing(card: Card): CardForPublishing {
         card.initialParentCardUid,
         card.keepChildCards,
         card.publisherType,
+        card.secondsBeforeTimeSpanForReminder,
         card.timeSpans
     );
 }

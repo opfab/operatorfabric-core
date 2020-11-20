@@ -78,6 +78,8 @@ public class LightCardPublicationData implements LightCard {
 
     private PublisherTypeEnum publisherType;
 
+    private Integer  secondsBeforeTimeSpanForReminder;
+
     /**
      * return timespans, may be null
      * @return
