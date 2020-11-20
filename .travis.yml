@@ -15,6 +15,7 @@ if: tag IS blank
 before_install:
   - export OF_VERSION=$(<VERSION)
   - export GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx1024m"
+  - export SDKMAN_CONFIG_FILE=${HOME}/.sdkman/etc/config
   - ./CICD/travis/check_version.sh --branch $TRAVIS_BRANCH --version $OF_VERSION
   - nvm install $NODE_VERSION
 install:
@@ -24,8 +25,8 @@ install:
   - if [ -z "$(ls -A ${HOME}/.sdkman)" ]; then
     rm -fr ${HOME}/.sdkman ;
     curl -s "https://get.sdkman.io" | bash ;
-    echo sdkman_auto_answer=true > ~/.sdkman/etc/config ;
-    echo sdkman_auto_selfupdate=true >> ${HOME}/.sdkman/etc/config ;
+    echo sdkman_auto_answer=true > ${SDKMAN_CONFIG_FILE} ;
+    echo sdkman_auto_selfupdate=true >> ${SDKMAN_CONFIG_FILE} ;
     fi
   # needed in order to have sdk available into the current environment
   - source "${HOME}/.sdkman/bin/sdkman-init.sh" ;
@@ -53,9 +54,14 @@ install:
     sdk install java "${JDK_VERSION_4_SDKMAN}" ;
     fi ;
     fi
-  - if [ $(cat ${HOME}/.sdkman/etc/config | wc -l) -gt 1 ]; then
-    echo sdkman_auto_selfupdate=true > ${HOME}/.sdkman/etc/config ;
-    if
+  - if [ -s ${SDKMAN_CONFIG_FILE} ]; then
+    cat ${SDKMAN_CONFIG_FILE} ;
+    if [ $(cat ${SDKMAN_CONFIG_FILE} | wc -l) -gt 1 ]; then
+    echo sdkman_auto_selfupdate=true > ${SDKMAN_CONFIG_FILE} ;
+    fi
+    else
+    echo sdkman_auto_selfupdate=true > ${SDKMAN_CONFIG_FILE} ;
+    fi
   - sudo apt-get install realpath
   # displays versions of useful tools for visual checks
   - npm -version
