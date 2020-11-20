@@ -10,7 +10,7 @@
 
 
 import {Injectable} from '@angular/core';
-import {catchError, map, switchMap} from 'rxjs/operators';
+import {map, mergeMap,} from 'rxjs/operators';
 import * as _ from 'lodash';
 import {Observable, of, throwError} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
@@ -60,17 +60,16 @@ export class ConfigService {
     }
 
     queryMenuEntryURL(id: string, menuEntryId: string): Observable<string> {
-        let resp;
         if (this.customMenus.length === 0) {
-            this.computeMenu().subscribe(x => {resp = this.getMenuEntryURL(id, menuEntryId)});
+            return this.computeMenu().pipe(mergeMap(menus => this.getMenuEntryURL(menus, id, menuEntryId)));
         } else {
-            resp = this.getMenuEntryURL(id, menuEntryId);
+            return this.getMenuEntryURL(this.customMenus, id, menuEntryId);
         }
-        return resp;
+
     }
 
-    private getMenuEntryURL(id: string, menuEntryId: string): Observable<string> {
-        const menu = this.customMenus.find(m => m.id === id);
+    private getMenuEntryURL(menus: Menu[], id: string, menuEntryId: string): Observable<string> {
+        const menu = menus.find(m => m.id === id);
         if (menu) {
             const entry = menu.entries.filter(e => e.id === menuEntryId);
 
