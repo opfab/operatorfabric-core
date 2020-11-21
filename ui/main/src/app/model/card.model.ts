@@ -113,7 +113,7 @@ export class TimeSpan {
 
 export class Recurrence {
     constructor(
-        public hoursAndMinutes: HourAndMinutes[],
+        public hoursAndMinutes: HourAndMinutes,
         public daysOfWeek?: number[],
         public timeZone?: string
     ) {}

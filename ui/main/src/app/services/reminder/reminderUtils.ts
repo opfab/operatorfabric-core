@@ -54,9 +54,8 @@ function getNextTimeFromRecurrence(StartingDate: number, recurrence: Recurrence)
                 date.add(1, 'day');
             }
             while (!recurrence.daysOfWeek.includes(date.isoWeekday()));
-            const firstHoursMinutes = getNextFormTimeArray(new HourAndMinutes(0, 0), recurrence.hoursAndMinutes);
-            date.set('hours', firstHoursMinutes.hours);
-            date.set('minutes', firstHoursMinutes.minutes);
+            date.set('hours', recurrence.hoursAndMinutes.hours);
+            date.set('minutes', recurrence.hoursAndMinutes.minutes);
             date.set('seconds', 0);
             date.set('milliseconds', 0);
             return date.valueOf();
@@ -64,17 +63,15 @@ function getNextTimeFromRecurrence(StartingDate: number, recurrence: Recurrence)
     }
 
     const startingHoursMinutes = new HourAndMinutes(date.hours(), date.minutes());
-    const nextHoursMinutes = getNextFormTimeArray(startingHoursMinutes, recurrence.hoursAndMinutes);
-
-    if (!isFirstHoursMinutesSuperiorToSecondOne(nextHoursMinutes, startingHoursMinutes)) {
+    if (!isFirstHoursMinutesSuperiorToSecondOne(recurrence.hoursAndMinutes, startingHoursMinutes)) {
             date.add(1, 'day');
             if (isDaysOfWeekFieldSet(recurrence)) {
                 while (!recurrence.daysOfWeek.includes(date.isoWeekday()))  date.add(1, 'day');
             }
 
         }
-    date.set('hours', nextHoursMinutes.hours);
-    date.set('minutes', nextHoursMinutes.minutes);
+    date.set('hours', recurrence.hoursAndMinutes.hours);
+    date.set('minutes', recurrence.hoursAndMinutes.minutes);
     date.set('seconds', 0);
     date.set('milliseconds', 0);
     return date.valueOf();
@@ -82,39 +79,10 @@ function getNextTimeFromRecurrence(StartingDate: number, recurrence: Recurrence)
 
 
 
- function getNextFormTimeArray(initialValue: HourAndMinutes, possibleValues: HourAndMinutes[]): HourAndMinutes {
-
-    let i = 1;
-    let value = possibleValues[0];
-    let timeSpan = subtractHM2ToHM1(value, initialValue);
-    while (i < possibleValues.length) {
-        const nextTimeSpan = subtractHM2ToHM1(possibleValues[i], initialValue);
-        if (nextTimeSpan > 0) {
-            if ((timeSpan <= 0) || (nextTimeSpan < timeSpan)) {
-                timeSpan = nextTimeSpan;
-                value = possibleValues[i];
-            }
-        } else {
-            if (nextTimeSpan !== 0 && timeSpan < 0 && timeSpan > nextTimeSpan) {
-                timeSpan = nextTimeSpan;
-                value = possibleValues[i];
-            }
-        }
-        i++;
-    }
-    return value;
-}
-
-
 function isFirstHoursMinutesSuperiorToSecondOne(hm1: HourAndMinutes, hm2: HourAndMinutes): boolean {
     if (hm1.hours > hm2.hours) return true;
     if (hm1.hours < hm2.hours) return false;
     return hm1.minutes > hm2.minutes;
-}
-
-function subtractHM2ToHM1(hm1: HourAndMinutes, hm2: HourAndMinutes): number {
-
-    return hm1.hours * 60 + hm1.minutes - hm2.hours * 60 + hm2.minutes;
 }
 
 function isDaysOfWeekFieldSet(recurrence: Recurrence): boolean {

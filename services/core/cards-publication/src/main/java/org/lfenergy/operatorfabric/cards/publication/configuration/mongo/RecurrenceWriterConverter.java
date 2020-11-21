@@ -31,13 +31,9 @@ public class RecurrenceWriterConverter {
 
     public static Document convert(RecurrencePublicationData source) {
         Document result = new Document();
-
-        List<? extends HoursAndMinutes>  hoursAndMinutes = source.getHoursAndMinutes();
+        HoursAndMinutes  hoursAndMinutes = source.getHoursAndMinutes();
         if (hoursAndMinutes!=null) {
-            List<Document>  hoursAndMinutesAsDocuments = hoursAndMinutes.stream()
-            .map(hm -> HoursAndMinutesWriterConverter.convert((HoursAndMinutesPublicationData) hm))
-            .collect(Collectors.toList());
-            result.append("hoursAndMinutes", hoursAndMinutesAsDocuments);
+            result.append("hoursAndMinutes", HoursAndMinutesWriterConverter.convert((HoursAndMinutesPublicationData) hoursAndMinutes));
         }
 
         List<Integer>  daysOfWeek = source.getDaysOfWeek();
