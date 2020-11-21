@@ -35,7 +35,7 @@
       <div id="div-card-template" [innerHtml]="htmlContent"></div>
     </div>
     
-    <div class="my-3" *ngIf="areActionsDisplayed()">
+    <div class="my-3">
       <div id='div-detail-msg' *ngIf='message.display'
             class="alert alert-dismissible fade show text-center {{message.color}}"
           role="alert">
@@ -45,17 +45,17 @@
         </button>
       </div>
     
-      <div id='div-detail-btn' *ngIf="isButtonsActivated" class="mb-3">
-        <button class="btn mr-3 {{btnColor}}" style="float: right;" *ngIf='responseDataExists'
+      <div id='div-detail-btn' *ngIf="showButtons" class="mb-3">
+        <button class="btn mr-3 {{btnColor}}" style="float: right;" *ngIf='showActionButton'
           translate [translateParams]="responseDataParameters" [disabled]='lttdExpiredIsTrue || !isActionEnabled'
                 (click)='submitResponse()'>{{btnText}}</button>
     
-        <button class="btn mr-3 {{btnAckColor}}" style="float: right;" *ngIf='isAcknowledgementAllowed' translate
+        <button class="btn mr-3 {{btnAckColor}}" style="float: right;" *ngIf='showAckButton' translate
           (click)='acknowledge()'>{{btnAckText}}</button>
     
-        <button class="btn mr-3 btn-primary" style="float: right;" *ngIf='isDeleteOrEditCardAllowed' translate
+        <button class="btn mr-3 btn-primary" style="float: right;" *ngIf='showEditAndDeleteButton' translate
                 (click)='open(doYouReallyWantToDeleteCardPopup)'>{{'button.delete'}}</button>
-        <button class="btn mr-3 btn-primary" style="float: right;" *ngIf='isDeleteOrEditCardAllowed' translate
+        <button class="btn mr-3 btn-primary" style="float: right;" *ngIf='showEditAndDeleteButton' translate
                 (click)='editCard()'>{{'button.edit'}}</button>
       </div>
     

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Card} from '@ofModel/card.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -20,6 +20,7 @@ import {User} from '@ofModel/user.model';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {AppService} from '@ofServices/app.service';
 import {State as CardState, Detail} from '@ofModel/processes.model';
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'of-card-details',
@@ -27,12 +28,15 @@ import {State as CardState, Detail} from '@ofModel/processes.model';
 
             <div *ngIf="card && cardState">
                 <of-detail   [cardState]="cardState" [card]="card" [childCards]="childCards"
-                           [user]="user" [currentPath]="_currentPath">
+                           [user]="user" [currentPath]="_currentPath" [parentModalRef]="parentModalRef">
                 </of-detail>
             </div>
         `
 })
 export class CardDetailsComponent implements OnInit, OnDestroy {
+
+
+    @Input() parentModalRef: NgbModalRef;
 
     card: Card;
     childCards: Card[];
