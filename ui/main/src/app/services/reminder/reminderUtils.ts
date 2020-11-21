@@ -7,29 +7,41 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { Card, Recurrence, HourAndMinutes } from '@ofModel/card.model';
+import { Card, Recurrence, HourAndMinutes, TimeSpan } from '@ofModel/card.model';
 import moment from 'moment';
 
 
 const MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS =  60000 * 15; // 15 minutes
 
 export function getNextTimeForRepeating(card: Card, startingDate?: number) {
-
     if (!!card.timeSpans) {
+        let nextTime = -1;
+        card.timeSpans.forEach( timeSpan => {
+            const timeForRepeating = getNextTimeForRepeatingFromTimeSpan(timeSpan, startingDate);
+            if (timeForRepeating !== -1) {
+                if ((nextTime === -1)  || (timeForRepeating < nextTime)) nextTime = timeForRepeating;
+            }
+        });
+        return nextTime;
+    }
+    return -1;
+}
+
+function getNextTimeForRepeatingFromTimeSpan(timeSpan: TimeSpan, startingDate?: number){
+    if (!!timeSpan) {
         if (!startingDate) startingDate = new Date().valueOf();
-        if (!card.timeSpans[0].recurrence) {
-            if (card.timeSpans[0].start + MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS < startingDate) return -1;
-            return card.timeSpans[0].start;
+        if (!timeSpan.recurrence) {
+            if (timeSpan.start + MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS < startingDate) return -1;
+            return timeSpan.start;
         } else {
-            if (startingDate > card.timeSpans[0].start) return getNextTimeFromRecurrence(startingDate, card.timeSpans[0].recurrence);
-            else return getNextTimeFromRecurrence(card.timeSpans[0].start, card.timeSpans[0].recurrence);
+            if (startingDate > timeSpan.start) return getNextTimeFromRecurrence(startingDate, timeSpan.recurrence);
+            else return getNextTimeFromRecurrence(timeSpan.start, timeSpan.recurrence);
         }
     }
     return -1;
 }
 
 function getNextTimeFromRecurrence(StartingDate: number, recurrence: Recurrence): number {
- 
     const date = moment(StartingDate).tz(recurrence.timeZone);
     if (isDaysOfWeekFieldSet(recurrence)) {
         if (!recurrence.daysOfWeek.includes(date.isoWeekday())) {
