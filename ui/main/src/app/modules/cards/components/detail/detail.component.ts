@@ -44,8 +44,7 @@ import {UpdateALightCard} from '@ofStore/actions/light-card.actions';
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {Entity} from '@ofModel/entity.model';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
+import {NgbModal,NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {ConfigService} from '@ofServices/config.service';
 import {State as CardState} from '@ofModel/processes.model';
 import { Router } from '@angular/router';
@@ -110,13 +109,13 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     @Input() childCards: Card[];
     @Input() user: User;
     @Input() currentPath: string;
+    @Input() parentModalRef: NgbModalRef;
 
     @ViewChild('cardDeletedWithNoErrorPopup', null) cardDeletedWithNoErrorPopupRef: TemplateRef<any>;
     @ViewChild('impossibleToDeleteCardPopup', null) impossibleToDeleteCardPopupRef: TemplateRef<any>;
 
     public isActionEnabled = false;
     public lttdExpiredIsTrue: boolean;
-    public isDeleteOrEditCardAllowed = false;
 
 
     unsubscribe$: Subject<void> = new Subject<void>();
@@ -126,8 +125,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private _userContext: UserContext;
     private _lastCards$: Observable<LightCard[]>;
     private _responseData: Response;
-    private _acknowledgementAllowed: boolean;
     message: Message = {display: false, text: undefined, color: undefined};
+
+    public showButtons = false;
+    public showAckButton = false;
+    public showActionButton = false;
+    public showEditAndDeleteButton = false ;
 
     modalRef: NgbModalRef;
 
@@ -191,7 +194,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     ngOnInit() {
 
-        if (this._appService.pageType === PageType.FEED) {
+        if (this._appService.pageType !== PageType.ARCHIVE) {
 
             this.setEntitiesToRespond();
 
@@ -229,6 +232,16 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 });
         }
         this.markAsReadIfNecessary();
+        this.setButtonsVisibility();
+    }
+
+    private setButtonsVisibility() {
+        if ((this._appService.pageType === PageType.ARCHIVE)
+            || (this._appService.pageType === PageType.MONITORING)) this.showButtons = false;
+        else this.showButtons = true;
+        this.showEditAndDeleteButton = this.doesTheUserHavePermissionToDeleteOrEditCard();
+        this.showAckButton = this.cardState.acknowledgementAllowed && (this._appService.pageType !== PageType.CALENDAR);
+        this.showActionButton =  (!!this._responseData);
     }
 
     ngDoCheck() {
@@ -242,11 +255,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     get i18nPrefix() {
         return `${this.card.process}.${this.card.processVersion}.`;
     }
-
-    get isButtonsActivated() {
-        return !((this._appService.pageType === PageType.ARCHIVE) || (this._appService.pageType === PageType.CALENDAR));
-    }
-
 
     get responseDataParameters(): Map<string> {
         return this._responseData.btnText ? this._responseData.btnText.parameters : undefined;
@@ -271,10 +279,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     get btnAckColor(): string {
         return this.card.hasBeenAcknowledged ? AckButtonColors.DANGER : AckButtonColors.PRIMARY;
-    }
-
-    get isAcknowledgementAllowed(): boolean {
-        return this._acknowledgementAllowed ? this._acknowledgementAllowed : false;
     }
 
     submitResponse() {
@@ -390,7 +394,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     closeDetails() {
-        this._appService.closeDetails(this.currentPath);
+        if (this.parentModalRef) this.parentModalRef.close();
+        else this._appService.closeDetails(this.currentPath);
     }
 
     // for certain types of template , we need to reload it to take into account
@@ -405,7 +410,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.initializeHrefsOfCssLink();
         this.initializeHandlebarsTemplates();
         this.markAsReadIfNecessary();
-        this.setIsDeleteOrEditCardAllowed();
+        this.setButtonsVisibility();
         this.message = {display: false, text: undefined, color: undefined};
         if (this._responseData != null && this._responseData !== undefined) {
             this.setEntitiesToRespond();
@@ -437,10 +442,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             this.isActionEnabled = this.isUserInEntityAllowedToRespond();
         else
             this.isActionEnabled = (this.isUserInEntityAllowedToRespond() && this.doesTheUserHavePermissionToRespond());
-    }
-
-    private setIsDeleteOrEditCardAllowed() {
-        this.isDeleteOrEditCardAllowed = this.doesTheUserHavePermissionToDeleteOrEditCard();
     }
 
 
@@ -524,7 +525,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
         templateGateway.childCards = this.childCards;
         this._responseData = this.cardState.response;
-        this._acknowledgementAllowed = this.cardState.acknowledgementAllowed;
         const templateName = this.cardState.details[0].templateName;
         if (!!templateName) {
             this.handlebars.executeTemplate(templateName,
@@ -590,6 +590,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     editCard(): void {
+        if (!!this.parentModalRef) this.parentModalRef.close();
         this.router.navigate(['/usercard', this.card.id]);
     }
 
@@ -599,8 +600,4 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.unsubscribe$.complete();
     }
 
-    areActionsDisplayed(): boolean {
-        const currentPageType = this._appService.pageType;
-        return currentPageType !== PageType.MONITORING && currentPageType !== PageType.CALENDAR;
-    }
 }
