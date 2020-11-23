@@ -73,6 +73,7 @@ jobs:
       script:
         - echo "==================> test only run"
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
+        - source bin/load_environment_light.sh
         - javac -version
         - ./gradlew --build-cache copyDependencies test
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
@@ -80,6 +81,7 @@ jobs:
       script:
         - echo "==================> test and SONAR run"
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
+        - source bin/load_environment_light.sh
         - javac -version
         - ./gradlew --build-cache copyDependencies test jacocoTestReport
         # [OC-865] Dropping dependency messing with typescript version as a workaround until sonar bug is fixed
