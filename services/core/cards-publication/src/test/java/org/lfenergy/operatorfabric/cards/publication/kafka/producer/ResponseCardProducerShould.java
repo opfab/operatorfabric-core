@@ -14,6 +14,7 @@ import org.apache.kafka.common.TopicPartition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.lfenergy.operatorfabric.avro.Card;
 import org.lfenergy.operatorfabric.avro.CardCommand;
 import org.lfenergy.operatorfabric.cards.publication.kafka.card.CardCommandFactory;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
@@ -47,6 +48,7 @@ class ResponseCardProducerShould {
     private ListenableFuture<SendResult<String, CardCommand>> responseFuture;
     private CardPublicationData cardPublicationData;
     private CardCommand cardCommand;
+    private Card card;
 
     private final int partition = 11;
     private final int offset = 2;
@@ -59,7 +61,9 @@ class ResponseCardProducerShould {
 
         cardPublicationData = mock(CardPublicationData.class);
         cardCommand = mock(CardCommand.class);
-        when(cardCommand.getProcess()).thenReturn(key);
+        card = mock(Card.class);
+        when(card.getProcess()).thenReturn(key);
+        when(cardCommand.getCard()).thenReturn(card);
         when (cardCommandFactory.create(any())).thenReturn(cardCommand);
 
         responseFuture = mock(ListenableFuture.class);

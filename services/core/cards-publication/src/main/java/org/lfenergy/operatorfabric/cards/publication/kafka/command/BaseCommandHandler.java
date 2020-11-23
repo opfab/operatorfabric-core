@@ -38,8 +38,6 @@ public class BaseCommandHandler {
         Map<String, Object> cardData = Collections.emptyMap();
         try {
             card = objectMapper.readValue(objectMapper.writeValueAsString(kafkaCard), CardPublicationData.class);
-            card.setProcess(cardCommand.getProcess());
-            card.setProcessInstanceId(cardCommand.getProcessInstanceId());
 
             String cardDataString = kafkaCard.getData();
             if (cardDataString != null) {

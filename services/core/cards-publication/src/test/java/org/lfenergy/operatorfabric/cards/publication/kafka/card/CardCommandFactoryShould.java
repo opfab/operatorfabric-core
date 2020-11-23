@@ -47,7 +47,7 @@ class CardCommandFactoryShould {
         CardCommand cardCommand = cut.create(cardPublicationData);
 
         assertThat (cardCommand.getCommand(), is (CommandType.RESPONSE_CARD));
-        assertThat (cardCommand.getProcess(), is (cardPublicationData.getProcess()));
+        assertThat (cardCommand.getCard().getProcess(), is (cardPublicationData.getProcess()));
         assertThat (cardCommand.getCard().getState(), is(cardPublicationData.getState()));
     }
 

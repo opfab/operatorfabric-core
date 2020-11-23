@@ -37,8 +37,6 @@ import static org.mockito.Mockito.when;
 class BaseCommandHandlerShould {
 
     private final String ANY_STRING = "any_string";
-    private final String PROCESS = "a_process";
-    private final String PROCESS_INSTANCE_ID = "a_process_instance_id";
     private final String DATA_KEY = "key";
     private final String DATA_VALUE = "value";
 
@@ -57,11 +55,10 @@ class BaseCommandHandlerShould {
         ReflectionTestUtils.setField(cut, "objectMapper", objectMapper);
         CardPublicationData cardPublicationData = CardPublicationData.builder()
                 .build();
+
         cardCommand = mock(CardCommand.class);
         card = mock(Card.class);
         when(cardCommand.getCard()).thenReturn(card);
-        when(cardCommand.getProcess()).thenReturn(PROCESS);
-        when(cardCommand.getProcessInstanceId()).thenReturn(PROCESS_INSTANCE_ID);
         when(objectMapper.writeValueAsString(card)).thenReturn(ANY_STRING);
         when(objectMapper.readValue(ANY_STRING, CardPublicationData.class)).thenReturn(cardPublicationData);
     }
@@ -72,8 +69,6 @@ class BaseCommandHandlerShould {
         CardPublicationData result = cut.buildCardPublicationData(cardCommand);
         Map<String,Object> data = (Map<String,Object>) result.getData();
         Assertions.assertThat(data.size()).isEqualTo(0);
-        Assertions.assertThat(result.getProcess()).isEqualTo(PROCESS);
-        Assertions.assertThat(result.getProcessInstanceId()).isEqualTo(PROCESS_INSTANCE_ID);
     }
 
     @Test
@@ -86,8 +81,6 @@ class BaseCommandHandlerShould {
         Map<String,Object> data = (Map<String,Object>) result.getData();
         Assertions.assertThat(data.size()).isEqualTo(1);
         Assertions.assertThat(data.get(DATA_KEY)).isEqualTo(DATA_VALUE);
-        Assertions.assertThat(result.getProcess()).isEqualTo(PROCESS);
-        Assertions.assertThat(result.getProcessInstanceId()).isEqualTo(PROCESS_INSTANCE_ID);
     }
 
 }
