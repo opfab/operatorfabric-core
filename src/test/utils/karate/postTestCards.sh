@@ -8,5 +8,10 @@
 # SPDX-License-Identifier: MPL-2.0
 # This file is part of the OperatorFabric project.
 
-java -jar karate.jar cards/post6CardsSeverity.feature 
+java -jar karate.jar cards/postAMessageCard.feature  \
+                     cards/postAChartCard.feature \
+                     cards/postAProcessCard.feature \
+                     cards/postAQuestionCard.feature \
+                     cards/postAnAlarmChartCard.feature \
+                     cards/postAContingenciesCard.feature \
 

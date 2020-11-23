@@ -28,8 +28,3 @@ Then status 200
 Given url opfabPublishCardUrl + 'cards/defaultProcess.process6'
 When method delete
 Then status 200
-
-####################################
-Given url opfabPublishCardUrl + 'cards/defaultProcess.processInstanceSentByENTITY1'
-When method delete
-Then status 200
