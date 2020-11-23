@@ -55,7 +55,6 @@ install:
     fi ;
     fi
   - if [ -s ${SDKMAN_CONFIG_FILE} ]; then
-    cat ${SDKMAN_CONFIG_FILE} ;
     if [ $(cat ${SDKMAN_CONFIG_FILE} | wc -l) -gt 1 ]; then
     echo sdkman_auto_selfupdate=true > ${SDKMAN_CONFIG_FILE} ;
     fi
@@ -63,26 +62,16 @@ install:
     echo sdkman_auto_selfupdate=true > ${SDKMAN_CONFIG_FILE} ;
     fi
   - sudo apt-get install realpath
-  # displays versions of useful tools for visual checks
-  - npm -version
-  - sdk version
-  - javac -version
 jobs:
   include:
     - stage: test
       script:
-        - echo "==================> test only run"
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
-        - source bin/load_environment_light.sh
-        - javac -version
         - ./gradlew --build-cache copyDependencies test
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
     - stage: test-sonar
       script:
-        - echo "==================> test and SONAR run"
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
-        - source bin/load_environment_light.sh
-        - javac -version
         - ./gradlew --build-cache copyDependencies test jacocoTestReport
         # [OC-865] Dropping dependency messing with typescript version as a workaround until sonar bug is fixed
         # See https://github.com/SonarSource/SonarJS/issues/1928 and https://community.sonarsource.com/t/error-about-unsupported-ts-version-while-project-is-using-supported-version/15776
@@ -95,7 +84,6 @@ jobs:
           then
           sdk install java "${JDK_VERSION_4_SONAR}" ;
           fi ;
-        - javac -version
         - sonar-scanner
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
     - stage: doc
