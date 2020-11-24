@@ -103,7 +103,7 @@
             >menu.settings</a>
           </div>
 
-          <div class="dropdown-item" [class.active]="currentPath && 'feedconfiguration' === currentPath[1]">
+          <div class="dropdown-item" [class.active]="currentPath && 'feedconfiguration' === currentPath[1]" *ngIf="(displayFeedConfiguration)">
             <a
                     class="nav-link opfab-menu-link text-decoration-none"
                     routerLink="/feedconfiguration"

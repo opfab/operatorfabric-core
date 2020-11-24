@@ -31,9 +31,6 @@ import { CheckboxSettingComponent } from './components/settings/checkbox-setting
         , MultiSettingsComponent
         , TypeAheadSettingsComponent
         , CheckboxSettingComponent],
-    exports: [
-        CheckboxSettingComponent
-    ],
     imports: [
         CommonModule,
         FormsModule,

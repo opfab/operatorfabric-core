@@ -23,8 +23,7 @@ import {SettingsModule} from '../settings/settings.module';
         FormsModule,
         ReactiveFormsModule,
         TranslateModule,
-        FeedconfigurationRoutingModule,
-        SettingsModule
+        FeedconfigurationRoutingModule
     ]
 })
 export class FeedconfigurationModule {

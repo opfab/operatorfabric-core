@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
 import { UserService } from '@ofServices/user.service';
@@ -17,19 +17,8 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { UserWithPerimeters } from '@ofModel/userWithPerimeters.model';
 import { ProcessesService } from '@ofServices/processes.service';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
-import {SettingsService} from '@ofServices/settings.service';
-import {Subject} from 'rxjs';
+import { SettingsService } from '@ofServices/settings.service';
 
-
-class Message {
-    text: string;
-    display: boolean;
-}
-
-function getI18nPrefixFromProcess(process: Process): string {
-    return process.id + '.' + process.version + '.';
-}
 
 @Component({
     selector: 'of-feedconfiguration',
@@ -37,19 +26,19 @@ function getI18nPrefixFromProcess(process: Process): string {
     styleUrls: ['./feedconfiguration.component.scss']
 })
 
-export class FeedconfigurationComponent implements OnInit, OnDestroy {
+export class FeedconfigurationComponent implements OnInit {
     feedConfigurationForm: FormGroup;
 
     processesDefinition: Process[];
     processGroups: {idGroup: string, processes: string[]}[];
     processesWithoutGroup: string[];
     currentUserWithPerimeters: UserWithPerimeters;
-    processesStatesLabels: Map<string, { processLabel: string,
-                                           states:
-                                               { stateLabel: string,
-                                                 stateControlIndex: number
-                                               }[]
-                                         }>;
+    processesStatesLabels: Map<string, { processI18n: string,
+                                         states:
+                                             { stateLabel: string,
+                                               stateControlIndex: number
+                                             }[]
+                                       }>;
     preparedListOfProcessesStates: { processId: string,
                                      stateId: string }[];
 
@@ -59,34 +48,23 @@ export class FeedconfigurationComponent implements OnInit, OnDestroy {
     public displaySendResultError = false;
     messageAfterSavingSettings: string;
 
-    unsubscribe$: Subject<void> = new Subject<void>();
-
     constructor(private formBuilder: FormBuilder,
                 private store: Store<AppState>,
                 private userService: UserService,
                 private processesService: ProcessesService,
                 private modalService: NgbModal,
-                private translateService: TranslateService,
                 private settingsService: SettingsService,
     ) {
-        this.processesDefinition = this.processesService.getAllProcesses();
-        this.processGroups = this.processesService.getProcessGroups();
-        this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
-        this.feedConfigurationForm = this.formBuilder.group({
-            processesStates: new FormArray([])
-        });
-        this.processesStatesLabels = new Map<string, {processLabel: string,
-                                                        states:
-                                                            { stateLabel: string,
-                                                              stateControlIndex: number
-                                                            }[]
-                                                       }> ();
+        this.processesStatesLabels = new Map<string, {processI18n: string,
+                                                      states:
+                                                          { stateLabel: string,
+                                                            stateControlIndex: number
+                                                          }[]
+                                                     }> ();
         this.preparedListOfProcessesStates = [];
         this.processesWithoutGroup = [];
-
-        this.computePreparedListOfProcessesStatesAndProcessesStatesLabels();
-        this.makeProcessesWithoutGroup();
-        this.addCheckboxesInFormArray();
+        this.processesDefinition = this.processesService.getAllProcesses();
+        this.initForm();
     }
 
     get processesStatesFormArray() {
@@ -135,18 +113,13 @@ export class FeedconfigurationComponent implements OnInit, OnDestroy {
                 const statesArray: { stateLabel: string, stateControlIndex: number }[]
                     = new Array<{stateLabel: string, stateControlIndex: number}>();
 
-                let processLabel = process.id;
-                if (!!process.name)
-                    this.translateService.get(getI18nPrefixFromProcess(process) + process.name)
-                        .subscribe(result => processLabel = result);
+                const processI18n = (!!process.name) ? this.getI18nPrefixFromProcess(process) + process.name :
+                    this.getI18nPrefixFromProcess(process) + process.id;
 
                 for (const key in process.states) {
                     const value = process.states[key];
-
-                    let stateLabel = key;
-                    if (!!value.name)
-                        this.translateService.get(getI18nPrefixFromProcess(process) + value.name)
-                            .subscribe(result => stateLabel = result);
+                    const stateLabel = (!!value.name) ? this.getI18nPrefixFromProcess(process) + value.name :
+                        this.getI18nPrefixFromProcess(process) + key;
 
                     statesArray.push({stateLabel: stateLabel, stateControlIndex: stateControlIndex});
                     this.preparedListOfProcessesStates.push({
@@ -154,18 +127,26 @@ export class FeedconfigurationComponent implements OnInit, OnDestroy {
                         stateId: key});
                     stateControlIndex++;
                 }
-                this.processesStatesLabels.set(process.id, {processLabel: processLabel,
-                                                              states: statesArray});
+                this.processesStatesLabels.set(process.id, {processI18n: processI18n,
+                                                            states: statesArray});
             }
         }
     }
 
-    ngOnInit() {
+    private initForm() {
+        this.feedConfigurationForm = this.formBuilder.group({
+            processesStates: new FormArray([])
+        });
     }
 
-    ngOnDestroy() {
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
+    ngOnInit() {
+        this.userService.currentUserWithPerimeters().subscribe(result => {
+            this.currentUserWithPerimeters = result;
+            this.processGroups = this.processesService.getProcessGroups();
+            this.computePreparedListOfProcessesStatesAndProcessesStatesLabels();
+            this.makeProcessesWithoutGroup();
+            this.addCheckboxesInFormArray();
+        });
     }
 
     confirmSaveSettings() {
@@ -208,6 +189,10 @@ export class FeedconfigurationComponent implements OnInit, OnDestroy {
                     this.displaySendResultError = true;
                 }
             );
+    }
+
+    getI18nPrefixFromProcess(process: Process): string {
+        return process.id + '.' + process.version + '.';
     }
 
     open(content) {

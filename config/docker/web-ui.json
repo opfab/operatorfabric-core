@@ -138,5 +138,8 @@
   },
   "admin": {
     "hidden": false
+  },
+  "feedConfiguration": {
+    "hidden": false
   }
 }

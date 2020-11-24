@@ -103,7 +103,7 @@ export class ProcessesService {
 
                             console.log(new Date().toISOString(), 'List of process groups loaded');
                         }
-                    }, (error) => console.error(new Date().toISOString(), 'an error occurred', error)
+                    }, (error) => console.error(new Date().toISOString(), 'An error occurred when loading processGroups', error)
                 ));
     }
 

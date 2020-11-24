@@ -16,13 +16,11 @@
             <h5 class="font-weight-bold" translate>{{processGroup.id}}</h5>
             <div class="row">
                 <div class="col-md" *ngFor="let processKey of processGroup.processes; ">
-                    <p class="font-weight-bold">{{processesStatesLabels.get(processKey).processLabel}}</p>
-
+                    <p class="font-weight-bold" translate>{{processesStatesLabels.get(processKey).processI18n}}</p>
                     <div class="custom-control custom-checkbox" >
                         <div class="row" formArrayName="processesStates" *ngFor="let state of processesStatesLabels.get(processKey).states; ">
-
                             <input type="checkbox" class="custom-control-input" [formControlName]=state.stateControlIndex [id]=state.stateControlIndex>
-                            <label class="custom-control-label" [for]=state.stateControlIndex >
+                            <label class="custom-control-label" [for]=state.stateControlIndex translate>
                                 {{state.stateLabel}}
                             </label>
                         </div>
@@ -36,11 +34,11 @@
         <br />
         <div class="row">
             <div class="col-md" *ngFor="let processId of processesWithoutGroup; ">
-                <p class="font-weight-bold">{{processesStatesLabels.get(processId).processLabel}}</p>
+                <p class="font-weight-bold" translate>{{processesStatesLabels.get(processId).processI18n}}</p>
                 <div class="custom-control custom-checkbox" >
                     <div class="row" formArrayName="processesStates" *ngFor="let state of processesStatesLabels.get(processId).states; ">
                         <input type="checkbox" class="custom-control-input" [formControlName]=state.stateControlIndex [id]=state.stateControlIndex>
-                        <label class="custom-control-label" [for]=state.stateControlIndex >
+                        <label class="custom-control-label" [for]=state.stateControlIndex translate>
                             {{state.stateLabel}}
                         </label>
                     </div>

@@ -130,5 +130,8 @@
   "navbar": {
     "hidden": [],
     "businessmenus" : {"type":"IFRAME"}
+  },
+  "feedConfiguration": {
+    "hidden": false
   }
 }
