@@ -345,9 +345,7 @@ class CardProcessServiceShould {
         List<Integer> daysOfWeek = new ArrayList<>();
         daysOfWeek.add(new Integer(2));
         daysOfWeek.add(new Integer(3));
-        List<HoursAndMinutes> hoursAndMinutes = new ArrayList<>();
-        hoursAndMinutes.add(new HoursAndMinutesPublicationData(2,10));
-        hoursAndMinutes.add(new HoursAndMinutesPublicationData(8,52));
+        HoursAndMinutes hoursAndMinutes = new HoursAndMinutesPublicationData(2,10);
         RecurrencePublicationData recurrence = new RecurrencePublicationData("timezone",daysOfWeek,hoursAndMinutes);
 
         CardPublicationData newCard = CardPublicationData.builder().publisher("PUBLISHER_1")

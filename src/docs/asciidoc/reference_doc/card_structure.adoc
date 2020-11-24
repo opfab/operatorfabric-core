@@ -104,6 +104,12 @@ OR
 
 Fixes the moment until when a `response` is possible for the card. After this moment, the response button won't be useable. When lttd time is approaching, a clock is visible on the card in the feed with the residual time.  The lttd time can be set for cards that don't expect any response
 
+==== SecondsBeforeTimeSpanForReminder (`secondsBeforeTimeSpanForReminder`)
+
+Fixes the time for remind before the event define by the card see  
+ifdef::single-page-doc[<<card_reminder, Card reminder>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#card_reminder, Card reminder>>]
+
 === Business period 
 
 We define the business period as starting form startDate to endDate.  The card will be visible on the UI if the business period overlap the user chosen period (i.e the period selected on  the timeline). If endDate is not set, the  card will be visible as soon as the startDate is before the end of the chosen period.

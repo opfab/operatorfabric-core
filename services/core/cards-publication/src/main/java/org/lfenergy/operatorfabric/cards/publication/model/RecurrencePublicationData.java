@@ -21,9 +21,9 @@ public class RecurrencePublicationData implements Recurrence {
 
     private String timeZone = "Europe/Paris";
     private List<Integer> daysOfWeek;
-    List<? extends HoursAndMinutes> hoursAndMinutes;
+    HoursAndMinutes hoursAndMinutes;
 
-    public  RecurrencePublicationData(String timeZone,List<Integer> daysOfWeek, List<? extends HoursAndMinutes> hoursAndMinutes)
+    public  RecurrencePublicationData(String timeZone,List<Integer> daysOfWeek, HoursAndMinutes hoursAndMinutes)
     {
         if (this.timeZone !=null) this.timeZone = timeZone ;
         this.daysOfWeek = daysOfWeek;

@@ -12,12 +12,11 @@
 package org.lfenergy.operatorfabric.cards.publication.configuration.mongo;
 
 import org.bson.Document;
-import org.lfenergy.operatorfabric.cards.publication.model.HoursAndMinutes;
 import org.lfenergy.operatorfabric.cards.publication.model.Recurrence;
 import org.lfenergy.operatorfabric.cards.publication.model.RecurrencePublicationData;
 
 import java.util.List;
-import java.util.ArrayList;
+
 
 
 public class RecurrenceReadConverter {
@@ -29,21 +28,14 @@ public class RecurrenceReadConverter {
     public static Recurrence convert(Document source) {
         String timeZone= source.getString("timeZone");
         List<Integer> daysOfWeek = (List<Integer>) source.get("daysOfWeek");
-        List<Document> hoursAndMinutesFormDoc = (List<Document>) source.get("hoursAndMinutes");
-        List<HoursAndMinutes> hoursAndMinutes = new ArrayList<>();
-        if (hoursAndMinutesFormDoc!=null) {
-            for(Document d:hoursAndMinutesFormDoc){
-                hoursAndMinutes.add(HoursAndMinutesReadConverter.convert(d));
-            }
-        }
+        Document hoursAndMinutes = (Document) source.get("hoursAndMinutes");
 
         RecurrencePublicationData.RecurrencePublicationDataBuilder builder = RecurrencePublicationData.builder()
                 .timeZone(timeZone)
                 .daysOfWeek(daysOfWeek)
-                .hoursAndMinutes(hoursAndMinutes)
+                .hoursAndMinutes(HoursAndMinutesReadConverter.convert(hoursAndMinutes))
                 ;
                 
-
         return builder.build();
     }
 }

@@ -18,7 +18,6 @@ import org.lfenergy.operatorfabric.cards.publication.model.HoursAndMinutesPublic
 
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class RecurrenceWriterConverter { 
 
@@ -31,13 +30,9 @@ public class RecurrenceWriterConverter {
 
     public static Document convert(RecurrencePublicationData source) {
         Document result = new Document();
-
-        List<? extends HoursAndMinutes>  hoursAndMinutes = source.getHoursAndMinutes();
+        HoursAndMinutes  hoursAndMinutes = source.getHoursAndMinutes();
         if (hoursAndMinutes!=null) {
-            List<Document>  hoursAndMinutesAsDocuments = hoursAndMinutes.stream()
-            .map(hm -> HoursAndMinutesWriterConverter.convert((HoursAndMinutesPublicationData) hm))
-            .collect(Collectors.toList());
-            result.append("hoursAndMinutes", hoursAndMinutesAsDocuments);
+            result.append("hoursAndMinutes", HoursAndMinutesWriterConverter.convert((HoursAndMinutesPublicationData) hoursAndMinutes));
         }
 
         List<Integer>  daysOfWeek = source.getDaysOfWeek();

@@ -22,6 +22,6 @@ public class RecurrenceConsultationData implements Recurrence {
 
     private String timeZone;
     private List<Integer> daysOfWeek;
-    List<? extends HoursAndMinutes> hoursAndMinutes;
+    private HoursAndMinutes hoursAndMinutes;
 
 }

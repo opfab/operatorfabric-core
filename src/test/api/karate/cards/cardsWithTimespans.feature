@@ -27,7 +27,14 @@ Feature: Cards with timespans
 					{
 						"timeZone":"test",
 						"daysOfWeek":[2,3],
-						"hoursAndMinutes": [{"hours":10,"minutes":20},{"hours":12,"minutes":58}]
+						"hoursAndMinutes": {"hours":10,"minutes":20}
+					}
+		},
+		{"start" : 1553186770681 ,"end" :1553186770682 , "recurrence" :
+					{
+						"timeZone":"test",
+						"daysOfWeek":[4,5],
+						"hoursAndMinutes": {"hours":12,"minutes":22}
 					}
 		},
 		{"start" : 1553186770678}
@@ -56,8 +63,11 @@ Feature: Cards with timespans
 	And match response.card.secondsBeforeTimeSpanForReminder == 1000
 	And match response.card.timeSpans[0].recurrence.timeZone == "test"
 	And match response.card.timeSpans[0].recurrence.daysOfWeek[1] == 3
-	And match response.card.timeSpans[0].recurrence.hoursAndMinutes[1].hours == 12
-	And match response.card.timeSpans[0].recurrence.hoursAndMinutes[1].minutes == 58
+	And match response.card.timeSpans[0].recurrence.hoursAndMinutes.hours == 10
+	And match response.card.timeSpans[0].recurrence.hoursAndMinutes.minutes == 20
+	And match response.card.timeSpans[1].recurrence.daysOfWeek[0] == 4
+	And match response.card.timeSpans[1].recurrence.hoursAndMinutes.hours == 12
+	And match response.card.timeSpans[1].recurrence.hoursAndMinutes.minutes == 22
 	
 
  #delete card
@@ -86,7 +96,7 @@ Scenario: When post a card with no timeZone in timespan recurrence , it set the 
 		{"start" : 1553186770681 ,"end" :1553186770682 , "recurrence" :
 					{
 						"daysOfWeek":[2,3],
-						"hoursAndMinutes": [{"hours":10,"minutes":20},{"hours":12,"minutes":58}]
+						"hoursAndMinutes": {"hours":10,"minutes":20}
 					}
 		},
 		{"start" : 1553186770678}
@@ -120,7 +130,7 @@ Scenario: When post a card with no timeZone in timespan recurrence , it set the 
     Then status 200
 
 
-  Scenario: When post card with no hoursAndMinutes in recurrencen the card is not accepted
+  Scenario: When post card with no hoursAndMinutes in recurrence, the card is not accepted
 
     * def card =
 """
