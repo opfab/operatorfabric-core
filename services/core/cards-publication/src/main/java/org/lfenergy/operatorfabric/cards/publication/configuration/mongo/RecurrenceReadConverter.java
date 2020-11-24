@@ -12,12 +12,11 @@
 package org.lfenergy.operatorfabric.cards.publication.configuration.mongo;
 
 import org.bson.Document;
-import org.lfenergy.operatorfabric.cards.publication.model.HoursAndMinutes;
 import org.lfenergy.operatorfabric.cards.publication.model.Recurrence;
 import org.lfenergy.operatorfabric.cards.publication.model.RecurrencePublicationData;
 
 import java.util.List;
-import java.util.ArrayList;
+
 
 
 public class RecurrenceReadConverter {

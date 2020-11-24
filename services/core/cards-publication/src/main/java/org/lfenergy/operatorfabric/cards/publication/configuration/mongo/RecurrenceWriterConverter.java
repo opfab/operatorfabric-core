@@ -18,7 +18,6 @@ import org.lfenergy.operatorfabric.cards.publication.model.HoursAndMinutesPublic
 
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class RecurrenceWriterConverter { 
 
