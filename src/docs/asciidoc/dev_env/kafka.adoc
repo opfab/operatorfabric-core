@@ -43,10 +43,9 @@ for the various Kafka configuration options.
 
 === Kafka OperatorFabric AVRO schema
 The AVRO schema, the byte format in which messages are transferred using Kafka topics, can be found at `client/src/main/avro`.
-Message are wrapped in a CardCommand object before being sent to a Kafka topic.
-This object is an almost one-to-one mapping of the OperatorFabric card, see also <<card_structure>>. The exceptions are  `Process` and
-`Process Instance Identifier`, which are moved to the top-level CardCommand.
-
+Message are wrapped in a CardCommand object before being sent to a Kafka topic. The CardCommand consists of some additional information and the
+OperatorFabric card itself, see also <<card_structure>>. The additional information, for example CommandType, consists mostly of the information
+present in a REST operation but not in Kafka. For example the http method (POST, DELETE, UPDATE) used.
 
 == Configure Kafka
 === Setting a new deserializer
