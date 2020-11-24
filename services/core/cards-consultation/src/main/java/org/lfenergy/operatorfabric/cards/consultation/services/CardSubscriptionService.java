@@ -11,12 +11,15 @@ package org.lfenergy.operatorfabric.cards.consultation.services;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.UserServiceCache;
 import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +38,8 @@ import java.util.concurrent.ScheduledFuture;
  */
 @Service
 @Slf4j
+@EnableCaching
+@Import({UserServiceCache.class})
 public class CardSubscriptionService {
 
     private final ThreadPoolTaskScheduler taskScheduler;
@@ -45,6 +50,9 @@ public class CardSubscriptionService {
     private final ConnectionFactory connectionFactory;
     private Map<String, CardSubscription> cache = new ConcurrentHashMap<>();
     private Map<String, ScheduledFuture<?>> pendingEvict = new ConcurrentHashMap<>();
+
+    @Autowired
+    protected UserServiceCache userServiceCache;
 
     @Autowired
     public CardSubscriptionService(ThreadPoolTaskScheduler taskScheduler,
@@ -134,6 +142,7 @@ public class CardSubscriptionService {
         cardSubscription.initSubscription(() -> scheduleEviction(subId));
         cache.put(subId, cardSubscription);
         log.debug("Subscription created with id {}", cardSubscription.getId());
+        cardSubscription.userServiceCache = this.userServiceCache;
         return cardSubscription;
     }
 

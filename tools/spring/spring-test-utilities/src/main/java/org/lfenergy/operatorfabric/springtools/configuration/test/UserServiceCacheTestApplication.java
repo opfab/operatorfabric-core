@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.lfenergy.operatorfabric.springtools.configuration.oauth.application;
+package org.lfenergy.operatorfabric.springtools.configuration.test;
 
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.UserServiceCache;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.UserServiceProxy;
