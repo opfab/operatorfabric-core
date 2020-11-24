@@ -158,31 +158,6 @@ You must not use dot in json field names. In this case, the card will be refused
 
 == Presentation Information of the card
 
-=== details (`details`)
-
-This attribute is a string of objects containing a `title` attribute which is `i18n` key and a `template` attribute
-which refers to a template name contained in the publisher bundle. The bundle in which those resources will be looked
-for is the one corresponding to the
-ifdef::single-page-doc[<<card_process_version, version>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#card_process_version, version>>]
-declared in the card for the current
-ifdef::single-page-doc[<<card_process, process>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#card_process, process>>]
-.
-If no resource is found, either because there is no bundle for the given version or
-there is no resource for the given key, then the corresponding key is displayed in the details section of the GUI.
-
-
-*example:*
-
-The `TEST` process only has a `0.1` version uploaded in the current `OperatorFabric` system. The `details` value is
-`[{"title":{"key":"first.tab.title"},"template":"template0"}]`.
-
-If the `processVersion` of the card is `2` then only the `title` key declared in the `details` array will be displayed
-without any translation, i.e. the tab will contains `TEST.2.first.tab.title` and will be empty. If the `l10n` for
-the title is not available, then the tab title will be still `TEST.2.first.tab.title` but the template will be computed
-and the details section will display the template content.
-
 === TimeSpans (`timeSpans`)
 
 When the simple startDate and endDate are not enough to characterize your

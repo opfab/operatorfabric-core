@@ -201,12 +201,6 @@ public class BusinessconfigController implements BusinessconfigApi {
     }
 
     @Override
-    public List<? extends Detail> getDetails(HttpServletRequest request, HttpServletResponse response, String processId, String stateName, String version) {
-        return getState(request, response, processId, stateName, version)
-                .getDetails();
-    }
-
-    @Override
     public Response getResponse(HttpServletRequest request, HttpServletResponse response, String processId,
                                 String stateName, String version) {
         return getState(request, response, processId, stateName, version)

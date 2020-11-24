@@ -19,7 +19,7 @@ import {UserService} from '@ofServices/user.service';
 import {User} from '@ofModel/user.model';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {AppService} from '@ofServices/app.service';
-import {State as CardState, Detail} from '@ofModel/processes.model';
+import {State as CardState} from '@ofModel/processes.model';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({

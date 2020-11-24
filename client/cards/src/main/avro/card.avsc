@@ -83,20 +83,6 @@
       "default": null
     },
     {
-      "name": "details",
-      "type": [
-        "null",
-        {
-          "type": "array",
-          "items": {
-            "name": "detail",
-            "type": "Detail"
-          }
-        }
-      ],
-      "default": null
-    },
-    {
       "name": "title",
       "type": "I18n"
     },

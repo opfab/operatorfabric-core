@@ -62673,17 +62673,6 @@
                 }
             ]
         },
-        "details": [
-            {
-                "styles": [
-                    "apogee-sea"
-                ],
-                "templateName": "template1",
-                "title": {
-                    "key": "apogeesea.card.details.generic"
-                }
-            }
-        ],
         "process": "APOGEESEA",
         "processInstanceId": "SEA0",
         "publisher": "APOGEESEA",

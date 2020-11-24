@@ -12,14 +12,10 @@
     "firstState": {
       "name":  "state.label",
       "color": "blue",
-      "details": [
-        {
-          "title": {
-            "key": "template.title"
-          },
-          "templateName": "operation"
-        }
-      ],
+      "detailTitle": {
+        "key": "template.title"
+      },
+      "templateName": "operation",
       "acknowledgementAllowed": false
     }
   }

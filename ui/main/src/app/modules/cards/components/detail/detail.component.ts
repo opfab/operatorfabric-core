@@ -505,7 +505,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private initializeHrefsOfCssLink() {
-        const styles = this.cardState.details[0].styles;
+        const styles = this.cardState.styles;
         this.hrefsOfCssLink = new Array<SafeResourceUrl>();
         if (!!styles) {
             const process = this.card.process;
@@ -525,7 +525,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
         templateGateway.childCards = this.childCards;
         this._responseData = this.cardState.response;
-        const templateName = this.cardState.details[0].templateName;
+        const templateName = this.cardState.templateName;
         if (!!templateName) {
             this.handlebars.executeTemplate(templateName,
                 new DetailContext(this.card, this._userContext, this._responseData))

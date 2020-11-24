@@ -12,30 +12,22 @@
       "name": "message.title",
       "color": "#FAF0AF",
       "userCardTemplate": "usercard_message",
-      "details": [
-        {
-          "title": {
-            "key": "message.title"
-          },
-          "templateName": "message",
-          "styles": []
-        }
-      ],
+      "detailTitle": {
+        "key": "message.title"
+      },
+      "templateName": "message",
+      "styles": [],
       "acknowledgementAllowed": true
     },
     "conferenceState": {
       "name": "conference.title",
       "color": "#FAF0AF",
       "userCardTemplate": "usercard_conference",
-      "details": [
-        {
-          "title": {
-            "key": "conference.title"
-          },
-          "templateName": "conference",
-          "styles": []
-        }
-      ],
+      "detailTitle": {
+        "key": "conference.title"
+      },
+      "templateName": "conference",
+      "styles": [],
       "acknowledgementAllowed": true
     },
     "questionState": {
@@ -45,30 +37,22 @@
       "response": {
         "state": "questionState"
       },
-      "details": [
-        {
-          "title": {
-            "key": "question.title"
-          },
-          "templateName": "question",
-          "styles": []
-        }
-      ],
+      "detailTitle": {
+        "key": "question.title"
+      },
+      "templateName": "question",
+      "styles": [],
       "acknowledgementAllowed": false
     },
     "taskState": {
       "name": "task.title",
       "color": "#8bcdcd",
       "userCardTemplate": "usercard_task",
-      "details": [
-        {
-          "title": {
-            "key": "task.title"
-          },
-          "templateName": "task",
-          "styles": [
-          ]
-        }
+      "detailTitle": {
+        "key": "task.title"
+      },
+      "templateName": "task",
+      "styles": [
       ],
       "acknowledgementAllowed": true
     },    
@@ -79,15 +63,11 @@
       "response": {
         "state": "incidentInProgressState"
       },
-      "details": [
-        {
-          "title": {
-            "key": "incidentInProgress.name"
-          },
-          "templateName": "incidentInProgress",
-          "styles": []
-        }
-      ],
+      "detailTitle": {
+        "key": "incidentInProgress.name"
+      },
+      "templateName": "incidentInProgress",
+      "styles": [],
       "acknowledgementAllowed": true
     }
   }

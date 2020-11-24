@@ -73,6 +73,7 @@ public class CardPublicationData implements Card {
     private I18n title;
     
     private I18n summary;
+
     @CreatedDate
     private Instant publishDate;
     private Instant lttd;
@@ -90,9 +91,6 @@ public class CardPublicationData implements Card {
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<? extends TimeSpan> timeSpans;
-    @Singular
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<? extends Detail> details;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Recipient recipient;
     @JsonInclude(JsonInclude.Include.NON_NULL)
