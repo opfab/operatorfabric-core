@@ -184,7 +184,13 @@
       "error": {
         "impossibleToDeleteCard": "Impossible to delete card for technical reasons"
       }
-    }
+    },
+    "searchPlaceholderText": "Search",
+    "selectRecipientText": "Select a recipîent",
+    "selectAllText": "Select All",
+    "unSelectAllText": "UnSelect All",
+    "filterSelectAllText": "Select all filtered results",
+    "filterUnSelectAllText": "UnSelect all filtered results"
   },
   "response": {
     "btnTitle": "VALIDATE ANSWERS",

@@ -184,7 +184,14 @@
       "error": {
         "impossibleToDeleteCard": "Impossible de supprimer la carte pour des raisons techniques"
       }
-    }
+    },
+    "searchPlaceholderText": "Rechercher",
+    "selectRecipientText": "Choisir un destinataire",
+    "selectAllText": "Sélectionner tout",
+    "unSelectAllText": "Desélectionner tout",
+    "filterSelectAllText": "Sélectionner tous les résultats filtrés",
+    "filterUnSelectAllText": "Desélectionner tous les résultats filtrés"
+    
   },
   "response": {
     "btnTitle": "VALIDER REPONSES",
