@@ -35,7 +35,7 @@ install:
   # Should be synch with ${OF_HOME}/bin/load_environment_light.sh. It's the first part of the sdk reference without vendor name
   # for example the current configured in sdk has the following reference `8.0.265-zulu`
   # the value of the following variable is `8.0.265` and its vendor name part is `-zulu`
-  - CURRENT_JDK_VERSION="8.0.265"
+  - CURRENT_JDK_VERSION="$(<JAVA_VERSION)"
   # need to substitute last dot by an underscore. Example value for the following: "1.8.0_265"
   # for java version higher than 8 the prefix `1.` should be removed
   - FULL_JDK_VERSION="1.${CURRENT_JDK_VERSION%.*}${CURRENT_JDK_VERSION/*./_}"
