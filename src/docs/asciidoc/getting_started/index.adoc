@@ -320,11 +320,9 @@ of the bundle:
 			"acknowledgementAllowed": true
 		},
 		"criticalSituation-end" : {
-			"details" : [{
 			"detailTitle" : { "key" : "criticalSituation-end.title"},
 			"templateName" : "endCriticalSituationTemplate",
-			"styles" : [ "style" ]
-			}],
+			"styles" : [ "style" ],
 			"acknowledgementAllowed": true
 		}
 	}
