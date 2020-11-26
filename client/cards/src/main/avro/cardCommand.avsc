@@ -13,14 +13,6 @@
         }
     },
     {
-      "name": "process",
-      "type": "string"
-    },
-    {
-      "name": "processInstanceId",
-      "type": "string"
-    },
-    {
       "name": "card",
       "type": ["null","Card"],
       "default": null

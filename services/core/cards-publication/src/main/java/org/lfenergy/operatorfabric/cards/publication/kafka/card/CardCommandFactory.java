@@ -35,8 +35,6 @@ public class CardCommandFactory {
             kafkaCard = objectMapper.readCardValue(objectMapper.writeValueAsString(cardPublicationData), Card.class);
             cardCommand.setCommand(CommandType.RESPONSE_CARD);
             cardCommand.setCard(kafkaCard);
-            cardCommand.setProcess(cardPublicationData.getProcess());
-            cardCommand.setProcessInstanceId(cardPublicationData.getProcessInstanceId());
 
             String cardDataString = objectMapper.writeValueAsString(cardData);
             kafkaCard.setData(cardDataString);

@@ -38,7 +38,7 @@ public class ResponseCardProducer {
         CardCommand cardCommand = cardCommandFactory.create(cardPublicationData);
 
         ListenableFuture<SendResult<String, CardCommand>> future =
-                kafkaTemplate.send(topic, cardCommand.getProcess(), cardCommand);
+                kafkaTemplate.send(topic, cardCommand.getCard().getProcess(), cardCommand);
         future.addCallback(new ListenableFutureCallback<SendResult<String, CardCommand>>() {
             @Override
             public void onFailure(Throwable throwable) {

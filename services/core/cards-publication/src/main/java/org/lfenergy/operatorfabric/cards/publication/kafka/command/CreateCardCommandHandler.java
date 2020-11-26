@@ -11,6 +11,7 @@ package org.lfenergy.operatorfabric.cards.publication.kafka.command;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.lfenergy.operatorfabric.avro.Card;
 import org.lfenergy.operatorfabric.avro.CardCommand;
 import org.lfenergy.operatorfabric.avro.CommandType;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
@@ -32,8 +33,9 @@ public class CreateCardCommandHandler extends BaseCommandHandler implements Comm
 
     @Override
     public void executeCommand(CardCommand cardCommand)  {
+        Card kafkaCard = cardCommand.getCard();
         log.debug("Received Kafka CREATE CARD with processInstanceId {}, taskId {} and variables: {}",
-                cardCommand.getProcessInstanceId(), cardCommand.getProcess(), cardCommand.getCard().getData());
+                kafkaCard.getProcessInstanceId(), kafkaCard.getProcess(), kafkaCard.getData());
 
         CardPublicationData card = buildCardPublicationData(cardCommand);
         if (card != null) {

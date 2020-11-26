@@ -55,6 +55,8 @@ class KafkaAvroWithoutRegistrySerializerShould {
 
     private Card createCard() {
         return Card.newBuilder()
+                .setProcess("Process")
+                .setProcessInstanceId("InstanceId")
                 .setPublisher("Publisher")
                 .setProcessVersion("ProcessVersion")
                 .setStartDate(12345L)
@@ -67,8 +69,6 @@ class KafkaAvroWithoutRegistrySerializerShould {
     private CardCommand createCardCommand(Card card) {
         return CardCommand.newBuilder()
                 .setCommand(CommandType.CREATE_CARD)
-                .setProcess("Process")
-                .setProcessInstanceId("InstanceId")
                 .setCard(card)
                 .build();
     }

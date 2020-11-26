@@ -14,6 +14,14 @@
       "default": null
     },
     {
+      "name": "process",
+      "type": "string"
+    },
+    {
+      "name": "processInstanceId",
+      "type": "string"
+    },
+    {
       "name": "publisher",
       "type": "string"
     },
