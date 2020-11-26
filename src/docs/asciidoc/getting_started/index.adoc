@@ -32,7 +32,7 @@ After connection, you should see the following screen
 
 image::empty-opfab-page.jpg[empty opfab screenshot]
 
-To stop the server, use:
+To stop the server (if you start it in background), use:
 
 ----
 docker-compose down & 
@@ -84,10 +84,7 @@ section of the reference documentation.
 	"process" :"defaultProcess",
 	"processInstanceId" : "hello-world-1",
 	"state" : "messageState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "Dispatcher"
-			},
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -112,10 +109,7 @@ We can send a new version of the card (updateCard.json):
 	"process"  :"defaultProcess",
 	"processInstanceId" : "hello-world-1",
 	"state" : "messageState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "Dispatcher"
-			},
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "ALARM",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -198,11 +192,9 @@ The global configuration is defined in config.json :
 	"version":"2",
 	"states":{
 		"messageState" : {
-			"details" : [{
-				"title" : { "key" : "defaultProcess.title"},
-				"templateName" : "template",
-				"styles" : [ "style" ]
-			}]
+			"detailTitle" : { "key" : "defaultProcess.title"},
+			"templateName" : "template",
+			"styles" : [ "style" ]
 		}
 	}
 }
@@ -259,7 +251,7 @@ You should received the following JSON in response, describing your bundle.
 
 [source,JSON]
 ----
-{"statesData":{"messageState":{"detailsData":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":["style"]}],"responseData":null,"acknowledgementAllowed":null,"color":null,"name":null,"details":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":["style"]}],"response":null,"acknowledgmentAllowed":null}},"id":"defaultProcess","name":null,"version":"2","menuLabel":null,"states":{"messageState":{"detailsData":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":["style"]}],"responseData":null,"acknowledgementAllowed":null,"color":null,"name":null,"details":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":["style"]}],"response":null,"acknowledgmentAllowed":null}},"menuEntries":null}
+{"statesData":{"messageState":{"responseData":null,"acknowledgementAllowed":true,"color":null,"name":null,"userCardTemplate":null,"detailTitle":{"key":"defaultProcess.title","parameters":null},"templateName":"template","styles":["style"],"acknowledgmentAllowed":true,"response":null}},"id":"defaultProcess","name":null,"version":"2","uiVisibility":null,"states":{"messageState":{"responseData":null,"acknowledgementAllowed":true,"color":null,"name":null,"userCardTemplate":null,"detailTitle":{"key":"defaultProcess.title","parameters":null},"templateName":"template","styles":["style"],"acknowledgmentAllowed":true,"response":null}}}
 ----
 
 ==== Send a card 
@@ -274,10 +266,7 @@ You can send the following card to test your new bundle:
 	"process"  :"defaultProcess",
 	"processInstanceId" : "hello-world-1",
 	"state": "messageState",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "Dispatcher"
-			},
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -319,28 +308,26 @@ of the bundle:
 	"version":"1",
 	"states":{
 		"criticalSituation-begin" : {
-			"details" : [{
-				"title" : { "key" : "criticalSituation-begin.title"},
-				"templateName" : "criticalSituationTemplate",
-				"styles" : [ "style" ]
-			}]
+			"detailTitle" : { "key" : "criticalSituation-begin.title"},
+			"templateName" : "criticalSituationTemplate",
+			"styles" : [ "style" ],
+			"acknowledgementAllowed": true
 		},
 		"criticalSituation-update" : {
-			"details" : [{
-				"title" : { "key" : "criticalSituation-update.title"},
-				"templateName" : "criticalSituationTemplate",
-				"styles" : [ "style" ]
-			}]
+			"detailTitle" : { "key" : "criticalSituation-update.title"},
+			"templateName" : "criticalSituationTemplate",
+			"styles" : [ "style" ],
+			"acknowledgementAllowed": true
 		},
 		"criticalSituation-end" : {
-			"details" : [{
-				"title" : { "key" : "criticalSituation-end.title"},
-				"templateName" : "endCriticalSituationTemplate",
-				"styles" : [ "style" ]
-			}]
+			"detailTitle" : { "key" : "criticalSituation-end.title"},
+			"templateName" : "endCriticalSituationTemplate",
+			"styles" : [ "style" ],
+			"acknowledgementAllowed": true
 		}
 	}
 }
+
 ----
 
 You can see in the JSON we define a process name "criticalSituation" with 3 states: criticalSituation-begin,
@@ -380,10 +367,7 @@ We can now send cards and simulate the process, first we send a card at the begi
 	"process"  :"criticalSituation",
 	"processInstanceId" : "alert1",
 	"state": "criticalSituation-begin",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "Dispatcher"
-			},
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "ALARM",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "criticalSituation-begin.summary"},
@@ -402,7 +386,7 @@ The card refers to the process "criticalSituation" as defined in the config.json
 Two other card have be provided to continue the process
 
 - cardUpdate.json: the state is criticalSituation-update
-- cardEnd.json: the state is criticalSituation-end and severity set to "information"
+- cardEnd.json: the state is criticalSituation-end and severity set to "compliant"
 
 You can send these cards:
 ----
@@ -425,10 +409,7 @@ To view the card in the time line, you need to set times in the card using timeS
 	"process"  :"maintenanceProcess",
 	"processInstanceId" : "maintenance-1",
 	"state": "planned",
-	"recipient" : {
-				"type" : "GROUP",
-				"identity" : "Dispatcher"
-			},
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "maintenanceProcess.summary"},
@@ -590,10 +571,7 @@ Let's send this card (for ENTITY1 and Dispatcher group) :
 	"process"  :"defaultProcess",
 	"processInstanceId" : "cardExample5_1",
 	"state": "messageState2",
-	"recipient" : {
-		"type" : "GROUP",
-		"identity" : "Dispatcher"
-	},
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -635,10 +613,7 @@ Let's send this card (for ENTITY1 and Planner group) :
 	"process"  :"defaultProcess",
 	"processInstanceId" : "cardExample5_2",
 	"state": "messageState",
-	"recipient" : {
-		"type" : "GROUP",
-		"identity" : "Planner"
-	},
+	"groupRecipients": ["Planner"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
