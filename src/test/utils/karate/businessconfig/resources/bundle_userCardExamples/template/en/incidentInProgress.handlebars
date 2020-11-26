@@ -84,18 +84,18 @@ Other impacts : <input size="50" type="text" id="OTHERS"> </input>
             templateGateway.childCards.forEach((c, i) => {
                  const entityName = templateGateway.getEntityName(c.publisher);
                 responses += `<tr> <td> ${entityName} </td>`
-                if (c.data.impacts.SA)  responses += `<td style="color:red;">  OUI </td>`;
-                else  responses += `<td>  NON </td>`;
-                if (c.data.impacts.SB)  responses += `<td style="color:red;">  OUI </td>`;
-                else  responses += `<td>  NON </td>`;
-                if (c.data.impacts.SC)  responses += `<td style="color:red;">  OUI </td>`;
-                else  responses += `<td>  NON </td>`;
-                if (c.data.impacts.SD)  responses += `<td style="color:red;">  OUI </td>`;
-                else  responses += `<td>  NON </td>`;
-                if (c.data.impacts.SE)  responses += `<td style="color:red;">  OUI </td>`;
-                else  responses += `<td>  NON </td>`;
-                if (c.data.impacts.SF)  responses += `<td style="color:red;">  OUI </td>`;
-                else  responses += `<td>  NON </td>`;
+                if (c.data.impacts.SA)  responses += `<td style="color:red;">  YES </td>`;
+                else  responses += `<td>  NO </td>`;
+                if (c.data.impacts.SB)  responses += `<td style="color:red;">  YES </td>`;
+                else  responses += `<td>  NO </td>`;
+                if (c.data.impacts.SC)  responses += `<td style="color:red;">  YES </td>`;
+                else  responses += `<td>  NO </td>`;
+                if (c.data.impacts.SD)  responses += `<td style="color:red;">  YES </td>`;
+                else  responses += `<td>  NO </td>`;
+                if (c.data.impacts.SE)  responses += `<td style="color:red;">  YES </td>`;
+                else  responses += `<td>  NO </td>`;
+                if (c.data.impacts.SF)  responses += `<td style="color:red;">  YES </td>`;
+                else  responses += `<td>  NO </td>`;
                 responses += `<td> ${c.data.impacts.OTHERS}</td>`;
                 responses += "</tr>";
             });
