@@ -377,11 +377,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     markAsReadIfNecessary() {
         if (this.card.hasBeenRead === false) {
-            this.cardService.postUserCardRead(this.card.uid).subscribe(resp => {
-                if (resp.status === 201 || resp.status === 200) {
-                    this.updateReadOnLightCard(true);
-                }
-            });
+            this.updateReadOnLightCard(true);
+            this.cardService.postUserCardRead(this.card.uid).subscribe();
         }
     }
 
