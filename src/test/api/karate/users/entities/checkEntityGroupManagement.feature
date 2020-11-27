@@ -111,7 +111,7 @@ Feature: CheckEntityGroupManagement
         | entity4_Version_RefToEntity2      | 'entity4-groupTest->entity2-groupTest->entity4-groupTest'                     |
         | entity4_Version_RefToEntity3      | 'entity4-groupTest->entity3-groupTest->entity2-groupTest->entity4-groupTest'  |
 
-    Scenario: Add entity with previous tested Id without any cylcle in parents
+    Scenario: Add entity with previous tested Id without any cycle in parents
 
         Given url opfabUrl + 'users/entities'
         And header Authorization = 'Bearer ' + adminAuthToken

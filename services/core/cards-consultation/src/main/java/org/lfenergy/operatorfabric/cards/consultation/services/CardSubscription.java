@@ -117,9 +117,9 @@ public class CardSubscription {
             else emitter.next("RESTORE");
             cardListener.start();
 
-            
+
         });
-        
+
     }
 
     private void registerListener(MessageListenerContainer mlc) {
@@ -197,12 +197,12 @@ public class CardSubscription {
 
     public void publishDataIntoSubscription(String message)
     {
-        this.messageSink.next(message); 
+        this.messageSink.next(message);
     }
 
 
     public void publishDataFluxIntoSubscription(Flux<String> messageFlux) {
-        
+
         messageFlux.subscribe(next->this.messageSink.next(next));
     }
 
@@ -229,14 +229,13 @@ public class CardSubscription {
     /**
      * @param messageBody message body received from rabbitMQ
      * @return true if the message received must be seen by the connected user.
-     *         Rules for receiving cards : 1) If the card is sent to the user
-     *         directly then the user receive it 2) If the card is sent to entity A
-     *         and group B, then to receive it, the user must be part of A AND (be
-     *         part of B OR have the right for the process/state of the card) 3) If
-     *         the card is sent to entity A only, then to receive it, the user must
-     *         be part of A and have the right for the process/state of the card 4)
-     *         If the card is sent to group B only, then to receive it, the user
-     *         must be part of B
+     *         Rules for receiving cards :
+     *         1) If the card is sent to the user directly then the user receive it
+     *         2) If the card is sent to entity A and group B, then to receive it,
+     *            the user must be part of A AND (be part of B OR have the right for the process/state of the card)
+     *         3) If  the card is sent to entity A only, then to receive it,
+     *            the user must be part of A and have the right for the process/state of the card
+     *         4) If the card is sent to group B only, then to receive it, the user must be part of B
      */
     public boolean checkIfUserMustReceiveTheCard(JSONObject cardOperation) {
 
