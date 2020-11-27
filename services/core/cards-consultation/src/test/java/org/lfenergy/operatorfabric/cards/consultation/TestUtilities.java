@@ -53,6 +53,14 @@ public class TestUtilities {
         return ZONED_FORMATTER.format(Instant.ofEpochMilli(now));
     }
 
+    // as date are stored in millis in mongo , we should not used nanos otherwise 
+    // we will have different results when comparing date send and date stored 
+    // resulting  in failed test 
+    public static Instant roundingToMillis(Instant instant) {
+        return Instant.ofEpochMilli(instant.toEpochMilli());
+    }
+
+
     /* Utilities regarding Cards */
 
     public static CardConsultationData createSimpleCard(int processSuffix, Instant publication, Instant start, Instant end) {
@@ -158,6 +166,7 @@ public class TestUtilities {
         card.setId(card.getProcess() + "." + card.getProcessInstanceId());
         card.setShardKey(Math.toIntExact(card.getStartDate().toEpochMilli() % 24 * 1000));
     }
+
 
     public static void logCardOperation(CardOperation o) {
         log.info("op publication: " + format(o.getPublishDate()));

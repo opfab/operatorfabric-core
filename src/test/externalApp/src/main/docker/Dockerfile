@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-alpine
+FROM azul/zulu-openjdk-alpine:11-jre
 VOLUME /tmp
 ARG JAR_FILE
 COPY ${JAR_FILE} app.jar

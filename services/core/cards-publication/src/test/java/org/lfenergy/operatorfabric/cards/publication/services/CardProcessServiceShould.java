@@ -53,17 +53,16 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static java.nio.charset.Charset.forName;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.await;
 import static org.jeasy.random.FieldPredicates.named;
 import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
+
 
 /**
  * <p>
@@ -330,7 +329,12 @@ class CardProcessServiceShould {
 
     @Test
     void preserveData() {
-        Instant start = Instant.now().plusSeconds(3600);
+        // as date are stored in millis in mongo , we should not used nanos otherwise 
+        // we will have different results when comparing date send and date stored 
+        // resulting  in failed test 
+
+        Instant start = Instant.ofEpochMilli(Instant.now().toEpochMilli()).plusSeconds(3600);
+        
         LinkedHashMap data = new LinkedHashMap();
         data.put("int", 123);
         data.put("string", "test");

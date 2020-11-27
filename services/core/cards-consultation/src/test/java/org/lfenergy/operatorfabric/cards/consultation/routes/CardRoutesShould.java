@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.configureRecipientReferencesAndStartDate;
 import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.createSimpleCard;
 import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.instantiateOneCardConsultationData;
+import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.roundingToMillis;
 
 import java.time.Instant;
 import java.util.Arrays;
@@ -40,6 +41,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
+
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.test.StepVerifier;
@@ -85,7 +87,7 @@ public class CardRoutesShould {
 
         @Test
         public void findOutCard() {
-            Instant now = Instant.now();
+            Instant now = roundingToMillis(Instant.now());
 
             CardConsultationData simpleCard = instantiateOneCardConsultationData();
             configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
@@ -241,7 +243,7 @@ public class CardRoutesShould {
 
         @Test
         public void findOutCard(){
-            Instant now = Instant.now();
+            Instant now = roundingToMillis(Instant.now());
 
             CardConsultationData simpleCard1 = instantiateOneCardConsultationData();
             configureRecipientReferencesAndStartDate(simpleCard1, "", now,
