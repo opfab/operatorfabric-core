@@ -91,6 +91,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
     errorMessage: Message = { display: false, text: undefined };
 
     modalRef: NgbModalRef;
+    severityVisible: boolean = true;
+    startDateVisible: boolean = true;
+    endDateVisible: boolean = true;
 
     displayForm() {
         return !this.displaySendResult;
@@ -266,8 +269,10 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.errorMessage.display = false;
         let card;
         if  (!!this.cardToEdit) card = this.cardToEdit.card ;
-        const templateName = this.selectedProcess.states[this.selectedState].userCardTemplate;
-        if (!!templateName) {
+        const userCard = this.selectedProcess.states[this.selectedState].userCard;
+        if (!!userCard && !!userCard.template) {
+            const templateName = userCard.template;
+
             this.handlebars.queryTemplate(this.selectedProcess.id, this.selectedProcess.version, templateName)
                 .pipe(map(t => t(new DetailContext(card, null, null)))).subscribe((template) => {
                     this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml(template);
@@ -280,6 +285,16 @@ export class UserCardComponent implements OnDestroy, OnInit {
                 }
                 );
         } else this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
+
+        if (!!userCard) {
+            this.severityVisible = (userCard.severityVisible === undefined) ? true : userCard.severityVisible;
+            this.startDateVisible = (userCard.startDateVisible === undefined) ? true : userCard.startDateVisible;
+            this.endDateVisible = (userCard.endDateVisible === undefined) ? true : userCard.endDateVisible;
+        } else {
+            this.severityVisible = true;
+            this.startDateVisible = true;
+            this.endDateVisible = true;
+        }
 
     }
 
@@ -349,13 +364,20 @@ export class UserCardComponent implements OnDestroy, OnInit {
         else startDate = this.createTimestampFromValue(startDate);
 
         let endDate = this.messageForm.get('endDate').value;
-        if (!endDate)  endDate = this.defaultEndDate;
+        if (!endDate)  endDate = this.endDateVisible ? this.defaultEndDate : null;
         else endDate = this.createTimestampFromValue(endDate);
-
+        
         const title = (!!specificInformation.card.title) ? specificInformation.card.title : 'UNDEFINED';
         const summary = (!!specificInformation.card.summary) ? specificInformation.card.summary : 'UNDEFINED';
         const keepChildCards = (!!specificInformation.card.keepChildCards) ? specificInformation.card.keepChildCards : false;
         const secondsBeforeTimeSpanForReminder = (!!specificInformation.card.secondsBeforeTimeSpanForReminder) ? specificInformation.card.secondsBeforeTimeSpanForReminder : null;
+
+        let severity;
+        if (this.severityVisible) {
+            severity = formValue['severity'];
+        } else {
+            severity = (!!specificInformation.card.severity) ? specificInformation.card.severity : Severity.INFORMATION;
+        }
 
         let timeSpans = [];
         if  (!!specificInformation.viewCardInAgenda) {
@@ -378,7 +400,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
             state: state,
             startDate: startDate,
             endDate: endDate,
-            severity: formValue['severity'],
+            severity: severity,
             hasBeenAcknowledged: false,
             hasBeenRead: false,
             entityRecipients: recipients,

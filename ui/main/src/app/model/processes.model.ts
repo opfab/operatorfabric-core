@@ -57,11 +57,20 @@ export class State {
         readonly acknowledgementAllowed?: boolean,
         readonly name?: string,
         readonly color?: string,
-        readonly userCardTemplate?: string,
+        readonly userCard?: UserCard,
     ) {
     }
 }
 
+export class UserCard {
+    constructor(
+        readonly template?: string,
+        readonly severityVisible?: boolean,
+        readonly startDateVisible?: boolean,
+        readonly endDateVisible?: boolean,
+    ) {
+    }
+}
 export class Response {
     /* istanbul ignore next */
     constructor(

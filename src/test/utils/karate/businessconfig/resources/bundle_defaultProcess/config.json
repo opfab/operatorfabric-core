@@ -11,7 +11,9 @@
     "messageState": {
       "name":  "message.title",
       "color": "#FAF0AF",
-      "userCardTemplate": "usercard_message",
+      "userCard" : {
+        "template" : "usercard_message"
+      },
       "detailTitle": {
         "key": "message.title"
       },
@@ -48,7 +50,9 @@
     "processState": {
       "name": "process.label",
       "color": "#8bcdcd",
-      "userCardTemplate": "usercard_process",
+      "userCard" : {
+        "template" : "usercard_process"
+      },
       "detailTitle": {
         "key": "process.label"
       },
