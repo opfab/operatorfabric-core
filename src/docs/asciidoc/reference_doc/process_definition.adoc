@@ -248,6 +248,8 @@ As above, all parts of files irrelevant for our example are symbolised by a `…
             "state1" : {
                   …
 	                "styles":["bundleTest"]
+                  }
+              }
 	…
 }
 ----
@@ -286,7 +288,7 @@ ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/api/businesscon
 
 *Example*
 
-[soruce,shell]
+[source,shell]
 ----
 cd ${BUNDLE_FOLDER}
 curl -X POST "http://localhost:2100/businessconfig/processes"\
