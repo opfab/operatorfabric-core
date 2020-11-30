@@ -22,7 +22,6 @@ import {DatetimeFilterModule} from '../../components/share/datetime-filter/datet
 import {TextAreaModule} from '../../components/share/text-area/text-area.module';
 import {CardsModule} from '../cards/cards.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import { NewCardTemplateService } from './newcard-template.services';
 import {MultiFilter2Module} from '../../components/share/multi-filter-2/multi-filter-2.module';
 
 @NgModule({
@@ -42,8 +41,7 @@ import {MultiFilter2Module} from '../../components/share/multi-filter-2/multi-fi
         CardsModule,
         NgbModule,
         MultiFilter2Module
-    ],
-    providers: [NewCardTemplateService],
+    ]
 })
 export class UserCardModule {
 }

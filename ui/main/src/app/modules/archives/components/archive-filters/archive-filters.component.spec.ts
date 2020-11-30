@@ -18,7 +18,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Store, StoreModule } from '@ngrx/store';
 import { appReducer, AppState } from '@ofStore/index';
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
-import { BusinessconfigI18nLoaderFactory, ProcessesService } from '@ofServices/processes.service';
+import { ProcessesService } from '@ofServices/processes.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TimeService } from '@ofServices/time.service';
 import { Router } from '@angular/router';
@@ -30,7 +30,7 @@ import createSpyObj = jasmine.createSpyObj;
 import { getRandomPage } from '@tests/helpers';
 import * as fromStore from '@ofStore/selectors/archive.selectors';
 import { ArchiveQuerySuccess } from '@ofStore/actions/archive.actions';
-import {AuthenticationImportHelperForSpecs} from '@tests/helpers'
+import {AuthenticationImportHelperForSpecs, BusinessconfigI18nLoaderFactory} from '@tests/helpers'
 
 describe('ArchiveFiltersComponent', () => {
   let component: ArchiveFiltersComponent;
@@ -56,8 +56,7 @@ describe('ArchiveFiltersComponent', () => {
         TranslateModule.forRoot({
           loader: {
               provide: TranslateLoader,
-              useFactory: BusinessconfigI18nLoaderFactory,
-              deps: [ProcessesService]
+              useFactory: BusinessconfigI18nLoaderFactory
           },
           useDefaultLang: false
         })

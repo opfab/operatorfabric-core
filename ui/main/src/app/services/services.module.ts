@@ -31,6 +31,7 @@ import { DataTableShareService } from 'app/modules/admin/services/data.service';
 import { GroupsService } from './groups.service';
 import { EntitiesService } from './entities.service';
 import { ExportService } from './export.service';
+import { ReminderService} from '@ofServices/reminder/reminder.service';
 
 @NgModule({
     imports: [
@@ -60,6 +61,7 @@ import { ExportService } from './export.service';
         GlobalStyleService,
         AppService,
         DataTableShareService,
+        ReminderService
     ]
 })
 export class ServicesModule {

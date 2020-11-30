@@ -45,7 +45,6 @@ import {reducer as userReducer} from '@ofStore/reducers/user.reducer';
 import {UserState} from '@ofStates/user.state';
 import {UserEffects} from '@ofEffects/user.effects';
 
-import {TranslateEffects} from '@ofEffects/translate.effects';
 
 import {CardsSubscriptionState} from '@ofStates/cards-subscription.state';
 import {cardsSubscriptionReducer} from '@ofStore/reducers/cards-subscription.reducer';
@@ -83,7 +82,6 @@ export const appEffects = [
     FeedFiltersEffects,
     ArchiveEffects,
     UserEffects,
-    TranslateEffects,
     LoggingEffects,
     MonitoringEffects
 ];

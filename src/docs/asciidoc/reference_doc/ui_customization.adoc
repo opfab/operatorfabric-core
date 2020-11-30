@@ -11,88 +11,134 @@
 
 == UI configuration 
 
-The web-ui.json file permit to configure parameters for customization , the list of parameters is 
-link:../deployment/index.html#ui_properties[described here]
+To customize the UI, declare specific parameters in the `web-ui.json` file as link:../deployment/index.html#ui_properties[listed here]
 
 
 [[menu_entries]]
 == Menu Entries
 
-It is possible to declare specific business menu in the upper part of  OperatorFabric. Those elements are declared  in the `config.json` file of the bundles. 
+The `ui-menu.json` file declares specific business menus to be displayed in the navigation bar of OperatorFabric.
 
-If there are several items to declare for a businessconfig service, a title for the businessconfig menu section need to be declared
-within the `i18nLabelKey` attribute, otherwise the first and only `menu entry` item is used to create an entry in the
-menu nav bar of OperatorFabric.
+A menu can target directly a link or give access to several sub-menus when clicked.
+Those sub-menus can only target a link.
+A targeted link can be open in an iframe or in a new tab.
 
-=== config.json declaration
+Menus support i18n following the i18n OperatorFabric rules.
+The ui-menu.json file contains directly the i18n dictionary for the menus.
 
-This kind of objects contains the following attributes :
+In case of a single menu, the navigation bar displays the l10n of the `label` of the entry menu.
+In this case, the `label` declared at the root level of the menu is useless and can be omitted (see example below).
+
+=== ui-menu.json declaration
+
+A single menu or a menu with sub-menus has at least attributes named `id` and `entries`.
+The `entries` attribute is an array of `menu entry`.
+Note that menus with sub-menus need a `label` declaring an i18n key.
+
+Each `menu entry` declares the attributes listed below:
 
 - `id`: identifier of the entry menu in the UI;
 - `url`: url opening a new page in a tab in the browser;
 - `label`: it's an i18n key used to l10n the entry in the UI.
-- `linkType`: Defines how business menu links are displayed in the navigation bar and how
-they open. Possible values:
-** TAB: Only a text link is displayed, and clicking it opens the link in a new tab.
-** IFRAME: Only a text link is displayed, and clicking it opens the link in an iframe in the main content zone below
-the navigation bar.
-** BOTH: Both a text link and a little arrow icon are displayed. Clicking the text link opens the link in an iframe
-while clicking the icon opens in a new tab. This is also the default value.
+- `linkType`: Defines how to display business menu links in the navigation bar and how to open them. Possible values:
+** `TAB`: displays only a text link. Clicking it opens the link in a new tab.
+** `IFRAME`: displays only a text link. Clicking it opens the link in an iframe in the main content zone below the navigation bar.
+** `BOTH`: default value. Displays a text link plus a little arrow icon. Clicking the text link opens the link in an iframe while clicking the icon opens in a new tab.
 
 
 === Examples
 
-In the following examples, only the part relative to menu entries in the `config.json` file is detailed, the other parts are omitted and represented with a '…'.
+In following example, the configuration file declares two additional business menus.
+The first has only one entry, the second has two entries.
+The sample contain also the i18n translations in english and in french.
 
-*Single menu entry*
-
-....
+[source, json]
+----
 {
-	…
-	"menuEntries":[{
-			"id": "identifer-single-menu-entry",
-			"url": "https://opfab.github.io",
-			"label": "single-menu-entry-i18n-key",
-			"linkType": "BOTH"	
-		}],
+  "menus": [
+    {
+      "id": "menu1",
+      "entries": [
+        {
+          "id": "uid_test_0",
+          "url": "https://opfab.github.io/",
+          "label": "entry.single",
+          "linkType": "BOTH"
+        }
+      ]
+    },
+    {
+      "id": "menu2",
+      "label": "title.multi",
+      "entries": [
+        {
+          "id": "uid_test_1",
+          "url": "https://opfab.github.io/",
+          "label": "entry.entry1",
+          "linkType": "BOTH"
+        },
+        {
+          "id": "uid_test_2",
+          "url": "https://www.wikipedia.org/",
+          "label": "entry.entry2",
+          "linkType": "BOTH"
+        }
+      ]
+    }
+  ],
+  "locales": [
+    {
+      "language": "en",
+      "i18n": {
+        "menu1": {
+          "entry": {
+            "single": "Single menu entry"
+          }
+        },
+        "menu2": {
+          "title": {
+            "multi": "Second menu"
+          },
+          "entry": {
+            "entry1": "First menu entry",
+            "entry2": "Second menu entry"
+          }
+        }
+      }
+    },
+    {
+      "language": "fr",
+      "i18n": {
+        "menu1": {
+          "entry": {
+            "single": "Unique menu entry"
+          }
+        },
+        "menu2": {
+          "title": {
+            "multi": "Deuxieme menu"
+          },
+          "entry": {
+            "entry1": "Premiere menu entry",
+            "entry2": "Deuxieme menu entry"
+          }
+        }
+      }
+    }
+  ]
 }
-....
-
-*Several menu entries*
-
-Here a sample with 3 menu entries.
-
-....
-{
-	…
-	"i18nLabelKey":"businessconfig-name-in-menu-navbar",
-	"menuEntries": [{
-			"id": "firstEntryIdentifier",
-			"url": "https://opfab.github.io/whatisopfab/",
-			"label": "first-menu-entry",
-			"linkType": "BOTH"
-		},
-		{
-			"id": "secondEntryIdentifier",
-			"url": "https://www.lfenergy.org/",
-			"label": "second-menu-entry"
-		} ,
-		{
-			"id": "businessconfigEntryIdentifier",
-			"url": "https://opfab.github.io",
-			"label": "businessconfig-menu-entry"
-		}]
-}
-....
+----
 
 === Operator Fabric theme
 
-If the page opened via the menu is in a iframe, the current theme of operator fabric will be passed as a parameter in the request send to the web site. The parameter is named opfab_theme and has the value of the current theme : DAY, NIGHT or LEGACY. 
+For iframes opened from menu, the associated request uses an extra parameter containing the current theme information.
+Named `opfab_theme`, this parameter has a value corresponding to the current theme: +
+`DAY`, `NIGHT` or `LEGACY`.
 
-Example : 
+*Example:*
 
-....
+----
  http://mysite.com/index.htm?opfab_theme=NIGHT 
-....
+----
 
-When user is switching theme and the iframe is opened, the iframe will be reloaded.
+Switching theme will trigger reload of open iframes.

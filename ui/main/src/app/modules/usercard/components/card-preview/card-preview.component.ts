@@ -9,7 +9,7 @@
 
 
 import {Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
-import {Card, Detail} from '@ofModel/card.model';
+import {Card} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../../../cards/services/handlebars.service';
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
@@ -22,7 +22,6 @@ import {UserContext} from '@ofModel/user-context.model';
 import {skip, switchMap, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 
-
 @Component({
     selector: 'of-card-preview',
     templateUrl: './card-preview.component.html'
@@ -34,10 +33,11 @@ export class CardPreviewComponent implements OnInit, OnDestroy {
 
     public active = false;
     unsubscribe$: Subject<void> = new Subject<void>();
-    readonly hrefsOfCssLink = new Array<SafeResourceUrl>();
+    public hrefsOfCssLink = new Array<SafeResourceUrl>();
     private _htmlContent: SafeHtml;
     private _userContext: UserContext;
-    private detail: Detail;
+    private styles: string[];
+    private templateName: string;
 
 
     constructor(private element: ElementRef, private businessconfigService: ProcessesService,
@@ -57,7 +57,6 @@ export class CardPreviewComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.getTemplateAndStyle();
-
     }
 
     private getTemplateAndStyle() {
@@ -68,7 +67,8 @@ export class CardPreviewComponent implements OnInit, OnDestroy {
                         const state = businessconfig.extractState(this.card);
                         if (!!state) {
                             // Take the first detail, new card preview only compatible with one detail per card
-                            this.detail = state.details[0];
+                            this.templateName = state.templateName;
+                            this.styles = state.styles;
                         }
                         this.initializeHrefsOfCssLink();
                         this.initializeHandlebarsTemplates();
@@ -88,10 +88,11 @@ export class CardPreviewComponent implements OnInit, OnDestroy {
     }
 
     private initializeHrefsOfCssLink() {
-        if (!!this.detail && !!this.detail.styles) {
+        if (!!this.styles) {
             const process = this.card.process;
             const processVersion = this.card.processVersion;
-            this.detail.styles.forEach(style => {
+            this.hrefsOfCssLink = new Array<SafeResourceUrl>();
+            this.styles.forEach(style => {
                 const cssUrl = this.businessconfigService.computeBusinessconfigCssUrl(process, style, processVersion);
                 // needed to instantiate href of link for css in component rendering
                 const safeCssUrl = this.sanitizer.bypassSecurityTrustResourceUrl(cssUrl);
@@ -105,7 +106,7 @@ export class CardPreviewComponent implements OnInit, OnDestroy {
         this.businessconfigService.queryProcessFromCard(this.card).pipe(
             takeUntil(this.unsubscribe$),
             switchMap(process => {
-                return this.handlebars.executeTemplate(this.detail.templateName,
+                return this.handlebars.executeTemplate(this.templateName,
                     new DetailContext(this.card, this._userContext, null));
             })
         )
@@ -116,7 +117,7 @@ export class CardPreviewComponent implements OnInit, OnDestroy {
                         this.reinsertScripts();
                     }, 10);
                 }, () =>  {
-                    console.log('WARNING impossible to load template ', this.detail.templateName);
+                    console.log('WARNING impossible to load template ', this.templateName);
                     this._htmlContent = this.sanitizer.bypassSecurityTrustHtml('');
                 }
             );

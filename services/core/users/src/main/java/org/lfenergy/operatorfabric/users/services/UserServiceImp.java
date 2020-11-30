@@ -18,6 +18,7 @@ import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
 import org.lfenergy.operatorfabric.users.repositories.PerimeterRepository;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.UpdatedUserEvent;
+import org.lfenergy.operatorfabric.users.repositories.UserSettingsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.bus.ServiceMatcher;
 import org.springframework.context.ApplicationEventPublisher;
@@ -39,6 +40,8 @@ public class UserServiceImp implements UserService {
     private GroupRepository groupRepository;
     @Autowired
     private PerimeterRepository perimeterRepository;
+    @Autowired
+    private UserSettingsRepository userSettingsRepository;
 
     /* These are Spring Cloud Bus beans used to fire an event (UpdatedUserEvent) every time a user is modified.
      *  Other services handle this event by clearing their user cache for the given user. See issue #64*/
@@ -46,6 +49,13 @@ public class UserServiceImp implements UserService {
     private ServiceMatcher busServiceMatcher;
     @Autowired
     private ApplicationEventPublisher publisher;
+
+    /** Retrieve user_settings from repository for the user **/
+    public UserSettingsData retrieveUserSettings(String login) {
+
+        return userSettingsRepository.findById(login)
+                .orElse(UserSettingsData.builder().login(login).build());
+    }
 
     /** Retrieve groups from repository for groups list, throwing an error if a group id is not found
      * */

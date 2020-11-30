@@ -145,7 +145,8 @@ public class CardRoutesShould {
         public void findOutCardWithoutAcks(){
         	Instant now = Instant.now();
         	CardConsultationData simpleCard = instantiateOneCardConsultationData();
-        	simpleCard.setParentCardUid(null);
+        	simpleCard.setParentCardId(null);
+            simpleCard.setInitialParentCardUid(null);
             configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
             StepVerifier.create(repository.save(simpleCard))
             .expectNextCount(1)
@@ -199,7 +200,8 @@ public class CardRoutesShould {
         public void findOutCardWithoutReads(){
         	Instant now = Instant.now();
         	CardConsultationData simpleCard = instantiateOneCardConsultationData();
-        	simpleCard.setParentCardUid(null);
+        	simpleCard.setParentCardId(null);
+            simpleCard.setInitialParentCardUid(null);
             configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
             StepVerifier.create(repository.save(simpleCard))
             .expectNextCount(1)
@@ -337,12 +339,14 @@ public class CardRoutesShould {
             configureRecipientReferencesAndStartDate(parentCard, "userWithGroupAndEntity", now, new String[] {"SOME_GROUP"}, null);
 
             CardConsultationData childCard1 = instantiateOneCardConsultationData();
-            childCard1.setParentCardUid("parentUid");
+            childCard1.setParentCardId(parentCard.getId());
+            childCard1.setInitialParentCardUid("parentUid");
             childCard1.setId(childCard1.getId() + "2");
             configureRecipientReferencesAndStartDate(childCard1, "userWithGroupAndEntity", now, new String[] {"SOME_GROUP"}, null);
 
             CardConsultationData childCard2 = instantiateOneCardConsultationData();
-            childCard2.setParentCardUid("parentUid");
+            childCard2.setParentCardId(parentCard.getId());
+            childCard2.setInitialParentCardUid("parentUid");
             childCard2.setId(childCard2.getId() + "3");
             configureRecipientReferencesAndStartDate(childCard2, "userWithGroupAndEntity", now, new String[] {"SOME_GROUP"}, null);
 

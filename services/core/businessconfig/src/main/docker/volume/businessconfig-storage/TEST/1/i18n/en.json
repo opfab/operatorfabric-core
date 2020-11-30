@@ -3,22 +3,7 @@
     "title": "Test: Process {{value}}",
     "summary": "This sums up the content of the card: {{value}}",
     "detail": {
-      "tab": {
-        "first": "First Tab",
-        "second": "Second Tab"
-      }
-    },
-    "action": {
-      "new": {
-        "first": "Action number {{value}}",
-        "second": "Second Action",
-        "businessconfig": "Businessconfig One ({{value}})"
-      },
-      "clicked": {
-        "first": "{{value}} clicked",
-        "second": "Resolved secondly",
-        "businessconfig": "For ({{value}}, it's done.)"
-      }
+      "title": "card title" 
     }
   },
   "process": {
@@ -26,11 +11,6 @@
   },
   "state": {
     "label": "Test State"
-  },
-  "menu": {
-    "label": "Test Process Menu",
-    "first":"Operator Fabric Documentation",
-    "second":"LF Energy"
   },
   "template": {
     "title": "Asset details"

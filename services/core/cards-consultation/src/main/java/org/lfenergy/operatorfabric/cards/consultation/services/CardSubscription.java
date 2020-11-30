@@ -229,7 +229,7 @@ public class CardSubscription {
     /**
      * @param messageBody message body received from rabbitMQ
      * @return true if the message received must be seen by the connected user.
-     *         Rules for receiving cards : 1) If the card is send to the user
+     *         Rules for receiving cards : 1) If the card is sent to the user
      *         directly then the user receive it 2) If the card is sent to entity A
      *         and group B, then to receive it, the user must be part of A AND (be
      *         part of B OR have the right for the process/state of the card) 3) If

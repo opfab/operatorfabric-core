@@ -9,35 +9,65 @@
   },
   "states": {
     "messageState": {
-      "name":  "message.title",
+      "name": "message.title",
       "color": "#FAF0AF",
       "userCardTemplate": "usercard_message",
-      "details": [
-        {
-          "title": {
-            "key": "message.title"
-          },
-          "templateName": "message",
-          "styles": [
-          ]
-        }
-      ],
+      "detailTitle": {
+        "key": "message.title"
+      },
+      "templateName": "message",
+      "styles": [],
       "acknowledgementAllowed": true
     },
     "conferenceState": {
-      "name":  "conference.title",
+      "name": "conference.title",
       "color": "#FAF0AF",
       "userCardTemplate": "usercard_conference",
-      "details": [
-        {
-          "title": {
-            "key": "conference.title"
-          },
-          "templateName": "conference",
-          "styles": [
-          ]
-        }
+      "detailTitle": {
+        "key": "conference.title"
+      },
+      "templateName": "conference",
+      "styles": [],
+      "acknowledgementAllowed": true
+    },
+    "questionState": {
+      "name": "question.title",
+      "color": "#8bcdcd",
+      "userCardTemplate": "usercard_question",
+      "response": {
+        "state": "questionState"
+      },
+      "detailTitle": {
+        "key": "question.title"
+      },
+      "templateName": "question",
+      "styles": [],
+      "acknowledgementAllowed": false
+    },
+    "taskState": {
+      "name": "task.title",
+      "color": "#8bcdcd",
+      "userCardTemplate": "usercard_task",
+      "detailTitle": {
+        "key": "task.title"
+      },
+      "templateName": "task",
+      "styles": [
       ],
+      "acknowledgementAllowed": true
+    },    
+    "incidentInProgressState": {
+      "name": "incidentInProgress.name",
+      "userCardTemplate": "usercard_incidentInProgress",
+      "color": "#FAF0AF",
+      "response": {
+        "state": "incidentInProgressState"
+      },
+      "detailTitle": {
+        "key": "incidentInProgress.name"
+      },
+      "templateName": "incidentInProgress",
+      "styles": [],
       "acknowledgementAllowed": true
     }
   }

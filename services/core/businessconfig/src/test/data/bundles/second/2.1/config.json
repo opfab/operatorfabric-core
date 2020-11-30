@@ -20,14 +20,10 @@
             },
             "externalRecipients": ["externalRecipient1", "externalRecipient2"]
           },
-          "details": [
-            {
-              "title": {
-                "key": "template.title"
-              },
-              "templateName": "template"
-            }
-          ],
+          "detailTitle": {
+            "key": "template.title"
+          },
+          "templateName": "template",
           "actions": {
             "action1": {
               "type": "URL",

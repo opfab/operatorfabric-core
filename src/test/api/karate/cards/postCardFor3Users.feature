@@ -3,7 +3,7 @@ Feature: Cards
 
 Background: 
 
-  * def signIn = call read('../common/getToken.feature') { username: 'tso1-operator'}
+  * def signIn = call read('../common/getToken.feature') { username: 'operator1'}
   * def authToken = signIn.authToken
 
 Scenario: Post Card
@@ -21,12 +21,12 @@ Scenario: Post Card
 				"process"  :"api_test",
 				"processInstanceId" : "process3users",
 				"state": "messageState",
-				"userRecipients": ["tso1-operator", "tso2-operator", "admin"],
+				"userRecipients": ["operator1", "operator2", "admin"],
 				"severity" : "INFORMATION",
 				"startDate" : startDate,
 				"summary" : {"key" : "defaultProcess.summary"},
 				"title" : {"key" : "defaultProcess.title"},
-				"data" : {"message":"a message for 3 users (tso1-operator, tso2-operator and admin)"}
+				"data" : {"message":"a message for 3 users (operator1, operator2 and admin)"}
 			}
 	return JSON.stringify(card);
 
@@ -46,19 +46,19 @@ When method post
 Then status 201
 And match response.count == 1
 
-#get card with user tso1-operator
+#get card with user operator1
 Given url opfabUrl + 'cards/cards/api_test.process3users' 
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200
-And match response.card.data.message == 'a message for 3 users (tso1-operator, tso2-operator and admin)'
+And match response.card.data.message == 'a message for 3 users (operator1, operator2 and admin)'
 And def cardUid = response.card.uid
 
 
-#get card from archives with user tso1-operator
+#get card from archives with user operator1
 Given url opfabUrl + 'cards/archives/' + cardUid 
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200
-And match response.data.message == 'a message for 3 users (tso1-operator, tso2-operator and admin)'
+And match response.data.message == 'a message for 3 users (operator1, operator2 and admin)'
 

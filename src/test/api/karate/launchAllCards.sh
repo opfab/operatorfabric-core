@@ -8,10 +8,10 @@
 # SPDX-License-Identifier: MPL-2.0
 # This file is part of the OperatorFabric project.
 
-rm -rf target
 
 java -jar karate.jar                              \
       cards/cards.feature                         \
+      cards/cardsWithTimespans.feature            \
       cards/fetchArchivedCard.feature             \
       cards/fetchArchivedCardsWithParams.feature  \
       cards/getCardSubscription.feature           \
@@ -30,7 +30,7 @@ java -jar karate.jar                              \
       cards/post2CardsGroupRouting.feature        \
       cards/post2CardsGroupRoutingDeprecated.feature  \
       cards/post1BigCards.feature                 \
-      cards/deleteUserCard.feature
+      cards/deleteUserCard.feature                    
       #cards/updateCardSubscription.feature
       #cards/delete3BigCards.feature               
 

@@ -8,7 +8,7 @@
  */
 
 
-import {Card, Detail} from '@ofModel/card.model';
+import {Card} from '@ofModel/card.model';
 import {I18n} from '@ofModel/i18n.model';
 import {Map as OfMap} from '@ofModel/map';
 
@@ -19,8 +19,6 @@ export class Process {
         readonly version: string,
         readonly name?: string,
         readonly locales?: string[],
-        readonly menuLabel?: string,
-        readonly menuEntries?: MenuEntry[],
         readonly states?: OfMap<State>,
         readonly uiVisibility?: UiVisibility
     ) { 
@@ -36,21 +34,8 @@ export class Process {
 }
 
 export const unfouundProcess: Process = new Process('', '', 'process.not-found',
-     [], '', [], null, null);
+     [], null, null);
 
-export class MenuEntry {
-
-    linkType: MenuEntryLinkTypeEnum = MenuEntryLinkTypeEnum.BOTH;
-
-    /* istanbul ignore next */
-    constructor(
-        readonly id: string,
-        readonly label: string,
-        readonly url: string,
-        linkType?: MenuEntryLinkTypeEnum
-    ) {
-    }
-}
 
 export class UiVisibility {
 
@@ -62,31 +47,17 @@ export class UiVisibility {
     }
 }
 
-export enum MenuEntryLinkTypeEnum {
-    TAB = 'TAB',
-    IFRAME = 'IFRAME',
-    BOTH = 'BOTH'
-}
-
-export class Menu {
-    /* istanbul ignore next */
-    constructor(
-        readonly id: string,
-        readonly version: string,
-        readonly label: string,
-        readonly entries: MenuEntry[]) {
-    }
-}
-
 export class State {
     /* istanbul ignore next */
     constructor(
-        readonly details?: Detail[],
+        readonly detailTitle?: I18n,
+        readonly templateName?: string,
+        readonly styles?: string[],
         readonly response?: Response,
         readonly acknowledgementAllowed?: boolean,
         readonly name?: string,
         readonly color?: string,
-        readonly userCardTemplate?: string
+        readonly userCardTemplate?: string,
     ) {
     }
 }

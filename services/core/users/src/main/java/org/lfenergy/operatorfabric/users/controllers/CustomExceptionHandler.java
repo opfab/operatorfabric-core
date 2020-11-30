@@ -51,7 +51,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler(ApiErrorException.class)
   public ResponseEntity<Object> handleApiError(ApiErrorException exception, final WebRequest
      request) {
-    log.info(GENERIC_MSG,exception);
+    log.info(GENERIC_MSG + " : " + exception.getError().getMessage());
     return new ResponseEntity<>(exception.getError(), exception.getError().getStatus());
   }
 

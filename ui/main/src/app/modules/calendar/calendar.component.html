@@ -24,6 +24,7 @@
         [events]="calendarEvents"
         [locales]="locales"
         [themeSystem]="themeSystem"
+        (datesRender)="datesRangeChange($event)"
         (dateClick)="handleDateClick($event)"
         (eventClick)="selectCard($event)"
       ></full-calendar>
@@ -40,7 +41,7 @@
       </div>
       <div class="modal-body">
         <div>
-          <of-card-details> </of-card-details>
+          <of-card-details [parentModalRef] = "modalRef"> </of-card-details>
         </div>
       </div>
   </ng-template>

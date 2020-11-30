@@ -88,10 +88,11 @@ export class FilterService {
                 if (!!status.start && !!status.end) {
                     const isCardStartOk = card.startDate >= status.start && card.startDate <= status.end;
                     if (!card.endDate) {
-                        return false ;
+                        return card.startDate <= status.end;
                     }
                     const isCardEndOk = card.endDate >= status.start && card.endDate <= status.end;
-                    return isCardStartOk && isCardEndOk;
+                    
+                    return isCardStartOk || isCardEndOk;
                 } else if (!!status.start) {
                     return card.startDate >= status.start;
                 } else if (!!status.end) {

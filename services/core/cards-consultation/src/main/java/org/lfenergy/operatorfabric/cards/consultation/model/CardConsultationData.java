@@ -43,7 +43,10 @@ public class CardConsultationData implements Card {
     private String uid;
     @Id
     private String id;
-    private String parentCardUid;
+    private String parentCardId;
+    private String initialParentCardUid;
+    @Builder.Default
+    private Boolean keepChildCards = false;
     private String publisher;
     private String processVersion;
     private String process;
@@ -51,6 +54,7 @@ public class CardConsultationData implements Card {
     private String state;
     private I18n title;
     private I18n summary;
+
     @CreatedDate
     private Instant publishDate;
     private Instant lttd;
@@ -65,9 +69,7 @@ public class CardConsultationData implements Card {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
     private List<String> tags;
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    @Singular
-    private List<? extends Detail> details;
+    
     private Recipient recipient;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;
@@ -99,6 +101,7 @@ public class CardConsultationData implements Card {
     @Transient
     private Boolean hasBeenRead;
     private PublisherTypeEnum publisherType;
+    private Integer  secondsBeforeTimeSpanForReminder;
     
     
 }

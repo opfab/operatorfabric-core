@@ -20,7 +20,7 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import {Card, Detail} from '@ofModel/card.model';
+import {Card, CardForPublishing} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../../services/handlebars.service';
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
@@ -31,7 +31,7 @@ import {AppState} from '@ofStore/index';
 import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
 import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {UserContext} from '@ofModel/user-context.model';
-import {map, skip, switchMap, take, takeUntil} from 'rxjs/operators';
+import {map, skip,take, takeUntil} from 'rxjs/operators';
 import {fetchLightCard, selectLastCards} from '@ofStore/selectors/feed.selectors';
 import {CardService} from '@ofServices/card.service';
 import {Observable, Subject, zip} from 'rxjs';
@@ -44,9 +44,10 @@ import {UpdateALightCard} from '@ofStore/actions/light-card.actions';
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {Entity} from '@ofModel/entity.model';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
+import {NgbModal,NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {ConfigService} from '@ofServices/config.service';
+import {State as CardState} from '@ofModel/processes.model';
+import { Router } from '@angular/router';
 
 
 declare const templateGateway: any;
@@ -103,29 +104,33 @@ const enum EntityMsgColor {
 })
 export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewChecked, DoCheck {
 
-    @Input() detail: Detail;
+    @Input() cardState: CardState;
     @Input() card: Card;
     @Input() childCards: Card[];
     @Input() user: User;
     @Input() currentPath: string;
+    @Input() parentModalRef: NgbModalRef;
 
     @ViewChild('cardDeletedWithNoErrorPopup', null) cardDeletedWithNoErrorPopupRef: TemplateRef<any>;
     @ViewChild('impossibleToDeleteCardPopup', null) impossibleToDeleteCardPopupRef: TemplateRef<any>;
 
-    public active = false;
     public isActionEnabled = false;
     public lttdExpiredIsTrue: boolean;
-    public isDeleteCardAllowed = false;
+
 
     unsubscribe$: Subject<void> = new Subject<void>();
-    readonly hrefsOfCssLink = new Array<SafeResourceUrl>();
+    public hrefsOfCssLink = new Array<SafeResourceUrl>();
     private _listEntitiesToRespond = new Array<EntityMessage>();
     private _htmlContent: SafeHtml;
     private _userContext: UserContext;
     private _lastCards$: Observable<LightCard[]>;
     private _responseData: Response;
-    private _acknowledgementAllowed: boolean;
     message: Message = {display: false, text: undefined, color: undefined};
+
+    public showButtons = false;
+    public showAckButton = false;
+    public showActionButton = false;
+    public showEditAndDeleteButton = false ;
 
     modalRef: NgbModalRef;
 
@@ -141,7 +146,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 private userService: UserService,
                 private entitiesService: EntitiesService,
                 private modalService: NgbModal,
-                private configService: ConfigService) {
+                private configService: ConfigService,
+                private router: Router) {
         this.store.select(selectAuthenticationState).subscribe(authState => {
             this._userContext = new UserContext(
                 authState.identifier,
@@ -188,7 +194,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     ngOnInit() {
 
-        if (this._appService.pageType === PageType.FEED) {
+        if (this._appService.pageType !== PageType.ARCHIVE) {
 
             this.setEntitiesToRespond();
 
@@ -199,7 +205,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                     takeUntil(this.unsubscribe$),
                     map(lastCards =>
                         lastCards.filter(card =>
-                            card.parentCardUid === this.card.uid &&
+                            card.parentCardId === this.card.id &&
                             !this.childCards.map(childCard => childCard.uid).includes(card.uid))
                     ),
                     map(childCards => childCards.map(c => this.cardService.loadCard(c.id)))
@@ -226,6 +232,16 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 });
         }
         this.markAsReadIfNecessary();
+        this.setButtonsVisibility();
+    }
+
+    private setButtonsVisibility() {
+        if ((this._appService.pageType === PageType.ARCHIVE)
+            || (this._appService.pageType === PageType.MONITORING)) this.showButtons = false;
+        else this.showButtons = true;
+        this.showEditAndDeleteButton = this.doesTheUserHavePermissionToDeleteOrEditCard();
+        this.showAckButton = this.cardState.acknowledgementAllowed && (this._appService.pageType !== PageType.CALENDAR);
+        this.showActionButton =  (!!this._responseData);
     }
 
     ngDoCheck() {
@@ -239,11 +255,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     get i18nPrefix() {
         return `${this.card.process}.${this.card.processVersion}.`;
     }
-
-    get isButtonsActivated() {
-        return !((this._appService.pageType === PageType.ARCHIVE) || (this._appService.pageType === PageType.CALENDAR));
-    }
-
 
     get responseDataParameters(): Map<string> {
         return this._responseData.btnText ? this._responseData.btnText.parameters : undefined;
@@ -270,20 +281,13 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         return this.card.hasBeenAcknowledged ? AckButtonColors.DANGER : AckButtonColors.PRIMARY;
     }
 
-    get isAcknowledgementAllowed(): boolean {
-        return this._acknowledgementAllowed ? this._acknowledgementAllowed : false;
-    }
-
     submitResponse() {
 
         const formResult: FormResult = templateGateway.validyForm();
 
         if (formResult.valid) {
 
-            const card: Card = {
-                uid: null,
-                id: null,
-                publishDate: null,
+            const card: CardForPublishing = {
                 publisher: this.user.entities[0],
                 publisherType: 'ENTITY',
                 processVersion: this.card.processVersion,
@@ -293,8 +297,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 startDate: this.card.startDate,
                 endDate: this.card.endDate,
                 severity: Severity.INFORMATION,
-                hasBeenAcknowledged: false,
-                hasBeenRead: false,
                 entityRecipients: this.card.entityRecipients,
                 userRecipients: this.card.userRecipients,
                 groupRecipients: this.card.groupRecipients,
@@ -303,10 +305,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 summary: this.card.summary,
                 data: formResult.formData,
                 recipient: this.card.recipient,
-                parentCardUid: this.card.uid
+                parentCardId: this.card.id,
+                initialParentCardUid: this.card.uid
             };
 
-            this.cardService.postResponseCard(card)
+            this.cardService.postCard(card)
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe(
                     rep => {
@@ -342,7 +345,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     acknowledge() {
         if (this.card.hasBeenAcknowledged) {
-            this.cardService.deleteUserAcnowledgement(this.card).subscribe(resp => {
+            this.cardService.deleteUserAcknowledgement(this.card.uid).subscribe(resp => {
                 if (resp.status === 200 || resp.status === 204) {
                     this.card = {...this.card, hasBeenAcknowledged: false};
                     this.updateAcknowledgementOnLightCard(false);
@@ -352,7 +355,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 }
             });
         } else {
-            this.cardService.postUserAcnowledgement(this.card).subscribe(resp => {
+            this.cardService.postUserAcknowledgement(this.card.uid).subscribe(resp => {
                 if (resp.status === 201 || resp.status === 200) {
                     this.updateAcknowledgementOnLightCard(true);
                     this.closeDetails();
@@ -374,11 +377,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     markAsReadIfNecessary() {
         if (this.card.hasBeenRead === false) {
-            this.cardService.postUserCardRead(this.card).subscribe(resp => {
-                if (resp.status === 201 || resp.status === 200) {
-                    this.updateReadOnLightCard(true);
-                }
-            });
+            this.updateReadOnLightCard(true);
+            this.cardService.postUserCardRead(this.card.uid).subscribe();
         }
     }
 
@@ -391,7 +391,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     closeDetails() {
-        this._appService.closeDetails(this.currentPath);
+        if (this.parentModalRef) this.parentModalRef.close();
+        else this._appService.closeDetails(this.currentPath);
     }
 
     // for certain types of template , we need to reload it to take into account
@@ -406,7 +407,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.initializeHrefsOfCssLink();
         this.initializeHandlebarsTemplates();
         this.markAsReadIfNecessary();
-        this.setIsDeleteCardAllowed();
+        this.setButtonsVisibility();
         this.message = {display: false, text: undefined, color: undefined};
         if (this._responseData != null && this._responseData !== undefined) {
             this.setEntitiesToRespond();
@@ -440,9 +441,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             this.isActionEnabled = (this.isUserInEntityAllowedToRespond() && this.doesTheUserHavePermissionToRespond());
     }
 
-    private setIsDeleteCardAllowed() {
-        this.isDeleteCardAllowed = this.doesTheUserHavePermissionToDeleteCard();
-    }
+
+
+
 
     private isUserInEntityAllowedToRespond(): boolean {
         if (this.card.entitiesAllowedToRespond) return this.card.entitiesAllowedToRespond.includes(this.user.entities[0]);
@@ -466,7 +467,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     /* 1st check : card.publisherType == ENTITY
        2nd check : the card has been sent by an entity of the user connected
        3rd check : the user has the Write access to the process/state of the card */
-    private doesTheUserHavePermissionToDeleteCard(): boolean {
+    private doesTheUserHavePermissionToDeleteOrEditCard(): boolean {
         let permission = false;
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
 
@@ -501,10 +502,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private initializeHrefsOfCssLink() {
-        if (this.detail && this.detail.styles) {
+        const styles = this.cardState.styles;
+        this.hrefsOfCssLink = new Array<SafeResourceUrl>();
+        if (!!styles) {
             const process = this.card.process;
             const processVersion = this.card.processVersion;
-            this.detail.styles.forEach(style => {
+            styles.forEach(style => {
                 const cssUrl = this.businessconfigService.computeBusinessconfigCssUrl(process, style, processVersion);
                 // needed to instantiate href of link for css in component rendering
                 const safeCssUrl = this.sanitizer.bypassSecurityTrustResourceUrl(cssUrl);
@@ -513,31 +516,28 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         }
     }
 
+
+
     private initializeHandlebarsTemplates() {
 
         templateGateway.childCards = this.childCards;
-        this.businessconfigService.queryProcessFromCard(this.card).pipe(
-            takeUntil(this.unsubscribe$),
-            switchMap(process => {
-
-                const state = process.extractState(this.card);
-                this._responseData = state.response;
-                this._acknowledgementAllowed = state.acknowledgementAllowed;
-                return this.handlebars.executeTemplate(this.detail.templateName,
-                    new DetailContext(this.card, this._userContext, this._responseData));
-            })
-        )
-            .subscribe(
-                html => {
-                    this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
-                    setTimeout(() => { // wait for DOM rendering
-                        this.reinsertScripts();
-                    }, 10);
-                }, () =>  {
-                    console.log('WARNING impossible to load template ', this.detail.templateName);
-                    this._htmlContent = this.sanitizer.bypassSecurityTrustHtml('');
-                }
-            );
+        this._responseData = this.cardState.response;
+        const templateName = this.cardState.templateName;
+        if (!!templateName) {
+            this.handlebars.executeTemplate(templateName,
+                new DetailContext(this.card, this._userContext, this._responseData))
+                .subscribe(
+                    html => {
+                        this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
+                        setTimeout(() => { // wait for DOM rendering
+                            this.reinsertScripts();
+                        }, 10);
+                    }, () => {
+                        console.log('WARNING impossible to load template ', templateName);
+                        this._htmlContent = this.sanitizer.bypassSecurityTrustHtml('');
+                    }
+                );
+        } else console.log('WARNING No template for state ', this.card.state);
     }
 
     get htmlContent() {
@@ -586,13 +586,15 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.modalRef.dismiss();
     }
 
+    editCard(): void {
+        if (!!this.parentModalRef) this.parentModalRef.close();
+        this.router.navigate(['/usercard', this.card.id]);
+    }
+
     ngOnDestroy() {
+        templateGateway.childCards = [];
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }
 
-    areActionsDisplayed(): boolean {
-        const currentPageType = this._appService.pageType;
-        return currentPageType !== PageType.MONITORING && currentPageType !== PageType.CALENDAR;
-    }
 }

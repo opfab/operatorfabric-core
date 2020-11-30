@@ -2,19 +2,45 @@
 spring:
   application:
     name: cards-publication
+  deserializer:
+    value:
+      delegate:
+        class: io.confluent.kafka.serializers.KafkaAvroDeserializer
+#        class: org.lfenergy.operatorfabric.cards.publication.kafka.consumer.KafkaAvroWithoutRegistryDeserializer
+  serializer:
+    value:
+      delegate:
+        class: io.confluent.kafka.serializers.KafkaAvroSerializer
+#        class: org.lfenergy.operatorfabric.cards.publication.kafka.producer.KafkaAvroWithoutRegistrySerializer
+# uncomment kafka.consumer.group-id to enable Kafka
+#  kafka:
+#    consumer:
+#      group-id: opfab-command
 
+opfab:
+  kafka:
+    topics:
+      card:
+        topicname: opfab
+      response-card:
+        topicname: opfab-response
+    schema:
+      registry:
+        url: http://localhost:8081
 
 #here we put urls for all feign clients
 users:
   ribbon:
     listOfServers: users:8080
-# WARNING - You shoud replace localhost with the real IP , as locahost related to IP internal to docker
+# WARNING - If you are not working on linux, you should replace the host ip address 172.17.0.1 
+# for mac see https://docs.docker.com/docker-for-mac/networking/#use-cases-and-workarounds
+# for windows see https://docs.docker.com/docker-for-windows/networking/#use-cases-and-workarounds
 externalRecipients-url: "{\
-           processAction: \"http://localhost:8090/test\", \
-           api_test_externalRecipient1: \"http://localhost:8090/test\", \
-           api_test_externalRecipient2: \"http://localhost:8090/test\", \
-           externalRecipient1: \"http://localhost:8090/test\", \
-           externalRecipient2: \"http://localhost:8090/test\" \
+           processAction: \"http://ext-app:8090/test\", \
+           api_test_externalRecipient1: \"http://ext-app:8090/test\", \
+           api_test_externalRecipient2: \"http://ext-app:8090/test\", \
+           externalRecipient1: \"http://ext-app:8090/test\", \
+           externalRecipient2: \"http://ext-app:8090/test\" \
            }"
 
 # WARNING : If you set this parameter to false , all users have the rights to respond to all cards

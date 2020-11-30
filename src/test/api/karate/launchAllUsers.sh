@@ -8,8 +8,6 @@
 # SPDX-License-Identifier: MPL-2.0
 # This file is part of the OperatorFabric project.
 
-rm -rf target
-
 # Be careful : patchUserSettings must be before fetchUserSettings
 
 java -jar karate.jar                                         \
@@ -53,4 +51,5 @@ java -jar karate.jar                                         \
       users/deleteUser.feature                               \
       users/entities/deleteEntity.feature                    \
       users/groups/deleteGroup.feature                       \
-      users/perimeters/deletePerimeter.feature
+      users/perimeters/deletePerimeter.feature               \
+      users/entities/checkEntityGroupManagement.feature

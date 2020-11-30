@@ -121,11 +121,7 @@
       }
     },
     "infos": {
-      "description": true,
-      "dateformat":true,
-      "timeformat":true,
-      "datetimeformat":true,
-      "disable": false
+      "description": true
     },
     "locale": "en",
     "nightDayMode": false,

@@ -28,7 +28,7 @@ import {select, Store} from '@ngrx/store';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {AppState} from '@ofStore/index';
 import { Router } from '@angular/router';
-import { Subscription, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
 
@@ -64,6 +64,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   public translateXTicksTwo: string;
   public xRealTimeLine: moment.Moment;
   private currentPath: string;
+  private isDestroyed = false ;
 
 
   // TOOLTIP
@@ -111,7 +112,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   ngOnDestroy() {
     this.ngUnsubscribe$.next();
     this.ngUnsubscribe$.complete();
-}
+    this.isDestroyed = true;
+  }
 
   // set inside ngx-charts library verticalSpacing variable to 10
   // library need to rotate ticks one time for set verticalSpacing to 10px on ngx-charts-x-axis-ticks
@@ -128,6 +130,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    * loop function for set xRealTimeLine at the actual time
    * xRealTimeLine is a vertical bar which represent the current time
    * update the domain if check follow clock tick is true
+   *  Stop it when destroying component to avoid memory leak
    */
   updateRealTimeDate(): void {
     this.xRealTimeLine = moment();
@@ -137,7 +140,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       }
     }
     setTimeout(() => {
-      this.updateRealTimeDate();
+      if (!this.isDestroyed) this.updateRealTimeDate();
     }, 1000);
   }
 
@@ -211,11 +214,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       case 'W':
         this.xTicks.forEach(tick => {
           this.xTicksOne.push(tick);
-          // [OC-797]
-          //  in case of a period containing the switch form winter/summer time
-          //  the tick are offset by one hour in a part of the timeline
-          // in this case , we put the date on the tick representing 01:00
-          if ((tick.hour() === 0) || (tick.hour() === 1)) {  this.xTicksTwo.push(tick); }
+          if (tick.hour() === 0)  this.xTicksTwo.push(tick);
         });
         break;
       default:
@@ -239,7 +238,18 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         } else {
           nextTick.add(1, 'month').startOf('month');
         }
-      } else { nextTick.add(tickSize.amount, tickSize.unit); }
+      }  else {
+        nextTick.add(tickSize.amount, tickSize.unit)
+         if ((this.domainId === '7D' || this.domainId === 'W')) {
+           // OC-1205 : Deal with winter/summer time changes
+           // if hour is 5, we are switching from winter to summer time, we subtract 1 hour to keep  ticks  to 04 / 08 / 12 ...
+           // if hour is 3, we are switching from summer to winter time, we add 1 hour to keep  ticks  to 04 / 08 / 12 ...
+           if (nextTick.hour() === 5)  nextTick.subtract(1, 'hour');
+           if (nextTick.hour() === 3)  nextTick.add(1, 'hour');
+         }
+
+
+        }
       this.xTicks.push(moment(nextTick));
     }
   }
@@ -256,7 +266,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   getAllCardsToDrawOnTheTimeLine(cards) {
     const myCardsTimeline = [];
     for (const card of cards) {
-      if (!card.parentCardUid) {// is not child card
+      if (!card.parentCardId) {// is not child card
         if (card.timeSpans && card.timeSpans.length > 0) {
           card.timeSpans.forEach(timeSpan => {
             if (!!timeSpan.start) {
@@ -305,7 +315,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       return val1.date - val2.date;
     });
 
-    // seperate cards by severity
+    // separate cards by severity
     const cardsBySeverity = [];
     for (let i = 0; i < 4; i++) { cardsBySeverity.push([]); }
     for (const card of this.cardsData) {

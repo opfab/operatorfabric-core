@@ -1,0 +1,73 @@
+
+
+Description de la tâche: <input size="50" type="text" id="taskDescription" value="{{card.data.taskDescription}}"> </input> 
+
+<br/>
+<br/>
+
+Se répète chaque  : 
+<div style="text-align: center;">
+    <table width="100%">
+        <tr>
+            <td> <input type="checkbox" checked id="Monday"> Lundi </input> </td>
+            <td> <input type="checkbox" checked id="Tuesday"> Mardi </input> </td>
+            <td> <input type="checkbox" checked id="Wednesday"> Mercredi  </input> </td>
+            <td> <input type="checkbox" checked id="Thursday"> Jeudi  </input> </td>
+            <td> <input type="checkbox" checked id="Friday"> Vendredi </input> </td>
+            <td> <input type="checkbox" checked id="Saturday"> Samedi  </input> </td>
+            <td> <input type="checkbox" checked id="Sunday"> Dimanche  </input> </td>
+        </tr>
+    </table>
+
+</div>
+
+<br/>
+<div style="text-align: center">
+ A : &nbsp; 
+ <input size="2" maxlength="2" type="text" id="hours"> </input>H  &nbsp;  
+ <input size="2" maxlength="2" type="text" id="minutes"> </input> Min , rappel de la tâche  
+
+ <input size="2" maxlength="2" type="text" id="minutesForReminder" value="5"> </input> minutes avant.
+</div>
+
+<script>
+    templateGateway.getSpecificCardInformation = function () {
+        const taskDescription = document.getElementById('taskDescription').value;
+        const hours =  document.getElementById('hours').value;
+        const minutes =  document.getElementById('minutes').value;
+         const minutesForReminder =  document.getElementById('minutesForReminder').value;
+
+       const daysOfWeek = [];
+        if (document.getElementById("Monday").checked) daysOfWeek.push(1);
+        if (document.getElementById("Tuesday").checked) daysOfWeek.push(2);
+        if (document.getElementById("Wednesday").checked) daysOfWeek.push(3);
+        if (document.getElementById("Thursday").checked) daysOfWeek.push(4);
+        if (document.getElementById("Friday").checked) daysOfWeek.push(5);
+        if (document.getElementById("Saturday").checked) daysOfWeek.push(6);
+        if (document.getElementById("Sunday").checked) daysOfWeek.push(7);
+
+        const recurrence = {
+            daysOfWeek : daysOfWeek,
+            hoursAndMinutes : {hours:hours,minutes:minutes}
+        }
+      
+        const card = {
+            summary: { key: "task.summary" },
+            title: { key: "task.title" },
+            secondsBeforeTimeSpanForReminder: minutesForReminder * 60,
+            data: {
+                taskDescription: taskDescription,
+                hours: hours,
+                minutes: minutes,
+                daysOfWeek: daysOfWeek,
+            }
+        };
+        return {
+            valid: true,
+            card: card,
+            viewCardInAgenda: true,
+            recurrence: recurrence
+        };
+
+    }
+</script>

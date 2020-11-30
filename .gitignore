@@ -125,3 +125,6 @@ ui/main/package-lock.json
 
 # Bundles for docker config 
 config/docker/businessconfig-storage/**
+
+# now script generated
+config/dev/nginx.conf

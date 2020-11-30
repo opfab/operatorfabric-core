@@ -1,0 +1,80 @@
+{
+  "menus": [
+    {
+      "id": "menu1",
+      "label": "title.single",
+      "entries": [
+        {
+          "id": "uid_test_0",
+          "url": "https://opfab.github.io/",
+          "label": "entry.single",
+          "linkType": "BOTH"
+        }
+      ]
+    },
+    {
+      "id": "menu2",
+      "label": "title.multi",
+      "entries": [
+        {
+          "id": "uid_test_1",
+          "url": "https://opfab.github.io/",
+          "label": "entry.entry1",
+          "linkType": "BOTH"
+        },
+        {
+          "id": "uid_test_2",
+          "url": "https://www.wikipedia.org/",
+          "label": "entry.entry2",
+          "linkType": "BOTH"
+        }
+      ]
+    }
+  ],
+  "locales": [
+    {
+      "language": "en",
+      "i18n": {
+        "menu1": {
+          "title": {
+            "single": "First menu"
+          },
+          "entry": {
+            "single": "Single menu entry"
+          }
+        },
+        "menu2": {
+          "title": {
+            "multi": "Second menu"
+          },
+          "entry": {
+            "entry1": "First menu entry",
+            "entry2": "Second menu entry"
+          }
+        }
+      }
+    },
+    {
+      "language": "fr",
+      "i18n": {
+        "menu1": {
+          "title": {
+            "single": "Premiere menu"
+          },
+          "entry": {
+            "single": "Unique menu entry"
+          }
+        },
+        "menu2": {
+          "title": {
+            "multi": "Deuxieme menu"
+          },
+          "entry": {
+            "entry1": "Premiere menu entry",
+            "entry2": "Deuxieme menu entry"
+          }
+        }
+      }
+    }
+  ]
+}

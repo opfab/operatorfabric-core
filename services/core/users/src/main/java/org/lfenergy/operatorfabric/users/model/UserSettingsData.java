@@ -29,10 +29,6 @@ public class UserSettingsData implements UserSettings {
     private String description;
     private String timeZone;
     private String locale;
-    private String timeFormat;
-    private String dateFormat;
-    private String dateTimeFormat;
-    private String email;
     @JsonIgnore
     @Singular("defaultTag")
     private Set<String> defaultTagsSet;
@@ -41,23 +37,28 @@ public class UserSettingsData implements UserSettings {
     private Boolean playSoundForCompliant;
     private Boolean playSoundForInformation;
 
+    @Singular("processStatesNotNotified")
+    private Map<String, List<String>> processesStatesNotNotified;
+
     public UserSettingsData(UserSettings settings) {
         this.login = settings.getLogin();
         this.description = settings.getDescription();
         this.timeZone = settings.getTimeZone();
         this.locale = settings.getLocale();
-        this.timeFormat = settings.getTimeFormat();
-        this.dateFormat = settings.getDateFormat();
-        this.dateTimeFormat = settings.getDateFormat();
-        if(settings.getDefaultTags()!=null)
+
+        if (settings.getDefaultTags() != null)
             this.defaultTagsSet = new HashSet<>(settings.getDefaultTags());
         else
             this.defaultTagsSet = null;
-        this.email = settings.getEmail();
         this.playSoundForAlarm = settings.getPlaySoundForAlarm();
         this.playSoundForAction = settings.getPlaySoundForAction();
         this.playSoundForCompliant = settings.getPlaySoundForCompliant();
         this.playSoundForInformation = settings.getPlaySoundForInformation();
+
+        if (settings.getProcessesStatesNotNotified() != null)
+            this.processesStatesNotNotified = new HashMap<>(settings.getProcessesStatesNotNotified());
+        else
+            this.processesStatesNotNotified = null;
     }
 
     public Set<String> getDefaultTagsSet() {
@@ -86,6 +87,11 @@ public class UserSettingsData implements UserSettings {
         return this;
     }
 
+    public UserSettingsData clearProcessesStatesNotNotified(){
+        setProcessesStatesNotNotified(null);
+        return this;
+    }
+
     /**
      * Create a new patched settings using this as reference and overriding fields from other parameter when field is not
      * null.
@@ -102,13 +108,9 @@ public class UserSettingsData implements UserSettings {
         result.description = other.getDescription() != null ? other.getDescription() : this.getDescription();
         result.timeZone = other.getTimeZone() != null ? other.getTimeZone() : this.getTimeZone();
         result.locale = other.getLocale() != null ? other.getLocale() : this.getLocale();
-        result.timeFormat = other.getTimeFormat() != null ? other.getTimeFormat() : this.getTimeFormat();
-        result.dateFormat = other.getDateFormat() != null ? other.getDateFormat() : this.getDateFormat();
-        result.dateTimeFormat = other.getDateTimeFormat() != null ? other.getDateTimeFormat() : this.getDateTimeFormat();
-        result.email = other.getEmail() != null ? other.getEmail() : this.getEmail();
-        if(other.getDefaultTags()!=null)
+        if (other.getDefaultTags() != null)
             result.defaultTagsSet = new HashSet<>(other.getDefaultTags());
-        else if (this.getDefaultTags()!=null)
+        else if (this.getDefaultTags() != null)
             result.defaultTagsSet = new HashSet<>(this.getDefaultTags());
         else
             result.defaultTagsSet = null;
@@ -116,6 +118,14 @@ public class UserSettingsData implements UserSettings {
         result.playSoundForAction = other.getPlaySoundForAction() != null ? other.getPlaySoundForAction() : this.getPlaySoundForAction();
         result.playSoundForCompliant = other.getPlaySoundForCompliant() != null ? other.getPlaySoundForCompliant() : this.getPlaySoundForCompliant();
         result.playSoundForInformation = other.getPlaySoundForInformation() != null ? other.getPlaySoundForInformation() : this.getPlaySoundForInformation();
+
+        if (other.getProcessesStatesNotNotified() != null)
+            result.processesStatesNotNotified = new HashMap<>(other.getProcessesStatesNotNotified());
+        else if (this.getProcessesStatesNotNotified() != null)
+            result.processesStatesNotNotified = new HashMap<>(this.getProcessesStatesNotNotified());
+        else
+            result.processesStatesNotNotified = null;
+
         return result;
     }
 }

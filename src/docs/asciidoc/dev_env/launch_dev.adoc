@@ -47,45 +47,56 @@ the home repository of `OperatorFabric`.
 
 == Deploy needed docker containers
 
-=== Minimal configuration for `gradle` build
+=== A Minimal Configuration for `gradle` Build
 
-Two docker container must be available during a gradle build of `OperatorFabric`:
+The gradle build of `OperatorFabric` needs two docker containers running:
+
 * RabbitMQ;
 * MongoDB.
 
-They can be launch using the `${OF_HOME}/src/main/docker/test-environment/docker-compose.yml`.
+Launch them using the `${OF_HOME}/src/main/docker/test-environment/docker-compose.yml`.
 
-Remind that, during a gradle build, before the `assemble` task, the `test` one is called. The Unit tests depend on those
-two software.
+Remind that, during a gradle build the `test` task runs before the `assemble` one.
+The Unit tests depend on those two software.
 
 === Enabling local quality report generation
 
-To get a Sonarqube report, in addition to the two previously listed docker containers, a `SonarQube` docker container is
-required. Use the `${OF_HOME}/src/main/docker/test-quality-environment/docker-compose.yml` to get them all running.
+Sonarqube reporting, in addition to the two previously listed docker containers, needs a `SonarQube` docker container.
+Use the `${OF_HOME}/src/main/docker/test-quality-environment/docker-compose.yml` to get them all running.
 
-To generate the quality report use the following command:
+To generate the quality report, run the following commands:
 [source,shell]
 ----
 cd ${OF_HOME}
 ./gradlew jacocoTestReport
 ----
 
-To export the different report into the `SonarQube` docker instance you need to install and use link:https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/[SonarScanner].
+To export the reports into the `SonarQube` docker instance, install and use link:https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/[SonarScanner].
 
 [[_docker_dev_env]]
 === Development environment
 
-During `OperatorFabric` development the running docker images of `MongoDB`, `RabbitMQ`, `web-ui` and `Keycloak` are needed.
+`OperatorFabric` development needs docker images of `MongoDB`, `RabbitMQ`, `web-ui` and `Keycloak` running.
+The `web-ui` configuration needs a `nginx.conf`.
 
-The `docker-compose` can be run in detached mode:
+The `${OF_HOME}/config/dev/$docker-compose.sh` creates the `nginx.conf` file and then runs `docker-compose` in detached mode.
+For this, use:
+[source,shell]
+----
+cd ${OF_HOME}/config/dev
+./docker-compose.sh
+----
+
+Once the `nginx.conf` created, run `docker-compose` independently is possible using:
 [source,shell]
 ----
 cd ${OF_HOME}/config/dev
 docker-compose up -d
 ----
 
+
 The configuration of the `web-ui` embeds a grayscale favicon which can be useful to spot the `OperatorFabric` dev tab in the browser.
-Sometime a `CTRL+F5` on the tab is required to refresh the favicon.
+To refresh the favicon, hit `CTRL+F5` on the page.
 
 == Build OperatorFabric with Gradle
 
@@ -126,10 +137,10 @@ bin/run_all.sh status
 == Log into the UI
 
 *_URL:_* localhost:2002/ui/ +
-*_login:_* tso1-operator +
+*_login:_* operator1 +
 *_password:_* test
 
-The other users available in development mode are `rte-operator` and `admin`, both with `test` as password.
+The other users available in development mode are `operator3` and `admin`, both with `test` as password.
 
 WARNING: It might take a little while for the UI to load even after all services are running.
 

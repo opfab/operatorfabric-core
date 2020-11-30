@@ -1,0 +1,27 @@
+{
+	"process.name" : "IGCC",
+	"action-FrEs-IGCC-export-0":{
+		"title":"🔧 Réduire IGCC à 0",
+		"summary":"Réduire IGCC à 0 MW dans le sens export"
+	},
+	"action-FrEs-IGCC-export-300":{
+		"title":"🔧 Réduire IGCC à 300",
+		"summary":"Réduire IGCC à 300 MW dans le sens export"
+	},
+	"action-FrEs-IGCC-import-0":{
+		"title":"🔧 Réduire IGCC à 0",
+		"summary":"Réduire IGCC à 0 MW dans le sens import"
+	},
+	"action-FrEs-IGCC-import-300":{
+		"title":"🔧 Réduire IGCC à 300",
+		"summary":"Réduire IGCC à 300 MW dans le sens import"
+	},
+	"compliant-FrEs-IGCC":{
+		"title":"✅ Lever les limitations IGCC",
+		"summary":"Lever les limitations IGCC"
+	},
+	"timeout-FrEs-IGCC":{
+		"title":"⏰ Bloquer IGCC à 0 MW",
+		"summary":"Point figé trop vieux, bloquer IGCC à 0 MW"
+	}
+}

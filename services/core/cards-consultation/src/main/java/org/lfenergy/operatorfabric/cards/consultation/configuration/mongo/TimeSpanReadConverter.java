@@ -14,7 +14,6 @@ package org.lfenergy.operatorfabric.cards.consultation.configuration.mongo;
 import org.bson.Document;
 import org.lfenergy.operatorfabric.cards.consultation.model.TimeSpan;
 import org.lfenergy.operatorfabric.cards.consultation.model.TimeSpanConsultationData;
-import org.lfenergy.operatorfabric.cards.model.TimeSpanDisplayModeEnum;
 import org.springframework.core.convert.converter.Converter;
 
 import java.time.Instant;
@@ -27,7 +26,7 @@ import java.time.Instant;
  */
 public class TimeSpanReadConverter implements Converter<Document, TimeSpan> {
 
-
+    
     @Override
     public TimeSpan convert(Document source) {
         Instant start = source.getDate("start") == null ? null : source.getDate("start").toInstant();
@@ -35,11 +34,11 @@ public class TimeSpanReadConverter implements Converter<Document, TimeSpan> {
         TimeSpanConsultationData.TimeSpanConsultationDataBuilder builder = TimeSpanConsultationData.builder()
                 .start(start)
                 ;
-        String stringDisplay = source.getString("display");
         if(end!=null)
             builder.end(end);
-        if(stringDisplay != null)
-            builder.display(TimeSpanDisplayModeEnum.valueOf(stringDisplay));
+        Document recurrence = (Document) source.get("recurrence");
+        if (recurrence!=null)  builder.recurrence(RecurrenceReadConverter.convert(recurrence));   
+        
 
         return builder.build();
     }

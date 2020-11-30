@@ -12,11 +12,13 @@ import {Action} from '@ngrx/store';
 import {FilterType} from '@ofServices/filter.service';
 import {Filter, FilterStatus} from '@ofModel/feed-filter.model';
 
+
 export enum FeedActionTypes {
     ApplyFilter = '[Feed] Change filter Status',
     ChangeSort = '[Feed] Change sort order',
     ResetFilter = '[Feed] Reset filter Status',
-    ApplySeveralFilters = '[Feed] Change several filters Status at Once'
+    ApplySeveralFilters = '[Feed] Change several filters Status at Once',
+    ChangeReadSort = "[Feed] Sort by read"
 }
 
 export class ApplyFilter implements Action {
@@ -35,6 +37,13 @@ export class ChangeSort implements Action {
     }
 }
 
+export class ChangeReadSort implements Action {
+    readonly type = FeedActionTypes.ChangeReadSort;
+
+    constructor() {
+    }
+}
+
 export class ResetFilter implements  Action {
     readonly type  = FeedActionTypes.ResetFilter;
 }
@@ -48,5 +57,6 @@ export class ApplySeveralFilters implements Action {
 export type FeedActions =
     ApplyFilter
     | ChangeSort
+    | ChangeReadSort
     | ResetFilter
     | ApplySeveralFilters;

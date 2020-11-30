@@ -161,38 +161,6 @@ class GivenAdminUserBusinessconfigControllerShould {
     }
 
     @Test
-    void fetchDetails() throws Exception {
-        ResultActions result = mockMvc.perform(
-                get("/businessconfig/processes/first/testState/details")
-                        .accept("application/json"));
-        result
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].templateName", is("template")))
-        ;
-    }
-
-    @Test
-    void fetchNoDetailsOfUnknownProcess() throws Exception {
-        ResultActions result = mockMvc.perform(
-                get("/businessconfig/processes/unknown/testState/details")
-                        .accept("application/json"));
-        result
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    void fetchNoDetailsOfUnknownState() throws Exception {
-        ResultActions result = mockMvc.perform(
-                get("/businessconfig/processes/first/unknown/details")
-                        .accept("application/json"));
-        result
-                .andExpect(status().isNotFound());
-    }
-
-
-    @Test
     void fetchTemplateResource() throws Exception {
         ResultActions result = mockMvc.perform(
                 get("/businessconfig/processes/first/templates/template1?locale=fr")

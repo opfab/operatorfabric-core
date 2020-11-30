@@ -1,0 +1,62 @@
+
+buildscript {
+	repositories {
+		jcenter()
+		mavenLocal()
+		mavenCentral()
+		maven { url "https://plugins.gradle.org/m2/" }
+	}
+	dependencies {
+		classpath misc.palantir
+	}
+}
+
+apply plugin: plugin.bom
+apply plugin: plugin.boot
+apply plugin: 'java'
+apply plugin: plugin.dockerBuild
+
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+
+//create a single Jar with all dependencies
+jar {
+	    manifest {
+	        attributes 'Main-Class': 'org.lfenergy.operatorfabric.externalApp.ExternalAppApplication'
+	    }
+	 
+	    from {
+	        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+	    }
+	}
+
+docker {
+	name "lfeoperatorfabric/of-external-app"
+	tags "latest", "${project.version}"
+    labels (['project':"${project.group}"])
+	dockerfile file('src/main/docker/Dockerfile')
+	copySpec.from(jar).rename(".*","${jar.archiveName}")
+	buildArgs(['JAR_FILE'       : "${jar.archiveName}",
+                       'http_proxy'     : apk.proxy.uri,
+                       'https_proxy'    : apk.proxy.uri,
+                       'HTTP_PROXY_AUTH': "basic:*:$apk.proxy.user:$apk.proxy.password"])
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'com.h2database:h2'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+	}
+}
+
+test {
+	useJUnitPlatform()
+}
+tasks.docker.dependsOn build

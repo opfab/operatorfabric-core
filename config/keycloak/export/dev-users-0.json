@@ -34,12 +34,12 @@
   }, {
     "id" : "5e5a469f-8d21-4308-8229-3532fe6e52f6",
     "createdTimestamp" : 1557499482370,
-    "username" : "rte-operator",
+    "username" : "operator3",
     "enabled" : true,
     "totp" : false,
     "emailVerified" : false,
     "attributes" : {
-      "groups" : ["RTE;ADMIN;TRANS"]
+      "groups" : ["RTE;ADMIN;ReadOnly"]
     },
     "credentials" : [ {
       "type" : "password",
@@ -83,7 +83,7 @@
   }, {
     "id" : "793c4666-1162-44a0-b372-42fbaa348e78",
     "createdTimestamp" : 1557499736343,
-    "username" : "tso1-operator",
+    "username" : "operator1",
     "enabled" : true,
     "totp" : false,
     "emailVerified" : false,
@@ -91,7 +91,7 @@
     "lastName" : "",
     "attributes" : {
       "entitiesId" : [ "ENTITY1;ENTITY3" ],
-      "groups" : ["TSO1;TRANS;TSO3"]
+      "groups" : ["Dispatcher;ReadOnly;Supervisor"]
     },
     "credentials" : [ {
       "type" : "password",
@@ -116,13 +116,45 @@
   }, {
     "id" : "453436ad-ecdc-45c6-a57d-861d565c5eaa",
     "createdTimestamp" : 1557499764075,
-    "username" : "tso2-operator",
+    "username" : "operator2",
     "enabled" : true,
     "totp" : false,
     "emailVerified" : false,
     "attributes" : {
       "entitiesId" : [ "ENTITY2;ENTITY4" ],
-      "groups" : ["TSO2;TRANS;TSO4"]
+      "groups" : ["Planner;ReadOnly;Manager"]
+    },
+    "credentials" : [ {
+      "type" : "password",
+      "hashedSaltedValue" : "7BJc08ILj6xLK78rWLSEnmoJWlawX4iRyqgbsKG7IkT5EkLe4rSa5z2a0yCSgr9AB61Wk8X5XZVuqcN/FHt2mA==",
+      "salt" : "H2uHh0lLFiIGBzFQicMOmQ==",
+      "hashIterations" : 27500,
+      "counter" : 0,
+      "algorithm" : "pbkdf2-sha256",
+      "digits" : 0,
+      "period" : 0,
+      "createdDate" : 1557499771266,
+      "config" : { }
+    } ],
+    "disableableCredentialTypes" : [ "password" ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "uma_authorization", "offline_access" ],
+    "clientRoles" : {
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  },
+  {
+    "id" : "453436ad-ecdc-45c6-a57d-861d565c5eab",
+    "createdTimestamp" : 1557499764090,
+    "username" : "operator4",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "attributes" : {
+      "entitiesId" : [ "ENTITY4" ],
+      "groups" : ["Supervisor"]
     },
     "credentials" : [ {
       "type" : "password",

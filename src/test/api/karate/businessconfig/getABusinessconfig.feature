@@ -17,6 +17,7 @@ Feature: Bundle
     And match response.uiVisibility.logging == true
     And match response.uiVisibility.calendar == true
 
+
   Scenario: check bundle without authentication
 
     # Check bundle

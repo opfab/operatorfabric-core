@@ -1,10 +1,10 @@
 Feature: Get current user with perimeters (opfab in JWT mode)(endpoint tested : GET /CurrentUserWithPerimeters)
 
   Background:
-   #Getting token for admin and tso1-operator user calling getToken.feature
+   #Getting token for admin and operator1 user calling getToken.feature
     * def signIn = call read('../../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = call read('../../common/getToken.feature') { username: 'tso1-operator'}
+    * def signInAsTSO = call read('../../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
 
@@ -40,23 +40,23 @@ Feature: Get current user with perimeters (opfab in JWT mode)(endpoint tested : 
 }
 """
 
-    * def TSO3groupsArray =
+    * def SupervisorgroupsArray =
 """
-[   "TSO3"
+[   "Supervisor"
 ]
 """
-    * def TSO1groupsArray =
+    * def DispatchergroupsArray =
 """
-[   "TSO1"
+[   "Dispatcher"
 ]
 """
 
-  Scenario: Get current user with perimeters with tso1-operator
+  Scenario: Get current user with perimeters with operator1
     Given url opfabUrl + 'users/CurrentUserWithPerimeters'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
-    And match response.userData.login == 'tso1-operator'
+    And match response.userData.login == 'operator1'
     And assert response.computedPerimeters.length == 0
 
 
@@ -88,40 +88,40 @@ Feature: Get current user with perimeters (opfab in JWT mode)(endpoint tested : 
     And match response.stateRights == perimeter15_2.stateRights
 
 
-  Scenario: Add TSO1 group to perimeter15_1
+  Scenario: Add Dispatcher group to perimeter15_1
     Given url opfabUrl + 'users/perimeters/' + perimeter15_1.id + '/groups'
     And header Authorization = 'Bearer ' + authToken
-    And request TSO1groupsArray
+    And request DispatchergroupsArray
     When method patch
     And status 200
 
 
-  Scenario: Add TSO3 group to perimeter15_2
+  Scenario: Add Supervisor group to perimeter15_2
     Given url opfabUrl + 'users/perimeters/' + perimeter15_2.id + '/groups'
     And header Authorization = 'Bearer ' + authToken
-    And request TSO3groupsArray
+    And request SupervisorgroupsArray
     When method patch
     And status 200
 
 
-  Scenario: Get current user with perimeters with tso1-operator
+  Scenario: Get current user with perimeters with operator1
     Given url opfabUrl + 'users/CurrentUserWithPerimeters'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
-    And match response.userData.login == 'tso1-operator'
+    And match response.userData.login == 'operator1'
     And assert response.computedPerimeters.length == 2
     And match response.computedPerimeters contains only [{"process":"process15","state":"state1","rights":"ReceiveAndWrite"}, {"process":"process15","state":"state2","rights":"ReceiveAndWrite"}]
 
 
-  Scenario: Delete TSO1 group from perimeter15_1
+  Scenario: Delete Dispatcher group from perimeter15_1
     Given url opfabUrl + 'users/perimeters/' + perimeter15_1.id  + '/groups'
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
 
 
-  Scenario: Delete TSO3 group from perimeter15_2
+  Scenario: Delete Supervisor group from perimeter15_2
     Given url opfabUrl + 'users/perimeters/' + perimeter15_2.id  + '/groups'
     And header Authorization = 'Bearer ' + authToken
     When method delete

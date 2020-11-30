@@ -7,9 +7,6 @@
     "calendar": true
   },
   "name":"process.label",
-  "menuEntries": [
-    {"id": "uid test 0","url": "https://opfab.github.io/","label": "menu.first", "linkType": "BOTH"}
-  ],
   "locales": [
     "fr",
     "en"
@@ -18,14 +15,10 @@
     "firstState": {
       "name":  "firstState.label",
       "color": "blue",
-      "details": [
-        {
-          "title": {
-            "key": "template1.title"
-          },
-          "templateName": "template1"
-        }
-      ],
+      "detailTitle": {
+        "key": "template1.title"
+      },
+      "templateName": "template1",
       "acknowledgementAllowed": false
     }
   }

@@ -1,10 +1,10 @@
 Feature: delete group from a perimeter (endpoint tested : DELETE /perimeters/{idPerimeter}/groups/{idGroup})
 
   Background:
-   #Getting token for admin and tso1-operator user calling getToken.feature
+   #Getting token for admin and operator1 user calling getToken.feature
     * def signIn = call read('../../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = call read('../../common/getToken.feature') { username: 'tso1-operator'}
+    * def signInAsTSO = call read('../../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
 
@@ -73,7 +73,7 @@ Feature: delete group from a perimeter (endpoint tested : DELETE /perimeters/{id
     Then status 200
 
 
-  Scenario: Delete group from a perimeter (with tso1-operator authentication)
+  Scenario: Delete group from a perimeter (with operator1 authentication)
     #Given url opfabUrl + 'users/perimeters/' + perimeterDeletedFrom + '/groups/' + groupToDelete
     Given url opfabUrl + 'users/perimeters/' + perimeterKarate2_1.id  + '/groups/' + groupKarate2.id
     And header Authorization = 'Bearer ' + authTokenAsTSO

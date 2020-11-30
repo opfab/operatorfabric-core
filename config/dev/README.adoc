@@ -1,0 +1,18 @@
+= First run
+
+=== Requierements
+
+The command `docker-compose` available in your `${PATH}`.
+
+== Instructions
+
+Run:
+----
+cd ${OF_HOME}/config/dev
+./docker-compose.sh
+----
+
+== Explanations
+
+The `docker-compose.yml` has a volume configured for the `nginx.conf` file.
+ This file is created by the script `docker-compose.sh`.

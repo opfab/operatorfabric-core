@@ -9,7 +9,7 @@
 
 
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
-import {LightCard, severityOrdinal} from '@ofModel/light-card.model';
+import {readOrdinal, LightCard, severityOrdinal} from '@ofModel/light-card.model';
 import {Filter} from '@ofModel/feed-filter.model';
 import {FilterService, FilterType} from '@ofServices/filter.service';
 
@@ -31,6 +31,7 @@ export interface CardFeedState extends EntityState<LightCard> {
     error: string;
     filters: Map<FilterType, Filter>;
     sortBySeverity: boolean;
+    sortByRead: boolean;
 }
 
 export function compareByStartDate(card1: LightCard, card2: LightCard) {
@@ -45,10 +46,30 @@ export function compareByPublishDate(card1: LightCard, card2: LightCard) {
     return card2.publishDate - card1.publishDate;
 }
 
+export function compareByRead(card1: LightCard, card2: LightCard) {
+    return readOrdinal(card1.hasBeenRead) - readOrdinal(card2.hasBeenRead);
+}
+
 export function compareBySeverityPublishDate(card1: LightCard, card2: LightCard) {
     let result = compareBySeverity(card1, card2);
     if (result === 0) {
         result = compareByPublishDate(card1, card2);
+    }
+    return result;
+}
+
+export function compareByReadPublishDate(card1: LightCard, card2: LightCard) {
+    let result = compareByRead(card1, card2);
+    if (result === 0) {
+        result = compareByPublishDate(card1, card2);
+    }
+    return result;
+}
+
+export function compareByReadSeverityPublishDate(card1: LightCard, card2: LightCard) {
+    let result = compareByRead(card1, card2);
+    if (result === 0) {
+        result = compareBySeverityPublishDate(card1, card2);
     }
     return result;
 }
@@ -76,5 +97,6 @@ export const feedInitialState: CardFeedState = LightCardAdapter.getInitialState(
         loading: false,
         error: '',
         filters: getDefaultFilter(),
-        sortBySeverity: false
+        sortBySeverity: false,
+        sortByRead: true
     });

@@ -1,0 +1,121 @@
+// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+:kafka_schema: https://docs.confluent.io/current/schema-registry/index.html
+:confluent: https://www.confluent.io/
+:spring_kafka_doc: https://docs.spring.io/spring-kafka/reference/html/
+
+= Kafka Implementation
+
+Next to publishing cards to OperatorFabric using the REST API, OperatorFabric also supports publishing cards via a Kafka Topic.
+In the default configuration Kafka is disabled.
+
+== Enabling Kafka
+
+To enable Kafka support you need to set the `kafka.consumer.group_id property` in the cards-publication yml file:
+[source,yaml]
+----
+  kafka:
+    consumer:
+      group-id: opfab-command
+----
+
+The default topic from which the messages are consumed is called 'opfab'. This setting can be modified by setting 'opfab.kafka.card.topics.topicname'.
+
+Make sure you also set the registry to either an empty string (`""`) or to the server providing the schema registry service.
+With the default settings, the Kafka consumer expects a broker running on http//127.0.0.1:9092 and a schema registry on http://127.0.0.1:8081.
+<<Cards-publication service>> for more settings.
+
+See link:{kafka_schema}[Schema management] for detailed information on using and benefits of a schema registry.
+
+== OperatorFabric Kafka source code
+== Listener / deserializer
+Most of the OperatorFabric Kafka implementation can be found at
+
+`org.lfenergy.operatorfabric.cards.publication.kafka`:: for
+the implementation of the deserializers and mapping of Kafka topics to OperatorFabric cards and
+`org.lfenergy.operatorfabric.autoconfigure.kafka` ::
+for the various Kafka configuration options.
+
+=== Kafka OperatorFabric AVRO schema
+The AVRO schema, the byte format in which messages are transferred using Kafka topics, can be found at `client/src/main/avro`.
+Message are wrapped in a CardCommand object before being sent to a Kafka topic. The CardCommand consists of some additional information and the
+OperatorFabric card itself, see also <<card_structure>>. The additional information, for example CommandType, consists mostly of the information
+present in a REST operation but not in Kafka. For example the http method (POST, DELETE, UPDATE) used.
+
+== Configure Kafka
+=== Setting a new deserializer
+By default, OperatorFabric uses the  `io.confluent.kafka.serializers.KafkaAvroDeserializer` from link:{confluent}[Confluent]. However, you can write your own
+deserializer. To use your own deserializer, make sure
+`spring.deserializer.value.delegate.class` points to your deserializer.
+
+
+== Kafka card producer
+To send a CardCommand to OperatorFabric, start by implementing a simple Kafka producer by following for example link:{spring_kafka_doc}[Spring for Apache Kafka].
+Note that some properties of CardCommand or its embedded Card are required. If not set, the card will be rejected by OperatorFabric.
+
+When you dump the card (which is about to be put on a topic) to stdout, you should see something like the line below. Do ignore the actual values from
+the dump below.
+
+[source, json]
+----
+{
+  "command": "CREATE_CARD",
+  "process": "integrationTest",
+  "processInstanceId": "fa6ce61f-192f-11eb-a6e3-eea952defe56",
+  "card": {
+    "parentCardUid": null,
+    "publisher": "myFirstPublisher",
+    "processVersion": "2",
+    "state": "FirstUserTask",
+    "publishDate": null,
+    "lttd": null,
+    "startDate": 1603897942000,
+    "endDate": 1604070742000,
+    "severity": "ALARM",
+    "tags": null,
+    "timeSpans": null,
+    "details": null,
+    "title": {
+      "key": "FirstUserTask.title",
+      "parameters": null
+    },
+    "summary": {
+      "key": "FirstUserTask.summary",
+      "parameters": null
+    },
+    "userRecipients": [
+      "tso1-operator",
+      "tso2-operator"
+    ],
+    "groupRecipients": null,
+    "externalRecipients": null,
+    "entitiesAllowedToRespond": [
+      "ENTITY1"
+    ],
+    "entityRecipients": null,
+    "hasBeenAcknowledged": null,
+    "data": "{\"action\":\"Just do something\"}"
+  }
+}
+
+----
+
+== Response Cards
+OperatorFabric <<response_cards>> can be sent by REST of put on a Kafka topic. The Kafka response card configuration follows the
+convention to configure a REST endpoint. Instead of setting the 'http://host/api' URL, you set it to 'kafka:response-topic' in the `externalRecipients-url:`
+section from the cards-publication.yml file:
+
+[source, yaml]
+----
+externalRecipients-url: "{\
+           processAction: \"http://localhost:8090/test\", \
+           mykafka: \"kafka:topicname\"
+           }"
+----
+
+Note that `topicname` is a placeholder for now. All response cards are returned via the same Kafka topic.

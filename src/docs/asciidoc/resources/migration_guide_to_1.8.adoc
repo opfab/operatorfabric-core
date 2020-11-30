@@ -1,0 +1,74 @@
+// Copyright (c) 2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 1.7.0 to release 1.8.0 
+
+== Card detail definition in business configuration 
+
+
+There is no more the need for multiple definitions of card's detail rendering because of the removal of multi-tab rendering. The rendering of the detail of a card is configured specifying the detail title, template name and the list of styles.
+
+
+In the Businessconfig model definition the field `details` has been removed.
+
+The new fields `detailTitle`, `templateName` and `styles` have been added.
+
+Here is an example of a simple config.json file:
+
+.Before
+[source,json]
+----
+
+{
+  "id": "TEST",
+  "version": "1",
+  "name": "process.label",
+  "states": {
+    "firstState": {
+      "name" :"mystate.label",
+      "details": [
+        {
+          "title": {
+            "key": "template.title"
+          },
+          "templateName": "operation",
+          "styles": ["style1","style2"]
+        }
+      ]
+    }
+  }
+}
+
+----
+
+.After
+[source,json]
+----
+
+{
+  "id": "TEST",
+  "version": "1",
+  "name": "process.label",
+  "states": {
+    "firstState": {
+      "name" :"mystate.label",
+      "detailTitle": {
+        "key": "template.title"
+        },
+      "templateName": "operation",
+      "styles": ["style1","style2"]
+    }
+  }
+}
+----
+
+== Business menu definition  
+
+The business menu are not configured anymore in the business definition but in a specific single configuration file called ui-menu.json. You must move your configuration from the config.json to this new file, see 
+ifdef::single-page-doc[<<menu_entries, documentation>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#menu_entries, documentation>>]
+.

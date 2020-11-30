@@ -1,0 +1,79 @@
+// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+
+= Card notification
+
+When a user receives a card, he is notified via a resume of the card on the left panel of the UI, what is called the "feed".
+
+== Sound notification 
+
+If the option is activated in the general configuration file web-ui.json, the user can choose to have a sound when a card is arriving. The configuration is to be set by the user with the settings menu.
+
+== Card read 
+
+When the user receives a new card, he see it in the feed with an eye icon on the right of the card resume. When he opens the cards, the icon disappears. 
+
+== Card acknowledgment 
+
+The user can set a card as "acknowledged" so he will not see it anymore by default in the feed. It is as well possible to cancel it and set a card to "unacknowledged" (a filter permit to see acknowledged cards). 
+
+To offer the possibility for the user to acknowledged card, it has to be configured in process definition. The configuration is set on a state based with the acknowledgementAllowed field set to true  (default is false). You can see examples in src/test/utils/karate/businessconfig/resources/bundle_defaultProcess/config.json
+[[card_reminder]]
+== Card reminder 
+
+For certain process and state, it is possible to configure a reminder. The reminder "reactivate" the card in the feed at a certain time. "Reactivate" means setting the card to the status "unread" and "unacknowledged".
+
+
+The time for "reactivation" is defined with the parameter "secondsBeforeTimeSpanForReminder" in the card.
+
+The remind is done related to the timespans values :
+
+- the startDate 
+
+- or recurrently if a recurrence objet is defined.
+
+=== Simple reminder
+
+If a timespan is present without a recurrence object, a reminder will arise at `startDate - secondsBeforeTimeSpanForReminder`.
+
+=== Recurrent reminder
+
+It is possible to set a recurrent reminder via the structure recurrence which define a regular event in the timespan structure. It is defined with the following fields : 
+
+ - HoursAndMinutes : hours and minutes of day when the event arise
+
+ - DayOfWeeks : a list of day of the week when the event arise. The day of week is a number with 1 being Monday and 7 being Sunday as defined in https://en.wikipedia.org/wiki/ISO_8601#Week_dates[the ISO Standard 8601 (weekday number) ]
+
+ - TimeZone : the time zone of reference for the recurrence definition (default value is Europe/Paris)
+
+The reminder will arise for each `recurrent date of event - secondsBeforeTimeSpanForReminder` starting from startDate. 
+
+==== Recurrent reminder example 
+
+If timespan is defined as follow : 
+
+.... 
+startDate : 1231135161
+recurrence : {
+    HoursAndMinutes : { hours:10 ,minutes:30},
+    DaysOfWeeks : [6,7]
+}
+....
+
+If secondsBeforeTimeSpanForReminder is set to 600 seconds, the reminder will arise every saturday and sunday at 10:20 starting from startDate 
+
+=== Last time for reminding
+
+If the user is not connected at the time of the remind,  when he connects if current time is superior to 15 minutes from the event date, no  remind will arise. 
+
+=== Debugging 
+
+When the user receives a card with a reminder to set, the log (console) of the browser contains a line with the date when the remind will arise . For example : 
+
+`2020-11-22T21:00:36.011Z Reminder Will remind card userCardExamples.0cf5537b-f0df-4314-f17f-2797ccd8e4e9 at
+                         Sun Nov 22 2020 22:55:00 GMT+0100 (heure normale d’Europe centrale)`

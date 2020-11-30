@@ -42,9 +42,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p></p>
@@ -122,14 +120,15 @@ class UsersControllerShould {
         us1 = UserSettingsData.builder()
                 .login("jcleese")
                 .description("Once played Sir Lancelot")
+                .processStatesNotNotified("processA", Arrays.asList("state1", "state2"))
+                .processStatesNotNotified("processB", Arrays.asList("state3", "state4"))
                 .build();
         us2 = UserSettingsData.builder()
                 .login("gchapman")
-                .dateFormat("LL")
+                .processesStatesNotNotified(Collections.emptyMap())
                 .build();
         us3 = UserSettingsData.builder()
                 .login("kkline")
-                .timeFormat("LT")
                 .build();
         userSettingsRepository.insert(us1);
         userSettingsRepository.insert(us2);
@@ -229,13 +228,32 @@ class UsersControllerShould {
 
         @Test
         void fetchSettings() throws Exception {
-            ResultActions result = mockMvc.perform(get("/users/gchapman/settings"));
-            result
+            ResultActions result1 = mockMvc.perform(get("/users/jcleese/settings"));
+            result1
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.login", is("jcleese")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(2)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processA.[0]", is("state1")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processA.[1]", is("state2")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processB.[0]", is("state3")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processB.[1]", is("state4")))
+            ;
+
+            ResultActions result2 = mockMvc.perform(get("/users/gchapman/settings"));
+            result2
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
-                    .andExpect(jsonPath("$.dateFormat", is("LL")))
-                    .andExpect(jsonPath("$.timeFormat", is(nullValue())))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(0)))
+            ;
+
+            ResultActions result3 = mockMvc.perform(get("/users/kkline/settings"));
+            result3
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.login", is("kkline")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(0)))
             ;
         }
 
@@ -256,48 +274,47 @@ class UsersControllerShould {
             mockMvc.perform(put("/users/mpalin/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
-                            "\"login\": \"mpalin\"," +
-                            "\"dateFormat\": \"LL\"," +
-                            "\"timeFormat\": \"LT\"" +
-                            "}")
+                            "\"login\": \"mpalin\"}")
             )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
-                    .andExpect(jsonPath("$.dateFormat", is("LL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
+                    .andExpect(jsonPath("$.processesStatesNotNotified", is(nullValue())))
             ;
 
             mockMvc.perform(get("/users/mpalin/settings"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
-                    .andExpect(jsonPath("$.dateFormat", is("LL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
+                    .andExpect(jsonPath("$.processesStatesNotNotified", is(nullValue())))
             ;
 
             mockMvc.perform(put("/users/mpalin/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
-                            "\"login\": \"mpalin\"" +
-                            "}")
+                            "\"login\": \"mpalin\"," +
+                            "\"processesStatesNotNotified\": {\"processC\":[\"state5\", \"state6\"]}}")
             )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
-                    .andExpect(jsonPath("$.dateFormat", is(nullValue())))
-                    .andExpect(jsonPath("$.timeFormat", is(nullValue())))
                     .andExpect(jsonPath("$.description", is(nullValue())))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(1)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
             ;
             mockMvc.perform(get("/users/mpalin/settings"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
-                    .andExpect(jsonPath("$.dateFormat", is(nullValue())))
-                    .andExpect(jsonPath("$.timeFormat", is(nullValue())))
                     .andExpect(jsonPath("$.description", is(nullValue())))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(1)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
             ;
 
         }
@@ -307,49 +324,74 @@ class UsersControllerShould {
             mockMvc.perform(put("/users/mpalin/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
-                            "\"login\": \"mpalin\"," +
-                            "\"dateFormat\": \"LL\"," +
-                            "\"timeFormat\": \"LT\"" +
-                            "}")
+                            "\"login\": \"mpalin\"}")
             )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
-                    .andExpect(jsonPath("$.dateFormat", is("LL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
+                    .andExpect(jsonPath("$.processesStatesNotNotified", is(nullValue())))
             ;
 
             mockMvc.perform(get("/users/mpalin/settings"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
-                    .andExpect(jsonPath("$.dateFormat", is("LL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
+                    .andExpect(jsonPath("$.processesStatesNotNotified", is(nullValue())))
             ;
 
             mockMvc.perform(patch("/users/mpalin/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"mpalin\"," +
-                            "\"dateFormat\": \"LLL\"" +
-                            "}")
+                            "\"processesStatesNotNotified\": {\"processC\": [\"state5\", \"state6\"]}}")
             )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
-                    .andExpect(jsonPath("$.dateFormat", is("LLL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(1)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
             ;
             mockMvc.perform(get("/users/mpalin/settings"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
-                    .andExpect(jsonPath("$.dateFormat", is("LLL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(1)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
+            ;
+
+            mockMvc.perform(patch("/users/mpalin/settings")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{" +
+                            "\"login\": \"mpalin\"," +
+                            "\"description\": \"a short description for mpalin\"}")
+            )
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.login", is("mpalin")))
+                    .andExpect(jsonPath("$.description", is("a short description for mpalin")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(1)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
+            ;
+            //We check that processesStatesNotNotified has not been deleted
+            mockMvc.perform(get("/users/mpalin/settings"))
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.login", is("mpalin")))
+                    .andExpect(jsonPath("$.description", is("a short description for mpalin")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(1)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
             ;
 
         }
@@ -360,24 +402,20 @@ class UsersControllerShould {
             mockMvc.perform(patch("/users/tjones/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
-                            "\"login\": \"mpalin\"," +
-                            "\"dateFormat\": \"LLL\"" +
-                            "}")
+                            "\"login\": \"mpalin\"}")
             )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("tjones")))
-                    .andExpect(jsonPath("$.dateFormat", is("LLL")))
-                    .andExpect(jsonPath("$.timeFormat", is(nullValue())))
                     .andExpect(jsonPath("$.description", is(nullValue())))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(0)))
             ;
             mockMvc.perform(get("/users/tjones/settings"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("tjones")))
-                    .andExpect(jsonPath("$.dateFormat", is("LLL")))
-                    .andExpect(jsonPath("$.timeFormat", is(nullValue())))
                     .andExpect(jsonPath("$.description", is(nullValue())))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(0)))
             ;
 
         }
@@ -926,8 +964,7 @@ class UsersControllerShould {
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
-                    .andExpect(jsonPath("$.dateFormat", is("LL")))
-                    .andExpect(jsonPath("$.timeFormat", is(nullValue())))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(0)))
             ;
         }
 
@@ -946,47 +983,53 @@ class UsersControllerShould {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"gchapman\"," +
-                            "\"dateFormat\": \"LL\"," +
-                            "\"timeFormat\": \"LT\"" +
-                            "}")
+                            "\"processesStatesNotNotified\": {\"processC\": [\"state5\", \"state6\"]}}")
             )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
-                    .andExpect(jsonPath("$.dateFormat", is("LL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(1)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
             ;
 
             mockMvc.perform(get("/users/gchapman/settings"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
-                    .andExpect(jsonPath("$.dateFormat", is("LL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(1)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
             ;
 
             mockMvc.perform(put("/users/gchapman/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
-                            "\"login\": \"gchapman\"" +
-                            "}")
+                            "\"login\": \"gchapman\"," +
+                            "\"processesStatesNotNotified\": {\"processC\": [\"state5\", \"state6\"]}}")
             )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
-                    .andExpect(jsonPath("$.dateFormat", is(nullValue())))
-                    .andExpect(jsonPath("$.timeFormat", is(nullValue())))
                     .andExpect(jsonPath("$.description", is(nullValue())))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(1)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
             ;
             mockMvc.perform(get("/users/gchapman/settings"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
-                    .andExpect(jsonPath("$.dateFormat", is(nullValue())))
-                    .andExpect(jsonPath("$.timeFormat", is(nullValue())))
                     .andExpect(jsonPath("$.description", is(nullValue())))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(1)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
             ;
 
         }
@@ -996,10 +1039,7 @@ class UsersControllerShould {
             mockMvc.perform(put("/users/kkline/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
-                            "\"login\": \"mpalin\"," +
-                            "\"dateFormat\": \"LL\"," +
-                            "\"timeFormat\": \"LT\"" +
-                            "}")
+                            "\"login\": \"mpalin\"}")
             )
                     .andExpect(status().isForbidden())
             ;
@@ -1010,49 +1050,74 @@ class UsersControllerShould {
             mockMvc.perform(put("/users/gchapman/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
-                            "\"login\": \"gchapman\"," +
-                            "\"dateFormat\": \"LLL\"," +
-                            "\"timeFormat\": \"LT\"" +
-                            "}")
+                            "\"login\": \"gchapman\"}")
             )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
-                    .andExpect(jsonPath("$.dateFormat", is("LLL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
+                    .andExpect(jsonPath("$.processesStatesNotNotified", is(nullValue())))
             ;
 
             mockMvc.perform(get("/users/gchapman/settings"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
-                    .andExpect(jsonPath("$.dateFormat", is("LLL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
+                    .andExpect(jsonPath("$.processesStatesNotNotified", is(nullValue())))
             ;
 
             mockMvc.perform(patch("/users/gchapman/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"gchapman\"," +
-                            "\"dateFormat\": \"LL\"" +
-                            "}")
+                            "\"processesStatesNotNotified\": {\"processC\":[\"state5\", \"state6\"]}}")
             )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
-                    .andExpect(jsonPath("$.dateFormat", is("LL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(1)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
             ;
             mockMvc.perform(get("/users/gchapman/settings"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
-                    .andExpect(jsonPath("$.dateFormat", is("LL")))
-                    .andExpect(jsonPath("$.timeFormat", is("LT")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(1)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
+            ;
+
+            mockMvc.perform(patch("/users/gchapman/settings")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{" +
+                            "\"login\": \"gchapman\"," +
+                            "\"description\": \"a short description for gchapman\"}")
+            )
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.login", is("gchapman")))
+                    .andExpect(jsonPath("$.description", is("a short description for gchapman")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(1)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
+            ;
+            //We check that processesStatesNotNotified has not been deleted
+            mockMvc.perform(get("/users/gchapman/settings"))
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.login", is("gchapman")))
+                    .andExpect(jsonPath("$.description", is("a short description for gchapman")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(1)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
+                    .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
             ;
 
         }
@@ -1062,10 +1127,7 @@ class UsersControllerShould {
             mockMvc.perform(patch("/users/kkline/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
-                            "\"login\": \"kkline\"," +
-                            "\"dateFormat\": \"LL\"," +
-                            "\"timeFormat\": \"LT\"" +
-                            "}")
+                            "\"login\": \"kkline\"}")
             )
                     .andExpect(status().isForbidden())
             ;

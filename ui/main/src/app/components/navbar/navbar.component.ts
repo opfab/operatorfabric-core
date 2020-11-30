@@ -17,7 +17,7 @@ import { selectCurrentUrl } from '@ofSelectors/router.selectors';
 import { LoadMenu } from '@ofActions/menu.actions';
 import { selectMenuStateMenu } from '@ofSelectors/menu.selectors';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Menu } from '@ofModel/processes.model';
+import { Menu } from '@ofModel/menu.model';
 import { tap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import {GlobalStyleService} from '@ofServices/global-style.service';

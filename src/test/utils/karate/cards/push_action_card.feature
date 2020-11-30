@@ -3,7 +3,7 @@ Feature: Cards
 
   Background:
 
-    * def signIn = call read('../common/getToken.feature') { username: 'tso1-operator'}
+    * def signIn = call read('../common/getToken.feature') { username: 'operator1'}
     * def authToken = signIn.authToken
 
   Scenario: Post card
@@ -48,7 +48,7 @@ Feature: Cards
         "summary": "Test the action process"
         }
     },
-    "groupRecipients": ["TSO1"],
+    "groupRecipients": ["Dispatcher"],
     "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
     "mainRecipient": null,
@@ -100,7 +100,7 @@ Feature: Cards
         "summary": "Test the action process"
         }
     },
-    "groupRecipients": ["TSO1"],
+    "groupRecipients": ["Dispatcher"],
     "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
     "mainRecipient": null,
@@ -152,7 +152,7 @@ Feature: Cards
         "summary": "Test the action process"
         }
     },
-    "groupRecipients": ["TSO1"],
+    "groupRecipients": ["Dispatcher"],
     "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
     "mainRecipient": null,
@@ -204,7 +204,7 @@ Feature: Cards
         "summary": "Test the action process"
         }
     },
-    "groupRecipients": ["TSO1"],
+    "groupRecipients": ["Dispatcher"],
     "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
     "mainRecipient": null,
@@ -255,9 +255,9 @@ Feature: Cards
         "summary": "Test the action without entity in entitiesAllowedToRespond"
         }
     },
-    "groupRecipients": ["TSO1"],
+    "groupRecipients": ["Dispatcher"],
     "entityRecipients": ["ENTITY1"],
-    "entitiesAllowedToRespond": ["TSO1","ENTITY1"],
+    "entitiesAllowedToRespond": ["Dispatcher","ENTITY1"],
     "mainRecipient": null,
     "userRecipients": null,
     "groupRecipients": null,

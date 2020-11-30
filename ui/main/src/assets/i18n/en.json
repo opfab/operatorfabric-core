@@ -63,7 +63,9 @@
     },
     "sort": {
       "severityPub": "Sorted by severity then publication",
-      "pub": "Sorted by publication"
+      "pub": "Sorted by publication",
+      "read": "Sorted by read",
+      "notsortedByRead": "Not sorted by read"
     }
   },
   "login": {
@@ -87,20 +89,15 @@
     }
   },
   "settings": {
-    "email": "Email address",
     "description": "Description",
     "locale": "Language",
     "timeZone": "Time zone",
-    "timeFormat": "Time format",
-    "dateFormat": "Date format",
-    "dateTimeFormat": "Date Time format",
     "defaultTags": "Default tags",
     "playSoundLabel": "Play sounds for cards with severity",
     "playSoundForAlarm": "Alarm",
     "playSoundForAction": "Action",
     "playSoundForCompliant": "Compliant",
-    "playSoundForInformation": "Information",
-    "invalidEmail": "Invalid email address"
+    "playSoundForInformation": "Information"
   },
   "archive": {
     "filters": {
@@ -145,10 +142,12 @@
     "ok": "OK",
     "cancel": "Cancel",
     "reset": "Reset",
-    "delete": "Delete"
+    "delete": "Delete",
+    "edit": "Edit"
   },
   "userCard": {
     "title": "Create a new card",
+    "editTitle" : "Edit a card",
     "error": {
       "noRecipientSelected": "You must at least choose one recipient",
       "templateError": "Technical error : invalid template",
@@ -161,7 +160,7 @@
       "startDate":  "Start Date",
       "endDate":  "End Date",
       "comment": "Comment",
-      "entities": "Recipients"
+      "recipients": "Recipients"
     },
     "options": {
       "severity": {
@@ -185,7 +184,13 @@
       "error": {
         "impossibleToDeleteCard": "Impossible to delete card for technical reasons"
       }
-    }
+    },
+    "searchPlaceholderText": "Search",
+    "selectRecipientText": "Select a recipîent",
+    "selectAllText": "Select All",
+    "unSelectAllText": "UnSelect All",
+    "filterSelectAllText": "Select all filtered results",
+    "filterUnSelectAllText": "UnSelect all filtered results"
   },
   "response": {
     "btnTitle": "VALIDATE ANSWERS",

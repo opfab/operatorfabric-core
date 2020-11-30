@@ -1,0 +1,285 @@
+# docker-compose DNS used to resolved keycloak services
+resolver 127.0.0.11 ipv6=off;
+server {
+  listen 80;
+  server_name localhost;
+  ### CUSTOMIZATION - BEGIN
+  # Url of the Authentication provider
+  set $KeycloakBaseUrl "http://keycloak:8080";
+  # Realm associated to OperatorFabric within the Authentication provider
+  set $OperatorFabricRealm "dev";
+  # base64 encoded pair of authentication in the form of 'client-id:secret-id'
+  set $ClientPairOFAuthentication "b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==" ;
+  ### CUSTOMIZATION - END
+  set $BasicValue "Basic $ClientPairOFAuthentication";
+  set $KeycloakOpenIdConnect $KeycloakBaseUrl/auth/realms/$OperatorFabricRealm/protocol/openid-connect;
+  #   access_log /var/log/nginx/host.access.log main;
+  #   enables `ng serve` mode with following default headers and avoid cors error on status other than 2xx
+  add_header 'Access-Control-Allow-Origin' '*' always;
+  add_header 'Access-Control-Allow-Credentials' 'true' always;
+  add_header 'Access-Control-Allow-Methods' '*' always;
+  add_header 'Access-Control-Allow-Headers' '*' always;
+  location /ui/ {
+    alias /usr/share/nginx/html/;
+    index index.html index.htm;
+  }
+  location /auth/check_token {
+    proxy_set_header Host $http_host;
+    proxy_set_header Authorization $BasicValue ;
+    proxy_pass $KeycloakOpenIdConnect/token/introspect;
+  }
+  location /auth/token {
+    proxy_set_header Host $http_host;
+    proxy_set_header Authorization $BasicValue ;
+    proxy_pass $KeycloakOpenIdConnect/token;
+  }
+  location /auth/code/ {
+    proxy_set_header Host $http_host;
+    proxy_set_header Authorization $BasicValue ;
+    proxy_pass $KeycloakOpenIdConnect/auth?response_type=code&client_id=opfab-client&$args;
+  }
+  # for angular hot reload in `ng serve` mode
+  location ^~ /sockjs-node/ {
+    proxy_pass http://127.0.0.1:4200;
+      proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_http_version 1.1;
+    proxy_cache_bypass $http_upgrade;
+  }
+  location /config/web-ui.json {
+    # enables `ng serve` mode
+    if ($request_method = 'OPTIONS') {
+      add_header 'Access-Control-Allow-Origin' '*';
+      add_header 'Access-Control-Allow-Credentials' 'true';
+      add_header 'Access-Control-Allow-Methods' '*';
+      add_header 'Access-Control-Allow-Headers' '*';
+      add_header 'Content-Length' 0;
+      add_header 'Vary' 'Origin';
+      add_header 'Vary' 'Access-Control-Request-Method' ;
+      add_header 'Vary' 'Access-Control-Request-Headers';
+      return 204;
+    }
+    alias /usr/share/nginx/html/opfab/web-ui.json;
+  }
+  location /config/ui-menu.json {
+    # enables `ng serve` mode
+    if ($request_method = 'OPTIONS') {
+      add_header 'Access-Control-Allow-Origin' '*';
+      add_header 'Access-Control-Allow-Credentials' 'true';
+      add_header 'Access-Control-Allow-Methods' '*';
+      add_header 'Access-Control-Allow-Headers' '*';
+      add_header 'Content-Length' 0;
+      add_header 'Vary' 'Origin';
+      add_header 'Vary' 'Access-Control-Request-Method' ;
+      add_header 'Vary' 'Access-Control-Request-Headers';
+      return 204;
+    }
+    alias /usr/share/nginx/html/opfab/ui-menu.json;
+  }
+  location /businessconfig {
+    # enables `ng serve` mode
+    if ($request_method = 'OPTIONS') {
+      add_header 'Access-Control-Allow-Origin' '*';
+      add_header 'Access-Control-Allow-Credentials' 'true';
+      add_header 'Access-Control-Allow-Methods' '*';
+      add_header 'Access-Control-Allow-Headers' '*';
+      add_header 'Content-Length' 0;
+      add_header 'Vary' 'Origin';
+      add_header 'Vary' 'Access-Control-Request-Method' ;
+      add_header 'Vary' 'Access-Control-Request-Headers';
+      return 204;
+    }
+    proxy_set_header Host $http_host;
+    proxy_pass http://${MY_DOCKER_HOST}:2100;
+  }
+
+  location /users {
+    # enables `ng serve` mode
+    if ($request_method = 'OPTIONS') {
+      add_header 'Access-Control-Allow-Origin' '*';
+      add_header 'Access-Control-Allow-Credentials' 'true';
+      add_header 'Access-Control-Allow-Methods' '*';
+      add_header 'Access-Control-Allow-Headers' '*';
+      add_header 'Content-Length' 0;
+      add_header 'Vary' 'Origin';
+      add_header 'Vary' 'Access-Control-Request-Method' ;
+      add_header 'Vary' 'Access-Control-Request-Headers';
+      return 204;
+    }
+    proxy_set_header Host $http_host;
+    proxy_pass http://${MY_DOCKER_HOST}:2103/users;
+  }
+
+  location ~ "^/users/(.*)" {
+    # enables `ng serve` mode
+    if ($request_method = 'OPTIONS') {
+      add_header 'Access-Control-Allow-Origin' '*';
+      add_header 'Access-Control-Allow-Credentials' 'true';
+      add_header 'Access-Control-Allow-Methods' '*';
+      add_header 'Access-Control-Allow-Headers' '*';
+      add_header 'Content-Length' 0;
+      add_header 'Vary' 'Origin';
+      add_header 'Vary' 'Access-Control-Request-Method' ;
+      add_header 'Vary' 'Access-Control-Request-Headers';
+      return 204;
+    }
+    proxy_set_header Host $http_host;
+    proxy_pass http://${MY_DOCKER_HOST}:2103/$1;
+  }
+
+  location /groups {
+    # enables `ng serve` mode
+    if ($request_method = 'OPTIONS') {
+      add_header 'Access-Control-Allow-Origin' '*';
+      add_header 'Access-Control-Allow-Credentials' 'true';
+      add_header 'Access-Control-Allow-Methods' '*';
+      add_header 'Access-Control-Allow-Headers' '*';
+      add_header 'Content-Length' 0;
+      add_header 'Vary' 'Origin';
+      add_header 'Vary' 'Access-Control-Request-Method' ;
+      add_header 'Vary' 'Access-Control-Request-Headers';
+      return 204;
+    }
+    proxy_set_header Host $http_host;
+    proxy_pass http://${MY_DOCKER_HOST}:2103/groups;
+  }
+
+  location ~ "^/groups/(.*)" {
+    # enables `ng serve` mode
+    if ($request_method = 'OPTIONS') {
+      add_header 'Access-Control-Allow-Origin' '*';
+      add_header 'Access-Control-Allow-Credentials' 'true';
+      add_header 'Access-Control-Allow-Methods' '*';
+      add_header 'Access-Control-Allow-Headers' '*';
+      add_header 'Content-Length' 0;
+      add_header 'Vary' 'Origin';
+      add_header 'Vary' 'Access-Control-Request-Method' ;
+      add_header 'Vary' 'Access-Control-Request-Headers';
+      return 204;
+    }
+    proxy_set_header Host $http_host;
+    proxy_pass http://${MY_DOCKER_HOST}:2103/$1;
+  }
+
+  location /entities {
+    # enables `ng serve` mode
+    if ($request_method = 'OPTIONS') {
+      add_header 'Access-Control-Allow-Origin' '*';
+      add_header 'Access-Control-Allow-Credentials' 'true';
+      add_header 'Access-Control-Allow-Methods' '*';
+      add_header 'Access-Control-Allow-Headers' '*';
+      add_header 'Content-Length' 0;
+      add_header 'Vary' 'Origin';
+      add_header 'Vary' 'Access-Control-Request-Method' ;
+      add_header 'Vary' 'Access-Control-Request-Headers';
+      return 204;
+    }
+    proxy_set_header Host $http_host;
+    proxy_pass http://${MY_DOCKER_HOST}:2103/entities;
+  }
+
+  location ~ "^/entities/(.*)" {
+    # enables `ng serve` mode
+    if ($request_method = 'OPTIONS') {
+      add_header 'Access-Control-Allow-Origin' '*';
+      add_header 'Access-Control-Allow-Credentials' 'true';
+      add_header 'Access-Control-Allow-Methods' '*';
+      add_header 'Access-Control-Allow-Headers' '*';
+      add_header 'Content-Length' 0;
+      add_header 'Vary' 'Origin';
+      add_header 'Vary' 'Access-Control-Request-Method' ;
+      add_header 'Vary' 'Access-Control-Request-Headers';
+      return 204;
+    }
+    proxy_set_header Host $http_host;
+    proxy_pass http://${MY_DOCKER_HOST}:2103/$1;
+  }
+
+
+  location  /cards/ {
+    # enables `ng serve` mode
+    if ($request_method = 'OPTIONS') {
+      add_header 'Access-Control-Allow-Origin' '*';
+      add_header 'Access-Control-Allow-Credentials' 'true';
+      add_header 'Access-Control-Allow-Methods' '*';
+      add_header 'Access-Control-Allow-Headers' '*';
+      add_header 'Content-Length' 0;
+      add_header 'Vary' 'Origin';
+      add_header 'Vary' 'Access-Control-Request-Method' ;
+      add_header 'Vary' 'Access-Control-Request-Headers';
+      return 204;
+    }
+    proxy_set_header Host $http_host;
+    proxy_pass http://${MY_DOCKER_HOST}:2104/;
+  }
+  location  /cardspub/cards/userCard {
+    # enables `ng serve` mode
+    if ($request_method = 'OPTIONS') {
+      add_header 'Access-Control-Allow-Origin' '*';
+      add_header 'Access-Control-Allow-Credentials' 'true';
+      add_header 'Access-Control-Allow-Methods' '*';
+      add_header 'Access-Control-Allow-Headers' '*';
+      add_header 'Content-Length' 0;
+      add_header 'Vary' 'Origin';
+      add_header 'Vary' 'Access-Control-Request-Method' ;
+      add_header 'Vary' 'Access-Control-Request-Headers';
+      return 204;
+    }
+    proxy_set_header Host $http_host;
+    proxy_pass http://${MY_DOCKER_HOST}:2102/cards/userCard;
+  }
+  location  /cardspub/cards/userAcknowledgement {
+    # enables `ng serve` mode
+    if ($request_method = 'OPTIONS') {
+      add_header 'Access-Control-Allow-Origin' '*';
+      add_header 'Access-Control-Allow-Credentials' 'true';
+      add_header 'Access-Control-Allow-Methods' '*';
+      add_header 'Access-Control-Allow-Headers' '*';
+      add_header 'Content-Length' 0;
+      add_header 'Vary' 'Origin';
+      add_header 'Vary' 'Access-Control-Request-Method' ;
+      add_header 'Vary' 'Access-Control-Request-Headers';
+      return 204;
+    }
+    proxy_set_header Host $http_host;
+    proxy_pass http://${MY_DOCKER_HOST}:2102/cards/userAcknowledgement;
+  }
+  location /archives {
+    # enables `ng serve` mode
+    if ($request_method = 'OPTIONS') {
+      add_header 'Access-Control-Allow-Origin' '*';
+      add_header 'Access-Control-Allow-Credentials' 'true';
+      add_header 'Access-Control-Allow-Methods' '*';
+      add_header 'Access-Control-Allow-Headers' '*';
+      add_header 'Content-Length' 0;
+      add_header 'Vary' 'Origin';
+      add_header 'Vary' 'Access-Control-Request-Method' ;
+      add_header 'Vary' 'Access-Control-Request-Headers';
+      return 204;
+    }
+    proxy_set_header Host $http_host;
+    proxy_pass http://${MY_DOCKER_HOST}:2104;
+  }
+  error_page 500 502 503 504 /50x.html;
+  location = /50x.html {
+    root /usr/share/nginx/html;
+  }
+  # TEST configuration
+  location  /logging/ {
+      # enables `ng serve` mode
+      if ($request_method = 'OPTIONS') {
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Credentials' 'true';
+        add_header 'Access-Control-Allow-Methods' '*';
+        add_header 'Access-Control-Allow-Headers' '*';
+        add_header 'Content-Length' 0;
+        add_header 'Vary' 'Origin';
+        add_header 'Vary' 'Access-Control-Request-Method' ;
+        add_header 'Vary' 'Access-Control-Request-Headers';
+        return 204;
+      }
+      try_files   $uri $uri/ /logging/Empty.json;
+
+    }
+}

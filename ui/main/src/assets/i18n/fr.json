@@ -63,7 +63,9 @@
     },
     "sort": {
       "severityPub": "Triées par type puis date de publication",
-      "pub": "Triées par date de publication"
+      "pub": "Triées par date de publication",
+      "read": "Triées par lu",
+      "notsortedByRead": "Pas triées par lu"
     }
   },
   "login": {
@@ -87,20 +89,15 @@
     }
   },
   "settings": {
-    "email": "Adresse email",
     "description": "Description",
     "locale": "Langue",
     "timeZone": "Zone horaire",
-    "timeFormat": "Format heure/minute",
-    "dateFormat": "Format de date",
-    "dateTimeFormat": "Format date et heure/minute",
     "defaultTags": "Tags par défaut",
     "playSoundLabel": "Jouer des sons pour les cartes de type",
     "playSoundForAlarm": "Alarme",
     "playSoundForAction": "Action",
     "playSoundForCompliant": "Conforme",
-    "playSoundForInformation": "Information",
-    "invalidEmail": "Adresse email invalide"
+    "playSoundForInformation": "Information"
   },
   "archive": {
     "filters": {
@@ -145,10 +142,12 @@
     "ok": "OK",
     "cancel": "Annuler",
     "reset": "Effacer",
-    "delete": "Supprimer"
+    "delete": "Supprimer",
+    "edit" : "Editer"
   },
   "userCard": {
     "title": "Création d'une nouvelle carte",
+    "editTitle" : "Edition d'une carte",
     "error": {
       "noRecipientSelected" : "Vous devez au moins choisir un destinataire",
       "templateError" : "Erreur technique : template non conforme",
@@ -161,7 +160,7 @@
       "startDate": "Date de début ",
       "endDate": "Date de fin ",
       "comment": "Commentaire",
-      "entities": "Destinataire"
+      "recipients": "Destinataire"
     },
     "options": {
       "severity": {
@@ -185,7 +184,14 @@
       "error": {
         "impossibleToDeleteCard": "Impossible de supprimer la carte pour des raisons techniques"
       }
-    }
+    },
+    "searchPlaceholderText": "Rechercher",
+    "selectRecipientText": "Choisir un destinataire",
+    "selectAllText": "Sélectionner tout",
+    "unSelectAllText": "Desélectionner tout",
+    "filterSelectAllText": "Sélectionner tous les résultats filtrés",
+    "filterUnSelectAllText": "Desélectionner tous les résultats filtrés"
+    
   },
   "response": {
     "btnTitle": "VALIDER REPONSES",

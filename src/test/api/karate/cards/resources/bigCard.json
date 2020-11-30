@@ -62673,22 +62673,11 @@
                 }
             ]
         },
-        "details": [
-            {
-                "styles": [
-                    "apogee-sea"
-                ],
-                "templateName": "template1",
-                "title": {
-                    "key": "apogeesea.card.details.generic"
-                }
-            }
-        ],
         "process": "APOGEESEA",
         "processInstanceId": "SEA0",
         "publisher": "APOGEESEA",
         "processVersion": "1",
-        "groupRecipients": ["TSO1"],
+        "groupRecipients": ["Dispatcher"],
         "severity": "ALARM",
         "startDate": 1553186770681,
         "state": "APOGEESEA",

@@ -4,7 +4,7 @@ addons:
     sonarcloud:
         organization: "opfab"
         token:
-            secure: "r3BfCTuMqW5B6GvQR5ZnnHauciJsqOLeKPMRp7NS1vr6oIo4SHIO6zyLbHUK7ItRt8at+DPkQE8eHtDSWlYutKwfbRPwxcqR4zf4AYuVmHWCS7WmcERMEixbOo5lGQ47KjMMsTbGTSg+Atv80Y3fugX4prm4rDWE8G/Irqvw4GW8P9DeI5upHOTBRzPifrT/PVoovCsqkdfzEFJBYb/fl9VdT340+nrxmcM1Lm1dQeDibAdqdXJQxjgKvbZTUq0D8Ih65EPEESQZjkb8G9CGumsfm6Rhcu1btrqVUCdv8QXe/ERkmryMSA041SmgmtEAf+b/TfdgIn1SLnEbOlLIv1melv0yvBhMHijcASZP1gsnfOTBKFRE616a87L7y3XrX58OAHiAaZ9ecpW5McOI6hHwlHpUaFvKTvbN05lxe3VziYmCIT0SRRrfquyoe8b9s/04FzGTSVnVumKCzlwUJq5M1pbjnS5XOgQCuwauAEarqdCyS9iSWPPm8NkSxkkNu43tCykYRh8dDAN/4E7f8oSoW2RrSsMpJ7a3Q77ACVQJQZtiGQdDStUPHtLNQlN8vzbYNHrkpZbO4nT64tONaTvwFirbkuQpkAGmYFN8jSSeyNRI+gM1lx3fxowjyIt+D+8KsofX5GYG7IDRTt9jVUkcwBOicDG9IuZ3ZaZRtVU="
+          secure: "Y6lcwkarytMScY+s2DLUuXodA6mQSBXqtuiypw6g6MO8xn5HUwy0MtmYVTfoNCRjSlZcFDaoLPFlkitRCAeZKJpeIw1iGbJFeLWUDI9QLwXebni4WuaWhNjuYIYt8IcP6im4YdzRuzz/TG1FHShtIDwhg7assBy4L/vtiOUTfxP8+/JgAR3Hl/OWFl0s+DY7Ldc8DnS7KTaXu/imjIKE68yWz77uYGzS+P4BZP79peVjSIoQXIb4p8KyfPJvIHEnt/m1MHDr67LzkUd2alypkCNSG/vxlL07oJTJQyPWKihpzHiXVH5jL4RTZVLVjBsSIuzMuf/jzP+s8S+iuEgHAKj+SC8DF02pciRj6naZNcXBFBTW9YeAXqLD3Eim/ZvGQtPq88KXZsvqJ9XluRz4Zx9cTDtjty7RQJBQzP98cA4n0d1t5NWRcyBJoijpDDax5jD6QkICAGtfR7Q8X0r8/TXf3VhTI/z3fhikTqTPvBd5jdFG3gkg/kTW6IFU95mAMQBC4CIKxNPnt7ojp+ZaqXKynbtD5FparQTP9sFOncen5M8AepQKnRGY8evfXl230PkDHA1S1YFfN/EdSd0tmkOV1nck9P+0Z25V1eXObJcMV3lHwFAosF9523t82DOWc+3bJgCmHa3AXKGoqB1sOFzgh7eOOudcGd2pcBjmMyU="
 services:
   - docker
 env:
@@ -35,7 +35,7 @@ install:
   # Should be synch with ${OF_HOME}/bin/load_environment_light.sh. It's the first part of the sdk reference without vendor name
   # for example the current configured in sdk has the following reference `8.0.265-zulu`
   # the value of the following variable is `8.0.265` and its vendor name part is `-zulu`
-  - CURRENT_JDK_VERSION="8.0.265"
+  - CURRENT_JDK_VERSION="$(<JAVA_VERSION)"
   # need to substitute last dot by an underscore. Example value for the following: "1.8.0_265"
   # for java version higher than 8 the prefix `1.` should be removed
   - FULL_JDK_VERSION="1.${CURRENT_JDK_VERSION%.*}${CURRENT_JDK_VERSION/*./_}"

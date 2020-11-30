@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {I18n} from '@ofModel/i18n.model';
 import {TranslateService} from '@ngx-translate/core';
@@ -16,7 +16,7 @@ import {TranslateService} from '@ngx-translate/core';
     selector: 'of-multi-filter-2',
     templateUrl: './multi-filter-2.component.html'
 })
-export class MultiFilter2Component implements OnInit {
+export class MultiFilter2Component implements OnInit, OnChanges {
 
     dropdownList: { id: string, itemName: string }[];
     @Input() public i18nRootLabelKey: string;
@@ -25,6 +25,7 @@ export class MultiFilter2Component implements OnInit {
     @Input() public dropdownSettings = [];
     @Input() public filterPath: string;
     @Input() public selectedItems ;
+    public selection = [];
 
     constructor(private translateService: TranslateService) {
         this.parentForm = new FormGroup({
@@ -33,6 +34,12 @@ export class MultiFilter2Component implements OnInit {
     }
 
     ngOnInit() {
+        this.initComponentValues();
+
+    }
+
+    initComponentValues() {
+
         this.dropdownList = [];
         if (!!this.values) {
             this.dropdownList = this.values.map(entry => this.computeValueAndLabel(entry));
@@ -40,7 +47,18 @@ export class MultiFilter2Component implements OnInit {
             // should throws an error ?
             console.error('there is currently no values', this.values);
         }
-        if (!this.selectedItems) this.selectedItems = this.dropdownList.map(item => item);
+        if (!this.selectedItems) this.selection = this.dropdownList.map(item => item);
+        else {
+            this.selectedItems.forEach(element => {
+                const items = this.dropdownList.filter(item  => item.id === element);
+                if (!!items[0]) this.selection.push(items[0]);
+            });
+
+        }
+    }
+
+    ngOnChanges() {
+        this.initComponentValues();
     }
 
     computeI18nLabelKey(): string {

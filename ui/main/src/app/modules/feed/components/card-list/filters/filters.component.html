@@ -14,10 +14,16 @@
             <span *ngIf="!(hideTimerTags)">
                 <of-time-filter [filterByPublishDate]="filterByPublishDate"></of-time-filter>
             </span>
-            <of-severity-sort></of-severity-sort>
+            <span *ngIf="!(hideSeveritySort)">
+                <of-severity-sort></of-severity-sort>
+            </span>
+            <span *ngIf="!(hideReadSort)">
+                <of-read-sort></of-read-sort>
+            </span>
             <span *ngIf="!(hideAckFilter)">
                 <of-ack-filter></of-ack-filter>
             </span>
+            
         </div>
 
 

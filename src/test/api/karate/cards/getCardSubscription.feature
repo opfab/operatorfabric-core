@@ -1,10 +1,10 @@
 Feature: get card Subscription
 
   Background:
-   #Getting token for admin and tso1-operator user calling getToken.feature
+   #Getting token for admin and operator1 user calling getToken.feature
     * def signIn = call read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = call read('../common/getToken.feature') { username: 'tso1-operator'}
+    * def signInAsTSO = call read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
 
@@ -21,7 +21,7 @@ Feature: get card Subscription
       Then print response
       And status 401
 
-  Scenario: get card subscription with user tso1-operator
+  Scenario: get card subscription with user operator1
     Given url opfabUrl + 'cards/cardSubscription' +'?clientId=ghi0123456789jkl'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get

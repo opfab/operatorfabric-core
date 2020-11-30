@@ -13,8 +13,12 @@ package org.lfenergy.operatorfabric.users.model;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 
 public class UserSettingsDataShould {
 
@@ -37,59 +41,55 @@ public class UserSettingsDataShould {
     public void patch(){
         UserSettingsData userData = UserSettingsData.builder()
                 .defaultTag("test1").defaultTag("test2")
-                .timeFormat("LT")
-                .dateFormat("LL")
                 .login("test-login")
                 .description("test-description")
-                .email("test@test.tst")
                 .locale("fr")
                 .timeZone("Europe/Berlin")
                 .playSoundForAlarm(true)
                 .playSoundForAction(false)
                 //Not setting Compliant and Information to test patch on empty
+                .processStatesNotNotified("processA", Arrays.asList("state1", "state2"))
+                .processStatesNotNotified("processB", Arrays.asList("state3", "state4"))
                 .build();
-        UserSettingsData patched = userData.patch(UserSettingsData.builder().timeFormat("LLT").build().clearTags());
-        assertThat(patched).isEqualToIgnoringGivenFields(userData,"timeFormat");
-        assertThat(patched.getTimeFormat()).isEqualTo("LLT");
+        UserSettingsData patched = userData.patch(UserSettingsData.builder().build().clearTags().clearProcessesStatesNotNotified());
 
-        patched = userData.patch(UserSettingsData.builder().dateFormat("LLT").build().clearTags());
-        assertThat(patched).isEqualToIgnoringGivenFields(userData,"dateFormat");
-        assertThat(patched.getDateFormat()).isEqualTo("LLT");
 
-        patched = userData.patch(UserSettingsData.builder().login("new-login").build().clearTags());
+        patched = userData.patch(UserSettingsData.builder().login("new-login").build().clearTags().clearProcessesStatesNotNotified());
         assertThat(patched).isEqualToIgnoringGivenFields(userData);
 
-        patched = userData.patch(UserSettingsData.builder().description("patched-description").build().clearTags());
+        patched = userData.patch(UserSettingsData.builder().description("patched-description").build().clearTags().clearProcessesStatesNotNotified());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"description");
         assertThat(patched.getDescription()).isEqualTo("patched-description");
 
-        patched = userData.patch(UserSettingsData.builder().email("patched-email").build().clearTags());
-        assertThat(patched).isEqualToIgnoringGivenFields(userData,"email");
-        assertThat(patched.getEmail()).isEqualTo("patched-email");
-
-        patched = userData.patch(UserSettingsData.builder().locale("patched-locale").build().clearTags());
+        patched = userData.patch(UserSettingsData.builder().locale("patched-locale").build().clearTags().clearProcessesStatesNotNotified());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"locale");
         assertThat(patched.getLocale()).isEqualTo("patched-locale");
 
-        patched = userData.patch(UserSettingsData.builder().timeZone("patched-zone").build().clearTags());
+        patched = userData.patch(UserSettingsData.builder().timeZone("patched-zone").build().clearTags().clearProcessesStatesNotNotified());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"timeZone");
         assertThat(patched.getTimeZone()).isEqualTo("patched-zone");
 
-        patched = userData.patch(UserSettingsData.builder().playSoundForAlarm(false).build().clearTags());
+        patched = userData.patch(UserSettingsData.builder().playSoundForAlarm(false).build().clearTags().clearProcessesStatesNotNotified());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"playSoundForAlarm");
         assertThat(patched.getPlaySoundForAlarm()).isEqualTo(false);
 
-        patched = userData.patch(UserSettingsData.builder().playSoundForAction(true).build().clearTags());
+        patched = userData.patch(UserSettingsData.builder().playSoundForAction(true).build().clearTags().clearProcessesStatesNotNotified());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"playSoundForAction");
         assertThat(patched.getPlaySoundForAction()).isEqualTo(true);
 
-        patched = userData.patch(UserSettingsData.builder().playSoundForCompliant(false).build().clearTags());
+        patched = userData.patch(UserSettingsData.builder().playSoundForCompliant(false).build().clearTags().clearProcessesStatesNotNotified());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"playSoundForCompliant");
         assertThat(patched.getPlaySoundForCompliant()).isEqualTo(false);
 
-        patched = userData.patch(UserSettingsData.builder().playSoundForInformation(true).build().clearTags());
+        patched = userData.patch(UserSettingsData.builder().playSoundForInformation(true).build().clearTags().clearProcessesStatesNotNotified());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"playSoundForInformation");
         assertThat(patched.getPlaySoundForInformation()).isEqualTo(true);
+
+        Map<String, List<String>> newProcessesStatesNotNotified = new HashMap<String, List<String>>();
+        newProcessesStatesNotNotified.put("processC", Arrays.asList("state5", "state6"));
+        patched = userData.patch(UserSettingsData.builder().processesStatesNotNotified(newProcessesStatesNotNotified).build().clearTags());
+        assertThat(patched).isEqualToIgnoringGivenFields(userData,"processesStatesNotNotified");
+        assertThat(patched.getProcessesStatesNotNotified()).hasSize(1).contains(entry("processC", Arrays.asList("state5", "state6")));
 
     }
 }

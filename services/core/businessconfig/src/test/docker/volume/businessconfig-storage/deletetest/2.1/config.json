@@ -7,14 +7,10 @@
   ],
   "states": {
     "firstState": {
-      "details": [
-        {
-          "title": {
-            "key": "template.title"
-          },
-          "templateName": "template"
-        }
-      ]
+      "title": {
+        "key": "template.title"
+      },
+      "templateName": "template"
     }
   }
 }

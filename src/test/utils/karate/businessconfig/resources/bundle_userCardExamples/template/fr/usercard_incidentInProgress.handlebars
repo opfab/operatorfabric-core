@@ -1,0 +1,73 @@
+Description de l'incident :
+<div style="width:100%">
+    <textarea id="message" name="message" style="width:100%">{{card.data.message}}</textarea>
+</div>
+
+<br />
+
+Service impactés : <br/>
+<div style="text-align: center;">
+    <table width="100%">
+        <tr>
+            <td> <input type="checkbox" id="SA"> Service A </input> </td>
+            <td> <input type="checkbox" id="SB"> Service B </input> </td>
+            <td> <input type="checkbox" id="SC"> Service C </input> </td>
+            <td> <input type="checkbox" id="SD"> Service D </input> </td>
+            <td> <input type="checkbox" id="SE"> Service E </input> </td>
+            <td> <input type="checkbox" id="SF"> Service F </input> </td>
+           
+
+        </tr>
+    </table>
+</div>
+<br/>
+  Autres impacts : <input size="50" type="text" id="OTHERS" value="{{card.data.impacts.OTHERS}}">  </input> 
+
+
+
+<script>
+
+    document.getElementById("SA").checked = "{{card.data.impacts.SA}}";
+    document.getElementById("SB").checked = "{{card.data.impacts.SB}}";
+    document.getElementById("SC").checked = "{{card.data.impacts.SC}}";
+    document.getElementById("SD").checked = "{{card.data.impacts.SD}}";
+    document.getElementById("SE").checked = "{{card.data.impacts.SE}}";
+    document.getElementById("SF").checked = "{{card.data.impacts.SF}}";
+
+
+    templateGateway.getSpecificCardInformation = function () {
+        const message = document.getElementById('message').value;
+        const SA = document.getElementById('SA').checked;
+        const SB = document.getElementById('SB').checked;
+        const SC = document.getElementById('SC').checked;
+        const SD = document.getElementById('SD').checked;
+        const SE = document.getElementById('SE').checked;
+        const SF = document.getElementById('SF').checked;
+        const OTHERS = document.getElementById('OTHERS').value;
+
+        const card = {
+            summary: { key: "incidentInProgress.summary" },
+            title: { key: "incidentInProgress.title" },
+            keepChildCards: true,
+            data: {
+                message: message,
+                impacts :
+                     {
+                         SA : SA,
+                         SB : SB,
+                         SC: SC,
+                         SD: SD,
+                         SE: SE,
+                         SF: SF,
+                         OTHERS: OTHERS
+                    }
+            }
+        };
+        return {
+            valid: true,
+            card: card,
+            viewCardInAgenda: false
+        };
+
+    }
+</script>

@@ -5,52 +5,71 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-= Version 1.7.0.RELEASE
+= Version 1.8.0.RELEASE
+
+This version introduce a breaking change in business process and menu configuration,link:https://opfab.github.io/documentation/archives/1.8.0.RELEASE/docs/single_page_doc.html#_migration_guide_from_release_1_7_0_to_release_1_8_0[see migration documentation]
+
 
 == Features
+-  **Add a reminder feature** , link:https://opfab.github.io/documentation/archives/1.8.0.RELEASE/docs/single_page_doc.html#card_reminder[see documentation] ([OC-1093] [OC-1230] [OC-1239])
 
-- [OC-1109] As a user I want to see the lttd countdown on 'simple' card
-- [OC-1192] Add end of timespan on timeline
-- [OC-1169] Set business log as optional (use operatorfabric.businessLogActivated in yaml configuration files to activate or not the business logs)
-- [OC-1173] Add the possibility to not check for user perimeter when sending response (child card). You can find more information in documentation
-** https://opfab.github.io/documentation/current/reference_doc/#_define_permissions
-** https://opfab.github.io/documentation/current/deployment/#_business_service_specific_configurations
-** https://opfab.github.io/documentation/current/deployment/#ui_properties
-
-- Work in progress
-** New version of userCard feature ([OC-1100] [OC-1143] [OC-1192][OC 1178][OC-1158][OC-1151][OC-1092])
-** New version of monitoring and Logging screens ( [OC-1130] [OC-1044] [OC-1077] [OC-1145])
-** First version of administration module for users, entities and groups management ([OC-1025] [OC-1088] [OC-1180] [OC-1026] [OC-1027] [OC-1028] [OC-1087] [OC-1181] [OC-1167])
+- **User cards** : 
+  ** [OC-1208] Add translation in recipient multiselect field
+  ** [OC-1194] Add the possibility to send usercard with response card
+  ** [OC-1176] Add edit user card feature
+- **Response cards**:
+  ** [OC-1190] Add an option in card to keep child card, link:https://opfab.github.io/documentation/archives/1.8.0.RELEASE/docs/single_page_doc.html#_send_a_question_card[see documentation]
+- **Card Feed**: 
+  ** [OC-1196] [OC-1214] Add an option to sort cards by read status
+- **Integration features**:
+  ** **Add kafka support** : possibility to send card to operator fabric via kafka and to send response card to kafka , link:https://opfab.github.io/documentation/archives/1.8.0.RELEASE/dev_env/single_page_doc.html#_kafka_implementation[see documentation]  ([OC-1073][OC-1231][OC-1247])
+  **  **Add support for monitoring via prometheus**, link:https://opfab.github.io/documentation/archives/1.8.0.RELEASE/docs/single_page_doc.html#_monitoring[see documentation] (OC-1233)
+- **Feature removals** : 
+** [OC-1113] Remove multiple tabs in card's details
+** [OC-1148] Remove email address and date/time formatting parameters in the settings
+- **Work in progress** :
+** [OC-1144] Add the possibility to have a relation between entities (Notion of parent entity)
+** [OC-1170] Filter notification screen for user (First step implementation) 
 
 == Tasks
 
-- Configuration :
-** [OC-1187] Set the external recipient in the business process definition. You can find more information in the documentation : https://opfab.github.io/documentation/current/reference_doc/#_configure_the_response_in_config_json
-** [OC-1126] Add field userRecipients and groupRecipients when posting a card. Theses fields replace recipient field which is now deprecated. ( See documentation : https://opfab.github.io/documentation/current/reference_doc/#_cards_examples)
-** [OC-1117] Remove template and css arrays in bundle definition .This two arrays are not needed anymore in the config.json of the bundle
+- [OC-1189] Attach child card to parent card id and not parent uid
+- [OC-1172] Rename users/groups and entities in test data . For testing opfab you shall use now operator1 and operator2 (instead of tso1-operator and tso2-operator) 
+- [OC-665] Externalize menu configuration from bundle. Business menu configuration is not done in process definition anymore , a specific configuration file name ui-menu.json is used 
+- [OC-1213] Documentation modification
+- [OC-1209] Add an end point to set a card unread for the current user
+- [OC-1154] Update cards subscription on calendar dates range change
+- [OC-1002] Minor corrections for karate testing in docker mode
+- [OC-1222] Add an option to hard kill the processes in run_all.sh
+- [OC-1225] Add a script to automate api none-regression test
+- [OC-1202] Renames 'ngnix.conf' files into 'nginx.conf'
 
-- Refactoring :
-** [OC-1184] Refactors card-detail implementation
-** [OC-1155] Optimize loading card from the UI
-** [OC-1137] Improve UI initialization
-** [OC-411] Remove unused property deletionDate
+[WARNING]
+====
+For dev configuration (${OF_HOME}/config/dev), use the docker-compose.sh script and do not start docker compose directly.
+====
 
-
-- Documentation :
-** [OC-1156] Add in documentation : How to check regression of a branch
-
-- Miscellaneous
-** [OC-1078] Implement notion of processGroup (WIP)
-** [OC-1147] Displays modal in full screen and upgrade boostrap and other libraries
-** [OC-1157] Colors modifications for day mode
+- [OC-1244] Add a new business example (IGCC)
+- [OC-1245] Set button visibility for detail card
+- [OC-1246] Divide post6CardsSeverity.feature in 6 features
+- [OC-1207] Update cards subscription period on monitoring date range change
+- [OC-1236] Add a new example of usercard (incident management)
+- [OC-1210] Add a method in templateGateway.js to get entity names
+- [OC-1238] Permit to use keepChildCards in user card
+- [OC-1115] Include ExternalApp in build process and add in docker-compose
+- [OC-1204] Update getting started documentation for release 1.8.0
+- [OC-1203] Refactor definition of detail in bundle, link:https://opfab.github.io/documentation/archives/1.8.0.RELEASE/docs/single_page_doc.html#_migration_guide_from_release_1_7_0_to_release_1_8_0[see changes]
 
 == Bugs
 
-- [OC-1149] Remove error in card detail
-- [OC-1175] Correct bug in datePicker : after opening the calendar, when clicking outside, the calendar shall disappear
-- [OC-1162] For the archives result, the tags and the processes chosen are not considered
-- [OC-1171] Load all translations during startup phase (Solve problem of translation after F5 action on admin screen)
-- [OC-1107] Lttd - only minutes and seconds are displayed in the countdown
-
+- [OC-1205] BUG in timeline when switching to winter time
+- [OC-1188] Solve bug when reloading monitoring/logging via F5, the translation for mutli filter was not loaded
+- [OC-1215] Solve memory leaks
+- [OC-1224] Closing archive card was not possible anymore
+- [OC-1226] When the timeline is hidden by the user, dates displayed shall take into account the date format configured in web-ui.json. It applies only for the mode TR and 7D
+- [OC-1232] Documents workaround to resolve ng build failure
+- [OC-1235] Permit to use http for authentication in implicit mode
+- [OC-1212] Fix bug on page reload when an external page is open in iframe
+- [OC-1253] Correct bug with card read
 
 

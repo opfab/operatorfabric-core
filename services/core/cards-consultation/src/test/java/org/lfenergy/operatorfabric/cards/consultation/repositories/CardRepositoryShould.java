@@ -21,7 +21,6 @@ import org.lfenergy.operatorfabric.cards.consultation.application.IntegrationTes
 import org.lfenergy.operatorfabric.cards.consultation.model.*;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
-import org.lfenergy.operatorfabric.cards.model.TitlePositionEnum;
 import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +77,7 @@ public class CardRepositoryShould {
 
     public CardRepositoryShould(){
         User user1 = new User();
-        user1.setLogin("rte-operator");
+        user1.setLogin("operator3");
         user1.setFirstName("Test");
         user1.setLastName("User");
         List<String> groups = new ArrayList<>();
@@ -92,7 +91,7 @@ public class CardRepositoryShould {
         rteUserEntity1.setUserData(user1);
 
         User user2 = new User();
-        user2.setLogin("rte-operator");
+        user2.setLogin("operator3");
         user2.setFirstName("Test");
         user2.setLastName("User");
         List<String> groups2 = new ArrayList<>();
@@ -156,15 +155,6 @@ public class CardRepositoryShould {
                                         .type(RecipientEnum.GROUP)
                                         .identity("group2")
                                         .build())
-                                .build())
-                        .detail(DetailConsultationData.builder()
-                                .templateName("template")
-                                .title(I18nConsultationData.builder()
-                                        .key("key")
-                                        .parameter("param1", "value1")
-                                        .build())
-                                .titlePosition(TitlePositionEnum.UP)
-                                .style("style")
                                 .build())
                         .entityRecipients(new ArrayList<String>(Arrays.asList("entity1", "entity2")))
                         .build();
@@ -468,8 +458,6 @@ public class CardRepositoryShould {
     @NotNull
     private Predicate<CardConsultationData> computeCardPredicate(CardConsultationData card) {
         Predicate<CardConsultationData> predicate = c -> card.getId().equals(c.getId());
-        predicate = predicate.and(c -> c.getDetails().size() == 1);
-        predicate = predicate.and(c -> c.getDetails().get(0).getTitlePosition() == TitlePositionEnum.UP);
         predicate = predicate.and(c -> "PUBLISHER".equals(c.getPublisher()));
         predicate = predicate.and(c -> c.getEntityRecipients().size() == 2);
         predicate = predicate.and(c -> c.getEntityRecipients().get(0).equals("entity1"));

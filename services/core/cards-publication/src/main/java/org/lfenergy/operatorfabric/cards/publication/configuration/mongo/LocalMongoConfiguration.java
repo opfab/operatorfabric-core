@@ -28,15 +28,15 @@ public class LocalMongoConfiguration extends AbstractLocalMongoConfiguration {
     public List<Converter> converterList() {
         List<Converter> converterList = new ArrayList<>();
         converterList.add(new I18nReadConverter());
-        converterList.add(new DetailReadConverter());
         converterList.add(new RecipientReadConverter());
         converterList.add(new TimeSpanReadConverter());
+        converterList.add(new TraceReadConverter());
 
-        converterList.add(new DetailWriterConverter());
+
         converterList.add(new I18nWriterConverter());
         converterList.add(new TimeSpanWriterConverter());
         converterList.add(new RecipientWriterConverter());
-        converterList.add(new TraceReadConverter());
+        
         return converterList;
     }
 }
