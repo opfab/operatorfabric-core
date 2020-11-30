@@ -27,7 +27,8 @@ Feature: Cards with timespans
 					{
 						"timeZone":"test",
 						"daysOfWeek":[2,3],
-						"hoursAndMinutes": {"hours":10,"minutes":20}
+						"hoursAndMinutes": {"hours":10,"minutes":20},
+						"durationInMinutes": 30
 					}
 		},
 		{"start" : 1553186770681 ,"end" :1553186770682 , "recurrence" :
@@ -62,6 +63,7 @@ Feature: Cards with timespans
 	And match response.card.timeSpans[0].end == 1553186770682
 	And match response.card.secondsBeforeTimeSpanForReminder == 1000
 	And match response.card.timeSpans[0].recurrence.timeZone == "test"
+	And match response.card.timeSpans[0].recurrence.durationInMinutes == 30
 	And match response.card.timeSpans[0].recurrence.daysOfWeek[1] == 3
 	And match response.card.timeSpans[0].recurrence.hoursAndMinutes.hours == 10
 	And match response.card.timeSpans[0].recurrence.hoursAndMinutes.minutes == 20

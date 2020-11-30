@@ -22,12 +22,15 @@ public class RecurrencePublicationData implements Recurrence {
     private String timeZone = "Europe/Paris";
     private List<Integer> daysOfWeek;
     HoursAndMinutes hoursAndMinutes;
+    private Integer durationInMinutes;
 
-    public  RecurrencePublicationData(String timeZone,List<Integer> daysOfWeek, HoursAndMinutes hoursAndMinutes)
+
+    public  RecurrencePublicationData(String timeZone,List<Integer> daysOfWeek, HoursAndMinutes hoursAndMinutes, Integer durationInMinutes)
     {
         if (this.timeZone !=null) this.timeZone = timeZone ;
         this.daysOfWeek = daysOfWeek;
         this.hoursAndMinutes = hoursAndMinutes; 
+        this.durationInMinutes = durationInMinutes;
     }
 
 }

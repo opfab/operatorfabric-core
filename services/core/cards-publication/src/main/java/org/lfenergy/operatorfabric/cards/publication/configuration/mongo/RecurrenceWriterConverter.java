@@ -42,6 +42,11 @@ public class RecurrenceWriterConverter {
         if ((timeZone==null)||timeZone.equals("")) timeZone = defaultTimeZone;
         result.append("timeZone", timeZone);
 
+        Integer durationInMinutes = source.getDurationInMinutes();
+        if (durationInMinutes != null) {
+            result.append("durationInMinutes", durationInMinutes);
+        }
+
         return result;
 
     }

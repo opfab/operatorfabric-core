@@ -115,7 +115,8 @@ export class Recurrence {
     constructor(
         public hoursAndMinutes: HourAndMinutes,
         public daysOfWeek?: number[],
-        public timeZone?: string
+        public timeZone?: string,
+        public durationInMinutes?: number
     ) {}
 
 }
