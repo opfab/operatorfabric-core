@@ -46,6 +46,7 @@ export class NavbarComponent implements OnInit {
   width: number;
   limitSize: boolean;
   displayAdmin: boolean;
+  displayFeedConfiguration: boolean;
   nightDayMode = false;
 
   constructor(private store: Store<AppState>, private globalStyleService: GlobalStyleService, private configService: ConfigService
@@ -103,7 +104,7 @@ export class NavbarComponent implements OnInit {
     const hiddenMenus = this.configService.getConfigValue('navbar.hidden', []);
     this.navigationRoutes = navigationRoutes.filter(route => !hiddenMenus.includes(route.path));
     this.displayAdmin = this.userService.isCurrentUserAdmin() && !this.configService.getConfigValue('admin.hidden');
-
+    this.displayFeedConfiguration = !this.configService.getConfigValue('feedConfiguration.hidden');
   }
 
   logOut() {

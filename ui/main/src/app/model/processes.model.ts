@@ -21,7 +21,7 @@ export class Process {
         readonly locales?: string[],
         readonly states?: OfMap<State>,
         readonly uiVisibility?: UiVisibility
-    ) { 
+    ) {
     }
 
     public extractState(card: Card): State {

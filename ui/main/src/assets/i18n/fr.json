@@ -8,6 +8,7 @@
     "monitoring": "Monitoring",
     "logout": "Déconnexion",
     "settings": "Paramètres",
+    "feedConfiguration": "Configuration des notifications",
     "about": "À propos",
     "usercard": "Création de cartes"
   },
@@ -143,7 +144,20 @@
     "cancel": "Annuler",
     "reset": "Effacer",
     "delete": "Supprimer",
-    "edit" : "Editer"
+    "edit" : "Editer",
+    "yes": "OUI"
+  },
+  "feedConfiguration": {
+    "title": "Configuration des notifications",
+    "confirmSettings": "Enregistrer les paramètres",
+    "settingsSavedWithNoError": "Paramètres enregistrés",
+    "popup": {
+      "title": "CONFIRMATION",
+      "areYouSure": "Vous avez fait des modifications. Etes-vous sûr de vouloir les enregistrer ?"
+    },
+    "error": {
+      "impossibleToSaveSettings": "Impossible d'enregistrer les paramètres pour des raisons techniques"
+    }
   },
   "userCard": {
     "title": "Création d'une nouvelle carte",
