@@ -3,13 +3,13 @@ Feature: Check addition of transitive entities to user
     Background:
         * def adminSignIn = call read('../../common/getToken.feature') { username: 'admin'}
         * def adminToken = adminSignIn.authToken
-        * def rootSignIn = call read('../../common/getToken.feature') { username: 'user-with-root-entity-only'}
+        * def rootSignIn = call read('../../common/getToken.feature') { username: 'user_test_api_2'}
         * def rootToken = rootSignIn.authToken
-		* def singleSignIn = call read('../../common/getToken.feature') { username: 'user-with-single-entity'}
+		* def singleSignIn = call read('../../common/getToken.feature') { username: 'user_test_api_1'}
 		* def singleToken =  singleSignIn.authToken
-		* def childAndGrandChildSignIn = call read('../../common/getToken.feature') { username: 'user-with-child-and-grand-child-entity'}
+		* def childAndGrandChildSignIn = call read('../../common/getToken.feature') { username: 'user_test_api_3'}
 		* def childAndGrandChildToken = childAndGrandChildSignIn.authToken
-		* def withoutChildSignIn = call read('../../common/getToken.feature') { username: 'user-without-child-entity'}
+		* def withoutChildSignIn = call read('../../common/getToken.feature') { username: 'user_test_api_4'}
 		* def withoutChildToken = withoutChildSignIn.authToken
 
         # entities
@@ -52,7 +52,7 @@ Feature: Check addition of transitive entities to user
         * def userWithSingleEntity =
         """
         {
-            "login":"user-with-single-entity",
+            "login":"user_test_api_1",
             "groups":["Dispatcher"],
             "entities":["single-entity"]
         }
@@ -60,7 +60,7 @@ Feature: Check addition of transitive entities to user
         * def userWithRootEntityOnly =
         """
         {
-            "login":"user-with-root-entity-only",
+            "login":"user_test_api_2",
             "groups":["Dispatcher"],
             "entities":["root-entity"]
         }
@@ -68,7 +68,7 @@ Feature: Check addition of transitive entities to user
         * def userWithChildAndGrandChildEntities =
         """
         {
-            "login":"user-with-child-and-grand-child-entity",
+            "login":"user_test_api_3",
             "groups":["Dispatcher"],
             "entities":["child-entity","grand-child-entity"]
         }
@@ -76,7 +76,7 @@ Feature: Check addition of transitive entities to user
         * def userWithoutChildEntity =
         """
         {
-            "login":"user-without-child-entity",
+            "login":"user_test_api_4",
             "groups":["Dispatcher"],
             "entities":["single-entity","grand-child-entity","root-entity"]
         }
@@ -198,7 +198,7 @@ Feature: Check addition of transitive entities to user
         	|cardToChild     |
         	|CardToGrandChild|
 # get cards
- 	Scenario Outline: Get cards for user-with-single-entity
+ 	Scenario Outline: Get cards for user with single entity (user_test_api_1)
 
      		Given url opfabUrl + 'cards/cards/' + <card>.publisher+'.'+<card>.processInstanceId
      		And header Authorization = 'Bearer ' + singleToken
@@ -212,7 +212,7 @@ Feature: Check addition of transitive entities to user
          		|cardToChild     |404     |
          		|CardToGrandChild|404     |
 
- 	Scenario Outline: Get cards for user-with-root-entity-only
+ 	Scenario Outline: Get cards for user with root entity only (user_test_api_2)
 
      		Given url opfabUrl + 'cards/cards/' + <card>.publisher+'.'+<card>.processInstanceId
      		And header Authorization = 'Bearer ' + rootToken
@@ -226,7 +226,7 @@ Feature: Check addition of transitive entities to user
          		|cardToChild     |404     |
          		|CardToGrandChild|404     |
 
- 	Scenario Outline: Get cards for user-with-child-and-grand-child--entity
+ 	Scenario Outline: Get cards for user with child and grand child entity (user_test_api_3)
 
      		Given url opfabUrl + 'cards/cards/' + <card>.publisher+'.'+<card>.processInstanceId
      		And header Authorization = 'Bearer ' + childAndGrandChildToken
@@ -240,7 +240,7 @@ Feature: Check addition of transitive entities to user
          		|cardToChild     |200     |
          		|CardToGrandChild|200     |
 
- 	Scenario Outline: Get cards for user-without-child--entity
+ 	Scenario Outline: Get cards for user without child entity (user_test_api_4)
 
      		Given url opfabUrl + 'cards/cards/' + <card>.publisher+'.'+<card>.processInstanceId
      		And header Authorization = 'Bearer ' + withoutChildToken

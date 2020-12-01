@@ -52,4 +52,5 @@ java -jar karate.jar                                         \
       users/entities/deleteEntity.feature                    \
       users/groups/deleteGroup.feature                       \
       users/perimeters/deletePerimeter.feature               \
-      users/entities/checkEntityGroupManagement.feature
+      users/entities/checkEntityGroupManagement.feature      \
+      users/entities/transitive-entities-in-currentUser.feature

@@ -130,10 +130,10 @@ public class CurrentUserWithPerimetersControllerShould {
             testedController.handleEntities(currentUser);
             // initial entities
             assertThat(currentUser.getEntities()).contains(GRAND_CHILD_ENTITY);
-            assertThat(currentUser.getEntities()).contains(CHILD_ENTITY);
             assertThat(currentUser.getEntities()).contains(ENTITY_1);
             // transitive entities
             assertThat(currentUser.getEntities()).contains(ROOT_ENTITY);
+            assertThat(currentUser.getEntities()).contains(CHILD_ENTITY);
             // other entities
             assertThat(currentUser.getEntities()).doesNotContain(ENTITY_2);
         }
