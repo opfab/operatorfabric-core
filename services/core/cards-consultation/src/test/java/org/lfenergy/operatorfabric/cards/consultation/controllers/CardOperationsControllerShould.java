@@ -46,6 +46,7 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.createSimpleCard;
+import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.roundingToMillis;
 
 /**
  * <p></p>
@@ -63,7 +64,7 @@ import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.creat
 public class CardOperationsControllerShould {
     private static String TEST_ID = "testClient";
 
-    private static Instant now = Instant.now();
+    private static Instant now = roundingToMillis(Instant.now());
     private static Instant nowPlusOne = now.plus(1, ChronoUnit.HOURS);
     private static Instant nowPlusTwo = now.plus(2, ChronoUnit.HOURS);
     private static Instant nowPlusThree = now.plus(3, ChronoUnit.HOURS);
@@ -72,17 +73,12 @@ public class CardOperationsControllerShould {
     private static Instant nowMinusThree = now.minus(3, ChronoUnit.HOURS);
 
     @Autowired
-    private RabbitTemplate rabbitTemplate;
-    @Autowired
-    private FanoutExchange cardExchange;
-    @Autowired
     private CardOperationsController controller;
     @Autowired
     private CardSubscriptionService service;
     @Autowired
     private ObjectMapper mapper;
-    @Autowired
-    private ThreadPoolTaskScheduler taskScheduler;
+
     @Autowired
     private CardRepository repository;
 
