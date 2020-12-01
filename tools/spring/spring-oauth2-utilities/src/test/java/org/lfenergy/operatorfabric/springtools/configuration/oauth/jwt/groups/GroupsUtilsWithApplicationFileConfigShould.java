@@ -21,7 +21,7 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.application.UserServiceCacheTestApplication;
+import org.lfenergy.operatorfabric.springtools.configuration.test.UserServiceCacheTestApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.GrantedAuthority;

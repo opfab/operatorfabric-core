@@ -15,7 +15,7 @@ import feign.mock.HttpMethod;
 import feign.mock.MockClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.application.UserServiceCacheTestApplication;
+import org.lfenergy.operatorfabric.springtools.configuration.test.UserServiceCacheTestApplication;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

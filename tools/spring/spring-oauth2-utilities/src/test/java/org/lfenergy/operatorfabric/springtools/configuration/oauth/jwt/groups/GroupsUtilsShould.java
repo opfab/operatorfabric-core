@@ -22,7 +22,7 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.application.UserServiceCacheTestApplication;
+import org.lfenergy.operatorfabric.springtools.configuration.test.UserServiceCacheTestApplication;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.JwtProperties;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.roles.RoleClaim;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.roles.RoleClaimCheckExistPath;
