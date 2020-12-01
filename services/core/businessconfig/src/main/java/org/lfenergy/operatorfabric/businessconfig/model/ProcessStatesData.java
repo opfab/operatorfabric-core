@@ -24,7 +24,7 @@ public class ProcessStatesData implements ProcessStates {
     private Boolean acknowledgementAllowed;
     private String color;
     private String name;
-    private String userCardTemplate;
+    private UserCard userCard;
     private I18n detailTitle;
     private String templateName;
     @Singular

@@ -11,7 +11,9 @@
     "messageState": {
       "name": "message.title",
       "color": "#FAF0AF",
-      "userCardTemplate": "usercard_message",
+      "userCard" : {
+        "template" : "usercard_message"
+      },
       "detailTitle": {
         "key": "message.title"
       },
@@ -22,7 +24,9 @@
     "conferenceState": {
       "name": "conference.title",
       "color": "#FAF0AF",
-      "userCardTemplate": "usercard_conference",
+      "userCard" : {
+        "template" : "usercard_conference"
+      },
       "detailTitle": {
         "key": "conference.title"
       },
@@ -33,7 +37,12 @@
     "questionState": {
       "name": "question.title",
       "color": "#8bcdcd",
-      "userCardTemplate": "usercard_question",
+      "userCard" : {
+				"template" : "usercard_question",
+				"severityVisible" : false,
+				"startDateVisible" : true,
+				"endDateVisible" : true
+			},
       "response": {
         "state": "questionState"
       },
@@ -47,7 +56,9 @@
     "taskState": {
       "name": "task.title",
       "color": "#8bcdcd",
-      "userCardTemplate": "usercard_task",
+      "userCard" : {
+        "template" : "usercard_task"
+      },
       "detailTitle": {
         "key": "task.title"
       },
@@ -58,7 +69,12 @@
     },    
     "incidentInProgressState": {
       "name": "incidentInProgress.name",
-      "userCardTemplate": "usercard_incidentInProgress",
+      "userCard" : {
+				"template" : "usercard_incidentInProgress",
+				"severityVisible" : true,
+				"startDateVisible" : false,
+				"endDateVisible" : false
+			},
       "color": "#FAF0AF",
       "response": {
         "state": "incidentInProgressState"

@@ -23,17 +23,17 @@
                     [values]="stateOptions"></of-single-filter>
 
             </div>
-            <div class="col">
+            <div class="col" *ngIf="severityVisible">
                 <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="severity"
                     [values]="severityOptions"></of-single-filter>
             </div>
         </div>
         <div class="row">
-            <div class="col">
+            <div class="col" *ngIf="startDateVisible">
                 <of-datetime-filter filterPath="startDate" formControlName="startDate" labelKey="userCard.filters."
                     [offset]="[{amount:1,unit:'minute'}]"></of-datetime-filter>
             </div>
-            <div class="col">
+            <div class="col" *ngIf="endDateVisible">
                 <of-datetime-filter filterPath="endDate" formControlName="endDate" labelKey="userCard.filters."
                     [offset]="[{amount:60,unit:'minute'}]"></of-datetime-filter>
             </div>

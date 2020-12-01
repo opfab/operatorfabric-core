@@ -16,6 +16,16 @@ Feature: Bundle
     And match response.uiVisibility.monitoring == true
     And match response.uiVisibility.logging == true
     And match response.uiVisibility.calendar == true
+    And match response.statesData.questionState.userCard.template == 'usercard_question'
+    And match response.statesData.questionState.userCard.severityVisible == false
+    And match response.statesData.questionState.userCard.startDateVisible == true
+    And match response.statesData.questionState.userCard.endDateVisible == true
+    And match response.statesData.incidentInProgressState.userCard.template == 'usercard_incidentInProgress'
+    And match response.statesData.incidentInProgressState.userCard.severityVisible == true
+    And match response.statesData.incidentInProgressState.userCard.startDateVisible == false
+    And match response.statesData.incidentInProgressState.userCard.endDateVisible == false
+
+
 
 
   Scenario: check bundle without authentication
