@@ -31,6 +31,7 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
+import { getNextTimeForRepeating } from '@ofServices/reminder/reminderUtils';
 
 
 @Component({
@@ -269,23 +270,40 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       if (!card.parentCardId) {// is not child card
         if (card.timeSpans && card.timeSpans.length > 0) {
           card.timeSpans.forEach(timeSpan => {
-            if (!!timeSpan.start) {
-              const myCardTimeline = {
-                date: timeSpan.start,
-                id: card.id,
-                severity: card.severity, process: card.process,
-                processVersion: card.processVersion, summary: card.title
-              };
-              myCardsTimeline.push(myCardTimeline);
-            }
-            if (!!timeSpan.end) {
-              const myCardTimeline = {
-                date: timeSpan.end,
-                id: card.id,
-                severity: card.severity, process: card.process,
-                processVersion: card.processVersion, summary: card.title
-              };
-              myCardsTimeline.push(myCardTimeline);
+            if (!!timeSpan.recurrence) {
+              let dateForReminder: number = getNextTimeForRepeating(card, this.xDomain[0] + 1000 * card.secondsBeforeTimeSpanForReminder);
+
+              while(dateForReminder >= 0 && (!timeSpan.end || (dateForReminder < timeSpan.end)) && dateForReminder < this.xDomain[1]) {
+                const myCardTimeline = {
+                  date: dateForReminder,
+                  id: card.id,
+                  severity: card.severity, process: card.process,
+                  processVersion: card.processVersion, summary: card.title
+                };
+                myCardsTimeline.push(myCardTimeline);
+                const nextDate = moment(dateForReminder).add(1, 'minute');
+                
+                dateForReminder = getNextTimeForRepeating(card, nextDate.valueOf() + 1000 * card.secondsBeforeTimeSpanForReminder);
+              }
+            } else {
+              if (!!timeSpan.start) {
+                const myCardTimeline = {
+                  date: timeSpan.start,
+                  id: card.id,
+                  severity: card.severity, process: card.process,
+                  processVersion: card.processVersion, summary: card.title
+                };
+                myCardsTimeline.push(myCardTimeline);
+              }
+              if (!!timeSpan.end) {
+                const myCardTimeline = {
+                  date: timeSpan.end,
+                  id: card.id,
+                  severity: card.severity, process: card.process,
+                  processVersion: card.processVersion, summary: card.title
+                };
+                myCardsTimeline.push(myCardTimeline);
+              }
             }
           });
         } else {
@@ -353,7 +371,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
               circleYPosition: cards[cardIndex].circleYPosition,
               summary: []
             };
-
+            
             // while cards date is inside the interval of the two current ticks ,add card information in the circle
             while (cards[cardIndex]  && cards[cardIndex].date < endLimit) {
               circle.count ++;
