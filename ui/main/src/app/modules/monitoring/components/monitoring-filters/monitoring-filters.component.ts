@@ -88,11 +88,11 @@ export class MonitoringFiltersComponent implements OnInit, AfterViewInit {
         const busiStart = this.monitoringForm.get('activeFrom');
         const busiEnd = this.monitoringForm.get('activeTo');
 
-        if (this.firstQuery || this.hasFormControlValueChanged(selectedProcesses) 
-            || this.hasFormControlValueChanged(pubStart) || this.hasFormControlValueChanged(pubEnd) 
+        if (this.firstQuery || this.hasFormControlValueChanged(selectedProcesses)
+            || this.hasFormControlValueChanged(pubStart) || this.hasFormControlValueChanged(pubEnd)
             || this.hasFormControlValueChanged(busiStart) || this.hasFormControlValueChanged(busiEnd)) {
             this.store.dispatch(new ResetFilter());
-            
+
             if (selectedProcesses.value) {
                 const processesId = Array.prototype.map.call(selectedProcesses.value, item => item.id);
                 const procFilter = {
@@ -102,7 +102,7 @@ export class MonitoringFiltersComponent implements OnInit, AfterViewInit {
                 };
                 this.store.dispatch(new ApplyFilter(procFilter));
             }
-            
+
             if (this.hasFormControlValueChanged(pubStart)
                 || this.hasFormControlValueChanged(pubEnd)) {
 
@@ -178,5 +178,4 @@ export class MonitoringFiltersComponent implements OnInit, AfterViewInit {
     ngOnDestroy() {
         this.store.dispatch(new ResetFilter());
     }
-
 }
