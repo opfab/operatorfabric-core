@@ -136,7 +136,7 @@ public class CardSubscriptionServiceShould {
         Assertions.assertThat(subscription.checkActive()).isFalse();
     }
 
-    /*@Test
+    //@Test
     public void receiveCards(){
         CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
         StepVerifier.FirstStep<String> verifier = StepVerifier.create(subscription.getPublisher());
@@ -147,7 +147,7 @@ public class CardSubscriptionServiceShould {
            .expectNext(rabbitTestMessage)
            .thenCancel()
            .verify();
-    }*/
+    }
 
     private Runnable createSendMessageTask() {
         return () ->{
