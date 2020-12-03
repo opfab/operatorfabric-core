@@ -25,8 +25,8 @@ Repeat every :
 <div style="text-align: center">
  At : &nbsp; 
  <input size="2" maxlength="2" type="text" id="hours"> </input>H  &nbsp;  
- <input size="2" maxlength="2" type="text" id="minutes"> </input> Min  , remind the task 
-
+ <input size="2" maxlength="2" type="text" id="minutes"> </input> Min  , duration 
+ <input size="3" maxlength="3" type="text" id="durationInMinutes" value="15"> </input> Min  , remind the task 
  <input size="2" maxlength="2" type="text" id="minutesForReminder" value="5"> </input> minutes before.
 </div>
 
@@ -36,6 +36,7 @@ Repeat every :
         const hours =  document.getElementById('hours').value;
         const minutes =  document.getElementById('minutes').value;
         const minutesForReminder =  document.getElementById('minutesForReminder').value;
+        const durationInMinutes =  document.getElementById('durationInMinutes').value;
 
        const daysOfWeek = [];
         if (document.getElementById("Monday").checked) daysOfWeek.push(1);
@@ -48,7 +49,8 @@ Repeat every :
 
         const recurrence = {
             daysOfWeek : daysOfWeek,
-            hoursAndMinutes : {hours:hours,minutes:minutes}
+            hoursAndMinutes : {hours:hours,minutes:minutes},
+            durationInMinutes: durationInMinutes
         }
       
         const card = {
@@ -59,7 +61,8 @@ Repeat every :
                 taskDescription: taskDescription,
                 hours: hours,
                 minutes: minutes,
-                daysOfWeek: daysOfWeek
+                daysOfWeek: daysOfWeek,
+                durationInMinutes: durationInMinutes
             }
         };
         return {

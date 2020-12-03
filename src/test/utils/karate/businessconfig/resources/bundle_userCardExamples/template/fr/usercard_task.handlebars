@@ -25,7 +25,8 @@ Se répète chaque  :
 <div style="text-align: center">
  A : &nbsp; 
  <input size="2" maxlength="2" type="text" id="hours"> </input>H  &nbsp;  
- <input size="2" maxlength="2" type="text" id="minutes"> </input> Min , rappel de la tâche  
+ <input size="2" maxlength="2" type="text" id="minutes"> </input> Min , durée
+ <input size="3" maxlength="3" type="text" id="durationInMinutes" value="15"> </input> Min , rappel de la tâche  
 
  <input size="2" maxlength="2" type="text" id="minutesForReminder" value="5"> </input> minutes avant.
 </div>
@@ -35,7 +36,8 @@ Se répète chaque  :
         const taskDescription = document.getElementById('taskDescription').value;
         const hours =  document.getElementById('hours').value;
         const minutes =  document.getElementById('minutes').value;
-         const minutesForReminder =  document.getElementById('minutesForReminder').value;
+        const minutesForReminder =  document.getElementById('minutesForReminder').value;
+        const durationInMinutes =  document.getElementById('durationInMinutes').value;
 
        const daysOfWeek = [];
         if (document.getElementById("Monday").checked) daysOfWeek.push(1);
@@ -48,7 +50,8 @@ Se répète chaque  :
 
         const recurrence = {
             daysOfWeek : daysOfWeek,
-            hoursAndMinutes : {hours:hours,minutes:minutes}
+            hoursAndMinutes : {hours:hours,minutes:minutes},
+            durationInMinutes: durationInMinutes
         }
       
         const card = {
@@ -60,6 +63,7 @@ Se répète chaque  :
                 hours: hours,
                 minutes: minutes,
                 daysOfWeek: daysOfWeek,
+                durationInMinutes: durationInMinutes
             }
         };
         return {

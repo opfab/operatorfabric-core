@@ -349,8 +349,9 @@ class CardProcessServiceShould {
         List<Integer> daysOfWeek = new ArrayList<>();
         daysOfWeek.add(new Integer(2));
         daysOfWeek.add(new Integer(3));
+        Integer duration = new Integer(15);
         HoursAndMinutes hoursAndMinutes = new HoursAndMinutesPublicationData(2,10);
-        RecurrencePublicationData recurrence = new RecurrencePublicationData("timezone",daysOfWeek,hoursAndMinutes);
+        RecurrencePublicationData recurrence = new RecurrencePublicationData("timezone",daysOfWeek,hoursAndMinutes, duration);
 
         CardPublicationData newCard = CardPublicationData.builder().publisher("PUBLISHER_1")
                 .processVersion("0.0.1").processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
