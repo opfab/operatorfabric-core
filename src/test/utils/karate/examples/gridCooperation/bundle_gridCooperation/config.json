@@ -56,7 +56,7 @@
 			"name":  "compliant-FrEs-IGCC.title",
 			"acknowledgementAllowed": true,
 			"color": "green",
-			"detailsTitle": {
+			"detailTitle": {
 						"key": "compliant-FrEs-IGCC.title"
 					},
 			"templateName": "compliant-FrEs-IGCC"
