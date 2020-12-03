@@ -41,12 +41,14 @@ image::BusinessObjects.jpg[business objects diagram]
 * Card : the core business object which contains the data to show to the user(or operator) 
 * Publisher : the emitter of the card (be it a third-party tool or an entity)
 * User : the operator receiving cards and responding via response cards
-* Group : a group (containing a list of users)
-* Entity : an entity (containing a list of users)
+* Entity : an entity (containing a list of users) , it can be used to model organizations (examples : control center, company , department... ) 
+* Group : a group (containing a list of users) , it can be used to model roles in organizations (examples : supervisor, dispatcher ... ) 
 * Process : the process the card is about
 * State : the step in the process
 * Perimeter : for a defined group the visibility of a card for a specific process and state
 * Card Rendering : data for card rendering 
+
+A card can have a parent card, in this case the card can be named child card.
 
 == Technical Architecture
 

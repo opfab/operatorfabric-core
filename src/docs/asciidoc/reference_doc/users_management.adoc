@@ -13,12 +13,14 @@
 The User service manages users, groups, entities and perimeters (linked to groups).
 
 Users:: represent account information for a person destined to receive cards in the OperatorFabric instance.
+Entities::
+- represent set of users destined to receive collectively some cards.
+- can be used to model organizations, for examples : control center, company , department... 
+- can be used in a way to handle rights on card reception in OperatorFabric.
 Groups::
 - represent set of users destined to receive collectively some cards.
 - has a set of perimeters to define rights for card reception in OperatorFabric.
-Entities::
-- represent set of users destined to receive collectively some cards.
-- can be used in a way to handle rights on card reception in OperatorFabric.
+- can be used to model roles in organizations, for examples : supervisor, dispatcher ... 
 
 WARNING: The user define here is an internal representation of the individual card recipient in `OperatorFabric` the authentication is leave to specific OAuth2 external service.
 
@@ -44,21 +46,22 @@ The administration of the groups, entities and perimeters is dealt by the admini
 More details about automated user creation
 ifdef::single-page-doc[<<opfab_spec_conf, here>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/deployment/index.adoc#opfab_spec_conf, here>>]
+
+=== Entities
+The notion of entity is loose and can be used to model organizations structures(examples : control center, company , department... ).
+Entities are used to send cards to several users without a name specifically. The information about membership to an
+entity is stored in the user information. Examples using entities can be found 
+ifdef::single-page-doc[<<_send_to_several_users, here>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#_send_to_several_users, here>>]
 .
 
 === Groups
-The notion of group is loose and can be used to simulate role in `OperatorFabric`.
+The notion of group is loose and can be used to simulate role in `OperatorFabric` (examples : supervisor, dispatcher ... ).
 Groups are used to send cards to several users without a name specifically. The information about membership to a
 group is stored in the user information. A group contains a list of perimeters which define the rights of reception/writing for a couple process/state. The rules used to send cards are described in the
 ifdef::single-page-doc[<<card_recipients, recipients section>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#card_recipients, recipients section>>]
 .
-
-=== Entities
-Entities are used to send cards to several users without a name specifically. The information about membership to an
-entity is stored in the user information. Examples using entities can be found 
-ifdef::single-page-doc[<<_send_to_several_users, here>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#_send_to_several_users, here>>]
 .
 
 === Perimeters
