@@ -30,3 +30,42 @@ $cell-width: 10;
   display: table-cell;
 }
 
+.label-sev-alarm::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 15px;
+  margin-right: 5px;
+  margin-bottom: -2px;
+  background-color: $sev-alarm;
+}
+
+.label-sev-action::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 15px;
+  margin-right: 5px;
+  margin-bottom: -2px;
+  background-color: $sev-action;
+}
+
+.label-sev-compliant::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 15px;
+  margin-right: 5px;
+  margin-bottom: -2px;
+  background-color: $sev-compliant;
+}
+
+.label-sev-information::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 15px;
+  margin-right: 5px;
+  margin-bottom: -2px;
+  background-color: $sev-information;
+}
