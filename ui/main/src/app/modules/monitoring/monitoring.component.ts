@@ -69,7 +69,7 @@ export class MonitoringComponent implements OnInit, OnDestroy, AfterViewInit {
                             let color = 'white';
                             let name: string;
                             const procId = card.process;
-                            if (!!this.mapOfProcesses && this.mapOfProcesses.has(procId)) {
+                            if (!!this.mapOfProcesses && this.mapOfProcesses.has(procId) && !card.parentCardId) {
                                 const currentProcess = this.mapOfProcesses.get(procId);
                                 /**
                                  * work around because Object.setPrototypeOf(currentProcess, Process.prototype);

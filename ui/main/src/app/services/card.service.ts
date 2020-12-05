@@ -262,7 +262,7 @@ export class CardService {
                     const publisherType = card.publisherType;
                     const enumThirdParty = PublisherType.EXTERNAL;
                     const isThirdPartyPublisher = enumThirdParty === PublisherType[publisherType];
-                    const sender = (isThirdPartyPublisher) ? 'SYSTEM' : this.entitiesService.getEntityName(card.publisher);
+                    const sender = (isThirdPartyPublisher) ? card.publisher : this.entitiesService.getEntityName(card.publisher);
                     return ({
                         process: card.process,
                         processVersion: card.processVersion,
