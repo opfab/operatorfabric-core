@@ -10,15 +10,27 @@
 
 
 .light-card-detail {
-  background-color: var(--opfab-lightcard-detail-bgcolor);
+
   color: var(--opfab-lightcard-detail-textcolor);
-  border-color: var(--opfab-lightcard-detail-border-color)
+  //border-color: var(--opfab-lightcard-detail-border-color);
+  margin-right: 20px;
 }
  
 
 .light-card-detail-selected {
-  border-color: var(--opfab-lightcard-detail-selected-border-color);
+  background-color: var(--opfab-lightcard-detail-selected-bgcolor);
+  margin-left: 20px;
+  margin-right: 0px;
   //#f8f9fa
+}
+
+.light-card-detail-unselected {
+  background-color: var(--opfab-lightcard-detail-bgcolor);
+}
+
+.light-card-detail-unread {
+ color:var(--opfab-lightcard-detail-unread-textcolor);
+ font-weight: bold;
 }
 
 .card {
@@ -28,7 +40,7 @@
 
 .card-title {
   font-variant: small-caps;
-  font-size: larger;
+  font-size: 20px;
 }
 
 .card-subtitle {
@@ -40,7 +52,7 @@
 }
 
 .badge-border {
-  width: 30px;
+  width: 15px;
   text-align: center;
 }
 

@@ -25,7 +25,6 @@ export class GlobalStyleService {
     private static DAY_STYLE = `:root { --opfab-bgcolor: white;
                                         --opfab-text-color: black;
                                         --opfab-button-disable-bgcolor: #eeeeee;
-                                        --opfab-timeline-bgcolor: white;
                                         --opfab-feedbar-bgcolor:#aaaaaa;
                                         --opfab-feedbar-icon-color: white;
                                         --opfab-feedbar-icon-hover-color:#212529;
@@ -41,9 +40,9 @@ export class GlobalStyleService {
                                         --opfab-lightcard-detail-bgcolor: #F3F2F1;
                                         --opfab-lightcard-detail-textcolor: black;
                                         --opfab-lightcard-detail-border-color: #cccccc;
-                                        --opfab-lightcard-detail-selected-border-color: #555555;
+                                        --opfab-lightcard-detail-selected-bgcolor: #E1E1E1;
+                                        --opfab-lightcard-detail-unread-textcolor: black;
                                         --opfab-light-card-lttd-timeleft: #ff6600;
-                                        --opfab-card-tab-selected-bgcolor: #ffffff;
                                         --opfab-card-tab-selected-text-color: black;
                                         --opfab-card-tab-border-color: #dddddd;
                                         --opfab-card-bgcolor : #F3F2F1;
@@ -85,6 +84,8 @@ export class GlobalStyleService {
                                         --opfab-lightcard-detail-bgcolor: #131D2B;
                                         --opfab-lightcard-detail-textcolor: #bababa;
                                         --opfab-lightcard-detail-border-color: #222933;
+                                        --opfab-lightcard-detail-selected-bgcolor: #0F161F;
+                                        --opfab-lightcard-detail-unread-textcolor: white;
                                         --opfab-light-card-lttd-timeleft: #FD9313;
                                         --opfab-card-tab-selected-text-color: #bababa;
                                         --opfab-card-tab-border-color: #bababa;
@@ -124,9 +125,8 @@ export class GlobalStyleService {
                                         --opfab-lightcard-detail-bgcolor: #2e353c;
                                         --opfab-lightcard-detail-textcolor: #f8f9fa;
                                         --opfab-lightcard-detail-border-color: #282e35;
-                                        --opfab-lightcard-detail-selected-border-color: #f8f9fa;
+                                        --opfab-lightcard-detail-selected-bgcolor: #f8f9fa;
                                         --opfab-light-card-lttd-timeleft: yellow;
-                                        --opfab-card-tab-selected-bgcolor: white;
                                         --opfab-card-tab-selected-text-color: #444444;
                                         --opfab-card-tab-border-color: white;
                                         --opfab-card-detail-border-color : #343a40 ;
