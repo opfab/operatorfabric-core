@@ -48,6 +48,7 @@ import {NgbModal,NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {ConfigService} from '@ofServices/config.service';
 import {State as CardState} from '@ofModel/processes.model';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 
 declare const templateGateway: any;
@@ -111,6 +112,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     public isActionEnabled = false;
     public lttdExpiredIsTrue: boolean;
+    public cardTitle: string;
 
 
     unsubscribe$: Subject<void> = new Subject<void>();
@@ -142,7 +144,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 private entitiesService: EntitiesService,
                 private modalService: NgbModal,
                 private configService: ConfigService,
-                private router: Router) {
+                private router: Router,
+                private translate: TranslateService) {
         this.store.select(selectAuthenticationState).subscribe(authState => {
             this._userContext = new UserContext(
                 authState.identifier,
@@ -226,9 +229,18 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                         });
                 });
         }
+        this.loadTranslationForTitle();
         this.markAsReadIfNecessary();
         this.setButtonsVisibility();
     }
+
+
+    loadTranslationForTitle() {
+        this.translate.get(this.i18nPrefix + this.cardState.detailTitle.key, this.cardState.detailTitle.parameters)
+                   .subscribe(translation =>
+                       this.cardTitle = translation.toUpperCase()
+                   );
+   }
 
     private setButtonsVisibility() {
         if ((this._appService.pageType === PageType.ARCHIVE)
@@ -395,6 +407,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     ngOnChanges(): void {
         this.initializeHrefsOfCssLink();
         this.initializeHandlebarsTemplates();
+        this.loadTranslationForTitle();
         this.markAsReadIfNecessary();
 
         this.message = {display: false, text: undefined, color: undefined};
