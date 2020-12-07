@@ -78,7 +78,7 @@
 
     <br />
     <div style="text-align: center;width:100%">
-        <button type="button" class="btn btn-primary" (click)="onSubmitForm(resumeCardBeforeSend)" translate>
+        <button type="button" class="opfab-btn" (click)="onSubmitForm(resumeCardBeforeSend)" translate>
             userCard.prepareCard
 
         </button>
@@ -97,7 +97,7 @@
     <of-card [lightCard]="card" [open]="true" [displayUnreadIcon]="false"></of-card>
     <br />
     <div style="text-align: center;">
-        <button type="button" class="btn btn-primary" (click)="sendAnotherUserCard()"
+        <button type="button" class="opfab-btn" (click)="sendAnotherUserCard()"
             translate>userCard.send-another-one</button>
     </div>
 </div>
@@ -128,9 +128,10 @@
             <of-card-preview [card]="card" [currentPath]="'test'"> </of-card-preview>
 
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="decline()" translate>userCard.refuse</button>
-            <button type="button" class="btn btn-outline-dark" (click)="confirm()" translate>userCard.accept</button>
+        <div class="modal-footer" style="margin-top:10px;margin-bottom: 0px;" ></div>
+        <div style="text-align: center;width:100%">
+            <button type="button" class="opfab-btn-cancel" (click)="decline()" translate>userCard.refuse</button>
+            <button type="button" class="opfab-btn" (click)="confirm()" translate>userCard.accept</button>
         </div>
     </div>
 </ng-template>

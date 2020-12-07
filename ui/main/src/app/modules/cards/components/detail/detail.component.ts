@@ -82,11 +82,6 @@ const enum AckI18nKeys {
     ERROR_MSG = 'response.error.ack'
 }
 
-const enum AckButtonColors {
-    PRIMARY = 'btn-primary',
-    DANGER = 'btn-danger'
-}
-
 const enum ResponseMsgColor {
     GREEN = 'alert-success',
     RED = 'alert-danger'
@@ -260,13 +255,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         return this._responseData.btnText ? this._responseData.btnText.parameters : undefined;
     }
 
-    get btnColor(): string {
-        return this.businessconfigService.getResponseBtnColorEnumValue(this._responseData.btnColor);
-    }
-
     get btnText(): string {
-        return this._responseData.btnText ?
-            this.i18nPrefix + this._responseData.btnText.key : ResponseI18nKeys.BUTTON_TITLE;
+     //   return this._responseData.btnText ?
+      //      this.i18nPrefix + this._responseData.btnText.key : ResponseI18nKeys.BUTTON_TITLE;
+      return ResponseI18nKeys.BUTTON_TITLE;
     }
 
     get responseDataExists(): boolean {
@@ -277,9 +269,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         return this.card.hasBeenAcknowledged ? AckI18nKeys.BUTTON_TEXT_UNACK : AckI18nKeys.BUTTON_TEXT_ACK;
     }
 
-    get btnAckColor(): string {
-        return this.card.hasBeenAcknowledged ? AckButtonColors.DANGER : AckButtonColors.PRIMARY;
-    }
 
     submitResponse() {
 

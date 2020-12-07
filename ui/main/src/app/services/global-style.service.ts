@@ -24,6 +24,7 @@ export class GlobalStyleService {
 
     private static DAY_STYLE = `:root { --opfab-bgcolor: white;
                                         --opfab-text-color: black;
+                                        --opfab-button-disable-bgcolor: #eeeeee;
                                         --opfab-timeline-bgcolor: white;
                                         --opfab-feedbar-bgcolor:#aaaaaa;
                                         --opfab-feedbar-icon-color: white;
@@ -62,10 +63,7 @@ export class GlobalStyleService {
                                         }`;
 
     private static NIGHT_STYLE = `:root {
-                                        --opfab-bgcolor: #343a40;
-                                        --opfab-text-color: white;
-                                        --opfab-timeline-bgcolor: #343a40;
-                                        --opfab-feedbar-bgcolor:#525854;
+                                        --opfab-button-disable-bgcolor: #2B353F;
                                         --opfab-feedbar-icon-color: white;
                                         --opfab-feedbar-icon-hover-color:#212529;
                                         --opfab-feedbar-icon-hover-bgcolor:white;

@@ -124,7 +124,7 @@
     "description": "Description",
     "sender": "Actor",
     "noResult": "No result",
-    "ExportTOExcel": "Export to Excel"
+    "ExportTOExcel": "EXPORT TO EXCEL"
   },
   "monitoring": {
     "filters": {
@@ -136,20 +136,20 @@
     "summary": "Summary",
     "trigger": "Trigger",
     "status": "Status",
-    "seeDetails": "see details",
-    "ExportTOExcel": "Export to Excel"
+    "seeDetails": "SEE DETAILS",
+    "ExportTOExcel": "EXPORT TO EXCEL"
   },
   "button": {
     "ok": "OK",
-    "cancel": "Cancel",
-    "reset": "Reset",
-    "delete": "Delete",
-    "edit": "Edit",
+    "cancel": "ANNULER",
+    "reset": "RESET",
+    "delete": "DELETE",
+    "edit": "EDIT",
     "yes": "YES"
   },
   "feedConfiguration": {
     "title": "Notification reception configuration",
-    "confirmSettings": "Confirm settings",
+    "confirmSettings": "CONFIRM SETTINGS",
     "settingsSavedWithNoError": "Settings saved",
     "popup": {
       "title": "CONFIRMATION",
@@ -185,13 +185,13 @@
         "INFORMATION": "Information"
       }
     },
-    "prepareCard": "Prepare Card before sending",
+    "prepareCard": "SEE BEFORE SENDING",
     "confirmSending": "Send the following card?",
-    "accept": "Send",
-    "refuse": "Cancel",
+    "accept": "SEND",
+    "refuse": "CANCEL",
     "processInstanceId": "Id",
     "state": "State",
-    "send-another-one": "Send another Card",
+    "send-another-one": "SEND ANOTHER CARD",
     "cardSendWithNoError": "Card sent",
     "deleteCard": {
       "doYouReallyWant": "Do you really want to delete this card ?",
@@ -208,7 +208,7 @@
     "filterUnSelectAllText": "UnSelect all filtered results"
   },
   "response": {
-    "btnTitle": "VALIDATE ANSWERS",
+    "btnTitle": "CONFIRM MY ANSWERS",
     "error": {
       "submit": "The card could not been sent",
       "form": "The form is not correctly filled",
@@ -219,8 +219,8 @@
   },
   "cardAcknowledgment": {
     "button": {
-      "ack": "Acknowledge and close",
-      "unack": "Cancel acknowledgement"
+      "ack": "ACKNOWLEDGE AND CLOSE",
+      "unack": "CANCEL ACKNOWLEDGMENT"
     }
   },
   "admin": {
@@ -242,9 +242,9 @@
         "add": "Add new user",
         "edit": "Edit",
         "delete": "Delete",
-        "save": "Save Changes",
-        "close": "Close",
-        "cancel": "cancel",
+        "save": "SAVE CHANGES",
+        "close": "CLOSE",
+        "cancel": "CANCEL",
         "confirm": "Please confirm..",
         "user": "user",
         "filter": "filter by ",

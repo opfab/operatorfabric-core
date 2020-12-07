@@ -15,7 +15,7 @@ import {environment} from '@env/environment';
 import {Observable, of, Subject} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {catchError, map, skip, tap} from 'rxjs/operators';
-import {Process, ResponseBtnColorEnum} from '@ofModel/processes.model';
+import {Process} from '@ofModel/processes.model';
 import {Card} from '@ofModel/card.model';
 import {merge} from 'rxjs';
 import { Store, select } from '@ngrx/store';
@@ -224,19 +224,6 @@ export class ProcessesService {
             object[process][version] = r;
             return object;
         };
-    }
-
-    getResponseBtnColorEnumValue(responseBtnColorEnum: ResponseBtnColorEnum): string {
-        switch (responseBtnColorEnum) {
-            case 'RED':
-                return 'btn-danger';
-            case 'GREEN':
-                return 'btn-success';
-            case 'YELLOW':
-                return 'btn-warning';
-            default:
-                return 'btn-success';
-        }
     }
 
 }

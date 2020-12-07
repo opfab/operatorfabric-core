@@ -59,10 +59,10 @@
   </form>
 </div>
 <div class="modal-footer bg-dark">
-  <button type="button" (click)="activeModal.dismiss('Cross click')" class="btn btn-secondary" data-dismiss="modal"
+  <button type="button" (click)="activeModal.dismiss('Cross click')" class="opfab-btn-cancel" data-dismiss="modal"
     translate>admin.input.user.close</button>
-  <button [disabled]="!form.valid" *ngIf="!row" (click)="update()" class="btn btn-primary"
+  <button [disabled]="!form.valid" *ngIf="!row" (click)="update()" class="opfab-btn"
     translate>admin.input.user.add</button>
-  <button [disabled]="!form.valid" *ngIf="row" (click)="update()" class="btn btn-primary"
+  <button [disabled]="!form.valid" *ngIf="row" (click)="update()" class="opfab-btn"
     translate>admin.input.user.save</button>
 </div>

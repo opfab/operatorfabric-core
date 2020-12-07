@@ -32,6 +32,47 @@ body {
   height: 100vh;
   font-family: 'Open Sans', sans-serif;
 }
+
+.opfab-btn {
+  color: white;
+  background-color: #2784FF;
+  border-width: 0px;
+  border-radius: 2px;
+  height: 40px;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 10px;
+  padding: 10px; 
+}
+
+.opfab-btn:hover {
+  background-color: #2268FF;
+}
+ 
+.opfab-btn:disabled {
+  color: #606267 ;
+  background-color: var(--opfab-button-disable-bgcolor);
+}
+
+
+.opfab-btn-cancel {
+  color: #2784FF ;
+  background-color: var(--opfab-bg-color);
+  border-width: 0px;
+  border-radius: 2px;
+  height: 40px;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 10px;
+  padding: 10px; 
+}
+
+.opfab-btn-cancel:hover {
+  color: #2268FF;
+}
+ 
+
+
 .archives-page .form-control {
   border-radius: 5px;
   padding: 5px;

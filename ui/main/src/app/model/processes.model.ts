@@ -76,18 +76,13 @@ export class Response {
     constructor(
         readonly lock?: boolean,
         readonly state?: string,
-        readonly btnColor?: ResponseBtnColorEnum,
         readonly btnText?: I18n,
         readonly externalRecipients?: string[]
     ) {
     }
 }
 
-export enum ResponseBtnColorEnum {
-    RED = 'RED',
-    GREEN = 'GREEN',
-    YELLOW = 'YELLOW'
-}
+
 
 export enum AcknowledgmentAllowedEnum {
     ALWAYS = 'Always',
