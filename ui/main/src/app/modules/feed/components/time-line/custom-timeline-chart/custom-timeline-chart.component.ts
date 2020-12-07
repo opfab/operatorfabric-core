@@ -416,10 +416,10 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   getCircleColor(severity: string): string {
     if (severity) {
       switch (severity) {
-        case 'ALARM': return 'red';
-        case 'ACTION': return 'orange';
-        case 'COMPLIANT': return 'green';
-        case 'INFORMATION': return 'blue';
+        case 'ALARM': return '#A71A1A'; // red
+        case 'ACTION': return '#FD9313'; // orange
+        case 'COMPLIANT': return '#00BB03'; // green
+        case 'INFORMATION': return '#1074AD'; // blue
         default:  return 'blue';
       }
     } else { return 'blue'; }

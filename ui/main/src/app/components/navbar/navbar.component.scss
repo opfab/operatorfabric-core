@@ -9,13 +9,7 @@
 
 
 
- ::ng-deep .opfab-menu-link {
-  color: var(--opfab-navbar-menu-link-color) !important;
- }
-
- ::ng-deep a.opfab-menu-link:hover, a.opfab-menu-link:focus{
-  color:var(--opfab-navbar-menu-link-hover-color) !important;
- }
+ 
 
  .opfab-nightday-icon{
   background-color: var(--opfab-bgcolor);
@@ -26,9 +20,16 @@
 
 .opfab-navbar {
     background-color: var(--opfab-bgcolor) ;
+    font-size: 16px;
+
+
     .navbar-nav {
       .nav-link {
         color:var(--opfab-navbar-color);
+        margin-left: 10px;
+        margin-right: 10px;
+        letter-spacing: 0.54px;
+        line-height: 18px;
   
         &:hover,
         &:focus {
@@ -41,6 +42,13 @@
       .nav-link.show,
       .nav-link.active {
         color:var(--opfab-navbar-color-active);
+        font-weight: bold;
+        //text-decoration: underline;
+        padding-bottom: 3px;
+        padding-left: 3px;
+        padding-right: 3px;
+        border-bottom-width: 2px;
+        border-bottom-style: solid;
       }
     }
 
@@ -55,15 +63,19 @@
     }
 
     .dropdown-menu {
-    background-color:var(--opfab-navbar-menu-bgcolor);
+      background-color:var(--opfab-bgcolor);
+      color:var(--opfab-navbar-color);
     }
 
     .dropdown-item:hover, .dropdown-item:focus {
-      background-color: var(--opfab-navbar-menu-bgcolor-item-hover);
+      color:var( --opfab-navbar-color-hover);
+      background-color:var( --opfab-bgcolor);
     }
     
     .dropdown-item.active, .dropdown-item:active {
-      background-color: var(--opfab-navbar-menu-bgcolor-item-active)
+      //background-color: var(--opfab-navbar-menu-bgcolor-item-active)
+      color:var(--opfab-navbar-color-active);
+      background-color:var( --opfab-bgcolor);
     }
 
   }

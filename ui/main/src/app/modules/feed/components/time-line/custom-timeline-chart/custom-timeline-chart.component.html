@@ -26,6 +26,8 @@
                    [width]="dims.width"
                    [tickValues]="xTicksTwo"
                    (dimensionsChanged)="updateXAxisHeight($event)"
+                   fill=var(--opfab-timeline-grid-text-color)
+                   [attr.font-size]="13"
             />
         </svg:g>
         <svg:g ngx-charts-x-axis
@@ -35,7 +37,9 @@
                [showGridLines]="true"
                [tickFormatting]="getXTickOneFormatting"
                [ticks]="xTicksOne"
-               (dimensionsChanged)="updateXAxisHeight($event)">
+               (dimensionsChanged)="updateXAxisHeight($event)"
+               fill=var(--opfab-timeline-grid-text-color)
+               >
         </svg:g>
 
 
@@ -48,19 +52,22 @@
         </svg:g>
         <text *ngIf="checkInsideDomain(xRealTimeLine) && !underDayPeriod"
               [attr.x]="xScale(xRealTimeLine)"
-              [attr.y]="-10" stroke="'black'"
-              [attr.fill]="'black'"
-              text-anchor="middle" stroke-width="1px"
-              [attr.font-size]="11" dy=".3em">{{getXRealTimeLineFormatting(xRealTimeLine)}}</text>
+              [attr.y]="-10" 
+              fill=var(--opfab-timeline-text-color)
+              text-anchor="middle" stroke-width="0.5px"
+              [attr.font-size]="13" dy=".3em">{{getXRealTimeLineFormatting(xRealTimeLine)}}</text>
         <text *ngIf="underDayPeriod"
               [attr.x]="50"
-              [attr.y]="-10" stroke="'black'"
-              [attr.fill]="'black'"
-              text-anchor="middle" stroke-width="1px"
-              [attr.font-size]="12" dy=".3em">{{dateFirstTick}}</text>
+              [attr.y]="-10" 
+              fill=var(--opfab-timeline-text-color)
+              text-anchor="middle" 
+              [attr.font-size]="13" dy=".3em"
+              >{{dateFirstTick}}
+              
+        </text>
         <svg:rect *ngIf="checkInsideDomain(xRealTimeLine)"
                   [attr.x]="xScale(xRealTimeLine)"
-                  [attr.width]="5"
+                  [attr.width]="2"
                   y="0"
                   fill=var(--opfab-timeline-realtimebar-color)
                   [attr.height]="dims.height"
@@ -71,19 +78,24 @@
         <svg:g *ngIf="(circle.count>1)" (click)="feedCircleHovered(circle)" container="body"   [ngbPopover]="tooltipTemplate"   [autoClose]="true">
             <svg:circle [attr.cx]="xScale(circle.date)"
                 [attr.cy]="yScale(circle.circleYPosition)" [attr.r]="'10'" [attr.fill]=circle.color [attr.stroke]="'stroke'"
-                [attr.opacity]="0.7" />
+                />
             <text  [attr.x]="xScale(circle.date)"
-                [attr.y]="yScale(circle.circleYPosition)" text-anchor="middle" font-weight="bold" stroke-width="0px"
-                [attr.font-size]="13" dy=".3em">{{circle.count}} </text>
+                [attr.y]="yScale(circle.circleYPosition)" text-anchor="middle"  stroke-width="0px"
+                fill=white
+                font-weight="bold" 
+                [attr.font-size]="15" dy=".3em">{{circle.count}} </text>
         </svg:g>
 
         <svg:g *ngIf="(circle.count==1)" (click)="showCard(circle.summary[0].cardId)" >
             <svg:circle [attr.cx]="xScale(circle.date)"
                 [attr.cy]="yScale(circle.circleYPosition)" [attr.r]="'10'" [attr.fill]=circle.color [attr.stroke]="'stroke'"
-                [attr.opacity]="0.7" />
+                />
             <text  [attr.x]="xScale(circle.date)"
-                [attr.y]="yScale(circle.circleYPosition)" text-anchor="middle" font-weight="bold" stroke-width="0px"
-                [attr.font-size]="13" dy=".3em">{{circle.count}} </text>
+                [attr.y]="yScale(circle.circleYPosition)" 
+                text-anchor="middle" 
+                fill=white
+                font-weight="bold" 
+                [attr.font-size]="15" dy=".3em">{{circle.count}} </text>
         </svg:g>
     </svg:g>
     </svg:g>

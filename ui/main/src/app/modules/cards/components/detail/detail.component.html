@@ -12,14 +12,14 @@
 <div calcHeightDirective parentId="parentFeedContent" fixedHeightClass="fixed-height-details" calcHeightClass="calc-height-details">
   <ul class="nav nav-tabs fixed-height-details opfab-line-undertab">
     <li class="nav-item opfab-tab " data-toggle="tab">
-      <span class="nav-link opfab-tab" translate [translateParams]="cardState.detailTitle?.parameters">{{i18nPrefix+cardState.detailTitle.key}}</span> 
+      <span class="opfab-tab" translate [translateParams]="cardState.detailTitle?.parameters">{{i18nPrefix+cardState.detailTitle.key}}</span> 
     </li>
   </ul>
 
-  <div class="calc-height-details">
+  <div class="opfab-card-detail calc-height-details">
    <link *ngFor="let cssUrl of hrefsOfCssLink" [href]="cssUrl" rel="stylesheet" type="text/css">
 
-    <div class="opfab-card-detail-border">
+    <div>
     
       <div  *ngIf='responseDataExists'  style="text-align: right;">
        

@@ -26,14 +26,9 @@
     background-color: var(--opfab-timeline-bgcolor);
 
     .gridline-path {
-        stroke-width: 1;
+        stroke-width: 0.5;
         fill: none;
         stroke:var(--opfab-timeline-grid-color);
-    }
-
-
-    text {
-      fill: var(--opfab-timeline-text-color);
     }
 
 
