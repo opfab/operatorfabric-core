@@ -64,11 +64,28 @@ public class UserServiceCacheTestApplication {
                 "\"lastName\": \"Gruber\"," +
                 "\"groups\": [\"bad_guys\",\"admin\"]" +
                 "}";
+        String stringTestUserWithPerimeter = "{" + 
+            "\"userData\": {" +
+                "\"login\": \"testuser\"," +
+                "\"firstName\": \"John\"," +
+            "   \"lastName\": \"McClane\"," +
+                "\"groups\": [\"testgroup1\"]" +
+                "}," + 
+            "\"computedPerimeters\": [" + 
+            " { " + 
+            "    \"process\": \"Process1\"," + 
+            "    \"state\": \"State1\"," + 
+            "    \"rights\": \"Receive\"" + 
+            "  }]" +
+          "}";
+        
+
 
         MockClient mockClient = new MockClient();
         mockClient = mockClient
                 .ok(HttpMethod.GET, "/users/jmcclane", stringUser1)
-                .ok(HttpMethod.GET, "/users/hgruber", stringUser2);
+                .ok(HttpMethod.GET, "/users/hgruber", stringUser2)
+                .ok(HttpMethod.GET, "/CurrentUserWithPerimeters", stringTestUserWithPerimeter);
 
         return mockClient;
     }
