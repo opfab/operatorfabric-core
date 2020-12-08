@@ -26,7 +26,6 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.cache.annotation.EnableCaching;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 
@@ -44,7 +43,6 @@ import java.util.*;
  */
 @Slf4j
 @EqualsAndHashCode
-@EnableCaching
 public class CardSubscription {
     public static final String GROUPS_SUFFIX = "Groups";
     public static final String DELETE_OPERATION = "DELETE";

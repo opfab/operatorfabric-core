@@ -18,8 +18,6 @@ import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 
@@ -38,8 +36,6 @@ import java.util.concurrent.ScheduledFuture;
  */
 @Service
 @Slf4j
-@EnableCaching
-@Import({UserServiceCache.class})
 public class CardSubscriptionService {
 
     private final ThreadPoolTaskScheduler taskScheduler;
