@@ -28,7 +28,7 @@ public class ExternalAppClientImpl implements ExternalAppClient {
     public static final String NO_EXTERNALRECIPIENTS_MESSAGE = "No external recipients found in the card";
     public static final String ERR_CONNECTION_REFUSED = "No external recipients found in the card";
 
-    @Value("#{${externalRecipients-url}}")
+    @Value("#{${externalRecipients-url:} ?: new java.util.HashMap() }")
     private Map<String, String> externalRecipients;
 
     @Autowired
