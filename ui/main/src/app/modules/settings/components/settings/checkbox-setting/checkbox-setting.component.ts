@@ -8,7 +8,7 @@
  */
 
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingComponent} from "../base-setting/base-setting.component";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
@@ -20,6 +20,8 @@ import {FormControl, FormGroup} from "@angular/forms";
   styleUrls: ['./checkbox-setting.component.scss']
 })
 export class CheckboxSettingComponent extends BaseSettingComponent implements OnInit, OnDestroy {
+
+  @Input() public labelClass: string;
 
   constructor(protected store: Store<AppState>) {
     super(store);

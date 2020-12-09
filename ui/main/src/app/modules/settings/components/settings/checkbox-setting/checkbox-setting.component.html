@@ -9,7 +9,7 @@
 
 <form [formGroup]="form" class="form-check-inline" id="checkbox-setting-form">
     <div class="form-group" >
-        <label class="form-check-label" for="setting" translate>settings.{{settingPath}}</label>
+        <label class="form-check-label {{labelClass}}" for="setting" translate>settings.{{settingPath}} </label>
         <input id="setting" type="checkbox" formControlName="setting" class="form-check-input"/>
     </div>
 </form>
