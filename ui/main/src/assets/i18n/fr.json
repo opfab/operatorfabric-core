@@ -13,14 +13,16 @@
     "usercard": "Création de cartes"
   },
   "timeline": {
+    "hideTimeline" : "Masquer la timeline",
+    "showTimeline" : "Afficher la Timeline",
     "businessPeriod": "Periode métier",
     "buttonTitle": {
-      "TR": "TR",
-      "J": "J",
-      "7D": "7J",
-      "W": "S",
-      "M": "M",
-      "Y": "A"
+      "TR": "Temps réel",
+      "J": "Jour",
+      "7D": "7 Jours",
+      "W": "Semaine",
+      "M": "Mois",
+      "Y": "Année"
     }
   },
   "feed": {

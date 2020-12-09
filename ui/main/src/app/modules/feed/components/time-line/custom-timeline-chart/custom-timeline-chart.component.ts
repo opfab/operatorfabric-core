@@ -60,7 +60,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   private xAxisHeight = 0;
   private yAxisWidth = 0 ;
   public xScale: any;
-  private margin: any[] = [10, 20, 10, 0];
+  private margin: any[] = [25, 15, 10, 0];
   public translateGraph: string;
   public translateXTicksTwo: string;
   public xRealTimeLine: moment.Moment;

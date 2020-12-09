@@ -13,14 +13,16 @@
     "usercard": "Card Creation"
   },
   "timeline": {
+    "hideTimeline" : "Hide Timeline",
+    "showTimeline" : "Show Timeline",
     "businessPeriod": "Business period",
     "buttonTitle": {
-      "TR": "RT",
-      "J": "D",
-      "7D": "7D",
-      "W": "W",
-      "M": "M",
-      "Y": "Y"
+      "TR": "Real Time",
+      "J": "Day",
+      "7D": "7 Day",
+      "W": "Week",
+      "M": "Month",
+      "Y": "Year"
     }
   },
   "feed": {

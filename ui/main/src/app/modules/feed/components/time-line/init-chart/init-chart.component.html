@@ -8,42 +8,48 @@
 
 
 <div class="timeline">
-  <div class="menu-timeline">
-    <button class="home-btn opfab-button-color" *ngIf="buttonHomeActive" (click)="homeClick(buttonHome[0], buttonHome[1])">
+  <div class="opfab-menu-timeline">
+    <button class="home-btn opfab-button-color" *ngIf="buttonHomeActive"
+      (click)="homeClick(buttonHome[0], buttonHome[1])">
       <em class="fas fa-home "></em>
     </button>
-    <div id="btn-menu-timeline">
+    <div *ngIf='hideTimeLine' class="opfab-business-period">
+    
+      <span translate>timeline.businessPeriod </span> : {{startDate}} -- {{endDate}}
+
+
+    </div>
+    <div id="opfab-menu-timeline-links">
       <ul>
-        <li>
-          <div class="opfab-text" *ngIf='hideTimeLine'><span translate>timeline.businessPeriod </span> : {{startDate}} -- {{endDate}} &nbsp; &nbsp; </div>
+        <li *ngIf='hideTimeLine'>
+          <a (click)="moveDomain(false)"> &lt;&lt;
+          </a>
         </li>
-        <li style="margin-right: 1rem;">
-          <button class="circle-btn opfab-button-color" (click)="moveDomain(false)">
-            <em class="fas fa-angle-double-left "></em>
-          </button>
-        </li>
+
         <li *ngFor="let button of buttonList">
-          <button [ngClass]="button.selected ? 'btn-selected' : 'btn-unselect'" (click)="changeGraphConf(button)" translate>
-            {{button.buttonTitle}}
-          </button>
+          <a [ngClass]="button.selected ? 'link-selected' : 'link-unselect'" (click)="changeGraphConf(button)"
+            translate>
+            &nbsp; {{button.buttonTitle}}
+          </a>
         </li>
-        <li style="margin-left: 1rem">
-          <button class="circle-btn opfab-button-color" (click)="moveDomain(true)">
-            <em class="fas fa-angle-double-right"></em>
-          </button>
-        </li>
-        <li style="margin-left: 1rem">
-          <button *ngIf="!hideTimeLine" class="circle-btn opfab-button-color" (click)="showOrHideTimeline()">
-            <em class="fas fa-caret-up"></em>
-          </button>
-          <button *ngIf="hideTimeLine" class="circle-btn opfab-button-color" (click)="showOrHideTimeline()">
-            <em class="fas fa-caret-down"></em>
-          </button>
+
+        <li *ngIf='hideTimeLine' >
+          <a (click)="moveDomain(true)">
+            &gt;&gt;
+          </a>
         </li>
       </ul>
     </div>
   </div>
-  <!--
+
+
+
+  <div class="opfab-timeline-grid" *ngIf="!hideTimeLine">
+    <div class="opfab-move-domain">
+      <a (click)="moveDomain(false)"> &lt;&lt;
+      </a>
+    </div>
+    <!--
    [results] is the basic input for data on ngx-charts
    [prod] Workaround for testing, the variable is not set  in unit test an true in production mode 
    [myData] is the data used by our timeline
@@ -52,11 +58,24 @@
 
    (zoomChange) call when custom timeline chart change his domain
   -->
-  <of-custom-timeline-chart *ngIf="!hideTimeLine" class="of-custom-timeline-chart"
-                             [prod]="true"
-                             [domainId]="domainId"
-                             [valueDomain]="myDomain"
-                             [followClockTick]="followClockTick"
-                             (zoomChange)="applyNewZoom($event)">
-  </of-custom-timeline-chart>
+
+    <of-custom-timeline-chart class="of-custom-timeline-chart" [prod]="true" [domainId]="domainId"
+      [valueDomain]="myDomain" [followClockTick]="followClockTick" (zoomChange)="applyNewZoom($event)">
+    </of-custom-timeline-chart>
+
+    <div class="opfab-move-domain">
+      <a (click)="moveDomain(true)">
+        &gt;&gt;
+      </a>
+    </div>
+
+  </div>
+</div>
+<div class="opfab-showhide-timeline">
+  <div *ngIf="!hideTimeLine" (click)="showOrHideTimeline()">
+    ˄ &nbsp;&nbsp; <span translate> timeline.hideTimeline </span>
+  </div>
+  <div *ngIf="hideTimeLine" (click)="showOrHideTimeline()">
+    ˅ &nbsp;&nbsp; <span translate> timeline.showTimeline </span>
+  </div>
 </div>

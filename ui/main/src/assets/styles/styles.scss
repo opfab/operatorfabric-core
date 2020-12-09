@@ -19,14 +19,11 @@
 @import "popover.scss";
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
-$top-padding: 80px ;
-$bottom-padding: 30px ;
-$body-padding: $top-padding 20px $bottom-padding 20px ;
-$total-vertical-padding: $top-padding + $bottom-padding ;
 
 body {
   color: $light;
-  padding: $body-padding;
+  padding: 80px 0px 30px 0px;
+  margin: 0px 15px 0px 15px;
   min-width: 500px;
   background-color: $dark;
   height: 100vh;
@@ -70,7 +67,6 @@ body {
 .opfab-btn-cancel:hover {
   color: #2268FF;
 }
- 
 
 
 .archives-page .form-control {
