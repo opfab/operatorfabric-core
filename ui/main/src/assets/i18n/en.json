@@ -10,7 +10,9 @@
     "settings": "Settings",
     "feedConfiguration": "Feed configuration",
     "about": "About",
-    "usercard": "Card Creation"
+    "usercard": "Card Creation",
+    "switchToNightMode": "Night mode",
+    "switchToDayMode": "Day mode"
   },
   "timeline": {
     "hideTimeline" : "Hide Timeline",

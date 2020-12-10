@@ -9,14 +9,6 @@
 
 
 
- 
-
- .opfab-nightday-icon{
-  background-color: var(--opfab-bgcolor);
-  color: var(--opfab-color);
-  box-shadow:none;
-}
-
 
 .opfab-navbar {
     background-color: var(--opfab-bgcolor) ;
@@ -73,10 +65,89 @@
     }
     
     .dropdown-item.active, .dropdown-item:active {
-      //background-color: var(--opfab-navbar-menu-bgcolor-item-active)
       color:var(--opfab-navbar-color-active);
       background-color:var( --opfab-bgcolor);
     }
 
   }
   
+  .opfab-right-menu {
+    background-color:var(--opfab-navbar-right-menu-bgcolor);
+    color:var(--opfab-navbar-color);
+    border-top: 2px solid var(--opfab-navbar-color);
+    margin-top: -8px;
+    margin-left: -12px;
+    margin-right: -12px;
+    margin-bottom: -10px;
+    padding-top: 10px;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
+  }
+
+  .opfab-right-menu-item {
+    color:var(--opfab-navbar-color);
+    margin-left: 20px;
+    margin-right: 20px;
+    letter-spacing: 0.54px;
+    font-size: 16px;
+    line-height: 40px;
+    &:hover,
+    &:focus {
+      color:var( --opfab-navbar-color-hover);
+    }
+  }
+
+  .opfab-right-menu-link {
+    display: grid;
+    grid-template-columns: 30px auto;
+    color:var(--opfab-navbar-color);
+    align-items: center;
+
+    &:hover,
+    &:focus {
+      color:var( --opfab-navbar-color-hover);
+      text-decoration: none;
+    }
+}
+
+.opfab-menu-icon {
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  margin-right: 5px;
+  background: var( --opfab-navbar-color-hover); 
+  mask-size: cover;
+}
+
+.opfab-menu-icon-parameters {
+  mask: url(assets/images/icons/parameters.svg);
+}
+
+.opfab-menu-icon-about {
+  mask: url(assets/images/icons/about.svg);
+}
+
+.opfab-menu-icon-logout {
+  mask: url(assets/images/icons/logout.svg);
+}
+
+.opfab-menu-icon-admin {
+  mask: url(assets/images/icons/administration.svg);
+}
+
+.opfab-menu-icon-dark-light {
+  mask: url(assets/images/icons/dark-light.svg);
+}
+
+.opfab-menu-icon-profile {
+  display: inline-block;
+  height: 36px;
+  width: 36px;
+  margin-right: 20px;
+  background: var( --opfab-navbar-color-hover); 
+  mask-size: cover;
+  mask: url(assets/images/icons/profile.svg);
+}
+
+.popover{
+  max-width: 100%; /* Max Width of the popover (depending on the container!) */
+}

@@ -39,7 +39,6 @@ export class NavbarComponent implements OnInit {
   currentPath: string[];
   private _businessconfigMenus: Observable<Menu[]>;
   expandedMenu: boolean[] = [];
-  expandedUserMenu = false;
 
   customLogo: string;
   height: number;
@@ -132,16 +131,10 @@ export class NavbarComponent implements OnInit {
   toggleMenu(index: number) {
     this.expandedMenu[index] = !this.expandedMenu[index];
     if (this.expandedMenu[index]) {
-      setTimeout(() => this.expandedMenu[index] = false, 5000);
+      setTimeout(() => this.expandedMenu[index] = false,5000);
     }
   }
 
-  toggleUserMenu() {
-    this.expandedUserMenu = !this.expandedUserMenu;
-    if (this.expandedUserMenu) {
-      setTimeout(() => this.expandedUserMenu = false, 5000);
-    }
-  }
 
   private loadNightModeFromLocalStorage() {
     NavbarComponent.nightMode = new BehaviorSubject<boolean>(true);

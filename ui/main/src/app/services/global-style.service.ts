@@ -57,6 +57,7 @@ export class GlobalStyleService {
                                         --opfab-navbar-menu-link-color: #343a40;
                                         --opfab-navbar-menu-link-hover-color: #121416;
                                         --opfab-navbar-menu-bgcolor: white;
+                                        --opfab-navbar-right-menu-bgcolor: white;
                                         --opfab-navbar-menu-bgcolor-item-active: #007bff;
                                         --opfab-navbar-menu-bgcolor-item-hover: #f8f9fa;
                                         --opfab-timeline-cardlink: #212529;
@@ -100,6 +101,7 @@ export class GlobalStyleService {
                                         --opfab-navbar-menu-link-color: #343a40;
                                         --opfab-navbar-menu-link-hover-color: #121416;
                                         --opfab-navbar-menu-bgcolor: white;
+                                        --opfab-navbar-right-menu-bgcolor: #131D2B;
                                         --opfab-navbar-menu-bgcolor-item-active: #007bff;
                                         --opfab-navbar-menu-bgcolor-item-hover: #f8f9fa;
                                         --opfab-timeline-cardlink: white;

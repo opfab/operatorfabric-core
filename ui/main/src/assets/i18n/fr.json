@@ -10,7 +10,9 @@
     "settings": "Paramètres",
     "feedConfiguration": "Configuration des notifications",
     "about": "À propos",
-    "usercard": "Création de cartes"
+    "usercard": "Création de cartes",
+    "switchToNightMode": "Mode nuit",
+    "switchToDayMode": "Mode jour"
   },
   "timeline": {
     "hideTimeline" : "Masquer la timeline",
