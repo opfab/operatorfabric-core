@@ -19,7 +19,7 @@
         "key": "template1.title"
       },
       "templateName": "template1",
-      "acknowledgementAllowed": false
+      "acknowledgmentAllowed": "Never"
     }
   }
 }

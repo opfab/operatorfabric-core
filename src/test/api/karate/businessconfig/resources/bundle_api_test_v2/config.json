@@ -29,7 +29,7 @@
 		  },
 		  "templateName": "question",
 		  "styles": [],
-		  "acknowledgementAllowed": false
+		  "acknowledgmentAllowed": "Never"
 		},   
 		"incidentInProgressState": {
 		  "name": "incidentInProgress.name",
@@ -48,7 +48,7 @@
 		  },
 		  "templateName": "incidentInProgress",
 		  "styles": [],
-		  "acknowledgementAllowed": true
+		  "acknowledgmentAllowed": "Always"
 		}
 	  }
 }

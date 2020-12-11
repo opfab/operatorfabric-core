@@ -21,7 +21,7 @@ import java.util.List;
 @Builder
 public class ProcessStatesData implements ProcessStates {
     private ResponseData responseData;
-    private Boolean acknowledgementAllowed;
+    private AcknowledgmentAllowedEnum acknowledgmentAllowed;
     private String color;
     private String name;
     private UserCard userCard;
@@ -41,8 +41,8 @@ public class ProcessStatesData implements ProcessStates {
     }
 
     @Override
-    public Boolean getAcknowledgmentAllowed() { return this.acknowledgementAllowed; }
+    public AcknowledgmentAllowedEnum getAcknowledgmentAllowed() { return this.acknowledgmentAllowed; }
 
     @Override
-    public void setAcknowledgmentAllowed(Boolean acknowledgmentAllowed) { this.acknowledgementAllowed = acknowledgmentAllowed; }
+    public void setAcknowledgmentAllowed(AcknowledgmentAllowedEnum acknowledgmentAllowed) { this.acknowledgmentAllowed = acknowledgmentAllowed; }
 }

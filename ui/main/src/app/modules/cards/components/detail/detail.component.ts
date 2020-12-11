@@ -24,7 +24,7 @@ import {Card, CardForPublishing} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../../services/handlebars.service';
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
-import {Response} from '@ofModel/processes.model';
+import {AcknowledgmentAllowedEnum, Response} from '@ofModel/processes.model';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -240,7 +240,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             || (this._appService.pageType === PageType.MONITORING)) this.showButtons = false;
         else this.showButtons = true;
         this.showEditAndDeleteButton = this.doesTheUserHavePermissionToDeleteOrEditCard();
-        this.showAckButton = this.cardState.acknowledgementAllowed && (this._appService.pageType !== PageType.CALENDAR);
+        this.showAckButton = this.isAcknowledgmentAllowed() && (this._appService.pageType !== PageType.CALENDAR);
         this.showActionButton =  (!!this._responseData);
     }
 
@@ -407,12 +407,14 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.initializeHrefsOfCssLink();
         this.initializeHandlebarsTemplates();
         this.markAsReadIfNecessary();
-        this.setButtonsVisibility();
+
         this.message = {display: false, text: undefined, color: undefined};
+        
         if (this._responseData != null && this._responseData !== undefined) {
             this.setEntitiesToRespond();
             this.setIsActionEnabled();
         }
+        this.setButtonsVisibility();
 
     }
 
@@ -462,6 +464,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             }
         });
         return permission;
+    }
+
+    private isAcknowledgmentAllowed(): boolean {
+        return (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS || 
+            (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER && !this.isActionEnabled));
     }
 
     /* 1st check : card.publisherType == ENTITY

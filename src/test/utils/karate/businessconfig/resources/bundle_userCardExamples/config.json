@@ -19,7 +19,7 @@
       },
       "templateName": "message",
       "styles": [],
-      "acknowledgementAllowed": true
+      "acknowledgmentAllowed": "Always"
     },
     "conferenceState": {
       "name": "conference.title",
@@ -32,7 +32,7 @@
       },
       "templateName": "conference",
       "styles": [],
-      "acknowledgementAllowed": true
+      "acknowledgmentAllowed": "Always"
     },
     "questionState": {
       "name": "question.title",
@@ -51,7 +51,7 @@
       },
       "templateName": "question",
       "styles": [],
-      "acknowledgementAllowed": false
+      "acknowledgmentAllowed": "Never"
     },
     "taskState": {
       "name": "task.title",
@@ -65,7 +65,7 @@
       "templateName": "task",
       "styles": [
       ],
-      "acknowledgementAllowed": true
+      "acknowledgmentAllowed": "Always"
     },    
     "incidentInProgressState": {
       "name": "incidentInProgress.name",
@@ -84,7 +84,7 @@
       },
       "templateName": "incidentInProgress",
       "styles": [],
-      "acknowledgementAllowed": true
+      "acknowledgmentAllowed": "OnlyWhenResponseDisabledForUser"
     }
   }
 }

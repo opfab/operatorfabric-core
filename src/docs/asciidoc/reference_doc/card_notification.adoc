@@ -22,7 +22,16 @@ When the user receives a new card, he see it in the feed with an eye icon on the
 
 The user can set a card as "acknowledged" so he will not see it anymore by default in the feed. It is as well possible to cancel it and set a card to "unacknowledged" (a filter permit to see acknowledged cards). 
 
-To offer the possibility for the user to acknowledged card, it has to be configured in process definition. The configuration is set on a state based with the acknowledgementAllowed field set to true  (default is false). You can see examples in src/test/utils/karate/businessconfig/resources/bundle_defaultProcess/config.json
+To offer the possibility for the user to acknowledged card, it has to be configured in process definition. The configuration is done on a state by setting the acknowledgmentAllowed field. Allowed values are:
+
+- "Never": acknowledgement not allowed (default value)
+
+- "Always": acknowledgement allowed
+
+- "OnlyWhenResponseDisabledForUser": acknowledgement allowed only when 
+the response is disabled for the user
+
+You can see examples in src/test/utils/karate/businessconfig/resources/bundle_defaultProcess/config.json
 [[card_reminder]]
 == Card reminder 
 
