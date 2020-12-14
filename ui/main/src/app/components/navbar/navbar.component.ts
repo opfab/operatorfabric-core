@@ -18,7 +18,7 @@ import { LoadMenu } from '@ofActions/menu.actions';
 import { selectMenuStateMenu } from '@ofSelectors/menu.selectors';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Menu } from '@ofModel/menu.model';
-import { tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {Route} from '@angular/router';
@@ -55,18 +55,19 @@ export class NavbarComponent implements OnInit {
   }
 
     ngOnInit() {
-        this.store.select(selectCurrentUrl).subscribe(url => {
-            if (url) {
-                this.currentPath = url.split('/');
-            }
-        });
-        this._businessconfigMenus = this.store.select(selectMenuStateMenu)
-            .pipe(tap(menus => {
-                this.expandedMenu = new Array<boolean>(menus.length);
-                _.fill(this.expandedMenu, false);
-            }));
-        this.store.dispatch(new LoadMenu());
-        this.store.dispatch(new QueryAllEntities());
+      this.store.select(selectCurrentUrl).subscribe(url => {
+          if (url) {
+              this.currentPath = url.split('/');
+          }
+      });
+      this._businessconfigMenus = this.store.select(selectMenuStateMenu)
+      .pipe(map(menus => this.getCurrentUserMenus(menus)),
+        tap(menus => {
+          this.expandedMenu = new Array<boolean>(menus.length);
+          _.fill(this.expandedMenu, false);
+      }));
+      this.store.dispatch(new LoadMenu());
+      this.store.dispatch(new QueryAllEntities());
 
 
     const logo = this.configService.getConfigValue('logo.base64');
@@ -105,6 +106,19 @@ export class NavbarComponent implements OnInit {
     this.navigationRoutes = navigationRoutes.filter(route => !hiddenMenus.includes(route.path));
     this.displayAdmin = this.userService.isCurrentUserAdmin() && !this.configService.getConfigValue('admin.hidden');
     this.displayFeedConfiguration = !this.configService.getConfigValue('feedConfiguration.hidden');
+
+  }
+
+  private getCurrentUserMenus(menus: Menu[]): Menu[] {
+    const filteredMenus = [];
+    menus.forEach(m => {
+
+      const entries = m.entries.filter(e => !e.showOnlyForGroups || this.userService.isCurrentUserInAnyGroup(e.showOnlyForGroups));
+      if (entries.length > 0) {
+        filteredMenus.push(new Menu(m.id, m.label, entries));
+      }
+    });
+    return filteredMenus;
   }
 
   logOut() {
