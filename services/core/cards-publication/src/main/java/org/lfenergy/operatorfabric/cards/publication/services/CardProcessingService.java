@@ -11,6 +11,7 @@
 package org.lfenergy.operatorfabric.cards.publication.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.lfenergy.operatorfabric.aop.process.AopTraceType;
 import org.lfenergy.operatorfabric.aop.process.mongo.models.UserActionTraceData;
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
@@ -251,6 +252,13 @@ public class CardProcessingService {
     public Optional<CardPublicationData> deleteCard(String id) {
         CardPublicationData cardToDelete = cardRepositoryService.findCardById(id);
         return deleteCard0(cardToDelete);
+    }
+
+    public Optional<CardPublicationData> deleteCard(CardPublicationData card) {
+        if (StringUtils.isEmpty(card.getId())) {
+            card.prepare(card.getPublishDate());
+        }
+        return deleteCard0(card);
     }
 
     public Optional<CardPublicationData> deleteUserCard(String id, CurrentUserWithPerimeters user) {

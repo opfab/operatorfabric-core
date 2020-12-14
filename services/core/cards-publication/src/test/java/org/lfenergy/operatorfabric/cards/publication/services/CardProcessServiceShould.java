@@ -439,6 +439,55 @@ class CardProcessServiceShould {
                 .expectNextMatches(r -> r.intValue()==thereShouldBeOneCardLess).verifyComplete();
     }
 
+    @Test
+    void deleteOneCard_with_card_no_id() {
+
+        EasyRandom easyRandom = instantiateRandomCardGenerator();
+        int numberOfCards = 13;
+        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
+        cards.forEach(c -> {
+            c.setParentCardId(null);
+            c.setInitialParentCardUid(null);
+        });
+
+        StepVerifier.create(cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards]))))
+                .expectNextMatches(r -> r.getCount().equals(numberOfCards)).verifyComplete();
+
+        CardPublicationData firstCard = cards.get(0);
+        firstCard.setId(null);
+        cardProcessingService.deleteCard(firstCard);
+
+        /* one card should be deleted(the first one) */
+        int thereShouldBeOneCardLess = numberOfCards - 1;
+
+        StepVerifier.create(cardRepository.count())
+                .expectNextMatches(r -> r.intValue()==thereShouldBeOneCardLess).verifyComplete();
+    }
+
+    @Test
+    void deleteOneCard_with_card_with_id() {
+
+        EasyRandom easyRandom = instantiateRandomCardGenerator();
+        int numberOfCards = 13;
+        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
+        cards.forEach(c -> {
+            c.setParentCardId(null);
+            c.setInitialParentCardUid(null);
+        });
+
+        StepVerifier.create(cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards]))))
+                .expectNextMatches(r -> r.getCount().equals(numberOfCards)).verifyComplete();
+
+        CardPublicationData firstCard = cards.get(0);
+        cardProcessingService.deleteCard(firstCard);
+
+        /* one card should be deleted(the first one) */
+        int thereShouldBeOneCardLess = numberOfCards - 1;
+
+        StepVerifier.create(cardRepository.count())
+                .expectNextMatches(r -> r.intValue()==thereShouldBeOneCardLess).verifyComplete();
+    }
+
     // FIXME unify way test cards are created throughout tests
     private List<CardPublicationData> instantiateSeveralRandomCards(EasyRandom randomGenerator, int cardNumber) {
 

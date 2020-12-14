@@ -66,7 +66,7 @@ class DeleteCardCommandHandlerShould {
         when(objectMapper.readValue(anyString(), eq(CardPublicationData.class))).thenReturn(cardPublicationDataMock);
         cut.executeCommand(cardCommandMock);
 
-        verify(cardProcessingService, times(1)).deleteCard(any());
+        verify(cardProcessingService, times(1)).deleteCard(eq(cardPublicationDataMock));
     }
 
 }
