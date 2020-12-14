@@ -16,7 +16,7 @@
         "key": "template.title"
       },
       "templateName": "operation",
-      "acknowledgementAllowed": false
+      "acknowledgmentAllowed": "Never"
     }
   }
 }

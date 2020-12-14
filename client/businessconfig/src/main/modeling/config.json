@@ -12,6 +12,7 @@
   "delegatePattern": true,
   "singleContentTypes": false,
   "importMappings" : {
+    "AcknowledgmentAllowedEnum": "org.lfenergy.operatorfabric.businessconfig.model.AcknowledgmentAllowedEnum",
     "ActionEnum": "org.lfenergy.operatorfabric.businessconfig.model.ActionEnum",
     "ResponseBtnColorEnum": "org.lfenergy.operatorfabric.businessconfig.model.ResponseBtnColorEnum",
     "LinkTypeEnum":         "org.lfenergy.operatorfabric.businessconfig.model.LinkTypeEnum",

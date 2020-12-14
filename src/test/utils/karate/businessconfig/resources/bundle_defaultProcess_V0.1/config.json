@@ -13,7 +13,7 @@
       "styles": [
         "style"
       ],
-      "acknowledgementAllowed": true
+      "acknowledgmentAllowed": "Always"
     }
   }
 }

@@ -54,7 +54,7 @@ export class State {
         readonly templateName?: string,
         readonly styles?: string[],
         readonly response?: Response,
-        readonly acknowledgementAllowed?: boolean,
+        readonly acknowledgmentAllowed?: AcknowledgmentAllowedEnum,
         readonly name?: string,
         readonly color?: string,
         readonly userCard?: UserCard,
@@ -87,6 +87,12 @@ export enum ResponseBtnColorEnum {
     RED = 'RED',
     GREEN = 'GREEN',
     YELLOW = 'YELLOW'
+}
+
+export enum AcknowledgmentAllowedEnum {
+    ALWAYS = 'Always',
+    NEVER = 'Never', 
+    ONLY_WHEN_RESPONSE_DISABLED_FOR_USER = 'OnlyWhenResponseDisabledForUser'
 }
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;

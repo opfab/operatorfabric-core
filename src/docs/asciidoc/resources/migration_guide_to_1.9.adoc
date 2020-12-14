@@ -1,0 +1,48 @@
+// Copyright (c) 2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 1.8.0 to release 1.9.0 
+
+== AcknowledgmentAllowed field in business configuration 
+
+In the process state definition the `acknowledgementAllowed` has been renamed to `acknowledgmentAllowed`.
+The acknowledgmentAllowed field in no more a boolean type and can now assume one of the following values:
+
+- "Never": acknowledgment not allowed (default value)
+
+- "Always": acknowledgment allowed
+
+- "OnlyWhenResponseDisabledForUser": acknowledgment allowed only when the response is disabled for the user
+
+
+Here is an example of a simple config.json file:
+
+[source,json]
+----
+
+{
+  "id": "TEST",
+  "version": "1",
+  "name": "process.label",
+  "states": {
+    "firstState": {
+      "name" :"mystate.label",
+      "details": [
+        {
+          "title": {
+            "key": "template.title"
+          },
+          "templateName": "operation",
+          "styles": ["style1","style2"]
+        }
+      ],
+      "acknowledgmentAllowed": "Never"
+    }
+  }
+}
+
+----

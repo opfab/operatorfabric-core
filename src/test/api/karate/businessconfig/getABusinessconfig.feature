@@ -24,6 +24,7 @@ Feature: Bundle
     And match response.statesData.incidentInProgressState.userCard.severityVisible == true
     And match response.statesData.incidentInProgressState.userCard.startDateVisible == false
     And match response.statesData.incidentInProgressState.userCard.endDateVisible == false
+    And match response.statesData.incidentInProgressState.acknowledgmentAllowed == 'Always'
 
 
 
