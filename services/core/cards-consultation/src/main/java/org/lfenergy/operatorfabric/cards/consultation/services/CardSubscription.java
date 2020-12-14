@@ -237,6 +237,12 @@ public class CardSubscription {
         return checkIfUserMustReceiveTheCard(cardOperation, currentUserWithPerimeters);
     }
 
+    public boolean checkIfUserMustBeNotifiedForThisProcessState(String process, String state, CurrentUserWithPerimeters currentUserWithPerimeters) {
+        Map<String, List<String>> processesStatesNotNotified = currentUserWithPerimeters.getProcessesStatesNotNotified();
+        return ! ((processesStatesNotNotified != null) && (processesStatesNotNotified.get(process) != null) &&
+                  (((List)processesStatesNotNotified.get(process)).contains(state)));
+    }
+
     /**
      * @param messageBody message body received from rabbitMQ
      * @return true if the message received must be seen by the connected user.
@@ -263,13 +269,16 @@ public class CardSubscription {
         JSONObject cardsObj = (cards != null) ? (JSONObject) cards.get(0) : null; // there is always only one card in
                                                                                   // the array
         String idCard = null;
-        if (cardsObj!=null) idCard = (cardsObj.get("id") != null) ? (String) cardsObj.get("id") : "";
+        String process = "";
+        String state = "";
+        if (cardsObj != null) {
+            idCard = (cardsObj.get("id") != null) ? (String) cardsObj.get("id") : "";
 
-        String process = (cardsObj != null) ? (String) cardsObj.get("process") : "";
-        String state = (cardsObj != null) ? (String) cardsObj.get("state") : "";
-        Map<String, List<String>> processesStatesNotNotified = currentUserWithPerimeters.getProcessesStatesNotNotified();
-        if ((processesStatesNotNotified != null) &&
-            (processesStatesNotNotified.get(process) != null) && (((List)processesStatesNotNotified.get(process)).contains(state)))
+            process = (String) cardsObj.get("process");
+            state = (String) cardsObj.get("state");
+        }
+
+        if (! checkIfUserMustBeNotifiedForThisProcessState(process, state, currentUserWithPerimeters))
             return false;
 
         String processStateKey = process + "." + state;
