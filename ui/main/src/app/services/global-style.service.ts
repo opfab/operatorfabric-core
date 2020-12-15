@@ -67,6 +67,7 @@ export class GlobalStyleService {
                                         --opfab-timeline-cardlink: #212529;
                                         --opfab-timeline-cardlink-bgcolor-hover: #e2e6ea;
                                         --opfab-timeline-cardlink-bordercolor-hover: #dae0e5;
+                                        --opfab-calendar-grid-color : #C9CCD1;
                                         }`;
 
     private static NIGHT_STYLE = `:root {
@@ -114,7 +115,9 @@ export class GlobalStyleService {
                                         --opfab-navbar-menu-bgcolor-item-hover: #f8f9fa;
                                         --opfab-timeline-cardlink: white;
                                         --opfab-timeline-cardlink-bgcolor-hover: #23272b;
-                                        --opfab-timeline-cardlink-bordercolor-hover: #1d2124;}`;
+                                        --opfab-timeline-cardlink-bordercolor-hover: #1d2124;
+                                        --opfab-calendar-grid-color : #606267;
+                                    }`;
 
 
     private static LEGACY_STYLE = `:root {
