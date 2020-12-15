@@ -327,12 +327,6 @@ export class InitChartComponent implements OnInit, OnDestroy {
         // event is catch by calc-height-directive.ts
         window.dispatchEvent(new Event('resize'));
 
-          // WORKAROUND to remove white background when user hide time line in Legacy mode 
-        if (this.globalStyleService.getStyle() === 'LEGACY') {
-            if (this.hideTimeLine) this.globalStyleService.setLegacyStyleWhenHideTimeLine();
-            else this.globalStyleService.setLegacyStyleWhenShowTimeLine();
-        }
-
     }
 
 }

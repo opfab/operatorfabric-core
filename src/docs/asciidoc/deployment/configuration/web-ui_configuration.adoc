@@ -92,7 +92,7 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |archive.filters.tags.list||no|List of tags to choose from in the corresponding filter in archives
 |settings.tags.hide||no|Control if you want to show or hide the tags filter in settings and feed page 
 |settings.nightDayMode|false|no|if you want to activate toggle for night or day mode 
-|settings.styleWhenNightDayModeDesactivated||no|style to apply if not using day night mode, possible value are DAY,NIGHT or LEGACY (black background and white timeline) 
+|settings.styleWhenNightDayModeDesactivated||no|style to apply if not using day night mode, possible value are DAY or NIGHT 
 |settings.dateFormat|Value from the browser configuration|no|Format for date rendering (example : DD/MM/YYYY )
 |settings.timeFormat|Value from the browser configuration|no|Format for time rendering (example : HH:mm )
 |settings.dateTimeFormat|Value from the browser configuration|no|Format for date and time rendering (example : HH:mm DD/MM/YYYY )

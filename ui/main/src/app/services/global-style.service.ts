@@ -120,44 +120,6 @@ export class GlobalStyleService {
                                     }`;
 
 
-    private static LEGACY_STYLE = `:root {
-                                        --opfab-bgcolor: #343a40;
-                                        --opfab-text-color: white;
-                                        --opfab-timeline-bgcolor: #f8f9fa;
-                                        --opfab-feedbar-bgcolor:#525854;
-                                        --opfab-feedbar-icon-color: white;
-                                        --opfab-feedbar-icon-hover-color:white;
-                                        --opfab-feedbar-icon-hover-bgcolor:#212529;
-                                        --opfab-timeline-text-color: #030303;
-                                        --opfab-timeline-grid-color: #e4e4e5;
-                                        --opfab-timeline-realtimebar-color: #808080;
-                                        --opfab-timeline-button-bgcolor: #e5e5e5;
-                                        --opfab-timeline-button-text-color: #49494a;
-                                        --opfab-timeline-button-selected-bgcolor: #49494a;
-                                        --opfab-timeline-button-selected-text-color: #fcfdfd;
-                                        --opfab-lightcard-detail-bgcolor: #2e353c;
-                                        --opfab-lightcard-detail-textcolor: #f8f9fa;
-                                        --opfab-lightcard-detail-border-color: #282e35;
-                                        --opfab-lightcard-detail-selected-bgcolor: #f8f9fa;
-                                        --opfab-light-card-lttd-timeleft: yellow;
-                                        --opfab-card-tab-selected-text-color: #444444;
-                                        --opfab-card-tab-border-color: white;
-                                        --opfab-card-detail-border-color : #343a40 ;
-                                        --opfab-navbar-color: rgba(255,255,255,.55);
-                                        --opfab-navbar-color-hover:rgba(255,255,255,.75);
-                                        --opfab-navbar-color-active:white;
-                                        --opfab-navbar-toggler-icon: url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255, 0.55)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e\");
-                                        --opfab-navbar-toggler-border-color: rgba(255,255,255,.1) ;
-                                        --opfab-navbar-info-block-color: white;
-                                        --opfab-navbar-menu-link-color: #343a40;
-                                        --opfab-navbar-menu-link-hover-color: #121416;
-                                        --opfab-navbar-menu-bgcolor: white;
-                                        --opfab-navbar-menu-bgcolor-item-active: #007bff;
-                                        --opfab-navbar-menu-bgcolor-item-hover: #f8f9fa;
-                                        --opfab-timeline-cardlink: white;
-                                        --opfab-timeline-cardlink-bgcolor-hover: #23272b;
-                                        --opfab-timeline-cardlink-bordercolor-hover: #1d2124;}`;
-
     constructor(private store: Store<AppState>) {
         const len = document.styleSheets.length;
         for (let n = 0; n < len; n++) {
@@ -183,10 +145,6 @@ export class GlobalStyleService {
                 this.setCss(GlobalStyleService.NIGHT_STYLE);
                 break;
             }
-            case 'LEGACY': {
-                this.setCss(GlobalStyleService.LEGACY_STYLE);
-                break;
-            }
             default:
                 this.setCss(GlobalStyleService.DAY_STYLE);
         }
@@ -199,15 +157,5 @@ export class GlobalStyleService {
         }
         GlobalStyleService.rootRulesNumber = GlobalStyleService.rootStyleSheet.insertRule(cssRule,
             GlobalStyleService.rootStyleSheet.cssRules.length);
-    }
-
-
-    // WORKAROUND to remove white background when user hide time line in Legacy mode
-    public setLegacyStyleWhenHideTimeLine() {
-        this.setCss(GlobalStyleService.NIGHT_STYLE);
-    }
-
-    public setLegacyStyleWhenShowTimeLine() {
-        this.setCss(GlobalStyleService.LEGACY_STYLE);
     }
 }

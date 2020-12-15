@@ -137,7 +137,7 @@ The sample contain also the i18n translations in english and in french.
 
 For iframes opened from menu, the associated request uses an extra parameter containing the current theme information.
 Named `opfab_theme`, this parameter has a value corresponding to the current theme: +
-`DAY`, `NIGHT` or `LEGACY`.
+`DAY` or `NIGHT`
 
 *Example:*
 
