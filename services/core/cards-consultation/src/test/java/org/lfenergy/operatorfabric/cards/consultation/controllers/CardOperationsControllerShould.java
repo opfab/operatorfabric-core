@@ -26,6 +26,7 @@ import org.lfenergy.operatorfabric.cards.consultation.model.CardOperationConsult
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.repositories.CardRepository;
 import org.lfenergy.operatorfabric.cards.consultation.services.CardSubscriptionService;
+import org.lfenergy.operatorfabric.springtools.configuration.test.UserServiceCacheTestApplication;
 import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.amqp.core.DirectExchange;
@@ -56,7 +57,7 @@ import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.round
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {IntegrationTestApplication.class, CardSubscriptionService.class, CardOperationsController
-   .class})
+   .class, UserServiceCacheTestApplication.class})
 @Slf4j
 @ActiveProfiles("test")
 @Tag("end-to-end")

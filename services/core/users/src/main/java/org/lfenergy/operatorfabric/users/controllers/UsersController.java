@@ -125,6 +125,7 @@ public class UsersController implements UsersApi {
     public UserSettings patchUserSettings(HttpServletRequest request, HttpServletResponse response, String login, UserSettings userSettings) throws Exception {
         UserSettingsData settings = userSettingsRepository.findById(login)
                 .orElse(UserSettingsData.builder().login(login).build());
+        publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), login));
         return userSettingsRepository.save(settings.patch(userSettings));
     }
 

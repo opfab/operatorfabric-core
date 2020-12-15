@@ -23,6 +23,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -86,7 +89,11 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 
 		Query query = new Query();
 		query.fields().exclude("data");
+
+		Criteria criteriaForProcessesStatesNotNotified = computeCriteriaForProcessesStatesNotNotified(currentUserWithPerimeters);
+
         query.addCriteria(criteria);
+        query.addCriteria(criteriaForProcessesStatesNotNotified);
         log.debug("launch query with user {}", currentUserWithPerimeters.getUserData().getLogin());
         return template.find(query, CardConsultationData.class).map(card -> {
             log.debug("Find card {}",card.getId());
@@ -95,6 +102,20 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 			return card;
 		});
 
+	}
+
+	private Criteria computeCriteriaForProcessesStatesNotNotified(CurrentUserWithPerimeters currentUserWithPerimeters) {
+		List<String> processesStatesNotNotifiedList = new ArrayList<>();
+		Map<String, List<String>> processesStatesNotNotifiedMap = currentUserWithPerimeters.getProcessesStatesNotNotified();
+
+		if (processesStatesNotNotifiedMap != null) {
+			processesStatesNotNotifiedMap.keySet().forEach(process ->
+				processesStatesNotNotifiedMap.get(process).forEach(state ->
+					processesStatesNotNotifiedList.add(process + "." + state)
+				)
+			);
+		}
+		return where(PROCESS_STATE_KEY).not().in(processesStatesNotNotifiedList);
 	}
 
 	private Criteria getCriteriaForRange(Instant rangeStart,Instant rangeEnd)
@@ -114,12 +135,7 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 			);
 	}
 
-
 	private Criteria publishDateCriteria(Instant publishFrom) {
 		return where(PUBLISH_DATE_FIELD).gte(publishFrom);
 	}
-
-
-
-
 }

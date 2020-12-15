@@ -177,6 +177,10 @@ export class CardService {
 
     }
 
+    public resetStartOfAlreadyLoadedPeriod() {
+        this.startOfAlreadyLoadedPeriod = null;
+    }
+
     public setSubscriptionDates(start: number, end: number) {
         console.log(new Date().toISOString(), 'CardService - Set subscription date', new Date(start), ' -', new Date(end));
         if (!this.startOfAlreadyLoadedPeriod) { // First loading , no card loaded yet

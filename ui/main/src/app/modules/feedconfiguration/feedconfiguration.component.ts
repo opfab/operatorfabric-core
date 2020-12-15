@@ -18,6 +18,7 @@ import { UserWithPerimeters } from '@ofModel/userWithPerimeters.model';
 import { ProcessesService } from '@ofServices/processes.service';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { SettingsService } from '@ofServices/settings.service';
+import {CardService} from "@ofServices/card.service";
 
 
 @Component({
@@ -54,6 +55,7 @@ export class FeedconfigurationComponent implements OnInit {
                 private processesService: ProcessesService,
                 private modalService: NgbModal,
                 private settingsService: SettingsService,
+                private cardService: CardService
     ) {
         this.processesStatesLabels = new Map<string, {processI18n: string,
                                                       states:
@@ -179,6 +181,7 @@ export class FeedconfigurationComponent implements OnInit {
                     } else {
                         this.messageAfterSavingSettings = 'feedConfiguration.settingsSavedWithNoError';
                         this.displaySendResultOk = true;
+                        this.cardService.resetStartOfAlreadyLoadedPeriod();
                     }
                     this.modalRef.close();
                 },

@@ -19,8 +19,10 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.UserServiceCache;
 import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
@@ -28,10 +30,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>This object manages subscription to AMQP exchange</p>
@@ -70,6 +69,8 @@ public class CardSubscription {
     private String userLogin;
     private boolean fluxHasBeenFirstInit = false;
 
+    protected UserServiceCache userServiceCache;
+
 
 
     /**
@@ -90,6 +91,11 @@ public class CardSubscription {
         this.connectionFactory = connectionFactory;
         this.clientId = clientId;
         this.queueName = computeSubscriptionId(userLogin + GROUPS_SUFFIX, this.clientId);
+    }
+
+    public void updateCurrentUserWithPerimeters(){
+        if (userServiceCache != null)
+            currentUserWithPerimeters = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(userLogin);
     }
 
     public static String computeSubscriptionId(String prefix, String clientId) {
@@ -226,6 +232,17 @@ public class CardSubscription {
         return "";
     }
 
+    public boolean checkIfUserMustReceiveTheCard(JSONObject cardOperation) {
+        updateCurrentUserWithPerimeters();
+        return checkIfUserMustReceiveTheCard(cardOperation, currentUserWithPerimeters);
+    }
+
+    public boolean checkIfUserMustBeNotifiedForThisProcessState(String process, String state, CurrentUserWithPerimeters currentUserWithPerimeters) {
+        Map<String, List<String>> processesStatesNotNotified = currentUserWithPerimeters.getProcessesStatesNotNotified();
+        return ! ((processesStatesNotNotified != null) && (processesStatesNotNotified.get(process) != null) &&
+                  (((List)processesStatesNotNotified.get(process)).contains(state)));
+    }
+
     /**
      * @param messageBody message body received from rabbitMQ
      * @return true if the message received must be seen by the connected user.
@@ -237,7 +254,7 @@ public class CardSubscription {
      *            the user must be part of A and have the right for the process/state of the card
      *         4) If the card is sent to group B only, then to receive it, the user must be part of B
      */
-    public boolean checkIfUserMustReceiveTheCard(JSONObject cardOperation) {
+    public boolean checkIfUserMustReceiveTheCard(JSONObject cardOperation, CurrentUserWithPerimeters currentUserWithPerimeters) {
 
         List<String> processStateList = new ArrayList<>();
         if (currentUserWithPerimeters.getComputedPerimeters() != null)
@@ -252,9 +269,19 @@ public class CardSubscription {
         JSONObject cardsObj = (cards != null) ? (JSONObject) cards.get(0) : null; // there is always only one card in
                                                                                   // the array
         String idCard = null;
-        if (cardsObj!=null) idCard = (cardsObj.get("id") != null) ? (String) cardsObj.get("id") : "";
+        String process = "";
+        String state = "";
+        if (cardsObj != null) {
+            idCard = (cardsObj.get("id") != null) ? (String) cardsObj.get("id") : "";
 
-        String processStateKey = (cardsObj != null) ? cardsObj.get("process") + "." + cardsObj.get("state") : "";
+            process = (String) cardsObj.get("process");
+            state = (String) cardsObj.get("state");
+        }
+
+        if (! checkIfUserMustBeNotifiedForThisProcessState(process, state, currentUserWithPerimeters))
+            return false;
+
+        String processStateKey = process + "." + state;
         List<String> userGroups = currentUserWithPerimeters.getUserData().getGroups();
         List<String> userEntities = currentUserWithPerimeters.getUserData().getEntities();
 

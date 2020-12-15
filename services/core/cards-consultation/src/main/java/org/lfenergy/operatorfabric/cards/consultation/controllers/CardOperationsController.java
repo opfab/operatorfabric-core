@@ -28,11 +28,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuples;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <p>Handles cards access at the rest level. Depends on {@link CardSubscriptionService} for business logic</p>
@@ -112,6 +109,7 @@ public class CardOperationsController {
      * @return
      */
     private Flux<String> fetchOldCards(CardSubscription subscription,Instant publishFrom,Instant start,Instant end)  {
+        subscription.updateCurrentUserWithPerimeters();
         return fetchOldCards0(publishFrom, start, end, subscription.getCurrentUserWithPerimeters());
     }
 
