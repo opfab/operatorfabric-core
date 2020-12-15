@@ -21,12 +21,14 @@ export class Menu {
 export class MenuEntry {
 
     linkType: MenuEntryLinkTypeEnum = MenuEntryLinkTypeEnum.BOTH;
+    showOnlyForGroups: string[];
 
     constructor(
         readonly id: string,
         readonly label: string,
         readonly url: string,
-        linkType?: MenuEntryLinkTypeEnum
+        linkType?: MenuEntryLinkTypeEnum,
+        showOnlyForGroups?: string[]
     ) {
     }
 }

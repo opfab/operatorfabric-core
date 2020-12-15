@@ -20,13 +20,28 @@
           "id": "uid_test_1",
           "url": "https://opfab.github.io/",
           "label": "entry.entry1",
-          "linkType": "BOTH"
+          "linkType": "BOTH",
+          "showOnlyForGroups": ["ReadOnly","Planner"]
         },
         {
           "id": "uid_test_2",
           "url": "https://www.wikipedia.org/",
           "label": "entry.entry2",
-          "linkType": "BOTH"
+          "linkType": "BOTH",
+          "showOnlyForGroups": ["Dispatcher"]
+        }
+      ]
+    },
+    {
+      "id": "adminmenu",
+      "label": "title.admin",
+      "entries": [
+        {
+          "id": "uid_test_3",
+          "url": "https://opfab.github.io/",
+          "label": "entry.admin",
+          "linkType": "BOTH",
+          "showOnlyForGroups": ["ADMIN"]
         }
       ]
     }
@@ -51,6 +66,14 @@
             "entry1": "First menu entry",
             "entry2": "Second menu entry"
           }
+        },
+        "adminmenu": {
+          "title": {
+            "admin": "Admin menu"
+          },
+          "entry": {
+            "admin": "Admin menu entry"
+          }
         }
       }
     },
@@ -72,6 +95,14 @@
           "entry": {
             "entry1": "Premiere menu entry",
             "entry2": "Deuxieme menu entry"
+          }
+        },
+        "adminmenu": {
+          "title": {
+            "admin": "Admin menu"
+          },
+          "entry": {
+            "admin": "Admin menu entry"
           }
         }
       }

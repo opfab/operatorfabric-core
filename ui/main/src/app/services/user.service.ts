@@ -114,4 +114,16 @@ export class UserService extends ErrorService implements CrudService {
     }
     return (this.getCurrentUserWithPerimeters().userData.groups.filter(group => group === 'ADMIN').length > 0) ? true : false;
   }
+
+  public isCurrentUserInAnyGroup(groups: string[]): boolean {
+    if (!groups) {
+      return false
+    }
+    if (!this._userWithPerimeters) {
+      this.currentUserWithPerimeters().subscribe((userWithPerimeters) => {
+        this._userWithPerimeters = userWithPerimeters;
+      }, (error) => console.error(new Date().toISOString(), 'an error occurred', error));
+    }
+    return (this.getCurrentUserWithPerimeters().userData.groups.filter(group => groups.indexOf(group) >=0).length > 0) ? true : false;
+  }
 }
