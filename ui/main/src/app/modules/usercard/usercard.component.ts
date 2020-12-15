@@ -140,17 +140,16 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
         this.getLocale().subscribe(locale => {
             this.translate.use(locale);
-            this.translate.get(['userCard.searchPlaceholderText', 'userCard.selectRecipientText', 'userCard.selectAllText', 'userCard.unSelectAllText', 'userCard.filterSelectAllText', 'userCard.filterUnSelectAllText'])
+            this.translate.get(['userCard.searchPlaceholderText','userCard.selectAllText', 'userCard.unSelectAllText', 'userCard.filterSelectAllText', 'userCard.filterUnSelectAllText'])
               .subscribe(translations => {
                 this.dropdownSettings = {
                     searchPlaceholderText: translations['userCard.searchPlaceholderText'],
-                    text: translations['userCard.selectRecipientText'],
+                    text: '',
                     selectAllText: translations['userCard.selectAllText'],
                     unSelectAllText: translations['userCard.unSelectAllText'],
                     filterSelectAllText: translations['userCard.filterSelectAllText'],
                     filterUnSelectAllText: translations['userCard.filterUnSelectAllText'],
-                    enableSearchFilter: true,
-                    classes: 'custom-class-example'
+                    enableSearchFilter: true
                 };
               })
             });

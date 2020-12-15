@@ -1,6 +1,3 @@
-
-
-
 <!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
@@ -8,42 +5,44 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
+<table style="width: 100%">
+    <tr>
+        <td>
+            <div class="opfab-input" style="margin-right:5px">
+                <label>SUJET DE LA CONFERENCE</label>
+                <input id="conf_subject" name="conf_subject" value="{{card.data.conf_subject}}">
+            </div>
+        </td>
+        <td>
+            <div class="opfab-input" style="margin-left:5px">
+                <label>LIEN VERS LA CONFERENCE</label>
+                <input id="conf_link" name="conf_link" placeholder="http://...." value="{{card.data.conf_link}}">
+            </div>
+        </td>
+    </tr>
+    <tr style="height: 20px;">
 
-    <table style="width: 100%;padding:2px">
-        <tr "padding:5px">
-            <td style="width: 15%;padding:5px">
-                Sujet de la conference
-            </td>
-             <td style="width: 35%;padding:5px">
-                <input  id="conf_subject" name="conf_subject" style="width: 100%;" value="{{card.data.conf_subject}}"></input >
-            </td>
-             <td style="width: 15%;padding:5px">
-                Lien vers la conference
-            </td>
-             <td style="width: 35%;padding:5px">
-                <input  id="conf_link" name="conf_link" placeholder="http://...." style="width: 100%" value="{{card.data.conf_link}}" ></input >
-            </td>
-        </tr>
-        <tr "padding:5px">
-            <td style="width: 15%;padding:5px">
-                Nom du rapport 
-            </td>
-             <td style="width: 35%;padding:5px">
-                <input  id="report_title" name="report_title" style="width: 100%;" value="{{card.data.report_title}}"></input >
-            </td>
-             <td style="width: 15%;padding:5px">
-                Lien vers le rapport
-            </td>
-             <td style="width: 35%;padding:5px">
-                <input  id="report_link" name="report_link" placeholder="http://...." style="width: 100%;" value="{{card.data.report_link}}" ></input >
-            </td>
-        </tr>
+    </tr>
+    <tr>
+        <td>
+            <div class="opfab-input" style="margin-right:5px">
+                <label>NOM DU RAPPORT </label>
+                <input id="report_title" name="report_title" value="{{card.data.report_title}}">
+            </div>
+        </td>
+        <td>
+            <div class="opfab-input" style="margin-left:5px">
+                <label> LIEN VERS LE RAPPORT </label>
+                <input id="report_link" name="report_link" placeholder="http://...." value="{{card.data.report_link}}">
+            </div>
+        </td>
+    </tr>
 
-    </table>
+</table>
 <br/>
-        Information complémentaires:  
-        <div style="width:100%">
-            <textarea  id="message" name="message"  style="width:100%" > {{card.data.message}} </textarea>
+        <div class="opfab-textarea">
+            <label>  INFORMATIONS COMPLEMENTAIRES  </label>
+            <textarea  id="message" name="message"> {{card.data.message}}</textarea>
         </div>
 
 

@@ -8,16 +8,16 @@
 
 
 <ng-container [formGroup]="parentForm">
-    <div class="row" style='margin-right:0;margin-left:0;'>
-        <div [ngClass]="{ 'col-md-12':true}">
-
-            <!-- archive.filters.{{filterPath}} -->
-            <label translate>{{computeI18nLabelKey()}}</label>
-            <angular2-multiselect [data]="dropdownList"
+    <div>
+        <div  class="opfab-multiselect">
+            
+            <angular2-multiselect 
+                                  [data]="dropdownList"
                                   [(ngModel)]="selection"
                                   [settings]="dropdownSettings"
                                   formControlName="{{filterPath}}"
             ></angular2-multiselect>
+            <label translate>{{computeI18nLabelKey()}}</label>
         </div>
     </div>
 </ng-container>

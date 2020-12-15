@@ -1,10 +1,11 @@
-<br/>
-<h2 style="text-align: center;"> Incident SI en cours </h2>
+<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
 
-
-<center>
-
-</center>
 <p>
     
     <strong> Description de l'incident :</strong> {{keepSpacesAndEndOfLine card.data.message}}
@@ -13,7 +14,7 @@
     <br />
     <br />
 
-    <strong> Services impactés vu SI : </strong>   <span id="impacts"></span>
+    <strong> Services impactés vu SI : </strong>   <span id="impacts"></span>  {{card.data.impacts.OTHERS}}
 
 
     <br />
@@ -23,9 +24,9 @@
 <div style="text-align: center;">
 
 
-    <h3> Merci de saisir les impacts que vous identifiez de votre coté </h3>
+    <strong> Merci de saisir les impacts que vous identifiez de votre coté </strong>
 
-
+    <br/>
     <br />
     <table width="100%">
         <tr>
@@ -42,7 +43,11 @@
 
 </div>
 <br/>
-Autres impacts : <input size="50" type="text" id="OTHERS"> </input> 
+<br/>
+<div class="opfab-input">
+    <label> AUTRES IMPACTS </label>
+    <input id="OTHERS" name="OTHERS">
+</div>
 
 <br/>
 <br/>
@@ -76,7 +81,7 @@ Autres impacts : <input size="50" type="text" id="OTHERS"> </input>
 
         if (templateGateway.childCards[0]) {
             let childsDiv = document.getElementById("childs-div");
-            let responses = ' <h3>Responses reçues </h3><center> <br/>'
+            let responses = ' <strong> REPONSES RECUES : </strong> <center> <br/>'
             responses += ' <table width="100%""> <tr> <th> Entity </th>';
             responses += ' <th> Service A </th> <th> Service B </th> <th> Service C </th> <th> Service D </th> <th>Service E </th> <th> Service F </th>';
             responses += ' </tr>';

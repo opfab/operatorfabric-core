@@ -8,9 +8,9 @@
 
 
 
-<div class="form-group" [formGroup]="parentForm">
+<div class="opfab-select" [formGroup]="parentForm">
     <label translate>{{computeI18nLabelKey()}}</label>
-    <select class="form-control" [formControlName]="filterPath">
+    <select [formControlName]="filterPath">
         <option *ngFor="let v of preparedList" value="{{v.value}}" translate>{{v.label|async}}</option>
     </select>
 </div>

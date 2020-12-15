@@ -94,10 +94,10 @@
     }
   },
   "settings": {
-    "description": "Description",
-    "locale": "Language",
-    "timeZone": "Time zone",
-    "defaultTags": "Default tags",
+    "description": "DESCRIPTION",
+    "locale": "LANGUAGE",
+    "timeZone": "TIME ZONE",
+    "defaultTags": "DEFAULT TAGS ",
     "playSoundLabel": "Play sounds for cards with severity",
     "playSoundForAlarm": "Alarm",
     "playSoundForAction": "Action",
@@ -107,12 +107,12 @@
   "archive": {
     "filters": {
       "publisher": "Publisher",
-      "process": "Process",
-      "tags": "Tags",
-      "publishDateFrom": "Publish From",
-      "publishDateTo": "Publish To",
-      "activeFrom": "Active From",
-      "activeTo": "Active To"
+      "process": "PROCESS",
+      "tags": "TAGS",
+      "publishDateFrom": "PUBLISH FROM",
+      "publishDateTo": "PUBLISH TO",
+      "activeFrom": "ACTIVE FROM",
+      "activeTo": "ACTIVE TO"
     },
     "search": "Search",
     "clear": "Clear",
@@ -164,8 +164,8 @@
     }
   },
   "userCard": {
-    "title": "Create a new card",
-    "editTitle" : "Edit a card",
+    "title": "CREATE A NEW CARD ",
+    "editTitle" : "EDIT A NEW CARS",
     "error": {
       "notAvailable": "Feature not available",
       "noRecipientSelected": "You must at least choose one recipient",
@@ -173,13 +173,12 @@
       "impossibleToSendCard": "Impossible to send card for technical reasons"
     },
     "filters": {
-      "severity": "Severity",
-      "process": "Process",
-      "state": "State",
-      "startDate":  "Start Date",
-      "endDate":  "End Date",
-      "comment": "Comment",
-      "recipients": "Recipients"
+      "severity": "SEVERITE",
+      "process": "PROCESSUS",
+      "state": "ETAT",
+      "startDate":  "START DATE",
+      "endDate":  "END DATE",
+      "recipients": "RECIPIENTS"
     },
     "options": {
       "severity": {
@@ -205,7 +204,6 @@
       }
     },
     "searchPlaceholderText": "Search",
-    "selectRecipientText": "Select a recipîent",
     "selectAllText": "Select All",
     "unSelectAllText": "UnSelect All",
     "filterSelectAllText": "Select all filtered results",

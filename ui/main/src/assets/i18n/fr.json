@@ -94,10 +94,10 @@
     }
   },
   "settings": {
-    "description": "Description",
-    "locale": "Langue",
-    "timeZone": "Zone horaire",
-    "defaultTags": "Tags par défaut",
+    "description": "DESCRIPTION",
+    "locale": "LANGUE",
+    "timeZone": "ZONE HORAIRE",
+    "defaultTags": "TAGS PAR DEFAUT",
     "playSoundLabel": "Jouer des sons pour les cartes de type",
     "playSoundForAlarm": "Alarme",
     "playSoundForAction": "Action",
@@ -107,12 +107,12 @@
   "archive": {
     "filters": {
       "publisher": "Emetteur",
-      "process": "Processus",
-      "tags": "Etiquettes",
-      "publishDateFrom": "Publié à partir de",
-      "publishDateTo": "Publié jusqu'à",
-      "activeFrom": "Active à partir de",
-      "activeTo": "Active jusqu'à"
+      "process": "PROCESSUS",
+      "tags": "ETIQUETTES",
+      "publishDateFrom": "PUBLIE A PARTIR DE",
+      "publishDateTo": "PUBLIE JUSQU'A",
+      "activeFrom": "ACTIVE A PARTIR DE",
+      "activeTo": "ACTIVE JUSQU'A"
     },
     "search": "Rechercher",
     "clear": "Effacer",
@@ -164,8 +164,8 @@
     }
   },
   "userCard": {
-    "title": "Création d'une nouvelle carte",
-    "editTitle" : "Edition d'une carte",
+    "title": "CREATION D'UNE NOUVELLE CARTE",
+    "editTitle" : "EDITION D'UNE CARTE",
     "error": {
       "notAvailable": "Fonctionnalité non disponible",
       "noRecipientSelected" : "Vous devez au moins choisir un destinataire",
@@ -173,13 +173,12 @@
       "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques"
     },
     "filters": {
-      "severity": "Sévérité",
-      "process": "Processus",
-      "state": "État",
-      "startDate": "Date de début ",
-      "endDate": "Date de fin ",
-      "comment": "Commentaire",
-      "recipients": "Destinataire"
+      "severity": "SEVERITE",
+      "process": "PROCESSUS",
+      "state": "ETAT",
+      "startDate": "DATE DE DEBUT ",
+      "endDate": "DATE DE FIN ",
+      "recipients": "DESTINATAIRES"
     },
     "options": {
       "severity": {
@@ -205,7 +204,6 @@
       }
     },
     "searchPlaceholderText": "Rechercher",
-    "selectRecipientText": "Choisir un destinataire",
     "selectAllText": "Sélectionner tout",
     "unSelectAllText": "Desélectionner tout",
     "filterSelectAllText": "Sélectionner tous les résultats filtrés",

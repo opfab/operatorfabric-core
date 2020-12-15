@@ -7,22 +7,21 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-
-<div class="container-fluid">
+<div class="container-fluid" style="padding: 40px;">
   <div class="row">
-    <div class="col-md-6" *ngIf="!displayInfo?.description">
+    <div style="margin-top: 30px;" class="col-md-6" *ngIf="!displayInfo?.description">
       <of-text-setting settingPath="description" [disabled]="(disableInfos)"></of-text-setting>
     </div>
-    <div class="col-md-6" *ngIf="!displayInfo?.language">
+    <div style="margin-top: 30px;" class="col-md-6" *ngIf="!displayInfo?.language">
       <of-list-setting settingPath="locale" [values]="locales" ></of-list-setting>
     </div>
-    <div class="col-md-6" *ngIf="!displayInfo?.timezone">
+    <div style="margin-top: 30px; "class="col-md-6" *ngIf="!displayInfo?.timezone">
       <of-list-setting settingPath="timeZone" [values]="timeZones" ></of-list-setting>
     </div>
-    <div class="col-md-6" *ngIf="!displayInfo?.tags">
+    <div style="margin-top: 30px;" class="col-md-6" *ngIf="!displayInfo?.tags">
       <of-type-ahead-settings settingPath="defaultTags"></of-type-ahead-settings>
     </div>
-    <div class="col-md-6" *ngIf="!displayInfo?.sounds">
+    <div  style="margin-top: 20px;" class="col-md-6" *ngIf="!displayInfo?.sounds">
       <div><label translate>settings.playSoundLabel</label></div>
       <of-checkbox-setting settingPath="playSoundForAlarm" labelClass="label-sev-alarm"></of-checkbox-setting>
       <of-checkbox-setting settingPath="playSoundForAction" labelClass="label-sev-action"></of-checkbox-setting>

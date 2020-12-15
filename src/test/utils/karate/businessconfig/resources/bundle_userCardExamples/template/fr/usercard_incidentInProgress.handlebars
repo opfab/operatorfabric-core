@@ -1,30 +1,43 @@
-Description de l'incident :
-<div style="width:100%">
-    <textarea id="message" name="message" style="width:100%">{{card.data.message}}</textarea>
+<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<br/>
+<br/>
+<div class="opfab-textarea">
+    <label> DESCRIPTION DE L'INCIDENT </label>
+    <textarea id="message" name="message" placeholder="Write something.."
+        style="width:100%"> {{card.data.message}} </textarea>
 </div>
 
 <br />
 
-Service impactés : <br/>
+SERVICES IMPACTES : <br/><br/>
 <div style="text-align: center;">
     <table width="100%">
         <tr>
-            <td> <input type="checkbox" id="SA"> Service A </input> </td>
-            <td> <input type="checkbox" id="SB"> Service B </input> </td>
-            <td> <input type="checkbox" id="SC"> Service C </input> </td>
-            <td> <input type="checkbox" id="SD"> Service D </input> </td>
-            <td> <input type="checkbox" id="SE"> Service E </input> </td>
-            <td> <input type="checkbox" id="SF"> Service F </input> </td>
+            <td> <input type="checkbox" id="SA"> SERVICE A  </td>
+            <td> <input type="checkbox" id="SB"> SERVICE B  </td>
+            <td> <input type="checkbox" id="SC"> SERVICE C  </td>
+            <td> <input type="checkbox" id="SD"> SERVICE D  </td>
+            <td> <input type="checkbox" id="SE"> SERVICE E  </td>
+            <td> <input type="checkbox" id="SF"> SERVICE F  </td>
            
 
         </tr>
     </table>
 </div>
 <br/>
-  Autres impacts : <input size="50" type="text" id="OTHERS" value="{{card.data.impacts.OTHERS}}">  </input> 
-
-
-
+<div class="opfab-input">
+    <label> AUTRES IMPACTS </label>
+    <input id="OTHERS" name="OTHERS" 
+        style="width:100%" value="{{card.data.impacts.OTHERS}}">
+</div>
+<br/>
 <script>
 
     document.getElementById("SA").checked = "{{card.data.impacts.SA}}";

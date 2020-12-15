@@ -23,7 +23,11 @@ export class GlobalStyleService {
     private static rootRulesNumber;
 
     private static DAY_STYLE = `:root { --opfab-bgcolor: white;
+                                        --opfab-bgcolor2: #F3F2F1;
                                         --opfab-text-color: black;
+                                        --opfab-input-text-color : black;
+                                        --opfab-form-label-text-color: black;
+                                        --opfab-form-border-color:  #9C9B9B;
                                         --opfab-button-disable-bgcolor: #eeeeee;
                                         --opfab-feedbar-bgcolor:#aaaaaa;
                                         --opfab-feedbar-icon-color: white;
@@ -67,7 +71,11 @@ export class GlobalStyleService {
 
     private static NIGHT_STYLE = `:root {
                                         --opfab-bgcolor: #262f3d;
+                                        --opfab-bgcolor2: #131D2B;
                                         --opfab-text-color: #bababa;
+                                        --opfab-input-text-color: white;
+                                        --opfab-form-border-color:  #606267;
+                                        --opfab-form-label-text-color: #bababa;
                                         --opfab-button-disable-bgcolor: #2B353F;
                                         --opfab-feedbar-bgcolor:#222933;
                                         --opfab-feedbar-icon-color: white;

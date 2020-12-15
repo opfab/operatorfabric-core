@@ -8,11 +8,12 @@
 
 
 <ng-container [formGroup]="datetimeForm">
-    <div class="form-row nomarginrow">
-        <div class="form-group col-8 nopaddingrow">
+    <table style="width:100%"> <tr>
+        <td>
+        <div class="nopaddingrow opfab-input">
             <!--archive.filters.{{filterPath}}-->
             <label for="date" translate>{{computeLabelKey()}}</label>
-            <input (change)="onChange($event)" class="form-control"
+            <input (change)="onChange($event)" 
                    type="text" ngbDatepicker
                    #nsd="ngbDatepicker"
                    id="date"
@@ -20,9 +21,13 @@
                    (click)="nsd.toggle()"
             placeholder="YYYY-MM-DD"/>
         </div>
-        <fieldset [disabled]="disabled" class="col-4 nopaddingrow">
+        </td>
+        <td>
+        <fieldset  [disabled]="disabled" class="nopaddingrow">
             <legend class="accessibility">Time</legend>
             <ngb-timepicker formControlName="time" ></ngb-timepicker>
         </fieldset>
-    </div>
+        </td>
+    </tr>
+    </table>
 </ng-container>

@@ -10,7 +10,7 @@
 <form [formGroup]="archiveForm" #currentForm="ngForm">
   <div class="container-fluid">
     <div class="form-row nomarginrow justify-content-center">
-      <div class="col-lg-3 col-md-4 nopaddingrow" *ngIf="tags||processes">
+      <div class="col-lg-3 col-md-4 nopaddingrow" style="margin-top: 28px;" *ngIf="tags||processes">
         <div class="row" style='margin-right:0;margin-left:0;'>
           <div *ngIf="tags"
                [ngClass]="{'col-md-6': (tags && processes), 'col-md-12': ( tags && !processes), 'archive-filter': true}">

@@ -6,8 +6,8 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<h2 *ngIf="!editCardMode" translate style="text-align: center;">userCard.title</h2>
-<h2 *ngIf="editCardMode" translate style="text-align: center;">userCard.editTitle</h2>
+<div *ngIf="!editCardMode" translate style="text-align: center;">userCard.title</div>
+<div *ngIf="editCardMode" translate style="text-align: center;">userCard.editTitle</div>
 
 <br />
 <div *ngIf="displayForm()" class="container">
@@ -63,6 +63,7 @@
 
     <br/>   
 
+    
 
     <form [formGroup]="recipientForm">
         <div class="row">
@@ -73,8 +74,9 @@
                 </of-multi-filter-2>
             </div>
 
-        </div>
+        </div> 
     </form>
+
 
     <br />
     <div style="text-align: center;width:100%">
