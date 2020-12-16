@@ -6,7 +6,8 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
+ @import "~assets/styles/_variables.scss";
+ 
 .modal-body{
   background-color: var(--opfab-lightcard-detail-bgcolor);
   color: var(--opfab-lightcard-detail-textcolor);
@@ -20,4 +21,62 @@
 
 .btn{
   color: var(--opfab-lightcard-detail-textcolor);
+}
+
+.radio-control {
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.label-sev-alarm::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 18px;
+  margin-right: 5px;
+  margin-bottom: -3px;
+  background-color: $sev-alarm;
+}
+
+.label-sev-action::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 18px;
+  margin-right: 5px;
+  margin-bottom: -3px;
+  background-color: $sev-action;
+}
+
+.label-sev-compliant::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 18px;
+  margin-right: 5px;
+  margin-bottom: -3px;
+  background-color: $sev-compliant;
+}
+
+.label-sev-information::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 18px;
+  margin-right: 5px;
+  margin-bottom: -3px;
+  background-color: $sev-information;
+}
+
+.alert-info {
+  color: var(--opfab-text-color);
+  background-color: transparent;
+  border-color: transparent;
+  text-align: center;
+  width: auto;
+  padding-top: 50px;
+}
+
+h1, .h1 {
+  font-size: 1.2rem;
 }

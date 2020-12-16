@@ -163,6 +163,7 @@
     "title": "Création d'une nouvelle carte",
     "editTitle" : "Edition d'une carte",
     "error": {
+      "notAvailable": "Fonctionnalité non disponible",
       "noRecipientSelected" : "Vous devez au moins choisir un destinataire",
       "templateError" : "Erreur technique : template non conforme",
       "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques"
@@ -178,9 +179,9 @@
     },
     "options": {
       "severity": {
-        "ALARM": "Alarm",
+        "ALARM": "Alarme",
         "ACTION": "Action",
-        "COMPLIANT": "Compliant",
+        "COMPLIANT": "Conforme",
         "INFORMATION": "Information"
       }
     },
