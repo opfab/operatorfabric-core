@@ -138,6 +138,7 @@ body {
   color:var(--opfab-input-text-color);
   background-color: var(--opfab-bgcolor);
   box-sizing: border-box;
+  position: relative;
   
   border: 1px solid var(--opfab-form-border-color);
   border-radius: 3px;
