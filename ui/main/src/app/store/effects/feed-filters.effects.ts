@@ -17,7 +17,13 @@ import {ConfigService} from '@ofServices/config.service';
 import {Action, Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {FilterService, FilterType} from '@ofServices/filter.service';
-import {ApplyFilter, ApplySeveralFilters, FeedActionTypes, ResetFilter} from '@ofActions/feed.actions';
+import {
+    ApplyFilter,
+    ApplySeveralFilters,
+    FeedActionTypes,
+    ResetFilter,
+    ResetFilterForMonitoring
+} from '@ofActions/feed.actions';
 import {LoadSettingsSuccess, SettingsActionTypes} from '@ofActions/settings.actions';
 
 @Injectable()
@@ -50,10 +56,18 @@ export class FeedFiltersEffects {
                 return new ApplyFilter({name: FilterType.TAG_FILTER, active: true, status: {tags: v}});
             })
         );
+
     @Effect()
     resetFeedFilter: Observable<Action> = this.actions$
         .pipe(
             ofType<ResetFilter>(FeedActionTypes.ResetFilter),
             map(() => new ApplySeveralFilters({filterStatuses: this.service.defaultFilters()}))
+        );
+
+    @Effect()
+    resetFeedFilterForMonitoring: Observable<Action> = this.actions$
+        .pipe(
+            ofType<ResetFilterForMonitoring>(FeedActionTypes.ResetFilterForMonitoring),
+            map(() => new ApplySeveralFilters({filterStatuses: this.service.defaultFiltersForMonitoring()}))
         );
 }
