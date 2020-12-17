@@ -12,7 +12,7 @@ import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {FilterType} from '@ofServices/filter.service';
-import {ApplyFilter, ResetFilter} from '@ofActions/feed.actions';
+import {ApplyFilter, ResetFilter, ResetFilterForMonitoring} from '@ofActions/feed.actions';
 import {DateTimeNgb, offSetCurrentTime} from '@ofModel/datetime-ngb.model';
 import {ConfigService} from '@ofServices/config.service';
 import moment from 'moment';
@@ -91,7 +91,7 @@ export class MonitoringFiltersComponent implements OnInit, AfterViewInit {
         if (this.firstQuery || this.hasFormControlValueChanged(selectedProcesses)
             || this.hasFormControlValueChanged(pubStart) || this.hasFormControlValueChanged(pubEnd)
             || this.hasFormControlValueChanged(busiStart) || this.hasFormControlValueChanged(busiEnd)) {
-            this.store.dispatch(new ResetFilter());
+            this.store.dispatch(new ResetFilterForMonitoring());
 
             if (selectedProcesses.value) {
                 const processesId = Array.prototype.map.call(selectedProcesses.value, item => item.id);

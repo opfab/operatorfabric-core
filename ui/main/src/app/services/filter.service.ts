@@ -19,13 +19,19 @@ import * as _ from 'lodash';
 export class FilterService {
 
     readonly _defaultFilters = new Map();
+    readonly _defaultFiltersForMonitoring = new Map();
 
     constructor() {
-        this._defaultFilters = this.initFilters();
+        this._defaultFilters = this.initFilters(true);
+        this._defaultFiltersForMonitoring = this.initFilters(false);
     }
 
     public defaultFilters(): Map<FilterType, Filter> {
         return this._defaultFilters;
+    }
+
+    public defaultFiltersForMonitoring(): Map<FilterType, Filter> {
+        return this._defaultFiltersForMonitoring;
     }
 
 
@@ -149,13 +155,16 @@ export class FilterService {
         );
     }
 
-    private initFilters(): Map<string, Filter> {
+    private initFilters(filterOnAck: boolean): Map<string, Filter> {
         const filters = new Map();
         filters.set(FilterType.TYPE_FILTER, this.initTypeFilter());
         filters.set(FilterType.BUSINESSDATE_FILTER, this.initBusinessDateFilter());
         filters.set(FilterType.PUBLISHDATE_FILTER, this.initPublishDateFilter());
         filters.set(FilterType.TAG_FILTER, this.initTagFilter());
-        filters.set(FilterType.ACKNOWLEDGEMENT_FILTER, this.initAcknowledgementFilter());
+
+        if (filterOnAck)
+            filters.set(FilterType.ACKNOWLEDGEMENT_FILTER, this.initAcknowledgementFilter());
+
         filters.set(FilterType.PROCESS_FILTER, this.initProcessFilter());
         filters.set(FilterType.MONITOR_DATE_FILTER, this.initMonitorDateFilter());
         return filters;
