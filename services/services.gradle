@@ -98,7 +98,10 @@ subprojects {
         }
 
         docker {
-            name "lfeoperatorfabric/of-${project.name.toLowerCase()}"
+            if (project.version.toUpperCase().equals("SNAPSHOT"))
+                name "lfeoperatorfabric/of-${project.name.toLowerCase()}:SNAPSHOT" /* more information : https://vsupalov.com/docker-latest-tag/ */
+            else
+                name "lfeoperatorfabric/of-${project.name.toLowerCase()}"
             tags "latest", "${project.version}"
             labels (['project':"${project.group}"])
             files( jar.archivePath

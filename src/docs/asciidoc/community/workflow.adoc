@@ -365,7 +365,7 @@ of making sure that the configuration documentation is correct and easily unders
 * Check dependency added to the project to see if there are compliant with opfab licencing. 
 
 
-==== Testing environnement for reviewer 
+==== Testing environment for reviewer
 
 Compile and run OperatorFabric docker images is the most effective way to check any regression.
 

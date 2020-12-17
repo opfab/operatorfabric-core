@@ -36,7 +36,10 @@ jar {
 	}
 
 docker {
-	name "lfeoperatorfabric/of-external-app"
+	if (project.version.toUpperCase().equals("SNAPSHOT"))
+		name "lfeoperatorfabric/of-external-app:SNAPSHOT" /* more information : https://vsupalov.com/docker-latest-tag/ */
+	else
+		name "lfeoperatorfabric/of-external-app"
 	tags "latest", "${project.version}"
     labels (['project':"${project.group}"])
 	dockerfile file('src/main/docker/Dockerfile')
