@@ -173,9 +173,9 @@
       "impossibleToSendCard": "Impossible to send card for technical reasons"
     },
     "filters": {
-      "severity": "SEVERITE",
-      "process": "PROCESSUS",
-      "state": "ETAT",
+      "severity": "SEVERITY",
+      "process": "PROCESS",
+      "state": "STATE",
       "startDate":  "START DATE",
       "endDate":  "END DATE",
       "recipients": "RECIPIENTS"
