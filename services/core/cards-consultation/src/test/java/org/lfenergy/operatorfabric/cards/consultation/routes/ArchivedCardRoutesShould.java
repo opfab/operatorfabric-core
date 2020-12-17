@@ -94,9 +94,10 @@ public class ArchivedCardRoutesShould {
                     .expectStatus().isOk()
                     .expectBody(ArchivedCardConsultationData.class).value(card -> {
                 assertThat(card)
+                        .usingRecursiveComparison()
                         //This is necessary because empty lists are ignored in the returned JSON
-                        .usingComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
-                        .isEqualToComparingFieldByFieldRecursively(simpleCard);
+                        .withComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
+                        .isEqualTo(simpleCard);
             });
         }
     }
@@ -161,9 +162,10 @@ public class ArchivedCardRoutesShould {
                     .expectStatus().isOk()
                     .expectBody(ArchivedCardConsultationData.class).value(card -> {
                 assertThat(card)
+                        .usingRecursiveComparison()
                         //This is necessary because empty lists are ignored in the returned JSON
-                        .usingComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
-                        .isEqualToComparingFieldByFieldRecursively(simpleCard1);
+                        .withComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
+                        .isEqualTo(simpleCard1);
             });
 
             StepVerifier.create(repository.save(simpleCard2))
@@ -191,9 +193,10 @@ public class ArchivedCardRoutesShould {
                     .expectStatus().isOk()
                     .expectBody(ArchivedCardConsultationData.class).value(card -> {
                 assertThat(card)
+                        .usingRecursiveComparison()
                         //This is necessary because empty lists are ignored in the returned JSON
-                        .usingComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
-                        .isEqualToComparingFieldByFieldRecursively(simpleCard4);
+                        .withComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
+                        .isEqualTo(simpleCard4);
             });
 
             StepVerifier.create(repository.save(simpleCard5))
