@@ -67,10 +67,10 @@
       }
     },
     "sort": {
-      "severityPub": "Sorted by severity then publication",
-      "pub": "Sorted by publication",
-      "read": "Sorted by read",
-      "notsortedByRead": "Not sorted by read"
+      "title": "Sort by",
+      "severity": "Criticity",
+      "publish": "Date",
+      "unread": "Unread"
     }
   },
   "login": {

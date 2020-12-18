@@ -67,10 +67,10 @@
       }
     },
     "sort": {
-      "severityPub": "Triées par type puis date de publication",
-      "pub": "Triées par date de publication",
-      "read": "Triées par lu",
-      "notsortedByRead": "Pas triées par lu"
+      "title": "Triées par",
+      "severity": "Criticité",
+      "publish": "Date",
+      "unread": "Pas lu"
     }
   },
   "login": {

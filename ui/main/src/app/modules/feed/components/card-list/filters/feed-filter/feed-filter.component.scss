@@ -30,6 +30,13 @@ $cell-width: 10;
   display: table-cell;
 }
 
+.filter-header {
+  margin-left: 2px;
+  margin-right: 2px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--opfab-text-color);
+}
+
 .label-sev-alarm::before {
   content: "";
   display: inline-block;
@@ -68,4 +75,17 @@ $cell-width: 10;
   margin-right: 5px;
   margin-bottom: -2px;
   background-color: $sev-information;
+}
+
+.opfab-menu-icon {
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  margin-right: 5px;
+  background: var( --opfab-navbar-color-hover);
+  mask-size: cover;
+}
+
+.opfab-icon-filter {
+  mask: url(assets/images/icons/filter.svg);
 }

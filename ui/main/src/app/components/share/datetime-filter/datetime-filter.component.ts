@@ -8,7 +8,7 @@
  */
 
 import * as moment from 'moment';
-import {AfterViewInit, Component, forwardRef, Input, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, forwardRef, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {takeUntil} from 'rxjs/operators';
@@ -35,6 +35,7 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
     @Input() defaultTime: { hour: number, minute: number };
     // no "unit of time enforcement", so be careful using offset
     @Input() offset: { amount: number, unit: string }[];
+    @Output() change = new EventEmitter();
 
     disabled = true;
     time = {hour: 0, minute: 0};
@@ -81,7 +82,10 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
         if (!this.offset) {
             this.disabled = true;
         }
-        if (!!val) this.datetimeForm.setValue(val, {emitEvent: false});
+        if (!!val) {
+            this.disabled = false;
+            this.datetimeForm.setValue(val, {emitEvent: false});
+        }
         else this.resetDateAndTime();
     }
 
@@ -104,11 +108,13 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
             if (val) {
                 this.disabled = false;
             }
+            this.change.emit();
         });
         this.timeInput.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(val => {
             if (val) {
                 this.disabled = false;
             }
+            this.change.emit();
         });
     }
 

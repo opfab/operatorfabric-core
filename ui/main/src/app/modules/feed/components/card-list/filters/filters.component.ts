@@ -44,10 +44,7 @@ export class FiltersComponent implements OnInit {
     
     // When time line is hide , we use a date filter by business date and not publish date
     this.filterByPublishDate = !this.configService.getConfigValue('feed.timeline.hide',false);
-    // Change default readSort 
-    if (this.hideReadSort) {
-      this.store.dispatch(new ChangeReadSort());
-    }
+
   }
 
 

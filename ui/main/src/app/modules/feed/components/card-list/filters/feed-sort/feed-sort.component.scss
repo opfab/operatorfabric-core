@@ -7,18 +7,23 @@
  * This file is part of the OperatorFabric project.
  */
 
-.filter-ack-icon-border {
-    text-shadow: 0 0 3px var(--opfab-bgcolor);
-    color: var(--opfab-feedbar-icon-color);
 
+.sort-header {
+  margin-left: 2px;
+  margin-right: 2px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--opfab-text-color);
 }
 
-.filter-ack-subicon-ur {
-    margin-left:5px; 
-    margin-top:-5px;
+.opfab-menu-icon {
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  margin-right: 5px;
+  background: var( --opfab-navbar-color-hover);
+  mask-size: cover;
 }
 
-.filter-ack-subicon-dl {
-    margin-left:-5px; 
-    margin-top:1px;
+.opfab-icon-sort {
+  mask: url(assets/images/icons/sort.svg);
 }
