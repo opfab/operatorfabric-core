@@ -120,15 +120,15 @@
   },
   "logging": {
     "filters": {
-      "process": "Process"
+      "process": "PROCESS"
     },
-    "cardType": "Card Type",
-    "timeOfAction": "Time of Action",
-    "processName": "Title",
-    "description": "Description",
-    "sender": "Actor",
+    "timeOfAction": "TIME OF ACTION",
+    "title": "TITLE",
+    "description": "DESCRIPTION",
+    "sender": "ACTOR",
     "noResult": "No result",
-    "ExportTOExcel": "EXPORT TO EXCEL"
+    "ExportTOExcel": "EXPORT TO EXCEL",
+    "resultsNumber":"Results number"
   },
   "monitoring": {
     "filters": {
@@ -149,7 +149,8 @@
     "reset": "RESET",
     "delete": "DELETE",
     "edit": "EDIT",
-    "yes": "YES"
+    "yes": "YES",
+    "search" : "SEARCH" 
   },
   "feedConfiguration": {
     "title": "Notification reception configuration",

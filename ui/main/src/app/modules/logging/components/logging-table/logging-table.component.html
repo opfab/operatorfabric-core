@@ -7,41 +7,42 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
+<div class="opfab-table">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col" translate>logging.timeOfAction</th>
+        <th scope="col" translate>logging.title</th>
+        <th scope="col" translate>logging.description</th>
+        <th scope="col" translate>logging.sender</th>
+      </tr>
+    </thead>
 
-<table class="table table-dark">
-  <caption class="hidden-caption">List of current cards filtered by process or by active dates</caption>
-  <thead>
-    <tr>
-      <th scope="col" translate>logging.timeOfAction</th>
-      <th scope="col" translate>logging.processName</th>
-      <th scope="col" translate>logging.description</th>
-      <th scope="col"></th>
-
-      <th scope="col" translate>logging.sender</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr mdbTableCol *ngFor="let element of results">
+    <tr *ngFor="let element of results" >
+      <td class="opfab-logging-sev opfab-logging-sev-{{element.cardType}}"></td>
       <td>{{displayTime(element.businessDate)}}</td>
-      <td translate [translateParams]="element.i18nKeyForProcessName.parameters">{{element.i18nKeyForProcessName.key}}
+      <td translate [translateParams]="element.i18nKeyForTitle.parameters">{{element.i18nKeyForTitle.key}}
       </td>
       <td translate [translateParams]="element.i18nKeyForDescription.parameters">{{element.i18nKeyForDescription.key}}
       </td>
-      <td><em class="fas fa-circle text-sev-{{element.cardType}}"></em></td>
+
       <td>{{element.sender}}</td>
     </tr>
-  </tbody>
-</table>
-
-<div class="export-div">
-  <button class="btn btn-primary btn-sm export-btn" type="button"  (click)="export()"
-  fileName="loggingResults" translate>
-  <em class="fa fa-file-export"></em> logging.ExportTOExcel</button>
-  <of-logging-page></of-logging-page>
+  </table>
+  <div class="opfab-logging-pagination">
+    <div style="width:10%;margin-top:17px">
+      <span translate> logging.resultsNumber </span> : {{collectionSize$ | async}}
+    </div>
+    <div style="width:40%;margin-top:5px">
+      <ngb-pagination *ngIf="(collectionSize$ | async) > size" [collectionSize]="collectionSize$ | async" [page]="page"
+        [pageSize]="size" (pageChange)="updateResultPage($event)" [maxSize]="3" [rotate]="true">
+      </ngb-pagination>
+    </div>
+    <div style="width:50%;text-align:right;padding:8px;">
+      <button class="opfab-btn" style="align-items:flex-end" type="button" (click)="export()" fileName="loggingResults"
+        translate>
+        <em class="fa fa-file-export"></em> logging.ExportTOExcel</button>
+    </div>
+  </div>
 </div>
-
-
-
-
-
-

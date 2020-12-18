@@ -101,4 +101,10 @@ export class LoggingFiltersComponent implements OnInit {
         });
         return params;
     }
+
+
+    resetForm()
+    {
+        this.loggingForm.reset();
+    }
 }

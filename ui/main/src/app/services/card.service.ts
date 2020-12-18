@@ -273,7 +273,7 @@ export class CardService {
                         processVersion: card.processVersion,
                         cardType: card.severity.toLowerCase(),
                         businessDate: moment(card.startDate),
-                        i18nKeyForProcessName: this.addPrefix(i18nPrefix, card.title),
+                        i18nKeyForTitle: this.addPrefix(i18nPrefix, card.title),
                         i18nKeyForDescription: this.addPrefix(i18nPrefix, card.summary),
                         sender: sender
                     } as LineOfLoggingResult);

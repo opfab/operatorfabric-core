@@ -120,15 +120,15 @@
   },
   "logging": {
     "filters": {
-      "process": "Processus"
+      "process": "PROCESSUS"
     },
-    "cardType": "Type de Carte",
-    "timeOfAction": "Moment de l'action",
-    "processName": "Titre",
-    "description": "Description",
-    "sender": "Envoyeur",
+    "timeOfAction": "MOMENT DE L'ACTION",
+    "title": "TITRE",
+    "description": "DESCRIPTION",
+    "sender": "EMETTEUR",
     "noResult": "Aucun résultat",
-    "ExportTOExcel": "EXPORTER VERS EXCEL"
+    "ExportTOExcel": "EXPORTER VERS EXCEL",
+    "resultsNumber":"Nombre de résultats"
   },
   "monitoring": {
     "filters": {
@@ -146,10 +146,11 @@
   "button": {
     "ok": "OK",
     "cancel": "ANNULER",
-    "reset": "EFFACER",
+    "reset": "REINITIALISER",
     "delete": "SUPPRIMER",
     "edit" : "EDITER",
-    "yes": "OUI"
+    "yes": "OUI",
+    "search": "RECHERCHER"
   },
   "feedConfiguration": {
     "title": "Configuration des notifications",

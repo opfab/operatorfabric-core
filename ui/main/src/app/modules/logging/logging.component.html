@@ -6,13 +6,15 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div class="row logging-page">
-    <div class="col-12">
+<div >
         <of-logging-filters [processData]="processValueForFilter"></of-logging-filters>
-    </div>
 </div>
 
-<div  *ngIf="(loggingResult$|async) as line ; else noResult">
+<div style="height:5%">
+
+</div>
+
+<div  *ngIf="(loggingResult$|async) as line ; else noResult" style="margin-left:5%;margin-right:5%">
     <of-logging-table [results]="line"></of-logging-table>
 </div>
 
