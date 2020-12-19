@@ -334,9 +334,17 @@ type-ahead > .badge-primary {
   .opfab-input > input ,
   .opfab-multiselect, 
   .opfab-multiselect > label,
-  .opfab-multiselect  .c-btn {
+  .opfab-multiselect  .c-btn,
+  .opfab-select,
+  .opfab-select > select,
+  .opfab-select > select option,
+  .opfab-select > label,
+  type-ahead > input{
     background-color: var(--opfab-bgcolor-darker);
   } 
+  type-ahead > .badge-primary {
+    background-color: var(--opfab-bgcolor);
+  }
 }
 
 // Table 

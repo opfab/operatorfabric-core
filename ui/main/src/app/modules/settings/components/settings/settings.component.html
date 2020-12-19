@@ -6,9 +6,13 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
+<div class="opfab-settings-title" translate>
+  settings.title
+</div>
 
-<div class="container-fluid" style="padding: 40px;">
-  <div class="row">
+
+<div class="opfab-settings opfab-form-darker">
+  <div class="row" >
     <div style="margin-top: 30px;" class="col-md-6" *ngIf="!displayInfo?.description">
       <of-text-setting settingPath="description" [disabled]="(disableInfos)"></of-text-setting>
     </div>

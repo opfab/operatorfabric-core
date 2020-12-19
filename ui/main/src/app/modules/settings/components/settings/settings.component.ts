@@ -16,7 +16,8 @@ import {ConfigService} from '@ofServices/config.service';
 
 @Component({
   selector: 'of-settings',
-  templateUrl: './settings.component.html'
+  templateUrl: './settings.component.html',
+  styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent implements OnInit {
   locales: string[];

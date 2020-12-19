@@ -94,6 +94,7 @@
     }
   },
   "settings": {
+    "title": "SETTINGS",
     "description": "DESCRIPTION",
     "locale": "LANGUAGE",
     "timeZone": "TIME ZONE",
