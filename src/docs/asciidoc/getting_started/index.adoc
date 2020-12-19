@@ -46,12 +46,7 @@ All examples assume you connect to the server from `localhost` (otherwise change
  
 === Example 1: Send and update a basic card
 
-Go in directory `client/example1` and send a card:
-
-----
-curl -X POST http://localhost:2102/cards -H "Content-type:application/json" --data @card.json
-----
-or use the provided script
+Go in directory `client/example1` and send a card, using the provided script :
 
 ----
 ./sendCard.sh card.json 
@@ -93,6 +88,11 @@ section of the reference documentation.
 }
 
 ----
+
+NOTE: If you open the json file of the card, you will see '${current_date_in_milliseconds_from_epoch}' for the field 'startDate'.
+      We have used this so that the date of the card is the current day (or the next day in some other examples). Indeed, in the shell script
+      that sends the card, you will see that we create an environment variable with the current date which is then injected
+      into the json file.
 
 ==== Update the card 
 
@@ -490,12 +490,7 @@ Let's send this card :
 }
 ----
 
-You can use this command line :
-----
-curl -X POST http://localhost:2102/cards -H "Content-type:application/json" --data @cardSentToEntity.json
-----
-
-or use the provided script :
+Use the provided script :
 ----
 ./sendCard.sh cardSentToEntity.json
 ----
@@ -580,12 +575,7 @@ Let's send this card (for ENTITY1 and Dispatcher group) :
 }
 ----
 
-You can use this command line :
-----
-curl -X POST http://localhost:2102/cards -H "Content-type:application/json" --data @cardSentToEntityAndGroup_1.json
-----
-
-or use the provided script :
+Use the provided script :
 ----
 ./sendCard.sh cardSentToEntityAndGroup_1.json
 ----
@@ -622,12 +612,7 @@ Let's send this card (for ENTITY1 and Planner group) :
 }
 ----
 
-You can use this command line :
-----
-curl -X POST http://localhost:2102/cards -H "Content-type:application/json" --data @cardSentToEntityAndGroup_2.json
-----
-
-or use the provided script :
+Use the provided script :
 ----
 ./sendCard.sh cardSentToEntityAndGroup_2.json
 ----
