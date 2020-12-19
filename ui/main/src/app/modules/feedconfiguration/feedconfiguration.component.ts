@@ -180,8 +180,6 @@ export class FeedconfigurationComponent implements OnInit {
                         this.messageAfterSavingSettings = 'feedConfiguration.error.impossibleToSaveSettings';
                         this.displaySendResultError = true;
                     } else {
-                        this.messageAfterSavingSettings = 'feedConfiguration.settingsSavedWithNoError';
-                        this.displaySendResultOk = true;
                         this.cardService.resetStartOfAlreadyLoadedPeriod();
                         this.store.dispatch(new EmptyLightCards());
                     }

@@ -153,9 +153,8 @@
     "search" : "SEARCH" 
   },
   "feedConfiguration": {
-    "title": "Notification reception configuration",
+    "title": "NOTIFICATION RECEPTION CONFIGURATION",
     "confirmSettings": "CONFIRM SETTINGS",
-    "settingsSavedWithNoError": "Settings saved",
     "popup": {
       "title": "CONFIRMATION",
       "areYouSure": "You have made some changes. Are you sure you want to save them ?"

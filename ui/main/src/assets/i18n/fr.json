@@ -153,9 +153,8 @@
     "search": "RECHERCHER"
   },
   "feedConfiguration": {
-    "title": "Configuration des notifications",
+    "title": "CONFIGURATIONS DES NOTIFICATIONS",
     "confirmSettings": "ENREGISTRER LA CONFIGURATION",
-    "settingsSavedWithNoError": "Paramètres enregistrés",
     "popup": {
       "title": "CONFIRMATION",
       "areYouSure": "Vous avez fait des modifications. Etes-vous sûr de vouloir les enregistrer ?"

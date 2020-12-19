@@ -7,12 +7,13 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-<h2 translate style="text-align: center;">feedConfiguration.title</h2>
-<br />
+<div class="opfab-feedconfiguration-title" translate>
+    feedConfiguration.title
+  </div>
+  
 
-<div class="container-fluid">
     <form [formGroup]="feedConfigurationForm">
-        <div *ngFor="let processGroup of processGroups; ">
+        <div *ngFor="let processGroup of processGroups; " class="opfab-feedconfiguration-processlist">
             <h5 class="font-weight-bold" translate>{{processGroup.id}}</h5>
             <div class="row">
                 <div class="col-md" *ngFor="let processKey of processGroup.processes; ">
@@ -34,7 +35,7 @@
             <br />
         </div>
         <br />
-        <div class="row">
+        <div class="row opfab-feedconfiguration-processlist">
             <div class="col-md" *ngFor="let processId of processesWithoutGroup; ">
                 <p class="font-weight-bold" translate>{{processesStatesLabels.get(processId).processI18n}}</p>
                 <div class="custom-control custom-checkbox" >
@@ -50,18 +51,15 @@
         </div>
 
         <br />
-        <div *ngIf="displaySendResultOk">
-            <h2 translate style="text-align: center" class="text-success"> {{messageAfterSavingSettings}} </h2>
-        </div>
 
         <div *ngIf="displaySendResultError">
-            <h2 translate style="text-align: center" class="text-danger"> {{messageAfterSavingSettings}} </h2>
+            <h4 translate style="text-align: center" class="text-danger"> {{messageAfterSavingSettings}} </h4>
         </div>
         <div style="text-align: center;width:100%">
             <button type="button" class="opfab-btn" (click)='open(confirmationPopup)' style="text-align: center;" translate>feedConfiguration.confirmSettings</button>
         </div>
     </form>
-</div>
+
 
 
 
