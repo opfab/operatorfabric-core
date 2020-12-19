@@ -8,36 +8,34 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-
-<table class="table table-dark">
-    <caption class="hidden-caption">List of current cards filtered by process or by active dates</caption>
+<div class="opfab-table">
+<table>
     <thead>
         <tr>
+            <th scope="col"></th>
             <th scope="col" translate>monitoring.time</th>
             <th colspan="2" scope="col" translate>monitoring.businessPeriod</th>
             <th scope="col" translate>monitoring.filters.process</th>
             <th scope="col" translate>monitoring.title</th>
             <th scope="col" translate>monitoring.summary</th>
-            <th scope="col" translate>monitoring.status</th>
+            <th scope="col" translate>monitoring.status</th> 
             <th scope="col"></th>
         </tr>
     </thead>
     <tbody>
-        <tr mdbTableCol *ngFor="let line of result">
+        <tr *ngFor="let line of result" (click)="selectCard(line.cardId)" style="cursor: pointer;">
+            <td [ngStyle]="{'background-color': line.coordinationStatusColor, 'color': line.coordinationStatusColor}" style="width: 15px;"> 
+                
+            </td>
             <td>{{displayTime(line.creationDateTime)}}</td>
             <td>{{displayTime(line.beginningOfBusinessPeriod)}}</td>
             <td>{{displayTime(line.endOfBusinessPeriod)}}</td>
             <td translate>{{line.processName}}</td>
             <td translate [translateParams]="line.title.parameters">{{line.title.key}}</td>
             <td translate [translateParams]="line.summary.parameters">{{line.summary.key}}</td>
-            <td translate>{{line.coordinationStatus}}
-                <p class="status"
-                    [ngStyle]="{'background-color': line.coordinationStatusColor, 'color': line.coordinationStatusColor}">
-                    .</p>
-            </td>
+            <td translate>{{line.coordinationStatus}} </td>
             <td>
-                <button type="button" class="opfab-btn" style="margin-top:0px;margin-bottom: 0px;" (click)="selectCard(line.cardId)"
-                        translate>monitoring.seeDetails   </button>
+                <div class="opfab-monitoring-icon opfab-icon-eye"></div>
             </td>
         </tr>
     </tbody>
@@ -47,6 +45,9 @@
     <button class="opfab-btn export-btn" type="button" (click)="export()"
         fileName="monitoringResults" translate>
         <em class="fa fa-file-export"></em> monitoring.ExportTOExcel</button>
+</div>
+
+
 </div>
 
 <ng-template #cardDetail let-modal>

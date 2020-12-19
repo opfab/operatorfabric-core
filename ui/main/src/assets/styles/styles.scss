@@ -463,3 +463,8 @@ html, body { height: 100%; }
   background-color: var(--opfab-timeline-bgcolor);
 }
 
+// icons
+
+.opfab-icon-eye {
+  mask: url(assets/images/icons/eye.svg);
+}

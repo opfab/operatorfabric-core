@@ -132,14 +132,13 @@
   },
   "monitoring": {
     "filters": {
-      "process": "Processus"
+      "process": "PROCESSUS"
     },
-    "time": "Date",
-    "businessPeriod": "Période métier",
-    "title": "Titre",
-    "summary": "Résumé",
-    "trigger": "Déclencheur",
-    "status": "Status",
+    "time": "DATE",
+    "businessPeriod": "PERIODE METIER",
+    "title": "TITRE",
+    "summary": "RESUME",
+    "status": "STATUS",
     "seeDetails": "VOIR LES DETAILS",
     "ExportTOExcel": "EXPORTER VERS EXCEL"
   },

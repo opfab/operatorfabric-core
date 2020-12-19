@@ -132,14 +132,13 @@
   },
   "monitoring": {
     "filters": {
-      "process": "Process"
+      "process": "PROCESS"
     },
-    "time": "Time",
-    "businessPeriod": "Business Period",
-    "title": "Title",
-    "summary": "Summary",
-    "trigger": "Trigger",
-    "status": "Status",
+    "time": "TIME",
+    "businessPeriod": "BUSINESS PERIOD",
+    "title": "TITLE",
+    "summary": "SUMMARY",
+    "status": "STATUS",
     "seeDetails": "SEE DETAILS",
     "ExportTOExcel": "EXPORT TO EXCEL"
   },

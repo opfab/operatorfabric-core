@@ -1,5 +1,4 @@
 /* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
- * Copyright (c) 2020, RTEi (http://www.rte-international.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,23 +8,22 @@
  */
 
 
-.export-div {
-  padding-top: 1px;
-  padding-left: 10px;
-  max-width: 100%;
-  height: 60px;
-  clear: left;
-}
-.export-btn {
-  float: right;
+.opfab-monitoring {
+    background-color: var(--opfab-bgcolor-darker);
+    margin-left: -15px;
+    margin-right: -15px;
+    padding-left: 30px;
+
 }
 
+.opfab-vertical-bar {
+    border-left-width: 1px;
+    border-left-style: solid;
+    height: 150px; 
+    width: 1px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 30px;
+    border-color: var(--opfab-form-border-color);
 
-.opfab-monitoring-icon {
-  display: inline-block;
-  height: 18px;
-  width: 30px;
-  margin-right: 5px;
-  background: var( --opfab-text-color); 
-  mask-size: cover;
 }
