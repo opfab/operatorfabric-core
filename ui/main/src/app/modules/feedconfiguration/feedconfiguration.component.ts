@@ -18,7 +18,8 @@ import { UserWithPerimeters } from '@ofModel/userWithPerimeters.model';
 import { ProcessesService } from '@ofServices/processes.service';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { SettingsService } from '@ofServices/settings.service';
-import {CardService} from "@ofServices/card.service";
+import {CardService} from '@ofServices/card.service';
+import {EmptyLightCards} from '@ofActions/light-card.actions';
 
 
 @Component({
@@ -182,6 +183,7 @@ export class FeedconfigurationComponent implements OnInit {
                         this.messageAfterSavingSettings = 'feedConfiguration.settingsSavedWithNoError';
                         this.displaySendResultOk = true;
                         this.cardService.resetStartOfAlreadyLoadedPeriod();
+                        this.store.dispatch(new EmptyLightCards());
                     }
                     this.modalRef.close();
                 },
