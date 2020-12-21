@@ -9,14 +9,14 @@
 <form [formGroup]="monitoringForm" #currentForm>
     <div class="opfab-monitoring opfab-form-darker">
         <div style="display: flex;">
-            <div style="margin-top: 28px;margin-right: 40px;position:relative; width: 400px;">
+            <div style="margin-top: 28px;margin-right: 40px;position:relative; min-width:400px;max-width:550px;">
                 <of-multi-filter-2 filterPath="process" id="process" formControlName="process"
                     [parentForm]="monitoringForm" [values]="dropdownList" [(ngModel)]="dropdownList"
                     [dropdownSettings]="dropdownSettings" [selectedItems]="[]" i18nRootLabelKey="monitoring.filters.">
                 </of-multi-filter-2>
             </div>
             <div class="opfab-vertical-bar"></div>
-            <div style="margin-left:40px;margin-right: 30px;width:300px">
+            <div style="margin-left:40px;margin-right: 30px;width:300px;min-width: 250px;">
                 <div>
                     <of-datetime-filter filterPath="publishDateFrom" formControlName="publishDateFrom"
                         labelKey="archive.filters."></of-datetime-filter>
@@ -28,7 +28,7 @@
             </div>
 
             <div class="opfab-vertical-bar"></div>
-            <div style="margin-left:40px;width:300px">
+            <div style="margin-left:40px;width:300px;min-width: 250px;">
                 <div>
                     <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom"
                         labelKey="archive.filters."></of-datetime-filter>
@@ -38,7 +38,7 @@
                     </of-datetime-filter>
                 </div>
             </div>
-            <div style="margin-top:125px; margin-left:60px ">
+            <div style="margin-top:125px; margin-left:60px;min-width: 320px; ">
                 <div class="form-group">
                     <div class="row">
                         <button class="opfab-btn" (click)='sendQuery()' translate> button.search</button>
