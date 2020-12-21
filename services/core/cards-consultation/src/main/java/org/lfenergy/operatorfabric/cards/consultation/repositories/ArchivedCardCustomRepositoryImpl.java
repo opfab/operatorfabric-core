@@ -47,10 +47,13 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
     public static final String PAGE_PARAM = "page";
     public static final String PAGE_SIZE_PARAM = "size";
 
+    public static final String PARENT_CARD_ID_FIELD = "parentCardId";
+    public static final String CHILD_CARDS_PARAM = "childCards";
+
     public static final int DEFAULT_PAGE_SIZE = 10;
 
     private static final List<String> SPECIAL_PARAMETERS = Arrays.asList(
-            PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM, PAGE_PARAM, PAGE_SIZE_PARAM);
+            PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM, PAGE_PARAM, PAGE_SIZE_PARAM, CHILD_CARDS_PARAM);
 
 
     private static final String ARCHIVED_CARDS_COLLECTION = "archivedCards";
@@ -131,6 +134,9 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         /* Add user criteria */
         criteria.add(computeCriteriaForUser(currentUserWithPerimeters));
 
+        /* Add child cards criteria (by default, child cards are not included) */
+        criteria.add(childCardsIncludedOrNotCriteria(queryParams));
+
         if (!criteria.isEmpty()) {
             query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));
         }
@@ -173,6 +179,17 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         }
 
         return criteria;
+    }
+
+    private Criteria childCardsIncludedOrNotCriteria(MultiValueMap<String, String> params) {
+
+        if (params.containsKey(CHILD_CARDS_PARAM)) {
+            String childCardsParam = params.getFirst(CHILD_CARDS_PARAM);
+
+            if ((childCardsParam != null) && (childCardsParam.equalsIgnoreCase("true")))
+                return new Criteria();
+        }
+        return Criteria.where(PARENT_CARD_ID_FIELD).exists(false);
     }
 
     private List<Criteria> activeRangeCriteria(MultiValueMap<String, String> params) {

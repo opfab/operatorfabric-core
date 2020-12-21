@@ -150,6 +150,7 @@ Feature: Archives
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
+	"parentCardId" : "api_test.process2card9",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card10",
 	"state": "messageState",
@@ -198,7 +199,7 @@ Feature: Archives
     Then method get
     Then status 200
     And print response
-    And match response.numberOfElements == 10
+    And match response.numberOfElements == 9
 
     Scenario: change number of elements
 
@@ -217,7 +218,7 @@ Feature: Archives
     When method get
     Then status 200
     And print response
-    And assert response.numberOfElements >= 10
+    And assert response.numberOfElements == 9
 
    Scenario: without authentication
     Given url opfabUrl + 'cards/archives/' +'?publisher=api_test'
@@ -238,7 +239,7 @@ Feature: Archives
     When method get
     Then status 200
     And print response
-    And assert response.numberOfElements >= 10
+    And assert response.numberOfElements == 9
 
    Scenario: filter by activeFrom
     Given url opfabUrl + 'cards/archives/' +'?activeFrom=1553186770481'
@@ -246,7 +247,7 @@ Feature: Archives
     When method get
     Then status 200
     And print response
-     And assert response.numberOfElements >= 10
+     And assert response.numberOfElements == 9
 
    Scenario: filter by activeTo
      Given url opfabUrl + 'cards/archives/' +'?activeTo=1653186770481'
@@ -254,7 +255,7 @@ Feature: Archives
      When method get
      Then status 200
      And print response
-     And assert response.numberOfElements >= 10
+     And assert response.numberOfElements == 9
 
   Scenario: filter process
     Given url opfabUrl + 'cards/archives/' +'?process=api_test'
@@ -262,4 +263,28 @@ Feature: Archives
     When method get
     Then status 200
     And print response
-    And assert response.numberOfElements >= 10
+    And assert response.numberOfElements == 9
+
+  Scenario: fetch all archived cards, child cards included
+    Given url opfabUrl + 'cards/archives/' +'?childCards=true'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 200
+    And print response
+    And assert response.numberOfElements == 10
+
+  Scenario: fetch archived cards, child cards excluded
+    Given url opfabUrl + 'cards/archives/' +'?childCards=false'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 200
+    And print response
+    And assert response.numberOfElements == 9
+
+  Scenario: fetch archived cards (child cards excluded by default)
+    Given url opfabUrl + 'cards/archives/'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 200
+    And print response
+    And assert response.numberOfElements == 9

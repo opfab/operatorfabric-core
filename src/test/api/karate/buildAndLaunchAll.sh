@@ -30,8 +30,8 @@ sleep 90
 echo "Start karate testing"
 cd ../../src/test/api/karate
 ./launchAllBusinessconfig.sh
-./launchAllUsers.sh
 ./launchAllCards.sh
+./launchAllUsers.sh
 ./launchAllAdmin.sh
 google-chrome target/cucumber-html-reports/overview-features.html &
 )

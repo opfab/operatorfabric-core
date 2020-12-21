@@ -835,6 +835,13 @@ paths:
             only cards where the field "key" is either equal to the string "value" or to an array
             containing "value".
             If key isn't a card property, the filter will have no effect.
+        - in: query
+          name: childCards
+          type: boolean
+          required: false
+          description: >-
+            If this parameter is set to true, child cards will be included in the results.
+            If the parameter is absent or set to false, child cards will not be included.
       responses:
         '200':
           description: OK
