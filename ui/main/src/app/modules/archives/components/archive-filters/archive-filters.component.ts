@@ -9,7 +9,7 @@
 
 
 import {ConfigService} from '@ofServices/config.service';
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Subject} from 'rxjs';
 
 import {Store} from '@ngrx/store';
@@ -52,13 +52,22 @@ export const transformToTimestamp = (date: NgbDateStruct, time: NgbTimeStruct): 
 })
 export class ArchiveFiltersComponent implements OnInit, OnDestroy {
 
-    tags: string [];
-    processes: string [];
+    tags: any [];
     size: number;
     archiveForm: FormGroup;
     unsubscribe$: Subject<void> = new Subject<void>();
     currentPath: any;
 
+
+    processDropdownList = [];
+    processDropdownSettings = {};
+
+
+    tagsDropdownList = [];
+    tagsDropdownSettings = {};
+
+    @Input()
+    public processData: [];
 
     constructor(private store: Store<AppState>
         , private timeService: TimeService
@@ -66,8 +75,8 @@ export class ArchiveFiltersComponent implements OnInit, OnDestroy {
         , private translateService: TranslateService
         , private  configService: ConfigService) {
         this.archiveForm = new FormGroup({
-            tags: new FormControl(''),
-            process: new FormControl(),
+            tags: new FormControl([]),
+            process: new FormControl([]),
             publishDateFrom: new FormControl(),
             publishDateTo: new FormControl(''),
             activeFrom: new FormControl(''),
@@ -78,7 +87,6 @@ export class ArchiveFiltersComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.tags = this.configService.getConfigValue('archive.filters.tags.list');
-        this.processes = this.configService.getConfigValue('archive.filters.process.list');
         this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
 
         this.store.select(selectCurrentUrl)
@@ -89,7 +97,28 @@ export class ArchiveFiltersComponent implements OnInit, OnDestroy {
                     this.currentPath = urlParts[1];
                 }
             });
+
+        this.processDropdownList = this.processData;
+
+        this.processDropdownSettings = {
+            text: 'Select a Process',
+            selectAllText: 'Select All',
+            unSelectAllText: 'UnSelect All',
+            enableSearchFilter: true
+        };
+
+        if (!!this.tags) {
+            this.tags.forEach(tag => this.tagsDropdownList.push({ id: tag.value, itemName: tag.label }));
+
+            this.tagsDropdownSettings = {
+                text: 'Select a Tag',
+                selectAllText: 'Select All',
+                unSelectAllText: 'UnSelect All',
+                enableSearchFilter: true
+            };
+        }
     }
+
 
 
     /**
@@ -102,9 +131,8 @@ export class ArchiveFiltersComponent implements OnInit, OnDestroy {
             // if the form element is date
             if (element) {
                 if (checkElement(FilterDateTypes, key)) {
-                    const {date, time} = element;
+                    const { date, time } = element;
                     if (date) {
-
                         const timeStamp = this.timeService.toNgBTimestamp(transformToTimestamp(date, time));
                         if (timeStamp !== 'NaN') {
                             params.set(key, [timeStamp]);
@@ -112,20 +140,23 @@ export class ArchiveFiltersComponent implements OnInit, OnDestroy {
                     }
                 } else {
                     if (element.length) {
-                        params.set(key, element);
+                        const ids = [];
+                        element.forEach(val => ids.push(val.id));
+                        params.set(key, ids);
                     }
                 }
             }
         });
         return params;
     }
-
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }
 
-    clearResult(): void {
+    resetForm()
+    {
+        this.archiveForm.reset();
         this.store.dispatch(new FlushArchivesResult());
         this.router.navigate(['/' + this.currentPath]);
     }

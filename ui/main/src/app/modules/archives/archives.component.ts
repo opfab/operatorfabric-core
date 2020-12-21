@@ -21,6 +21,7 @@ import {
     selectArchiveLoaded
 } from '@ofSelectors/archive.selectors';
 import {FlushArchivesResult} from '@ofStore/actions/archive.actions';
+import { ProcessesService } from '@ofServices/processes.service';
 
 @Component({
     selector: 'of-archives',
@@ -40,9 +41,18 @@ export class ArchivesComponent implements OnInit, OnDestroy {
     loadingIsTrue: boolean;
     //loaded = false;
     loaded = true;
+    processValueForFilter = new Array();
 
-    constructor(private store: Store<AppState>) {
+    constructor(private store: Store<AppState>,private processesService: ProcessesService) {
         this.store.dispatch(new FlushArchivesResult());
+        processesService.getAllProcesses().forEach((process) => {
+            const id = process.id;
+            let itemName = process.name;
+            if (!itemName) {
+                itemName = id;
+            }
+            this.processValueForFilter.push({ id: id, itemName: itemName, i18nPrefix: `${process.id}.${process.version}` });
+        });
     }
 
     async ngOnInit() {
@@ -72,10 +82,7 @@ export class ArchivesComponent implements OnInit, OnDestroy {
         this.subscription2$ = this.isEmpty$.subscribe((result) => {
             this.isEmptyMessage = result === true;
         });
-
-        console.log("end this.loaded : ", this.loaded);
         
-
     }
 
     ngOnDestroy() {

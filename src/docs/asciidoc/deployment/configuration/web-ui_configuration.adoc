@@ -88,7 +88,6 @@ a|card time display mode in the feed. Values :
 Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_database_time_zones[TZ database].
 
 |archive.filters.page.size|10|no|The page size of archive filters
-|archive.filters.process.list||no|List of processes to choose from in the corresponding filter in archives
 |archive.filters.tags.list||no|List of tags to choose from in the corresponding filter in archives
 |settings.tags.hide||no|Control if you want to show or hide the tags filter in settings and feed page 
 |settings.nightDayMode|false|no|if you want to activate toggle for night or day mode 

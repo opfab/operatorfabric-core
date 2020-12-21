@@ -10,9 +10,12 @@
 
 <div class="row archives-page">
     <div class="col-12">
-        <of-archive-filters></of-archive-filters>
+        <of-archive-filters [processData]="processValueForFilter"></of-archive-filters>
     </div>
 </div>
+
+
+<div style="height:5%"> </div>
 
 <div [style.display]="(!(loadingIsTrue)) ? 'none' : undefined">
 

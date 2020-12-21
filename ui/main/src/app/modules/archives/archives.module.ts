@@ -20,7 +20,7 @@ import {CardsModule} from '../cards/cards.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {DatetimeFilterModule} from '../../components/share/datetime-filter/datetime-filter.module';
-import {MultiFilterModule} from '../../components/share/multi-filter/multi-filter.module';
+import { MultiFilter2Module } from 'app/components/share/multi-filter-2/multi-filter-2.module';
 
 @NgModule({
   imports: [
@@ -30,9 +30,9 @@ import {MultiFilterModule} from '../../components/share/multi-filter/multi-filte
     ArchivesRoutingModule,
     CardsModule,
     TranslateModule,
-    NgbModule
-      , DatetimeFilterModule
-      , MultiFilterModule
+    NgbModule,
+    DatetimeFilterModule,
+    MultiFilter2Module
 
   ],
   declarations: [
