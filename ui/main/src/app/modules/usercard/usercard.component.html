@@ -23,10 +23,26 @@
                     [values]="stateOptions"></of-single-filter>
 
             </div>
-            <div class="col" *ngIf="severityVisible">
-                <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="severity"
-                    [values]="severityOptions"></of-single-filter>
+        </div>
+        <div class="row justify-content-center" *ngIf="severityVisible">
+
+            <div class="form-group form-check-inline radio-control">
+                <input type="radio" id="sev-alarm" class="form-check-input" formControlName="severity" value="ALARM">
+                <label for="sev-alarm" class="form-check-label label-sev-alarm" translate>userCard.options.severity.ALARM</label>            
             </div>
+            <div class="form-group form-check-inline radio-control">
+                <input type="radio" id="sev-action" class="form-check-input" formControlName="severity" value="ACTION">
+                <label for="sev-action" class="form-check-label label-sev-action" translate>userCard.options.severity.ACTION</label>            
+            </div>
+            <div class="form-group form-check-inline radio-control">
+                <input type="radio" id="sev-compliant" class="form-check-input" formControlName="severity" value="COMPLIANT">
+                <label for="sev-compliant" class="form-check-label label-sev-compliant" translate>userCard.options.severity.COMPLIANT</label>            
+            </div>
+            <div class="form-group form-check-inline radio-control">
+                <input type="radio" id="sev-information" class="form-check-input" formControlName="severity" value="INFORMATION">
+                <label for="sev-information" class="form-check-label label-sev-information" translate>userCard.options.severity.INFORMATION</label>            
+            </div>
+
         </div>
         <div class="row">
             <div class="col" *ngIf="startDateVisible">
@@ -68,6 +84,11 @@
         </button>
     </div>
 </div>
+<ng-container *ngIf="!displayForm() && !displaySendResult">
+    <div class="alert alert-info">
+        <h1><label translate>userCard.error.notAvailable</label></h1>
+    </div>
+</ng-container>
 
 <div *ngIf="displaySendResult">
     <br />

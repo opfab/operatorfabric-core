@@ -163,6 +163,7 @@
     "title": "Create a new card",
     "editTitle" : "Edit a card",
     "error": {
+      "notAvailable": "Feature not available",
       "noRecipientSelected": "You must at least choose one recipient",
       "templateError": "Technical error : invalid template",
       "impossibleToSendCard": "Impossible to send card for technical reasons"
