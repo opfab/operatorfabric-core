@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-
+ @import "~assets/styles/_variables.scss";
 
 .light-card-detail {
 
@@ -54,6 +54,11 @@
   width: 15px;
   text-align: center;
 }
+
+.opfab-bg-sev-alarm {background-color: $sev-alarm;}
+.opfab-bg-sev-action {background-color: $sev-action;}
+.opfab-bg-sev-compliant {background-color: $sev-compliant;}
+.opfab-bg-sev-information {background-color: $sev-information;}
 
 .lttd-timeleft{
   font-size: small;

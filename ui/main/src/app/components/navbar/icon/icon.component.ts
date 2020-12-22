@@ -14,8 +14,7 @@ import {PlatformLocation} from "@angular/common";
 
 @Component({
   selector: 'of-icon',
-  templateUrl:'icon.component.html',
-  styleUrls: ['icon.component.scss']
+  templateUrl:'icon.component.html'
 })
 export class IconComponent implements OnInit {
 

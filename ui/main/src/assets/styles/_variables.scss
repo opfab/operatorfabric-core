@@ -6,15 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
-
-
-@import '../../../node_modules/bootstrap/scss/bootstrap';
-
-$icon-font-path: "../../../node_modules/bootstrap-sass/assets/fonts/bootstrap/" !default;
-//$body-bg: #000;
-
-
 /*
   Colors
  */
@@ -25,13 +16,3 @@ $sev-compliant:    #00BB03 !default;
 $sev-information:  #1074AD !default;
 $less-dark:        #525854 !default;
 
-$theme-colors: map-merge(
-    (
-            "sev-alarm":    $sev-alarm,
-            "sev-action":  $sev-action,
-            "sev-information":    $sev-information,
-            "sev-compliant":       $sev-compliant,
-            "less-dark": $less-dark
-    ),
-    $theme-colors
-);

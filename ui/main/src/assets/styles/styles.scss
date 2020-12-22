@@ -15,8 +15,6 @@
 /* import bootstrap*/
 @import '../../../node_modules/bootstrap/scss/bootstrap.scss';
 @import "navbar.scss";
-@import "utilities.scss";
-@import "popover.scss";
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 
@@ -30,6 +28,9 @@ body {
   font-family: 'Open Sans', sans-serif;
   font-size: 13px;
 }
+
+
+
 
 // BUTTON STYLE 
 
