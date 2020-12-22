@@ -25,7 +25,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 import { UserWithPerimeters, RightsEnum, ComputedPerimeter } from '@ofModel/userWithPerimeters.model';
 import { EntitiesService } from '@ofServices/entities.service';
-import { transformToTimestamp } from '../archives/components/archive-filters/archive-filters.component';
+import { transformToTimestamp } from '../archives/archives.component';
 import { ProcessesService } from '@ofServices/processes.service';
 import { ActivatedRoute} from '@angular/router';
 import { getDateTimeNgbFromMoment } from '@ofModel/datetime-ngb.model';

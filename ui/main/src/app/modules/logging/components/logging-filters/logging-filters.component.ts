@@ -11,20 +11,42 @@ import {Component, Input, OnInit} from '@angular/core';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {FormControl, FormGroup} from '@angular/forms';
-import {
-    checkElement,
-    FilterDateTypes,
-    transformToTimestamp
-} from '../../../archives/components/archive-filters/archive-filters.component';
+
 import {SendLoggingQuery} from '@ofActions/logging.actions';
 import {ConfigService} from '@ofServices/config.service';
 import {TimeService} from '@ofServices/time.service';
+import { NgbDateStruct, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
+import { DateTimeNgb } from '@ofModel/datetime-ngb.model';
+
+
+
+export enum FilterDateTypes {
+    PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
+    PUBLISH_DATE_TO_PARAM = 'publishDateTo',
+    ACTIVE_FROM_PARAM = 'activeFrom',
+    ACTIVE_TO_PARAM = 'activeTo'
+
+}
+
+
+export const checkElement = (enumeration: typeof FilterDateTypes, value: string): boolean => {
+    let result = false;
+    if (Object.values(enumeration).includes(value)) {
+        result = true;
+    }
+    return result;
+};
+
+export const transformToTimestamp = (date: NgbDateStruct, time: NgbTimeStruct): string => {
+    return new DateTimeNgb(date, time).formatDateTime();
+};
 
 @Component({
     selector: 'of-logging-filters',
     templateUrl: './logging-filters.component.html',
     styleUrls: ['./logging-filters.component.scss']
 })
+
 export class LoggingFiltersComponent implements OnInit {
 
     size = 10;

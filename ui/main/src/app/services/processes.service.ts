@@ -19,7 +19,6 @@ import {Process} from '@ofModel/processes.model';
 import {Card} from '@ofModel/card.model';
 import {merge} from 'rxjs';
 import { Store, select } from '@ngrx/store';
-import { selectArchiveLightCards } from '@ofStore/selectors/archive.selectors';
 import { selectLinesOfLoggingResult } from '@ofStore/selectors/logging.selectors';
 import { AppState } from '@ofStore/index';
 import { selectFeed, selectLastCards } from '@ofStore/selectors/feed.selectors';
@@ -41,7 +40,6 @@ export class ProcessesService {
         this.urlCleaner = new HttpUrlEncodingCodec();
         this.processesUrl = `${environment.urls.processes}`;
         this.processGroupsUrl = `${environment.urls.processGroups}`;
-        this.loadTranslationIfNeededAfterLoadingArchiveCard();
         this.loadTranslationIfNeededAfterLoadingLoggingCard();
         this.loadTranslationIfNeededAfterLoadingCard();
     }
@@ -52,11 +50,6 @@ export class ProcessesService {
             .subscribe(cards =>  cards.forEach(card => this.loadTranslationsForProcess(card.process, card.processVersion)));
     }
 
-    private loadTranslationIfNeededAfterLoadingArchiveCard() {
-        this.store.pipe(
-            select(selectArchiveLightCards))
-            .subscribe(cards => cards.forEach(card => this.loadTranslationsForProcess(card.process, card.processVersion)));
-    }
 
     private loadTranslationIfNeededAfterLoadingLoggingCard() {
         this.store.pipe(
@@ -65,7 +58,7 @@ export class ProcessesService {
                 this.loadTranslationsForProcess(loggingResult.process, loggingResult.processVersion)));
     }
 
-    private loadTranslationsForProcess(process,version) {
+    public loadTranslationsForProcess(process,version) {
         this.translateService.getLangs().forEach(
             local => this.addTranslationIfNeeded(local, process, version ));
     }

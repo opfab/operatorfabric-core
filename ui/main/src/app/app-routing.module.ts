@@ -14,8 +14,8 @@ import {LoginComponent} from './components/login/login.component';
 import {AboutComponent} from './modules/about/about.component';
 import {LoggingComponent} from './modules/logging/logging.component';
 import {MonitoringComponent} from './modules/monitoring/monitoring.component';
-import { AdminComponent } from './modules/admin/admin.component';
 import {CalendarComponent} from './modules/calendar/calendar.component';
+import { ArchivesEntryPointComponent } from './modules/archives/archives-entry-point.component'
 
 const defaultPath = '/feed';
 const archivePath = 'archives';
@@ -30,8 +30,8 @@ const routes: Routes = [
         loadChildren: () => import('./modules/usercard/usercard.module').then(m => m.UserCardModule),
     },
     {
-        path: archivePath,
-        loadChildren: () => import('./modules/archives/archives.module').then(m => m.ArchivesModule),
+        path: 'archives',
+        component: ArchivesEntryPointComponent
     },
     {
         path: 'monitoring',

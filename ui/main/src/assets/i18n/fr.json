@@ -107,7 +107,6 @@
   },
   "archive": {
     "filters": {
-      "publisher": "Emetteur",
       "process": "PROCESSUS",
       "tags": "ETIQUETTES",
       "publishDateFrom": "PUBLIE A PARTIR DE",
@@ -115,9 +114,15 @@
       "activeFrom": "ACTIVE A PARTIR DE",
       "activeTo": "ACTIVE JUSQU'A"
     },
-    "search": "Rechercher",
-    "clear": "Effacer",
-    "noResult": "Votre recherche ne correspond à aucun résultat."
+    "result": {
+      "publishDate" : "DATE DE PUBLICATION",
+      "businessPeriod" : "PERIODE METIER",
+      "title" : "TITRE",
+      "description": "DESCRIPTION"
+    },
+    "noResult": "Votre recherche ne correspond à aucun résultat.",
+    "exportToExcel" : "EXPORTER VERS EXCEL",
+    "resultsNumber":"Nombre de résultats"
   },
   "logging": {
     "filters": {

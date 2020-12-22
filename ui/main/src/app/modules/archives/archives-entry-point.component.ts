@@ -7,22 +7,21 @@
  * This file is part of the OperatorFabric project.
  */
 
- .opfab-archives {
-  background-color: var(--opfab-bgcolor-darker);
-  margin-left: -15px;
-  margin-right: -15px;
-  padding-left: 30px;
 
-}
 
-.opfab-vertical-bar {
-  border-left-width: 1px;
-  border-left-style: solid;
-  height: 150px; 
-  width: 1px;
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-top: 30px;
-  border-color: var(--opfab-form-border-color);
+// intermediate component used to avoir circular dependency with router module
+
+
+import {Component} from '@angular/core';
+
+
+@Component({
+    selector: 'of-archives-entry-point',
+    template: `
+
+            <of-archives> </of-archives>
+        `
+})
+export class ArchivesEntryPointComponent {
 
 }

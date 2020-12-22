@@ -107,7 +107,6 @@
   },
   "archive": {
     "filters": {
-      "publisher": "Publisher",
       "process": "PROCESS",
       "tags": "TAGS",
       "publishDateFrom": "PUBLISH FROM",
@@ -115,9 +114,15 @@
       "activeFrom": "ACTIVE FROM",
       "activeTo": "ACTIVE TO"
     },
-    "search": "Search",
-    "clear": "Clear",
-    "noResult": "Your search did not match any results."
+    "result": {
+      "publishDate" : "PUBLICATION DATE",
+      "businessPeriod" : "BUSINESS PERIOD",
+      "title" : "TITLE",
+      "description": "DESCRIPTION"
+    },
+    "noResult": "Your search did not match any results.",
+    "exportToExcel" : "EXPORT TO EXCEL",
+    "resultsNumber":"Results number"
   },
   "logging": {
     "filters": {
