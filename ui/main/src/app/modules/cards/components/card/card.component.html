@@ -8,7 +8,7 @@
 
 
 
-<div class="card light-card-detail " 
+<div id="opfab-feed-light-card-{{lightCard.process}}-{{lightCard.processInstanceId}}" class="card light-card-detail " 
 [class.light-card-detail-selected]="open"  
 [class.light-card-detail-unselected]="!open" 
 [class.light-card-detail-unread]="displayUnreadIcon && !isArchivePageType() && !lightCard.hasBeenRead"

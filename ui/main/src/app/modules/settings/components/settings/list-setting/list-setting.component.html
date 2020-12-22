@@ -11,7 +11,7 @@
 <form [formGroup]="form">
   <div class="opfab-select">
     <label for="setting" translate>settings.{{settingPath}}</label>
-    <select id="setting" formControlName="setting" [attr.required]="requiredField">
+    <select id="opfab-setting-{{settingPath}}" formControlName="setting" [attr.required]="requiredField">
       <option *ngFor="let v of preparedList" value="{{v.value}}">{{v.label|async}}</option>
     </select>
     <span class="text-danger" *ngIf="!form.valid">Incorrect submission</span>

@@ -11,7 +11,7 @@
 <form [formGroup]="form" id="time-filter-form">
     <div class="opfab-input">
         <label for="setting" translate>settings.{{settingPath}}</label>
-        <type-ahead id="setting"
+        <type-ahead id="opfab-setting-{{settingPath}}"
                     formControlName="setting"
                     class="tags-field rounded"
                     [multi]="true"
