@@ -88,7 +88,6 @@ body {
   border-radius: 3px;
   font-size: 13px;
   height: 46px;
-  box-sizing: border-box;
   outline: none;
 }
 
@@ -147,7 +146,6 @@ body {
   border-radius: 3px;
   font-size: 13px;
   height: 46px;
-  box-sizing: border-box;
   outline: none;
   background-color: var(--opfab-bgcolor);
 }
@@ -195,7 +193,6 @@ body {
   border: 1px solid var(--opfab-form-border-color);
   border-radius: 3px;
   font-size: 13px;
-  box-sizing: border-box;
   outline: none;
 }
 
@@ -263,8 +260,6 @@ type-ahead > .badge-primary {
   border: 1px solid var(--opfab-form-border-color);
   border-radius: 3px;
   font-size: 13px;
-  //height: 46px;
-  box-sizing: border-box;
   outline: none;
 }
 
@@ -298,7 +293,7 @@ type-ahead > .badge-primary {
 
 .opfab-multiselect .c-remove {
   svg {
-      fill:var(--opfab-input-text-color);;
+      fill:var(--opfab-input-text-color);
   }
 
 }
@@ -364,7 +359,7 @@ type-ahead > .badge-primary {
     text-align: center;
     border-bottom: 1px solid var(--opfab-table-border-color);
     width: 100%;
-  };
+  }
   tr {
     height: 42px;
     color: var(--opfab-text-color-stronger);
@@ -393,7 +388,7 @@ ngb-pagination {
       background-color: var(--opfab-bgcolor-darker);
       color : var(--opfab-text-color-stronger);
       border : 0px;
-    };
+    }
     .page-item.active .page-link{
       background-color: white;
       color : black;
