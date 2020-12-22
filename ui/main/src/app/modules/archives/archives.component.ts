@@ -8,7 +8,7 @@
  */
 
 
-import { Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 import { AppState } from '@ofStore/index';
 import { ProcessesService } from '@ofServices/processes.service';
@@ -17,13 +17,14 @@ import { takeUntil } from 'rxjs/operators';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ConfigService } from '@ofServices/config.service';
 import { TimeService } from '@ofServices/time.service';
-import { NgbDateStruct, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbModal, NgbModalOptions, NgbModalRef, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { DateTimeNgb } from '@ofModel/datetime-ngb.model';
 import { CardService } from '@ofServices/card.service';
 import { LightCard } from '@ofModel/light-card.model';
 import { Page } from '@ofModel/page.model';
 import { ExportService } from '@ofServices/export.service';
 import { TranslateService } from '@ngx-translate/core';
+import { Card } from '@ofModel/card.model';
 
 
 export enum FilterDateTypes {
@@ -71,13 +72,19 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     tagsDropdownList = [];
     tagsDropdownSettings = {};
 
+    // View card 
+    modalRef: NgbModalRef;
+    @ViewChild('cardDetail', null) cardDetailTemplate: ElementRef;
+    selectedCard : Card; 
+
     constructor(private store: Store<AppState>,
         private processesService: ProcessesService,
         private configService: ConfigService,
         private timeService: TimeService,
         private cardService: CardService,
         private exportService: ExportService,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private modalService: NgbModal
     ) {
 
         this.archiveForm = new FormGroup({
@@ -176,16 +183,15 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 this.firstQueryHasBeenDone = true;
                 if (page.content.length > 0) this.hasResult = true;
                 else this.hasResult = false;
-                page.content.forEach (card => this.loadTranslationForCardIfNeeded(card));
+                page.content.forEach(card => this.loadTranslationForCardIfNeeded(card));
                 this.results = page.content;
 
             });
 
     }
 
-    loadTranslationForCardIfNeeded(card: LightCard)
-    {
-        this.processesService.loadTranslationsForProcess(card.process,card.processVersion);
+    loadTranslationForCardIfNeeded(card: LightCard) {
+        this.processesService.loadTranslationsForProcess(card.process, card.processVersion);
     }
 
     updateResultPage(currentPage): void {
@@ -212,13 +218,13 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
                 lines.forEach((card: LightCard) => {
                     if (typeof card !== undefined) {
-                   // TO DO translation for old process should be done  , but loading local arrive to late , solution to find 
+                        // TO DO translation for old process should be done  , but loading local arrive to late , solution to find 
                         exportArchiveData.push({
-                            severity : card.severity,
+                            severity: card.severity,
                             publishDate: this.timeService.formatDateTime(card.publishDate),
-                            businessDate : this.displayTime(card.startDate) + '-'  + this.displayTime(card.endDate),
+                            businessDate: this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
                             title: this.translateColomn(card.process + '.' + card.processVersion + '.' + card.title.key, card.title.parameters),
-                            summary : this.translateColomn(card.process + '.' + card.processVersion + '.' + card.summary.key, card.summary.parameters),
+                            summary: this.translateColomn(card.process + '.' + card.processVersion + '.' + card.summary.key, card.summary.parameters),
                         });
                     }
                 });
@@ -238,6 +244,18 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             .subscribe((translate) => { translatedColomn = translate; });
 
         return translatedColomn;
+    }
+
+
+    openCard(cardId) {
+        this.cardService.loadArchivedCard(cardId).subscribe((card: Card) => {
+            this.selectedCard = card;
+            const options: NgbModalOptions = {
+                size: 'fullscreen'
+            };
+            this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
+        }
+        );
     }
 
     ngOnDestroy() {

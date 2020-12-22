@@ -76,15 +76,15 @@
         </tr>
       </thead>
 
-      <tr *ngFor="let element of results">
-        <td class="opfab-archive-sev opfab-archive-sev-{{element.severity.toLowerCase()}}"></td>
-        <td> {{displayTime(element.publishDate)}} </td>
-        <td> {{displayTime(element.startDate)}} - {{displayTime(element.endDate)}} </td>
-        <td translate [translateParams]="element.title.parameters">
-          {{ element.process + '.' + element.processVersion + '.' + element.title.key}}
+      <tr *ngFor="let card of results" (click)="openCard(card.id)" style="cursor: pointer;">
+        <td class="opfab-archive-sev opfab-archive-sev-{{card.severity.toLowerCase()}}"></td>
+        <td> {{displayTime(card.publishDate)}} </td>
+        <td> {{displayTime(card.startDate)}} - {{displayTime(card.endDate)}} </td>
+        <td translate [translateParams]="card.title.parameters">
+          {{ card.process + '.' + card.processVersion + '.' + card.title.key}}
         </td>
-        <td translate [translateParams]="element.summary.parameters">
-          {{ element.process + '.' + element.processVersion + '.' + element.summary.key}}
+        <td translate [translateParams]="card.summary.parameters">
+          {{ card.process + '.' + card.processVersion + '.' + card.summary.key}}
         </td>
       </tr>
     </table>
@@ -108,3 +108,17 @@
 
 <div *ngIf="firstQueryHasBeenDone&&!hasResult" style="text-align: center;font-size: 20px;" translate>archive.noResult
 </div>
+
+<ng-template #cardDetail let-modal>
+  <div class="modal-header">
+      <h4 translate  [translateParams]="selectedCard.title.parameters"> {{ selectedCard.process + '.' + selectedCard.processVersion + '.' + selectedCard.title.key}} </h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+      <div>
+          <of-card-detail [card]="selectedCard"> </of-card-detail>
+      </div>
+  </div>
+</ng-template>

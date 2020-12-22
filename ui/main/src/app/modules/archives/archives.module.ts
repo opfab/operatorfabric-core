@@ -17,6 +17,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {DatetimeFilterModule} from '../../components/share/datetime-filter/datetime-filter.module';
 import { MultiFilter2Module } from 'app/components/share/multi-filter-2/multi-filter-2.module';
+import { CardDetailModule } from 'app/components/share/card-detail/card-detail.module';
 import { ArchivesEntryPointComponent } from './archives-entry-point.component';
 
 @NgModule({
@@ -28,7 +29,8 @@ import { ArchivesEntryPointComponent } from './archives-entry-point.component';
     TranslateModule,
     NgbModule,
     DatetimeFilterModule,
-    MultiFilter2Module
+    MultiFilter2Module,
+    CardDetailModule
 
   ],
   declarations: [
