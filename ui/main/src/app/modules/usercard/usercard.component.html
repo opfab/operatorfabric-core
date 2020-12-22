@@ -80,7 +80,7 @@
 
     <br />
     <div style="text-align: center;width:100%">
-        <button type="button" class="opfab-btn" (click)="onSubmitForm(resumeCardBeforeSend)" translate>
+        <button id="opfab-usercard-btn-prepareCard" type="button" class="opfab-btn" (click)="onSubmitForm(resumeCardBeforeSend)" translate>
             userCard.prepareCard
 
         </button>
@@ -99,7 +99,7 @@
     <of-card [lightCard]="card" [open]="true" [displayUnreadIcon]="false"></of-card>
     <br />
     <div style="text-align: center;">
-        <button type="button" class="opfab-btn" (click)="sendAnotherUserCard()"
+        <button id="opfab-usercard-btn-sendAnotherCard" type="button" class="opfab-btn" (click)="sendAnotherUserCard()"
             translate>userCard.send-another-one</button>
     </div>
 </div>
@@ -108,7 +108,7 @@
 <div id='div-detail-msg' *ngIf='errorMessage.display' class="alert alert-dismissible fade show text-center alert-danger"
     role="alert" translate>
     {{errorMessage.text}}
-    <button type="button" class="close" aria-label="Close" (click)="errorMessage.display = false">
+    <button id="opfab-usercard-btn-close" type="button" class="close" aria-label="Close" (click)="errorMessage.display = false">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
@@ -116,7 +116,7 @@
 <ng-template #resumeCardBeforeSend let-modal>
     <div class="modal-header">
         <h4 translate> userCard.confirmSending </h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <button id="opfab-usercard-btn-close" type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -132,8 +132,8 @@
         </div>
         <div class="modal-footer" style="margin-top:10px;margin-bottom: 0px;" ></div>
         <div style="text-align: center;width:100%">
-            <button type="button" class="opfab-btn-cancel" (click)="decline()" translate>userCard.refuse</button>
-            <button type="button" class="opfab-btn" (click)="confirm()" translate>userCard.accept</button>
+            <button id="opfab-usercard-btn-refuse" type="button" class="opfab-btn-cancel" (click)="decline()" translate>userCard.refuse</button>
+            <button id="opfab-usercard-btn-accept" type="button" class="opfab-btn" (click)="confirm()" translate>userCard.accept</button>
         </div>
     </div>
 </ng-template>

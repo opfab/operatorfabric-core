@@ -103,7 +103,7 @@
         <div *ngFor="let title of currentCircleHovered.summary;let i=index" style="padding: 0px;margin: 0px;line-height: 8px">
             <div *ngIf="i<maxNumberLinesForBubblePopover">
                 <br/>
-                <button class="btn btn-cardlink btn-sm" (click)="showCard(title.cardId)">
+                <button id="opfab-timeline-bubble-btn" class="btn btn-cardlink btn-sm" (click)="showCard(title.cardId)">
                     <div style="text-align:left">
                         {{title.summaryDate}}
                         <span translate [translateParams]="title.parameters"

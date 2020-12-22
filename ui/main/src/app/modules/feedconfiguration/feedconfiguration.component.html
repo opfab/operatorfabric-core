@@ -56,7 +56,7 @@
             <h4 translate style="text-align: center" class="text-danger"> {{messageAfterSavingSettings}} </h4>
         </div>
         <div style="text-align: center;width:100%">
-            <button type="button" class="opfab-btn" (click)='open(confirmationPopup)' style="text-align: center;" translate>feedConfiguration.confirmSettings</button>
+            <button id="opfab-feedconfiguration-btn-confirm" type="button" class="opfab-btn" (click)='open(confirmationPopup)' style="text-align: center;" translate>feedConfiguration.confirmSettings</button>
         </div>
     </form>
 
@@ -67,13 +67,13 @@
     <ng-template #confirmationPopup let-modal>
         <div class="modal-header">
             <h4 translate> feedConfiguration.popup.title </h4>
-            <button type="button" class="close" aria-label="Close" (click)="modalRef.dismiss('Cross click')">
+            <button id="opfab-feedconfiguration-btn-close" type="button" class="close" aria-label="Close" (click)="modalRef.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <div class="modal-body text-center">
             <p translate>feedConfiguration.popup.areYouSure</p>
-            <button type="button" class="opfab-btn" (click)="confirmSaveSettings()" translate>button.yes</button>
+            <button id="opfab-feedconfiguration-btn-yes" type="button" class="opfab-btn" (click)="confirmSaveSettings()" translate>button.yes</button>
         </div>
     </ng-template>
 </div>

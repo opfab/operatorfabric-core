@@ -40,59 +40,59 @@
             class="alert alert-dismissible fade show text-center {{message.color}}"
           role="alert">
         <span [innerHTML]='message.text' translate></span>
-        <button type="button" class="close" aria-label="Close" (click)="message.display = false">
+        <button id="opfab-card-details-btn-close" type="button" class="close" aria-label="Close" (click)="message.display = false">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
     
       <div id='div-detail-btn' *ngIf="showButtons" >
-        <button class="opfab-btn"  *ngIf='showActionButton && isActionEnabled '
+        <button id="opfab-card-details-btn-response" class="opfab-btn"  *ngIf='showActionButton && isActionEnabled '
           translate [translateParams]="responseDataParameters" [disabled]='lttdExpiredIsTrue || !isActionEnabled'
                 (click)='submitResponse()'>{{btnText}}</button>
     
-        <button class="opfab-btn"  *ngIf='showAckButton' translate
+        <button id="opfab-card-details-btn-ack" class="opfab-btn"  *ngIf='showAckButton' translate
           (click)='acknowledge()'>{{btnAckText}}</button>
     
-        <button class="opfab-btn"  *ngIf='showEditAndDeleteButton' translate
+        <button id="opfab-card-details-btn-delete" class="opfab-btn"  *ngIf='showEditAndDeleteButton' translate
                 (click)='open(doYouReallyWantToDeleteCardPopup)'>{{'button.delete'}}</button>
-        <button class="opfab-btn "*ngIf='showEditAndDeleteButton' translate
+        <button id="opfab-card-details-btn-edit" class="opfab-btn "*ngIf='showEditAndDeleteButton' translate
                 (click)='editCard()'>{{'button.edit'}}</button>
       </div>
     
       <ng-template #doYouReallyWantToDeleteCardPopup let-modal>
         <div class="modal-header">
           <h4 translate> userCard.deleteCard.doYouReallyWant </h4>
-          <button type="opfab-btn" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <button id="opfab-card-details-delete-btn-close" type="opfab-btn" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body text-center">
-          <button type="button" class="opfab-btn-cancel" (click)="declineDeleteCard()" translate>button.cancel</button>
-          <button type="button" class="opfab-btn" (click)="confirmDeleteCard()" translate>button.delete</button>
+          <button id="opfab-card-details-delete-btn-cancel" type="button" class="opfab-btn-cancel" (click)="declineDeleteCard()" translate>button.cancel</button>
+          <button id="opfab-card-details-delete-btn-confirm" type="button" class="opfab-btn" (click)="confirmDeleteCard()" translate>button.delete</button>
         </div>
       </ng-template>
     
       <ng-template #cardDeletedWithNoErrorPopup let-modal>
         <div class="modal-header text-center">
           <h4 class="modal-title w-100" translate> userCard.deleteCard.cardDeletedWithNoError </h4>
-          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <button id="opfab-card-details-delete-btn-close" type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body text-center">
-          <button type="button" class="opfab-btn" (click)="modal.dismiss()" translate>button.ok</button>
+          <button id="opfab-card-details-delete-btn-ok"type="button" class="opfab-btn" (click)="modal.dismiss()" translate>button.ok</button>
         </div>
       </ng-template>
     
       <ng-template #impossibleToDeleteCardPopup let-modal>
         <div class="modal-header text-center">
           <h4 class="modal-title w-100" translate> userCard.deleteCard.error.impossibleToDeleteCard </h4>
-          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <button id="opfab-card-details-delete-error-btn-close" type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body text-center">
-          <button type="button" class="opfab-btn" (click)="modal.dismiss()" translate>button.ok</button>
+          <button id="opfab-card-details-delete-error-btn-close" type="button" class="opfab-btn" (click)="modal.dismiss()" translate>button.ok</button>
         </div>
       </ng-template>
     </div>

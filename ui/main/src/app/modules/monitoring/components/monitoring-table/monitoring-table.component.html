@@ -42,7 +42,7 @@
 </table>
 
 <div class="export-div">
-    <button class="opfab-btn export-btn" type="button" (click)="export()"
+    <button id="opfab-monitoring-btn-exportToExcel" class="opfab-btn export-btn" type="button" (click)="export()"
         fileName="monitoringResults" translate>
         <em class="fa fa-file-export"></em> monitoring.ExportTOExcel</button>
 </div>
@@ -52,7 +52,7 @@
 
 <ng-template #cardDetail let-modal>
     <div class="modal-header">
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <button id="opfab-monitoring-btn-close" type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
