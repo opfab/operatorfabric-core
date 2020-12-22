@@ -258,6 +258,7 @@ export class CardService {
     }
 
     fetchLoggingResults(filters: Map<string, string[]>): Observable<Page<LineOfLoggingResult>> {
+        filters.set('childCards', ['true']);
         return this.fetchArchivedCards(filters).pipe(
             map((page: Page<LightCard>) => {
                 const cards = page.content;
