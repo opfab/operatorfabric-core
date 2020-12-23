@@ -30,7 +30,6 @@ import {TypeaheadModule} from 'ngx-type-ahead';
 import {TimeService} from '@ofServices/time.service';
 import {UtilitiesModule} from '../utilities/utilities.module';
 import {FontAwesomeIconsModule} from '../utilities/fontawesome-icons.module';
-import { FlatpickrModule } from 'angularx-flatpickr';
 import {DatetimeFilterModule} from '../../components/share/datetime-filter/datetime-filter.module';
 import { FeedSortComponent } from './components/card-list/filters/feed-sort/feed-sort.component';
 
@@ -48,8 +47,7 @@ import { FeedSortComponent } from './components/card-list/filters/feed-sort/feed
         DatetimeFilterModule,
         FeedRoutingModule,
         FontAwesomeIconsModule,
-        UtilitiesModule,
-        FlatpickrModule.forRoot()
+        UtilitiesModule
     ],
     declarations: [CardListComponent,
         FeedComponent,
