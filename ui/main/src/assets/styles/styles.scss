@@ -138,6 +138,7 @@ body {
 // INPUT FIELD STYLE 
 
 
+
 .opfab-input, .form-control{
   box-sizing: border-box;
   position: relative;
@@ -166,7 +167,27 @@ body {
   border: none;
   outline: none;
   -webkit-appearance: none;
+  -webkit-autofill:none;
+
+  // Firefox : to avoid browser styling when auto-filling input field (example password) 
+  // see https://stackoverflow.com/questions/55228377/remove-new-firefox-autofill-color
+  filter: none;
 }
+
+  // Chrome  : to avoid browser styling when auto-filling input field (example password) 
+  // see https://stackoverflow.com/questions/2781549/removing-input-background-colour-for-chrome-autocomplete
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:focus, 
+  input:-webkit-autofill:active  {
+      -webkit-box-shadow: 0 0 0 30px var(--opfab-bgcolor) inset !important;
+  }
+  input:-webkit-autofill {
+    -webkit-text-fill-color: var(--opfab-text-color) !important;
+  }
+  
+
+  
 
 .opfab-input > label {
   margin-left: 10px;

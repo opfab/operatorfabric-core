@@ -31,10 +31,9 @@ export class GlobalStyleService {
                                         --opfab-form-label-text-color: black;
                                         --opfab-form-border-color:  #9C9B9B;
                                         --opfab-button-disable-bgcolor: #eeeeee;
-                                        --opfab-feedbar-bgcolor:#aaaaaa;
-                                        --opfab-feedbar-icon-color: white;
+                                        --opfab-feedbar-icon-color: black;
                                         --opfab-feedbar-icon-hover-color:#212529;
-                                        --opfab-feedbar-icon-hover-bgcolor:white;
+                                        --opfab-feedbar-icon-hover-bgcolor: #F3F2F1;
                                         --opfab-timeline-bgcolor: #F3F2F1;
                                         --opfab-timeline-text-color: #000000;
                                         --opfab-timeline-grid-color: #C9CCD1;
@@ -82,10 +81,9 @@ export class GlobalStyleService {
                                         --opfab-form-border-color:  #606267;
                                         --opfab-form-label-text-color: #bababa;
                                         --opfab-button-disable-bgcolor: #2B353F;
-                                        --opfab-feedbar-bgcolor:#222933;
                                         --opfab-feedbar-icon-color: white;
-                                        --opfab-feedbar-icon-hover-color:#212529;
-                                        --opfab-feedbar-icon-hover-bgcolor:white;
+                                        --opfab-feedbar-icon-hover-color:white;
+                                        --opfab-feedbar-icon-hover-bgcolor:#131D2B;
                                         --opfab-timeline-bgcolor: #131D2B;
                                         --opfab-timeline-text-color: #ffffff;
                                         --opfab-timeline-grid-text-color: #bababa;

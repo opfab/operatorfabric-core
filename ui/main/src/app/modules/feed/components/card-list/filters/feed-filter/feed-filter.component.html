@@ -9,27 +9,30 @@
 
 
 <ng-template #filterTypeContent>
+
+
+
     <div class="row filter-header">
         <span translate>feed.filters.type.title</span>
     </div>
     <form [formGroup]="typeFilterForm" id="type-filter-form">
         <div class="form-group form-check">
-            <input type="checkbox" id="type-alarm" class="form-check-input" formControlName="alarm">
+            <input type="checkbox" id="opfab-feed-filter-severity-alarm" class="form-check-input" formControlName="alarm">
             <label for="type-alarm" class="form-check-label label-sev-alarm"
                 translate>feed.filters.type.alarm.label</label>
         </div>
         <div class="form-group form-check">
-            <input type="checkbox" id="type-action" class="form-check-input" formControlName="action">
+            <input type="checkbox" id="opfab-feed-filter-severity-action" class="form-check-input" formControlName="action">
             <label for="type-action" class="form-check-label label-sev-action"
                 translate>feed.filters.type.action.label</label>
         </div>
         <div class="form-group form-check">
-            <input type="checkbox" id="type-compliant" class="form-check-input" formControlName="compliant">
+            <input type="checkbox" id="opfab-feed-filter-severity-compliant" class="form-check-input" formControlName="compliant">
             <label for="type-compliant" class="form-check-label label-sev-compliant"
                 translate>feed.filters.type.compliant.label</label>
         </div>
         <div class="form-group form-check">
-            <input type="checkbox" id="type-information" class="form-check-input" formControlName="information">
+            <input type="checkbox" id="opfab-feed-filter-severity-information" class="form-check-input" formControlName="information">
             <label for="type-information" class="form-check-label label-sev-information"
                 translate>feed.filters.type.information.label</label>
         </div>
@@ -40,17 +43,17 @@
         </div>
         <form [formGroup]="ackFilterForm" id="ack-filter-form">
             <div class="form-group form-check">
-                <input type="radio" id="ack-all" class="form-check-input" formControlName="ackControl" value="all">
+                <input type="radio" id="opfab-feed-filter-ack-all" class="form-check-input" formControlName="ackControl" value="all">
                 &nbsp;
                 <label for="ack-all" class="form-check-label" translate>feed.filters.ack.all.label</label>
             </div>
             <div class="form-group form-check">
-                <input type="radio" id="ack-ack" class="form-check-input" formControlName="ackControl" value="ack">
+                <input type="radio" id="opfab-feed-filter-ack-ack" class="form-check-input" formControlName="ackControl" value="ack">
                 &nbsp;
                 <label for="ack-ack" class="form-check-label" translate>feed.filters.ack.acknowledged.label</label>
             </div>
             <div class="form-group form-check">
-                <input type="radio" id="ack-notack" class="form-check-input" formControlName="ackControl"
+                <input type="radio" id="opfab-feed-filter-ack-notack" class="form-check-input" formControlName="ackControl"
                     value="notack">
                 &nbsp;
                 <label for="ack-notack" class="form-check-label"
@@ -59,7 +62,8 @@
 
         </form>
     </div>
-    <div *ngIf="!(hideTimerTags)">
+    
+    <div *ngIf="!(hideTimerTags)" style="width:300px">
 
         <div class="row filter-header" *ngIf="filterByPublishDate">
             <span translate>feed.filters.time.titleIfFilterBasedOnPublishDate</span>
@@ -70,16 +74,16 @@
 
         <form [formGroup]="timeFilterForm" id="time-filter-form">
 
-            <div class="row" style="margin-left: 2px; margin-right: 2px;">
+            <div style="margin-left: 2px; margin-right: 2px;margin-top:-10px">
                 <div class="form-group" id="start">
-                    <of-datetime-filter id="dateTimeFrom"  (change)="onDateTimeChange($event)" filterPath="start.label" formControlName="dateTimeFrom"
+                    <of-datetime-filter id="opfab-feed-filter-dateTimeFrom"  (change)="onDateTimeChange($event)" filterPath="start.label" formControlName="dateTimeFrom"
                         labelKey="feed.filters.time."></of-datetime-filter>
                 </div>
             </div>
 
-            <div class="row" style="margin-left: 2px; margin-right: 2px;">
+            <div style="margin-left: 2px; margin-right: 2px;margin-top:-20px">
                 <div class="form-group" id="end">
-                    <of-datetime-filter id="dateTimeTo" filterPath="end.label" formControlName="dateTimeTo"
+                    <of-datetime-filter id="opfab-feed-filter-dateTimeTo" filterPath="end.label" formControlName="dateTimeTo"
                         labelKey="feed.filters.time." (change)="onDateTimeChange($event)"></of-datetime-filter>
                 </div>
 
@@ -93,8 +97,10 @@
 
 
 <ng-template #filterTypeTitle><span translate>feed.filters.type.title</span></ng-template>
-<button type="button" class="btn btn-outline-secondary p-1 mr-1 border-0 " placement="bottom-left"
-    [ngbPopover]="filterTypeContent" container="body" [autoClose]="'outside'">
-    <div class="opfab-menu-icon opfab-icon-filter"></div>
-    
-</button>
+
+
+<div class="opfab-icon-bg-color">
+    <div id="opfab-feed-filter-btn-filter" class="opfab-icon-filter" placement="bottom-left" [ngbPopover]="filterTypeContent"
+        container="body" [autoClose]="'outside'">
+    </div>
+</div>

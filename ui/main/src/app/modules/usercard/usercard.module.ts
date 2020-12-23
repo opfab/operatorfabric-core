@@ -13,7 +13,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {UserCardComponent} from './usercard.component';
 import {UserCardRoutingModule} from './usercard-routing.module';
 import {TranslateModule} from '@ngx-translate/core';
-import {FlatpickrModule} from 'angularx-flatpickr';
 import {ArchivesModule} from '../archives/archives.module';
 import {SingleFilterModule} from '../../components/share/single-filter/single-filter.module';
 import {MultiFilterModule} from '../../components/share/multi-filter/multi-filter.module';
@@ -32,7 +31,6 @@ import { CardDetailModule } from 'app/components/share/card-detail/card-detail.m
         ReactiveFormsModule,
         UserCardRoutingModule,
         TranslateModule,
-        FlatpickrModule.forRoot(),
         ArchivesModule,
         SingleFilterModule,
         MultiFilterModule,

@@ -15,15 +15,32 @@
   border-bottom: 1px solid var(--opfab-text-color);
 }
 
-.opfab-menu-icon {
-  display: inline-block;
-  height: 18px;
-  width: 18px;
-  margin-right: 5px;
-  background: var( --opfab-navbar-color-hover);
-  mask-size: cover;
-}
+
+
 
 .opfab-icon-sort {
+  display: inline-block;
+  height: 32px;
+  width: 32px;
+  margin-top:5px;
+  margin-right: 5px;
+  border-width: 0px;
+  background: var( --opfab-navbar-color-hover);
+  mask-size: cover;
   mask: url(assets/images/icons/sort.svg);
+}
+
+.opfab-icon-sort:hover {
+  background: var(--opfab-feedbar-icon-hover-color);
+}
+
+.opfab-icon-bg-color {
+  margin:0px; 
+  border-radius: 3px;
+  padding: 5px;
+}
+
+.opfab-icon-bg-color:hover {
+  background-color: var(--opfab-feedbar-icon-hover-bgcolor);
+
 }
