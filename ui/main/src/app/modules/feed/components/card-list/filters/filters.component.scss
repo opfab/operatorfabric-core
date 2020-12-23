@@ -24,24 +24,18 @@
   }
 }
 
-::ng-deep .opfab-feed-icon{
-  background-color: var(--opfab-feedbar-bgcolor);
-  color: var(--opfab-feedbar-icon-color);
-}
-
-
-::ng-deep .opfab-feed-icon:hover{
-  background: var(--opfab-feedbar-icon-hover-color);
-  color: var(--opfab-feedbar-icon-hover-bgcolor);
-}
-
 .opfab-feedbar {
-  background-color: var(--opfab-feedbar-bgcolor);
-  margin-right: 20px;
+  background-color: var(--opfab-bgcolor);
+  padding-right: 20px;
+  display:flex; 
+  width:100%;
 }
 
-.nomarginrow {
-    margin-left:0;
-    margin-right:0;
+.opfab-feed-spinner {
+  margin-top: 3px;
+  font-size: 25px;
+  margin-left: 10px;
+  width : 40px;
+  color: var(--opfab-feedbar-icon-color);
   }
 

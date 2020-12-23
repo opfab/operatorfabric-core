@@ -13,17 +13,17 @@
     </div>
     <form [formGroup]="sortForm" id="sort-form">
         <div *ngIf="!hideReadSort" class="form-group form-check">
-            <input type="radio" id="unread" class="form-check-input" formControlName="sortControl" value="unread">
+            <input type="radio" id="opfab-feed-filter-unread" class="form-check-input" formControlName="sortControl" value="unread">
             &nbsp;
             <label for="unread" class="form-check-label" translate>feed.sort.unread</label>
         </div>
         <div class="form-group form-check">
-            <input type="radio" id="publication" class="form-check-input" formControlName="sortControl" value="date">
+            <input type="radio" id="opfab-feed-filter-publication-date" class="form-check-input" formControlName="sortControl" value="date">
             &nbsp;
             <label for="publication" class="form-check-label" translate>feed.sort.publish</label>
         </div>
         <div *ngIf="!hideSeveritySort" class="form-group form-check">
-            <input type="radio" id="severity" class="form-check-input" formControlName="sortControl"
+            <input type="radio" id="opfab-feed-filter-severity" class="form-check-input" formControlName="sortControl"
                 value="severity">
             &nbsp;
             <label for="severity" class="form-check-label"
@@ -33,7 +33,8 @@
     </form>
 </ng-template>
 
- <button type="button" class="btn btn-outline-secondary p-1 mr-1 border-0 " placement="bottom-left"
-    [ngbPopover]="sortContent" container="body" [autoClose]="'outside'">
-    <div class="opfab-menu-icon opfab-icon-sort"></div>
-</button>
+<div class="opfab-icon-bg-color">
+    <div id="opfab-feed-filter-btn-sort" class="opfab-icon-sort" placement="bottom-left" [ngbPopover]="sortContent"
+        container="body" [autoClose]="'outside'">
+    </div>
+</div>
