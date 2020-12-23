@@ -7,12 +7,13 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-<h2 translate style="text-align: center;">feedConfiguration.title</h2>
-<br />
+<div class="opfab-feedconfiguration-title" translate>
+    feedConfiguration.title
+  </div>
+  
 
-<div class="container-fluid">
     <form [formGroup]="feedConfigurationForm">
-        <div *ngFor="let processGroup of processGroups; ">
+        <div *ngFor="let processGroup of processGroups; " class="opfab-feedconfiguration-processlist">
             <h5 class="font-weight-bold" translate>{{processGroup.id}}</h5>
             <div class="row">
                 <div class="col-md" *ngFor="let processKey of processGroup.processes; ">
@@ -34,7 +35,7 @@
             <br />
         </div>
         <br />
-        <div class="row">
+        <div class="row opfab-feedconfiguration-processlist">
             <div class="col-md" *ngFor="let processId of processesWithoutGroup; ">
                 <p class="font-weight-bold" translate>{{processesStatesLabels.get(processId).processI18n}}</p>
                 <div class="custom-control custom-checkbox" >
@@ -50,18 +51,15 @@
         </div>
 
         <br />
-        <div *ngIf="displaySendResultOk">
-            <h2 translate style="text-align: center" class="text-success"> {{messageAfterSavingSettings}} </h2>
-        </div>
 
         <div *ngIf="displaySendResultError">
-            <h2 translate style="text-align: center" class="text-danger"> {{messageAfterSavingSettings}} </h2>
+            <h4 translate style="text-align: center" class="text-danger"> {{messageAfterSavingSettings}} </h4>
         </div>
         <div style="text-align: center;width:100%">
-            <button type="button" class="btn btn-primary" (click)='open(confirmationPopup)' style="text-align: center;" translate>feedConfiguration.confirmSettings</button>
+            <button id="opfab-feedconfiguration-btn-confirm" type="button" class="opfab-btn" (click)='open(confirmationPopup)' style="text-align: center;" translate>feedConfiguration.confirmSettings</button>
         </div>
     </form>
-</div>
+
 
 
 
@@ -69,13 +67,13 @@
     <ng-template #confirmationPopup let-modal>
         <div class="modal-header">
             <h4 translate> feedConfiguration.popup.title </h4>
-            <button type="button" class="close" aria-label="Close" (click)="modalRef.dismiss('Cross click')">
+            <button id="opfab-feedconfiguration-btn-close" type="button" class="close" aria-label="Close" (click)="modalRef.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <div class="modal-body text-center">
             <p translate>feedConfiguration.popup.areYouSure</p>
-            <button type="button" class="btn btn-primary" (click)="confirmSaveSettings()" translate>button.yes</button>
+            <button id="opfab-feedconfiguration-btn-yes" type="button" class="opfab-btn" (click)="confirmSaveSettings()" translate>button.yes</button>
         </div>
     </ng-template>
 </div>

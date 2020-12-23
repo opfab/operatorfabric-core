@@ -6,55 +6,48 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<form [formGroup]="monitoringForm">
-    <div class="container-fluid">
-        <div class="form-row nomarginrow justify-content-center">
-            <div class="col-lg-3 col-md-4">
-                        <of-multi-filter-2 filterPath="process"
-                                           id="process"
-                                           formControlName="process"
-                                           [parentForm]="monitoringForm"
-                                           [values]="dropdownList"
-                                           [(ngModel)]="dropdownList"
-                                           [dropdownSettings]="dropdownSettings"
-                                           i18nRootLabelKey="monitoring.filters."
-                        ></of-multi-filter-2>
+<form [formGroup]="monitoringForm" #currentForm>
+    <div class="opfab-monitoring opfab-form-darker">
+        <div style="display: flex;">
+            <div style="margin-top: 28px;margin-right: 40px;position:relative; min-width:400px;max-width:550px;">
+                <of-multi-filter-2 filterPath="process" id="process" formControlName="process"
+                    [parentForm]="monitoringForm" [values]="dropdownList" [(ngModel)]="dropdownList"
+                    [dropdownSettings]="dropdownSettings" [selectedItems]="[]" i18nRootLabelKey="monitoring.filters.">
+                </of-multi-filter-2>
             </div>
-            <div class="col-lg-2 col-md-4">
-                <of-datetime-filter filterPath="publishDateFrom" formControlName="publishDateFrom"
-                                    labelKey="archive.filters."
-                ></of-datetime-filter>
+            <div class="opfab-vertical-bar"></div>
+            <div style="margin-left:40px;margin-right: 30px;width:300px;min-width: 250px;">
+                <div>
+                    <of-datetime-filter filterPath="publishDateFrom" formControlName="publishDateFrom"
+                        labelKey="archive.filters."></of-datetime-filter>
+                </div>
+                <div>
+                    <of-datetime-filter filterPath="publishDateTo" formControlName="publishDateTo"
+                        labelKey="archive.filters."></of-datetime-filter>
+                </div>
             </div>
-            <div class="col-lg-2 col-md-4">
-                <of-datetime-filter filterPath="publishDateTo" formControlName="publishDateTo"
-                                    labelKey="archive.filters."
-                ></of-datetime-filter>
+
+            <div class="opfab-vertical-bar"></div>
+            <div style="margin-left:40px;width:300px;min-width: 250px;">
+                <div>
+                    <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom"
+                        labelKey="archive.filters."></of-datetime-filter>
+                </div>
+                <div>
+                    <of-datetime-filter filterPath="activeTo" formControlName="activeTo" labelKey="archive.filters.">
+                    </of-datetime-filter>
+                </div>
             </div>
-            <div class="col-lg-2 col-md-4">
-                <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom"
-                                    labelKey="archive.filters."
-                                    [offset]="[{amount:0, unit:'hours'}]"
-                ></of-datetime-filter>
-            </div>
-            <div class="col-lg-2 col-md-4">
-                <of-datetime-filter filterPath="activeTo" formControlName="activeTo"
-                                    labelKey="archive.filters."
-                                    [offset]="[{amount:0, unit:'hours'}]"
-                ></of-datetime-filter>
-            </div>
-            <div class="col-lg-auto col-md-2" style="margin-top:30px;margin-left:11px">
+            <div style="margin-top:125px; margin-left:60px;min-width: 320px; ">
                 <div class="form-group">
                     <div class="row">
-                        <button type="button" class="btn btn-primary archive-radius" (click)="sendQuery()">
-                            <em class="fas fa-search"></em>
-                        </button>
-                        <button type="button" id="reset" class="btn btn-primary archive-radius"
-                                (click)="resetForm()">
-                            <em class="fas fa-undo"></em>
-                        </button>
+                        <button id="opfab-monitoring-btn-search" class="opfab-btn" (click)='sendQuery()' translate> button.search</button>
+                        <button id="opfab-monitoring-btn-reset" class="opfab-btn-cancel" (click)='resetForm()' translate> button.reset</button>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 </form>

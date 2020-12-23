@@ -60,7 +60,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   private xAxisHeight = 0;
   private yAxisWidth = 0 ;
   public xScale: any;
-  private margin: any[] = [10, 20, 10, 0];
+  private margin: any[] = [25, 15, 10, 0];
   public translateGraph: string;
   public translateXTicksTwo: string;
   public xRealTimeLine: moment.Moment;
@@ -416,10 +416,10 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   getCircleColor(severity: string): string {
     if (severity) {
       switch (severity) {
-        case 'ALARM': return 'red';
-        case 'ACTION': return 'orange';
-        case 'COMPLIANT': return 'green';
-        case 'INFORMATION': return 'blue';
+        case 'ALARM': return '#A71A1A'; // red
+        case 'ACTION': return '#FD9313'; // orange
+        case 'COMPLIANT': return '#00BB03'; // green
+        case 'INFORMATION': return '#1074AD'; // blue
         default:  return 'blue';
       }
     } else { return 'blue'; }

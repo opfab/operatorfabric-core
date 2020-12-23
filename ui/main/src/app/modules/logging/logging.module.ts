@@ -17,8 +17,6 @@ import {LoggingTableComponent} from './components/logging-table/logging-table.co
 import {LoggingComponent} from './logging.component';
 import {LoggingFiltersComponent} from './components/logging-filters/logging-filters.component';
 import {DatetimeFilterModule} from '../../components/share/datetime-filter/datetime-filter.module';
-import {MultiFilterModule} from '../../components/share/multi-filter/multi-filter.module';
-import {LoggingPageComponent} from './components/logging-table/logging-page/logging-page.component';
 import {MultiFilter2Module} from '../../components/share/multi-filter-2/multi-filter-2.module';
 
 
@@ -36,8 +34,7 @@ import {MultiFilter2Module} from '../../components/share/multi-filter-2/multi-fi
     declarations: [
     LoggingComponent,
     LoggingTableComponent,
-    LoggingFiltersComponent,
-    LoggingPageComponent
+    LoggingFiltersComponent
 ]
 })
 export class LoggingModule {

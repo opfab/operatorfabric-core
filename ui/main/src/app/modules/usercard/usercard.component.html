@@ -6,8 +6,8 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<h2 *ngIf="!editCardMode" translate style="text-align: center;">userCard.title</h2>
-<h2 *ngIf="editCardMode" translate style="text-align: center;">userCard.editTitle</h2>
+<div *ngIf="!editCardMode" translate style="text-align: center;">userCard.title</div>
+<div *ngIf="editCardMode" translate style="text-align: center;">userCard.editTitle</div>
 
 <br />
 <div *ngIf="displayForm()" class="container">
@@ -63,6 +63,7 @@
 
     <br/>   
 
+    
 
     <form [formGroup]="recipientForm">
         <div class="row">
@@ -73,12 +74,13 @@
                 </of-multi-filter-2>
             </div>
 
-        </div>
+        </div> 
     </form>
+
 
     <br />
     <div style="text-align: center;width:100%">
-        <button type="button" class="btn btn-primary" (click)="onSubmitForm(resumeCardBeforeSend)" translate>
+        <button id="opfab-usercard-btn-prepareCard" type="button" class="opfab-btn" (click)="onSubmitForm(resumeCardBeforeSend)" translate>
             userCard.prepareCard
 
         </button>
@@ -97,7 +99,7 @@
     <of-card [lightCard]="card" [open]="true" [displayUnreadIcon]="false"></of-card>
     <br />
     <div style="text-align: center;">
-        <button type="button" class="btn btn-primary" (click)="sendAnotherUserCard()"
+        <button id="opfab-usercard-btn-sendAnotherCard" type="button" class="opfab-btn" (click)="sendAnotherUserCard()"
             translate>userCard.send-another-one</button>
     </div>
 </div>
@@ -106,7 +108,7 @@
 <div id='div-detail-msg' *ngIf='errorMessage.display' class="alert alert-dismissible fade show text-center alert-danger"
     role="alert" translate>
     {{errorMessage.text}}
-    <button type="button" class="close" aria-label="Close" (click)="errorMessage.display = false">
+    <button id="opfab-usercard-btn-close" type="button" class="close" aria-label="Close" (click)="errorMessage.display = false">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
@@ -114,7 +116,7 @@
 <ng-template #resumeCardBeforeSend let-modal>
     <div class="modal-header">
         <h4 translate> userCard.confirmSending </h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <button id="opfab-usercard-btn-close" type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -125,12 +127,13 @@
 
             <of-card [lightCard]="card" [open]="true" [displayUnreadIcon]="false"></of-card>
 
-            <of-card-preview [card]="card" [currentPath]="'test'"> </of-card-preview>
+             <of-card-detail [card]="card"> </of-card-detail>
 
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="decline()" translate>userCard.refuse</button>
-            <button type="button" class="btn btn-outline-dark" (click)="confirm()" translate>userCard.accept</button>
+        <div class="modal-footer" style="margin-top:10px;margin-bottom: 0px;" ></div>
+        <div style="text-align: center;width:100%">
+            <button id="opfab-usercard-btn-refuse" type="button" class="opfab-btn-cancel" (click)="decline()" translate>userCard.refuse</button>
+            <button id="opfab-usercard-btn-accept" type="button" class="opfab-btn" (click)="confirm()" translate>userCard.accept</button>
         </div>
     </div>
 </ng-template>

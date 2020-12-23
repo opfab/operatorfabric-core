@@ -25,7 +25,6 @@ import {reducer as cardReducer} from '@ofStore/reducers/card.reducer';
 import {reducer as configReducer} from '@ofStore/reducers/config.reducer';
 import {reducer as settingsReducer} from '@ofStore/reducers/settings.reducer';
 import {reducer as menuReducer} from '@ofStore/reducers/menu.reducer';
-import {reducer as archiveReducer} from '@ofStore/reducers/archive.reducer';
 import {reducer as globalStyleReducer} from '@ofStore/reducers/global-style.reducer';
 import {reducer as loggingReducer} from '@ofStore/reducers/logging.reducer';
 import {reducer as monitoringReducer} from '@ofStore/reducers/monitoring.reducer';
@@ -38,8 +37,6 @@ import {FeedFiltersEffects} from '@ofEffects/feed-filters.effects';
 import {ConfigState} from '@ofStates/config.state';
 import {SettingsState} from '@ofStates/settings.state';
 import {SettingsEffects} from '@ofEffects/settings.effects';
-import {ArchiveState} from '@ofStates/archive.state';
-import {ArchiveEffects} from '@ofEffects/archive.effects';
 
 import {reducer as userReducer} from '@ofStore/reducers/user.reducer';
 import {UserState} from '@ofStates/user.state';
@@ -63,7 +60,6 @@ export interface AppState {
     menu: MenuState;
     config: ConfigState;
     settings: SettingsState;
-    archive: ArchiveState;
     user: UserState;
     cardsSubscription: CardsSubscriptionState;
     globalStyle: GlobalStyleState;
@@ -80,7 +76,6 @@ export const appEffects = [
     AuthenticationEffects,
     MenuEffects,
     FeedFiltersEffects,
-    ArchiveEffects,
     UserEffects,
     LoggingEffects,
     MonitoringEffects
@@ -94,7 +89,6 @@ export const appReducer: ActionReducerMap<AppState> = {
     menu: menuReducer,
     config: configReducer,
     settings: settingsReducer,
-    archive: archiveReducer,
     user: userReducer,
     cardsSubscription: cardsSubscriptionReducer,
     globalStyle: globalStyleReducer,

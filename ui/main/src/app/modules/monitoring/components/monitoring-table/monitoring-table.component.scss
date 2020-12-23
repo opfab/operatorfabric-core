@@ -8,46 +8,24 @@
  * This file is part of the OperatorFabric project.
  */
 
-table {
-  text-align: center;
-  background-color: var(--opfab-lightcard-detail-bgcolor);
-  color: var(--opfab-lightcard-detail-textcolor);
-}
-
-.status {
-  float: right;
-  width: 10%;
-  shape-outside: circle();
-  clip-path: circle();
-}
-
-// not displayed but still read by VoiceOver
-.hidden-caption {
-  visibility: collapse;
-}
 
 .export-div {
   padding-top: 1px;
   padding-left: 10px;
   max-width: 100%;
-  height: 30px;
+  height: 60px;
   clear: left;
 }
 .export-btn {
   float: right;
 }
 
-.modal-body{
-  background-color: var(--opfab-lightcard-detail-bgcolor);
-  color: var(--opfab-lightcard-detail-textcolor);
-}
 
-
-.modal-header{
-  background-color: var(--opfab-lightcard-detail-bgcolor);
-  color: var(--opfab-lightcard-detail-textcolor);
-}
-
-.btn{
-  color: var(--opfab-lightcard-detail-textcolor);
+.opfab-monitoring-icon {
+  display: inline-block;
+  height: 18px;
+  width: 30px;
+  margin-right: 5px;
+  background: var( --opfab-text-color); 
+  mask-size: cover;
 }

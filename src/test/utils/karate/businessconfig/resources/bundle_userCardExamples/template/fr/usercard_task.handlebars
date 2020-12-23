@@ -1,35 +1,84 @@
 
-
-Description de la tâche: <input size="50" type="text" id="taskDescription" value="{{card.data.taskDescription}}"> </input> 
+<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
 
 <br/>
+<div class="opfab-input">
+    <label for="taskDescription"> DESCRIPTION DE LA TACHE </label>
+    <input size="50" type="text" id="taskDescription" value="{{card.data.taskDescription}}"> </input> 
+</div>
 <br/>
 
-Se répète chaque  : 
+
+REPETER CHAQUE:
+<br/> <br/>
 <div style="text-align: center;">
     <table width="100%">
         <tr>
-            <td> <input type="checkbox" checked id="Monday"> Lundi </input> </td>
-            <td> <input type="checkbox" checked id="Tuesday"> Mardi </input> </td>
-            <td> <input type="checkbox" checked id="Wednesday"> Mercredi  </input> </td>
-            <td> <input type="checkbox" checked id="Thursday"> Jeudi  </input> </td>
-            <td> <input type="checkbox" checked id="Friday"> Vendredi </input> </td>
-            <td> <input type="checkbox" checked id="Saturday"> Samedi  </input> </td>
-            <td> <input type="checkbox" checked id="Sunday"> Dimanche  </input> </td>
+            <td> <input type="checkbox" checked id="Monday"> LUNDI </input> </td>
+            <td> <input type="checkbox" checked id="Tuesday"> MARDI </input> </td>
+            <td> <input type="checkbox" checked id="Wednesday"> MERCREDI  </input> </td>
+            <td> <input type="checkbox" checked id="Thursday"> JEUDI  </input> </td>
+            <td> <input type="checkbox" checked id="Friday"> VENDREDI  </input> </td>
+            <td> <input type="checkbox" checked id="Saturday"> SAMEDI  </input> </td>
+            <td> <input type="checkbox" checked id="Sunday"> DIMANCHE  </input> </td>
         </tr>
     </table>
 
 </div>
 
 <br/>
-<div style="text-align: center">
- A : &nbsp; 
- <input size="2" maxlength="2" type="text" id="hours"> </input>H  &nbsp;  
- <input size="2" maxlength="2" type="text" id="minutes"> </input> Min , durée
- <input size="3" maxlength="3" type="text" id="durationInMinutes" value="15"> </input> Min , rappel de la tâche  
+<br/>
+<div>
 
- <input size="2" maxlength="2" type="text" id="minutesForReminder" value="5"> </input> minutes avant.
+    <table>
+        <tr>
+            <td style="width:4%">
+                A :
+            </td>
+            <td style="width:10%">
+                <div class="opfab-input">
+                    <label> HEURE </label>
+                    <input style="text-align:center" size="10" maxlength="2" type="text" id="hours">
+                </div>
+            </td>
+    
+            <td style="width:10%">
+                <div class="opfab-input">
+                    <label> MIN </label>
+                    <input style="text-align:center" size="10" maxlength="2" type="text" id="minutes">
+                </div>
+            </td>
+            <td style="width:6%">
+    
+            </td>
+            <td style="width:32%">
+                <div class="opfab-input">
+                    <label> DUREE DE LA TACHE (MINUTES) </label>
+                    <input size="3" maxlength="3" type="text" id="durationInMinutes" value="15">
+                </div>
+            </td>
+            <td style="width:6%">
+    
+            </td>
+            <td style="width:32%">
+                <div class="opfab-input">
+                    <label> MINUTES AVANT LA TACHE POUR LE RAPPEL</label>
+                    <input size="2" maxlength="2" type="text" id="minutesForReminder" value="5">
+                </div>
+            </td>
+        </tr>
+    </table>
+
 </div>
+
+<br/>
+
 
 <script>
     templateGateway.getSpecificCardInformation = function () {

@@ -8,14 +8,14 @@
 
 
 <div *ngIf=hasLinkType(LynkType.TAB)>
-  <a class="text-link" [href]="menuEntry.url" target="_blank" rel="noopener noreferrer" translate>{{menu.id}}.{{menuEntry.label}}</a>
+  <a id="opfab-navbar-menu-{{menu.id}}" class="text-link " [href]="menuEntry.url" target="_blank" rel="noopener noreferrer" translate>{{menu.id}}.{{menuEntry.label}}</a>
 </div>
 <div *ngIf=hasLinkType(LynkType.IFRAME)>
-  <a class="text-link" [routerLink]="['/businessconfigparty',menu.id,menuEntry.id]" translate>{{menu.id}}.{{menuEntry.label}}</a>
+  <a id="opfab-navbar-menu-{{menu.id}}" class="text-link " [routerLink]="['/businessconfigparty',menu.id,menuEntry.id]" translate>{{menu.id}}.{{menuEntry.label}}</a>
 </div>
 <div *ngIf=hasLinkType(LynkType.BOTH)>
-  <a class="text-link" [routerLink]="['/businessconfigparty',menu.id,menuEntry.id]" translate>{{menu.id}}.{{menuEntry.label}}</a>
-  <a class="icon-link" [href]="menuEntry.url" rel="noopener noreferrer" target="_blank">
+  <a id="opfab-navbar-menu-{{menu.id}}" class="text-link " [routerLink]="['/businessconfigparty',menu.id,menuEntry.id]" translate>{{menu.id}}.{{menuEntry.label}}</a>
+  <a id="opfab-navbar-menu-icon-{{menu.id}}" class="icon-link " [href]="menuEntry.url" rel="noopener noreferrer" target="_blank">
     <fa-icon icon="external-link-alt"></fa-icon>
   </a>
 </div>

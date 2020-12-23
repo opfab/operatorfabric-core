@@ -20,7 +20,8 @@ import moment from 'moment';
 
 @Component({
     selector: 'of-monitoring-filters',
-    templateUrl: './monitoring-filters.component.html'
+    templateUrl: './monitoring-filters.component.html',
+    styleUrls: ['./monitoring-filters.component.scss']
 })
 export class MonitoringFiltersComponent implements OnInit, AfterViewInit {
 
@@ -94,13 +95,17 @@ export class MonitoringFiltersComponent implements OnInit, AfterViewInit {
             this.store.dispatch(new ResetFilterForMonitoring());
 
             if (selectedProcesses.value) {
-                const processesId = Array.prototype.map.call(selectedProcesses.value, item => item.id);
-                const procFilter = {
-                    name: FilterType.PROCESS_FILTER
-                    , active: true
-                    , status: {processes: processesId}
-                };
-                this.store.dispatch(new ApplyFilter(procFilter));
+                const processesId  = Array.prototype.map.call(selectedProcesses.value, item => item.id);
+                if (processesId.length >0 ) 
+                {
+                    const procFilter = {
+                        name: FilterType.PROCESS_FILTER
+                        , active: true
+                        , status: {processes: processesId}
+                    };
+                    this.store.dispatch(new ApplyFilter(procFilter));
+                }
+                
             }
 
             if (this.hasFormControlValueChanged(pubStart)

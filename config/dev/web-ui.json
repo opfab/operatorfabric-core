@@ -8,12 +8,6 @@
           "10"
         ]
       },
-      "process": {
-        "list": [
-          "process",
-          "someOtherProcess"
-        ]
-      },
       "tags": {
         "list": [
           {

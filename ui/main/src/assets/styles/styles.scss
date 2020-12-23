@@ -15,22 +15,392 @@
 /* import bootstrap*/
 @import '../../../node_modules/bootstrap/scss/bootstrap.scss';
 @import "navbar.scss";
-@import "utilities.scss";
-@import "popover.scss";
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
-$top-padding: 80px ;
-$bottom-padding: 30px ;
-$body-padding: $top-padding 20px $bottom-padding 20px ;
-$total-vertical-padding: $top-padding + $bottom-padding ;
 
 body {
   color: $light;
-  padding: $body-padding;
+  padding: 80px 0px 30px 0px;
+  margin: 0px 15px 0px 15px;
   min-width: 500px;
   background-color: $dark;
   height: 100vh;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 13px;
 }
+
+
+
+
+// BUTTON STYLE 
+
+.opfab-btn {
+  color: white;
+  background-color: #2784FF;
+  border-width: 0px;
+  border-radius: 2px;
+  height: 40px;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 10px;
+  padding: 10px; 
+  min-width: 150px;
+}
+
+.opfab-btn:hover {
+  background-color: #2268FF;
+}
+ 
+.opfab-btn:disabled {
+  color: #606267 ;
+  background-color: var(--opfab-button-disable-bgcolor);
+}
+
+
+.opfab-btn-cancel {
+  color: #2784FF ;
+  background-color: var(--opfab-bg-color);
+  border-width: 0px;
+  border-radius: 2px;
+  height: 40px;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 10px;
+  padding: 10px; 
+  min-width: 150px;
+}
+
+.opfab-btn-cancel:hover {
+  color: #2268FF;
+}
+// END BUTTON STYLE 
+
+
+// SELECT FIELD STYLE 
+
+
+.opfab-select  {
+  color:var(--opfab-input-text-color);
+  background-color: var(--opfab-bgcolor);
+  box-sizing: border-box;
+  
+  border: 0.5px solid var(--opfab-form-border-color);
+  border-radius: 3px;
+  font-size: 13px;
+  height: 46px;
+  outline: none;
+}
+
+.opfab-select > select {
+  background-color:var(--opfab-bgcolor);
+  color:var(--opfab-input-text-color);
+  padding: 10px;
+  width: calc(100% - 4px);
+  height: 42px;
+  border: none;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.opfab-select > select option {
+  background-color:var(--opfab-bgcolor) ;
+  font-size: 16px;
+}
+
+.opfab-select > label {
+  margin-left: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  position: absolute;
+  font-size: 11px;  
+  top: -10px;
+  left:10;
+  color: var(--opfab-form-label-text-color);
+  background-color: var(--opfab-bgcolor);
+}
+
+.opfab-select::before {
+  content: "V";
+  transform: scaleY(0.5);
+  position: absolute;
+  margin-right: 20px;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 100%;
+  text-align: center;
+  font-size: 30px;
+  color: var(--opfab-form-border-color);
+  pointer-events: none;
+}
+
+
+// INPUT FIELD STYLE 
+
+
+.opfab-input, .form-control{
+  box-sizing: border-box;
+  position: relative;
+  color:var(--opfab-input-text-color);
+  border: 1px solid var(--opfab-form-border-color);
+  border-radius: 3px;
+  font-size: 13px;
+  height: 46px;
+  outline: none;
+  background-color: var(--opfab-bgcolor);
+}
+
+
+// use in date time filter when time is disabled
+.form-control:disabled {
+  background-color: var(--opfab-bgcolor);
+  color: #606267;
+}
+
+.opfab-input > input {
+  background-color:var(--opfab-bgcolor);
+  color:var(--opfab-input-text-color);
+  padding: 10px;
+  width: calc(100% - 4px);
+  height: 42px;
+  border: none;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.opfab-input > label {
+  margin-left: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  position: absolute;
+  font-size: 11px;  
+  //top: 0px;
+  margin-top: -10px;
+  left:10;
+  color: var(--opfab-form-label-text-color);
+  background-color: var(--opfab-bgcolor);
+}
+
+
+
+// TEXTAREA FIELD STYLE 
+
+.opfab-textarea {
+  color:var(--opfab-input-text-color);
+  background-color: var(--opfab-bgcolor);
+  box-sizing: border-box;
+  
+  border: 1px solid var(--opfab-form-border-color);
+  border-radius: 3px;
+  font-size: 13px;
+  outline: none;
+}
+
+.opfab-textarea  > textarea {
+  background-color:var(--opfab-bgcolor);
+  color:var(--opfab-input-text-color);
+  padding: 10px;
+  width: calc(100% - 4px);
+  border: none;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.opfab-textarea  > label {
+  margin-left: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  position: absolute;
+  font-size: 11px;  
+  margin-top: -10px;
+  left:10;
+  color: var(--opfab-form-label-text-color);
+  background-color: var(--opfab-bgcolor);
+}
+
+
+// For time picker
+.btn-link {
+  font-size: 13px;
+  color:var(--opfab-input-text-color);
+}
+
+// ngx-type_ahead conf 
+.opfab-input > type-ahead {
+  padding: 10px;
+  width: calc(100% - 4px);
+  height: 42px;
+  border: none;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+type-ahead > input {
+  background-color:var(--opfab-bgcolor);
+  color:var(--opfab-input-text-color);
+}
+
+
+type-ahead > .badge-primary {
+  background-color:var(--opfab-bgcolor-darker);
+  font-size: 13px;
+  font-weight: lighter;
+  margin-right: 5px;
+  color:var(--opfab-input-text-color);
+}
+// end type-ahead specific conf
+
+
+// Multiselect specific conf 
+
+.opfab-multiselect  {
+  color:var(--opfab-input-text-color);
+  box-sizing: border-box;
+  padding-right: 10px;
+  border: 1px solid var(--opfab-form-border-color);
+  border-radius: 3px;
+  font-size: 13px;
+  outline: none;
+}
+
+
+
+.opfab-multiselect  .c-btn {
+  background-color:var(--opfab-bgcolor);
+  color:var(--opfab-input-text-color);
+  margin: 5px;
+  font-size: 13px;
+  border: none;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+
+.opfab-multiselect > label {
+  margin-left: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  position: absolute;
+  font-size: 11px;  
+  top: -10px;
+  left:10;
+  color: var(--opfab-form-label-text-color);
+  background-color: var(--opfab-bgcolor);
+}
+
+
+
+
+.opfab-multiselect .c-remove {
+  svg {
+      fill:var(--opfab-input-text-color);
+  }
+
+}
+
+.opfab-multiselect::after {
+  content: "V";
+  transform: scaleY(0.5);
+  position: absolute;
+  margin-right: 5px;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 100%;
+  text-align: center;
+  font-size: 30px;
+  color: var(--opfab-form-border-color);
+  pointer-events: none;
+}
+
+// end multiselect specific conf 
+
+
+// Class to use when background form is darker
+
+.opfab-form-darker {
+  .opfab-input,
+  .opfab-input > input, 
+  .opfab-input label , 
+  .opfab-textarea, 
+  .opfab-textarea  > textarea,
+  .opfab-textarea label , 
+  .form-control , 
+  .form-control:disabled , 
+  .opfab-input > input ,
+  .opfab-multiselect, 
+  .opfab-multiselect > label,
+  .opfab-multiselect  .c-btn,
+  .opfab-select,
+  .opfab-select > select,
+  .opfab-select > select option,
+  .opfab-select > label,
+  type-ahead > input{
+    background-color: var(--opfab-bgcolor-darker);
+  } 
+  type-ahead > .badge-primary {
+    background-color: var(--opfab-bgcolor);
+  }
+}
+
+// Table 
+
+
+.opfab-table {
+  
+  background-color: var(--opfab-bgcolor-darker);
+  color: var(--opfab-lightcard-detail-textcolor);
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 5px;
+  
+
+  table {
+    text-align: center;
+    border-bottom: 1px solid var(--opfab-table-border-color);
+    width: 100%;
+  }
+  tr {
+    height: 42px;
+    color: var(--opfab-text-color-stronger);
+  }
+
+  tr:nth-child(even)
+  {
+    background-color: var(--opfab-bgcolor);
+  }
+
+  th {
+    color: var(--opfab-text-color);
+    height: 70px;
+    border-top: 1px solid var(--opfab-table-border-color);
+    border-bottom: 1px solid var(--opfab-table-border-color);
+  }
+
+}
+
+
+
+// Pagination component config 
+
+ngb-pagination {
+  .page-link,.page-item.disabled .page-link {
+      background-color: var(--opfab-bgcolor-darker);
+      color : var(--opfab-text-color-stronger);
+      border : 0px;
+    }
+    .page-item.active .page-link{
+      background-color: white;
+      color : black;
+      border: 0px;
+    }
+
+    .page-link:focus {
+      box-shadow: none;
+    }
+}
+
+
 .archives-page .form-control {
   border-radius: 5px;
   padding: 5px;
@@ -53,7 +423,7 @@ select.form-control[multiple] {
 // if set in the component it does not work 
 .fc th,
 .fc td {
- border-color: var(--opfab-timeline-grid-color);
+ border-color: var(--opfab-calendar-grid-color);
 }
 
 // Override color for today in calendar 
@@ -76,6 +446,16 @@ html, body { height: 100%; }
   max-width: 100vw * 0.9;
 }
 
+.modal-body{
+  background-color: var(--opfab-bgcolor);
+  color: var(--opfab-textcolor);
+}
+
+.modal-header{
+  background-color: var(--opfab-bgcolor);
+  color: var(--opfab-textcolor);
+}
+
 // Global colors 
 
 .opfab-colors {
@@ -85,4 +465,10 @@ html, body { height: 100%; }
 
 .opfab-timeline-bgcolor {
   background-color: var(--opfab-timeline-bgcolor);
+}
+
+// icons
+
+.opfab-icon-eye {
+  mask: url(assets/images/icons/eye.svg);
 }

@@ -7,30 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
- .opfab-card-detail-border{
-  border-color:var(--opfab-card-detail-border-color);
-  border-style: solid;
-  border-left-width: 1px;
-  border-right-width: 1px;
-  border-bottom-width: 1px;
-  border-top-width: 0px;
-  border-radius : 5px;
-}
-
-.modal-body{
- background-color: var(--opfab-lightcard-detail-bgcolor);
- color: var(--opfab-lightcard-detail-textcolor);
-}
-
-
-.modal-header{
- background-color: var(--opfab-lightcard-detail-bgcolor);
- color: var(--opfab-lightcard-detail-textcolor);
-}
-
-.btn{
- color: var(--opfab-lightcard-detail-textcolor);
-}
 
 .calc-height-details {
   overflow-x: hidden;
@@ -39,12 +15,20 @@
 
 .opfab-line-undertab{
   border-color:var(--opfab-card-tab-border-color);
+  border-bottom-width: 0.5px;
 }
 
 .opfab-tab{
-  border-color:var(--opfab-card-tab-border-color);
-  border-radius: 4px;
   color: var(--opfab-card-tab-selected-text-color);
-  background-color: var(--opfab-card-tab-selected-bgcolor);
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+ 
+}
+
+.opfab-card-detail{
+  background-color: var(--opfab-card-bgcolor);
+  box-shadow: var(--opfab-card-shadow)
+
 }
 

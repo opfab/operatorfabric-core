@@ -21,6 +21,7 @@ import { ConfigService } from '@ofServices/config.service';
 import { AppService, PageType } from '@ofServices/app.service';
 import { CountdownComponent, CountdownConfig, CountdownEvent } from 'ngx-countdown';
 import { UserService } from '@ofServices/user.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'of-card',
@@ -37,6 +38,7 @@ export class CardComponent implements OnInit, OnDestroy, DoCheck {
     @Input() public displayUnreadIcon = true;
     currentPath: any;
     protected _i18nPrefix: string;
+    cardTitle: string;
     dateToDisplay: string;
 
     prettyConfig: CountdownConfig;
@@ -57,8 +59,10 @@ export class CardComponent implements OnInit, OnDestroy, DoCheck {
         private time: TimeService,
         private configService: ConfigService,
         private _appService: AppService,
-        private userService: UserService
-    ) { }
+        private userService: UserService,
+        protected translate: TranslateService
+    ) {
+     }
 
     ngOnInit() {
         this.secondsBeforeLttdForClockDisplay = this.configService.getConfigValue('feed.card.secondsBeforeLttdForClockDisplay', false);
@@ -72,10 +76,18 @@ export class CardComponent implements OnInit, OnDestroy, DoCheck {
                     this.currentPath = urlParts[1];
                 }
             });
-
+        this.loadTranslationForTitle();
         this.computeDisplayedDate();
         this.startCountdownWhenNecessary();
     }
+
+    loadTranslationForTitle() {
+         this.translate.get(this.i18nPrefix + this.lightCard.title.key, this.lightCard.title.parameters)
+                    .subscribe(translation =>
+                        this.cardTitle = translation.toUpperCase()
+                    );
+    }
+
 
     ngDoCheck() {
         if (!!this.lightCard.lttd && !this.hideHourInCountDown) {

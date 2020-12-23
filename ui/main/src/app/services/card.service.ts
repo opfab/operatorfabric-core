@@ -222,7 +222,6 @@ export class CardService {
 
     fetchArchivedCards(filters: Map<string, string[]>): Observable<Page<LightCard>> {
         const params = this.convertFiltersIntoHttpParams(filters);
-        // const tmp = new HttpParams().set('publisher', 'defaultPublisher').set('size', '10');
         return this.httpClient.get<Page<LightCard>>(`${this.archivesUrl}/`, {params});
     }
 
@@ -273,7 +272,7 @@ export class CardService {
                         processVersion: card.processVersion,
                         cardType: card.severity.toLowerCase(),
                         businessDate: moment(card.startDate),
-                        i18nKeyForProcessName: this.addPrefix(i18nPrefix, card.title),
+                        i18nKeyForTitle: this.addPrefix(i18nPrefix, card.title),
                         i18nKeyForDescription: this.addPrefix(i18nPrefix, card.summary),
                         sender: sender
                     } as LineOfLoggingResult);

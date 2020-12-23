@@ -11,7 +11,7 @@
 <nav class="navbar navbar-expand-lg fixed-top  opfab-navbar">
   <a class="navbar-brand">
     <div *ngIf="this.customLogo; else opFabLogo">
-      <of-custom-logo [base64]="customLogo" [limitSize]="limitSize" [height]="height" [width]="width" ></of-custom-logo> 
+      <of-custom-logo [base64]="customLogo" [limitSize]="limitSize" [height]="height" [width]="width"></of-custom-logo>
     </div>
     <ng-template #opFabLogo>
       <div class="brand-bg-light">
@@ -19,42 +19,29 @@
       </div>
     </ng-template>
   </a>
-  <button class="navbar-toggler" type="button" (click)="navbarCollapsed = !navbarCollapsed" [attr.aria-expanded]="!navbarCollapsed"
-          aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+  <button class="navbar-toggler" type="button" (click)="navbarCollapsed = !navbarCollapsed"
+    [attr.aria-expanded]="!navbarCollapsed" aria-controls="navbarContent" aria-expanded="false"
+    aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse " id="navbarContent" [ngbCollapse]="navbarCollapsed">
     <ul class="navbar-nav mr-auto ">
       <!-- Links to OperatorFabric pages as defined in app-rooting.module.ts (e.g. Card Feed, Archive) -->
       <li class="nav-item" *ngFor="let link of navigationRoutes, let i = index"
-          [class.active]="currentPath && link.path === currentPath[1]">
-        <a
-                class="nav-link"
-                [routerLink]="link.path"
-                routerLinkActive #rla="routerLinkActive"
-                (click)="activeLinkIndex = i"
-                translate
-        >{{'menu.'+link.path}}</a>
+        [class.active]="currentPath && link.path === currentPath[1]">
+        <a id="opfab-navbar-menu-{{link.path}}" class="nav-link" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
+          (click)="activeLinkIndex = i" translate>{{'menu.'+link.path}}</a>
       </li>
       <!-- Links from menus declared in businessconfig-party bundles-->
-      <li *ngFor="let tMenu of (businessconfigMenus|async); let index = index;"
-          class="nav-item"
-          [class.dropdown]="tMenu.entries.length>1"
-          [class.businessconfig-dropdown]="tMenu.entries.length>1">
+      <li *ngFor="let tMenu of (businessconfigMenus|async); let index = index;" class="nav-item"
+        [class.dropdown]="tMenu.entries.length>1" [class.businessconfig-dropdown]="tMenu.entries.length>1">
         <!-- Dropdown menu if at least 2 entries-->
-        <a
-                class="nav-link"
-                [id]="'drop_'+tMenu.id"
-                [attr.aria-expanded]="expandedMenu[index]"
-                (click)="toggleMenu(index)"
-                *ngIf="tMenu.entries.length>1"
-                translate
-                href="javascript:void(0)"
-        >{{tMenu.id}}.{{tMenu.label}}</a>
-        <div class="dropdown-menu "
-             *ngIf="tMenu.entries.length>1"
-             [ngbCollapse]="!expandedMenu[index]">
-          <div class="dropdown-item nav-link opfab-menu-link" *ngFor="let entry of tMenu.entries">
+        <a id="opfab-navbar-menu-dropdown-{{tMenu.id}}" class="nav-link"  [attr.aria-expanded]="expandedMenu[index]"
+          (click)="toggleMenu(index)" *ngIf="tMenu.entries.length>1" translate
+          href="javascript:void(0)">{{tMenu.id}}.{{tMenu.label}}</a>
+        <div class="dropdown-menu  dropdown-menu-left " *ngIf="tMenu.entries.length>1"
+          [ngbCollapse]="!expandedMenu[index]">
+          <div class="dropdown-item " *ngFor="let entry of tMenu.entries">
             <of-menu-link [menu]="tMenu" [menuEntry]="entry"></of-menu-link>
           </div>
         </div>
@@ -64,70 +51,75 @@
         </div>
       </li>
     </ul>
-  
+
     <ul class="navbar-nav navbar-right">
-      <li *ngIf="(nightDayMode)">
-        <button type="button" class="btn p-1 btn-outline-light opfab-nightday-icon border-0" *ngIf="(!(getNightMode()|async))" (click)='switchToNightMode()' >
-          <em  class="fas fa-moon"></em>
-      </button>
-
-      <button type="button" class="btn p-1 btn-outline-light opfab-nightday-icon border-0" *ngIf="(getNightMode()|async)" (click)='switchToDayMode()' >
-        <em class="fas fa-sun"></em>
-    </button>
-      </li>
       <li class="nav-item dropdown align-middle">
-        <a
-                class="nav-link dropdown-toggle"
-                id="drop_user_menu"
-                [attr.aria-expanded]="expandedUserMenu"
-                (click)="toggleUserMenu()"
-                href="javascript:void(0)"
-        ><of-info></of-info></a>
-        <div class="dropdown-menu dropdown-menu-right"
-             [ngbCollapse]="!expandedUserMenu">
-          <div class="dropdown-item" [class.active]="currentPath && 'admin' === currentPath[1]" *ngIf="(displayAdmin)">
-            <a
-                    class="nav-link opfab-menu-link text-decoration-none"
-                    routerLink="/admin"
-                    routerLinkActive #rla="routerLinkActive"
-                    translate
-            >menu.admin</a>
-          </div>
+        <a class="nav-link dropdown-toggle" id="opfab-navbar-drop_user_menu" 
+          [ngbPopover]="menuContent" container="body" [autoClose]="'always'" href="javascript:void(0)">
+          <span class="opfab-menu-icon-profile"></span>
+          <of-info></of-info>
+        </a>
 
-          <div class="dropdown-item" [class.active]="currentPath && 'settings' === currentPath[1]">
-            <a
-                    class="nav-link opfab-menu-link text-decoration-none"
-                    routerLink="/settings"
-                    routerLinkActive #rla="routerLinkActive"
-                    translate
-            >menu.settings</a>
-          </div>
 
-          <div class="dropdown-item" [class.active]="currentPath && 'feedconfiguration' === currentPath[1]" *ngIf="(displayFeedConfiguration)">
-            <a
-                    class="nav-link opfab-menu-link text-decoration-none"
-                    routerLink="/feedconfiguration"
-                    routerLinkActive #rla="routerLinkActive"
-                    translate
-            >menu.feedConfiguration</a>
-          </div>
-
-          <div class="dropdown-item" [class.active]="currentPath && 'about' === currentPath[1]">
-            <a
-                    class="nav-link opfab-menu-link text-decoration-none"
-                    routerLink="/about"
-                    routerLinkActive #rla="routerLinkActive"
-                    translate
-            >menu.about</a>
-          </div>
-          <div class="dropdown-item">
-            <form>
-              <a class="nav-link opfab-menu-link  text-decoration-none" (click)="logOut()" href="javascript:void(0)">
-                <span translate>menu.logout</span>&nbsp;<fa-icon icon="sign-out-alt"></fa-icon></a>
-            </form>
-          </div>
-        </div>
       </li>
     </ul>
   </div>
+
 </nav>
+
+
+<ng-template #menuContent>
+
+  <div class="opfab-right-menu">
+    <div class="opfab-right-menu-item" *ngIf="(displayAdmin)">
+      <a id="opfab-navbar-right-menu-admin" class="opfab-right-menu-link"  routerLink="/admin" routerLinkActive #rla="routerLinkActive">
+        <div class="opfab-menu-icon opfab-menu-icon-admin"></div>
+        <div translate> menu.admin </div>
+      </a>
+    </div>
+
+    <div class="opfab-right-menu-item">
+      <a id="opfab-navbar-right-menu-settings" class="opfab-right-menu-link" routerLink="/settings"  routerLinkActive #rla="routerLinkActive">
+        <div class="opfab-menu-icon opfab-menu-icon-parameters"></div>
+        <div translate> menu.settings </div>
+      </a>
+    </div>
+
+    <div class="opfab-right-menu-item" *ngIf="(displayFeedConfiguration)">
+      <a  id="opfab-navbar-right-menu-feedconfiguration" class="opfab-right-menu-link" routerLink="/feedconfiguration"  routerLinkActive
+        #rla="routerLinkActive">
+        <div class="opfab-menu-icon opfab-menu-icon-parameters"></div>
+        <div translate> menu.feedConfiguration</div>
+      </a>
+    </div>
+
+    <div class="opfab-right-menu-item">
+      <a id="opfab-navbar-right-menu-about"  class="opfab-right-menu-link" routerLink="/about"  routerLinkActive #rla="routerLinkActive">
+        <div class="opfab-menu-icon opfab-menu-icon-about"></div>
+        <div translate> menu.about</div>
+      
+      </a>
+    </div>
+
+    <div class="opfab-right-menu-item" *ngIf="(nightDayMode)">
+      <a id="opfab-navbar-right-menu-night-mode" *ngIf="(!(getNightMode()|async))" class="opfab-right-menu-link" (click)='switchToNightMode()'>
+        <div class="opfab-menu-icon opfab-menu-icon-dark-light"></div>
+        <div translate> menu.switchToNightMode</div>
+      </a>
+      <a id="opfab-navbar-right-menu-day-mode"  *ngIf="(getNightMode()|async)" class="opfab-right-menu-link"  (click)='switchToDayMode()'>
+        <div class="opfab-menu-icon opfab-menu-icon-dark-light"></div>
+        <div translate > menu.switchToDayMode</div>
+      </a>
+    </div>
+    
+    <div class="opfab-right-menu-item" style="padding-top: 20px; padding-bottom: 20px">
+      <form>
+        <a id="opfab-navbar-right-menu-logout"  class="opfab-right-menu-link" (click)="logOut()" href="javascript:void(0)">
+          <div class="opfab-menu-icon opfab-menu-icon-logout"></div>
+          <div translate> menu.logout</div>
+        </a>
+      </form>
+    </div>
+  </div>
+
+</ng-template>

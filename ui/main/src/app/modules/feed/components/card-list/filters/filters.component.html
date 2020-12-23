@@ -7,23 +7,13 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-<div class="rounded opfab-feedbar-bgcolor ">
+<div class="rounded opfab-feedbar">
     <div class="d-flex justify-content-between nomarginrow">
         <div>
-            <of-type-filter></of-type-filter>
-            <span *ngIf="!(hideTimerTags)">
-                <of-time-filter [filterByPublishDate]="filterByPublishDate"></of-time-filter>
-            </span>
-            <span *ngIf="!(hideSeveritySort)">
-                <of-severity-sort></of-severity-sort>
-            </span>
-            <span *ngIf="!(hideReadSort)">
-                <of-read-sort></of-read-sort>
-            </span>
-            <span *ngIf="!(hideAckFilter)">
-                <of-ack-filter></of-ack-filter>
-            </span>
-            
+            <of-feed-filter [filterByPublishDate]="filterByPublishDate" [hideTimerTags]="hideTimerTags" [hideAckFilter]="hideAckFilter"></of-feed-filter>
+
+            <of-feed-sort [hideSeveritySort]="hideSeveritySort" [hideReadSort]="hideReadSort"></of-feed-sort>
+
         </div>
 
 

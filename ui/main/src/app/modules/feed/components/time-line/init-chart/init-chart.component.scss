@@ -10,29 +10,37 @@
 
 
 .timeline {
-  width: 98%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 10px;
-  display: flex;
-  flex-direction: column;
+  margin-right: 30px;
+  padding-right: 20px;
+  margin-left : -10px;
+  margin-bottom: 0px;
   color : var(--opfab-text-color);
   background-color: var(--opfab-timeline-bgcolor);
 
   .of-custom-timeline-chart {
-    max-height: 100px;
-    margin-bottom: 40px;
+    max-height: 150px;
+    margin-bottom: 10px;
   }
 
-  .opfab-text {
-    font-size : 20px;
+  .opfab-business-period {
+    font-size : 15px;
+    width: 100%;
+    background-color: var(--opfab-timeline-bgcolor);
+    text-align: center;
   }
 
-  .menu-timeline {
+  .opfab-timeline-grid {
+    display: grid;
+    grid-template-columns: 20px auto 10px;
+    align-items: center;
+  }
+
+  .opfab-menu-timeline {
+    
     position: relative;
     max-height: 40px;
     padding-top: 5px;
-    margin-bottom: 5px;
+    padding-bottom: 5px;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
@@ -53,18 +61,25 @@
       height: 25px;
       border-radius: 50%;
       border: none;
-      left: -25px;
+      left: -5px;
       padding: 1px;
     }
 
-    #btn-menu-timeline {
+
+
+
+    #opfab-menu-timeline-links {
       position: absolute;
       flex-grow: 1;
-      right: 30px;
-      font-size: 12px;
+      right: 10px;
+      font-size: 13px;
+      color:var(--opfab-navbar-color);
+      background-color: var(--opfab-bgcolor);
+      margin-top: -10px;
+      text-decoration: none;
+      padding-bottom: 5px;
 
       ul {
-        padding: 0;
         margin: 0;
         list-style: none;
         display: flex;
@@ -72,30 +87,53 @@
 
         
         li {
-          button {
-            list-style: none;
-            width: 25px;
-            height: 25px;
-            padding: 1px;
+
+          padding-left: 0px;
+          padding-right: 20px;
+          .link-selected {
+            color:var(--opfab-navbar-color-active);
             font-weight: bold;
+            text-decoration: underline;
           }
 
-          .btn-selected {
-            background-color: var(--opfab-timeline-button-selected-bgcolor);
-            color: var(--opfab-timeline-button-selected-text-color);
-          }
-
-          .btn-unselect {
-            background-color: var(--opfab-timeline-button-bgcolor);
-            color: var(--opfab-timeline-button-text-color);
-          }
+          .link-unselect {
+            background-color: var(--opfab-bgcolor);
+            color:var(--opfab-navbar-color);
+              }
 
           .circle-btn {
             border-radius: 50%;
             border: none;
           }
         }
+        li:hover {
+          color: var(--opfab-navbar-color-active);
+          font-weight: bold;
+        }
       }
     }
   }
+}
+
+.opfab-move-domain{
+  padding-bottom: 12px;
+}
+.opfab-move-domain:hover{
+  color: var(--opfab-navbar-color-active);
+  font-weight: bold;
+}
+
+
+.opfab-showhide-timeline {
+  background-color: var(--opfab-bgcolor);
+  width: 100%;
+  text-align: right;
+  font-size: 13px;
+  padding-top : 2px;
+  padding-right:20px;
+}
+
+.opfab-showhide-timeline:hover {
+  color: var(--opfab-navbar-color-active);
+  font-weight: bold;
 }

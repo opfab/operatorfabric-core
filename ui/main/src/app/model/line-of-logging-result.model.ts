@@ -16,7 +16,7 @@ export interface LineOfLoggingResult {
     process: string;
     processVersion: string;
     businessDate: Moment;
-    i18nKeyForProcessName: I18n;
+    i18nKeyForTitle: I18n;
     i18nKeyForDescription: I18n;
     sender: string;
 }

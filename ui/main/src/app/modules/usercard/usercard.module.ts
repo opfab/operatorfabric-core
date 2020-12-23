@@ -11,7 +11,6 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {UserCardComponent} from './usercard.component';
-import {CardPreviewComponent} from './components/card-preview/card-preview.component';
 import {UserCardRoutingModule} from './usercard-routing.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {FlatpickrModule} from 'angularx-flatpickr';
@@ -23,9 +22,10 @@ import {TextAreaModule} from '../../components/share/text-area/text-area.module'
 import {CardsModule} from '../cards/cards.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {MultiFilter2Module} from '../../components/share/multi-filter-2/multi-filter-2.module';
+import { CardDetailModule } from 'app/components/share/card-detail/card-detail.module';
 
 @NgModule({
-    declarations: [UserCardComponent, CardPreviewComponent],
+    declarations: [UserCardComponent],
     imports: [
         CommonModule,
         FormsModule,
@@ -40,7 +40,8 @@ import {MultiFilter2Module} from '../../components/share/multi-filter-2/multi-fi
         TextAreaModule,
         CardsModule,
         NgbModule,
-        MultiFilter2Module
+        MultiFilter2Module,
+        CardDetailModule
     ]
 })
 export class UserCardModule {

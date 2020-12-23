@@ -1,0 +1,91 @@
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+
+@import "~assets/styles/_variables.scss";
+
+$cell-width: 10;
+
+.type-selections {
+  display: table;
+  width: $cell-width * 2px;
+  height: $cell-width * 2px;
+}
+
+.fa-circle {
+  margin-right: 0.3rem;
+}
+
+.type-row {
+  display: table-row;
+}
+
+.type-cell {
+  display: table-cell;
+}
+
+.filter-header {
+  margin-left: 2px;
+  margin-right: 2px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--opfab-text-color);
+}
+
+.label-sev-alarm::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 15px;
+  margin-right: 5px;
+  margin-bottom: -2px;
+  background-color: $sev-alarm;
+}
+
+.label-sev-action::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 15px;
+  margin-right: 5px;
+  margin-bottom: -2px;
+  background-color: $sev-action;
+}
+
+.label-sev-compliant::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 15px;
+  margin-right: 5px;
+  margin-bottom: -2px;
+  background-color: $sev-compliant;
+}
+
+.label-sev-information::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 15px;
+  margin-right: 5px;
+  margin-bottom: -2px;
+  background-color: $sev-information;
+}
+
+.opfab-menu-icon {
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  margin-right: 5px;
+  background: var( --opfab-navbar-color-hover);
+  mask-size: cover;
+}
+
+.opfab-icon-filter {
+  mask: url(assets/images/icons/filter.svg);
+}

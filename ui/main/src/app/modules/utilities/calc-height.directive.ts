@@ -15,11 +15,12 @@ import {
 } from '@angular/core';
 import {debounceTime, takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
+import { OnInit } from '@angular/core';
 
 @Directive({
     selector: '[calcHeightDirective]'
 })
-export class CalcHeightDirective implements OnDestroy {
+export class CalcHeightDirective implements OnInit,OnDestroy {
 
     @Input()
     parentId: any;
@@ -42,6 +43,11 @@ export class CalcHeightDirective implements OnDestroy {
         ).subscribe(x => this.calcHeight(this.parentId, this.fixedHeightClass, this.calcHeightClass));
 
     }
+
+    ngOnInit():void{
+        this._resizeSubject$.next();
+    }
+
     ngOnDestroy(): void {
         this.ngUnsubscribe$.next();
         this.ngUnsubscribe$.complete();

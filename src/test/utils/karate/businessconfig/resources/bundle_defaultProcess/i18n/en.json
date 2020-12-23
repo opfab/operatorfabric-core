@@ -6,7 +6,7 @@
 	},
 	"chartDetail" : { "title":"A Chart"},
 	"chartLine" : { "title":"Electricity consumption forecast"},
-	"processState" : { "title":"Process state"},
+	"processState" : { "title":"Process state ({{status}})" },
 	"question" : {"title": "⚡ Planned Outage","button" : {"text" :"Send your response"}},
 	"contingencies": {"title" : "⚠️ Network Contingencies ⚠️","summary":"Contingencies report for french network"},
 	"response" : { "title":"Planned outage date response"},

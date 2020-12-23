@@ -37,6 +37,7 @@ import { NgbModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { CountdownModule, CountdownGlobalConfig, CountdownConfig } from 'ngx-countdown';
 import {CalendarModule} from './modules/calendar/calendar.module';
 import { AppErrorHandler } from './common/error/app-error-handler';
+import { ArchivesModule } from './modules/archives/archives.module';
 
 export function countdownConfigFactory(): CountdownConfig {
     return { format: `mm:ss` };
@@ -57,6 +58,7 @@ export function countdownConfigFactory(): CountdownConfig {
     TranslateModule.forRoot(),
     FontAwesomeIconsModule,
     UtilitiesModule,
+    ArchivesModule,
     LoggingModule,
     MonitoringModule,
     NgbModalModule,

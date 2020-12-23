@@ -8,20 +8,6 @@
  */
  @import "~assets/styles/_variables.scss";
  
-.modal-body{
-  background-color: var(--opfab-lightcard-detail-bgcolor);
-  color: var(--opfab-lightcard-detail-textcolor);
-}
-
-
-.modal-header{
-  background-color: var(--opfab-lightcard-detail-bgcolor);
-  color: var(--opfab-lightcard-detail-textcolor);
-}
-
-.btn{
-  color: var(--opfab-lightcard-detail-textcolor);
-}
 
 .radio-control {
   margin-top: 20px;
@@ -75,8 +61,4 @@
   text-align: center;
   width: auto;
   padding-top: 50px;
-}
-
-h1, .h1 {
-  font-size: 1.2rem;
 }

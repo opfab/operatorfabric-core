@@ -8,12 +8,14 @@
 
 
 
-<div class="container-fluid">
-    <div class="row fixed-height-main-layout" *ngIf="!hideTimeLine">
-        <div class="col-12 opfab-timeline-bgcolor" style="margin-bottom: 2rem;">
-            <of-time-line></of-time-line>
-        </div>
+<div>
+    
+    <div class="fixed-height-main-layout opfab_timeline_margin" *ngIf="!hideTimeLine">
+       <div>
+           <of-time-line></of-time-line> 
+        </div> 
     </div>
+
     <div id="parentFeedContent" class="row calc-height-main-layout">
         <div class="col-3">
             <of-card-list [lightCards]="lightCards$|async" [selection]="selection$"></of-card-list>

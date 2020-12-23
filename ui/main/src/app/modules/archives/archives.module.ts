@@ -11,35 +11,31 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {ArchivesRoutingModule} from './archives-routing.module';
-import {ArchiveListPageComponent} from './components/archive-list/archive-list-page/archive-list-page.component';
 import {ArchivesComponent} from './archives.component';
-import {ArchiveListComponent} from './components/archive-list/archive-list.component';
-import {ArchiveFiltersComponent} from './components/archive-filters/archive-filters.component';
 import {CardsModule} from '../cards/cards.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {DatetimeFilterModule} from '../../components/share/datetime-filter/datetime-filter.module';
-import {MultiFilterModule} from '../../components/share/multi-filter/multi-filter.module';
+import { MultiFilter2Module } from 'app/components/share/multi-filter-2/multi-filter-2.module';
+import { CardDetailModule } from 'app/components/share/card-detail/card-detail.module';
+import { ArchivesEntryPointComponent } from './archives-entry-point.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    ArchivesRoutingModule,
     CardsModule,
     TranslateModule,
-    NgbModule
-      , DatetimeFilterModule
-      , MultiFilterModule
+    NgbModule,
+    DatetimeFilterModule,
+    MultiFilter2Module,
+    CardDetailModule
 
   ],
   declarations: [
     ArchivesComponent,
-    ArchiveListComponent,
-    ArchiveFiltersComponent,
-    ArchiveListPageComponent
+    ArchivesEntryPointComponent
   ]
 })
 export class ArchivesModule { }
