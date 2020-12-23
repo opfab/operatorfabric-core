@@ -60,11 +60,13 @@ jobs:
   include:
     - stage: test
       script:
+        - docker login --username ${DOCKER_CLOUD_USER} --password ${DOCKER_CLOUD_PWD}
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
         - ./gradlew --build-cache copyDependencies test
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
     - stage: test-sonar
       script:
+        - docker login --username ${DOCKER_CLOUD_USER} --password ${DOCKER_CLOUD_PWD}
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
         - ./gradlew --build-cache copyDependencies test jacocoTestReport
         # [OC-865] Dropping dependency messing with typescript version as a workaround until sonar bug is fixed
