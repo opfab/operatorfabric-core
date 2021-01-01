@@ -189,7 +189,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     private extractTime(form: AbstractControl) {
         const val = form.value;
         if (!val || val == '')  {
-            return -1;
+            return null;
         }
         const converter = new DateTimeNgb(val.date, val.time);
         return converter.convertToNumber();
