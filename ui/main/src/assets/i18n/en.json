@@ -150,10 +150,10 @@
   },
   "button": {
     "ok": "OK",
-    "cancel": "ANNULER",
+    "cancel": "CANCEL",
     "reset": "RESET",
-    "delete": "DELETE",
-    "edit": "EDIT",
+    "delete": "Delete",
+    "edit": "Edit",
     "yes": "YES",
     "search" : "SEARCH" 
   },

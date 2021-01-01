@@ -16,6 +16,8 @@
 .opfab-line-undertab{
   border-color:var(--opfab-card-tab-border-color);
   border-bottom-width: 0.5px;
+  display: inline-block;
+  width: 100%;
 }
 
 .opfab-tab{
@@ -32,3 +34,60 @@
 
 }
 
+
+.opfab-menu-icon {
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  margin-right: 5px;
+  background: var( --opfab-navbar-color-hover);
+  mask-size: cover;
+}
+
+.opfab-menu-icon-right {
+  float: right;
+  margin-right: 20px;
+}
+
+.opfab-menu-item-right {
+  float: right;
+  display: inline-flex;
+}
+
+.opfab-menu-item-left {
+  float: left;
+}
+
+.opfab-icon-edit {
+  mask: url(assets/images/icons/edit.svg);
+}
+
+.opfab-icon-trash {
+  mask: url(assets/images/icons/trash.svg);
+}
+
+.opfab-right-menu-item {
+  color:var(--opfab-navbar-color);
+  margin-left: 20px;
+  margin-right: 20px;
+  letter-spacing: 0.54px;
+  font-size: 16px;
+  line-height: 40px;
+  &:hover,
+  &:focus {
+    color:var( --opfab-navbar-color-hover);
+  }
+}
+
+.opfab-right-menu-link {
+  display: grid;
+  grid-template-columns: 30px auto;
+  color:var(--opfab-navbar-color);
+  align-items: center;
+
+  &:hover,
+  &:focus {
+    color:var( --opfab-navbar-color-hover);
+    text-decoration: none;
+  }
+}

@@ -19,12 +19,10 @@ import {HandlebarsService} from './services/handlebars.service';
 import {UtilitiesModule} from '../utilities/utilities.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountdownModule} from 'ngx-countdown';
-import {CloseableCardDetailsComponent} from './components/card-details/closeable-card-details.component';
 
 @NgModule({
   declarations: [CardComponent
       , CardDetailsComponent
-      , CloseableCardDetailsComponent
       , DetailComponent],
   imports: [
     CommonModule,
@@ -35,7 +33,6 @@ import {CloseableCardDetailsComponent} from './components/card-details/closeable
   ],
     exports: [CardComponent
         , CardDetailsComponent
-        , CloseableCardDetailsComponent
         , DetailComponent
     ],
     schemas: [

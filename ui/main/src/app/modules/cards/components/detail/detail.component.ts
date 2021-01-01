@@ -174,7 +174,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 cardTemplateHeight -= divMsg.scrollHeight + 35;
             }
             if (divBtn) {
-                cardTemplateHeight -= divBtn.scrollHeight + 50;
+                cardTemplateHeight -= divBtn.scrollHeight + 25;
             }
 
             cardTemplate.style.maxHeight = `${cardTemplateHeight}px`;
