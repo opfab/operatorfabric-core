@@ -21,7 +21,7 @@
   background-color: var(--opfab-lightcard-detail-selected-bgcolor);
   margin-left: 20px;
   margin-right: 0px;
-  //#f8f9fa
+  transition: margin 0.3s;
 }
 
 .light-card-detail-unselected {
