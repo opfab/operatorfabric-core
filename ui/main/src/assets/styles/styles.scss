@@ -247,18 +247,64 @@ body {
 }
 
 // ngx-type_ahead conf 
-.opfab-input > type-ahead {
+
+
+.opfab-input-type-ahead{
+  box-sizing: border-box;
+  position: relative;
+  color:var(--opfab-input-text-color);
+  border: 1px solid var(--opfab-form-border-color);
+  border-radius: 3px;
+  font-size: 13px;
+  outline: none;
+  min-height: 46px;
+  background-color: var(--opfab-bgcolor);
+}
+
+
+.opfab-input-type-ahead > input {
+  background-color:var(--opfab-bgcolor);
+  color:var(--opfab-input-text-color);
   padding: 10px;
-  width: calc(100% - 4px);
   height: 42px;
+  border: none;
+  outline: none;
+  -webkit-appearance: none;
+  -webkit-autofill:none;
+
+  // Firefox : to avoid browser styling when auto-filling input field (example password) 
+  // see https://stackoverflow.com/questions/55228377/remove-new-firefox-autofill-color
+  filter: none;
+}
+
+
+
+.opfab-input-type-ahead > type-ahead {
+  padding: 10px;
+  width: 100%;
   border: none;
   outline: none;
   -webkit-appearance: none;
 }
 
+.opfab-input-type-ahead > label {
+  margin-left: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  position: absolute;
+  font-size: 11px;  
+  margin-top: -10px;
+  left:10;
+  color: var(--opfab-form-label-text-color);
+  background-color: var(--opfab-bgcolor);
+}
+
+
+
 type-ahead > input {
   background-color:var(--opfab-bgcolor);
   color:var(--opfab-input-text-color);
+  max-width: calc(100% / 4); // limit going to new line when writing new entry in field 
 }
 
 
@@ -269,7 +315,7 @@ type-ahead > .badge-primary {
   margin-right: 5px;
   color:var(--opfab-input-text-color);
 }
-// end type-ahead specific conf
+// end type-ahead  conf
 
 
 // Multiselect specific conf 
@@ -356,6 +402,9 @@ type-ahead > .badge-primary {
   .opfab-select > select,
   .opfab-select > select option,
   .opfab-select > label,
+  .opfab-input-type-ahead,
+  .opfab-input-type-ahead > input, 
+  .opfab-input-type-ahead label , 
   type-ahead > input{
     background-color: var(--opfab-bgcolor-darker);
   } 
