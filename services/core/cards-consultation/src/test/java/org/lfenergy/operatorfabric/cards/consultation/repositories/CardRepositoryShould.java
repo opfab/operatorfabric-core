@@ -119,9 +119,9 @@ public class CardRepositoryShould {
 
 
     private void assertCard(CardOperation op,Object processName, Object publisher, Object processVersion) {
-        assertThat(op.getCards().get(0).getId()).isEqualTo(processName);
-        assertThat(op.getCards().get(0).getPublisher()).isEqualTo(publisher);
-        assertThat(op.getCards().get(0).getProcessVersion()).isEqualTo(processVersion);
+        assertThat(op.getCardToBeProcessed().getId()).isEqualTo(processName);
+        assertThat(op.getCardToBeProcessed().getPublisher()).isEqualTo(publisher);
+        assertThat(op.getCardToBeProcessed().getProcessVersion()).isEqualTo(processVersion);
     }
 
     private void persistCard(CardConsultationData simpleCard) {
@@ -194,11 +194,11 @@ public class CardRepositoryShould {
         StepVerifier.create(repository.getCardOperations(null, now,nowPlusOne, adminUser)
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
+                    assertThat(op.getCardToBeProcessed()).isNotNull();
                     assertCard(op,"PROCESS.PROCESS1", "PUBLISHER", "0");
                 })
                 .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
+                    assertThat(op.getCardToBeProcessed()).isNotNull();
                     assertCard(op,"PROCESS.PROCESS2", "PUBLISHER", "0");
                 })
                 .expectComplete()
@@ -216,15 +216,15 @@ public class CardRepositoryShould {
         StepVerifier.create(repository.getCardOperations(null, now,nowPlusThree, adminUser)
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
+                    assertThat(op.getCardToBeProcessed()).isNotNull();
                     assertCard(op,"PROCESS.PROCESS1", "PUBLISHER", "0");
                 })
                 .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
+                    assertThat(op.getCardToBeProcessed()).isNotNull();
                     assertCard(op,"PROCESS.PROCESS2", "PUBLISHER", "0");
                 })
                 .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
+                    assertThat(op.getCardToBeProcessed()).isNotNull();
                     assertCard(op,"PROCESS.PROCESS3", "PUBLISHER", "0");
                 })
                 .expectComplete()
@@ -256,11 +256,11 @@ public class CardRepositoryShould {
         StepVerifier.create(repository.getCardOperations(nowPlusOne, now,nowPlusThree, adminUser)
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
+                    assertThat(op.getCardToBeProcessed()).isNotNull();
                     assertCard(op,"PROCESS.PROCESS2", "PUBLISHER", "0");
                 })
                 .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
+                    assertThat(op.getCardToBeProcessed()).isNotNull();
                     assertCard(op,"PROCESS.PROCESS3", "PUBLISHER", "0");
                 })
                 .expectComplete()
@@ -278,7 +278,7 @@ public class CardRepositoryShould {
             StepVerifier.create(repository.getCardOperations(nowPlusOne, nowPlusTwo,nowPlusThree, adminUser)
                     .doOnNext(TestUtilities::logCardOperation))
                     .assertNext(op -> {
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCardToBeProcessed()).isNotNull();
                         assertCard(op,"PROCESS.PROCESS3", "PUBLISHER", "0");
                     })
                     .expectComplete()
@@ -319,11 +319,11 @@ public class CardRepositoryShould {
             StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, rteUserEntity1)
                     .doOnNext(TestUtilities::logCardOperation))
                     .assertNext(op -> {
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCardToBeProcessed()).isNotNull();
                         assertCard(op,"PROCESS.PROCESS1", "PUBLISHER", "0");
                     })
                     .assertNext(op -> {
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCardToBeProcessed()).isNotNull();
                         assertCard(op,"PROCESS.PROCESS2", "PUBLISHER", "0");
                     })
                     .expectComplete()
@@ -350,11 +350,11 @@ public class CardRepositoryShould {
             StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, rteUserEntity1)
                     .doOnNext(TestUtilities::logCardOperation))
                     .assertNext(op -> {
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCardToBeProcessed()).isNotNull();
                         assertCard(op,"PROCESS.PROCESS1", "PUBLISHER", "0");
                     })
                     .assertNext(op -> {
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCardToBeProcessed()).isNotNull();
                         assertCard(op,"PROCESS.PROCESS2", "PUBLISHER", "0");
                     })
                     .expectComplete()
@@ -372,14 +372,14 @@ public class CardRepositoryShould {
             StepVerifier.create(repository.getCardOperations(null, now,nowPlusThree, adminUser)
                     .doOnNext(TestUtilities::logCardOperation))
                     .assertNext(op -> {
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCardToBeProcessed()).isNotNull();
                         assertCard(op,"PROCESS.PROCESS1", "PUBLISHER", "0");
-                        assertThat(op.getCards().get(0).getHasBeenAcknowledged()).isFalse();
+                        assertThat(op.getCardToBeProcessed().getHasBeenAcknowledged()).isFalse();
                     })
                     .assertNext(op -> {
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCardToBeProcessed()).isNotNull();
                         assertCard(op,"PROCESS.PROCESS2", "PUBLISHER", "0");
-                        assertThat(op.getCards().get(0).getHasBeenAcknowledged()).isTrue();
+                        assertThat(op.getCardToBeProcessed().getHasBeenAcknowledged()).isTrue();
                     })
                     .expectComplete()
                     .verify();
@@ -395,14 +395,14 @@ public class CardRepositoryShould {
             StepVerifier.create(repository.getCardOperations(null, now,nowPlusThree, adminUser)
                     .doOnNext(TestUtilities::logCardOperation))
                     .assertNext(op -> {
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCardToBeProcessed()).isNotNull();
                         assertCard(op,"PROCESS.PROCESS1", "PUBLISHER", "0");
-                        assertThat(op.getCards().get(0).getHasBeenAcknowledged()).isFalse();
+                        assertThat(op.getCardToBeProcessed().getHasBeenAcknowledged()).isFalse();
                     })
                     .assertNext(op -> {
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCardToBeProcessed()).isNotNull();
                         assertCard(op,"PROCESS.PROCESS2", "PUBLISHER", "0");
-                        assertThat(op.getCards().get(0).getHasBeenAcknowledged()).isFalse();
+                        assertThat(op.getCardToBeProcessed().getHasBeenAcknowledged()).isFalse();
                     })
                     .expectComplete()
                     .verify();
@@ -418,14 +418,14 @@ public class CardRepositoryShould {
             StepVerifier.create(repository.getCardOperations(null, now,nowPlusThree, adminUser)
                     .doOnNext(TestUtilities::logCardOperation))
                     .assertNext(op -> {
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCardToBeProcessed()).isNotNull();
                         assertCard(op,"PROCESS.PROCESS1", "PUBLISHER", "0");
-                        assertThat(op.getCards().get(0).getHasBeenRead()).isFalse();
+                        assertThat(op.getCardToBeProcessed().getHasBeenRead()).isFalse();
                     })
                     .assertNext(op -> {
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCardToBeProcessed()).isNotNull();
                         assertCard(op,"PROCESS.PROCESS2", "PUBLISHER", "0");
-                        assertThat(op.getCards().get(0).getHasBeenRead()).isTrue();
+                        assertThat(op.getCardToBeProcessed().getHasBeenRead()).isTrue();
                     })
                     .expectComplete()
                     .verify();
@@ -441,14 +441,14 @@ public class CardRepositoryShould {
             StepVerifier.create(repository.getCardOperations(null, now,nowPlusThree, adminUser)
                     .doOnNext(TestUtilities::logCardOperation))
                     .assertNext(op -> {
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCardToBeProcessed()).isNotNull();
                         assertCard(op,"PROCESS.PROCESS1", "PUBLISHER", "0");
-                        assertThat(op.getCards().get(0).getHasBeenRead()).isFalse();
+                        assertThat(op.getCardToBeProcessed().getHasBeenRead()).isFalse();
                     })
                     .assertNext(op -> {
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCardToBeProcessed()).isNotNull();
                         assertCard(op,"PROCESS.PROCESS2", "PUBLISHER", "0");
-                        assertThat(op.getCards().get(0).getHasBeenRead()).isFalse();
+                        assertThat(op.getCardToBeProcessed().getHasBeenRead()).isFalse();
                     })
                     .expectComplete()
                     .verify();

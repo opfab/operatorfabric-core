@@ -55,7 +55,7 @@ public class CardNotificationService {
         switch (type) {
             case ADD:
             case UPDATE:
-                builderEncapsulator.builder().card(card.toLightCard());
+                builderEncapsulator.builder().cardToBeProcessed(card.toLightCard());
                 break;
             case DELETE:
                 builderEncapsulator.builder().cardId(card.getId());
@@ -84,8 +84,8 @@ public class CardNotificationService {
             rabbitTemplate.convertAndSend("CARD_EXCHANGE", "", mapper.writeValueAsString(cardOperation));
             log.debug("Operation sent to CARD_EXCHANGE, type={}, ids={}, cards={}, groupRecipientsIds={}, entityRecipientsIds={}, userRecipientsIds={}"
                     , cardOperation.getType()
-                    , cardOperation.getCardIds().toString()
-                    , cardOperation.getCards().toString()
+                    , cardOperation.getCardId()
+                    , (cardOperation.getCardToBeProcessed() != null ? cardOperation.getCardToBeProcessed().toString() : "")
                     , cardOperation.getGroupRecipientsIds().toString()
                     , cardOperation.getEntityRecipientsIds().toString()
                     , cardOperation.getUserRecipientsIds().toString());

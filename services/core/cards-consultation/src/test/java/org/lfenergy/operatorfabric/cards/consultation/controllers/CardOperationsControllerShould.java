@@ -209,44 +209,44 @@ public class CardOperationsControllerShould {
         StepVerifier.FirstStep<CardOperation> verifier = StepVerifier.create(publisher.map(s -> TestUtilities.readCardOperation(mapper, s)).doOnNext(TestUtilities::logCardOperation));
         verifier
                 .assertNext(op->{
-                    assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    cardIds.add(op.getCards().get(0).getId());
+                        assertThat(op.getCardToBeProcessed()).isNotNull();
+                        assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
+                        cardIds.add(op.getCardToBeProcessed().getId());
                 })
                 .assertNext(op->{
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCardToBeProcessed()).isNotNull();
                         assertThat(op.getPublishDate()).isEqualTo(nowPlusOne);
-                        cardIds.add(op.getCards().get(0).getId());
+                        cardIds.add(op.getCardToBeProcessed().getId());
                 })
                 .assertNext(op->{
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCardToBeProcessed()).isNotNull();
                         assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                        cardIds.add(op.getCards().get(0).getId());
+                        cardIds.add(op.getCardToBeProcessed().getId());
                 })
                 .assertNext(op->{
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCardToBeProcessed()).isNotNull();
                         assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                        cardIds.add(op.getCards().get(0).getId());
+                        cardIds.add(op.getCardToBeProcessed().getId());
                 })
                 .assertNext(op->{
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCardToBeProcessed()).isNotNull();
                         assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                        cardIds.add(op.getCards().get(0).getId());
+                        cardIds.add(op.getCardToBeProcessed().getId());
                 })
                 .assertNext(op->{
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCardToBeProcessed()).isNotNull();
                         assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                        cardIds.add(op.getCards().get(0).getId());
+                        cardIds.add(op.getCardToBeProcessed().getId());
                 })
                 .assertNext(op->{
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCardToBeProcessed()).isNotNull();
                         assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                        cardIds.add(op.getCards().get(0).getId());
+                        cardIds.add(op.getCardToBeProcessed().getId());
                 })
                 .assertNext(op->{
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCardToBeProcessed()).isNotNull();
                         assertThat(op.getPublishDate()).isEqualTo(nowPlusOne);
-                        cardIds.add(op.getCards().get(0).getId());
+                        cardIds.add(op.getCardToBeProcessed().getId());
                 })
                 .expectComplete()
                 .verify();
@@ -289,16 +289,16 @@ public class CardOperationsControllerShould {
                         .notification(false).build()
         ));
         List<CardOperation> list = publisher.map(s -> TestUtilities.readCardOperation(mapper, s))
-        		.filter(co -> Arrays.asList("PROCESS.PROCESS0","PROCESS.PROCESS2","PROCESS.PROCESS4").contains(co.getCards().get(0).getId()))
-        		.collectSortedList((co1,co2) -> co1.getCards().get(0).getId().compareTo(co2.getCards().get(0).getId()))
+        		.filter(co -> Arrays.asList("PROCESS.PROCESS0","PROCESS.PROCESS2","PROCESS.PROCESS4").contains(co.getCardToBeProcessed().getId()))
+        		.collectSortedList((co1,co2) -> co1.getCardToBeProcessed().getId().compareTo(co2.getCardToBeProcessed().getId()))
     	.block();
         
-		assertThat(list.get(0).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS0");
-        assertThat(list.get(0).getCards().get(0).getHasBeenAcknowledged()).isTrue();
-        assertThat(list.get(1).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS2");
-        assertThat(list.get(1).getCards().get(0).getHasBeenAcknowledged()).isFalse();
-        assertThat(list.get(2).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS4");
-        assertThat(list.get(2).getCards().get(0).getHasBeenAcknowledged()).isFalse();
+		assertThat(list.get(0).getCardToBeProcessed().getId()).isEqualTo("PROCESS.PROCESS0");
+        assertThat(list.get(0).getCardToBeProcessed().getHasBeenAcknowledged()).isTrue();
+        assertThat(list.get(1).getCardToBeProcessed().getId()).isEqualTo("PROCESS.PROCESS2");
+        assertThat(list.get(1).getCardToBeProcessed().getHasBeenAcknowledged()).isFalse();
+        assertThat(list.get(2).getCardToBeProcessed().getId()).isEqualTo("PROCESS.PROCESS4");
+        assertThat(list.get(2).getCardToBeProcessed().getHasBeenAcknowledged()).isFalse();
     }
     
     @Test
@@ -314,16 +314,16 @@ public class CardOperationsControllerShould {
         ));
         
         List<CardOperation> list = publisher.map(s -> TestUtilities.readCardOperation(mapper, s))
-        		.filter(co -> Arrays.asList("PROCESS.PROCESS0","PROCESS.PROCESS2","PROCESS.PROCESS4").contains(co.getCards().get(0).getId()))
-        		.collectSortedList((co1,co2) -> co1.getCards().get(0).getId().compareTo(co2.getCards().get(0).getId()))
+        		.filter(co -> Arrays.asList("PROCESS.PROCESS0","PROCESS.PROCESS2","PROCESS.PROCESS4").contains(co.getCardToBeProcessed().getId()))
+        		.collectSortedList((co1,co2) -> co1.getCardToBeProcessed().getId().compareTo(co2.getCardToBeProcessed().getId()))
     	.block();
         
-		assertThat(list.get(0).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS0");
-        assertThat(list.get(0).getCards().get(0).getHasBeenRead()).isTrue();
-        assertThat(list.get(1).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS2");
-        assertThat(list.get(1).getCards().get(0).getHasBeenRead()).isFalse();
-        assertThat(list.get(2).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS4");
-        assertThat(list.get(2).getCards().get(0).getHasBeenRead()).isFalse();       
+		assertThat(list.get(0).getCardToBeProcessed().getId()).isEqualTo("PROCESS.PROCESS0");
+        assertThat(list.get(0).getCardToBeProcessed().getHasBeenRead()).isTrue();
+        assertThat(list.get(1).getCardToBeProcessed().getId()).isEqualTo("PROCESS.PROCESS2");
+        assertThat(list.get(1).getCardToBeProcessed().getHasBeenRead()).isFalse();
+        assertThat(list.get(2).getCardToBeProcessed().getId()).isEqualTo("PROCESS.PROCESS4");
+        assertThat(list.get(2).getCardToBeProcessed().getHasBeenRead()).isFalse();
     }
 
  

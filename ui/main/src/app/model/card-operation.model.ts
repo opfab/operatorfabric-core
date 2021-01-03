@@ -16,8 +16,8 @@ export class CardOperation implements CardOperation {
         readonly number: number,
         readonly publicationDate: number,
         readonly type: CardOperationType,
-        readonly cards?: LightCard[],
-        readonly cardIds?: string[]
+        readonly cardToBeProcessed?: LightCard,
+        readonly cardId?: string
     ) {
     }
 

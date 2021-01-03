@@ -157,28 +157,22 @@ definitions:
         $ref: '#/definitions/EpochDate'
       type:
         $ref: '#/definitions/CardOperationTypeEnum'
-      cardIds:
-        type: array
-        items:
-          type: string
+      cardId:
+        type: string
         description: >-
-          IDs of cards to be deleted. Only used for CardOperations of DELETE
+          ID of card to be deleted. Only used for CardOperations of DELETE
           type.
-      cards:
-        type: array
-        items:
-          $ref: '#/definitions/LightCard'
+      cardToBeProcessed:
+        $ref: '#/definitions/LightCard'
         description: >-
-          Card objects to be added or updated. Only used for CardOperations of
+          Card object to be added or updated. Only used for CardOperations of
           ADD or UPDATE type.
     example:
       number: 3
       publishDate: 1546300800000
       type: DELETE
-      cardIds:
+      cardId:
         - 12345
-        - 12346
-        - 12347
   Recipient:
     description: Recipient object defines rules for recipient computation
     type: object

@@ -83,12 +83,12 @@ export class CardService {
                 operation => {
                     switch (operation.type) {
                         case CardOperationType.ADD:
-                            console.log(new Date().toISOString(), `CardService - Receive card to add id=`, operation.cards[0].id);
-                            this.store.dispatch(new LoadLightCardsSuccess({lightCards: operation.cards}));
+                            console.log(new Date().toISOString(), `CardService - Receive card to add id=`, operation.cardToBeProcessed.id);
+                            this.store.dispatch(new LoadLightCardsSuccess({lightCards: [operation.cardToBeProcessed]}));
                             break;
                         case CardOperationType.DELETE:
-                            console.log(new Date().toISOString(), `CardService - Receive card to delete id=`, operation.cardIds[0]);
-                            this.store.dispatch(new RemoveLightCard({cards: operation.cardIds}));
+                            console.log(new Date().toISOString(), `CardService - Receive card to delete id=`, operation.cardId);
+                            this.store.dispatch(new RemoveLightCard({cards: [operation.cardId]}));
                             break;
                         default:
                             this.store.dispatch(new AddLightCardFailure(
