@@ -32,13 +32,13 @@ public class ProcessData implements Process {
   private String id;
   private String name;
   private String version;
-  @Singular("stateData")
-  private Map<String, ProcessStatesData> statesData;
+  @Singular
+  private Map<String, ProcessStatesData> states;
   private ProcessUiVisibilityData uiVisibility;
 
   @Override
   public Map<String, ? extends ProcessStates> getStates(){
-    return statesData;
+    return states;
   }
 
   @Override
@@ -47,8 +47,8 @@ public class ProcessData implements Process {
   }
 
   @Override
-  public void setStates(Map<String, ? extends ProcessStates> statesData){
-    this.statesData = new HashMap<>((Map<String, ProcessStatesData>) statesData);
+  public void setStates(Map<String, ? extends ProcessStates> states){
+    this.states = new HashMap<>((Map<String, ProcessStatesData>) states);
   }
 
   @Override

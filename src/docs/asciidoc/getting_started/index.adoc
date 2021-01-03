@@ -251,7 +251,7 @@ You should received the following JSON in response, describing your bundle.
 
 [source,JSON]
 ----
-{"statesData":{"messageState":{"responseData":null,"acknowledgementAllowed":true,"color":null,"name":null,"userCardTemplate":null,"detailTitle":{"key":"defaultProcess.title","parameters":null},"templateName":"template","styles":["style"],"acknowledgmentAllowed":true,"response":null}},"id":"defaultProcess","name":null,"version":"2","uiVisibility":null,"states":{"messageState":{"responseData":null,"acknowledgementAllowed":true,"color":null,"name":null,"userCardTemplate":null,"detailTitle":{"key":"defaultProcess.title","parameters":null},"templateName":"template","styles":["style"],"acknowledgmentAllowed":true,"response":null}}}
+{"id":"defaultProcess","name":null,"version":"2","uiVisibility":null,"states":{"messageState":{"responseData":null,"acknowledgementAllowed":true,"color":null,"name":null,"userCardTemplate":null,"detailTitle":{"key":"defaultProcess.title","parameters":null},"templateName":"template","styles":["style"],"acknowledgmentAllowed":true,"response":null}}}
 ----
 
 ==== Send a card 
