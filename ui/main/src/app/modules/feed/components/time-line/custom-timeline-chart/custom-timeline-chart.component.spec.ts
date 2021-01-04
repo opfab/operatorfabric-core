@@ -59,12 +59,6 @@ describe('CustomTimelineChartComponent', () => {
   }));
 
 
-  it('should format dateFirsTick when the domain set is smaller than 1 day', () => {
-    fixture.detectChanges();
-    component.valueDomain = [0, 5000000];
-    expect(component.underDayPeriod).toBeTruthy();
-  });
-
 
   it('should call update() and create chart by calling updateXAxisWidth function', () => {
     fixture.detectChanges();
