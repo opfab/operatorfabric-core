@@ -6,7 +6,7 @@ Feature: Update existing user
     * def authToken = signIn.authToken
     * def signInAsTSO = call read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
-    * def userToUpdate = "loginKarate5"
+    * def userToUpdate = "loginkarate5"
 
 
     * def userNew =
@@ -68,7 +68,7 @@ Feature: Update existing user
     And request userNew
     When method put
     Then status 201
-    And match response.login == userNew.login
+    And match response.login == karate.lowerCase(userNew.login)
     And match response.firstName == userNew.firstName
     And match response.lastName == userNew.lastName
 
@@ -80,6 +80,6 @@ Feature: Update existing user
     And request userUpdate
     When method put
     Then status 200
-    And match response.login == userUpdate.login
+    And match response.login == karate.lowerCase(userUpdate.login)
     And match response.firstName == userUpdate.firstName
     And match response.lastName == userUpdate.lastName

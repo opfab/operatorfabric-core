@@ -67,6 +67,7 @@ public class UsersController implements UsersApi {
     @Override
     public User createUser(HttpServletRequest request, HttpServletResponse response, User user) throws Exception {
         boolean created = false;
+        user.setLogin(user.getLogin().toLowerCase());
         String login = user.getLogin();
 
         if ((login == null) || (login.length() == 0)) {
@@ -77,9 +78,8 @@ public class UsersController implements UsersApi {
                             .build());
         }
 
-        if(userRepository.findById(user.getLogin()).orElse(null)
-                ==null){
-            response.addHeader("Location", request.getContextPath() + "/users/" + user.getLogin());
+        if (userRepository.findById(login).orElse(null) == null){
+            response.addHeader("Location", request.getContextPath() + "/users/" + login);
             response.setStatus(201);
             created = true;
             log.debug(String.format(USER_CREATED, login));
@@ -90,7 +90,7 @@ public class UsersController implements UsersApi {
         userService.createUser(user);
 
         if(!created)
-            publisher.publishEvent(new UpdatedUserEvent(this,busServiceMatcher.getServiceId(),login));
+            publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), login));
         
         return user;
     }
@@ -144,13 +144,15 @@ public class UsersController implements UsersApi {
     @Override
     public User updateUser(HttpServletRequest request, HttpServletResponse response, String login, User user) throws Exception {
         //login from user body parameter should match login path parameter
-        if((user.getLogin() != null) && (!user.getLogin().equals(login))){
+        if ((user.getLogin() != null) && (!user.getLogin().equalsIgnoreCase(login))) {
             throw new ApiErrorException(
                     ApiError.builder()
                             .status(HttpStatus.BAD_REQUEST)
                             .message(NO_MATCHING_USER_NAME_MSG)
                             .build());
         }
+        if (user.getLogin() != null)
+            user.setLogin(user.getLogin().toLowerCase());
         return createUser(request, response, user);
     }
 

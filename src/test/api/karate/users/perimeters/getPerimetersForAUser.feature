@@ -71,7 +71,7 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
 """
     * def user10Array =
 """
-[   "loginKarate10"
+[   "loginkarate10"
 ]
 """
     * def group10Array =
@@ -91,7 +91,7 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
     And request user10
     When method post
     Then status 201
-    And match response.login == user10.login
+    And match response.login == karate.lowerCase(user10.login)
     And match response.firstName == user10.firstName
     And match response.lastName == user10.lastName
 
@@ -173,30 +173,30 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
 
 
   Scenario: get all perimeters for user10 without authentication
-    Given url opfabUrl + 'users/users/' + user10.login + '/perimeters'
+    Given url opfabUrl + 'users/users/' + karate.lowerCase(user10.login) + '/perimeters'
     When method get
     Then status 401
 
 
   Scenario: get all perimeters for user10 with simple user
     #   Using TSO user,  expected response 403
-    Given url opfabUrl + 'users/users/' + user10.login + '/perimeters'
+    Given url opfabUrl + 'users/users/' + karate.lowerCase(user10.login) + '/perimeters'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 403
 
 
   Scenario: get all perimeters for a nonexistent user
-    Given url opfabUrl + 'users/users/unknownUser/perimeters'
+    Given url opfabUrl + 'users/users/unknownuser/perimeters'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 404
     And match response.status == 'NOT_FOUND'
-    And match response.message == 'User unknownUser not found'
+    And match response.message == 'User unknownuser not found'
 
 
   Scenario: get all perimeters for user10
-    Given url opfabUrl + 'users/users/' + user10.login + '/perimeters'
+    Given url opfabUrl + 'users/users/' + karate.lowerCase(user10.login) + '/perimeters'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200

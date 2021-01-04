@@ -11,12 +11,12 @@ Feature: Add users to a group
     # defining users to add
     * def usersArray =
 """
-[   "loginKarate1"
+[   "loginkarate1"
 ]
 """
     * def wrongBodyRequest =
 """
-[   {"login" : "loginKarate1"}
+[   {"login" : "loginkarate1"}
 ]
 """
 

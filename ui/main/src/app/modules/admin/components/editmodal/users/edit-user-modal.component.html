@@ -13,7 +13,7 @@
       <div *ngIf="!row">
         <mat-form-field appearance="fill" color="primary">
           <mat-label for="login" translate>admin.input.user.login</mat-label>
-          <input matInput  formControlName="login" name="login" id="login" type="text"
+          <input oninput="this.value = this.value.toLowerCase()" matInput  formControlName="login" name="login" id="login" type="text"
             class="form-control bg-dark">
         </mat-form-field>
         <div *ngIf="login.touched && login.invalid" class="alert alert-danger">
