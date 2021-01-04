@@ -152,8 +152,8 @@
     "ok": "OK",
     "cancel": "ANNULER",
     "reset": "REINITIALISER",
-    "delete": "SUPPRIMER",
-    "edit" : "EDITER",
+    "delete": "Supprimer",
+    "edit" : "Editer",
     "yes": "OUI",
     "search": "RECHERCHER"
   },

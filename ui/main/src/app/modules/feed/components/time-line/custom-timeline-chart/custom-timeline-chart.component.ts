@@ -48,9 +48,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   public xTicksTwo: Array<any> = [];
   public xTicksOneFormat: string;
   public xTicksTwoFormat: string;
-  public underDayPeriod = false;
-  public dateFirstTick: string;
+  public title: string;
   public oldWidth = 0;
+  
 
 
   @ViewChild(ChartComponent, { read: ElementRef, static: false }) chart: ElementRef;
@@ -66,12 +66,13 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   public xRealTimeLine: moment.Moment;
   private currentPath: string;
   private isDestroyed = false ;
-
+  public weekRectangles;
 
   // TOOLTIP
   public currentCircleHovered;
   public circles;
   public cardsData;
+
 
   @Input() prod; // Workaround for testing, the variable is not set  in unit test an true in production mode
   @Input() domainId;
@@ -79,11 +80,53 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   @Input()
   set valueDomain(value: any) {
     this.xDomain = value;
-    // allow to show on top left of component date of first tick
-    this.underDayPeriod = false;
-    if (value[1] - value[0] < 86401000) { // 1 Day + 1 second  , take into account the J domain form Oh to 0h the next day
-      this.underDayPeriod = true;
-      this.dateFirstTick = moment(value[0]).format('ddd DD MMM YYYY');
+    this.setTitle();
+    this.setWeekRectanglePositions();
+  }
+
+  setTitle()
+  {
+    switch (this.domainId) {
+      case 'TR':
+      case 'J':
+        this.title = moment(this.xDomain[0]).format('DD MMMM YYYY');
+        break;
+      case 'M':
+        this.title = moment(this.xDomain[0]).format('MMMM YYYY').toLocaleUpperCase();
+        break;
+      case 'Y':
+        this.title = moment(this.xDomain[0]).format('YYYY').toLocaleUpperCase();
+        break;
+      case '7D':
+      case 'W':
+        this.title = moment(this.xDomain[0]).format('DD/MM/YYYY').toLocaleUpperCase() + ' - ' +  moment(this.xDomain[1]).format('DD/MM/YYYY') ; 
+        break;
+      default:
+    }
+  }
+
+  setWeekRectanglePositions() {
+    this.weekRectangles = new Array();
+    if (this.domainId === 'W' || this.domainId === '7D') {
+      let startOfDay = this.xDomain[0];
+      let changeBgColor = true;
+      while (startOfDay < this.xDomain[1]) {
+        let endOfDay = moment(startOfDay);
+        endOfDay.set('hour',23);
+        endOfDay.set('minute',59);
+        if (endOfDay > this.xDomain[1]) endOfDay = this.xDomain[1];
+        const week = {
+          start: startOfDay,
+          end: endOfDay,
+          changeBgColor : changeBgColor
+        }
+        this.weekRectangles.push(week);
+        startOfDay = moment(startOfDay).add(1,'day');
+        startOfDay.set("hour",0);
+        startOfDay.set('minute',0);
+        changeBgColor = !changeBgColor;
+      }
+
     }
   }
 
@@ -186,7 +229,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.xScale =  scaleTime().range([0, this.dims.width]).domain(this.xDomain);
     this.yScale =  scaleLinear().range([this.dims.height, 0]).domain([0, 5]);
     this.translateGraph = `translate(${this.dims.xOffset} , ${this.margin[0]})`;
-    this.translateXTicksTwo = `translate(0, ${this.dims.height + 15})`;
+    this.translateXTicksTwo = `translate(0, ${this.dims.height + 5})`;
     if (this.oldWidth !== this.dims.width) {
       this.oldWidth = this.dims.width;
       this.widthChange.emit(true);
@@ -200,8 +243,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     switch (this.domainId) {
       case 'TR':
         this.xTicks.forEach(tick => {
-          this.xTicksOne.push(tick);
-          if (tick.minute() === 0) { this.xTicksTwo.push(tick); }
+          if (tick.minute()===0 || tick.minute()===30) this.xTicksOne.push(tick);
+          else this.xTicksTwo.push(tick);
         });
         break;
       case 'J':
@@ -214,8 +257,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       case '7D':
       case 'W':
         this.xTicks.forEach(tick => {
-          this.xTicksOne.push(tick);
-          if (tick.hour() === 0)  this.xTicksTwo.push(tick);
+          if (tick.hour()===0 || tick.hour()===8 || tick.hour()===16) this.xTicksOne.push(tick);
+          else  this.xTicksTwo.push(tick);
         });
         break;
       default:
@@ -474,48 +517,42 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     return moment(xRealTimeLine).format('DD/MM/YY HH:mm');
   }
 
+  getWeekFormatting(start, end)
+  {
+    if (end.valueOf() - start.valueOf() < 43200000) return ''; //  12h =>  12h*3600s*1000ms =  43200000ms
+    return moment(start).format('ddd DD MMM');
+  }
+
+  getRealTimeTextPosition()
+  {
+    return Math.max(this.xScale(this.xRealTimeLine),50); // To avoid going to much on the left, 50px min
+  }
+
   feedCircleHovered(myCircle): void {
     this.currentCircleHovered = myCircle;
   }
 
   getXTickOneFormatting = (value): string => {
 
-    const isFirstOfJanuary = (value.valueOf() === moment(value).startOf('year').valueOf());
     switch (this.domainId) {
       case 'TR':
-        return value.format('mm');
+        if (value.minute()===0) return value.format('HH') + 'h';
+        return value.format('HH') + 'h30';
       case 'J':
-        return value.format('HH') + 'h' + value.format('mm');
+        return value.format('HH') + 'h';
       case '7D':
       case 'W':
         return value.format('HH') + 'h';
       case 'M':
-        if (isFirstOfJanuary) { return value.format('DD MMM YY'); }
-        return value.format('ddd DD MMM');
+        return value.format('dd').toLocaleUpperCase().substring(0,1) + value.format(' DD');
       case 'Y':
-        if (isFirstOfJanuary) { return value.format('D MMM YY'); }
-        else { return value.format('D MMM'); }
+        return value.format('D MMM'); 
       default: return '';
     }
   }
 
   getXTickTwoFormatting = (value): string => {
-    const isFirstOfJanuary = (value.valueOf() === moment(value).startOf('year').valueOf());
-    switch (this.domainId) {
-      case 'TR':
-        if (moment(value).hours() === 0) { return value.format('ddd DD MMM'); }
-        return value.format('HH') + 'h';
-      case 'J':
-        return value.format('HH') + 'h' + value.format('mm');
-      case '7D':
-      case 'W':
-      case 'M':
-        if (isFirstOfJanuary) { return value.format('DD MMM YY'); }
-        return value.format('ddd DD MMM');
-      case 'Y':
-        return value.format('D MMM');
-      default: return '';
-    }
+    return '';
   }
 
   getTickSize() {

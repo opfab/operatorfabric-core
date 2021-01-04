@@ -14,9 +14,27 @@
         (mouseWheelUp)="onZoom($event, 'in')"
         (mouseWheelDown)="onZoom($event, 'out')"
         class="">
+
+
+
+
     <svg:g [attr.transform]="translateGraph" class="chart">
 
-        <svg:g [attr.transform]="translateXTicksTwo">
+        <svg:g *ngFor="let rectangle of weekRectangles">
+           <svg:rect *ngIf="rectangle.changeBgColor" [attr.x]="xScale(rectangle.start)"
+                [attr.width]="xScale(rectangle.end) - xScale(rectangle.start)" y="0" fill=var(--opfab-timeline-week-bgcolor)
+                [attr.height]="dims.height"></svg:rect> -->
+            <text *ngIf="rectangle.changeBgColor"
+                [attr.x]="xScale(rectangle.start) + (xScale(rectangle.end) - xScale(rectangle.start)) /2" [attr.y]="58"
+                fill=var(--opfab-timeline-week-color) text-anchor="middle" [attr.font-size]="15" stroke-width="0.5px">
+                {{getWeekFormatting(rectangle.start,rectangle.end)}}</text>
+            <text *ngIf="!rectangle.changeBgColor"
+                [attr.x]="xScale(rectangle.start) + (xScale(rectangle.end) - xScale(rectangle.start)) /2" [attr.y]="58"
+                fill=var(--opfab-timeline-week-color2) text-anchor="middle" [attr.font-size]="15" stroke-width="0.5px">
+                {{getWeekFormatting(rectangle.start,rectangle.end)}}</text>
+        </svg:g>
+
+         <svg:g [attr.transform]="translateXTicksTwo">
             <svg:g ngx-charts-x-axis-ticks
                    *ngIf="prod"
                    [scale]="xScale"
@@ -29,7 +47,7 @@
                    fill=var(--opfab-timeline-grid-text-color)
                    [attr.font-size]="13"
             />
-        </svg:g>
+        </svg:g> 
         <svg:g ngx-charts-x-axis
                *ngIf="prod"
                [xScale]="xScale"
@@ -50,19 +68,29 @@
                [ticks]="[0,1,2,3,4,5]"
                [showGridLines]="true">
         </svg:g>
-        <text *ngIf="checkInsideDomain(xRealTimeLine) && !underDayPeriod"
-              [attr.x]="xScale(xRealTimeLine)"
-              [attr.y]="-10" 
+
+        <!-- no rounded only up corner possible with svg so use two rectangles -->
+        <svg:rect *ngIf="checkInsideDomain(xRealTimeLine)" [attr.x]="getRealTimeTextPosition()-50" [attr.width]="100" y="-18"
+            fill=var(--opfab-timeline-realtimebar-color) [attr.height]="18" rx="10" ry="10"></svg:rect>
+        <svg:rect *ngIf="checkInsideDomain(xRealTimeLine)" [attr.x]="getRealTimeTextPosition()-50" [attr.width]="100" y="-10"
+            fill=var(--opfab-timeline-realtimebar-color) [attr.height]="10"></svg:rect>
+
+        
+
+        <text *ngIf="checkInsideDomain(xRealTimeLine)"
+              [attr.x]="getRealTimeTextPosition()"
+              [attr.y]="-8" 
               fill=var(--opfab-timeline-text-color)
               text-anchor="middle" stroke-width="0.5px"
               [attr.font-size]="13" dy=".3em">{{getXRealTimeLineFormatting(xRealTimeLine)}}</text>
-        <text *ngIf="underDayPeriod"
-              [attr.x]="50"
-              [attr.y]="-10" 
+
+        <text 
+              [attr.x]="'50%'"
+              [attr.y]="-22" 
               fill=var(--opfab-timeline-text-color)
               text-anchor="middle" 
               [attr.font-size]="13" dy=".3em"
-              >{{dateFirstTick}}
+              >{{title}}
               
         </text>
         <svg:rect *ngIf="checkInsideDomain(xRealTimeLine)"
@@ -71,8 +99,13 @@
                   y="0"
                   fill=var(--opfab-timeline-realtimebar-color)
                   [attr.height]="dims.height"
-                  class="realTimeLine opfab-timeline-realtimebar-color"
         ></svg:rect>
+
+    
+
+
+
+
         <svg:g *ngFor="let circle of circles" type="button">
 
         <svg:g *ngIf="(circle.count>1)" (click)="feedCircleHovered(circle)" container="body"   [ngbPopover]="tooltipTemplate"   [autoClose]="true">

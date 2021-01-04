@@ -9,14 +9,37 @@
 
 
 
-<div >
-  <ul class="nav nav-tabs opfab-line-undertab">
-    <li class="nav-item opfab-tab " data-toggle="tab">
+<div calcHeightDirective parentId="parentFeedContent" fixedHeightClass="fixed-height-details" calcHeightClass="calc-height-details" style="display: block;">
+
+  <ul class="nav nav-tabs fixed-height-details opfab-line-undertab">
+
+    <li class="nav-item opfab-tab opfab-menu-item-left" data-toggle="tab">
       <span class="opfab-tab" >{{cardTitle}}</span> 
     </li>
+    <li class="nav-item opfab-menu-item-right">
+      <div class="opfab-right-menu-item" *ngIf='showEditAndDeleteButton' >
+        <a class="opfab-right-menu-link" (click)='editCard()'>
+          <div class="opfab-menu-icon opfab-menu-icon-right opfab-icon-edit"></div>
+          <div translate>{{'button.edit'}}</div>
+        </a>
+      </div>
+
+      <div class="opfab-right-menu-item" *ngIf='showEditAndDeleteButton' >
+        <a class="opfab-right-menu-link" (click)='open(doYouReallyWantToDeleteCardPopup)'>
+          <div class="opfab-menu-icon opfab-menu-icon-right opfab-icon-trash"></div>
+          <div translate>{{'button.delete'}}</div>
+        </a>
+      </div>
+      <div class="opfab-right-menu-item" aria-label="Close" (click)="closeDetails()">
+          <span aria-hidden="true" style="font-size: 30px;cursor: pointer;">&times;</span>
+      </div>
+
+    </li>
+
   </ul>
 
-  <div class="opfab-card-detail ">
+
+  <div class="opfab-card-detail calc-height-details">
    <link *ngFor="let cssUrl of hrefsOfCssLink" [href]="cssUrl" rel="stylesheet" type="text/css">
 
     <div>
@@ -53,10 +76,6 @@
         <button id="opfab-card-details-btn-ack" class="opfab-btn"  *ngIf='showAckButton' translate
           (click)='acknowledge()'>{{btnAckText}}</button>
     
-        <button id="opfab-card-details-btn-delete" class="opfab-btn"  *ngIf='showEditAndDeleteButton' translate
-                (click)='open(doYouReallyWantToDeleteCardPopup)'>{{'button.delete'}}</button>
-        <button id="opfab-card-details-btn-edit" class="opfab-btn "*ngIf='showEditAndDeleteButton' translate
-                (click)='editCard()'>{{'button.edit'}}</button>
       </div>
     
       <ng-template #doYouReallyWantToDeleteCardPopup let-modal>

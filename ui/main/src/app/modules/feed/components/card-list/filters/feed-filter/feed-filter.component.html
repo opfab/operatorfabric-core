@@ -74,14 +74,14 @@
 
         <form [formGroup]="timeFilterForm" id="time-filter-form">
 
-            <div style="margin-left: 2px; margin-right: 2px;margin-top:-10px">
+            <div style="margin-left: 2px; margin-right: 2px;margin-top:-10px;width:250px">
                 <div class="form-group" id="start">
                     <of-datetime-filter id="opfab-feed-filter-dateTimeFrom"  (change)="onDateTimeChange($event)" filterPath="start.label" formControlName="dateTimeFrom"
                         labelKey="feed.filters.time."></of-datetime-filter>
                 </div>
             </div>
 
-            <div style="margin-left: 2px; margin-right: 2px;margin-top:-20px">
+            <div style="margin-left: 2px; margin-right: 2px;margin-top:-20px;;width:250px">
                 <div class="form-group" id="end">
                     <of-datetime-filter id="opfab-feed-filter-dateTimeTo" filterPath="end.label" formControlName="dateTimeTo"
                         labelKey="feed.filters.time." (change)="onDateTimeChange($event)"></of-datetime-filter>

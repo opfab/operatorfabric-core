@@ -37,6 +37,9 @@ export class GlobalStyleService {
                                         --opfab-timeline-bgcolor: #F3F2F1;
                                         --opfab-timeline-text-color: #000000;
                                         --opfab-timeline-grid-color: #C9CCD1;
+                                        --opfab-timeline-week-color: #aaaaaa;
+                                        --opfab-timeline-week-color2: #aaaaaa;
+                                        --opfab-timeline-week-bgcolor: #E3E2E1;
                                         --opfab-timeline-realtimebar-color: #2784FF;
                                         --opfab-timeline-button-bgcolor: #e5e5e5;
                                         --opfab-timeline-button-text-color: #49494a;
@@ -71,6 +74,13 @@ export class GlobalStyleService {
                                         --opfab-calendar-grid-color : #C9CCD1;
                                         }`;
 
+/** color testing to remove when color validated 
+ * 
+ *   --opfab-timeline-week-color: #131D2B;
+                                        --opfab-timeline-week-color2: #2E4B73;
+                                        --opfab-timeline-week-bgcolor: #2E4B73;
+ */
+
     private static NIGHT_STYLE = `:root {
                                         --opfab-bgcolor: #262f3d;
                                         --opfab-bgcolor-darker: #131D2B;
@@ -87,7 +97,10 @@ export class GlobalStyleService {
                                         --opfab-timeline-bgcolor: #131D2B;
                                         --opfab-timeline-text-color: #ffffff;
                                         --opfab-timeline-grid-text-color: #bababa;
-                                        --opfab-timeline-grid-color: #979797;
+                                        --opfab-timeline-grid-color: #575757;
+                                        --opfab-timeline-week-color: #444444;
+                                        --opfab-timeline-week-color2: #444444;
+                                        --opfab-timeline-week-bgcolor: #192432;
                                         --opfab-timeline-realtimebar-color: #2784FF;
                                         --opfab-timeline-button-bgcolor: rgb(221, 221, 221);
                                         --opfab-timeline-button-text-color: black;
