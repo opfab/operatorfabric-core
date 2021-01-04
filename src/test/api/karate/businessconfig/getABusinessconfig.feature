@@ -16,15 +16,15 @@ Feature: Bundle
     And match response.uiVisibility.monitoring == true
     And match response.uiVisibility.logging == true
     And match response.uiVisibility.calendar == true
-    And match response.statesData.questionState.userCard.template == 'usercard_question'
-    And match response.statesData.questionState.userCard.severityVisible == false
-    And match response.statesData.questionState.userCard.startDateVisible == true
-    And match response.statesData.questionState.userCard.endDateVisible == true
-    And match response.statesData.incidentInProgressState.userCard.template == 'usercard_incidentInProgress'
-    And match response.statesData.incidentInProgressState.userCard.severityVisible == true
-    And match response.statesData.incidentInProgressState.userCard.startDateVisible == false
-    And match response.statesData.incidentInProgressState.userCard.endDateVisible == false
-    And match response.statesData.incidentInProgressState.acknowledgmentAllowed == 'Always'
+    And match response.states.questionState.userCard.template == 'usercard_question'
+    And match response.states.questionState.userCard.severityVisible == false
+    And match response.states.questionState.userCard.startDateVisible == true
+    And match response.states.questionState.userCard.endDateVisible == true
+    And match response.states.incidentInProgressState.userCard.template == 'usercard_incidentInProgress'
+    And match response.states.incidentInProgressState.userCard.severityVisible == true
+    And match response.states.incidentInProgressState.userCard.startDateVisible == false
+    And match response.states.incidentInProgressState.userCard.endDateVisible == false
+    And match response.states.incidentInProgressState.acknowledgmentAllowed == 'Always'
 
 
 
