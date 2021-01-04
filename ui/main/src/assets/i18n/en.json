@@ -215,7 +215,8 @@
     "filterUnSelectAllText": "UnSelect all filtered results"
   },
   "response": {
-    "btnTitle": "CONFIRM MY ANSWERS",
+    "btnTitle": "VALIDATE ANSWER",
+    "btnUnlock": "MODIFY ANSWER",
     "error": {
       "submit": "The card could not been sent",
       "form": "The form is not correctly filled",

@@ -151,7 +151,6 @@ For each user response, a child card containing the response is emitted and stor
 - As child cards are arriving in real time, you need to define a method call templateGateway.applyChildCards() which will be called by OperatorFabric each time the list of child cards is evolving.
 - To integrate the child cards when loading the card you need to call to _templateGateway.applyChildCards()_. (OperatorFabric is not calling the method on card loading)
 
-
 === Entity name 
 
 If you want to show the name of an entity that send the response, you need to get the id of the entity via the publisher field of the child card and then you  can get the name of the entity by calling _templateGateway.getEntityName(entityId)_
@@ -159,3 +158,17 @@ If you want to show the name of an entity that send the response, you need to ge
 === Example 
 
 You can find an example in the file src/test/utils/karate/businessconfig/resources/bundle_defaultProcess/template/en/question.handlebars.
+
+== Lock mechanism
+
+When a user has never answered to a response card, the button will be marked as "VALIDATE ANSWER" and the card will be unlocked.
+When the user responds for the first time (and the response succeeds), the button will then be marked as "MODIFY ANSWER" and the information that the card has been locked will be sent to the third template (by calling the _templateGateway.lockAnswer()_ function).
+
+Once a user has responded to a response card, its entity status will be considered as "already answered" for this card.
+Then all the users having the same entity will be in this status for this card.
+
+From there, as soon as they will open this card the button will be marked as "MODIFY ANSWER" and this information (i.e. that this entity has already responded) will be send to the third template (via the _templateGateway.isLocked_ variable).
+
+The user can then click on "MODIFY ANSWER" and the button will come back to its initial state ("VALIDATE ANSWER") and the information that the user wants to modify its initial answer will be sent to the third template (by calling the _templateGateway.unlockAnswer()_ function).
+
+Once again, after validating its answer, the information will be sent to the third template that the card has been locked (by calling the templateGateway.lockAnswer() function).

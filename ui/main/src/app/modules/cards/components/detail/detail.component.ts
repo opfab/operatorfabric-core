@@ -31,7 +31,7 @@ import {AppState} from '@ofStore/index';
 import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
 import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {UserContext} from '@ofModel/user-context.model';
-import {map, skip,take, takeUntil} from 'rxjs/operators';
+import {map, skip, take, takeUntil} from 'rxjs/operators';
 import {fetchLightCard, selectLastCards} from '@ofStore/selectors/feed.selectors';
 import {CardService} from '@ofServices/card.service';
 import {Observable, Subject, zip} from 'rxjs';
@@ -113,7 +113,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public isActionEnabled = false;
     public lttdExpiredIsTrue: boolean;
     public cardTitle: string;
-
+    public isDeleteOrEditCardAllowed = false;
+    public hasAlreadyResponded = false;
 
     unsubscribe$: Subject<void> = new Subject<void>();
     public hrefsOfCssLink = new Array<SafeResourceUrl>();
@@ -146,15 +147,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 private configService: ConfigService,
                 private router: Router,
                 private translate: TranslateService) {
-        this.store.select(selectAuthenticationState).subscribe(authState => {
-            this._userContext = new UserContext(
-                authState.identifier,
-                authState.token,
-                authState.firstName,
-                authState.lastName
-            );
-        });
-        this.reloadTemplateWhenGlobalStyleChange();
+    }
+
+    get isLocked() {
+      return this.hasAlreadyResponded;
     }
 
     open(content) {
@@ -188,9 +184,26 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         window.onload = this.adaptTemplateSize;
     }
 
+    checkIfHasAlreadyResponded() {
+      this.hasAlreadyResponded = false;
+      for (const e of this.childCards.map(c => c.publisher)) {
+        if (this.user.entities.includes(e)) {
+          this.hasAlreadyResponded = true;
+          break;
+        }
+      }
+    }
+
+    unlockAnswer() {
+      this.hasAlreadyResponded = false;
+      templateGateway.unlockAnswer();
+    }
+
     // -------------------------------------------------------------- //
 
     ngOnInit() {
+      this.checkIfHasAlreadyResponded();
+      this.reloadTemplateWhenGlobalStyleChange();
 
         if (this._appService.pageType !== PageType.ARCHIVE) {
 
@@ -316,11 +329,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                     rep => {
                         if (rep['count'] === 0 && rep['message'].includes('Error')) {
                             this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG);
-                            console.error(rep);
-
                         } else {
-                            console.log(rep);
-                            this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, ResponseMsgColor.GREEN);
+                          this.hasAlreadyResponded = true;
+                          templateGateway.lockAnswer();
+                          this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, ResponseMsgColor.GREEN);
                         }
                     },
                     err => {
@@ -401,11 +413,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private reloadTemplateWhenGlobalStyleChange() {
         this.store.select(selectGlobalStyleState)
             .pipe(takeUntil(this.unsubscribe$), skip(1))
-            .subscribe(style => this.initializeHandlebarsTemplates());
+            .subscribe(() => this.initializeHandlebarsTemplates());
     }
 
     ngOnChanges(): void {
         this.initializeHrefsOfCssLink();
+        this.checkIfHasAlreadyResponded();
         this.initializeHandlebarsTemplates();
         this.loadTranslationForTitle();
         this.markAsReadIfNecessary();
@@ -417,7 +430,15 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             this.setIsActionEnabled();
         }
         this.setButtonsVisibility();
-
+        this.hasAlreadyResponded = false;
+        for (const e of this.childCards.map(c => c.publisher)) {
+          if (this.user.entities.includes(e)) {
+            this.hasAlreadyResponded = true;
+            break;
+          }
+        }
+        console.log('this.childCards.map(c => c.publisher)', this.childCards.map(c => c.publisher));
+        console.log('this.hasAlreadyResponded', this.hasAlreadyResponded);
     }
 
     private setEntitiesToRespond() {
@@ -525,11 +546,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         }
     }
 
-
-
-    private initializeHandlebarsTemplates() {
-
-        templateGateway.childCards = this.childCards;
+    private initializeHandlebarsTemplatesProcess() {
+      templateGateway.childCards = this.childCards;
+      templateGateway.isLocked = this.isLocked;
         this._responseData = this.cardState.response;
         const templateName = this.cardState.templateName;
         if (!!templateName) {
@@ -547,6 +566,25 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                     }
                 );
         } else console.log('WARNING No template for state ', this.card.state);
+    }
+
+    private initializeHandlebarsTemplates() {
+
+      if (!this._userContext) {
+        this.store.select(selectAuthenticationState).subscribe(authState => {
+          this._userContext = new UserContext(
+              authState.identifier,
+              authState.token,
+              authState.firstName,
+              authState.lastName,
+              this.user.groups,
+              this.user.entities
+          );
+          this.initializeHandlebarsTemplatesProcess();
+      });
+      } else {
+        this.initializeHandlebarsTemplatesProcess();
+      }
     }
 
     get htmlContent() {

@@ -31,6 +31,10 @@ const templateGateway = {
         }
         return this.opfabEntityNames.get(entityId);
     },
+
+    lockAnswer: function() {},
+    applyChildCards: function() {},
+    unlockAnswer: function() {},
     childCards: []
     
 };
