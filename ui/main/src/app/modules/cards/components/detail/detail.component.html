@@ -72,8 +72,8 @@
         <button id="opfab-card-details-btn-response" class="opfab-btn"  *ngIf='showActionButton && isActionEnabled && !isLocked'
           translate [translateParams]="responseDataParameters" [disabled]='lttdExpiredIsTrue || !isActionEnabled'
                 (click)='submitResponse()'>{{btnText}}</button>
-        <button class="btn btn-warning mr-3" style="float: right; color: black;" translate
-            *ngIf='responseDataExists && isLocked' (click)='unlockAnswer()'>
+        <button id="opfab-card-details-btn-response" class="opfab-btn" [disabled]='lttdExpiredIsTrue || !isActionEnabled'
+          translate *ngIf='showActionButton && isActionEnabled && isLocked' (click)='unlockAnswer()'>
           response.btnUnlock
         </button>
     

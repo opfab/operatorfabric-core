@@ -113,7 +113,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public isActionEnabled = false;
     public lttdExpiredIsTrue: boolean;
     public cardTitle: string;
-    public isDeleteOrEditCardAllowed = false;
     public hasAlreadyResponded = false;
 
     unsubscribe$: Subject<void> = new Subject<void>();
@@ -430,15 +429,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             this.setIsActionEnabled();
         }
         this.setButtonsVisibility();
-        this.hasAlreadyResponded = false;
-        for (const e of this.childCards.map(c => c.publisher)) {
-          if (this.user.entities.includes(e)) {
-            this.hasAlreadyResponded = true;
-            break;
-          }
-        }
-        console.log('this.childCards.map(c => c.publisher)', this.childCards.map(c => c.publisher));
-        console.log('this.hasAlreadyResponded', this.hasAlreadyResponded);
+
     }
 
     private setEntitiesToRespond() {
