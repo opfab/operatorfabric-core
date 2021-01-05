@@ -34,6 +34,22 @@ while the *docker* sub-directory is a specific configuration meant for use in a 
 
 == Business service configuration
 
+=== Specify an external configuration
+
+When starting docker in the full docker environment an external environment file could be provided like:
+
+----
+cd ./config/docker
+./docker-compose.sh ~/config/local.env
+----
+In the provided environment file the Spring active profiles can be set.
+
+----
+SPRING_PROFILES_ACTIVE=docker,local
+----
+This way the configuration file 'cards-publication-local.yml' can be provided in the same configuration directory and can be read by SpringBoot
+
+
 === Shared business service configuration
 
 The configuration shared by all business services is in a yaml file, you can find an example with the file
