@@ -20,7 +20,7 @@ Feature: deleteUser
 
 
   Scenario: Delete user for a non-existent user, expected response 404
-    Given url opfabUrl + 'users/users/NonExistentUser'
+    Given url opfabUrl + 'users/users/nonexistentuser'
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 404
@@ -33,26 +33,26 @@ Feature: deleteUser
     And request userForEndpointDeleteUser
     When method post
     Then status 201
-    And match response.login == userForEndpointDeleteUser.login
+    And match response.login == karate.lowerCase(userForEndpointDeleteUser.login)
     And match response.firstName == userForEndpointDeleteUser.firstName
     And match response.lastName == userForEndpointDeleteUser.lastName
 
 
   Scenario: we check that the user created previously exists
-    Given url opfabUrl + 'users/users/' + userForEndpointDeleteUser.login
+    Given url opfabUrl + 'users/users/' + karate.lowerCase(userForEndpointDeleteUser.login)
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
 
 
   Scenario: delete user with no authentication, expected response 401
-    Given url opfabUrl + 'users/users/' + userForEndpointDeleteUser.login
+    Given url opfabUrl + 'users/users/' + karate.lowerCase(userForEndpointDeleteUser.login)
     When method delete
     Then status 401
 
 
   Scenario: delete user with no admin authentication (with operator1 authentication), expected response 403
-    Given url opfabUrl + 'users/users/' + userForEndpointDeleteUser.login
+    Given url opfabUrl + 'users/users/' + karate.lowerCase(userForEndpointDeleteUser.login)
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method delete
     Then status 403
@@ -66,14 +66,14 @@ Feature: deleteUser
 
 
   Scenario: delete user (with admin authentication), expected response 200
-    Given url opfabUrl + 'users/users/' + userForEndpointDeleteUser.login
+    Given url opfabUrl + 'users/users/' + karate.lowerCase(userForEndpointDeleteUser.login)
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
 
 
   Scenario: we check that the user doesn't exist anymore, expected response 404
-    Given url opfabUrl + 'users/users/' + userForEndpointDeleteUser.login
+    Given url opfabUrl + 'users/users/' + karate.lowerCase(userForEndpointDeleteUser.login)
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 404

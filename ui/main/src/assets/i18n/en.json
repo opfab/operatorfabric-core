@@ -294,7 +294,7 @@
       "entities": "Entities management"
     },
     "pagination": {
-      "firstText": "Fisrt",
+      "firstText": "First",
       "lastText": "Last",
       "nextText": "Next",
       "prevText": "Previous"

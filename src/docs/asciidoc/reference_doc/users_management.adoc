@@ -37,6 +37,9 @@ Users are the individuals and mainly physical person who can log in OperatorFabr
 
 The access to this service has to be authorized, in the `OAuth2` service used by the current `OperatorFabric` instance, at least to access User information and to manage Users. The membership of groups and entities are stored in the user information.
 
+NOTE: User login must be lowercase. Otherwise, it will be converted to lowercase before saving to the database.
+
+
 ==== Automated user creation
 
 In case of a user does exist in a provided authentication service but he does not exist in the `OperatorFabric`
