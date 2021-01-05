@@ -162,7 +162,7 @@ definitions:
         description: >-
           ID of card to be deleted. Only used for CardOperations of DELETE
           type.
-      cardToBeProcessed:
+      card:
         $ref: '#/definitions/LightCard'
         description: >-
           Card object to be added or updated. Only used for CardOperations of

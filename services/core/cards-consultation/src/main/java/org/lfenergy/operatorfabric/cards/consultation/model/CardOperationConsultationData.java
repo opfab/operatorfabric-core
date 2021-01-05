@@ -11,15 +11,12 @@
 
 package org.lfenergy.operatorfabric.cards.consultation.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * <p>Please use builder to instantiate</p>
@@ -42,22 +39,7 @@ public class CardOperationConsultationData implements CardOperation {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String cardId;
     
-    @Singular("card")
-    @JsonIgnore
-    private List<LightCardConsultationData> rawCards;
-    
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private LightCard cardToBeProcessed;
-    public LightCard getCardToBeProcessed(){
-        if (rawCards != null)
-            return rawCards.get(0);
-    	return null;
-    }
 
-	@Override
-	//Used only by tests for deserialization
-	public void setCardToBeProcessed(LightCard card) {
-		this.setRawCards(Arrays.asList((LightCardConsultationData) card));
-	}
-    
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private LightCard card;
 }

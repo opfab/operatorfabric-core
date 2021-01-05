@@ -40,7 +40,7 @@ public class CardOperationData implements CardOperation {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String cardId;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private LightCard cardToBeProcessed;
+    private LightCard card;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> groupRecipientsIds;

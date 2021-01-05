@@ -170,8 +170,8 @@ public class TestUtilities {
 
     public static void logCardOperation(CardOperation o) {
         log.info("op publication: " + format(o.getPublishDate()));
-        if (o.getCardToBeProcessed() != null)
-            log.info(String.format("card [%s]: %s", o.getCardToBeProcessed().getId(), format(o.getCardToBeProcessed().getStartDate())));
+        if (o.getCard() != null)
+            log.info(String.format("card [%s]: %s", o.getCard().getId(), format(o.getCard().getStartDate())));
     }
 
     /* Utilities regarding archived Cards */

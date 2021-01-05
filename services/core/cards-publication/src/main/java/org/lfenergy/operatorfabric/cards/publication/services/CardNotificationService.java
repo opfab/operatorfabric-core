@@ -55,7 +55,7 @@ public class CardNotificationService {
         switch (type) {
             case ADD:
             case UPDATE:
-                builderEncapsulator.builder().cardToBeProcessed(card.toLightCard());
+                builderEncapsulator.builder().card(card.toLightCard());
                 break;
             case DELETE:
                 builderEncapsulator.builder().cardId(card.getId());
@@ -85,7 +85,7 @@ public class CardNotificationService {
             log.debug("Operation sent to CARD_EXCHANGE, type={}, ids={}, cards={}, groupRecipientsIds={}, entityRecipientsIds={}, userRecipientsIds={}"
                     , cardOperation.getType()
                     , cardOperation.getCardId()
-                    , (cardOperation.getCardToBeProcessed() != null ? cardOperation.getCardToBeProcessed().toString() : "")
+                    , (cardOperation.getCard() != null ? cardOperation.getCard().toString() : "")
                     , cardOperation.getGroupRecipientsIds().toString()
                     , cardOperation.getEntityRecipientsIds().toString()
                     , cardOperation.getUserRecipientsIds().toString());
