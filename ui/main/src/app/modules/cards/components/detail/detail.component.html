@@ -16,7 +16,7 @@
     <li class="nav-item opfab-tab opfab-menu-item-left" data-toggle="tab">
       <span class="opfab-tab" >{{cardTitle}}</span> 
     </li>
-    <li class="nav-item opfab-menu-item-right">
+    <li *ngIf="showButtons" class="nav-item opfab-menu-item-right">
       <div class="opfab-right-menu-item" *ngIf='showEditAndDeleteButton' >
         <a class="opfab-right-menu-link" (click)='editCard()'>
           <div class="opfab-menu-icon opfab-menu-icon-right opfab-icon-edit"></div>
@@ -39,12 +39,12 @@
   </ul>
 
 
-  <div class="opfab-card-detail calc-height-details">
+  <div class="calc-height-details">
    <link *ngFor="let cssUrl of hrefsOfCssLink" [href]="cssUrl" rel="stylesheet" type="text/css">
 
-    <div>
+    <div >
     
-      <div  *ngIf='responseDataExists'  style="text-align: right;">
+      <div  *ngIf='responseDataExists' class="opfab-card-response-header"  style="text-align: right;">
        
 
             <span translate>response.answers</span> :
@@ -55,10 +55,10 @@
 
       </div>
 
-      <div id="div-card-template" [innerHtml]="htmlContent"></div>
+      <div id="div-card-template" class="opfab-card-detail" [innerHtml]="htmlContent"></div>
     </div>
     
-    <div style="text-align: center;width:100% ; " >
+    <div  style="text-align: center;width:100% ; " >
       <div id='div-detail-msg' *ngIf='message.display'
             class="alert alert-dismissible fade show text-center {{message.color}}"
           role="alert">

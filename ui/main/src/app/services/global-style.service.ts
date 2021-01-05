@@ -114,7 +114,7 @@ export class GlobalStyleService {
                                         --opfab-light-card-lttd-timeleft: #FD9313;
                                         --opfab-card-tab-selected-text-color: #bababa;
                                         --opfab-card-tab-border-color: #bababa;
-                                        --opfab-card-bgcolor :  #262f3d;
+                                        --opfab-card-bgcolor :  #131D2B;
                                         --opfab-card-detail-border-color : #343a40 ;
                                         --opfab-navbar-color: #BABABA;
                                         --opfab-navbar-color-hover:white;

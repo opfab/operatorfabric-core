@@ -81,7 +81,7 @@ body {
 
 .opfab-select  {
   color:var(--opfab-input-text-color);
-  background-color: var(--opfab-bgcolor);
+  background-color: var(--opfab-bgcolor-darker);
   box-sizing: border-box;
   
   border: 0.5px solid var(--opfab-form-border-color);
@@ -92,7 +92,7 @@ body {
 }
 
 .opfab-select > select {
-  background-color:var(--opfab-bgcolor);
+  background-color:var(--opfab-bgcolor-darker);
   color:var(--opfab-input-text-color);
   padding: 10px;
   width: calc(100% - 4px);
@@ -103,7 +103,7 @@ body {
 }
 
 .opfab-select > select option {
-  background-color:var(--opfab-bgcolor) ;
+  background-color:var(--opfab-bgcolor-darker) ;
   font-size: 16px;
 }
 
@@ -116,7 +116,7 @@ body {
   top: -10px;
   left:10;
   color: var(--opfab-form-label-text-color);
-  background-color: var(--opfab-bgcolor);
+  background-color: var(--opfab-bgcolor-darker);
 }
 
 .opfab-select::before {
@@ -148,18 +148,18 @@ body {
   font-size: 13px;
   height: 46px;
   outline: none;
-  background-color: var(--opfab-bgcolor);
+  background-color: var(--opfab-bgcolor-darker);
 }
 
 
 // use in date time filter when time is disabled
 .form-control:disabled {
-  background-color: var(--opfab-bgcolor);
+  background-color: var(--opfab-bgcolor-darker);
   color: #606267;
 }
 
 .opfab-input > input {
-  background-color:var(--opfab-bgcolor);
+  background-color:var(--opfab-bgcolor-darker);
   color:var(--opfab-input-text-color);
   padding: 10px;
   width: calc(100% - 4px);
@@ -180,7 +180,7 @@ body {
   input:-webkit-autofill:hover, 
   input:-webkit-autofill:focus, 
   input:-webkit-autofill:active  {
-      -webkit-box-shadow: 0 0 0 30px var(--opfab-bgcolor) inset !important;
+      -webkit-box-shadow: 0 0 0 30px var(--opfab-bgcolor-darker) inset !important;
   }
   input:-webkit-autofill {
     -webkit-text-fill-color: var(--opfab-text-color) !important;
@@ -199,7 +199,7 @@ body {
   margin-top: -10px;
   left:10;
   color: var(--opfab-form-label-text-color);
-  background-color: var(--opfab-bgcolor);
+  background-color: var(--opfab-bgcolor-darker);
 }
 
 
@@ -208,7 +208,7 @@ body {
 
 .opfab-textarea {
   color:var(--opfab-input-text-color);
-  background-color: var(--opfab-bgcolor);
+  background-color: var(--opfab-bgcolor-darker);
   box-sizing: border-box;
   
   border: 1px solid var(--opfab-form-border-color);
@@ -218,7 +218,7 @@ body {
 }
 
 .opfab-textarea  > textarea {
-  background-color:var(--opfab-bgcolor);
+  background-color:var(--opfab-bgcolor-darker);
   color:var(--opfab-input-text-color);
   padding: 10px;
   width: calc(100% - 4px);
@@ -236,7 +236,7 @@ body {
   margin-top: -10px;
   left:10;
   color: var(--opfab-form-label-text-color);
-  background-color: var(--opfab-bgcolor);
+  background-color: var(--opfab-bgcolor-darker);
 }
 
 
@@ -258,12 +258,12 @@ body {
   font-size: 13px;
   outline: none;
   min-height: 46px;
-  background-color: var(--opfab-bgcolor);
+  background-color: var(--opfab-bgcolor-darker);
 }
 
 
 .opfab-input-type-ahead > input {
-  background-color:var(--opfab-bgcolor);
+  background-color:var(--opfab-bgcolor-darker);
   color:var(--opfab-input-text-color);
   padding: 10px;
   height: 42px;
@@ -296,20 +296,20 @@ body {
   margin-top: -10px;
   left:10;
   color: var(--opfab-form-label-text-color);
-  background-color: var(--opfab-bgcolor);
+  background-color: var(--opfab-bgcolor-darker);
 }
 
 
 
 type-ahead > input {
-  background-color:var(--opfab-bgcolor);
+  background-color:var(--opfab-bgcolor-darker);
   color:var(--opfab-input-text-color);
   max-width: calc(100% / 4); // limit going to new line when writing new entry in field 
 }
 
 
 type-ahead > .badge-primary {
-  background-color:var(--opfab-bgcolor-darker);
+  background-color:var(--opfab-bgcolor);
   font-size: 13px;
   font-weight: lighter;
   margin-right: 5px;
@@ -333,7 +333,7 @@ type-ahead > .badge-primary {
 
 
 .opfab-multiselect  .c-btn {
-  background-color:var(--opfab-bgcolor);
+  background-color:var(--opfab-bgcolor-darker);
   color:var(--opfab-input-text-color);
   margin: 5px;
   font-size: 13px;
@@ -352,7 +352,7 @@ type-ahead > .badge-primary {
   top: -10px;
   left:10;
   color: var(--opfab-form-label-text-color);
-  background-color: var(--opfab-bgcolor);
+  background-color: var(--opfab-bgcolor-darker);
 }
 
 
@@ -383,9 +383,9 @@ type-ahead > .badge-primary {
 // end multiselect specific conf 
 
 
-// Class to use when background form is darker
+// Class to use when background form is lighter
 
-.opfab-form-darker {
+.opfab-form-lighter {
   .opfab-input,
   .opfab-input > input, 
   .opfab-input label , 
@@ -406,10 +406,10 @@ type-ahead > .badge-primary {
   .opfab-input-type-ahead > input, 
   .opfab-input-type-ahead label , 
   type-ahead > input{
-    background-color: var(--opfab-bgcolor-darker);
+    background-color: var(--opfab-bgcolor);
   } 
   type-ahead > .badge-primary {
-    background-color: var(--opfab-bgcolor);
+    background-color: var(--opfab-bgcolor-darker);
   }
 }
 
