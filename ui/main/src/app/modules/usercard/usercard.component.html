@@ -11,7 +11,7 @@
 
 <br />
 <div *ngIf="displayForm()" class="container">
-    <form [formGroup]="messageForm">
+    <form [formGroup]="messageForm" class="opfab-form-lighter">
         <div class="row">
 
             <div class="col">
@@ -59,13 +59,13 @@
 
     </form>
 
-    <div [innerHtml]="userCardTemplate"></div>
+    <div class="opfab-form-lighter" [innerHtml]="userCardTemplate"></div>
 
     <br/>   
 
     
 
-    <form [formGroup]="recipientForm">
+    <form [formGroup]="recipientForm" class="opfab-form-lighter">
         <div class="row">
             <div class="col-12">
 
@@ -96,7 +96,7 @@
     <br />
     <h2 translate style="text-align: center"> {{messageAfterSendingCard}} </h2>
     <br /><br />
-    <of-card [lightCard]="card" [open]="true" [displayUnreadIcon]="false"></of-card>
+    <of-card [lightCard]="card" [open]="false" [displayUnreadIcon]="false"></of-card>
     <br />
     <div style="text-align: center;">
         <button id="opfab-usercard-btn-sendAnotherCard" type="button" class="opfab-btn" (click)="sendAnotherUserCard()"
@@ -124,10 +124,13 @@
 
         <div>
 
+            <div style="margin-right:-18px;">
+            <of-card [lightCard]="card" [open]="false" [displayUnreadIcon]="false" ></of-card>
+            </div>
 
-            <of-card [lightCard]="card" [open]="true" [displayUnreadIcon]="false"></of-card>
-
-             <of-card-detail [card]="card"> </of-card-detail>
+            <div style="margin-top:10px">
+             <of-card-detail [card]="card" > </of-card-detail>
+             </div>
 
         </div>
         <div class="modal-footer" style="margin-top:10px;margin-bottom: 0px;" ></div>

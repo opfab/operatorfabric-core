@@ -24,7 +24,8 @@ import {Subject} from 'rxjs';
 
 @Component({
     selector: 'of-card-detail',
-    templateUrl: './card-detail.component.html'
+    templateUrl: './card-detail.component.html',
+    styleUrls: ['./card-detail.component.scss']
 })
 export class CardDetailComponent implements OnInit, OnDestroy {
 
