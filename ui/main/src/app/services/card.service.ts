@@ -271,7 +271,7 @@ export class CardService {
                         process: card.process,
                         processVersion: card.processVersion,
                         cardType: card.severity.toLowerCase(),
-                        businessDate: moment(card.startDate),
+                        businessDate: moment(card.publishDate),
                         i18nKeyForTitle: this.addPrefix(i18nPrefix, card.title),
                         i18nKeyForDescription: this.addPrefix(i18nPrefix, card.summary),
                         sender: sender
