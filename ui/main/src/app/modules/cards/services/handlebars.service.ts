@@ -51,8 +51,10 @@ export class HandlebarsService {
         this.registerKeyValue();
         this.registerToBreakage();
         this.registerArrayContains();
+        this.registerArrayContainsOneOf();
         this.registerTimes();
         this.registerKeepSpacesAndEndOfLine();
+        this.registerMergeArrays();
         this.store.select(buildSettingsOrConfigSelector('locale')).subscribe(locale => this.changeLocale(locale))
     }
 
@@ -302,6 +304,12 @@ export class HandlebarsService {
         });
     }
 
+    private registerArrayContainsOneOf() {
+        Handlebars.registerHelper('arrayContainsOneOf', function(arr1, arr2, options) {
+            return arr1.some( ai => arr2.includes(ai) );
+        });
+    }
+
     private registerTimes() {
         Handlebars.registerHelper('times', function(n, block) {
             var accum = '';
@@ -327,6 +335,9 @@ export class HandlebarsService {
 
     private registerKeyValue() {
         Handlebars.registerHelper('keyValue', function (obj, options) {
+            if (Object.keys(obj).length === 0) {
+              return options.fn({value: false});
+            }
             var buffer, key;
             buffer = "";
             for (key in obj) {
@@ -350,6 +361,12 @@ export class HandlebarsService {
             return new Handlebars.SafeString(result);
         });
 
+    }
+
+    private registerMergeArrays() {
+      Handlebars.registerHelper('mergeArrays', function (arr1, arr2, options) {
+        return arr1.concat(arr2);
+      });
     }
 }
 

@@ -66,6 +66,18 @@
 
     }
 
+  templateGateway.lockAnswer = function() {
+      document.getElementById('choice1').disabled = true;
+      document.getElementById('choice2').disabled = true;
+      document.getElementById('choice3').disabled = true;
+  }
+
+  templateGateway.unlockAnswer = function() {
+      document.getElementById('choice1').disabled = false;
+      document.getElementById('choice2').disabled = false;
+      document.getElementById('choice3').disabled = false;
+
+ }
 
 
 </script>

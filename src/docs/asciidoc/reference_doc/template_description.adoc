@@ -423,6 +423,28 @@ Convert a string to a light HTML by replacing :
   -  each new line character with <br/>
   -  spaces with \&nbsp; when there is at least two consecutive spaces.
 
+[[arrayContainsOneOf]]
+=== arrayContainsOneOf
+
+If the first array contains at least one element of the second array, return true. Otherwise, return false.
+
+....
+{{#if (arrayContainsOneOf arr1 arr2)}}
+  <p>Arr1 contains at least one element of arr2</p>
+{{/if}}
+....
+
+[[mergeArrays]]
+=== mergeArrays
+
+Return an array that is a merge of the two arrays.
+
+....
+{{#each (mergeArrays arr1 arr2)}}
+  <p>{{@index}} element: {{this}}</p>
+{{/each}}
+....
+
 == Charts 
 
 The library https://www.chartjs.org/[charts.js] is integrate in operator fabric, it means it's possible to show charts in cards, you can find a bundle example in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/utils/karate/businessconfig/resources/bundle_api_test[src/test/utils/karate/businessconfig/resources/bundle_test_api]).

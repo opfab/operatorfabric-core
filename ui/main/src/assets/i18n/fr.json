@@ -216,7 +216,8 @@
     
   },
   "response": {
-    "btnTitle": "CONFIRMER MA REPONSE",
+    "btnTitle": "VALIDER REPONSE",
+    "btnUnlock": "MODIFIER REPONSE",
     "error": {
       "submit": "La carte n'a pas pu être envoyée",
       "form": "Le formulaire n'est pas correctement rempli"

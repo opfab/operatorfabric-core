@@ -9,11 +9,13 @@
 
 
 
-export class UserContext{
+export class UserContext {
     constructor(
-        readonly login:string,
-        readonly token:string,
-        readonly firstName:string,
-        readonly lastName:string,
-    ){}
+        readonly login: string,
+        readonly token: string,
+        readonly firstName: string,
+        readonly lastName: string,
+        readonly groups?: Array<string>,
+        readonly entities?: Array<string>
+    ) {}
 }
