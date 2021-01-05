@@ -170,9 +170,8 @@ public class TestUtilities {
 
     public static void logCardOperation(CardOperation o) {
         log.info("op publication: " + format(o.getPublishDate()));
-        for (LightCard c : o.getCards()) {
-            log.info(String.format("card [%s]: %s", c.getId(), format(c.getStartDate())));
-        }
+        if (o.getCard() != null)
+            log.info(String.format("card [%s]: %s", o.getCard().getId(), format(o.getCard().getStartDate())));
     }
 
     /* Utilities regarding archived Cards */

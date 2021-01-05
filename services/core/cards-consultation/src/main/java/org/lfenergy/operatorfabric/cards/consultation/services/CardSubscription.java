@@ -217,14 +217,13 @@ public class CardSubscription {
         String typeOperation = (cardOperation.get("type") != null) ? (String) cardOperation.get("type") : "";
 
         if (typeOperation.equals("ADD") || typeOperation.equals("UPDATE")) {
-            JSONArray cards = (JSONArray) cardOperation.get("cards");
-            JSONObject cardsObj = (cards != null) ? (JSONObject) cards.get(0) : null; // there is always only one card
-                                                                                      // in the array
-            String idCard = (cardsObj != null) ? (String) cardsObj.get("id") : "";
+            JSONObject cardObj = (JSONObject) cardOperation.get("card");
+
+            String idCard = (cardObj != null) ? (String) cardObj.get("id") : "";
 
             log.debug("Send delete card with id {} for user {}", idCard, userLogin);
             cardOperation.replace("type", DELETE_OPERATION);
-            cardOperation.appendField("cardIds", Arrays.asList(idCard));
+            cardOperation.put("cardId", idCard);
 
             return cardOperation.toJSONString();
         }
@@ -264,18 +263,17 @@ public class CardSubscription {
         JSONArray groupRecipientsIdsArray = (JSONArray) cardOperation.get("groupRecipientsIds");
         JSONArray entityRecipientsIdsArray = (JSONArray) cardOperation.get("entityRecipientsIds");
         JSONArray userRecipientsIdsArray = (JSONArray) cardOperation.get("userRecipientsIds");
-        JSONArray cards = (JSONArray) cardOperation.get("cards");
+        JSONObject cardObj = (JSONObject) cardOperation.get("card");
         String typeOperation = (cardOperation.get("type") != null) ? (String) cardOperation.get("type") : "";
-        JSONObject cardsObj = (cards != null) ? (JSONObject) cards.get(0) : null; // there is always only one card in
-                                                                                  // the array
+
         String idCard = null;
         String process = "";
         String state = "";
-        if (cardsObj != null) {
-            idCard = (cardsObj.get("id") != null) ? (String) cardsObj.get("id") : "";
+        if (cardObj != null) {
+            idCard = (cardObj.get("id") != null) ? (String) cardObj.get("id") : "";
 
-            process = (String) cardsObj.get("process");
-            state = (String) cardsObj.get("state");
+            process = (String) cardObj.get("process");
+            state = (String) cardObj.get("state");
         }
 
         if (! checkIfUserMustBeNotifiedForThisProcessState(process, state, currentUserWithPerimeters))
@@ -285,7 +283,7 @@ public class CardSubscription {
         List<String> userGroups = currentUserWithPerimeters.getUserData().getGroups();
         List<String> userEntities = currentUserWithPerimeters.getUserData().getEntities();
 
-        log.debug("Check if user {} shall receive card {} for processStateKey {}", userLogin, idCard,processStateKey);
+        log.debug("Check if user {} shall receive card {} for processStateKey {}", userLogin, idCard, processStateKey);
 
         // user only
         if (checkInCaseOfCardSentToUserDirectly(userRecipientsIdsArray)) {

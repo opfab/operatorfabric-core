@@ -30,7 +30,6 @@ public class LocalMongoConfiguration extends AbstractLocalMongoConfiguration {
                 new I18nReadConverter(),
                 new RecipientReadConverter(),
                 new LightCardReadConverter(),
-                new CardOperationReadConverter(),
                 new TimeSpanReadConverter()
         );
     }

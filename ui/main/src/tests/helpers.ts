@@ -112,7 +112,7 @@ export function getOneRandomAddCardOperation(): CardOperation {
         generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(768),
         now,
         CardOperationType.ADD,
-        getSeveralRandomLightCards(numberOfCards)
+        getSeveralRandomLightCards(numberOfCards)[0]
     );
 }
 
