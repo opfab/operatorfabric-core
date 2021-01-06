@@ -9,7 +9,7 @@
 
 
 
-<div calcHeightDirective parentId="parentFeedContent" fixedHeightClass="fixed-height-details" calcHeightClass="calc-height-details" style="display: block;">
+<div calcHeightDirective parentId="parentFeedContent" fixedHeightClass="fixed-height-details" calcHeightClass="calc-height-details" style="display: block;  margin-top:16px;">
 
   <ul class="nav nav-tabs fixed-height-details opfab-line-undertab">
 
@@ -68,7 +68,7 @@
         </button>
       </div>
     
-      <div id='div-detail-btn' *ngIf="showButtons" >
+      <div id='div-detail-btn' *ngIf="showButtons" style="text-align: right;">
         <button id="opfab-card-details-btn-response" class="opfab-btn"  *ngIf='showActionButton && isActionEnabled && !isLocked'
           translate [translateParams]="responseDataParameters" [disabled]='lttdExpiredIsTrue || !isActionEnabled'
                 (click)='submitResponse()'>{{btnText}}</button>

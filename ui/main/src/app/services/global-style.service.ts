@@ -52,7 +52,7 @@ export class GlobalStyleService {
                                         --opfab-lightcard-detail-unread-textcolor: black;
                                         --opfab-light-card-lttd-timeleft: #ff6600;
                                         --opfab-card-tab-selected-text-color: black;
-                                        --opfab-card-tab-border-color: #dddddd;
+                                        --opfab-card-tab-border-color: ##111D2D;
                                         --opfab-card-bgcolor : #F3F2F1;
                                         --opfab-card-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
                                         --opfab-card-detail-border-color : #dddddd;
