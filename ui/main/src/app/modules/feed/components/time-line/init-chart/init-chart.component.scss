@@ -45,27 +45,6 @@
     flex-direction: row;
     justify-content: flex-end;
 
-    .opfab-button-color {
-      color: var(--opfab-timeline-button-text-color);
-      background-color: var(--opfab-timeline-button-bgcolor);
-    }
-
-    .opfab-button-color:hover{
-      background-color: var(--opfab-timeline-bgcolor);
-    }
-
-    .home-btn {
-      position: absolute;
-      align-self: flex-start;
-      width: 25px;
-      height: 25px;
-      border-radius: 50%;
-      border: none;
-      left: -5px;
-      padding: 1px;
-    }
-
-
 
 
     #opfab-menu-timeline-links {
