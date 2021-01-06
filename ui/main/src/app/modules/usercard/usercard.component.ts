@@ -187,6 +187,8 @@ export class UserCardComponent implements OnDestroy, OnInit {
     loadAllEntities(): void {
         this.entitiesService.getEntities().forEach(entity =>
             this.recipientsOptions.push({ id: entity.id, itemName: entity.name }));
+
+        this.recipientsOptions.sort(( a, b ) => a.itemName.localeCompare(b.itemName));
     }
 
 
