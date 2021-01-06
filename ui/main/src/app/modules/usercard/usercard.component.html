@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020-2021, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -26,23 +26,25 @@
         </div>
         <div class="row justify-content-center" *ngIf="severityVisible">
 
-            <div class="form-group form-check-inline radio-control">
-                <input type="radio" id="sev-alarm" class="form-check-input" formControlName="severity" value="ALARM">
-                <label for="sev-alarm" class="form-check-label label-sev-alarm" translate>userCard.options.severity.ALARM</label>            
-            </div>
-            <div class="form-group form-check-inline radio-control">
-                <input type="radio" id="sev-action" class="form-check-input" formControlName="severity" value="ACTION">
-                <label for="sev-action" class="form-check-label label-sev-action" translate>userCard.options.severity.ACTION</label>            
-            </div>
-            <div class="form-group form-check-inline radio-control">
-                <input type="radio" id="sev-compliant" class="form-check-input" formControlName="severity" value="COMPLIANT">
-                <label for="sev-compliant" class="form-check-label label-sev-compliant" translate>userCard.options.severity.COMPLIANT</label>            
-            </div>
-            <div class="form-group form-check-inline radio-control">
-                <input type="radio" id="sev-information" class="form-check-input" formControlName="severity" value="INFORMATION">
-                <label for="sev-information" class="form-check-label label-sev-information" translate>userCard.options.severity.INFORMATION</label>            
-            </div>
+            <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-alarm" translate> userCard.options.severity.ALARM </span>
+                <input type="radio"  id="sev-alarm" name="radio" formControlName="severity" value="ALARM">
+                <span class="opfab-radio-button-checkmark"></span>
+            </label>
+ 
+            <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-action" translate> userCard.options.severity.ACTION </span>
+                <input type="radio"  id="sev-action" name="radio" formControlName="severity" value="ACTION">
+                <span class="opfab-radio-button-checkmark"></span>
+            </label>
 
+            <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-compliant" translate> userCard.options.severity.COMPLIANT </span>
+                <input type="radio"  id="sev-compliant" name="radio" formControlName="severity" value="COMPLIANT">
+                <span class="opfab-radio-button-checkmark"></span>
+            </label>
+
+            <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-information" translate> userCard.options.severity.INFORMATION </span>
+                <input type="radio"  id="sev-information" name="radio" formControlName="severity" value="INFORMATION">
+                <span class="opfab-radio-button-checkmark"></span>
+            </label>
         </div>
         <div class="row">
             <div class="col" *ngIf="startDateVisible">

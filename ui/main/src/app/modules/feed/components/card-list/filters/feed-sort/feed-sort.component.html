@@ -12,24 +12,21 @@
         <span translate>feed.sort.title</span>
     </div>
     <form [formGroup]="sortForm" id="sort-form">
-        <div *ngIf="!hideReadSort" class="form-group form-check">
-            <input type="radio" id="opfab-feed-filter-unread" class="form-check-input" formControlName="sortControl" value="unread">
-            &nbsp;
-            <label for="unread" class="form-check-label" translate>feed.sort.unread</label>
-        </div>
-        <div class="form-group form-check">
-            <input type="radio" id="opfab-feed-filter-publication-date" class="form-check-input" formControlName="sortControl" value="date">
-            &nbsp;
-            <label for="publication" class="form-check-label" translate>feed.sort.publish</label>
-        </div>
-        <div *ngIf="!hideSeveritySort" class="form-group form-check">
-            <input type="radio" id="opfab-feed-filter-severity" class="form-check-input" formControlName="sortControl"
-                value="severity">
-            &nbsp;
-            <label for="severity" class="form-check-label"
-                translate>feed.sort.severity</label>
-        </div>
 
+        <label *ngIf="!hideReadSort" class="opfab-radio-button"> <span  translate> feed.sort.unread</span>
+            <input type="radio"  id="opfab-feed-filter-unread" formControlName="sortControl" value="unread">
+            <span class="opfab-radio-button-checkmark"></span>
+        </label>
+
+        <label class="opfab-radio-button"> <span  translate> feed.sort.publish</span>
+            <input type="radio"  id="opfab-feed-filter-publication-date" formControlName="sortControl" value="date">
+            <span class="opfab-radio-button-checkmark"></span>
+        </label>
+
+        <label *ngIf="!hideSeveritySort" class="opfab-radio-button"> <span  translate> feed.sort.severity</span>
+            <input type="radio"  id="opfab-feed-filter-severity" formControlName="sortControl" value="severity">
+            <span class="opfab-radio-button-checkmark"></span>
+        </label>
     </form>
 </ng-template>
 

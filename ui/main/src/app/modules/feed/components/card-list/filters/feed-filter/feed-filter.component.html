@@ -12,7 +12,7 @@
 
 
 
-    <div class="row filter-header">
+    <div class="row opfab-filter-header">
         <span translate>feed.filters.type.title</span>
     </div>
     <form [formGroup]="typeFilterForm" id="type-filter-form">
@@ -46,23 +46,21 @@
             <span translate>feed.filters.ack.title</span>
         </div>
         <form [formGroup]="ackFilterForm" id="ack-filter-form">
-            <div class="form-group form-check">
-                <input type="radio" id="opfab-feed-filter-ack-all" class="form-check-input" formControlName="ackControl" value="all">
-                &nbsp;
-                <label for="ack-all" class="form-check-label" translate>feed.filters.ack.all.label</label>
-            </div>
-            <div class="form-group form-check">
-                <input type="radio" id="opfab-feed-filter-ack-ack" class="form-check-input" formControlName="ackControl" value="ack">
-                &nbsp;
-                <label for="ack-ack" class="form-check-label" translate>feed.filters.ack.acknowledged.label</label>
-            </div>
-            <div class="form-group form-check">
-                <input type="radio" id="opfab-feed-filter-ack-notack" class="form-check-input" formControlName="ackControl"
-                    value="notack">
-                &nbsp;
-                <label for="ack-notack" class="form-check-label"
-                    translate>feed.filters.ack.notacknowledged.label</label>
-            </div>
+
+            <label class="opfab-radio-button"> <span  translate>feed.filters.ack.all.label</span>
+                <input type="radio"  id="opfab-feed-filter-ack-all" formControlName="ackControl" value="all">
+                <span class="opfab-radio-button-checkmark"></span>
+            </label>
+
+            <label class="opfab-radio-button"> <span  translate>feed.filters.ack.acknowledged.label</span>
+                <input type="radio"  id="opfab-feed-filter-ack-ack" formControlName="ackControl" value="ack">
+                <span class="opfab-radio-button-checkmark"></span>
+            </label>
+
+            <label class="opfab-radio-button"> <span  translate>feed.filters.ack.notacknowledged.label</span>
+                <input type="radio"  id="opfab-feed-filter-ack-notack" formControlName="ackControl" value="notack">
+                <span class="opfab-radio-button-checkmark"></span>
+            </label>
 
         </form>
     </div>
