@@ -11,6 +11,8 @@
 
 .feed-content {
   height: 100%;
+  margin: 0px;
+  padding: 0px;
 }
 
 .calc-height-feed-content {
@@ -24,6 +26,7 @@
   height: 10px; 
   margin-top: 10px;
   margin-right: 20px;
+  margin-left: 0px;
   border-color:var(--opfab-card-tab-border-color);
 
 }

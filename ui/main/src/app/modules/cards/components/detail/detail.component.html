@@ -42,7 +42,7 @@
   <div class="calc-height-details">
    <link *ngFor="let cssUrl of hrefsOfCssLink" [href]="cssUrl" rel="stylesheet" type="text/css">
 
-    <div >
+    <div style="padding-right:3px"> <!-- padding is necessary to see box shadow-->
     
       <div  *ngIf='responseDataExists' class="opfab-card-response-header"  style="text-align: right;">
        

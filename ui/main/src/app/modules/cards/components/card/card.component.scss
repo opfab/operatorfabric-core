@@ -10,9 +10,7 @@
  @import "~assets/styles/_variables.scss";
 
 .light-card-detail {
-
   color: var(--opfab-lightcard-detail-textcolor);
-  //border-color: var(--opfab-lightcard-detail-border-color);
   margin-right: 20px;
 }
  
@@ -36,6 +34,7 @@
 .card {
   margin-bottom: 5px;
   word-break: break-all;
+  box-shadow: var(--opfab-card-shadow);
 }
 
 .card-title {
@@ -54,6 +53,7 @@
   min-width: 15px;
   max-width: 15px;
   text-align: center;
+  margin-right: 18px;
 }
 
 .opfab-bg-sev-alarm {background-color: $sev-alarm;}
