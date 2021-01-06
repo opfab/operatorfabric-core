@@ -338,15 +338,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
                 };
                 myCardsTimeline.push(myCardTimeline);
               }
-              if (!!timeSpan.end) {
-                const myCardTimeline = {
-                  date: timeSpan.end,
-                  id: card.id,
-                  severity: card.severity, process: card.process,
-                  processVersion: card.processVersion, summary: card.title
-                };
-                myCardsTimeline.push(myCardTimeline);
-              }
             }
           });
         } else {
