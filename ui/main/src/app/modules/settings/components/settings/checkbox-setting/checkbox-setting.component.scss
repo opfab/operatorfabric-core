@@ -17,8 +17,9 @@ label {
   content: "";
   display: inline-block;
   width: 7px;
-  height: 18px;
+  height: 15px;
   margin-right: 5px;
+  margin-left: 18px;
   margin-bottom: -3px;
   background-color: $sev-alarm;
 }
@@ -27,8 +28,9 @@ label {
   content: "";
   display: inline-block;
   width: 7px;
-  height: 18px;
+  height: 15px;
   margin-right: 5px;
+  margin-left: 18px;
   margin-bottom: -3px;
   background-color: $sev-action;
 }
@@ -37,8 +39,9 @@ label {
   content: "";
   display: inline-block;
   width: 7px;
-  height: 18px;
+  height: 15px;
   margin-right: 5px;
+  margin-left: 18px;
   margin-bottom: -3px;
   background-color: $sev-compliant;
 }
@@ -47,8 +50,9 @@ label {
   content: "";
   display: inline-block;
   width: 7px;
-  height: 18px;
+  height: 15px;
   margin-right: 5px;
+  margin-left: 18px;
   margin-bottom: -3px;
   background-color: $sev-information;
 }

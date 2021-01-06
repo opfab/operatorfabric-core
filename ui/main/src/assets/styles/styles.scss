@@ -201,8 +201,69 @@ body {
   color: var(--opfab-form-label-text-color);
   background-color: var(--opfab-bgcolor-darker);
 }
+// CHECKBOX 
 
+/* The opfab-checkbox */
+.opfab-checkbox {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 13px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 
+/* Hide the browser's default checkbox */
+.opfab-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.opfab-checkmark {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  height: 17px;
+  width: 17px;
+  border: 1px solid #979797;
+  border-radius: 2px;
+  
+}
+
+/* Create the opfab-checkmark/indicator (hidden when not checked) */
+.opfab-checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the opfab-checkmark when checked */
+.opfab-checkbox input:checked ~ .opfab-checkmark:after {
+  display: block;
+}
+
+/* Style the opfab-checkmark/indicator */
+.opfab-checkbox .opfab-checkmark:after {
+  left: 8px;
+  top: -6px;
+  width: 10px;
+  height: 20px;
+  border: solid #0082FF;
+  border-width: 0 4px 4px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+// END CHECKBOX 
 
 // TEXTAREA FIELD STYLE 
 
