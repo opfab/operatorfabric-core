@@ -82,7 +82,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
     public card: Card;
 
     readonly defaultStartDate = new Date().valueOf() + 60000;
-    readonly defaultEndDate = new Date().valueOf() + 60000 * 60;
+    readonly defaultEndDate = new Date().valueOf() + 60000 * 60 * 24;
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
