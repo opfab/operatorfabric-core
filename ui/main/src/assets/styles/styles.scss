@@ -227,7 +227,7 @@ body {
 }
 
 /* Create a custom checkbox */
-.opfab-checkmark {
+.opfab-checkbox-checkmark {
   position: absolute;
   top: 2px;
   left: 0;
@@ -238,20 +238,20 @@ body {
   
 }
 
-/* Create the opfab-checkmark/indicator (hidden when not checked) */
-.opfab-checkmark:after {
+/* Create the opfab-checkbox-checkmark/indicator (hidden when not checked) */
+.opfab-checkbox-checkmark:after {
   content: "";
   position: absolute;
   display: none;
 }
 
-/* Show the opfab-checkmark when checked */
-.opfab-checkbox input:checked ~ .opfab-checkmark:after {
+/* Show the opfab-checkbox-checkmark when checked */
+.opfab-checkbox input:checked ~ .opfab-checkbox-checkmark:after {
   display: block;
 }
 
-/* Style the opfab-checkmark/indicator */
-.opfab-checkbox .opfab-checkmark:after {
+/* Style the opfab-checkbox-checkmark/indicator */
+.opfab-checkbox .opfab-checkbox-checkmark:after {
   left: 8px;
   top: -6px;
   width: 10px;
@@ -264,6 +264,70 @@ body {
 }
 
 // END CHECKBOX 
+
+
+// RADIO BUTTON 
+
+
+/* The container */
+.opfab-radio-button {
+  display: block;
+  position: relative;
+  padding-left: 25px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 13px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.opfab-radio-button input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.opfab-radio-button-checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 17px;
+  width: 17px;
+  border: 1px solid var(--opfab-text-color);
+  border-radius: 50%;
+}
+
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.opfab-radio-button-checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.opfab-radio-button input:checked ~ .opfab-radio-button-checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.opfab-radio-button .opfab-radio-button-checkmark:after {
+  top: 17%;
+  left: 17%; 
+	width: 65%;
+	height: 65%;
+	border-radius: 50%;
+	background: var(--opfab-text-color);
+}
+
+
+
+// END RADIO BUTTON
+
 
 // TEXTAREA FIELD STYLE 
 

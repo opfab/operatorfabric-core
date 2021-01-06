@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,27 +10,8 @@
 
 @import "~assets/styles/_variables.scss";
 
-$cell-width: 10;
 
-.type-selections {
-  display: table;
-  width: $cell-width * 2px;
-  height: $cell-width * 2px;
-}
-
-.fa-circle {
-  margin-right: 0.3rem;
-}
-
-.type-row {
-  display: table-row;
-}
-
-.type-cell {
-  display: table-cell;
-}
-
-.filter-header {
+.opfab-filter-header {
   margin-left: 2px;
   margin-right: 2px;
   margin-bottom: 10px;
