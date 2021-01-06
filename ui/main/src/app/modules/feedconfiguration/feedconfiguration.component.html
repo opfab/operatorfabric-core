@@ -23,7 +23,7 @@
                             <div class="row" formArrayName="processesStates" *ngFor="let state of processesStatesLabels.get(processKey).states; ">
                                 <label class="opfab-checkbox"> <span translate> {{state.stateLabel}} </span>
                                     <input type="checkbox"[formControlName]=state.stateControlIndex [id]=state.stateControlIndex >
-                                    <span class="opfab-checkmark"></span>
+                                    <span class="opfab-checkbox-checkmark"></span>
                                 </label>
                             </div>
                         </div>
@@ -44,7 +44,7 @@
 
                             <label class="opfab-checkbox"> <span translate> {{state.stateLabel}} </span>
                                 <input type="checkbox"[formControlName]=state.stateControlIndex [id]=state.stateControlIndex >
-                                <span class="opfab-checkmark"></span>
+                                <span class="opfab-checkbox-checkmark"></span>
                             </label>
                     </div>
                 </div>

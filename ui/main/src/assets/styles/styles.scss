@@ -227,7 +227,7 @@ body {
 }
 
 /* Create a custom checkbox */
-.opfab-checkmark {
+.opfab-checkbox-checkmark {
   position: absolute;
   top: 2px;
   left: 0;
@@ -238,20 +238,20 @@ body {
   
 }
 
-/* Create the opfab-checkmark/indicator (hidden when not checked) */
-.opfab-checkmark:after {
+/* Create the opfab-checkbox-checkmark/indicator (hidden when not checked) */
+.opfab-checkbox-checkmark:after {
   content: "";
   position: absolute;
   display: none;
 }
 
-/* Show the opfab-checkmark when checked */
-.opfab-checkbox input:checked ~ .opfab-checkmark:after {
+/* Show the opfab-checkbox-checkmark when checked */
+.opfab-checkbox input:checked ~ .opfab-checkbox-checkmark:after {
   display: block;
 }
 
-/* Style the opfab-checkmark/indicator */
-.opfab-checkbox .opfab-checkmark:after {
+/* Style the opfab-checkbox-checkmark/indicator */
+.opfab-checkbox .opfab-checkbox-checkmark:after {
   left: 8px;
   top: -6px;
   width: 10px;
@@ -316,8 +316,8 @@ body {
 
 /* Style the indicator (dot/circle) */
 .opfab-radio-button .opfab-radio-button-checkmark:after {
- top: 17%;
- left: 17%; 
+  top: 17%;
+  left: 17%; 
 	width: 65%;
 	height: 65%;
 	border-radius: 50%;
