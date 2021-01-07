@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,11 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-.calc-height-details {
-  overflow-x: hidden;
-  overflow-y: auto;
-}
 
 .opfab-line-undertab{
   border-color:var(--opfab-card-tab-border-color);
@@ -41,14 +36,17 @@
 
 }
 
-
 .opfab-menu-icon {
   display: inline-block;
   height: 18px;
   width: 18px;
   margin-right: 5px;
-  background: var( --opfab-navbar-color-hover);
+  background: var( --opfab-navbar-color);
   mask-size: cover;
+  &:hover,
+  &:focus {
+    background:var( --opfab-navbar-color-hover);
+  }
 }
 
 .opfab-menu-icon-right {
@@ -71,6 +69,14 @@
 
 .opfab-icon-trash {
   mask: url(assets/images/icons/trash.svg);
+}
+
+.opfab-icon-maximize {
+  mask: url(assets/images/icons/maximize.svg);
+}
+
+.opfab-icon-reduce {
+  mask: url(assets/images/icons/reduce.svg);
 }
 
 .opfab-right-menu-item {
@@ -97,4 +103,42 @@
     color:var( --opfab-navbar-color-hover);
     text-decoration: none;
   }
+}
+
+.opfab-close-card-link{
+  color:var(--opfab-navbar-color);
+  margin-left: 5px;
+  margin-right: 20px;
+  letter-spacing: 0.54px;
+  line-height: 40px;
+  font-size: 30px;
+  cursor: pointer;
+  &:hover,
+  &:focus {
+    color:var( --opfab-navbar-color-hover);
+  }
+}
+
+.opfab-max-and-reduce-icons
+{
+  margin-top:12px;
+  margin-right: 0px;
+  color:var(--opfab-navbar-color);
+  cursor: pointer;
+  &:hover,
+  &:focus {
+    color:var( --opfab-navbar-color-hover);
+  }
+}
+
+.opfab-card-detail-fullscreen{
+  position: fixed; 
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 50px;
+  width: 100%; 
+  height: 100%; 
+  padding: 20px;
+  background-color: var(--opfab-bgcolor);
+
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -124,7 +124,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private _responseData: Response;
     message: Message = {display: false, text: undefined, color: undefined};
 
+    public fullscreen = false;
     public showButtons = false;
+    public showCloseButton = false;
+    public showMaxAndReduceButton = false;
     public showAckButton = false;
     public showActionButton = false;
     public showEditAndDeleteButton = false ;
@@ -159,12 +162,13 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     // -------------------------- [OC-980] -------------------------- //
     adaptTemplateSize() {
         const cardTemplate = document.getElementById('div-card-template');
-        if (!!cardTemplate) {
+        if (!!cardTemplate) {  
             const diffWindow = cardTemplate.getBoundingClientRect();
             const divMsg = document.getElementById('div-detail-msg');
             const divBtn = document.getElementById('div-detail-btn');
 
             let cardTemplateHeight = window.innerHeight - diffWindow.top;
+            if (this._appService.pageType !== PageType.FEED) cardTemplateHeight -= 50;
             if (divMsg) {
                 cardTemplateHeight -= divMsg.scrollHeight + 15;
             }
@@ -174,7 +178,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
             cardTemplate.style.height = `${cardTemplateHeight}px`;
             cardTemplate.style.overflowX = 'hidden';
-        }
+        }  
     }
 
     ngAfterViewChecked() {
@@ -258,6 +262,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         if ((this._appService.pageType === PageType.ARCHIVE)
             || (this._appService.pageType === PageType.MONITORING)) this.showButtons = false;
         else this.showButtons = true;
+        if (this._appService.pageType !== PageType.CALENDAR) {
+            this.showCloseButton = true;
+            this.showMaxAndReduceButton = true;
+        }
         this.showEditAndDeleteButton = this.doesTheUserHavePermissionToDeleteOrEditCard();
         this.showAckButton = this.isAcknowledgmentAllowed() && (this._appService.pageType !== PageType.CALENDAR);
         this.showActionButton =  (!!this._responseData);
@@ -280,8 +288,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     get btnText(): string {
-     //   return this._responseData.btnText ?
-      //      this.i18nPrefix + this._responseData.btnText.key : ResponseI18nKeys.BUTTON_TITLE;
       return ResponseI18nKeys.BUTTON_TITLE;
     }
 
@@ -627,6 +633,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     editCard(): void {
         if (!!this.parentModalRef) this.parentModalRef.close();
         this.router.navigate(['/usercard', this.card.id]);
+    }
+
+    setFullScreen(active) {
+        this.fullscreen = active;
     }
 
     ngOnDestroy() {
