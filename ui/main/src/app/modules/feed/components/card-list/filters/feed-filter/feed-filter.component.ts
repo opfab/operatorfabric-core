@@ -195,5 +195,11 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         return converter.convertToNumber();
     }
 
+    isFilterActive(): boolean {
+        return !this.typeFilterForm.get('alarm').value || !this.typeFilterForm.get('action').value
+            || !this.typeFilterForm.get('compliant').value || !this.typeFilterForm.get('information').value
+            || this.ackFilterForm.get('ackControl').value === 'ack'
+            || !!this.extractTime(this.timeFilterForm.get('dateTimeFrom')) || !!this.extractTime(this.timeFilterForm.get('dateTimeTo'));
+    }
     
 }

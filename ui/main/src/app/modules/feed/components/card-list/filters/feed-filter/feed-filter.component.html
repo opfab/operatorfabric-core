@@ -102,7 +102,7 @@
 
 
 <div class="opfab-icon-bg-color">
-    <div id="opfab-feed-filter-btn-filter" class="opfab-icon-filter" placement="bottom-left" [ngbPopover]="filterTypeContent"
+    <div id="opfab-feed-filter-btn-filter" [ngClass]="isFilterActive() ? 'opfab-icon-filter-active' :  'opfab-icon-filter'" placement="bottom-left" [ngbPopover]="filterTypeContent"
         container="body" [autoClose]="'outside'">
     </div>
 </div>
