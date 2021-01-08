@@ -16,7 +16,7 @@ import { IconComponent } from './icon/icon.component';
 import { InfoComponent } from './info/info.component';
 import { MenuLinkComponent } from './menus/menu-link/menu-link.component';
 import { AppRoutingModule } from 'app/app-routing.module';
-import { UserCardModule} from '../../modules/usercard/usercard.module'
+import { UserCardModule} from '../usercard/usercard.module'
 import { FontAwesomeIconsModule } from 'app/modules/utilities/fontawesome-icons.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 

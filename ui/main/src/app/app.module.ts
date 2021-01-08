@@ -32,7 +32,7 @@ import { CountdownModule, CountdownGlobalConfig, CountdownConfig } from 'ngx-cou
 import {CalendarModule} from './modules/calendar/calendar.module';
 import { AppErrorHandler } from './common/error/app-error-handler';
 import { ArchivesModule } from './modules/archives/archives.module';
-import { NavbarModule } from './components/navbar/navbar.module';
+import { NavbarModule } from './modules/navbar/navbar.module';
 import { NgbModalModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeIconsModule } from './modules/utilities/fontawesome-icons.module';
 
