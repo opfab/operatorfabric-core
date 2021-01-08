@@ -10,7 +10,7 @@
 
 import {NgModule} from '@angular/core';
 import {PreloadAllModules, Router, RouterModule, Routes} from '@angular/router';
-import {LoginComponent} from './components/login/login.component';
+import {LoginComponent} from './modules/login/login.component';
 import {AboutComponent} from './modules/about/about.component';
 import {LoggingComponent} from './modules/logging/logging.component';
 import {MonitoringComponent} from './modules/monitoring/monitoring.component';
@@ -24,10 +24,6 @@ const routes: Routes = [
     {
         path: 'feed',
         loadChildren: () => import('./modules/feed/feed.module').then(m => m.FeedModule),
-    },
-    {
-        path: 'usercard',
-        loadChildren: () => import('./modules/usercard/usercard.module').then(m => m.UserCardModule),
     },
     {
         path: 'archives',

@@ -53,6 +53,10 @@
     </ul>
 
     <ul class="navbar-nav navbar-right">
+      <li style="display:flex;margin-top: 12px;cursor:pointer" (click)="openCardCreation()">
+         <span class="opfab-menu-icon-newcard"></span>
+         <div  style="margin-top:5px;color:var( --opfab-navbar-color-hover);  font-weight: bold;" translate> menu.usercard </div>
+      </li>
       <li class="nav-item dropdown align-middle">
         <a class="nav-link dropdown-toggle" id="opfab-navbar-drop_user_menu" 
           [ngbPopover]="menuContent" container="body" [autoClose]="'always'" href="javascript:void(0)">
@@ -122,4 +126,18 @@
     </div>
   </div>
 
+</ng-template>
+
+<ng-template #userCard let-modal>
+  <div class="modal-header">
+      <div translate > userCard.title </div>
+      <div id="opfab-usercard-close"  class="opfab-close-modal-icon" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true" >&times;</span>
+      </div>
+  </div>
+  <div class="modal-body">
+      <div>
+          <of-usercard> </of-usercard>
+      </div>
+  </div>
 </ng-template>

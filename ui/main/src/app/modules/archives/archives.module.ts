@@ -15,9 +15,9 @@ import {ArchivesComponent} from './archives.component';
 import {CardsModule} from '../cards/cards.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {DatetimeFilterModule} from '../../components/share/datetime-filter/datetime-filter.module';
-import { MultiFilter2Module } from 'app/components/share/multi-filter-2/multi-filter-2.module';
-import { CardDetailModule } from 'app/components/share/card-detail/card-detail.module';
+import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
+import { MultiFilter2Module } from 'app/modules/share/multi-filter-2/multi-filter-2.module';
+import { CardDetailModule } from 'app/modules/share/card-detail/card-detail.module';
 import { ArchivesEntryPointComponent } from './archives-entry-point.component';
 
 @NgModule({

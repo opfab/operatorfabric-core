@@ -144,3 +144,17 @@
   </div>
 
 </div>
+
+<ng-template #userCard let-modal>
+  <div class="modal-header">
+      <div translate > userCard.editTitle </div>
+      <div id="opfab-usercard-close"  class="opfab-close-modal-icon" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true" >&times;</span>
+      </div>
+  </div>
+  <div class="modal-body">
+      <div>
+          <of-usercard [cardIdToEdit]="card.id"></of-usercard> 
+      </div>
+  </div>
+</ng-template>

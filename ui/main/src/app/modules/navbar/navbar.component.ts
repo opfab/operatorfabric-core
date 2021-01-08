@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  */
 
 
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { navigationRoutes } from '../../app-routing.module';
 import { Store } from '@ngrx/store';
 import { TryToLogOut } from '@ofActions/authentication.actions';
@@ -25,6 +25,7 @@ import {Route} from '@angular/router';
 import {ConfigService} from '@ofServices/config.service';
 import {QueryAllEntities} from "@ofActions/user.actions";
 import { UserService } from '@ofServices/user.service';
+import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'of-navbar',
@@ -39,6 +40,9 @@ export class NavbarComponent implements OnInit {
   currentPath: string[];
   private _businessconfigMenus: Observable<Menu[]>;
   expandedMenu: boolean[] = [];
+  
+  modalRef: NgbModalRef;
+  @ViewChild('userCard', null) userCardTemplate: ElementRef;
 
   customLogo: string;
   height: number;
@@ -49,7 +53,7 @@ export class NavbarComponent implements OnInit {
   nightDayMode = false;
 
   constructor(private store: Store<AppState>, private globalStyleService: GlobalStyleService, private configService: ConfigService
-    , private userService: UserService) {
+    , private userService: UserService, private modalService: NgbModal) {
 
   }
 
@@ -165,6 +169,13 @@ export class NavbarComponent implements OnInit {
     return NavbarComponent.nightMode.asObservable();
   }
 
+  openCardCreation()
+  {
+    const options: NgbModalOptions = {
+      size: 'usercard'
+  };
+  this.modalRef = this.modalService.open(this.userCardTemplate, options);
+  }
 }
 
 

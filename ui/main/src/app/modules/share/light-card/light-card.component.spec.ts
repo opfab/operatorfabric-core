@@ -12,7 +12,7 @@
 import {async, ComponentFixture, getTestBed, TestBed} from '@angular/core/testing';
 
 
-import {CardComponent} from './card.component';
+import {LightCardComponent} from './light-card.component';
 import {BusinessconfigI18nLoaderFactory} from '@tests/helpers';
 import {RouterTestingModule} from '@angular/router/testing';
 import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
@@ -35,9 +35,9 @@ export function countdownConfigFactory(): CountdownConfig {
   }
 
 
-describe('CardComponent', () => {
-    let lightCardDetailsComp: CardComponent;
-    let fixture: ComponentFixture<CardComponent>;
+describe('LightCardComponent', () => {
+    let lightCardDetailsComp: LightCardComponent;
+    let fixture: ComponentFixture<LightCardComponent>;
     let store: Store<AppState>;
     let router: SpyObj<Router>;
     let injector: TestBed;
@@ -66,7 +66,7 @@ describe('CardComponent', () => {
                 }),
                 NgbModule
             ],
-            declarations: [CardComponent],
+            declarations: [LightCardComponent],
             providers: [
                 {provide: store, useClass: Store},
                 {provide: Router, useValue: myrout},
@@ -89,7 +89,7 @@ describe('CardComponent', () => {
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(CardComponent);
+        fixture = TestBed.createComponent(LightCardComponent);
         lightCardDetailsComp = fixture.debugElement.componentInstance;
         router = TestBed.get(Router);
     });

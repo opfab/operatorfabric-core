@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,11 +24,11 @@ import { UserService } from '@ofServices/user.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-    selector: 'of-card',
-    templateUrl: './card.component.html',
-    styleUrls: ['./card.component.scss']
+    selector: 'of-light-card',
+    templateUrl: './light-card.component.html',
+    styleUrls: ['./light-card.component.scss']
 })
-export class CardComponent implements OnInit, OnDestroy, DoCheck {
+export class LightCardComponent implements OnInit, OnDestroy, DoCheck {
 
     @ViewChild('countdown', { static: true })
     private countdown: CountdownComponent;
