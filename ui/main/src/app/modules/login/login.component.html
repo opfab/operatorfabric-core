@@ -8,7 +8,7 @@
 
 
     <form [formGroup]="userForm" (ngSubmit)="onSubmit()"
-        [ngClass]="{'is-invalid': userForm.hasError('authentication.error')}">
+        [ngClass]="{'is-invalid': userForm.hasError('authentication.error')}" class="opfab-form-lighter" >
         <div style="margin-top:5%">
             <div class="opfab-input" style="margin:auto;margin-bottom:30px;width:300px">
                 <label for="identifier" translate>login.login</label>
