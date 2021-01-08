@@ -10,7 +10,6 @@
 
 import {CUSTOM_ELEMENTS_SCHEMA, ModuleWithProviders, NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {CardComponent} from './components/card/card.component';
 import {CardDetailsComponent} from './components/card-details/card-details.component';
 import {DetailComponent} from './components/detail/detail.component';
 import {TranslateModule} from '@ngx-translate/core';
@@ -19,20 +18,22 @@ import {HandlebarsService} from './services/handlebars.service';
 import {UtilitiesModule} from '../utilities/utilities.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountdownModule} from 'ngx-countdown';
+import { UserCardModule } from '../usercard/usercard.module';
 
 @NgModule({
-  declarations: [CardComponent
-      , CardDetailsComponent
+  declarations: [
+       CardDetailsComponent
       , DetailComponent],
   imports: [
     CommonModule,
     CountdownModule,
       TranslateModule,
       UtilitiesModule,
-      NgbModule
+      NgbModule,
+      UserCardModule
   ],
-    exports: [CardComponent
-        , CardDetailsComponent
+    exports: [
+         CardDetailsComponent
         , DetailComponent
     ],
     schemas: [

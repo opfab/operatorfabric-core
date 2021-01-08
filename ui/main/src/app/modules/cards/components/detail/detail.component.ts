@@ -44,7 +44,7 @@ import {UpdateALightCard} from '@ofStore/actions/light-card.actions';
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {Entity} from '@ofModel/entity.model';
-import {NgbModal,NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal,NgbModalOptions,NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {ConfigService} from '@ofServices/config.service';
 import {State as CardState} from '@ofModel/processes.model';
 import { Router } from '@angular/router';
@@ -109,6 +109,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     @ViewChild('cardDeletedWithNoErrorPopup', null) cardDeletedWithNoErrorPopupRef: TemplateRef<any>;
     @ViewChild('impossibleToDeleteCardPopup', null) impossibleToDeleteCardPopupRef: TemplateRef<any>;
+    @ViewChild('userCard', null) userCardTemplate: TemplateRef<any>;
 
     public isActionEnabled = false;
     public lttdExpiredIsTrue: boolean;
@@ -632,7 +633,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     editCard(): void {
         if (!!this.parentModalRef) this.parentModalRef.close();
-        this.router.navigate(['/usercard', this.card.id]);
+
+        const options: NgbModalOptions = {
+            size: 'usercard'
+        };
+        this.modalRef = this.modalService.open(this.userCardTemplate, options);
+  
     }
 
     setFullScreen(active) {

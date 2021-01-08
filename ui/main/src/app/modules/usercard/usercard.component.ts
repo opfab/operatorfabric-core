@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { Component, OnDestroy, TemplateRef, ElementRef, OnInit } from '@angular/core';
+import { Component, OnDestroy, TemplateRef, ElementRef, OnInit, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
@@ -20,15 +20,14 @@ import { Process } from '@ofModel/processes.model';
 import { TimeService } from '@ofServices/time.service';
 import { Severity } from '@ofModel/light-card.model';
 import { Guid } from 'guid-typescript';
-import { NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct,NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 import { UserWithPerimeters, RightsEnum, ComputedPerimeter } from '@ofModel/userWithPerimeters.model';
 import { EntitiesService } from '@ofServices/entities.service';
-import { transformToTimestamp } from '../archives/archives.component';
 import { ProcessesService } from '@ofServices/processes.service';
 import { ActivatedRoute} from '@angular/router';
-import { getDateTimeNgbFromMoment } from '@ofModel/datetime-ngb.model';
+import { DateTimeNgb, getDateTimeNgbFromMoment } from '@ofModel/datetime-ngb.model';
 import * as moment from 'moment-timezone';
 import { HandlebarsService } from '../cards/services/handlebars.service';
 import { DetailContext } from '@ofModel/detail-context.model';
@@ -79,6 +78,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
     editCardMode = false;
     cardToEdit: CardData;
 
+    @Input() cardIdToEdit = null; 
     public card: Card;
 
     readonly defaultStartDate = new Date().valueOf() + 60000;
@@ -88,6 +88,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
 
     public displaySendResult = false;
+    public displayPreview = false;
     errorMessage: Message = { display: false, text: undefined };
 
     modalRef: NgbModalRef;
@@ -104,7 +105,6 @@ export class UserCardComponent implements OnDestroy, OnInit {
         private userService: UserService,
         private timeService: TimeService,
         private entitiesService: EntitiesService,
-        private modalService: NgbModal,
         private sanitizer: DomSanitizer,
         private element: ElementRef,
         private processesService: ProcessesService,
@@ -162,13 +162,12 @@ export class UserCardComponent implements OnDestroy, OnInit {
         return this.store.select(buildSettingsOrConfigSelector('locale'));
       }
 
-    loadCardForEdition() {
-        this.route.paramMap.subscribe(
-            paramMap => {
-                const cardId = paramMap.get('cardId');
-                if (!!cardId) {
+
+    loadCardForEdition()
+    {
+        if (!!this.cardIdToEdit) {
                     this.editCardMode = true;
-                    this.cardService.loadCard(cardId).subscribe(card => {
+            this.cardService.loadCard(this.cardIdToEdit).subscribe(card => {
                         this.cardToEdit = card;
                         this.messageForm.get('severity').setValue(this.cardToEdit.card.severity);
                         this.messageForm.get('process').setValue(this.cardToEdit.card.process);
@@ -179,9 +178,6 @@ export class UserCardComponent implements OnDestroy, OnInit {
                     });
                 }
             }
-        );
-    }
-
 
 
     loadAllEntities(): void {
@@ -418,24 +414,25 @@ export class UserCardComponent implements OnDestroy, OnInit {
         } as Card;
 
 
-        const options: NgbModalOptions = {
-            size: 'fullscreen'
-        };
         this.errorMessage.display = false;
-        this.modalRef = this.modalService.open(template, options);
+        this.displayPreview= true;
     }
 
 
     createTimestampFromValue = (value: any): number => {
         const { date, time } = value;
         if (date) {
-            return this.timeService.toNgBNumberTimestamp(transformToTimestamp(date, time));
+            return this.timeService.toNgBNumberTimestamp(this.transformToTimestamp(date, time));
             // TODO Why do we need 2 transformations? What is an NgBTimestamp vs a plain Timestamp?
         } else {
             return null;
         }
     }
 
+    transformToTimestamp(date: NgbDateStruct, time: NgbTimeStruct): string {
+        return new DateTimeNgb(date, time).formatDateTime();
+    }
+    
 
     getI18nPrefixFromProcess = (process: Process): string => {
         return process.id + '.' + process.version + '.';
@@ -447,6 +444,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
     }
 
     confirm(): void {
+        this.displayPreview = false;
         this.cardService.postCard(fromCardToCardForPublishing(this.card))
             .subscribe(
                 resp => {
@@ -459,13 +457,11 @@ export class UserCardComponent implements OnDestroy, OnInit {
                     } else {
                         this.messageAfterSendingCard = 'userCard.cardSendWithNoError';
                     }
-                    this.modalRef.close();
                     this.displaySendResult = true;
                     this.messageForm.reset();
                 },
                 err => {
                     console.error('Error when sending card :', err);
-                    this.modalRef.close();
                     this.displaySendResult = true;
                     this.messageForm.reset();
                 }
@@ -474,7 +470,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
 
     decline(): void {
-        this.modalRef.dismiss(this.messageAfterSendingCard);
+       this.displayPreview = false;
     }
 
     sendAnotherUserCard() {

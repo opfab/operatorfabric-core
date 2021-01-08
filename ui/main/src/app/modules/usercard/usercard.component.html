@@ -6,11 +6,8 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div *ngIf="!editCardMode" translate style="text-align: center;">userCard.title</div>
-<div *ngIf="editCardMode" translate style="text-align: center;">userCard.editTitle</div>
 
-<br />
-<div *ngIf="displayForm()" class="container">
+<div [hidden]="displayPreview" *ngIf="displayForm()" class="container" style="padding-top:20px">
     <form [formGroup]="messageForm" class="opfab-form-lighter">
         <div class="row">
 
@@ -27,22 +24,22 @@
         <div class="row justify-content-center" *ngIf="severityVisible">
 
             <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-alarm" translate> userCard.options.severity.ALARM </span>
-                <input type="radio"  id="sev-alarm" name="radio" formControlName="severity" value="ALARM">
+                <input type="radio"  id="sev-alarm" name="severity" formControlName="severity" value="ALARM">
                 <span class="opfab-radio-button-checkmark"></span>
             </label>
  
             <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-action" translate> userCard.options.severity.ACTION </span>
-                <input type="radio"  id="sev-action" name="radio" formControlName="severity" value="ACTION">
+                <input type="radio"  id="sev-action" name="severity" formControlName="severity" value="ACTION">
                 <span class="opfab-radio-button-checkmark"></span>
             </label>
 
             <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-compliant" translate> userCard.options.severity.COMPLIANT </span>
-                <input type="radio"  id="sev-compliant" name="radio" formControlName="severity" value="COMPLIANT">
+                <input type="radio"  id="sev-compliant" name="severity" formControlName="severity" value="COMPLIANT">
                 <span class="opfab-radio-button-checkmark"></span>
             </label>
 
             <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-information" translate> userCard.options.severity.INFORMATION </span>
-                <input type="radio"  id="sev-information" name="radio" formControlName="severity" value="INFORMATION">
+                <input type="radio"  id="sev-information" name="severity" formControlName="severity" value="INFORMATION">
                 <span class="opfab-radio-button-checkmark"></span>
             </label>
         </div>
@@ -88,6 +85,50 @@
         </button>
     </div>
 </div>
+
+
+<div *ngIf="displayPreview">
+
+        <div>
+            <div style="margin-right:-18px;">
+            <of-light-card [lightCard]="card" [open]="false" [displayUnreadIcon]="false" ></of-light-card>
+            </div>
+
+            <div style="margin-top:10px">
+
+        <!--
+            
+        Originally we execute javascript define in template for preview like we do when viewing card in feed
+        
+        This lead to a BUG :
+        
+        In case the user was watching in the feed a card with response activated
+        he may not be able to see child cards after closing the usercard form 
+         
+        REASONS : 
+        
+        The card template in the preview  may redefine method templateGateway.applyChild 
+        This will override method templateGateway.applyChild  form the card on the feed 
+        As a consequence , the card on the feed will never receive new (or updated) child cards  
+         
+        Anyway , it seems not necessary to use script for card preview 
+        if necessary in the future , we need to find a solution to this problem 
+
+        -->
+
+             <of-card-detail [card]="card" [executeTemplateScript]="false" > </of-card-detail>
+             </div>
+
+        </div>
+        <div class="modal-footer" style="margin-top:10px;margin-bottom: 0px;" ></div>
+        <div style="text-align: center;width:100%">
+            <button id="opfab-usercard-btn-refuse" type="button" class="opfab-btn-cancel" (click)="decline()" translate>userCard.refuse</button>
+            <button id="opfab-usercard-btn-accept" type="button" class="opfab-btn" (click)="confirm()" translate>userCard.accept</button>
+        </div>
+
+</div>
+
+
 <ng-container *ngIf="!displayForm() && !displaySendResult">
     <div class="alert alert-info">
         <h1><label translate>userCard.error.notAvailable</label></h1>
@@ -98,7 +139,7 @@
     <br />
     <h2 translate style="text-align: center"> {{messageAfterSendingCard}} </h2>
     <br /><br />
-    <of-card [lightCard]="card" [open]="false" [displayUnreadIcon]="false"></of-card>
+    <of-light-card [lightCard]="card" [open]="false" [displayUnreadIcon]="false"></of-light-card>
     <br />
     <div style="text-align: center;">
         <button id="opfab-usercard-btn-sendAnotherCard" type="button" class="opfab-btn" (click)="sendAnotherUserCard()"
@@ -115,30 +156,4 @@
     </button>
 </div>
 
-<ng-template #resumeCardBeforeSend let-modal>
-    <div class="modal-header">
-        <h4 translate> userCard.confirmSending </h4>
-        <button id="opfab-usercard-btn-close" type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
 
-        <div>
-
-            <div style="margin-right:-18px;">
-            <of-card [lightCard]="card" [open]="false" [displayUnreadIcon]="false" ></of-card>
-            </div>
-
-            <div style="margin-top:10px">
-             <of-card-detail [card]="card" > </of-card-detail>
-             </div>
-
-        </div>
-        <div class="modal-footer" style="margin-top:10px;margin-bottom: 0px;" ></div>
-        <div style="text-align: center;width:100%">
-            <button id="opfab-usercard-btn-refuse" type="button" class="opfab-btn-cancel" (click)="decline()" translate>userCard.refuse</button>
-            <button id="opfab-usercard-btn-accept" type="button" class="opfab-btn" (click)="confirm()" translate>userCard.accept</button>
-        </div>
-    </div>
-</ng-template>

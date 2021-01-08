@@ -32,6 +32,7 @@ import {UtilitiesModule} from '../utilities/utilities.module';
 import {FontAwesomeIconsModule} from '../utilities/fontawesome-icons.module';
 import {DatetimeFilterModule} from '../../components/share/datetime-filter/datetime-filter.module';
 import { FeedSortComponent } from './components/card-list/filters/feed-sort/feed-sort.component';
+import { LightCardModule } from 'app/components/share/light-card/light-card.module';
 
 @NgModule({
     imports: [
@@ -47,7 +48,8 @@ import { FeedSortComponent } from './components/card-list/filters/feed-sort/feed
         DatetimeFilterModule,
         FeedRoutingModule,
         FontAwesomeIconsModule,
-        UtilitiesModule
+        UtilitiesModule,
+        LightCardModule
     ],
     declarations: [CardListComponent,
         FeedComponent,

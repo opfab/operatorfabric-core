@@ -26,10 +26,6 @@ const routes: Routes = [
         loadChildren: () => import('./modules/feed/feed.module').then(m => m.FeedModule),
     },
     {
-        path: 'usercard',
-        loadChildren: () => import('./modules/usercard/usercard.module').then(m => m.UserCardModule),
-    },
-    {
         path: 'archives',
         component: ArchivesEntryPointComponent
     },
