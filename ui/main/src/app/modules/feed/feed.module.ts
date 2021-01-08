@@ -30,9 +30,9 @@ import {TypeaheadModule} from 'ngx-type-ahead';
 import {TimeService} from '@ofServices/time.service';
 import {UtilitiesModule} from '../utilities/utilities.module';
 import {FontAwesomeIconsModule} from '../utilities/fontawesome-icons.module';
-import {DatetimeFilterModule} from '../../components/share/datetime-filter/datetime-filter.module';
+import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
 import { FeedSortComponent } from './components/card-list/filters/feed-sort/feed-sort.component';
-import { LightCardModule } from 'app/components/share/light-card/light-card.module';
+import { LightCardModule } from 'app/modules/share/light-card/light-card.module';
 
 @NgModule({
     imports: [

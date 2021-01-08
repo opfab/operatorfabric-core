@@ -16,8 +16,8 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {LoggingTableComponent} from './components/logging-table/logging-table.component';
 import {LoggingComponent} from './logging.component';
 import {LoggingFiltersComponent} from './components/logging-filters/logging-filters.component';
-import {DatetimeFilterModule} from '../../components/share/datetime-filter/datetime-filter.module';
-import {MultiFilter2Module} from '../../components/share/multi-filter-2/multi-filter-2.module';
+import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
+import {MultiFilter2Module} from '../../modules/share/multi-filter-2/multi-filter-2.module';
 
 
 @NgModule({

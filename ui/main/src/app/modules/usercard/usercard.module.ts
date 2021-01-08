@@ -12,14 +12,14 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {UserCardComponent} from './usercard.component';
 import {TranslateModule} from '@ngx-translate/core';
-import {SingleFilterModule} from '../../components/share/single-filter/single-filter.module';
-import {MultiFilterModule} from '../../components/share/multi-filter/multi-filter.module';
-import {DatetimeFilterModule} from '../../components/share/datetime-filter/datetime-filter.module';
-import {TextAreaModule} from '../../components/share/text-area/text-area.module';
+import {SingleFilterModule} from '../../modules/share/single-filter/single-filter.module';
+import {MultiFilterModule} from '../../modules/share/multi-filter/multi-filter.module';
+import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
+import {TextAreaModule} from '../../modules/share/text-area/text-area.module';
 
-import {MultiFilter2Module} from '../../components/share/multi-filter-2/multi-filter-2.module';
-import { CardDetailModule } from 'app/components/share/card-detail/card-detail.module';
-import { LightCardModule } from 'app/components/share/light-card/light-card.module';
+import {MultiFilter2Module} from '../../modules/share/multi-filter-2/multi-filter-2.module';
+import { CardDetailModule } from 'app/modules/share/card-detail/card-detail.module';
+import { LightCardModule } from 'app/modules/share/light-card/light-card.module';
 
 @NgModule({
     declarations: [UserCardComponent],
