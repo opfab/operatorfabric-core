@@ -19,7 +19,7 @@ import { StateModule } from '@ofStore/state.module';
 import { ServicesModule } from '@ofServices/services.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LoginComponent } from './components/login/login.component';
+import { LoginComponent } from './modules/login/login.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { UtilitiesModule } from './modules/utilities/utilities.module';
 import { OAuthModule } from 'angular-oauth2-oidc';
