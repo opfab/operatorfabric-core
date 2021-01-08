@@ -142,3 +142,39 @@
   background-color: var(--opfab-bgcolor);
 
 }
+
+.opfab-icon-help {
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  margin-bottom:-2px;
+  margin-right: 10px;
+  border-width: 0px;
+  background: var( --opfab-navbar-color-hover);
+  mask-size: cover;
+  mask: url(assets/images/icons/help.svg);
+}
+
+.label-help {
+  display: block;
+}
+
+.label-answered::before {
+  content: "";
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+  margin-bottom: -3px;
+  background-color: green;
+}
+
+.label-unanswered::before {
+  content: "";
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+  margin-bottom: -3px;
+  background-color: #ff6600;
+}

@@ -223,7 +223,9 @@
       "ack": "Unable to change acknowledgement of this card for an error of remote system"
     },
     "submitSuccess": "Action succeeded",
-    "answers": "Answers"
+    "answers": "Answers",
+    "answered": "Answered",
+    "unanswered": "Not answered yet"
   },
   "cardAcknowledgment": {
     "button": {

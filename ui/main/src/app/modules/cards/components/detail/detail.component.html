@@ -7,6 +7,7 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
+
 <div [class.opfab-card-detail-fullscreen]="fullscreen">
   <div style="display: block;  margin-top:16px;">
     <ul class="nav nav-tabs opfab-line-undertab">
@@ -47,8 +48,15 @@
 
     <div style="padding-right:3px"> <!-- padding is necessary to see box shadow-->
     
+      <ng-template #helpContent>
+        <label class="label-help"><span class="label-answered" translate>response.answered</span></label>
+        <label class="label-help"><span class="label-unanswered" translate>response.unanswered</span></label>
+      </ng-template>
+      
       <div  *ngIf='responseDataExists' class="opfab-card-response-header"  style="text-align: right;">
-       
+        <div id="opfab-answer-help" class="opfab-icon-help" placement="left" [ngbPopover]="helpContent"
+        container="body" [autoClose]="'outside'">
+      </div>
           <span translate>response.answers</span> :
           <span *ngFor="let entity of listEntitiesToRespond; let isLast = last"
             [ngStyle]="{'color': entity.color,'border-right': (!isLast) ? '3px solid white':'','text-align': 'center'}">
