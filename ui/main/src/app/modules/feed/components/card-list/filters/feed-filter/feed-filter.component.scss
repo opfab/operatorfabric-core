@@ -72,6 +72,17 @@
   mask: url(assets/images/icons/filter.svg);
 }
 
+.opfab-icon-filter-active {
+  display: inline-block;
+  height: 32px;
+  width: 32px;
+  margin-top:5px;
+  margin-right: 10px;
+  border-width: 0px;
+  background: #0082FF;
+  mask-size: cover;
+  mask: url(assets/images/icons/filter-active.svg);
+}
 
 .opfab-icon-filter:hover {
   background: var(--opfab-feedbar-icon-hover-color);
