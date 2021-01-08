@@ -30,6 +30,7 @@
   "feed": {
     "filters": {
       "title": "Filtres",
+      "reset": "Reinitialiser",
       "time": {
         "titleIfFilterBasedOnPublishDate": "Date de réception",
         "titleIfFilterBasedOnBusinessDate": "Période métier",

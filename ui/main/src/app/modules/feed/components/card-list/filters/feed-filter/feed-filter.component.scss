@@ -98,3 +98,15 @@
   background-color: var(--opfab-feedbar-icon-hover-bgcolor);
 
 }
+
+.opfab-link {
+  display: block;
+  color:var(--opfab-navbar-color);
+  text-align: center;
+
+  &:hover,
+  &:focus {
+    color:var( --opfab-navbar-color-hover);
+    text-decoration: none;
+  }
+}

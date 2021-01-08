@@ -91,7 +91,9 @@
 
             </div>
         </form>
+        
     </div>
+    <div *ngIf="isFilterActive()"><a class="opfab-link" (click)="reset()"><span translate>feed.filters.reset</span></a></div>
 </ng-template>
 
 
