@@ -223,7 +223,9 @@
       "form": "Le formulaire n'est pas correctement rempli"
     },
     "submitSuccess": "Action effectuée",
-    "answers": "Réponses"
+    "answers": "Réponses",
+    "answered": "A répondu",
+    "unanswered": "Pas encore répondu"
   },
   "cardAcknowledgment": {
     "button": {
