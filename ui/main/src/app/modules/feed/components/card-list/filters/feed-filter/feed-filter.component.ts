@@ -201,5 +201,19 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             || this.ackFilterForm.get('ackControl').value === 'ack'
             || !!this.extractTime(this.timeFilterForm.get('dateTimeFrom')) || !!this.extractTime(this.timeFilterForm.get('dateTimeTo'));
     }
+
+    reset() {
+        this.typeFilterForm.get('alarm').setValue(true,{emitEvent: true});
+        this.typeFilterForm.get('action').setValue(true,{emitEvent: true});
+        this.typeFilterForm.get('compliant').setValue(true,{emitEvent: true});
+        this.typeFilterForm.get('information').setValue(true,{emitEvent: true});
+
+        this.ackFilterForm.get('ackControl').setValue("notack",{emitEvent: true});
+
+        this.timeFilterForm.get('dateTimeFrom').setValue(null);
+        this.timeFilterForm.get('dateTimeTo').setValue(null);
+        this.setNewFilterValue();
+
+    }
     
 }
