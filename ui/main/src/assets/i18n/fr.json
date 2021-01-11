@@ -1,4 +1,8 @@
 {
+  "global":{
+    "connectionLost":"Connexion perdue",
+    "tryToReconnect":"Tentative de reconnexion ..."
+  },
   "menu": {
     "feed": "Flux de cartes",
     "calendar" : "Calendrier",
