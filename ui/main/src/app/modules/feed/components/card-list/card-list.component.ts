@@ -8,25 +8,35 @@
  */
 
 
-import {Component, Input, OnInit} from '@angular/core';
-import {LightCard} from '@ofModel/light-card.model';
-import {Observable} from 'rxjs';
-import {ResizableComponent} from 'app/modules/utilities/components/resizable/resizable.component';
+import { AfterViewChecked, Component, Input, OnInit } from '@angular/core';
+import { LightCard } from '@ofModel/light-card.model';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'of-card-list',
     templateUrl: './card-list.component.html',
     styleUrls: ['./card-list.component.scss']
 })
-export class CardListComponent extends ResizableComponent implements OnInit {
+export class CardListComponent implements AfterViewChecked, OnInit {
 
     @Input() public lightCards: LightCard[];
     @Input() public selection: Observable<string>;
 
-    constructor() {
-        super();
-    }
+    domCardListElement;
 
     ngOnInit(): void {
+        this.domCardListElement = document.getElementById('opfab-card-list');
     }
+
+    ngAfterViewChecked() {
+        this.adaptFrameHeight();
+    }
+
+    adaptFrameHeight() {
+        const rect = this.domCardListElement.getBoundingClientRect();
+        const height = window.innerHeight - rect.top - 10;
+        this.domCardListElement.style.height = `${height}px`;
+    }
+
+
 }

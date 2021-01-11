@@ -8,7 +8,7 @@
 
 
 
-<div class="app-content opfab-bgcolor" calcHeightDirective fixedHeightClass="fixed-height-main-layout" calcHeightClass="calc-height-main-layout" >
+<div class="app-content opfab-bgcolor"  >
     <of-navbar *ngIf="loaded"></of-navbar>
     <router-outlet *ngIf="loaded" ></router-outlet>
     <of-login *ngIf="!isAuthenticated && !useCodeOrImplicitFlow"></of-login>

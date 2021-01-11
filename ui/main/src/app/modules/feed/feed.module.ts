@@ -28,8 +28,6 @@ import {InitChartComponent} from './components/time-line/init-chart/init-chart.c
 import {TagsFilterComponent} from './components/card-list/filters/tags-filter/tags-filter.component';
 import {TypeaheadModule} from 'ngx-type-ahead';
 import {TimeService} from '@ofServices/time.service';
-import {UtilitiesModule} from '../utilities/utilities.module';
-import {FontAwesomeIconsModule} from '../utilities/fontawesome-icons.module';
 import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
 import { FeedSortComponent } from './components/card-list/filters/feed-sort/feed-sort.component';
 import { LightCardModule } from 'app/modules/share/light-card/light-card.module';
@@ -47,8 +45,6 @@ import { LightCardModule } from 'app/modules/share/light-card/light-card.module'
         CardsModule,
         DatetimeFilterModule,
         FeedRoutingModule,
-        FontAwesomeIconsModule,
-        UtilitiesModule,
         LightCardModule
     ],
     declarations: [CardListComponent,
