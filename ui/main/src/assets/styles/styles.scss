@@ -505,6 +505,12 @@ type-ahead > .badge-primary {
   pointer-events: none;
 }
 
+// Remove default arrow by setting the up/down arrow color to the background color
+.opfab-multiselect .selected-list .c-angle-down svg, .opfab-multiselect .selected-list .c-angle-up svg{
+  fill: var(--opfab-bgcolor-darker);
+}
+
+
 // end multiselect specific conf 
 
 
@@ -536,6 +542,11 @@ type-ahead > .badge-primary {
   type-ahead > .badge-primary {
     background-color: var(--opfab-bgcolor-darker);
   }
+  // Remove default arrow by setting the up/down arrow color to the background color
+  .opfab-multiselect .selected-list .c-angle-down svg, .opfab-multiselect .selected-list .c-angle-up svg{
+    fill: var(--opfab-bgcolor);
+  }
+  
 }
 
 // Table 
