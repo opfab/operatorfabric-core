@@ -30,7 +30,7 @@ export class GlobalStyleService {
                                         --opfab-input-text-color : black;
                                         --opfab-form-label-text-color: black;
                                         --opfab-form-border-color:  #9C9B9B;
-                                        --opfab-button-disable-bgcolor: #eeeeee;
+                                        --opfab-button-disable-bgcolor: #DBDBDB;
                                         --opfab-feedbar-icon-color: black;
                                         --opfab-feedbar-icon-hover-color:#212529;
                                         --opfab-feedbar-icon-hover-bgcolor: #F3F2F1;
