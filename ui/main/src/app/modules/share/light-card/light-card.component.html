@@ -22,7 +22,11 @@
         </div>
         <div class="ml-auto align-self-center pr-2" style="margin-right:-10px;">
             <div class="d-flex align-items-end flex-column">
-                <div *ngIf="lightCard.hasBeenAcknowledged" class="p-2"><em class="fa fa-check"></em></div>
+                <ng-template #tipAcknowledged>
+                    <span translate>feed.tips.acknowledged</span>
+                </ng-template>
+                <div *ngIf="lightCard.hasBeenAcknowledged" class="p-2" placement="right" [ngbPopover]="tipAcknowledged"
+                container="body" triggers="mouseenter:mouseleave"><em class="fa fa-check"></em></div>
               </div>
         </div>
     </div>
@@ -37,10 +41,15 @@
         <div class="ml-auto align-self-center pr-2">
             <div class="d-flex align-items-end flex-row" style="margin-right:-20px;" >
                 <div [hidden]="!this.enableLastTimeToAct">
-                    <div [hidden]="this.stopTime">
+
+                    <ng-template #tipLttd>
+                        <span translate>feed.tips.lttd</span>
+                    </ng-template>
+                    <div [hidden]="this.stopTime" placement="right" [ngbPopover]="tipLttd" container="body" triggers="mouseenter:mouseleave">
                         <countdown #countdown class="lttd-timeleft" [config]='prettyConfig' (event)="onTimerFinished($event)" ></countdown>
                         <em class="far fa-clock lttd-icon lttd-timeleft"></em>
                     </div>
+
                     <div [hidden]="!this.stopTime">
                         <span><label class="lttd-text" translate>feed.filters.time.lttd.label</label></span>
                         <span><em class="far fa-clock lttd-icon" ></em></span>

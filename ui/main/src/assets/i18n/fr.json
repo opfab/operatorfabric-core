@@ -71,6 +71,10 @@
       "severity": "Criticité",
       "publish": "Date",
       "unread": "Pas lu"
+    },
+    "tips": {
+      "acknowledged": "Acquittée",
+      "lttd": "Temps restant pour décider"
     }
   },
   "login": {
