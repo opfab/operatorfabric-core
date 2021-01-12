@@ -8,6 +8,7 @@
 	"chartLine" : { "title":"Prévison de consommation électrique"},
 	"processState" : { "title":"Etat du processus {{status}}"},
 	"question" : {"title": "⚡ Indisponibilité planifiée","button" : {"text" :"Envoyer votre réponse"}},
+	"questionState" : {"title": "Action requise"},
 	"contingencies": {"title" : "⚠️ Contraintes réseau ⚠️","summary":"Synthèse des contraintes sur le réseau français"},
 	"response" : { "title":"Indisponibilité planifiée - Choix de date"},
 	"menu":{

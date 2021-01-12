@@ -242,7 +242,8 @@
     "submitSuccess": "Action succeeded",
     "answers": "Answers",
     "answered": "Answered",
-    "unanswered": "Not answered yet"
+    "unanswered": "Not answered yet",
+    "status": "Status"
   },
   "cardAcknowledgment": {
     "button": {
