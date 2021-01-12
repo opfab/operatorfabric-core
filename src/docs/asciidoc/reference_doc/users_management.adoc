@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -17,6 +17,7 @@ Entities::
 - represent set of users destined to receive collectively some cards.
 - can be used to model organizations, for examples : control center, company , department... 
 - can be used in a way to handle rights on card reception in OperatorFabric.
+- can be part of another entity (or even several entities). This relationship is modeled using the "parent entity" property
 Groups::
 - represent set of users destined to receive collectively some cards.
 - has a set of perimeters to define rights for card reception in OperatorFabric.
@@ -53,7 +54,10 @@ ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/deployment/inde
 === Entities
 The notion of entity is loose and can be used to model organizations structures(examples : control center, company , department... ).
 Entities are used to send cards to several users without a name specifically. The information about membership to an
-entity is stored in the user information. Examples using entities can be found 
+entity is stored in the user's data (`entities` field of the `user` object). In Entity objects, the `parents` property (array) expresses the fact that this entity is a part of one or several other entities. This feature allows cards to be sent to a group of entities without having to repeat the detailed list of entities for each card.
+
+
+Examples using entities can be found 
 ifdef::single-page-doc[<<_send_to_several_users, here>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#_send_to_several_users, here>>]
 .
