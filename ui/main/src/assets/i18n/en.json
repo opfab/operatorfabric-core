@@ -72,6 +72,10 @@
       "severity": "Criticity",
       "publish": "Date",
       "unread": "Unread"
+    },
+    "tips": {
+      "acknowledged": "Acknowledged",
+      "lttd": "Time to decide"
     }
   },
   "login": {
