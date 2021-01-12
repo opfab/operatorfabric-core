@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -110,7 +110,7 @@ git push --set-upstream origin X.X.X.release
 . Check that the build is correctly triggered
 +
 You can check the status of the build job triggered by the commit on
-link:https://travis-ci.org/opfab/operatorfabric-core/branches[Travis CI].
+link:https://travis-ci.com/opfab/operatorfabric-core/branches[Travis CI].
 The build job should have the following three stages:
 +
 image::release_branch_build.png[Running build for release branch screenshot]
@@ -149,7 +149,7 @@ git push origin X.X.X.RELEASE <3>
 . Check that the build is correctly triggered
 +
 You can check the status of the build job triggered by the commit on
-link:https://travis-ci.org/opfab/operatorfabric-core/branches[Travis CI].
+link:https://travis-ci.com/opfab/operatorfabric-core/branches[Travis CI].
 The build job should have the following four stages (or three if the images aren't tagged as latest)
 +
 image::master_branch_build.png[Running build for master branch screenshot]

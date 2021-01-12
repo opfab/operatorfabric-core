@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -16,8 +16,8 @@
 
 image:https://img.shields.io/badge/license-MPL_2.0-blue.svg[MPL-2.0
 License,link=https://www.mozilla.org/en-US/MPL/2.0/]
-image:https://travis-ci.org/opfab/operatorfabric-core.svg?branch=develop[Build
-Status,link=https://travis-ci.org/opfab/operatorfabric-core]
+image:https://travis-ci.com/opfab/operatorfabric-core.svg?branch=develop[Build
+Status,link=https://travis-ci.com/opfab/operatorfabric-core]
 image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=alert_status[Quality
 Gate,link=https://sonarcloud.io/dashboard?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core]
 image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=coverage[Coverage,link=https://sonarcloud.io/component_measures?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=Coverage]
@@ -99,7 +99,7 @@ image:https://img.shields.io/badge/Using-Swagger-%237473C0.svg?style=for-the-bad
 OperatorFabric is built and integrated using battle-tested tools and (open) platforms.
 
 image:https://img.shields.io/badge/Built%20with-Gradle-%23410099.svg?style=for-the-badge[Built with Gradle,link=https://gradle.org/]
-image:https://img.shields.io/badge/Using-Travis%20CI-%23FF647D.svg?style=for-the-badge[Using Travis CI,link=https://travis-ci.org/opfab/operatorfabric-core]
+image:https://img.shields.io/badge/Using-Travis%20CI-%23FF647D.svg?style=for-the-badge[Using Travis CI,link=https://travis-ci.com/opfab/operatorfabric-core]
 image:https://img.shields.io/badge/Using-SonarCloud-%23FF647D.svg?style=for-the-badge[Using SonarCloud,link=https://sonarcloud.io/dashboard?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core]
 
 == Licensing

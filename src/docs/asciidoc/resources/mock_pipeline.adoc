@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -15,6 +15,8 @@ We wanted to be able to test changes to this configuration or to the scripts use
 master branch, to our docker images or to the documentation. We didn't find any such "dry-run" options on Travis CI so
 we decided to create a complete mock pipeline replicating the actual pipeline.
 This is a short summary of the necessary steps.
+
+//TODO Check if this is still accurate after the migration to travis-ci.com (OC-1110)
 
 == GitHub
 . Create organization opfab-mock
