@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,13 +19,14 @@ import { selectIdentifier } from '@ofSelectors/authentication.selectors';
 import { ConfigService } from '@ofServices/config.service';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, skip } from 'rxjs/operators';
-import { merge} from 'rxjs';
+import { merge, Observable} from 'rxjs';
 import { I18nService } from '@ofServices/i18n.service';
 import { CardService } from '@ofServices/card.service';
 import { UserService } from '@ofServices/user.service';
 import { EntitiesService } from '@ofServices/entities.service';
 import { ProcessesService } from '@ofServices/processes.service';
 import { ReminderService } from '@ofServices/reminder/reminder.service';
+import { selectSubscriptionOpen } from '@ofStore/selectors/cards-subscription.selectors';
 
 @Component({
   selector: 'of-root',
@@ -37,6 +38,8 @@ export class AppComponent implements OnInit {
   isAuthenticated = false;
   loaded = false;
   useCodeOrImplicitFlow = true;
+  connectionLost = false; 
+  connectionLostForMoreThanTenSeconds = false;
 
   /**
    * NB: I18nService is injected to trigger its constructor at application startup
@@ -57,7 +60,9 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.loadConfiguration();
     this.initApplicationWhenUserAuthenticated();
+    this.detectConnectionLost();
   }
+
 
   private loadConfiguration() {
     this.configService.fetchConfiguration().subscribe(config => {
@@ -131,4 +136,14 @@ export class AppComponent implements OnInit {
       });
   }
 
+  private detectConnectionLost() {
+    this.store.select(selectSubscriptionOpen).subscribe(subscriptionOpen => {
+      this.connectionLostForMoreThanTenSeconds = false;
+      this.connectionLost = !subscriptionOpen;
+      // Wait 10s before showing "connection lost" to the user to avoid alerting on short connection loss
+      if (this.connectionLost) setTimeout(() => {
+        if (this.connectionLost) this.connectionLostForMoreThanTenSeconds = true;
+      }, 10000);
+    });
+  }
 }

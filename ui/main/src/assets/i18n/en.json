@@ -1,4 +1,8 @@
 {
+  "global":{
+    "connectionLost":"Connection lost",
+    "tryToReconnect":"Try to reconnect ..."
+  },
   "menu": {
     "feed": "Card Feed",
     "calendar": "Calendar",
