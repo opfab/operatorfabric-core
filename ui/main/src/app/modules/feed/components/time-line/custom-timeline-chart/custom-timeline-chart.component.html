@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -48,6 +48,7 @@
                    [attr.font-size]="13"
             />
         </svg:g> 
+        
         <svg:g ngx-charts-x-axis
                *ngIf="prod"
                [xScale]="xScale"
@@ -69,13 +70,21 @@
                [showGridLines]="true">
         </svg:g>
 
+
+        <svg:rect [attr.x]="0" [attr.width]="2" y="0" fill=#B1B1B1 [attr.height]="dims.height"></svg:rect>
+        
+        <svg:rect [attr.x]="xScale(xDomain[1])-2" [attr.width]="2" y="0" fill=#B1B1B1 [attr.height]="dims.height"></svg:rect>
+        
+        <svg:rect [attr.x]="0" [attr.width]="xScale(xDomain[1])" [attr.y]="dims.height-2" fill=#B1B1B1 [attr.height]="2">
+        </svg:rect>
+
+
         <!-- no rounded only up corner possible with svg so use two rectangles -->
         <svg:rect *ngIf="checkInsideDomain(xRealTimeLine)" [attr.x]="getRealTimeTextPosition()-50" [attr.width]="100" y="-18"
             fill=var(--opfab-timeline-realtimebar-color) [attr.height]="18" rx="10" ry="10"></svg:rect>
         <svg:rect *ngIf="checkInsideDomain(xRealTimeLine)" [attr.x]="getRealTimeTextPosition()-50" [attr.width]="100" y="-10"
             fill=var(--opfab-timeline-realtimebar-color) [attr.height]="10"></svg:rect>
 
-        
 
         <text *ngIf="checkInsideDomain(xRealTimeLine)"
               [attr.x]="getRealTimeTextPosition()"
@@ -86,7 +95,7 @@
 
         <text 
               [attr.x]="'50%'"
-              [attr.y]="-22" 
+              [attr.y]="-27" 
               fill=var(--opfab-timeline-text-color)
               text-anchor="middle" 
               [attr.font-size]="13" dy=".3em"
@@ -100,10 +109,6 @@
                   fill=var(--opfab-timeline-realtimebar-color)
                   [attr.height]="dims.height"
         ></svg:rect>
-
-    
-
-
 
 
         <svg:g *ngFor="let circle of circles" type="button">

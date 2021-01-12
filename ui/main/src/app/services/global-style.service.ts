@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,7 +39,7 @@ export class GlobalStyleService {
                                         --opfab-timeline-grid-color: #C9CCD1;
                                         --opfab-timeline-week-color: #aaaaaa;
                                         --opfab-timeline-week-color2: #aaaaaa;
-                                        --opfab-timeline-week-bgcolor: #E3E2E1;
+                                        --opfab-timeline-week-bgcolor: #ffffff;
                                         --opfab-timeline-realtimebar-color: #2784FF;
                                         --opfab-timeline-button-bgcolor: #e5e5e5;
                                         --opfab-timeline-button-text-color: #49494a;
@@ -73,13 +73,6 @@ export class GlobalStyleService {
                                         --opfab-timeline-cardlink-bordercolor-hover: #dae0e5;
                                         --opfab-calendar-grid-color : #C9CCD1;
                                         }`;
-
-/** color testing to remove when color validated 
- * 
- *   --opfab-timeline-week-color: #131D2B;
-                                        --opfab-timeline-week-color2: #2E4B73;
-                                        --opfab-timeline-week-bgcolor: #2E4B73;
- */
 
     private static NIGHT_STYLE = `:root {
                                         --opfab-bgcolor: #262f3d;

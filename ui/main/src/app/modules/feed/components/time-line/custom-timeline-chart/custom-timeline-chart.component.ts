@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -60,7 +60,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   private xAxisHeight = 0;
   private yAxisWidth = 0 ;
   public xScale: any;
-  private margin: any[] = [25, 15, 10, 0];
+  private margin: any[] = [30, 15, 10, 0];
   public translateGraph: string;
   public translateXTicksTwo: string;
   public xRealTimeLine: moment.Moment;
@@ -151,6 +151,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.initGraph();
     this.updateRealTimeDate();
     this.initDataPipe();
+    this.updateDimensions(); // need to init here only for unit test , otherwise dims is null
   }
 
   ngOnDestroy() {
