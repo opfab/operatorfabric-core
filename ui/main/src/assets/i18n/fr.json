@@ -80,7 +80,8 @@
     "tips": {
       "acknowledged": "Acquittée",
       "lttd": "Temps restant pour décider"
-    }
+    },
+    "received": "Reçu à {{time}}"
   },
   "login": {
     "reset": "RaZ",

@@ -78,20 +78,23 @@
           </button>
         </div>
 
-        <div id='div-detail-btn' *ngIf="showButtons" style="text-align: right;">
-          <button id="opfab-card-details-btn-response" class="opfab-btn"
-            *ngIf='showActionButton && isActionEnabled && !isLocked' translate
-            [translateParams]="responseDataParameters" [disabled]='lttdExpiredIsTrue || !isActionEnabled'
-            (click)='submitResponse()'>{{btnText}}</button>
-          <button id="opfab-card-details-btn-response" class="opfab-btn"
-            [disabled]='lttdExpiredIsTrue || !isActionEnabled' translate
-            *ngIf='showActionButton && isActionEnabled && isLocked' (click)='unlockAnswer()'>
-            response.btnUnlock
-          </button>
+        <div id='div-detail-btn'>
+          
+          <span class="opfab-card-received-footer" translate [translateParams]="getPublishDateTranslationParams()">feed.received</span>
+          <div *ngIf="showButtons" style="text-align: right;">
+            <button id="opfab-card-details-btn-response" class="opfab-btn"
+              *ngIf='showActionButton && isActionEnabled && !isLocked' translate
+              [translateParams]="responseDataParameters" [disabled]='lttdExpiredIsTrue || !isActionEnabled'
+              (click)='submitResponse()'>{{btnText}}</button>
+            <button id="opfab-card-details-btn-response" class="opfab-btn"
+              [disabled]='lttdExpiredIsTrue || !isActionEnabled' translate
+              *ngIf='showActionButton && isActionEnabled && isLocked' (click)='unlockAnswer()'>
+              response.btnUnlock
+            </button>
 
-          <button id="opfab-card-details-btn-ack" class="opfab-btn" *ngIf='showAckButton' translate
-            (click)='acknowledge()'>{{btnAckText}}</button>
-
+            <button id="opfab-card-details-btn-ack" class="opfab-btn" *ngIf='showAckButton' translate
+              (click)='acknowledge()'>{{btnAckText}}</button>
+          </div>
         </div>
 
         <ng-template #doYouReallyWantToDeleteCardPopup let-modal>

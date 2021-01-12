@@ -49,6 +49,7 @@ import {ConfigService} from '@ofServices/config.service';
 import {State as CardState} from '@ofModel/processes.model';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { TimeService } from '@ofServices/time.service';
 
 
 declare const templateGateway: any;
@@ -149,7 +150,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 private modalService: NgbModal,
                 private configService: ConfigService,
                 private router: Router,
-                private translate: TranslateService) {
+                private translate: TranslateService,
+                private time: TimeService,) {
     }
 
     get isLocked() {
@@ -295,6 +297,13 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     get btnAckText(): string {
         return this.card.hasBeenAcknowledged ? AckI18nKeys.BUTTON_TEXT_UNACK : AckI18nKeys.BUTTON_TEXT_ACK;
+    }
+
+    getPublishDateTranslationParams(): any {
+        const param = {
+            'time': this.time.formatDateTime(this.card.publishDate)
+        }
+        return param;
     }
 
 
