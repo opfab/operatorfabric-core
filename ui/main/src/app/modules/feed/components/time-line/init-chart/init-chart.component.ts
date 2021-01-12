@@ -299,10 +299,6 @@ export class InitChartComponent implements OnInit, OnDestroy {
     showOrHideTimeline() {
         this.hideTimeLine = !this.hideTimeLine;
         localStorage.setItem('opfab.hideTimeLine', this.hideTimeLine.toString());
-        // need to relcalculate frame size
-        // event is catch by calc-height-directive.ts
-        window.dispatchEvent(new Event('resize'));
-
     }
 
 }

@@ -160,7 +160,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.modalRef = this.modalService.open(content);
     }
 
-    // -------------------------- [OC-980] -------------------------- //
     adaptTemplateSize() {
         const cardTemplate = document.getElementById('div-card-template');
         if (!!cardTemplate) {  
@@ -184,8 +183,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     ngAfterViewChecked() {
         this.adaptTemplateSize();
-        window.onresize = this.adaptTemplateSize;
-        window.onload = this.adaptTemplateSize;
     }
 
     checkIfHasAlreadyResponded() {

@@ -15,7 +15,6 @@ import {DetailComponent} from './components/detail/detail.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from './services/handlebars.service';
-import {UtilitiesModule} from '../utilities/utilities.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountdownModule} from 'ngx-countdown';
 import { UserCardModule } from '../usercard/usercard.module';
@@ -28,7 +27,6 @@ import { UserCardModule } from '../usercard/usercard.module';
     CommonModule,
     CountdownModule,
       TranslateModule,
-      UtilitiesModule,
       NgbModule,
       UserCardModule
   ],

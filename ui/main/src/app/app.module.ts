@@ -21,7 +21,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './modules/login/login.component';
 import { TranslateModule } from '@ngx-translate/core';
-import { UtilitiesModule } from './modules/utilities/utilities.module';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { AboutComponent } from './modules/about/about.component';
 import { LoggingModule } from './modules/logging/logging.module';
@@ -56,7 +55,6 @@ export function countdownConfigFactory(): CountdownConfig {
     NgbModule,
     TranslateModule.forRoot(),
     FontAwesomeIconsModule,
-    UtilitiesModule,
     ArchivesModule,
     LoggingModule,
     MonitoringModule,
