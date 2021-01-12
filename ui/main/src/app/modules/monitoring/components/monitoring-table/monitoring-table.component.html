@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
 <!-- Copyright (c) 2020, RTEi (http://www.rte-international.com)           -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
@@ -14,7 +14,7 @@
         <tr>
             <th scope="col"></th>
             <th scope="col" translate>monitoring.time</th>
-            <th colspan="2" scope="col" translate>monitoring.businessPeriod</th>
+            <th scope="col" translate>monitoring.businessPeriod</th>
             <th scope="col" translate>monitoring.filters.process</th>
             <th scope="col" translate>monitoring.title</th>
             <th scope="col" translate>monitoring.summary</th>
@@ -24,16 +24,13 @@
     </thead>
     <tbody>
         <tr *ngFor="let line of result" (click)="selectCard(line.cardId)" style="cursor: pointer;">
-            <td [ngStyle]="{'background-color': line.coordinationStatusColor, 'color': line.coordinationStatusColor}" style="width: 15px;"> 
-                
-            </td>
+            <td class="opfab-monitoring-sev opfab-monitoring-sev-{{line.severity}}"></td>
             <td>{{displayTime(line.creationDateTime)}}</td>
-            <td>{{displayTime(line.beginningOfBusinessPeriod)}}</td>
-            <td>{{displayTime(line.endOfBusinessPeriod)}}</td>
+            <td>{{displayTime(line.beginningOfBusinessPeriod)}} - {{displayTime(line.endOfBusinessPeriod)}}</td>
             <td translate>{{line.processName}}</td>
             <td translate [translateParams]="line.title.parameters">{{line.title.key}}</td>
             <td translate [translateParams]="line.summary.parameters">{{line.summary.key}}</td>
-            <td translate>{{line.coordinationStatus}} </td>
+            <td translate [ngStyle]="{'color': line.coordinationStatusColor}">{{line.coordinationStatus}} </td>
         </tr>
     </tbody>
 </table>
