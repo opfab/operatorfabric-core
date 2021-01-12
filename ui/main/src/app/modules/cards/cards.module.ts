@@ -16,8 +16,8 @@ import {TranslateModule} from '@ngx-translate/core';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from './services/handlebars.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {CountdownModule} from 'ngx-countdown';
-import { UserCardModule } from '../usercard/usercard.module';
+import {CountDownModule} from '../share/countdown/countdown.module';
+import {UserCardModule} from '../usercard/usercard.module';
 
 @NgModule({
   declarations: [
@@ -25,7 +25,7 @@ import { UserCardModule } from '../usercard/usercard.module';
       , DetailComponent],
   imports: [
     CommonModule,
-    CountdownModule,
+      CountDownModule,
       TranslateModule,
       NgbModule,
       UserCardModule
