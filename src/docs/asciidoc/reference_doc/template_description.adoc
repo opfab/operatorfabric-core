@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -445,7 +445,24 @@ Return an array that is a merge of the two arrays.
 {{/each}}
 ....
 
+[[opfab_template_style]]
+== Operator fabric css styles
+
+Opfab define `css class` you shall use to have the good look and feel inside your templates:
+
+* opfab-input : input field
+* opfab-textarea : text area input field  
+* opfab-select : select input field
+* opfab-radio-button : radio button input field
+* opfab-checkbox : checkbox input field
+* opfab-table : a HTML table 
+
+These styles are especially useful for templates used in user card or card with responses.
+
+Your can find example using these classes in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/utils/karate/businessconfig/resources/bundle_userCardExamples[src/test/utils/karate/businessconfig/resources/bundle_userCardExamples]).
+
+
 == Charts 
 
-The library https://www.chartjs.org/[charts.js] is integrate in operator fabric, it means it's possible to show charts in cards, you can find a bundle example in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/utils/karate/businessconfig/resources/bundle_api_test[src/test/utils/karate/businessconfig/resources/bundle_test_api]).
+The library https://www.chartjs.org/[charts.js] is integrate in operator fabric, it means it's possible to show charts in cards, you can find a bundle example in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/utils/karate/businessconfig/resources/bundle_defautlProcess[src/test/utils/karate/businessconfig/resources/bundle_defaultProcess]).
 

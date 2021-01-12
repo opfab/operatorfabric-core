@@ -1,0 +1,127 @@
+// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+[[user_cards]]
+= User cards
+
+Via the menu create card, the user can send cards to entities. This feature needs to be configure.
+
+
+== Configure the bundle
+
+A card is related to a process and a state, if you want the user to emit a card for a specific process and state, you need to define it in the corresponding bundle. 
+
+For example : 
+
+....
+"id": "userCardExamples",
+"name": "userCardExamples.label",
+"version": "1",
+"states": {
+  "messageState": {
+    "name": "message.title",
+    "userCard" : {
+      "template" : "usercard_message",
+      "severityVisible" : true,
+      "startDateVisible" : true,
+      "endDateVisible" : true
+    },
+    "detailTitle": {
+      "key": "message.title"
+    },
+    "templateName": "message",
+    "styles": [],
+    "acknowledgmentAllowed": "Always"
+  }
+}
+....
+
+In this example, the field userCard defines that we have a template called `usercard_message` that defines the specific field business fields for this user card.
+
+The template is working the same as templates for presenting cards. Here is an example :
+
+
+....
+
+<div class="opfab-textarea">
+    <label> MESSAGE </label>
+    <textarea id="message" name="message" placeholder="Write something.."
+        style="width:100%"> {{card.data.message}} </textarea>
+</div>
+
+
+<script>
+    templateGateway.getSpecificCardInformation = function () {
+        const message = document.getElementById('message').value;
+        const card = {
+          summary : {key : "message.summary"},
+          title : {key : "message.title"},
+          data : {message: message}
+        };
+        if (message.length<1) return { valid:false , errorMsg:'You must provide a message'}
+        return {
+            valid: true,
+            card: card
+        };
+
+    }
+</script>
+....
+
+
+The first part defines the HTML business specific input fields. You just have to design in the template the form fields specific to your process, the generic fields (like startDate , endDate , severity ... ) are presented by default. It is possible to hide certain generic fields, in the case you set the visibility to false in the config.json (for example field `severityVisible`).
+
+Notice that you shall use an opfab css class to present your form with the good look and feel (See
+ifdef::single-page-doc[<<opfab_template_style, Operator Fabric Style >>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#opfab_template_style, Operator Fabric Style>>]
+for more information)
+
+
+The field `{{card.data.message}}` is the value from the card  to set in the field `message` when editing the card.  
+
+The second part is a javascript method you need to implement to permit operator fabric to get your specific data . 
+
+To have a better understanding, we encourage you to have a look to the examples in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/utils/karate/businessconfig/resources/bundle_userCardExamples[src/test/utils/karate/businessconfig/resources/bundle_userCardExamples]).
+
+
+== Method getSpecificCardInformation
+
+The following card fields can be set via the object `card` in the object return by method `getSpecificCardInformation`:
+
+* title 
+* summary
+* keepChildCard
+* secondsBeforeTimeSpanForReminder
+* severity (in case it is not visible from the user , when `severityVisible` set to false in `config.json`)
+* data 
+
+If you want to see the card in the agenda feature, you need to set 'viewCardInAgenda' to  true in the object return by the method.
+
+If the form is not fill correctly by the user, you can provide an error message like in the example presented before.
+
+Again, have a look to the examples provided. 
+
+
+== Define permissions
+
+To send a user card, the user must be member of group that has a perimeter defining the right `ReceiveAndWrite` or `Write` for the chosen process and state. For example: 
+
+....
+{
+  "id" : "perimeterUserCard",
+  "process" : "userCardExamples",
+  "stateRights" : [
+    {
+      "state" : "messageState",
+      "right" : "ReceiveAndWrite"
+    }
+  ]
+}
+....
+
+
+Using the `ReceiveAndWrite` right instead of the `Write` right permit the user to receive the card he sends and edit or delete it.
