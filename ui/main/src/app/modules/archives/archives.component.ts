@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -256,6 +256,13 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
         }
         );
+    }
+
+    getPublishDateTranslationParams(): any {
+        const param = {
+            'time': this.timeService.formatDateTime(this.selectedCard.publishDate)
+        }
+        return param;
     }
 
     ngOnDestroy() {

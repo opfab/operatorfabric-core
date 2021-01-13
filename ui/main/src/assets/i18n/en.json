@@ -80,7 +80,8 @@
     "tips": {
       "acknowledged": "Acknowledged",
       "lttd": "Time to decide"
-    }
+    },
+    "received": "Received at {{time}}"
   },
   "login": {
     "reset": "Reset",
