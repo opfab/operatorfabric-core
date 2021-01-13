@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,6 +16,9 @@ import {ApplyFilter, ResetFilter, ResetFilterForMonitoring} from '@ofActions/fee
 import {DateTimeNgb, offSetCurrentTime} from '@ofModel/datetime-ngb.model';
 import {ConfigService} from '@ofServices/config.service';
 import moment from 'moment';
+import { Observable } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
 
 
 @Component({
@@ -38,7 +41,7 @@ export class MonitoringFiltersComponent implements OnInit, AfterViewInit {
 
     public submittedOnce = false;
 
-    constructor(private store: Store<AppState>, private configService: ConfigService) {
+    constructor(private store: Store<AppState>, private configService: ConfigService, private translate: TranslateService,) {
 
     }
 
@@ -58,19 +61,27 @@ export class MonitoringFiltersComponent implements OnInit, AfterViewInit {
 
         this.dropdownList = this.processData;
 
-        this.dropdownSettings = {
-            text: 'Select a Process',
-            selectAllText: 'Select All',
-            unSelectAllText: 'UnSelect All',
-            enableSearchFilter: true,
-            classes: 'custom-class-example'
-        };
+        this.getLocale().subscribe(locale => {
+            this.translate.use(locale);
+            this.translate.get(['monitoring.filters.selectProcessText'])
+              .subscribe(translations => {
+                this.dropdownSettings = {
+                    text: translations['monitoring.filters.selectProcessText'],
+                    enableSearchFilter: true,
+                    classes: 'custom-class-example'
+                }
+              })
+            });
     }
 
     ngAfterViewInit() {
         this.sendQuery();
     }
 
+    protected getLocale(): Observable<string> {
+        return this.store.select(buildSettingsOrConfigSelector('locale'));
+    }
+    
     initActiveDatesForm() {
         const start = moment();
         start.add(-2, 'hours');

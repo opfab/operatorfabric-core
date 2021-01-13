@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,10 @@ import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {I18n} from '@ofModel/i18n.model';
 import {TranslateService} from '@ngx-translate/core';
+import { Store } from '@ngrx/store';
+import { AppState } from '@ofStore/index';
+import { Observable } from 'rxjs';
+import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
 
 @Component({
     selector: 'of-multi-filter-2',
@@ -22,12 +26,12 @@ export class MultiFilter2Component implements OnInit, OnChanges {
     @Input() public i18nRootLabelKey: string;
     @Input() public values: ({ id: string, itemName: (I18n | string), i18nPrefix?: string } | string)[];
     @Input() public parentForm: FormGroup;
-    @Input() public dropdownSettings = [];
+    @Input() public dropdownSettings = {};
     @Input() public filterPath: string;
     @Input() public selectedItems ;
     public selection = [];
 
-    constructor(private translateService: TranslateService) {
+    constructor(private store: Store<AppState>, private translateService: TranslateService) {
         this.parentForm = new FormGroup({
             [this.filterPath]: new FormControl()
         });
@@ -55,10 +59,28 @@ export class MultiFilter2Component implements OnInit, OnChanges {
             });
 
         }
+        this.getLocale().subscribe(locale => {
+            this.translateService.use(locale);
+            this.translateService.get(['multiFilter.searchPlaceholderText','multiFilter.selectAllText', 'multiFilter.unSelectAllText', 'multiFilter.filterSelectAllText', 'multiFilter.filterUnSelectAllText'])
+              .subscribe(translations => {
+                this.dropdownSettings = {...{
+                    searchPlaceholderText: translations['multiFilter.searchPlaceholderText'],
+                    selectAllText: translations['multiFilter.selectAllText'],
+                    unSelectAllText: translations['multiFilter.unSelectAllText'],
+                    filterSelectAllText: translations['multiFilter.filterSelectAllText'],
+                    filterUnSelectAllText: translations['multiFilter.filterUnSelectAllText'],
+                    noDataLabel: translations['multiFilter.noDataLabel'],
+                },...this.dropdownSettings};
+              })
+            });
     }
 
     ngOnChanges() {
         this.initComponentValues();
+    }
+
+    protected getLocale(): Observable<string> {
+        return this.store.select(buildSettingsOrConfigSelector('locale'));
     }
 
     computeI18nLabelKey(): string {

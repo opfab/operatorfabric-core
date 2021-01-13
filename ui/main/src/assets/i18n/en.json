@@ -31,6 +31,14 @@
       "Y": "Year"
     }
   },
+  "multiFilter": {
+    "searchPlaceholderText": "Search",
+    "selectAllText": "Select All",
+    "unSelectAllText": "UnSelect All",
+    "filterSelectAllText": "Select all filtered results",
+    "filterUnSelectAllText": "UnSelect all filtered results",
+    "noDataLabel": "No Data Available"
+  },
   "feed": {
     "filters": {
       "title": "Filters",
@@ -131,11 +139,14 @@
     },
     "noResult": "Your search did not match any results.",
     "exportToExcel" : "EXPORT TO EXCEL",
-    "resultsNumber":"Results number"
+    "resultsNumber":"Results number",
+    "selectProcessText": "Select a Process",
+    "selectTagText": "Select a Tag"
   },
   "logging": {
     "filters": {
-      "process": "PROCESS"
+      "process": "PROCESS",
+      "selectProcessText": "Select a Process"
     },
     "timeOfAction": "TIME OF ACTION",
     "title": "TITLE",
@@ -147,7 +158,8 @@
   },
   "monitoring": {
     "filters": {
-      "process": "PROCESS"
+      "process": "PROCESS",
+      "selectProcessText": "Select a Process"
     },
     "time": "TIME",
     "businessPeriod": "BUSINESS PERIOD",
@@ -216,12 +228,7 @@
       "error": {
         "impossibleToDeleteCard": "Impossible to delete card for technical reasons"
       }
-    },
-    "searchPlaceholderText": "Search",
-    "selectAllText": "Select All",
-    "unSelectAllText": "UnSelect All",
-    "filterSelectAllText": "Select all filtered results",
-    "filterUnSelectAllText": "UnSelect all filtered results"
+    }
   },
   "response": {
     "btnTitle": "VALIDATE ANSWER",

@@ -1,4 +1,4 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,7 @@ import { CardService } from '@ofServices/card.service';
 import { UserService } from '@ofServices/user.service';
 import { Card, CardData,fromCardToCardForPublishing, TimeSpan} from '@ofModel/card.model';
 import { I18n } from '@ofModel/i18n.model';
-import {  Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Process } from '@ofModel/processes.model';
 import { TimeService } from '@ofServices/time.service';
 import { Severity } from '@ofModel/light-card.model';
@@ -33,7 +33,6 @@ import { HandlebarsService } from '../cards/services/handlebars.service';
 import { DetailContext } from '@ofModel/detail-context.model';
 import { map } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
-import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
 
 declare const templateGateway: any;
 
@@ -138,30 +137,13 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.changeStatesWhenSelectProcess();
         this.loadTemplateWhenStateChange();
 
-        this.getLocale().subscribe(locale => {
-            this.translate.use(locale);
-            this.translate.get(['userCard.searchPlaceholderText','userCard.selectAllText', 'userCard.unSelectAllText', 'userCard.filterSelectAllText', 'userCard.filterUnSelectAllText'])
-              .subscribe(translations => {
-                this.dropdownSettings = {
-                    searchPlaceholderText: translations['userCard.searchPlaceholderText'],
-                    text: '',
-                    selectAllText: translations['userCard.selectAllText'],
-                    unSelectAllText: translations['userCard.unSelectAllText'],
-                    filterSelectAllText: translations['userCard.filterSelectAllText'],
-                    filterUnSelectAllText: translations['userCard.filterUnSelectAllText'],
-                    enableSearchFilter: true
-                };
-              })
-            });
-
+        this.dropdownSettings = {
+            text: '',
+            enableSearchFilter: true
+        };
         
         this.loadCardForEdition();
     }
-
-    protected getLocale(): Observable<string> {
-        return this.store.select(buildSettingsOrConfigSelector('locale'));
-      }
-
 
     loadCardForEdition()
     {
