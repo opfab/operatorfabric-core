@@ -15,7 +15,6 @@ import {TranslateModule} from '@ngx-translate/core';
 import {SingleFilterModule} from '../../modules/share/single-filter/single-filter.module';
 import {MultiFilterModule} from '../../modules/share/multi-filter/multi-filter.module';
 import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
-import {TextAreaModule} from '../../modules/share/text-area/text-area.module';
 
 import {MultiFilter2Module} from '../../modules/share/multi-filter-2/multi-filter-2.module';
 import { CardDetailModule } from 'app/modules/share/card-detail/card-detail.module';
@@ -31,7 +30,6 @@ import { LightCardModule } from 'app/modules/share/light-card/light-card.module'
         SingleFilterModule,
         MultiFilterModule,
         DatetimeFilterModule,
-        TextAreaModule,
 
         MultiFilter2Module,
         CardDetailModule,
