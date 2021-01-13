@@ -9,7 +9,7 @@
 
 
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { AppState } from '@ofStore/index';
 import { ProcessesService } from '@ofServices/processes.service';
 import { Store } from '@ngrx/store';
@@ -25,7 +25,7 @@ import { Page } from '@ofModel/page.model';
 import { ExportService } from '@ofServices/export.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Card } from '@ofModel/card.model';
-
+import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -112,26 +112,30 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             this.processDropdownList.push({ id: id, itemName: itemName, i18nPrefix: `${process.id}.${process.version}` });
         });
 
-
-        this.processDropdownSettings = {
-            text: 'Select a Process',
-            selectAllText: 'Select All',
-            unSelectAllText: 'UnSelect All',
-            enableSearchFilter: true
-        };
-
         if (!!this.tags) {
             this.tags.forEach(tag => this.tagsDropdownList.push({ id: tag.value, itemName: tag.label }));
-
-            this.tagsDropdownSettings = {
-                text: 'Select a Tag',
-                selectAllText: 'Select All',
-                unSelectAllText: 'UnSelect All',
-                enableSearchFilter: true
-            };
         }
+
+        this.getLocale().subscribe(locale => {
+            this.translate.use(locale);
+            this.translate.get(['archive.selectProcessText','archive.selectTagText'])
+              .subscribe(translations => {
+                this.processDropdownSettings = {
+                    text: translations['archive.selectProcessText'],
+                    enableSearchFilter: true
+                }
+                this.tagsDropdownSettings = {
+                    text: translations['archive.selectTagText'],
+                    enableSearchFilter: true
+                };
+              })
+            });
     }
 
+    protected getLocale(): Observable<string> {
+        return this.store.select(buildSettingsOrConfigSelector('locale'));
+    }
+    
     /**
      * Transforms the filters list to Map
      */

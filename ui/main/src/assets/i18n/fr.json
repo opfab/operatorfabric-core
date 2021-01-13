@@ -31,6 +31,14 @@
       "Y": "Année"
     }
   },
+  "multiFilter": {
+    "searchPlaceholderText": "Rechercher",
+    "selectAllText": "Sélectionner tout",
+    "unSelectAllText": "Desélectionner tout",
+    "filterSelectAllText": "Sélectionner tous les résultats filtrés",
+    "filterUnSelectAllText": "Desélectionner tous les résultats filtrés",
+    "noDataLabel": "Pas de données disponibles"
+  },
   "feed": {
     "filters": {
       "title": "Filtres",
@@ -132,11 +140,14 @@
     },
     "noResult": "Votre recherche ne correspond à aucun résultat.",
     "exportToExcel" : "EXPORTER VERS EXCEL",
-    "resultsNumber":"Nombre de résultats"
+    "resultsNumber":"Nombre de résultats",
+    "selectProcessText": "Sélectionner un Processus",
+    "selectTagText": "Sélectionner une Etiquette"
   },
   "logging": {
     "filters": {
-      "process": "PROCESSUS"
+      "process": "PROCESSUS",
+      "selectProcessText": "Sélectionner un Processus"
     },
     "timeOfAction": "MOMENT DE L'ACTION",
     "title": "TITRE",
@@ -148,7 +159,8 @@
   },
   "monitoring": {
     "filters": {
-      "process": "PROCESSUS"
+      "process": "PROCESSUS",
+      "selectProcessText": "Sélectionner un Processus"
     },
     "time": "DATE",
     "businessPeriod": "PERIODE METIER",
@@ -217,13 +229,7 @@
       "error": {
         "impossibleToDeleteCard": "Impossible de supprimer la carte pour des raisons techniques"
       }
-    },
-    "searchPlaceholderText": "Rechercher",
-    "selectAllText": "Sélectionner tout",
-    "unSelectAllText": "Desélectionner tout",
-    "filterSelectAllText": "Sélectionner tous les résultats filtrés",
-    "filterUnSelectAllText": "Desélectionner tous les résultats filtrés"
-    
+    }
   },
   "response": {
     "btnTitle": "VALIDER REPONSE",
