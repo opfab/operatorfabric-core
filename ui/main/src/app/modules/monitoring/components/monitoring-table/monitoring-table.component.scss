@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * Copyright (c) 2020, RTEi (http://www.rte-international.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -7,6 +7,8 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
+
+ @import "~assets/styles/_variables.scss";
 
 
 .export-div {
@@ -19,3 +21,13 @@
 .export-btn {
   float: right;
 }
+
+.opfab-monitoring-sev {
+  width: 15px;
+}
+
+
+.opfab-monitoring-sev-alarm {background-color: $sev-alarm;}
+.opfab-monitoring-sev-action {background-color: $sev-action;}
+.opfab-monitoring-sev-compliant {background-color: $sev-compliant;}
+.opfab-monitoring-sev-information {background-color: $sev-information;}

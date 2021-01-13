@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -91,7 +91,8 @@ export class MonitoringComponent implements OnInit, OnDestroy, AfterViewInit {
                                         processName: this.prefixForTranslation(card, currentProcess.name),
                                         coordinationStatusColor: color,
                                         coordinationStatus: this.prefixForTranslation(card, name),
-                                        cardId: card.id
+                                        cardId: card.id,
+                                        severity: card.severity.toLocaleLowerCase()
 
                                     } as LineOfMonitoringResult);
                             }

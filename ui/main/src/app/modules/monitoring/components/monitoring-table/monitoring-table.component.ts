@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
 * Copyright (c) 2020, RTEi (http://www.rte-international.com)
 * See AUTHORS.txt
 * This Source Code Form is subject to the terms of the Mozilla Public
@@ -74,7 +74,8 @@ export class MonitoringTableComponent implements OnDestroy {
                     process: processName,
                     title: title,
                     summary: summary,
-                    status: status
+                    status: status,
+                    severity: line.severity
                 });
             }
         });
