@@ -17,7 +17,6 @@ import {MonitoringComponent} from './monitoring.component';
 import { MonitoringFiltersComponent } from './components/monitoring-filters/monitoring-filters.component';
 import { MonitoringTableComponent } from './components/monitoring-table/monitoring-table.component';
 import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
-import {MultiFilterModule} from '../../modules/share/multi-filter/multi-filter.module';
 import {AppRoutingModule} from '../../app-routing.module';
 import {MultiFilter2Module} from '../../modules/share/multi-filter-2/multi-filter-2.module';
 
@@ -37,7 +36,6 @@ import {MultiFilter2Module} from '../../modules/share/multi-filter-2/multi-filte
       , TranslateModule
       , NgbModule
       , DatetimeFilterModule
-      , MultiFilterModule
       , AppRoutingModule
       , MultiFilter2Module
   ]

@@ -13,7 +13,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {UserCardComponent} from './usercard.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {SingleFilterModule} from '../../modules/share/single-filter/single-filter.module';
-import {MultiFilterModule} from '../../modules/share/multi-filter/multi-filter.module';
 import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
 
 import {MultiFilter2Module} from '../../modules/share/multi-filter-2/multi-filter-2.module';
@@ -28,7 +27,6 @@ import { LightCardModule } from 'app/modules/share/light-card/light-card.module'
         ReactiveFormsModule,
         TranslateModule,
         SingleFilterModule,
-        MultiFilterModule,
         DatetimeFilterModule,
 
         MultiFilter2Module,
