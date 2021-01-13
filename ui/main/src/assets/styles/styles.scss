@@ -625,12 +625,7 @@ select.form-control[multiple] {
   margin-top: 5px;
 }
 
-// For calendar module we need to set here the color of the grid 
-// if set in the component it does not work 
-.fc th,
-.fc td {
- border-color: var(--opfab-calendar-grid-color);
-}
+
 
 // Override color for today in calendar 
 .alert-info {

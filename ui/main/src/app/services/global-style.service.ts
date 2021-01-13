@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -131,7 +131,7 @@ export class GlobalStyleService {
                                         --opfab-timeline-cardlink: white;
                                         --opfab-timeline-cardlink-bgcolor-hover: #23272b;
                                         --opfab-timeline-cardlink-bordercolor-hover: #1d2124;
-                                        --opfab-calendar-grid-color : #606267;
+                                        --opfab-calendar-grid-color : #303237;
                                     }`;
 
 
