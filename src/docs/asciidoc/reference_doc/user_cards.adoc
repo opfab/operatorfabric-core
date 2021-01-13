@@ -8,12 +8,13 @@
 [[user_cards]]
 = User cards
 
-Via the menu create card, the user can send cards to entities. This feature needs to be configure.
+Using the `Create card` menu, the user can send cards to entities. This feature needs to be configured.
 
 
 == Configure the bundle
 
-A card is related to a process and a state, if you want the user to emit a card for a specific process and state, you need to define it in the corresponding bundle. 
+A card is related to a process and a state, if you want users to be able to emit a card for a specific process and state,
+you need to define it in the bundle for this process.
 
 For example : 
 
@@ -40,10 +41,11 @@ For example :
 }
 ....
 
-In this example, the field userCard defines that we have a template called `usercard_message` that defines the specific field business fields for this user card.
+In this example, the field userCard states that we have a template called `usercard_message` that defines how
+the specific business input fields for this user card will be displayed in the card sending form that will be
+presented to the user (through the `Create Card` menu).
 
-The template is working the same as templates for presenting cards. Here is an example :
-
+This template works the same as templates for card presentation. Here is an example :
 
 ....
 
@@ -73,24 +75,32 @@ The template is working the same as templates for presenting cards. Here is an e
 ....
 
 
-The first part defines the HTML business specific input fields. You just have to design in the template the form fields specific to your process, the generic fields (like startDate , endDate , severity ... ) are presented by default. It is possible to hide certain generic fields, in the case you set the visibility to false in the config.json (for example field `severityVisible`).
+The first part defines the HTML for the business-specific input fields. It should only include the form
+fields specific to your process, because the generic fields (like startDate , endDate , severity ... ) are presented
+by default. It is possible to hide certain generic fields, by setting their visibility to false in the config.json
+(for example field `severityVisible`).
 
-Notice that you shall use an opfab css class to present your form with the good look and feel (See
-ifdef::single-page-doc[<<opfab_template_style, Operator Fabric Style >>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#opfab_template_style, Operator Fabric Style>>]
+Please note that you should use an OpFab css class so the "business-specific" part of the form has the same look and
+feel (See
+ifdef::single-page-doc[<<opfab_template_style, OperatorFabric Style >>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#opfab_template_style, OperatorFabric Style>>]
 for more information)
 
+Once the card has been sent, users with the appropriate rights can edit it. If they choose to do so, they're presented
+with the same input form as for the card creation, but the fields are pre-filled with the current data of the card.
+This way, they can only change what they need without having to re-create the card from scratch.
+That's what the reference to `{{card.data.message}}` is for. It means that this text-area input field should be filled
+with the value of the field `message` from the card's data.
 
-The field `{{card.data.message}}` is the value from the card  to set in the field `message` when editing the card.  
+The second part is a javascript method you need to implement to allow OperatorFabric to get your specific data .
 
-The second part is a javascript method you need to implement to permit operator fabric to get your specific data . 
-
-To have a better understanding, we encourage you to have a look to the examples in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/utils/karate/businessconfig/resources/bundle_userCardExamples[src/test/utils/karate/businessconfig/resources/bundle_userCardExamples]).
+To have a better understanding of this feature, we encourage you to have a look at the examples in the OperatorFabric
+core repository under (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/utils/karate/businessconfig/resources/bundle_userCardExamples[src/test/utils/karate/businessconfig/resources/bundle_userCardExamples]).
 
 
 == Method getSpecificCardInformation
 
-The following card fields can be set via the object `card` in the object return by method `getSpecificCardInformation`:
+The following card fields can be set via the object `card` in the object returned by method `getSpecificCardInformation`:
 
 * title 
 * summary
@@ -99,16 +109,16 @@ The following card fields can be set via the object `card` in the object return 
 * severity (in case it is not visible from the user , when `severityVisible` set to false in `config.json`)
 * data 
 
-If you want to see the card in the agenda feature, you need to set 'viewCardInAgenda' to  true in the object return by the method.
+If you want the card to be visible in the agenda feature, you need to set 'viewCardInAgenda' to true in the object returned by the method.
 
-If the form is not fill correctly by the user, you can provide an error message like in the example presented before.
-
+If the form is not filled correctly by the user, you can provide an error message (see example above).
 Again, have a look to the examples provided. 
 
 
 == Define permissions
 
-To send a user card, the user must be member of group that has a perimeter defining the right `ReceiveAndWrite` or `Write` for the chosen process and state. For example: 
+To send a user card, the user must be member of a group that has a perimeter defining the right `ReceiveAndWrite`
+or `Write` for the chosen process and state. For example:
 
 ....
 {
@@ -124,4 +134,5 @@ To send a user card, the user must be member of group that has a perimeter defin
 ....
 
 
-Using the `ReceiveAndWrite` right instead of the `Write` right permit the user to receive the card he sends and edit or delete it.
+NOTE: Using the `ReceiveAndWrite` right instead of the `Write` right allows the user to receive the card they sent and
+edit or delete it.

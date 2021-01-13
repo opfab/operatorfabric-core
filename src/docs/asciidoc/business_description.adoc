@@ -48,4 +48,4 @@ and the response could be seen by other operators.
 
 image::ResponseCardScreenshot.png[Feed screen layout,align="center"]
 
-It is possible as well for the user to directly send card to other users via predefine card templates.
+It is also possible for users to directly send card to other users using predefined card templates.

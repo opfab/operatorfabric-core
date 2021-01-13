@@ -11,7 +11,7 @@
 
 
 Templates are https://handlebarsjs.com/[Handlebars] template files. Templates
-are fuelled with a scope structure composed of
+are then filled with data coming from two sources:
 
  * a *card* property (See
 ifdef::single-page-doc[link:../api/cards/index.html[card data model]]
@@ -446,9 +446,9 @@ Return an array that is a merge of the two arrays.
 ....
 
 [[opfab_template_style]]
-== Operator fabric css styles
+== OperatorFabric css styles
 
-Opfab define `css class` you shall use to have the good look and feel inside your templates:
+OperatorFabric defines a `css class` that you should use so your templates don't clash with the rest of the OperatorFabric look and feel:
 
 * opfab-input : input field
 * opfab-textarea : text area input field  
@@ -459,10 +459,10 @@ Opfab define `css class` you shall use to have the good look and feel inside you
 
 These styles are especially useful for templates used in user card or card with responses.
 
-Your can find example using these classes in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/utils/karate/businessconfig/resources/bundle_userCardExamples[src/test/utils/karate/businessconfig/resources/bundle_userCardExamples]).
+Your can find example using these classes in the OperatorFabric core repository (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/utils/karate/businessconfig/resources/bundle_userCardExamples[src/test/utils/karate/businessconfig/resources/bundle_userCardExamples]).
 
 
 == Charts 
 
-The library https://www.chartjs.org/[charts.js] is integrate in operator fabric, it means it's possible to show charts in cards, you can find a bundle example in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/utils/karate/businessconfig/resources/bundle_defautlProcess[src/test/utils/karate/businessconfig/resources/bundle_defaultProcess]).
+The library https://www.chartjs.org/[charts.js] is integrated in OperatorFabric, it means it's possible to show charts in cards, you can find a bundle example in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/utils/karate/businessconfig/resources/bundle_defautlProcess[src/test/utils/karate/businessconfig/resources/bundle_defaultProcess]).
 
