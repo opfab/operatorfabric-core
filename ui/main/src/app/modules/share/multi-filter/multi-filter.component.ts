@@ -17,10 +17,10 @@ import { Observable } from 'rxjs';
 import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
 
 @Component({
-    selector: 'of-multi-filter-2',
-    templateUrl: './multi-filter-2.component.html'
+    selector: 'of-multi-filter',
+    templateUrl: './multi-filter.component.html'
 })
-export class MultiFilter2Component implements OnInit, OnChanges {
+export class MultiFilterComponent implements OnInit, OnChanges {
 
     dropdownList: { id: string, itemName: string }[];
     @Input() public i18nRootLabelKey: string;

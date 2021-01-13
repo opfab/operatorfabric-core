@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,11 +12,11 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {MultiFilter2Component} from './multi-filter-2.component';
+import {MultiFilterComponent} from './multi-filter.component';
 import {AngularMultiSelectModule} from 'angular2-multiselect-dropdown';
 
 @NgModule({
-    declarations: [MultiFilter2Component],
+    declarations: [MultiFilterComponent],
     imports: [
         CommonModule,
         FormsModule,
@@ -25,6 +25,6 @@ import {AngularMultiSelectModule} from 'angular2-multiselect-dropdown';
         NgbModule,
         AngularMultiSelectModule
     ],
-    exports: [MultiFilter2Component]
+    exports: [MultiFilterComponent]
 })
-export class MultiFilter2Module { }
+export class MultiFilterModule { }

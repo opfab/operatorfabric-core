@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,7 @@ import { MonitoringFiltersComponent } from './components/monitoring-filters/moni
 import { MonitoringTableComponent } from './components/monitoring-table/monitoring-table.component';
 import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
 import {AppRoutingModule} from '../../app-routing.module';
-import {MultiFilter2Module} from '../../modules/share/multi-filter-2/multi-filter-2.module';
+import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
 
 
 
@@ -37,7 +37,7 @@ import {MultiFilter2Module} from '../../modules/share/multi-filter-2/multi-filte
       , NgbModule
       , DatetimeFilterModule
       , AppRoutingModule
-      , MultiFilter2Module
+      , MultiFilterModule
   ]
 })
 export class MonitoringModule { }
