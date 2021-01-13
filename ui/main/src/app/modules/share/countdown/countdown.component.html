@@ -1,0 +1,24 @@
+<!-- Copyright (c) 2021, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
+<span [hidden]="!this.enableLastTimeToAct">
+
+    <ng-template #tipLttd>
+        <span translate>feed.tips.lttd</span>
+    </ng-template>
+
+    <span [hidden]="this.stopTime" placement="right" [ngbPopover]="tipLttd" container="body" triggers="mouseenter:mouseleave">
+        <countdown #countdown class="lttd-timeleft" [config]='prettyConfig' (event)="onTimerFinished($event)" ></countdown>
+        <em class="far fa-clock lttd-icon lttd-timeleft"></em>
+    </span>
+    <span [hidden]="!this.stopTime">
+        <span><label class="lttd-text" translate>feed.filters.time.lttd.label</label></span>
+        <span><em class="far fa-clock lttd-icon" ></em></span>
+    </span>
+</span>

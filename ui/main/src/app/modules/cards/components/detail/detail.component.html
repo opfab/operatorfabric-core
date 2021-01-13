@@ -53,20 +53,26 @@
         <label class="label-help"><span class="label-unanswered" translate>response.unanswered</span></label>
       </ng-template>
       
-      <div  *ngIf='responseDataExists' class="opfab-card-response-header"  style="text-align: right;">
-        <div id="opfab-answer-help" class="opfab-icon-help" placement="left" [ngbPopover]="helpContent"
-        container="body" [autoClose]="'outside'">
-      </div>
-          <span translate>response.answers</span> :
-          <span *ngFor="let entity of listEntitiesToRespond; let isLast = last"
-            [ngStyle]="{'color': entity.color,'border-right': (!isLast) ? '3px solid white':'','text-align': 'center'}">
-            &nbsp; {{entity.name}} &nbsp;
-          </span>
+      <div  *ngIf='responseDataExists' class="opfab-card-response-header" >
+        <div class="flex-container">
+          <div style="width:10%">
+            <of-countdown [card]="card"></of-countdown>
+          </div>
 
+          <div style="width:90%;text-align: right" >
+            <div id="opfab-answer-help" class="opfab-icon-help" placement="left" [ngbPopover]="helpContent"
+              container="body" [autoClose]="'outside'">
+            </div>
+            <span translate>response.answers</span> :
+            <span *ngFor="let entity of listEntitiesToRespond; let isLast = last"
+                [ngStyle]="{'color': entity.color,'border-right': (!isLast) ? '3px solid white':'','text-align': 'center'}">
+                &nbsp; {{entity.name}} &nbsp;
+            </span>
+          </div>
         </div>
-
-        <div id="div-card-template" class="opfab-card-detail" [innerHtml]="htmlContent"></div>
       </div>
+
+      <div id="div-card-template" class="opfab-card-detail" [innerHtml]="htmlContent"></div>
 
       <div style="text-align: center;width:100% ; ">
         <div id='div-detail-msg' *ngIf='message.display'

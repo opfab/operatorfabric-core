@@ -8,7 +8,7 @@
  */
 
 
-import { Component, Input, OnDestroy, OnInit, ViewChild, DoCheck } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { LightCard } from '@ofModel/light-card.model';
 import { Router } from '@angular/router';
 import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
@@ -19,8 +19,6 @@ import { TimeService } from '@ofServices/time.service';
 import { Subject } from 'rxjs';
 import { ConfigService } from '@ofServices/config.service';
 import { AppService, PageType } from '@ofServices/app.service';
-import { CountdownComponent, CountdownConfig, CountdownEvent } from 'ngx-countdown';
-import { UserService } from '@ofServices/user.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -28,10 +26,7 @@ import { TranslateService } from '@ngx-translate/core';
     templateUrl: './light-card.component.html',
     styleUrls: ['./light-card.component.scss']
 })
-export class LightCardComponent implements OnInit, OnDestroy, DoCheck {
-
-    @ViewChild('countdown', { static: true })
-    private countdown: CountdownComponent;
+export class LightCardComponent implements OnInit, OnDestroy {
 
     @Input() public open = false;
     @Input() public lightCard: LightCard;
@@ -40,15 +35,6 @@ export class LightCardComponent implements OnInit, OnDestroy, DoCheck {
     protected _i18nPrefix: string;
     cardTitle: string;
     dateToDisplay: string;
-
-    prettyConfig: CountdownConfig;
-    enableLastTimeToAct = false;
-    stopTime = false;
-    secondsBeforeLttdForClockDisplay: number;
-    interval: any;
-    hideHourInCountDown = false;
-    MILLISECONDS_SECOND = 1000;
-
 
     private ngUnsubscribe: Subject<void> = new Subject<void>();
 
@@ -59,13 +45,11 @@ export class LightCardComponent implements OnInit, OnDestroy, DoCheck {
         private time: TimeService,
         private configService: ConfigService,
         private _appService: AppService,
-        private userService: UserService,
         protected translate: TranslateService
     ) {
      }
 
     ngOnInit() {
-        this.secondsBeforeLttdForClockDisplay = this.configService.getConfigValue('feed.card.secondsBeforeLttdForClockDisplay', false);
         this._i18nPrefix = `${this.lightCard.process}.${this.lightCard.processVersion}.`;
         this.store
             .select(selectCurrentUrl)
@@ -78,7 +62,6 @@ export class LightCardComponent implements OnInit, OnDestroy, DoCheck {
             });
         this.loadTranslationForTitle();
         this.computeDisplayedDate();
-        this.startCountdownWhenNecessary();
     }
 
     loadTranslationForTitle() {
@@ -86,88 +69,6 @@ export class LightCardComponent implements OnInit, OnDestroy, DoCheck {
                     .subscribe(translation =>
                         this.cardTitle = translation.toUpperCase()
                     );
-    }
-
-
-    ngDoCheck() {
-        if (!!this.lightCard.lttd && !this.hideHourInCountDown) {
-            const leftTimeSeconds = this.getSecondsBeforeLttd();
-            if (leftTimeSeconds < 3600) {
-                this.prettyConfig = {
-                    leftTime: leftTimeSeconds,
-                    format: 'mm:ss'
-                };
-                this.hideHourInCountDown = true;
-            }
-        }
-    }
-
-
-    public isValidatelttd(): boolean {
-        const entityUser = this.userService.getCurrentUserWithPerimeters().userData.entities[0];
-
-        if (!this.isArchivePageType()) {
-            if (!!this.lightCard.entitiesAllowedToRespond) {
-                return this.lightCard.entitiesAllowedToRespond.includes(entityUser);
-            } else {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    isTimeToStartCountDown(): boolean {
-        const delta = this.getSecondsBeforeLttd();
-        return delta > 0 && delta <= this.secondsBeforeLttdForClockDisplay;
-    }
-
-    startCountDownConfig() {
-        const leftTimeSeconds = this.getSecondsBeforeLttd();
-        this.prettyConfig = {
-            leftTime: leftTimeSeconds,
-            format: leftTimeSeconds >= 3600 ? 'HH:mm:ss' : 'mm:ss'
-        };
-        this.enableLastTimeToAct = true;
-        this.stopTime = false;
-        this.countdown.begin();
-    }
-
-    getSecondsBeforeLttd(): number {
-        return Math.floor((this.lightCard.lttd - new Date().getTime()) / this.MILLISECONDS_SECOND);
-    }
-
-    startCountdownWhenNecessary() {
-
-        if (this.lightCard.lttd === null || !this.isValidatelttd()) {
-            this.enableLastTimeToAct = false;
-            this.countdown.stop();
-        } else if (this.getSecondsBeforeLttd() <= 0) {
-            this.stopCountDown();
-        } else {
-            this.interval = setInterval(() => {
-                if (this.isTimeToStartCountDown()) {
-                    this.startCountDownConfig();
-                    clearInterval(this.interval);
-                    return;
-                }
-            }, this.MILLISECONDS_SECOND);
-        }
-
-
-    }
-
-    stopCountDown() {
-        this.enableLastTimeToAct = true;
-        this.stopTime = true;
-        this.countdown.stop();
-    }
-
-    onTimerFinished($event: CountdownEvent) {
-        if ($event.action === 'done') {
-            if (this.lightCard.lttd != null && this.getSecondsBeforeLttd() <= 0) {
-                this.stopCountDown();
-            }
-        }
     }
 
     computeDisplayedDate() {
@@ -208,6 +109,5 @@ export class LightCardComponent implements OnInit, OnDestroy, DoCheck {
     ngOnDestroy(): void {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
-        clearInterval(this.interval);
     }
 }

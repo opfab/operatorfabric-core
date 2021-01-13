@@ -9,21 +9,23 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
-import {LightCardComponent} from './light-card.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {CountDownModule} from '../countdown/countdown.module';
+import {CountdownModule} from 'ngx-countdown';
+import {CountDownComponent} from "./countdown.component";
 
 
 @NgModule({
-    declarations: [LightCardComponent],
+    declarations: [CountDownComponent],
     imports: [
         CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
         TranslateModule,
-        CountDownModule,
-        NgbModule
+        NgbModule,
+        CountdownModule
     ],
-    exports: [LightCardComponent]
+    exports: [CountDownComponent]
 })
-export class LightCardModule {
-}
+export class CountDownModule { }
