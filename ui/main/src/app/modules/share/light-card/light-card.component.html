@@ -40,21 +40,7 @@
         <div class="badge-border  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}} "></div>
         <div class="ml-auto align-self-center pr-2">
             <div class="d-flex align-items-end flex-row" style="margin-right:-20px;" >
-                <div [hidden]="!this.enableLastTimeToAct">
-
-                    <ng-template #tipLttd>
-                        <span translate>feed.tips.lttd</span>
-                    </ng-template>
-                    <div [hidden]="this.stopTime" placement="right" [ngbPopover]="tipLttd" container="body" triggers="mouseenter:mouseleave">
-                        <countdown #countdown class="lttd-timeleft" [config]='prettyConfig' (event)="onTimerFinished($event)" ></countdown>
-                        <em class="far fa-clock lttd-icon lttd-timeleft"></em>
-                    </div>
-
-                    <div [hidden]="!this.stopTime">
-                        <span><label class="lttd-text" translate>feed.filters.time.lttd.label</label></span>
-                        <span><em class="far fa-clock lttd-icon" ></em></span>
-                    </div>
-                </div>
+                <of-countdown [card]="lightCard"></of-countdown>
             </div>
         </div>
     </div>

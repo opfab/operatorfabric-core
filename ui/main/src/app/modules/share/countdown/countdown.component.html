@@ -7,13 +7,18 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-<div [hidden]="!this.enableLastTimeToAct">
-    <div [hidden]="this.stopTime">
+<span [hidden]="!this.enableLastTimeToAct">
+
+    <ng-template #tipLttd>
+        <span translate>feed.tips.lttd</span>
+    </ng-template>
+
+    <span [hidden]="this.stopTime" placement="right" [ngbPopover]="tipLttd" container="body" triggers="mouseenter:mouseleave">
         <countdown #countdown class="lttd-timeleft" [config]='prettyConfig' (event)="onTimerFinished($event)" ></countdown>
         <em class="far fa-clock lttd-icon lttd-timeleft"></em>
-    </div>
-    <div [hidden]="!this.stopTime">
+    </span>
+    <span [hidden]="!this.stopTime">
         <span><label class="lttd-text" translate>feed.filters.time.lttd.label</label></span>
         <span><em class="far fa-clock lttd-icon" ></em></span>
-    </div>
-</div>
+    </span>
+</span>

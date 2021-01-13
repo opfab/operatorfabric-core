@@ -7,21 +7,22 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, DoCheck, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {CountdownComponent, CountdownConfig, CountdownEvent} from 'ngx-countdown';
 import {AppService, PageType} from "@ofServices/app.service";
 import {ConfigService} from "@ofServices/config.service";
 import {UserService} from "@ofServices/user.service";
 import {Card} from "@ofModel/card.model";
+import {LightCard} from "@ofModel/light-card.model";
 
 @Component({
     selector: 'of-countdown',
     templateUrl: './countdown.component.html',
     styleUrls: ['./countdown.component.scss']
 })
-export class CountDownComponent implements OnInit {
+export class CountDownComponent implements OnInit, DoCheck, OnDestroy {
 
-    @Input() public card: Card;
+    @Input() public card: Card | LightCard;
 
     @ViewChild('countdown', { static: true })
     private countdown: CountdownComponent;
@@ -124,6 +125,10 @@ export class CountDownComponent implements OnInit {
 
     isArchivePageType(): boolean {
         return this._appService.pageType == PageType.ARCHIVE;
+    }
+
+    ngOnDestroy(): void {
+        clearInterval(this.interval);
     }
 
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +20,7 @@ import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {ProcessesService} from '@ofServices/processes.service';
-import { CountdownModule, CountdownGlobalConfig, CountdownConfig } from 'ngx-countdown';
+import { CountdownGlobalConfig, CountdownConfig } from 'ngx-countdown';
 import {ServicesModule} from '@ofServices/services.module';
 import {Router} from '@angular/router';
 import 'moment/locale/fr';
@@ -29,6 +29,7 @@ import {I18nService} from '@ofServices/i18n.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
+import {CountDownModule} from '../countdown/countdown.module';
 
 export function countdownConfigFactory(): CountdownConfig {
     return { format: `mm:ss` };
@@ -56,7 +57,7 @@ describe('LightCardComponent', () => {
                 StoreModule.forRoot(appReducer),
                 RouterTestingModule,
                 HttpClientTestingModule,
-                CountdownModule,
+                CountDownModule,
                 TranslateModule.forRoot({
                     loader: {
                         provide: TranslateLoader,

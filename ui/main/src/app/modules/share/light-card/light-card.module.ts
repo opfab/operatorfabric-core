@@ -11,8 +11,8 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {LightCardComponent} from './light-card.component';
-import {CountdownModule} from 'ngx-countdown';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {CountDownModule} from '../countdown/countdown.module';
 
 
 @NgModule({
@@ -20,7 +20,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     imports: [
         CommonModule,
         TranslateModule,
-        CountdownModule,
+        CountDownModule,
         NgbModule
     ],
     exports: [LightCardComponent]
