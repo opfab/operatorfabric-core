@@ -124,7 +124,7 @@ export class GlobalStyleService {
                                         --opfab-timeline-cardlink: white;
                                         --opfab-timeline-cardlink-bgcolor-hover: #23272b;
                                         --opfab-timeline-cardlink-bordercolor-hover: #1d2124;
-                                        --opfab-calendar-grid-color : #606267;
+                                        --opfab-calendar-grid-color : #303237;
                                     }`;
 
 
