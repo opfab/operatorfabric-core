@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -7,11 +7,17 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-
-<div class="opfab-select" [formGroup]="parentForm">
-  <!-- archive.filters.{{filterPath}} -->
-  <label translate>{{computeI18nLabelKey()}}</label>
-  <select multiple  size='2' [formControlName]="filterPath">
-    <option *ngFor="let v of preparedList" value="{{v.value}}">{{v.label|async}}</option>
-  </select>
-</div>
+<ng-container [formGroup]="parentForm">
+    <div>
+        <div  class="opfab-multiselect" style="position:relative">
+            
+            <angular2-multiselect 
+                                  [data]="dropdownList"
+                                  [(ngModel)]="selection"
+                                  [settings]="dropdownSettings"
+                                  formControlName="{{filterPath}}"
+            ></angular2-multiselect>
+            <label translate>{{computeI18nLabelKey()}}</label>
+        </div>
+    </div>
+</ng-container>

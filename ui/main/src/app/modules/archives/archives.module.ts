@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,7 @@ import {CardsModule} from '../cards/cards.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
-import { MultiFilter2Module } from 'app/modules/share/multi-filter-2/multi-filter-2.module';
+import { MultiFilterModule } from 'app/modules/share/multi-filter/multi-filter.module';
 import { CardDetailModule } from 'app/modules/share/card-detail/card-detail.module';
 import { ArchivesEntryPointComponent } from './archives-entry-point.component';
 
@@ -29,7 +29,7 @@ import { ArchivesEntryPointComponent } from './archives-entry-point.component';
     TranslateModule,
     NgbModule,
     DatetimeFilterModule,
-    MultiFilter2Module,
+    MultiFilterModule,
     CardDetailModule
 
   ],
