@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -71,7 +71,7 @@ const routes: Routes = [
 ];
 // TODO manage visible path more gently
 const startIndex = 0;
-const numberOfHiddenRoutes = 6 ; // 'businessconfigparty', 'settings', 'navbar', 'admin', 'about', 'feedconfiguration'
+const numberOfHiddenRoutes = 7 ; // 'Calendar' 'businessconfigparty', 'settings', 'navbar', 'admin', 'about', 'feedconfiguration'
 const manageIndexesWhichBeginAtZero = 1;
 const numberOfRoutes = routes.length;
 const lastIndexOfVisibleElements = numberOfRoutes - numberOfHiddenRoutes - manageIndexesWhichBeginAtZero;
