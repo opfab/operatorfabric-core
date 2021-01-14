@@ -139,7 +139,7 @@
       "description": "DESCRIPTION"
     },
     "noResult": "Your search did not match any results.",
-    "exportToExcel" : "EXPORT TO EXCEL",
+    "exportToExcel" : "Export data",
     "resultsNumber":"Results number",
     "selectProcessText": "Select a Process",
     "selectTagText": "Select a Tag"
@@ -154,7 +154,7 @@
     "description": "DESCRIPTION",
     "sender": "ACTOR",
     "noResult": "No result",
-    "ExportTOExcel": "EXPORT TO EXCEL",
+    "ExportTOExcel": "Export data",
     "resultsNumber":"Results number"
   },
   "monitoring": {
@@ -168,7 +168,7 @@
     "summary": "SUMMARY",
     "status": "STATUS",
     "seeDetails": "SEE DETAILS",
-    "ExportTOExcel": "EXPORT TO EXCEL"
+    "ExportTOExcel": "Export data"
   },
   "button": {
     "ok": "OK",
