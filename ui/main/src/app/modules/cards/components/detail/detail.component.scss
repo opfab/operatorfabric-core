@@ -193,3 +193,30 @@
   margin: 10px;
   padding: 10px;
 }
+
+.opfab-entities-dropdown {
+  text-align: center;
+  padding-left: 5px;
+}
+
+.opfab-entities-dropdown::after {
+  content: "V";
+  transform: matrix(1, 0, 0, 0.5, 0, 3);
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 100%;
+  text-align: center;
+  font-size: 20px;
+  margin-top: -5px;
+  color: var(--opfab-form-border-color);
+  pointer-events: none;
+}
+
+.opfab-entities-popover {
+  background: var( --opfab-bgcolor);
+}
+.opfab-entities-popover .arrow::after {
+  border-bottom-color: var( --opfab-bgcolor);
+  border-bottom: 0px;
+}
