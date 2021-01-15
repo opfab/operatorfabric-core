@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,6 +16,7 @@ import {selectLinesOfLoggingResult} from '@ofSelectors/logging.selectors';
 import {map, takeUntil} from 'rxjs/operators';
 import {LoggingFiltersComponent} from './components/logging-filters/logging-filters.component';
 import { ProcessesService } from '@ofServices/processes.service';
+import {Process} from "@ofModel/processes.model";
 
 @Component({
     selector: 'of-logging',
@@ -32,6 +33,7 @@ export class LoggingComponent implements  AfterViewInit, OnDestroy {
     unsubscribe$: Subject<void> = new Subject<void>();
 
     processValueForFilter = new Array();
+    processStateDescription = new Map();
 
     constructor(private store: Store<AppState>, private processesService: ProcessesService) {
         processesService.getAllProcesses().forEach( (process) => {
@@ -43,6 +45,11 @@ export class LoggingComponent implements  AfterViewInit, OnDestroy {
                }
                this.processValueForFilter.push({id: id, itemName: itemName, i18nPrefix: `${process.id}.${process.version}` });
            }
+
+            for (const key in process.states) {
+                this.processStateDescription.set(process.id + '.' + key,
+                    this.getI18nPrefixFromProcess(process) + process.states[key].description);
+            }
         });
     }
 
@@ -65,6 +72,10 @@ export class LoggingComponent implements  AfterViewInit, OnDestroy {
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
+    }
+
+    getI18nPrefixFromProcess(process: Process): string {
+        return process.id + '.' + process.version + '.';
     }
 
 }

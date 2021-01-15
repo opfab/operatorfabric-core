@@ -34,6 +34,7 @@ export class LoggingTableComponent implements OnInit, OnDestroy {
 
 
     @Input() results: LineOfLoggingResult[];
+    @Input() processStateDescription: Map<string, string>;
     displayedResult: string;
     exportLoggingData: Array<any> ;
     page = 0;
@@ -91,7 +92,8 @@ export class LoggingTableComponent implements OnInit, OnDestroy {
                         this.exportLoggingData.push({
                             timeOfAction: this.timeService.formatDateTime(line.businessDate),
                             title: this.translateColomn(line.i18nKeyForTitle.key, line.i18nKeyForTitle.parameters),
-                            description: this.translateColomn(line.i18nKeyForDescription.key, line.i18nKeyForDescription.parameters),
+                            summary: this.translateColomn(line.i18nKeyForSummary.key, line.i18nKeyForSummary.parameters),
+                            description: this.translateColomn(this.processStateDescription.get(line.process + '.' + line.state)),
                             sender: line.sender
                         });
                     }

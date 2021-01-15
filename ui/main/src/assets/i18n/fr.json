@@ -151,6 +151,7 @@
     },
     "timeOfAction": "MOMENT DE L'ACTION",
     "title": "TITRE",
+    "summary": "RESUME",
     "description": "DESCRIPTION",
     "sender": "EMETTEUR",
     "noResult": "Aucun résultat",
