@@ -111,6 +111,9 @@
       }
     }
   },
+  "about": {
+    "title": "ABOUT"
+  },
   "settings": {
     "title": "SETTINGS",
     "description": "DESCRIPTION",

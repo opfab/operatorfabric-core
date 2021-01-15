@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,10 +8,11 @@
  */
 
 .about-application-list{
-  margin-top: 15%;
+  margin-top: 5%;
   list-style-type: none;
   text-align: center;
-  font-size: 1.3rem;
+  font-size: 13px;
+  color:  var(--opfab-text-color-stronger);
 }
 .about-application-list li{
   line-height: 1.5;

@@ -178,3 +178,15 @@
   max-width: 100%; /* Max Width of the popover (depending on the container!) */
 }
 
+.opfab-about-brand {
+  display: inline-block;
+  padding-top: 0.3125rem;
+  padding-bottom: 0.3125rem;
+  font-size: 1.25rem;
+  line-height: inherit;
+  white-space: nowrap;
+}
+
+.opfab-about-title {
+  color:  var(--opfab-text-color-stronger);
+}

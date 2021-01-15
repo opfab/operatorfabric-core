@@ -11,7 +11,6 @@
 import {NgModule} from '@angular/core';
 import {PreloadAllModules, Router, RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from './modules/login/login.component';
-import {AboutComponent} from './modules/about/about.component';
 import {LoggingComponent} from './modules/logging/logging.component';
 import {MonitoringComponent} from './modules/monitoring/monitoring.component';
 import {CalendarComponent} from './modules/calendar/calendar.component';
@@ -52,10 +51,6 @@ const routes: Routes = [
     {
         path: 'navbar',
         component: LoginComponent
-    },
-    {
-        path: 'about',
-        component: AboutComponent
     },
     {
         path: 'admin',
