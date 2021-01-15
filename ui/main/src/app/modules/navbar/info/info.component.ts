@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,7 +26,7 @@ import * as moment from 'moment';
 })
 export class InfoComponent implements OnInit {
      _userName$: Observable<string>;
-     _description$: Observable<string>;
+     description: string;
      timeToDisplay: string;
 
     constructor(private store: Store<AppState>, private timeService: TimeService) {
@@ -35,7 +35,9 @@ export class InfoComponent implements OnInit {
     ngOnInit() {
         this.updateTime();
         this._userName$ = this.store.select(selectUserNameOrIdentifier);
-        this._description$ = this.store.select(buildSettingsSelector('description'));
+        this.store.select(buildSettingsSelector('description')).subscribe( desc => 
+          this.description = desc
+        );
     }
 
 

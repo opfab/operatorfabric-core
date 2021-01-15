@@ -142,25 +142,37 @@
   mask: url(assets/images/icons/dark-light.svg);
 }
 
-.opfab-menu-icon-profile {
-  display: inline-block;
-  height: 36px;
-  width: 36px;
-  margin-right: 20px;
-  background: var( --opfab-navbar-color-hover); 
-  mask: url(assets/images/icons/profile.svg);
-  mask-size: cover;
-}
-
 .opfab-menu-icon-newcard {
   display: inline-block;
-  height: 36px;
-  width: 36px;
-  margin-right: 20px;
-  background: var( --opfab-navbar-color-hover); 
+  height: 28px;
+  width: 28px;
+  margin-right: 10px;
+  margin-top: -5px;
+  background: var( --opfab-text-color); 
   mask: url(assets/images/icons/newcard.svg);
   mask-size: cover;
 }
+
+
+.opfab-menu-icon-calendar {
+  display: inline-block;
+  height: 28px;
+  width: 28px;
+  margin-right: 10px;
+  margin-top: -5px;
+  background: var( --opfab-text-color); 
+  mask: url(assets/images/icons/calendar.svg);
+  mask-size: cover;
+}
+
+.opfab-menu-icon-calendar.active {
+  background: var(--opfab-navbar-color-active);
+}
+
+.opfab-menu-icon-newcard:hover, .opfab-menu-icon-calendar:hover{
+  background: var( --opfab-navbar-color-hover); 
+}
+
 
 .popover{
   max-width: 100%; /* Max Width of the popover (depending on the container!) */
