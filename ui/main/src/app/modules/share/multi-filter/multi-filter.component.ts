@@ -7,20 +7,23 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {I18n} from '@ofModel/i18n.model';
 import {TranslateService} from '@ngx-translate/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'of-multi-filter',
     templateUrl: './multi-filter.component.html'
 })
-export class MultiFilterComponent implements OnInit, OnChanges {
+export class MultiFilterComponent implements OnInit, OnChanges, OnDestroy {
+
+    unsubscribe$: Subject<void> = new Subject<void>();
 
     dropdownList: { id: string, itemName: string }[];
     @Input() public i18nRootLabelKey: string;
@@ -59,7 +62,7 @@ export class MultiFilterComponent implements OnInit, OnChanges {
             });
 
         }
-        this.getLocale().subscribe(locale => {
+        this.getLocale().pipe(takeUntil(this.unsubscribe$)).subscribe(locale => {
             this.translateService.use(locale);
             this.translateService.get(['multiFilter.searchPlaceholderText','multiFilter.selectAllText', 'multiFilter.unSelectAllText', 'multiFilter.filterSelectAllText', 'multiFilter.filterUnSelectAllText'])
               .subscribe(translations => {
@@ -115,6 +118,11 @@ export class MultiFilterComponent implements OnInit, OnChanges {
             id: entry.id,
             itemName: translatedItemName
         };
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 }
 

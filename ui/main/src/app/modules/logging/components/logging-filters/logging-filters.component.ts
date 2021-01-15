@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {FormControl, FormGroup} from '@angular/forms';
@@ -19,7 +19,8 @@ import { NgbDateStruct, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { DateTimeNgb } from '@ofModel/datetime-ngb.model';
 import { TranslateService } from '@ngx-translate/core';
 import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 
 
@@ -50,7 +51,9 @@ export const transformToTimestamp = (date: NgbDateStruct, time: NgbTimeStruct): 
     styleUrls: ['./logging-filters.component.scss']
 })
 
-export class LoggingFiltersComponent implements OnInit {
+export class LoggingFiltersComponent implements OnInit, OnDestroy {
+
+    unsubscribe$: Subject<void> = new Subject<void>();
 
     size = 10;
     loggingForm: FormGroup;
@@ -80,7 +83,7 @@ export class LoggingFiltersComponent implements OnInit {
         );
         this.dropdownList = this.processData;
 
-        this.getLocale().subscribe(locale => {
+        this.getLocale().pipe(takeUntil(this.unsubscribe$)).subscribe(locale => {
             this.translate.use(locale);
             this.translate.get(['logging.filters.selectProcessText'])
               .subscribe(translations => {
@@ -139,5 +142,10 @@ export class LoggingFiltersComponent implements OnInit {
     resetForm()
     {
         this.loggingForm.reset();
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 }
