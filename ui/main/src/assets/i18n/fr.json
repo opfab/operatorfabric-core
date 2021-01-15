@@ -241,7 +241,8 @@
     "submitSuccess": "Action effectuée",
     "answers": "Réponses",
     "answered": "A répondu",
-    "unanswered": "Pas encore répondu"
+    "unanswered": "Pas encore répondu",
+    "status": "Status"
   },
   "cardAcknowledgment": {
     "button": {

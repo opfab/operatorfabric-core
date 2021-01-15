@@ -155,6 +155,10 @@
   mask: url(assets/images/icons/help.svg);
 }
 
+.opfab-question-card-state-name{
+  color: var(--opfab-light-card-lttd-timeleft);
+}
+
 .label-help {
   display: block;
 }

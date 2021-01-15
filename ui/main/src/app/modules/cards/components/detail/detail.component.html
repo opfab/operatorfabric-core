@@ -55,11 +55,15 @@
       
       <div  *ngIf='responseDataExists' class="opfab-card-response-header" >
         <div class="flex-container">
-          <div style="width:10%">
+          <div style="width:30%;" >
+            <span style="border-right:3px solid white" >
+              <span translate>response.status</span> :
+              <span class="opfab-question-card-state-name" >{{cardStateName}} &nbsp;</span>
+            </span>
             <of-countdown [card]="card"></of-countdown>
           </div>
 
-          <div style="width:90%;text-align: right" >
+          <div style="width:70%;text-align: right" >
             <div id="opfab-answer-help" class="opfab-icon-help" placement="left" [ngbPopover]="helpContent"
               container="body" [autoClose]="'outside'">
             </div>
@@ -85,7 +89,7 @@
         </div>
 
         <div id='div-detail-btn'>
-          
+
           <span class="opfab-card-received-footer" translate [translateParams]="getPublishDateTranslationParams()">feed.received</span>
           <div *ngIf="showButtons" style="text-align: right;">
             <button id="opfab-card-details-btn-response" class="opfab-btn"

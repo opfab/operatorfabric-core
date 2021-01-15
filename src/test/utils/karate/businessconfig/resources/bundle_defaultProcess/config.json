@@ -75,7 +75,7 @@
       "acknowledgmentAllowed": "Always"
     },
     "questionState": {
-      "name": "question.title",
+      "name": "questionState.title",
       "color": "#8bcdcd",
       "response": {
         "lock": true,
