@@ -19,11 +19,10 @@
             <th scope="col" translate>monitoring.title</th>
             <th scope="col" translate>monitoring.summary</th>
             <th scope="col" translate>monitoring.status</th> 
-            <th scope="col"></th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let line of result" (click)="selectCard(line.cardId)" style="cursor: pointer;">
+        <tr *ngFor="let line of result" (click)="selectCard(line.cardId)" class="opfab-monitoring-table-line" style="cursor: pointer;">
             <td class="opfab-monitoring-sev opfab-monitoring-sev-{{line.severity}}"></td>
             <td>{{displayTime(line.creationDateTime)}}</td>
             <td>{{displayTime(line.beginningOfBusinessPeriod)}} - {{displayTime(line.endOfBusinessPeriod)}}</td>
