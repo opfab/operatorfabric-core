@@ -31,3 +31,7 @@
 .opfab-monitoring-sev-action {background-color: $sev-action;}
 .opfab-monitoring-sev-compliant {background-color: $sev-compliant;}
 .opfab-monitoring-sev-information {background-color: $sev-information;}
+
+.opfab-monitoring-table-line:hover {
+border: 2px solid #2268FF;
+}

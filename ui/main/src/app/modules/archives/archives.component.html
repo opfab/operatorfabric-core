@@ -76,7 +76,7 @@
         </tr>
       </thead>
 
-      <tr *ngFor="let card of results" (click)="openCard(card.id)" style="cursor: pointer;">
+      <tr *ngFor="let card of results" (click)="openCard(card.id)" class="opfab-archives-table-line" style="cursor: pointer;">
         <td class="opfab-archive-sev opfab-archive-sev-{{card.severity.toLowerCase()}}"></td>
         <td> {{displayTime(card.publishDate)}} </td>
         <td> {{displayTime(card.startDate)}} - {{displayTime(card.endDate)}} </td>
