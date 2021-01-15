@@ -139,7 +139,7 @@
       "description": "DESCRIPTION"
     },
     "noResult": "Votre recherche ne correspond à aucun résultat.",
-    "exportToExcel" : "EXPORTER VERS EXCEL",
+    "exportToExcel" : "Exporter les données",
     "resultsNumber":"Nombre de résultats",
     "selectProcessText": "Sélectionner un Processus",
     "selectTagText": "Sélectionner une Etiquette"
@@ -154,7 +154,7 @@
     "description": "DESCRIPTION",
     "sender": "EMETTEUR",
     "noResult": "Aucun résultat",
-    "ExportTOExcel": "EXPORTER VERS EXCEL",
+    "ExportTOExcel": "Exporter les données",
     "resultsNumber":"Nombre de résultats"
   },
   "monitoring": {
@@ -168,7 +168,7 @@
     "summary": "RESUME",
     "status": "STATUS",
     "seeDetails": "VOIR LES DETAILS",
-    "ExportTOExcel": "EXPORTER VERS EXCEL"
+    "ExportTOExcel": "Exporter les données"
   },
   "button": {
     "ok": "OK",

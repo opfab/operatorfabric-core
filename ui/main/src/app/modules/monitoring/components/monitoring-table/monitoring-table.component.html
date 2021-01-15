@@ -34,10 +34,11 @@
     </tbody>
 </table>
 
-<div class="export-div">
-    <button id="opfab-monitoring-btn-exportToExcel" class="opfab-btn export-btn" type="button" (click)="export()"
-        fileName="monitoringResults" translate>
-        <em class="fa fa-file-export"></em> monitoring.ExportTOExcel</button>
+<div class="opfab-monitoring-export-div">
+    <div id="opfab-monitoring-btn-exportToExcel" class="opfab-monitoring-export-btn" style="cursor:pointer" (click)="export()" fileName="monitoringResults" >
+        <span class="opfab-icon-export-data"></span>
+        <span style="font-weight: bold;" translate> monitoring.ExportTOExcel </span>
+    </div>
 </div>
 
 
