@@ -151,6 +151,7 @@
     },
     "timeOfAction": "TIME OF ACTION",
     "title": "TITLE",
+    "summary": "SUMMARY",
     "description": "DESCRIPTION",
     "sender": "ACTOR",
     "noResult": "No result",

@@ -14,6 +14,7 @@
         <th scope="col"></th>
         <th scope="col" translate>logging.timeOfAction</th>
         <th scope="col" translate>logging.title</th>
+        <th scope="col" translate>logging.summary</th>
         <th scope="col" translate>logging.description</th>
         <th scope="col" translate>logging.sender</th>
       </tr>
@@ -24,7 +25,9 @@
       <td>{{displayTime(element.businessDate)}}</td>
       <td translate [translateParams]="element.i18nKeyForTitle.parameters">{{element.i18nKeyForTitle.key}}
       </td>
-      <td translate [translateParams]="element.i18nKeyForDescription.parameters">{{element.i18nKeyForDescription.key}}
+      <td translate [translateParams]="element.i18nKeyForSummary.parameters">{{element.i18nKeyForSummary.key}}
+      </td>
+      <td translate >{{processStateDescription.get(element.process + '.' + element.state)}}
       </td>
 
       <td>{{element.sender}}</td>
