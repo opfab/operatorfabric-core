@@ -44,6 +44,8 @@ export class NavbarComponent implements OnInit {
   modalRef: NgbModalRef;
   @ViewChild('userCard', null) userCardTemplate: ElementRef;
 
+  @ViewChild('about', null) aboutTemplate: ElementRef;
+
   customLogo: string;
   height: number;
   width: number;
@@ -175,6 +177,10 @@ export class NavbarComponent implements OnInit {
       size: 'usercard'
   };
   this.modalRef = this.modalService.open(this.userCardTemplate, options);
+  }
+
+  showAbout() {
+    this.modalService.open(this.aboutTemplate, {centered: true});
   }
 }
 

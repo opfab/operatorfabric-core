@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * Copyright (c) 2020, RTEi (http://www.rte-international.com)
  *  See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -22,7 +22,6 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './modules/login/login.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { OAuthModule } from 'angular-oauth2-oidc';
-import { AboutComponent } from './modules/about/about.component';
 import { LoggingModule } from './modules/logging/logging.module';
 import { MonitoringModule } from './modules/monitoring/monitoring.module';
 import { AdminModule } from './modules/admin/admin.module';
@@ -66,8 +65,7 @@ export function countdownConfigFactory(): CountdownConfig {
     NavbarModule
   ],
   declarations: [AppComponent,
-    LoginComponent,
-    AboutComponent
+    LoginComponent
   ],
 
 

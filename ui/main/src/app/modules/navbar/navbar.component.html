@@ -101,7 +101,7 @@
     </div>
 
     <div class="opfab-right-menu-item">
-      <a id="opfab-navbar-right-menu-about"  class="opfab-right-menu-link" routerLink="/about"  routerLinkActive #rla="routerLinkActive">
+      <a id="opfab-navbar-right-menu-about"  class="opfab-right-menu-link" (click)="showAbout()"  href="javascript:void(0)">
         <div class="opfab-menu-icon opfab-menu-icon-about"></div>
         <div translate> menu.about</div>
       
@@ -142,5 +142,29 @@
       <div>
           <of-usercard> </of-usercard>
       </div>
+  </div>
+</ng-template>
+
+<ng-template #about let-modal>
+  <div class="modal-header">
+      <div class="opfab-about-title" translate > about.title </div>
+      <div id="opfab-about-close"  class="opfab-close-modal-icon" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true" >&times;</span>
+      </div>
+  </div>
+  <div class="modal-body text-center">
+    <a class="opfab-about-brand" style="margin-right: 0">
+      <div *ngIf="this.customLogo; else opFabLogo">
+        <of-custom-logo [base64]="customLogo" [limitSize]="limitSize" [height]="height" [width]="width"></of-custom-logo>
+      </div>
+    </a>
+    <div>
+      <of-about> </of-about>
+    </div>
+    <div>
+      <button id="opfab-about-btn-close" type="button" class="opfab-btn" aria-label="Close" (click)="modal.dismiss('Ok')">
+        <span translate>button.ok</span>
+      </button>
+    </div>
   </div>
 </ng-template>

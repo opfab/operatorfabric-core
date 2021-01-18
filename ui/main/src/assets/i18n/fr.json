@@ -111,6 +111,9 @@
       }
     }
   },
+  "about": {
+    "title": "A PROPOS"
+  },
   "settings": {
     "title": "PARAMETRES",
     "description": "DESCRIPTION",
