@@ -688,6 +688,11 @@ html, body { height: 100%; }
   }
 }
 
+// Specific configuration for modal in administration interface 
+.cdk-overlay-container, .cdk-overlay-pane {
+  z-index: 9999 !important;
+}
+
 // Global colors 
 
 .opfab-colors {
