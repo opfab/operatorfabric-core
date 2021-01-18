@@ -52,6 +52,13 @@
         <label class="label-help"><span class="label-answered" translate>response.answered</span></label>
         <label class="label-help"><span class="label-unanswered" translate>response.unanswered</span></label>
       </ng-template>
+
+      <ng-template #entitiesDropdown>
+        <div *ngFor="let entity of listDropdownEntitiesToRespond;"
+        [ngStyle]="{'color': entity.color,'text-align': 'left'}">
+        &nbsp; {{entity.name}} &nbsp;
+      </div>
+      </ng-template>
       
       <div  *ngIf='responseDataExists' class="opfab-card-response-header" >
         <div class="flex-container">
@@ -68,9 +75,13 @@
               container="body" [autoClose]="'outside'">
             </div>
             <span translate>response.answers</span> :
-            <span *ngFor="let entity of listEntitiesToRespond; let isLast = last"
-                [ngStyle]="{'color': entity.color,'border-right': (!isLast) ? '3px solid white':'','text-align': 'center'}">
+            <span *ngFor="let entity of listVisibleEntitiesToRespond; let isLast = last"
+                [ngStyle]="{'color': entity.color,'text-align': 'center'}">
                 &nbsp; {{entity.name}} &nbsp;
+            </span>
+            <span *ngIf="listDropdownEntitiesToRespond && listDropdownEntitiesToRespond.length > 0" id="opfab-entities-dropdown" class="opfab-entities-dropdown" placement="bottom-right" [ngbPopover]="entitiesDropdown"
+              container="body" [autoClose]="'true'" popoverClass="opfab-entities-popover">
+              &nbsp;..&nbsp;
             </span>
           </div>
         </div>

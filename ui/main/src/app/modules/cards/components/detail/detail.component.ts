@@ -18,7 +18,8 @@ import {
     OnDestroy,
     OnInit,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
 import {Card, CardForPublishing} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
@@ -94,10 +95,13 @@ const enum EntityMsgColor {
     ORANGE = '#ff6600'
 }
 
+const maxVisibleEntitiesToRespond = 3;
+
 @Component({
     selector: 'of-detail',
     templateUrl: './detail.component.html',
-    styleUrls: ['./detail.component.scss']
+    styleUrls: ['./detail.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewChecked, DoCheck {
 
@@ -528,8 +532,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         return (userRight(userRights) - userRight(rightsAction)) === 0;
     }
 
-    get listEntitiesToRespond() {
-        return this._listEntitiesToRespond;
+    get listVisibleEntitiesToRespond() {
+        return this._listEntitiesToRespond.length > maxVisibleEntitiesToRespond ? this._listEntitiesToRespond.slice(0, maxVisibleEntitiesToRespond) : this._listEntitiesToRespond;
+    }
+
+    get listDropdownEntitiesToRespond() {
+        return this._listEntitiesToRespond.length > maxVisibleEntitiesToRespond ? this._listEntitiesToRespond.slice(maxVisibleEntitiesToRespond) : [];
     }
 
     getEntityName(id: string): Entity {
