@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewInit, Component, OnDestroy, ViewChild} from '@angular/core';
+import {OnInit, Component, OnDestroy, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {Observable, Subject} from 'rxjs';
@@ -23,7 +23,7 @@ import {Process} from "@ofModel/processes.model";
     templateUrl: './logging.component.html',
     styleUrls: ['./logging.component.scss']
 })
-export class LoggingComponent implements  AfterViewInit, OnDestroy {
+export class LoggingComponent implements OnInit, OnDestroy {
 
     @ViewChild(LoggingFiltersComponent, {static: false})
     filters: LoggingFiltersComponent;
@@ -53,7 +53,7 @@ export class LoggingComponent implements  AfterViewInit, OnDestroy {
         });
     }
 
-    ngAfterViewInit() {
+    ngOnInit() {
         this.loggingResult$ = this.store.select(selectLinesOfLoggingResult)
             .pipe(
                 takeUntil(this.unsubscribe$),
@@ -61,7 +61,7 @@ export class LoggingComponent implements  AfterViewInit, OnDestroy {
                     // no result case
                         if (!lines || lines.length <= 0 ) {
                             // no message displayed when landing on the page
-                            this.canDisplayNoResultMessage = this.filters.submittedOnce;
+                            this.canDisplayNoResultMessage = (!!this.filters ? this.filters.submittedOnce : false);
                             return null;
                         }
                         return lines;
@@ -69,6 +69,7 @@ export class LoggingComponent implements  AfterViewInit, OnDestroy {
                 ))
         ;
     }
+
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();

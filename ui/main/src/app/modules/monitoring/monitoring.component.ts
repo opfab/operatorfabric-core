@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Observable, of, Subject} from 'rxjs';
 import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
 import {AppState} from '@ofStore/index';
@@ -26,7 +26,7 @@ import { ProcessesService } from '@ofServices/processes.service';
     templateUrl: './monitoring.component.html',
     styleUrls: ['./monitoring.component.scss']
 })
-export class MonitoringComponent implements OnInit, OnDestroy, AfterViewInit {
+export class MonitoringComponent implements OnInit, OnDestroy {
 
     @ViewChild(MonitoringFiltersComponent, {static: false})
     filters: MonitoringFiltersComponent;
@@ -55,9 +55,6 @@ export class MonitoringComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
-    }
-
-    ngAfterViewInit() {
         this.monitoringResult$ = this.store.pipe(
             takeUntil(this.unsubscribe$),
             select(selectSortedFilteredLightCards),
