@@ -1,1 +1,9 @@
+<!--
+Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+See AUTHORS.txt
+This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+If a copy of the license was not distributed with this
+file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+SPDX-License-Identifier: CC-BY-4.0
+-->
 <svg id="login" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31.97 32"><defs><style>.cls-1,.cls-2{fill:none;stroke:#000;stroke-width:2;}.cls-1{stroke-miterlimit:10;}.cls-2{stroke-linecap:round;stroke-linejoin:round;}</style></defs><title>logout</title><path class="cls-1" d="M33,24" transform="translate(-0.03)"/><polyline class="cls-2" points="15.84 0.5 0.5 0.5 0.5 31.5 15.5 31.5"/><polyline class="cls-2" points="8.47 15.5 31.47 15.5 25.44 9.47"/><line class="cls-2" x1="25.47" y1="22.5" x2="31.47" y2="15.5"/></svg>

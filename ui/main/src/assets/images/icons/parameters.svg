@@ -1,1 +1,9 @@
+<!--
+Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+See AUTHORS.txt
+This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+If a copy of the license was not distributed with this
+file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+SPDX-License-Identifier: CC-BY-4.0
+-->
 <svg id="parametres" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31.82 31.81"><defs><style>.cls-1{fill:none;stroke:#000; stroke-width:2;stroke-miterlimit:5;}</style></defs><title>parameters</title><path class="cls-1" d="M31.4,17.77l-3.44.7a.6.6,0,0,0-.48.45,11.54,11.54,0,0,1-1.24,3,.63.63,0,0,0,0,.66l1.95,2.93-2.64,2.64-2.93-1.95a.63.63,0,0,0-.66,0,11.54,11.54,0,0,1-3,1.24.6.6,0,0,0-.45.48l-.7,3.44H14.13l-.69-3.44a.61.61,0,0,0-.45-.48,11.46,11.46,0,0,1-3-1.24.61.61,0,0,0-.65,0L6.42,28.12,3.78,25.48l2-2.93a.63.63,0,0,0,0-.66,11.87,11.87,0,0,1-1.23-3A.61.61,0,0,0,4,18.47l-3.45-.7V14L4,13.35a.65.65,0,0,0,.48-.45,11.78,11.78,0,0,1,1.23-3,.61.61,0,0,0,0-.65l-2-2.94L6.42,3.69,9.36,5.64a.61.61,0,0,0,.65,0,11.81,11.81,0,0,1,3-1.24A.62.62,0,0,0,13.44,4L14.13.5h3.74L18.56,4a.62.62,0,0,0,.45.47,12,12,0,0,1,3,1.24.61.61,0,0,0,.65,0l2.93-1.95,2.64,2.64L26.27,9.27a.59.59,0,0,0,0,.65,11.78,11.78,0,0,1,1.23,3,.65.65,0,0,0,.48.45l3.45.69Z" transform="translate(-0.09)"/><circle class="cls-1" cx="15.91" cy="16" r="7"/></svg>
