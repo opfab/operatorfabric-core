@@ -30,7 +30,6 @@ import {Subject} from 'rxjs';
 export class CardDetailComponent implements OnInit, OnDestroy {
 
     @Input() card: Card;
-    @Input() public executeTemplateScript = true;
 
     public active = false;
     unsubscribe$: Subject<void> = new Subject<void>();
@@ -114,7 +113,7 @@ export class CardDetailComponent implements OnInit, OnDestroy {
             .subscribe(
                 html => {
                     this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
-                    if (this.executeTemplateScript) setTimeout(() => { // wait for DOM rendering
+                    setTimeout(() => { // wait for DOM rendering
                         this.reinsertScripts();
                     }, 10);
                 }, () =>  {

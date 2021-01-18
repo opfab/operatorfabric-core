@@ -26,6 +26,7 @@ import {ConfigService} from '@ofServices/config.service';
 import {QueryAllEntities} from "@ofActions/user.actions";
 import { UserService } from '@ofServices/user.service';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { AppService } from '@ofServices/app.service';
 
 @Component({
     selector: 'of-navbar',
@@ -53,7 +54,7 @@ export class NavbarComponent implements OnInit {
   nightDayMode = false;
 
   constructor(private store: Store<AppState>, private globalStyleService: GlobalStyleService, private configService: ConfigService
-    , private userService: UserService, private modalService: NgbModal) {
+    , private userService: UserService, private modalService: NgbModal, private appService: AppService) {
 
   }
 
@@ -171,9 +172,31 @@ export class NavbarComponent implements OnInit {
 
   openCardCreation()
   {
-    const options: NgbModalOptions = {
-      size: 'usercard'
-  };
+
+  /** 
+  We can not have in the same time a card open in the feed and a preview of user card, so
+  we close the card if one is open in the feed 
+        
+  This lead to a BUG :
+  
+  In case the user was watching in the feed a card with response activated
+  he may not be able to see child cards after closing the usercard form 
+   
+  REASONS : 
+  
+  The card template in the preview  may redefine method templateGateway.applyChild 
+  This will override method templateGateway.applyChild  form the card on the feed 
+  As a consequence, the card on the feed will never receive new (or updated) child cards  
+
+  Futhermore, having the same template open twice in the application may cause unwanted behavior as 
+  we could have duplicated element html ids in the html document.
+
+  */
+  if (this.currentPath[1]==='feed') this.appService.closeDetails('feed');
+
+  const options: NgbModalOptions = {
+    size: 'usercard'
+};
   this.modalRef = this.modalService.open(this.userCardTemplate, options);
   }
 }
