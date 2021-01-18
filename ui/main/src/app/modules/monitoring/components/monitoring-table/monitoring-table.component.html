@@ -45,14 +45,9 @@
 </div>
 
 <ng-template #cardDetail let-modal>
-    <div class="modal-header">
-        <button id="opfab-monitoring-btn-close" type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
     <div class="modal-body">
         <div>
-            <of-card-details> </of-card-details>
+            <of-card-details [parentModalRef] = "modalRef"> </of-card-details>
         </div>
     </div>
 </ng-template>

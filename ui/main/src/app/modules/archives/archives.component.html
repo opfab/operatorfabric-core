@@ -113,9 +113,9 @@
 <ng-template #cardDetail let-modal>
   <div class="modal-header">
       <h4 translate  [translateParams]="selectedCard.title.parameters"> {{ selectedCard.process + '.' + selectedCard.processVersion + '.' + selectedCard.title.key}} </h4>
-      <button id="opfab-archives-card-detail-close" type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-          <span aria-hidden="true">&times;</span>
-      </button>
+      <div id="opfab-archives-card-detail-close"  class="opfab-close-modal-icon" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true" >&times;</span>
+    </div>
   </div>
   <div class="modal-body">
       <div>
