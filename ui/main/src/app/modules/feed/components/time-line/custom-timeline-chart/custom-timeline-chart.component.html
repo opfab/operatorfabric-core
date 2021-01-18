@@ -25,11 +25,11 @@
                 [attr.width]="xScale(rectangle.end) - xScale(rectangle.start)" y="0" fill=var(--opfab-timeline-week-bgcolor)
                 [attr.height]="dims.height"></svg:rect> -->
             <text *ngIf="rectangle.changeBgColor"
-                [attr.x]="xScale(rectangle.start) + (xScale(rectangle.end) - xScale(rectangle.start)) /2" [attr.y]="58"
+                [attr.x]="xScale(rectangle.start) + (xScale(rectangle.end) - xScale(rectangle.start)) /2" [attr.y]="53"
                 fill=var(--opfab-timeline-week-color) text-anchor="middle" [attr.font-size]="15" stroke-width="0.5px">
                 {{getWeekFormatting(rectangle.start,rectangle.end)}}</text>
             <text *ngIf="!rectangle.changeBgColor"
-                [attr.x]="xScale(rectangle.start) + (xScale(rectangle.end) - xScale(rectangle.start)) /2" [attr.y]="58"
+                [attr.x]="xScale(rectangle.start) + (xScale(rectangle.end) - xScale(rectangle.start)) /2" [attr.y]="53"
                 fill=var(--opfab-timeline-week-color2) text-anchor="middle" [attr.font-size]="15" stroke-width="0.5px">
                 {{getWeekFormatting(rectangle.start,rectangle.end)}}</text>
         </svg:g>
