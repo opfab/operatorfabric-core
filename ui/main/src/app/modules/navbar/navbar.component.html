@@ -53,11 +53,11 @@
     </ul>
 
     <ul class="navbar-nav navbar-right">
-      <li style="display:flex;margin-top: 12px;cursor:pointer;margin-right:20px" (click)="openCardCreation()">
+      <li style="display:flex;margin-top: 12px;cursor:pointer;margin-right:20px" (click)="openCardCreation()" *ngIf="(displayCreateUserCard)">
         <span class="opfab-menu-icon-newcard"></span>
      </li>
 
-      <li style="display:flex;margin-top: 12px;cursor:pointer;" [routerLink]="'calendar'" routerLinkActive #rla="routerLinkActive">
+      <li style="display:flex;margin-top: 12px;cursor:pointer;" [routerLink]="'calendar'" routerLinkActive #rla="routerLinkActive" *ngIf="(displayCalendar)">
         <a  href="javascript:void(0)" [class.active]="(currentPath.includes('calendar'))" class="opfab-menu-icon-calendar"></a>
      </li>
 
