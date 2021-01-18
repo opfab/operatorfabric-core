@@ -1,4 +1,5 @@
 /* Copyright (c) 2018-2020, RTEI (http://www.rte-international.com)
+ * Copyright (c) 2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UserService } from '@ofServices/user.service';
 import { DataTableShareService } from '../../../services/data.service';
 import { OfTableComponent } from '../oftable/oftable.component';
@@ -16,17 +17,19 @@ import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationDialogService } from 'app/modules/admin/services/confirmation-dialog.service';
 import { AppState } from '@ofStore/index';
 import { Store } from '@ngrx/store';
-import { Observable, throwError } from 'rxjs';
+import { Observable, Subject, throwError } from 'rxjs';
 import { AppError } from 'app/common/error/app-error';
 import { EditUsermodalComponent } from '../../editmodal/users/edit-user-modal.component';
+import { takeUntil } from 'rxjs/operators';
 
 
 @Component({
   selector: 'of-users-table',
   templateUrl: '../oftable/oftable.component.html'
 })
-export class OfUsersTableComponent extends OfTableComponent implements OnInit {
+export class OfUsersTableComponent extends OfTableComponent implements OnInit, OnDestroy {
 
+  unsubscribe$: Subject<void> = new Subject<void>();
 
   modalComponent = EditUsermodalComponent;
   typeModal = 'user';
@@ -43,7 +46,7 @@ export class OfUsersTableComponent extends OfTableComponent implements OnInit {
     super(modalService, dataService, store);
     this.crudService = crudService;
     this.config.sorting = { columns: this.columns };
-    this.getLocale().subscribe(locale => {
+    this.getLocale().pipe(takeUntil(this.unsubscribe$)).subscribe(locale => {
       this.translate.use(locale);
       this.translate.get(['admin.input.user.login', 'admin.input.user.firstname', 'admin.input.user.lastname',
         'admin.input.user.groups', 'admin.input.user.entities', 'admin.input.user.edit', 'admin.input.user.delete',
@@ -139,5 +142,10 @@ export class OfUsersTableComponent extends OfTableComponent implements OnInit {
 
   getObservableRow(): Observable<any> {
     return this.dataService.getUserRowEvent();
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

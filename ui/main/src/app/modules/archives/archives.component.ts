@@ -116,7 +116,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             this.tags.forEach(tag => this.tagsDropdownList.push({ id: tag.value, itemName: tag.label }));
         }
 
-        this.getLocale().subscribe(locale => {
+        this.getLocale().pipe(takeUntil(this.unsubscribe$)).subscribe(locale => {
             this.translate.use(locale);
             this.translate.get(['archive.selectProcessText','archive.selectTagText'])
               .subscribe(translations => {

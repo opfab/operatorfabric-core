@@ -1,4 +1,5 @@
 /* Copyright (c) 2018-2020, RTEI (http://www.rte-international.com)
+ * Copyright (c) 2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,19 +8,22 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { AppState } from '@ofStore/index';
 import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'of-admin',
   templateUrl: './admin.component.html'
 })
-export class AdminComponent implements OnInit {
+export class AdminComponent implements OnInit, OnDestroy {
+
+  unsubscribe$: Subject<void> = new Subject<void>();
 
   activeTab: string;
   usersLabel: string;
@@ -27,7 +31,7 @@ export class AdminComponent implements OnInit {
   groupsLabel: string;
 
   constructor(private route: ActivatedRoute, protected store: Store<AppState>, protected translate: TranslateService) {
-    this.getLocale().subscribe(locale => {
+    this.getLocale().pipe(takeUntil(this.unsubscribe$)).subscribe(locale => {
       this.translate.use(locale);
       this.translate.get(['admin.tabs.users', 'admin.tabs.entities', 'admin.tabs.groups'])
         .subscribe(translations => {
@@ -49,6 +53,11 @@ export class AdminComponent implements OnInit {
 
   private getLocale(): Observable<string> {
     return this.store.select(buildSettingsOrConfigSelector('locale'));
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
 }

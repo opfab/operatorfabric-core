@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewInit, Component, Input,OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input,OnDestroy,OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -16,9 +16,10 @@ import {ApplyFilter, ResetFilter, ResetFilterForMonitoring} from '@ofActions/fee
 import {DateTimeNgb, offSetCurrentTime} from '@ofModel/datetime-ngb.model';
 import {ConfigService} from '@ofServices/config.service';
 import moment from 'moment';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
+import { takeUntil } from 'rxjs/operators';
 
 
 @Component({
@@ -26,7 +27,9 @@ import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.con
     templateUrl: './monitoring-filters.component.html',
     styleUrls: ['./monitoring-filters.component.scss']
 })
-export class MonitoringFiltersComponent implements OnInit, AfterViewInit {
+export class MonitoringFiltersComponent implements OnInit, AfterViewInit, OnDestroy {
+
+    unsubscribe$: Subject<void> = new Subject<void>();
 
     size = 10;
     monitoringForm: FormGroup;
@@ -61,7 +64,7 @@ export class MonitoringFiltersComponent implements OnInit, AfterViewInit {
 
         this.dropdownList = this.processData;
 
-        this.getLocale().subscribe(locale => {
+        this.getLocale().pipe(takeUntil(this.unsubscribe$)).subscribe(locale => {
             this.translate.use(locale);
             this.translate.get(['monitoring.filters.selectProcessText'])
               .subscribe(translations => {
@@ -193,5 +196,7 @@ export class MonitoringFiltersComponent implements OnInit, AfterViewInit {
 
     ngOnDestroy() {
         this.store.dispatch(new ResetFilter());
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 }
