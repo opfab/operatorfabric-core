@@ -1,12 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg">
-<!--  
-Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+<!--
+Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 See AUTHORS.txt
 This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 If a copy of the license was not distributed with this
 file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
-SPDX-License-Identifier: CC-BY-4.0 
+SPDX-License-Identifier: CC-BY-4.0
 -->
+<svg xmlns="http://www.w3.org/2000/svg">
     <symbol id="operator-fabric" viewBox="0 0 64 64">
         <g fill="#410099">
             <path class="st2" d="M24.871 47.313c.451-1.128.226-2.425-.677-3.27l-4.229-4.286a3.05 3.05 0 0 0-3.27-.677l-5.019 2.086-2.255 13.42 13.42-2.255zM41.167 11.675l-2.086 5.019c-.451 1.128-.226 2.425.676 3.27l4.286 4.286a3.05 3.05 0 0 0 3.27.677l5.019-2.087 2.255-13.42zM37.784 47.82c-.451-1.128-1.579-1.86-2.763-1.86h-6.09c-1.24 0-2.312.732-2.763 1.86l-2.086 5.075 7.894 11.108h.056l7.895-11.108zM52.84 24.137l-5.019 2.087c-1.128.45-1.86 1.578-1.86 2.763v6.033c0 1.24.732 2.312 1.86 2.763l5.075 2.086 11.108-7.894zM47.313 39.08c-1.127-.451-2.424-.226-3.27.677l-4.286 4.285a3.05 3.05 0 0 0-.676 3.27l2.086 5.076 13.42 2.255-2.255-13.42zM11.62 22.84l5.018 2.087c1.128.45 2.425.225 3.271-.677l4.285-4.286a3.05 3.05 0 0 0 .677-3.27l-2.086-5.019L9.365 9.42zM16.131 37.84c1.128-.452 1.86-1.58 1.86-2.764v-6.09c0-1.24-.732-2.311-1.86-2.762l-5.019-2.087L.004 32.031l11.108 7.895zM24.082 11.112l2.086 5.018c.451 1.128 1.579 1.86 2.763 1.86h6.034c1.24 0 2.311-.732 2.763-1.86l2.086-5.018L31.92.003z"/>

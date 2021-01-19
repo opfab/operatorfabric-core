@@ -1,1 +1,9 @@
+<!--
+Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+See AUTHORS.txt
+This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+If a copy of the license was not distributed with this
+file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+SPDX-License-Identifier: CC-BY-4.0
+-->
 <svg id="creation" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><defs><style>.cls-1,.cls-2,.cls-3{stroke:#000;}.cls-1,.cls-3{stroke-miterlimit:10;}.cls-2,.cls-3{fill:none;stroke-linecap:round;}.cls-2{stroke-linejoin:round;}</style></defs><title>card creation</title><path class="cls-1" d="M1.16,31.14"/><polyline class="cls-2" points="11.5 10 0.5 10 0.5 31.5 31.5 31.5 31.5 10"/><path d="M26.1,1,31,5.9l-1,1L15.33,21.56,7.5,24.5l2.94-7.83L25.12,2l1-1m0-1a1,1,0,0,0-.7.29l-1,1L9.73,16a1,1,0,0,0-.23.36L6.56,24.15a1,1,0,0,0,.23,1.06,1,1,0,0,0,.71.29,1,1,0,0,0,.35-.06l7.83-2.94a1,1,0,0,0,.36-.23L30.73,7.58l1-1a1,1,0,0,0,0-1.41L26.81.29A1,1,0,0,0,26.1,0Z"/><line class="cls-2" x1="10.5" y1="16.5" x2="15.63" y2="21.37"/><line class="cls-3" x1="18.11" y1="23.71" x2="29.4" y2="23.71"/><line class="cls-3" x1="23.76" y1="18.07" x2="23.76" y2="29.36"/></svg>

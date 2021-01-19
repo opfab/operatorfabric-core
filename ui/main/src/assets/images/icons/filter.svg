@@ -1,1 +1,9 @@
+<!--
+Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+See AUTHORS.txt
+This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+If a copy of the license was not distributed with this
+file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+SPDX-License-Identifier: CC-BY-4.0
+-->
 <svg id="filtre" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><defs><style>.cls-1{fill:none;stroke:#000;stroke-linejoin:round;}</style></defs><title>filter</title><path d="M31,1V6.75l-11,9-.36.3V27.29l-5.23,3V16l-.43-.3L1,6.7V1H31m1-1H0V7.23l13.42,9.29V32l7.23-4.13V16.52L32,7.23V0Z"/><polyline class="cls-1" points="23.5 27.5 27.5 31.5 31.5 27.5"/></svg>
