@@ -1,5 +1,5 @@
 {
-	"process": {"label": "Processus d'example V0.1"},
+	"process": {"label": "Processus d'exemple V0.1"},
 	"name": "test API",
 	"defaultProcess":{
 		"title":"Message (V0.1)",

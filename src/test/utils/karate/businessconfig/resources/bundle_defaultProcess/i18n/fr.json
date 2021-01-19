@@ -1,5 +1,5 @@
 {
-	"process": {"label": "Processus d'example"},
+	"process": {"label": "Processus d'exemple"},
 	"message":{
 		"title":"Message",
 		"summary":"Message reçu"
