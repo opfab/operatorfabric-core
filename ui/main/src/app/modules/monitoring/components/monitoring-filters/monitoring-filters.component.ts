@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewInit, Component, Input,OnDestroy,OnInit} from '@angular/core';
+import {Component, Input,OnDestroy,OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -27,7 +27,7 @@ import { takeUntil } from 'rxjs/operators';
     templateUrl: './monitoring-filters.component.html',
     styleUrls: ['./monitoring-filters.component.scss']
 })
-export class MonitoringFiltersComponent implements OnInit, AfterViewInit, OnDestroy {
+export class MonitoringFiltersComponent implements OnInit, OnDestroy {
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -75,9 +75,7 @@ export class MonitoringFiltersComponent implements OnInit, AfterViewInit, OnDest
                 }
               })
             });
-    }
 
-    ngAfterViewInit() {
         this.sendQuery();
     }
 
