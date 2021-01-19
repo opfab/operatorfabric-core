@@ -268,13 +268,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
    }
 
     private setButtonsVisibility() {
-        if ((this._appService.pageType === PageType.ARCHIVE)
-            || (this._appService.pageType === PageType.MONITORING)) this.showButtons = false;
+        if (this._appService.pageType === PageType.ARCHIVE) this.showButtons = false;
         else this.showButtons = true;
-        if (this._appService.pageType !== PageType.CALENDAR) {
-            this.showCloseButton = true;
+        if ((this._appService.pageType !== PageType.CALENDAR)&& (this._appService.pageType !== PageType.MONITORING)) {
             this.showMaxAndReduceButton = true;
         }
+        this.showCloseButton = true;
         this.showEditAndDeleteButton = this.doesTheUserHavePermissionToDeleteOrEditCard();
         this.showAckButton = this.isAcknowledgmentAllowed() && (this._appService.pageType !== PageType.CALENDAR);
         this.showActionButton =  (!!this._responseData);
