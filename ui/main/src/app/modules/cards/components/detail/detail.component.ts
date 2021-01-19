@@ -575,6 +575,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                         this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
                         setTimeout(() => { // wait for DOM rendering
                             this.reinsertScripts();
+                            setTimeout(() => { // wait for script loading before calling them in template 
+                                templateGateway.applyChildCards();
+                                if (this.hasAlreadyResponded) templateGateway.lockAnswer();
+                            }, 10);
                         }, 10);
                     }, () => {
                         console.log('WARNING impossible to load template ', templateName);

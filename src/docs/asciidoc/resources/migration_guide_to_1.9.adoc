@@ -46,3 +46,10 @@ Here is an example of a simple config.json file:
 }
 
 ----
+
+== Response card : templateGateway.applyChild()
+
+For card with responses, it is not necessary to call templateGateway.applyChildCards() in your template on loading
+anymore, OperatorFabric will do it.
+
+

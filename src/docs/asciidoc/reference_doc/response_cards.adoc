@@ -147,9 +147,11 @@ NOTE: By default, OperatorFabric considers that if the parent card (question car
 
 For each user response, a child card containing the response is emitted and stored in OperatorFabric like a normal card. It is not directly visible on the ui but this child card can be integrated in real time to the parent card of all the users watching the card. To do that, you need  some code in the template to process child data:
 
-- You can access child cards via the javascript method templateGateway.childCards() which returns an array of the child cards. The structure of a child card is the same as the structure of a classic card.
-- As child cards are arriving in real time, you need to define a method call templateGateway.applyChildCards() which will be called by OperatorFabric each time the list of child cards is evolving.
-- To integrate the child cards when loading the card you need to call to _templateGateway.applyChildCards()_. (OperatorFabric is not calling the method on card loading)
+- You can access child cards via the javascript method templateGateway.childCards() which returns an array of the child
+cards. The structure of a child card is the same as the structure of a classic card.
+- You need to define a method called templateGateway.applyChildCards() which implements the processing of  child cards.
+This method will be called by OperatorFabric when loading the card and every time the list of child cards changes.
+
 
 === Entity name 
 
