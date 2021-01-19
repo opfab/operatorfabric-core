@@ -95,28 +95,7 @@
             </div>
 
             <div style="margin-top:10px">
-
-        <!--
-            
-        Originally we execute javascript define in template for preview like we do when viewing card in feed
-        
-        This lead to a BUG :
-        
-        In case the user was watching in the feed a card with response activated
-        he may not be able to see child cards after closing the usercard form 
-         
-        REASONS : 
-        
-        The card template in the preview  may redefine method templateGateway.applyChild 
-        This will override method templateGateway.applyChild  form the card on the feed 
-        As a consequence , the card on the feed will never receive new (or updated) child cards  
-         
-        Anyway , it seems not necessary to use script for card preview 
-        if necessary in the future , we need to find a solution to this problem 
-
-        -->
-
-             <of-card-detail [card]="card" [executeTemplateScript]="false" > </of-card-detail>
+             <of-card-detail [card]="card"> </of-card-detail>
              </div>
 
         </div>
