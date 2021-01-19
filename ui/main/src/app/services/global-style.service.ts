@@ -91,9 +91,9 @@ export class GlobalStyleService {
                                         --opfab-timeline-text-color: #ffffff;
                                         --opfab-timeline-grid-text-color: #bababa;
                                         --opfab-timeline-grid-color: #575757;
-                                        --opfab-timeline-week-color: #444444;
-                                        --opfab-timeline-week-color2: #444444;
-                                        --opfab-timeline-week-bgcolor: #192432;
+                                        --opfab-timeline-week-color: #B1B1B1;
+                                        --opfab-timeline-week-color2: #B1B1B1;
+                                        --opfab-timeline-week-bgcolor: #212B3A;
                                         --opfab-timeline-realtimebar-color: #2784FF;
                                         --opfab-timeline-button-bgcolor: rgb(221, 221, 221);
                                         --opfab-timeline-button-text-color: black;
