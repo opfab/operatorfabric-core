@@ -440,7 +440,6 @@ body {
 type-ahead > input {
   background-color:var(--opfab-bgcolor-darker);
   color:var(--opfab-input-text-color);
-  max-width: calc(100% / 4); // limit going to new line when writing new entry in field 
 }
 
 
