@@ -220,3 +220,48 @@
   border-bottom-color: var( --opfab-bgcolor);
   border-bottom: 0px;
 }
+
+.opfab-info-message {
+  text-align: center;
+  width:100% ;
+  position: fixed; 
+  z-index: 4000;
+  left: 0;
+  top: 0; 
+  color: white;
+}
+
+.opfab-alert-success {
+  background-color: #67a854;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: left;
+  height: 60px;
+  line-height: 60px;
+  padding-left: 30px;
+}
+
+.opfab-alert-error {
+  background-color: #e87a08;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: left;
+  height: 60px;
+  line-height: 60px;
+  padding-left: 30px;
+}
+
+.opfab-alert-close {
+  position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    color: var(--opfab-bgcolor);
+    margin-right: 30px;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.opfab-alert-close:hover, .opfab-alert-close:focus {
+  color: var(--opfab-navbar-color);
+} 

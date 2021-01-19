@@ -6,8 +6,12 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
-
+<div id='div-detail-msg' class="opfab-info-message {{message.className}}" *ngIf='message.display'>
+  <span [innerHTML]='message.text' translate></span>
+  <div id="opfab-usercard-close" class="opfab-alert-close" aria-label="Close" (click)="message.display = false">
+    <span aria-hidden="true">&times;</span>
+  </div>
+</div>
 <div [class.opfab-card-detail-fullscreen]="fullscreen">
   <div style="display: block;  margin-top:16px;">
     <ul class="nav nav-tabs opfab-line-undertab">
@@ -90,14 +94,7 @@
       <div id="div-card-template" class="opfab-card-detail" [innerHtml]="htmlContent"></div>
 
       <div style="text-align: center;width:100% ; ">
-        <div id='div-detail-msg' *ngIf='message.display'
-          class="alert alert-dismissible fade show text-center {{message.color}}" role="alert">
-          <span [innerHTML]='message.text' translate></span>
-          <button id="opfab-card-details-btn-close" type="button" class="close" aria-label="Close"
-            (click)="message.display = false">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
+
 
         <div id='div-detail-btn'>
 

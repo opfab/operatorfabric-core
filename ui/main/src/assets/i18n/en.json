@@ -236,11 +236,11 @@
     "btnTitle": "VALIDATE ANSWER",
     "btnUnlock": "MODIFY ANSWER",
     "error": {
-      "submit": "The card could not been sent",
+      "submit": "The answer could not be sent",
       "form": "The form is not correctly filled",
       "ack": "Unable to change acknowledgement of this card for an error of remote system"
     },
-    "submitSuccess": "Action succeeded",
+    "submitSuccess": "Your answer is confirmed. Thank you!",
     "answers": "Answers",
     "answered": "Answered",
     "unanswered": "Not answered yet",
