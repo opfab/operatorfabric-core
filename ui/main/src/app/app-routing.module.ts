@@ -66,7 +66,7 @@ const routes: Routes = [
 ];
 // TODO manage visible path more gently
 const startIndex = 0;
-const numberOfHiddenRoutes = 7 ; // 'Calendar' 'businessconfigparty', 'settings', 'navbar', 'admin', 'about', 'feedconfiguration'
+const numberOfHiddenRoutes = 6 ; // 'Calendar' 'businessconfigparty', 'settings', 'navbar', 'admin', 'feedconfiguration'
 const manageIndexesWhichBeginAtZero = 1;
 const numberOfRoutes = routes.length;
 const lastIndexOfVisibleElements = numberOfRoutes - numberOfHiddenRoutes - manageIndexesWhichBeginAtZero;
