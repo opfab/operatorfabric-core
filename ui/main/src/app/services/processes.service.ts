@@ -77,8 +77,15 @@ export class ProcessesService {
                 map(processesLoaded => {
                     if (!!processesLoaded) {
                         this.processes = processesLoaded;
-                        this.loadAllTranslations();
-                        console.log(new Date().toISOString(), 'List of processes loaded');
+                        if (this.processes.length === 0) {
+                            console.log(new Date().toISOString(), 'WARNING : no processes configured');
+                            this.translationsLoaded.next();
+                            }
+
+                        else {
+                            this.loadAllTranslations();
+                            console.log(new Date().toISOString(), 'List of processes loaded');
+                        }
                     }
                 }, (error) => console.error(new Date().toISOString(), 'an error occurred', error)
                 ));
