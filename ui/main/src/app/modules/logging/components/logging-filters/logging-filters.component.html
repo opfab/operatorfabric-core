@@ -11,10 +11,8 @@
             <div  style="margin-top: 28px;margin-right: 40px;position:relative; min-width:400px;max-width:550px;" >
                 <of-multi-filter filterPath="process"
                                    id="process"
-                                   formControlName="process"
                                    [parentForm]="loggingForm"
                                    [values]="dropdownList"
-                                   [(ngModel)]="dropdownList"
                                    [dropdownSettings]="dropdownSettings"
                                    [selectedItems]="[]"
                                    i18nRootLabelKey="logging.filters."
