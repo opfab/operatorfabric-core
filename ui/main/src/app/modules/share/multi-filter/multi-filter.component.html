@@ -15,6 +15,7 @@
                                   [data]="dropdownList"
                                   [(ngModel)]="selection"
                                   [settings]="dropdownSettings"
+                                  (onDeSelectAll)="onDeSelectAll($event)"
                                   formControlName="{{filterPath}}"
             ></angular2-multiselect>
             <label translate>{{computeI18nLabelKey()}}</label>
