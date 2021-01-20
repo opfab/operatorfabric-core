@@ -78,6 +78,10 @@ export class MultiFilterComponent implements OnInit, OnChanges, OnDestroy {
             });
     }
 
+    onDeSelectAll(items: any) {
+        this.selection = [];
+    }
+
     ngOnChanges() {
         this.initComponentValues();
     }
