@@ -139,7 +139,7 @@
       "publishDate" : "PUBLICATION DATE",
       "businessPeriod" : "BUSINESS PERIOD",
       "title" : "TITLE",
-      "description": "DESCRIPTION"
+      "summary": "SUMMARY"
     },
     "noResult": "Your search did not match any results.",
     "exportToExcel" : "Export data",

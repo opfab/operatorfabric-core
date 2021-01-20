@@ -139,7 +139,7 @@
       "publishDate" : "DATE DE PUBLICATION",
       "businessPeriod" : "PERIODE METIER",
       "title" : "TITRE",
-      "description": "DESCRIPTION"
+      "summary": "RESUME"
     },
     "noResult": "Votre recherche ne correspond à aucun résultat.",
     "exportToExcel" : "Exporter les données",
