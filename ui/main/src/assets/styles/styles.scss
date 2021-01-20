@@ -27,8 +27,39 @@ body {
   height: 100vh;
   font-family: 'Open Sans', sans-serif;
   font-size: 13px;
+
+  // scroll styling for firefox only
+  scrollbar-color:var(--opfab-scrollbar-bar-bgcolor-firefox)  var(--opfab-scrollbar-bgcolor-firefox) ;
 }
 
+
+// CUSTOM SCROLLBAR STYLE
+// for chromium based browser 
+
+
+::-webkit-scrollbar {
+  width: 16px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 8px;
+  background: var(--opfab-scrollbar-bgcolor); 
+  border: solid 1px var(--opfab-scrollbar-border-color);
+}
+ 
+::-webkit-scrollbar-thumb {
+  background: var(--opfab-scrollbar-bar-bgcolor); 
+    border-radius: 8px;
+    border: solid 1px var(--opfab-scrollbar-bar-border-color);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--opfab-scrollbar-bar-bgcolor); 
+    border-radius: 8px;
+    border: solid 1px var(--opfab-scrollbar-bar-border-color);
+}
+
+// END CUSTOM SCROLLBAR STYLE
 
 
 

@@ -72,6 +72,12 @@ export class GlobalStyleService {
                                         --opfab-timeline-cardlink-bgcolor-hover: #e2e6ea;
                                         --opfab-timeline-cardlink-bordercolor-hover: #dae0e5;
                                         --opfab-calendar-grid-color : #C9CCD1;
+                                        --opfab-scrollbar-bgcolor: #ffffff;
+                                        --opfab-scrollbar-border-color: #979797;
+                                        --opfab-scrollbar-bar-bgcolor: #BFC1C7;
+                                        --opfab-scrollbar-bar-border-color: #979797;
+                                        --opfab-scrollbar-bgcolor-firefox: #dddddd;
+                                        --opfab-scrollbar-bar-bgcolor-firefox: #bbbbbb;
                                         }`;
 
     private static NIGHT_STYLE = `:root {
@@ -125,6 +131,12 @@ export class GlobalStyleService {
                                         --opfab-timeline-cardlink-bgcolor-hover: #23272b;
                                         --opfab-timeline-cardlink-bordercolor-hover: #1d2124;
                                         --opfab-calendar-grid-color : #303237;
+                                        --opfab-scrollbar-bgcolor: #131D2B;
+                                        --opfab-scrollbar-border-color: #131D2B;
+                                        --opfab-scrollbar-bar-bgcolor: #262f3d;
+                                        --opfab-scrollbar-bar-border-color: #979797;
+                                        --opfab-scrollbar-bgcolor-firefox: #131D2B;
+                                        --opfab-scrollbar-bar-bgcolor-firefox: #333D4B;
                                     }`;
 
 
