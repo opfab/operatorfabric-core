@@ -6,11 +6,12 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<form [formGroup]="monitoringForm" #currentForm>
+<form [hidden]="hideFilters" [formGroup]="monitoringForm" #currentForm>
+    <!-- Using hidden class rather than ngIf in order to keep selected values when filters are hidden -->
     <div class="opfab-monitoring">
         <div style="display: flex;">
             <div style="margin-top: 28px;margin-right: 40px;position:relative; min-width:400px;max-width:550px;">
-                <of-multi-filter filterPath="process" id="process" 
+                <of-multi-filter filterPath="process" id="process"
                     [parentForm]="monitoringForm" [values]="dropdownList"
                     [dropdownSettings]="dropdownSettings" [selectedItems]="[]" i18nRootLabelKey="monitoring.filters.">
                 </of-multi-filter>
@@ -19,11 +20,11 @@
             <div style="margin-left:40px;margin-right: 30px;width:300px;min-width: 250px;">
                 <div>
                     <of-datetime-filter filterPath="publishDateFrom" formControlName="publishDateFrom"
-                        labelKey="archive.filters."></of-datetime-filter>
+                                        labelKey="archive.filters."></of-datetime-filter>
                 </div>
                 <div>
                     <of-datetime-filter filterPath="publishDateTo" formControlName="publishDateTo"
-                        labelKey="archive.filters."></of-datetime-filter>
+                                        labelKey="archive.filters."></of-datetime-filter>
                 </div>
             </div>
 
@@ -31,7 +32,7 @@
             <div style="margin-left:40px;width:300px;min-width: 250px;">
                 <div>
                     <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom"
-                        labelKey="archive.filters."></of-datetime-filter>
+                                        labelKey="archive.filters."></of-datetime-filter>
                 </div>
                 <div>
                     <of-datetime-filter filterPath="activeTo" formControlName="activeTo" labelKey="archive.filters.">
@@ -51,3 +52,55 @@
     </div>
 
 </form>
+
+
+<div class="opfab-filters-summary" *ngIf="hideFilters">
+    <div class="col-7 align-left" style="margin-left: 5%">
+        <div class="row align-top"><span translate>archive.filters.process</span>: &nbsp;
+            <div *ngIf="this.processSummary&&this.processSummary.length>0 else noSelection">
+            <span *ngFor="let process of listVisibleProcessesForSummary(); let isLast = last">
+                {{process.itemName}}<span *ngIf="!isLast">,&nbsp;</span>
+            </span>
+            <span *ngIf="listDropdownProcessesForSummary() && listDropdownProcessesForSummary().length > 0"
+                  id="opfab-process-summary-dropdown" class="opfab-processes-dropdown" placement="bottom-right" [ngbPopover]="processesDropdown"
+                  container="body" [autoClose]="'true'" popoverClass="opfab-processes-popover">
+              &nbsp;...&nbsp;
+            </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-2 align-left">
+        <div class="row align-top"><span translate>archive.filters.publishDateFrom</span>: &nbsp;
+            <span *ngIf="this.publishDateFromSummary&&this.publishDateFromSummary.length>0 else noSelection">{{this.publishDateFromSummary}}</span>
+        </div>
+        <div class="row align-top"><span translate>archive.filters.publishDateTo</span>: &nbsp;
+            <span *ngIf="this.publishDateToSummary&&this.publishDateToSummary.length>0 else noSelection">{{this.publishDateToSummary}}</span>
+        </div>
+    </div>
+    <div class="col-2 align-left">
+        <div class="row align-top"><span translate>archive.filters.activeFrom</span>: &nbsp;
+            <span *ngIf="this.activeDateFromSummary&&this.activeDateFromSummary.length>0 else noSelection">{{this.activeDateFromSummary}}</span>
+        </div>
+        <div class="row align-top"><span translate>archive.filters.activeTo</span>: &nbsp;
+            <span *ngIf="this.activeDateToSummary&&this.activeDateToSummary.length>0 else noSelection">{{this.activeDateToSummary}}</span>
+        </div>
+    </div>
+    <ng-template #noSelection>
+        <span translate>monitoring.noSelection</span>
+    </ng-template>
+    <ng-template #processesDropdown>
+        <div *ngFor="let process of listDropdownProcessesForSummary();">
+            &nbsp; {{process.itemName}} &nbsp;
+        </div>
+    </ng-template>
+</div>
+
+
+<div class="opfab-showhide-filters">
+    <div id="opfab-monitoring-link-hide-filters" *ngIf="!hideFilters" (click)="showOrHideFilters()">
+        ˄ &nbsp;&nbsp; <span translate> monitoring.hideFilters </span>
+    </div>
+    <div id="opfab-monitoring-link-show-filters" *ngIf="hideFilters" (click)="showOrHideFilters()">
+        ˅ &nbsp;&nbsp; <span translate> monitoring.showFilters </span>
+    </div>
+</div>

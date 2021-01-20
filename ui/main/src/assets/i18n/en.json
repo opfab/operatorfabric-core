@@ -162,6 +162,9 @@
     "resultsNumber":"Results number"
   },
   "monitoring": {
+    "hideFilters" : "Hide Filters",
+    "showFilters" : "Show Filters",
+    "noSelection" : "NA",
     "filters": {
       "process": "PROCESS",
       "selectProcessText": "Select a Process"

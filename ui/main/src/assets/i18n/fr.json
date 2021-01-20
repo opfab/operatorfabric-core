@@ -162,6 +162,9 @@
     "resultsNumber":"Nombre de résultats"
   },
   "monitoring": {
+    "hideFilters" : "Masquer les filtres",
+    "showFilters" : "Afficher les filtres",
+    "noSelection" : "NA",
     "filters": {
       "process": "PROCESSUS",
       "selectProcessText": "Sélectionner un Processus"
