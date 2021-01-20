@@ -225,6 +225,9 @@
     "refuse": "CANCEL",
     "processInstanceId": "Id",
     "state": "State",
+    "recipients": "RECIPIENTS:",
+    "feedPreview": "FEED PREVIEW:",
+    "contentPreview": "CONTENT PREVIEW:",
     "send-another-one": "SEND ANOTHER CARD",
     "cardSendWithNoError": "Card sent",
     "deleteCard": {

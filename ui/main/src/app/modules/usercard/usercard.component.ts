@@ -169,7 +169,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.recipientsOptions.sort(( a, b ) => a.itemName.localeCompare(b.itemName));
     }
 
-
+    
     loadAllProcessAndStateInUserPerimeter(): void {
         this.processesDefinition = this.processesService.getAllProcesses();
         const processesInPerimeter: Set<string> = new Set();
@@ -418,6 +418,11 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     getI18nPrefixFromProcess = (process: Process): string => {
         return process.id + '.' + process.version + '.';
+    }
+
+    getEntityName(id: string): string {
+        const entityOption = this.recipientsOptions.find(entity => entity.id === id);
+        return entityOption.itemName;
     }
 
     ngOnDestroy() {

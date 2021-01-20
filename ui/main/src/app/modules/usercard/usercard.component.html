@@ -88,13 +88,26 @@
 
 
 <div *ngIf="displayPreview">
-
         <div>
-            <div style="margin-right:-18px;">
+            <div class="opfab-section-header">
+                <span translate>userCard.recipients</span>
+            </div>
+            <div style="display: inline-flex;">
+                <div *ngFor="let entityId of card.entityRecipients">
+                    <span  style="text-align: center;">&nbsp; {{getEntityName(entityId)}} &nbsp; </span>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="opfab-section-header">
+                <span translate>userCard.feedPreview</span>
+            </div>
+           
+            <div style="width: 40%;">
             <of-light-card [lightCard]="card" [open]="false" [displayUnreadIcon]="false" ></of-light-card>
             </div>
-
-            <div style="margin-top:10px">
+            <div class="opfab-section-header"><span translate>userCard.contentPreview</span></div>
+            <div>
              <of-card-detail [card]="card"> </of-card-detail>
              </div>
 
