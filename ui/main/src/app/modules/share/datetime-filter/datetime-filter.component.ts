@@ -7,13 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import * as moment from 'moment';
-import {AfterViewInit, Component, EventEmitter, forwardRef, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, forwardRef, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {getDateTimeNgbFromMoment, offSetCurrentTime} from '@ofModel/datetime-ngb.model';
+import {offSetCurrentTime} from '@ofModel/datetime-ngb.model';
 
 @Component({
     selector: 'of-datetime-filter',
@@ -147,5 +146,19 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
         return this.labelKey + this.filterPath;
     }
 
+}
+
+export class DateTimeFilterValue {
+
+    date : {
+        year : number;
+        month : number;
+        day : number;
+    };
+
+    time : {
+        hour : number;
+        minute : number;
+    }
 
 }
