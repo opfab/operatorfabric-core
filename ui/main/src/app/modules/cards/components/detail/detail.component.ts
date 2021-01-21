@@ -58,7 +58,7 @@ declare const templateGateway: any;
 class Message {
     text: string;
     display: boolean;
-    color: ResponseMsgColor;
+    className: ResponseMsgClass;
 }
 
 class EntityMessage {
@@ -85,9 +85,9 @@ const enum AckI18nKeys {
     ERROR_MSG = 'response.error.ack'
 }
 
-const enum ResponseMsgColor {
-    GREEN = 'alert-success',
-    RED = 'alert-danger'
+const enum ResponseMsgClass {
+    SUCCESS = 'opfab-alert-success',
+    ERROR = 'opfab-alert-error'
 }
 
 const enum EntityMsgColor {
@@ -129,7 +129,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private _userContext: UserContext;
     private _lastCards$: Observable<LightCard[]>;
     private _responseData: Response;
-    message: Message = {display: false, text: undefined, color: undefined};
+    message: Message = {display: false, text: undefined, className: undefined};
 
     public fullscreen = false;
     public showButtons = false;
@@ -171,14 +171,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         const cardTemplate = document.getElementById('div-card-template');
         if (!!cardTemplate) {  
             const diffWindow = cardTemplate.getBoundingClientRect();
-            const divMsg = document.getElementById('div-detail-msg');
             const divBtn = document.getElementById('div-detail-btn');
 
             let cardTemplateHeight = window.innerHeight - diffWindow.top;
             if (this._appService.pageType !== PageType.FEED) cardTemplateHeight -= 50;
-            if (divMsg) {
-                cardTemplateHeight -= divMsg.scrollHeight + 15;
-            }
+
             if (divBtn) {
                 cardTemplateHeight -= divBtn.scrollHeight + 15 ;
             }
@@ -352,7 +349,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                         } else {
                           this.hasAlreadyResponded = true;
                           templateGateway.lockAnswer();
-                          this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, ResponseMsgColor.GREEN);
+                          this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, ResponseMsgClass.SUCCESS);
                         }
                     },
                     err => {
@@ -368,13 +365,18 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         }
     }
 
-    private displayMessage(text: string, color: ResponseMsgColor = ResponseMsgColor.RED) {
+    private displayMessage(text: string, className: ResponseMsgClass = ResponseMsgClass.ERROR) {
         this.message = {
             text: text,
-            color: color,
+            className: className,
             display: true
         };
+
+        setTimeout(() => {
+            this.message.display = false;
+        }, 5000);
     }
+
 
     acknowledge() {
         if (this.card.hasBeenAcknowledged) {
@@ -443,7 +445,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.loadTranslationForTitleAndStateName();
         this.markAsReadIfNecessary();
 
-        this.message = {display: false, text: undefined, color: undefined};
+        this.message = {display: false, text: undefined, className: undefined};
         
         if (this._responseData != null && this._responseData !== undefined) {
             this.setEntitiesToRespond();

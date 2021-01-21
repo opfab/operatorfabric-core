@@ -242,7 +242,7 @@
       "submit": "La carte n'a pas pu être envoyée",
       "form": "Le formulaire n'est pas correctement rempli"
     },
-    "submitSuccess": "Action effectuée",
+    "submitSuccess": "Votre réponse est confirmée. Merci!",
     "answers": "Réponses",
     "answered": "A répondu",
     "unanswered": "Pas encore répondu",
