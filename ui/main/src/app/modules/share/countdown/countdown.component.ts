@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, DoCheck, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, DoCheck, Input, OnChanges, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {CountdownComponent, CountdownConfig, CountdownEvent} from 'ngx-countdown';
 import {AppService, PageType} from "@ofServices/app.service";
 import {ConfigService} from "@ofServices/config.service";
@@ -20,7 +20,7 @@ import {LightCard} from "@ofModel/light-card.model";
     templateUrl: './countdown.component.html',
     styleUrls: ['./countdown.component.scss']
 })
-export class CountDownComponent implements OnInit, DoCheck, OnDestroy {
+export class CountDownComponent implements OnInit, DoCheck, OnChanges, OnDestroy {
 
     @Input() public card: Card | LightCard;
 
@@ -42,6 +42,10 @@ export class CountDownComponent implements OnInit, DoCheck, OnDestroy {
 
     ngOnInit() {
         this.secondsBeforeLttdForClockDisplay = this.configService.getConfigValue('feed.card.secondsBeforeLttdForClockDisplay', false);
+        this.startCountdownWhenNecessary();
+    }
+
+    ngOnChanges() {
         this.startCountdownWhenNecessary();
     }
 
