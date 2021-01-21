@@ -119,6 +119,11 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
         this.monitoringForm.controls.activeTo.patchValue({'date': {'year': end.year(), 'month': end.month() + 1, 'day': end.date()}, 'time': {'hour': end.hour(), 'minute': end.minute()}});
         this.monitoringForm.controls.activeFrom.updateValueAndValidity({onlySelf: false, emitEvent: true});
         this.monitoringForm.controls.activeTo.updateValueAndValidity({onlySelf: false, emitEvent: true});
+
+        // Show init dates on summary (in case the monitoring screen is opened with filters hidden)
+        this.activeDateFromSummary = this.formValueToString(this.monitoringForm.get('activeFrom').value);
+        this.activeDateToSummary = this.formValueToString(this.monitoringForm.get('activeTo').value);
+
     }
 
     sendQuery() {
@@ -219,7 +224,6 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
     }
 
     showOrHideFilters() {
-        console.log("AGU ",this.selectedProcesses.value);
         // Update summary of filters
         // There is no need to use observables are the summary should only be updated when it is needed, rather than react to every selection change
         //This takes advantage of the translation managed by the filter component to produce the list of available processes rather than do the translation again.
@@ -240,7 +244,8 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
     }
 
     formValueToDate(value : DateTimeFilterValue) : Date {
-        return new Date(value.date.year,value.date.month, value.date.day,value.time.hour,value.time.minute)
+        //Note the -1 for the month because the Date constructor takes the month as a number between 0 and 11 (January to December) as parameter
+        return new Date(value.date.year,value.date.month -1, value.date.day,value.time.hour,value.time.minute);
     }
 
     listVisibleProcessesForSummary() {
