@@ -19,7 +19,7 @@ import { selectIdentifier } from '@ofSelectors/authentication.selectors';
 import { ConfigService } from '@ofServices/config.service';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, skip } from 'rxjs/operators';
-import { merge, Observable} from 'rxjs';
+import { merge } from 'rxjs';
 import { I18nService } from '@ofServices/i18n.service';
 import { CardService } from '@ofServices/card.service';
 import { UserService } from '@ofServices/user.service';
@@ -27,12 +27,22 @@ import { EntitiesService } from '@ofServices/entities.service';
 import { ProcessesService } from '@ofServices/processes.service';
 import { ReminderService } from '@ofServices/reminder/reminder.service';
 import { selectSubscriptionOpen } from '@ofStore/selectors/cards-subscription.selectors';
+import { Actions, ofType } from '@ngrx/effects';
+import { AlertActions, AlertActionTypes } from '@ofStore/actions/alert.actions';
+import { Message, MessageLevel } from '@ofModel/message.model';
+
+class Alert {
+  alert: Message;
+  display: boolean;
+  className: string;
+}
 
 @Component({
   selector: 'of-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
+
 export class AppComponent implements OnInit {
   readonly title = 'OperatorFabric';
   isAuthenticated = false;
@@ -40,6 +50,7 @@ export class AppComponent implements OnInit {
   useCodeOrImplicitFlow = true;
   connectionLost = false; 
   connectionLostForMoreThanTenSeconds = false;
+  alertMessage: Alert = {alert: undefined, className: undefined, display: false};
 
   /**
    * NB: I18nService is injected to trigger its constructor at application startup
@@ -54,13 +65,15 @@ export class AppComponent implements OnInit {
     , private userService: UserService
     , private entitiesService: EntitiesService
     , private processesService: ProcessesService
-    , private reminderService: ReminderService) {
+    , private reminderService: ReminderService
+    , private actions$: Actions) {
   }
 
   ngOnInit() {
     this.loadConfiguration();
     this.initApplicationWhenUserAuthenticated();
     this.detectConnectionLost();
+    this.subscribeToAlerts();
   }
 
 
@@ -146,4 +159,36 @@ export class AppComponent implements OnInit {
       }, 10000);
     });
   }
+
+  private subscribeToAlerts() {
+    this.actions$.pipe(
+      ofType<AlertActions>(AlertActionTypes.AlertMessage)).subscribe( alert => {
+        this.displayAlert(alert.payload.alertMessage);
+      })
+  }
+
+  private displayAlert(message: Message) {
+    let className = 'opfab-alert-info';
+    switch (message.level) {
+      case MessageLevel.DEBUG:
+        className = "opfab-alert-debug";
+        break;
+      case MessageLevel.INFO:
+        className = "opfab-alert-info";
+        break;
+      case MessageLevel.ERROR:
+        className = "opfab-alert-error";
+        break;       
+    }
+    this.alertMessage = {
+        alert: message,
+        className: className,
+        display: true
+    };
+
+    setTimeout(() => {
+        this.alertMessage.display = false;
+    }, 5000);
+
+}
 }

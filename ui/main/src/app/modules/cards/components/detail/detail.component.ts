@@ -51,6 +51,8 @@ import {State as CardState} from '@ofModel/processes.model';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { TimeService } from '@ofServices/time.service';
+import { AlertMessage } from '@ofStore/actions/alert.actions';
+import { MessageLevel } from '@ofModel/message.model';
 
 
 declare const templateGateway: any;
@@ -345,36 +347,28 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 .subscribe(
                     rep => {
                         if (rep['count'] === 0 && rep['message'].includes('Error')) {
-                            this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG);
+                            this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
                         } else {
                           this.hasAlreadyResponded = true;
                           templateGateway.lockAnswer();
-                          this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, ResponseMsgClass.SUCCESS);
+                          this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
                         }
                     },
                     err => {
-                        this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG);
+                        this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
                         console.error(err);
                     }
                 );
 
         } else {
             (formResult.errorMsg && formResult.errorMsg !== '') ?
-                this.displayMessage(formResult.errorMsg) :
-                this.displayMessage(ResponseI18nKeys.FORM_ERROR_MSG);
+                this.displayMessage(formResult.errorMsg, null, MessageLevel.ERROR) :
+                this.displayMessage(ResponseI18nKeys.FORM_ERROR_MSG, null, MessageLevel.ERROR);
         }
     }
 
-    private displayMessage(text: string, className: ResponseMsgClass = ResponseMsgClass.ERROR) {
-        this.message = {
-            text: text,
-            className: className,
-            display: true
-        };
-
-        setTimeout(() => {
-            this.message.display = false;
-        }, 5000);
+    private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
+        this.store.dispatch(new AlertMessage({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}}));
     }
 
 
@@ -386,7 +380,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                     this.updateAcknowledgementOnLightCard(false);
                 } else {
                     console.error('the remote acknowledgement endpoint returned an error status(%d)', resp.status);
-                    this.displayMessage(AckI18nKeys.ERROR_MSG);
+                    this.displayMessage(AckI18nKeys.ERROR_MSG, null, MessageLevel.ERROR);
                 }
             });
         } else {
@@ -396,7 +390,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                     this.closeDetails();
                 } else {
                     console.error('the remote acknowledgement endpoint returned an error status(%d)', resp.status);
-                    this.displayMessage(AckI18nKeys.ERROR_MSG);
+                    this.displayMessage(AckI18nKeys.ERROR_MSG, null, MessageLevel.ERROR);
                 }
             });
         }

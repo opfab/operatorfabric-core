@@ -6,12 +6,6 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div id='div-detail-msg' class="opfab-info-message {{message.className}}" *ngIf='message.display'>
-  <span [innerHTML]='message.text' translate></span>
-  <div id="opfab-usercard-close" class="opfab-alert-close" aria-label="Close" (click)="message.display = false">
-    <span aria-hidden="true">&times;</span>
-  </div>
-</div>
 <div [class.opfab-card-detail-fullscreen]="fullscreen">
   <div style="display: block;  margin-top:16px;">
     <ul class="nav nav-tabs opfab-line-undertab">
