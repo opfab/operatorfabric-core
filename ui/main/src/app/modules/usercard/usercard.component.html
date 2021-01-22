@@ -79,7 +79,7 @@
 
     <br />
     <div style="text-align: center;width:100%">
-        <button id="opfab-usercard-btn-prepareCard" type="button" class="opfab-btn" (click)="onSubmitForm(resumeCardBeforeSend)" translate>
+        <button id="opfab-usercard-btn-prepareCard" type="button" class="opfab-btn" [disabled]="!selectedProcess" (click)="onSubmitForm(resumeCardBeforeSend)" translate>
             userCard.prepareCard
 
         </button>
