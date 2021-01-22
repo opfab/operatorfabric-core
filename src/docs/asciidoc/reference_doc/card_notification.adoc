@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -9,6 +9,19 @@
 = Card notification
 
 When a user receives a card, he is notified via a resume of the card on the left panel of the UI, what is called the "feed".
+
+== Notification configuration
+
+For each process/state, the user can choose to be notified or not when receiving a card. If he chooses not to be
+notified then the card will not be visible in the feed. However, it will be visible in the archives screen.
+
+The notification configuration screen can be made accessible or not for the OperatorFabric instance via the variable
+feedConfiguration.hidden in the web-ui.json file.
+
+In order to have a better visual organization of the processes in the UI, you can define processes groups.
+You can find more information
+ifdef::single-page-doc[<<_processes_groups, here>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#_processes_groups, here>>]
 
 == Sound notification 
 
