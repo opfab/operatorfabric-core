@@ -171,27 +171,11 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
             
             const bstart = this.extractDateOrDefaultOne( this.busiStart,  offSetCurrentTime([{amount: -2, unit: 'hours'}]));
             const bend = this.extractDateOrDefaultOne( this.busiEnd, offSetCurrentTime([{amount: 2, unit: 'days'}]));
-            const businessDateFilter = (bend >= 0) ? {
-                    name: FilterType.MONITOR_DATE_FILTER
-                    , active: true
-                    , status: {
-                        start: bstart,
-                        end: bend
-                    }
-                } : {
-                    name: FilterType.MONITOR_DATE_FILTER
-                    , active: true
-                    , status: {
-                        start: bstart
-                    }
-                };
                 
                 this.store.dispatch(new ApplyFilter({
                     name: FilterType.BUSINESSDATE_FILTER, active: true,
                     status: {start: bstart, end: bend}
                     }));
-                
-                this.store.dispatch(new ApplyFilter(businessDateFilter));
         }
         this.firstQuery = false;
     }

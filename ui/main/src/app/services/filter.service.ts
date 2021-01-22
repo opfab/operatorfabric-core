@@ -88,29 +88,6 @@ export class FilterService {
             {start: new Date().valueOf() - 2 * 60 * 60 * 1000, end: new Date().valueOf() + 48 * 60 * 60 * 1000});
     }
 
-    private initMonitorDateFilter() {
-        return new Filter(
-            (card: LightCard, status) => {
-                if (!!status.start && !!status.end) {
-                    const isCardStartOk = card.startDate >= status.start && card.startDate <= status.end;
-                    if (!card.endDate) {
-                        return card.startDate <= status.end;
-                    }
-                    const isCardEndOk = card.endDate >= status.start && card.endDate <= status.end;
-                    
-                    return isCardStartOk || isCardEndOk;
-                } else if (!!status.start) {
-                    return card.startDate >= status.start;
-                } else if (!!status.end) {
-                    return (!! card.endDate && card.endDate <= status.end ) || card.startDate <= status.end;
-                }
-                console.warn(new Date().toISOString(), 'Unexpected business date filter situation');
-                return false;
-            },
-            false,
-            {start: new Date().valueOf() - 2 * 60 * 60 * 1000});
-    }
-
 
     private initPublishDateFilter() {
         return new Filter(
@@ -166,7 +143,6 @@ export class FilterService {
             filters.set(FilterType.ACKNOWLEDGEMENT_FILTER, this.initAcknowledgementFilter());
 
         filters.set(FilterType.PROCESS_FILTER, this.initProcessFilter());
-        filters.set(FilterType.MONITOR_DATE_FILTER, this.initMonitorDateFilter());
         return filters;
     }
 }
@@ -180,8 +156,7 @@ export enum FilterType {
     PUBLISHDATE_FILTER,
     ACKNOWLEDGEMENT_FILTER,
     TEST_FILTER,
-    PROCESS_FILTER,
-    MONITOR_DATE_FILTER
+    PROCESS_FILTER
 }
 export const BUSINESS_DATE_FILTER_INITIALISATION = {
     name: FilterType.BUSINESSDATE_FILTER,
