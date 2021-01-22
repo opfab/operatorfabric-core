@@ -139,6 +139,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public showActionButton = false;
     public showEditAndDeleteButton = false ;
 
+    private cardSetToReadButNotYetOnUI;
+
     modalRef: NgbModalRef;
 
     public displayDeleteResult = false;
@@ -207,7 +209,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     // -------------------------------------------------------------- //
 
     ngOnInit() {
-      this.checkIfHasAlreadyResponded();
       this.reloadTemplateWhenGlobalStyleChange();
 
         if (this._appService.pageType !== PageType.ARCHIVE) {
@@ -247,9 +248,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                         });
                 });
         }
-        this.loadTranslationForTitleAndStateName();
-        this.markAsReadIfNecessary();
-        this.setButtonsVisibility();
     }
 
 
@@ -412,20 +410,29 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     markAsReadIfNecessary() {
         if (this.card.hasBeenRead === false) {
-            this.updateReadOnLightCard(true);
+            // we do not set the card as read in the UI yet , as we want to keep 
+            // the card as unread in the feed 
+            // we will set it read in the UI and in the feed when 
+            //  - we close the card
+            //  - we exit the feed (i.e destroy the card)
+            //  - we change card 
+
+            this.cardSetToReadButNotYetOnUI = this.card;
             this.cardService.postUserCardRead(this.card.uid).subscribe();
         }
     }
 
-    updateReadOnLightCard(hasBeenRead: boolean) {
-        this.store.select(fetchLightCard(this.card.id)).pipe(take(1))
+    updateReadCardStatusOnUI() {
+        if (this.cardSetToReadButNotYetOnUI) this.store.select(fetchLightCard(this.cardSetToReadButNotYetOnUI.id)).pipe(take(1))
             .subscribe((lightCard: LightCard) => {
-                const updatedLighCard = {...lightCard, hasBeenRead: hasBeenRead};
-                this.store.dispatch(new UpdateALightCard({card: updatedLighCard}));
+                const updatedLightCard = {...lightCard, hasBeenRead: true};
+                this.store.dispatch(new UpdateALightCard({card: updatedLightCard}));
             });
+        this.cardSetToReadButNotYetOnUI = null;
     }
 
     closeDetails() {
+        this.updateReadCardStatusOnUI();
         if (this.parentModalRef) this.parentModalRef.close();
         else this._appService.closeDetails(this.currentPath);
     }
@@ -443,6 +450,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.checkIfHasAlreadyResponded();
         this.initializeHandlebarsTemplates();
         this.loadTranslationForTitleAndStateName();
+        this.updateReadCardStatusOnUI();
         this.markAsReadIfNecessary();
 
         this.message = {display: false, text: undefined, className: undefined};
@@ -670,6 +678,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     ngOnDestroy() {
+        this.updateReadCardStatusOnUI();
         templateGateway.childCards = [];
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
