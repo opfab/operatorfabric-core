@@ -653,7 +653,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         if (!!this.parentModalRef) this.parentModalRef.close();
 
         const options: NgbModalOptions = {
-            size: 'usercard'
+            size: 'usercard',
+            backdrop: 'static'
         };
         this.modalRef = this.modalService.open(this.userCardTemplate, options);
   

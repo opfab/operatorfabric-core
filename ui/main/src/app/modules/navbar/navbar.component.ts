@@ -200,7 +200,8 @@ export class NavbarComponent implements OnInit {
   if (this.currentPath[1]==='feed') this.appService.closeDetails('feed');
 
   const options: NgbModalOptions = {
-    size: 'usercard'
+    size: 'usercard',
+    backdrop: 'static'
 };
   this.modalRef = this.modalService.open(this.userCardTemplate, options);
   }
