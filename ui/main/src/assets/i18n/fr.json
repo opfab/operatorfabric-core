@@ -226,7 +226,7 @@
     "processInstanceId": "Identifiant",
     "state": "État",
     "send-another-one": "ENVOYER UNE AUTRE CARTE",
-    "cardSendWithNoError": "Carte envoyée",
+    "cardSendWithNoError": "Votre carte est publiée",
     "deleteCard": {
       "doYouReallyWant": "Voulez-vous vraiment supprimer cette carte ?",
       "cardDeletedWithNoError": "Carte supprimée",

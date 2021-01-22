@@ -226,7 +226,7 @@
     "processInstanceId": "Id",
     "state": "State",
     "send-another-one": "SEND ANOTHER CARD",
-    "cardSendWithNoError": "Card sent",
+    "cardSendWithNoError": "Your card is published",
     "deleteCard": {
       "doYouReallyWant": "Do you really want to delete this card ?",
       "cardDeletedWithNoError": "Card deleted",

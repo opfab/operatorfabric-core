@@ -108,31 +108,12 @@
 </div>
 
 
-<ng-container *ngIf="!displayForm() && !displaySendResult">
+<ng-container *ngIf="!displayForm()">
     <div class="alert alert-info">
         <h1><label translate>userCard.error.notAvailable</label></h1>
     </div>
 </ng-container>
 
-<div *ngIf="displaySendResult">
-    <br />
-    <h2 translate style="text-align: center"> {{messageAfterSendingCard}} </h2>
-    <br /><br />
-    <of-light-card [lightCard]="card" [open]="false" [displayUnreadIcon]="false"></of-light-card>
-    <br />
-    <div style="text-align: center;">
-        <button id="opfab-usercard-btn-sendAnotherCard" type="button" class="opfab-btn" (click)="sendAnotherUserCard()"
-            translate>userCard.send-another-one</button>
-    </div>
-</div>
 
-<br />
-<div id='div-detail-msg' *ngIf='errorMessage.display' class="alert alert-dismissible fade show text-center alert-danger"
-    role="alert" translate>
-    {{errorMessage.text}}
-    <button id="opfab-usercard-btn-close" type="button" class="close" aria-label="Close" (click)="errorMessage.display = false">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
 
 

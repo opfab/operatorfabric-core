@@ -33,13 +33,10 @@ import { HandlebarsService } from '../cards/services/handlebars.service';
 import { DetailContext } from '@ofModel/detail-context.model';
 import { map } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
+import { MessageLevel } from '@ofModel/message.model';
+import { AlertMessage } from '@ofStore/actions/alert.actions';
 
 declare const templateGateway: any;
-
-class Message {
-    text: string;
-    display: boolean;
-}
 
 
 @Component({
@@ -49,10 +46,10 @@ class Message {
 })
 export class UserCardComponent implements OnDestroy, OnInit {
 
+    @Input() modal;
+
     messageForm: FormGroup;
     recipientForm: FormGroup;
-    messageAfterSendingCard: string;
-
 
     processesDefinition: Process[];
     currentUserWithPerimeters: UserWithPerimeters;
@@ -85,10 +82,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
-
-    public displaySendResult = false;
     public displayPreview = false;
-    errorMessage: Message = { display: false, text: undefined };
 
     modalRef: NgbModalRef;
     severityVisible: boolean = true;
@@ -96,7 +90,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
     endDateVisible: boolean = true;
 
     displayForm() {
-        return !!this.processOptions && this.processOptions.length > 0 && !this.displaySendResult;
+        return !!this.processOptions && this.processOptions.length > 0;
     }
 
     constructor(private store: Store<AppState>,
@@ -247,7 +241,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
     }
 
     loadTemplate() {
-        this.errorMessage.display = false;
+
         let card;
         if  (!!this.cardToEdit) card = this.cardToEdit.card ;
         const userCard = this.selectedProcess.states[this.selectedState].userCard;
@@ -293,6 +287,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
         });
     }
 
+    private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
+        this.store.dispatch(new AlertMessage({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}}));
+    }
 
     onSubmitForm(template: TemplateRef<any>) {
         const formValue = this.messageForm.value;
@@ -305,30 +302,26 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
         if (!templateGateway.getSpecificCardInformation) {
             console.log('No getSpecificCardInformationMethod() in template can not send card');
-            this.errorMessage.display = true;
-            this.errorMessage.text = 'userCard.error.templateError';
+            this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
             return;
         }
 
         const specificInformation = templateGateway.getSpecificCardInformation();
         if (!specificInformation) {
             console.log('getSpecificCardInformationMethod() in template return no information');
-            this.errorMessage.display = true;
-            this.errorMessage.text = 'userCard.error.templateError';
+            this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
             return;
         }
 
         if (!specificInformation.valid) {
-            this.errorMessage.display = true;
-            this.errorMessage.text = specificInformation.errorMsg;
+            this.displayMessage('specificInformation.errorMsg', null, MessageLevel.ERROR);
             return;
         }
 
         const selectedRecipients = this.recipientForm.value['recipients'];
         const recipients = new Array();
         if (selectedRecipients.length < 1) {
-            this.errorMessage.display = true;
-            this.errorMessage.text = 'userCard.error.noRecipientSelected';
+            this.displayMessage('userCard.error.noRecipientSelected', null, MessageLevel.ERROR);
             return;
         } else selectedRecipients.forEach(entity => recipients.push(entity.id));
 
@@ -395,8 +388,6 @@ export class UserCardComponent implements OnDestroy, OnInit {
             data: specificInformation.card.data,
         } as Card;
 
-
-        this.errorMessage.display = false;
         this.displayPreview= true;
     }
 
@@ -430,22 +421,20 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.cardService.postCard(fromCardToCardForPublishing(this.card))
             .subscribe(
                 resp => {
-                    this.messageAfterSendingCard = '';
                     const msg = resp.message;
                     // TODO better way to handle perimeter errors
                     if (!!msg && msg.includes('unable')) {
                         console.log('Impossible to send card , error message from service : ', msg);
-                        this.messageAfterSendingCard = 'userCard.error.impossibleToSendCard';
+                        this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
                     } else {
-                        this.messageAfterSendingCard = 'userCard.cardSendWithNoError';
+                        this.displayMessage('userCard.cardSendWithNoError', null, MessageLevel.INFO);
                     }
-                    this.displaySendResult = true;
-                    this.messageForm.reset();
+
+                    this.modal.dismiss("Close");
                 },
                 err => {
                     console.error('Error when sending card :', err);
-                    this.displaySendResult = true;
-                    this.messageForm.reset();
+                    this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
                 }
             );
     }
@@ -458,7 +447,6 @@ export class UserCardComponent implements OnDestroy, OnInit {
     sendAnotherUserCard() {
         this.userCardTemplate = '';
         this.card = null;
-        this.displaySendResult = false;
         this.editCardMode = false;
         this.cardToEdit = null;
         this.selectedRecipients = [];

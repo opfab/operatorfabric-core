@@ -33,4 +33,11 @@
       </div>
       
       </div>
+      <div id='div-detail-msg' class="opfab-info-message {{alertMessage.className}}" *ngIf='alertMessage && alertMessage.display'>
+        <span *ngIf="alertMessage.alert.i18n" translate>{{alertMessage.alert.i18n.key}}</span>
+        <span *ngIf="alertMessage.alert.message">&nbsp; {{alertMessage.alert.message}}</span>
+        <div id="opfab-usercard-close" class="opfab-alert-close" aria-label="Close" (click)="alertMessage.display = false">
+          <span aria-hidden="true">&times;</span>
+        </div>
+      </div>
 </div>
