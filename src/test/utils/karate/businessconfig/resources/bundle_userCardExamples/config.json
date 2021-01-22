@@ -36,6 +36,7 @@
     },
     "questionState": {
       "name": "question.title",
+      "showDetailCardHeader": false,
       "color": "#8bcdcd",
       "userCard" : {
 				"template" : "usercard_question",

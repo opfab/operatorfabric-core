@@ -306,6 +306,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         return this.card.hasBeenAcknowledged ? AckI18nKeys.BUTTON_TEXT_UNACK : AckI18nKeys.BUTTON_TEXT_ACK;
     }
 
+    get showDetailCardHeader(): boolean {
+        return (this.cardState.showDetailCardHeader === null) || (this.cardState.showDetailCardHeader === true);
+    }
+
     getPublishDateTranslationParams(): any {
         const param = {
             'time': this.time.formatDateTime(this.card.publishDate)
