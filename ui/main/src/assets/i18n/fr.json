@@ -83,7 +83,7 @@
       "title": "Triées par",
       "severity": "Criticité puis date ",
       "publish": "Date",
-      "unread": "Non lu puis par date"
+      "unread": "Non lu puis date"
     },
     "tips": {
       "acknowledged": "Acquittée",
