@@ -25,7 +25,7 @@
         <li *ngFor="let button of buttonList">
           <a id="opfab-timeline-link-period-{{button.domainId}}" [ngClass]="button.selected ? 'link-selected' : 'link-unselect'" (click)="changeGraphConf(button)"
             translate>
-            &nbsp; {{button.buttonTitle}}
+            {{button.buttonTitle}}
           </a>
         </li>
 
