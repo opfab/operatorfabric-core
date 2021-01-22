@@ -81,9 +81,9 @@
     },
     "sort": {
       "title": "Sort by",
-      "severity": "Criticity",
+      "severity": "Criticity  then date",
       "publish": "Date",
-      "unread": "Unread"
+      "unread": "Unread then date"
     },
     "tips": {
       "acknowledged": "Acknowledged",

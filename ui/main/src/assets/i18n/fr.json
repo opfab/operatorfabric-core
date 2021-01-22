@@ -81,9 +81,9 @@
     },
     "sort": {
       "title": "Triées par",
-      "severity": "Criticité",
+      "severity": "Criticité puis date ",
       "publish": "Date",
-      "unread": "Pas lu"
+      "unread": "Non lu puis date"
     },
     "tips": {
       "acknowledged": "Acquittée",
