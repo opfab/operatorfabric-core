@@ -143,7 +143,6 @@ export class FilterService {
             filters.set(FilterType.ACKNOWLEDGEMENT_FILTER, this.initAcknowledgementFilter());
 
         filters.set(FilterType.PROCESS_FILTER, this.initProcessFilter());
-        filters.set(FilterType.MONITOR_DATE_FILTER, this.initBusinessDateFilter());
         return filters;
     }
 }
@@ -157,8 +156,7 @@ export enum FilterType {
     PUBLISHDATE_FILTER,
     ACKNOWLEDGEMENT_FILTER,
     TEST_FILTER,
-    PROCESS_FILTER,
-    MONITOR_DATE_FILTER
+    PROCESS_FILTER
 }
 export const BUSINESS_DATE_FILTER_INITIALISATION = {
     name: FilterType.BUSINESSDATE_FILTER,
