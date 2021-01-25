@@ -58,7 +58,8 @@ export class State {
         readonly name?: string,
         readonly color?: string,
         readonly userCard?: UserCard,
-        readonly description?: string
+        readonly description?: string,
+        readonly showDetailCardHeader?: boolean
     ) {
     }
 }

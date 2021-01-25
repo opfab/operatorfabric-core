@@ -26,6 +26,7 @@ Feature: Bundle
     And match response.states.questionState.userCard.severityVisible == false
     And match response.states.questionState.userCard.startDateVisible == true
     And match response.states.questionState.userCard.endDateVisible == true
+    And match response.states.questionState.showDetailCardHeader == false
     And match response.states.incidentInProgressState.userCard.template == 'usercard_incidentInProgress'
     And match response.states.incidentInProgressState.userCard.severityVisible == true
     And match response.states.incidentInProgressState.userCard.startDateVisible == false
