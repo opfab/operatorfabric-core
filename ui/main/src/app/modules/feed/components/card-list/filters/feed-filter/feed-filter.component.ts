@@ -9,7 +9,7 @@
 
 
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {Observable, Subject, timer} from "rxjs";
 import {Filter} from "@ofModel/feed-filter.model";
 import {Store} from "@ngrx/store";
@@ -27,7 +27,8 @@ import { DateTimeNgb } from '@ofModel/datetime-ngb.model';
 @Component({
     selector: 'of-feed-filter',
     templateUrl: './feed-filter.component.html',
-    styleUrls: ['./feed-filter.component.scss']
+    styleUrls: ['./feed-filter.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class FeedFilterComponent implements OnInit, OnDestroy {
     @Input() filterByPublishDate: boolean;

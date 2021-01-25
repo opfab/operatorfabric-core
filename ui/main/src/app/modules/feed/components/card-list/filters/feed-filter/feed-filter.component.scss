@@ -16,7 +16,8 @@
   margin-right: 2px;
   margin-bottom: 10px;
   margin-top: 20px;
-  border-bottom: 1px solid var(--opfab-text-color);
+  padding-bottom: 4px;
+  border-bottom: 0.5px solid var(--opfab-text-color);
 }
 
 .label-sev-alarm::before {
@@ -103,10 +104,17 @@
   display: block;
   color:var(--opfab-navbar-color);
   text-align: center;
+  text-decoration: underline;
 
   &:hover,
   &:focus {
     color:var( --opfab-navbar-color-hover);
     text-decoration: none;
   }
+}
+
+.opfab-filters-popover {
+  margin-left: -10px;
+  background-color: #182638;
+  padding-left: 2px;
 }

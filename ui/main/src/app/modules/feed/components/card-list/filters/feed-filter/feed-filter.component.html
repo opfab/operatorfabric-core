@@ -15,7 +15,7 @@
     <div class="row opfab-filter-header">
         <span translate>feed.filters.type.title</span>
     </div>
-    <form [formGroup]="typeFilterForm" id="type-filter-form">
+    <form [formGroup]="typeFilterForm" id="type-filter-form" style="padding-left: 3px;">
 
         <label class="opfab-checkbox "> <span class="label-sev-alarm" translate> feed.filters.type.alarm.label </span>
             <input id="opfab-feed-filter-severity-alarm" type="checkbox" formControlName="alarm" >
@@ -45,7 +45,7 @@
         <div class="row opfab-filter-header">
             <span translate>feed.filters.ack.title</span>
         </div>
-        <form [formGroup]="ackFilterForm" id="ack-filter-form">
+        <form [formGroup]="ackFilterForm" id="ack-filter-form"  style="padding-left: 3px;">
 
             <label class="opfab-radio-button"> <span  translate>feed.filters.ack.all.label</span>
                 <input type="radio"  id="opfab-feed-filter-ack-all" formControlName="ackControl" value="all">
@@ -104,7 +104,7 @@
 
 
 <div class="opfab-icon-bg-color">
-    <div id="opfab-feed-filter-btn-filter" [ngClass]="isFilterActive() ? 'opfab-icon-filter-active' :  'opfab-icon-filter'" placement="bottom-left" [ngbPopover]="filterTypeContent"
+    <div id="opfab-feed-filter-btn-filter" [ngClass]="isFilterActive() ? 'opfab-icon-filter-active' :  'opfab-icon-filter'" popoverClass="opfab-filters-popover" placement="bottom-left" [ngbPopover]="filterTypeContent"
         container="body" [autoClose]="'outside'">
     </div>
 </div>
