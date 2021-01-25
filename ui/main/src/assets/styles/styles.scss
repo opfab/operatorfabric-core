@@ -172,7 +172,7 @@ body {
   height: 100%;
   text-align: center;
   font-size: 30px;
-  color: var(--opfab-form-border-color);
+  color: var(--opfab-text-color);
   pointer-events: none;
 }
 
@@ -500,7 +500,7 @@ type-ahead > .badge-primary {
 
 .opfab-multiselect  .c-btn {
   background-color:var(--opfab-bgcolor-darker);
-  color:var(--opfab-input-text-color);
+  color:var(--opfab-text-color);
   margin: 5px;
   font-size: 13px;
   border: none;
@@ -521,12 +521,12 @@ type-ahead > .badge-primary {
   background-color: var(--opfab-bgcolor-darker);
 }
 
-
-
-
 .opfab-multiselect .c-remove {
+  width:10px;
+  position: absolute;
+  top: 17px;
   svg {
-      fill:var(--opfab-input-text-color);
+      fill:var(--opfab-text-color);
   }
 
 }
@@ -539,10 +539,9 @@ type-ahead > .badge-primary {
   top: 0;
   right: 0;
   width: 30px;
-  height: 100%;
   text-align: center;
   font-size: 30px;
-  color: var(--opfab-form-border-color);
+  color: var(--opfab-text-color);
   pointer-events: none;
 }
 
@@ -551,6 +550,9 @@ type-ahead > .badge-primary {
   fill: var(--opfab-bgcolor-darker);
 }
 
+.opfab-multiselect .selected-list .c-list {
+  width: calc(100% - 25px); // to avoid the cross to overlap with selected values as with default value 20px 
+}
 
 // end multiselect specific conf 
 

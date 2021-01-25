@@ -8,7 +8,7 @@
 <form [formGroup]="loggingForm" #currentForm>
     <div class="opfab-logging" >
         <div style="display: flex;">
-            <div  style="margin-top: 28px;margin-right: 40px;position:relative; min-width:400px;max-width:550px;" >
+            <div  style="margin-top: 28px;margin-right: 40px;position:relative; min-width:400px;max-width:400px;" >
                 <of-multi-filter filterPath="process"
                                    id="process"
                                    [parentForm]="loggingForm"
@@ -19,7 +19,7 @@
                 ></of-multi-filter>
             </div>
             <div class="opfab-vertical-bar"></div>
-            <div style="margin-left:40px;margin-right: 30px;width:300px;min-width: 250px;">
+            <div style="margin-left:40px;margin-right: 30px;width:280px;min-width: 280px;">
                 <div>
                 <of-datetime-filter filterPath="publishDateFrom" formControlName="publishDateFrom"
                                     labelKey="archive.filters."></of-datetime-filter>
@@ -31,7 +31,7 @@
             </div>
 
             <div class="opfab-vertical-bar"></div>
-            <div style="margin-left:40px;width:300px;min-width: 250px;">
+            <div style="margin-left:40px;width:280px;min-width: 280px;">
                 <div>
                     <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom"
                                         labelKey="archive.filters."></of-datetime-filter>
