@@ -69,7 +69,7 @@
       <thead>
         <tr>
           <th scope="col"></th>
-          <th scope="col" translate>archive.result.publishDate</th>
+          <th scope="col" style="padding-left: 5px" translate>archive.result.publishDate</th>
           <th scope="col" translate>archive.result.businessPeriod</th>
           <th scope="col" translate>archive.result.title</th>
           <th scope="col" translate>archive.result.summary</th>
@@ -78,7 +78,7 @@
 
       <tr *ngFor="let card of results" (click)="openCard(card.id)" class="opfab-archives-table-line" style="cursor: pointer;">
         <td class="opfab-archive-sev opfab-archive-sev-{{card.severity.toLowerCase()}}"></td>
-        <td> {{displayTime(card.publishDate)}} </td>
+        <td style="padding-left: 5px"> {{displayTime(card.publishDate)}} </td>
         <td> {{displayTime(card.startDate)}} - {{displayTime(card.endDate)}} </td>
         <td translate [translateParams]="card.title.parameters">
           {{ card.process + '.' + card.processVersion + '.' + card.title.key}}
