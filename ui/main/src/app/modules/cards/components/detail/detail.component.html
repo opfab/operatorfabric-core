@@ -70,7 +70,7 @@
 
           <div style="width:70%;text-align: right" >
             <div id="opfab-answer-help" class="opfab-icon-help" placement="left" [ngbPopover]="helpContent"
-              container="body" [autoClose]="'outside'">
+              container="body" triggers="mouseenter:mouseleave">
             </div>
             <span translate>response.answers</span> :
             <span *ngFor="let entity of listVisibleEntitiesToRespond; let isLast = last"
