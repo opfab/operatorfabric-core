@@ -108,7 +108,6 @@ OperatorFabric TSC voting members are:
 * link:https://github.com/freddidierRTE[Frédéric Didier]
 * link:https://github.com/0x62646f727465[Boris Dolley]
 * link:https://github.com/AlexGuironnetRTE[Alexandra Guironnet]
-* link:https://github.com/rlg-rte[Ronan Le Gall]
 * link:https://github.com/vlo-rte[Valérie Longa]
 * link:https://github.com/HanaeSafiRTE[Hanae Safi]
 * link:https://github.com/gtrimbach-RTE[Guillaume Trimbach]
