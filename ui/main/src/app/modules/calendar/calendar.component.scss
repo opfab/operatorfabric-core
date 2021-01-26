@@ -118,6 +118,11 @@ td.fc-today
   border-style: hidden;
 }
 
+// Day name in uppercase 
+.fc-day-header {
+  text-transform: uppercase;
+}
+
 // Day number on the top left of the cell  
 .fc-ltr .fc-dayGrid-view .fc-day-top .fc-day-number{
   float: left;
