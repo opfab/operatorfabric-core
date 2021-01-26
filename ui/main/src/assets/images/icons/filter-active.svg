@@ -1,9 +1,9 @@
 <!--
-Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+Copyright (c) 2021 RTE (http://www.rte-france.com)
 See AUTHORS.txt
 This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 If a copy of the license was not distributed with this
 file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 SPDX-License-Identifier: CC-BY-4.0
 -->
-<svg id="filtre_active" data-name="filtre active" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><title>filter active</title><path d="M31,1V6.75l-11,9-.36.3V27.29l-5.23,3V16l-.43-.3L1,6.7V1H31m1-1H0V7.23l13.42,9.29V32l7.23-4.13V16.52L32,7.23V0Z"/><path d="M22.15,27.85A.47.47,0,0,1,22,27.5V32h4.5a.47.47,0,0,1-.35-.15Z"/><path d="M22,22v5.5a.47.47,0,0,1,.15-.35.48.48,0,0,1,.7,0l3.53,3.53,4.68-8.42a.5.5,0,0,1,.68-.2.51.51,0,0,1,.2.68l-5,9a.55.55,0,0,1-.37.26H32V22Z"/></svg>
+<svg id="Calque_28" data-name="Calque 28" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32.01 32"><title>active filter</title><g id="filtre_active" data-name="filtre active"><path d="M30,2V6.27L19.38,15l-.73.6V26.7l-3.23,1.84V15.47l-.86-.6L2,6.18V2H30m2-2H0V7.22l13.42,9.29V32l7.23-4.13V16.52L32,7.23V0Z"/><path d="M22.15,27.85A.5.5,0,0,1,22,27.5V32h4.5a.47.47,0,0,1-.35-.15Z"/><path d="M22,22v5.5a.47.47,0,0,1,.15-.35.5.5,0,0,1,.71,0l3.53,3.53,4.68-8.42a.5.5,0,0,1,.87.49l-5,9a.49.49,0,0,1-.37.25H32V22Z"/></g></svg>
