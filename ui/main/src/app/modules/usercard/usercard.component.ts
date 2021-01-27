@@ -444,6 +444,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
             );
     }
 
+    cancel(): void {
+        this.modal.close();
+    }
 
     decline(): void {
        this.displayPreview = false;
