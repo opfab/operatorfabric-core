@@ -43,18 +43,18 @@
                 <span class="opfab-radio-button-checkmark"></span>
             </label>
         </div>
-        <div class="row">
-            <div class="col" *ngIf="startDateVisible">
+        <div class="justify-content-center" style="display:flex;width:100%;align-content:center;flex-wrap: wrap;">
+            <div *ngIf="startDateVisible" style="width:280px;margin-right: 50px;margin-left: 50px ;">
                 <of-datetime-filter filterPath="startDate" formControlName="startDate" labelKey="userCard.filters."
-                    [offset]="[{amount:1,unit:'minute'}]"></of-datetime-filter>
+                    [offset]="[{amount:1,unit:'minute'}]" ></of-datetime-filter>
             </div>
-            <div class="col" *ngIf="endDateVisible">
+            <div *ngIf="endDateVisible" style="width: 280px;;margin-right: 50px;margin-left: 50px ;">
                 <of-datetime-filter filterPath="endDate" formControlName="endDate" labelKey="userCard.filters."
                     [offset]="[{amount:1,unit:'day'}]"></of-datetime-filter>
             </div>
         </div>
 
-
+ 
 
     </form>
 

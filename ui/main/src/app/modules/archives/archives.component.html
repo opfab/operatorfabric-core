@@ -12,13 +12,13 @@
       <div class="opfab-archives">
         <div style="display: flex;">
           <div style="margin-right:40px">
-            <div *ngIf="tags" style="min-width:400px;max-width:400px;margin-top:28px;margin-bottom: 54px;">
+            <div *ngIf="tags" style="min-width:300px;max-width:400px;margin-top:28px;margin-bottom: 54px;">
               <of-multi-filter filterPath="tags" id="tags" [parentForm]="archiveForm" [values]="tagsDropdownList"
                 [dropdownSettings]="tagsDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="archive.filters.">
               </of-multi-filter>
             </div>
 
-            <div style="min-width:400px;max-width:400px;margin-top: 28px;">
+            <div style="min-width:300px;max-width:400px;margin-top: 28px;">
               <of-multi-filter filterPath="process" id="process" [parentForm]="archiveForm"
                 [values]="processDropdownList" [dropdownSettings]="processDropdownSettings" [selectedItems]="[]"
                 i18nRootLabelKey="archive.filters."></of-multi-filter>
@@ -27,7 +27,7 @@
 
 
           <div class="opfab-vertical-bar"></div>
-          <div style="margin-left:40px;margin-right: 30px;width:280px; min-width: 280px;">
+          <div style="margin-left:40px;margin-right: 30px;width:230px; min-width: 230px;">
             <div>
               <of-datetime-filter filterPath="publishDateFrom" formControlName="publishDateFrom"
                 labelKey="archive.filters."></of-datetime-filter>
@@ -39,7 +39,7 @@
           </div>
 
           <div class="opfab-vertical-bar"></div>
-          <div style="margin-left:40px;width:280px;min-width: 280px;">
+          <div style="margin-left:40px;width:230px;min-width: 230px;">
             <div>
               <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom" labelKey="archive.filters.">
               </of-datetime-filter>
