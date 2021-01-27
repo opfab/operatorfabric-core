@@ -18,7 +18,8 @@ import {
     OnDestroy,
     OnInit,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
 import {Card, CardForPublishing} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
@@ -101,7 +102,8 @@ const maxVisibleEntitiesToRespond = 3;
 @Component({
     selector: 'of-detail',
     templateUrl: './detail.component.html',
-    styleUrls: ['./detail.component.scss']
+    styleUrls: ['./detail.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewChecked, DoCheck {
 
@@ -166,7 +168,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     open(content) {
-        this.modalRef = this.modalService.open(content);
+        const modalOptions = { windowClass : "opfab-modal-content"}
+        this.modalRef = this.modalService.open(content, modalOptions);
     }
 
     adaptTemplateSize() {
