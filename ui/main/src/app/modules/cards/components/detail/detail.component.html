@@ -70,7 +70,7 @@
 
           <div style="width:70%;text-align: right" >
             <div id="opfab-answer-help" class="opfab-icon-help" placement="left" [ngbPopover]="helpContent"
-              container="body" triggers="mouseenter:mouseleave">
+              container="body" triggers="mouseenter:mouseleave" popoverClass="opfab-popover">
             </div>
             <span translate>response.answers</span> :
             <span *ngFor="let entity of listVisibleEntitiesToRespond; let isLast = last"
@@ -78,7 +78,7 @@
                 &nbsp; {{entity.name}} &nbsp;
             </span>
             <span *ngIf="listDropdownEntitiesToRespond && listDropdownEntitiesToRespond.length > 0" id="opfab-entities-dropdown" class="opfab-entities-dropdown" placement="bottom-right" [ngbPopover]="entitiesDropdown"
-              container="body" [autoClose]="'true'" popoverClass="opfab-entities-popover">
+              container="body" [autoClose]="'true'" popoverClass="opfab-popover-no-arrow">
               &nbsp;..&nbsp;
             </span>
           </div>

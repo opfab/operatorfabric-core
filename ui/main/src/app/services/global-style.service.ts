@@ -31,6 +31,7 @@ export class GlobalStyleService {
                                         --opfab-form-label-text-color: black;
                                         --opfab-form-border-color:  #9C9B9B;
                                         --opfab-button-disable-bgcolor: #DBDBDB;
+                                        --opfab-popover-bgcolor: #f3f2f1;
                                         --opfab-feedbar-icon-color: black;
                                         --opfab-feedbar-icon-hover-color:#212529;
                                         --opfab-feedbar-icon-hover-bgcolor: #F3F2F1;
@@ -65,7 +66,7 @@ export class GlobalStyleService {
                                         --opfab-navbar-menu-link-color: #343a40;
                                         --opfab-navbar-menu-link-hover-color: #121416;
                                         --opfab-navbar-menu-bgcolor: white;
-                                        --opfab-navbar-right-menu-bgcolor: white;
+                                        --opfab-navbar-right-menu-bgcolor: #f3f2f1;
                                         --opfab-navbar-menu-bgcolor-item-active: #007bff;
                                         --opfab-navbar-menu-bgcolor-item-hover: #f8f9fa;
                                         --opfab-timeline-cardlink: #212529;
@@ -90,6 +91,7 @@ export class GlobalStyleService {
                                         --opfab-form-border-color:  #606267;
                                         --opfab-form-label-text-color: #bababa;
                                         --opfab-button-disable-bgcolor: #2B353F;
+                                        --opfab-popover-bgcolor: #182638;
                                         --opfab-feedbar-icon-color: white;
                                         --opfab-feedbar-icon-hover-color:white;
                                         --opfab-feedbar-icon-hover-bgcolor:#131D2B;
@@ -124,7 +126,7 @@ export class GlobalStyleService {
                                         --opfab-navbar-menu-link-color: #343a40;
                                         --opfab-navbar-menu-link-hover-color: #121416;
                                         --opfab-navbar-menu-bgcolor: white;
-                                        --opfab-navbar-right-menu-bgcolor: #131D2B;
+                                        --opfab-navbar-right-menu-bgcolor: #182638;
                                         --opfab-navbar-menu-bgcolor-item-active: #007bff;
                                         --opfab-navbar-menu-bgcolor-item-hover: #f8f9fa;
                                         --opfab-timeline-cardlink: white;

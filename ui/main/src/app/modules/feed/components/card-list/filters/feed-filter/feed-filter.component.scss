@@ -20,6 +20,14 @@
   border-bottom: 0.5px solid var(--opfab-text-color);
 }
 
+.opfab-filter-type-header {
+  margin-left: 2px;
+  margin-right: 2px;
+  margin-bottom: 10px;
+  padding-bottom: 4px;
+  border-bottom: 0.5px solid var(--opfab-text-color);
+}
+
 .label-sev-alarm::before {
   content: "";
   display: inline-block;
@@ -115,6 +123,52 @@
 
 .opfab-filters-popover {
   margin-left: -10px;
-  background-color: #182638;
   padding-left: 2px;
+
+  background-color: var(--opfab-popover-bgcolor);
+  color: var(--opfab-text-color);
+  .popover-header {
+    color: var(--opfab-text-color);
+    background-color: var(--opfab-popover-bgcolor);
+    border-bottom: 1px solid var(--opfab-text-color);
+  }
+  .popover-body {
+    color: var(--opfab-text-color);
+  }
+  .arrow::after{
+    border-right-color: var(--opfab-popover-bgcolor);
+  }
+}
+
+.opfab-time-filter  {
+  .opfab-input,
+  .opfab-input > input, 
+  .opfab-input label , 
+  .opfab-textarea, 
+  .opfab-textarea  > textarea,
+  .opfab-textarea label , 
+  .form-control , 
+  .form-control:disabled , 
+  .opfab-input > input ,
+  .opfab-multiselect, 
+  .opfab-multiselect > label,
+  .opfab-multiselect  .c-btn,
+  .opfab-select,
+  .opfab-select > select,
+  .opfab-select > select option,
+  .opfab-select > label,
+  .opfab-input-type-ahead,
+  .opfab-input-type-ahead > input, 
+  .opfab-input-type-ahead label , 
+  type-ahead > input{
+    background-color:var(--opfab-popover-bgcolor);
+  } 
+  type-ahead > .badge-primary {
+    background-color: var(--opfab-bgcolor-darker);
+  }
+  // Remove default arrow by setting the up/down arrow color to the background color
+  .opfab-multiselect .selected-list .c-angle-down svg, .opfab-multiselect .selected-list .c-angle-up svg{
+    fill: var(--opfab-popover-bgcolor);
+  }
+  
 }

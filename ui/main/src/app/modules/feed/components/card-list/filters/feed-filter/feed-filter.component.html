@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -12,7 +12,7 @@
 
 
 
-    <div class="row opfab-filter-header">
+    <div class="row opfab-filter-type-header">
         <span translate>feed.filters.type.title</span>
     </div>
     <form [formGroup]="typeFilterForm" id="type-filter-form" style="padding-left: 3px;">
@@ -74,7 +74,7 @@
             <span translate>feed.filters.time.titleIfFilterBasedOnBusinessDate</span>
         </div>
 
-        <form class="opfab-form-lighter" [formGroup]="timeFilterForm" id="time-filter-form">
+        <form class="opfab-time-filter" [formGroup]="timeFilterForm" id="time-filter-form">
 
             <div style="margin-left: 2px; margin-right: 2px;margin-top:-10px;width:250px">
                 <div class="form-group" id="start">
@@ -93,7 +93,7 @@
         </form>
         
     </div>
-    <div *ngIf="isFilterActive()"><a class="opfab-link" (click)="reset()"><span translate>feed.filters.reset</span></a></div>
+    <div *ngIf="isFilterChanged()"><a class="opfab-link" (click)="reset()"><span translate>feed.filters.reset</span></a></div>
 </ng-template>
 
 

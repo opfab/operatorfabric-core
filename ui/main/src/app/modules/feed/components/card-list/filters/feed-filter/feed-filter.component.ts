@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -200,6 +200,13 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         return !this.typeFilterForm.get('alarm').value || !this.typeFilterForm.get('action').value
             || !this.typeFilterForm.get('compliant').value || !this.typeFilterForm.get('information').value
             || this.ackFilterForm.get('ackControl').value === 'ack'
+            || !!this.extractTime(this.timeFilterForm.get('dateTimeFrom')) || !!this.extractTime(this.timeFilterForm.get('dateTimeTo'));
+    }
+
+    isFilterChanged(): boolean {
+        return !this.typeFilterForm.get('alarm').value || !this.typeFilterForm.get('action').value
+            || !this.typeFilterForm.get('compliant').value || !this.typeFilterForm.get('information').value
+            || this.ackFilterForm.get('ackControl').value != 'notack'
             || !!this.extractTime(this.timeFilterForm.get('dateTimeFrom')) || !!this.extractTime(this.timeFilterForm.get('dateTimeTo'));
     }
 
