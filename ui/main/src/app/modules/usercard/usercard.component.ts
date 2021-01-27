@@ -83,6 +83,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
     unsubscribe$: Subject<void> = new Subject<void>();
 
     public displayPreview = false;
+    public displaySendingCardInProgress = false;
 
     modalRef: NgbModalRef;
     severityVisible: boolean = true;
@@ -423,6 +424,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     confirm(): void {
         this.displayPreview = false;
+        this.displaySendingCardInProgress = true;
         this.cardService.postCard(fromCardToCardForPublishing(this.card))
             .subscribe(
                 resp => {

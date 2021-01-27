@@ -7,7 +7,7 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-<div [hidden]="displayPreview" *ngIf="displayForm()" class="container" style="padding-top:20px">
+<div [hidden]="displayPreview" [hidden]="displaySendingCardInProgress" *ngIf="displayForm()" class="container" style="padding-top:20px">
     <form [formGroup]="messageForm" class="opfab-form-lighter">
         <div class="row">
 
@@ -121,6 +121,12 @@
 
 </div>
 
+<div *ngIf="displaySendingCardInProgress" style="text-align: center;margin-top: 20px;font-size: 20px">
+    <em  class="fas fa-spinner fa-spin slow-spin"></em>
+    <div style="font-weight: bold;margin-top: 10px;margin-bottom: 20px" translate>
+        userCard.sendingCardInProgress
+    </div>
+</div>
 
 <ng-container *ngIf="!displayForm()">
     <div class="alert alert-info">

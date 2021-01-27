@@ -239,7 +239,8 @@
       "error": {
         "impossibleToDeleteCard": "Impossible de supprimer la carte pour des raisons techniques"
       }
-    }
+    },
+    "sendingCardInProgress": "Envoi de la carte en cours ..."
   },
   "response": {
     "btnTitle": "VALIDER REPONSE",
