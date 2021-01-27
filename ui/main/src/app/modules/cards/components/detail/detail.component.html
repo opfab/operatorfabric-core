@@ -61,10 +61,9 @@
       <div  *ngIf='responseDataExists && showDetailCardHeader' class="opfab-card-response-header" >
         <div class="flex-container">
           <div style="width:30%;" >
-            <span style="border-right:3px solid white" >
-              <span translate>response.status</span> :
-              <span class="opfab-question-card-state-name" >{{cardStateName}} &nbsp;</span>
-            </span>
+            <span style="padding-left:15px" translate>response.status</span> :
+            <span class="opfab-question-card-state-name" >{{cardStateName}} &nbsp;</span>
+            <span *ngIf="!!this.card.lttd"> |</span>
             <of-countdown [card]="card"></of-countdown>
           </div>
 
