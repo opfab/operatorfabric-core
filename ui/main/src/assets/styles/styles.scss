@@ -194,12 +194,6 @@ body {
 }
 
 
-// use in date time filter when time is disabled
-.form-control:disabled {
-  background-color: var(--opfab-bgcolor-darker);
-  color: #606267;
-}
-
 .opfab-input > input {
   background-color:var(--opfab-bgcolor-darker);
   color:var(--opfab-input-text-color);
@@ -243,6 +237,23 @@ body {
   color: var(--opfab-form-label-text-color);
   background-color: var(--opfab-bgcolor-darker);
 }
+
+// TIME INPUT IN DATE TIME PICKER 
+.ngb-tp-input-container .form-control {
+  padding: 0px
+}
+
+.ngb-tp {
+  width : 80px;
+}
+
+// use in date time filter when time is disabled
+.form-control:disabled {
+  background-color: var(--opfab-bgcolor-darker);
+  color: #606267;
+}
+
+
 // CHECKBOX 
 
 /* The opfab-checkbox */
