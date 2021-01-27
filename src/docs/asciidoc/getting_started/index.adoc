@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -61,7 +61,7 @@ The result should be a 201 Http status, and a json object such as:
 
 See the result in the UI, you should see a card, if you click on it you'll see the detail
 
-image::formated-card-details.jpg[detail card screenshot]
+image::formated-card-details.png[detail card screenshot]
 
 ==== Anatomy of the card : 
 A card is containing information regarding the publisher, the recipients, the process, the data to show... 
@@ -305,25 +305,26 @@ of the bundle:
 ----
 {
 	"id":"criticalSituation",
+	"name": "process.name",
 	"version":"1",
 	"states":{
 		"criticalSituation-begin" : {
 			"detailTitle" : { "key" : "criticalSituation-begin.title"},
 			"templateName" : "criticalSituationTemplate",
 			"styles" : [ "style" ],
-			"acknowledgementAllowed": true
+			"acknowledgmentAllowed": "Always"
 		},
 		"criticalSituation-update" : {
 			"detailTitle" : { "key" : "criticalSituation-update.title"},
 			"templateName" : "criticalSituationTemplate",
 			"styles" : [ "style" ],
-			"acknowledgementAllowed": true
+			"acknowledgmentAllowed": "Always"
 		},
 		"criticalSituation-end" : {
 			"detailTitle" : { "key" : "criticalSituation-end.title"},
 			"templateName" : "endCriticalSituationTemplate",
 			"styles" : [ "style" ],
-			"acknowledgementAllowed": true
+			"acknowledgmentAllowed": "Always"
 		}
 	}
 }
@@ -339,13 +340,16 @@ The title is a key which refer to an i18n found in the corresponding i18n reposi
 [source,JSON]
 ----
 {
+    "process": {
+      "name": "Critical situation process"
+    },
 	"criticalSituation-begin":{
 		"title":"CRITICAL SITUATION",
-		"summary":" CRITICAL SITUATION ON THE GRID, SEE DETAIL FOR INSTRUCTION"
+		"summary":" CRITICAL SITUATION ON THE GRID , SEE DETAIL FOR INSTRUCTION"
 	},
         "criticalSituation-update":{
                 "title":"CRITICAL SITUATION - UPDATE",
-                "summary":" CRITICAL SITUATION ON THE GRID, SEE DETAIL FOR INSTRUCTION"
+                "summary":" CRITICAL SITUATION ON THE GRID , SEE DETAIL FOR INSTRUCTION"
         },
         "criticalSituation-end":{
                 "title":"CRITICAL SITUATION - END",
@@ -462,7 +466,7 @@ A second card (card2.json) is provided as example, you need again to set times v
 ----
 This time the severity of the card is ALERT, you should see the point in red in the timeline
 
-image::example4.jpg[example 4 screenshot]
+image::example4.png[example 4 screenshot]
 
 === Example 5: Card routing mechanism
 
