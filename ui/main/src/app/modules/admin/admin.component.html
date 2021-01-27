@@ -1,3 +1,12 @@
+<!-- Copyright (c) 2020, RTEi (http://www.rte-international.com)           -->
+<!-- Copyright (c) 2021, RTE (http://www.rte-france.com)                   -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
 <div id="tabs" #tabs>
 
   <ul class="nav nav-pills">
@@ -18,18 +27,31 @@
     <div class="tab-pane active" id="admin/users" [ngClass]="{ 'active':activeTab==='users'}">
       <br>
       <br>
-      <of-users-table></of-users-table>
+      <of-users-table [paginationPageSize]="paginationPageSize"></of-users-table>
     </div>
     <div class="tab-pane" id="admin/entities" [ngClass]="{ 'active':activeTab==='entities'}">
       <br>
       <br>
-     <of-entities-table></of-entities-table>
+      <of-entities-table [paginationPageSize]="paginationPageSize"></of-entities-table>
     </div>
     <div class="tab-pane" id="admin/groups" [ngClass]="{ 'active':activeTab==='groups'}">
       <br>
       <br>
-      <of-groups-table></of-groups-table>
+      <of-groups-table [paginationPageSize]="paginationPageSize"></of-groups-table>
     </div>
+  </div>
+
+  <br>
+  <br>
+  <div>
+    <select (change)="onPageSizeChanged()" id="page-size-select" label="page-size">
+      <option *ngFor="let option of paginationPageSizeOptions"
+              [value]="option"
+              [attr.selected]="option==paginationDefaultPageSize ? true : null">
+        {{option}}
+      </option>
+    </select>
+    <label for="page-size-select" translate>&nbsp;admin.input.lines</label>
   </div>
 
 </div>

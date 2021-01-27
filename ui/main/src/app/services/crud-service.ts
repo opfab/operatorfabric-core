@@ -7,11 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
- import { Observable } from 'rxjs';
+import {Observable} from 'rxjs';
+import {Injectable} from "@angular/core";
+import {ErrorService} from "@ofServices/error-service";
 
-export interface CrudService {
-  getAll(): Observable<Array<any>>;
-  update(data: any): Observable<any>;
-  deleteById(id: string): Observable<any>;
+@Injectable({
+    providedIn: 'root'
+})
+export abstract class CrudService extends ErrorService {
+  abstract getAll(): Observable<Array<any>>;
+  abstract update(data: any): Observable<any>;
+  abstract deleteById(id: string): Observable<any>;
 
 }

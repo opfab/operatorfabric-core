@@ -1,4 +1,5 @@
-/* Copyright (c) 2018-2020, RTEI (http://www.rte-international.com)
+/* Copyright (c) 2020, RTEi (http://www.rte-international.com)
+ * Copyright (c) 2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,41 +8,41 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { ErrorHandler, NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AdminComponent } from './admin.component';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { AdminRoutingModule } from './admin-rooting.module';
-import { TranslateModule } from '@ngx-translate/core';
-import { AppErrorHandler } from 'app/common/error/app-error-handler';
-import { OfUsersTableComponent } from './components/ngtable/users/ofuserstable.component';
-import { OfGroupsTableComponent } from './components/ngtable/groups/of-groups-table.component';
-import { OfEntitiesTableComponent } from './components/ngtable/entities/of-entities-table.component';
-import { OfTableComponent } from './components/ngtable/oftable/oftable.component';
-import { Ng2TableModule } from 'ng2-table';
-import { EditUsermodalComponent } from './components/editmodal/users/edit-user-modal.component';
-import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
-import { MatInputModule, MatSelectModule } from '@angular/material';
-import { EditEntityGroupModalComponent } from './components/editmodal/groups-entities/edit-entity-group-modal.component';
 
+import {ErrorHandler, NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {AdminComponent} from './admin.component';
+import {PaginationModule} from 'ngx-bootstrap/pagination';
+import {AdminRoutingModule} from './admin-rooting.module';
+import {TranslateModule} from '@ngx-translate/core';
+import {AppErrorHandler} from 'app/common/error/app-error-handler';
+import {EditUserModalComponent} from './components/editmodal/users/edit-user-modal.component';
+import {ConfirmationDialogComponent} from './components/confirmation-dialog/confirmation-dialog.component';
+import {EditEntityGroupModalComponent} from './components/editmodal/groups-entities/edit-entity-group-modal.component';
+import {AgGridModule} from 'ag-grid-angular';
+import {UsersTableComponent} from './components/table/users-table.component';
+import {ActionCellRendererComponent} from './components/table/action-cell-renderer.component';
+import {MatInputModule, MatSelectModule} from '@angular/material';
+import {EntitiesTableComponent} from './components/table/entities-table.component';
+import {GroupsTableComponent} from './components/table/groups-table.component';
 
 
 @NgModule({
   declarations: [
     AdminComponent,
-    OfUsersTableComponent,
-    OfGroupsTableComponent,
-    OfEntitiesTableComponent,
-    OfTableComponent,
-    EditUsermodalComponent,
+    UsersTableComponent,
+    EntitiesTableComponent,
+    GroupsTableComponent,
+    EditUserModalComponent,
     ConfirmationDialogComponent,
-    EditEntityGroupModalComponent
+    EditEntityGroupModalComponent,
+    ActionCellRendererComponent
   ],
 
 
   entryComponents: [
-    EditUsermodalComponent,
+    EditUserModalComponent,
     ConfirmationDialogComponent,
     EditEntityGroupModalComponent
   ],
@@ -56,9 +57,13 @@ import { EditEntityGroupModalComponent } from './components/editmodal/groups-ent
     , MatSelectModule
     , MatInputModule
     , TranslateModule
-    , Ng2TableModule
+    , AgGridModule.withComponents([[
+      ActionCellRendererComponent,
+    ]]),
   ],
-  providers: [{ provide: ErrorHandler, useClass: AppErrorHandler }]
+  providers: [
+      { provide: ErrorHandler, useClass: AppErrorHandler },
+  ]
 })
 export class AdminModule { }
 

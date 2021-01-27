@@ -7,24 +7,22 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { Injectable } from '@angular/core';
-import { environment } from '@env/environment';
-import { HttpClient } from '@angular/common/http';
-import { CrudService } from './crud-service';
-import { ErrorService } from './error-service';
-import { catchError } from 'rxjs/operators';
-import { Observable, Subject} from 'rxjs';
-import { Entity } from '@ofModel/entity.model';
-import { takeUntil } from 'rxjs/internal/operators/takeUntil';
-import { tap } from 'rxjs/operators';
+import {environment} from '@env/environment';
+import {HttpClient} from '@angular/common/http';
+import {CrudService} from './crud-service';
+import {catchError, tap} from 'rxjs/operators';
+import {Observable, Subject} from 'rxjs';
+import {Entity} from '@ofModel/entity.model';
+import {takeUntil} from 'rxjs/internal/operators/takeUntil';
+import {Injectable} from "@angular/core";
 
 
 declare const templateGateway: any;
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
-export class EntitiesService extends ErrorService implements CrudService {
+export class EntitiesService extends CrudService {
 
  readonly entitiesUrl: string;
  private _entities: Entity[];

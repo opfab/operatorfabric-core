@@ -1,4 +1,13 @@
-<!-- Modal-content -->
+<!-- Copyright (c) 2020, RTEi (http://www.rte-international.com)           -->
+<!-- Copyright (c) 2021, RTE (http://www.rte-france.com)                   -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
 <div class="modal-header bg-dark">
   <h5 class="modal-title" *ngIf="row">{{row.id}}</h5>
   <h5 class="modal-title" *ngIf="!row && type==='group'" translate>admin.input.group.add</h5>
@@ -17,7 +26,7 @@
           <input matInput  formControlName="id" name="id" id="id" type="text"
             class="form-control bg-dark">
         </mat-form-field>
-        <div *ngIf="id.touched && id.invalid" class="alert alert-danger">
+        <div *ngIf="id.invalid" class="alert alert-danger">
           <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
           <div *ngIf="id.errors.maxlength" translate>admin.input.id.maxLength</div>
           <div *ngIf="id.errors.minlength" translate>admin.input.id.minLength</div>
@@ -30,7 +39,7 @@
       <mat-label for="name" translate>admin.input.name.label</mat-label>
       <input matInput formControlName="name" name="name" id="name" type="text" class="form-control bg-dark">
       </mat-form-field>
-      <div *ngIf="name.touched && name.invalid" class="alert alert-danger">
+      <div *ngIf="name.invalid" class="alert alert-danger">
         <div *ngIf="name.errors.required" translate>admin.input.name.required</div>
         <div *ngIf="name.errors.maxlength" translate>admin.input.name.maxLength</div>
       </div>
@@ -45,11 +54,11 @@
 </div>
 <div class="modal-footer bg-dark">
   <button id="opfab-admin-edit-group-btn-cancel" type="button" (click)="activeModal.dismiss('Cross click')" class="opfab-btn-cancel" data-dismiss="modal"
-    translate>admin.input.user.close</button>
+    translate>admin.input.close</button>
   <button  id="opfab-admin-group-btn-add" [disabled]="!form.valid" *ngIf="!row && type==='group'" (click)="update()" class="opfab-btn"
     translate>admin.input.group.add</button>
   <button id="opfab-admin-entity-btn-add"[disabled]="!form.valid" *ngIf="!row && type==='entity'" (click)="update()" class="opfab-btn"
     translate>admin.input.entity.add</button>
   <button id="opfab-admin-user-btn-save" [disabled]="!form.valid" *ngIf="row" (click)="update()" class="opfab-btn"
-    translate>admin.input.user.save</button>
+    translate>admin.input.save</button>
 </div>

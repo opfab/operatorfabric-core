@@ -1,4 +1,5 @@
-/* Copyright (c) 2018-2020, RTEI (http://www.rte-international.com)
+/* Copyright (c) 2020, RTEi (http://www.rte-international.com)
+ * Copyright (c) 2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,24 +8,23 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
-import { OnInit, Component, Input } from '@angular/core';
-import { User } from '@ofModel/user.model';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { UserService } from '@ofServices/user.service';
-import { DataTableShareService } from 'app/modules/admin/services/data.service';
-import { GroupsService } from '@ofServices/groups.service';
-import { EntitiesService } from '@ofServices/entities.service';
-import { Entity } from '@ofModel/entity.model';
-import { Group } from '@ofModel/group.model';
-import { IdValidatorService } from 'app/modules/admin/services/id-validator.service';
+import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import {Component, Input, OnInit} from '@angular/core';
+import {User} from '@ofModel/user.model';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {UserService} from '@ofServices/user.service';
+import {GroupsService} from '@ofServices/groups.service';
+import {EntitiesService} from '@ofServices/entities.service';
+import {Entity} from '@ofModel/entity.model';
+import {Group} from '@ofModel/group.model';
+import {IdValidatorService} from 'app/modules/admin/services/id-validator.service';
 
 @Component({
-  selector: 'of-editmodal',
+  selector: 'of-edit-user-modal',
   templateUrl: './edit-user-modal.component.html',
   styleUrls: ['./edit-user-modal.component.scss']
 })
-export class EditUsermodalComponent implements OnInit {
+export class EditUserModalComponent implements OnInit {
 
   form = new FormGroup({
     login: new FormControl(''
@@ -42,11 +42,10 @@ export class EditUsermodalComponent implements OnInit {
   @Input() row: User;
 
   constructor(
-    public activeModal: NgbActiveModal,
+    private activeModal: NgbActiveModal,
     private crudService: UserService,
-    private data: DataTableShareService,
     private groupsService: GroupsService,
-    private entitesService: EntitiesService) {
+    private entitiesService: EntitiesService) {
   }
 
   ngOnInit() {
@@ -55,6 +54,7 @@ export class EditUsermodalComponent implements OnInit {
     }
     this.initializeEntities();
     this.initializeGroups();
+
   }
 
   update() {
@@ -63,8 +63,11 @@ export class EditUsermodalComponent implements OnInit {
     this.groups.setValue(this.groups.value.filter((item: string) => item.length > 0));
     this.entities.setValue(this.entities.value.filter((item: string) => item.length > 0));
     this.crudService.update(this.form.value).subscribe(() => {
-      this.data.changeUserRow(this.form.value);
-      this.activeModal.dismiss('Update click');
+      this.activeModal.close('Update button clicked on user modal');
+      // We call the activeModal "close" method and not "dismiss" to indicate that the modal was closed because the
+      // user chose to perform an action (here, update the selected item).
+      // This is important as code in the corresponding table components relies on the resolution of the
+      // `NgbMobalRef.result` promise to trigger a refresh of the data shown on the table.
     });
   }
 
@@ -101,7 +104,7 @@ export class EditUsermodalComponent implements OnInit {
 
 
   private initializeEntities(): void {
-    this.entitesService.getAll().subscribe(response => {
+    this.entitiesService.getAll().subscribe(response => {
       this.entitiesList = response;
     });
 

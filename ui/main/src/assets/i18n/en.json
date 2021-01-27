@@ -184,7 +184,7 @@
     "delete": "Delete",
     "edit": "Edit",
     "yes": "YES",
-    "search" : "SEARCH" 
+    "search" : "SEARCH"
   },
   "feedConfiguration": {
     "title": "NOTIFICATION RECEPTION CONFIGURATION",
@@ -265,42 +265,45 @@
   "admin": {
     "input": {
       "group": {
-        "delete": "Do you really want to delete group",
+        "id": "Id",
+        "name": "Name",
+        "description": "Description",
+        "confirmDelete": "Do you really want to delete group",
         "add": "Add new group"
       },
       "entity": {
-        "delete": "Do you really want to delete entity",
+        "id": "Id",
+        "name": "Name",
+        "description": "Description",
+        "confirmDelete": "Do you really want to delete entity",
         "add": "Add new entity"
       },
       "user": {
         "login": "Login",
-        "lastname": "Last name",
-        "firstname": "First name",
+        "lastName": "Last name",
+        "firstName": "First name",
         "groups": "Groups",
         "entities": "Entities",
-        "add": "Add new user",
-        "edit": "Edit",
-        "delete": "Delete",
-        "save": "SAVE CHANGES",
-        "close": "CLOSE",
-        "cancel": "CANCEL",
-        "confirm": "Please confirm..",
-        "user": "user",
-        "filter": "filter by ",
-        "filterAll": "filter all columns"
+        "confirmDelete": "Do you really want to delete user",
+        "add": "Add new user"
       },
-      "delete": "Do you really want to delete user",
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "SAVE CHANGES",
+      "close": "CLOSE",
+      "cancel": "CANCEL",
+      "confirm": "Please confirm...",
       "login": {
         "required": "Login is required.",
         "minLength": "Login should be minimum 4 characters.",
         "maxLength": "Login should be maximum 20 characters.",
         "alreadyTaken": "Login is already taken."
       },
-      "firstname": {
+      "firstName": {
         "required": "First name is required.",
         "maxLength": "First name should be maximum 20 characters."
       },
-      "lastname": {
+      "lastName": {
         "required": "Last name is required.",
         "maxLength": "Last name should be maximum 20 characters."
       },
@@ -308,8 +311,7 @@
         "required": "Id is required.",
         "minLength": "Id should be minimum 2 characters.",
         "maxLength": "Id should be maximum 20 characters.",
-        "alreadyTaken": "ID is already taken.",
-        "label":"Id"
+        "alreadyTaken": "ID is already taken."
       },
       "name": {
         "required": "Name is required.",
@@ -317,18 +319,28 @@
         "label":"Name"
       },
       "description": "Description",
-      "lines": "lines"
+      "lines": "lines per page"
     },
     "tabs": {
       "users": "Users management",
       "groups": "Groups management",
       "entities": "Entities management"
-    },
-    "pagination": {
-      "firstText": "First",
-      "lastText": "Last",
-      "nextText": "Next",
-      "prevText": "Previous"
     }
+  },
+  "ag-grid": {
+    "loadingOoo": "Loading...",
+    "noRowsToShow": "No Rows To Show",
+    "filterOoo": "Filter...",
+    "equals": "Equals",
+    "notEqual": "Not equal",
+    "contains": "Contains",
+    "notContains": "Not contains",
+    "startsWith": "Starts with",
+    "endsWith": "Ends with",
+    "andCondition": "AND",
+    "orCondition": "OR",
+    "to": "to",
+    "of": "of",
+    "page": "Page"
   }
 }
