@@ -30,7 +30,7 @@ Test the connection to the UI: to connect to OperatorFabric, open in a browser t
 
 After connection, you should see the following screen
 
-image::empty-opfab-page.jpg[empty opfab screenshot]
+image::empty-opfab-page.png[empty opfab screenshot]
 
 To stop the server (if you start it in background), use:
 
