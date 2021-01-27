@@ -239,7 +239,8 @@
       "error": {
         "impossibleToDeleteCard": "Impossible to delete card for technical reasons"
       }
-    }
+    },
+    "sendingCardInProgress": "Sending card in progress ..."
   },
   "response": {
     "btnTitle": "VALIDATE ANSWER",
