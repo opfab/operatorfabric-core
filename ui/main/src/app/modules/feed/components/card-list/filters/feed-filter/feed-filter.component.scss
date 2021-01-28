@@ -144,31 +144,9 @@
   .opfab-input,
   .opfab-input > input, 
   .opfab-input label , 
-  .opfab-textarea, 
-  .opfab-textarea  > textarea,
-  .opfab-textarea label , 
   .form-control , 
-  .form-control:disabled , 
-  .opfab-input > input ,
-  .opfab-multiselect, 
-  .opfab-multiselect > label,
-  .opfab-multiselect  .c-btn,
-  .opfab-select,
-  .opfab-select > select,
-  .opfab-select > select option,
-  .opfab-select > label,
-  .opfab-input-type-ahead,
-  .opfab-input-type-ahead > input, 
-  .opfab-input-type-ahead label , 
-  type-ahead > input{
+  .form-control:disabled 
+  {
     background-color:var(--opfab-popover-bgcolor);
-  } 
-  type-ahead > .badge-primary {
-    background-color: var(--opfab-bgcolor-darker);
-  }
-  // Remove default arrow by setting the up/down arrow color to the background color
-  .opfab-multiselect .selected-list .c-angle-down svg, .opfab-multiselect .selected-list .c-angle-up svg{
-    fill: var(--opfab-popover-bgcolor);
-  }
-  
+  }   
 }
