@@ -746,3 +746,39 @@ html, body { height: 100%; }
 .opfab-timeline-bgcolor {
   background-color: var(--opfab-timeline-bgcolor);
 }
+
+.opfab-popover {
+  background-color: var(--opfab-popover-bgcolor);
+  color: var(--opfab-text-color);
+  .popover-header {
+    color: var(--opfab-text-color);
+    background-color: var(--opfab-popover-bgcolor);
+    border-bottom: 1px solid var(--opfab-text-color);
+  }
+  .popover-body {
+    color: var(--opfab-text-color);
+  }
+  .arrow::after{
+    border-right-color: var(--opfab-popover-bgcolor);
+  }
+}
+
+.opfab-popover-no-arrow {
+  background-color: var(--opfab-popover-bgcolor);
+  color: var(--opfab-text-color);
+  .popover-header {
+    color: var(--opfab-text-color);
+    background-color: var(--opfab-popover-bgcolor);
+    border-bottom: 1px solid var(--opfab-text-color);
+  }
+  .popover-body {
+    color: var(--opfab-text-color);
+  }
+
+  .arrow {
+    display: none;
+  }
+  .arrow::after{
+    border-bottom: 0px;
+  }
+}

@@ -8,21 +8,6 @@
  */
 
 
- ::ng-deep .popover {
-  background-color: var(--opfab-bgcolor);
-  color: var(--opfab-text-color);
-  .popover-header {
-    color: var(--opfab-text-color);
-    background-color: var(--opfab-bgcolor);
-    border-bottom: 1px solid var(--opfab-text-color);
-  }
-  .popover-body {
-    color: var(--opfab-text-color);
-  }
-  .arrow::after{
-    border-right-color: var(--opfab-bgcolor);
-  }
-}
 
 .opfab-feedbar {
   background-color: var(--opfab-bgcolor);

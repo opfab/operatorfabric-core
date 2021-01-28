@@ -16,7 +16,16 @@
   margin-right: 2px;
   margin-bottom: 10px;
   margin-top: 20px;
-  border-bottom: 1px solid var(--opfab-text-color);
+  padding-bottom: 4px;
+  border-bottom: 0.5px solid var(--opfab-text-color);
+}
+
+.opfab-filter-type-header {
+  margin-left: 2px;
+  margin-right: 2px;
+  margin-bottom: 10px;
+  padding-bottom: 4px;
+  border-bottom: 0.5px solid var(--opfab-text-color);
 }
 
 .label-sev-alarm::before {
@@ -103,10 +112,41 @@
   display: block;
   color:var(--opfab-navbar-color);
   text-align: center;
+  text-decoration: underline;
 
   &:hover,
   &:focus {
     color:var( --opfab-navbar-color-hover);
     text-decoration: none;
   }
+}
+
+.opfab-filters-popover {
+  margin-left: -10px;
+  padding-left: 2px;
+
+  background-color: var(--opfab-popover-bgcolor);
+  color: var(--opfab-text-color);
+  .popover-header {
+    color: var(--opfab-text-color);
+    background-color: var(--opfab-popover-bgcolor);
+    border-bottom: 1px solid var(--opfab-text-color);
+  }
+  .popover-body {
+    color: var(--opfab-text-color);
+  }
+  .arrow::after{
+    border-right-color: var(--opfab-popover-bgcolor);
+  }
+}
+
+.opfab-time-filter  {
+  .opfab-input,
+  .opfab-input > input, 
+  .opfab-input label , 
+  .form-control , 
+  .form-control:disabled 
+  {
+    background-color:var(--opfab-popover-bgcolor);
+  }   
 }
