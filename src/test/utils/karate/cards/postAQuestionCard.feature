@@ -28,6 +28,7 @@ Scenario: Post a question card
 			"entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
 			"severity" : "ACTION",
 			"startDate" : startDate,
+			"endDate" : endDate,
 			"summary" : {"key" : "message.summary"},
 			"title" : {"key" : "question.title"},
 			"data" : {"message":" Action Card"},
