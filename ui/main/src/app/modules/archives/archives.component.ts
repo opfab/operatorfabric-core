@@ -122,10 +122,12 @@ export class ArchivesComponent implements OnDestroy, OnInit {
               .subscribe(translations => {
                 this.processDropdownSettings = {
                     text: translations['archive.selectProcessText'],
+                    badgeShowLimit: 3,
                     enableSearchFilter: true
                 }
                 this.tagsDropdownSettings = {
                     text: translations['archive.selectTagText'],
+                    badgeShowLimit: 3,
                     enableSearchFilter: true
                 };
               })

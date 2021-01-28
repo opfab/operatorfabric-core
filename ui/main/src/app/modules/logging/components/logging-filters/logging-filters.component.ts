@@ -90,6 +90,7 @@ export class LoggingFiltersComponent implements OnInit, OnDestroy {
                 this.dropdownSettings = {
                     text: translations['logging.filters.selectProcessText'],
                     enableSearchFilter: true,
+                    badgeShowLimit: 4,
                     classes: 'custom-class-example'
                 }
               })

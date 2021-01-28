@@ -95,6 +95,7 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
                 this.dropdownSettings = {
                     text: translations['monitoring.filters.selectProcessText'],
                     enableSearchFilter: true,
+                    badgeShowLimit: 4,
                     classes: 'custom-class-example'
                 }
               })

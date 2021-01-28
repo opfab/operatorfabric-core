@@ -133,6 +133,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
         this.dropdownSettings = {
             text: '',
+            badgeShowLimit: 30,
             enableSearchFilter: true
         };
         
