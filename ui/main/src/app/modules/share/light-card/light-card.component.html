@@ -18,7 +18,7 @@
         </div>
         <div class="p-1" style="width: 100%">
             <div style="display: flex;">
-            <p class="card-title" > {{cardTitle}}</p>
+            <p class="card-title text-uppercase" translate [translateParams]="lightCard.title.parameters">{{i18nPrefix + lightCard.title.key}}</p>
             <div class="ml-auto align-self-center pr-2" style="margin-right:-5px; margin-top: -10px;">
                 <div class="d-flex align-items-end flex-column">
                     <ng-template #tipAcknowledged>

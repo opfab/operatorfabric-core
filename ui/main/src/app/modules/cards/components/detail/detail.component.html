@@ -10,7 +10,7 @@
   <div style="display: block;  margin-top:16px;">
     <ul class="nav nav-tabs opfab-line-undertab">
       <li class="nav-item opfab-tab opfab-menu-item-left" data-toggle="tab">
-        <span class="opfab-tab">{{cardTitle}}</span>
+        <span class="opfab-tab text-uppercase" translate [translateParams]="cardState.detailTitle?.parameters">{{i18nPrefix+cardState.detailTitle.key}}</span>
       </li>
       <li *ngIf="showButtons" class="nav-item opfab-menu-item-right">
         <div class="opfab-right-menu-item" *ngIf='showEditAndDeleteButton'>
@@ -62,7 +62,7 @@
         <div class="flex-container">
           <div style="width:30%;" >
             <span style="padding-left:15px" translate>response.status</span> :
-            <span class="opfab-question-card-state-name" >{{cardStateName}} &nbsp;</span>
+            <span class="opfab-question-card-state-name" translate>{{i18nPrefix+this.cardState.name}} &nbsp;</span>
             <span *ngIf="!!this.card.lttd"> |</span>
             <of-countdown [card]="card"></of-countdown>
           </div>

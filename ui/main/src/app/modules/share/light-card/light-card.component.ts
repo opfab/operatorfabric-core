@@ -60,15 +60,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
                     this.currentPath = urlParts[1];
                 }
             });
-        this.loadTranslationForTitle();
         this.computeDisplayedDate();
-    }
-
-    loadTranslationForTitle() {
-         this.translate.get(this.i18nPrefix + this.lightCard.title.key, this.lightCard.title.parameters)
-                    .subscribe(translation =>
-                        this.cardTitle = translation.toUpperCase()
-                    );
     }
 
     computeDisplayedDate() {

@@ -250,18 +250,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         }
     }
 
-
-    loadTranslationForTitleAndStateName() {
-        this.translate.get(this.i18nPrefix + this.cardState.detailTitle.key, this.cardState.detailTitle.parameters)
-                   .subscribe(translation =>
-                       this.cardTitle = translation.toUpperCase()
-                   );
-
-        this.translate.get(this.i18nPrefix + this.cardState.name)
-            .subscribe(translation =>
-                this.cardStateName = translation);
-   }
-
     private setButtonsVisibility() {
         if (this._appService.pageType === PageType.ARCHIVE) this.showButtons = false;
         else this.showButtons = true;
@@ -445,7 +433,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.initializeHrefsOfCssLink();
         this.checkIfHasAlreadyResponded();
         this.initializeHandlebarsTemplates();
-        this.loadTranslationForTitleAndStateName();
         this.updateReadCardStatusOnUI();
         this.markAsReadIfNecessary();
 
