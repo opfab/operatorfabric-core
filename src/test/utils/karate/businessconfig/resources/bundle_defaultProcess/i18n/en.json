@@ -32,7 +32,7 @@
 		"description": "Contingencies state"
 	},
 	"questionState": {
-		"title": "Required action",
+		"title": "Action required",
 		"description": "Question state"
 	},
 	"responseState": {
