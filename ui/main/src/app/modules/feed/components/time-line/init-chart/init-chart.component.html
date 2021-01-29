@@ -68,10 +68,10 @@
   </div>
 </div>
 <div class="opfab-showhide-timeline">
-  <div id="opfab-timeline-link-hide-timeline" *ngIf="!hideTimeLine" (click)="showOrHideTimeline()">
-    ˄ &nbsp;&nbsp; <span translate> timeline.hideTimeline </span>
+  <div id="opfab-timeline-link-hide-timeline" *ngIf="!hideTimeLine" >
+    <a (click)="showOrHideTimeline()">˄ &nbsp;&nbsp; <span translate> timeline.hideTimeline </span></a>
   </div>
-  <div id="opfab-timeline-link-show-timeline" *ngIf="hideTimeLine" (click)="showOrHideTimeline()">
-    ˅ &nbsp;&nbsp; <span translate> timeline.showTimeline </span>
+  <div id="opfab-timeline-link-show-timeline" *ngIf="hideTimeLine">
+    <a  (click)="showOrHideTimeline()">˅ &nbsp;&nbsp; <span translate> timeline.showTimeline </span></a>
   </div>
 </div>
