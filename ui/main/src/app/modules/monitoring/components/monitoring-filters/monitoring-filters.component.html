@@ -98,9 +98,9 @@
 
 <div class="opfab-showhide-filters">
     <div id="opfab-monitoring-link-hide-filters" *ngIf="!hideFilters" (click)="showOrHideFilters()">
-        ˄ &nbsp;&nbsp; <span translate> monitoring.hideFilters </span>
+       <a (click)="showOrHideFilters()"> ˄ &nbsp;&nbsp; <span translate> monitoring.hideFilters </span></a>
     </div>
     <div id="opfab-monitoring-link-show-filters" *ngIf="hideFilters" (click)="showOrHideFilters()">
-        ˅ &nbsp;&nbsp; <span translate> monitoring.showFilters </span>
+        <a (click)="showOrHideFilters()"> ˅ &nbsp;&nbsp; <span translate> monitoring.showFilters </span></a>
     </div>
 </div>
