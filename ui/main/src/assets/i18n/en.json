@@ -87,7 +87,7 @@
     },
     "tips": {
       "acknowledged": "Acknowledged",
-      "lttd": "Time to decide"
+      "lttd": "Time remaining to decide"
     },
     "received": "Received at {{time}}"
   },
