@@ -23,7 +23,6 @@ import {ConfigService} from '@ofServices/config.service';
 import {I18nService} from '@ofServices/i18n.service';
 import {SettingsService} from '@ofServices/settings.service';
 import { UserService } from './user.service';
-import { NotifyService } from '@ofServices/notify.service';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import { AppService } from './app.service';
@@ -56,7 +55,6 @@ import { ReminderService} from '@ofServices/reminder/reminder.service';
         UserService,
         GroupsService,
         EntitiesService,
-        NotifyService,
         SoundNotificationService,
         GlobalStyleService,
         AppService,
