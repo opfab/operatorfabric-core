@@ -14,9 +14,6 @@
           "key": "action.text"
         }
       },
-      "detailTitle": {
-        "key": "cardDetails.title"
-      },
       "templateName": "long-card",
       "styles": [
       ]
@@ -31,9 +28,6 @@
         },
         "externalRecipients": ["externalRecipient1", "externalRecipient2"]
       },
-      "detailTitle": {
-        "key": "cardDetails.title"
-      },
       "templateName": "template1",
       "styles": [
         "main"
@@ -47,9 +41,6 @@
           "key": "action.text"
         }
       },
-      "detailTitle": {
-        "key": "cardDetails.title"
-      },
       "templateName": "template1",
       "styles": [
         "main"
@@ -61,9 +52,6 @@
         "state": "responseState",
         "btnColor": "RED"
       },
-      "detailTitle": {
-        "key": "cardDetails.title"
-      },
       "templateName": "template1",
       "styles": [
         "main"
@@ -73,9 +61,6 @@
       "response": {
         "lock": true,
         "state": "responseState"
-      },
-      "detailTitle": {
-        "key": "cardDetails.title"
       },
       "templateName": "template1",
       "styles": [

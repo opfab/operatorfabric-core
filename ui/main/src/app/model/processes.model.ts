@@ -50,7 +50,6 @@ export class UiVisibility {
 export class State {
     /* istanbul ignore next */
     constructor(
-        readonly detailTitle?: I18n,
         readonly templateName?: string,
         readonly styles?: string[],
         readonly response?: Response,

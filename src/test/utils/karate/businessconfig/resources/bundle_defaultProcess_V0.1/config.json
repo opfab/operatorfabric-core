@@ -6,9 +6,6 @@
     "messageState": {
       "name":  "defaultProcess.title",
       "color": "#CC9900",
-      "detailTitle": {
-        "key": "defaultProcess.title"
-      },
       "templateName": "template",
       "styles": [
         "style"

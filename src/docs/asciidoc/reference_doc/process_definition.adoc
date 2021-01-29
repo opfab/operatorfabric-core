@@ -317,15 +317,9 @@ These command line should return a `200 http status` response with the details o
   "version": "1",
   "states" : {
           "start" : {
-            "detailTitle" : {
-              "key" : "start.first.title"
-            },
-            "templateName" : "template1"        
+            "templateName" : "template1"
           },
           "end" : {
-            "detailTitle" : {
-              "key" : "end.first.title"
-            },
             "templateName" : "template2",
             "styles" : [ "bundleTest.css" ]
           }

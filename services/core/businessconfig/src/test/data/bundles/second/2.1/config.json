@@ -20,9 +20,6 @@
             },
             "externalRecipients": ["externalRecipient1", "externalRecipient2"]
           },
-          "detailTitle": {
-            "key": "template.title"
-          },
           "templateName": "template",
           "actions": {
             "action1": {

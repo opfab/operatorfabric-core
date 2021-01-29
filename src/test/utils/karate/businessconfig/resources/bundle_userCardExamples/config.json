@@ -14,9 +14,6 @@
       "userCard" : {
         "template" : "usercard_message"
       },
-      "detailTitle": {
-        "key": "message.title"
-      },
       "templateName": "message",
       "styles": [],
       "acknowledgmentAllowed": "Always"
@@ -26,9 +23,6 @@
       "color": "#CC9900",
       "userCard" : {
         "template" : "usercard_conference"
-      },
-      "detailTitle": {
-        "key": "conference.title"
       },
       "templateName": "conference",
       "styles": [],
@@ -47,9 +41,6 @@
       "response": {
         "state": "questionState"
       },
-      "detailTitle": {
-        "key": "question.title"
-      },
       "templateName": "question",
       "styles": [],
       "acknowledgmentAllowed": "Never"
@@ -59,9 +50,6 @@
       "color": "#0070C0",
       "userCard" : {
         "template" : "usercard_task"
-      },
-      "detailTitle": {
-        "key": "task.title"
       },
       "templateName": "task",
       "styles": [
@@ -79,9 +67,6 @@
       "color": "#CC9900",
       "response": {
         "state": "incidentInProgressState"
-      },
-      "detailTitle": {
-        "key": "incidentInProgress.name"
       },
       "templateName": "incidentInProgress",
       "styles": [],

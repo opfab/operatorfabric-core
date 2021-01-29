@@ -15,9 +15,6 @@
       "userCard" : {
         "template" : "usercard_message"
       },
-      "detailTitle": {
-        "key": "message.title"
-      },
       "templateName": "template",
       "styles": [
         "style"
@@ -28,9 +25,6 @@
       "name": "chartDetail.title",
       "description": "chartState.description",
       "color": "#DA00DA",
-      "detailTitle": {
-        "key": "chartDetail.title"
-      },
       "templateName": "chart",
       "styles": [
         "style"
@@ -41,9 +35,6 @@
       "name": "chartLine.title",
       "description": "chartLineState.description",
       "color": "#6666FF",
-      "detailTitle": {
-        "key": "chartLine.title"
-      },
       "templateName": "chart-line",
       "styles": [
         "style"
@@ -57,9 +48,6 @@
       "userCard" : {
         "template" : "usercard_process"
       },
-      "detailTitle": {
-        "key": "process.label"
-      },
       "templateName": "process",
       "styles": [
         "style"
@@ -70,9 +58,6 @@
       "name": "contingencies.title",
       "description": "contingenciesState.description",
       "color": "#0070C0",
-      "detailTitle": {
-        "key": "contingencies.title"
-      },
       "templateName": "contingencies",
       "styles": [
         "contingencies"
@@ -91,9 +76,6 @@
           "key": "question.button.text"
         }
       },
-      "detailTitle": {
-        "key": "question.title"
-      },
       "templateName": "question",
       "styles": [
         "style"
@@ -104,9 +86,6 @@
       "name": "response.title",
       "description": "responseState.description",
       "color": "#0070C0",
-      "detailTitle": {
-        "key": "response.title"
-      },
       "templateName": "response",
       "styles": [
         "style"

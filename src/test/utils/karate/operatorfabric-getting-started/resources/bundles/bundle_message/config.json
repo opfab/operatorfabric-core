@@ -3,7 +3,6 @@
 	"version":"1",
 	"states":{
 		"messageState" : {
-			"detailTitle" : { "key" : "defaultProcess.title"},
 			"templateName" : "template",
 			"styles" : [ "style" ]
 		}
