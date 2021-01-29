@@ -5,7 +5,7 @@
   "states": {
     "messageState": {
       "name":  "defaultProcess.title",
-      "color": "#FAF0AF",
+      "color": "#CC9900",
       "detailTitle": {
         "key": "defaultProcess.title"
       },
