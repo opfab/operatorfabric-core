@@ -48,8 +48,6 @@ import {Entity} from '@ofModel/entity.model';
 import {NgbModal,NgbModalOptions,NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {ConfigService} from '@ofServices/config.service';
 import {State as CardState} from '@ofModel/processes.model';
-import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { TimeService } from '@ofServices/time.service';
 import { AlertMessage } from '@ofStore/actions/alert.actions';
 import { MessageLevel } from '@ofModel/message.model';
@@ -120,7 +118,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     public isActionEnabled = false;
     public lttdExpiredIsTrue: boolean;
-    public cardTitle: string;
     public cardStateName: string;
     public hasAlreadyResponded = false;
 
@@ -140,6 +137,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public showAckButton = false;
     public showActionButton = false;
     public showEditAndDeleteButton = false ;
+    public showDetailCardHeader = false;
 
     private cardSetToReadButNotYetOnUI;
 
@@ -158,9 +156,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 private entitiesService: EntitiesService,
                 private modalService: NgbModal,
                 private configService: ConfigService,
-                private router: Router,
-                private translate: TranslateService,
-                private time: TimeService,) {
+                private time: TimeService) {
+
     }
 
     get isLocked() {
@@ -212,6 +209,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     // -------------------------------------------------------------- //
 
     ngOnInit() {
+      this.initAllBindedVariables();
       this.reloadTemplateWhenGlobalStyleChange();
 
         if (this._appService.pageType !== PageType.ARCHIVE) {
@@ -251,6 +249,28 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                         });
                 });
         }
+    }
+
+    // When we load the component , we need first  to reset all values of the previous version of the component
+    //
+    // Even if the previous component has been destroy, the values that was bind to an element in the DOM 
+    // are still present "somewhere" in angular "structure".
+    // When we load the component , angular will first initialize the values with the old one before binding it to 
+    // the new one . Depending on the performance of network / browser , we can see briefly on the screen the previous values.
+    // To avoid that , we shall init as soon as possible the values bind in the HTML.
+
+    private initAllBindedVariables()
+    {
+        this._htmlContent = ""; 
+        this.fullscreen = false;
+        this.showMaxAndReduceButton = false;
+        this.showAckButton = false;
+        this.showActionButton = false;
+        this.showEditAndDeleteButton = false ;
+        this.showDetailCardHeader = false;
+        this.isActionEnabled = false;
+        this.lttdExpiredIsTrue = false;
+        this.displayDeleteResult = false;
     }
 
     private setButtonsVisibility() {
@@ -293,9 +313,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         return this.card.hasBeenAcknowledged ? AckI18nKeys.BUTTON_TEXT_UNACK : AckI18nKeys.BUTTON_TEXT_ACK;
     }
 
-    get showDetailCardHeader(): boolean {
-        return (this.cardState.showDetailCardHeader === null) || (this.cardState.showDetailCardHeader === true);
-    }
+
 
     getPublishDateTranslationParams(): any {
         const param = {
@@ -446,6 +464,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             this.setIsActionEnabled();
         }
         this.setButtonsVisibility();
+        this.setShowDetailCardHeader();
 
     }
 
@@ -475,7 +494,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
 
-
+    private setShowDetailCardHeader() {
+        this.showDetailCardHeader = (this.cardState.showDetailCardHeader === null) || (this.cardState.showDetailCardHeader === true);
+    }
 
 
     private isUserInEntityAllowedToRespond(): boolean {
@@ -559,6 +580,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private initializeHandlebarsTemplatesProcess() {
+      this._htmlContent = "";
       templateGateway.childCards = this.childCards;
       templateGateway.isLocked = this.isLocked;
         this._responseData = this.cardState.response;
