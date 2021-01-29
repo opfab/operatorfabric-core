@@ -60,6 +60,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     size: number;
     archiveForm: FormGroup;
 
+    filters;
     results: LightCard[];
     currentPage = 0;
     resultsNumber: number = 0;
@@ -177,10 +178,10 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     sendQuery(page_number): void {
         const { value } = this.archiveForm;
-        const params = this.filtersToMap(value);
-        params.set('size', [this.size.toString()]);
-        params.set('page', [page_number]);
-        this.cardService.fetchArchivedCards(params)
+        this.filters = this.filtersToMap(value);
+        this.filters.set('size', [this.size.toString()]);
+        this.filters.set('page', [page_number]);
+        this.cardService.fetchArchivedCards(this.filters)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((page: Page<LightCard>) => {
                 this.resultsNumber = page.totalElements;
@@ -213,10 +214,11 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     initExportArchiveData(): void {
         const exportArchiveData = [];
 
-        const filters = new Map<string, string[]>();
-        filters.set('size', [this.resultsNumber.toString()]);
+       
+        this.filters.set('size', [this.resultsNumber.toString()]);
+        this.filters.set('page', [0]);
 
-        this.cardService.fetchArchivedCards(filters).pipe(takeUntil(this.unsubscribe$))
+        this.cardService.fetchArchivedCards(this.filters).pipe(takeUntil(this.unsubscribe$))
             .subscribe((page: Page<LightCard>) => {
                 const lines = page.content;
 
