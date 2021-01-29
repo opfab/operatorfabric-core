@@ -180,7 +180,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         const params = this.filtersToMap(value);
         params.set('size', [this.size.toString()]);
         params.set('page', [page_number]);
-        this.hasResult = true;
         this.cardService.fetchArchivedCards(params)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((page: Page<LightCard>) => {
@@ -191,7 +190,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 else this.hasResult = false;
                 page.content.forEach(card => this.loadTranslationForCardIfNeeded(card));
                 this.results = page.content;
-
             });
 
     }
