@@ -10,7 +10,7 @@
   "states": {
     "messageState": {
       "name": "message.title",
-      "color": "#FAF0AF",
+      "color": "#CC9900",
       "userCard" : {
         "template" : "usercard_message"
       },
@@ -23,7 +23,7 @@
     },
     "conferenceState": {
       "name": "conference.title",
-      "color": "#FAF0AF",
+      "color": "#CC9900",
       "userCard" : {
         "template" : "usercard_conference"
       },
@@ -37,7 +37,7 @@
     "questionState": {
       "name": "question.title",
       "showDetailCardHeader": false,
-      "color": "#8bcdcd",
+      "color": "#0070C0",
       "userCard" : {
 				"template" : "usercard_question",
 				"severityVisible" : false,
@@ -56,7 +56,7 @@
     },
     "taskState": {
       "name": "task.title",
-      "color": "#8bcdcd",
+      "color": "#0070C0",
       "userCard" : {
         "template" : "usercard_task"
       },
@@ -76,7 +76,7 @@
 				"startDateVisible" : false,
 				"endDateVisible" : false
 			},
-      "color": "#FAF0AF",
+      "color": "#CC9900",
       "response": {
         "state": "incidentInProgressState"
       },
