@@ -5,7 +5,7 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-= Migration Guide from release 1.8.0 to release 1.9.0 
+= Migration Guide from release 1.8.0 to release 2.0.0
 
 == AcknowledgmentAllowed field in business configuration 
 
