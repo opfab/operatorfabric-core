@@ -209,9 +209,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     // -------------------------------------------------------------- //
 
     ngOnInit() {
-      this.initAllBindedVariables();
-      this.reloadTemplateWhenGlobalStyleChange();
-
+        this.reloadTemplateWhenGlobalStyleChange();
         if (this._appService.pageType !== PageType.ARCHIVE) {
 
             this.setEntitiesToRespond();
@@ -451,6 +449,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     ngOnChanges(): void {
+        this.initAllBindedVariables();
         this.initializeHrefsOfCssLink();
         this.checkIfHasAlreadyResponded();
         this.initializeHandlebarsTemplates();
@@ -580,7 +579,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private initializeHandlebarsTemplatesProcess() {
-      this._htmlContent = "";
       templateGateway.childCards = this.childCards;
       templateGateway.isLocked = this.isLocked;
         this._responseData = this.cardState.response;
