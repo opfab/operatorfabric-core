@@ -11,12 +11,12 @@ Feature: Add users to an entity
     # defining users to add
     * def usersArray =
 """
-[   "loginKarate1"
+[   "loginkarate1"
 ]
 """
     * def wrongBodyRequest =
 """
-[   {"login" : "loginKarate1"}
+[   {"login" : "loginkarate1"}
 ]
 """
 

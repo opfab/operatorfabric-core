@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,10 +16,8 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {LoggingTableComponent} from './components/logging-table/logging-table.component';
 import {LoggingComponent} from './logging.component';
 import {LoggingFiltersComponent} from './components/logging-filters/logging-filters.component';
-import {DatetimeFilterModule} from '../../components/share/datetime-filter/datetime-filter.module';
-import {MultiFilterModule} from '../../components/share/multi-filter/multi-filter.module';
-import {LoggingPageComponent} from './components/logging-table/logging-page/logging-page.component';
-import {MultiFilter2Module} from '../../components/share/multi-filter-2/multi-filter-2.module';
+import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
+import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
 
 
 @NgModule({
@@ -31,13 +29,12 @@ import {MultiFilter2Module} from '../../components/share/multi-filter-2/multi-fi
         TranslateModule,
         NgbModule,
         DatetimeFilterModule,
-        MultiFilter2Module
+        MultiFilterModule
     ],
     declarations: [
     LoggingComponent,
     LoggingTableComponent,
-    LoggingFiltersComponent,
-    LoggingPageComponent
+    LoggingFiltersComponent
 ]
 })
 export class LoggingModule {

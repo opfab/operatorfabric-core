@@ -1,4 +1,5 @@
 /* Copyright (c) 2018-2020, RTEI (http://www.rte-international.com)
+ * Copyright (c) 2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +9,7 @@
  */
 
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -17,7 +18,8 @@ import { AppState } from '@ofStore/index';
 import { AppError } from 'app/common/error/app-error';
 import { ConfirmationDialogService } from 'app/modules/admin/services/confirmation-dialog.service';
 import { DataTableShareService } from 'app/modules/admin/services/data.service';
-import { Observable, throwError } from 'rxjs';
+import { Observable, Subject, throwError } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { EditEntityGroupModalComponent } from '../../editmodal/groups-entities/edit-entity-group-modal.component';
 import { OfTableComponent } from '../oftable/oftable.component';
 
@@ -25,7 +27,9 @@ import { OfTableComponent } from '../oftable/oftable.component';
   selector: 'of-entities-table',
   templateUrl: '../oftable/oftable.component.html'
 })
-export class OfEntitiesTableComponent extends OfTableComponent implements OnInit {
+export class OfEntitiesTableComponent extends OfTableComponent implements OnInit, OnDestroy {
+
+  unsubscribe$: Subject<void> = new Subject<void>();
 
   modalComponent = EditEntityGroupModalComponent;
   typeModal = 'entity';
@@ -40,7 +44,7 @@ export class OfEntitiesTableComponent extends OfTableComponent implements OnInit
     super(modalService, dataService, store);
     this.crudService = crudService;
     this.config.sorting = { columns: this.columns };
-    this.getLocale().subscribe(locale => {
+    this.getLocale().pipe(takeUntil(this.unsubscribe$)).subscribe(locale => {
       this.translate.use(locale);
       this.translate.get(['admin.input.id.label', 'admin.input.name.label', 'admin.input.description',
         'admin.input.user.edit', 'admin.input.user.delete', 'admin.input.user.filter', 'admin.pagination.firstText',
@@ -111,5 +115,9 @@ export class OfEntitiesTableComponent extends OfTableComponent implements OnInit
     return this.dataService.getEntityRowEvent();
   }
 
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 
 }

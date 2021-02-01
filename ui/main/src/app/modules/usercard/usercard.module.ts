@@ -1,4 +1,4 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2020-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,36 +11,31 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {UserCardComponent} from './usercard.component';
-import {CardPreviewComponent} from './components/card-preview/card-preview.component';
-import {UserCardRoutingModule} from './usercard-routing.module';
 import {TranslateModule} from '@ngx-translate/core';
-import {FlatpickrModule} from 'angularx-flatpickr';
-import {ArchivesModule} from '../archives/archives.module';
-import {SingleFilterModule} from '../../components/share/single-filter/single-filter.module';
-import {MultiFilterModule} from '../../components/share/multi-filter/multi-filter.module';
-import {DatetimeFilterModule} from '../../components/share/datetime-filter/datetime-filter.module';
-import {TextAreaModule} from '../../components/share/text-area/text-area.module';
-import {CardsModule} from '../cards/cards.module';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {MultiFilter2Module} from '../../components/share/multi-filter-2/multi-filter-2.module';
+import {SingleFilterModule} from '../../modules/share/single-filter/single-filter.module';
+import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
+
+import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
+import { CardDetailModule } from 'app/modules/share/card-detail/card-detail.module';
+import { LightCardModule } from 'app/modules/share/light-card/light-card.module';
 
 @NgModule({
-    declarations: [UserCardComponent, CardPreviewComponent],
+    declarations: [UserCardComponent],
     imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        UserCardRoutingModule,
         TranslateModule,
-        FlatpickrModule.forRoot(),
-        ArchivesModule,
         SingleFilterModule,
-        MultiFilterModule,
         DatetimeFilterModule,
-        TextAreaModule,
-        CardsModule,
-        NgbModule,
-        MultiFilter2Module
+
+        MultiFilterModule,
+        CardDetailModule,
+        LightCardModule
+    ],
+    exports: [
+        UserCardComponent
+
     ]
 })
 export class UserCardModule {

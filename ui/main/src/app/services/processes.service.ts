@@ -15,11 +15,10 @@ import {environment} from '@env/environment';
 import {Observable, of, Subject} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {catchError, map, skip, tap} from 'rxjs/operators';
-import {Process, ResponseBtnColorEnum} from '@ofModel/processes.model';
+import {Process} from '@ofModel/processes.model';
 import {Card} from '@ofModel/card.model';
 import {merge} from 'rxjs';
 import { Store, select } from '@ngrx/store';
-import { selectArchiveLightCards } from '@ofStore/selectors/archive.selectors';
 import { selectLinesOfLoggingResult } from '@ofStore/selectors/logging.selectors';
 import { AppState } from '@ofStore/index';
 import { selectFeed, selectLastCards } from '@ofStore/selectors/feed.selectors';
@@ -28,17 +27,19 @@ import { selectFeed, selectLastCards } from '@ofStore/selectors/feed.selectors';
 @Injectable()
 export class ProcessesService {
     readonly processesUrl: string;
+    readonly processGroupsUrl: string;
     private urlCleaner: HttpUrlEncodingCodec;
     private processCache = new Map();
     private translationsAlreadyLoaded = new Set<string>();
     private processes: Process[];
+    private processGroups: {idGroup: string, processes: string[]}[];
     private translationsLoaded = new Subject();
 
     constructor(private httpClient: HttpClient, private translateService: TranslateService, private store: Store<AppState>
     ) {
         this.urlCleaner = new HttpUrlEncodingCodec();
         this.processesUrl = `${environment.urls.processes}`;
-        this.loadTranslationIfNeededAfterLoadingArchiveCard();
+        this.processGroupsUrl = `${environment.urls.processGroups}`;
         this.loadTranslationIfNeededAfterLoadingLoggingCard();
         this.loadTranslationIfNeededAfterLoadingCard();
     }
@@ -49,11 +50,6 @@ export class ProcessesService {
             .subscribe(cards =>  cards.forEach(card => this.loadTranslationsForProcess(card.process, card.processVersion)));
     }
 
-    private loadTranslationIfNeededAfterLoadingArchiveCard() {
-        this.store.pipe(
-            select(selectArchiveLightCards))
-            .subscribe(cards => cards.forEach(card => this.loadTranslationsForProcess(card.process, card.processVersion)));
-    }
 
     private loadTranslationIfNeededAfterLoadingLoggingCard() {
         this.store.pipe(
@@ -62,7 +58,7 @@ export class ProcessesService {
                 this.loadTranslationsForProcess(loggingResult.process, loggingResult.processVersion)));
     }
 
-    private loadTranslationsForProcess(process,version) {
+    public loadTranslationsForProcess(process,version) {
         this.translateService.getLangs().forEach(
             local => this.addTranslationIfNeeded(local, process, version ));
     }
@@ -81,10 +77,33 @@ export class ProcessesService {
                 map(processesLoaded => {
                     if (!!processesLoaded) {
                         this.processes = processesLoaded;
-                        this.loadAllTranslations();
-                        console.log(new Date().toISOString(), 'List of processes loaded');
+                        if (this.processes.length === 0) {
+                            console.log(new Date().toISOString(), 'WARNING : no processes configured');
+                            this.translationsLoaded.next();
+                            }
+
+                        else {
+                            this.loadAllTranslations();
+                            console.log(new Date().toISOString(), 'List of processes loaded');
+                        }
                     }
                 }, (error) => console.error(new Date().toISOString(), 'an error occurred', error)
+                ));
+    }
+
+    public loadProcessGroups(): Observable<any> {
+        return this.queryProcessGroups()
+            .pipe(
+                map(processGroupsFile => {
+                        if (!!processGroupsFile) {
+                            this.processGroups = processGroupsFile.groups;
+
+                            for (const language in processGroupsFile.locale)
+                                 this.translateService.setTranslation(language, processGroupsFile.locale[language], true);
+
+                            console.log(new Date().toISOString(), 'List of process groups loaded');
+                        }
+                    }, (error) => console.error(new Date().toISOString(), 'An error occurred when loading processGroups', error)
                 ));
     }
 
@@ -112,8 +131,11 @@ export class ProcessesService {
 
     public getAllProcesses(): Process[] {
         return this.processes;
-      }
+    }
 
+    public getProcessGroups(): {idGroup: string, processes: string[]}[] {
+        return this.processGroups;
+    }
 
     queryProcessFromCard(card: Card): Observable<Process> {
         return this.queryProcess(card.process, card.processVersion);
@@ -121,8 +143,12 @@ export class ProcessesService {
 
     queryAllProcesses(): Observable<Process[]> {
         return this.httpClient.get<Process[]>(this.processesUrl);
-
     }
+
+    queryProcessGroups(): Observable<any> {
+        return this.httpClient.get(this.processGroupsUrl);
+    }
+
     queryProcess(id: string, version: string): Observable<Process> {
         const key = `${id}.${version}`;
         const process = this.processCache.get(key);
@@ -198,19 +224,6 @@ export class ProcessesService {
             object[process][version] = r;
             return object;
         };
-    }
-
-    getResponseBtnColorEnumValue(responseBtnColorEnum: ResponseBtnColorEnum): string {
-        switch (responseBtnColorEnum) {
-            case 'RED':
-                return 'btn-danger';
-            case 'GREEN':
-                return 'btn-success';
-            case 'YELLOW':
-                return 'btn-warning';
-            default:
-                return 'btn-success';
-        }
     }
 
 }

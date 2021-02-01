@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -30,7 +30,7 @@ Test the connection to the UI: to connect to OperatorFabric, open in a browser t
 
 After connection, you should see the following screen
 
-image::empty-opfab-page.jpg[empty opfab screenshot]
+image::empty-opfab-page.png[empty opfab screenshot]
 
 To stop the server (if you start it in background), use:
 
@@ -46,12 +46,7 @@ All examples assume you connect to the server from `localhost` (otherwise change
  
 === Example 1: Send and update a basic card
 
-Go in directory `client/example1` and send a card:
-
-----
-curl -X POST http://localhost:2102/cards -H "Content-type:application/json" --data @card.json
-----
-or use the provided script
+Go in directory `client/example1` and send a card, using the provided script :
 
 ----
 ./sendCard.sh card.json 
@@ -66,7 +61,7 @@ The result should be a 201 Http status, and a json object such as:
 
 See the result in the UI, you should see a card, if you click on it you'll see the detail
 
-image::formated-card-details.jpg[detail card screenshot]
+image::formated-card-details.png[detail card screenshot]
 
 ==== Anatomy of the card : 
 A card is containing information regarding the publisher, the recipients, the process, the data to show... 
@@ -93,6 +88,11 @@ section of the reference documentation.
 }
 
 ----
+
+NOTE: If you open the json file of the card, you will see '${current_date_in_milliseconds_from_epoch}' for the field 'startDate'.
+      We have used this so that the date of the card is the current day (or the next day in some other examples). Indeed, in the shell script
+      that sends the card, you will see that we create an environment variable with the current date which is then injected
+      into the json file.
 
 ==== Update the card 
 
@@ -251,7 +251,7 @@ You should received the following JSON in response, describing your bundle.
 
 [source,JSON]
 ----
-{"statesData":{"messageState":{"responseData":null,"acknowledgementAllowed":true,"color":null,"name":null,"userCardTemplate":null,"detailTitle":{"key":"defaultProcess.title","parameters":null},"templateName":"template","styles":["style"],"acknowledgmentAllowed":true,"response":null}},"id":"defaultProcess","name":null,"version":"2","uiVisibility":null,"states":{"messageState":{"responseData":null,"acknowledgementAllowed":true,"color":null,"name":null,"userCardTemplate":null,"detailTitle":{"key":"defaultProcess.title","parameters":null},"templateName":"template","styles":["style"],"acknowledgmentAllowed":true,"response":null}}}
+{"id":"defaultProcess","name":null,"version":"2","uiVisibility":null,"states":{"messageState":{"responseData":null,"acknowledgementAllowed":true,"color":null,"name":null,"userCard":null,"detailTitle":{"key":"defaultProcess.title","parameters":null},"templateName":"template","styles":["style"],"acknowledgmentAllowed":true,"response":null}}}
 ----
 
 ==== Send a card 
@@ -305,25 +305,26 @@ of the bundle:
 ----
 {
 	"id":"criticalSituation",
+	"name": "process.name",
 	"version":"1",
 	"states":{
 		"criticalSituation-begin" : {
 			"detailTitle" : { "key" : "criticalSituation-begin.title"},
 			"templateName" : "criticalSituationTemplate",
 			"styles" : [ "style" ],
-			"acknowledgementAllowed": true
+			"acknowledgmentAllowed": "Always"
 		},
 		"criticalSituation-update" : {
 			"detailTitle" : { "key" : "criticalSituation-update.title"},
 			"templateName" : "criticalSituationTemplate",
 			"styles" : [ "style" ],
-			"acknowledgementAllowed": true
+			"acknowledgmentAllowed": "Always"
 		},
 		"criticalSituation-end" : {
 			"detailTitle" : { "key" : "criticalSituation-end.title"},
 			"templateName" : "endCriticalSituationTemplate",
 			"styles" : [ "style" ],
-			"acknowledgementAllowed": true
+			"acknowledgmentAllowed": "Always"
 		}
 	}
 }
@@ -339,13 +340,16 @@ The title is a key which refer to an i18n found in the corresponding i18n reposi
 [source,JSON]
 ----
 {
+    "process": {
+      "name": "Critical situation process"
+    },
 	"criticalSituation-begin":{
 		"title":"CRITICAL SITUATION",
-		"summary":" CRITICAL SITUATION ON THE GRID, SEE DETAIL FOR INSTRUCTION"
+		"summary":" CRITICAL SITUATION ON THE GRID , SEE DETAIL FOR INSTRUCTION"
 	},
         "criticalSituation-update":{
                 "title":"CRITICAL SITUATION - UPDATE",
-                "summary":" CRITICAL SITUATION ON THE GRID, SEE DETAIL FOR INSTRUCTION"
+                "summary":" CRITICAL SITUATION ON THE GRID , SEE DETAIL FOR INSTRUCTION"
         },
         "criticalSituation-end":{
                 "title":"CRITICAL SITUATION - END",
@@ -462,7 +466,7 @@ A second card (card2.json) is provided as example, you need again to set times v
 ----
 This time the severity of the card is ALERT, you should see the point in red in the timeline
 
-image::example4.jpg[example 4 screenshot]
+image::example4.png[example 4 screenshot]
 
 === Example 5: Card routing mechanism
 
@@ -490,12 +494,7 @@ Let's send this card :
 }
 ----
 
-You can use this command line :
-----
-curl -X POST http://localhost:2102/cards -H "Content-type:application/json" --data @cardSentToEntity.json
-----
-
-or use the provided script :
+Use the provided script :
 ----
 ./sendCard.sh cardSentToEntity.json
 ----
@@ -580,12 +579,7 @@ Let's send this card (for ENTITY1 and Dispatcher group) :
 }
 ----
 
-You can use this command line :
-----
-curl -X POST http://localhost:2102/cards -H "Content-type:application/json" --data @cardSentToEntityAndGroup_1.json
-----
-
-or use the provided script :
+Use the provided script :
 ----
 ./sendCard.sh cardSentToEntityAndGroup_1.json
 ----
@@ -622,12 +616,7 @@ Let's send this card (for ENTITY1 and Planner group) :
 }
 ----
 
-You can use this command line :
-----
-curl -X POST http://localhost:2102/cards -H "Content-type:application/json" --data @cardSentToEntityAndGroup_2.json
-----
-
-or use the provided script :
+Use the provided script :
 ----
 ./sendCard.sh cardSentToEntityAndGroup_2.json
 ----

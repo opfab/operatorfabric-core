@@ -1,12 +1,11 @@
 {
-	"process": {"label": "Processus d'example"},
+	"process": {"label": "Processus d'exemple"},
 	"message":{
 		"title":"Message",
 		"summary":"Message reçu"
 	},
 	"chartDetail" : { "title":"Un graphique"},
 	"chartLine" : { "title":"Prévison de consommation électrique"},
-	"processState" : { "title":"Etat du processus"},
 	"question" : {"title": "⚡ Indisponibilité planifiée","button" : {"text" :"Envoyer votre réponse"}},
 	"contingencies": {"title" : "⚠️ Contraintes réseau ⚠️","summary":"Synthèse des contraintes sur le réseau français"},
 	"response" : { "title":"Indisponibilité planifiée - Choix de date"},
@@ -14,5 +13,29 @@
 		"label": "Menu du Processus de Test",
 		"first":"Documentation Operator Fabric",
 		"second":"LF Energy"
+	},
+
+	"messageState": {
+		"description": "Message"
+	},
+	"chartState": {
+		"description": "Graphique"
+	},
+	"chartLineState": {
+		"description": "Courbe de consommation électrique"
+	},
+	"processState": {
+		"title":"Etat du processus {{status}}",
+		"description": "Processus"
+	},
+	"contingenciesState": {
+		"description": "Contraintes réseau"
+	},
+	"questionState": {
+		"title": "Action requise",
+		"description": "Question"
+	},
+	"responseState": {
+		"description": "Response"
 	}
 }

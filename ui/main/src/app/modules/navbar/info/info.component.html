@@ -1,0 +1,18 @@
+<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<div class="navbar-info-block">
+    <div class="opfab-menu-icon-profile"></div>
+    <div class="time" >{{timeToDisplay}}</div>
+</div>
+
+<div class="text-center navbar-info-block" style="margin-left: 5px;">
+    <div class="user-name" style="font-size:15px;text-align:right;">{{_userName$|async}}</div>
+    <div *ngIf="description"  class="user-description" style="padding-top:10px;margin-left:5px;text-align:center;">{{description}}</div>
+    <div *ngIf="!description" class="user-description" style="padding-top:5px;"> &nbsp;</div>
+</div>

@@ -31,7 +31,7 @@ Scenario: Post a process card
 			"severity" : "COMPLIANT",
 			"startDate" : startDate,
 			"summary" : {"key" : "message.summary"},
-			"title" : {"key" : "processState.title"},
+			"title" : {"key" : "processState.title" , "parameters" : {"status":"calcul"}},
 			"data" : {"state":"calcul1","stateName":"CALCUL1"},
 			"timeSpans" : [
 				{"start" : startDateTimeSpans1,"end" : endDateTimeSpans1},

@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.configureRecipientReferencesAndStartDate;
 import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.createSimpleCard;
 import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.instantiateOneCardConsultationData;
+import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.roundingToMillis;
 
 import java.time.Instant;
 import java.util.Arrays;
@@ -40,6 +41,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
+
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.test.StepVerifier;
@@ -85,7 +87,7 @@ public class CardRoutesShould {
 
         @Test
         public void findOutCard() {
-            Instant now = Instant.now();
+            Instant now = roundingToMillis(Instant.now());
 
             CardConsultationData simpleCard = instantiateOneCardConsultationData();
             configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
@@ -99,10 +101,11 @@ public class CardRoutesShould {
                     .expectStatus().isOk()
                     .expectBody(CardData.class).value(cardData ->
                             assertThat(cardData.getCard())
+                                .usingRecursiveComparison()
                                 //This is necessary because empty lists are ignored in the returned JSON
-                                .usingComparatorForFields(new EmptyListComparator<String>(),
-                                        "tags", "details", "userRecipients")
-                                .isEqualToComparingFieldByFieldRecursively(simpleCard));
+                                .withComparatorForFields(new EmptyListComparator<String>(),
+                                "tags", "details", "userRecipients")
+                                .isEqualTo(simpleCard));
         }
         
         @Test
@@ -241,7 +244,7 @@ public class CardRoutesShould {
 
         @Test
         public void findOutCard(){
-            Instant now = Instant.now();
+            Instant now = roundingToMillis(Instant.now());
 
             CardConsultationData simpleCard1 = instantiateOneCardConsultationData();
             configureRecipientReferencesAndStartDate(simpleCard1, "", now,
@@ -276,10 +279,11 @@ public class CardRoutesShould {
                     .expectStatus().isOk()
                     .expectBody(CardData.class).value(cardData ->
                             assertThat(cardData.getCard())
+                                .usingRecursiveComparison()
                                 //This is necessary because empty lists are ignored in the returned JSON
-                                .usingComparatorForFields(new EmptyListComparator<String>(),
-                                        "tags", "details", "userRecipients")
-                                .isEqualToComparingFieldByFieldRecursively(simpleCard1));
+                                .withComparatorForFields(new EmptyListComparator<String>(),
+                                "tags", "details", "userRecipients")
+                                .isEqualTo(simpleCard1));
 
             StepVerifier.create(repository.save(simpleCard2))
                     .expectNextCount(1)
@@ -306,10 +310,11 @@ public class CardRoutesShould {
                     .expectStatus().isOk()
                     .expectBody(CardData.class).value(cardData ->
                             assertThat(cardData.getCard())
+                                .usingRecursiveComparison()
                                 //This is necessary because empty lists are ignored in the returned JSON
-                                .usingComparatorForFields(new EmptyListComparator<String>(),
-                                        "tags", "details", "userRecipients")
-                                .isEqualToComparingFieldByFieldRecursively(simpleCard4));
+                                .withComparatorForFields(new EmptyListComparator<String>(),
+                                "tags", "details", "userRecipients")
+                                .isEqualTo(simpleCard4));
 
             StepVerifier.create(repository.save(simpleCard5))
                     .expectNextCount(1)

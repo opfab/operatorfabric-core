@@ -6,44 +6,44 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
+<table style="width: 100%">
+    <tr>
+        <td>
+            <div class="opfab-input" style="margin-right:5px">
+                <label>CONFERENCE SUBJECT</label>
+                <input id="conf_subject" name="conf_subject" value="{{card.data.conf_subject}}">
+            </div>
+        </td>
+        <td>
+            <div class="opfab-input" style="margin-left:5px">
+                <label>LINK FOR CONFERENCE</label>
+                <input id="conf_link" name="conf_link" placeholder="http://...." value="{{card.data.conf_link}}">
+            </div>
+        </td>
+    </tr>
+    <tr style="height: 20px;">
 
-
-
-    <table style="width: 100%;padding:2px">
-        <tr "padding:5px">
-            <td style="width: 15%;padding:5px">
-                Conference subject
-            </td>
-             <td style="width: 35%;padding:5px">
-                <input  id="conf_subject" name="conf_subject" style="width: 100%;" value="{{card.data.conf_subject}}"></input >
-            </td>
-             <td style="width: 15%;padding:5px">
-                Link for conference
-            </td>
-             <td style="width: 35%;padding:5px">
-                <input  id="conf_link" name="conf_link" placeholder="http://...." style="width: 100%" value="{{card.data.conf_link}}"></input >
-            </td>
-        </tr>
-        <tr "padding:5px">
-            <td style="width: 15%;padding:5px">
-                Report name 
-            </td>
-             <td style="width: 35%;padding:5px">
-                <input  id="report_title" name="report_title" style="width: 100%;" value="{{card.data.report_title}}"></input >
-            </td>
-             <td style="width: 15%;padding:5px">
-                Link for report 
-            </td>
-             <td style="width: 35%;padding:5px">
-                <input  id="report_link" name="report_link" placeholder="http://...." style="width: 100%;" value="{{card.data.report_link}}"></input >
-            </td>
-        </tr>
-
-    </table>
+    </tr>
+    <tr>
+        <td>
+            <div class="opfab-input" style="margin-right:5px">
+                <label>REPORT NAME </label>
+                <input id="report_title" name="report_title" value="{{card.data.report_title}}">
+            </div>
+        </td>
+        <td>
+            <div class="opfab-input" style="margin-left:5px">
+                <label> LINK TO THE REPORT </label>
+                <input id="report_link" name="report_link" placeholder="http://...." value="{{card.data.report_link}}">
+            </div>
+        </td>
+    </tr>
+</table>
 <br/>
-        Complementary information :  
-        <div style="width:100%">
-            <textarea  id="message" name="message"  style="width:100%" > {{card.data.message}}</textarea>
+        
+        <div class="opfab-textarea">
+            <label>  COMPLEMENTARY INFORMATION  </label>
+            <textarea  id="message" name="message"> {{card.data.message}}</textarea>
         </div>
 
 

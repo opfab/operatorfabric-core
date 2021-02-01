@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,14 +26,9 @@
     background-color: var(--opfab-timeline-bgcolor);
 
     .gridline-path {
-        stroke-width: 1;
+        stroke-width: 0.5;
         fill: none;
         stroke:var(--opfab-timeline-grid-color);
-    }
-
-
-    text {
-      fill: var(--opfab-timeline-text-color);
     }
 
 
@@ -42,8 +37,8 @@
 
 .btn-cardlink {
   color: var(--opfab-timeline-cardlink);
-  background-color: var(--opfab-bgcolor);
-  border-color:var(--opfab-bgcolor);
+  background-color: var(--opfab-popover-bgcolor);
+  border-color:var(--opfab-popover-bgcolor);
 }
 
 .btn-cardlink:hover, .btn-cardlink:focus, .btn-cardlink.focus {

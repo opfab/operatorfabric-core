@@ -1,4 +1,8 @@
 {
+  "global":{
+    "connectionLost":"Connection lost",
+    "tryToReconnect":"Try to reconnect ..."
+  },
   "menu": {
     "feed": "Card Feed",
     "calendar": "Calendar",
@@ -8,23 +12,37 @@
     "monitoring": "Monitoring",
     "logout": "Logout",
     "settings": "Settings",
+    "feedConfiguration": "Notification reception configuration",
     "about": "About",
-    "usercard": "Card Creation"
+    "usercard": "Card Creation",
+    "switchToNightMode": "Night mode",
+    "switchToDayMode": "Day mode"
   },
   "timeline": {
+    "hideTimeline" : "Hide Timeline",
+    "showTimeline" : "Show Timeline",
     "businessPeriod": "Business period",
     "buttonTitle": {
-      "TR": "RT",
-      "J": "D",
-      "7D": "7D",
-      "W": "W",
-      "M": "M",
-      "Y": "Y"
+      "TR": "Real Time",
+      "J": "Day",
+      "7D": "7 Day",
+      "W": "Week",
+      "M": "Month",
+      "Y": "Year"
     }
+  },
+  "multiFilter": {
+    "searchPlaceholderText": "Search",
+    "selectAllText": "Select All",
+    "unSelectAllText": "UnSelect All",
+    "filterSelectAllText": "Select all filtered results",
+    "filterUnSelectAllText": "UnSelect all filtered results",
+    "noDataLabel": "No Data Available"
   },
   "feed": {
     "filters": {
       "title": "Filters",
+      "reset": "Reset",
       "time": {
         "titleIfFilterBasedOnPublishDate": "Receipt date",
         "titleIfFilterBasedOnBusinessDate": "Business period",
@@ -62,11 +80,16 @@
       }
     },
     "sort": {
-      "severityPub": "Sorted by severity then publication",
-      "pub": "Sorted by publication",
-      "read": "Sorted by read",
-      "notsortedByRead": "Not sorted by read"
-    }
+      "title": "Sort by",
+      "severity": "Criticity  then date",
+      "publish": "Date",
+      "unread": "Unread then date"
+    },
+    "tips": {
+      "acknowledged": "Acknowledged",
+      "lttd": "Time remaining to decide"
+    },
+    "received": "Received at {{time}}"
   },
   "login": {
     "reset": "Reset",
@@ -88,11 +111,15 @@
       }
     }
   },
+  "about": {
+    "title": "ABOUT"
+  },
   "settings": {
-    "description": "Description",
-    "locale": "Language",
-    "timeZone": "Time zone",
-    "defaultTags": "Default tags",
+    "title": "SETTINGS",
+    "description": "DESCRIPTION",
+    "locale": "LANGUAGE",
+    "timeZone": "TIME ZONE",
+    "defaultTags": "DEFAULT TAGS ",
     "playSoundLabel": "Play sounds for cards with severity",
     "playSoundForAlarm": "Alarm",
     "playSoundForAction": "Action",
@@ -101,66 +128,91 @@
   },
   "archive": {
     "filters": {
-      "publisher": "Publisher",
-      "process": "Process",
-      "tags": "Tags",
-      "publishDateFrom": "Publish From",
-      "publishDateTo": "Publish To",
-      "activeFrom": "Active From",
-      "activeTo": "Active To"
+      "process": "PROCESS",
+      "tags": "TAGS",
+      "publishDateFrom": "PUBLISH FROM",
+      "publishDateTo": "PUBLISH TO",
+      "activeFrom": "ACTIVE FROM",
+      "activeTo": "ACTIVE TO"
     },
-    "search": "Search",
-    "clear": "Clear",
-    "noResult": "Your search did not match any results."
+    "result": {
+      "publishDate" : "PUBLICATION DATE",
+      "businessPeriod" : "BUSINESS PERIOD",
+      "title" : "TITLE",
+      "summary": "SUMMARY"
+    },
+    "noResult": "Your search did not match any results.",
+    "exportToExcel" : "Export data",
+    "resultsNumber":"Results number",
+    "selectProcessText": "Select a Process",
+    "selectTagText": "Select a Tag"
   },
   "logging": {
     "filters": {
-      "process": "Process"
+      "process": "PROCESS",
+      "selectProcessText": "Select a Process"
     },
-    "cardType": "Card Type",
-    "timeOfAction": "Time of Action",
-    "processName": "Title",
-    "description": "Description",
-    "sender": "Sender",
-    "noResult": "No result",
-    "ExportTOExcel": "Export to Excel"
+    "timeOfAction": "TIME OF ACTION",
+    "title": "TITLE",
+    "summary": "SUMMARY",
+    "description": "DESCRIPTION",
+    "sender": "ACTOR",
+    "noResult": "Your search did not match any results.",
+    "ExportTOExcel": "Export data",
+    "resultsNumber":"Results number"
   },
   "monitoring": {
+    "hideFilters" : "Hide Filters",
+    "showFilters" : "Show Filters",
+    "noSelection" : "NA",
     "filters": {
-      "process": "Process"
+      "process": "PROCESS",
+      "selectProcessText": "Select a Process"
     },
-    "time": "Time",
-    "businessPeriod": "Business Period",
-    "title": "Title",
-    "summary": "Summary",
-    "trigger": "Trigger",
-    "status": "Status",
-    "seeDetails": "see details",
-    "ExportTOExcel": "Export to Excel"
+    "time": "TIME",
+    "businessPeriod": "BUSINESS PERIOD",
+    "title": "TITLE",
+    "summary": "SUMMARY",
+    "status": "STATUS",
+    "seeDetails": "SEE DETAILS",
+    "ExportTOExcel": "Export data"
   },
   "button": {
     "ok": "OK",
-    "cancel": "Cancel",
-    "reset": "Reset",
+    "cancel": "CANCEL",
+    "reset": "RESET",
     "delete": "Delete",
-    "edit": "Edit"
+    "edit": "Edit",
+    "yes": "YES",
+    "search" : "SEARCH" 
+  },
+  "feedConfiguration": {
+    "title": "NOTIFICATION RECEPTION CONFIGURATION",
+    "confirmSettings": "CONFIRM SETTINGS",
+    "popup": {
+      "title": "CONFIRMATION",
+      "areYouSure": "You have made some changes. Are you sure you want to save them ?"
+    },
+    "error": {
+      "impossibleToSaveSettings": "Impossible to save settings for technical reasons"
+    }
   },
   "userCard": {
-    "title": "Create a new card",
-    "editTitle" : "Edit a card",
+    "title": "CREATE A NEW CARD ",
+    "editTitle" : "EDIT A NEW CARS",
     "error": {
+      "notAvailable": "Feature not available",
       "noRecipientSelected": "You must at least choose one recipient",
       "templateError": "Technical error : invalid template",
       "impossibleToSendCard": "Impossible to send card for technical reasons"
     },
     "filters": {
-      "severity": "Severity",
-      "process": "Process",
-      "state": "State",
-      "startDate":  "Start Date",
-      "endDate":  "End Date",
-      "comment": "Comment",
-      "recipients": "Recipients"
+      "severity": "SEVERITY",
+      "process": "PROCESS",
+      "state": "STATE",
+      "startDate":  "START DATE",
+      "endDate":  "END DATE",
+      "recipients": "RECIPIENTS"
     },
     "options": {
       "severity": {
@@ -170,14 +222,17 @@
         "INFORMATION": "Information"
       }
     },
-    "prepareCard": "Prepare Card before sending",
+    "prepareCard": "SEE BEFORE SENDING",
     "confirmSending": "Send the following card?",
-    "accept": "Send",
-    "refuse": "Cancel",
+    "accept": "SEND",
+    "refuse": "CANCEL",
     "processInstanceId": "Id",
     "state": "State",
-    "send-another-one": "Send another Card",
-    "cardSendWithNoError": "Card sent",
+    "recipients": "RECIPIENTS:",
+    "feedPreview": "FEED PREVIEW:",
+    "contentPreview": "CONTENT PREVIEW:",
+    "send-another-one": "SEND ANOTHER CARD",
+    "cardSendWithNoError": "Your card is published",
     "deleteCard": {
       "doYouReallyWant": "Do you really want to delete this card ?",
       "cardDeletedWithNoError": "Card deleted",
@@ -185,27 +240,26 @@
         "impossibleToDeleteCard": "Impossible to delete card for technical reasons"
       }
     },
-    "searchPlaceholderText": "Search",
-    "selectRecipientText": "Select a recipîent",
-    "selectAllText": "Select All",
-    "unSelectAllText": "UnSelect All",
-    "filterSelectAllText": "Select all filtered results",
-    "filterUnSelectAllText": "UnSelect all filtered results"
+    "sendingCardInProgress": "Sending card in progress ..."
   },
   "response": {
-    "btnTitle": "VALIDATE ANSWERS",
+    "btnTitle": "VALIDATE ANSWER",
+    "btnUnlock": "MODIFY ANSWER",
     "error": {
-      "submit": "The card could not been sent",
+      "submit": "The answer could not be sent",
       "form": "The form is not correctly filled",
       "ack": "Unable to change acknowledgement of this card for an error of remote system"
     },
-    "submitSuccess": "Action succeeded",
-    "answers": "Answers"
+    "submitSuccess": "Your answer is confirmed. Thank you!",
+    "answers": "Answers",
+    "answered": "Answered",
+    "unanswered": "Not answered yet",
+    "status": "Status"
   },
   "cardAcknowledgment": {
     "button": {
-      "ack": "Acknowledge and close",
-      "unack": "Cancel acknowledgement"
+      "ack": "ACKNOWLEDGE AND CLOSE",
+      "unack": "CANCEL ACKNOWLEDGMENT"
     }
   },
   "admin": {
@@ -227,9 +281,9 @@
         "add": "Add new user",
         "edit": "Edit",
         "delete": "Delete",
-        "save": "Save Changes",
-        "close": "Close",
-        "cancel": "cancel",
+        "save": "SAVE CHANGES",
+        "close": "CLOSE",
+        "cancel": "CANCEL",
         "confirm": "Please confirm..",
         "user": "user",
         "filter": "filter by ",
@@ -271,7 +325,7 @@
       "entities": "Entities management"
     },
     "pagination": {
-      "firstText": "Fisrt",
+      "firstText": "First",
       "lastText": "Last",
       "nextText": "Next",
       "prevText": "Previous"

@@ -8,14 +8,15 @@
 
 
 
-<div class="container-fluid feed-content" calcHeightDirective parentId="parentFeedContent" fixedHeightClass="fixed-height-feed-content" calcHeightClass="calc-height-feed-content">
-  <div class="fixed-height-feed-content">
+<div class="container-fluid feed-content">
+  <div>
     <of-filters></of-filters>
   </div>
-  <div class="calc-height-feed-content">
+  <div class="opfab-feed-horizontal-bar"> </div>
+  <div id="opfab-card-list" class="opfab-card-list">
     <div class="row" *ngFor="let currentLightCard of lightCards">
-      <div class="col-12">
-        <of-card [lightCard]="currentLightCard" [open]="currentLightCard.id === (selection|async)"></of-card>
+      <div class="col-12" style="padding-right: 20px;margin-bottom: 10px;">
+        <of-light-card [lightCard]="currentLightCard" [open]="currentLightCard.id === (selection|async)"></of-light-card>
       </div>
     </div>
   </div>

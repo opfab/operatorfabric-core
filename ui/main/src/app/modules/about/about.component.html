@@ -6,10 +6,11 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<ul class="about-application-list">
-    <li *ngFor="let elem of aboutElements">
+<div class="about-application-list">
+    <div *ngFor="let elem of aboutElements">
         <span class="about-application-name">{{elem.name}}</span>
         <span> - </span>
         <span>{{elem.version}}</span>
-    </li>
-</ul>
+    </div>
+    <br/>
+</div>

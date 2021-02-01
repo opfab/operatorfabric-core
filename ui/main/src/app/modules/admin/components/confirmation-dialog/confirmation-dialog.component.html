@@ -8,6 +8,6 @@
     {{ message }}
   </div>
   <div class="modal-footer  bg-dark">
-    <button type="button" class="btn btn-danger" (click)="decline()">{{ btnCancelText }}</button>
-    <button type="button" class="btn btn-primary" (click)="accept()">{{ btnOkText }}</button>
+    <button id="opfab-admin-confirmation-btn-cancel" type="button" class="opfab-btn-cancel" (click)="decline()">{{ btnCancelText }}</button>
+    <button id="opfab-admin-confirmation-btn-ok"  type="button" class="opfab-btn" (click)="accept()">{{ btnOkText }}</button>
   </div>

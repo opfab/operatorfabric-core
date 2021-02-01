@@ -14,13 +14,6 @@
           "5"
         ]
       },
-      "process": {
-        "list": [
-          "process1",
-          "process2",
-          "process3"
-        ]
-      },
       "tags": {
         "list": [
           {
@@ -124,11 +117,13 @@
       "description": true
     },
     "locale": "en",
-    "nightDayMode": false,
-    "styleWhenNightDayModeDesactivated" : "LEGACY"
+    "nightDayMode": false
   },
   "navbar": {
     "hidden": [],
     "businessmenus" : {"type":"IFRAME"}
+  },
+  "feedConfiguration": {
+    "hidden": false
   }
 }

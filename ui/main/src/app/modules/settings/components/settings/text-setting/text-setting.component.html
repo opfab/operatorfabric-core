@@ -11,9 +11,9 @@
 <form [formGroup]="form">
   <div class="form-group">
     <label for="setting" translate>settings.{{settingPath}}</label>
-    <input *ngIf="(settingPath === 'description') && disabled" type="text" class="form-control" id="setting" formControlName="setting" [pattern]="pattern" [attr.required]="requiredField" disabled>
+    <input id="opfab-setting-{{settingPath}}" *ngIf="(settingPath === 'description') && disabled" type="text" class="form-control"  formControlName="setting" [pattern]="pattern" [attr.required]="requiredField" disabled>
 
-    <input *ngIf="!((settingPath === 'description') && disabled)" type="text" class="form-control" id="setting" formControlName="setting" [pattern]="pattern" [attr.required]="requiredField">
+    <input id="opfab-setting-{{settingPath}}" *ngIf="!((settingPath === 'description') && disabled)" type="text" class="form-control" formControlName="setting" [pattern]="pattern" [attr.required]="requiredField">
 
     <span class="text-danger" *ngIf="!form.valid">Incorrect submission</span>
   </div>

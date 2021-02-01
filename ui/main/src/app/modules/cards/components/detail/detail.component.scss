@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,44 +7,212 @@
  * This file is part of the OperatorFabric project.
  */
 
- .opfab-card-detail-border{
-  border-color:var(--opfab-card-detail-border-color);
-  border-style: solid;
-  border-left-width: 1px;
-  border-right-width: 1px;
-  border-bottom-width: 1px;
-  border-top-width: 0px;
-  border-radius : 5px;
-}
-
-.modal-body{
- background-color: var(--opfab-lightcard-detail-bgcolor);
- color: var(--opfab-lightcard-detail-textcolor);
-}
-
-
-.modal-header{
- background-color: var(--opfab-lightcard-detail-bgcolor);
- color: var(--opfab-lightcard-detail-textcolor);
-}
-
-.btn{
- color: var(--opfab-lightcard-detail-textcolor);
-}
-
-.calc-height-details {
-  overflow-x: hidden;
-  overflow-y: auto;
-}
 
 .opfab-line-undertab{
   border-color:var(--opfab-card-tab-border-color);
+  border-bottom-width: 0.5px;
+  display: inline-block;
+  width: 100%;
+  margin-bottom : 5px;
 }
 
 .opfab-tab{
-  border-color:var(--opfab-card-tab-border-color);
-  border-radius: 4px;
   color: var(--opfab-card-tab-selected-text-color);
-  background-color: var(--opfab-card-tab-selected-bgcolor);
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+ 
 }
 
+.opfab-card-response-header {
+  background-color: var(--opfab-card-bgcolor);
+  margin-bottom: 5px;
+}
+
+.opfab-card-detail{
+  background-color: var(--opfab-card-bgcolor);
+  box-shadow: var(--opfab-card-shadow);
+  padding: 15px;
+
+}
+
+.opfab-menu-icon {
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  margin-right: 5px;
+  background: var( --opfab-navbar-color);
+  mask-size: cover;
+  &:hover,
+  &:focus {
+    background:var( --opfab-navbar-color-hover);
+  }
+}
+
+.opfab-menu-icon-right {
+  float: right;
+  margin-right: 20px;
+}
+
+.opfab-menu-item-right {
+  float: right;
+  display: inline-flex;
+}
+
+.opfab-menu-item-left {
+  float: left;
+}
+
+.opfab-icon-edit {
+  mask: url(assets/images/icons/edit.svg);
+}
+
+.opfab-icon-trash {
+  mask: url(assets/images/icons/trash.svg);
+}
+
+.opfab-icon-maximize {
+  mask: url(assets/images/icons/maximize.svg);
+}
+
+.opfab-icon-reduce {
+  mask: url(assets/images/icons/reduce.svg);
+}
+
+.opfab-right-menu-item {
+  color:var(--opfab-navbar-color);
+  margin-left: 20px;
+  margin-right: 20px;
+  letter-spacing: 0.54px;
+  font-size: 16px;
+  line-height: 40px;
+  &:hover,
+  &:focus {
+    color:var( --opfab-navbar-color-hover);
+  }
+}
+
+.opfab-right-menu-link {
+  display: grid;
+  grid-template-columns: 30px auto;
+  color:var(--opfab-navbar-color);
+  align-items: center;
+
+  &:hover,
+  &:focus {
+    color:var( --opfab-navbar-color-hover);
+    text-decoration: none;
+  }
+}
+
+.opfab-close-card-link{
+  color:var(--opfab-navbar-color);
+  margin-left: 5px;
+  margin-right: 20px;
+  letter-spacing: 0.54px;
+  line-height: 40px;
+  font-size: 30px;
+  cursor: pointer;
+  &:hover,
+  &:focus {
+    color:var( --opfab-navbar-color-hover);
+  }
+}
+
+.opfab-max-and-reduce-icons
+{
+  margin-top:12px;
+  margin-right: 0px;
+  color:var(--opfab-navbar-color);
+  cursor: pointer;
+  &:hover,
+  &:focus {
+    color:var( --opfab-navbar-color-hover);
+  }
+}
+
+.opfab-card-detail-fullscreen{
+  position: fixed; 
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 50px;
+  width: 100%; 
+  height: 100%; 
+  padding: 20px;
+  background-color: var(--opfab-bgcolor);
+
+}
+
+.opfab-icon-help {
+  display: inline-block;
+  height: 13px;
+  width: 13px;
+  margin-bottom:-2px;
+  margin-right: 10px;
+  border-width: 0px;
+  background: var( --opfab-navbar-color-hover);
+  mask-size: cover;
+  mask: url(assets/images/icons/help.svg);
+}
+
+.opfab-question-card-state-name{
+  color: var(--opfab-light-card-lttd-timeleft);
+}
+
+.label-help {
+  display: block;
+}
+
+.label-answered::before {
+  content: "";
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+  margin-bottom: -3px;
+  background-color: green;
+}
+
+.label-unanswered::before {
+  content: "";
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+  margin-bottom: -3px;
+  background-color: #ff6600;
+}
+
+.flex-container {
+  display: flex;
+}
+.opfab-card-received-footer {
+  float: left;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 10px;
+  padding: 10px;
+}
+
+.opfab-entities-dropdown {
+  text-align: center;
+  padding-left: 5px;
+}
+
+.opfab-entities-dropdown::after {
+  content: "V";
+  transform: matrix(1, 0, 0, 0.5, 0, 3);
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 100%;
+  text-align: center;
+  font-size: 20px;
+  margin-top: -5px;
+  color: var(--opfab-form-border-color);
+  pointer-events: none;
+}
+
+.opfab-modal-content .modal-content{
+  width: max-content;
+}

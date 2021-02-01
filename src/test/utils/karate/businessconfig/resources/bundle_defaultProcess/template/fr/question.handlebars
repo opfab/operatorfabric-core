@@ -3,12 +3,13 @@
 
 <form id='question-form'>
    <div class="form-group">
-      <h1>  Indisponibilité  de 2 heures à prevoir pour la ligne HVDC france-angleterre </h1>
+      <h4>  Indisponibilité  de 2 heures à prevoir pour la ligne HVDC france-angleterre </h4>
       <br/>
-      <h3>  Merci de confirmer les créneaux qui vous conviennent  </h3>
-        <input type="checkbox" id="choice1" name="choice1"> Le 10/08/2020 entre 8h and 10h</input> <br/>
-        <input type="checkbox" id="choice2" name="choice2"> Le 10/08/2020 entre 10h and 12h</input> <br/>
-        <input type="checkbox" id="choice3" name="choice3"> Le 11/08/2020 entre 8h and 10h</input> <br/>
+       Merci de confirmer les créneaux qui vous conviennent  <br/><br/>
+
+       <label class="opfab-checkbox" style="margin-left:40px"> Le 10/08/2020 entre 8h and 10h <input type="checkbox" id="choice1" name="choice1" >  <span class="opfab-checkbox-checkmark"> </span> </label>
+       <label class="opfab-checkbox" style="margin-left:40px"> Le 10/08/2020 entre 10h and 12h <input type="checkbox" id="choice2" name="choice2" >  <span class="opfab-checkbox-checkmark"> </span> </label>
+       <label class="opfab-checkbox" style="margin-left:40px"> Le 11/08/2020 entre 8h and 10h  <input type="checkbox" id="choice3" name="choice3" >  <span class="opfab-checkbox-checkmark"> </span> </label>
     </div>
 </form> 
 
@@ -26,7 +27,7 @@
     if (templateGateway.childCards[0])
     {
     let childsDiv = document.getElementById("childs-div");
-    let responses  = '<center> <h3>Responses reçues </h3> <br/>'
+    let responses  = '<center> <h4>Responses reçues </h4> <br/>'
     responses += ' <table width="100%""> <tr> <th> Entity </th>';
     responses += ' <th> 10/08/2020 8h-10h </th>';
     responses += ' <th> 10/08/2020 10h-12h </th>';
@@ -67,6 +68,19 @@
       };
 
     }
+
+  templateGateway.lockAnswer = function() {
+      document.getElementById('choice1').disabled = true;
+      document.getElementById('choice2').disabled = true;
+      document.getElementById('choice3').disabled = true;
+  }
+
+  templateGateway.unlockAnswer = function() {
+      document.getElementById('choice1').disabled = false;
+      document.getElementById('choice2').disabled = false;
+      document.getElementById('choice3').disabled = false;
+
+  }
 
 </script>
 

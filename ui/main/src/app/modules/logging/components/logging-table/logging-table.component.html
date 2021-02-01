@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
 <!-- Copyright (c) 2020, RTEi (http://www.rte-international.com)           -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
@@ -7,41 +7,46 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
+<div class="opfab-table">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col" style="padding-left: 5px" translate>logging.timeOfAction</th>
+        <th scope="col" translate>logging.title</th>
+        <th scope="col" translate>logging.summary</th>
+        <th scope="col" translate>logging.description</th>
+        <th scope="col" translate>logging.sender</th>
+      </tr>
+    </thead>
 
-<table class="table table-dark">
-  <caption class="hidden-caption">List of current cards filtered by process or by active dates</caption>
-  <thead>
-    <tr>
-      <th scope="col" translate>logging.timeOfAction</th>
-      <th scope="col" translate>logging.processName</th>
-      <th scope="col" translate>logging.description</th>
-      <th scope="col"></th>
+    <tr *ngFor="let element of results" >
+      <td class="opfab-logging-sev opfab-logging-sev-{{element.cardType}}"></td>
+      <td style="padding-left: 5px">{{displayTime(element.businessDate)}}</td>
+      <td translate [translateParams]="element.i18nKeyForTitle.parameters">{{element.i18nKeyForTitle.key}}
+      </td>
+      <td translate [translateParams]="element.i18nKeyForSummary.parameters">{{element.i18nKeyForSummary.key}}
+      </td>
+      <td translate >{{processStateDescription.get(element.process + '.' + element.state)}}
+      </td>
 
-      <th scope="col" translate>logging.sender</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr mdbTableCol *ngFor="let element of results">
-      <td>{{displayTime(element.businessDate)}}</td>
-      <td translate [translateParams]="element.i18nKeyForProcessName.parameters">{{element.i18nKeyForProcessName.key}}
-      </td>
-      <td translate [translateParams]="element.i18nKeyForDescription.parameters">{{element.i18nKeyForDescription.key}}
-      </td>
-      <td><em class="fas fa-circle text-sev-{{element.cardType}}"></em></td>
       <td>{{element.sender}}</td>
     </tr>
-  </tbody>
-</table>
-
-<div class="export-div">
-  <button class="btn btn-primary btn-sm export-btn" type="button"  (click)="export()"
-  fileName="loggingResults" translate>
-  <em class="fa fa-file-export"></em> logging.ExportTOExcel</button>
-  <of-logging-page></of-logging-page>
+  </table>
+  <div class="opfab-logging-pagination">
+    <div style="width:10%;margin-top:17px">
+      <span translate> logging.resultsNumber </span> : {{collectionSize$ | async}}
+    </div>
+    <div style="width:40%;margin-top:5px">
+      <ngb-pagination *ngIf="(collectionSize$ | async) > size" [collectionSize]="collectionSize$ | async" [page]="page"
+        [pageSize]="size" (pageChange)="updateResultPage($event)" [maxSize]="3" [rotate]="true">
+      </ngb-pagination>
+    </div>
+    <div style="width:50%;text-align:right;padding-right:8px;">
+      <div id="opfab-logging-btn-exportToExcel" style="float: right;cursor:pointer" (click)="export()" fileName="loggingResults" >
+        <span class="opfab-icon-export-data"></span>
+        <span style="font-weight: bold;" translate>logging.ExportTOExcel</span>
+      </div>
+    </div>
+  </div>
 </div>
-
-
-
-
-
-

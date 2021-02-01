@@ -32,7 +32,7 @@ In this case, the `label` declared at the root level of the menu is useless and 
 === ui-menu.json declaration
 
 A single menu or a menu with sub-menus has at least attributes named `id` and `entries`.
-The `entries` attribute is an array of `menu entry`.
+The `entries` attribute is an array of `menu entry`. It is possible to restrict the visibility of one menu entry the one or more user groups by setting the `showOnlyForGroups` parameter.
 Note that menus with sub-menus need a `label` declaring an i18n key.
 
 Each `menu entry` declares the attributes listed below:
@@ -44,6 +44,8 @@ Each `menu entry` declares the attributes listed below:
 ** `TAB`: displays only a text link. Clicking it opens the link in a new tab.
 ** `IFRAME`: displays only a text link. Clicking it opens the link in an iframe in the main content zone below the navigation bar.
 ** `BOTH`: default value. Displays a text link plus a little arrow icon. Clicking the text link opens the link in an iframe while clicking the icon opens in a new tab.
+**
+- `showOnlyForGroups`: Defines the list of user groups entitled to see the menu entry, if not defined or empty it will be visible to every user.
 
 
 === Examples
@@ -75,13 +77,15 @@ The sample contain also the i18n translations in english and in french.
           "id": "uid_test_1",
           "url": "https://opfab.github.io/",
           "label": "entry.entry1",
-          "linkType": "BOTH"
+          "linkType": "BOTH",
+          "showOnlyForGroups": "ReadOnly,Dispatcher"
         },
         {
           "id": "uid_test_2",
           "url": "https://www.wikipedia.org/",
           "label": "entry.entry2",
-          "linkType": "BOTH"
+          "linkType": "BOTH",
+          "showOnlyForGroups": "Planner"
         }
       ]
     }
@@ -133,7 +137,7 @@ The sample contain also the i18n translations in english and in french.
 
 For iframes opened from menu, the associated request uses an extra parameter containing the current theme information.
 Named `opfab_theme`, this parameter has a value corresponding to the current theme: +
-`DAY`, `NIGHT` or `LEGACY`.
+`DAY` or `NIGHT`
 
 *Example:*
 

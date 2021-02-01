@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,14 +8,55 @@
  */
 
 
-.alert-info {
-    color: var(--opfab-text-color);
-    background-color: transparent;
-    border-color: transparent;
-    text-align: center;
-    width: auto;
+ @import "~assets/styles/_variables.scss";
+
+.opfab-archive-sev {
+  width: 15px;
 }
 
-h1, .h1 {
-    font-size: 1.2rem;
+.opfab-archive-pagination {
+  padding-top: 6px;
+  padding-left: 10px;
+  width: 100%;
+  display: flex;
+  color: var(--opfab-text-color-stronger);
+  font-size: 14px;
 }
+
+.opfab-archive-sev-alarm {background-color: $sev-alarm;}
+.opfab-archive-sev-action {background-color: $sev-action;}
+.opfab-archive-sev-compliant {background-color: $sev-compliant;}
+.opfab-archive-sev-information {background-color: $sev-information;}
+
+
+  .opfab-archives {
+    background-color: var(--opfab-bgcolor-darker);
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-left: 5%;
+  
+  }
+  
+  .opfab-vertical-bar {
+    border-left-width: 1px;
+    border-left-style: solid;
+    height: 150px; 
+    width: 1px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 30px;
+    border-color: var(--opfab-form-border-color);
+  
+  }
+
+  .opfab-card-received-footer {
+    float: left;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 10px;
+    padding: 10px;
+  }
+
+  .opfab-archives-table-line:hover {
+    border: 2px solid #2268FF;
+    }

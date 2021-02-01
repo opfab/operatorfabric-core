@@ -84,8 +84,8 @@ public class CardNotificationService {
             rabbitTemplate.convertAndSend("CARD_EXCHANGE", "", mapper.writeValueAsString(cardOperation));
             log.debug("Operation sent to CARD_EXCHANGE, type={}, ids={}, cards={}, groupRecipientsIds={}, entityRecipientsIds={}, userRecipientsIds={}"
                     , cardOperation.getType()
-                    , cardOperation.getCardIds().toString()
-                    , cardOperation.getCards().toString()
+                    , cardOperation.getCardId()
+                    , (cardOperation.getCard() != null ? cardOperation.getCard().toString() : "")
                     , cardOperation.getGroupRecipientsIds().toString()
                     , cardOperation.getEntityRecipientsIds().toString()
                     , cardOperation.getUserRecipientsIds().toString());

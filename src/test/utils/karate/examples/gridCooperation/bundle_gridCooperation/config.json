@@ -9,7 +9,7 @@
 	"states": {
 		"timeout-FrEs-IGCC": {
 			"name":  "timeout-FrEs-IGCC.title",
-			"acknowledgementAllowed": true,
+			"acknowledgmentAllowed": "Always",
 			"color": "red",
 			"detailTitle": {
 						"key": "timeout-FrEs-IGCC.title"
@@ -18,7 +18,7 @@
 		},
 		"action-FrEs-IGCC-export-0": {
 			"name":  "action-FrEs-IGCC-export-0.title",
-			"acknowledgementAllowed": true,
+			"acknowledgmentAllowed": "Always",
 			"color": "red",
 			"detailTitle": {
 						"key": "action-FrEs-IGCC-export-0.title"
@@ -27,7 +27,7 @@
 		},
 		"action-FrEs-IGCC-export-300": {
 			"name":  "action-FrEs-IGCC-export-300.title",
-			"acknowledgementAllowed": true,
+			"acknowledgmentAllowed": "Always",
 			"color": "orange",
 			"detailTitle": {
 						"key": "action-FrEs-IGCC-export-300.title"
@@ -36,7 +36,7 @@
 		},
 		"action-FrEs-IGCC-import-0": {
 			"name":  "action-FrEs-IGCC-import-0.title",
-			"acknowledgementAllowed": true,
+			"acknowledgmentAllowed": "Always",
 			"color": "red",
 			"detailTitle": {
 						"key": "action-FrEs-IGCC-import-0.title"
@@ -45,7 +45,7 @@
 		},
 		"action-FrEs-IGCC-import-300": {
 			"name":  "action-FrEs-IGCC-import-300.title",
-			"acknowledgementAllowed": true,
+			"acknowledgmentAllowed": "Always",
 			"color": "orange",
 			"detailTitle": {
 						"key": "action-FrEs-IGCC-import-300.title"
@@ -54,9 +54,9 @@
 		},
 		"compliant-FrEs-IGCC": {
 			"name":  "compliant-FrEs-IGCC.title",
-			"acknowledgementAllowed": true,
+			"acknowledgmentAllowed": "Always",
 			"color": "green",
-			"detailsTitle": {
+			"detailTitle": {
 						"key": "compliant-FrEs-IGCC.title"
 					},
 			"templateName": "compliant-FrEs-IGCC"

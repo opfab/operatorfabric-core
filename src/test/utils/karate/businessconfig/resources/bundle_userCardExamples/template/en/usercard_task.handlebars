@@ -1,34 +1,84 @@
-
-
-Task description : <input size="50" type="text" id="taskDescription" value="{{card.data.taskDescription}}"> </input> 
+<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
 
 <br/>
+<div class="opfab-input">
+    <label for="taskDescription"> TASK DESCRIPTION</label>
+    <input size="50" type="text" id="taskDescription" value="{{card.data.taskDescription}}"> </input> 
+</div>
 <br/>
 
-Repeat every : 
-<div style="text-align: center;">
+
+REPEAT EVERY:
+<br/> <br/>
+<div>
     <table width="100%">
         <tr>
-            <td> <input type="checkbox" checked id="Monday"> Monday </input> </td>
-            <td> <input type="checkbox" checked id="Tuesday"> Tuesday </input> </td>
-            <td> <input type="checkbox" checked id="Wednesday"> Wednesday  </input> </td>
-            <td> <input type="checkbox" checked id="Thursday"> Thursday  </input> </td>
-            <td> <input type="checkbox" checked id="Friday"> Friday  </input> </td>
-            <td> <input type="checkbox" checked id="Saturday"> Saturday  </input> </td>
-            <td> <input type="checkbox" checked id="Sunday"> Sunday  </input> </td>
+            <td><label class="opfab-checkbox"> MONDAY <input type="checkbox" id="Monday">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox"> TUESDAY <input type="checkbox" id="Tuesday">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox"> WEDNESDAY <input type="checkbox" id="Wednesday">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox"> THURSDAY <input type="checkbox" id="Thursday">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox"> FRIDAY <input type="checkbox" id="Friday">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox"> SATURDAY <input type="checkbox" id="Saturday">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox"> SUNDAY <input type="checkbox" id="Sunday">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+
         </tr>
     </table>
 
 </div>
 
 <br/>
-<div style="text-align: center">
- At : &nbsp; 
- <input size="2" maxlength="2" type="text" id="hours"> </input>H  &nbsp;  
- <input size="2" maxlength="2" type="text" id="minutes"> </input> Min  , remind the task 
+<br/>
+<div>
 
- <input size="2" maxlength="2" type="text" id="minutesForReminder" value="5"> </input> minutes before.
+    <table>
+        <tr>
+            <td style="width:4%">
+                AT :
+            </td>
+            <td style="width:10%">
+                <div class="opfab-input">
+                    <label> HOUR </label>
+                    <input style="text-align:center" size="10" maxlength="2" type="text" id="hours">
+                </div>
+            </td>
+    
+            <td style="width:10%">
+                <div class="opfab-input">
+                    <label> MIN </label>
+                    <input style="text-align:center" size="10" maxlength="2" type="text" id="minutes">
+                </div>
+            </td>
+            <td style="width:6%">
+    
+            </td>
+            <td style="width:32%">
+                <div class="opfab-input">
+                    <label> TASK DURATION (MINUTES) </label>
+                    <input size="3" maxlength="3" type="text" id="durationInMinutes" value="15">
+                </div>
+            </td>
+            <td style="width:6%">
+    
+            </td>
+            <td style="width:32%">
+                <div class="opfab-input">
+                    <label> MINUTES TO REMIND BEFORE TASK</label>
+                    <input size="2" maxlength="2" type="text" id="minutesForReminder" value="5">
+                </div>
+            </td>
+        </tr>
+    </table>
+
 </div>
+
+<br/>
+
 
 <script>
     templateGateway.getSpecificCardInformation = function () {
@@ -36,6 +86,7 @@ Repeat every :
         const hours =  document.getElementById('hours').value;
         const minutes =  document.getElementById('minutes').value;
         const minutesForReminder =  document.getElementById('minutesForReminder').value;
+        const durationInMinutes =  document.getElementById('durationInMinutes').value;
 
        const daysOfWeek = [];
         if (document.getElementById("Monday").checked) daysOfWeek.push(1);
@@ -48,7 +99,8 @@ Repeat every :
 
         const recurrence = {
             daysOfWeek : daysOfWeek,
-            hoursAndMinutes : {hours:hours,minutes:minutes}
+            hoursAndMinutes : {hours:hours,minutes:minutes},
+            durationInMinutes: durationInMinutes
         }
       
         const card = {
@@ -59,7 +111,8 @@ Repeat every :
                 taskDescription: taskDescription,
                 hours: hours,
                 minutes: minutes,
-                daysOfWeek: daysOfWeek
+                daysOfWeek: daysOfWeek,
+                durationInMinutes: durationInMinutes
             }
         };
         return {

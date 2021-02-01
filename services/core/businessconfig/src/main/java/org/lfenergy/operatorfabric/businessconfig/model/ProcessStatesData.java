@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,10 +21,12 @@ import java.util.List;
 @Builder
 public class ProcessStatesData implements ProcessStates {
     private ResponseData responseData;
-    private Boolean acknowledgementAllowed;
+    private AcknowledgmentAllowedEnum acknowledgmentAllowed;
     private String color;
     private String name;
-    private String userCardTemplate;
+    private String description;
+    private Boolean showDetailCardHeader;
+    private UserCard userCard;
     private I18n detailTitle;
     private String templateName;
     @Singular
@@ -41,8 +43,8 @@ public class ProcessStatesData implements ProcessStates {
     }
 
     @Override
-    public Boolean getAcknowledgmentAllowed() { return this.acknowledgementAllowed; }
+    public AcknowledgmentAllowedEnum getAcknowledgmentAllowed() { return this.acknowledgmentAllowed; }
 
     @Override
-    public void setAcknowledgmentAllowed(Boolean acknowledgmentAllowed) { this.acknowledgementAllowed = acknowledgmentAllowed; }
+    public void setAcknowledgmentAllowed(AcknowledgmentAllowedEnum acknowledgmentAllowed) { this.acknowledgmentAllowed = acknowledgmentAllowed; }
 }

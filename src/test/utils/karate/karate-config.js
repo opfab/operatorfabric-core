@@ -1,5 +1,5 @@
 
-function fn() {   
+function() {   
 
   /* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
  * See AUTHORS.txt

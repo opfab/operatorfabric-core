@@ -53,17 +53,16 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static java.nio.charset.Charset.forName;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.await;
 import static org.jeasy.random.FieldPredicates.named;
 import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
+
 
 /**
  * <p>
@@ -330,7 +329,12 @@ class CardProcessServiceShould {
 
     @Test
     void preserveData() {
-        Instant start = Instant.now().plusSeconds(3600);
+        // as date are stored in millis in mongo , we should not used nanos otherwise 
+        // we will have different results when comparing date send and date stored 
+        // resulting  in failed test 
+
+        Instant start = Instant.ofEpochMilli(Instant.now().toEpochMilli()).plusSeconds(3600);
+        
         LinkedHashMap data = new LinkedHashMap();
         data.put("int", 123);
         data.put("string", "test");
@@ -345,8 +349,9 @@ class CardProcessServiceShould {
         List<Integer> daysOfWeek = new ArrayList<>();
         daysOfWeek.add(new Integer(2));
         daysOfWeek.add(new Integer(3));
+        Integer duration = new Integer(15);
         HoursAndMinutes hoursAndMinutes = new HoursAndMinutesPublicationData(2,10);
-        RecurrencePublicationData recurrence = new RecurrencePublicationData("timezone",daysOfWeek,hoursAndMinutes);
+        RecurrencePublicationData recurrence = new RecurrencePublicationData("timezone",daysOfWeek,hoursAndMinutes, duration);
 
         CardPublicationData newCard = CardPublicationData.builder().publisher("PUBLISHER_1")
                 .processVersion("0.0.1").processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
@@ -426,6 +431,55 @@ class CardProcessServiceShould {
         CardPublicationData firstCard = cards.get(0);
         String id = firstCard.getId();
         cardProcessingService.deleteCard(id);
+
+        /* one card should be deleted(the first one) */
+        int thereShouldBeOneCardLess = numberOfCards - 1;
+
+        StepVerifier.create(cardRepository.count())
+                .expectNextMatches(r -> r.intValue()==thereShouldBeOneCardLess).verifyComplete();
+    }
+
+    @Test
+    void deleteOneCard_with_card_no_id() {
+
+        EasyRandom easyRandom = instantiateRandomCardGenerator();
+        int numberOfCards = 13;
+        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
+        cards.forEach(c -> {
+            c.setParentCardId(null);
+            c.setInitialParentCardUid(null);
+        });
+
+        StepVerifier.create(cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards]))))
+                .expectNextMatches(r -> r.getCount().equals(numberOfCards)).verifyComplete();
+
+        CardPublicationData firstCard = cards.get(0);
+        firstCard.setId(null);
+        cardProcessingService.deleteCard(firstCard);
+
+        /* one card should be deleted(the first one) */
+        int thereShouldBeOneCardLess = numberOfCards - 1;
+
+        StepVerifier.create(cardRepository.count())
+                .expectNextMatches(r -> r.intValue()==thereShouldBeOneCardLess).verifyComplete();
+    }
+
+    @Test
+    void deleteOneCard_with_card_with_id() {
+
+        EasyRandom easyRandom = instantiateRandomCardGenerator();
+        int numberOfCards = 13;
+        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
+        cards.forEach(c -> {
+            c.setParentCardId(null);
+            c.setInitialParentCardUid(null);
+        });
+
+        StepVerifier.create(cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards]))))
+                .expectNextMatches(r -> r.getCount().equals(numberOfCards)).verifyComplete();
+
+        CardPublicationData firstCard = cards.get(0);
+        cardProcessingService.deleteCard(firstCard);
 
         /* one card should be deleted(the first one) */
         int thereShouldBeOneCardLess = numberOfCards - 1;

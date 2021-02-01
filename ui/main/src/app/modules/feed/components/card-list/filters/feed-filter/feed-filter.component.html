@@ -1,0 +1,110 @@
+<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
+
+<ng-template #filterTypeContent>
+
+
+
+    <div class="row opfab-filter-type-header">
+        <span translate>feed.filters.type.title</span>
+    </div>
+    <form [formGroup]="typeFilterForm" id="type-filter-form" style="padding-left: 3px;">
+
+        <label class="opfab-checkbox "> <span class="label-sev-alarm" translate> feed.filters.type.alarm.label </span>
+            <input id="opfab-feed-filter-severity-alarm" type="checkbox" formControlName="alarm" >
+            <span class="opfab-checkbox-checkmark"></span>
+        </label>
+
+
+        <label class="opfab-checkbox "> <span class="label-sev-action" translate> feed.filters.type.action.label </span>
+            <input id="opfab-feed-filter-severity-action" type="checkbox" formControlName="action" >
+            <span class="opfab-checkbox-checkmark"></span>
+        </label>
+
+
+        <label class="opfab-checkbox "> <span class="label-sev-compliant" translate> feed.filters.type.compliant.label </span>
+            <input id="opfab-feed-filter-severity-compliant" type="checkbox" formControlName="compliant" >
+            <span class="opfab-checkbox-checkmark"></span>
+        </label>
+
+
+        <label class="opfab-checkbox "> <span class="label-sev-information" translate> feed.filters.type.information.label </span>
+            <input id="opfab-feed-filter-severity-information" type="checkbox" formControlName="information" >
+            <span class="opfab-checkbox-checkmark"></span>
+        </label>
+
+    </form>
+    <div *ngIf="!(hideAckFilter)">
+        <div class="row opfab-filter-header">
+            <span translate>feed.filters.ack.title</span>
+        </div>
+        <form [formGroup]="ackFilterForm" id="ack-filter-form"  style="padding-left: 3px;">
+
+            <label class="opfab-radio-button"> <span  translate>feed.filters.ack.all.label</span>
+                <input type="radio"  id="opfab-feed-filter-ack-all" formControlName="ackControl" value="all">
+                <span class="opfab-radio-button-checkmark"></span>
+            </label>
+
+            <label class="opfab-radio-button"> <span  translate>feed.filters.ack.acknowledged.label</span>
+                <input type="radio"  id="opfab-feed-filter-ack-ack" formControlName="ackControl" value="ack">
+                <span class="opfab-radio-button-checkmark"></span>
+            </label>
+
+            <label class="opfab-radio-button"> <span  translate>feed.filters.ack.notacknowledged.label</span>
+                <input type="radio"  id="opfab-feed-filter-ack-notack" formControlName="ackControl" value="notack">
+                <span class="opfab-radio-button-checkmark"></span>
+            </label>
+
+        </form>
+    </div>
+    
+    <div *ngIf="!(hideTimerTags)" style="width:300px">
+
+        <div class="row opfab-filter-header" *ngIf="filterByPublishDate">
+            <span translate>feed.filters.time.titleIfFilterBasedOnPublishDate</span>
+        </div>
+        <div class="row opfab-ilter-header" *ngIf="!filterByPublishDate">
+            <span translate>feed.filters.time.titleIfFilterBasedOnBusinessDate</span>
+        </div>
+
+        <form class="opfab-time-filter" [formGroup]="timeFilterForm" id="time-filter-form">
+
+            <div style="margin-left: 2px; margin-right: 2px;margin-top:-10px;width:200px">
+                <div class="form-group" id="start">
+                    <of-datetime-filter id="opfab-feed-filter-dateTimeFrom"  (change)="onDateTimeChange($event)" filterPath="start.label" formControlName="dateTimeFrom"
+                        labelKey="feed.filters.time."></of-datetime-filter>
+                </div>
+            </div>
+
+            <div style="margin-left: 2px; margin-right: 2px;margin-top:-20px;;width:200px">
+                <div class="form-group" id="end">
+                    <of-datetime-filter id="opfab-feed-filter-dateTimeTo" filterPath="end.label" formControlName="dateTimeTo"
+                        labelKey="feed.filters.time." (change)="onDateTimeChange($event)"></of-datetime-filter>
+                </div>
+
+            </div>
+        </form>
+        
+    </div>
+    <div *ngIf="isFilterChanged()"><a class="opfab-link" (click)="reset()"><span translate>feed.filters.reset</span></a></div>
+</ng-template>
+
+
+
+
+
+<ng-template #filterTypeTitle><span translate>feed.filters.type.title</span></ng-template>
+
+
+<div class="opfab-icon-bg-color">
+    <div id="opfab-feed-filter-btn-filter" [ngClass]="isFilterActive() ? 'opfab-icon-filter-active' :  'opfab-icon-filter'" popoverClass="opfab-filters-popover" placement="bottom-left" [ngbPopover]="filterTypeContent"
+        container="body" [autoClose]="'outside'">
+    </div>
+</div>

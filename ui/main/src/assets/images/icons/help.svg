@@ -1,0 +1,9 @@
+<!--
+Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+See AUTHORS.txt
+This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+If a copy of the license was not distributed with this
+file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+SPDX-License-Identifier: CC-BY-4.0
+-->
+<svg id="help" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><title>help</title><path d="M16,1A15,15,0,1,1,1,16,15,15,0,0,1,16,1m0-1A16,16,0,1,0,32,16,16,16,0,0,0,16,0Z"/><path d="M14.64,21.39v-.51a6.4,6.4,0,0,1,.51-2.75A7.61,7.61,0,0,1,17,15.85l1.25-1.08a6,6,0,0,0,1.41-1.65,4.11,4.11,0,0,0,.42-1.89A3.52,3.52,0,0,0,19,8.47a4.29,4.29,0,0,0-3-1,8.25,8.25,0,0,0-2,.24,11,11,0,0,0-2,.77l-.51-1.09a13.09,13.09,0,0,1,2.52-.87A9.72,9.72,0,0,1,16,6.27,5.57,5.57,0,0,1,20,7.61a4.81,4.81,0,0,1,1.43,3.7,5,5,0,0,1-.24,1.63,5.34,5.34,0,0,1-.69,1.29,7.7,7.7,0,0,1-1.08,1.15c-.42.37-.88.77-1.39,1.2a10,10,0,0,0-1.35,1.34A4.18,4.18,0,0,0,16,19.2a7.13,7.13,0,0,0-.21,2v.19ZM16.7,24.7a1.5,1.5,0,1,1-1.5-1.5A1.5,1.5,0,0,1,16.7,24.7Z"/></svg>

@@ -1,4 +1,4 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { Component, OnDestroy, TemplateRef, ElementRef, OnInit } from '@angular/core';
+import { Component, OnDestroy, TemplateRef, ElementRef, OnInit, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
@@ -15,33 +15,28 @@ import { CardService } from '@ofServices/card.service';
 import { UserService } from '@ofServices/user.service';
 import { Card, CardData,fromCardToCardForPublishing, TimeSpan} from '@ofModel/card.model';
 import { I18n } from '@ofModel/i18n.model';
-import {  Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Process } from '@ofModel/processes.model';
 import { TimeService } from '@ofServices/time.service';
 import { Severity } from '@ofModel/light-card.model';
 import { Guid } from 'guid-typescript';
-import { NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct,NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 import { UserWithPerimeters, RightsEnum, ComputedPerimeter } from '@ofModel/userWithPerimeters.model';
 import { EntitiesService } from '@ofServices/entities.service';
-import { transformToTimestamp } from '../archives/components/archive-filters/archive-filters.component';
 import { ProcessesService } from '@ofServices/processes.service';
 import { ActivatedRoute} from '@angular/router';
-import { getDateTimeNgbFromMoment } from '@ofModel/datetime-ngb.model';
+import { DateTimeNgb, getDateTimeNgbFromMoment } from '@ofModel/datetime-ngb.model';
 import * as moment from 'moment-timezone';
 import { HandlebarsService } from '../cards/services/handlebars.service';
 import { DetailContext } from '@ofModel/detail-context.model';
 import { map } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
-import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
+import { MessageLevel } from '@ofModel/message.model';
+import { AlertMessage } from '@ofStore/actions/alert.actions';
 
 declare const templateGateway: any;
-
-class Message {
-    text: string;
-    display: boolean;
-}
 
 
 @Component({
@@ -51,10 +46,10 @@ class Message {
 })
 export class UserCardComponent implements OnDestroy, OnInit {
 
+    @Input() modal;
+
     messageForm: FormGroup;
     recipientForm: FormGroup;
-    messageAfterSendingCard: string;
-
 
     processesDefinition: Process[];
     currentUserWithPerimeters: UserWithPerimeters;
@@ -79,21 +74,24 @@ export class UserCardComponent implements OnDestroy, OnInit {
     editCardMode = false;
     cardToEdit: CardData;
 
+    @Input() cardIdToEdit = null; 
     public card: Card;
 
     readonly defaultStartDate = new Date().valueOf() + 60000;
-    readonly defaultEndDate = new Date().valueOf() + 60000 * 60;
+    readonly defaultEndDate = new Date().valueOf() + 60000 * 60 * 24;
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
-
-    public displaySendResult = false;
-    errorMessage: Message = { display: false, text: undefined };
+    public displayPreview = false;
+    public displaySendingCardInProgress = false;
 
     modalRef: NgbModalRef;
+    severityVisible: boolean = true;
+    startDateVisible: boolean = true;
+    endDateVisible: boolean = true;
 
     displayForm() {
-        return !this.displaySendResult;
+        return !!this.processOptions && this.processOptions.length > 0;
     }
 
     constructor(private store: Store<AppState>,
@@ -101,7 +99,6 @@ export class UserCardComponent implements OnDestroy, OnInit {
         private userService: UserService,
         private timeService: TimeService,
         private entitiesService: EntitiesService,
-        private modalService: NgbModal,
         private sanitizer: DomSanitizer,
         private element: ElementRef,
         private processesService: ProcessesService,
@@ -135,38 +132,20 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.changeStatesWhenSelectProcess();
         this.loadTemplateWhenStateChange();
 
-        this.getLocale().subscribe(locale => {
-            this.translate.use(locale);
-            this.translate.get(['userCard.searchPlaceholderText', 'userCard.selectRecipientText', 'userCard.selectAllText', 'userCard.unSelectAllText', 'userCard.filterSelectAllText', 'userCard.filterUnSelectAllText'])
-              .subscribe(translations => {
-                this.dropdownSettings = {
-                    searchPlaceholderText: translations['userCard.searchPlaceholderText'],
-                    text: translations['userCard.selectRecipientText'],
-                    selectAllText: translations['userCard.selectAllText'],
-                    unSelectAllText: translations['userCard.unSelectAllText'],
-                    filterSelectAllText: translations['userCard.filterSelectAllText'],
-                    filterUnSelectAllText: translations['userCard.filterUnSelectAllText'],
-                    enableSearchFilter: true,
-                    classes: 'custom-class-example'
-                };
-              })
-            });
-
+        this.dropdownSettings = {
+            text: '',
+            badgeShowLimit: 30,
+            enableSearchFilter: true
+        };
         
         this.loadCardForEdition();
     }
 
-    protected getLocale(): Observable<string> {
-        return this.store.select(buildSettingsOrConfigSelector('locale'));
-      }
-
-    loadCardForEdition() {
-        this.route.paramMap.subscribe(
-            paramMap => {
-                const cardId = paramMap.get('cardId');
-                if (!!cardId) {
+    loadCardForEdition()
+    {
+        if (!!this.cardIdToEdit) {
                     this.editCardMode = true;
-                    this.cardService.loadCard(cardId).subscribe(card => {
+            this.cardService.loadCard(this.cardIdToEdit).subscribe(card => {
                         this.cardToEdit = card;
                         this.messageForm.get('severity').setValue(this.cardToEdit.card.severity);
                         this.messageForm.get('process').setValue(this.cardToEdit.card.process);
@@ -177,17 +156,16 @@ export class UserCardComponent implements OnDestroy, OnInit {
                     });
                 }
             }
-        );
-    }
-
 
 
     loadAllEntities(): void {
         this.entitiesService.getEntities().forEach(entity =>
             this.recipientsOptions.push({ id: entity.id, itemName: entity.name }));
+
+        this.recipientsOptions.sort(( a, b ) => a.itemName.localeCompare(b.itemName));
     }
 
-
+    
     loadAllProcessAndStateInUserPerimeter(): void {
         this.processesDefinition = this.processesService.getAllProcesses();
         const processesInPerimeter: Set<string> = new Set();
@@ -219,10 +197,12 @@ export class UserCardComponent implements OnDestroy, OnInit {
                 if ((perimeter.process === process.id) && this.userCanSendCard(perimeter)) {
                     const state = process.states[perimeter.state];
                     if (!!state) {
-                        const label = !!state.name ? (new I18n(this.getI18nPrefixFromProcess(process)
-                            + state.name)) : perimeter.state;
-                        const stateEntry = { value: perimeter.state, label: label };
-                        statesList.push(stateEntry);
+                        if (!!state.userCard) {
+                            const label = !!state.name ? (new I18n(this.getI18nPrefixFromProcess(process)
+                                + state.name)) : perimeter.state;
+                            const stateEntry = { value: perimeter.state, label: label };
+                            statesList.push(stateEntry);
+                        }
                     } else console.log('WARNING : state', perimeter.state , 'is present in perimeter for process'
                                     , process.id , 'but not in process definition');
 
@@ -263,11 +243,13 @@ export class UserCardComponent implements OnDestroy, OnInit {
     }
 
     loadTemplate() {
-        this.errorMessage.display = false;
+
         let card;
         if  (!!this.cardToEdit) card = this.cardToEdit.card ;
-        const templateName = this.selectedProcess.states[this.selectedState].userCardTemplate;
-        if (!!templateName) {
+        const userCard = this.selectedProcess.states[this.selectedState].userCard;
+        if (!!userCard && !!userCard.template) {
+            const templateName = userCard.template;
+
             this.handlebars.queryTemplate(this.selectedProcess.id, this.selectedProcess.version, templateName)
                 .pipe(map(t => t(new DetailContext(card, null, null)))).subscribe((template) => {
                     this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml(template);
@@ -280,6 +262,16 @@ export class UserCardComponent implements OnDestroy, OnInit {
                 }
                 );
         } else this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
+
+        if (!!userCard) {
+            this.severityVisible = (userCard.severityVisible === undefined) ? true : userCard.severityVisible;
+            this.startDateVisible = (userCard.startDateVisible === undefined) ? true : userCard.startDateVisible;
+            this.endDateVisible = (userCard.endDateVisible === undefined) ? true : userCard.endDateVisible;
+        } else {
+            this.severityVisible = true;
+            this.startDateVisible = true;
+            this.endDateVisible = true;
+        }
 
     }
 
@@ -297,6 +289,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
         });
     }
 
+    private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
+        this.store.dispatch(new AlertMessage({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}}));
+    }
 
     onSubmitForm(template: TemplateRef<any>) {
         const formValue = this.messageForm.value;
@@ -309,30 +304,26 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
         if (!templateGateway.getSpecificCardInformation) {
             console.log('No getSpecificCardInformationMethod() in template can not send card');
-            this.errorMessage.display = true;
-            this.errorMessage.text = 'userCard.error.templateError';
+            this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
             return;
         }
 
         const specificInformation = templateGateway.getSpecificCardInformation();
         if (!specificInformation) {
             console.log('getSpecificCardInformationMethod() in template return no information');
-            this.errorMessage.display = true;
-            this.errorMessage.text = 'userCard.error.templateError';
+            this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
             return;
         }
 
         if (!specificInformation.valid) {
-            this.errorMessage.display = true;
-            this.errorMessage.text = specificInformation.errorMsg;
+            this.displayMessage('specificInformation.errorMsg', null, MessageLevel.ERROR);
             return;
         }
 
         const selectedRecipients = this.recipientForm.value['recipients'];
         const recipients = new Array();
         if (selectedRecipients.length < 1) {
-            this.errorMessage.display = true;
-            this.errorMessage.text = 'userCard.error.noRecipientSelected';
+            this.displayMessage('userCard.error.noRecipientSelected', null, MessageLevel.ERROR);
             return;
         } else selectedRecipients.forEach(entity => recipients.push(entity.id));
 
@@ -349,13 +340,20 @@ export class UserCardComponent implements OnDestroy, OnInit {
         else startDate = this.createTimestampFromValue(startDate);
 
         let endDate = this.messageForm.get('endDate').value;
-        if (!endDate)  endDate = this.defaultEndDate;
+        if (!endDate)  endDate = this.endDateVisible ? this.defaultEndDate : null;
         else endDate = this.createTimestampFromValue(endDate);
-
+        
         const title = (!!specificInformation.card.title) ? specificInformation.card.title : 'UNDEFINED';
         const summary = (!!specificInformation.card.summary) ? specificInformation.card.summary : 'UNDEFINED';
         const keepChildCards = (!!specificInformation.card.keepChildCards) ? specificInformation.card.keepChildCards : false;
         const secondsBeforeTimeSpanForReminder = (!!specificInformation.card.secondsBeforeTimeSpanForReminder) ? specificInformation.card.secondsBeforeTimeSpanForReminder : null;
+
+        let severity;
+        if (this.severityVisible) {
+            severity = formValue['severity'];
+        } else {
+            severity = (!!specificInformation.card.severity) ? specificInformation.card.severity : Severity.INFORMATION;
+        }
 
         let timeSpans = [];
         if  (!!specificInformation.viewCardInAgenda) {
@@ -378,7 +376,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
             state: state,
             startDate: startDate,
             endDate: endDate,
-            severity: formValue['severity'],
+            severity: severity,
             hasBeenAcknowledged: false,
             hasBeenRead: false,
             entityRecipients: recipients,
@@ -392,28 +390,32 @@ export class UserCardComponent implements OnDestroy, OnInit {
             data: specificInformation.card.data,
         } as Card;
 
-
-        const options: NgbModalOptions = {
-            size: 'fullscreen'
-        };
-        this.errorMessage.display = false;
-        this.modalRef = this.modalService.open(template, options);
+        this.displayPreview= true;
     }
 
 
     createTimestampFromValue = (value: any): number => {
         const { date, time } = value;
         if (date) {
-            return this.timeService.toNgBNumberTimestamp(transformToTimestamp(date, time));
+            return this.timeService.toNgBNumberTimestamp(this.transformToTimestamp(date, time));
             // TODO Why do we need 2 transformations? What is an NgBTimestamp vs a plain Timestamp?
         } else {
             return null;
         }
     }
 
+    transformToTimestamp(date: NgbDateStruct, time: NgbTimeStruct): string {
+        return new DateTimeNgb(date, time).formatDateTime();
+    }
+    
 
     getI18nPrefixFromProcess = (process: Process): string => {
         return process.id + '.' + process.version + '.';
+    }
+
+    getEntityName(id: string): string {
+        const entityOption = this.recipientsOptions.find(entity => entity.id === id);
+        return entityOption.itemName;
     }
 
     ngOnDestroy() {
@@ -422,40 +424,40 @@ export class UserCardComponent implements OnDestroy, OnInit {
     }
 
     confirm(): void {
+        this.displayPreview = false;
+        this.displaySendingCardInProgress = true;
         this.cardService.postCard(fromCardToCardForPublishing(this.card))
             .subscribe(
                 resp => {
-                    this.messageAfterSendingCard = '';
                     const msg = resp.message;
                     // TODO better way to handle perimeter errors
                     if (!!msg && msg.includes('unable')) {
                         console.log('Impossible to send card , error message from service : ', msg);
-                        this.messageAfterSendingCard = 'userCard.error.impossibleToSendCard';
+                        this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
                     } else {
-                        this.messageAfterSendingCard = 'userCard.cardSendWithNoError';
+                        this.displayMessage('userCard.cardSendWithNoError', null, MessageLevel.INFO);
                     }
-                    this.modalRef.close();
-                    this.displaySendResult = true;
-                    this.messageForm.reset();
+
+                    this.modal.dismiss("Close");
                 },
                 err => {
                     console.error('Error when sending card :', err);
-                    this.modalRef.close();
-                    this.displaySendResult = true;
-                    this.messageForm.reset();
+                    this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
                 }
             );
     }
 
+    cancel(): void {
+        this.modal.close();
+    }
 
     decline(): void {
-        this.modalRef.dismiss(this.messageAfterSendingCard);
+       this.displayPreview = false;
     }
 
     sendAnotherUserCard() {
         this.userCardTemplate = '';
         this.card = null;
-        this.displaySendResult = false;
         this.editCardMode = false;
         this.cardToEdit = null;
         this.selectedRecipients = [];

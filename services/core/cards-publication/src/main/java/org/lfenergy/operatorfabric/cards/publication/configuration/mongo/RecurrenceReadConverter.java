@@ -29,11 +29,13 @@ public class RecurrenceReadConverter {
         String timeZone= source.getString("timeZone");
         List<Integer> daysOfWeek = (List<Integer>) source.get("daysOfWeek");
         Document hoursAndMinutes = (Document) source.get("hoursAndMinutes");
+        Integer durationInMinutes = source.getInteger("durationInMinutes");
 
         RecurrencePublicationData.RecurrencePublicationDataBuilder builder = RecurrencePublicationData.builder()
                 .timeZone(timeZone)
                 .daysOfWeek(daysOfWeek)
                 .hoursAndMinutes(HoursAndMinutesReadConverter.convert(hoursAndMinutes))
+                .durationInMinutes(durationInMinutes)
                 ;
                 
         return builder.build();

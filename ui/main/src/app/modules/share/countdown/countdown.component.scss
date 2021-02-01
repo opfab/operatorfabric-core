@@ -1,0 +1,26 @@
+/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+@import "~assets/styles/_variables.scss";
+
+.lttd-timeleft{
+  font-size: small;
+  color: var(--opfab-light-card-lttd-timeleft);
+  padding-left : 10px;
+}
+.lttd-text{
+  font-size: small;
+  padding-left : 10px;
+  padding-right: 10px;
+}
+
+.lttd-icon{
+  font-size: small;
+  padding-left: 6px;
+}

@@ -6,7 +6,6 @@
 	},
 	"chartDetail" : { "title":"A Chart"},
 	"chartLine" : { "title":"Electricity consumption forecast"},
-	"processState" : { "title":"Process state"},
 	"question" : {"title": "⚡ Planned Outage","button" : {"text" :"Send your response"}},
 	"contingencies": {"title" : "⚠️ Network Contingencies ⚠️","summary":"Contingencies report for french network"},
 	"response" : { "title":"Planned outage date response"},
@@ -14,5 +13,29 @@
 		"label": "Test Process Menu",
 		"first":"Operator Fabric Documentation",
 		"second":"LF Energy"
+	},
+
+	"messageState": {
+		"description": "Message state"
+	},
+	"chartState": {
+		"description": "Chart state"
+	},
+	"chartLineState": {
+		"description": "Chart line state"
+	},
+	"processState": {
+		"title":"Process state ({{status}})",
+		"description": "Process state"
+	},
+	"contingenciesState": {
+		"description": "Contingencies state"
+	},
+	"questionState": {
+		"title": "Action required",
+		"description": "Question state"
+	},
+	"responseState": {
+		"description": "Response state"
 	}
 }

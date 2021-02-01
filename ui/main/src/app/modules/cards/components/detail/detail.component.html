@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -6,99 +6,169 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
+<div [class.opfab-card-detail-fullscreen]="fullscreen">
+  <div style="display: block;  margin-top:16px;">
+    <ul class="nav nav-tabs opfab-line-undertab">
+      <li class="nav-item opfab-tab opfab-menu-item-left" data-toggle="tab">
+        <span class="opfab-tab text-uppercase" translate [translateParams]="cardState.detailTitle?.parameters">{{i18nPrefix+cardState.detailTitle.key}}</span>
+      </li>
+      <li *ngIf="showButtons" class="nav-item opfab-menu-item-right">
+        <div class="opfab-right-menu-item" *ngIf='showEditAndDeleteButton'>
+          <a class="opfab-right-menu-link" (click)='editCard()'>
+            <div class="opfab-menu-icon opfab-menu-icon-right opfab-icon-edit"></div>
+            <div translate>{{'button.edit'}}</div>
+          </a>
+        </div>
 
+        <div class="opfab-right-menu-item" *ngIf='showEditAndDeleteButton'>
+          <a class="opfab-right-menu-link" (click)='open(doYouReallyWantToDeleteCardPopup)'>
+            <div class="opfab-menu-icon opfab-menu-icon-right opfab-icon-trash"></div>
+            <div translate>{{'button.delete'}}</div>
+          </a>
+        </div>
 
-
-<div calcHeightDirective parentId="parentFeedContent" fixedHeightClass="fixed-height-details" calcHeightClass="calc-height-details">
-  <ul class="nav nav-tabs fixed-height-details opfab-line-undertab">
-    <li class="nav-item opfab-tab " data-toggle="tab">
-      <span class="nav-link opfab-tab" translate [translateParams]="cardState.detailTitle?.parameters">{{i18nPrefix+cardState.detailTitle.key}}</span> 
-    </li>
-  </ul>
-
-  <div class="calc-height-details">
-   <link *ngFor="let cssUrl of hrefsOfCssLink" [href]="cssUrl" rel="stylesheet" type="text/css">
-
-    <div class="opfab-card-detail-border">
-    
-      <div  *ngIf='responseDataExists'  style="text-align: right;">
-       
-
-            <span translate>response.answers</span> :
-            <span *ngFor="let entity of listEntitiesToRespond; let isLast = last"
-              [ngStyle]="{'color': entity.color,'border-right': (!isLast) ? '3px solid white':'','text-align': 'center'}">
-              &nbsp; {{entity.name}} &nbsp;
-            </span>
-
-      </div>
-
-      <div id="div-card-template" [innerHtml]="htmlContent"></div>
-    </div>
-    
-    <div class="my-3">
-      <div id='div-detail-msg' *ngIf='message.display'
-            class="alert alert-dismissible fade show text-center {{message.color}}"
-          role="alert">
-        <span [innerHTML]='message.text' translate></span>
-        <button type="button" class="close" aria-label="Close" (click)="message.display = false">
+        <div *ngIf="!fullscreen && showMaxAndReduceButton" class="opfab-max-and-reduce-icons">
+          <div class="opfab-menu-icon opfab-icon-maximize" (click)='setFullScreen(true)'></div>
+        </div>
+        <div *ngIf="fullscreen && showMaxAndReduceButton" class="opfab-max-and-reduce-icons">
+          <div class="opfab-menu-icon  opfab-icon-reduce" (click)='setFullScreen(false)'></div>
+        </div>
+        <div *ngIf="showCloseButton" class="opfab-close-card-link" aria-label="Close" (click)="closeDetails()">
           <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-    
-      <div id='div-detail-btn' *ngIf="showButtons" class="mb-3">
-        <button class="btn mr-3 {{btnColor}}" style="float: right;" *ngIf='showActionButton'
-          translate [translateParams]="responseDataParameters" [disabled]='lttdExpiredIsTrue || !isActionEnabled'
-                (click)='submitResponse()'>{{btnText}}</button>
-    
-        <button class="btn mr-3 {{btnAckColor}}" style="float: right;" *ngIf='showAckButton' translate
-          (click)='acknowledge()'>{{btnAckText}}</button>
-    
-        <button class="btn mr-3 btn-primary" style="float: right;" *ngIf='showEditAndDeleteButton' translate
-                (click)='open(doYouReallyWantToDeleteCardPopup)'>{{'button.delete'}}</button>
-        <button class="btn mr-3 btn-primary" style="float: right;" *ngIf='showEditAndDeleteButton' translate
-                (click)='editCard()'>{{'button.edit'}}</button>
-      </div>
-    
-      <ng-template #doYouReallyWantToDeleteCardPopup let-modal>
-        <div class="modal-header">
-          <h4 translate> userCard.deleteCard.doYouReallyWant </h4>
-          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-          </button>
         </div>
-        <div class="modal-body text-center">
-          <button type="button" class="btn mr-3 btn-secondary" (click)="declineDeleteCard()" translate>button.cancel</button>
-          <button type="button" class="btn mr-3 btn-danger " (click)="confirmDeleteCard()" translate>button.delete</button>
-        </div>
-      </ng-template>
-    
-      <ng-template #cardDeletedWithNoErrorPopup let-modal>
-        <div class="modal-header text-center">
-          <h4 class="modal-title w-100" translate> userCard.deleteCard.cardDeletedWithNoError </h4>
-          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body text-center">
-          <button type="button" class="btn btn-success" (click)="modal.dismiss()" translate>button.ok</button>
-        </div>
-      </ng-template>
-    
-      <ng-template #impossibleToDeleteCardPopup let-modal>
-        <div class="modal-header text-center">
-          <h4 class="modal-title w-100" translate> userCard.deleteCard.error.impossibleToDeleteCard </h4>
-          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body text-center">
-          <button type="button" class="btn btn-danger" (click)="modal.dismiss()" translate>button.ok</button>
-        </div>
-      </ng-template>
-    </div>
-  
 
+      </li>
+    </ul>
+
+    <div>
+      <link *ngFor="let cssUrl of hrefsOfCssLink" [href]="cssUrl" rel="stylesheet" type="text/css">
+
+
+    <div style="padding-right:3px"> <!-- padding is necessary to see box shadow-->
+    
+      <ng-template #helpContent>
+        <label class="label-help"><span class="label-answered" translate>response.answered</span></label>
+        <label class="label-help"><span class="label-unanswered" translate>response.unanswered</span></label>
+      </ng-template>
+
+      <ng-template #entitiesDropdown>
+        <div *ngFor="let entity of listDropdownEntitiesToRespond;"
+        [ngStyle]="{'color': entity.color,'text-align': 'left'}">
+        &nbsp; {{entity.name}} &nbsp;
+      </div>
+      </ng-template>
+      
+      <div  *ngIf='responseDataExists && showDetailCardHeader' class="opfab-card-response-header" >
+        <div class="flex-container">
+          <div style="width:30%;" >
+            <span style="padding-left:15px" translate>response.status</span> :
+            <span class="opfab-question-card-state-name" translate>{{i18nPrefix+this.cardState.name}} &nbsp;</span>
+            <span *ngIf="!!this.card.lttd"> |</span>
+            <of-countdown [card]="card"></of-countdown>
+          </div>
+
+          <div style="width:70%;text-align: right" >
+            <div id="opfab-answer-help" class="opfab-icon-help" placement="left" [ngbPopover]="helpContent"
+              container="body" triggers="mouseenter:mouseleave" popoverClass="opfab-popover">
+            </div>
+            <span translate>response.answers</span> :
+            <span *ngFor="let entity of listVisibleEntitiesToRespond; let isLast = last"
+                [ngStyle]="{'color': entity.color,'text-align': 'center'}">
+                &nbsp; {{entity.name}} &nbsp;
+            </span>
+            <span *ngIf="listDropdownEntitiesToRespond && listDropdownEntitiesToRespond.length > 0" id="opfab-entities-dropdown" class="opfab-entities-dropdown" placement="bottom-right" [ngbPopover]="entitiesDropdown"
+              container="body" [autoClose]="'true'" popoverClass="opfab-popover-no-arrow">
+              &nbsp;..&nbsp;
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div id="div-card-template" class="opfab-card-detail" [innerHtml]="htmlContent"></div>
+
+      <div style="text-align: center;width:100% ; ">
+
+
+        <div id='div-detail-btn'>
+
+          <span class="opfab-card-received-footer" translate [translateParams]="getPublishDateTranslationParams()">feed.received</span>
+          <div *ngIf="showButtons" style="text-align: right;">
+            <button id="opfab-card-details-btn-response" class="opfab-btn"
+              *ngIf='showActionButton && isActionEnabled && !isLocked' translate
+              [translateParams]="responseDataParameters" [disabled]='lttdExpiredIsTrue || !isActionEnabled'
+              (click)='submitResponse()'>{{btnText}}</button>
+            <button id="opfab-card-details-btn-response" class="opfab-btn"
+              [disabled]='lttdExpiredIsTrue || !isActionEnabled' translate
+              *ngIf='showActionButton && isActionEnabled && isLocked' (click)='unlockAnswer()'>
+              response.btnUnlock
+            </button>
+
+            <button id="opfab-card-details-btn-ack" class="opfab-btn" *ngIf='showAckButton' translate
+              (click)='acknowledge()'>{{btnAckText}}</button>
+          </div>
+        </div>
+
+        <ng-template #doYouReallyWantToDeleteCardPopup let-modal>
+          <div class="modal-header">
+            <span translate> userCard.deleteCard.doYouReallyWant </span>
+            <div id="opfab-card-details-delete-btn-close" class="opfab-close-modal-icon" aria-label="Close"
+              (click)="modal.dismiss('Cross click')">
+              <span aria-hidden="true">&times;</span>
+          </div>
+          </div>
+          <div class="modal-body text-center">
+            <button id="opfab-card-details-delete-btn-cancel" type="button" class="opfab-btn-cancel"
+              (click)="declineDeleteCard()" translate>button.cancel</button>
+            <button id="opfab-card-details-delete-btn-confirm" type="button" class="opfab-btn"
+              (click)="confirmDeleteCard()" translate>button.delete</button>
+          </div>
+        </ng-template>
+
+        <ng-template #cardDeletedWithNoErrorPopup let-modal>
+          <div class="modal-header text-center">
+            <h4 class="modal-title w-100" translate> userCard.deleteCard.cardDeletedWithNoError </h4>
+            <button id="opfab-card-details-delete-btn-close" type="button" class="close" aria-label="Close"
+              (click)="modal.dismiss('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body text-center">
+            <button id="opfab-card-details-delete-btn-ok" type="button" class="opfab-btn" (click)="modal.dismiss()"
+              translate>button.ok</button>
+          </div>
+        </ng-template>
+
+        <ng-template #impossibleToDeleteCardPopup let-modal>
+          <div class="modal-header text-center">
+            <h4 class="modal-title w-100" translate> userCard.deleteCard.error.impossibleToDeleteCard </h4>
+            <button id="opfab-card-details-delete-error-btn-close" type="button" class="close" aria-label="Close"
+              (click)="modal.dismiss('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body text-center">
+            <button id="opfab-card-details-delete-error-btn-close" type="button" class="opfab-btn"
+              (click)="modal.dismiss()" translate>button.ok</button>
+          </div>
+        </ng-template>
+      </div>
+
+
+    </div>
   </div>
+
 </div>
 
-
+<ng-template #userCard let-modal>
+  <div class="modal-header">
+      <div translate > userCard.editTitle </div>
+      <div id="opfab-usercard-close"  class="opfab-close-modal-icon" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true" >&times;</span>
+      </div>
+  </div>
+  <div class="modal-body">
+      <div>
+          <of-usercard [cardIdToEdit]="card.id" [modal]="modal"></of-usercard> 
+      </div>
+  </div>
+</ng-template>

@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020-2021, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -6,12 +6,9 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<h2 *ngIf="!editCardMode" translate style="text-align: center;">userCard.title</h2>
-<h2 *ngIf="editCardMode" translate style="text-align: center;">userCard.editTitle</h2>
 
-<br />
-<div *ngIf="displayForm()" class="container">
-    <form [formGroup]="messageForm">
+<div [hidden]="displayPreview" [hidden]="displaySendingCardInProgress" *ngIf="displayForm()" class="container" style="padding-top:20px">
+    <form [formGroup]="messageForm" class="opfab-form-lighter">
         <div class="row">
 
             <div class="col">
@@ -23,93 +20,120 @@
                     [values]="stateOptions"></of-single-filter>
 
             </div>
-            <div class="col">
-                <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="severity"
-                    [values]="severityOptions"></of-single-filter>
-            </div>
         </div>
-        <div class="row">
-            <div class="col">
+        <div class="row justify-content-center" *ngIf="severityVisible">
+
+            <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-alarm" translate> userCard.options.severity.ALARM </span>
+                <input type="radio"  id="sev-alarm" name="severity" formControlName="severity" value="ALARM">
+                <span class="opfab-radio-button-checkmark"></span>
+            </label>
+ 
+            <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-action" translate> userCard.options.severity.ACTION </span>
+                <input type="radio"  id="sev-action" name="severity" formControlName="severity" value="ACTION">
+                <span class="opfab-radio-button-checkmark"></span>
+            </label>
+
+            <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-compliant" translate> userCard.options.severity.COMPLIANT </span>
+                <input type="radio"  id="sev-compliant" name="severity" formControlName="severity" value="COMPLIANT">
+                <span class="opfab-radio-button-checkmark"></span>
+            </label>
+
+            <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-information" translate> userCard.options.severity.INFORMATION </span>
+                <input type="radio"  id="sev-information" name="severity" formControlName="severity" value="INFORMATION">
+                <span class="opfab-radio-button-checkmark"></span>
+            </label>
+        </div>
+        <div class="justify-content-center" style="display:flex;width:100%;align-content:center;flex-wrap: wrap;">
+            <div *ngIf="startDateVisible" style="width:280px;margin-right: 50px;margin-left: 50px ;">
                 <of-datetime-filter filterPath="startDate" formControlName="startDate" labelKey="userCard.filters."
-                    [offset]="[{amount:1,unit:'minute'}]"></of-datetime-filter>
+                    [offset]="[{amount:1,unit:'minute'}]" ></of-datetime-filter>
             </div>
-            <div class="col">
+            <div *ngIf="endDateVisible" style="width: 280px;;margin-right: 50px;margin-left: 50px ;">
                 <of-datetime-filter filterPath="endDate" formControlName="endDate" labelKey="userCard.filters."
-                    [offset]="[{amount:60,unit:'minute'}]"></of-datetime-filter>
+                    [offset]="[{amount:1,unit:'day'}]"></of-datetime-filter>
             </div>
         </div>
 
-
+ 
 
     </form>
 
-    <div [innerHtml]="userCardTemplate"></div>
+    <div class="opfab-form-lighter" [innerHtml]="userCardTemplate"></div>
 
     <br/>   
 
+    
 
-    <form [formGroup]="recipientForm">
+    <form [formGroup]="recipientForm" class="opfab-form-lighter">
         <div class="row">
             <div class="col-12">
 
-                <of-multi-filter-2 filterPath="recipients" id="recipients" [parentForm]="recipientForm"
+                <of-multi-filter filterPath="recipients" id="recipients" [parentForm]="recipientForm"
                     [values]="recipientsOptions" [dropdownSettings]="dropdownSettings" i18nRootLabelKey="userCard.filters." [selectedItems]="selectedRecipients" >
-                </of-multi-filter-2>
+                </of-multi-filter>
             </div>
 
-        </div>
+        </div> 
     </form>
+
 
     <br />
     <div style="text-align: center;width:100%">
-        <button type="button" class="btn btn-primary" (click)="onSubmitForm(resumeCardBeforeSend)" translate>
+        <button id="opfab-usercard-btn-cancel" class="opfab-btn-cancel" (click)="cancel()" translate> userCard.refuse</button>
+        <button id="opfab-usercard-btn-prepareCard" type="button" class="opfab-btn" [disabled]="!selectedProcess" (click)="onSubmitForm(resumeCardBeforeSend)" translate>
             userCard.prepareCard
 
         </button>
     </div>
 </div>
 
-<div *ngIf="displaySendResult">
-    <br />
-    <h2 translate style="text-align: center"> {{messageAfterSendingCard}} </h2>
-    <br /><br />
-    <of-card [lightCard]="card" [open]="true" [displayUnreadIcon]="false"></of-card>
-    <br />
-    <div style="text-align: center;">
-        <button type="button" class="btn btn-primary" (click)="sendAnotherUserCard()"
-            translate>userCard.send-another-one</button>
-    </div>
-</div>
 
-<br />
-<div id='div-detail-msg' *ngIf='errorMessage.display' class="alert alert-dismissible fade show text-center alert-danger"
-    role="alert" translate>
-    {{errorMessage.text}}
-    <button type="button" class="close" aria-label="Close" (click)="errorMessage.display = false">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-
-<ng-template #resumeCardBeforeSend let-modal>
-    <div class="modal-header">
-        <h4 translate> userCard.confirmSending </h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-
+<div *ngIf="displayPreview">
         <div>
-
-
-            <of-card [lightCard]="card" [open]="true" [displayUnreadIcon]="false"></of-card>
-
-            <of-card-preview [card]="card" [currentPath]="'test'"> </of-card-preview>
+            <div class="opfab-section-header">
+                <span translate>userCard.recipients</span>
+            </div>
+            <div style="display: inline-flex;">
+                <div *ngFor="let entityId of card.entityRecipients">
+                    <span  style="text-align: center;">&nbsp; {{getEntityName(entityId)}} &nbsp; </span>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="opfab-section-header">
+                <span translate>userCard.feedPreview</span>
+            </div>
+           
+            <div style="width: 40%;">
+            <of-light-card [lightCard]="card" [open]="false" [displayUnreadIcon]="false" ></of-light-card>
+            </div>
+            <div class="opfab-section-header"><span translate>userCard.contentPreview</span></div>
+            <div>
+             <of-card-detail [card]="card"> </of-card-detail>
+             </div>
 
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="decline()" translate>userCard.refuse</button>
-            <button type="button" class="btn btn-outline-dark" (click)="confirm()" translate>userCard.accept</button>
+        <div class="modal-footer" style="margin-top:10px;margin-bottom: 0px;" ></div>
+        <div style="text-align: center;width:100%">
+            <button id="opfab-usercard-btn-refuse" type="button" class="opfab-btn-cancel" (click)="decline()" translate>userCard.refuse</button>
+            <button id="opfab-usercard-btn-accept" type="button" class="opfab-btn" (click)="confirm()" translate>userCard.accept</button>
         </div>
+
+</div>
+
+<div *ngIf="displaySendingCardInProgress" style="text-align: center;margin-top: 20px;font-size: 20px">
+    <em  class="fas fa-spinner fa-spin slow-spin"></em>
+    <div style="font-weight: bold;margin-top: 10px;margin-bottom: 20px" translate>
+        userCard.sendingCardInProgress
     </div>
-</ng-template>
+</div>
+
+<ng-container *ngIf="!displayForm()">
+    <div class="alert alert-info">
+        <h1><label translate>userCard.error.notAvailable</label></h1>
+    </div>
+</ng-container>
+
+
+
+

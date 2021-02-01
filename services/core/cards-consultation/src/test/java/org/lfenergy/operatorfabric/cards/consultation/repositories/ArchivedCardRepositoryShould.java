@@ -66,7 +66,7 @@ public class ArchivedCardRepositoryShould {
     private static CurrentUserWithPerimeters currentUser4 = new CurrentUserWithPerimeters();
     private static CurrentUserWithPerimeters currentUser5 = new CurrentUserWithPerimeters();
 
-    private static Instant now = Instant.now();
+    private static Instant now = roundingToMillis(Instant.now());
     private static Instant nowPlusHalf = now.plus(30, ChronoUnit.MINUTES);
     private static Instant nowMinusHalf = now.minus(30, ChronoUnit.MINUTES);
     private static Instant nowPlusOne = now.plus(1, ChronoUnit.HOURS);

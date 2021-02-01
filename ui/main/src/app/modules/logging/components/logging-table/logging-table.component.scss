@@ -7,22 +7,25 @@
  * This file is part of the OperatorFabric project.
  */
 
-table {
-  text-align: center;
-  background-color: var(--opfab-lightcard-detail-bgcolor);
-  color: var(--opfab-lightcard-detail-textcolor);
+ @import "~assets/styles/_variables.scss";
+
+.opfab-logging-sev {
+  width: 15px;
 }
 
-// not displayed by still read by VoiceOver
-.hidden-caption {
-  visibility: collapse;
-}
-.export-div {
-  padding-top: 1px;
+.opfab-logging-pagination {
+  padding-top: 6px;
   padding-left: 10px;
-  max-width: 100%;
-  clear: left;
+  width: 100%;
+  display: flex;
+  color: var(--opfab-text-color-stronger);
+  font-size: 14px;
 }
-.export-btn {
-  float: right;
-}
+
+
+.opfab-logging-sev-alarm {background-color: $sev-alarm;}
+.opfab-logging-sev-action {background-color: $sev-action;}
+.opfab-logging-sev-compliant {background-color: $sev-compliant;}
+.opfab-logging-sev-information {background-color: $sev-information;}
+
+

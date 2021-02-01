@@ -3,16 +3,12 @@
 
 <br />
 
-<table style="width: 100%;">
-    <tr>
-        <td>
-            Votre réponse  :
-        </td>
-        <td>
-            <input size="50" type="text" id="response"> </input>
-        </td>
-    </tr>
-</table>
+<div class="opfab-input">
+    <label> REPONSE </label>
+    <input id="response" name="reponse">
+</div>
+
+
 <br/>
 <br/>
 
@@ -25,9 +21,9 @@
 
         if (templateGateway.childCards[0]) {
             let childsDiv = document.getElementById("childs-div");
-            let responses = ' <h3>Responses reçues  </h3><center> <br/>'
-            responses += ' <table width="100%""> <tr> <th> Entité </th>';
-            responses += ' <th> Response </th>';
+            let responses = ' <h3>Response received </h3><center> <br/>'
+            responses += ' <table width="100%""> <tr> <th> Entity </th>';
+            responses += ' <th> response </th>';
             responses += ' </tr>';
 
             templateGateway.childCards.forEach((c, i) => {
@@ -42,8 +38,6 @@
             childsDiv.innerHTML = responses;
         }
     }
-
-    templateGateway.applyChildCards();
 
     templateGateway.validyForm = function () {
         const response = document.getElementById('response').value;

@@ -1,0 +1,33 @@
+<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
+<ng-container [formGroup]="datetimeForm">
+    <table style="width:100%"> <tr>
+        <td>
+        <div class="nopaddingrow opfab-input">
+            <!--archive.filters.{{filterPath}}-->
+            <label for="date" translate>{{computeLabelKey()}}</label>
+            <input (change)="onChange($event)" 
+                   type="text" ngbDatepicker
+                   #nsd="ngbDatepicker"
+                   id="date"
+                   formControlName="date"
+                   (click)="nsd.toggle()"
+            placeholder="YYYY-MM-DD"/>
+        </div>
+        </td>
+        <td>
+        <fieldset  [disabled]="disabled" class="nopaddingrow">
+            <legend class="accessibility">Time</legend>
+            <ngb-timepicker formControlName="time" ></ngb-timepicker>
+        </fieldset>
+        </td>
+    </tr>
+    </table>
+</ng-container>

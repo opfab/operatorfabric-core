@@ -1,4 +1,8 @@
 {
+  "global":{
+    "connectionLost":"Connexion perdue",
+    "tryToReconnect":"Tentative de reconnexion ..."
+  },
   "menu": {
     "feed": "Flux de cartes",
     "calendar" : "Calendrier",
@@ -8,23 +12,37 @@
     "monitoring": "Monitoring",
     "logout": "Déconnexion",
     "settings": "Paramètres",
+    "feedConfiguration": "Configuration des notifications",
     "about": "À propos",
-    "usercard": "Création de cartes"
+    "usercard": "Création de cartes",
+    "switchToNightMode": "Mode nuit",
+    "switchToDayMode": "Mode jour"
   },
   "timeline": {
+    "hideTimeline" : "Masquer la timeline",
+    "showTimeline" : "Afficher la Timeline",
     "businessPeriod": "Periode métier",
     "buttonTitle": {
-      "TR": "TR",
-      "J": "J",
-      "7D": "7J",
-      "W": "S",
-      "M": "M",
-      "Y": "A"
+      "TR": "Temps réel",
+      "J": "Jour",
+      "7D": "7 Jours",
+      "W": "Semaine",
+      "M": "Mois",
+      "Y": "Année"
     }
+  },
+  "multiFilter": {
+    "searchPlaceholderText": "Rechercher",
+    "selectAllText": "Sélectionner tout",
+    "unSelectAllText": "Desélectionner tout",
+    "filterSelectAllText": "Sélectionner tous les résultats filtrés",
+    "filterUnSelectAllText": "Desélectionner tous les résultats filtrés",
+    "noDataLabel": "Pas de données disponibles"
   },
   "feed": {
     "filters": {
       "title": "Filtres",
+      "reset": "Reinitialiser",
       "time": {
         "titleIfFilterBasedOnPublishDate": "Date de réception",
         "titleIfFilterBasedOnBusinessDate": "Période métier",
@@ -62,11 +80,16 @@
       }
     },
     "sort": {
-      "severityPub": "Triées par type puis date de publication",
-      "pub": "Triées par date de publication",
-      "read": "Triées par lu",
-      "notsortedByRead": "Pas triées par lu"
-    }
+      "title": "Triées par",
+      "severity": "Criticité puis date ",
+      "publish": "Date",
+      "unread": "Non lu puis date"
+    },
+    "tips": {
+      "acknowledged": "Acquittée",
+      "lttd": "Temps restant pour décider"
+    },
+    "received": "Reçu à {{time}}"
   },
   "login": {
     "reset": "RaZ",
@@ -88,11 +111,15 @@
       }
     }
   },
+  "about": {
+    "title": "A PROPOS"
+  },
   "settings": {
-    "description": "Description",
-    "locale": "Langue",
-    "timeZone": "Zone horaire",
-    "defaultTags": "Tags par défaut",
+    "title": "PARAMETRES",
+    "description": "DESCRIPTION",
+    "locale": "LANGUE",
+    "timeZone": "ZONE HORAIRE",
+    "defaultTags": "TAGS PAR DEFAUT",
     "playSoundLabel": "Jouer des sons pour les cartes de type",
     "playSoundForAlarm": "Alarme",
     "playSoundForAction": "Action",
@@ -101,83 +128,111 @@
   },
   "archive": {
     "filters": {
-      "publisher": "Emetteur",
-      "process": "Processus",
-      "tags": "Etiquettes",
-      "publishDateFrom": "Publié à partir de",
-      "publishDateTo": "Publié jusqu'à",
-      "activeFrom": "Active à partir de",
-      "activeTo": "Active jusqu'à"
+      "process": "PROCESSUS",
+      "tags": "ETIQUETTES",
+      "publishDateFrom": "PUBLIE A PARTIR DE",
+      "publishDateTo": "PUBLIE JUSQU'A",
+      "activeFrom": "ACTIVE A PARTIR DE",
+      "activeTo": "ACTIVE JUSQU'A"
     },
-    "search": "Rechercher",
-    "clear": "Effacer",
-    "noResult": "Votre recherche ne correspond à aucun résultat."
+    "result": {
+      "publishDate" : "DATE DE PUBLICATION",
+      "businessPeriod" : "PERIODE METIER",
+      "title" : "TITRE",
+      "summary": "RESUME"
+    },
+    "noResult": "Votre recherche ne correspond à aucun résultat.",
+    "exportToExcel" : "Exporter les données",
+    "resultsNumber":"Nombre de résultats",
+    "selectProcessText": "Sélectionner un Processus",
+    "selectTagText": "Sélectionner une Etiquette"
   },
   "logging": {
     "filters": {
-      "process": "Processus"
+      "process": "PROCESSUS",
+      "selectProcessText": "Sélectionner un Processus"
     },
-    "cardType": "Type de Carte",
-    "timeOfAction": "Moment de l'action",
-    "processName": "Titre",
-    "description": "Description",
-    "sender": "Envoyeur",
-    "noResult": "Aucun résultat",
-    "ExportTOExcel": "Exporter vers Excel"
+    "timeOfAction": "MOMENT DE L'ACTION",
+    "title": "TITRE",
+    "summary": "RESUME",
+    "description": "DESCRIPTION",
+    "sender": "EMETTEUR",
+    "noResult": "Votre recherche ne correspond à aucun résultat.",
+    "ExportTOExcel": "Exporter les données",
+    "resultsNumber":"Nombre de résultats"
   },
   "monitoring": {
+    "hideFilters" : "Masquer les filtres",
+    "showFilters" : "Afficher les filtres",
+    "noSelection" : "NA",
     "filters": {
-      "process": "Processus"
+      "process": "PROCESSUS",
+      "selectProcessText": "Sélectionner un Processus"
     },
-    "time": "Date",
-    "businessPeriod": "Période métier",
-    "title": "Titre",
-    "summary": "Résumé",
-    "trigger": "Déclencheur",
-    "status": "Status",
-    "seeDetails": "Voir les détails",
-    "ExportTOExcel": "Exporter vers Excel"
+    "time": "DATE",
+    "businessPeriod": "PERIODE METIER",
+    "title": "TITRE",
+    "summary": "RESUME",
+    "status": "STATUS",
+    "seeDetails": "VOIR LES DETAILS",
+    "ExportTOExcel": "Exporter les données"
   },
   "button": {
     "ok": "OK",
-    "cancel": "Annuler",
-    "reset": "Effacer",
+    "cancel": "ANNULER",
+    "reset": "REINITIALISER",
     "delete": "Supprimer",
-    "edit" : "Editer"
+    "edit" : "Editer",
+    "yes": "OUI",
+    "search": "RECHERCHER"
+  },
+  "feedConfiguration": {
+    "title": "CONFIGURATIONS DES NOTIFICATIONS",
+    "confirmSettings": "ENREGISTRER LA CONFIGURATION",
+    "popup": {
+      "title": "CONFIRMATION",
+      "areYouSure": "Vous avez fait des modifications. Etes-vous sûr de vouloir les enregistrer ?"
+    },
+    "error": {
+      "impossibleToSaveSettings": "Impossible d'enregistrer les paramètres pour des raisons techniques"
+    }
   },
   "userCard": {
-    "title": "Création d'une nouvelle carte",
-    "editTitle" : "Edition d'une carte",
+    "title": "CREATION D'UNE NOUVELLE CARTE",
+    "editTitle" : "EDITION D'UNE CARTE",
     "error": {
+      "notAvailable": "Fonctionnalité non disponible",
       "noRecipientSelected" : "Vous devez au moins choisir un destinataire",
       "templateError" : "Erreur technique : template non conforme",
       "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques"
     },
     "filters": {
-      "severity": "Sévérité",
-      "process": "Processus",
-      "state": "État",
-      "startDate": "Date de début ",
-      "endDate": "Date de fin ",
-      "comment": "Commentaire",
-      "recipients": "Destinataire"
+      "severity": "SEVERITE",
+      "process": "PROCESSUS",
+      "state": "ETAT",
+      "startDate": "DATE DE DEBUT ",
+      "endDate": "DATE DE FIN ",
+      "recipients": "DESTINATAIRES"
     },
     "options": {
       "severity": {
-        "ALARM": "Alarm",
+        "ALARM": "Alarme",
         "ACTION": "Action",
-        "COMPLIANT": "Compliant",
+        "COMPLIANT": "Conforme",
         "INFORMATION": "Information"
       }
     },
-    "prepareCard": "Preparation de la carte avant envoi",
+    "prepareCard": "VISUALISATION AVANT ENVOI",
     "confirmSending": "Envoyer la carte suivante ?",
-    "accept": "Envoyer",
-    "refuse": "Annuler",
+    "accept": "ENVOYER",
+    "refuse": "ANNULER",
     "processInstanceId": "Identifiant",
     "state": "État",
-    "send-another-one": "Envoyer une autre carte",
-    "cardSendWithNoError": "Carte envoyée",
+    "recipients": "DESTINATAIRES:",
+    "feedPreview": "PREVISUALISATION FEED:",
+    "contentPreview": "PREVISUALISATION CONTENU:",
+    "send-another-one": "ENVOYER UNE AUTRE CARTE",
+    "cardSendWithNoError": "Votre carte est publiée",
     "deleteCard": {
       "doYouReallyWant": "Voulez-vous vraiment supprimer cette carte ?",
       "cardDeletedWithNoError": "Carte supprimée",
@@ -185,27 +240,25 @@
         "impossibleToDeleteCard": "Impossible de supprimer la carte pour des raisons techniques"
       }
     },
-    "searchPlaceholderText": "Rechercher",
-    "selectRecipientText": "Choisir un destinataire",
-    "selectAllText": "Sélectionner tout",
-    "unSelectAllText": "Desélectionner tout",
-    "filterSelectAllText": "Sélectionner tous les résultats filtrés",
-    "filterUnSelectAllText": "Desélectionner tous les résultats filtrés"
-    
+    "sendingCardInProgress": "Envoi de la carte en cours ..."
   },
   "response": {
-    "btnTitle": "VALIDER REPONSES",
+    "btnTitle": "VALIDER REPONSE",
+    "btnUnlock": "MODIFIER REPONSE",
     "error": {
       "submit": "La carte n'a pas pu être envoyée",
       "form": "Le formulaire n'est pas correctement rempli"
     },
-    "submitSuccess": "Action effectuée",
-    "answers": "Réponses"
+    "submitSuccess": "Votre réponse est confirmée. Merci!",
+    "answers": "Réponses",
+    "answered": "A répondu",
+    "unanswered": "Pas encore répondu",
+    "status": "Status"
   },
   "cardAcknowledgment": {
     "button": {
-      "ack": "Acquitter et fermer",
-      "unack": "Annuler l'acquitement"
+      "ack": "ACQUITTER ET FERMER",
+      "unack": "ANNULER L'ACQUITTEMENT"
     }
   },
   "admin": {
@@ -227,9 +280,9 @@
         "add": "Ajouter un nouvel utilisateur",
         "edit": "Editer",
         "delete": "Supprimer",
-        "save": "Sauvegarder les changements",
-        "close": "Fermer",
-        "cancel": "Abandonner",
+        "save": "SAUVEGARDER LES CHANGEMENTS",
+        "close": "FERMER",
+        "cancel": "ABANDONNER",
         "confirm":"Confirmez..",
         "user":"utilisateur",
         "filter": "filtrer par ",

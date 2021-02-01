@@ -1,0 +1,162 @@
+/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+ @import "~assets/styles/_variables.scss";
+
+::ng-deep .opfab-app-calendar{
+
+
+// GLOBAL SETTINGS 
+.fc-header-toolbar,
+.fc-view,
+td.fc-today
+{
+  background-color: var(--opfab-bgcolor-darker);
+}
+
+
+.fc-header-toolbar
+ {
+   padding-left: 38px;
+   padding-right: 38px;
+   height: 39px;
+ }
+
+ .fc-view
+{
+  margin-left: 38px;
+  margin-right: 38px;
+  padding: 16px;
+}
+
+
+
+// EVENTS SETTINGS
+
+.opfab-calendar-event {
+  border-width: 0 0 0 4px;
+  border-radius: 0 4px 4px 0;
+  background-color: var(--opfab-bgcolor);
+  font-size: 13px;
+  color: var(--opfab-color); 
+  }
+  
+.opfab-calendar-event:hover {
+  color: var(--opfab-text-color-stronger); 
+  }
+
+.opfab-calendar-event-action {
+  border-color: $sev-action;
+}
+
+.opfab-calendar-event-alarm {
+  border-color: $sev-alarm;
+}
+
+.opfab-calendar-event-compliant {
+  border-color: $sev-compliant;
+}
+
+.opfab-calendar-event-information {
+  border-color: $sev-information;
+}
+  
+// LINKS IN CALENDAR HEADER
+
+.fc-button-primary
+{
+  background-color: var(--opfab-bgcolor-darker);
+  border-color: var(--opfab-bgcolor-darker);
+  color:var(--opfab-text-color);
+}
+
+.fc-button-primary:not(:disabled).fc-button-active
+{
+  background-color: var(--opfab-bgcolor-darker);
+  border-color:  var(--opfab-bgcolor-darker);
+  font-weight: bold;
+  text-decoration: underline;
+  color:var(--opfab-text-color-stronger);
+}
+
+
+.fc-next-button,
+.fc-prev-button{
+  margin-bottom: 7px;
+}
+
+.fc-icon-chevron-right::before {
+  content: '>>';
+  font-size: 13px;
+}
+
+.fc-icon-chevron-left::before {
+  content: '<<';
+  font-size: 13px;
+}
+
+// END LINKS IN CALENDAR HEADER
+
+// GRID COLOR
+
+.fc td {
+ border-color: var(--opfab-calendar-grid-color);
+}
+
+
+// MONTH VIEW
+.fc th,
+.fc-day-header,
+.fc-widget-header
+{
+  border-style: hidden;
+}
+
+// Day name in uppercase 
+.fc-day-header {
+  text-transform: uppercase;
+}
+
+// Day number on the top left of the cell  
+.fc-ltr .fc-dayGrid-view .fc-day-top .fc-day-number{
+  float: left;
+}
+
+.fc th
+{
+  height: 40px;
+}
+
+.fc tbody td{
+  border-left-width: 0;
+  border-bottom-width: 1px;
+  border-top-width: 1px;
+}
+// END MONTH VIEW 
+
+// DAY AND WEEK VIEW 
+.fc-time-grid  td
+{
+  height: 27px;
+}
+
+// remove border for certain event 
+.fc-time-grid-event-inset
+{
+  box-shadow: none;
+}
+
+// remove line on bottom
+hr {
+  padding: 0px;
+} 
+
+// END DAY AND WEEK VIEW 
+
+}

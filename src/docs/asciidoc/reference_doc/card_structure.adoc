@@ -70,12 +70,6 @@ This attribute is display as header of a card in the feed of the GUI. It's the m
 
 This attribute is display as a description of a card in the feed of the GUI, when the card is selected by the operator. It's completing the information of the card title. The value refer to an `i18n` value used to localize this information.
 
-=== Recipient (`recipient`)
-
-Declares to whom the card is send. For more details about way recipient works see
-ifdef::single-page-doc[<<display_rules, Display rules>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#display_rules, Display rules>>]
-. Without recipient declaration a card is useless in `OperatorFabric` system.
 
 === Optional information
 
@@ -92,13 +86,22 @@ Tags are intended as an additional way to filter cards in the feed of the GUI.
 
 ==== EntityRecipients (`entityRecipients`)
 
-Used to send cards to entity : all users members of the listed entities who have the right for the process/state of the card will receive it. If this field is used in conjunction with groups recipients, to receive the cards :
+Used to send cards to entity : all users members of the listed entities who have the right for the process/state of the card will receive it. 
+
+
+==== GroupRecipients (`groupRecipients`)
+
+Used to send cards to groups : all users members of the groups will receive it. If this field is used in conjunction with entityRecipients, to receive the cards :
 
 * users must be members of one of the entities AND one of the groups to receive the cards.
 
 OR
 
 * users must be members of one of the entities AND have the right for the process/state of the card.
+
+==== UserRecipients (`userRecipients`)
+
+Used to send cards directly to users without using groups or entities for card routing.
 
 ==== Last Time to Decide (`lttd`)
 

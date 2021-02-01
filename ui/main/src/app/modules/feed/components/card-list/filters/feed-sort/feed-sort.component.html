@@ -1,0 +1,37 @@
+<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
+ <ng-template #sortContent>
+    <div class="row sort-header">
+        <span translate>feed.sort.title</span>
+    </div>
+    <form [formGroup]="sortForm" id="sort-form">
+
+        <label *ngIf="!hideReadSort" class="opfab-radio-button"> <span  translate> feed.sort.unread</span>
+            <input type="radio"  id="opfab-feed-filter-unread" formControlName="sortControl" value="unread">
+            <span class="opfab-radio-button-checkmark"></span>
+        </label>
+
+        <label class="opfab-radio-button"> <span  translate> feed.sort.publish</span>
+            <input type="radio"  id="opfab-feed-filter-publication-date" formControlName="sortControl" value="date">
+            <span class="opfab-radio-button-checkmark"></span>
+        </label>
+
+        <label *ngIf="!hideSeveritySort" class="opfab-radio-button"> <span  translate> feed.sort.severity</span>
+            <input type="radio"  id="opfab-feed-filter-severity" formControlName="sortControl" value="severity">
+            <span class="opfab-radio-button-checkmark"></span>
+        </label>
+    </form>
+</ng-template>
+
+<div class="opfab-icon-bg-color">
+    <div id="opfab-feed-filter-btn-sort" class="opfab-icon-sort" placement="bottom-left" [ngbPopover]="sortContent"
+        container="body" [autoClose]="'outside'" popoverClass="opfab-popover">
+    </div>
+</div>

@@ -6,11 +6,49 @@
 		"logging": true,
 		"calendar": true
 	},
-	"states":{
+	"states": {
 		"messageState" : {
 			"detailTitle" : { "key" : "detail.title"},
 			"templateName" : "template",
 			"styles" : [ "style" ]
+		},
+		"questionState": {
+		  "name": "question.title",
+		  "color": "#8bcdcd",
+		  "userCard" : {
+					"template" : "usercard_question",
+					"severityVisible" : false,
+					"startDateVisible" : true,
+					"endDateVisible" : true
+				},
+		  "response": {
+			"state": "questionState"
+		  },
+		  "detailTitle": {
+			"key": "question.title"
+		  },
+		  "templateName": "question",
+		  "styles": [],
+		  "acknowledgmentAllowed": "Never"
+		},  
+		"incidentInProgressState": {
+		  "name": "incidentInProgress.name",
+		  "userCard" : {
+					"template" : "usercard_incidentInProgress",
+					"severityVisible" : true,
+					"startDateVisible" : false,
+					"endDateVisible" : false
+				},
+		  "color": "#FAF0AF",
+		  "response": {
+			"state": "incidentInProgressState"
+		  },
+		  "detailTitle": {
+			"key": "incidentInProgress.name"
+		  },
+		  "templateName": "incidentInProgress",
+		  "styles": [],
+		  "acknowledgmentAllowed": "Always"
 		}
-	}
+	  }
 }

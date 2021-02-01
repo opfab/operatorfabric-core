@@ -11,9 +11,23 @@
 
 .feed-content {
   height: 100%;
+  margin: -6px;
+  padding: 0px;
 }
 
-.calc-height-feed-content {
+.opfab-card-list {
   overflow-x: hidden;
   overflow-y: auto;
 }
+
+.opfab-feed-horizontal-bar {
+  border-top-width: 1px;
+  border-top-style: solid;
+  height: 10px; 
+  margin-top: 10px;
+  margin-right: 20px;
+  margin-left: 1px;
+  border-color:var(--opfab-card-tab-border-color);
+
+}
+

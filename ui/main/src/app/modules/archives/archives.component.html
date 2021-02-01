@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -7,38 +7,122 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
+<div class="archives-page">
+    <form [formGroup]="archiveForm" #currentForm>
+      <div class="opfab-archives">
+        <div style="display: flex;">
+          <div style="margin-right:40px">
+            <div style="min-width:300px;max-width:400px;margin-top:28px;margin-bottom: 54px;">
+              <of-multi-filter filterPath="process" id="process" [parentForm]="archiveForm"
+                               [values]="processDropdownList" [dropdownSettings]="processDropdownSettings" [selectedItems]="[]"
+                               i18nRootLabelKey="archive.filters.">
+              </of-multi-filter>
+            </div>
 
-<div class="row archives-page">
-    <div class="col-12">
-        <of-archive-filters></of-archive-filters>
-    </div>
+            <div *ngIf="tags" style="min-width:300px;max-width:400px;margin-top: 28px;">
+              <of-multi-filter filterPath="tags" id="tags" [parentForm]="archiveForm" [values]="tagsDropdownList"
+                               [dropdownSettings]="tagsDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="archive.filters.">
+              </of-multi-filter>
+            </div>
+          </div>
+
+
+          <div class="opfab-vertical-bar"></div>
+          <div style="margin-left:40px;margin-right: 30px;width:230px; min-width: 230px;">
+            <div>
+              <of-datetime-filter filterPath="publishDateFrom" formControlName="publishDateFrom"
+                labelKey="archive.filters."></of-datetime-filter>
+            </div>
+            <div>
+              <of-datetime-filter filterPath="publishDateTo" formControlName="publishDateTo"
+                labelKey="archive.filters."></of-datetime-filter>
+            </div>
+          </div>
+
+          <div class="opfab-vertical-bar"></div>
+          <div style="margin-left:40px;width:230px;min-width: 230px;">
+            <div>
+              <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom" labelKey="archive.filters.">
+              </of-datetime-filter>
+            </div>
+            <div>
+              <of-datetime-filter filterPath="activeTo" formControlName="activeTo" labelKey="archive.filters.">
+              </of-datetime-filter>
+            </div>
+          </div>
+          <div  style="margin-top:125px; margin-left:60px;min-width: 320px; ">
+            <button id="opfab-archives-btn-search" class="opfab-btn" (click)='sendQuery(0)' translate> button.search</button>
+            <button id="opfab-archives-btn-reset" class="opfab-btn-cancel" (click)='resetForm()' translate> button.reset</button>
+          </div>
+        </div>
+      </div>
+
+    </form>
 </div>
 
-<div [style.display]="(!(loadingIsTrue)) ? 'none' : undefined">
 
-    <div class="text-center" *ngIf="!(loaded$|async)">
-        <div class="spinner-border " role="status"><span class="sr-only">Loading...</span></div>
-    </div>
+<div style="height:5%"> </div>
+<div *ngIf=" hasResult" style="margin-left:5%;margin-right:5%">
+  <div class="opfab-table">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col" style="padding-left: 5px" translate>archive.result.publishDate</th>
+          <th scope="col" translate>archive.result.businessPeriod</th>
+          <th scope="col" translate>archive.result.title</th>
+          <th scope="col" translate>archive.result.summary</th>
+        </tr>
+      </thead>
 
-    <ng-container *ngIf="loaded$|async">
-        <div class="alert alert-info" [style.display]="(!(isEmptyMessage)) ? 'none' : undefined">
-            <h1><label translate>archive.noResult</label></h1>
+      <tr *ngFor="let card of results" (click)="openCard(card.id)" class="opfab-archives-table-line" style="cursor: pointer;">
+        <td class="opfab-archive-sev opfab-archive-sev-{{card.severity.toLowerCase()}}"></td>
+        <td style="padding-left: 5px"> {{displayTime(card.publishDate)}} </td>
+        <td> {{displayTime(card.startDate)}} - {{displayTime(card.endDate)}} </td>
+        <td translate [translateParams]="card.title.parameters">
+          {{ card.process + '.' + card.processVersion + '.' + card.title.key}}
+        </td>
+        <td translate [translateParams]="card.summary.parameters">
+          {{ card.process + '.' + card.processVersion + '.' + card.summary.key}}
+        </td>
+      </tr>
+    </table>
+    <div class="opfab-archive-pagination">
+      <div style="white-space: nowrap;margin-top:17px">
+        <span translate> archive.resultsNumber </span> : {{resultsNumber}}
+      </div>
+      <div style="width:40%;margin-top:5px">
+        <ngb-pagination *ngIf="resultsNumber > size" [collectionSize]="resultsNumber"
+          [page]="currentPage" [pageSize]="size" (pageChange)="updateResultPage($event)" [maxSize]="3" [rotate]="true">
+        </ngb-pagination>
+      </div>
+      <div style="width:50%;text-align:right;padding-right:8px;">
+        <div id="opfab-archives-btn-exportToExcel" style="float: right;cursor:pointer" (click)="export()" fileName="archiveResults" >
+          <span class="opfab-icon-export-data"></span>
+          <span style="font-weight: bold;" translate>archive.exportToExcel</span>
         </div>
-    </ng-container>
-
-    <div [style.display]="((isEmptyMessage)) ? 'none' : undefined">
-        <div class="row">
-            <div class="col-3">
-                <of-archive-list [lightCards]="lightCards$|async" [selection]="selection$"></of-archive-list>
-            </div>
-            <div class="col-9">
-                <router-outlet></router-outlet>
-            </div>
-        </div>
+      </div>
     </div>
-
-
-
-
-
+  </div>
 </div>
+
+<div *ngIf="firstQueryHasBeenDone&&!hasResult" style="text-align: center;font-size: 20px;" translate>archive.noResult
+</div>
+
+<ng-template #cardDetail let-modal>
+  <div class="modal-header">
+      <div class="text-uppercase" translate [translateParams]="selectedCard.title.parameters"> {{ selectedCard.process + '.' + selectedCard.processVersion + '.' + selectedCard.title.key}} </div>
+      <div id="opfab-archives-card-detail-close"  class="opfab-close-modal-icon" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true" >&times;</span>
+    </div>
+  </div>
+  <div class="modal-body">
+      <div>
+          <of-card-detail [card]="selectedCard"> </of-card-detail>
+      </div>
+      <div>
+      <span class="opfab-card-received-footer" translate [translateParams]="getPublishDateTranslationParams()">feed.received</span>
+
+    </div>
+  </div>
+</ng-template>

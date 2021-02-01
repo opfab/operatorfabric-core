@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -83,12 +83,12 @@ export class CardService {
                 operation => {
                     switch (operation.type) {
                         case CardOperationType.ADD:
-                            console.log(new Date().toISOString(), `CardService - Receive card to add id=`, operation.cards[0].id);
-                            this.store.dispatch(new LoadLightCardsSuccess({lightCards: operation.cards}));
+                            console.log(new Date().toISOString(), `CardService - Receive card to add id=`, operation.card.id);
+                            this.store.dispatch(new LoadLightCardsSuccess({lightCards: [operation.card]}));
                             break;
                         case CardOperationType.DELETE:
-                            console.log(new Date().toISOString(), `CardService - Receive card to delete id=`, operation.cardIds[0]);
-                            this.store.dispatch(new RemoveLightCard({cards: operation.cardIds}));
+                            console.log(new Date().toISOString(), `CardService - Receive card to delete id=`, operation.cardId);
+                            this.store.dispatch(new RemoveLightCard({cards: [operation.cardId]}));
                             break;
                         default:
                             this.store.dispatch(new AddLightCardFailure(
@@ -177,6 +177,10 @@ export class CardService {
 
     }
 
+    public resetStartOfAlreadyLoadedPeriod() {
+        this.startOfAlreadyLoadedPeriod = null;
+    }
+
     public setSubscriptionDates(start: number, end: number) {
         console.log(new Date().toISOString(), 'CardService - Set subscription date', new Date(start), ' -', new Date(end));
         if (!this.startOfAlreadyLoadedPeriod) { // First loading , no card loaded yet
@@ -218,7 +222,6 @@ export class CardService {
 
     fetchArchivedCards(filters: Map<string, string[]>): Observable<Page<LightCard>> {
         const params = this.convertFiltersIntoHttpParams(filters);
-        // const tmp = new HttpParams().set('publisher', 'defaultPublisher').set('size', '10');
         return this.httpClient.get<Page<LightCard>>(`${this.archivesUrl}/`, {params});
     }
 
@@ -254,6 +257,7 @@ export class CardService {
     }
 
     fetchLoggingResults(filters: Map<string, string[]>): Observable<Page<LineOfLoggingResult>> {
+        filters.set('childCards', ['true']);
         return this.fetchArchivedCards(filters).pipe(
             map((page: Page<LightCard>) => {
                 const cards = page.content;
@@ -262,14 +266,15 @@ export class CardService {
                     const publisherType = card.publisherType;
                     const enumThirdParty = PublisherType.EXTERNAL;
                     const isThirdPartyPublisher = enumThirdParty === PublisherType[publisherType];
-                    const sender = (isThirdPartyPublisher) ? 'SYSTEM' : this.entitiesService.getEntityName(card.publisher);
+                    const sender = (isThirdPartyPublisher) ? card.publisher : this.entitiesService.getEntityName(card.publisher);
                     return ({
                         process: card.process,
                         processVersion: card.processVersion,
+                        state: card.state,
                         cardType: card.severity.toLowerCase(),
-                        businessDate: moment(card.startDate),
-                        i18nKeyForProcessName: this.addPrefix(i18nPrefix, card.title),
-                        i18nKeyForDescription: this.addPrefix(i18nPrefix, card.summary),
+                        businessDate: moment(card.publishDate),
+                        i18nKeyForTitle: this.addPrefix(i18nPrefix, card.title),
+                        i18nKeyForSummary: this.addPrefix(i18nPrefix, card.summary),
                         sender: sender
                     } as LineOfLoggingResult);
                 });

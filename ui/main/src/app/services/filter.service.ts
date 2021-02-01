@@ -19,13 +19,19 @@ import * as _ from 'lodash';
 export class FilterService {
 
     readonly _defaultFilters = new Map();
+    readonly _defaultFiltersForMonitoring = new Map();
 
     constructor() {
-        this._defaultFilters = this.initFilters();
+        this._defaultFilters = this.initFilters(true);
+        this._defaultFiltersForMonitoring = this.initFilters(false);
     }
 
     public defaultFilters(): Map<FilterType, Filter> {
         return this._defaultFilters;
+    }
+
+    public defaultFiltersForMonitoring(): Map<FilterType, Filter> {
+        return this._defaultFiltersForMonitoring;
     }
 
 
@@ -82,29 +88,6 @@ export class FilterService {
             {start: new Date().valueOf() - 2 * 60 * 60 * 1000, end: new Date().valueOf() + 48 * 60 * 60 * 1000});
     }
 
-    private initMonitorDateFilter() {
-        return new Filter(
-            (card: LightCard, status) => {
-                if (!!status.start && !!status.end) {
-                    const isCardStartOk = card.startDate >= status.start && card.startDate <= status.end;
-                    if (!card.endDate) {
-                        return card.startDate <= status.end;
-                    }
-                    const isCardEndOk = card.endDate >= status.start && card.endDate <= status.end;
-                    
-                    return isCardStartOk || isCardEndOk;
-                } else if (!!status.start) {
-                    return card.startDate >= status.start;
-                } else if (!!status.end) {
-                    return (!! card.endDate && card.endDate <= status.end ) || card.startDate <= status.end;
-                }
-                console.warn(new Date().toISOString(), 'Unexpected business date filter situation');
-                return false;
-            },
-            false,
-            {start: new Date().valueOf() - 2 * 60 * 60 * 1000});
-    }
-
 
     private initPublishDateFilter() {
         return new Filter(
@@ -149,15 +132,17 @@ export class FilterService {
         );
     }
 
-    private initFilters(): Map<string, Filter> {
+    private initFilters(filterOnAck: boolean): Map<string, Filter> {
         const filters = new Map();
         filters.set(FilterType.TYPE_FILTER, this.initTypeFilter());
         filters.set(FilterType.BUSINESSDATE_FILTER, this.initBusinessDateFilter());
         filters.set(FilterType.PUBLISHDATE_FILTER, this.initPublishDateFilter());
         filters.set(FilterType.TAG_FILTER, this.initTagFilter());
-        filters.set(FilterType.ACKNOWLEDGEMENT_FILTER, this.initAcknowledgementFilter());
+
+        if (filterOnAck)
+            filters.set(FilterType.ACKNOWLEDGEMENT_FILTER, this.initAcknowledgementFilter());
+
         filters.set(FilterType.PROCESS_FILTER, this.initProcessFilter());
-        filters.set(FilterType.MONITOR_DATE_FILTER, this.initMonitorDateFilter());
         return filters;
     }
 }
@@ -171,8 +156,7 @@ export enum FilterType {
     PUBLISHDATE_FILTER,
     ACKNOWLEDGEMENT_FILTER,
     TEST_FILTER,
-    PROCESS_FILTER,
-    MONITOR_DATE_FILTER
+    PROCESS_FILTER
 }
 export const BUSINESS_DATE_FILTER_INITIALISATION = {
     name: FilterType.BUSINESSDATE_FILTER,

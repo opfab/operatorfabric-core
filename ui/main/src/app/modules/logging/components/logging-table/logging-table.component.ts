@@ -13,14 +13,16 @@ import { LineOfLoggingResult } from '@ofModel/line-of-logging-result.model';
 import { TimeService } from '@ofServices/time.service';
 import { Moment } from 'moment-timezone';
 import { CardService } from '../../../../services/card.service';
-import { selectLoggingCount } from '@ofSelectors/logging.selectors';
+import { selectLoggingCount, selectLoggingFilter } from '@ofSelectors/logging.selectors';
 import { Store, select } from '@ngrx/store';
 import { Page } from '@ofModel/page.model';
 import { AppState } from '@ofStore/index';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { ExportService } from '@ofServices/export.service';
+import { FlushLoggingResult, UpdateLoggingPage } from '@ofStore/actions/logging.actions';
+import { ConfigService } from '@ofServices/config.service';
 
 
 @Component({
@@ -32,19 +34,37 @@ export class LoggingTableComponent implements OnInit, OnDestroy {
 
 
     @Input() results: LineOfLoggingResult[];
+    @Input() processStateDescription: Map<string, string>;
     displayedResult: string;
     exportLoggingData: Array<any> ;
+    page = 0;
+    collectionSize$: Observable<number>;
+    size: number;
+
     unsubscribe$: Subject<void> = new Subject<void>();
 
 
     constructor(public timeService: TimeService, private cardService: CardService,
-        private store: Store<AppState>, private translate: TranslateService, private exportService: ExportService) {
+        private store: Store<AppState>, private translate: TranslateService, private exportService: ExportService, private configService: ConfigService) {
     }
-
-
 
     ngOnInit() {
         this.displayedResult = JSON.stringify(this.results);
+        this.collectionSize$ = this.store.pipe(
+            select(selectLoggingCount),
+            catchError(err => of(0))
+        );
+        this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
+    
+        this.store.select(selectLoggingFilter)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(filters => {
+              const pageFilter = filters.get('page');
+              // page on ngb-pagination component start at 1 , and page on backend start at 0
+              if (pageFilter) {
+                this.page = +pageFilter[0] + 1;
+              }
+            });
 
     }
 
@@ -71,8 +91,9 @@ export class LoggingTableComponent implements OnInit, OnDestroy {
                     if (typeof line !== undefined) {
                         this.exportLoggingData.push({
                             timeOfAction: this.timeService.formatDateTime(line.businessDate),
-                            processName: this.translateColomn(line.i18nKeyForProcessName.key, line.i18nKeyForProcessName.parameters),
-                            description: this.translateColomn(line.i18nKeyForDescription.key, line.i18nKeyForDescription.parameters),
+                            title: this.translateColomn(line.i18nKeyForTitle.key, line.i18nKeyForTitle.parameters),
+                            summary: this.translateColomn(line.i18nKeyForSummary.key, line.i18nKeyForSummary.parameters),
+                            description: this.translateColomn(this.processStateDescription.get(line.process + '.' + line.state)),
                             sender: line.sender
                         });
                     }
@@ -95,7 +116,16 @@ export class LoggingTableComponent implements OnInit, OnDestroy {
         return translatedColomn;
     }
 
+
+    updateResultPage(currentPage): void {
+
+    // page on ngb-pagination component start at 1 , and page on backend start at 0
+    this.store.dispatch(new UpdateLoggingPage({page: currentPage - 1}));
+  }
+
+
     ngOnDestroy() {
+        this.store.dispatch(new FlushLoggingResult());
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }

@@ -37,12 +37,10 @@ public class CardOperationData implements CardOperation {
     private Long number;
     private Instant publishDate;
     private CardOperationTypeEnum type;
-    @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<String> cardIds;
-    @Singular
+    private String cardId;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<? extends LightCard> cards;
+    private LightCard card;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> groupRecipientsIds;

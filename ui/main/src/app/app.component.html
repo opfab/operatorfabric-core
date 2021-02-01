@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -8,11 +8,36 @@
 
 
 
-<div class="app-content opfab-bgcolor" calcHeightDirective fixedHeightClass="fixed-height-main-layout" calcHeightClass="calc-height-main-layout" >
+<div class="app-content opfab-bgcolor"  >
     <of-navbar *ngIf="loaded"></of-navbar>
     <router-outlet *ngIf="loaded" ></router-outlet>
     <of-login *ngIf="!isAuthenticated && !useCodeOrImplicitFlow"></of-login>
-    <div *ngIf="!loaded && useCodeOrImplicitFlow">
-        Application is loading ...
+    <div class="opfab-connecting" *ngIf="!loaded && useCodeOrImplicitFlow">
+        <div class="opfab-connecting-spinner">
+            <em  class="fas fa-spinner fa-spin slow-spin" ></em>
+            </div>
+            <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px">
+                 Application is loading ...
+            </div>
     </div>
+
+    <div class="opfab-reconnecting" *ngIf="connectionLostForMoreThanTenSeconds&& loaded">
+        <div class="opfab-connecting-spinner">
+        <em  class="fas fa-spinner fa-spin slow-spin" ></em>
+        </div>
+        <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>
+            global.connectionLost
+        </div>
+        <div style="text-align: center;font:16px;font-weight: bold;" translate>
+            global.tryToReconnect
+      </div>
+      
+      </div>
+      <div id='div-detail-msg' class="opfab-info-message {{alertMessage.className}}" *ngIf='alertMessage && alertMessage.display'>
+        <span *ngIf="alertMessage.alert.i18n" translate>{{alertMessage.alert.i18n.key}}</span>
+        <span *ngIf="alertMessage.alert.message">&nbsp; {{alertMessage.alert.message}}</span>
+        <div id="opfab-usercard-close" class="opfab-alert-close" aria-label="Close" (click)="alertMessage.display = false">
+          <span aria-hidden="true">&times;</span>
+        </div>
+      </div>
 </div>

@@ -1,4 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -7,7 +16,8 @@ import { AppState } from '@ofStore/index';
 import { AppError } from 'app/common/error/app-error';
 import { ConfirmationDialogService } from 'app/modules/admin/services/confirmation-dialog.service';
 import { DataTableShareService } from 'app/modules/admin/services/data.service';
-import { Observable, throwError } from 'rxjs';
+import { Observable, Subject, throwError } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { EditEntityGroupModalComponent } from '../../editmodal/groups-entities/edit-entity-group-modal.component';
 import { OfTableComponent } from '../oftable/oftable.component';
 
@@ -15,7 +25,9 @@ import { OfTableComponent } from '../oftable/oftable.component';
   selector: 'of-groups-table',
   templateUrl: '../oftable/oftable.component.html'
 })
-export class OfGroupsTableComponent extends OfTableComponent implements OnInit {
+export class OfGroupsTableComponent extends OfTableComponent implements OnInit, OnDestroy {
+
+  unsubscribe$: Subject<void> = new Subject<void>();
 
   modalComponent = EditEntityGroupModalComponent;
   typeModal = 'group';
@@ -30,7 +42,7 @@ export class OfGroupsTableComponent extends OfTableComponent implements OnInit {
     super(modalService, dataService, store);
     this.crudService = crudService;
     this.config.sorting = { columns: this.columns };
-    this.getLocale().subscribe(locale => {
+    this.getLocale().pipe(takeUntil(this.unsubscribe$)).subscribe(locale => {
       this.translate.use(locale);
       this.translate.get(['admin.input.id.label', 'admin.input.name.label', 'admin.input.description',
         'admin.input.user.edit', 'admin.input.user.delete', 'admin.input.user.filter', 'admin.input.user.filter',
@@ -99,6 +111,11 @@ export class OfGroupsTableComponent extends OfTableComponent implements OnInit {
 
   getObservableRow(): Observable<any> {
     return this.dataService.getGroupRowEvent();
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
 }

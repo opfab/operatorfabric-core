@@ -10,8 +10,11 @@
   "states": {
     "messageState": {
       "name":  "message.title",
-      "color": "#FAF0AF",
-      "userCardTemplate": "usercard_message",
+      "description": "messageState.description",
+      "color": "#CC9900",
+      "userCard" : {
+        "template" : "usercard_message"
+      },
       "detailTitle": {
         "key": "message.title"
       },
@@ -19,11 +22,12 @@
       "styles": [
         "style"
       ],
-      "acknowledgementAllowed": true
+      "acknowledgmentAllowed": "Always"
     },
     "chartState": {
       "name": "chartDetail.title",
-      "color": "#f1c5c5",
+      "description": "chartState.description",
+      "color": "#DA00DA",
       "detailTitle": {
         "key": "chartDetail.title"
       },
@@ -31,11 +35,12 @@
       "styles": [
         "style"
       ],
-      "acknowledgementAllowed": true
+      "acknowledgmentAllowed": "Always"
     },
     "chartLineState": {
       "name": "chartLine.title",
-      "color": "#e5edb7",
+      "description": "chartLineState.description",
+      "color": "#6666FF",
       "detailTitle": {
         "key": "chartLine.title"
       },
@@ -43,12 +48,15 @@
       "styles": [
         "style"
       ],
-      "acknowledgementAllowed": true
+      "acknowledgmentAllowed": "Always"
     },
     "processState": {
       "name": "process.label",
-      "color": "#8bcdcd",
-      "userCardTemplate": "usercard_process",
+      "description": "processState.description",
+      "color": "#0070C0",
+      "userCard" : {
+        "template" : "usercard_process"
+      },
       "detailTitle": {
         "key": "process.label"
       },
@@ -56,11 +64,12 @@
       "styles": [
         "style"
       ],
-      "acknowledgementAllowed": true
+      "acknowledgmentAllowed": "Always"
     },
     "contingenciesState": {
       "name": "contingencies.title",
-      "color": "#8bcdcd",
+      "description": "contingenciesState.description",
+      "color": "#0070C0",
       "detailTitle": {
         "key": "contingencies.title"
       },
@@ -68,11 +77,12 @@
       "styles": [
         "contingencies"
       ],
-      "acknowledgementAllowed": true
+      "acknowledgmentAllowed": "Always"
     },
     "questionState": {
-      "name": "question.title",
-      "color": "#8bcdcd",
+      "name": "questionState.title",
+      "description": "questionState.description",
+      "color": "#0070C0",
       "response": {
         "lock": true,
         "state": "responseState",
@@ -88,11 +98,12 @@
       "styles": [
         "style"
       ],
-      "acknowledgementAllowed": false
+      "acknowledgmentAllowed": "OnlyWhenResponseDisabledForUser"
     },   
     "responseState": {
       "name": "response.title",
-      "color": "#8bcdcd",
+      "description": "responseState.description",
+      "color": "#0070C0",
       "detailTitle": {
         "key": "response.title"
       },
@@ -100,7 +111,7 @@
       "styles": [
         "style"
       ],
-      "acknowledgementAllowed": true
+      "acknowledgmentAllowed": "Always"
     }
 
   }

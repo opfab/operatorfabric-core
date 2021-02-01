@@ -10,10 +10,10 @@
 
 
 java -jar karate.jar                              \
+      cards/fetchArchivedCardsWithParams.feature  \
       cards/cards.feature                         \
       cards/cardsWithTimespans.feature            \
       cards/fetchArchivedCard.feature             \
-      cards/fetchArchivedCardsWithParams.feature  \
       cards/getCardSubscription.feature           \
       cards/userCards.feature                     \
       cards/cardsUserAcks.feature                 \

@@ -26,6 +26,7 @@ import org.lfenergy.operatorfabric.cards.consultation.model.CardOperationConsult
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.repositories.CardRepository;
 import org.lfenergy.operatorfabric.cards.consultation.services.CardSubscriptionService;
+import org.lfenergy.operatorfabric.springtools.configuration.test.UserServiceCacheTestApplication;
 import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.amqp.core.DirectExchange;
@@ -46,6 +47,7 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.createSimpleCard;
+import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.roundingToMillis;
 
 /**
  * <p></p>
@@ -55,7 +57,7 @@ import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.creat
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {IntegrationTestApplication.class, CardSubscriptionService.class, CardOperationsController
-   .class})
+   .class, UserServiceCacheTestApplication.class})
 @Slf4j
 @ActiveProfiles("test")
 @Tag("end-to-end")
@@ -63,7 +65,7 @@ import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.creat
 public class CardOperationsControllerShould {
     private static String TEST_ID = "testClient";
 
-    private static Instant now = Instant.now();
+    private static Instant now = roundingToMillis(Instant.now());
     private static Instant nowPlusOne = now.plus(1, ChronoUnit.HOURS);
     private static Instant nowPlusTwo = now.plus(2, ChronoUnit.HOURS);
     private static Instant nowPlusThree = now.plus(3, ChronoUnit.HOURS);
@@ -72,17 +74,12 @@ public class CardOperationsControllerShould {
     private static Instant nowMinusThree = now.minus(3, ChronoUnit.HOURS);
 
     @Autowired
-    private RabbitTemplate rabbitTemplate;
-    @Autowired
-    private FanoutExchange cardExchange;
-    @Autowired
     private CardOperationsController controller;
     @Autowired
     private CardSubscriptionService service;
     @Autowired
     private ObjectMapper mapper;
-    @Autowired
-    private ThreadPoolTaskScheduler taskScheduler;
+
     @Autowired
     private CardRepository repository;
 
@@ -212,44 +209,44 @@ public class CardOperationsControllerShould {
         StepVerifier.FirstStep<CardOperation> verifier = StepVerifier.create(publisher.map(s -> TestUtilities.readCardOperation(mapper, s)).doOnNext(TestUtilities::logCardOperation));
         verifier
                 .assertNext(op->{
-                    assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    cardIds.add(op.getCards().get(0).getId());
+                        assertThat(op.getCard()).isNotNull();
+                        assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
+                        cardIds.add(op.getCard().getId());
                 })
                 .assertNext(op->{
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCard()).isNotNull();
                         assertThat(op.getPublishDate()).isEqualTo(nowPlusOne);
-                        cardIds.add(op.getCards().get(0).getId());
+                        cardIds.add(op.getCard().getId());
                 })
                 .assertNext(op->{
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCard()).isNotNull();
                         assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                        cardIds.add(op.getCards().get(0).getId());
+                        cardIds.add(op.getCard().getId());
                 })
                 .assertNext(op->{
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCard()).isNotNull();
                         assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                        cardIds.add(op.getCards().get(0).getId());
+                        cardIds.add(op.getCard().getId());
                 })
                 .assertNext(op->{
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCard()).isNotNull();
                         assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                        cardIds.add(op.getCards().get(0).getId());
+                        cardIds.add(op.getCard().getId());
                 })
                 .assertNext(op->{
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCard()).isNotNull();
                         assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                        cardIds.add(op.getCards().get(0).getId());
+                        cardIds.add(op.getCard().getId());
                 })
                 .assertNext(op->{
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCard()).isNotNull();
                         assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                        cardIds.add(op.getCards().get(0).getId());
+                        cardIds.add(op.getCard().getId());
                 })
                 .assertNext(op->{
-                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getCard()).isNotNull();
                         assertThat(op.getPublishDate()).isEqualTo(nowPlusOne);
-                        cardIds.add(op.getCards().get(0).getId());
+                        cardIds.add(op.getCard().getId());
                 })
                 .expectComplete()
                 .verify();
@@ -292,16 +289,16 @@ public class CardOperationsControllerShould {
                         .notification(false).build()
         ));
         List<CardOperation> list = publisher.map(s -> TestUtilities.readCardOperation(mapper, s))
-        		.filter(co -> Arrays.asList("PROCESS.PROCESS0","PROCESS.PROCESS2","PROCESS.PROCESS4").contains(co.getCards().get(0).getId()))
-        		.collectSortedList((co1,co2) -> co1.getCards().get(0).getId().compareTo(co2.getCards().get(0).getId()))
+        		.filter(co -> Arrays.asList("PROCESS.PROCESS0","PROCESS.PROCESS2","PROCESS.PROCESS4").contains(co.getCard().getId()))
+        		.collectSortedList((co1,co2) -> co1.getCard().getId().compareTo(co2.getCard().getId()))
     	.block();
         
-		assertThat(list.get(0).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS0");
-        assertThat(list.get(0).getCards().get(0).getHasBeenAcknowledged()).isTrue();
-        assertThat(list.get(1).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS2");
-        assertThat(list.get(1).getCards().get(0).getHasBeenAcknowledged()).isFalse();
-        assertThat(list.get(2).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS4");
-        assertThat(list.get(2).getCards().get(0).getHasBeenAcknowledged()).isFalse();
+		assertThat(list.get(0).getCard().getId()).isEqualTo("PROCESS.PROCESS0");
+        assertThat(list.get(0).getCard().getHasBeenAcknowledged()).isTrue();
+        assertThat(list.get(1).getCard().getId()).isEqualTo("PROCESS.PROCESS2");
+        assertThat(list.get(1).getCard().getHasBeenAcknowledged()).isFalse();
+        assertThat(list.get(2).getCard().getId()).isEqualTo("PROCESS.PROCESS4");
+        assertThat(list.get(2).getCard().getHasBeenAcknowledged()).isFalse();
     }
     
     @Test
@@ -317,16 +314,16 @@ public class CardOperationsControllerShould {
         ));
         
         List<CardOperation> list = publisher.map(s -> TestUtilities.readCardOperation(mapper, s))
-        		.filter(co -> Arrays.asList("PROCESS.PROCESS0","PROCESS.PROCESS2","PROCESS.PROCESS4").contains(co.getCards().get(0).getId()))
-        		.collectSortedList((co1,co2) -> co1.getCards().get(0).getId().compareTo(co2.getCards().get(0).getId()))
+        		.filter(co -> Arrays.asList("PROCESS.PROCESS0","PROCESS.PROCESS2","PROCESS.PROCESS4").contains(co.getCard().getId()))
+        		.collectSortedList((co1,co2) -> co1.getCard().getId().compareTo(co2.getCard().getId()))
     	.block();
         
-		assertThat(list.get(0).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS0");
-        assertThat(list.get(0).getCards().get(0).getHasBeenRead()).isTrue();
-        assertThat(list.get(1).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS2");
-        assertThat(list.get(1).getCards().get(0).getHasBeenRead()).isFalse();
-        assertThat(list.get(2).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS4");
-        assertThat(list.get(2).getCards().get(0).getHasBeenRead()).isFalse();       
+		assertThat(list.get(0).getCard().getId()).isEqualTo("PROCESS.PROCESS0");
+        assertThat(list.get(0).getCard().getHasBeenRead()).isTrue();
+        assertThat(list.get(1).getCard().getId()).isEqualTo("PROCESS.PROCESS2");
+        assertThat(list.get(1).getCard().getHasBeenRead()).isFalse();
+        assertThat(list.get(2).getCard().getId()).isEqualTo("PROCESS.PROCESS4");
+        assertThat(list.get(2).getCard().getHasBeenRead()).isFalse();
     }
 
  

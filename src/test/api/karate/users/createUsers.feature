@@ -44,7 +44,7 @@ Feature: CreateUsers
     And request userKarate
     When method post
     Then status 201
-    And match response.login == userKarate.login
+    And match response.login == karate.lowerCase(userKarate.login)
     And match response.firstName == userKarate.firstName
     And match response.lastName == userKarate.lastName
 
@@ -56,7 +56,7 @@ Feature: CreateUsers
     And request userUpdate
     When method post
     Then status 200
-    And match response.login == userUpdate.login
+    And match response.login == karate.lowerCase(userUpdate.login)
     And match response.firstName == userUpdate.firstName
     And match response.lastName == userUpdate.lastName
 

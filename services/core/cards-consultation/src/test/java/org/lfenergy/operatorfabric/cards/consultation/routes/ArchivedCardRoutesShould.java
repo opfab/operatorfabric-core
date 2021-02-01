@@ -37,6 +37,7 @@ import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.createSimpleArchivedCard;
+import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.roundingToMillis;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {IntegrationTestApplication.class, ArchivedCardRoutesConfig.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -82,7 +83,8 @@ public class ArchivedCardRoutesShould {
 
         @Test
         public void findArchivedCardById() {
-            ArchivedCardConsultationData simpleCard = createSimpleArchivedCard(1, publisher, Instant.now(), Instant.now(), Instant.now().plusSeconds(3600),"userWithGroup",null,null);
+            Instant now = roundingToMillis(Instant.now());
+            ArchivedCardConsultationData simpleCard = createSimpleArchivedCard(1, publisher,now,now,now.plusSeconds(3600),"userWithGroup",null,null);
             StepVerifier.create(repository.save(simpleCard))
                     .expectNextCount(1)
                     .expectComplete()
@@ -92,9 +94,10 @@ public class ArchivedCardRoutesShould {
                     .expectStatus().isOk()
                     .expectBody(ArchivedCardConsultationData.class).value(card -> {
                 assertThat(card)
+                        .usingRecursiveComparison()
                         //This is necessary because empty lists are ignored in the returned JSON
-                        .usingComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
-                        .isEqualToComparingFieldByFieldRecursively(simpleCard);
+                        .withComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
+                        .isEqualTo(simpleCard);
             });
         }
     }
@@ -124,29 +127,30 @@ public class ArchivedCardRoutesShould {
 
         @Test
         public void findArchivedCardById() {
+        Instant now = roundingToMillis(Instant.now());
 
-            ArchivedCardConsultationData simpleCard1 = createSimpleArchivedCard(1, publisher, Instant.now(),
-                    Instant.now(), Instant.now().plusSeconds(3600), "",
+            ArchivedCardConsultationData simpleCard1 = createSimpleArchivedCard(1, publisher,now,
+                   now,now.plusSeconds(3600), "",
                     new String[]{"OTHER_GROUP", "SOME_GROUP"}, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must receive
 
-            ArchivedCardConsultationData simpleCard2 = createSimpleArchivedCard(1, publisher, Instant.now(),
-                    Instant.now(), Instant.now().plusSeconds(3600), "",
+            ArchivedCardConsultationData simpleCard2 = createSimpleArchivedCard(1, publisher,now,
+                   now,now.plusSeconds(3600), "",
                     new String[]{"OTHER_GROUP", "SOME_GROUP"}, new String[]{"OTHER_ENTITY"});//must not receive
 
-            ArchivedCardConsultationData simpleCard3 = createSimpleArchivedCard(1, publisher, Instant.now(),
-                    Instant.now(), Instant.now().plusSeconds(3600), "",
+            ArchivedCardConsultationData simpleCard3 = createSimpleArchivedCard(1, publisher,now,
+                   now,now.plusSeconds(3600), "",
                     new String[]{"OTHER_GROUP"}, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must not receive
 
-            ArchivedCardConsultationData simpleCard4 = createSimpleArchivedCard(1, publisher, Instant.now(),
-                    Instant.now(), Instant.now().plusSeconds(3600), "",
+            ArchivedCardConsultationData simpleCard4 = createSimpleArchivedCard(1, publisher,now,
+                   now,now.plusSeconds(3600), "",
                     new String[]{"OTHER_GROUP", "SOME_GROUP"}, null);//must receive
 
-            ArchivedCardConsultationData simpleCard5 = createSimpleArchivedCard(1, publisher, Instant.now(),
-                    Instant.now(), Instant.now().plusSeconds(3600), "",
+            ArchivedCardConsultationData simpleCard5 = createSimpleArchivedCard(1, publisher,now,
+                   now,now.plusSeconds(3600), "",
                     null, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must not receive (because the user doesn't have the right for process/state)
 
-            ArchivedCardConsultationData simpleCard6 = createSimpleArchivedCard(1, publisher, Instant.now(),
-                    Instant.now(), Instant.now().plusSeconds(3600), "",
+            ArchivedCardConsultationData simpleCard6 = createSimpleArchivedCard(1, publisher,now,
+                   now,now.plusSeconds(3600), "",
                     null, null);//must not receive
 
             StepVerifier.create(repository.save(simpleCard1))
@@ -158,9 +162,10 @@ public class ArchivedCardRoutesShould {
                     .expectStatus().isOk()
                     .expectBody(ArchivedCardConsultationData.class).value(card -> {
                 assertThat(card)
+                        .usingRecursiveComparison()
                         //This is necessary because empty lists are ignored in the returned JSON
-                        .usingComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
-                        .isEqualToComparingFieldByFieldRecursively(simpleCard1);
+                        .withComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
+                        .isEqualTo(simpleCard1);
             });
 
             StepVerifier.create(repository.save(simpleCard2))
@@ -188,9 +193,10 @@ public class ArchivedCardRoutesShould {
                     .expectStatus().isOk()
                     .expectBody(ArchivedCardConsultationData.class).value(card -> {
                 assertThat(card)
+                        .usingRecursiveComparison()
                         //This is necessary because empty lists are ignored in the returned JSON
-                        .usingComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
-                        .isEqualToComparingFieldByFieldRecursively(simpleCard4);
+                        .withComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
+                        .isEqualTo(simpleCard4);
             });
 
             StepVerifier.create(repository.save(simpleCard5))

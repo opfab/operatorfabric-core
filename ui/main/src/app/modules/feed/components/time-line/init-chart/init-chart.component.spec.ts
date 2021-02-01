@@ -67,16 +67,13 @@ describe('InitChartComponent', () => {
 
 
   xit('should apply differents zoom movements on timeline' +
-      'should verify domain value is changed after calling moveDomain & homeClick functions', () => {
+      'should verify domain value is changed after calling moveDomain function', () => {
     fixture.detectChanges();
     const tmp = component.buttonTitle;
     component.applyNewZoom('drag');
     expect(tmp).toEqual(component.buttonTitle);
-    expect(component.buttonHomeActive).toBeTruthy();
 
     component.followClockTickMode = true;
-    component.homeClick(1, 2);
-    expect(component.buttonHomeActive).toBeFalsy();
     expect(component.followClockTick).toBeTruthy();
     expect(component.myDomain).toEqual([1, 2]);
 

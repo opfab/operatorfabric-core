@@ -30,7 +30,7 @@ Feature: deleteUserFromEntity
 
     * def usersArray =
 """
-[   "loginKarate2"
+[   "loginkarate2"
 ]
 """
 
@@ -51,7 +51,7 @@ Feature: deleteUserFromEntity
     And request userKarate2
     When method post
     Then status 200
-    And match response.login == userKarate2.login
+    And match response.login == karate.lowerCase(userKarate2.login)
     And match response.firstName == userKarate2.firstName
     And match response.lastName == userKarate2.lastName
 
@@ -67,14 +67,14 @@ Feature: deleteUserFromEntity
 
   Scenario: Delete user from an entity (with operator1 authentication)
     #Given url opfabUrl + 'users/entities/' + entityDeletedFrom + '/users/' + userToDelete
-    Given url opfabUrl + 'users/entities/' + entityKarate2.id  + '/users/' + userKarate2.login
+    Given url opfabUrl + 'users/entities/' + entityKarate2.id  + '/users/' + karate.lowerCase(userKarate2.login)
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method delete
     Then status 403
 
 
   Scenario: No authentication, expected response 401
-    Given url opfabUrl + 'users/entities/' + entityKarate2.id  + '/users/' + userKarate2.login
+    Given url opfabUrl + 'users/entities/' + entityKarate2.id  + '/users/' + karate.lowerCase(userKarate2.login)
     When method delete
     Then status 401
 
@@ -82,7 +82,7 @@ Feature: deleteUserFromEntity
   Scenario: Delete user from a non-existent entity
   #  non-existent entity, expected response 404
     Given def userToDelete = 'operator3'
-    Given url opfabUrl + 'users/entities/' + 'entityNonExistent'  + '/users/' + userKarate2.login
+    Given url opfabUrl + 'users/entities/' + 'entityNonExistent'  + '/users/' + karate.lowerCase(userKarate2.login)
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 404
@@ -90,7 +90,7 @@ Feature: deleteUserFromEntity
 
   #delete /entities/{id}/users/{login}
   Scenario: Delete user from an entity (with admin authentication)
-    Given url opfabUrl + 'users/entities/' + entityKarate2.id  + '/users/' + userKarate2.login
+    Given url opfabUrl + 'users/entities/' + entityKarate2.id  + '/users/' + karate.lowerCase(userKarate2.login)
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200

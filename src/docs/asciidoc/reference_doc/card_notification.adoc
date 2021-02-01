@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -9,6 +9,19 @@
 = Card notification
 
 When a user receives a card, he is notified via a resume of the card on the left panel of the UI, what is called the "feed".
+
+== Notification configuration
+
+For each process/state, the user can choose to be notified or not when receiving a card. If he chooses not to be
+notified then the card will not be visible in the feed. However, it will be visible in the archives screen.
+
+The notification configuration screen can be made accessible or not for the OperatorFabric instance via the variable
+feedConfiguration.hidden in the web-ui.json file.
+
+In order to have a better visual organization of the processes in the UI, you can define processes groups.
+You can find more information
+ifdef::single-page-doc[<<_processes_groups, here>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#_processes_groups, here>>]
 
 == Sound notification 
 
@@ -22,7 +35,16 @@ When the user receives a new card, he see it in the feed with an eye icon on the
 
 The user can set a card as "acknowledged" so he will not see it anymore by default in the feed. It is as well possible to cancel it and set a card to "unacknowledged" (a filter permit to see acknowledged cards). 
 
-To offer the possibility for the user to acknowledged card, it has to be configured in process definition. The configuration is set on a state based with the acknowledgementAllowed field set to true  (default is false). You can see examples in src/test/utils/karate/businessconfig/resources/bundle_defaultProcess/config.json
+To offer the possibility for the user to acknowledged card, it has to be configured in process definition. The configuration is done on a state by setting the acknowledgmentAllowed field. Allowed values are:
+
+- "Never": acknowledgement not allowed (default value)
+
+- "Always": acknowledgement allowed
+
+- "OnlyWhenResponseDisabledForUser": acknowledgement allowed only when 
+the response is disabled for the user
+
+You can see examples in src/test/utils/karate/businessconfig/resources/bundle_defaultProcess/config.json
 [[card_reminder]]
 == Card reminder 
 
@@ -47,9 +69,11 @@ It is possible to set a recurrent reminder via the structure recurrence which de
 
  - HoursAndMinutes : hours and minutes of day when the event arise
 
- - DayOfWeeks : a list of day of the week when the event arise. The day of week is a number with 1 being Monday and 7 being Sunday as defined in https://en.wikipedia.org/wiki/ISO_8601#Week_dates[the ISO Standard 8601 (weekday number) ]
+ - DaysOfWeek : a list of day of the week when the event arise. The day of week is a number with 1 being Monday and 7 being Sunday as defined in https://en.wikipedia.org/wiki/ISO_8601#Week_dates[the ISO Standard 8601 (weekday number) ]
 
  - TimeZone : the time zone of reference for the recurrence definition (default value is Europe/Paris)
+
+ - DurationInMinutes : the duration in minutes of the event
 
 The reminder will arise for each `recurrent date of event - secondsBeforeTimeSpanForReminder` starting from startDate. 
 
@@ -60,8 +84,9 @@ If timespan is defined as follow :
 .... 
 startDate : 1231135161
 recurrence : {
-    HoursAndMinutes : { hours:10 ,minutes:30},
-    DaysOfWeeks : [6,7]
+    hoursAndMinutes : { hours:10 ,minutes:30},
+    daysOfWeek : [6,7],
+    durationInMinutes : 15
 }
 ....
 

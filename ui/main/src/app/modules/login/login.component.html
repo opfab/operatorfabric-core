@@ -1,0 +1,28 @@
+<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()"
+        [ngClass]="{'is-invalid': userForm.hasError('authentication.error')}" class="opfab-form-lighter" >
+        <div style="margin-top:5%">
+            <div class="opfab-input" style="margin:auto;margin-bottom:30px;width:300px">
+                <label for="identifier" translate>login.login</label>
+                <input id="opfab-login" type="text" formControlName="identifier" />
+            </div>
+            <div class="opfab-input" style="margin:auto;margin-bottom:30px;width:300px">
+                <label for="password" translate>login.password</label>
+                <input id="opfab-password" type="password" formControlName="password" />
+            </div>
+            <div  style="margin-left:20px;text-align: center;">
+                <button id="opfab-login-btn-submit" class="opfab-btn" [disabled]="userForm.invalid"
+                    translate>login.submit.password</button>
+            </div>
+        </div>
+    </form>
+    <div class="alert alert-danger" *ngIf="loginMessage" style="margin:auto;margin-top:50px;width:600px;text-align: center;">
+        {{loginMessage.i18n.key|translate:loginMessage.i18n.parameters}}</div>

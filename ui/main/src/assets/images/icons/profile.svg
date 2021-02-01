@@ -1,0 +1,9 @@
+<!--
+Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+See AUTHORS.txt
+This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+If a copy of the license was not distributed with this
+file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+SPDX-License-Identifier: CC-BY-4.0
+-->
+<svg id="profile" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><title>profile</title><path d="M16,1A15,15,0,1,1,1,16,15,15,0,0,1,16,1m0-1A16,16,0,1,0,32,16,16,16,0,0,0,16,0Z"/><circle cx="16" cy="9" r="5.5"/><path d="M16,4a5,5,0,1,1-5,5,5,5,0,0,1,5-5m0-1a6,6,0,1,0,6,6,6,6,0,0,0-6-6Z"/><path d="M16.1,28.94a12.78,12.78,0,0,1-10-4.69.31.31,0,0,1,0-.43,11.13,11.13,0,0,1,8.07-5.64,11.38,11.38,0,0,1,11.8,5.48.26.26,0,0,1,0,.36,12.42,12.42,0,0,1-8,4.72C17.28,28.86,16.59,28.89,16.1,28.94Z"/></svg>

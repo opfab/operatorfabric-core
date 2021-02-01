@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: OperatorFabric Card Consumer Service
-  version: 1.8.0.RELEASE
+  version: 2.0.0.RELEASE
   title: Card Management API
   termsOfService: ''
   contact:
@@ -157,28 +157,22 @@ definitions:
         $ref: '#/definitions/EpochDate'
       type:
         $ref: '#/definitions/CardOperationTypeEnum'
-      cardIds:
-        type: array
-        items:
-          type: string
+      cardId:
+        type: string
         description: >-
-          IDs of cards to be deleted. Only used for CardOperations of DELETE
+          ID of card to be deleted. Only used for CardOperations of DELETE
           type.
-      cards:
-        type: array
-        items:
-          $ref: '#/definitions/LightCard'
+      card:
+        $ref: '#/definitions/LightCard'
         description: >-
-          Card objects to be added or updated. Only used for CardOperations of
+          Card object to be added or updated. Only used for CardOperations of
           ADD or UPDATE type.
     example:
       number: 3
       publishDate: 1546300800000
       type: DELETE
-      cardIds:
+      cardId:
         - 12345
-        - 12346
-        - 12347
   Recipient:
     description: Recipient object defines rules for recipient computation
     type: object
@@ -238,6 +232,9 @@ definitions:
       timeZone:
         description: Time zone reference for the recurrence definition
         type: string
+      durationInMinutes:
+        description: Duration in minutes of the event
+        type: integer
     required:
       - hoursAndMinutes
   HoursAndMinutes:
@@ -832,6 +829,13 @@ paths:
             only cards where the field "key" is either equal to the string "value" or to an array
             containing "value".
             If key isn't a card property, the filter will have no effect.
+        - in: query
+          name: childCards
+          type: boolean
+          required: false
+          description: >-
+            If this parameter is set to true, child cards will be included in the results.
+            If the parameter is absent or set to false, child cards will not be included.
       responses:
         '200':
           description: OK

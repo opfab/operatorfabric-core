@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,3 +7,23 @@
  * This file is part of the OperatorFabric project.
  */
 
+
+.opfab-logging {
+    background-color: var(--opfab-bgcolor-darker);
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-left: 5%;
+
+}
+
+.opfab-vertical-bar {
+    border-left-width: 1px;
+    border-left-style: solid;
+    height: 150px; 
+    width: 1px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 30px;
+    border-color: var(--opfab-form-border-color);
+
+}

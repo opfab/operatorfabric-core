@@ -1,0 +1,81 @@
+<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
+<div class="opfab-feedconfiguration-title" translate>
+    feedConfiguration.title
+  </div>
+  
+
+    <form [formGroup]="feedConfigurationForm">
+        <div *ngFor="let processGroup of processGroups; " class="opfab-feedconfiguration-processlist">
+            <h5 class="font-weight-bold" translate>{{processGroup.id}}</h5>
+            <div class="row">
+                <div class="col-md" *ngFor="let processKey of processGroup.processes; ">
+                    <div *ngIf="processesStatesLabels.get(processKey)">
+                        <p class="font-weight-bold" translate>{{processesStatesLabels.get(processKey).processI18n}}</p>
+                        <div style="margin-left: 20px;" >
+                            <div class="row" formArrayName="processesStates" *ngFor="let state of processesStatesLabels.get(processKey).states; ">
+                                <label class="opfab-checkbox"> <span translate> {{state.stateLabel}} </span>
+                                    <input type="checkbox"[formControlName]=state.stateControlIndex [id]=state.stateControlIndex >
+                                    <span class="opfab-checkbox-checkmark"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <br />
+            <br />
+        </div>
+        <br />
+        <div class="row opfab-feedconfiguration-processlist">
+            <div class="col-md" *ngFor="let processId of processesWithoutGroup; ">
+                <p class="font-weight-bold" translate>{{processesStatesLabels.get(processId).processI18n}}</p>
+                <div style="margin-left: 20px;">
+                    <div class="row" formArrayName="processesStates" *ngFor="let state of processesStatesLabels.get(processId).states; ">
+
+
+                            <label class="opfab-checkbox"> <span translate> {{state.stateLabel}} </span>
+                                <input type="checkbox"[formControlName]=state.stateControlIndex [id]=state.stateControlIndex >
+                                <span class="opfab-checkbox-checkmark"></span>
+                            </label>
+                    </div>
+                </div>
+                <br />
+             </div>
+        </div>
+
+        <br />
+
+        <div *ngIf="displaySendResultError">
+            <h4 translate style="text-align: center" class="text-danger"> {{messageAfterSavingSettings}} </h4>
+        </div>
+        <div style="text-align: center;width:100%">
+            <button id="opfab-feedconfiguration-btn-confirm" type="button" class="opfab-btn" (click)='open(confirmationPopup)' style="text-align: center;min-width: 243px;" translate>feedConfiguration.confirmSettings</button>
+        </div>
+    </form>
+
+
+
+
+<div class="my-3">
+    <ng-template #confirmationPopup let-modal>
+        <div class="modal-header">
+            <h4 translate> feedConfiguration.popup.title </h4>
+            <button id="opfab-feedconfiguration-btn-close" type="button" class="close" aria-label="Close" (click)="modalRef.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body text-center">
+            <p translate>feedConfiguration.popup.areYouSure</p>
+            <button id="opfab-feedconfiguration-btn-yes" type="button" class="opfab-btn" (click)="confirmSaveSettings()" translate>button.yes</button>
+        </div>
+    </ng-template>
+</div>

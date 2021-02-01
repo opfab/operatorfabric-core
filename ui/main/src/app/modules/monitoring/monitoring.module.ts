@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,12 +16,9 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {MonitoringComponent} from './monitoring.component';
 import { MonitoringFiltersComponent } from './components/monitoring-filters/monitoring-filters.component';
 import { MonitoringTableComponent } from './components/monitoring-table/monitoring-table.component';
-import {DatetimeFilterModule} from '../../components/share/datetime-filter/datetime-filter.module';
-import {MultiFilterModule} from '../../components/share/multi-filter/multi-filter.module';
+import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
 import {AppRoutingModule} from '../../app-routing.module';
-import { UtilitiesModule } from '../utilities/utilities.module';
-import {AngularMultiSelect, AngularMultiSelectModule} from 'angular2-multiselect-dropdown';
-import {MultiFilter2Module} from '../../components/share/multi-filter-2/multi-filter-2.module';
+import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
 
 
 
@@ -39,10 +36,8 @@ import {MultiFilter2Module} from '../../components/share/multi-filter-2/multi-fi
       , TranslateModule
       , NgbModule
       , DatetimeFilterModule
-      , MultiFilterModule
       , AppRoutingModule
-      , UtilitiesModule
-      , MultiFilter2Module
+      , MultiFilterModule
   ]
 })
 export class MonitoringModule { }

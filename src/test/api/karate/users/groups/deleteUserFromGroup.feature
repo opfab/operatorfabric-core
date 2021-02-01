@@ -29,7 +29,7 @@ Feature: deleteUserFromGroup
 
     * def usersArray =
 """
-[   "loginKarate2"
+[   "loginkarate2"
 ]
 """
 
@@ -50,7 +50,7 @@ Feature: deleteUserFromGroup
     And request userKarate2
     When method post
     Then status 201
-    And match response.login == userKarate2.login
+    And match response.login == karate.lowerCase(userKarate2.login)
     And match response.firstName == userKarate2.firstName
     And match response.lastName == userKarate2.lastName
 
@@ -66,14 +66,14 @@ Feature: deleteUserFromGroup
 
   Scenario: Delete user from a group (with operator1 authentication)
     #Given url opfabUrl + 'users/groups/' + groupDeletedFrom + '/users/' + userToDelete
-    Given url opfabUrl + 'users/groups/' + groupKarate2.id  + '/users/' + userKarate2.login
+    Given url opfabUrl + 'users/groups/' + groupKarate2.id  + '/users/' + karate.lowerCase(userKarate2.login)
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method delete
     Then status 403
 
 
   Scenario: No authentication, expected response 401
-    Given url opfabUrl + 'users/groups/' + groupKarate2.id  + '/users/' + userKarate2.login
+    Given url opfabUrl + 'users/groups/' + groupKarate2.id  + '/users/' + karate.lowerCase(userKarate2.login)
     When method delete
     Then status 401
 
@@ -81,7 +81,7 @@ Feature: deleteUserFromGroup
   Scenario: Delete user from a non-existent group
   #  non-existent group, expected response 404
     Given def userToDelete = 'operator3'
-    Given url opfabUrl + 'users/groups/' + 'groupNonExistent'  + '/users/' + userKarate2.login
+    Given url opfabUrl + 'users/groups/' + 'groupNonExistent'  + '/users/' + karate.lowerCase(userKarate2.login)
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 404
@@ -89,7 +89,7 @@ Feature: deleteUserFromGroup
 
   #delete /groups/{name}/users/{login}
   Scenario: Delete user from a group (with admin authentication)
-    Given url opfabUrl + 'users/groups/' + groupKarate2.id  + '/users/' + userKarate2.login
+    Given url opfabUrl + 'users/groups/' + groupKarate2.id  + '/users/' + karate.lowerCase(userKarate2.login)
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200

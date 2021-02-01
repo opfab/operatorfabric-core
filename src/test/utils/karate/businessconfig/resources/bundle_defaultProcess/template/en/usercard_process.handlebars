@@ -1,14 +1,16 @@
-<div style="width:100%;display:flex;flex-wrap:wrap">  
-    <div style="flex-basis:0;width:100%;position:relative;flex-grow:1">
-Define the state of the process 
-    </div>
+<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
 
-    <div style="flex-basis:0;width:100%;position:relative;flex-grow:1">
-Status of the state 
-    </div>
-</div>
+
 <div style="width:100%;display:flex;flex-wrap:wrap">  
-    <div style="flex-basis:0;width:100%;position:relative;flex-grow:1">
+    <div class="opfab-select" style="flex-basis:0;width:100%;position:relative;flex-grow:1;margin-right:20px">
+
+        <label> STATE OF THE PROCESS</label>
         <select name="state" id="state">
             <option value="">--Please choose an option--</option>
             <option value="start">Started </option>
@@ -20,7 +22,8 @@ Status of the state
 
     </div>
 
-   <div style="flex-basis:0;width:100%;position:relative;flex-grow:1">
+   <div class="opfab-select"  style="flex-basis:0;width:100%;position:relative;flex-grow:1;margin-left:20px">
+       <label > STATUS OF THE STATE </label>
         <select name="status" id="status">
             <option value="">--Please choose an option--</option>
             <option value="ok"> Ok </option>

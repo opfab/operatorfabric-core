@@ -13,7 +13,6 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {AppState} from '@ofStore/index';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {HandleUnexpectedError, SendArchiveQuery} from '@ofActions/archive.actions';
 import {catchError, map, switchMap, withLatestFrom} from 'rxjs/operators';
 import {Page} from '@ofModel/page.model';
 import {
@@ -25,7 +24,7 @@ import {
 } from '@ofActions/logging.actions';
 import {LineOfLoggingResult} from '@ofModel/line-of-logging-result.model';
 import {selectLoggingFilter} from '@ofSelectors/logging.selectors';
-import {SendMonitoringQuery} from '@ofActions/monitoring.actions';
+
 
 @Injectable()
 export class LoggingEffects {
@@ -43,7 +42,7 @@ export class LoggingEffects {
         }),
         map((resultPage: Page<LineOfLoggingResult>) => new LoggingQuerySuccess({resultPage})),
         catchError((error, caught) => {
-            this.store.dispatch(new HandleUnexpectedError({error: error}));
+            console.log("error when query logging card  ",error);
             return caught;
         })
     );
@@ -58,7 +57,7 @@ export class LoggingEffects {
             return new SendLoggingQuery({params: filters});
         }),
         catchError((error, caught) => {
-            this.store.dispatch(new HandleUnexpectedError({error: error}));
+            console.log("error when query logging page ",error);
             return caught;
         })
     );

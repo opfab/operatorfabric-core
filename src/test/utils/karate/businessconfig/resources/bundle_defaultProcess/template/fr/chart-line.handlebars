@@ -1,8 +1,7 @@
 
-<br>
-<h1 style="text-align:center">
+<h4 style="text-align:center">
 Prévision journalière de consommation électrique 
-</h1>
+</h4>
 
 
 <table width="100%">
@@ -32,12 +31,14 @@ var myChart = new Chart(ctx, {
     options: {
         scales: {
             yAxes: [{
+                gridLines: {color:'rgba(100,100,100,0.2)'},
                 ticks: {
                     beginAtZero: true,
                     fontColor: opfabColor
                 }
             }],
             xAxes: [{
+                 gridLines: {color:'rgba(100,100,100,0.2)'},
                 ticks: {
                     fontColor: opfabColor
                 }

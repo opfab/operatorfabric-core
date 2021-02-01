@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -16,8 +16,8 @@
 
 image:https://img.shields.io/badge/license-MPL_2.0-blue.svg[MPL-2.0
 License,link=https://www.mozilla.org/en-US/MPL/2.0/]
-image:https://travis-ci.org/opfab/operatorfabric-core.svg?branch=develop[Build
-Status,link=https://travis-ci.org/opfab/operatorfabric-core]
+image:https://travis-ci.com/opfab/operatorfabric-core.svg?branch=develop[Build
+Status,link=https://travis-ci.com/opfab/operatorfabric-core]
 image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=alert_status[Quality
 Gate,link=https://sonarcloud.io/dashboard?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core]
 image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=coverage[Coverage,link=https://sonarcloud.io/component_measures?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=Coverage]
@@ -31,24 +31,39 @@ us on Spectrum,link=https://spectrum.chat/opfab]
 == Introduction
 
 //tag::short_description[]
-OperatorFabric is a modular, extensible, industrial-strength and field-tested
-platform for use in electricity, water, and other utility operations.
+OperatorFabric is a modular, extensible, industrial-strength platform for use in electricity, water, and other utility operations.
 
-* System visualization and console integration
-* Precise alerting
-* Workflow scheduling
-* Historian
-* Scripting (ex: Python, JavaScript)
+It aims to facilitate operational activities for utilities in two ways :
 
-NOTE: Workflow Scheduling could be addressed either as an internal module or
-through simplified and standardized (BPMN) integration with external workflow
-engines, we're still weighing the pros and cons of the two options._
+* Centralize real time business events in a single place to avoid having multiple screens/software. To do so,  OperatorFabric provides 
+** event notifications named "cards"  with filtering features (severity , date , process ... )
+** event dispatching rules on a per user basis (based on groups, organizational entities, processes... )
+** event-sending endpoints for business applications 
+** a mechanism of templating to customize events rendering (using HTML5 )
+** a view of the events on a timeline and agenda view 
+** storage of all the events (archive feature)
+** notifications via sounds 
+** possibilities  to integrate screen form other applications
+
+    
+* Facilitate interactions between operational control centers:
+** Share information in real time, as pre-formatted cards that can be sent either manually by operators or automatically by external solutions.
+** Introduce pre-formatted question/response exchanges between control centers. This can be used to implement operational processes (with the notion of "last time to respond").  
+** Share events in calendar (also allowing repeating events)
+
+In addition, the following features are available :  internationalization, time-zone management, light/dark mode for the UI,  authorization mechanism.
+
+Integration with existing IT systems is an overarching concern: support of Firefox and Chromium-based browsers, docker deployment, communication with business applications via REST API or Kafka, integration with external authentication systems (via OAuth2), monitoring via Prometheus endpoints.
+
 
 OperatorFabric is part of the https://www.lfenergy.org/[LF Energy] coalition, a project of The Linux Foundation that
 supports open source innovation projects within the energy and electricity sectors.
 
 OpFab is an open source platform licensed under https://www.mozilla.org/en-US/MPL/2.0/[Mozilla Public License V2].
 The source code is hosted on GitHub in this repository : https://github.com/opfab/operatorfabric-core[operatorfabric-core].
+
+Documentation is available at https://opfab.github.io/ 
+
 //end::short_description[]
 
 image::feed_screenshot.png[UI screenshot]
@@ -99,7 +114,7 @@ image:https://img.shields.io/badge/Using-Swagger-%237473C0.svg?style=for-the-bad
 OperatorFabric is built and integrated using battle-tested tools and (open) platforms.
 
 image:https://img.shields.io/badge/Built%20with-Gradle-%23410099.svg?style=for-the-badge[Built with Gradle,link=https://gradle.org/]
-image:https://img.shields.io/badge/Using-Travis%20CI-%23FF647D.svg?style=for-the-badge[Using Travis CI,link=https://travis-ci.org/opfab/operatorfabric-core]
+image:https://img.shields.io/badge/Using-Travis%20CI-%23FF647D.svg?style=for-the-badge[Using Travis CI,link=https://travis-ci.com/opfab/operatorfabric-core]
 image:https://img.shields.io/badge/Using-SonarCloud-%23FF647D.svg?style=for-the-badge[Using SonarCloud,link=https://sonarcloud.io/dashboard?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core]
 
 == Licensing

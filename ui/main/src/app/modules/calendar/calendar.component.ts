@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,11 +28,13 @@ import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.con
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ApplyFilter } from '@ofStore/actions/feed.actions';
 import { FilterType } from '@ofServices/filter.service';
+import moment from 'moment';
+import { HourAndMinutes } from '@ofModel/card.model';
 
 @Component({
   selector: 'of-calendar',
   templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.css']
+  styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -43,7 +45,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
   calendarVisible = true;
   calendarPlugins = [dayGridPlugin, timeGrigPlugin, interactionPlugin, bootstrapPlugin];
   locales = allLocales;
-  themeSystem = 'bootstrap';
+  themeSystem = 'standard';
   calendarEvents: EventInput[] = [];
   modalRef: NgbModalRef;
 
@@ -82,11 +84,6 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
   private processCards(cards) {
     this.calendarEvents = [];
     for (const card of cards) {
-      let color;
-      if (card.severity === 'INFORMATION') { color = 'blue'; }
-      if (card.severity === 'COMPLIANT') { color = 'green'; }
-      if (card.severity === 'ACTION') { color = 'orange'; }
-      if (card.severity === 'ALARM') { color = 'red'; }
       this.translate.get(card.process + '.' + card.processVersion + '.' + card.title.key
           , card.title.parameters).subscribe(title => {
         if (card.timeSpans) {
@@ -94,14 +91,30 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
             if (timespan.end) {
               const startDate = new Date(timespan.start.valueOf());
               const endDate = new Date(timespan.end.valueOf());
-              this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
-                id: card.id,
-                title: title,
-                start: startDate,
-                end: endDate,
-                backgroundColor: color,
-                allDay: false
-              });
+
+              if (timespan.recurrence) {
+                this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
+                  id: card.id,
+                  title: title,
+                  allDay: false,
+                  startRecur: startDate,
+                  endRecur: endDate,
+                  className: ["opfab-calendar-event",'opfab-calendar-event-' + card.severity.toLowerCase()],
+                  daysOfWeek: timespan.recurrence ? timespan.recurrence.daysOfWeek.map(d => d % 7) : [],
+                  startTime: timespan.recurrence.hoursAndMinutes ? this.formatTwoDigits(timespan.recurrence.hoursAndMinutes.hours) + ':' + this.formatTwoDigits(timespan.recurrence.hoursAndMinutes.minutes) : null,
+                  endTime: timespan.recurrence.durationInMinutes ? this.getEndTime(timespan.recurrence.hoursAndMinutes, timespan.recurrence.durationInMinutes) : null
+                });
+              } else {
+                this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
+                  id: card.id,
+                  title: title,
+                  start: startDate,
+                  end: endDate,
+                  className: ["opfab-calendar-event",'opfab-calendar-event-' + card.severity.toLowerCase()],
+                  allDay: false
+                });
+              }
+
             }
           }
         }
@@ -110,15 +123,17 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  private formatTwoDigits(time: number) {
+    return time < 10 ? '0' + time : time;
+  }
+
+  private getEndTime(hourAndMinutes: HourAndMinutes, duration: number) {
+    duration = Math.min(duration, 30);
+    return this.formatTwoDigits(hourAndMinutes.hours + Math.floor(duration / 60)) + ':' + this.formatTwoDigits(hourAndMinutes.minutes + duration % 60);
+  }
 
   handleDateClick(arg) {
-    if (confirm('Would you like to add an event to ' + arg.dateStr + ' ?')) {
-      this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
-        title: 'New Event',
-        start: arg.date,
-        allDay: arg.allDay
-      });
-    }
+
   }
 
   selectCard(info) {

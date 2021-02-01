@@ -46,8 +46,6 @@ export class InitChartComponent implements OnInit, OnDestroy {
 
     // buttons
     public buttonTitle: string;
-    public buttonHome: number[];
-    public buttonHomeActive: boolean;
     public buttonList;
 
     public hideTimeLine = false;
@@ -98,7 +96,6 @@ export class InitChartComponent implements OnInit, OnDestroy {
 
         this.followClockTick = false;
         this.followClockTickMode = false;
-        this.buttonHomeActive = false;
 
         if (conf.followClockTick) {
             this.followClockTick = true;
@@ -169,7 +166,6 @@ export class InitChartComponent implements OnInit, OnDestroy {
             }
         }
         this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
-        this.buttonHome = [startDomain.valueOf(), endDomain.valueOf()];
     }
 
 
@@ -223,7 +219,6 @@ export class InitChartComponent implements OnInit, OnDestroy {
      * @param direction receive by child component custom-timeline-chart
      */
     applyNewZoom(direction: string): void {
-        this.buttonHomeActive = false;
 
         for (let i = 0; i < this.buttonList.length; i++) {
             if (this.buttonList[i].buttonTitle === this.buttonTitle) {
@@ -238,24 +233,6 @@ export class InitChartComponent implements OnInit, OnDestroy {
                 }
                 return;
             }
-        }
-    }
-
-    /**
-     * change timeline domain
-     * deactivate the home button display
-     * activate first move boolean, on first move make by clicking a button the home domain will be used
-     * activate followClockTick if the zoom level has this mode activated
-     * @param startDomain new start of domain
-     * @param endDomain new end of domain
-     */
-    homeClick(startDomain: number, endDomain: number): void {
-
-        this.setStartAndEndDomain(startDomain, endDomain);
-        this.buttonHomeActive = false;
-        // followClockTickMode is define on the zoom level
-        if (this.followClockTickMode) {
-            this.followClockTick = true;
         }
     }
 
@@ -282,7 +259,6 @@ export class InitChartComponent implements OnInit, OnDestroy {
             endDomain = this.goBackword(endDomain);
         }
 
-        this.buttonHomeActive = true;
         this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
     }
 
@@ -323,16 +299,6 @@ export class InitChartComponent implements OnInit, OnDestroy {
     showOrHideTimeline() {
         this.hideTimeLine = !this.hideTimeLine;
         localStorage.setItem('opfab.hideTimeLine', this.hideTimeLine.toString());
-        // need to relcalculate frame size
-        // event is catch by calc-height-directive.ts
-        window.dispatchEvent(new Event('resize'));
-
-          // WORKAROUND to remove white background when user hide time line in Legacy mode 
-        if (this.globalStyleService.getStyle() === 'LEGACY') {
-            if (this.hideTimeLine) this.globalStyleService.setLegacyStyleWhenHideTimeLine();
-            else this.globalStyleService.setLegacyStyleWhenShowTimeLine();
-        }
-
     }
 
 }

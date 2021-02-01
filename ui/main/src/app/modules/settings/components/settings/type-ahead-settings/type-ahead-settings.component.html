@@ -9,11 +9,11 @@
 
 
 <form [formGroup]="form" id="time-filter-form">
-    <div class="form-group">
+    <div class="opfab-input-type-ahead">
         <label for="setting" translate>settings.{{settingPath}}</label>
-        <type-ahead id="setting"
+        <type-ahead id="opfab-setting-{{settingPath}}"
                     formControlName="setting"
-                    class="form-control tags-field rounded"
+                    class="tags-field rounded"
                     [multi]="true"
                     [custom]="true"></type-ahead>
     </div>

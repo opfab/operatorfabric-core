@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,8 +8,108 @@
  */
 
 
-.button {margin-right: 8px;}
 
 .app-content {
   height: 100%; //This allows to take up all the space in body, minus padding
+  margin: 0%;
+  padding: 0%;
 }
+
+
+.opfab-connecting {
+  position: fixed; 
+  z-index: 5000; /* Sit on top */
+  left: 0;
+  top: 0; 
+  padding-top: 20%;
+  width: 100%; 
+  height: 100%; 
+  color: white;
+  }
+
+
+.opfab-reconnecting {
+  position: fixed; 
+  z-index: 5000; /* Sit on top */
+  left: 0;
+  top: 0; 
+  padding-top: 20%;
+  width: 100%; 
+  height: 100%; 
+  background-color: rgba(0,0,0,0.6); 
+  color: white;
+  }
+
+.opfab-connecting-spinner{
+  font-size: 68px;
+  padding-top: 20px;
+  width: 150px;
+  height: 150px;
+  margin: auto;
+  border: solid 1px var(--opfab-bgcolor);
+  border-radius: 8px;
+  text-align: center;
+  background-color: var(--opfab-bgcolor);
+  color: #aaaaaa;
+
+}
+
+.slow-spin {
+  -webkit-animation: fa-spin 2s infinite linear;
+  animation: fa-spin 2s infinite linear;
+} 
+
+.opfab-info-message {
+  text-align: center;
+  width:100% ;
+  position: fixed; 
+  z-index: 4000;
+  left: 0;
+  top: 0; 
+  color: white;
+}
+
+.opfab-alert-debug {
+  background-color: #0070da;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: left;
+  height: 60px;
+  line-height: 60px;
+  padding-left: 30px;
+}
+
+.opfab-alert-info {
+  background-color: #67a854;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: left;
+  height: 60px;
+  line-height: 60px;
+  padding-left: 30px;
+}
+
+.opfab-alert-error {
+  background-color: #e87a08;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: left;
+  height: 60px;
+  line-height: 60px;
+  padding-left: 30px;
+}
+
+.opfab-alert-close {
+  position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    color: var(--opfab-bgcolor);
+    margin-right: 30px;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.opfab-alert-close:hover, .opfab-alert-close:focus {
+  color: var(--opfab-navbar-color);
+} 

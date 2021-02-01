@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,7 +27,6 @@ export class FiltersComponent implements OnInit {
   hideAckFilter: boolean;
   hideTags: boolean;
   hideTimerTags: boolean;
-  cardsSubscriptionOpen$ : Observable<boolean>;
   filterByPublishDate : boolean = true;
   hideReadSort: boolean;
   hideSeveritySort: boolean;
@@ -40,14 +39,10 @@ export class FiltersComponent implements OnInit {
     this.hideAckFilter = this.configService.getConfigValue('feed.card.hideAckFilter',false);
     this.hideReadSort = this.configService.getConfigValue('feed.card.hideReadSort',false);
     this.hideSeveritySort = this.configService.getConfigValue('feed.card.hideSeveritySort',false);
-    this.cardsSubscriptionOpen$ = this.store.select(selectSubscriptionOpen);
     
     // When time line is hide , we use a date filter by business date and not publish date
     this.filterByPublishDate = !this.configService.getConfigValue('feed.timeline.hide',false);
-    // Change default readSort 
-    if (this.hideReadSort) {
-      this.store.dispatch(new ChangeReadSort());
-    }
+
   }
 
 

@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -6,45 +6,47 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 <form [formGroup]="loggingForm" #currentForm>
-    <div class="container-fluid">
-        <div class="form-row nomarginrow justify-content-center">
-            <div class="col-lg-3 col-md-4 nopaddingrow">
-                <of-multi-filter-2 filterPath="process"
+    <div class="opfab-logging" >
+        <div style="display: flex;">
+            <div  style="margin-top: 28px;margin-right: 40px;position:relative; min-width:300px;max-width:400px;" >
+                <of-multi-filter filterPath="process"
                                    id="process"
-                                   formControlName="process"
                                    [parentForm]="loggingForm"
                                    [values]="dropdownList"
-                                   [(ngModel)]="dropdownList"
                                    [dropdownSettings]="dropdownSettings"
+                                   [selectedItems]="[]"
                                    i18nRootLabelKey="logging.filters."
-                ></of-multi-filter-2>
+                ></of-multi-filter>
             </div>
-            <div class="col-lg-2 col-md-4 archive-filter">
+            <div class="opfab-vertical-bar"></div>
+            <div style="margin-left:40px;margin-right: 30px;width:230px;min-width: 230px;">
+                <div>
                 <of-datetime-filter filterPath="publishDateFrom" formControlName="publishDateFrom"
                                     labelKey="archive.filters."></of-datetime-filter>
-            </div>
-            <div class="col-lg-2 col-md-4 archive-filter">
-                <of-datetime-filter filterPath="publishDateTo" formControlName="publishDateTo"
+                </div>
+                <div>
+                    <of-datetime-filter filterPath="publishDateTo" formControlName="publishDateTo"
                                     labelKey="archive.filters."></of-datetime-filter>
+                </div>
             </div>
-            <div class="col-lg-2 col-md-4 archive-filter">
-                <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom"
-                                    labelKey="archive.filters."></of-datetime-filter>
+
+            <div class="opfab-vertical-bar"></div>
+            <div style="margin-left:40px;width:230px;min-width: 230px;">
+                <div>
+                    <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom"
+                                        labelKey="archive.filters."></of-datetime-filter>
+                </div>
+                <div>
+                    <of-datetime-filter filterPath="activeTo" formControlName="activeTo"
+                                        labelKey="archive.filters."></of-datetime-filter>
+                </div>
             </div>
-            <div class="col-lg-2 col-md-4 archive-filter">
-                <of-datetime-filter filterPath="activeTo" formControlName="activeTo"
-                                    labelKey="archive.filters."></of-datetime-filter>
-            </div>
-            <div class="col-lg-auto col-md-2" style="margin-top:30px;margin-left:11px">
+            <div  style="margin-top:125px; margin-left:60px;min-width: 320px; ">
                 <div class="form-group">
                     <div class="row">
-                        <button type="button" class="btn btn-primary archive-radius" (click)="sendQuery()">
-                            <em class="fas fa-search"></em>
-                        </button>
-                        <button type="button" id="reset" class="btn btn-primary archive-radius"
-                                (click)="currentForm.resetForm()">
-                            <em class="fas fa-undo"></em>
-                        </button>
+                        <button id="opfab-logging-btn-search" class="opfab-btn" (click)='sendQuery()' translate> button.search</button>
+                        <button id="opfab-logging-btn-cancel" class="opfab-btn-cancel" (click)='resetForm()' translate> button.reset</button>
+                      
                     </div>
                 </div>
             </div>

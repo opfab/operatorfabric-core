@@ -8,12 +8,6 @@
           "10"
         ]
       },
-      "process": {
-        "list": [
-          "process",
-          "someOtherProcess"
-        ]
-      },
       "tags": {
         "list": [
           {
@@ -138,6 +132,9 @@
     "businessmenus" : {"type":"BOTH"}
   },
   "admin": {
+    "hidden": false
+  },
+  "feedConfiguration": {
     "hidden": false
   }
 }

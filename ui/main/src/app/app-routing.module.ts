@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,12 +10,11 @@
 
 import {NgModule} from '@angular/core';
 import {PreloadAllModules, Router, RouterModule, Routes} from '@angular/router';
-import {LoginComponent} from './components/login/login.component';
-import {AboutComponent} from './modules/about/about.component';
+import {LoginComponent} from './modules/login/login.component';
 import {LoggingComponent} from './modules/logging/logging.component';
 import {MonitoringComponent} from './modules/monitoring/monitoring.component';
-import { AdminComponent } from './modules/admin/admin.component';
 import {CalendarComponent} from './modules/calendar/calendar.component';
+import { ArchivesEntryPointComponent } from './modules/archives/archives-entry-point.component'
 
 const defaultPath = '/feed';
 const archivePath = 'archives';
@@ -26,12 +25,8 @@ const routes: Routes = [
         loadChildren: () => import('./modules/feed/feed.module').then(m => m.FeedModule),
     },
     {
-        path: 'usercard',
-        loadChildren: () => import('./modules/usercard/usercard.module').then(m => m.UserCardModule),
-    },
-    {
-        path: archivePath,
-        loadChildren: () => import('./modules/archives/archives.module').then(m => m.ArchivesModule),
+        path: 'archives',
+        component: ArchivesEntryPointComponent
     },
     {
         path: 'monitoring',
@@ -58,12 +53,12 @@ const routes: Routes = [
         component: LoginComponent
     },
     {
-        path: 'about',
-        component: AboutComponent
-    },
-    {
         path: 'admin',
          loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule),
+    },
+    {
+        path: 'feedconfiguration',
+        loadChildren: () => import('./modules/feedconfiguration/feedconfiguration.module').then(m => m.FeedconfigurationModule),
     },
     {   path: '**',
         redirectTo: defaultPath
@@ -71,7 +66,7 @@ const routes: Routes = [
 ];
 // TODO manage visible path more gently
 const startIndex = 0;
-const numberOfHiddenRoutes = 5 ; // 'businessconfigparty', 'settings', 'navbar'  'admin' ,'about'
+const numberOfHiddenRoutes = 6 ; // 'Calendar' 'businessconfigparty', 'settings', 'navbar', 'admin', 'feedconfiguration'
 const manageIndexesWhichBeginAtZero = 1;
 const numberOfRoutes = routes.length;
 const lastIndexOfVisibleElements = numberOfRoutes - numberOfHiddenRoutes - manageIndexesWhichBeginAtZero;

@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -47,3 +47,5 @@ When the operator is responding, a  card is emitted to the sender of the initial
 and the response could be seen by other operators.
 
 image::ResponseCardScreenshot.png[Feed screen layout,align="center"]
+
+It is also possible for users to directly send card to other users using predefined card templates.

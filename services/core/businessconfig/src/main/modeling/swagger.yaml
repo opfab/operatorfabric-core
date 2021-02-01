@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: OperatorFabric BusinessconfigParty Management API
-  version: 1.8.0.RELEASE
+  version: 2.0.0.RELEASE
   title: Businessconfig Management
   termsOfService: ''
   contact:
@@ -353,17 +353,24 @@ definitions:
             response:
               $ref: '#/definitions/Response'
             acknowledgmentAllowed:
-              type: boolean
-              description: This flag indicates the possibility for a card of this kind to be acknowledged on user basis
+              description: Acknowledgment allowed or not
+              $ref: '#/definitions/AcknowledgmentAllowedEnum'
+              default: Never
             name:
               type: string
               description: i18n key for UI
+            description:
+              type: string
+              description: i18n key for UI
+            showDetailCardHeader:
+              type: boolean
+              description: Hide or show header card for question card
             color:
               type: string
               description: use as a display cue in the UI
-            userCardTemplate:
-              type: string
-              description : Name of the template to use when creating a new card
+            userCard:
+              description : User card template and visibility options
+              $ref: '#/definitions/UserCard'
             detailTitle:
               description: Detail i18n title
               $ref: '#/definitions/I18n'
@@ -465,6 +472,18 @@ definitions:
       - YELLOW
     example: RED
 
+  AcknowledgmentAllowedEnum:
+    type: string
+    description: |-
+      Acknowledgment allowed >
+      * ALWAYS - Acknowledgment always allowed
+      * NEVER - Acknowledgment not allowed
+      * ONLY_WHEN_RESPONSE_DISABLED_FOR_USER - Acknowledgment allowed only if response is disabled for the user
+    enum:
+      - Always
+      - Never
+      - OnlyWhenResponseDisabledForUser
+
   ProcessGroup:
     description: Object containing a list of processes.
     properties:
@@ -501,3 +520,13 @@ definitions:
             type: object
             additionalProperties:
               type: string
+  UserCard:
+    properties:
+      template:
+        type: string
+      severityVisible: 
+        type: boolean
+      startDateVisible: 
+        type: boolean      
+      endDateVisible: 
+        type: boolean

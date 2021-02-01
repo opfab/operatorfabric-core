@@ -31,7 +31,6 @@ export const emptyAppState4Test: AppState = {
     menu: null,
     config: null,
     settings: null,
-    archive:null,
     user:null,
     cardsSubscription:null,
     globalStyle: null,
@@ -113,7 +112,7 @@ export function getOneRandomAddCardOperation(): CardOperation {
         generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(768),
         now,
         CardOperationType.ADD,
-        getSeveralRandomLightCards(numberOfCards)
+        getSeveralRandomLightCards(numberOfCards)[0]
     );
 }
 

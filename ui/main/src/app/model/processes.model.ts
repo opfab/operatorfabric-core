@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,7 @@ export class Process {
         readonly locales?: string[],
         readonly states?: OfMap<State>,
         readonly uiVisibility?: UiVisibility
-    ) { 
+    ) {
     }
 
     public extractState(card: Card): State {
@@ -54,30 +54,42 @@ export class State {
         readonly templateName?: string,
         readonly styles?: string[],
         readonly response?: Response,
-        readonly acknowledgementAllowed?: boolean,
+        readonly acknowledgmentAllowed?: AcknowledgmentAllowedEnum,
         readonly name?: string,
         readonly color?: string,
-        readonly userCardTemplate?: string,
+        readonly userCard?: UserCard,
+        readonly description?: string,
+        readonly showDetailCardHeader?: boolean
     ) {
     }
 }
 
+export class UserCard {
+    constructor(
+        readonly template?: string,
+        readonly severityVisible?: boolean,
+        readonly startDateVisible?: boolean,
+        readonly endDateVisible?: boolean,
+    ) {
+    }
+}
 export class Response {
     /* istanbul ignore next */
     constructor(
         readonly lock?: boolean,
         readonly state?: string,
-        readonly btnColor?: ResponseBtnColorEnum,
         readonly btnText?: I18n,
         readonly externalRecipients?: string[]
     ) {
     }
 }
 
-export enum ResponseBtnColorEnum {
-    RED = 'RED',
-    GREEN = 'GREEN',
-    YELLOW = 'YELLOW'
+
+
+export enum AcknowledgmentAllowedEnum {
+    ALWAYS = 'Always',
+    NEVER = 'Never', 
+    ONLY_WHEN_RESPONSE_DISABLED_FOR_USER = 'OnlyWhenResponseDisabledForUser'
 }
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
