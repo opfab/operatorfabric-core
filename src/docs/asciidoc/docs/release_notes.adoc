@@ -1,14 +1,66 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
+= Version 2.0.0.RELEASE
 
-= Version SNAPSHOT
+== Overview
 
-//The release notes are managed in an outside repository to avoid constantly having conflicts when merging PRs on the
-//develop branch. See https://github.com/opfab/release-notes/.
-//The content from this repository is then pasted back to this file during the release process.
+We decided to make this a major version because in addition to providing new features, it also substancially changes (and hopefully improves!) the user experience (*new global style for the UI* and layout changes for some screens).
+
+The following features introduced as beta in previous versions are now *production-ready*:
+
+- User Cards
+- Agenda
+- Logging
+- Monitoring
+
+This version also introduces a *notification filter management* interface for users (see below for details).
+
+== Features
+
+- *Filter notification screen for user* (OC-1218, OC-1219, OC-1275, OC-1360): users can now filter the card they received in the feed with a configuration screen accessible throught the right menu
+- *Events representation in time* (OC-1241, OC-1242, OC-1299): handle repeating events & remove bubble for business period end.
+- [OC-1229] Send card to user using group of entities
+- [OC-1272] Add the possibility to show ack button only if action is disabled for the user. In consequence, the configuration of the acknowledgement feature has changed (link:https://opfab.github.io/documentation/current/docs/single_page_doc.html#_migration_guide_from_release_1_8_0_to_release_2_0_0[see migration documentation]).
+- [OC-1277] Add the possibility to set business menu visibility depending on group membership (link:https://opfab.github.io/documentation/current/reference_doc/#menu_entries[see documentation])
+- [OC-1289] Do not show child cards on the UI archive panel
+- [OC-1200] Add update reponse button when there is already a reponse for the entity
+- *User cards (Free Message)* (OC-1279, OC-1295, OC-1195): feature enhancement and changes to the card-sending form
+
+== Tasks
+
+=== Technical
+
+- [OC-1060] Upgrade to Java 11
+- [OC-1285] Update backend dependencies to last versions
+- [OC-824] DockerTagSnapshot task shouldn't tag latest as well
+
+=== Documentation
+
+- [OC-1206] Add config parameters for date and time rendering in the documentation
+- [OC-1234] Update documentation regarding entities and groups description
+- [OC-1286] Updated Kafka documentation
+- [OC-840], [OC-1298] Modify Getting Started documentation
+- [OC-1256] Add documentation for groups of entities
+- [OC-1101] Add user card documentation
+- [OC-1139] Add in documentation : describe notion of processes groups
+
+=== Misc
+
+- [OC-1250] Make externalRecipients-url param in cards-publication.yml not mandatory
+- [OC-1276] Remove double state definition in process endpoint
+- [OC-1183] Set login to lowercase
+- [OC-1309] Template communication improvement
+
+== Bugs
+
+- [OC-1355] Bug in creation/edit user with multiselect component
+- [OC-1363] Start UI even if no processes defined (add a warning in the log)
+- [OC-654] Correct deprecated code in cards-consultation
+
+
 
