@@ -62,6 +62,8 @@ export class MultiFilterComponent implements OnInit, OnChanges, OnDestroy {
             });
 
         }
+        this.parentForm.get(this.filterPath).setValue(this.selection);
+
         this.getLocale().pipe(takeUntil(this.unsubscribe$)).subscribe(locale => {
             this.translateService.use(locale);
             this.translateService.get(['multiFilter.searchPlaceholderText','multiFilter.selectAllText', 'multiFilter.unSelectAllText', 'multiFilter.filterSelectAllText', 'multiFilter.filterUnSelectAllText'])
@@ -80,6 +82,7 @@ export class MultiFilterComponent implements OnInit, OnChanges, OnDestroy {
 
     onDeSelectAll(items: any) {
         this.selection = [];
+        this.parentForm.get(this.filterPath).setValue(this.selection);
     }
 
     ngOnChanges() {
