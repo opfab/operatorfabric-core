@@ -19,7 +19,6 @@ import {environment} from '@env/environment';
 import {GuidService} from '@ofServices/guid.service';
 import {LightCard, PublisherType} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
-import {NotifyService} from '@ofServices/notify.service';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {CardSubscriptionClosed, CardSubscriptionOpen} from '@ofActions/cards-subscription.actions';
@@ -57,7 +56,6 @@ export class CardService {
 
 
     constructor(private httpClient: HttpClient,
-                private notifyService: NotifyService,
                 private guidService: GuidService,
                 private store: Store<AppState>,
                 private authService: AuthenticationService,
@@ -119,7 +117,6 @@ export class CardService {
         return Observable.create(observer => {
             try {
                 eventSource.onmessage = message => {
-                    this.notifyService.createNotification(`New cards are being pushed`);
                     if (!message) {
                         return observer.error(message);
                     }
