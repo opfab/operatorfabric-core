@@ -15,3 +15,5 @@ include::mock_pipeline.adoc[leveloffset=+1]
 include::migration_guide.adoc[leveloffset=+1]
 
 include::migration_guide_to_1.8.adoc[leveloffset=+1]
+
+include::migration_guide_to_2.0.adoc[leveloffset=+1]

@@ -132,7 +132,7 @@ git merge X.X.X.release <3>
 ----
 <1> Check out the `master` branch
 <2> Make sure your local copy is up to date
-<3> Merge the `X.X.X.release` branch into `master`
+<3> Merge the `X.X.X.release` branch into `master`, accepting changes from X.X.X.release in case of conflicts.
 
 IMPORTANT: If you also want the new docker images to be tagged `latest` (as should be the case for most release
 versions), you should add the keyword `ci_latest` to the merge commit message.
@@ -176,7 +176,7 @@ branch they should rely on the latest RELEASE version available on DockerHub. On
 previous steps has completed successfully, and you can see X.X.X.RELEASE images for all services on DockerHub, you should:
 
 . Remove your locally built X.X.X.RELEASE images if any
-. Run the config/demo docker-compose file to make sure it pulls the images from DockerHub and behaves as intended.
+. Run the config/docker docker-compose file to make sure it pulls the images from DockerHub and behaves as intended.
 
 People who want to experiment with OperatorFabric are pointed to this docker-compose so it's important to make sure
 that it's working correctly.
@@ -214,7 +214,7 @@ avoid confusion with the actual release commit tagged on `master`.
 
 ----
 git branch -d X.X.X.release <1>
-​git push origin --delete X.X.X.release <2>
 ----
 <1> Delete the branch locally
-<2> Remove it from GitHub
+
+NOTE: The branch will automatically be deleted from GitHub after it is merged (new repository policy).
