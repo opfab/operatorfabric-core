@@ -192,7 +192,6 @@ The global configuration is defined in config.json :
 	"version":"2",
 	"states":{
 		"messageState" : {
-			"detailTitle" : { "key" : "defaultProcess.title"},
 			"templateName" : "template",
 			"styles" : [ "style" ]
 		}
@@ -251,7 +250,7 @@ You should received the following JSON in response, describing your bundle.
 
 [source,JSON]
 ----
-{"id":"defaultProcess","name":null,"version":"2","uiVisibility":null,"states":{"messageState":{"responseData":null,"acknowledgementAllowed":true,"color":null,"name":null,"userCard":null,"detailTitle":{"key":"defaultProcess.title","parameters":null},"templateName":"template","styles":["style"],"acknowledgmentAllowed":true,"response":null}}}
+{"id":"defaultProcess","name":null,"version":"2","uiVisibility":null,"states":{"messageState":{"responseData":null,"acknowledgementAllowed":true,"color":null,"name":null,"userCard":null,"templateName":"template","styles":["style"],"acknowledgmentAllowed":true,"response":null}}}
 ----
 
 ==== Send a card 
@@ -309,19 +308,16 @@ of the bundle:
 	"version":"1",
 	"states":{
 		"criticalSituation-begin" : {
-			"detailTitle" : { "key" : "criticalSituation-begin.title"},
 			"templateName" : "criticalSituationTemplate",
 			"styles" : [ "style" ],
 			"acknowledgmentAllowed": "Always"
 		},
 		"criticalSituation-update" : {
-			"detailTitle" : { "key" : "criticalSituation-update.title"},
 			"templateName" : "criticalSituationTemplate",
 			"styles" : [ "style" ],
 			"acknowledgmentAllowed": "Always"
 		},
 		"criticalSituation-end" : {
-			"detailTitle" : { "key" : "criticalSituation-end.title"},
 			"templateName" : "endCriticalSituationTemplate",
 			"styles" : [ "style" ],
 			"acknowledgmentAllowed": "Always"

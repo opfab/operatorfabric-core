@@ -12,9 +12,6 @@
     "firstState": {
       "name":  "state.label",
       "color": "blue",
-      "detailTitle": {
-        "key": "template.title"
-      },
       "templateName": "operation",
       "acknowledgmentAllowed": "Never"
     }

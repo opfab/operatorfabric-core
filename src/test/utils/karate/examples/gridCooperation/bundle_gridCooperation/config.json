@@ -11,54 +11,36 @@
 			"name":  "timeout-FrEs-IGCC.title",
 			"acknowledgmentAllowed": "Always",
 			"color": "red",
-			"detailTitle": {
-						"key": "timeout-FrEs-IGCC.title"
-					},
 			"templateName": "timeout-FrEs-IGCC"
 		},
 		"action-FrEs-IGCC-export-0": {
 			"name":  "action-FrEs-IGCC-export-0.title",
 			"acknowledgmentAllowed": "Always",
 			"color": "red",
-			"detailTitle": {
-						"key": "action-FrEs-IGCC-export-0.title"
-					},
 			"templateName": "action-FrEs-IGCC-export-0"
 		},
 		"action-FrEs-IGCC-export-300": {
 			"name":  "action-FrEs-IGCC-export-300.title",
 			"acknowledgmentAllowed": "Always",
 			"color": "orange",
-			"detailTitle": {
-						"key": "action-FrEs-IGCC-export-300.title"
-					},
 			"templateName": "action-FrEs-IGCC-export-300"
 		},
 		"action-FrEs-IGCC-import-0": {
 			"name":  "action-FrEs-IGCC-import-0.title",
 			"acknowledgmentAllowed": "Always",
 			"color": "red",
-			"detailTitle": {
-						"key": "action-FrEs-IGCC-import-0.title"
-					},
 			"templateName": "action-FrEs-IGCC-import-0"
 		},
 		"action-FrEs-IGCC-import-300": {
 			"name":  "action-FrEs-IGCC-import-300.title",
 			"acknowledgmentAllowed": "Always",
 			"color": "orange",
-			"detailTitle": {
-						"key": "action-FrEs-IGCC-import-300.title"
-					},
 			"templateName": "action-FrEs-IGCC-import-300"
 		},
 		"compliant-FrEs-IGCC": {
 			"name":  "compliant-FrEs-IGCC.title",
 			"acknowledgmentAllowed": "Always",
 			"color": "green",
-			"detailTitle": {
-						"key": "compliant-FrEs-IGCC.title"
-					},
 			"templateName": "compliant-FrEs-IGCC"
 		}
 	}

@@ -7,9 +7,6 @@
   ],
   "states": {
     "testState": {
-      "detailTitle": {
-        "key": "template.title"
-      },
       "templateName": "template",
       "actions": {
         "testAction": {

@@ -65,9 +65,6 @@ A card can have a response only if it's in a process/state that is configured fo
           "key": "question.button.text"
         }
       },
-      "detailTitle": {
-        "key": "question.title"
-      },
       "templateName": "question",
       "styles": [
         "style"

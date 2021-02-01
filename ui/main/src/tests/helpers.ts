@@ -91,7 +91,7 @@ export function getOneRandomProcess(processTemplate?:any): Process {
         const titleKey =  getRandomI18nData();
         const templateName = 'template1';
         states[getRandomAlphanumericValue(3,10)]=
-            new State(titleKey, templateName, ['style1','style2']);
+            new State(templateName, ['style1','style2']);
     }
 
 
