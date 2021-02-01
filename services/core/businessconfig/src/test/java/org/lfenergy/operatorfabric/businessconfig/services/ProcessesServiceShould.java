@@ -25,7 +25,9 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
+import net.minidev.json.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.AfterAll;
@@ -38,8 +40,13 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.businessconfig.application.IntegrationTestApplication;
 import org.lfenergy.operatorfabric.businessconfig.model.Process;
+import org.lfenergy.operatorfabric.businessconfig.model.ProcessGroup;
+import org.lfenergy.operatorfabric.businessconfig.model.ProcessGroupData;
+import org.lfenergy.operatorfabric.businessconfig.model.ProcessGroupsData;
+import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -201,6 +208,23 @@ class ProcessesServiceShould {
           "template")
           .getInputStream()
     );
+  }
+
+  @Test
+  public void testCheckNoDuplicateProcessInUploadedFile() {
+
+      ProcessGroupData gp1 = ProcessGroupData.builder().id("gp1").processes(Arrays.asList("process1", "process2")).build();
+      ProcessGroupData gp2 = ProcessGroupData.builder().id("gp2").processes(Arrays.asList("process3", "process4")).build();
+      ProcessGroupData gp3 = ProcessGroupData.builder().id("gp3").processes(Arrays.asList("process5", "process4")).build();
+      ProcessGroupData gp4 = ProcessGroupData.builder().id("gp4").processes(Arrays.asList("process7", "process8", "process7")).build();
+
+      ProcessGroupsData groups_without_duplicate = ProcessGroupsData.builder().groups(Arrays.asList(gp1, gp2)).build();
+      ProcessGroupsData groups_with_duplicate = ProcessGroupsData.builder().groups(Arrays.asList(gp2, gp3)).build();
+      ProcessGroupsData groups_with_duplicate_in_the_same_group = ProcessGroupsData.builder().groups(Arrays.asList(gp1, gp4)).build();
+
+      assertThat(service.checkNoDuplicateProcessInUploadedFile(groups_without_duplicate)).isTrue();
+      assertThat(service.checkNoDuplicateProcessInUploadedFile(groups_with_duplicate)).isFalse();
+      assertThat(service.checkNoDuplicateProcessInUploadedFile(groups_with_duplicate_in_the_same_group)).isFalse();
   }
 
   @Nested

@@ -340,11 +340,15 @@ section which resumes how to resolve common problems.
 
 == Processes groups
 
-OperatorFabric offers the possibility of defining processes groups. These groups have an impact only on the UI, for example on the notification configuration screen, by offering a more organized view of all the processes.
+OperatorFabric offers the possibility of defining process groups. These groups have an impact only on the UI, for
+example on the notification configuration screen, by offering a more organized view of all the processes.
+
+IMPORTANT: A process can only belong to one process group.
 
 To define processes groups, you have to upload a file via a `POST` http request as described in the
-ifdef::single-page-doc[<<../api/businessconfig/#/businessconfig/uploadProcessgroups, Businessconfig Service API documentation>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/api/businessconfig/#/businessconfig/uploadProcessgroups, Businessconfig Service API documentation>>]
+
+ifdef::single-page-doc[link:../api/businessconfig/index.html#/businessconfig/uploadProcessgroups[Businessconfig Service API documentation]]
+ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/businessconfig/index.html#/default/uploadProcessgroups[Businessconfig Service API documentation]]
 .
 
 *Example*

@@ -1,0 +1,29 @@
+{
+  "groups": [
+    {
+      "id": "processgroup1",
+      "processes": [
+        "id_process1",
+        "id_process2"
+      ]
+    },
+    {
+      "id": "processgroup2",
+      "processes": [
+        "id_process3",
+        "id_process4",
+        "id_process3"
+      ]
+    }
+  ],
+  "locale": {
+    "en": {
+      "processgroup1": "Process Group 1",
+      "processgroup2": "Process Group 2"
+    },
+    "fr": {
+      "processgroup1": "Groupe de process 1",
+      "processgroup2": "Groupe de process 2"
+    }
+  }
+}
