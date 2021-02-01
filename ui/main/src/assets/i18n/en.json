@@ -157,7 +157,7 @@
     "summary": "SUMMARY",
     "description": "DESCRIPTION",
     "sender": "ACTOR",
-    "noResult": "No result",
+    "noResult": "Your search did not match any results.",
     "ExportTOExcel": "Export data",
     "resultsNumber":"Results number"
   },

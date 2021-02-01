@@ -157,7 +157,7 @@
     "summary": "RESUME",
     "description": "DESCRIPTION",
     "sender": "EMETTEUR",
-    "noResult": "Aucun résultat",
+    "noResult": "Votre recherche ne correspond à aucun résultat.",
     "ExportTOExcel": "Exporter les données",
     "resultsNumber":"Nombre de résultats"
   },
