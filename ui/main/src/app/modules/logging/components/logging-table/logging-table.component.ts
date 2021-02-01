@@ -21,7 +21,7 @@ import { catchError, takeUntil } from 'rxjs/operators';
 import { Observable, of, Subject } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { ExportService } from '@ofServices/export.service';
-import { UpdateLoggingPage } from '@ofStore/actions/logging.actions';
+import { FlushLoggingResult, UpdateLoggingPage } from '@ofStore/actions/logging.actions';
 import { ConfigService } from '@ofServices/config.service';
 
 
@@ -125,6 +125,7 @@ export class LoggingTableComponent implements OnInit, OnDestroy {
 
 
     ngOnDestroy() {
+        this.store.dispatch(new FlushLoggingResult());
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }
