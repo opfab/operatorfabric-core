@@ -1,4 +1,4 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2020-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,6 +20,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { SettingsService } from '@ofServices/settings.service';
 import {CardService} from '@ofServices/card.service';
 import {EmptyLightCards} from '@ofActions/light-card.actions';
+import {TranslateService} from "@ngx-translate/core";
 
 
 @Component({
@@ -32,10 +33,11 @@ export class FeedconfigurationComponent implements OnInit {
     feedConfigurationForm: FormGroup;
 
     processesDefinition: Process[];
-    processGroups: {idGroup: string, processes: string[]}[];
-    processesWithoutGroup: string[];
+    processGroupsData: {id: string, groupLabel?: string, processes: string[]}[];
+    processesWithoutGroup: { idProcess: string,
+                             processLabel: string }[];
     currentUserWithPerimeters: UserWithPerimeters;
-    processesStatesLabels: Map<string, { processI18n: string,
+    processesStatesLabels: Map<string, { processLabel: string,
                                          states:
                                              { stateLabel: string,
                                                stateControlIndex: number
@@ -56,9 +58,10 @@ export class FeedconfigurationComponent implements OnInit {
                 private processesService: ProcessesService,
                 private modalService: NgbModal,
                 private settingsService: SettingsService,
-                private cardService: CardService
+                private cardService: CardService,
+                private translateService: TranslateService
     ) {
-        this.processesStatesLabels = new Map<string, {processI18n: string,
+        this.processesStatesLabels = new Map<string, {processLabel: string,
                                                       states:
                                                           { stateLabel: string,
                                                             stateControlIndex: number
@@ -75,7 +78,7 @@ export class FeedconfigurationComponent implements OnInit {
     }
 
     private findInProcessGroups(processIdToFind: string): boolean {
-        for (const processGroup of this.processGroups.values()) {
+        for (const processGroup of this.processGroupsData.values()) {
             if (processGroup.processes.includes(processIdToFind))
                 return true;
         }
@@ -84,9 +87,16 @@ export class FeedconfigurationComponent implements OnInit {
 
     private makeProcessesWithoutGroup() {
         this.processesDefinition.forEach(process => {
-            if (! this.findInProcessGroups(process.id))
-                this.processesWithoutGroup.push(process.id);
+            if (! this.findInProcessGroups(process.id)) {
+                let processLabel = (!!process.name) ? this.getI18nPrefixFromProcess(process) + process.name :
+                    this.getI18nPrefixFromProcess(process) + process.id;
+
+                this.translateService.get(processLabel).subscribe(translate => { processLabel = translate; });
+                this.processesWithoutGroup.push({idProcess: process.id,
+                                                 processLabel: processLabel});
+            }
         });
+        this.processesWithoutGroup.sort((obj1, obj2) => this.compareObj(obj1.processLabel, obj2.processLabel));
     }
 
     private addCheckboxesInFormArray() {
@@ -116,13 +126,16 @@ export class FeedconfigurationComponent implements OnInit {
                 const statesArray: { stateLabel: string, stateControlIndex: number }[]
                     = new Array<{stateLabel: string, stateControlIndex: number}>();
 
-                const processI18n = (!!process.name) ? this.getI18nPrefixFromProcess(process) + process.name :
+                let processLabel = (!!process.name) ? this.getI18nPrefixFromProcess(process) + process.name :
                     this.getI18nPrefixFromProcess(process) + process.id;
+                this.translateService.get(processLabel).subscribe(translate => { processLabel = translate; });
 
                 for (const key in process.states) {
                     const value = process.states[key];
-                    const stateLabel = (!!value.name) ? this.getI18nPrefixFromProcess(process) + value.name :
+                    let stateLabel = (!!value.name) ? this.getI18nPrefixFromProcess(process) + value.name :
                         this.getI18nPrefixFromProcess(process) + key;
+
+                    this.translateService.get(stateLabel).subscribe(translate => { stateLabel = translate; });
 
                     statesArray.push({stateLabel: stateLabel, stateControlIndex: stateControlIndex});
                     this.preparedListOfProcessesStates.push({
@@ -130,7 +143,8 @@ export class FeedconfigurationComponent implements OnInit {
                         stateId: key});
                     stateControlIndex++;
                 }
-                this.processesStatesLabels.set(process.id, {processI18n: processI18n,
+                statesArray.sort((obj1, obj2) => this.compareObj(obj1.stateLabel, obj2.stateLabel));
+                this.processesStatesLabels.set(process.id, {processLabel: processLabel,
                                                             states: statesArray});
             }
         }
@@ -145,7 +159,18 @@ export class FeedconfigurationComponent implements OnInit {
     ngOnInit() {
         this.userService.currentUserWithPerimeters().subscribe(result => {
             this.currentUserWithPerimeters = result;
-            this.processGroups = this.processesService.getProcessGroups();
+
+            this.processGroupsData = this.processesService.getProcessGroups();
+            this.processGroupsData.forEach(group => {
+                this.translateService.get(group.id).subscribe(translate => {
+                    group.groupLabel = translate;
+                });
+
+                group.processes.sort();
+            });
+
+            this.processGroupsData.sort((obj1, obj2) => this.compareObj(obj1.groupLabel, obj2.groupLabel));
+
             this.computePreparedListOfProcessesStatesAndProcessesStatesLabels();
             this.makeProcessesWithoutGroup();
             this.addCheckboxesInFormArray();
@@ -200,5 +225,13 @@ export class FeedconfigurationComponent implements OnInit {
 
     open(content) {
         this.modalRef = this.modalService.open(content);
+    }
+
+    compareObj(obj1, obj2) {
+        if (obj1 > obj2)
+            return 1;
+        if (obj1 < obj2)
+            return -1;
+        return 0;
     }
 }
