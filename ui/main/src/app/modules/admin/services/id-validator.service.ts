@@ -1,4 +1,5 @@
-/* Copyright (c) 2018-2020, RTEI (http://www.rte-international.com)
+/* Copyright (c) 2020, RTEi (http://www.rte-international.com)
+ * Copyright (c) 2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,8 +8,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { AbstractControl, ValidationErrors } from '@angular/forms';
-import { CrudService } from '@ofServices/crud-service';
+import {AbstractControl, ValidationErrors} from '@angular/forms';
+import {CrudService} from '@ofServices/crud-service';
 
 
 export class IdValidatorService {

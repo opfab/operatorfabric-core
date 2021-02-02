@@ -1,4 +1,5 @@
-/* Copyright (c) 2018-2020, RTEI (http://www.rte-international.com)
+/* Copyright (c) 2020, RTEi (http://www.rte-international.com)
+ * Copyright (c) 2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,13 +8,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { EntitiesService } from '@ofServices/entities.service';
-import { GroupsService } from '@ofServices/groups.service';
-import { DataTableShareService } from 'app/modules/admin/services/data.service';
-import { IdValidatorService } from 'app/modules/admin/services/id-validator.service';
+
+import {Component, Input, OnInit} from '@angular/core';
+import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {EntitiesService} from '@ofServices/entities.service';
+import {GroupsService} from '@ofServices/groups.service';
+import {IdValidatorService} from 'app/modules/admin/services/id-validator.service';
+import {AdminTableType} from "../../table/admin-table.component";
 
 @Component({
   selector: 'of-edit-group-modal',
@@ -31,11 +33,10 @@ export class EditEntityGroupModalComponent implements OnInit {
   });
 
   @Input() row: any;
-  @Input() type: string;
+  @Input() type: AdminTableType;
 
   constructor(
-    public activeModal: NgbActiveModal,
-    private data: DataTableShareService,
+    private activeModal: NgbActiveModal,
     private groupsService: GroupsService,
     private entitiesService: EntitiesService) {
   }
@@ -48,16 +49,18 @@ export class EditEntityGroupModalComponent implements OnInit {
 
   update() {
     this.cleanForm();
-    if (this.type === 'entity') {
+    // We call the activeModal "close" method and not "dismiss" to indicate that the modal was closed because the
+    // user chose to perform an action (here, update the selected item).
+    // This is important as code in the corresponding table components relies on the resolution of the
+    // `NgbMobalRef.result` promise to trigger a refresh of the data shown on the table.
+    if (this.type === AdminTableType.ENTITY) {
       this.entitiesService.update(this.form.value).subscribe(() => {
-        this.data.changeEntityRow(this.form.value);
-        this.activeModal.dismiss('Update click');
+        this.activeModal.close('Update button clicked on ' + this.type + ' modal');
       });
     }
-    if (this.type === 'group') {
+    if (this.type === AdminTableType.GROUP) {
       this.groupsService.update(this.form.value).subscribe(() => {
-        this.data.changeGroupRow(this.form.value);
-        this.activeModal.dismiss('Update click');
+        this.activeModal.close('Update button clicked on ' + this.type + ' modal');
       });
     }
   }

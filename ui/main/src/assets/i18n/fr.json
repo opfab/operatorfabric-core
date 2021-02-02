@@ -247,7 +247,8 @@
     "btnUnlock": "MODIFIER REPONSE",
     "error": {
       "submit": "La carte n'a pas pu être envoyée",
-      "form": "Le formulaire n'est pas correctement rempli"
+      "form": "Le formulaire n'est pas correctement rempli",
+      "ack": "Impossible d'agir sur l'acquittement de cette carte en raison d'un problème technique"
     },
     "submitSuccess": "Votre réponse est confirmée. Merci!",
     "answers": "Réponses",
@@ -263,71 +264,83 @@
   },
   "admin": {
     "input": {
-       "group": {
-         "delete": "Voulez vous vraiment supprimer le group",
-         "add":"Ajouter un nouveau groupe"
+      "group": {
+        "id": "Id",
+        "name": "Nom",
+        "description": "Description",
+        "confirmDelete": "Voulez vous vraiment supprimer le groupe",
+        "add":"Ajouter un nouveau groupe"
       },
       "entity": {
-         "delete": "Voulez vous vraiment supprimer l'entité",
-         "add":"Ajouter une nouvelle entité"
+        "id": "Id",
+        "name": "Nom",
+        "description": "Description",
+        "confirmDelete": "Voulez vous vraiment supprimer l'entité",
+        "add":"Ajouter une nouvelle entité"
       },
       "user": {
         "login": "Identifiant",
-        "lastname": "Nom",
-        "firstname": "Prénom",
+        "lastName": "Nom",
+        "firstName": "Prénom",
         "groups": "Groupes",
-        "entities": "Entitiés",
-        "add": "Ajouter un nouvel utilisateur",
-        "edit": "Editer",
-        "delete": "Supprimer",
-        "save": "SAUVEGARDER LES CHANGEMENTS",
-        "close": "FERMER",
-        "cancel": "ABANDONNER",
-        "confirm":"Confirmez..",
-        "user":"utilisateur",
-        "filter": "filtrer par ",
-        "filterAll": "filtrer toutes les colonnes"
+        "entities": "Entités",
+        "confirmDelete": "Voulez vous vraiment supprimer l'utilisateur",
+        "add":"Ajouter un nouvel utilisateur"
       },
-      "delete" :"Voulez vous vraiment supprimer l'utilisateur",
+      "edit": "Editer",
+      "delete": "Supprimer",
+      "save": "SAUVEGARDER LES CHANGEMENTS",
+      "close": "FERMER",
+      "cancel": "ABANDONNER",
+      "confirm":"Confirmez...",
       "login": {
         "required": "L'identifiant est obligatoire.",
         "minLength": "L'identifiant doit avoir au moins 4 caractères.",
         "maxLength": "L'identifiant doit avoir au maximum 20 caractères.",
-        "alreadyTaken": "Cet identifiant est déjà pris."
+        "alreadyTaken": "Cet identifiant existe déjà."
       },
-      "firstname": {
+      "firstName": {
         "required": "Le prénom est obligatoire.",
         "maxLength": "Le prénom doit avoir  au maximum 20 caractères."
       },
-      "lastname": {
+      "lastName": {
         "required": "Le nom est obligatoire.",
         "maxLength": "Le nom doit avoir  au maximum 20 caractères."
       },
-     "id": {
+      "id": {
         "required": "L'identifiant est obligatoire.",
         "minLength": "L'identifiant doit avoir au moins 2 caractères.",
         "maxLength": "L'identifiant doit avoir au maximum 20 caractères.",
-        "alreadyTaken": "Cet identifiant est déjà pris.",
-        "label":"Id"
+        "alreadyTaken": "Cet identifiant existe déjà."
       },
       "name": {
         "required": "Le nom est obligatoire.",
-        "maxLength": "Le nom doit avoir  au maximum 20 caractères.",
+        "maxLength": "Le nom doit avoir au maximum 20 caractères.",
         "label":"Nom"
       },
       "description": "Description",
-      "lines": "lines"
+      "lines": "lignes par page"
     },
     "tabs": {
       "users": "Gestion des utilisateurs",
       "groups": "Gestion des groupes",
       "entities": "Gestion des entités"
-    },
-    "pagination": {
-      "firstText": "Premier",
-      "lastText": "Dernier",
-      "nextText": "Suivant",
-      "prevText": "Précédent"
     }
+  },
+  "ag-grid": {
+    "loadingOoo": "Chargement en cours...",
+    "noRowsToShow": "Aucune donnée",
+    "filterOoo": "Filtrer...",
+    "equals": "Egal à",
+    "notEqual": "N'est pas égal à",
+    "contains": "Contient",
+    "notContains": "Ne contient pas",
+    "startsWith": "Commence par",
+    "endsWith": "Finit par",
+    "andCondition": "ET",
+    "orCondition": "OU",
+    "to": "à",
+    "of": "de",
+    "page": "Page"
   }
 }

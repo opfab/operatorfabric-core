@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTEI (http://www.rte-international.com)
+/* Copyright (c) 2020, RTEi (http://www.rte-international.com)
  * Copyright (c) 2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -8,18 +8,20 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
-import { AppState } from '@ofStore/index';
-import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {Store} from '@ngrx/store';
+import {TranslateService} from '@ngx-translate/core';
+import {AppState} from '@ofStore/index';
+import {buildSettingsOrConfigSelector} from '@ofStore/selectors/settings.x.config.selectors';
+import {Observable, Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'of-admin',
-  templateUrl: './admin.component.html'
+  templateUrl: './admin.component.html',
+  styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent implements OnInit, OnDestroy {
 
@@ -30,6 +32,11 @@ export class AdminComponent implements OnInit, OnDestroy {
   entitiesLabel: string;
   groupsLabel: string;
 
+  private paginationDefaultPageSize = 10;
+  private paginationPageSizeOptions = [5, 10, 25, 50, 100];
+  public paginationPageSize = this.paginationDefaultPageSize;
+
+  //TODO Why do we need to use translate.get and subscriptions rather than the translate directive like everywhere else?
   constructor(private route: ActivatedRoute, protected store: Store<AppState>, protected translate: TranslateService) {
     this.getLocale().pipe(takeUntil(this.unsubscribe$)).subscribe(locale => {
       this.translate.use(locale);
@@ -58,6 +65,12 @@ export class AdminComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  onPageSizeChanged() {
+    // Cast to get rid of "Property 'value' does not exist on type 'HTMLElement'."
+    const value = (<HTMLInputElement> document.getElementById('page-size-select')).value;
+    this.paginationPageSize = Number(value);
   }
 
 }

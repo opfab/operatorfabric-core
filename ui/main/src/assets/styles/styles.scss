@@ -1,4 +1,5 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2020, RTEi (http://www.rte-international.com)
+ * Copyright (c) 2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,15 +8,17 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 /* You can add global styles to this file, and also import other style files */
 
 @import "variables";
 /* import bootstrap*/
 @import '../../../node_modules/bootstrap/scss/bootstrap.scss';
 @import "navbar.scss";
-@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+//@import '../../../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+@import "../../../node_modules/ag-grid-community/dist/styles/ag-grid.css";
+@import "../../../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
+@import "../../../node_modules/ag-grid-community/dist/styles/ag-theme-alpine/sass/ag-theme-alpine-mixin.scss";
 
 
 body {
@@ -43,18 +46,18 @@ body {
 
 ::-webkit-scrollbar-track {
   border-radius: 8px;
-  background: var(--opfab-scrollbar-bgcolor); 
+  background: var(--opfab-scrollbar-bgcolor);
   border: solid 1px var(--opfab-scrollbar-border-color);
 }
- 
+
 ::-webkit-scrollbar-thumb {
-  background: var(--opfab-scrollbar-bar-bgcolor); 
+  background: var(--opfab-scrollbar-bar-bgcolor);
     border-radius: 8px;
     border: solid 1px var(--opfab-scrollbar-bar-border-color);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--opfab-scrollbar-bar-bgcolor); 
+  background: var(--opfab-scrollbar-bar-bgcolor);
     border-radius: 8px;
     border: solid 1px var(--opfab-scrollbar-bar-border-color);
 }
@@ -74,14 +77,14 @@ body {
   font-size: 14px;
   font-weight: 600;
   margin: 10px;
-  padding: 10px; 
+  padding: 10px;
   min-width: 150px;
 }
 
 .opfab-btn:hover {
   background-color: #2268FF;
 }
- 
+
 .opfab-btn:disabled {
   color: #606267 ;
   background-color: var(--opfab-button-disable-bgcolor);
@@ -97,7 +100,7 @@ body {
   font-size: 14px;
   font-weight: 600;
   margin: 10px;
-  padding: 10px; 
+  padding: 10px;
   min-width: 150px;
 }
 
@@ -125,7 +128,7 @@ body {
   color:var(--opfab-input-text-color);
   background-color: var(--opfab-bgcolor-darker);
   box-sizing: border-box;
-  
+
   border: 0.5px solid var(--opfab-form-border-color);
   border-radius: 3px;
   font-size: 13px;
@@ -154,7 +157,7 @@ body {
   padding-left: 10px;
   padding-right: 10px;
   position: absolute;
-  font-size: 11px;  
+  font-size: 11px;
   top: -10px;
   left:10;
   color: var(--opfab-form-label-text-color);
@@ -210,27 +213,27 @@ body {
   filter: none;
 }
 
-  // Chrome  : to avoid browser styling when auto-filling input field (example password) 
+  // Chrome  : to avoid browser styling when auto-filling input field (example password)
   // see https://stackoverflow.com/questions/2781549/removing-input-background-colour-for-chrome-autocomplete
   input:-webkit-autofill,
-  input:-webkit-autofill:hover, 
-  input:-webkit-autofill:focus, 
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
   input:-webkit-autofill:active  {
       -webkit-box-shadow: 0 0 0 30px var(--opfab-bgcolor-darker) inset !important;
   }
   input:-webkit-autofill {
     -webkit-text-fill-color: var(--opfab-text-color) !important;
   }
-  
 
-  
+
+
 
 .opfab-input > label {
   margin-left: 10px;
   padding-left: 10px;
   padding-right: 10px;
   position: absolute;
-  font-size: 11px;  
+  font-size: 11px;
   //top: 0px;
   margin-top: -10px;
   left:10;
@@ -288,7 +291,7 @@ body {
   width: 17px;
   border: 1px solid #979797;
   border-radius: 2px;
-  
+
 }
 
 /* Create the opfab-checkbox-checkmark/indicator (hidden when not checked) */
@@ -370,7 +373,7 @@ body {
 /* Style the indicator (dot/circle) */
 .opfab-radio-button .opfab-radio-button-checkmark:after {
   top: 17%;
-  left: 17%; 
+  left: 17%;
 	width: 65%;
 	height: 65%;
 	border-radius: 50%;
@@ -388,7 +391,7 @@ body {
   color:var(--opfab-input-text-color);
   background-color: var(--opfab-bgcolor-darker);
   box-sizing: border-box;
-  
+
   border: 1px solid var(--opfab-form-border-color);
   border-radius: 3px;
   font-size: 13px;
@@ -410,7 +413,7 @@ body {
   padding-left: 10px;
   padding-right: 10px;
   position: absolute;
-  font-size: 11px;  
+  font-size: 11px;
   margin-top: -10px;
   left:10;
   color: var(--opfab-form-label-text-color);
@@ -470,7 +473,7 @@ body {
   padding-left: 10px;
   padding-right: 10px;
   position: absolute;
-  font-size: 11px;  
+  font-size: 11px;
   margin-top: -10px;
   left:10;
   color: var(--opfab-form-label-text-color);
@@ -525,7 +528,7 @@ type-ahead > .badge-primary {
   padding-left: 10px;
   padding-right: 10px;
   position: absolute;
-  font-size: 11px;  
+  font-size: 11px;
   top: -10px;
   left:10;
   color: var(--opfab-form-label-text-color);
@@ -572,15 +575,15 @@ type-ahead > .badge-primary {
 
 .opfab-form-lighter {
   .opfab-input,
-  .opfab-input > input, 
-  .opfab-input label , 
-  .opfab-textarea, 
+  .opfab-input > input,
+  .opfab-input label ,
+  .opfab-textarea,
   .opfab-textarea  > textarea,
-  .opfab-textarea label , 
-  .form-control , 
-  .form-control:disabled , 
+  .opfab-textarea label ,
+  .form-control ,
+  .form-control:disabled ,
   .opfab-input > input ,
-  .opfab-multiselect, 
+  .opfab-multiselect,
   .opfab-multiselect > label,
   .opfab-multiselect  .c-btn,
   .opfab-select,
@@ -588,11 +591,11 @@ type-ahead > .badge-primary {
   .opfab-select > select option,
   .opfab-select > label,
   .opfab-input-type-ahead,
-  .opfab-input-type-ahead > input, 
-  .opfab-input-type-ahead label , 
+  .opfab-input-type-ahead > input,
+  .opfab-input-type-ahead label ,
   type-ahead > input{
     background-color: var(--opfab-bgcolor);
-  } 
+  }
   type-ahead > .badge-primary {
     background-color: var(--opfab-bgcolor-darker);
   }
@@ -600,20 +603,20 @@ type-ahead > .badge-primary {
   .opfab-multiselect .selected-list .c-angle-down svg, .opfab-multiselect .selected-list .c-angle-up svg{
     fill: var(--opfab-bgcolor);
   }
-  
+
 }
 
 // Table 
 
 
 .opfab-table {
-  
+
   background-color: var(--opfab-bgcolor-darker);
   color: var(--opfab-lightcard-detail-textcolor);
   padding-left: 5px;
   padding-right: 5px;
   padding-bottom: 5px;
-  
+
 
   table {
     text-align: left;
@@ -781,4 +784,23 @@ html, body { height: 100%; }
   .arrow::after{
     border-bottom: 0px;
   }
+}
+
+// OpFab customization of the alpine theme for ag-grid
+// It allows the colors to match the ones from the OpFab global style and to respond to the night/day mode
+.opfab-ag-grid-theme {
+  @include ag-theme-alpine((
+          background-color: var(--opfab-bgcolor),
+          header-background-color: var(--opfab-bgcolor-darker),
+          odd-row-background-color: var(--opfab-bgcolor-darker),
+          modal-overlay-background-color: var(--opfab-bgcolor),
+          data-color: var(--opfab-text-color),
+          header-foreground-color: var(--opfab-text-color),
+          secondary-foreground-color: var(--opfab-text-color),
+          border-color: var(--opfab-table-border-color),
+          input-disabled-background-color: var(--opfab-button-disable-bgcolor),
+          input-disabled-border-color: var(--opfab-button-disable-bgcolor),
+          header-column-resize-handle-color: var(--opfab-table-border-color)
+));
+
 }

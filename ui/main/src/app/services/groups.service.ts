@@ -7,19 +7,18 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { Injectable } from '@angular/core';
-import { CrudService } from './crud-service';
-import { Observable } from 'rxjs';
-import { Group } from '@ofModel/group.model';
-import { environment } from '@env/environment';
-import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { ErrorService } from './error-service';
+import {CrudService} from './crud-service';
+import {Observable} from 'rxjs';
+import {Group} from '@ofModel/group.model';
+import {environment} from '@env/environment';
+import {HttpClient} from '@angular/common/http';
+import {catchError} from 'rxjs/operators';
+import {Injectable} from "@angular/core";
 
 @Injectable({
   providedIn: 'root'
 })
-export class GroupsService extends ErrorService implements CrudService {
+export class GroupsService extends CrudService {
 
   readonly groupsUrl: string;
 
