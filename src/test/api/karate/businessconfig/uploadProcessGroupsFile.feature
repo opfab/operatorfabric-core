@@ -25,6 +25,22 @@ Feature: uploadProcessGroups
     And status 403
 
 
+  Scenario: Post process groups file with duplicate process
+    Given url opfabUrl + '/businessconfig/processgroups'
+    And header Authorization = 'Bearer ' + authToken
+    And multipart file file = { read: 'resources/processgroups2_with_duplicate_in_different_groups.json' }
+    When method post
+    And status 400
+
+
+  Scenario: Post process groups file with duplicate process in the same group
+    Given url opfabUrl + '/businessconfig/processgroups'
+    And header Authorization = 'Bearer ' + authToken
+    And multipart file file = { read: 'resources/processgroups2_with_duplicate_in_same_group.json' }
+    When method post
+    And status 400
+
+
   Scenario: Post process groups file
     Given url opfabUrl + '/businessconfig/processgroups'
     And header Authorization = 'Bearer ' + authToken

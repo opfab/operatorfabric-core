@@ -47,6 +47,20 @@ task copyProcessGroupsFile(type: Exec){
     args "-c", "cp processgroups.json $project.projectDir/build/test-data/"
 }
 
+task copyProcessGroupsFile2(type: Exec) {
+    description 'copy processgroups_with_duplicate_in_same_group.json file for businessconfig party configuration data for tests in build/test-data'
+    workingDir "$project.projectDir/src/test/data/"
+    executable "bash"
+    args "-c", "cp processgroups_with_duplicate_in_same_group.json $project.projectDir/build/test-data/"
+}
+
+task copyProcessGroupsFile3(type: Exec) {
+    description 'copy processgroups_with_duplicate_in_different_groups.json file for businessconfig party configuration data for tests in build/test-data'
+    workingDir "$project.projectDir/src/test/data/"
+    executable "bash"
+    args "-c", "cp processgroups_with_duplicate_in_different_groups.json $project.projectDir/build/test-data/"
+}
+
 task createDevData(type: Copy){
     description 'prepare data in build/test-data for running bootRun task during development'
     from 'src/main/docker/volume/businessconfig-storage'
@@ -86,8 +100,10 @@ createDevData.dependsOn prepareDevDataDir
 compressBundle1Data.dependsOn prepareTestDataDir
 compressBundle2Data.dependsOn prepareTestDataDir
 copyProcessGroupsFile.dependsOn prepareTestDataDir
-test.dependsOn prepareTestDataDir,compressBundle1Data,compressBundle2Data,copyProcessGroupsFile
-unitTest.dependsOn prepareTestDataDir,compressBundle1Data,compressBundle2Data,copyProcessGroupsFile
+copyProcessGroupsFile2.dependsOn prepareTestDataDir
+copyProcessGroupsFile3.dependsOn prepareTestDataDir
+test.dependsOn prepareTestDataDir,compressBundle1Data,compressBundle2Data,copyProcessGroupsFile,copyProcessGroupsFile2,copyProcessGroupsFile3
+unitTest.dependsOn prepareTestDataDir,compressBundle1Data,compressBundle2Data,copyProcessGroupsFile,copyProcessGroupsFile2,copyProcessGroupsFile3
 bootRun.dependsOn createDevData
 
 // <<<<< Test data tasks

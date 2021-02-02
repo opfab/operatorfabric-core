@@ -1,0 +1,29 @@
+{
+  "groups": [
+    {
+      "id": "processgroupKarate3",
+      "processes": [
+        "id_process5",
+        "id_process6"
+      ]
+    },
+    {
+      "id": "processgroupKarate4",
+      "processes": [
+        "id_process7",
+        "id_process8",
+	"id_process7"
+      ]
+    }
+  ],
+  "locale": {
+    "en": {
+      "processgroupKarate3": "Process Group Karate 3",
+      "processgroupKarate4": "Process Group Karate 4"
+    },
+    "fr": {
+      "processgroupKarate3": "Groupe de process Karate 3",
+      "processgroupKarate4": "Groupe de process Karate 4"
+    }
+  }
+}
