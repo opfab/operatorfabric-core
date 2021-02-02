@@ -8,16 +8,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Component, Input, OnInit} from '@angular/core';
-import {User} from '@ofModel/user.model';
-import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {UserService} from '@ofServices/user.service';
-import {GroupsService} from '@ofServices/groups.service';
-import {EntitiesService} from '@ofServices/entities.service';
-import {Entity} from '@ofModel/entity.model';
-import {Group} from '@ofModel/group.model';
-import {IdValidatorService} from 'app/modules/admin/services/id-validator.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import { User } from '@ofModel/user.model';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { UserService } from '@ofServices/user.service';
+import { GroupsService } from '@ofServices/groups.service';
+import { EntitiesService } from '@ofServices/entities.service';
+import { Entity } from '@ofModel/entity.model';
+import { Group } from '@ofModel/group.model';
 
 @Component({
   selector: 'of-edit-user-modal',
@@ -28,8 +27,7 @@ export class EditUserModalComponent implements OnInit {
 
   form = new FormGroup({
     login: new FormControl(''
-      , [Validators.required, Validators.minLength(4), Validators.maxLength(20)]
-      , this.existsId.bind(this)),
+      , [Validators.required, Validators.minLength(4), Validators.maxLength(20)]),
     firstName: new FormControl('', [Validators.required, Validators.maxLength(20)]),
     lastName: new FormControl('', [Validators.required, Validators.maxLength(20)]),
     groups: new FormControl([]),
@@ -115,17 +113,6 @@ export class EditUserModalComponent implements OnInit {
       this.groupsList = response;
     });
 
-  }
-
- existsId(control: AbstractControl) {
-    // if create
-    if (!this.row) {
-      return new IdValidatorService(this.crudService).isIdAvailable(control);
-    } else {
-      return new Promise((resolve) => {
-        resolve(null);
-      });
-    }
   }
 
   dismissModal(reason : string) : void {

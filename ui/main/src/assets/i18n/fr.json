@@ -296,8 +296,7 @@
       "login": {
         "required": "L'identifiant est obligatoire.",
         "minLength": "L'identifiant doit avoir au moins 4 caractères.",
-        "maxLength": "L'identifiant doit avoir au maximum 20 caractères.",
-        "alreadyTaken": "Cet identifiant existe déjà."
+        "maxLength": "L'identifiant doit avoir au maximum 20 caractères."
       },
       "firstName": {
         "required": "Le prénom est obligatoire.",
@@ -311,7 +310,7 @@
         "required": "L'identifiant est obligatoire.",
         "minLength": "L'identifiant doit avoir au moins 2 caractères.",
         "maxLength": "L'identifiant doit avoir au maximum 20 caractères.",
-        "alreadyTaken": "Cet identifiant existe déjà."
+        "label":"Id"
       },
       "name": {
         "required": "Le nom est obligatoire.",

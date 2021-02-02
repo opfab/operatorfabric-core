@@ -296,8 +296,7 @@
       "login": {
         "required": "Login is required.",
         "minLength": "Login should be minimum 4 characters.",
-        "maxLength": "Login should be maximum 20 characters.",
-        "alreadyTaken": "Login is already taken."
+        "maxLength": "Login should be maximum 20 characters."
       },
       "firstName": {
         "required": "First name is required.",
@@ -311,7 +310,7 @@
         "required": "Id is required.",
         "minLength": "Id should be minimum 2 characters.",
         "maxLength": "Id should be maximum 20 characters.",
-        "alreadyTaken": "ID is already taken."
+        "label":"Id"
       },
       "name": {
         "required": "Name is required.",
