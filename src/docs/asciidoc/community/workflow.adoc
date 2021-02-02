@@ -358,7 +358,8 @@ logic and not the framework itself)
 * Documentation has been updated (especially if configuration is needed)
 * Configuration examples have been updated (both for dev and docker)
 * Build and run OpFab locally to see the new feature or bug fix at work. In the case of a new feature, it's also a way
-of making sure that the configuration documentation is correct and easily understandable.
+of making sure that the configuration documentation is correct and easily understandable. 
+* Check for error messages in the browser console.
 * Depending on the scope of the PR , build docker images and test in docker mode
 * Check that the copyright header has been updated on the changed files if need be, and in the case of a first-time
     contributor, make sure they're added to the AUTHORS.txt file.
@@ -379,6 +380,7 @@ Compile and run OperatorFabric docker images is the most effective way to check 
 . Run the following scripts: `./loadBundle.sh && ./setPerimeterForTest.sh && ./postTestCards.sh`;
 . Open the front-end in a browser and look for any regression.
 
+To automate build and API testing, you can use `${OF_HOME}/src/test/api/karate/buildAndLaunchAll.sh`. 
 
 === Merging a Pull Request
 
