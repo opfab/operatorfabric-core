@@ -11,6 +11,7 @@
        <label class="opfab-checkbox" style="margin-left:40px"> Le 10/08/2020 entre 10h and 12h <input type="checkbox" id="choice2" name="choice2" >  <span class="opfab-checkbox-checkmark"> </span> </label>
        <label class="opfab-checkbox" style="margin-left:40px"> Le 11/08/2020 entre 8h and 10h  <input type="checkbox" id="choice3" name="choice3" >  <span class="opfab-checkbox-checkmark"> </span> </label>
     </div>
+    <div id="responseDisabled" style="color: red"></div>
 </form> 
 
 <br/>
@@ -80,6 +81,19 @@
       document.getElementById('choice2').disabled = false;
       document.getElementById('choice3').disabled = false;
 
+  }
+
+  templateGateway.setLttdExpired = function(expired) {
+      const responseEnabled = document.getElementById('responseDisabled');
+      if (responseEnabled != null) {
+        if (expired) {
+            responseEnabled.innerHTML="Response time has expired";
+            templateGateway.lockAnswer();
+        } else {
+            responseEnabled.innerHTML="";
+            templateGateway.unlockAnswer();
+        }
+      }
   }
 
 </script>

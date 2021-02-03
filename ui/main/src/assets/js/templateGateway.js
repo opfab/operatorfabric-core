@@ -35,6 +35,7 @@ const templateGateway = {
     lockAnswer: function() {},
     applyChildCards: function() {},
     unlockAnswer: function() {},
+    setLttdExpired: function(expired) {},
     childCards: []
     
 };
