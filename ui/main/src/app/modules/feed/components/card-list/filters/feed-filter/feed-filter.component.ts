@@ -206,8 +206,16 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         status.start = this.extractTime(this.timeFilterForm.get('dateTimeFrom'));
         status.end = this.extractTime(this.timeFilterForm.get('dateTimeTo'));
 
-        localStorage.setItem('opfab.feed.filter.start', status.start);
-        localStorage.setItem('opfab.feed.filter.end', status.end);
+        if (status.start == null) {
+            localStorage.removeItem('opfab.feed.filter.start');
+        } else {
+            localStorage.setItem('opfab.feed.filter.start', status.start);
+        }
+        if (status.end == null) {
+            localStorage.removeItem('opfab.feed.filter.end');
+        } else {
+            localStorage.setItem('opfab.feed.filter.end', status.end);
+        }
 
         this.store.dispatch(
             new ApplyFilter({
@@ -222,6 +230,17 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         if (!val || val == '')  {
             return null;
         }
+
+        if (isNaN(val.time.hour)) {
+            val.time.hour = 0;
+        }
+        if (isNaN(val.time.minute)) {
+            val.time.minute = 0;
+        }
+        if (isNaN(val.time.second)) {
+            val.time.second = 0;
+        }
+
         const converter = new DateTimeNgb(val.date, val.time);
         return converter.convertToNumber();
     }
