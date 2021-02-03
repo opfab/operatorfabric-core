@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,7 +32,7 @@ export class ProcessesService {
     private processCache = new Map();
     private translationsAlreadyLoaded = new Set<string>();
     private processes: Process[];
-    private processGroups: {idGroup: string, processes: string[]}[];
+    private processGroups: {id: string, processes: string[]}[];
     private translationsLoaded = new Subject();
 
     constructor(private httpClient: HttpClient, private translateService: TranslateService, private store: Store<AppState>
@@ -133,7 +133,7 @@ export class ProcessesService {
         return this.processes;
     }
 
-    public getProcessGroups(): {idGroup: string, processes: string[]}[] {
+    public getProcessGroups(): {id: string, processes: string[]}[] {
         return this.processGroups;
     }
 
