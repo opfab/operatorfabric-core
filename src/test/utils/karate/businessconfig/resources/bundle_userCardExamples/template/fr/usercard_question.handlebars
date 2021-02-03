@@ -18,6 +18,11 @@
 <script>
     templateGateway.getSpecificCardInformation = function () {
         const question = document.getElementById('question').value;
+
+        if (question.length <1) return {
+            valid: false,
+            errorMsg : "Vous devez fournir une question"
+        }
       
         const card = {
             summary: { key: "question.summary" },
