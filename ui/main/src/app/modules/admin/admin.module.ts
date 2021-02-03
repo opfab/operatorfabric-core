@@ -27,7 +27,6 @@ import {MatInputModule, MatSelectModule} from '@angular/material';
 import {EntitiesTableComponent} from './components/table/entities-table.component';
 import {GroupsTableComponent} from './components/table/groups-table.component';
 
-
 @NgModule({
   declarations: [
     AdminComponent,

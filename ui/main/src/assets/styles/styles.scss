@@ -11,10 +11,11 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "variables";
+
 /* import bootstrap*/
 @import '../../../node_modules/bootstrap/scss/bootstrap.scss';
+
 @import "navbar.scss";
-//@import '../../../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 @import "../../../node_modules/ag-grid-community/dist/styles/ag-grid.css";
 @import "../../../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
@@ -116,7 +117,6 @@ body {
   margin-top: 10px;
   background: var( --opfab-text-color);
   mask: url(assets/images/icons/export-data.svg);
-  mask-size: cover;
 }
 // END BUTTON STYLE 
 
@@ -713,7 +713,6 @@ html, body { height: 100%; }
 
 .modal-header{
   background-color: var(--opfab-bgcolor);
-  color: var(--opfab-textcolor);
   height: 60px;
   font-size: 20px;
   font-weight: bold;

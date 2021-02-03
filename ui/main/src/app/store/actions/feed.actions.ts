@@ -10,7 +10,7 @@
 
 import {Action} from '@ngrx/store';
 import {FilterType} from '@ofServices/filter.service';
-import {Filter, FilterStatus} from '@ofModel/feed-filter.model';
+import {Filter} from '@ofModel/feed-filter.model';
 
 
 export enum FeedActionTypes {
@@ -19,7 +19,7 @@ export enum FeedActionTypes {
     ResetFilter = '[Feed] Reset filter Status',
     ResetFilterForMonitoring = '[Feed] Reset filter Status for monitoring screen',
     ApplySeveralFilters = '[Feed] Change several filters Status at Once',
-    ChangeReadSort = "[Feed] Sort by read"
+    ChangeReadSort = '[Feed] Sort by read'
 }
 
 export class ApplyFilter implements Action {

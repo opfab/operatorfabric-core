@@ -10,13 +10,12 @@
 package org.lfenergy.operatorfabric.cards.consultation.repositories;
 
 
-import java.time.Instant;
-import java.util.List;
-
 import org.lfenergy.operatorfabric.cards.consultation.model.CardConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.model.CardOperation;
 import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import reactor.core.publisher.Flux;
+
+import java.time.Instant;
 
 
 /*

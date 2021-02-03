@@ -24,7 +24,7 @@ import {
     UserApplicationRegistered
 } from '@ofStore/actions/user.actions';
 import {AcceptLogIn, AuthenticationActionTypes} from '@ofStore/actions/authentication.actions';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {catchError, map, switchMap} from 'rxjs/operators';
 import {Entity, User} from '@ofModel/user.model';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 

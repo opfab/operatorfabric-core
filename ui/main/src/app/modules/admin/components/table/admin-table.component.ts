@@ -94,7 +94,7 @@ export abstract class AdminTableComponent implements OnInit {
   }
 
   ngOnChanges() {
-    if(!!this.gridApi) this.gridApi.paginationSetPageSize(this.paginationPageSize);
+    if (!!this.gridApi) this.gridApi.paginationSetPageSize(this.paginationPageSize);
   }
 
   public localizeHeader(parameters: ICellRendererParams): string {
@@ -107,7 +107,7 @@ export abstract class AdminTableComponent implements OnInit {
     // Column definitions can't be managed in the constructor like the other grid options because they rely on the `fields`
     // property that is defined in the classes implementing AdminTableComponent. As such, it is still undefined when the
     // constructor from the supertype is called.
-    this.gridApi.setColumnDefs(this.createColumnDefs(this.fields,this.tableType+'.'));
+    this.gridApi.setColumnDefs(this.createColumnDefs(this.fields, this.tableType + '.'));
     this.gridApi.paginationSetPageSize(this.paginationPageSize);
   }
 
@@ -118,23 +118,23 @@ export abstract class AdminTableComponent implements OnInit {
    * @return ColDef[] object containing the column definitions for the grid
    * */
   createColumnDefs(fields: string[], i18nPrefixForHeader?: string): ColDef[] {
-    //if provided, i18nPrefixForHeader should have trailing dot
+    // if provided, i18nPrefixForHeader should have trailing dot
 
-    //Create data columns from fields
-    let columnDefs :ColDef[];
-    columnDefs = new Array(fields.length+2); //+2 because 2 action columns (see below)
+    // Create data columns from fields
+    let columnDefs: ColDef[];
+    columnDefs = new Array(fields.length + 2); // +2 because 2 action columns (see below)
 
-    fields.forEach((field : string, index:number) => {
-      columnDefs[index] = { headerName: i18nPrefixForHeader+field, field: field, type: 'dataColumn'}
+    fields.forEach((field: string, index: number) => {
+      columnDefs[index] = { headerName: i18nPrefixForHeader + field, field: field, type: 'dataColumn'};
     });
 
-    //Add action columns
+    // Add action columns
     columnDefs[fields.length] = {
       headerName: 'edit',
       colId: 'edit',
       type: 'actionColumn'
     };
-    columnDefs[fields.length+1] = {
+    columnDefs[fields.length + 1] = {
       headerName: 'delete',
       colId: 'delete',
       type: 'actionColumn'

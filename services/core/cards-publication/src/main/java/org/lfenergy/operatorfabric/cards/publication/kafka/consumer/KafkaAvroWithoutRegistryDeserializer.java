@@ -1,4 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
+ * Copyright (c) 2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,13 +43,10 @@ public class KafkaAvroWithoutRegistryDeserializer implements Deserializer<CardCo
             try {
                 ByteBuffer buffer = this.getByteBuffer(payload);
                 buffer.getInt();   // read next 4 bytes
-                String subject = null;
 
                 int length = buffer.limit() - 1 - 4;
                 int start = buffer.position() + buffer.arrayOffset();
-                CardCommand result = datumReader.read((CardCommand) null, this.decoderFactory.binaryDecoder(buffer.array(), start, length, (BinaryDecoder) null));
-
-                return result;
+                return datumReader.read((CardCommand) null, this.decoderFactory.binaryDecoder(buffer.array(), start, length, (BinaryDecoder) null));
             } catch (RuntimeException | IOException ex) {
                 throw new SerializationException("Error deserializing Avro message", ex);
             }

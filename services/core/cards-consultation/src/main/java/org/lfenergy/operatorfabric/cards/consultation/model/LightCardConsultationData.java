@@ -122,7 +122,7 @@ public class LightCardConsultationData implements LightCard {
                 .entitiesAllowedToRespond(other.getEntitiesAllowedToRespond())
                 .publisherType(other.getPublisherType())
                 .secondsBeforeTimeSpanForReminder(other.getSecondsBeforeTimeSpanForReminder());    
-                ;
+
         if(other.getTags()!=null && ! other.getTags().isEmpty())
             builder.tags(other.getTags());
         if(other.getTimeSpans()!=null && !other.getTimeSpans().isEmpty())

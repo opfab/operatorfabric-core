@@ -19,9 +19,9 @@ This helper class presumes that stored Entities don't cycle (beware manual datab
 public class EntityCycleDetector {
 
     static final String CYCLE_DETECTION = "A cycle has been detected: ";
-    final private List<String> visitedId;
-    final private Map<String, List<String>> graph;
-    final private String currentEntityId;
+    private final List<String> visitedId;
+    private final Map<String, List<String>> graph;
+    private final String currentEntityId;
     
 
     public EntityCycleDetector(Entity currentEntity, List<? extends Entity> allEntities) {

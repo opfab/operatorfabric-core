@@ -13,7 +13,6 @@ package org.lfenergy.operatorfabric.cards.publication.model;
 
 import lombok.*;
 
-import javax.validation.constraints.NotNull;
 import java.util.Map;
 
 /**

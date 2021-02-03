@@ -15,10 +15,10 @@ import {ArchivesComponent} from './archives.component';
 import {CardsModule} from '../cards/cards.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
-import { MultiFilterModule } from 'app/modules/share/multi-filter/multi-filter.module';
-import { CardDetailModule } from 'app/modules/share/card-detail/card-detail.module';
-import { ArchivesEntryPointComponent } from './archives-entry-point.component';
+import {DatetimeFilterModule} from '../share/datetime-filter/datetime-filter.module';
+import {MultiFilterModule} from 'app/modules/share/multi-filter/multi-filter.module';
+import {CardDetailModule} from 'app/modules/share/card-detail/card-detail.module';
+import {ArchivesEntryPointComponent} from './archives-entry-point.component';
 
 @NgModule({
   imports: [
