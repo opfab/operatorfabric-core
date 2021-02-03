@@ -16,6 +16,12 @@ bin/run_all.sh stop
 sleep 5
 echo "Hard stop for cleaning if needed"
 bin/run_all.sh hardstop
+echo "Stop existing running opfab docker"
+cd config/dev
+docker-compose down
+cd ../docker
+docker-compose down
+cd ../..
 echo "Start docker compose for building" 
 docker-compose -f ${dockerComposeFile} up -d
 echo "Build all" 
