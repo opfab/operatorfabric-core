@@ -12,7 +12,7 @@
   <h5 class="modal-title" *ngIf="row">{{row.id}}</h5>
   <h5 class="modal-title" *ngIf="!row && type==='group'" translate>admin.input.group.add</h5>
   <h5 class="modal-title" *ngIf="!row && type==='entity'" translate>admin.input.entity.add</h5>
-  <button id="opfab-admin-edit-group-btn-close"  (click)="activeModal.dismiss('Cross click')" type="button" class="close" data-dismiss="modal"
+  <button id="opfab-admin-edit-group-btn-close"  (click)="dismissModal('Cross click')" type="button" class="close" data-dismiss="modal"
     aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -53,7 +53,7 @@
   </form>
 </div>
 <div class="modal-footer bg-dark">
-  <button id="opfab-admin-edit-group-btn-cancel" type="button" (click)="activeModal.dismiss('Cross click')" class="opfab-btn-cancel" data-dismiss="modal"
+  <button id="opfab-admin-edit-group-btn-cancel" type="button" (click)="dismissModal('Cancel click')" class="opfab-btn-cancel" data-dismiss="modal"
     translate>admin.input.close</button>
   <button  id="opfab-admin-group-btn-add" [disabled]="!form.valid" *ngIf="!row && type==='group'" (click)="update()" class="opfab-btn"
     translate>admin.input.group.add</button>

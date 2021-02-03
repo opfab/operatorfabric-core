@@ -8,26 +8,23 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Injectable, Input, OnInit} from '@angular/core';
 import {ColDef, GridOptions, ICellRendererParams} from 'ag-grid-community';
 import {TranslateService} from '@ngx-translate/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {throwError} from 'rxjs';
-import {ConfirmationDialogService} from "../../services/confirmation-dialog.service";
-import {ActionCellRendererComponent} from "./action-cell-renderer.component";
-import {AppError} from "../../../../common/error/app-error";
-import {CrudService} from "@ofServices/crud-service";
+import {ConfirmationDialogService} from '../../services/confirmation-dialog.service';
+import {ActionCellRendererComponent} from './action-cell-renderer.component';
+import {AppError} from '../../../../common/error/app-error';
+import {CrudService} from '@ofServices/crud-service';
 
-@Component({
-  selector: 'of-admin-table',
-  templateUrl: 'admin-table.component.html'
-})
+@Injectable()
 export abstract class AdminTableComponent implements OnInit {
 
   // These fields will be initialized in the concrete classes extending `AdminTableComponent`
   // (e.g. EntitiesTableComponent) as they depend on the type of the table
   /** Modal component to open when editing an item from the table (e.g. `EditEntityGroupModal`) */
-  protected editModalComponent;
+  public editModalComponent;
   /** Type of data managed by the table (e.g. `AdminTableType.ENTITY`) */
   protected tableType: AdminTableType;
   /** Relevant fields for this data type. They will be used to populate the table columns */
@@ -36,9 +33,9 @@ export abstract class AdminTableComponent implements OnInit {
   protected idField: string;
 
   // ag-grid configuration objects
-  protected gridOptions;
-  protected gridApi;
-  protected rowData: any;
+  public gridOptions;
+  public gridApi;
+  public rowData: any;
 
   @Input()
   public paginationPageSize;

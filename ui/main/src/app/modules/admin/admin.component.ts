@@ -32,8 +32,8 @@ export class AdminComponent implements OnInit, OnDestroy {
   entitiesLabel: string;
   groupsLabel: string;
 
-  private paginationDefaultPageSize = 10;
-  private paginationPageSizeOptions = [5, 10, 25, 50, 100];
+  public paginationDefaultPageSize = 10;
+  public paginationPageSizeOptions = [5, 10, 25, 50, 100];
   public paginationPageSize = this.paginationDefaultPageSize;
 
   //TODO Why do we need to use translate.get and subscriptions rather than the translate directive like everywhere else?
