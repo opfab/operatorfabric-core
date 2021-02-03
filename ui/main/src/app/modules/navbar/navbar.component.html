@@ -51,6 +51,12 @@
         </div>
       </li>
     </ul>
+<!-- KEEP IN COMMENTS UNTIL VALIDATION OF DESIGN 
+    <div style="width:120px;height:87px;overflow: hidden;margin-top: -30px;margin-bottom:-20px">
+    <div style="font-size:12px;transform:rotate(-45deg);color:white;background-color: red;margin-left:-20px;margin-top:20px;width:220px;padding-left:40px;font-weight: bold;">
+      INTEGRATION
+    </div>
+    </div> -->
 
     <ul class="navbar-nav navbar-right">
       <li style="display:flex;margin-top: 12px;cursor:pointer;margin-right:20px" (click)="openCardCreation()" *ngIf="(displayCreateUserCard)">
@@ -70,6 +76,17 @@
 
       </li>
     </ul>
+
+    <div *ngIf="displayEnvironmentName" 
+      style="width:80px;height:87px;overflow: hidden;margin-top: -30px;margin-bottom:-20px;
+      margin-left: -50px;margin-right: -15px;">
+      <div [style.background-color]="environmentColor" 
+          style="font-size:10px;transform:rotate(45deg);color:white;
+          margin-top:33px; margin-left: -57px; width:210px;
+          text-align: center; font-weight: bold;">
+        {{environmentName}}
+      </div>
+    </div>
   </div>
 
 </nav>

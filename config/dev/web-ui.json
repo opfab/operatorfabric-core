@@ -1,5 +1,7 @@
 {
   "title": "OperatorFabric (Dev Mode)",
+  "environmentName": "DEV ENV",
+  "environmentColor": "green",
   "checkPerimeterForResponseCard": true,
   "archive": {
     "filters": {
