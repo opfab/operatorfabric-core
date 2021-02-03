@@ -15,7 +15,7 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {EntitiesService} from '@ofServices/entities.service';
 import {GroupsService} from '@ofServices/groups.service';
 import {IdValidatorService} from 'app/modules/admin/services/id-validator.service';
-import {AdminTableType} from "../../table/admin-table.component";
+import {AdminTableType} from '../../table/admin-table.component';
 
 @Component({
   selector: 'of-edit-group-modal',
@@ -99,6 +99,10 @@ export class EditEntityGroupModalComponent implements OnInit {
         resolve(null);
       });
     }
+  }
+
+  dismissModal(reason : string) : void {
+    this.activeModal.dismiss(reason);
   }
 
 }

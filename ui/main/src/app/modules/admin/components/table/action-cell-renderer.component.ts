@@ -40,4 +40,8 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
   refresh(): boolean {
     return false;
   }
+
+  getIconForAction() : string {
+    return this.actionIconsMapping[this.actionType];
+  }
 }

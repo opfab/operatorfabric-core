@@ -128,4 +128,8 @@ export class EditUserModalComponent implements OnInit {
     }
   }
 
+  dismissModal(reason : string) : void {
+    this.activeModal.dismiss(reason);
+  }
+
 }
