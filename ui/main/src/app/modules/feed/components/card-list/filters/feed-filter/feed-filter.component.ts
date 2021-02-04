@@ -8,18 +8,17 @@
  */
 
 
-
 import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {Subject, timer} from "rxjs";
-import {Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
-import {AbstractControl, FormControl, FormGroup} from "@angular/forms";
-import {debounce, debounceTime, distinctUntilChanged, first, takeUntil} from "rxjs/operators";
-import {ApplyFilter} from "@ofActions/feed.actions";
+import {Subject, timer} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {debounce, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
+import {ApplyFilter} from '@ofActions/feed.actions';
 import * as _ from 'lodash';
-import {FilterType} from "@ofServices/filter.service";
+import {FilterType} from '@ofServices/filter.service';
 
-import { DateTimeNgb, getDateTimeNgbFromMoment } from '@ofModel/datetime-ngb.model';
+import {DateTimeNgb, getDateTimeNgbFromMoment} from '@ofModel/datetime-ngb.model';
 import moment from 'moment';
 
 
@@ -46,7 +45,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     constructor(private store: Store<AppState>) {
         this.typeFilterForm = this.createFormGroup();
         this.ackFilterForm = this.createAckFormGroup();
-        this.timeFilterForm = this.createDateTimeForm();        
+        this.timeFilterForm = this.createDateTimeForm();
     }
 
     private createFormGroup() {
@@ -55,13 +54,13 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             action: new FormControl(),
             compliant: new FormControl(),
             information: new FormControl()
-        },{updateOn: 'change'});
+        }, {updateOn: 'change'});
     }
 
     private createAckFormGroup() {
         return new FormGroup({
-            ackControl: new FormControl("notack")            
-        },{updateOn: 'change'});
+            ackControl: new FormControl('notack')
+        }, {updateOn: 'change'});
     }
 
     private createDateTimeForm() {
@@ -91,23 +90,23 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     }
 
     private initTypeFilter() {
-        
-       const savedAlarm = localStorage.getItem("opfab.feed.filter.type.alarm");
-       const savedAction = localStorage.getItem("opfab.feed.filter.type.action");
-       const savedACompliant = localStorage.getItem("opfab.feed.filter.type.compliant");
-       const savedInformation = localStorage.getItem("opfab.feed.filter.type.information");
-      
-       const alarmUnset = savedAlarm && savedAlarm != "true";
-       const actionUnset = savedAction && savedAction != "true";
-       const compliantUnset = savedACompliant && savedACompliant != "true";
-       const informationUnset = savedInformation && savedInformation != "true";
+
+       const savedAlarm = localStorage.getItem('opfab.feed.filter.type.alarm');
+       const savedAction = localStorage.getItem('opfab.feed.filter.type.action');
+       const savedACompliant = localStorage.getItem('opfab.feed.filter.type.compliant');
+       const savedInformation = localStorage.getItem('opfab.feed.filter.type.information');
+
+       const alarmUnset = savedAlarm && savedAlarm != 'true';
+       const actionUnset = savedAction && savedAction != 'true';
+       const compliantUnset = savedACompliant && savedACompliant != 'true';
+       const informationUnset = savedInformation && savedInformation != 'true';
 
 
-       this.typeFilterForm.get('alarm').setValue(!alarmUnset,{emitEvent: false});
-       this.typeFilterForm.get('action').setValue(!actionUnset,{emitEvent: false});
-       this.typeFilterForm.get('compliant').setValue(!compliantUnset,{emitEvent: false});
-       this.typeFilterForm.get('information').setValue(!informationUnset,{emitEvent: false});
-       
+       this.typeFilterForm.get('alarm').setValue(!alarmUnset, {emitEvent: false});
+       this.typeFilterForm.get('action').setValue(!actionUnset, {emitEvent: false});
+       this.typeFilterForm.get('compliant').setValue(!compliantUnset, {emitEvent: false});
+       this.typeFilterForm.get('information').setValue(!informationUnset, {emitEvent: false});
+
        this.store.dispatch(
         new ApplyFilter({
             name: FilterType.TYPE_FILTER,
@@ -115,20 +114,20 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             status: {'alarm' : !alarmUnset, 'action': !actionUnset, 'compliant' : !compliantUnset, 'information' : !informationUnset}
         }));
 
-        
+
         this.typeFilterForm
                 .valueChanges
                 .pipe(
                     takeUntil(this.ngUnsubscribe$),
-                    distinctUntilChanged((formA, formB)=>{
-                        return _.isEqual(formA,formB);
+                    distinctUntilChanged((formA, formB) => {
+                        return _.isEqual(formA, formB);
                     }),
                     debounce(() => timer(500)))
                 .subscribe(form => {
-                    localStorage.setItem("opfab.feed.filter.type.alarm", form.alarm);
-                    localStorage.setItem("opfab.feed.filter.type.action", form.action);
-                    localStorage.setItem("opfab.feed.filter.type.compliant", form.compliant);
-                    localStorage.setItem("opfab.feed.filter.type.information", form.information);
+                    localStorage.setItem('opfab.feed.filter.type.alarm', form.alarm);
+                    localStorage.setItem('opfab.feed.filter.type.action', form.action);
+                    localStorage.setItem('opfab.feed.filter.type.compliant', form.compliant);
+                    localStorage.setItem('opfab.feed.filter.type.information', form.information);
                     return this.store.dispatch(
                     new ApplyFilter({
                         name: FilterType.TYPE_FILTER,
@@ -140,11 +139,11 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     private initAckFilter() {
 
-        const ackValue = localStorage.getItem("opfab.feed.filter.ack");
+        const ackValue = localStorage.getItem('opfab.feed.filter.ack');
         if (!!ackValue) {
-            this.ackFilterForm.get('ackControl').setValue(ackValue,{emitEvent: false});
-            let active = !(ackValue === "all");
-            let ack = active && ackValue === "ack";
+            this.ackFilterForm.get('ackControl').setValue(ackValue, {emitEvent: false});
+            const active = ackValue !== 'all';
+            const ack = active && ackValue === 'ack';
             this.store.dispatch(
                 new ApplyFilter({
                     name: FilterType.ACKNOWLEDGEMENT_FILTER,
@@ -153,7 +152,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
                 }));
 
         } else {
-            this.ackFilterForm.get('ackControl').setValue("notack",{emitEvent: false});
+            this.ackFilterForm.get('ackControl').setValue('notack', {emitEvent: false});
         }
 
         this.ackFilterForm
@@ -161,9 +160,9 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             .pipe(
                 takeUntil(this.ngUnsubscribe$))
             .subscribe(form => {
-                let active = !(form.ackControl === "all");
-                let ack = active && form.ackControl === "ack";
-                localStorage.setItem("opfab.feed.filter.ack", form.ackControl);
+                const active = form.ackControl !== 'all';
+                const ack = active && form.ackControl === 'ack';
+                localStorage.setItem('opfab.feed.filter.ack', form.ackControl);
 
                 return this.store.dispatch(
                     new ApplyFilter({
@@ -179,16 +178,16 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         if (this.filterByPublishDate) this.dateFilterType = FilterType.PUBLISHDATE_FILTER;
         else this.dateFilterType = FilterType.BUSINESSDATE_FILTER;
 
-        const savedStart = localStorage.getItem("opfab.feed.filter.start");
-        const savedEnd = localStorage.getItem("opfab.feed.filter.end");
+        const savedStart = localStorage.getItem('opfab.feed.filter.start');
+        const savedEnd = localStorage.getItem('opfab.feed.filter.end');
 
         if (!!savedStart) {
-            this.timeFilterForm.get("dateTimeFrom").setValue(getDateTimeNgbFromMoment(moment(+savedStart)));
+            this.timeFilterForm.get('dateTimeFrom').setValue(getDateTimeNgbFromMoment(moment(+savedStart)));
         }
         if (!!savedEnd) {
-            this.timeFilterForm.get("dateTimeTo").setValue(getDateTimeNgbFromMoment(moment(+savedEnd)));
+            this.timeFilterForm.get('dateTimeTo').setValue(getDateTimeNgbFromMoment(moment(+savedEnd)));
         }
-        
+
         this.setNewFilterValue();
 
         this.dateTimeFilterChange.pipe(
@@ -204,11 +203,11 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     private setNewFilterValue(): void {
         const status = { start: null, end: null };
-        status.start = this.extractTime(this.timeFilterForm.get("dateTimeFrom"));
-        status.end = this.extractTime(this.timeFilterForm.get("dateTimeTo"));
-       
-        localStorage.setItem("opfab.feed.filter.start", status.start);
-        localStorage.setItem("opfab.feed.filter.end", status.end);
+        status.start = this.extractTime(this.timeFilterForm.get('dateTimeFrom'));
+        status.end = this.extractTime(this.timeFilterForm.get('dateTimeTo'));
+
+        localStorage.setItem('opfab.feed.filter.start', status.start);
+        localStorage.setItem('opfab.feed.filter.end', status.end);
 
         this.store.dispatch(
             new ApplyFilter({
@@ -242,12 +241,12 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     }
 
     reset() {
-        this.typeFilterForm.get('alarm').setValue(true,{emitEvent: true});
-        this.typeFilterForm.get('action').setValue(true,{emitEvent: true});
-        this.typeFilterForm.get('compliant').setValue(true,{emitEvent: true});
-        this.typeFilterForm.get('information').setValue(true,{emitEvent: true});
+        this.typeFilterForm.get('alarm').setValue(true, {emitEvent: true});
+        this.typeFilterForm.get('action').setValue(true, {emitEvent: true});
+        this.typeFilterForm.get('compliant').setValue(true, {emitEvent: true});
+        this.typeFilterForm.get('information').setValue(true, {emitEvent: true});
         if (!this.hideAckFilter) {
-            this.ackFilterForm.get('ackControl').setValue("notack",{emitEvent: true});
+            this.ackFilterForm.get('ackControl').setValue('notack', {emitEvent: true});
         }
 
         if (!this.hideTimerTags) {
@@ -256,5 +255,5 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             this.setNewFilterValue();
         }
     }
-    
+
 }

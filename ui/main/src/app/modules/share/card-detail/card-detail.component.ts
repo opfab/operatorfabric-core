@@ -11,7 +11,7 @@
 import {Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
 import {Card} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
-import {HandlebarsService} from '../../../modules/cards/services/handlebars.service';
+import {HandlebarsService} from '../../cards/services/handlebars.service';
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {Store} from '@ngrx/store';

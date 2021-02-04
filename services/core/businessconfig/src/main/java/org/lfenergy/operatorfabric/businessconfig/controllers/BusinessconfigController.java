@@ -12,15 +12,14 @@
 package org.lfenergy.operatorfabric.businessconfig.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.lfenergy.operatorfabric.businessconfig.model.Process;
+import org.lfenergy.operatorfabric.businessconfig.model.*;
+import org.lfenergy.operatorfabric.businessconfig.services.ProcessesService;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
-import org.lfenergy.operatorfabric.businessconfig.model.*;
-import org.lfenergy.operatorfabric.businessconfig.model.Process;
-import org.lfenergy.operatorfabric.businessconfig.services.ProcessesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,7 +31,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 /**
  * BusinessconfigController, documented at {@link BusinessconfigApi}

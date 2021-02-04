@@ -14,7 +14,6 @@ package org.lfenergy.operatorfabric.cards.publication.model;
 import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**

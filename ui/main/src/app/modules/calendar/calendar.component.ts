@@ -8,28 +8,27 @@
  */
 
 
-import { AppState } from '@ofStore/index';
-import { select, Store } from '@ngrx/store';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import {AppState} from '@ofStore/index';
+import {select, Store} from '@ngrx/store';
+import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
-import { Component, ViewChild, OnDestroy, OnInit, AfterViewInit, ElementRef, HostListener } from '@angular/core';
-import { FullCalendarComponent } from '@fullcalendar/angular';
-import { EventInput } from '@fullcalendar/core';
+import {AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {FullCalendarComponent} from '@fullcalendar/angular';
+import {EventInput} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGrigPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import allLocales from '@fullcalendar/core/locales-all';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
-import { TranslateService } from '@ngx-translate/core';
-import { SelectLightCard } from '@ofActions/light-card.actions';
-import { LoadCard } from '@ofActions/card.actions';
-import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
-import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { ApplyFilter } from '@ofStore/actions/feed.actions';
-import { FilterType } from '@ofServices/filter.service';
-import moment from 'moment';
-import { HourAndMinutes } from '@ofModel/card.model';
+import {TranslateService} from '@ngx-translate/core';
+import {SelectLightCard} from '@ofActions/light-card.actions';
+import {LoadCard} from '@ofActions/card.actions';
+import {buildSettingsOrConfigSelector} from '@ofStore/selectors/settings.x.config.selectors';
+import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {ApplyFilter} from '@ofStore/actions/feed.actions';
+import {FilterType} from '@ofServices/filter.service';
+import {HourAndMinutes} from '@ofModel/card.model';
 
 @Component({
   selector: 'of-calendar',
@@ -99,7 +98,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
                   allDay: false,
                   startRecur: startDate,
                   endRecur: endDate,
-                  className: ["opfab-calendar-event",'opfab-calendar-event-' + card.severity.toLowerCase()],
+                  className: ['opfab-calendar-event', 'opfab-calendar-event-' + card.severity.toLowerCase()],
                   daysOfWeek: timespan.recurrence ? timespan.recurrence.daysOfWeek.map(d => d % 7) : [],
                   startTime: timespan.recurrence.hoursAndMinutes ? this.formatTwoDigits(timespan.recurrence.hoursAndMinutes.hours) + ':' + this.formatTwoDigits(timespan.recurrence.hoursAndMinutes.minutes) : null,
                   endTime: timespan.recurrence.durationInMinutes ? this.getEndTime(timespan.recurrence.hoursAndMinutes, timespan.recurrence.durationInMinutes) : null
@@ -110,7 +109,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
                   title: title,
                   start: startDate,
                   end: endDate,
-                  className: ["opfab-calendar-event",'opfab-calendar-event-' + card.severity.toLowerCase()],
+                  className: ['opfab-calendar-event', 'opfab-calendar-event-' + card.severity.toLowerCase()],
                   allDay: false
                 });
               }

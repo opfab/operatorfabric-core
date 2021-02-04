@@ -8,18 +8,17 @@
  */
 
 
-
 import {Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {Observable, of} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
-import {catchError, map, delay} from 'rxjs/operators';
+import {catchError, delay, map} from 'rxjs/operators';
 import * as moment from 'moment';
-import { ConfigService} from '@ofServices/config.service';
-import { ApplyFilter } from '@ofStore/actions/feed.actions';
-import {BUSINESS_DATE_FILTER_INITIALISATION, FilterType} from '@ofServices/filter.service';
+import {ConfigService} from '@ofServices/config.service';
+import {ApplyFilter} from '@ofStore/actions/feed.actions';
+import {BUSINESS_DATE_FILTER_INITIALISATION} from '@ofServices/filter.service';
 
 @Component({
     selector: 'of-cards',
