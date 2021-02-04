@@ -11,9 +11,16 @@
     <form [formGroup]="messageForm" class="opfab-form-lighter">
         <div class="row">
 
+            <div class="col" *ngIf="displayServiceFilter()">
+                <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="service"
+                    [values]="serviceOptions"></of-single-filter>
+            </div>
             <div class="col">
-                <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
+                <of-single-filter [hidden]="!! isSelectedService" i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
                     [values]="processOptions"></of-single-filter>
+
+                <of-single-filter [hidden]="! isSelectedService" i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
+                                  [values]="processOptionsWhenSelectedService"></of-single-filter>
             </div>
             <div class="col">
                 <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="state"
