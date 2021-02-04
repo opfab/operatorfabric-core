@@ -9,13 +9,12 @@
  */
 
 
-import {Component, Input, OnInit} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
-import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {EntitiesService} from '@ofServices/entities.service';
-import {GroupsService} from '@ofServices/groups.service';
-import {IdValidatorService} from 'app/modules/admin/services/id-validator.service';
-import {AdminTableType} from '../../table/admin-table.component';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { EntitiesService } from '@ofServices/entities.service';
+import { GroupsService } from '@ofServices/groups.service';
+import { AdminTableType } from '../../table/admin-table.component';
 
 @Component({
   selector: 'of-edit-group-modal',
@@ -26,8 +25,7 @@ export class EditEntityGroupModalComponent implements OnInit {
 
   form = new FormGroup({
     id: new FormControl(''
-      , [Validators.required, Validators.minLength(2), Validators.maxLength(20)]
-      , this.existsId.bind(this)),
+      , [Validators.required, Validators.minLength(2), Validators.maxLength(20)]),
     name: new FormControl('', [Validators.required, Validators.maxLength(20)]),
     description: new FormControl('')
   });
@@ -87,22 +85,7 @@ export class EditEntityGroupModalComponent implements OnInit {
     return this.form.get('description') as FormControl;
   }
 
-  existsId(control: AbstractControl) {
-    // if create
-    if (!this.row) {
-      if (this.type === 'entity')
-        return new IdValidatorService(this.entitiesService).isIdAvailable(control);
-      else
-        return new IdValidatorService(this.groupsService).isIdAvailable(control);
-    } else {
-      return new Promise((resolve) => {
-        resolve(null);
-      });
-    }
-  }
-
-  dismissModal(reason : string) : void {
+  dismissModal(reason: string): void {
     this.activeModal.dismiss(reason);
   }
-
 }
