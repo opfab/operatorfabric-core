@@ -55,6 +55,9 @@ export class NavbarComponent implements OnInit {
   displayFeedConfiguration: boolean;
   displayCreateUserCard: boolean;
   displayCalendar: boolean;
+  displayEnvironmentName = false;
+  environmentName : string;
+  environmentColor : string;
   nightDayMode = false;
 
   constructor(private store: Store<AppState>, private globalStyleService: GlobalStyleService, private configService: ConfigService
@@ -116,6 +119,10 @@ export class NavbarComponent implements OnInit {
     this.displayFeedConfiguration = !this.configService.getConfigValue('feedConfiguration.hidden');
     this.displayCreateUserCard = ! hiddenMenus.includes("usercard");
     this.displayCalendar = ! hiddenMenus.includes("calendar");
+    this.environmentName = this.configService.getConfigValue('environmentName');
+    this.environmentColor = this.configService.getConfigValue('environmentColor','blue');
+    if (!!this.environmentName) this.displayEnvironmentName = true
+
   }
 
   private getCurrentUserMenus(menus: Menu[]): Menu[] {
