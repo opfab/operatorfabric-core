@@ -316,7 +316,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         }
 
         if (!specificInformation.valid) {
-            this.displayMessage('specificInformation.errorMsg', null, MessageLevel.ERROR);
+            this.displayMessage(specificInformation.errorMsg, null, MessageLevel.ERROR);
             return;
         }
 
