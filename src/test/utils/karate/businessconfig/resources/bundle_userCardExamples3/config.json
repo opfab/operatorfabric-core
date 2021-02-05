@@ -1,0 +1,23 @@
+{
+  "id": "userCardExamples3",
+  "name": "userCardExamples3.label",
+  "version": "1",
+  "uiVisibility": {
+    "monitoring": true,
+    "logging": true,
+    "calendar": true
+  },
+  "states": {
+    "taskState": {
+      "name": "task.title",
+      "color": "#0070C0",
+      "userCard" : {
+        "template" : "usercard_task"
+      },
+      "templateName": "task",
+      "styles": [
+      ],
+      "acknowledgmentAllowed": "Always"
+    }
+  }
+}

@@ -70,11 +70,11 @@ export class UserCardComponent implements OnDestroy, OnInit {
     processOptionsWhenSelectedService = new Array();
     serviceOptions = new Array();
 
-    public isSelectedService = false;
     selectedProcess: Process;
     selectedState: string;
     processesPerServices = new Map();
     servicePerProcesses = new Map();
+    processesWithoutService = new Array();
     statesPerProcesses = new Map();
     userCardTemplate: SafeHtml;
     editCardMode = false;
@@ -162,7 +162,13 @@ export class UserCardComponent implements OnDestroy, OnInit {
             this.cardService.loadCard(this.cardIdToEdit).subscribe(card => {
                         this.cardToEdit = card;
                         this.messageForm.get('severity').setValue(this.cardToEdit.card.severity);
-                        this.messageForm.get('service').setValue(this.servicePerProcesses.get(this.cardToEdit.card.process));
+
+                        const serviceForCardToEdit = this.servicePerProcesses.get(this.cardToEdit.card.process);
+                        if (serviceForCardToEdit)
+                            this.messageForm.get('service').setValue(serviceForCardToEdit);
+                        else
+                            this.messageForm.get('service').setValue("--");
+
                         this.messageForm.get('process').setValue(this.cardToEdit.card.process);
                         this.messageForm.get('state').setValue(this.cardToEdit.card.state);
                         this.messageForm.get('startDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.startDate)));
@@ -224,12 +230,18 @@ export class UserCardComponent implements OnDestroy, OnInit {
                 this.processesPerServices.set(group.id, processOptions);
         });
 
-        if (this.processOptions.length > numberOfProcessesAttachedToAService)
-            this.serviceOptions.push({value: "", label: ""});
+        if (this.processOptions.length > numberOfProcessesAttachedToAService) {
+            this.loadProcessesWithoutService();
+            this.serviceOptions.push({value: "--", label: "service.defaultLabel"});
+        }
         for (let serviceId of this.processesPerServices.keys())
             this.serviceOptions.push({value: serviceId, label: serviceId});
     }
 
+    loadProcessesWithoutService(): void {
+        const processesWithService = Array.from(this.servicePerProcesses.keys());
+        this.processesWithoutService = this.processOptions.filter(processOption => processesWithService.indexOf(processOption.value) < 0);
+    }
 
     private userCanSendCard(perimeter: ComputedPerimeter): boolean {
         return ((perimeter.rights === RightsEnum.ReceiveAndWrite)
@@ -269,13 +281,14 @@ export class UserCardComponent implements OnDestroy, OnInit {
     changeProcessesWhenSelectService(): void {
         this.messageForm.get('service').valueChanges.subscribe((service) => {
             if (!!service) {
-                this.processOptionsWhenSelectedService = this.processesPerServices.get(service);
+                if (service == '--')
+                    this.processOptionsWhenSelectedService = this.processesWithoutService;
+                else
+                    this.processOptionsWhenSelectedService = this.processesPerServices.get(service);
+
                 this.selectedProcess = this.processOptionsWhenSelectedService[0].value;
-                this.isSelectedService = true;
                 this.messageForm.get('process').setValue(this.selectedProcess);
             }
-            else
-                this.isSelectedService = false;
         });
     }
 

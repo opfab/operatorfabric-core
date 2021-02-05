@@ -327,6 +327,9 @@
       "entities": "Entities management"
     }
   },
+  "service": {
+    "defaultLabel": "--"
+  },
   "ag-grid": {
     "loadingOoo": "Loading...",
     "noRowsToShow": "No Rows To Show",

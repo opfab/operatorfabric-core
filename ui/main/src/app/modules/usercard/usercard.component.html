@@ -16,10 +16,10 @@
                     [values]="serviceOptions"></of-single-filter>
             </div>
             <div class="col">
-                <of-single-filter [hidden]="!! isSelectedService" i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
+                <of-single-filter [hidden]="displayServiceFilter()" i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
                     [values]="processOptions"></of-single-filter>
 
-                <of-single-filter [hidden]="! isSelectedService" i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
+                <of-single-filter [hidden]="! displayServiceFilter()" i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
                                   [values]="processOptionsWhenSelectedService"></of-single-filter>
             </div>
             <div class="col">

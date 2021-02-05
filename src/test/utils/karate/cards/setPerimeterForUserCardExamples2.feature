@@ -7,18 +7,18 @@ Feature: Add perimeters/group for action test
 
 
 
-    * def perimeterUserCardExamples =
+    * def perimeterUserCardExamples2 =
 """
 {
-  "id" : "perimeterUserCardExamples",
-  "process" : "userCardExamples",
+  "id" : "perimeterUserCardExamples2",
+  "process" : "userCardExamples2",
   "stateRights" : [
     {
-      "state" : "conferenceState",
+      "state" : "messageState",
       "right" : "ReceiveAndWrite"
     },
     {
-      "state" : "incidentInProgressState",
+      "state" : "questionState",
       "right" : "ReceiveAndWrite"
     }
   ]
@@ -26,32 +26,32 @@ Feature: Add perimeters/group for action test
 """
 
 
-  Scenario: Create perimeterUserCardExamples
+  Scenario: Create perimeterUserCardExamples2
     Given url opfabUrl + 'users/perimeters'
     And header Authorization = 'Bearer ' + authToken
-    And request perimeterUserCardExamples
+    And request perimeterUserCardExamples2
     When method post
     Then status 201
 
 
-  Scenario: Add perimeterUserCardExamples for groups Dispatcher
+  Scenario: Add perimeterUserCardExamples2 for groups Dispatcher
     Given url opfabUrl + 'users/groups/Dispatcher/perimeters'
     And header Authorization = 'Bearer ' + authToken
-    And request ["perimeterUserCardExamples"]
+    And request ["perimeterUserCardExamples2"]
     When method patch
     Then status 200
 
-  Scenario: Add perimeterUserCardExamples for groups Planner
+  Scenario: Add perimeterUserCardExamples2 for groups Planner
     Given url opfabUrl + 'users/groups/Planner/perimeters'
     And header Authorization = 'Bearer ' + authToken
-    And request ["perimeterUserCardExamples"]
+    And request ["perimeterUserCardExamples2"]
     When method patch
     Then status 200
 
-  Scenario: Add perimeterUserCardExamples for groups Supervisor
+  Scenario: Add perimeterUserCardExamples2 for groups Supervisor
     Given url opfabUrl + 'users/groups/Supervisor/perimeters'
     And header Authorization = 'Bearer ' + authToken
-    And request ["perimeterUserCardExamples"]
+    And request ["perimeterUserCardExamples2"]
     When method patch
     Then status 200
 

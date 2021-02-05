@@ -7,18 +7,14 @@ Feature: Add perimeters/group for action test
 
 
 
-    * def perimeterUserCardExamples =
+    * def perimeterUserCardExamples3 =
 """
 {
-  "id" : "perimeterUserCardExamples",
-  "process" : "userCardExamples",
+  "id" : "perimeterUserCardExamples3",
+  "process" : "userCardExamples3",
   "stateRights" : [
     {
-      "state" : "conferenceState",
-      "right" : "ReceiveAndWrite"
-    },
-    {
-      "state" : "incidentInProgressState",
+      "state" : "taskState",
       "right" : "ReceiveAndWrite"
     }
   ]
@@ -26,32 +22,32 @@ Feature: Add perimeters/group for action test
 """
 
 
-  Scenario: Create perimeterUserCardExamples
+  Scenario: Create perimeterUserCardExamples3
     Given url opfabUrl + 'users/perimeters'
     And header Authorization = 'Bearer ' + authToken
-    And request perimeterUserCardExamples
+    And request perimeterUserCardExamples3
     When method post
     Then status 201
 
 
-  Scenario: Add perimeterUserCardExamples for groups Dispatcher
+  Scenario: Add perimeterUserCardExamples3 for groups Dispatcher
     Given url opfabUrl + 'users/groups/Dispatcher/perimeters'
     And header Authorization = 'Bearer ' + authToken
-    And request ["perimeterUserCardExamples"]
+    And request ["perimeterUserCardExamples3"]
     When method patch
     Then status 200
 
-  Scenario: Add perimeterUserCardExamples for groups Planner
+  Scenario: Add perimeterUserCardExamples3 for groups Planner
     Given url opfabUrl + 'users/groups/Planner/perimeters'
     And header Authorization = 'Bearer ' + authToken
-    And request ["perimeterUserCardExamples"]
+    And request ["perimeterUserCardExamples3"]
     When method patch
     Then status 200
 
-  Scenario: Add perimeterUserCardExamples for groups Supervisor
+  Scenario: Add perimeterUserCardExamples3 for groups Supervisor
     Given url opfabUrl + 'users/groups/Supervisor/perimeters'
     And header Authorization = 'Bearer ' + authToken
-    And request ["perimeterUserCardExamples"]
+    And request ["perimeterUserCardExamples3"]
     When method patch
     Then status 200
 

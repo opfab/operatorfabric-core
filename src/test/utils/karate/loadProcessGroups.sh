@@ -8,18 +8,9 @@
 # SPDX-License-Identifier: MPL-2.0
 # This file is part of the OperatorFabric project.
 
-echo "Zip bundle"
-(
-cd businessconfig/resources
-./packageBundle.sh
-)
-
 echo "Launch Karate test"
 java -jar karate.jar                           \
-      businessconfig/postBundleDefaultProcess.feature         \
-      businessconfig/postBundleUserCardExamples.feature       \
-      businessconfig/postBundleUserCardExamples2.feature      \
-      businessconfig/postBundleUserCardExamples3.feature      \
+      businessconfig/postProcessGroups.feature
 
 
 

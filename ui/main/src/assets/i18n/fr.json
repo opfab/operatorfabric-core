@@ -327,6 +327,9 @@
       "entities": "Gestion des entités"
     }
   },
+  "service": {
+    "defaultLabel": "--"
+  },
   "ag-grid": {
     "loadingOoo": "Chargement en cours...",
     "noRowsToShow": "Aucune donnée",
