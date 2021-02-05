@@ -81,7 +81,7 @@
     },
     "sort": {
       "title": "Sort by",
-      "severity": "Criticity  then date",
+      "severity": "Criticality then date",
       "publish": "Date",
       "unread": "Unread then date"
     },
