@@ -284,7 +284,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     ngDoCheck() {
+        const previous = this.lttdExpiredIsTrue;
         this.checkLttdExpired();
+        if (previous != this.lttdExpiredIsTrue) {
+            templateGateway.setLttdExpired(this.lttdExpiredIsTrue);
+        }
     }
 
     checkLttdExpired(): void {
@@ -464,7 +468,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         }
         this.setButtonsVisibility();
         this.setShowDetailCardHeader();
-
+        
     }
 
     private setEntitiesToRespond() {
@@ -594,6 +598,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                             setTimeout(() => { // wait for script loading before calling them in template 
                                 templateGateway.applyChildCards();
                                 if (this.hasAlreadyResponded) templateGateway.lockAnswer();
+                                if (this.card.lttd && this.lttdExpiredIsTrue) {
+                                    templateGateway.setLttdExpired(true);
+                                }
+
                             }, 10);
                         }, 10);
                     }, () => {

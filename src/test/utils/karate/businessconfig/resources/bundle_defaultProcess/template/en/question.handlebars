@@ -9,6 +9,7 @@
        <label class="opfab-checkbox" style="margin-left:40px"> The 10/08/2021 between 10PM and 12PM <input type="checkbox" id="choice2" name="choice2" >  <span class="opfab-checkbox-checkmark"> </span> </label>
        <label class="opfab-checkbox" style="margin-left:40px"> The 11/08/2021 between 8PM and 10PM <input type="checkbox" id="choice3" name="choice3" >  <span class="opfab-checkbox-checkmark"> </span> </label>
     </div>
+    <div id="responseDisabled" style="color: red"></div>
 </form> 
 
 <br/>
@@ -77,6 +78,18 @@
 
  }
 
+  templateGateway.setLttdExpired = function(expired) {
+      const responseEnabled = document.getElementById('responseDisabled');
+      if (responseEnabled != null) {
+        if (expired) {
+            responseEnabled.innerHTML="Response time has expired";
+            templateGateway.lockAnswer();
+        } else {
+            responseEnabled.innerHTML="";
+            templateGateway.unlockAnswer();
+        }
+      }
+  }
 
 </script>
 
