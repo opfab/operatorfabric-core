@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,6 +21,9 @@ import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {UserContext} from '@ofModel/user-context.model';
 import {skip, switchMap, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
+
+
+declare const templateGateway: any;
 
 @Component({
     selector: 'of-card-detail',
@@ -115,6 +118,7 @@ export class CardDetailComponent implements OnInit, OnDestroy {
                     this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
                     setTimeout(() => { // wait for DOM rendering
                         this.reinsertScripts();
+                        templateGateway.setScreenSize('lg');
                     }, 10);
                 }, () =>  {
                     console.log('WARNING impossible to load template ', this.templateName);

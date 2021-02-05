@@ -466,3 +466,12 @@ Your can find example using these classes in the OperatorFabric core repository 
 
 The library https://www.chartjs.org/[charts.js] is integrated in OperatorFabric, it means it's possible to show charts in cards, you can find a bundle example in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/utils/karate/businessconfig/resources/bundle_defautlProcess[src/test/utils/karate/businessconfig/resources/bundle_defaultProcess]).
 
+
+== OperatorFabric specific functions
+
+=== Set screen size
+
+To adapt the template content on screen size it is possible to receive from OperatorFabric information on the size of the window where the template will be rendered. To receive screen size information you need to implement a javascript function in your template called templateGateway.setScreenSize(size) which receives as input a string parameter with one of the following values :
+
+- 'md' : medium size window
+- 'lg' : large size window
