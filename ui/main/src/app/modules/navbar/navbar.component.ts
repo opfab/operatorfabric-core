@@ -8,25 +8,25 @@
  */
 
 
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { navigationRoutes } from '../../app-routing.module';
-import { Store } from '@ngrx/store';
-import { TryToLogOut } from '@ofActions/authentication.actions';
-import { AppState } from '@ofStore/index';
-import { selectCurrentUrl } from '@ofSelectors/router.selectors';
-import { LoadMenu } from '@ofActions/menu.actions';
-import { selectMenuStateMenu } from '@ofSelectors/menu.selectors';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Menu } from '@ofModel/menu.model';
-import { map, tap } from 'rxjs/operators';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {navigationRoutes} from '../../app-routing.module';
+import {Store} from '@ngrx/store';
+import {TryToLogOut} from '@ofActions/authentication.actions';
+import {AppState} from '@ofStore/index';
+import {selectCurrentUrl} from '@ofSelectors/router.selectors';
+import {LoadMenu} from '@ofActions/menu.actions';
+import {selectMenuStateMenu} from '@ofSelectors/menu.selectors';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {Menu} from '@ofModel/menu.model';
+import {map, tap} from 'rxjs/operators';
 import * as _ from 'lodash';
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {Route} from '@angular/router';
 import {ConfigService} from '@ofServices/config.service';
-import {QueryAllEntities} from "@ofActions/user.actions";
-import { UserService } from '@ofServices/user.service';
-import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { AppService } from '@ofServices/app.service';
+import {QueryAllEntities} from '@ofActions/user.actions';
+import {UserService} from '@ofServices/user.service';
+import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {AppService} from '@ofServices/app.service';
 
 @Component({
     selector: 'of-navbar',
@@ -43,9 +43,9 @@ export class NavbarComponent implements OnInit {
   expandedMenu: boolean[] = [];
   
   modalRef: NgbModalRef;
-  @ViewChild('userCard', null) userCardTemplate: ElementRef;
+  @ViewChild('userCard') userCardTemplate: ElementRef;
 
-  @ViewChild('about', null) aboutTemplate: ElementRef;
+  @ViewChild('about') aboutTemplate: ElementRef;
 
   customLogo: string;
   height: number;

@@ -37,8 +37,8 @@ import {HourAndMinutes} from '@ofModel/card.model';
 })
 export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  @ViewChild('calendar', null) calendarComponent: FullCalendarComponent; // the #calendar in the template
-  @ViewChild('cardDetail', null) cardDetailTemplate: ElementRef; // the #calendar in the template
+  @ViewChild('calendar') calendarComponent: FullCalendarComponent; // the #calendar in the template
+  @ViewChild('cardDetail') cardDetailTemplate: ElementRef; // the #calendar in the template
 
   private unsubscribe$ = new Subject<void>();
   calendarVisible = true;

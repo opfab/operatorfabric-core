@@ -8,24 +8,24 @@
  */
 
 
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { AppState } from '@ofStore/index';
-import { ProcessesService } from '@ofServices/processes.service';
-import { Store } from '@ngrx/store';
-import { takeUntil } from 'rxjs/operators';
-import { FormControl, FormGroup } from '@angular/forms';
-import { ConfigService } from '@ofServices/config.service';
-import { TimeService } from '@ofServices/time.service';
-import { NgbDateStruct, NgbModal, NgbModalOptions, NgbModalRef, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
-import { DateTimeNgb } from '@ofModel/datetime-ngb.model';
-import { CardService } from '@ofServices/card.service';
-import { LightCard } from '@ofModel/light-card.model';
-import { Page } from '@ofModel/page.model';
-import { ExportService } from '@ofServices/export.service';
-import { TranslateService } from '@ngx-translate/core';
-import { Card } from '@ofModel/card.model';
-import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Observable, Subject} from 'rxjs';
+import {AppState} from '@ofStore/index';
+import {ProcessesService} from '@ofServices/processes.service';
+import {Store} from '@ngrx/store';
+import {takeUntil} from 'rxjs/operators';
+import {FormControl, FormGroup} from '@angular/forms';
+import {ConfigService} from '@ofServices/config.service';
+import {TimeService} from '@ofServices/time.service';
+import {NgbDateStruct, NgbModal, NgbModalOptions, NgbModalRef, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
+import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
+import {CardService} from '@ofServices/card.service';
+import {LightCard} from '@ofModel/light-card.model';
+import {Page} from '@ofModel/page.model';
+import {ExportService} from '@ofServices/export.service';
+import {TranslateService} from '@ngx-translate/core';
+import {Card} from '@ofModel/card.model';
+import {buildSettingsOrConfigSelector} from '@ofStore/selectors/settings.x.config.selectors';
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -37,7 +37,7 @@ export enum FilterDateTypes {
 
 export const checkElement = (enumeration: typeof FilterDateTypes, value: string): boolean => {
     let result = false;
-    if (Object.values(enumeration).includes(value)) {
+    if (Object.values(enumeration).map(enumValue => enumValue.toString()).includes(value)) {
         result = true;
     }
     return result;
@@ -75,7 +75,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     // View card 
     modalRef: NgbModalRef;
-    @ViewChild('cardDetail', null) cardDetailTemplate: ElementRef;
+    @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
     selectedCard : Card; 
 
     constructor(private store: Store<AppState>,

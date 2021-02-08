@@ -25,7 +25,7 @@ import {Card, CardForPublishing} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../../services/handlebars.service';
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
-import {AcknowledgmentAllowedEnum, Response} from '@ofModel/processes.model';
+import {AcknowledgmentAllowedEnum, Response, State as CardState} from '@ofModel/processes.model';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -45,12 +45,11 @@ import {ClearLightCardSelection, UpdateALightCard} from '@ofStore/actions/light-
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {Entity} from '@ofModel/entity.model';
-import {NgbModal,NgbModalOptions,NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {ConfigService} from '@ofServices/config.service';
-import {State as CardState} from '@ofModel/processes.model';
-import { TimeService } from '@ofServices/time.service';
-import { AlertMessage } from '@ofStore/actions/alert.actions';
-import { MessageLevel } from '@ofModel/message.model';
+import {TimeService} from '@ofServices/time.service';
+import {AlertMessage} from '@ofStore/actions/alert.actions';
+import {MessageLevel} from '@ofModel/message.model';
 
 
 declare const templateGateway: any;
@@ -113,9 +112,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     @Input() parentModalRef: NgbModalRef;
     @Input() screenSize: string;
 
-    @ViewChild('cardDeletedWithNoErrorPopup', null) cardDeletedWithNoErrorPopupRef: TemplateRef<any>;
-    @ViewChild('impossibleToDeleteCardPopup', null) impossibleToDeleteCardPopupRef: TemplateRef<any>;
-    @ViewChild('userCard', null) userCardTemplate: TemplateRef<any>;
+    @ViewChild('cardDeletedWithNoErrorPopup') cardDeletedWithNoErrorPopupRef: TemplateRef<any>;
+    @ViewChild('impossibleToDeleteCardPopup') impossibleToDeleteCardPopupRef: TemplateRef<any>;
+    @ViewChild('userCard') userCardTemplate: TemplateRef<any>;
 
     public isActionEnabled = false;
     public lttdExpiredIsTrue: boolean;

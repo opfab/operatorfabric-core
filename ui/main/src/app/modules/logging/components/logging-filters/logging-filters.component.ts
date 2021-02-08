@@ -15,13 +15,12 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {SendLoggingQuery} from '@ofActions/logging.actions';
 import {ConfigService} from '@ofServices/config.service';
 import {TimeService} from '@ofServices/time.service';
-import { NgbDateStruct, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
-import { DateTimeNgb } from '@ofModel/datetime-ngb.model';
-import { TranslateService } from '@ngx-translate/core';
-import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-
+import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
+import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
+import {TranslateService} from '@ngx-translate/core';
+import {buildSettingsOrConfigSelector} from '@ofStore/selectors/settings.x.config.selectors';
+import {Observable, Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 
 export enum FilterDateTypes {
@@ -35,7 +34,7 @@ export enum FilterDateTypes {
 
 export const checkElement = (enumeration: typeof FilterDateTypes, value: string): boolean => {
     let result = false;
-    if (Object.values(enumeration).includes(value)) {
+    if (Object.values(enumeration).map(enumValue => enumValue.toString()).includes(value)) {
         result = true;
     }
     return result;
