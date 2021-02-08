@@ -63,6 +63,7 @@ export class NavbarComponent implements OnInit {
   constructor(private store: Store<AppState>, private globalStyleService: GlobalStyleService, private configService: ConfigService
     , private userService: UserService, private modalService: NgbModal, private appService: AppService) {
 
+      this.currentPath = ['']; // Initializing currentPath to avoid 'undefined' errors when it is used to determine 'active' look in template
   }
 
     ngOnInit() {

@@ -28,7 +28,7 @@
     <ul class="navbar-nav mr-auto ">
       <!-- Links to OperatorFabric pages as defined in app-rooting.module.ts (e.g. Card Feed, Archive) -->
       <li class="nav-item" *ngFor="let link of navigationRoutes, let i = index"
-        [class.active]="currentPath && link.path === currentPath[1]">
+        [class.active]="link.path === currentPath[1]">
         <a id="opfab-navbar-menu-{{link.path}}" class="nav-link" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
           (click)="activeLinkIndex = i" translate>{{'menu.'+link.path}}</a>
       </li>
