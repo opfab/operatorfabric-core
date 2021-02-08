@@ -199,7 +199,7 @@
   },
   "userCard": {
     "title": "CREATE A NEW CARD ",
-    "editTitle" : "EDIT A NEW CARS",
+    "editTitle" : "EDIT A NEW CARD",
     "error": {
       "notAvailable": "Feature not available",
       "noRecipientSelected": "You must at least choose one recipient",
@@ -208,6 +208,7 @@
     },
     "filters": {
       "severity": "SEVERITY",
+      "service": "SERVICE",
       "process": "PROCESS",
       "state": "STATE",
       "startDate":  "START DATE",
@@ -325,6 +326,9 @@
       "groups": "Groups management",
       "entities": "Entities management"
     }
+  },
+  "service": {
+    "defaultLabel": "--"
   },
   "ag-grid": {
     "loadingOoo": "Loading...",

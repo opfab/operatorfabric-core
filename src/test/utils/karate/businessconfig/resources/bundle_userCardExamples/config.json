@@ -8,16 +8,6 @@
     "calendar": true
   },
   "states": {
-    "messageState": {
-      "name": "message.title",
-      "color": "#CC9900",
-      "userCard" : {
-        "template" : "usercard_message"
-      },
-      "templateName": "message",
-      "styles": [],
-      "acknowledgmentAllowed": "Always"
-    },
     "conferenceState": {
       "name": "conference.title",
       "color": "#CC9900",
@@ -28,34 +18,6 @@
       "styles": [],
       "acknowledgmentAllowed": "Always"
     },
-    "questionState": {
-      "name": "question.title",
-      "showDetailCardHeader": false,
-      "color": "#0070C0",
-      "userCard" : {
-				"template" : "usercard_question",
-				"severityVisible" : false,
-				"startDateVisible" : true,
-				"endDateVisible" : true
-			},
-      "response": {
-        "state": "questionState"
-      },
-      "templateName": "question",
-      "styles": [],
-      "acknowledgmentAllowed": "Never"
-    },
-    "taskState": {
-      "name": "task.title",
-      "color": "#0070C0",
-      "userCard" : {
-        "template" : "usercard_task"
-      },
-      "templateName": "task",
-      "styles": [
-      ],
-      "acknowledgmentAllowed": "Always"
-    },    
     "incidentInProgressState": {
       "name": "incidentInProgress.name",
       "userCard" : {

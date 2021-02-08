@@ -208,6 +208,7 @@
     },
     "filters": {
       "severity": "SEVERITE",
+      "service": "SERVICE",
       "process": "PROCESSUS",
       "state": "ETAT",
       "startDate": "DATE DE DEBUT ",
@@ -325,6 +326,9 @@
       "groups": "Gestion des groupes",
       "entities": "Gestion des entités"
     }
+  },
+  "service": {
+    "defaultLabel": "--"
   },
   "ag-grid": {
     "loadingOoo": "Chargement en cours...",
