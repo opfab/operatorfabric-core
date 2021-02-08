@@ -9,7 +9,8 @@
 	"states": {
 		"messageState" : {
 			"templateName" : "template",
-			"styles" : [ "style" ]
+			"styles" : [ "style" ],
+			"type" : "CANCELED"
 		},
 		"questionState": {
 		  "name": "question.title",
@@ -25,7 +26,8 @@
 		  },
 		  "templateName": "question",
 		  "styles": [],
-		  "acknowledgmentAllowed": "Never"
+		  "acknowledgmentAllowed": "Never",
+		  "type" : "INPROGRESS"
 		},   
 		"incidentInProgressState": {
 		  "name": "incidentInProgress.name",
@@ -41,7 +43,8 @@
 		  },
 		  "templateName": "incidentInProgress",
 		  "styles": [],
-		  "acknowledgmentAllowed": "Always"
+		  "acknowledgmentAllowed": "Always",
+		  "type" : "FINISHED"
 		}
 	  }
 }
