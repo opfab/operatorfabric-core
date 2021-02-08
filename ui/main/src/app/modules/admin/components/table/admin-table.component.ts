@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable, Input, OnInit} from '@angular/core';
+import {Directive, Injectable, Input, OnInit} from '@angular/core';
 import {ColDef, GridOptions, ICellRendererParams} from 'ag-grid-community';
 import {TranslateService} from '@ngx-translate/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -18,6 +18,7 @@ import {ActionCellRendererComponent} from './action-cell-renderer.component';
 import {AppError} from '../../../../common/error/app-error';
 import {CrudService} from '@ofServices/crud-service';
 
+@Directive()
 @Injectable()
 export abstract class AdminTableComponent implements OnInit {
 

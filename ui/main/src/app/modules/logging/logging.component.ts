@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {OnInit, Component, OnDestroy, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {Observable, Subject} from 'rxjs';
@@ -15,8 +15,8 @@ import {LineOfLoggingResult} from '@ofModel/line-of-logging-result.model';
 import {selectLinesOfLoggingResult} from '@ofSelectors/logging.selectors';
 import {map, takeUntil} from 'rxjs/operators';
 import {LoggingFiltersComponent} from './components/logging-filters/logging-filters.component';
-import { ProcessesService } from '@ofServices/processes.service';
-import {Process} from "@ofModel/processes.model";
+import {ProcessesService} from '@ofServices/processes.service';
+import {Process} from '@ofModel/processes.model';
 
 @Component({
     selector: 'of-logging',
@@ -25,7 +25,7 @@ import {Process} from "@ofModel/processes.model";
 })
 export class LoggingComponent implements OnInit, OnDestroy {
 
-    @ViewChild(LoggingFiltersComponent, {static: false})
+    @ViewChild(LoggingFiltersComponent)
     filters: LoggingFiltersComponent;
 
     loggingResult$: Observable<LineOfLoggingResult[]>;

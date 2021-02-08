@@ -8,14 +8,12 @@
  */
 
 
-import {Inject} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {GlobalStyleUpdate} from '@ofActions/global-style.actions';
 
-@Inject({
-    providedIn: 'root'
-})
+@Injectable()
 export class GlobalStyleService {
 
     private static style: string;

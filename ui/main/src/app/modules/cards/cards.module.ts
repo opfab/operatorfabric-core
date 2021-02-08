@@ -43,7 +43,7 @@ import {UserCardModule} from '../usercard/usercard.module';
 })
 
 export class CardsModule {
-    static forRoot(): ModuleWithProviders {
+    static forRoot(): ModuleWithProviders<CardsModule> {
         return {
             ngModule: CardsModule,
             providers: [ProcessesService]

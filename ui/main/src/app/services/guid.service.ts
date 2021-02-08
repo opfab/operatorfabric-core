@@ -8,13 +8,10 @@
  */
 
 
-
-import {Inject} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Guid} from 'guid-typescript';
 
-@Inject({
-    providedIn: 'root'
-})
+@Injectable()
 export class GuidService {
 
     private readonly guid: Guid;

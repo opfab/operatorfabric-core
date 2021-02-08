@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ErrorHandler} from '@angular/core';
+import {ErrorHandler, Injectable} from '@angular/core';
 import {NotAllowedError} from './not-allowed-error';
 import {NotFoundError} from './not-found-error';
 
@@ -16,6 +16,7 @@ import {NotFoundError} from './not-found-error';
  * By default, it will print messages to the console, and this class is a custom `ErrorHandler` that will override
  * this default for certain error types.
  */
+@Injectable()
 export class AppErrorHandler implements ErrorHandler {
 
   handleError(error) {
