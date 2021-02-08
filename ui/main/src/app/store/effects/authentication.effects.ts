@@ -85,7 +85,10 @@ export class AuthenticationEffects {
                 switchMap((action: TryToLogIn) => {
                     const payload = action.payload;
                     return this.authService.askTokenFromPassword(payload.username, payload.password).pipe(
-                        map(authenticationInfo => new AcceptLogIn(authenticationInfo)),
+                        map(authenticationInfo => {
+                            this.authService.regularCheckTokenValidity();
+                            return new AcceptLogIn(authenticationInfo)}
+                            ),
                         catchError(errorResponse => {
                                 return this.handleErrorOnTokenGeneration(errorResponse, 'authenticate');
                             }
@@ -204,6 +207,7 @@ export class AuthenticationEffects {
                                 MessageLevel.ERROR,
                                 new I18n('login.error.token.invalid'))));
                         }
+                        return of(this.handleRejectedLogin(new Message('No token (password mode)')));
                     } else {
                         if (!this.authService.isExpirationDateOver()) {
                             const authInfo = this.authService.extractIdentificationInformation();
