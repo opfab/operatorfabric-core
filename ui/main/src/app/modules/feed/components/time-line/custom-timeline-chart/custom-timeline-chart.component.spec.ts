@@ -41,7 +41,7 @@ describe('CustomTimelineChartComponent', () => {
         FormsModule,
         StoreModule.forRoot(appReducer, storeConfig),
         RouterTestingModule,
-        StoreRouterConnectingModule,
+        StoreRouterConnectingModule.forRoot(),
         NgxChartsModule,
         NgbModule,
         HttpClientTestingModule],
