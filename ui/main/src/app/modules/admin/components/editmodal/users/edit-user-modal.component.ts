@@ -42,10 +42,10 @@ export class EditUserModalComponent implements OnInit {
   @Input() row: User;
 
   constructor(
-    private activeModal: NgbActiveModal,
-    private crudService: UserService,
-    private groupsService: GroupsService,
-    private entitiesService: EntitiesService) {
+      private activeModal: NgbActiveModal,
+      private crudService: UserService,
+      private groupsService: GroupsService,
+      private entitiesService: EntitiesService) {
 
     this.userForm = new FormGroup({
       login: new FormControl(''
