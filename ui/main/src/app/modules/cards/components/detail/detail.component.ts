@@ -111,6 +111,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     @Input() user: User;
     @Input() currentPath: string;
     @Input() parentModalRef: NgbModalRef;
+    @Input() screenSize: string;
 
     @ViewChild('cardDeletedWithNoErrorPopup', null) cardDeletedWithNoErrorPopupRef: TemplateRef<any>;
     @ViewChild('impossibleToDeleteCardPopup', null) impossibleToDeleteCardPopupRef: TemplateRef<any>;
@@ -259,7 +260,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     private initAllBindedVariables()
     {
-        this._htmlContent = ""; 
+        this._htmlContent = "";
         this.fullscreen = false;
         this.showMaxAndReduceButton = false;
         this.showAckButton = false;
@@ -602,6 +603,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                                     templateGateway.setLttdExpired(true);
                                 }
 
+                                templateGateway.setScreenSize(this.screenSize);
                             }, 10);
                         }, 10);
                     }, () => {
@@ -690,6 +692,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     setFullScreen(active) {
         this.fullscreen = active;
+        templateGateway.setScreenSize(active? 'lg' : 'md');
     }
 
     ngOnDestroy() {

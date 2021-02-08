@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,7 +28,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
             <div *ngIf="card && cardState">
                 <of-detail   [cardState]="cardState" [card]="card" [childCards]="childCards"
-                           [user]="user" [currentPath]="_currentPath" [parentModalRef]="parentModalRef">
+                           [user]="user" [currentPath]="_currentPath" [parentModalRef]="parentModalRef" [screenSize]="screenSize">
                 </of-detail>
             </div>
         `
@@ -37,6 +37,7 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
 
 
     @Input() parentModalRef: NgbModalRef;
+    @Input() screenSize: string = 'md';
 
     card: Card;
     childCards: Card[];
