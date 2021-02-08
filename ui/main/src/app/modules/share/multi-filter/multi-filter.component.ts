@@ -11,11 +11,11 @@ import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {I18n} from '@ofModel/i18n.model';
 import {TranslateService} from '@ngx-translate/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '@ofStore/index';
-import { Observable, Subject } from 'rxjs';
-import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
-import { takeUntil } from 'rxjs/operators';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {Observable, Subject} from 'rxjs';
+import {buildSettingsOrConfigSelector} from '@ofStore/selectors/settings.x.config.selectors';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     selector: 'of-multi-filter',
@@ -31,7 +31,15 @@ export class MultiFilterComponent implements OnInit, OnChanges, OnDestroy {
     @Input() public parentForm: FormGroup;
     @Input() public dropdownSettings = {};
     @Input() public filterPath: string;
-    @Input() public selectedItems ;
+    /** `selectedItems` is an array containing the ids of items that have been selected */
+    @Input() public selectedItems;
+    /** `selection` is an array containing {id,itemName} pairs representing the selection that will actually be passed by the component.
+     * In particular, if `selectedItems` is undefined, `selection` will be equal to the full list of possible values (`dropDownList`).
+     * This behaviour is useful if the component is being used as a filter and when no values are selected, we don't want to restrict search
+     * results based on this criteria (e.g. archive screen filters).
+     * In other cases, when no items are selected we want the passed selection to be empty as well (e.g. edition modals in the admin
+     * screen). In this case, `selectedItems` should be set to [].
+     * */
     public selection = [];
 
     constructor(private store: Store<AppState>, private translateService: TranslateService) {
@@ -41,20 +49,44 @@ export class MultiFilterComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnInit() {
-        this.initComponentValues();
 
+        // Subscribe to locale changes and handle translations for placeholders
+        this.getLocale().pipe(takeUntil(this.unsubscribe$)).subscribe(locale => {
+            this.translateService.use(locale);
+            this.translateService.get(['multiFilter.searchPlaceholderText', 'multiFilter.selectAllText', 'multiFilter.unSelectAllText',
+                'multiFilter.filterSelectAllText', 'multiFilter.filterUnSelectAllText'])
+                .subscribe(translations => {
+                    this.dropdownSettings = {...{
+                            searchPlaceholderText: translations['multiFilter.searchPlaceholderText'],
+                            selectAllText: translations['multiFilter.selectAllText'],
+                            unSelectAllText: translations['multiFilter.unSelectAllText'],
+                            filterSelectAllText: translations['multiFilter.filterSelectAllText'],
+                            filterUnSelectAllText: translations['multiFilter.filterUnSelectAllText'],
+                            noDataLabel: translations['multiFilter.noDataLabel'],
+                        }, ...this.dropdownSettings};
+                });
+        });
     }
 
-    initComponentValues() {
 
+    onDeSelectAll(items: any) {
+        this.selection = [];
+        this.parentForm.get(this.filterPath).setValue(this.selection);
+    }
+
+    ngOnChanges() {
+
+        // Initialisation of component values
+        this.selection = [];
         this.dropdownList = [];
         if (!!this.values) {
             this.dropdownList = this.values.map(entry => this.computeValueAndLabel(entry));
         } else {
             // should throws an error ?
-            console.error('there is currently no values', this.values);
+            console.error('There are currently no values for ' + this.filterPath);
         }
-        if (!this.selectedItems) this.selection = this.dropdownList.map(item => item);
+        if (!this.selectedItems) this.selection = this.dropdownList.map(item => item); // If selectedItems haven't been defined,
+        // selection is set to a copy of all values so no filter is applied for this field
         else {
             this.selectedItems.forEach(element => {
                 const items = this.dropdownList.filter(item  => item.id === element);
@@ -64,29 +96,6 @@ export class MultiFilterComponent implements OnInit, OnChanges, OnDestroy {
         }
         this.parentForm.get(this.filterPath).setValue(this.selection);
 
-        this.getLocale().pipe(takeUntil(this.unsubscribe$)).subscribe(locale => {
-            this.translateService.use(locale);
-            this.translateService.get(['multiFilter.searchPlaceholderText','multiFilter.selectAllText', 'multiFilter.unSelectAllText', 'multiFilter.filterSelectAllText', 'multiFilter.filterUnSelectAllText'])
-              .subscribe(translations => {
-                this.dropdownSettings = {...{
-                    searchPlaceholderText: translations['multiFilter.searchPlaceholderText'],
-                    selectAllText: translations['multiFilter.selectAllText'],
-                    unSelectAllText: translations['multiFilter.unSelectAllText'],
-                    filterSelectAllText: translations['multiFilter.filterSelectAllText'],
-                    filterUnSelectAllText: translations['multiFilter.filterUnSelectAllText'],
-                    noDataLabel: translations['multiFilter.noDataLabel'],
-                },...this.dropdownSettings};
-              })
-            });
-    }
-
-    onDeSelectAll(items: any) {
-        this.selection = [];
-        this.parentForm.get(this.filterPath).setValue(this.selection);
-    }
-
-    ngOnChanges() {
-        this.initComponentValues();
     }
 
     protected getLocale(): Observable<string> {

@@ -7,70 +7,68 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
+<div class="modal-content">
+  <div class="modal-header">
+    <span class="modal-title" *ngIf="row">{{row.login}}</span>
+    <span class="modal-title" *ngIf="!row" translate>admin.input.user.add</span>
+    <button id="opfab-admin-edit-user-btn-close" (click)="dismissModal('Cross click')" type="button" class="close" data-dismiss="modal"
+            aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="userForm" class="opfab-form-lighter">
+      <div class="container">
+        <div class="col">
 
-<div class="modal-header bg-dark">
-  <h5 class="modal-title" *ngIf="row">{{row.login}}</h5>
-  <h5 class="modal-title" *ngIf="!row" translate>admin.input.user.add</h5>
-  <button id="opfab-admin-edit-user-btn-close" (click)="dismissModal('Cross click')" type="button" class="close" data-dismiss="modal"
-    aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-<div class="border border-primary p-4 bg-dark">
-  <form [formGroup]="form">
-    <div class="form-group">
-      <div *ngIf="!row">
-        <mat-form-field appearance="fill" color="primary">
-          <mat-label for="login" translate>admin.input.user.login</mat-label>
-          <input oninput="this.value = this.value.toLowerCase()" matInput  formControlName="login" name="login" id="login" type="text"
-            class="form-control bg-dark">
-        </mat-form-field>
-        <div *ngIf="login.invalid" class="alert alert-danger">
-          <div *ngIf="login.errors.required" translate>admin.input.login.required</div>
-          <div *ngIf="login.errors.maxlength" translate>admin.input.login.maxLength</div>
-          <div *ngIf="login.errors.minlength" translate>admin.input.login.minLength</div>
+          <div *ngIf="!row" class="opfab-input row">
+            <label for="login" translate>admin.input.user.login</label>
+            <input oninput="this.value = this.value.toLowerCase()" formControlName="login" name="login" id="login" type="text">
+            <div *ngIf="login.invalid" class="row alert alert-danger">
+              <div *ngIf="login.errors.required" translate>admin.input.login.required</div>
+              <div *ngIf="login.errors.maxlength" translate>admin.input.login.maxLength</div>
+              <div *ngIf="login.errors.minlength" translate>admin.input.login.minLength</div>
+            </div>
+          </div>
+
+          <div class="opfab-input row">
+            <label for="firstName" translate>admin.input.user.firstName</label>
+            <input formControlName="firstName" name="firstName" id="firstName" type="text">
+          </div>
+          <div *ngIf="firstName.invalid" class="row alert alert-danger">
+            <div *ngIf="firstName.errors.required" translate>admin.input.firstName.required</div>
+            <div *ngIf="firstName.errors.maxlength" translate>admin.input.firstName.maxLength</div>
+          </div>
+          <div class="opfab-input row">
+            <label for="lastName" translate>admin.input.user.lastName</label>
+            <input formControlName="lastName" name="lastName" id="lastName" type="text">
+          </div>
+          <div *ngIf="lastName.invalid" class="row alert alert-danger">
+            <div *ngIf="lastName.errors.required" translate>admin.input.lastName.required</div>
+            <div *ngIf="lastName.errors.maxlength" translate>admin.input.lastName.maxLength</div>
+          </div>
+          <div class="row">
+            <of-multi-filter filterPath="groups" id="groups" [parentForm]="userForm"
+                             [values]="groupsDropdownList" [dropdownSettings]="groupsDropdownSettings" [selectedItems]="selectedGroups"
+                             i18nRootLabelKey="admin.input.user.">
+            </of-multi-filter>
+          </div>
+          <div class="row">
+            <of-multi-filter filterPath="entities" id="entities" [parentForm]="userForm"
+                             [values]="entitiesDropdownList" [dropdownSettings]="entitiesDropdownSettings" [selectedItems]="selectedEntities"
+                             i18nRootLabelKey="admin.input.user.">
+            </of-multi-filter>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="form-group">
-      <mat-form-field appearance="fill">
-      <mat-label for="firstName" translate>admin.input.user.firstName</mat-label>
-      <input matInput formControlName="firstName" name="firstName" id="firstName" type="text" class="form-control bg-dark">
-      </mat-form-field>
-      <div *ngIf="firstName.invalid" class="alert alert-danger">
-        <div *ngIf="firstName.errors.required" translate>admin.input.firstName.required</div>
-        <div *ngIf="firstName.errors.maxlength" translate>admin.input.firstName.maxLength</div>
-      </div>
-    </div>
-    <div class="form-group">
-      <mat-form-field appearance="fill">
-      <mat-label for="lastName" translate>admin.input.user.lastName</mat-label>
-      <input matInput formControlName="lastName" name="lastName" id="lastName" type="text" class="form-control bg-dark">
-      </mat-form-field>
-      <div *ngIf="lastName.invalid" class="alert alert-danger">
-        <div *ngIf="lastName.errors.required" translate>admin.input.lastName.required</div>
-        <div *ngIf="lastName.errors.maxlength" translate>admin.input.lastName.maxLength</div>
-      </div>
-    </div>
-    <div class="form-group">
-      <mat-label for="groups" translate>admin.input.user.groups</mat-label>
-      <mat-select multiple formControlName="groups" name="groups" id="groups" class="form-control bg-dark">
-        <mat-option *ngFor="let group of groupsList" [value]="group.id">{{group.id}}</mat-option>
-      </mat-select>
-    </div>
-    <div class="form-group">
-      <mat-label for="entities" translate>admin.input.user.entities</mat-label>
-      <mat-select multiple formControlName="entities" name="entities" id="entities" class="form-control bg-dark">
-        <mat-option *ngFor="let entity of entitiesList" [value]="entity.id">{{entity.id}}</mat-option>
-      </mat-select>
-    </div>
-  </form>
-</div>
-<div class="modal-footer bg-dark">
-  <button id="opfab-admin-user-btn-close" type="button" (click)="dismissModal('Cancel click')" class="opfab-btn-cancel" data-dismiss="modal"
-    translate>admin.input.close</button>
-  <button id="opfab-admin-user-btn-add" [disabled]="!form.valid" *ngIf="!row" (click)="update()" class="opfab-btn"
-    translate>admin.input.user.add</button>
-  <button id="opfab-admin-user-btn-save" [disabled]="!form.valid" *ngIf="row" (click)="update()" class="opfab-btn"
-    translate>admin.input.save</button>
+    </form>
+  </div>
+  <div class="modal-footer" style="border-top: none">
+    <button id="opfab-admin-user-btn-close" type="button" (click)="dismissModal('Cancel click')" class="opfab-btn-cancel" data-dismiss="modal"
+            translate>admin.input.close</button>
+    <button id="opfab-admin-user-btn-add" [disabled]="!userForm.valid" *ngIf="!row" (click)="update()" class="opfab-btn"
+            translate>admin.input.user.add</button>
+    <button id="opfab-admin-user-btn-save" [disabled]="!userForm.valid" *ngIf="row" (click)="update()" class="opfab-btn"
+            translate>admin.input.save</button>
+  </div>
 </div>

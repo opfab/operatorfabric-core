@@ -9,44 +9,26 @@
  */
 
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {TranslateService} from '@ngx-translate/core';
 import {AppState} from '@ofStore/index';
-import {buildSettingsOrConfigSelector} from '@ofStore/selectors/settings.x.config.selectors';
-import {Observable, Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'of-admin',
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })
-export class AdminComponent implements OnInit, OnDestroy {
-
-  unsubscribe$: Subject<void> = new Subject<void>();
+export class AdminComponent implements OnInit {
 
   activeTab: string;
-  usersLabel: string;
-  entitiesLabel: string;
-  groupsLabel: string;
 
   public paginationDefaultPageSize = 10;
   public paginationPageSizeOptions = [5, 10, 25, 50, 100];
   public paginationPageSize = this.paginationDefaultPageSize;
 
-  //TODO Why do we need to use translate.get and subscriptions rather than the translate directive like everywhere else?
   constructor(private route: ActivatedRoute, protected store: Store<AppState>, protected translate: TranslateService) {
-    this.getLocale().pipe(takeUntil(this.unsubscribe$)).subscribe(locale => {
-      this.translate.use(locale);
-      this.translate.get(['admin.tabs.users', 'admin.tabs.entities', 'admin.tabs.groups'])
-        .subscribe(translations => {
-          this.usersLabel = translations['admin.tabs.users'];
-          this.entitiesLabel = translations['admin.tabs.entities'];
-          this.groupsLabel = translations['admin.tabs.groups'];
-        });
-    });
   }
 
   ngOnInit() {
@@ -56,15 +38,6 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   setActiveTab(tab: string): void {
     this.activeTab = tab;
-  }
-
-  private getLocale(): Observable<string> {
-    return this.store.select(buildSettingsOrConfigSelector('locale'));
-  }
-
-  ngOnDestroy() {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
   }
 
   onPageSizeChanged() {

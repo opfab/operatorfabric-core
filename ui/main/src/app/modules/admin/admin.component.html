@@ -7,18 +7,18 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div id="tabs" #tabs>
+<div id="tabs">
 
   <ul class="nav nav-pills">
 
     <li class="nav-item">
-      <a class="nav-link" [ngClass]="{ 'active':activeTab==='users'}" data-toggle="tab" href="#admin/users" (click)="setActiveTab('users')" > {{usersLabel}} </a>
+      <a class="nav-link" [ngClass]="{ 'active':activeTab==='users'}" data-toggle="tab" href="#admin/users" (click)="setActiveTab('users')" translate> admin.tabs.users </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" [ngClass]="{ 'active':activeTab==='entities'}" data-toggle="tab" href="#admin/entities" (click)="setActiveTab('entities')"> {{entitiesLabel}} </a>
+      <a class="nav-link" [ngClass]="{ 'active':activeTab==='entities'}" data-toggle="tab" href="#admin/entities" (click)="setActiveTab('entities')" translate> admin.tabs.entities </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" [ngClass]="{ 'active':activeTab==='groups'}" data-toggle="tab" href="#admin/groups" (click)="setActiveTab('groups')"> {{groupsLabel}} </a>
+      <a class="nav-link" [ngClass]="{ 'active':activeTab==='groups'}" data-toggle="tab" href="#admin/groups" (click)="setActiveTab('groups')" translate> admin.tabs.groups </a>
     </li>
 
   </ul>
