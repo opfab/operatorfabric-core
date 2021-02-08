@@ -14,7 +14,7 @@ import {catchError, tap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {Entity} from '@ofModel/entity.model';
 import {takeUntil} from 'rxjs/internal/operators/takeUntil';
-import {Injectable} from "@angular/core";
+import {Injectable} from '@angular/core';
 
 
 declare const templateGateway: any;
@@ -44,16 +44,23 @@ export class EntitiesService extends CrudService {
 
   getAllEntities(): Observable<Entity[]> {
     return this.httpClient.get<Entity[]>(`${this.entitiesUrl}`).pipe(
-      catchError((error: Response) => this.handleError)
+      catchError((error: Response) => this.handleError(error))
     );
   }
 
-
-
- updateEntity(entityData: Entity): Observable<Entity> {
+  updateEntity(entityData: Entity): Observable<Entity> {
     return this.httpClient.post<Entity>(`${this.entitiesUrl}`, entityData).pipe(
-      catchError((error: Response) => this.handleError)
+      catchError((error: Response) => this.handleError(error)),
+        tap(next => {
+            this.updateCachedEntity(entityData);
+        })
     );
+  }
+
+  private updateCachedEntity(entityData: Entity): void {
+      const updatedEntities = this._entities.filter(entity => entity.id !== entityData.id);
+      updatedEntities.push(entityData);
+      this._entities = updatedEntities;
   }
 
 

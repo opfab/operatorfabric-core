@@ -9,21 +9,21 @@
  */
 
 
-import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { EntitiesService } from '@ofServices/entities.service';
-import { GroupsService } from '@ofServices/groups.service';
-import { AdminTableType } from '../../table/admin-table.component';
+import {Component, Input, OnInit} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {EntitiesService} from '@ofServices/entities.service';
+import {GroupsService} from '@ofServices/groups.service';
+import {AdminTableType} from '../../table/admin-table.component';
 
 @Component({
-  selector: 'of-edit-group-modal',
-  templateUrl: './edit-group-modal.component.html',
-  styleUrls: ['./edit-group-modal.component.scss']
+  selector: 'of-edit-entity-group-modal',
+  templateUrl: './edit-entity-group-modal.component.html',
+  styleUrls: ['./edit-entity-group-modal.component.scss']
 })
 export class EditEntityGroupModalComponent implements OnInit {
 
-  form = new FormGroup({
+  entityGroupForm = new FormGroup({
     id: new FormControl(''
       , [Validators.required, Validators.minLength(2), Validators.maxLength(20)]),
     name: new FormControl('', [Validators.required, Validators.maxLength(20)]),
@@ -40,8 +40,8 @@ export class EditEntityGroupModalComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.row) {
-      this.form.patchValue(this.row, { onlySelf: true });
+    if (this.row) { // If the modal is used for edition, initialize the modal with current data from this row
+      this.entityGroupForm.patchValue(this.row, { onlySelf: true });
     }
   }
 
@@ -52,12 +52,12 @@ export class EditEntityGroupModalComponent implements OnInit {
     // This is important as code in the corresponding table components relies on the resolution of the
     // `NgbMobalRef.result` promise to trigger a refresh of the data shown on the table.
     if (this.type === AdminTableType.ENTITY) {
-      this.entitiesService.update(this.form.value).subscribe(() => {
+      this.entitiesService.update(this.entityGroupForm.value).subscribe(() => {
         this.activeModal.close('Update button clicked on ' + this.type + ' modal');
       });
     }
     if (this.type === AdminTableType.GROUP) {
-      this.groupsService.update(this.form.value).subscribe(() => {
+      this.groupsService.update(this.entityGroupForm.value).subscribe(() => {
         this.activeModal.close('Update button clicked on ' + this.type + ' modal');
       });
     }
@@ -65,7 +65,7 @@ export class EditEntityGroupModalComponent implements OnInit {
 
   private cleanForm() {
     if (this.row) {
-      this.form.value['id'] = this.row.id;
+      this.entityGroupForm.value['id'] = this.row.id;
     }
     this.id.setValue((this.id.value as string).trim());
     this.name.setValue((this.name.value as string).trim());
@@ -74,15 +74,15 @@ export class EditEntityGroupModalComponent implements OnInit {
   }
 
   get id() {
-    return this.form.get('id') as FormControl;
+    return this.entityGroupForm.get('id') as FormControl;
   }
 
   get name() {
-    return this.form.get('name') as FormControl;
+    return this.entityGroupForm.get('name') as FormControl;
   }
 
   get description() {
-    return this.form.get('description') as FormControl;
+    return this.entityGroupForm.get('description') as FormControl;
   }
 
   dismissModal(reason: string): void {

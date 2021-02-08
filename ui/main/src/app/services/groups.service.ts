@@ -8,19 +8,23 @@
  */
 
 import {CrudService} from './crud-service';
-import {Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {Group} from '@ofModel/group.model';
 import {environment} from '@env/environment';
 import {HttpClient} from '@angular/common/http';
-import {catchError} from 'rxjs/operators';
-import {Injectable} from "@angular/core";
+import {catchError, tap} from 'rxjs/operators';
+import {Injectable, OnDestroy} from '@angular/core';
+import {takeUntil} from 'rxjs/internal/operators/takeUntil';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GroupsService extends CrudService {
+export class GroupsService extends CrudService implements OnDestroy {
 
   readonly groupsUrl: string;
+  private _groups: Group[];
+
+  private ngUnsubscribe$ = new Subject<void>();
 
   /**
    * @constructor
@@ -30,6 +34,12 @@ export class GroupsService extends CrudService {
     super();
     this.groupsUrl = `${environment.urls.groups}`;
   }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe$.next();
+    this.ngUnsubscribe$.complete();
+  }
+
   deleteById(id: string) {
     const url = `${this.groupsUrl}/groups/${id}`;
     return this.httpClient.delete(url).pipe(
@@ -37,17 +47,41 @@ export class GroupsService extends CrudService {
     );
   }
 
+  private updateCachedGroups(groupData: Group): void {
+    const updatedGroups = this._groups.filter(group => group.id !== groupData.id);
+    updatedGroups.push(groupData);
+    this._groups = updatedGroups;
+  }
+
   getAllGroups(): Observable<Group[]> {
     return this.httpClient.get<Group[]>(`${this.groupsUrl}`).pipe(
-      catchError((error: Response) => this.handleError)
+      catchError((error: Response) => this.handleError(error))
     );
   }
 
+  public loadAllGroupsData(): Observable<any> {
+    return this.getAllGroups()
+        .pipe(takeUntil(this.ngUnsubscribe$)
+            , tap(
+                (groups) => {
+                  if (!!groups) {
+                    this._groups = groups;
+                    console.log(new Date().toISOString(), 'List of groups loaded');
+                  }
+                }, (error) => console.error(new Date().toISOString(), 'an error occurred', error)
+            ));
+  }
 
+  public getGroups(): Group[] {
+    return this._groups;
+  }
 
-  updateGroup(groupsData: Group): Observable<Group> {
-    return this.httpClient.post<Group>(`${this.groupsUrl}`, groupsData).pipe(
-      catchError((error: Response) => this.handleError)
+  updateGroup(groupData: Group): Observable<Group> {
+    return this.httpClient.post<Group>(`${this.groupsUrl}`, groupData).pipe(
+      catchError((error: Response) => this.handleError(error)),
+        tap(next => {
+          this.updateCachedGroups(groupData);
+        })
     );
   }
 
