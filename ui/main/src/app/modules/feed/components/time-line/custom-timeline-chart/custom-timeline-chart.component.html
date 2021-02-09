@@ -113,7 +113,7 @@
 
         <svg:g *ngFor="let circle of circles" type="button">
 
-        <svg:g *ngIf="(circle.count>1)" (click)="feedCircleHovered(circle)" container="body"   [ngbPopover]="tooltipTemplate"   [autoClose]="true" popoverClass="opfab-popover">
+        <svg:g *ngIf="(circle.count>1)" (mouseenter)="feedCircleHovered(circle, p1)" container="body" #p1="ngbPopover"   [ngbPopover]="tooltipTemplate"    triggers="mouseenter:mouseleave" closeDelay="3000" popoverClass="opfab-popover">
             <svg:circle [attr.cx]="xScale(circle.date)"
                 [attr.cy]="yScale(circle.circleYPosition)" [attr.r]="'10'" [attr.fill]=circle.color [attr.stroke]="'stroke'"
                 />
@@ -124,7 +124,7 @@
                 [attr.font-size]="15" dy=".3em">{{circle.count}} </text>
         </svg:g>
 
-        <svg:g *ngIf="(circle.count==1)" (click)="showCard(circle.summary[0].cardId)" >
+        <svg:g *ngIf="(circle.count==1)" (click)="showCard(circle.summary[0].cardId)" (mouseenter)="feedCircleHovered(circle, p2)"  container="body" #p2="ngbPopover" [ngbPopover]="tooltipTemplate"  triggers="mouseenter:mouseleave" closeDelay="3000" popoverClass="opfab-popover" >
             <svg:circle [attr.cx]="xScale(circle.date)"
                 [attr.cy]="yScale(circle.circleYPosition)" [attr.r]="'10'" [attr.fill]=circle.color [attr.stroke]="'stroke'"
                 />
@@ -140,7 +140,7 @@
     <ng-template #tooltipTemplate>
         <div *ngFor="let title of currentCircleHovered.summary;let i=index" style="padding: 0px;margin: 0px;line-height: 8px">
             <div *ngIf="i<maxNumberLinesForBubblePopover">
-                <br/>
+                <br *ngIf="i > 0"/>
                 <button id="opfab-timeline-bubble-btn" class="btn btn-cardlink btn-sm" (click)="showCard(title.cardId)">
                     <div style="text-align:left">
                         {{title.summaryDate}}

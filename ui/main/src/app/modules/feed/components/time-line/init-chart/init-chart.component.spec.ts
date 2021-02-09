@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,6 +24,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {MouseWheelDirective} from '../directives/mouse-wheel.directive';
 import {TimeService} from '@ofServices/time.service';
 import {GlobalStyleService} from "@ofServices/global-style.service";
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 
 describe('InitChartComponent', () => {
@@ -38,7 +39,8 @@ describe('InitChartComponent', () => {
         StoreModule.forRoot(appReducer, storeConfig),
         RouterTestingModule,
         StoreRouterConnectingModule,
-        NgxChartsModule ],
+        NgxChartsModule,
+        NgbModule],
       declarations: [ InitChartComponent, CustomTimelineChartComponent, MouseWheelDirective],
       providers: [{provide: APP_BASE_HREF, useValue: '/'},
         {provide: Store, useClass: Store},
