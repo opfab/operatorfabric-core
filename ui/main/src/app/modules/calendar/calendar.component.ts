@@ -14,13 +14,9 @@ import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
 import {AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FullCalendarComponent} from '@fullcalendar/angular';
+import {CalendarOptions, FullCalendarComponent} from '@fullcalendar/angular';
 import {EventInput} from '@fullcalendar/core';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGrigPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
 import allLocales from '@fullcalendar/core/locales-all';
-import bootstrapPlugin from '@fullcalendar/bootstrap';
 import {TranslateService} from '@ngx-translate/core';
 import {SelectLightCard} from '@ofActions/light-card.actions';
 import {LoadCard} from '@ofActions/card.actions';
@@ -38,15 +34,37 @@ import {HourAndMinutes} from '@ofModel/card.model';
 export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('calendar') calendarComponent: FullCalendarComponent; // the #calendar in the template
-  @ViewChild('cardDetail') cardDetailTemplate: ElementRef; // the #calendar in the template
+  @ViewChild('cardDetail') cardDetailTemplate: ElementRef; // the #cardDetail in the template
 
   private unsubscribe$ = new Subject<void>();
   calendarVisible = true;
-  calendarPlugins = [dayGridPlugin, timeGrigPlugin, interactionPlugin, bootstrapPlugin];
   locales = allLocales;
-  themeSystem = 'standard';
-  calendarEvents: EventInput[] = [];
+  calendarEvents: EventInput[];
   modalRef: NgbModalRef;
+
+  // allDaySlot is now specific to timeGrid views (since v4), so it generate an error in build if we specify that the type of calendarOptions is
+  // CalendarOptions... Yet it seems to be the correct way to set this property since it works as intended.
+  calendarOptions = {
+    initialView: 'dayGridMonth',
+    headerToolbar : {
+      left: 'prev,today,next',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    },
+    weekends: true,
+    scrollTime: '\'00:00\'',
+    contentHeight: '748',
+    slotDuration: '01:00:00',
+    allDaySlot: false,
+    selectable: false,
+    navLinks: false,
+    dayHeaderFormat: { weekday: 'long' },
+    events: this.calendarEvents,
+    locales: this.locales,
+    themeSystem: 'standard',
+    datesSet: this.datesRangeChange.bind(this),
+    eventClick: this.selectCard.bind(this)
+  };
 
 
   constructor(private store: Store<AppState>,
@@ -100,8 +118,8 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
                   endRecur: endDate,
                   className: ['opfab-calendar-event', 'opfab-calendar-event-' + card.severity.toLowerCase()],
                   daysOfWeek: timespan.recurrence ? timespan.recurrence.daysOfWeek.map(d => d % 7) : [],
-                  startTime: timespan.recurrence.hoursAndMinutes ? this.formatTwoDigits(timespan.recurrence.hoursAndMinutes.hours) + ':' + this.formatTwoDigits(timespan.recurrence.hoursAndMinutes.minutes) : null,
-                  endTime: timespan.recurrence.durationInMinutes ? this.getEndTime(timespan.recurrence.hoursAndMinutes, timespan.recurrence.durationInMinutes) : null
+                  startTime: timespan.recurrence.hoursAndMinutes ? CalendarComponent.formatTwoDigits(timespan.recurrence.hoursAndMinutes.hours) + ':' + CalendarComponent.formatTwoDigits(timespan.recurrence.hoursAndMinutes.minutes) : null,
+                  endTime: timespan.recurrence.durationInMinutes ? CalendarComponent.getEndTime(timespan.recurrence.hoursAndMinutes, timespan.recurrence.durationInMinutes) : null
                 });
               } else {
                 this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
@@ -120,19 +138,9 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       );
     }
-  }
-
-  private formatTwoDigits(time: number) {
-    return time < 10 ? '0' + time : time;
-  }
-
-  private getEndTime(hourAndMinutes: HourAndMinutes, duration: number) {
-    duration = Math.min(duration, 30);
-    return this.formatTwoDigits(hourAndMinutes.hours + Math.floor(duration / 60)) + ':' + this.formatTwoDigits(hourAndMinutes.minutes + duration % 60);
-  }
-
-  handleDateClick(arg) {
-
+    // It is necessary to reassign the updated events to the corresponding options property to trigger change detection
+    // See https://fullcalendar.io/docs/angular §Modifying properties
+    this.calendarOptions.events = this.calendarEvents;
   }
 
   selectCard(info) {
@@ -145,16 +153,25 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  datesRangeChange(info) {
+  datesRangeChange(dateInfo) {
     this.store.dispatch(new ApplyFilter({
       name: FilterType.BUSINESSDATE_FILTER, active: true,
-      status: {start: info.view.activeStart.getTime(), end: info.view.activeEnd.getTime()}
+      status: {start: dateInfo.view.activeStart.getTime(), end: dateInfo.view.activeEnd.getTime()}
       }));
   }
 
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  private static formatTwoDigits(time: number) {
+    return time < 10 ? '0' + time : time;
+  }
+
+  private static getEndTime(hourAndMinutes: HourAndMinutes, duration: number) {
+    duration = Math.min(duration, 30);
+    return CalendarComponent.formatTwoDigits(hourAndMinutes.hours + Math.floor(duration / 60)) + ':' + CalendarComponent.formatTwoDigits(hourAndMinutes.minutes + duration % 60);
   }
 
 }

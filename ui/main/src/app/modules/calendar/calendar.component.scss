@@ -35,6 +35,12 @@ td.fc-today
   padding: 16px;
 }
 
+// This is necessary because from v5 days are links (even if navLinks : false) rather than spans so these properties
+  // are overridden by the style for links rather than inherited from the main OpFab look.
+.fc a:not([href]) {
+  color: var(--opfab-color);
+  text-decoration: none;
+}
 
 
 // EVENTS SETTINGS
@@ -43,6 +49,7 @@ td.fc-today
   border-width: 0 0 0 4px;
   border-radius: 0 4px 4px 0;
   background-color: var(--opfab-bgcolor);
+  min-height: 18px;
   font-size: 13px;
   color: var(--opfab-color); 
   }
@@ -69,14 +76,14 @@ td.fc-today
   
 // LINKS IN CALENDAR HEADER
 
-.fc-button-primary
+.fc .fc-button-primary, .fc .fc-button-primary:disabled
 {
   background-color: var(--opfab-bgcolor-darker);
   border-color: var(--opfab-bgcolor-darker);
   color:var(--opfab-text-color);
 }
 
-.fc-button-primary:not(:disabled).fc-button-active
+.fc .fc-button-primary:not(:disabled).fc-button-active
 {
   background-color: var(--opfab-bgcolor-darker);
   border-color:  var(--opfab-bgcolor-darker);
@@ -86,8 +93,8 @@ td.fc-today
 }
 
 
-.fc-next-button,
-.fc-prev-button{
+.fc .fc-next-button,
+.fc .fc-prev-button{
   margin-bottom: 7px;
 }
 
@@ -112,14 +119,14 @@ td.fc-today
 
 // MONTH VIEW
 .fc th,
-.fc-day-header,
+.fc-col-header-cell-cushion,
 .fc-widget-header
 {
   border-style: hidden;
 }
 
 // Day name in uppercase 
-.fc-day-header {
+.fc-col-header-cell-cushion {
   text-transform: uppercase;
 }
 

@@ -7,30 +7,10 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-    <div id="opfab-calendar" class='opfab-app-calendar' *ngIf="calendarVisible">
+    <div id="opfab-calendar" class="opfab-app-calendar" *ngIf="calendarVisible">
       <full-calendar
         #calendar
-        defaultView="dayGridMonth"
-        [header]="{
-          left: 'prev,today,next',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        }"
-        [plugins]="calendarPlugins"
-        [weekends]="true"
-        [scrollTime]="'00:00'"
-        [contentHeight]='748'
-        [timeGridEventMinHeight]='18'
-        [slotDuration] = "'01:00:00'"
-        [allDaySlot] = "false"
-        [selectable]="false"
-        [columnHeaderFormat]="{ weekday: 'long' }"
-        [events]="calendarEvents"
-        [locales]="locales"
-        [themeSystem]="themeSystem"
-        (datesRender)="datesRangeChange($event)"
-        (dateClick)="handleDateClick($event)"
-        (eventClick)="selectCard($event)"
+        [options]="calendarOptions"
       ></full-calendar>
 
 
