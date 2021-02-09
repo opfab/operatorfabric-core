@@ -381,6 +381,9 @@ definitions:
               type: array
               items:
                 type: string
+            type:
+              description: Type of state ("INPROGRESS", "FINISHED" or "CANCELED")
+              $ref: '#/definitions/TypeOfStateEnum'
       uiVisibility:
         type: object
         properties:
@@ -472,6 +475,18 @@ definitions:
       - Always
       - Never
       - OnlyWhenResponseDisabledForUser
+
+  TypeOfStateEnum:
+    type: string
+    description: |-
+      Type of state >
+      * INPROGRESS - In Progress
+      * FINISHED - Finished
+      * CANCELED - Canceled
+    enum:
+      - INPROGRESS
+      - FINISHED
+      - CANCELED
 
   ProcessGroup:
     description: Object containing a list of processes.

@@ -20,11 +20,14 @@ Feature: Bundle
     And match response.states.questionState.userCard.severityVisible == false
     And match response.states.questionState.userCard.startDateVisible == true
     And match response.states.questionState.userCard.endDateVisible == true
+    And match response.states.questionState.type == 'INPROGRESS'
+    And match response.states.messageState.type == 'CANCELED'
     And match response.states.incidentInProgressState.userCard.template == 'usercard_incidentInProgress'
     And match response.states.incidentInProgressState.userCard.severityVisible == true
     And match response.states.incidentInProgressState.userCard.startDateVisible == false
     And match response.states.incidentInProgressState.userCard.endDateVisible == false
     And match response.states.incidentInProgressState.acknowledgmentAllowed == 'Always'
+    And match response.states.incidentInProgressState.type == 'FINISHED'
 
 
 
