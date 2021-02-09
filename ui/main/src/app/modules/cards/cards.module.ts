@@ -39,7 +39,6 @@ import {UserCardModule} from '../usercard/usercard.module';
         NO_ERRORS_SCHEMA
       ],
     providers: [HandlebarsService],
-    entryComponents: []
 })
 
 export class CardsModule {

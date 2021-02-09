@@ -41,12 +41,12 @@ describe('Businessconfig Services', () => {
             ]
         });
         injector = getTestBed();
-        store = TestBed.get(Store);
+        store = TestBed.inject(Store);
         // spyOn(store, 'dispatch').and.callThrough();
         // avoid exceptions during construction and init of the component
         // spyOn(store, 'select').and.callFake(() => of('/test/url'));
         httpMock = injector.get(HttpTestingController);
-        configService = TestBed.get(ConfigService);
+        configService = TestBed.inject(ConfigService);
         store.dispatch(new AcceptLogIn(new PayloadForSuccessfulAuthentication('test-user',null,null,null)))
     });
     afterEach(() => {

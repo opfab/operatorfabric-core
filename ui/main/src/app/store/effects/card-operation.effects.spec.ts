@@ -54,8 +54,8 @@ describe('CardOperationEffects', () => {
         });
 
 
-        store = TestBed.get(Store);
-        effects = TestBed.get(CardOperationEffects);
+        store = TestBed.inject(Store) as MockStore<AppState>;
+        effects = TestBed.inject(CardOperationEffects);
     }));
 
     describe( 'refreshIfSelectedCard', () => {

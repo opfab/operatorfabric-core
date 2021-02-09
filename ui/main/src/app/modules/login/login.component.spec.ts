@@ -64,7 +64,7 @@ describe('LoginComponent', () => {
             ]
         })
             .compileComponents();
-        store = TestBed.get(Store);
+        store = TestBed.inject(Store);
         // store.select.and.callThrough();
         // avoid exceptions during construction and init of the component
     }));

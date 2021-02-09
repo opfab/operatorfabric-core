@@ -19,7 +19,7 @@ import {of} from "rxjs";
 import {settingsInitialState} from "@ofStates/settings.state";
 import {map} from "rxjs/operators";
 import {PatchSettings} from "@ofActions/settings.actions";
-import {emptyAppState4Test} from "@tests/helpers";
+import {emptyAppState4Test, injectedSpy} from '@tests/helpers';
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
 import {authInitialState} from "@ofStates/authentication.state";
@@ -49,7 +49,7 @@ describe('TextSettingComponent', () => {
     }));
 
     beforeEach(() => {
-        mockStore = TestBed.get(Store);
+        mockStore = injectedSpy(Store);
         mockStore.select.and.callFake(selector => {
             return of({
                 ...emptyAppState, settings: {

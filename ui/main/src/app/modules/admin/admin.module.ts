@@ -39,13 +39,6 @@ import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
   ],
 
 
-  entryComponents: [
-    EditUserModalComponent,
-    ConfirmationDialogComponent,
-    EditEntityGroupModalComponent
-  ],
-
-
   imports: [
     FormsModule
     , ReactiveFormsModule
