@@ -161,4 +161,13 @@ public class CardPublicationData implements Card {
             result.timeSpansSet(new HashSet<>(this.getTimeSpans()));
         return result.build();
     }
+
+
+    public Boolean getKeepChildCards() {
+        return keepChildCards;
+    }
+
+    public void setKeepChildCards(Boolean keepChildCards) {
+        this.keepChildCards = keepChildCards != null ? keepChildCards : false;
+    }
 }
