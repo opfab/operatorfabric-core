@@ -128,7 +128,9 @@
   },
   "archive": {
     "filters": {
+      "service": "SERVICE",
       "process": "PROCESSUS",
+      "state": "ETAT",
       "tags": "ETIQUETTES",
       "publishDateFrom": "PUBLIE A PARTIR DE",
       "publishDateTo": "PUBLIE JUSQU'A",
@@ -139,12 +141,15 @@
       "publishDate" : "DATE DE PUBLICATION",
       "businessPeriod" : "PERIODE METIER",
       "title" : "TITRE",
-      "summary": "RESUME"
+      "summary": "RESUME",
+      "service": "SERVICE"
     },
     "noResult": "Votre recherche ne correspond à aucun résultat.",
     "exportToExcel" : "Exporter les données",
     "resultsNumber":"Nombre de résultats",
+    "selectServiceText": "Sélectionner un Service",
     "selectProcessText": "Sélectionner un Processus",
+    "selectStateText": "Sélectionner un Etat",
     "selectTagText": "Sélectionner une Etiquette"
   },
   "logging": {

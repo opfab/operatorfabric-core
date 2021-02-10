@@ -67,30 +67,42 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     hasResult = false;
     firstQueryHasBeenDone = false;
 
-    // Filter values 
+    // Filter values
+    serviceDropdownList = [];
+    serviceDropdownSettings = {};
     processDropdownList = [];
+    processDropdownListWhenSelectedService = [];
+    processesWithoutServiceDropdownList = [];
     processDropdownSettings = {};
+    stateDropdownListWhenSelectedProcess = [];
+    stateDropdownSettings = {};
     tagsDropdownList = [];
     tagsDropdownSettings = {};
 
-    // View card 
+    // View card
     modalRef: NgbModalRef;
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
-    selectedCard : Card; 
+    selectedCard : Card;
+
+    processesDropdownListPerServices = new Map();
+    statesDropdownListPerProcesses = new Map();
+    processesGroups: {id: string, processes: string[]}[];
 
     constructor(private store: Store<AppState>,
-        private processesService: ProcessesService,
-        private configService: ConfigService,
-        private timeService: TimeService,
-        private cardService: CardService,
-        private exportService: ExportService,
-        private translate: TranslateService,
-        private modalService: NgbModal
+                private processesService: ProcessesService,
+                private configService: ConfigService,
+                private timeService: TimeService,
+                private cardService: CardService,
+                private exportService: ExportService,
+                private translate: TranslateService,
+                private modalService: NgbModal
     ) {
 
         this.archiveForm = new FormGroup({
             tags: new FormControl([]),
+            state: new FormControl([]),
             process: new FormControl([]),
+            service: new FormControl([]),
             publishDateFrom: new FormControl(),
             publishDateTo: new FormControl(''),
             activeFrom: new FormControl(''),
@@ -104,6 +116,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.tags = this.configService.getConfigValue('archive.filters.tags.list');
         this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
         this.results = new Array();
+        this.processesGroups = this.processesService.getProcessGroups();
         this.processesService.getAllProcesses().forEach((process) => {
             const id = process.id;
             let itemName = process.name;
@@ -112,60 +125,194 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             }
             this.processDropdownList.push({ id: id, itemName: itemName, i18nPrefix: `${process.id}.${process.version}` });
         });
+        this.processDropdownListWhenSelectedService = [];
+        this.stateDropdownListWhenSelectedProcess = [];
 
         if (!!this.tags) {
             this.tags.forEach(tag => this.tagsDropdownList.push({ id: tag.value, itemName: tag.label }));
         }
 
+        this.loadAllProcessesPerServices();
+        this.loadAllStatesPerProcesses();
+
         this.getLocale().pipe(takeUntil(this.unsubscribe$)).subscribe(locale => {
             this.translate.use(locale);
-            this.translate.get(['archive.selectProcessText','archive.selectTagText'])
-              .subscribe(translations => {
-                this.processDropdownSettings = {
-                    text: translations['archive.selectProcessText'],
-                    badgeShowLimit: 3,
-                    enableSearchFilter: true
-                }
-                this.tagsDropdownSettings = {
-                    text: translations['archive.selectTagText'],
-                    badgeShowLimit: 3,
-                    enableSearchFilter: true
-                };
-              })
-            });
+            this.translate.get(['archive.selectServiceText','archive.selectProcessText','archive.selectStateText',
+                'archive.selectTagText'])
+                .subscribe(translations => {
+                    this.serviceDropdownSettings = {
+                        text: translations['archive.selectServiceText'],
+                        badgeShowLimit: 1,
+                        enableSearchFilter: true
+                    }
+                    this.processDropdownSettings = {
+                        text: translations['archive.selectProcessText'],
+                        badgeShowLimit: 1,
+                        enableSearchFilter: true
+                    }
+                    this.stateDropdownSettings = {
+                        text: translations['archive.selectStateText'],
+                        badgeShowLimit: 1,
+                        enableSearchFilter: true
+                    }
+                    this.tagsDropdownSettings = {
+                        text: translations['archive.selectTagText'],
+                        badgeShowLimit: 1,
+                        enableSearchFilter: true
+                    };
+                })
+        });
+        this.changeProcessesWhenSelectService();
+        this.changeStatesWhenSelectProcess();
+    }
+
+    addProcessesDropdownList(processesDropdownList: any[]): void {
+        processesDropdownList.forEach( processDropdownList =>
+            this.processDropdownListWhenSelectedService.push(processDropdownList) );
+    }
+
+    addStatesDropdownList(statesDropdownList: any[]): void {
+        statesDropdownList.forEach( stateDropdownList =>
+            this.stateDropdownListWhenSelectedProcess.push(stateDropdownList) );
+    }
+
+    changeProcessesWhenSelectService(): void {
+        this.archiveForm.get('service').valueChanges.subscribe((selectedServices) => {
+
+            if (!! selectedServices && selectedServices.length > 0) {
+                this.processDropdownListWhenSelectedService = [];
+                selectedServices.forEach(service => {
+
+                    if (service.id == '--')
+                        this.addProcessesDropdownList(this.processesWithoutServiceDropdownList);
+                    else
+                        this.addProcessesDropdownList(this.processesDropdownListPerServices.get(service.id));
+                });
+            }
+            else
+                this.processDropdownListWhenSelectedService = [];
+        });
+    }
+
+    changeStatesWhenSelectProcess(): void {
+        this.archiveForm.get('process').valueChanges.subscribe((selectedProcesses) => {
+
+            if (!! selectedProcesses && selectedProcesses.length > 0) {
+                this.stateDropdownListWhenSelectedProcess = [];
+                selectedProcesses.forEach(process =>
+                    this.addStatesDropdownList(this.statesDropdownListPerProcesses.get(process.id))
+                );
+            }
+            else
+                this.stateDropdownListWhenSelectedProcess = [];
+        });
+    }
+
+    findServiceForProcess(processId : string) : string {
+        for (let group of this.processesGroups) {
+            if (group.processes.find(process => process == processId))
+                return group.id;
+        }
+        return '';
+    }
+
+    findServiceLabelForProcess(processId : string) : string {
+        const serviceId = this.findServiceForProcess(processId);
+        return (!! serviceId && serviceId != '') ? serviceId : "service.defaultLabel";
+    }
+
+    loadAllProcessesPerServices(): void {
+        this.processesService.getAllProcesses().forEach(process => {
+
+            const service = this.findServiceForProcess(process.id);
+            if (service != '') {
+                let processes = (!! this.processesDropdownListPerServices.get(service) ? this.processesDropdownListPerServices.get(service) : []);
+                processes.push({id: process.id, itemName: process.name, i18nPrefix: `${process.id}.${process.version}`});
+                this.processesDropdownListPerServices.set(service, processes);
+            }
+            else
+                this.processesWithoutServiceDropdownList.push({ id: process.id, itemName: process.name, i18nPrefix: `${process.id}.${process.version}` });
+        });
+        if (this.processesWithoutServiceDropdownList.length > 0)
+            this.serviceDropdownList.push({ id: '--', itemName: "service.defaultLabel" });
+
+        const services = Array.from(this.processesDropdownListPerServices.keys());
+        services.forEach(service => this.serviceDropdownList.push({ id: service, itemName: service }));
+    }
+
+    loadAllStatesPerProcesses(): void {
+        this.processesService.getAllProcesses().forEach(process => {
+
+            let statesDropdownList = [];
+            for (let state in process.states)
+                statesDropdownList.push({id: process.id + '.' + state, itemName: process.states[state].name, i18nPrefix: `${process.id}.${process.version}`});
+            this.statesDropdownListPerProcesses.set(process.id, statesDropdownList);
+        });
+    }
+
+    displayServiceFilter() {
+        return !!this.serviceDropdownList && this.serviceDropdownList.length > 1 ;
     }
 
     protected getLocale(): Observable<string> {
         return this.store.select(buildSettingsOrConfigSelector('locale'));
     }
-    
+
     /**
      * Transforms the filters list to Map
      */
-    filtersToMap = (filters: any): Map<string, string[]> => {
-        const params = new Map();
+    filtersToMap = (filters: any) : void => {
+        this.filters = new Map();
         Object.keys(filters).forEach(key => {
             const element = filters[key];
             // if the form element is date
             if (element) {
-                if (checkElement(FilterDateTypes, key)) {
-                    const { date, time } = element;
-                    if (date) {
-                        const timeStamp = this.timeService.toNgBTimestamp(transformToTimestamp(date, time));
-                        if (timeStamp !== 'NaN') {
-                            params.set(key, [timeStamp]);
-                        }
-                    }
-                } else {
+                if (checkElement(FilterDateTypes, key))
+                    this.dateFilterToMap(key, element);
+                else {
                     if (element.length) {
                         const ids = [];
-                        element.forEach(val => ids.push(val.id));
-                        params.set(key, ids);
+                        if (key == 'state')
+                            this.stateFilterToMap(element);
+                        else if (key == 'service')
+                            this.serviceFilterToMap(element);
+                        else {
+                            element.forEach(val => ids.push(val.id));
+                            this.filters.set(key, ids);
+                        }
                     }
                 }
             }
         });
-        return params;
+    }
+
+    dateFilterToMap(key: string, element: any) {
+        const { date, time } = element;
+        if (date) {
+            const timeStamp = this.timeService.toNgBTimestamp(transformToTimestamp(date, time));
+            if (timeStamp !== 'NaN')
+                this.filters.set(key, [timeStamp]);
+        }
+    }
+
+    stateFilterToMap(element: any) {
+        const ids = [];
+        element.forEach(val => ids.push(val.id.substring(val.id.indexOf('.') + 1)));
+        this.filters.set('state', ids);
+    }
+
+    serviceFilterToMap(element: any) {
+        const ids = [];
+
+        element.forEach(service => {
+            if (service.id == '--')
+                this.processesWithoutServiceDropdownList.forEach(process => ids.push(process.id))
+            else
+                this.processesDropdownListPerServices.get(service.id).forEach(process => ids.push(process.id))
+        });
+
+        if (!this.filters.get('process'))
+            this.filters.set('process', ids);
     }
 
     resetForm() {
@@ -178,7 +325,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     sendQuery(page_number): void {
         const { value } = this.archiveForm;
-        this.filters = this.filtersToMap(value);
+        this.filtersToMap(value);
         this.filters.set('size', [this.size.toString()]);
         this.filters.set('page', [page_number]);
         this.cardService.fetchArchivedCards(this.filters)
@@ -209,12 +356,12 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
 
-    // EXPORT TO EXCEL 
+    // EXPORT TO EXCEL
 
     initExportArchiveData(): void {
         const exportArchiveData = [];
 
-       
+
         this.filters.set('size', [this.resultsNumber.toString()]);
         this.filters.set('page', [0]);
 
@@ -224,7 +371,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
                 lines.forEach((card: LightCard) => {
                     if (typeof card !== undefined) {
-                        // TO DO translation for old process should be done  , but loading local arrive to late , solution to find 
+                        // TO DO translation for old process should be done  , but loading local arrive to late , solution to find
                         exportArchiveData.push({
                             severity: card.severity,
                             publishDate: this.timeService.formatDateTime(card.publishDate),
@@ -255,12 +402,12 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     openCard(cardId) {
         this.cardService.loadArchivedCard(cardId).subscribe((card: Card) => {
-            this.selectedCard = card;
-            const options: NgbModalOptions = {
-                size: 'fullscreen'
-            };
-            this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
-        }
+                this.selectedCard = card;
+                const options: NgbModalOptions = {
+                    size: 'fullscreen'
+                };
+                this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
+            }
         );
     }
 

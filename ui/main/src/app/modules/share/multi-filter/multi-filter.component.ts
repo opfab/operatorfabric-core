@@ -111,17 +111,14 @@ export class MultiFilterComponent implements OnInit, OnChanges, OnDestroy {
         if (typeof entry === 'string') {
             return {id: entry, itemName: entry};
         } else if (typeof entry.itemName === 'string') {
-            if (!!entry.i18nPrefix) { // need mutualisation
-                const firstI18nPrefix = (entry.i18nPrefix) ? `${entry.i18nPrefix}.` : '';
-                let firstTranslatedItemName = entry.id;
-                this.translateService.get(`${firstI18nPrefix}${entry.itemName}`
-                    , null).subscribe(result => firstTranslatedItemName = result);
-                return {
-                    id: entry.id,
-                    itemName: firstTranslatedItemName
-                };
-            }
-            return {id: entry.id, itemName: entry.itemName};
+            const firstI18nPrefix = (entry.i18nPrefix) ? `${entry.i18nPrefix}.` : '';
+            let firstTranslatedItemName = entry.id;
+            this.translateService.get(`${firstI18nPrefix}${entry.itemName}`
+                , null).subscribe(result => firstTranslatedItemName = result);
+            return {
+                id: entry.id,
+                itemName: firstTranslatedItemName
+            };
         } else if (!entry.itemName) {
             return {id: entry.id, itemName: entry.id};
         }
