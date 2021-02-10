@@ -14,7 +14,7 @@ import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
 import {AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {CalendarOptions, FullCalendarComponent} from '@fullcalendar/angular';
+import {FullCalendarComponent} from '@fullcalendar/angular';
 import {EventInput} from '@fullcalendar/core';
 import allLocales from '@fullcalendar/core/locales-all';
 import {TranslateService} from '@ngx-translate/core';
@@ -39,7 +39,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
   private unsubscribe$ = new Subject<void>();
   calendarVisible = true;
   locales = allLocales;
-  calendarEvents: EventInput[];
+  calendarEvents: EventInput[] = [];
   modalRef: NgbModalRef;
 
   // allDaySlot is now specific to timeGrid views (since v4), so it generate an error in build if we specify that the type of calendarOptions is
