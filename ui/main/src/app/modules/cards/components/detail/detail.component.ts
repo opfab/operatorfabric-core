@@ -41,7 +41,7 @@ import {AppService, PageType} from '@ofServices/app.service';
 import {User} from '@ofModel/user.model';
 import {Map} from '@ofModel/map';
 import {RightsEnum, userRight} from '@ofModel/userWithPerimeters.model';
-import {UpdateALightCard} from '@ofStore/actions/light-card.actions';
+import {ClearLightCardSelection, UpdateALightCard} from '@ofStore/actions/light-card.actions';
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {Entity} from '@ofModel/entity.model';
@@ -139,7 +139,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public showActionButton = false;
     public showEditAndDeleteButton = false ;
     public showDetailCardHeader = false;
-
     private cardSetToReadButNotYetOnUI;
 
     modalRef: NgbModalRef;
@@ -158,7 +157,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 private modalService: NgbModal,
                 private configService: ConfigService,
                 private time: TimeService) {
-
     }
 
     get isLocked() {
@@ -248,28 +246,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                         });
                 });
         }
-    }
-
-    // When we load the component , we need first  to reset all values of the previous version of the component
-    //
-    // Even if the previous component has been destroy, the values that was bind to an element in the DOM 
-    // are still present "somewhere" in angular "structure".
-    // When we load the component , angular will first initialize the values with the old one before binding it to 
-    // the new one . Depending on the performance of network / browser , we can see briefly on the screen the previous values.
-    // To avoid that , we shall init as soon as possible the values bind in the HTML.
-
-    private initAllBindedVariables()
-    {
-        this._htmlContent = "";
-        this.fullscreen = false;
-        this.showMaxAndReduceButton = false;
-        this.showAckButton = false;
-        this.showActionButton = false;
-        this.showEditAndDeleteButton = false ;
-        this.showDetailCardHeader = false;
-        this.isActionEnabled = false;
-        this.lttdExpiredIsTrue = false;
-        this.displayDeleteResult = false;
     }
 
     private setButtonsVisibility() {
@@ -441,7 +417,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     closeDetails() {
         this.updateReadCardStatusOnUI();
-        if (this.parentModalRef) this.parentModalRef.close();
+        if (this.parentModalRef)  {
+            this.parentModalRef.close();
+            this.store.dispatch(new ClearLightCardSelection());
+        }
         else this._appService.closeDetails(this.currentPath);
     }
 
@@ -454,7 +433,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     ngOnChanges(): void {
-        this.initAllBindedVariables();
         this.initializeHrefsOfCssLink();
         this.checkIfHasAlreadyResponded();
         this.initializeHandlebarsTemplates();
