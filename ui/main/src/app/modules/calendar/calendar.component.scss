@@ -11,11 +11,11 @@
 
 ::ng-deep .opfab-app-calendar{
 
-
 // GLOBAL SETTINGS 
 .fc-header-toolbar,
 .fc-view,
-td.fc-today
+.fc .fc-daygrid-day.fc-day-today,   // no specific bgcolor for today 
+.fc .fc-timegrid-col.fc-day-today  // no specific bgcolor for today 
 {
   background-color: var(--opfab-bgcolor-darker);
 }
@@ -117,13 +117,26 @@ td.fc-today
 }
 
 
+
 // MONTH VIEW
 .fc th,
-.fc-col-header-cell-cushion,
-.fc-widget-header
+.fc .fc-scrollgrid
 {
   border-style: hidden;
 }
+// remove grid border on header 
+.fc-scrollgrid-section-header td
+{
+   border-style: hidden;
+}
+
+// Current Day 
+.fc-daygrid .fc-daygrid-day.fc-day-today
+{
+  border-width: 2px;
+  border-color: #2268FF;
+}
+
 
 // Day name in uppercase 
 .fc-col-header-cell-cushion {
@@ -131,8 +144,8 @@ td.fc-today
 }
 
 // Day number on the top left of the cell  
-.fc-ltr .fc-dayGrid-view .fc-day-top .fc-day-number{
-  float: left;
+.fc .fc-daygrid-day-top{
+  flex-direction: row;
 }
 
 .fc th
@@ -140,23 +153,47 @@ td.fc-today
   height: 40px;
 }
 
-.fc tbody td{
+.fc-daygrid tbody td{
   border-left-width: 0;
   border-bottom-width: 1px;
-  border-top-width: 1px;
+  border-top-width: 0px;
 }
+
+
+// change the color of default bullet point 
+.opfab-calendar-event-action .fc-daygrid-event-dot  {
+  border-color: $sev-action;
+}
+
+.opfab-calendar-event-alarm  .fc-daygrid-event-dot {
+  border-color: $sev-alarm;
+}
+
+.opfab-calendar-event-compliant .fc-daygrid-event-dot  {
+  border-color: $sev-compliant;
+}
+
+.opfab-calendar-event-information .fc-daygrid-event-dot  {
+  border-color: $sev-information;
+}
+
 // END MONTH VIEW 
 
 // DAY AND WEEK VIEW 
-.fc-time-grid  td
+.fc .fc-timegrid-slot
 {
-  height: 27px;
+  height: 28px;
 }
 
-// remove border for certain event 
-.fc-time-grid-event-inset
+// to see border right for current day in week view
+.fc-timegrid-cols .fc-day-today {
+  border-width: 2px;
+}
+
+// text color in event  
+.fc-v-event .fc-event-main
 {
-  box-shadow: none;
+  color: var(--opfab-color);
 }
 
 // remove line on bottom

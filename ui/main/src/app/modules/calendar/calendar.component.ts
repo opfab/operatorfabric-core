@@ -53,7 +53,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     },
     weekends: true,
     scrollTime: '\'00:00\'',
-    contentHeight: '748',
+    contentHeight: 750,
     slotDuration: '01:00:00',
     allDaySlot: false,
     selectable: false,
@@ -78,13 +78,9 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
     this.setLocale();
-    this.resizeCalendar();
+
   }
 
-  @HostListener('window:resize')
-  resizeCalendar() {
-    this.calendarComponent.getApi().setOption('height', window.innerHeight - 150);
-  }
 
   private setLocale() {
     this.store.select(buildSettingsOrConfigSelector('locale'))
