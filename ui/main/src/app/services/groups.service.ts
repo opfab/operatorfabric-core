@@ -12,9 +12,8 @@ import {Observable, Subject} from 'rxjs';
 import {Group} from '@ofModel/group.model';
 import {environment} from '@env/environment';
 import {HttpClient} from '@angular/common/http';
-import {catchError, tap} from 'rxjs/operators';
+import {catchError, takeUntil, tap} from 'rxjs/operators';
 import {Injectable, OnDestroy} from '@angular/core';
-import {takeUntil} from 'rxjs/internal/operators/takeUntil';
 
 @Injectable({
   providedIn: 'root'

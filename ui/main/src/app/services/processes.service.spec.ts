@@ -11,14 +11,13 @@
 import {getTestBed, TestBed} from '@angular/core/testing';
 
 import {ProcessesService} from './processes.service';
-import {HttpClientTestingModule, HttpTestingController, TestRequest} from '@angular/common/http/testing';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {environment} from '@env/environment';
 import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
 import {RouterTestingModule} from '@angular/router/testing';
 import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
-import {getRandomAlphanumericValue, BusinessconfigI18nLoaderFactory} from '@tests/helpers';
-import * as _ from 'lodash';
+import {BusinessconfigI18nLoaderFactory, getRandomAlphanumericValue} from '@tests/helpers';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 import {GuidService} from '@ofServices/guid.service';
 import {ConfigService} from '@ofServices/config.service';

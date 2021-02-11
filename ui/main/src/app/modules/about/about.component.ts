@@ -9,8 +9,8 @@
 
 
 import {Component, OnInit} from '@angular/core';
-import _ from 'lodash';
-import {ConfigService} from "@ofServices/config.service";
+import _ from 'lodash-es';
+import {ConfigService} from '@ofServices/config.service';
 
 
 /**

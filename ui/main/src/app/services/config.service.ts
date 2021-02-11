@@ -8,16 +8,15 @@
  */
 
 
-
 import {Injectable} from '@angular/core';
-import {map, mergeMap,} from 'rxjs/operators';
-import * as _ from 'lodash';
+import {map, mergeMap} from 'rxjs/operators';
+import * as _ from 'lodash-es';
 import {Observable, of, throwError} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {environment} from '@env/environment';
-import { Locale, Menu, MenuConfig } from '@ofModel/menu.model';
+import {Locale, Menu, MenuConfig} from '@ofModel/menu.model';
 
 @Injectable()
 export class ConfigService {

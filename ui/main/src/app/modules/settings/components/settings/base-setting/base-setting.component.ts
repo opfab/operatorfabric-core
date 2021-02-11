@@ -8,7 +8,6 @@
  */
 
 
-
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
@@ -17,7 +16,7 @@ import {buildSettingsSelector} from '@ofSelectors/settings.selectors';
 import {Subject, timer} from 'rxjs';
 import {debounce, distinctUntilChanged, filter, first, map, takeUntil} from 'rxjs/operators';
 import {FormGroup} from '@angular/forms';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 import {selectIdentifier} from '@ofSelectors/authentication.selectors';
 
 @Component({

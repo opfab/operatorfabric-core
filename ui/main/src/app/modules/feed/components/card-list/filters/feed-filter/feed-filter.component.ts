@@ -15,7 +15,7 @@ import {AppState} from '@ofStore/index';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {debounce, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {ApplyFilter} from '@ofActions/feed.actions';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 import {FilterType} from '@ofServices/filter.service';
 
 import {DateTimeNgb, getDateTimeNgbFromMoment} from '@ofModel/datetime-ngb.model';

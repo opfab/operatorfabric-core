@@ -39,6 +39,13 @@
               "node_modules/svg-pan-zoom/dist/svg-pan-zoom.js",
               "src/assets/js/templateGateway.js",
               "src/assets/js/Chart.min.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "rxjs/internal/Subject",
+              "@tweenjs/tween.js",
+              "xlsx",
+              "file-saver",
+              "moment-timezone"
             ]
           },
           "configurations": {
