@@ -14,10 +14,9 @@ import {Observable, Subject} from 'rxjs';
 import {Entity, User} from '@ofModel/user.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {HttpClient} from '@angular/common/http';
-import {takeUntil} from 'rxjs/internal/operators/takeUntil';
-import {catchError, tap} from 'rxjs/operators';
+import {catchError, takeUntil, tap} from 'rxjs/operators';
 import {CrudService} from './crud-service';
-import {Injectable} from "@angular/core";
+import {Injectable} from '@angular/core';
 
 @Injectable({
   providedIn: 'root'

@@ -19,7 +19,7 @@ import {selectMenuStateMenu} from '@ofSelectors/menu.selectors';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Menu} from '@ofModel/menu.model';
 import {map, tap} from 'rxjs/operators';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {Route} from '@angular/router';
 import {ConfigService} from '@ofServices/config.service';

@@ -10,10 +10,9 @@
 import {environment} from '@env/environment';
 import {HttpClient} from '@angular/common/http';
 import {CrudService} from './crud-service';
-import {catchError, tap} from 'rxjs/operators';
+import {catchError, takeUntil, tap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {Entity} from '@ofModel/entity.model';
-import {takeUntil} from 'rxjs/internal/operators/takeUntil';
 import {Injectable} from '@angular/core';
 
 
