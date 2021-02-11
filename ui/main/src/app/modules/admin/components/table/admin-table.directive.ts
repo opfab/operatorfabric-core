@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Directive, Injectable, Input, OnInit} from '@angular/core';
+import {Directive, Injectable, Input, OnChanges, OnInit} from '@angular/core';
 import {ColDef, GridOptions, ICellRendererParams} from 'ag-grid-community';
 import {TranslateService} from '@ngx-translate/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -20,9 +20,9 @@ import {CrudService} from '@ofServices/crud-service';
 
 @Directive()
 @Injectable()
-export abstract class AdminTableComponent implements OnInit {
+export abstract class AdminTableDirective implements OnInit, OnChanges {
 
-  // These fields will be initialized in the concrete classes extending `AdminTableComponent`
+  // These fields will be initialized in the concrete classes extending `AdminTableDirective`
   // (e.g. EntitiesTableComponent) as they depend on the type of the table
   /** Modal component to open when editing an item from the table (e.g. `EditEntityGroupModal`) */
   public editModalComponent;
@@ -106,7 +106,7 @@ export abstract class AdminTableComponent implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     // Column definitions can't be managed in the constructor like the other grid options because they rely on the `fields`
-    // property that is defined in the classes implementing AdminTableComponent. As such, it is still undefined when the
+    // property that is defined in the classes implementing AdminTableDirective. As such, it is still undefined when the
     // constructor from the supertype is called.
     this.gridApi.setColumnDefs(this.createColumnDefs(this.fields, this.tableType + '.'));
     this.gridApi.paginationSetPageSize(this.paginationPageSize);
@@ -167,7 +167,7 @@ export abstract class AdminTableComponent implements OnInit {
   openDeleteConfirmationDialog(row: any): any {
     this.confirmationDialogService.confirm(
         this.translateService.instant('admin.input.confirm'),
-        this.translateService.instant('admin.input.user.confirmDelete') + ' ' + row[this.idField] + '?',
+        this.translateService.instant('admin.input.' + this.tableType + '.confirmDelete') + ' ' + row[this.idField] + '?',
         'OK', // TODO Refactor to avoid translate.instant ? OK is not i18ed ?
         this.translateService.instant('admin.input.cancel')
     ).then((confirmed) => {

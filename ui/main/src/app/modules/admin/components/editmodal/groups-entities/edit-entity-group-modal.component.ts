@@ -14,7 +14,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {EntitiesService} from '@ofServices/entities.service';
 import {GroupsService} from '@ofServices/groups.service';
-import {AdminTableType} from '../../table/admin-table.component';
+import {AdminTableType} from '../../table/admin-table.directive';
 
 @Component({
   selector: 'of-edit-entity-group-modal',
