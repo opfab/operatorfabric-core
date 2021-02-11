@@ -24,11 +24,11 @@
           <div *ngIf="!row" class="opfab-input row">
             <label for="login" translate>admin.input.user.login</label>
             <input oninput="this.value = this.value.toLowerCase()" formControlName="login" name="login" id="login" type="text">
-            <div *ngIf="login.invalid" class="row alert alert-danger">
-              <div *ngIf="login.errors.required" translate>admin.input.login.required</div>
-              <div *ngIf="login.errors.maxlength" translate>admin.input.login.maxLength</div>
-              <div *ngIf="login.errors.minlength" translate>admin.input.login.minLength</div>
-            </div>
+          </div>
+          <div *ngIf="login.invalid" class="row alert alert-danger">
+            <div *ngIf="login.errors.required" translate>admin.input.login.required</div>
+            <div *ngIf="login.errors.maxlength" translate>admin.input.login.maxLength</div>
+            <div *ngIf="login.errors.minlength" translate>admin.input.login.minLength</div>
           </div>
 
           <div class="opfab-input row">
@@ -62,13 +62,14 @@
         </div>
       </div>
     </form>
-  </div>
-  <div class="modal-footer" style="border-top: none">
-    <button id="opfab-admin-user-btn-close" type="button" (click)="dismissModal('Cancel click')" class="opfab-btn-cancel" data-dismiss="modal"
-            translate>admin.input.close</button>
-    <button id="opfab-admin-user-btn-add" [disabled]="!userForm.valid" *ngIf="!row" (click)="update()" class="opfab-btn"
-            translate>admin.input.user.add</button>
-    <button id="opfab-admin-user-btn-save" [disabled]="!userForm.valid" *ngIf="row" (click)="update()" class="opfab-btn"
-            translate>admin.input.save</button>
+
+    <div class="modal-footer" style="border-top: none">
+      <button id="opfab-admin-user-btn-close" type="button" (click)="dismissModal('Cancel click')" class="opfab-btn-cancel" data-dismiss="modal"
+              translate>admin.input.close</button>
+      <button id="opfab-admin-user-btn-add" [disabled]="!userForm.valid" *ngIf="!row" (click)="update()" class="opfab-btn"
+              translate>admin.input.user.add</button>
+      <button id="opfab-admin-user-btn-save" [disabled]="!userForm.valid" *ngIf="row" (click)="update()" class="opfab-btn"
+              translate>admin.input.save</button>
+    </div>
   </div>
 </div>
