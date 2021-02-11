@@ -60,7 +60,7 @@ import {ReminderService} from '@ofServices/reminder/reminder.service';
     ]
 })
 export class ServicesModule {
-    static forRoot(): ModuleWithProviders {
+    static forRoot(): ModuleWithProviders<ServicesModule> {
         return {
             ngModule: ServicesModule
         };

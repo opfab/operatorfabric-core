@@ -20,7 +20,7 @@ import {of} from "rxjs";
 import {settingsInitialState} from "@ofStates/settings.state";
 import {map} from "rxjs/operators";
 import {PatchSettings} from "@ofActions/settings.actions";
-import {emptyAppState4Test} from "@tests/helpers";
+import {emptyAppState4Test, injectedSpy} from '@tests/helpers';
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
 import {authInitialState} from "@ofStates/authentication.state";
@@ -51,7 +51,7 @@ describe('TypeAheadSettingsComponent', () => {
     }));
 
     beforeEach(() => {
-        store = TestBed.get(Store);
+        store = injectedSpy(Store);
         store.select.and.callFake(selector => {
             return of({
                 ...emptyAppState, settings: {

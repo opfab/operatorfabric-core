@@ -36,8 +36,8 @@ describe('TimeService', () => {
                     ],
         });
 
-        httpMock = TestBed.get(HttpTestingController);
-        service = TestBed.get(TimeService);
+        httpMock = TestBed.inject(HttpTestingController);
+        service = TestBed.inject(TimeService);
     });
 
     afterEach(()=>{

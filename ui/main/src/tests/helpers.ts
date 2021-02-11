@@ -22,6 +22,9 @@ import {GuidService} from '@ofServices/guid.service';
 import {OAuthLogger, OAuthService, UrlHelperService} from 'angular-oauth2-oidc';
 import {TranslateLoader} from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
+import {Type} from '@angular/core';
+import SpyObj = jasmine.SpyObj;
+import {TestBed} from '@angular/core/testing';
 
 export const emptyAppState4Test: AppState = {
     router: null,
@@ -325,3 +328,12 @@ export function BusinessconfigI18nLoaderFactory(): TranslateLoader {
     return new BusinessconfigI18nLoader();
 }
 
+/** This function helps get around the fact that TestBed.inject() which replaces TestBed.get in Angular v9 is type-safe, so it returns the
+ * type of the actual object, which often clashes with the expected type (mock or spy) of the variable. We can't use the "real" type on the
+ * variable because we usually need to access methods from the spy or mock.
+ * It generate errors such as "Type 'Store<any>' is not assignable to type 'SpyObj<Store<AppState>>'".
+ * See https://github.com/angular/angular/issues/35944
+ * */
+export function injectedSpy<S>(service: Type<S>): SpyObj<S> {
+    return TestBed.inject(service) as SpyObj<S>;
+}

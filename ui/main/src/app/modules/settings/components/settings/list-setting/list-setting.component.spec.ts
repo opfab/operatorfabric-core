@@ -21,7 +21,7 @@ import {map} from "rxjs/operators";
 import {PatchSettings} from "@ofActions/settings.actions";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {I18n} from "@ofModel/i18n.model";
-import {emptyAppState4Test} from "@tests/helpers";
+import {emptyAppState4Test, injectedSpy} from '@tests/helpers';
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
 import {authInitialState} from "@ofStates/authentication.state";
@@ -53,8 +53,8 @@ describe('ListSettingComponent', () => {
     }));
 
     beforeEach(() => {
-        translateService = TestBed.get(TranslateService);
-        mockStore = TestBed.get(Store);
+        translateService = TestBed.inject(TranslateService);
+        mockStore = injectedSpy(Store);
         mockStore.select.and.callFake(selector => {
             return of({
                 ...emptyAppState, settings: {

@@ -56,12 +56,12 @@ describe('Processes Services', () => {
             ]
         });
         injector = getTestBed();
-        store = TestBed.get(Store);
+        store = TestBed.inject(Store);
         spyOn(store, 'dispatch').and.callThrough();
         // avoid exceptions during construction and init of the component
         // spyOn(store, 'select').and.callFake(() => of('/test/url'));
         httpMock = injector.get(HttpTestingController);
-        processesService = TestBed.get(ProcessesService);
+        processesService = TestBed.inject(ProcessesService);
         translateService = injector.get(TranslateService);
         translateService.addLangs(['en', 'fr']);
         translateService.setDefaultLang('en');

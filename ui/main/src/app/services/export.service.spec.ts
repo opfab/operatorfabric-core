@@ -25,7 +25,7 @@ describe('ExportService', () => {
       providers: [ExportService]
 
     });
-    service = TestBed.get(ExportService);
+    service = TestBed.inject(ExportService);
 
   });
   it('should be created', () => {

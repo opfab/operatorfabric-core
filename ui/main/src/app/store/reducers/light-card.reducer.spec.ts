@@ -59,7 +59,7 @@ describe('LightCard Reducer', () => {
 
             const severalRandomLightCards = getSeveralRandomLightCards(5);
 
-            const previousState = lightCardEntityAdapter.addAll(severalRandomLightCards, feedInitialState);
+            const previousState = lightCardEntityAdapter.setAll(severalRandomLightCards, feedInitialState);
 
             const currentError = new Error(getRandomAlphanumericValue(5, 12));
             const loadLightCardsFailureAction = new LoadLightCardsFailure({error: currentError});
@@ -77,7 +77,7 @@ describe('LightCard Reducer', () => {
     describe('EmptyLightCards', () => {
         it('should empty entities', () => {
             const severalRandomLightCards = getSeveralRandomLightCards(5);
-            const previousState = lightCardEntityAdapter.addAll(severalRandomLightCards, feedInitialState);
+            const previousState = lightCardEntityAdapter.setAll(severalRandomLightCards, feedInitialState);
             const actualState = reducer(previousState, new EmptyLightCards());
             expect(actualState).toBeTruthy();
             expect(actualState.loading).toEqual(false);
@@ -101,7 +101,7 @@ describe('LightCard Reducer', () => {
     describe('AddLightCardFailure', () => {
         it('should leave state unchanged with an additional message message', () => {
             const severalRandomLightCards = getSeveralRandomLightCards(5);
-            const previousState = lightCardEntityAdapter.addAll(severalRandomLightCards, feedInitialState);
+            const previousState = lightCardEntityAdapter.setAll(severalRandomLightCards, feedInitialState);
 
             const currentError = new Error(getRandomAlphanumericValue(5, 12));
             const addLightCardFailureAction = new AddLightCardFailure({error: currentError});

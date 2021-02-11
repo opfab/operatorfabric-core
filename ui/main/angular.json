@@ -10,7 +10,7 @@
       "prefix": "of",
       "schematics": {
         "@schematics/angular:component": {
-          "styleext": "scss"
+          "style": "scss"
         }
       },
       "architect": {
@@ -30,9 +30,6 @@
             ],
             "styles": [
               "node_modules/@fortawesome/fontawesome-free/css/all.css",
-              "node_modules/@fullcalendar/core/main.css",
-              "node_modules/@fullcalendar/daygrid/main.css",
-              "node_modules/@fullcalendar/timegrid/main.css",
               "node_modules/@fullcalendar/bootstrap/main.css",
               "node_modules/angular2-multiselect-dropdown/themes/default.theme.css",
               "src/assets/styles/style.css",
@@ -46,6 +43,12 @@
           },
           "configurations": {
             "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -62,6 +65,12 @@
               "buildOptimizer": true
             },
             "productionDebug": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",

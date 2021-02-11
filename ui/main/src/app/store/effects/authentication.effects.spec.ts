@@ -41,6 +41,7 @@ import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
 import { TranslateModule, TranslateService} from "@ngx-translate/core";
 import { ConfigService } from '@ofServices/config.service';
+import {injectedSpy} from '@tests/helpers';
 
 describe('AuthenticationEffects', () => {
     let actions$: Observable<any>;
@@ -86,19 +87,19 @@ describe('AuthenticationEffects', () => {
             ]
         });
 
-        effects = TestBed.get(AuthenticationEffects);
-        translate = TestBed.get(TranslateService);
+        effects = TestBed.inject(AuthenticationEffects);
+        translate = TestBed.inject(TranslateService);
        
 
     }));
 
     beforeEach(() => {
-        actions$ = TestBed.get(Actions);
-        authenticationService = TestBed.get(AuthenticationService);
-        cardService = TestBed.get(CardService);
-        router = TestBed.get(Router);
-        mockStore = TestBed.get(Store);
-        configService = TestBed.get(ConfigService);
+        actions$ = TestBed.inject(Actions);
+        authenticationService = injectedSpy(AuthenticationService);
+        cardService = injectedSpy(CardService);
+        router = injectedSpy(Router);
+        mockStore = injectedSpy(Store);
+        configService = injectedSpy(ConfigService);
     });
 
     it('should be created', () => {

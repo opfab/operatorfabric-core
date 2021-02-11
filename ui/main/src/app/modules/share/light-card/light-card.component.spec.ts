@@ -13,7 +13,7 @@ import {async, ComponentFixture, getTestBed, TestBed} from '@angular/core/testin
 
 
 import {LightCardComponent} from './light-card.component';
-import {BusinessconfigI18nLoaderFactory} from '@tests/helpers';
+import {BusinessconfigI18nLoaderFactory, injectedSpy} from '@tests/helpers';
 import {RouterTestingModule} from '@angular/router/testing';
 import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
 import {Store, StoreModule} from '@ngrx/store';
@@ -30,6 +30,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
 import {CountDownModule} from '../countdown/countdown.module';
+import {CardService} from '@ofServices/card.service';
 
 export function countdownConfigFactory(): CountdownConfig {
     return { format: `mm:ss` };
@@ -76,7 +77,7 @@ describe('LightCardComponent', () => {
                 {provide: 'TimeEventSource', useValue: null},
                 TimeService, I18nService
             ]}).compileComponents();
-        store = TestBed.get(Store);
+        store = TestBed.inject(Store);
         spyOn(store, 'dispatch').and.callThrough();
         // avoid exceptions during construction and init of the component
         injector = getTestBed();
@@ -92,7 +93,7 @@ describe('LightCardComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(LightCardComponent);
         lightCardDetailsComp = fixture.debugElement.componentInstance;
-        router = TestBed.get(Router);
+        router = injectedSpy(Router);
     });
     it('should handle non existent timestamp with an empty string', () => {
         const expectedEmptyString = lightCardDetailsComp.handleDate(undefined);

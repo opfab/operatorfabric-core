@@ -30,7 +30,7 @@ import {AppState} from '@ofStore/index';
 })
 export class MonitoringTableComponent implements OnDestroy {
 
-    @ViewChild('cardDetail', null) cardDetailTemplate: ElementRef;
+    @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
     @Input() result: LineOfMonitoringResult[];
     exportMonitoringData: Array<any> = [];
     unsubscribe$: Subject<void> = new Subject<void>();

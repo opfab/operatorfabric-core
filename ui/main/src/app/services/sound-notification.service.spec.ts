@@ -56,12 +56,12 @@ describe('SoundNotificationService', () => {
       providers: [SoundNotificationService
       ]
     });
-    service = TestBed.get(SoundNotificationService);
+    service = TestBed.inject(SoundNotificationService);
     playSound = spyOn(service, 'playSound').and.callThrough();
   });
 
   it('should be created', () => {
-    const service: SoundNotificationService = TestBed.get(SoundNotificationService);
+    const service: SoundNotificationService = TestBed.inject(SoundNotificationService);
     expect(service).toBeTruthy();
   });
 

@@ -64,11 +64,11 @@ describe('Handlebars Services', () => {
             ]
         });
         injector = getTestBed();
-        store = TestBed.get(Store);
+        store = TestBed.inject(Store);
         spyOn(store, 'dispatch').and.callThrough();
         httpMock = injector.get(HttpTestingController);
-        handlebarsService = TestBed.get(HandlebarsService);
-        translate = TestBed.get(TranslateService)
+        handlebarsService = TestBed.inject(HandlebarsService);
+        translate = TestBed.inject(TranslateService)
     });
     afterEach(() => {
         httpMock.verify();

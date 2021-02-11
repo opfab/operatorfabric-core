@@ -38,7 +38,7 @@ describe('InitChartComponent', () => {
         FormsModule,
         StoreModule.forRoot(appReducer, storeConfig),
         RouterTestingModule,
-        StoreRouterConnectingModule,
+        StoreRouterConnectingModule.forRoot(),
         NgxChartsModule,
         NgbModule],
       declarations: [ InitChartComponent, CustomTimelineChartComponent, MouseWheelDirective],

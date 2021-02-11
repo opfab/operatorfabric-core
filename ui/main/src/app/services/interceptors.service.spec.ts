@@ -13,7 +13,7 @@ import {inject, TestBed} from '@angular/core/testing';
 import {TokenInjector} from '@ofServices/interceptors.service';
 import {HttpRequest} from '@angular/common/http';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
-import {getRandomAlphanumericValue} from '@tests/helpers';
+import {getRandomAlphanumericValue, injectedSpy} from '@tests/helpers';
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
 
@@ -28,7 +28,7 @@ describe('Interceptor', () => {
                 {provide: AuthenticationService, useValue: authenticationServiceSpy},
             ]
         });
-        authenticationService = TestBed.get(AuthenticationService);
+        authenticationService = injectedSpy(AuthenticationService);
         authenticationServiceSpy.getSecurityHeader.and.returnValue({'Authorization': `Bearer dummyToken`});
     });
 
