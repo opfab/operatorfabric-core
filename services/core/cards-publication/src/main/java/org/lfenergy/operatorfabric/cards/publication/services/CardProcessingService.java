@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -71,6 +71,7 @@ public class CardProcessingService {
 
         long windowStart = Instant.now().toEpochMilli();
 
+        
         //delete child cards process should be prior to cards updates
         Flux<CardPublicationData> cards = deleteChildCardsProcess(pushedCards);
         cards = registerRecipientProcess(cards);
