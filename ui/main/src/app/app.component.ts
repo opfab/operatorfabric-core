@@ -145,9 +145,6 @@ export class AppComponent implements OnInit {
             .subscribe(() => {
               this.loaded = true;
               this.reminderService.startService(identifier);
-              // This can only be done once the main initialization above is complete as user data is necessary to determine if the user
-              // has the required admin privileges.
-              if (this.userService.isCurrentUserAdmin()) this.groupsService.loadAllGroupsData();
             });
         }
       });

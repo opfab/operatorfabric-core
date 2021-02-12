@@ -9,18 +9,23 @@
  */
 
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {TranslateService} from '@ngx-translate/core';
 import {AppState} from '@ofStore/index';
+import {GroupsService} from '@ofServices/groups.service';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'of-admin',
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })
-export class AdminComponent implements OnInit {
+export class AdminComponent implements OnInit, OnDestroy {
+
+  unsubscribe$: Subject<void> = new Subject<void>();
 
   activeTab: string;
 
@@ -28,12 +33,19 @@ export class AdminComponent implements OnInit {
   public paginationPageSizeOptions = [5, 10, 25, 50, 100];
   public paginationPageSize = this.paginationDefaultPageSize;
 
-  constructor(private route: ActivatedRoute, protected store: Store<AppState>, protected translate: TranslateService) {
+  constructor(private route: ActivatedRoute,
+              protected store: Store<AppState>,
+              protected translate: TranslateService,
+              private groupsService: GroupsService) {
   }
 
   ngOnInit() {
     const url = this.route.snapshot.url.join('').trim();
     this.activeTab = (url.length !== 0) ? url : 'users';
+
+    // Initialization necessary for groups selection dropdown in modals and to display names instead of codes
+    // As it is only necessary for admin purposes, it's done here rather than in the app initialization code
+    this.groupsService.loadAllGroupsData().pipe(takeUntil(this.unsubscribe$)).subscribe();
   }
 
   setActiveTab(tab: string): void {
@@ -46,4 +58,8 @@ export class AdminComponent implements OnInit {
     this.paginationPageSize = Number(value);
   }
 
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 }
