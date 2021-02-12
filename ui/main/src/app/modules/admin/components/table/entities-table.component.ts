@@ -11,7 +11,7 @@
 import {Component, OnInit} from '@angular/core';
 import {CrudService} from "@ofServices/crud-service";
 import {HttpClient} from "@angular/common/http";
-import {AdminTableComponent, AdminTableType} from "./admin-table.component";
+import {AdminTableDirective, AdminTableType} from "./admin-table.directive";
 import {EntitiesService} from "@ofServices/entities.service";
 import {EditEntityGroupModalComponent} from "../editmodal/groups-entities/edit-entity-group-modal.component";
 
@@ -20,7 +20,7 @@ import {EditEntityGroupModalComponent} from "../editmodal/groups-entities/edit-e
   providers:  [{provide: CrudService, useClass: EntitiesService, deps: [HttpClient]}],
   selector: 'of-entities-table'
 })
-export class EntitiesTableComponent extends AdminTableComponent implements OnInit {
+export class EntitiesTableComponent extends AdminTableDirective implements OnInit {
 
   tableType = AdminTableType.ENTITY;
   fields = ['id', 'name', 'description'];

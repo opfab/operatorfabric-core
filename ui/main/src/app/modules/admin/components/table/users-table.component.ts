@@ -13,14 +13,14 @@ import {UserService} from '@ofServices/user.service';
 import {EditUserModalComponent} from '../editmodal/users/edit-user-modal.component';
 import {CrudService} from "@ofServices/crud-service";
 import {HttpClient} from "@angular/common/http";
-import {AdminTableComponent, AdminTableType} from "./admin-table.component";
+import {AdminTableDirective, AdminTableType} from "./admin-table.directive";
 
 @Component({
   templateUrl: 'admin-table.component.html',
   providers:  [{provide: CrudService, useClass: UserService, deps: [HttpClient]}],
   selector: 'of-users-table'
 })
-export class UsersTableComponent extends AdminTableComponent implements OnInit {
+export class UsersTableComponent extends AdminTableDirective implements OnInit {
 
   tableType = AdminTableType.USER;
   fields = ['login', 'firstName', 'lastName', 'groups', 'entities'];
