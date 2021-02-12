@@ -14,7 +14,10 @@
       "@ofStates/*": ["app/store/states/*"],
       "@ofServices/*": ["app/services/*"],
       "@ofModel/*": ["app/model/*"],
-      "@tests/*": ["tests/*"]
+      "@tests/*": ["tests/*"],
+      "file-saver-es": [
+        "@types/file-saver"
+      ]
     },
     "outDir": "./dist/out-tsc",
     "sourceMap": true,

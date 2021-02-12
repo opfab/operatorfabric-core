@@ -8,8 +8,8 @@
  */
 
 
-import {AppState} from "@ofStore/index";
-import * as _ from 'lodash';
+import {AppState} from '@ofStore/index';
+import * as _ from 'lodash-es';
 
 export function buildSettingsOrConfigSelector(path: string, fallback: any = null) {
     return (state: AppState) => {

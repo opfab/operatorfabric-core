@@ -17,7 +17,7 @@ import {buildFilterSelector} from '@ofSelectors/feed.selectors';
 import {FilterType} from '@ofServices/filter.service';
 import {debounce, distinctUntilChanged, first, takeUntil} from 'rxjs/operators';
 import {Filter} from '@ofModel/feed-filter.model';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 import {ApplyFilter} from '@ofActions/feed.actions';
 
 @Component({
