@@ -512,7 +512,7 @@ Scenario: Push a card for a user with no group and no entity
     And match response.data.message == 'a message for user with no group and no entity'
 
 
-Scenario: Push card with null keepChilCards
+Scenario: Push card with null keepChilCards and publisherType
 
     * def parentCard2 =
 """
@@ -526,6 +526,7 @@ Scenario: Push card with null keepChilCards
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
     "keepChildCards": null,
+	"publisherType": null,
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title2"},
 	"data" : {"message":"test externalRecipients"}
@@ -546,3 +547,4 @@ Scenario: Push card with null keepChilCards
     When method get
     Then status 200
     And match response.card.keepChildCards == false
+	And match response.card.publisherType == "EXTERNAL"
