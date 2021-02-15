@@ -27,24 +27,24 @@
     <div class="tab-pane active" id="admin/users" [ngClass]="{ 'active':activeTab==='users'}">
       <br>
       <br>
-      <of-users-table [paginationPageSize]="paginationPageSize"></of-users-table>
+      <of-users-table (dataUpdate)="propagateUpdate($event)" [paginationPageSize]="paginationPageSize"></of-users-table>
     </div>
     <div class="tab-pane" id="admin/entities" [ngClass]="{ 'active':activeTab==='entities'}">
       <br>
       <br>
-      <of-entities-table [paginationPageSize]="paginationPageSize"></of-entities-table>
+      <of-entities-table (dataUpdate)="propagateUpdate($event)" [paginationPageSize]="paginationPageSize"></of-entities-table>
     </div>
     <div class="tab-pane" id="admin/groups" [ngClass]="{ 'active':activeTab==='groups'}">
       <br>
       <br>
-      <of-groups-table [paginationPageSize]="paginationPageSize"></of-groups-table>
+      <of-groups-table (dataUpdate)="propagateUpdate($event)" [paginationPageSize]="paginationPageSize"></of-groups-table>
     </div>
   </div>
 
   <br>
   <br>
   <div>
-    <select (change)="onPageSizeChanged()" id="page-size-select" label="page-size">
+    <select (change)="onPageSizeChanged()" id="page-size-select">
       <option *ngFor="let option of paginationPageSizeOptions"
               [value]="option"
               [attr.selected]="option==paginationDefaultPageSize ? true : null">
