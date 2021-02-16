@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Directive, Injectable, Input, OnChanges, OnInit} from '@angular/core';
+import {Directive, EventEmitter, Injectable, Input, OnChanges, OnInit, Output} from '@angular/core';
 import {ColDef, GridOptions, ICellRendererParams} from 'ag-grid-community';
 import {TranslateService} from '@ngx-translate/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -40,6 +40,11 @@ export abstract class AdminTableDirective implements OnInit, OnChanges {
 
   @Input()
   public paginationPageSize;
+
+  /** This is used to notify the admin component that data has been changed so it can trigger a refresh for related data, passing the
+   * tableType as payload to know which data has been changed. */
+  @Output()
+  public dataUpdate = new EventEmitter<AdminTableType>();
 
   protected i18NPrefix = 'admin.input.';
 
@@ -152,10 +157,11 @@ export abstract class AdminTableDirective implements OnInit, OnChanges {
       modalRef.componentInstance.type = this.tableType;
       modalRef.componentInstance.row = params.data; // This passes the data from the edited row to the modal to initialize input values.
       modalRef.result.then(
-          (result: any) => {
+          () => { // If modal is closed
             this.refreshData(); // This refreshes the data when the modal is closed after a change
+            this.dataUpdate.emit(this.tableType);
           },
-          (reason: any) => { }); // If the modal is dismissed (by clicking the "close" button, the top right cross icon
+          () => { }); // If the modal is dismissed (by clicking the "close" button, the top right cross icon
       // or clicking outside the modal, there is no need to refresh the data
     }
     if (columnId === 'delete') {
@@ -174,7 +180,11 @@ export abstract class AdminTableDirective implements OnInit, OnChanges {
       if (confirmed) {
         // The data refresh is launched inside the subscribe to make sure that the deletion request has been (correctly)
         // handled first
-        this.crudService.deleteById(row[this.idField]).subscribe(x => this.refreshData()); // TODO unsubscribe on destroy?
+        this.crudService.deleteById(row[this.idField])
+            .subscribe(() => {
+          this.refreshData();
+          this.dataUpdate.emit(this.tableType);
+        }); // TODO unsubscribe on destroy?
       }
     }).catch(() => throwError(new AppError(null)));
   }
@@ -185,10 +195,12 @@ export abstract class AdminTableDirective implements OnInit, OnChanges {
     modalRef.result.then(
         // Hooking the refresh of the data to the closing of the modal seemed simpler than setting up
         // NGRX actions and effects for this sole purpose
-        (result: any) => {
-          this.refreshData();
+        () => { // If modal is closed
+          this.refreshData(); // This refreshes the data when the modal is closed after a change
+          // Data creation doesn't need to be propagated to the user table
         },
-        (reason: any) => { });
+        () => { }); // If modal is dismissed (by clicking the "close" button, the top right cross icon
+    // or clicking outside the modal, there is no need to refresh the data
   }
 
   refreshData() {

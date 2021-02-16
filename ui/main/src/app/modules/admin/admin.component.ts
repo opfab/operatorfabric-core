@@ -9,7 +9,7 @@
  */
 
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {TranslateService} from '@ngx-translate/core';
@@ -17,6 +17,8 @@ import {AppState} from '@ofStore/index';
 import {GroupsService} from '@ofServices/groups.service';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {AdminTableType} from './components/table/admin-table.directive';
+import {UsersTableComponent} from './components/table/users-table.component';
 
 @Component({
   selector: 'of-admin',
@@ -32,6 +34,9 @@ export class AdminComponent implements OnInit, OnDestroy {
   public paginationDefaultPageSize = 10;
   public paginationPageSizeOptions = [5, 10, 25, 50, 100];
   public paginationPageSize = this.paginationDefaultPageSize;
+
+  @ViewChild(UsersTableComponent)
+  private usersTableComponent: UsersTableComponent;
 
   constructor(private route: ActivatedRoute,
               protected store: Store<AppState>,
@@ -61,5 +66,13 @@ export class AdminComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+/** After an update on the entities (resp. groups) screen, both entity and user data need to be refreshed as changes to an
+ * entity (deletion, name change) need to be taken into account in users that belonged to this entity as well. */
+  propagateUpdate(event) {
+      if (event === AdminTableType.ENTITY || event === AdminTableType.GROUP) {
+        this.usersTableComponent.refreshData();
+      }
   }
 }
