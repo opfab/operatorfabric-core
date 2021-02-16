@@ -25,8 +25,8 @@ export class EditEntityGroupModalComponent implements OnInit {
 
   entityGroupForm = new FormGroup({
     id: new FormControl(''
-      , [Validators.required, Validators.minLength(2), Validators.maxLength(20)]),
-    name: new FormControl('', [Validators.required, Validators.maxLength(20)]),
+      , [Validators.required, Validators.minLength(2)]),
+    name: new FormControl('', [Validators.required]),
     description: new FormControl('')
   });
 

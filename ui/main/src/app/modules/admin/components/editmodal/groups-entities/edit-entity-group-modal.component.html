@@ -27,7 +27,6 @@
           </div>
           <div *ngIf="id.invalid" class="row alert alert-danger">
             <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
-            <div *ngIf="id.errors.maxlength" translate>admin.input.id.maxLength</div>
             <div *ngIf="id.errors.minlength" translate>admin.input.id.minLength</div>
           </div>
 
@@ -37,7 +36,6 @@
           </div>
           <div *ngIf="name.invalid" class=" row alert alert-danger">
             <div *ngIf="name.errors.required" translate>admin.input.name.required</div>
-            <div *ngIf="name.errors.maxlength" translate>admin.input.name.maxLength</div>
           </div>
 
           <div class="opfab-input row">

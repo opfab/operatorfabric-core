@@ -27,7 +27,6 @@
           </div>
           <div *ngIf="login.invalid" class="row alert alert-danger">
             <div *ngIf="login.errors.required" translate>admin.input.login.required</div>
-            <div *ngIf="login.errors.maxlength" translate>admin.input.login.maxLength</div>
             <div *ngIf="login.errors.minlength" translate>admin.input.login.minLength</div>
           </div>
 
@@ -37,7 +36,6 @@
           </div>
           <div *ngIf="firstName.invalid" class="row alert alert-danger">
             <div *ngIf="firstName.errors.required" translate>admin.input.firstName.required</div>
-            <div *ngIf="firstName.errors.maxlength" translate>admin.input.firstName.maxLength</div>
           </div>
           <div class="opfab-input row">
             <label for="lastName" translate>admin.input.user.lastName</label>
@@ -45,7 +43,6 @@
           </div>
           <div *ngIf="lastName.invalid" class="row alert alert-danger">
             <div *ngIf="lastName.errors.required" translate>admin.input.lastName.required</div>
-            <div *ngIf="lastName.errors.maxlength" translate>admin.input.lastName.maxLength</div>
           </div>
           <div class="row">
             <of-multi-filter filterPath="groups" id="groups" [parentForm]="userForm"
