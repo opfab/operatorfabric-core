@@ -49,9 +49,9 @@ export class EditUserModalComponent implements OnInit {
 
     this.userForm = new FormGroup({
       login: new FormControl(''
-          , [Validators.required, Validators.minLength(4), Validators.maxLength(20)]),
-      firstName: new FormControl('', [Validators.required, Validators.maxLength(20)]),
-      lastName: new FormControl('', [Validators.required, Validators.maxLength(20)]),
+          , [Validators.required, Validators.minLength(4)]),
+      firstName: new FormControl('', [Validators.required]),
+      lastName: new FormControl('', [Validators.required]),
       groups: new FormControl([]),
       entities: new FormControl([])
     });

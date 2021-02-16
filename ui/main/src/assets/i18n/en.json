@@ -296,26 +296,21 @@
       "confirm": "Please confirm...",
       "login": {
         "required": "Login is required.",
-        "minLength": "Login should be minimum 4 characters.",
-        "maxLength": "Login should be maximum 20 characters."
+        "minLength": "Login should be minimum 4 characters."
       },
       "firstName": {
-        "required": "First name is required.",
-        "maxLength": "First name should be maximum 20 characters."
+        "required": "First name is required."
       },
       "lastName": {
-        "required": "Last name is required.",
-        "maxLength": "Last name should be maximum 20 characters."
+        "required": "Last name is required."
       },
       "id": {
         "required": "Id is required.",
         "minLength": "Id should be minimum 2 characters.",
-        "maxLength": "Id should be maximum 20 characters.",
         "label":"Id"
       },
       "name": {
         "required": "Name is required.",
-        "maxLength": "Name should be maximum 20 characters.",
         "label":"Name"
       },
       "description": "Description",

@@ -296,26 +296,21 @@
       "confirm":"Confirmez...",
       "login": {
         "required": "L'identifiant est obligatoire.",
-        "minLength": "L'identifiant doit avoir au moins 4 caractères.",
-        "maxLength": "L'identifiant doit avoir au maximum 20 caractères."
+        "minLength": "L'identifiant doit avoir au moins 4 caractères."
       },
       "firstName": {
-        "required": "Le prénom est obligatoire.",
-        "maxLength": "Le prénom doit avoir  au maximum 20 caractères."
+        "required": "Le prénom est obligatoire."
       },
       "lastName": {
-        "required": "Le nom est obligatoire.",
-        "maxLength": "Le nom doit avoir  au maximum 20 caractères."
+        "required": "Le nom est obligatoire."
       },
       "id": {
         "required": "L'identifiant est obligatoire.",
         "minLength": "L'identifiant doit avoir au moins 2 caractères.",
-        "maxLength": "L'identifiant doit avoir au maximum 20 caractères.",
         "label":"Id"
       },
       "name": {
         "required": "Le nom est obligatoire.",
-        "maxLength": "Le nom doit avoir au maximum 20 caractères.",
         "label":"Nom"
       },
       "description": "Description",
