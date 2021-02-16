@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,8 +21,8 @@ export const environment = {
         cards: 'http://localhost:2002/cards',
         cardspub: 'http://localhost:2002/cardspub',
         users: 'http://localhost:2002/users',
-        groups: 'http://localhost:2002/groups',
-        entities: 'http://localhost:2002/entities',
+        groups: 'http://localhost:2002/users/groups',
+        entities: 'http://localhost:2002/users/entities',
         archives: '',
         processes: 'http://localhost:2002/businessconfig/processes',
         processGroups: 'http://localhost:2002/businessconfig/processgroups',
