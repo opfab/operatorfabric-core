@@ -53,7 +53,7 @@
   font-size: 13px;
   color: var(--opfab-color); 
   }
-  
+
 .opfab-calendar-event:hover {
   color: var(--opfab-text-color-stronger); 
   }
@@ -159,6 +159,9 @@
   border-top-width: 0px;
 }
 
+.fc-h-event .fc-event-main {
+  color: var(--opfab-color); 
+}
 
 // change the color of default bullet point 
 .opfab-calendar-event-action .fc-daygrid-event-dot  {
