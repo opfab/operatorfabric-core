@@ -8,28 +8,34 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Directive, EventEmitter, Injectable, Input, OnChanges, OnInit, Output} from '@angular/core';
+import {Directive, Injectable, OnDestroy, OnInit} from '@angular/core';
 import {ColDef, GridOptions, ICellRendererParams} from 'ag-grid-community';
 import {TranslateService} from '@ngx-translate/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {throwError} from 'rxjs';
+import {Subject, throwError} from 'rxjs';
 import {ConfirmationDialogService} from '../../services/confirmation-dialog.service';
-import {ActionCellRendererComponent} from './action-cell-renderer.component';
 import {AppError} from '../../../../common/error/app-error';
 import {CrudService} from '@ofServices/crud-service';
+import {ActionCellRendererComponent} from './action-cell-renderer.component';
+import {EntityCellRendererComponent} from './entity-cell-renderer.component';
+import {GroupCellRendererComponent} from './group-cell-renderer.component';
+import {AdminItemType, SharingService} from '../../services/sharing.service';
+import {takeUntil} from 'rxjs/operators';
 
 @Directive()
 @Injectable()
-export abstract class AdminTableDirective implements OnInit, OnChanges {
+export abstract class AdminTableDirective implements OnInit, OnDestroy {
+
+  unsubscribe$: Subject<void> = new Subject<void>();
 
   // These fields will be initialized in the concrete classes extending `AdminTableDirective`
   // (e.g. EntitiesTableComponent) as they depend on the type of the table
   /** Modal component to open when editing an item from the table (e.g. `EditEntityGroupModal`) */
   public editModalComponent;
-  /** Type of data managed by the table (e.g. `AdminTableType.ENTITY`) */
-  protected tableType: AdminTableType;
+  /** Type of data managed by the table (e.g. `AdminItemType.ENTITY`) */
+  protected tableType: AdminItemType;
   /** Relevant fields for this data type. They will be used to populate the table columns */
-  protected fields: string[];
+  protected fields: Field[];
   /** Among these fields, which one represents an item's unique id (e.g. `id`) */
   protected idField: string;
 
@@ -38,28 +44,23 @@ export abstract class AdminTableDirective implements OnInit, OnChanges {
   public gridApi;
   public rowData: any;
 
-  @Input()
-  public paginationPageSize;
-
-  /** This is used to notify the admin component that data has been changed so it can trigger a refresh for related data, passing the
-   * tableType as payload to know which data has been changed. */
-  @Output()
-  public dataUpdate = new EventEmitter<AdminTableType>();
-
   protected i18NPrefix = 'admin.input.';
+  protected crudService: CrudService;
 
   constructor(
       protected translateService: TranslateService,
       protected confirmationDialogService: ConfirmationDialogService,
       protected modalService: NgbModal,
-      protected crudService: CrudService) {
+      protected dataHandlingService: SharingService) {
 
     this.gridOptions = <GridOptions>{
       context: {
         componentParent: this
       },
       frameworkComponents : {
-        actionCellRenderer: ActionCellRendererComponent
+        actionCellRenderer: ActionCellRendererComponent,
+        groupCellRenderer: GroupCellRendererComponent,
+        entityCellRenderer: EntityCellRendererComponent
       },
       domLayout: 'autoHeight',
       defaultColDef : {
@@ -78,8 +79,7 @@ export abstract class AdminTableDirective implements OnInit, OnChanges {
         'dataColumn': {
           sortable: true,
           filter: true,
-          flex: 3
-
+          flex: 2
         }
       },
       localeTextFunc : function (key) {
@@ -96,11 +96,8 @@ export abstract class AdminTableDirective implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.tableType);
     this.refreshData();
-  }
-
-  ngOnChanges() {
-    if (!!this.gridApi) this.gridApi.paginationSetPageSize(this.paginationPageSize);
   }
 
   public localizeHeader(parameters: ICellRendererParams): string {
@@ -114,7 +111,12 @@ export abstract class AdminTableDirective implements OnInit, OnChanges {
     // property that is defined in the classes implementing AdminTableDirective. As such, it is still undefined when the
     // constructor from the supertype is called.
     this.gridApi.setColumnDefs(this.createColumnDefs(this.fields, this.tableType + '.'));
-    this.gridApi.paginationSetPageSize(this.paginationPageSize);
+    this.dataHandlingService.paginationPageSize$
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(pageSize => {
+          this.gridApi.paginationSetPageSize(pageSize);
+        });
+
   }
 
   /** This function generates the ag-grid `ColumnDefs` for the grid from a list of fields
@@ -123,15 +125,22 @@ export abstract class AdminTableDirective implements OnInit, OnChanges {
    * @param i18nPrefixForHeader: optional prefix to add to the field name to create the relevant i18nKey
    * @return ColDef[] object containing the column definitions for the grid
    * */
-  createColumnDefs(fields: string[], i18nPrefixForHeader?: string): ColDef[] {
+  createColumnDefs(fields: Field[], i18nPrefixForHeader?: string): ColDef[] {
     // if provided, i18nPrefixForHeader should have trailing dot
 
     // Create data columns from fields
     let columnDefs: ColDef[];
     columnDefs = new Array(fields.length + 2); // +2 because 2 action columns (see below)
 
-    fields.forEach((field: string, index: number) => {
-      columnDefs[index] = { headerName: i18nPrefixForHeader + field, field: field, type: 'dataColumn'};
+    fields.forEach((field: Field, index: number) => {
+      const columnDef = {
+        type: 'dataColumn',
+        headerName: i18nPrefixForHeader + field.name,
+        field: field.name
+      };
+      if (!!field.flex) columnDef['flex'] = field.flex;
+      if (!!field.cellRendererName) columnDef['cellRenderer'] = field.cellRendererName;
+      columnDefs[index] = columnDef;
     });
 
     // Add action columns
@@ -159,7 +168,6 @@ export abstract class AdminTableDirective implements OnInit, OnChanges {
       modalRef.result.then(
           () => { // If modal is closed
             this.refreshData(); // This refreshes the data when the modal is closed after a change
-            this.dataUpdate.emit(this.tableType);
           },
           () => { }); // If the modal is dismissed (by clicking the "close" button, the top right cross icon
       // or clicking outside the modal, there is no need to refresh the data
@@ -182,9 +190,8 @@ export abstract class AdminTableDirective implements OnInit, OnChanges {
         // handled first
         this.crudService.deleteById(row[this.idField])
             .subscribe(() => {
-          this.refreshData();
-          this.dataUpdate.emit(this.tableType);
-        }); // TODO unsubscribe on destroy?
+              this.refreshData();
+            });
       }
     }).catch(() => throwError(new AppError(null)));
   }
@@ -207,9 +214,26 @@ export abstract class AdminTableDirective implements OnInit, OnChanges {
     this.rowData = this.crudService.getAll();
   }
 
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
 }
 
-export enum AdminTableType {
-  USER = 'user', ENTITY = 'entity', GROUP = 'group'
-}
+export class Field {
 
+  public name: string;
+  public flex: number;
+  public cellRendererName: string;
+
+  /**@param name: should match the property name in the underlying row data. Will be used as key to find i18n label for the column header.
+   @param flex: Sets the column size relative to others
+   @param cellRendererName: needs to match one of the renderers defined under `frameworkComponents` in the `gridOptions` above.
+   * */
+  constructor(name: string, flex?: number, cellRendererName?: string) {
+    this.name = name;
+    this.flex = flex;
+    this.cellRendererName = cellRendererName;
+  }
+}

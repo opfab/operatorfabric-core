@@ -7,18 +7,18 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CrudService} from './crud-service';
 import {Observable, Subject} from 'rxjs';
 import {Group} from '@ofModel/group.model';
 import {environment} from '@env/environment';
 import {HttpClient} from '@angular/common/http';
 import {catchError, takeUntil, tap} from 'rxjs/operators';
 import {Injectable, OnDestroy} from '@angular/core';
+import {CachedCrudService} from '@ofServices/cached-crud-service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GroupsService extends CrudService implements OnDestroy {
+export class GroupsService extends CachedCrudService implements OnDestroy {
 
   readonly groupsUrl: string;
   private _groups: Group[];
@@ -42,8 +42,15 @@ export class GroupsService extends CrudService implements OnDestroy {
   deleteById(id: string) {
     const url = `${this.groupsUrl}/${id}`;
     return this.httpClient.delete(url).pipe(
-      catchError((error: Response) => this.handleError(error))
+      catchError((error: Response) => this.handleError(error)),
+        tap(() => {
+          this.deleteFromCachedGroups(id);
+        })
     );
+  }
+
+  private deleteFromCachedGroups(id: string): void {
+    this._groups = this._groups.filter(group => group.id !== id);
   }
 
   private updateCachedGroups(groupData: Group): void {
@@ -75,10 +82,14 @@ export class GroupsService extends CrudService implements OnDestroy {
     return this._groups;
   }
 
+  public getCachedValues(): Array<Group> {
+    return this.getGroups();
+  }
+
   updateGroup(groupData: Group): Observable<Group> {
     return this.httpClient.post<Group>(`${this.groupsUrl}`, groupData).pipe(
       catchError((error: Response) => this.handleError(error)),
-        tap(next => {
+        tap(() => {
           this.updateCachedGroups(groupData);
         })
     );

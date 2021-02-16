@@ -9,21 +9,18 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {CrudService} from "@ofServices/crud-service";
-import {HttpClient} from "@angular/common/http";
-import {AdminTableDirective, AdminTableType} from "./admin-table.directive";
-import {EntitiesService} from "@ofServices/entities.service";
-import {EditEntityGroupModalComponent} from "../editmodal/groups-entities/edit-entity-group-modal.component";
+import {AdminTableDirective, Field} from './admin-table.directive';
+import {EditEntityGroupModalComponent} from '../editmodal/groups-entities/edit-entity-group-modal.component';
+import {AdminItemType} from '../../services/sharing.service';
 
 @Component({
-  templateUrl: 'admin-table.component.html',
-  providers:  [{provide: CrudService, useClass: EntitiesService, deps: [HttpClient]}],
+  templateUrl: 'admin-table.directive.html',
   selector: 'of-entities-table'
 })
 export class EntitiesTableComponent extends AdminTableDirective implements OnInit {
 
-  tableType = AdminTableType.ENTITY;
-  fields = ['id', 'name', 'description'];
+  tableType = AdminItemType.ENTITY;
+  fields = [new Field('id'), new Field('name'), new Field('description')];
   idField = 'id';
   editModalComponent = EditEntityGroupModalComponent;
 

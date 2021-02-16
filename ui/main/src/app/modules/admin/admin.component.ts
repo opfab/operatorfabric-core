@@ -9,70 +9,37 @@
  */
 
 
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {TranslateService} from '@ngx-translate/core';
 import {AppState} from '@ofStore/index';
-import {GroupsService} from '@ofServices/groups.service';
-import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {AdminTableType} from './components/table/admin-table.directive';
-import {UsersTableComponent} from './components/table/users-table.component';
+import {SharingService} from './services/sharing.service';
 
 @Component({
   selector: 'of-admin',
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })
-export class AdminComponent implements OnInit, OnDestroy {
-
-  unsubscribe$: Subject<void> = new Subject<void>();
-
-  activeTab: string;
+export class AdminComponent implements OnInit {
 
   public paginationDefaultPageSize = 10;
   public paginationPageSizeOptions = [5, 10, 25, 50, 100];
-  public paginationPageSize = this.paginationDefaultPageSize;
-
-  @ViewChild(UsersTableComponent)
-  private usersTableComponent: UsersTableComponent;
 
   constructor(private route: ActivatedRoute,
               protected store: Store<AppState>,
               protected translate: TranslateService,
-              private groupsService: GroupsService) {
+              private dataHandlingService: SharingService) {
   }
 
   ngOnInit() {
-    const url = this.route.snapshot.url.join('').trim();
-    this.activeTab = (url.length !== 0) ? url : 'users';
-
-    // Initialization necessary for groups selection dropdown in modals and to display names instead of codes
-    // As it is only necessary for admin purposes, it's done here rather than in the app initialization code
-    this.groupsService.loadAllGroupsData().pipe(takeUntil(this.unsubscribe$)).subscribe();
-  }
-
-  setActiveTab(tab: string): void {
-    this.activeTab = tab;
+    this.dataHandlingService.changePaginationPageSize(this.paginationDefaultPageSize);
   }
 
   onPageSizeChanged() {
     // Cast to get rid of "Property 'value' does not exist on type 'HTMLElement'."
     const value = (<HTMLInputElement> document.getElementById('page-size-select')).value;
-    this.paginationPageSize = Number(value);
+    this.dataHandlingService.changePaginationPageSize(Number(value));
   }
 
-  ngOnDestroy() {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
-
-/** After an update on the entities (resp. groups) screen, both entity and user data need to be refreshed as changes to an
- * entity (deletion, name change) need to be taken into account in users that belonged to this entity as well. */
-  propagateUpdate(event) {
-      if (event === AdminTableType.ENTITY || event === AdminTableType.GROUP) {
-        this.usersTableComponent.refreshData();
-      }
-  }
 }

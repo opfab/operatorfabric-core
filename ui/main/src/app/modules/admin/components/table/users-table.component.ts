@@ -9,21 +9,19 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {UserService} from '@ofServices/user.service';
 import {EditUserModalComponent} from '../editmodal/users/edit-user-modal.component';
-import {CrudService} from "@ofServices/crud-service";
-import {HttpClient} from "@angular/common/http";
-import {AdminTableDirective, AdminTableType} from "./admin-table.directive";
+import {AdminTableDirective, Field} from './admin-table.directive';
+import {AdminItemType} from '../../services/sharing.service';
 
 @Component({
-  templateUrl: 'admin-table.component.html',
-  providers:  [{provide: CrudService, useClass: UserService, deps: [HttpClient]}],
+  templateUrl: 'admin-table.directive.html',
   selector: 'of-users-table'
 })
 export class UsersTableComponent extends AdminTableDirective implements OnInit {
 
-  tableType = AdminTableType.USER;
-  fields = ['login', 'firstName', 'lastName', 'groups', 'entities'];
+  tableType = AdminItemType.USER;
+  fields = [new Field('login'), new Field('firstName'), new Field('lastName'),
+    new Field('groups', 5, 'groupCellRenderer'), new Field('entities', 5, 'entityCellRenderer')];
   idField = 'login';
   editModalComponent = EditUserModalComponent;
 
