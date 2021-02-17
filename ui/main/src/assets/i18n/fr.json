@@ -128,10 +128,6 @@
   },
   "archive": {
     "filters": {
-      "service": "SERVICE",
-      "process": "PROCESSUS",
-      "state": "ETAT",
-      "tags": "ETIQUETTES",
       "publishDateFrom": "PUBLIE A PARTIR DE",
       "publishDateTo": "PUBLIE JUSQU'A",
       "activeFrom": "ACTIVE A PARTIR DE",
@@ -147,22 +143,18 @@
     },
     "noResult": "Votre recherche ne correspond à aucun résultat.",
     "exportToExcel" : "Exporter les données",
-    "resultsNumber":"Nombre de résultats",
-    "selectServiceText": "Sélectionner un Service",
-    "selectProcessText": "Sélectionner un Processus",
-    "selectStateText": "Sélectionner un Etat",
-    "selectTagText": "Sélectionner une Etiquette"
+    "resultsNumber":"Nombre de résultats"
   },
   "logging": {
     "filters": {
-      "process": "PROCESSUS",
-      "selectProcessText": "Sélectionner un Processus"
+      "process": "PROCESSUS"
     },
     "timeOfAction": "MOMENT DE L'ACTION",
     "title": "TITRE",
     "summary": "RESUME",
     "description": "DESCRIPTION",
     "sender": "EMETTEUR",
+    "service": "SERVICE",
     "noResult": "Votre recherche ne correspond à aucun résultat.",
     "ExportTOExcel": "Exporter les données",
     "resultsNumber":"Nombre de résultats"
@@ -347,5 +339,15 @@
     "to": "à",
     "of": "de",
     "page": "Page"
+  },
+  "filters": {
+    "service": "SERVICE",
+    "process": "PROCESSUS",
+    "state": "ETAT",
+    "tags": "ETIQUETTES",
+    "selectServiceText": "Sélectionner un Service",
+    "selectProcessText": "Sélectionner un Processus",
+    "selectStateText": "Sélectionner un Etat",
+    "selectTagText": "Sélectionner une Etiquette"
   }
 }

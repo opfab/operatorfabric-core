@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * Copyright (c) 2020, RTEi (http://www.rte-international.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -23,6 +23,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ExportService } from '@ofServices/export.service';
 import { FlushLoggingResult, UpdateLoggingPage } from '@ofStore/actions/logging.actions';
 import { ConfigService } from '@ofServices/config.service';
+import { LoggingComponent } from "../../logging.component";
 
 
 @Component({
@@ -32,9 +33,9 @@ import { ConfigService } from '@ofServices/config.service';
 })
 export class LoggingTableComponent implements OnInit, OnDestroy {
 
-
     @Input() results: LineOfLoggingResult[];
     @Input() processStateDescription: Map<string, string>;
+    @Input() displayServiceColumn: boolean;
     displayedResult: string;
     exportLoggingData: Array<any> ;
     page = 0;
@@ -44,8 +45,13 @@ export class LoggingTableComponent implements OnInit, OnDestroy {
     unsubscribe$: Subject<void> = new Subject<void>();
 
 
-    constructor(public timeService: TimeService, private cardService: CardService,
-        private store: Store<AppState>, private translate: TranslateService, private exportService: ExportService, private configService: ConfigService) {
+    constructor(public timeService: TimeService,
+                private cardService: CardService,
+                private store: Store<AppState>,
+                private translate: TranslateService,
+                private exportService: ExportService,
+                private configService: ConfigService,
+                private parentComponent: LoggingComponent) {
     }
 
     ngOnInit() {
@@ -92,16 +98,27 @@ export class LoggingTableComponent implements OnInit, OnDestroy {
                 const summaryColumnName = this.translateColomn('logging.summary');
                 const descriptionColumnName = this.translateColomn('logging.description');
                 const senderColumnName = this.translateColomn('logging.sender');
+                const serviceColumnName = this.translateColomn('logging.service');
 
                 lines.forEach( (line: LineOfLoggingResult) => {
                     if (typeof line !== undefined) {
-                        this.exportLoggingData.push({
-                            [timeOfActionColumnName]: this.timeService.formatDateTime(line.businessDate),
-                            [titleColumnName]: this.translateColomn(line.i18nKeyForTitle.key, line.i18nKeyForTitle.parameters),
-                            [summaryColumnName]: this.translateColomn(line.i18nKeyForSummary.key, line.i18nKeyForSummary.parameters),
-                            [descriptionColumnName]: this.translateColomn(this.processStateDescription.get(line.process + '.' + line.state)),
-                            [senderColumnName]: line.sender
-                        });
+                        if (this.displayServiceColumn)
+                            this.exportLoggingData.push({
+                                [timeOfActionColumnName]: this.timeService.formatDateTime(line.businessDate),
+                                [titleColumnName]: this.translateColomn(line.i18nKeyForTitle.key, line.i18nKeyForTitle.parameters),
+                                [summaryColumnName]: this.translateColomn(line.i18nKeyForSummary.key, line.i18nKeyForSummary.parameters),
+                                [descriptionColumnName]: this.translateColomn(this.processStateDescription.get(line.process + '.' + line.state)),
+                                [senderColumnName]: line.sender,
+                                [serviceColumnName]: this.translateColomn(this.parentComponent.filters.filtersTemplate.findServiceLabelForProcess(line.process))
+                            });
+                        else
+                            this.exportLoggingData.push({
+                                [timeOfActionColumnName]: this.timeService.formatDateTime(line.businessDate),
+                                [titleColumnName]: this.translateColomn(line.i18nKeyForTitle.key, line.i18nKeyForTitle.parameters),
+                                [summaryColumnName]: this.translateColomn(line.i18nKeyForSummary.key, line.i18nKeyForSummary.parameters),
+                                [descriptionColumnName]: this.translateColomn(this.processStateDescription.get(line.process + '.' + line.state)),
+                                [senderColumnName]: line.sender
+                            });
                     }
                 });
                 this.exportService.exportAsExcelFile(this.exportLoggingData, 'Logging');

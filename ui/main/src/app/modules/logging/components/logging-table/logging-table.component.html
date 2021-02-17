@@ -17,6 +17,7 @@
         <th scope="col" translate>logging.summary</th>
         <th scope="col" translate>logging.description</th>
         <th scope="col" translate>logging.sender</th>
+        <th scope="col" *ngIf="displayServiceColumn" translate>logging.service</th>
       </tr>
     </thead>
 
@@ -31,6 +32,7 @@
       </td>
 
       <td>{{element.sender}}</td>
+      <td *ngIf="displayServiceColumn" translate>{{ parentComponent.filters.filtersTemplate.findServiceLabelForProcess(element.process) }}</td>
     </tr>
   </table>
   <div class="opfab-logging-pagination">

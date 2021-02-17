@@ -128,10 +128,6 @@
   },
   "archive": {
     "filters": {
-      "service": "SERVICE",
-      "process": "PROCESS",
-      "state": "STATE",
-      "tags": "TAGS",
       "publishDateFrom": "PUBLISH FROM",
       "publishDateTo": "PUBLISH TO",
       "activeFrom": "ACTIVE FROM",
@@ -147,22 +143,18 @@
     },
     "noResult": "Your search did not match any results.",
     "exportToExcel" : "Export data",
-    "resultsNumber":"Results number",
-    "selectServiceText": "Select a Service",
-    "selectProcessText": "Select a Process",
-    "selectStateText": "Select a State",
-    "selectTagText": "Select a Tag"
+    "resultsNumber":"Results number"
   },
   "logging": {
     "filters": {
-      "process": "PROCESS",
-      "selectProcessText": "Select a Process"
+      "process": "PROCESS"
     },
     "timeOfAction": "TIME OF ACTION",
     "title": "TITLE",
     "summary": "SUMMARY",
     "description": "DESCRIPTION",
     "sender": "ACTOR",
+    "service": "SERVICE",
     "noResult": "Your search did not match any results.",
     "ExportTOExcel": "Export data",
     "resultsNumber":"Results number"
@@ -347,5 +339,15 @@
     "to": "to",
     "of": "of",
     "page": "Page"
+  },
+  "filters": {
+    "service": "SERVICE",
+    "process": "PROCESS",
+    "state": "STATE",
+    "tags": "TAGS",
+    "selectServiceText": "Select a Service",
+    "selectProcessText": "Select a Process",
+    "selectStateText": "Select a State",
+    "selectTagText": "Select a Tag"
   }
 }
