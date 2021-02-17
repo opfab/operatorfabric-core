@@ -545,6 +545,10 @@ type-ahead > .badge-primary {
 
 }
 
+.opfab-multiselect .c-token {
+  width: 85%;
+}
+
 .opfab-multiselect::after {
   content: "V";
   transform: scaleY(0.5);

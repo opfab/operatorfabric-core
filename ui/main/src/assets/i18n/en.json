@@ -128,7 +128,9 @@
   },
   "archive": {
     "filters": {
+      "service": "SERVICE",
       "process": "PROCESS",
+      "state": "STATE",
       "tags": "TAGS",
       "publishDateFrom": "PUBLISH FROM",
       "publishDateTo": "PUBLISH TO",
@@ -139,12 +141,15 @@
       "publishDate" : "PUBLICATION DATE",
       "businessPeriod" : "BUSINESS PERIOD",
       "title" : "TITLE",
-      "summary": "SUMMARY"
+      "summary": "SUMMARY",
+      "service": "SERVICE"
     },
     "noResult": "Your search did not match any results.",
     "exportToExcel" : "Export data",
     "resultsNumber":"Results number",
+    "selectServiceText": "Select a Service",
     "selectProcessText": "Select a Process",
+    "selectStateText": "Select a State",
     "selectTagText": "Select a Tag"
   },
   "logging": {
