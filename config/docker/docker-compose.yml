@@ -34,10 +34,13 @@ services:
      - "2103:8080"
 #    Debug port closed for security reasons, be careful if you open it 
 #     - "4103:5005"
+    environment:
+      - SPRING_PROFILES_ACTIVE
     volumes:
     - "../certificates:/certificates_to_add"
     - "./users-docker.yml:/config/application.yml"
     - "./common-docker.yml:/config/common-docker.yml"
+    - ${CONFIG_PATH}:/external-config
   businessconfig:
     container_name: businessconfig
     image: "lfeoperatorfabric/of-businessconfig-business-service:SNAPSHOT"
@@ -48,11 +51,14 @@ services:
      - "2100:8080"
 #    Debug port closed for security reasons, be careful if you open it 
 #     - "4100:5005"
+    environment:
+      - SPRING_PROFILES_ACTIVE
     volumes:
      - "../certificates:/certificates_to_add"
      - "./businessconfig-storage:/businessconfig-storage"
      - "./common-docker.yml:/config/common-docker.yml"
      - "./businessconfig-docker.yml:/config/application-docker.yml"
+     - ${CONFIG_PATH}:/external-config
   cards-publication:
     container_name: cards-publication
     image: "lfeoperatorfabric/of-cards-publication-business-service:SNAPSHOT"
@@ -63,10 +69,13 @@ services:
      - "2102:8080"
 #    Debug port closed for security reasons, be careful if you open it 
 #     - "4102:5005"
+    environment:
+      - SPRING_PROFILES_ACTIVE
     volumes:
       - "../certificates:/certificates_to_add"
       - "./common-docker.yml:/config/common-docker.yml"
       - "./cards-publication-docker.yml:/config/application-docker.yml"
+      - ${CONFIG_PATH}:/external-config
   cards-consultation:
     container_name: cards-consultation
     image: "lfeoperatorfabric/of-cards-consultation-business-service:SNAPSHOT"
@@ -75,10 +84,13 @@ services:
      - "2104:8080"
 #    Debug port closed for security reasons, be careful if you open it 
 #     - "4104:5005"
+    environment:
+      - SPRING_PROFILES_ACTIVE
     volumes:
       - "../certificates:/certificates_to_add"
       - "./common-docker.yml:/config/common-docker.yml"
       - "./cards-consultation-docker.yml:/config/application-docker.yml"
+      - ${CONFIG_PATH}:/external-config
   web-ui:
     image: "lfeoperatorfabric/of-web-ui:SNAPSHOT"
     ports:

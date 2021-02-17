@@ -118,7 +118,7 @@ startProject(){
         cd $OF_HOME
         java -Xss512k -XX:MaxRAM=512m $debugOptions \
              -jar $projectBuildPath/libs/$1-$version.jar \
-             $applicationOptions 2>&1 > $projectBuildPath/logs/$(date -I).log &
+             $applicationOptions 2>&1 > $projectBuildPath/logs/$(date \+"%y-%m-%d").log &
 #        set +x
         echo $! > $projectBuildPath/PIDFILE
 
@@ -166,7 +166,7 @@ stopCommand(){
   for ((i=0; i<${#dependentProjects[*]}; ));
   do
     stopProject ${dependentProjects[i]} ${dependentProjects[i+1]}
-    i=$((i+"$PRJ_STRC_FIELDS"))
+    i=$((i+$PRJ_STRC_FIELDS))
   done
 }
 
@@ -192,7 +192,7 @@ hardstopCommand(){
   for ((i=0; i<${#dependentProjects[*]}; ));
   do
     hardstopProject ${dependentProjects[i]} ${dependentProjects[i+1]}
-    i=$((i+"$PRJ_STRC_FIELDS"))
+    i=$((i+$PRJ_STRC_FIELDS))
   done
 }
 
