@@ -103,13 +103,18 @@ export class CountDownComponent implements OnInit, DoCheck, OnChanges, OnDestroy
         } else if (this.getSecondsBeforeLttd() <= 0) {
             this.stopCountDown();
         } else {
+            this.startCountDownConfigWhenNecessary();
             this.interval = setInterval(() => {
-                if (this.isTimeToStartCountDown()) {
-                    this.startCountDownConfig();
-                    clearInterval(this.interval);
-                    return;
-                }
+                this.startCountDownConfigWhenNecessary()
             }, this.MILLISECONDS_SECOND);
+        }
+    }
+
+    startCountDownConfigWhenNecessary() {
+        if (this.isTimeToStartCountDown()) {
+            this.startCountDownConfig();
+            clearInterval(this.interval);
+            return;
         }
     }
 
