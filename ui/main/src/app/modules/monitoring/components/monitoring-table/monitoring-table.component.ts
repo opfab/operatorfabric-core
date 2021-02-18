@@ -59,6 +59,14 @@ export class MonitoringTableComponent implements OnDestroy {
         this.exportMonitoringData = [];
         let time: string, businessPeriod: string, processName: any, title: any, summary: any, status: any;
 
+        const timeColumnName = this.translateColomn('monitoring.time');
+        const businessPeriodColumnName = this.translateColomn('monitoring.businessPeriod');
+        const processColumnName = this.translateColomn('monitoring.filters.process');
+        const titleColumnName = this.translateColomn('monitoring.title');
+        const summaryColumnName = this.translateColomn('monitoring.summary');
+        const statusColumnName = this.translateColomn('monitoring.status');
+        const severityColumnName = this.translateColomn('monitoring.severity');
+
         this.result.forEach((line: LineOfMonitoringResult) => {
             if (typeof line !== undefined) {
                 time = this.displayTime(line.creationDateTime);
@@ -69,13 +77,13 @@ export class MonitoringTableComponent implements OnDestroy {
                 status = this.translateColomn(line.coordinationStatus);
 
                 this.exportMonitoringData.push({
-                    time: time,
-                    businessPeriod: businessPeriod,
-                    process: processName,
-                    title: title,
-                    summary: summary,
-                    status: status,
-                    severity: line.severity
+                    [timeColumnName]: time,
+                    [businessPeriodColumnName]: businessPeriod,
+                    [processColumnName]: processName,
+                    [titleColumnName]: title,
+                    [summaryColumnName]: summary,
+                    [statusColumnName]: status,
+                    [severityColumnName]: line.severity
                 });
             }
         });

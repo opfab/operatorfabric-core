@@ -361,7 +361,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     initExportArchiveData(): void {
         const exportArchiveData = [];
 
-
         this.filters.set('size', [this.resultsNumber.toString()]);
         this.filters.set('page', [0]);
 
@@ -369,15 +368,21 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             .subscribe((page: Page<LightCard>) => {
                 const lines = page.content;
 
+                const severityColumnName = this.translateColomn('archive.result.severity');
+                const publishDateColumnName = this.translateColomn('archive.result.publishDate');
+                const businessDateColumnName = this.translateColomn('archive.result.businessPeriod');
+                const titleColumnName = this.translateColomn('archive.result.title');
+                const summaryColumnName = this.translateColomn('archive.result.summary');
+
                 lines.forEach((card: LightCard) => {
                     if (typeof card !== undefined) {
                         // TO DO translation for old process should be done  , but loading local arrive to late , solution to find
                         exportArchiveData.push({
-                            severity: card.severity,
-                            publishDate: this.timeService.formatDateTime(card.publishDate),
-                            businessDate: this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
-                            title: this.translateColomn(card.process + '.' + card.processVersion + '.' + card.title.key, card.title.parameters),
-                            summary: this.translateColomn(card.process + '.' + card.processVersion + '.' + card.summary.key, card.summary.parameters),
+                            [severityColumnName]: card.severity,
+                            [publishDateColumnName]: this.timeService.formatDateTime(card.publishDate),
+                            [businessDateColumnName]: this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
+                            [titleColumnName]: this.translateColomn(card.process + '.' + card.processVersion + '.' + card.title.key, card.title.parameters),
+                            [summaryColumnName]: this.translateColomn(card.process + '.' + card.processVersion + '.' + card.summary.key, card.summary.parameters)
                         });
                     }
                 });
