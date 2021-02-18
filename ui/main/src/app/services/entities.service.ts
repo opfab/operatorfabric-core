@@ -9,11 +9,11 @@
 
 import {environment} from '@env/environment';
 import {HttpClient} from '@angular/common/http';
-import {CrudService} from './crud-service';
 import {catchError, takeUntil, tap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {Entity} from '@ofModel/entity.model';
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
+import {CachedCrudService} from '@ofServices/cached-crud-service';
 
 
 declare const templateGateway: any;
@@ -21,11 +21,11 @@ declare const templateGateway: any;
 @Injectable({
     providedIn: 'root'
 })
-export class EntitiesService extends CrudService {
+export class EntitiesService extends CachedCrudService implements OnDestroy {
 
  readonly entitiesUrl: string;
  private _entities: Entity[];
- private ngUnsubscribe = new Subject<void>();
+ private ngUnsubscribe$ = new Subject<void>();
   /**
    * @constructor
    * @param httpClient - Angular build-in
@@ -34,11 +34,24 @@ export class EntitiesService extends CrudService {
     super();
     this.entitiesUrl = `${environment.urls.entities}`;
   }
+
+  ngOnDestroy() {
+        this.ngUnsubscribe$.next();
+        this.ngUnsubscribe$.complete();
+  }
+
   deleteById(id: string) {
       const url = `${this.entitiesUrl}/${id}`;
     return this.httpClient.delete(url).pipe(
-      catchError((error: Response) => this.handleError(error))
+      catchError((error: Response) => this.handleError(error)),
+        tap(() => {
+            this.deleteFromCachedEntities(id);
+        })
     );
+  }
+
+  private deleteFromCachedEntities(id: string): void {
+        this._entities = this._entities.filter(entity => entity.id !== id);
   }
 
   getAllEntities(): Observable<Entity[]> {
@@ -50,7 +63,7 @@ export class EntitiesService extends CrudService {
   updateEntity(entityData: Entity): Observable<Entity> {
     return this.httpClient.post<Entity>(`${this.entitiesUrl}`, entityData).pipe(
       catchError((error: Response) => this.handleError(error)),
-        tap(next => {
+        tap(() => {
             this.updateCachedEntity(entityData);
         })
     );
@@ -73,7 +86,7 @@ export class EntitiesService extends CrudService {
 
   public loadAllEntitiesData(): Observable<any> {
     return this.getAllEntities()
-      .pipe(takeUntil(this.ngUnsubscribe)
+      .pipe(takeUntil(this.ngUnsubscribe$)
       , tap(
         (entities) => {
           if (!!entities) {
@@ -89,7 +102,11 @@ export class EntitiesService extends CrudService {
     return this._entities;
   }
 
-  public getEntityName(idEntity: string): string {
+  public getCachedValues(): Array<Entity> {
+      return this.getEntities();
+  }
+
+    public getEntityName(idEntity: string): string {
       const name = this._entities.find(entity => entity.id === idEntity).name;
       return (name ? name : idEntity);
     }

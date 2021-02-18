@@ -8,8 +8,8 @@
  */
 
 import {Observable} from 'rxjs';
-import {Injectable} from "@angular/core";
-import {ErrorService} from "@ofServices/error-service";
+import {Injectable} from '@angular/core';
+import {ErrorService} from '@ofServices/error-service';
 
 @Injectable({
     providedIn: 'root'

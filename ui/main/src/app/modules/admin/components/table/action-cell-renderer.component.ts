@@ -10,6 +10,7 @@
 
 import {Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
+import {ICellRendererParams} from 'ag-grid-community';
 
 @Component({
   selector: 'of-action-cell-renderer',
@@ -37,11 +38,16 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
     this.params.context.componentParent.openActionModal(this.params);
   }
 
-  refresh(): boolean {
-    return false;
+
+  // noinspection JSUnusedLocalSymbols
+  /** This method returns true to signal to the grid that this renderer doesn't need to be recreated if the underlying data changes
+   *  See https://www.ag-grid.com/documentation/angular/component-cell-renderer/#handling-refresh
+   * */
+  refresh(params: ICellRendererParams): boolean {
+    return true;
   }
 
-  getIconForAction() : string {
+  getIconForAction(): string {
     return this.actionIconsMapping[this.actionType];
   }
 }

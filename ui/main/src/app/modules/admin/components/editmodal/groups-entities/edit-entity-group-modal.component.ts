@@ -12,9 +12,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {EntitiesService} from '@ofServices/entities.service';
-import {GroupsService} from '@ofServices/groups.service';
-import {AdminTableType} from '../../table/admin-table.directive';
+import {AdminItemType, SharingService} from '../../../services/sharing.service';
+import {CrudService} from '@ofServices/crud-service';
 
 @Component({
   selector: 'of-edit-entity-group-modal',
@@ -31,15 +30,18 @@ export class EditEntityGroupModalComponent implements OnInit {
   });
 
   @Input() row: any;
-  @Input() type: AdminTableType;
+  @Input() type: AdminItemType;
+
+  private crudService: CrudService;
 
   constructor(
     private activeModal: NgbActiveModal,
-    private groupsService: GroupsService,
-    private entitiesService: EntitiesService) {
+    private dataHandlingService: SharingService
+  ) {
   }
 
   ngOnInit() {
+    this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.type);
     if (this.row) { // If the modal is used for edition, initialize the modal with current data from this row
       this.entityGroupForm.patchValue(this.row, { onlySelf: true });
     }
@@ -50,17 +52,10 @@ export class EditEntityGroupModalComponent implements OnInit {
     // We call the activeModal "close" method and not "dismiss" to indicate that the modal was closed because the
     // user chose to perform an action (here, update the selected item).
     // This is important as code in the corresponding table components relies on the resolution of the
-    // `NgbMobalRef.result` promise to trigger a refresh of the data shown on the table.
-    if (this.type === AdminTableType.ENTITY) {
-      this.entitiesService.update(this.entityGroupForm.value).subscribe(() => {
-        this.activeModal.close('Update button clicked on ' + this.type + ' modal');
-      });
-    }
-    if (this.type === AdminTableType.GROUP) {
-      this.groupsService.update(this.entityGroupForm.value).subscribe(() => {
-        this.activeModal.close('Update button clicked on ' + this.type + ' modal');
-      });
-    }
+    // `NgbModalRef.result` promise to trigger a refresh of the data shown on the table.
+    this.crudService.update(this.entityGroupForm.value).subscribe(() => {
+      this.activeModal.close('Update button clicked on ' + this.type + ' modal');
+    });
   }
 
   private cleanForm() {

@@ -13,7 +13,7 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AdminComponent} from './admin.component';
 import {PaginationModule} from 'ngx-bootstrap/pagination';
-import {AdminRoutingModule} from './admin-rooting.module';
+import {AdminRoutingModule} from './admin-routing.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {AppErrorHandler} from 'app/common/error/app-error-handler';
 import {ConfirmationDialogComponent} from './components/confirmation-dialog/confirmation-dialog.component';
@@ -22,9 +22,13 @@ import {UsersTableComponent} from './components/table/users-table.component';
 import {EditUserModalComponent} from './components/editmodal/users/edit-user-modal.component';
 import {EntitiesTableComponent} from './components/table/entities-table.component';
 import {GroupsTableComponent} from './components/table/groups-table.component';
-import {ActionCellRendererComponent} from './components/table/action-cell-renderer.component';
 import {AgGridModule} from 'ag-grid-angular';
 import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
+import {ArrayCellRendererComponent} from './components/table/array-cell-renderer.component';
+import {ActionCellRendererComponent} from './components/table/action-cell-renderer.component';
+import {GroupCellRendererComponent} from './components/table/group-cell-renderer.component';
+import {EntityCellRendererComponent} from './components/table/entity-cell-renderer.component';
+import {SharingService} from './services/sharing.service';
 
 @NgModule({
   declarations: [
@@ -35,7 +39,10 @@ import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
     EditUserModalComponent,
     ConfirmationDialogComponent,
     EditEntityGroupModalComponent,
-    ActionCellRendererComponent
+    ActionCellRendererComponent,
+    ArrayCellRendererComponent,
+    GroupCellRendererComponent,
+    EntityCellRendererComponent
   ],
 
 
@@ -49,10 +56,14 @@ import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
     , TranslateModule
     , AgGridModule.withComponents([[
       ActionCellRendererComponent,
+      ArrayCellRendererComponent,
+      GroupCellRendererComponent,
+      EntityCellRendererComponent
     ]])
   ],
   providers: [
-      { provide: ErrorHandler, useClass: AppErrorHandler },
+    { provide: ErrorHandler, useClass: AppErrorHandler },
+    { provide: SharingService, useClass: SharingService}
   ]
 })
 export class AdminModule { }

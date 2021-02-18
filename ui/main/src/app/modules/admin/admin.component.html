@@ -12,34 +12,20 @@
   <ul class="nav nav-pills">
 
     <li class="nav-item">
-      <a class="nav-link" [ngClass]="{ 'active':activeTab==='users'}" data-toggle="tab" href="#admin/users" (click)="setActiveTab('users')" translate> admin.tabs.users </a>
+      <a class="nav-link" data-toggle="tab" routerLink="/admin/users" routerLinkActive="active" translate> admin.tabs.users </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" [ngClass]="{ 'active':activeTab==='entities'}" data-toggle="tab" href="#admin/entities" (click)="setActiveTab('entities')" translate> admin.tabs.entities </a>
+      <a class="nav-link" data-toggle="tab" routerLink="/admin/entities" routerLinkActive="active" translate> admin.tabs.entities </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" [ngClass]="{ 'active':activeTab==='groups'}" data-toggle="tab" href="#admin/groups" (click)="setActiveTab('groups')" translate> admin.tabs.groups </a>
+      <a class="nav-link" data-toggle="tab" routerLink="/admin/groups" routerLinkActive="active" translate> admin.tabs.groups </a>
     </li>
 
   </ul>
+  <br>
+  <br>
 
-  <div class="tab-content">
-    <div class="tab-pane active" id="admin/users" [ngClass]="{ 'active':activeTab==='users'}">
-      <br>
-      <br>
-      <of-users-table (dataUpdate)="propagateUpdate($event)" [paginationPageSize]="paginationPageSize"></of-users-table>
-    </div>
-    <div class="tab-pane" id="admin/entities" [ngClass]="{ 'active':activeTab==='entities'}">
-      <br>
-      <br>
-      <of-entities-table (dataUpdate)="propagateUpdate($event)" [paginationPageSize]="paginationPageSize"></of-entities-table>
-    </div>
-    <div class="tab-pane" id="admin/groups" [ngClass]="{ 'active':activeTab==='groups'}">
-      <br>
-      <br>
-      <of-groups-table (dataUpdate)="propagateUpdate($event)" [paginationPageSize]="paginationPageSize"></of-groups-table>
-    </div>
-  </div>
+  <router-outlet></router-outlet>
 
   <br>
   <br>
