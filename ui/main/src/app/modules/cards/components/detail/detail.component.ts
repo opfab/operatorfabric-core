@@ -124,6 +124,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     unsubscribe$: Subject<void> = new Subject<void>();
     public hrefsOfCssLink = new Array<SafeResourceUrl>();
     private _listEntitiesToRespond = new Array<EntityMessage>();
+    private _userEntitiesAllowedToRespond: string[];
     private _htmlContent: SafeHtml;
     private _userContext: UserContext;
     private _lastCards$: Observable<LightCard[]>;
@@ -308,11 +309,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         if (formResult.valid) {
 
             const card: CardForPublishing = {
-                publisher: this.user.entities[0],
+                publisher: this.getUserEntityToRespond(),
                 publisherType: 'ENTITY',
                 processVersion: this.card.processVersion,
                 process: this.card.process,
-                processInstanceId: `${this.card.processInstanceId}_${this.user.entities[0]}`,
+                processInstanceId: `${this.card.processInstanceId}_${this.getUserEntityToRespond()}`,
                 state: this._responseData.state,
                 startDate: this.card.startDate,
                 endDate: this.card.endDate,
@@ -451,6 +452,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     private setEntitiesToRespond() {
         this._listEntitiesToRespond = new Array<EntityMessage>();
+        this._userEntitiesAllowedToRespond = [];
         if (this.card.entitiesAllowedToRespond) {
             this.card.entitiesAllowedToRespond.forEach(entity => {
                 const entityName = this.getEntityName(entity);
@@ -462,6 +464,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                         });
                 }
             });
+            this._userEntitiesAllowedToRespond = this.card.entitiesAllowedToRespond.filter(x => this.user.entities.includes(x));
         }
     }
 
@@ -481,10 +484,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
 
     private isUserInEntityAllowedToRespond(): boolean {
-        if (this.card.entitiesAllowedToRespond) return this.card.entitiesAllowedToRespond.includes(this.user.entities[0]);
-        else return false;
+        return this._userEntitiesAllowedToRespond.length === 1;
     }
 
+    private getUserEntityToRespond() : string {
+        return this._userEntitiesAllowedToRespond.length === 1 ? this._userEntitiesAllowedToRespond[0] : null;
+    }
 
     private doesTheUserHavePermissionToRespond(): boolean {
         let permission = false;
