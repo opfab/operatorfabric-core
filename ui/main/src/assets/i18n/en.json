@@ -138,6 +138,7 @@
       "activeTo": "ACTIVE TO"
     },
     "result": {
+      "severity": "SEVERITY",
       "publishDate" : "PUBLICATION DATE",
       "businessPeriod" : "BUSINESS PERIOD",
       "title" : "TITLE",
@@ -179,6 +180,7 @@
     "title": "TITLE",
     "summary": "SUMMARY",
     "status": "STATUS",
+    "severity": "SEVERITY",
     "seeDetails": "SEE DETAILS",
     "ExportTOExcel": "Export data"
   },
