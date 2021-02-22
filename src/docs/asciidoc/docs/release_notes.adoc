@@ -1,14 +1,67 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
+= Version 2.1.0.RELEASE
 
-= Version SNAPSHOT
+== Features
 
-//The release notes are managed in an outside repository to avoid constantly having conflicts when merging PRs on the
-//develop branch. See https://github.com/opfab/release-notes/.
-//The content from this repository is then pasted back to this file during the release process.
+- OC-1395 : When user exits the feed screen or exits operator fabric his filters/sorts options are memorized, when he
+goes back the filters/sorts options are set to the memorized values.
+- OC-1399 : Notification Screen - Display the states, process and process groups in alphabetical order
+- OC-1438 : Add the possibility to show environment name in the top right corner
+- OC-1201 : Inform the template when lttd has expired
+- OC-1396 : Communicate to the template the screen size calling setScreenSize() method
+- OC-1400 : Add "service" field in the free message feature
+- OC-1270 : Timeline circles : open popover on mouseover
+- OC-964 : Deal with user in more than one entity
++
+Now if the entity to respond with cannot be resolved because a user is a member of several entities that are allowed to
+respond to a card, the response action is disabled.
+- OC-1431 - Display names rather than IDs for entities/groups in the users table (Administration)
 
+== Bugs
+
+- OC-1428 : Fix bug on Feed Filter when setting only date and not time
+- OC-1436 : Error message does not appear correctly in usercard
+- OC-1452 : Translation error : criticity -> criticality
+- OC-890 : When using PASSWORD flow, once the token is expired the user isn't notified
+- OC-1472 : Card detail show last seen card for few instants before showing the selected card (rework of OC-1419)
+- OC-1347 : Fix bug with keepChildCards default value
+- OC-1459 : Admin - Propagate entity/group update to users
+- OC-1469 : Fix Bug - publisherType not set to external when receiving a card via card endPoint
+- OC-1478 : Fix Bug in calendar day mode when event spans multiple days
+- OC-1489 : Fix bug on delayed display of countdown counter
+- OC-1425 : Export data : title of the columns are not translated
+- OC-1496 : Admin UI : In day mode : when trying to delete user/group/entity, popup is displayed in night mode
+
+== Tasks
+
+- OC-1283 : Allow external config location for docker-compose
++
+This can be useful to avoid committing test or demo-specific configuration.
+See https://opfab.github.io/documentation/archives/2.1.0.RELEASE/docs/single_page_doc.html#_specify_an_external_configuration[documentation].
+- OC-1361 : Remove old notification feature via the browser
+- OC-1407 : Remove detailTitle in bundle config -> the title of the card always comes from the title field of the card
++
+IMPORTANT: Please remove detailTitle properties from your bundles.
++
+- Rework of the admin screen (OC-1191, OC-1434, OC-1457)
+- Upgrade Angular from v8.2 to v10.2 and related tasks (OC-1061, OC-1392, OC-1437, OC-1468)
+- OC-1409 : When pushing the process group file check for duplicate processes
+- OC-1430 : Adapt api testing script to first stop and remove existing containers
+- OC-1447 : Introduce notion of type of state
++
+NOTE: This shouldn't have any impact for deployments using docker. If you need to build the UI however,
+you need to run "npm install" first to get the new dependencies. We found it best to delete the node_modules folder
+before running npm_install to avoid errors.
+In addition, see the https://opfab.github.io/documentation/archives/2.1.0.RELEASE/docs/single_page_doc.html#_build[documentation]
+to troubleshoot any errors.
++
+- Documentation updates (OC-1427, OC-1429)
+- OC-1083 : Refactoring of NGNX endpoints for groups and entities : "/users/entities" instead of "/entities"
+and "/users/groups" instead of "/groups"
+- OC-1439 : New archives screen filters
