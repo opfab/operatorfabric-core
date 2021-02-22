@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,6 @@
  */
 
 
-
 import {Action} from '@ngrx/store';
 import {LightCard} from '@ofModel/light-card.model';
 
@@ -16,7 +15,6 @@ export enum LightCardActionTypes {
     LoadLightCards = '[LCard] Load',
     EmptyLightCards = '[LCard] Empty',
     LoadLightCardsSuccess = '[LCard] Load Success',
-    LoadLightCardsExtendedData = '[LCard] Load Extended Data',
     LoadLightCardsFailure = '[LCard] Load Fail',
     SelectLightCard = '[LCard] Select One',
     ClearLightCardSelection = '[LCard] Clear Light Card Selection',
@@ -41,16 +39,7 @@ export class EmptyLightCards implements Action {
 export class LoadLightCardsSuccess implements Action {
     readonly type = LightCardActionTypes.LoadLightCardsSuccess;
 
-    /* istanbul ignore next */
-    constructor(public payload: { lightCards: LightCard[] }) {
-    }
-}
-
-export class LoadLightCardsExtendedData implements Action {
-    readonly type = LightCardActionTypes.LoadLightCardsExtendedData;
-
-    /* istanbul ignore next */
-    constructor() {
+    constructor(public payload: {lightCards: LightCard[]} ) {
     }
 }
 
@@ -76,8 +65,6 @@ export class ClearLightCardSelection implements Action {
 
     readonly type = LightCardActionTypes.ClearLightCardSelection;
 
-    constructor() {
-    }
 }
 
 export class AddLightCardFailure implements Action {
@@ -115,8 +102,6 @@ export class UpdateALightCard implements Action {
 export class LightCardAlreadyUpdated implements Action {
     readonly type = LightCardActionTypes.LightCardAlreadyUpdated;
 
-    constructor() {
-    }
 }
 
 export type LightCardActions =

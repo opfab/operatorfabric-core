@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,9 +8,8 @@
  */
 
 
-
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {BaseSettingComponent} from '../base-setting/base-setting.component';
+import {BaseSettingDirective} from '../base-setting/base-setting.directive';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
@@ -22,7 +21,7 @@ import {Observable, of} from 'rxjs';
     selector: 'of-list-setting',
     templateUrl: './list-setting.component.html'
 })
-export class ListSettingComponent extends BaseSettingComponent implements OnInit, OnDestroy {
+export class ListSettingComponent extends BaseSettingDirective implements OnInit, OnDestroy {
 
     @Input() values: ({ value: string, label: (I18n | string) } | string)[];
     preparedList: { value: string, label: Observable<string> }[];

@@ -24,7 +24,7 @@ import {Page} from '@ofModel/page.model';
 import {ExportService} from '@ofServices/export.service';
 import {TranslateService} from '@ngx-translate/core';
 import {Card} from '@ofModel/card.model';
-import {ArchivesLoggingFiltersComponent} from "../share/archives-logging-filters/archives-logging-filters.component";
+import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 
 
 @Component({
@@ -42,7 +42,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     results: LightCard[];
     currentPage = 0;
-    resultsNumber: number = 0;
+    resultsNumber = 0;
     hasResult = false;
     firstQueryHasBeenDone = false;
 
@@ -50,14 +50,13 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     modalRef: NgbModalRef;
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
     @ViewChild('filters') filtersTemplate: ArchivesLoggingFiltersComponent;
-    selectedCard : Card;
+    selectedCard: Card;
 
     constructor(private store: Store<AppState>,
                 private processesService: ProcessesService,
                 private configService: ConfigService,
                 private timeService: TimeService,
                 private cardService: CardService,
-                private exportService: ExportService,
                 private translate: TranslateService,
                 private modalService: NgbModal
     ) {
@@ -76,7 +75,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     ngOnInit() {
         this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
-        this.results = new Array();
+        this.results = [];
     }
 
     resetForm() {
@@ -97,8 +96,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 this.resultsNumber = page.totalElements;
                 this.currentPage = page_number + 1; // page on ngb-pagination component start at 1 , and page on backend start at 0
                 this.firstQueryHasBeenDone = true;
-                if (page.content.length > 0) this.hasResult = true;
-                else this.hasResult = false;
+                this.hasResult = page.content.length > 0;
                 page.content.forEach(card => this.loadTranslationForCardIfNeeded(card));
                 this.results = page.content;
             });
@@ -129,12 +127,12 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             .subscribe((page: Page<LightCard>) => {
                 const lines = page.content;
 
-                const severityColumnName = this.translateColomn('archive.result.severity');
-                const publishDateColumnName = this.translateColomn('archive.result.publishDate');
-                const businessDateColumnName = this.translateColomn('archive.result.businessPeriod');
-                const titleColumnName = this.translateColomn('archive.result.title');
-                const summaryColumnName = this.translateColomn('archive.result.summary');
-                const serviceColumnName = this.translateColomn('archive.result.service');
+                const severityColumnName = this.translateColumn('archive.result.severity');
+                const publishDateColumnName = this.translateColumn('archive.result.publishDate');
+                const businessDateColumnName = this.translateColumn('archive.result.businessPeriod');
+                const titleColumnName = this.translateColumn('archive.result.title');
+                const summaryColumnName = this.translateColumn('archive.result.summary');
+                const serviceColumnName = this.translateColumn('archive.result.service');
 
                 lines.forEach((card: LightCard) => {
                     if (typeof card !== undefined) {
@@ -144,21 +142,21 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                                 [severityColumnName]: card.severity,
                                 [publishDateColumnName]: this.timeService.formatDateTime(card.publishDate),
                                 [businessDateColumnName]: this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
-                                [titleColumnName]: this.translateColomn(card.process + '.' + card.processVersion + '.' + card.title.key, card.title.parameters),
-                                [summaryColumnName]: this.translateColomn(card.process + '.' + card.processVersion + '.' + card.summary.key, card.summary.parameters),
-                                [serviceColumnName]: this.translateColomn(this.filtersTemplate.findServiceLabelForProcess(card.process))
+                                [titleColumnName]: this.translateColumn(card.process + '.' + card.processVersion + '.' + card.title.key, card.title.parameters),
+                                [summaryColumnName]: this.translateColumn(card.process + '.' + card.processVersion + '.' + card.summary.key, card.summary.parameters),
+                                [serviceColumnName]: this.translateColumn(this.filtersTemplate.findServiceLabelForProcess(card.process))
                             });
                         else
                             exportArchiveData.push({
                                 [severityColumnName]: card.severity,
                                 [publishDateColumnName]: this.timeService.formatDateTime(card.publishDate),
                                 [businessDateColumnName]: this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
-                                [titleColumnName]: this.translateColomn(card.process + '.' + card.processVersion + '.' + card.title.key, card.title.parameters),
-                                [summaryColumnName]: this.translateColomn(card.process + '.' + card.processVersion + '.' + card.summary.key, card.summary.parameters)
+                                [titleColumnName]: this.translateColumn(card.process + '.' + card.processVersion + '.' + card.title.key, card.title.parameters),
+                                [summaryColumnName]: this.translateColumn(card.process + '.' + card.processVersion + '.' + card.summary.key, card.summary.parameters)
                             });
                     }
                 });
-                this.exportService.exportAsExcelFile(exportArchiveData, 'Archive');
+                ExportService.exportAsExcelFile(exportArchiveData, 'Archive');
             });
     }
 
@@ -166,14 +164,14 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.initExportArchiveData();
     }
 
-    translateColomn(key: string | Array<string>, interpolateParams?: Object): any {
-        let translatedColomn: number;
+    translateColumn(key: string | Array<string>, interpolateParams?: Object): any {
+        let translatedColumn: number;
 
         this.translate.get(key, interpolateParams)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((translate) => { translatedColomn = translate; });
+            .subscribe((translate) => { translatedColumn = translate; });
 
-        return translatedColomn;
+        return translatedColumn;
     }
 
 
@@ -189,10 +187,9 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     getPublishDateTranslationParams(): any {
-        const param = {
+        return {
             'time': this.timeService.formatDateTime(this.selectedCard.publishDate)
-        }
-        return param;
+        };
     }
 
     ngOnDestroy() {

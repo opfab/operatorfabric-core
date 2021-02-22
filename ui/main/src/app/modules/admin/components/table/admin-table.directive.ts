@@ -169,8 +169,10 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
           () => { // If modal is closed
             this.refreshData(); // This refreshes the data when the modal is closed after a change
           },
-          () => { }); // If the modal is dismissed (by clicking the "close" button, the top right cross icon
-      // or clicking outside the modal, there is no need to refresh the data
+          () => {
+            // If the modal is dismissed (by clicking the "close" button, the top right cross icon
+            // or clicking outside the modal, there is no need to refresh the data
+          });
     }
     if (columnId === 'delete') {
       this.openDeleteConfirmationDialog(params.data);
@@ -206,8 +208,10 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
           this.refreshData(); // This refreshes the data when the modal is closed after a change
           // Data creation doesn't need to be propagated to the user table
         },
-        () => { }); // If modal is dismissed (by clicking the "close" button, the top right cross icon
-    // or clicking outside the modal, there is no need to refresh the data
+        () => {
+          // If modal is dismissed (by clicking the "close" button, the top right cross icon
+          // or clicking outside the modal, there is no need to refresh the data
+        });
   }
 
   refreshData() {

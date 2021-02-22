@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
 
 
 import {AuthenticationActions, AuthenticationActionTypes} from '@ofActions/authentication.actions';
@@ -21,7 +20,7 @@ export function reducer(state: AuthState = authInitialState, action: Authenticat
                 ...state,
                 code: action.payload.code,
                 message: null
-            }
+            };
         }
 
         case AuthenticationActionTypes.AcceptLogIn: {
@@ -60,7 +59,7 @@ export function reducer(state: AuthState = authInitialState, action: Authenticat
                 message: action.payload.error
             };
         }
-        case AuthenticationActionTypes.ImplicitallyAuthenticated: {
+        case AuthenticationActionTypes.ImplicitlyAuthenticated: {
             return {
                 ...state,
                 isImplicitlyAuthenticated: true
@@ -70,7 +69,7 @@ export function reducer(state: AuthState = authInitialState, action: Authenticat
                 return {
                     ...state,
                     isImplicitlyAuthenticated: false
-                }
+                };
             }
 
         default:
@@ -97,4 +96,4 @@ export const getExpirationTime = (state: AuthState) => {
     } else {
         return UTC_beginning_time;
     }
-}
+};
