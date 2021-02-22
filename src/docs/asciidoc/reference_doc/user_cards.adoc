@@ -31,9 +31,6 @@ For example :
       "startDateVisible" : true,
       "endDateVisible" : true
     },
-    "detailTitle": {
-      "key": "message.title"
-    },
     "templateName": "message",
     "styles": [],
     "acknowledgmentAllowed": "Always"

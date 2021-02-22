@@ -1,4 +1,5 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2020, RTEi (http://www.rte-international.com)
+ * Copyright (c) 2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,8 +27,8 @@ import {GuidService} from '@ofServices/guid.service';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {ConfigService} from '@ofServices/config.service';
-import * as jwt_decode from 'jwt-decode';
-import * as _ from 'lodash';
+import jwt_decode from 'jwt-decode';
+import * as _ from 'lodash-es';
 import {User} from '@ofModel/user.model';
 import {EventType as OAuthType, JwksValidationHandler, OAuthEvent, OAuthService} from 'angular-oauth2-oidc';
 import {implicitAuthenticationConfigFallback} from '@ofServices/authentication/auth-implicit-flow.config';
@@ -62,7 +63,6 @@ export class AuthenticationService {
     private mode: string;
     private authModeHandler: AuthenticationModeHandler;
     private implicitConf = implicitAuthenticationConfigFallback;
-    private authenticatedUser: User;
 
     /**
      * @constructor
@@ -247,7 +247,6 @@ export class AuthenticationService {
         return this.httpClient.get<User>(`${this.userDataUrl}/${auth.identifier}`)
             .pipe(
                 map(u => {
-                    this.authenticatedUser = u;
                     auth.firstName = u.firstName;
                     auth.lastName = u.lastName;
                     return auth;

@@ -33,7 +33,7 @@ import {CustomRouterStateSerializer} from '@ofStore/states/router.state';
     providers: [{provide: 'configRetryDelay', useValue: 5000}]
 })
 export class StateModule {
-    static forRoot(): ModuleWithProviders {
+    static forRoot(): ModuleWithProviders<StateModule> {
         return {
             ngModule: StateModule
             ,

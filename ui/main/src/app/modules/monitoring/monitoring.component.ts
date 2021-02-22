@@ -19,7 +19,7 @@ import * as moment from 'moment';
 import {I18n} from '@ofModel/i18n.model';
 import {MonitoringFiltersComponent} from './components/monitoring-filters/monitoring-filters.component';
 import {Process} from '@ofModel/processes.model';
-import { ProcessesService } from '@ofServices/processes.service';
+import {ProcessesService} from '@ofServices/processes.service';
 
 @Component({
     selector: 'of-monitoring',
@@ -28,7 +28,7 @@ import { ProcessesService } from '@ofServices/processes.service';
 })
 export class MonitoringComponent implements OnInit, OnDestroy {
 
-    @ViewChild(MonitoringFiltersComponent, {static: false})
+    @ViewChild(MonitoringFiltersComponent)
     filters: MonitoringFiltersComponent;
 
     monitoringResult$: Observable<LineOfMonitoringResult[]>;

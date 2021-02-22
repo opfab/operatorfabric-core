@@ -1,21 +1,9 @@
 {
 	"userCardExamples": {"label": "Exemples de nouvelles cartes "},
-	"message":{
-		"title":"Message",
-		"summary":"Message reçu"
-	},
 	"conference":{
 		"title":"Conférence téléphonique ☏",
 		"summary":"Vous êtes invité à une conférence téléphonique"
 	},
-	"question":{
-		"title":"Question",
-		"summary":"Il y a une question pour vous"
-	},
-	"task":{
-		"title":"Tâche ",
-		"summary":"Il y a quelque chose à faire "
-  },
 	"incidentInProgress":{
 		"name":"Incident SI",
 		"title":"Incident SI ",

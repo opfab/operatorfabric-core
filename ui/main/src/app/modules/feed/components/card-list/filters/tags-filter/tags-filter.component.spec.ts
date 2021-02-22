@@ -45,9 +45,9 @@ describe('TagsFilterComponent', () => {
     }));
 
     beforeEach(() => {
-        store = TestBed.get(Store);
+        store = TestBed.inject(Store);
         spyOn(store, 'dispatch').and.callThrough();
-        filterService = TestBed.get(FilterService);
+        filterService = TestBed.inject(FilterService);
         fixture = TestBed.createComponent(TagsFilterComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

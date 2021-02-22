@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: OperatorFabric Card Consumer Service
-  version: 2.0.0.RELEASE
+  version: 2.1.0.RELEASE
   title: Card Management API
   termsOfService: ''
   contact:

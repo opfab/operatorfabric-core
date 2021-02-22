@@ -16,6 +16,7 @@
     "ActionEnum": "org.lfenergy.operatorfabric.businessconfig.model.ActionEnum",
     "ResponseBtnColorEnum": "org.lfenergy.operatorfabric.businessconfig.model.ResponseBtnColorEnum",
     "LinkTypeEnum":         "org.lfenergy.operatorfabric.businessconfig.model.LinkTypeEnum",
+    "TypeOfStateEnum": "org.lfenergy.operatorfabric.businessconfig.model.TypeOfStateEnum",
     "EpochDate": "java.time.Instant",
     "LongInteger": "java.lang.Long"
   }

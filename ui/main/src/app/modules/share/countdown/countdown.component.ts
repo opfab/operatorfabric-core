@@ -63,11 +63,11 @@ export class CountDownComponent implements OnInit, DoCheck, OnChanges, OnDestroy
     }
 
     public isValidatelttd(): boolean {
-        const entityUser = this.userService.getCurrentUserWithPerimeters().userData.entities[0];
 
         if (!this.isArchivePageType()) {
             if (!!this.card.entitiesAllowedToRespond) {
-                return this.card.entitiesAllowedToRespond.includes(entityUser);
+                const intersection = this.card.entitiesAllowedToRespond.filter(x => this.userService.getCurrentUserWithPerimeters().userData.entities.includes(x));
+                return intersection.length === 1;
             } else {
                 return true;
             }
@@ -103,13 +103,18 @@ export class CountDownComponent implements OnInit, DoCheck, OnChanges, OnDestroy
         } else if (this.getSecondsBeforeLttd() <= 0) {
             this.stopCountDown();
         } else {
+            this.startCountDownConfigWhenNecessary();
             this.interval = setInterval(() => {
-                if (this.isTimeToStartCountDown()) {
-                    this.startCountDownConfig();
-                    clearInterval(this.interval);
-                    return;
-                }
+                this.startCountDownConfigWhenNecessary()
             }, this.MILLISECONDS_SECOND);
+        }
+    }
+
+    startCountDownConfigWhenNecessary() {
+        if (this.isTimeToStartCountDown()) {
+            this.startCountDownConfig();
+            clearInterval(this.interval);
+            return;
         }
     }
 

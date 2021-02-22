@@ -8,28 +8,28 @@
  */
 
 
-
-import { Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { Store } from '@ngrx/store';
-import { AppState } from '@ofStore/index';
-import { AuthenticationService } from '@ofServices/authentication/authentication.service';
-import { LoadConfigSuccess } from '@ofActions/config.actions';
-import { selectIdentifier } from '@ofSelectors/authentication.selectors';
-import { ConfigService } from '@ofServices/config.service';
-import { TranslateService } from '@ngx-translate/core';
-import { catchError, skip } from 'rxjs/operators';
-import { merge } from 'rxjs';
-import { I18nService } from '@ofServices/i18n.service';
-import { CardService } from '@ofServices/card.service';
-import { UserService } from '@ofServices/user.service';
-import { EntitiesService } from '@ofServices/entities.service';
-import { ProcessesService } from '@ofServices/processes.service';
-import { ReminderService } from '@ofServices/reminder/reminder.service';
-import { selectSubscriptionOpen } from '@ofStore/selectors/cards-subscription.selectors';
-import { Actions, ofType } from '@ngrx/effects';
-import { AlertActions, AlertActionTypes } from '@ofStore/actions/alert.actions';
-import { Message, MessageLevel } from '@ofModel/message.model';
+import {Component, OnInit} from '@angular/core';
+import {Title} from '@angular/platform-browser';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {AuthenticationService} from '@ofServices/authentication/authentication.service';
+import {LoadConfigSuccess} from '@ofActions/config.actions';
+import {selectIdentifier} from '@ofSelectors/authentication.selectors';
+import {ConfigService} from '@ofServices/config.service';
+import {TranslateService} from '@ngx-translate/core';
+import {catchError, skip} from 'rxjs/operators';
+import {merge} from 'rxjs';
+import {I18nService} from '@ofServices/i18n.service';
+import {CardService} from '@ofServices/card.service';
+import {UserService} from '@ofServices/user.service';
+import {EntitiesService} from '@ofServices/entities.service';
+import {ProcessesService} from '@ofServices/processes.service';
+import {ReminderService} from '@ofServices/reminder/reminder.service';
+import {selectSubscriptionOpen} from '@ofStore/selectors/cards-subscription.selectors';
+import {Actions, ofType} from '@ngrx/effects';
+import {AlertActions, AlertActionTypes} from '@ofStore/actions/alert.actions';
+import {Message, MessageLevel} from '@ofModel/message.model';
+import {GroupsService} from '@ofServices/groups.service';
 
 class Alert {
   alert: Message;
@@ -48,7 +48,7 @@ export class AppComponent implements OnInit {
   isAuthenticated = false;
   loaded = false;
   useCodeOrImplicitFlow = true;
-  connectionLost = false; 
+  connectionLost = false;
   connectionLostForMoreThanTenSeconds = false;
   alertMessage: Alert = {alert: undefined, className: undefined, display: false};
 
@@ -64,6 +64,7 @@ export class AppComponent implements OnInit {
     , private cardService: CardService
     , private userService: UserService
     , private entitiesService: EntitiesService
+    , private groupsService: GroupsService
     , private processesService: ProcessesService
     , private reminderService: ReminderService
     , private actions$: Actions) {
@@ -88,7 +89,7 @@ export class AppComponent implements OnInit {
       console.error('Impossible to load configuration file web-ui.json', err);
       return caught;
     }));
-    
+
   }
 
   private setTitle() {
@@ -98,7 +99,7 @@ export class AppComponent implements OnInit {
 
   private loadTranslationForMenu() {
     this.configService.loadMenuTranslations().subscribe(locales => locales.forEach(locale =>
-      this.translateService.setTranslation(locale.language, locale.i18n, true)))
+      this.translateService.setTranslation(locale.language, locale.i18n, true)));
     catchError((err, caught) => {
       console.error('Impossible to load configuration file ui-menu.json', err);
       return caught;
@@ -116,7 +117,7 @@ export class AppComponent implements OnInit {
         this.launchAuthenticationProcess();
       });
     }
-    
+
   }
 
   private launchAuthenticationProcess() {
@@ -164,21 +165,21 @@ export class AppComponent implements OnInit {
     this.actions$.pipe(
       ofType<AlertActions>(AlertActionTypes.AlertMessage)).subscribe( alert => {
         this.displayAlert(alert.payload.alertMessage);
-      })
+      });
   }
 
   private displayAlert(message: Message) {
     let className = 'opfab-alert-info';
     switch (message.level) {
       case MessageLevel.DEBUG:
-        className = "opfab-alert-debug";
+        className = 'opfab-alert-debug';
         break;
       case MessageLevel.INFO:
-        className = "opfab-alert-info";
+        className = 'opfab-alert-info';
         break;
       case MessageLevel.ERROR:
-        className = "opfab-alert-error";
-        break;       
+        className = 'opfab-alert-error';
+        break;
     }
     this.alertMessage = {
         alert: message,

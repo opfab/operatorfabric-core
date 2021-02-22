@@ -26,8 +26,8 @@ describe('EntitiesService', () => {
         StoreModule.forRoot(appReducer)
       ],
     });
-    httpMock = TestBed.get(HttpTestingController);
-    entitiesService = TestBed.get(EntitiesService);
+    httpMock = TestBed.inject(HttpTestingController);
+    entitiesService = TestBed.inject(EntitiesService);
   });
   afterEach(() => {
     httpMock.verify();

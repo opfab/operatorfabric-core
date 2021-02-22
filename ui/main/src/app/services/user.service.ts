@@ -1,4 +1,5 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2020, RTEi (http://www.rte-international.com)
+ * Copyright (c) 2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,21 +9,19 @@
  */
 
 
-import { Injectable } from '@angular/core';
-import { environment } from '@env/environment';
-import { Observable, Subject } from 'rxjs';
-import { Entity, User } from '@ofModel/user.model';
-import { UserWithPerimeters } from '@ofModel/userWithPerimeters.model';
-import { HttpClient } from '@angular/common/http';
-import { takeUntil } from 'rxjs/internal/operators/takeUntil';
-import { tap } from 'rxjs/operators';
-import { GroupsService } from './groups.service';
-import { CrudService } from './crud-service';
-import { catchError } from 'rxjs/operators';
-import { ErrorService } from './error-service';
+import {environment} from '@env/environment';
+import {Observable, Subject} from 'rxjs';
+import {Entity, User} from '@ofModel/user.model';
+import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {HttpClient} from '@angular/common/http';
+import {catchError, takeUntil, tap} from 'rxjs/operators';
+import {CrudService} from './crud-service';
+import {Injectable} from '@angular/core';
 
-@Injectable()
-export class UserService extends ErrorService implements CrudService {
+@Injectable({
+  providedIn: 'root'
+})
+export class UserService extends CrudService {
   readonly userUrl: string;
   private _userWithPerimeters: UserWithPerimeters;
   private ngUnsubscribe = new Subject<void>();
@@ -31,7 +30,7 @@ export class UserService extends ErrorService implements CrudService {
    * @constructor
    * @param httpClient - Angular build-in
    */
-  constructor(private httpClient: HttpClient, private groupsService: GroupsService) {
+  constructor(private httpClient: HttpClient) {
     super();
     this.userUrl = `${environment.urls.users}`;
   }
@@ -62,7 +61,7 @@ export class UserService extends ErrorService implements CrudService {
 
   getAllUsers(): Observable<User[]> {
     return this.httpClient.get<User[]>(`${this.userUrl}`).pipe(
-      catchError((error: Response) => this.handleError)
+      catchError((error: Response) => this.handleError(error))
     );
   }
 
@@ -72,7 +71,7 @@ export class UserService extends ErrorService implements CrudService {
 
   updateUser(userData: User): Observable<User> {
     return this.httpClient.post<User>(`${this.userUrl}`, userData).pipe(
-      catchError((error: Response) => this.handleError)
+      catchError((error: Response) => this.handleError(error))
     );
   }
 
@@ -83,7 +82,7 @@ export class UserService extends ErrorService implements CrudService {
   queryAllEntities(): Observable<Entity[]> {
     const url = `${this.userUrl}/entities`;
     return this.httpClient.get<Entity[]>(url).pipe(
-      catchError((error: Response) => this.handleError)
+      catchError((error: Response) => this.handleError(error))
     );
 
   }
@@ -112,18 +111,18 @@ export class UserService extends ErrorService implements CrudService {
         this._userWithPerimeters = userWithPerimeters;
       }, (error) => console.error(new Date().toISOString(), 'an error occurred', error));
     }
-    return (this.getCurrentUserWithPerimeters().userData.groups.filter(group => group === 'ADMIN').length > 0) ? true : false;
+    return (this.getCurrentUserWithPerimeters().userData.groups.filter(group => group === 'ADMIN').length > 0);
   }
 
   public isCurrentUserInAnyGroup(groups: string[]): boolean {
     if (!groups) {
-      return false
+      return false;
     }
     if (!this._userWithPerimeters) {
       this.currentUserWithPerimeters().subscribe((userWithPerimeters) => {
         this._userWithPerimeters = userWithPerimeters;
       }, (error) => console.error(new Date().toISOString(), 'an error occurred', error));
     }
-    return (this.getCurrentUserWithPerimeters().userData.groups.filter(group => groups.indexOf(group) >=0).length > 0) ? true : false;
+    return (this.getCurrentUserWithPerimeters().userData.groups.filter(group => groups.indexOf(group) >= 0).length > 0);
   }
 }

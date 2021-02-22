@@ -11,9 +11,16 @@
     <form [formGroup]="messageForm" class="opfab-form-lighter">
         <div class="row">
 
+            <div class="col" *ngIf="displayServiceFilter()">
+                <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="service"
+                    [values]="serviceOptions"></of-single-filter>
+            </div>
             <div class="col">
-                <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
+                <of-single-filter [hidden]="displayServiceFilter()" i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
                     [values]="processOptions"></of-single-filter>
+
+                <of-single-filter [hidden]="! displayServiceFilter()" i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
+                                  [values]="processOptionsWhenSelectedService"></of-single-filter>
             </div>
             <div class="col">
                 <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="state"
@@ -44,11 +51,11 @@
             </label>
         </div>
         <div class="justify-content-center" style="display:flex;width:100%;align-content:center;flex-wrap: wrap;">
-            <div *ngIf="startDateVisible" style="width:280px;margin-right: 50px;margin-left: 50px ;">
+            <div *ngIf="startDateVisible" style="width:280px; margin-right: 50px; margin-left: 50px;">
                 <of-datetime-filter filterPath="startDate" formControlName="startDate" labelKey="userCard.filters."
                     [offset]="[{amount:1,unit:'minute'}]" ></of-datetime-filter>
             </div>
-            <div *ngIf="endDateVisible" style="width: 280px;;margin-right: 50px;margin-left: 50px ;">
+            <div *ngIf="endDateVisible" style="width: 280px; margin-right: 50px; margin-left: 50px;">
                 <of-datetime-filter filterPath="endDate" formControlName="endDate" labelKey="userCard.filters."
                     [offset]="[{amount:1,unit:'day'}]"></of-datetime-filter>
             </div>

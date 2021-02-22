@@ -61,8 +61,8 @@ describe('FilterService', () => {
             imports: [
                 StoreModule.forRoot(appReducer),]
         });
-        service = TestBed.get(FilterService);
-        store = TestBed.get(Store);
+        service = TestBed.inject(FilterService);
+        store = TestBed.inject(Store);
 
     });
 

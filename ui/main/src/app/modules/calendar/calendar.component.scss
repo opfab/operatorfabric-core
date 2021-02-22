@@ -11,11 +11,11 @@
 
 ::ng-deep .opfab-app-calendar{
 
-
 // GLOBAL SETTINGS 
 .fc-header-toolbar,
 .fc-view,
-td.fc-today
+.fc .fc-daygrid-day.fc-day-today,   // no specific bgcolor for today 
+.fc .fc-timegrid-col.fc-day-today  // no specific bgcolor for today 
 {
   background-color: var(--opfab-bgcolor-darker);
 }
@@ -35,6 +35,12 @@ td.fc-today
   padding: 16px;
 }
 
+// This is necessary because from v5 days are links (even if navLinks : false) rather than spans so these properties
+  // are overridden by the style for links rather than inherited from the main OpFab look.
+.fc a:not([href]) {
+  color: var(--opfab-color);
+  text-decoration: none;
+}
 
 
 // EVENTS SETTINGS
@@ -43,10 +49,11 @@ td.fc-today
   border-width: 0 0 0 4px;
   border-radius: 0 4px 4px 0;
   background-color: var(--opfab-bgcolor);
+  min-height: 18px;
   font-size: 13px;
   color: var(--opfab-color); 
   }
-  
+
 .opfab-calendar-event:hover {
   color: var(--opfab-text-color-stronger); 
   }
@@ -69,14 +76,14 @@ td.fc-today
   
 // LINKS IN CALENDAR HEADER
 
-.fc-button-primary
+.fc .fc-button-primary, .fc .fc-button-primary:disabled
 {
   background-color: var(--opfab-bgcolor-darker);
   border-color: var(--opfab-bgcolor-darker);
   color:var(--opfab-text-color);
 }
 
-.fc-button-primary:not(:disabled).fc-button-active
+.fc .fc-button-primary:not(:disabled).fc-button-active
 {
   background-color: var(--opfab-bgcolor-darker);
   border-color:  var(--opfab-bgcolor-darker);
@@ -86,8 +93,8 @@ td.fc-today
 }
 
 
-.fc-next-button,
-.fc-prev-button{
+.fc .fc-next-button,
+.fc .fc-prev-button{
   margin-bottom: 7px;
 }
 
@@ -110,22 +117,35 @@ td.fc-today
 }
 
 
+
 // MONTH VIEW
 .fc th,
-.fc-day-header,
-.fc-widget-header
+.fc .fc-scrollgrid
 {
   border-style: hidden;
 }
+// remove grid border on header 
+.fc-scrollgrid-section-header td
+{
+   border-style: hidden;
+}
+
+// Current Day 
+.fc-daygrid .fc-daygrid-day.fc-day-today
+{
+  border-width: 2px;
+  border-color: #2268FF;
+}
+
 
 // Day name in uppercase 
-.fc-day-header {
+.fc-col-header-cell-cushion {
   text-transform: uppercase;
 }
 
 // Day number on the top left of the cell  
-.fc-ltr .fc-dayGrid-view .fc-day-top .fc-day-number{
-  float: left;
+.fc .fc-daygrid-day-top{
+  flex-direction: row;
 }
 
 .fc th
@@ -133,23 +153,50 @@ td.fc-today
   height: 40px;
 }
 
-.fc tbody td{
+.fc-daygrid tbody td{
   border-left-width: 0;
   border-bottom-width: 1px;
-  border-top-width: 1px;
+  border-top-width: 0px;
 }
+
+.fc-h-event .fc-event-main {
+  color: var(--opfab-color); 
+}
+
+// change the color of default bullet point 
+.opfab-calendar-event-action .fc-daygrid-event-dot  {
+  border-color: $sev-action;
+}
+
+.opfab-calendar-event-alarm  .fc-daygrid-event-dot {
+  border-color: $sev-alarm;
+}
+
+.opfab-calendar-event-compliant .fc-daygrid-event-dot  {
+  border-color: $sev-compliant;
+}
+
+.opfab-calendar-event-information .fc-daygrid-event-dot  {
+  border-color: $sev-information;
+}
+
 // END MONTH VIEW 
 
 // DAY AND WEEK VIEW 
-.fc-time-grid  td
+.fc .fc-timegrid-slot
 {
-  height: 27px;
+  height: 28px;
 }
 
-// remove border for certain event 
-.fc-time-grid-event-inset
+// to see border right for current day in week view
+.fc-timegrid-cols .fc-day-today {
+  border-width: 2px;
+}
+
+// text color in event  
+.fc-v-event .fc-event-main
 {
-  box-shadow: none;
+  color: var(--opfab-color);
 }
 
 // remove line on bottom

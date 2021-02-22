@@ -1,13 +1,21 @@
-<div class="modal-header  bg-dark">
+<!-- Copyright (c) 2020, RTEi (http://www.rte-international.com)           -->
+<!-- Copyright (c) 2021, RTE (http://www.rte-france.com)                   -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<div class="modal-header">
   <h4 class="modal-title">{{ title }}</h4>
-    <button type="button" class="close" aria-label="Close" (click)="dismiss()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body  bg-dark">
-    {{ message }}
-  </div>
-  <div class="modal-footer  bg-dark">
-    <button id="opfab-admin-confirmation-btn-cancel" type="button" class="opfab-btn-cancel" (click)="decline()">{{ btnCancelText }}</button>
-    <button id="opfab-admin-confirmation-btn-ok"  type="button" class="opfab-btn" (click)="accept()">{{ btnOkText }}</button>
-  </div>
+  <button type="button" class="close" aria-label="Close" (click)="dismiss()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body text-center">
+  <p>{{ message }}</p>
+  <button id="opfab-admin-confirmation-btn-cancel" type="button" class="opfab-btn-cancel" (click)="decline()">{{ btnCancelText }}</button>
+  <button id="opfab-admin-confirmation-btn-ok"  type="button" class="opfab-btn" (click)="accept()">{{ btnOkText }}</button>
+</div>
+

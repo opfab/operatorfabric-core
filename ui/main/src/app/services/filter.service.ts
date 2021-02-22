@@ -11,7 +11,7 @@
 import {Injectable} from '@angular/core';
 import {Filter} from '@ofModel/feed-filter.model';
 import {LightCard, Severity} from '@ofModel/light-card.model';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 
 @Injectable({
     providedIn: 'root'

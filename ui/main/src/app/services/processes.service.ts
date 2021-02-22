@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,20 +8,18 @@
  */
 
 
-
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams, HttpUrlEncodingCodec} from '@angular/common/http';
 import {environment} from '@env/environment';
-import {Observable, of, Subject} from 'rxjs';
+import {merge, Observable, of, Subject} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {catchError, map, skip, tap} from 'rxjs/operators';
 import {Process} from '@ofModel/processes.model';
 import {Card} from '@ofModel/card.model';
-import {merge} from 'rxjs';
-import { Store, select } from '@ngrx/store';
-import { selectLinesOfLoggingResult } from '@ofStore/selectors/logging.selectors';
-import { AppState } from '@ofStore/index';
-import { selectFeed, selectLastCards } from '@ofStore/selectors/feed.selectors';
+import {select, Store} from '@ngrx/store';
+import {selectLinesOfLoggingResult} from '@ofStore/selectors/logging.selectors';
+import {AppState} from '@ofStore/index';
+import {selectLastCards} from '@ofStore/selectors/feed.selectors';
 
 
 @Injectable()
@@ -32,7 +30,7 @@ export class ProcessesService {
     private processCache = new Map();
     private translationsAlreadyLoaded = new Set<string>();
     private processes: Process[];
-    private processGroups: {idGroup: string, processes: string[]}[];
+    private processGroups: {id: string, processes: string[]}[];
     private translationsLoaded = new Subject();
 
     constructor(private httpClient: HttpClient, private translateService: TranslateService, private store: Store<AppState>
@@ -58,7 +56,7 @@ export class ProcessesService {
                 this.loadTranslationsForProcess(loggingResult.process, loggingResult.processVersion)));
     }
 
-    public loadTranslationsForProcess(process,version) {
+    public loadTranslationsForProcess(process, version) {
         this.translateService.getLangs().forEach(
             local => this.addTranslationIfNeeded(local, process, version ));
     }
@@ -80,9 +78,7 @@ export class ProcessesService {
                         if (this.processes.length === 0) {
                             console.log(new Date().toISOString(), 'WARNING : no processes configured');
                             this.translationsLoaded.next();
-                            }
-
-                        else {
+                            } else {
                             this.loadAllTranslations();
                             console.log(new Date().toISOString(), 'List of processes loaded');
                         }
@@ -133,7 +129,7 @@ export class ProcessesService {
         return this.processes;
     }
 
-    public getProcessGroups(): {idGroup: string, processes: string[]}[] {
+    public getProcessGroups(): {id: string, processes: string[]}[] {
         return this.processGroups;
     }
 

@@ -8,20 +8,18 @@
  */
 
 
-
 import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {Observable, Subject, timer} from "rxjs";
-import {Filter} from "@ofModel/feed-filter.model";
-import {Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
-import {buildFilterSelector} from "@ofSelectors/feed.selectors";
-import {AbstractControl, FormControl, FormGroup} from "@angular/forms";
-import {debounce, debounceTime, distinctUntilChanged, first, takeUntil} from "rxjs/operators";
-import {ApplyFilter} from "@ofActions/feed.actions";
-import * as _ from 'lodash';
-import {FilterType} from "@ofServices/filter.service";
+import {Subject, timer} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {debounce, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
+import {ApplyFilter} from '@ofActions/feed.actions';
+import * as _ from 'lodash-es';
+import {FilterType} from '@ofServices/filter.service';
 
-import { DateTimeNgb } from '@ofModel/datetime-ngb.model';
+import {DateTimeNgb, getDateTimeNgbFromMoment} from '@ofModel/datetime-ngb.model';
+import moment from 'moment';
 
 
 @Component({
@@ -44,23 +42,10 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     private dateFilterType = FilterType.PUBLISHDATE_FILTER;
 
-    private _filter$: Observable<Filter>;
-    private _ackFilter$: Observable<Filter>;
-
-
-
-    get filter$(): Observable<Filter>{
-        return this._filter$;
-    }
-
-    get ackFilter$(): Observable<Filter>{
-        return this._ackFilter$;
-    }
-
     constructor(private store: Store<AppState>) {
         this.typeFilterForm = this.createFormGroup();
         this.ackFilterForm = this.createAckFormGroup();
-        this.timeFilterForm = this.createDateTimeForm();        
+        this.timeFilterForm = this.createDateTimeForm();
     }
 
     private createFormGroup() {
@@ -69,13 +54,13 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             action: new FormControl(),
             compliant: new FormControl(),
             information: new FormControl()
-        },{updateOn: 'change'});
+        }, {updateOn: 'change'});
     }
 
     private createAckFormGroup() {
         return new FormGroup({
-            ackControl: new FormControl("notack")            
-        },{updateOn: 'change'});
+            ackControl: new FormControl('notack')
+        }, {updateOn: 'change'});
     }
 
     private createDateTimeForm() {
@@ -94,35 +79,55 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.initTypeFilter();
-        this.initAckFilter();
-        this.initDateTimeFilter();
+
+        if (!this.hideAckFilter) {
+            this.initAckFilter();
+        }
+
+        if (!this.hideTimerTags) {
+            this.initDateTimeFilter();
+        }
     }
 
     private initTypeFilter() {
-        this._filter$ = this.store.select(buildFilterSelector(FilterType.TYPE_FILTER));
-        this._filter$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((next: Filter) => {
-            if (next) {
-                this.typeFilterForm.get('alarm').setValue(!next.active || next.status.alarm, {emitEvent: false});
-                this.typeFilterForm.get('action').setValue(!next.active || next.status.action, {emitEvent: false});
-                this.typeFilterForm.get('compliant').setValue(!next.active || next.status.compliant, {emitEvent: false});
-                this.typeFilterForm.get('information').setValue(!next.active || next.status.information, {emitEvent: false});
-            } else {
-                this.typeFilterForm.get('alarm').setValue(true,{emitEvent: false});
-                this.typeFilterForm.get('action').setValue(true,{emitEvent: false});
-                this.typeFilterForm.get('compliant').setValue(true,{emitEvent: false});
-                this.typeFilterForm.get('information').setValue(true,{emitEvent: false});
-            }
-        });
-        this._filter$.pipe(first(),takeUntil(this.ngUnsubscribe$)).subscribe(()=>{
-            this.typeFilterForm
+
+       const savedAlarm = localStorage.getItem('opfab.feed.filter.type.alarm');
+       const savedAction = localStorage.getItem('opfab.feed.filter.type.action');
+       const savedACompliant = localStorage.getItem('opfab.feed.filter.type.compliant');
+       const savedInformation = localStorage.getItem('opfab.feed.filter.type.information');
+
+       const alarmUnset = savedAlarm && savedAlarm != 'true';
+       const actionUnset = savedAction && savedAction != 'true';
+       const compliantUnset = savedACompliant && savedACompliant != 'true';
+       const informationUnset = savedInformation && savedInformation != 'true';
+
+
+       this.typeFilterForm.get('alarm').setValue(!alarmUnset, {emitEvent: false});
+       this.typeFilterForm.get('action').setValue(!actionUnset, {emitEvent: false});
+       this.typeFilterForm.get('compliant').setValue(!compliantUnset, {emitEvent: false});
+       this.typeFilterForm.get('information').setValue(!informationUnset, {emitEvent: false});
+
+       this.store.dispatch(
+        new ApplyFilter({
+            name: FilterType.TYPE_FILTER,
+            active: (alarmUnset || actionUnset || compliantUnset || informationUnset),
+            status: {'alarm' : !alarmUnset, 'action': !actionUnset, 'compliant' : !compliantUnset, 'information' : !informationUnset}
+        }));
+
+
+        this.typeFilterForm
                 .valueChanges
                 .pipe(
                     takeUntil(this.ngUnsubscribe$),
-                    distinctUntilChanged((formA, formB)=>{
-                        return _.isEqual(formA,formB);
+                    distinctUntilChanged((formA, formB) => {
+                        return _.isEqual(formA, formB);
                     }),
                     debounce(() => timer(500)))
-                .subscribe(form => { 
+                .subscribe(form => {
+                    localStorage.setItem('opfab.feed.filter.type.alarm', form.alarm);
+                    localStorage.setItem('opfab.feed.filter.type.action', form.action);
+                    localStorage.setItem('opfab.feed.filter.type.compliant', form.compliant);
+                    localStorage.setItem('opfab.feed.filter.type.information', form.information);
                     return this.store.dispatch(
                     new ApplyFilter({
                         name: FilterType.TYPE_FILTER,
@@ -130,26 +135,35 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
                         status: form
                     }));
                 });
-        });
     }
 
     private initAckFilter() {
-        this._ackFilter$ = this.store.select(buildFilterSelector(FilterType.ACKNOWLEDGEMENT_FILTER));
-        this._filter$.pipe(first(),takeUntil(this.ngUnsubscribe$))
-            .subscribe((next: Filter) => {
-                if (next) {                    
-                    this.ackFilterForm.get('ackControl').setValue(!next.active && "all" || next.status.ack && "ack" || "notack", {emitEvent: false});                    
-                } else {
-                    this.ackFilterForm.get('ackControl').setValue("notack",{emitEvent: false});
-                }
-            });
+
+        const ackValue = localStorage.getItem('opfab.feed.filter.ack');
+        if (!!ackValue) {
+            this.ackFilterForm.get('ackControl').setValue(ackValue, {emitEvent: false});
+            const active = ackValue !== 'all';
+            const ack = active && ackValue === 'ack';
+            this.store.dispatch(
+                new ApplyFilter({
+                    name: FilterType.ACKNOWLEDGEMENT_FILTER,
+                    active: active,
+                    status: ack
+                }));
+
+        } else {
+            this.ackFilterForm.get('ackControl').setValue('notack', {emitEvent: false});
+        }
+
         this.ackFilterForm
             .valueChanges
             .pipe(
                 takeUntil(this.ngUnsubscribe$))
             .subscribe(form => {
-                let active = !(form.ackControl === "all");
-                let ack = active && form.ackControl === "ack";
+                const active = form.ackControl !== 'all';
+                const ack = active && form.ackControl === 'ack';
+                localStorage.setItem('opfab.feed.filter.ack', form.ackControl);
+
                 return this.store.dispatch(
                     new ApplyFilter({
                         name: FilterType.ACKNOWLEDGEMENT_FILTER,
@@ -160,8 +174,21 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     }
 
     initDateTimeFilter() {
+
         if (this.filterByPublishDate) this.dateFilterType = FilterType.PUBLISHDATE_FILTER;
         else this.dateFilterType = FilterType.BUSINESSDATE_FILTER;
+
+        const savedStart = localStorage.getItem('opfab.feed.filter.start');
+        const savedEnd = localStorage.getItem('opfab.feed.filter.end');
+
+        if (!!savedStart) {
+            this.timeFilterForm.get('dateTimeFrom').setValue(getDateTimeNgbFromMoment(moment(+savedStart)));
+        }
+        if (!!savedEnd) {
+            this.timeFilterForm.get('dateTimeTo').setValue(getDateTimeNgbFromMoment(moment(+savedEnd)));
+        }
+
+        this.setNewFilterValue();
 
         this.dateTimeFilterChange.pipe(
             takeUntil(this.ngUnsubscribe$),
@@ -176,8 +203,19 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     private setNewFilterValue(): void {
         const status = { start: null, end: null };
-        status.start = this.extractTime(this.timeFilterForm.get("dateTimeFrom"));
-        status.end = this.extractTime(this.timeFilterForm.get("dateTimeTo"));
+        status.start = this.extractTime(this.timeFilterForm.get('dateTimeFrom'));
+        status.end = this.extractTime(this.timeFilterForm.get('dateTimeTo'));
+
+        if (status.start == null) {
+            localStorage.removeItem('opfab.feed.filter.start');
+        } else {
+            localStorage.setItem('opfab.feed.filter.start', status.start);
+        }
+        if (status.end == null) {
+            localStorage.removeItem('opfab.feed.filter.end');
+        } else {
+            localStorage.setItem('opfab.feed.filter.end', status.end);
+        }
 
         this.store.dispatch(
             new ApplyFilter({
@@ -192,6 +230,17 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         if (!val || val == '')  {
             return null;
         }
+
+        if (isNaN(val.time.hour)) {
+            val.time.hour = 0;
+        }
+        if (isNaN(val.time.minute)) {
+            val.time.minute = 0;
+        }
+        if (isNaN(val.time.second)) {
+            val.time.second = 0;
+        }
+
         const converter = new DateTimeNgb(val.date, val.time);
         return converter.convertToNumber();
     }
@@ -211,17 +260,19 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     }
 
     reset() {
-        this.typeFilterForm.get('alarm').setValue(true,{emitEvent: true});
-        this.typeFilterForm.get('action').setValue(true,{emitEvent: true});
-        this.typeFilterForm.get('compliant').setValue(true,{emitEvent: true});
-        this.typeFilterForm.get('information').setValue(true,{emitEvent: true});
+        this.typeFilterForm.get('alarm').setValue(true, {emitEvent: true});
+        this.typeFilterForm.get('action').setValue(true, {emitEvent: true});
+        this.typeFilterForm.get('compliant').setValue(true, {emitEvent: true});
+        this.typeFilterForm.get('information').setValue(true, {emitEvent: true});
+        if (!this.hideAckFilter) {
+            this.ackFilterForm.get('ackControl').setValue('notack', {emitEvent: true});
+        }
 
-        this.ackFilterForm.get('ackControl').setValue("notack",{emitEvent: true});
-
-        this.timeFilterForm.get('dateTimeFrom').setValue(null);
-        this.timeFilterForm.get('dateTimeTo').setValue(null);
-        this.setNewFilterValue();
-
+        if (!this.hideTimerTags) {
+            this.timeFilterForm.get('dateTimeFrom').setValue(null);
+            this.timeFilterForm.get('dateTimeTo').setValue(null);
+            this.setNewFilterValue();
+        }
     }
-    
+
 }

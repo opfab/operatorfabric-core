@@ -1,40 +1,17 @@
+/* Copyright (c) 2020, RTEi (http://www.rte-international.com)
+ * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
 
-.ng-valid[required], .ng-valid.required  {
-  border-left: 5px solid #42A948; /* green */
-}
-form, input, label, p {
-    color: white !important;
-}
-
-.tp-container {
-   display: flex;
-   flex-direction: column;
-}
-.tp-container > * {
-   width: 100%;
+.row {
+  margin-bottom: 15px;
 }
 
-::ng-deep .mat-form-field {
-    .mat-form-field-label {
-        color: white;
-    }
-}
-
-::ng-deep .mat-form-field.mat-focused {
-    .mat-form-field-label {
-        color: #ff884d;
-    }
-}
-
-::ng-deep .not-empty-select.mat-selected {
-  color: green !important;
-  background-color: red;
-}
-
-::ng-deep .mat-option-text {
-    color: white;
-}
-
-::ng-deep .mat-select-value {
-    color: white;
+of-multi-filter {
+  width: 100%;
 }

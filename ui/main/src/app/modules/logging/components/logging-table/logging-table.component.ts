@@ -87,14 +87,20 @@ export class LoggingTableComponent implements OnInit, OnDestroy {
             .subscribe((page: Page<LineOfLoggingResult>) => {
                 const lines = page.content;
 
+                const timeOfActionColumnName = this.translateColomn('logging.timeOfAction');
+                const titleColumnName = this.translateColomn('logging.title');
+                const summaryColumnName = this.translateColomn('logging.summary');
+                const descriptionColumnName = this.translateColomn('logging.description');
+                const senderColumnName = this.translateColomn('logging.sender');
+
                 lines.forEach( (line: LineOfLoggingResult) => {
                     if (typeof line !== undefined) {
                         this.exportLoggingData.push({
-                            timeOfAction: this.timeService.formatDateTime(line.businessDate),
-                            title: this.translateColomn(line.i18nKeyForTitle.key, line.i18nKeyForTitle.parameters),
-                            summary: this.translateColomn(line.i18nKeyForSummary.key, line.i18nKeyForSummary.parameters),
-                            description: this.translateColomn(this.processStateDescription.get(line.process + '.' + line.state)),
-                            sender: line.sender
+                            [timeOfActionColumnName]: this.timeService.formatDateTime(line.businessDate),
+                            [titleColumnName]: this.translateColomn(line.i18nKeyForTitle.key, line.i18nKeyForTitle.parameters),
+                            [summaryColumnName]: this.translateColomn(line.i18nKeyForSummary.key, line.i18nKeyForSummary.parameters),
+                            [descriptionColumnName]: this.translateColomn(this.processStateDescription.get(line.process + '.' + line.state)),
+                            [senderColumnName]: line.sender
                         });
                     }
                 });

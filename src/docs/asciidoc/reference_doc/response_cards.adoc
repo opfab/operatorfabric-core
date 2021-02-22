@@ -65,9 +65,6 @@ A card can have a response only if it's in a process/state that is configured fo
           "key": "question.button.text"
         }
       },
-      "detailTitle": {
-        "key": "question.title"
-      },
       "templateName": "question",
       "styles": [
         "style"
@@ -174,3 +171,7 @@ From there, as soon as they will open this card the button will be marked as "MO
 The user can then click on "MODIFY ANSWER" and the button will come back to its initial state ("VALIDATE ANSWER") and the information that the user wants to modify its initial answer will be sent to the third template (by calling the _templateGateway.unlockAnswer()_ function).
 
 Once again, after validating its answer, the information will be sent to the third template that the card has been locked (by calling the templateGateway.lockAnswer() function).
+
+== Last Time to Decide (`lttd`)
+
+If the card has a last time to decide (lttd) configured, when the time is expired this information will be sent to the third template (by calling the template.setLttdExpired(true) function).

@@ -22,8 +22,8 @@ describe('GroupsService', () => {
       imports:[  HttpClientTestingModule],
 
   });
-  httpMock = TestBed.get(HttpTestingController);
-  service = TestBed.get(GroupsService);
+  httpMock = TestBed.inject(HttpTestingController);
+  service = TestBed.inject(GroupsService);
   });
   it('should be created', () => {
     expect(service).toBeTruthy();

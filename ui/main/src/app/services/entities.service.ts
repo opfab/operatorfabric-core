@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,28 +7,25 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { Injectable } from '@angular/core';
-import { environment } from '@env/environment';
-import { HttpClient } from '@angular/common/http';
-import { CrudService } from './crud-service';
-import { ErrorService } from './error-service';
-import { catchError } from 'rxjs/operators';
-import { Observable, Subject} from 'rxjs';
-import { Entity } from '@ofModel/entity.model';
-import { takeUntil } from 'rxjs/internal/operators/takeUntil';
-import { tap } from 'rxjs/operators';
+import {environment} from '@env/environment';
+import {HttpClient} from '@angular/common/http';
+import {catchError, takeUntil, tap} from 'rxjs/operators';
+import {Observable, Subject} from 'rxjs';
+import {Entity} from '@ofModel/entity.model';
+import {Injectable, OnDestroy} from '@angular/core';
+import {CachedCrudService} from '@ofServices/cached-crud-service';
 
 
 declare const templateGateway: any;
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
-export class EntitiesService extends ErrorService implements CrudService {
+export class EntitiesService extends CachedCrudService implements OnDestroy {
 
  readonly entitiesUrl: string;
  private _entities: Entity[];
- private ngUnsubscribe = new Subject<void>();
+ private ngUnsubscribe$ = new Subject<void>();
   /**
    * @constructor
    * @param httpClient - Angular build-in
@@ -37,25 +34,45 @@ export class EntitiesService extends ErrorService implements CrudService {
     super();
     this.entitiesUrl = `${environment.urls.entities}`;
   }
+
+  ngOnDestroy() {
+        this.ngUnsubscribe$.next();
+        this.ngUnsubscribe$.complete();
+  }
+
   deleteById(id: string) {
-      const url = `${this.entitiesUrl}/entities/${id}`;
+      const url = `${this.entitiesUrl}/${id}`;
     return this.httpClient.delete(url).pipe(
-      catchError((error: Response) => this.handleError(error))
+      catchError((error: Response) => this.handleError(error)),
+        tap(() => {
+            this.deleteFromCachedEntities(id);
+        })
     );
+  }
+
+  private deleteFromCachedEntities(id: string): void {
+        this._entities = this._entities.filter(entity => entity.id !== id);
   }
 
   getAllEntities(): Observable<Entity[]> {
     return this.httpClient.get<Entity[]>(`${this.entitiesUrl}`).pipe(
-      catchError((error: Response) => this.handleError)
+      catchError((error: Response) => this.handleError(error))
     );
   }
 
-
-
- updateEntity(entityData: Entity): Observable<Entity> {
+  updateEntity(entityData: Entity): Observable<Entity> {
     return this.httpClient.post<Entity>(`${this.entitiesUrl}`, entityData).pipe(
-      catchError((error: Response) => this.handleError)
+      catchError((error: Response) => this.handleError(error)),
+        tap(() => {
+            this.updateCachedEntity(entityData);
+        })
     );
+  }
+
+  private updateCachedEntity(entityData: Entity): void {
+      const updatedEntities = this._entities.filter(entity => entity.id !== entityData.id);
+      updatedEntities.push(entityData);
+      this._entities = updatedEntities;
   }
 
 
@@ -69,7 +86,7 @@ export class EntitiesService extends ErrorService implements CrudService {
 
   public loadAllEntitiesData(): Observable<any> {
     return this.getAllEntities()
-      .pipe(takeUntil(this.ngUnsubscribe)
+      .pipe(takeUntil(this.ngUnsubscribe$)
       , tap(
         (entities) => {
           if (!!entities) {
@@ -85,7 +102,11 @@ export class EntitiesService extends ErrorService implements CrudService {
     return this._entities;
   }
 
-  public getEntityName(idEntity: string): string {
+  public getCachedValues(): Array<Entity> {
+      return this.getEntities();
+  }
+
+    public getEntityName(idEntity: string): string {
       const name = this._entities.find(entity => entity.id === idEntity).name;
       return (name ? name : idEntity);
     }

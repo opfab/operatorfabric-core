@@ -18,6 +18,7 @@ import {StoreModule} from "@ngrx/store";
 import {appReducer} from "@ofStore/index";
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
+import {injectedSpy} from '@tests/helpers';
 
 
 describe('CardService', () => {
@@ -40,7 +41,7 @@ describe('CardService', () => {
                 ,GuidService
             ]
         });
-        httpMock = TestBed.get(HttpTestingController);
-        authenticationService = TestBed.get(AuthenticationService);
+        httpMock = TestBed.inject(HttpTestingController);
+        authenticationService = injectedSpy(AuthenticationService);
     });
 });

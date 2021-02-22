@@ -11,14 +11,13 @@
 import {getTestBed, TestBed} from '@angular/core/testing';
 
 import {ProcessesService} from './processes.service';
-import {HttpClientTestingModule, HttpTestingController, TestRequest} from '@angular/common/http/testing';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {environment} from '@env/environment';
 import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
 import {RouterTestingModule} from '@angular/router/testing';
 import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
-import {getRandomAlphanumericValue, BusinessconfigI18nLoaderFactory} from '@tests/helpers';
-import * as _ from 'lodash';
+import {BusinessconfigI18nLoaderFactory, getRandomAlphanumericValue} from '@tests/helpers';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 import {GuidService} from '@ofServices/guid.service';
 import {ConfigService} from '@ofServices/config.service';
@@ -56,12 +55,12 @@ describe('Processes Services', () => {
             ]
         });
         injector = getTestBed();
-        store = TestBed.get(Store);
+        store = TestBed.inject(Store);
         spyOn(store, 'dispatch').and.callThrough();
         // avoid exceptions during construction and init of the component
         // spyOn(store, 'select').and.callFake(() => of('/test/url'));
         httpMock = injector.get(HttpTestingController);
-        processesService = TestBed.get(ProcessesService);
+        processesService = TestBed.inject(ProcessesService);
         translateService = injector.get(TranslateService);
         translateService.addLangs(['en', 'fr']);
         translateService.setDefaultLang('en');

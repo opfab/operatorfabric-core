@@ -18,7 +18,6 @@ import {storeFreeze} from 'ngrx-store-freeze';
 import {CardEffects} from '@ofEffects/card.effects';
 import {CardOperationEffects} from '@ofEffects/card-operation.effects';
 import {AuthenticationEffects} from '@ofEffects/authentication.effects';
-import {RouterEffects} from 'ngrx-router';
 import {CardFeedState} from '@ofStates/feed.state';
 import {reducer as lightCardReducer} from '@ofStore/reducers/light-card.reducer';
 import {reducer as cardReducer} from '@ofStore/reducers/card.reducer';
@@ -45,7 +44,7 @@ import {UserEffects} from '@ofEffects/user.effects';
 
 import {CardsSubscriptionState} from '@ofStates/cards-subscription.state';
 import {cardsSubscriptionReducer} from '@ofStore/reducers/cards-subscription.reducer';
-import {GlobalStyleState } from './states/global-style.state';
+import {GlobalStyleState} from './states/global-style.state';
 import {LoggingState} from '@ofStates/loggingState';
 import {LoggingEffects} from '@ofEffects/logging.effects';
 import {MonitoringState} from '@ofStates/monitoring.state';
@@ -71,7 +70,6 @@ export const appEffects = [
     CardEffects,
     SettingsEffects,
     CardOperationEffects,
-    RouterEffects,
     CustomRouterEffects,
     AuthenticationEffects,
     MenuEffects,

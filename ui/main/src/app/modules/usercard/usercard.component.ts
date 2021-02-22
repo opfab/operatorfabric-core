@@ -53,6 +53,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     processesDefinition: Process[];
     currentUserWithPerimeters: UserWithPerimeters;
+    processGroups: {id: string, processes: string[]}[];
 
     severityOptions = Object.keys(Severity).map(severity => {
         return {
@@ -66,9 +67,14 @@ export class UserCardComponent implements OnDestroy, OnInit {
     selectedRecipients = [];
     dropdownSettings = {};
     processOptions = new Array();
+    processOptionsWhenSelectedService = new Array();
+    serviceOptions = new Array();
 
     selectedProcess: Process;
     selectedState: string;
+    processesPerServices = new Map();
+    servicePerProcesses = new Map();
+    processesWithoutService = new Array();
     statesPerProcesses = new Map();
     userCardTemplate: SafeHtml;
     editCardMode = false;
@@ -94,6 +100,10 @@ export class UserCardComponent implements OnDestroy, OnInit {
         return !!this.processOptions && this.processOptions.length > 0;
     }
 
+    displayServiceFilter() {
+        return !!this.serviceOptions && this.serviceOptions.length > 1 ;
+    }
+
     constructor(private store: Store<AppState>,
         private cardService: CardService,
         private userService: UserService,
@@ -111,11 +121,14 @@ export class UserCardComponent implements OnDestroy, OnInit {
     ngOnInit() {
 
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+        this.processGroups = this.processesService.getProcessGroups();
         this.loadAllEntities();
         this.loadAllProcessAndStateInUserPerimeter();
+        this.loadAllServicesRelatingToUserPerimeter();
 
         this.messageForm = new FormGroup({
             severity: new FormControl(''),
+            service: new FormControl(''),
             process: new FormControl(''),
             state: new FormControl(''),
             startDate: new FormControl(''),
@@ -130,6 +143,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
         this.changeSeverityToDefaultValue();
         this.changeStatesWhenSelectProcess();
+        this.changeProcessesWhenSelectService();
         this.loadTemplateWhenStateChange();
 
         this.dropdownSettings = {
@@ -148,14 +162,21 @@ export class UserCardComponent implements OnDestroy, OnInit {
             this.cardService.loadCard(this.cardIdToEdit).subscribe(card => {
                         this.cardToEdit = card;
                         this.messageForm.get('severity').setValue(this.cardToEdit.card.severity);
+
+                        const serviceForCardToEdit = this.servicePerProcesses.get(this.cardToEdit.card.process);
+                        if (serviceForCardToEdit)
+                            this.messageForm.get('service').setValue(serviceForCardToEdit);
+                        else
+                            this.messageForm.get('service').setValue("--");
+
                         this.messageForm.get('process').setValue(this.cardToEdit.card.process);
                         this.messageForm.get('state').setValue(this.cardToEdit.card.state);
                         this.messageForm.get('startDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.startDate)));
                         this.messageForm.get('endDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.endDate)));
                         this.selectedRecipients = this.cardToEdit.card.entityRecipients;
-                    });
-                }
-            }
+            });
+        }
+    }
 
 
     loadAllEntities(): void {
@@ -184,6 +205,43 @@ export class UserCardComponent implements OnDestroy, OnInit {
                 });
     }
 
+    isProcessInProcessesGroup(idProcess: string, processesGroup: {id: string, processes: string[]}) : boolean {
+        if (processesGroup.processes.find(process => process === idProcess))
+            return true;
+        return false;
+    }
+
+    loadAllServicesRelatingToUserPerimeter(): void {
+        let numberOfProcessesAttachedToAService = 0;
+
+        this.processGroups.forEach(group => {
+
+            const processOptions = [];
+            this.processOptions.forEach(processOption => {
+                if (this.isProcessInProcessesGroup(processOption.value, group)) {
+                    processOptions.push(processOption);
+                    numberOfProcessesAttachedToAService++;
+
+                    this.servicePerProcesses.set(processOption.value, group.id);
+                }
+            });
+
+            if (processOptions.length > 0)
+                this.processesPerServices.set(group.id, processOptions);
+        });
+
+        if (this.processOptions.length > numberOfProcessesAttachedToAService) {
+            this.loadProcessesWithoutService();
+            this.serviceOptions.push({value: "--", label: "service.defaultLabel"});
+        }
+        for (let serviceId of this.processesPerServices.keys())
+            this.serviceOptions.push({value: serviceId, label: serviceId});
+    }
+
+    loadProcessesWithoutService(): void {
+        const processesWithService = Array.from(this.servicePerProcesses.keys());
+        this.processesWithoutService = this.processOptions.filter(processOption => processesWithService.indexOf(processOption.value) < 0);
+    }
 
     private userCanSendCard(perimeter: ComputedPerimeter): boolean {
         return ((perimeter.rights === RightsEnum.ReceiveAndWrite)
@@ -218,6 +276,20 @@ export class UserCardComponent implements OnDestroy, OnInit {
         });
         this.messageForm.get('severity').setValue(this.severityOptions[0].value);
 
+    }
+
+    changeProcessesWhenSelectService(): void {
+        this.messageForm.get('service').valueChanges.subscribe((service) => {
+            if (!!service) {
+                if (service == '--')
+                    this.processOptionsWhenSelectedService = this.processesWithoutService;
+                else
+                    this.processOptionsWhenSelectedService = this.processesPerServices.get(service);
+
+                this.selectedProcess = this.processOptionsWhenSelectedService[0].value;
+                this.messageForm.get('process').setValue(this.selectedProcess);
+            }
+        });
     }
 
     changeStatesWhenSelectProcess(): void {
@@ -316,7 +388,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         }
 
         if (!specificInformation.valid) {
-            this.displayMessage('specificInformation.errorMsg', null, MessageLevel.ERROR);
+            this.displayMessage(specificInformation.errorMsg, null, MessageLevel.ERROR);
             return;
         }
 

@@ -42,6 +42,7 @@ The properties lie in the `web-ui.json`.The following table describes their mean
 |===
 |name|default|mandatory?|Description
 
+
 |security.provider-realm||yes|The realm name in keycloak server settings page. This is used for the log out process to know which realm should be affected.
 |security.provider-url||yes|The keycloak server instance
 |security.logout-url||yes
@@ -78,7 +79,6 @@ a|card time display mode in the feed. Values :
 |feed.card.secondsBeforeLttdForClockDisplay|180|no| Number of seconds before lttd when a clock is activated in cards on the feed 
 
 |feed.timeline.domains|["TR", "J", "7D", "W", "M", "Y"]|no| List of domains to show on the timeline, possible domains are : "TR", "J", "7D", "W", "M", "Y".
-|feed.notify|false|no|If set to true, new cards are notified in the OS through web-push notifications
 |feedConfiguration.hidden|false|no|Control if you want to show or hide the notification configuration screen
 |playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
 |playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
@@ -123,6 +123,8 @@ It should look like:
 |logo.width|150|no|The width of the logo (in px) (only taken into account if logo.base64 is set).
 |logo.limitSize|true|no|If it is true, the height limit is 32(px) and the width limit is 200(px), it means that if the height is over than 32, it will be set to 32, if the width is over than 200, it is set to 200. If it is false, no limit restriction for the height and the width. 
 |title|OperatorFabric|no|Title of the application, displayed on the browser
+|environmentName||no| Name of the environment to display on the top-right corner (examples: PROD , TEST .. ), if the value not set the environnement name is not shown .
+|environmentColor|blue|no| Color of the background of the environnement name. The format of color is css, for example : `red` , `#4052FF`
 |navbar.hidden|["logging","monitoring"]|no
 a| Lists the application menu to hide in the navbar. +
 The `keys` used are the `route.path` declared in the `${OF_HOME}ui/main/src/app/app-routing.module.ts` file. +

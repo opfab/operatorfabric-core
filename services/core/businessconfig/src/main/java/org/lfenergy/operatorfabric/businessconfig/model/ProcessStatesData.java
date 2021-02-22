@@ -12,7 +12,6 @@ package org.lfenergy.operatorfabric.businessconfig.model;
 
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -27,10 +26,10 @@ public class ProcessStatesData implements ProcessStates {
     private String description;
     private Boolean showDetailCardHeader;
     private UserCard userCard;
-    private I18n detailTitle;
     private String templateName;
     @Singular
     private List<String> styles;
+    private TypeOfStateEnum type;
 
     @Override
     public Response getResponse() {
@@ -47,4 +46,10 @@ public class ProcessStatesData implements ProcessStates {
 
     @Override
     public void setAcknowledgmentAllowed(AcknowledgmentAllowedEnum acknowledgmentAllowed) { this.acknowledgmentAllowed = acknowledgmentAllowed; }
+
+    @Override
+    public TypeOfStateEnum getType() { return this.type; }
+
+    @Override
+    public void setType(TypeOfStateEnum type) { this.type = type; }
 }

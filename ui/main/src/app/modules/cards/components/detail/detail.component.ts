@@ -25,7 +25,7 @@ import {Card, CardForPublishing} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../../services/handlebars.service';
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
-import {AcknowledgmentAllowedEnum, Response} from '@ofModel/processes.model';
+import {AcknowledgmentAllowedEnum, Response, State as CardState} from '@ofModel/processes.model';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -41,16 +41,15 @@ import {AppService, PageType} from '@ofServices/app.service';
 import {User} from '@ofModel/user.model';
 import {Map} from '@ofModel/map';
 import {RightsEnum, userRight} from '@ofModel/userWithPerimeters.model';
-import {UpdateALightCard} from '@ofStore/actions/light-card.actions';
+import {ClearLightCardSelection, UpdateALightCard} from '@ofStore/actions/light-card.actions';
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {Entity} from '@ofModel/entity.model';
-import {NgbModal,NgbModalOptions,NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {ConfigService} from '@ofServices/config.service';
-import {State as CardState} from '@ofModel/processes.model';
-import { TimeService } from '@ofServices/time.service';
-import { AlertMessage } from '@ofStore/actions/alert.actions';
-import { MessageLevel } from '@ofModel/message.model';
+import {TimeService} from '@ofServices/time.service';
+import {AlertMessage} from '@ofStore/actions/alert.actions';
+import {MessageLevel} from '@ofModel/message.model';
 
 
 declare const templateGateway: any;
@@ -111,10 +110,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     @Input() user: User;
     @Input() currentPath: string;
     @Input() parentModalRef: NgbModalRef;
+    @Input() screenSize: string;
 
-    @ViewChild('cardDeletedWithNoErrorPopup', null) cardDeletedWithNoErrorPopupRef: TemplateRef<any>;
-    @ViewChild('impossibleToDeleteCardPopup', null) impossibleToDeleteCardPopupRef: TemplateRef<any>;
-    @ViewChild('userCard', null) userCardTemplate: TemplateRef<any>;
+    @ViewChild('cardDeletedWithNoErrorPopup') cardDeletedWithNoErrorPopupRef: TemplateRef<any>;
+    @ViewChild('impossibleToDeleteCardPopup') impossibleToDeleteCardPopupRef: TemplateRef<any>;
+    @ViewChild('userCard') userCardTemplate: TemplateRef<any>;
 
     public isActionEnabled = false;
     public lttdExpiredIsTrue: boolean;
@@ -124,6 +124,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     unsubscribe$: Subject<void> = new Subject<void>();
     public hrefsOfCssLink = new Array<SafeResourceUrl>();
     private _listEntitiesToRespond = new Array<EntityMessage>();
+    private _userEntitiesAllowedToRespond: string[];
     private _htmlContent: SafeHtml;
     private _userContext: UserContext;
     private _lastCards$: Observable<LightCard[]>;
@@ -138,7 +139,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public showActionButton = false;
     public showEditAndDeleteButton = false ;
     public showDetailCardHeader = false;
-
     private cardSetToReadButNotYetOnUI;
 
     modalRef: NgbModalRef;
@@ -157,7 +157,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 private modalService: NgbModal,
                 private configService: ConfigService,
                 private time: TimeService) {
-
     }
 
     get isLocked() {
@@ -249,28 +248,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         }
     }
 
-    // When we load the component , we need first  to reset all values of the previous version of the component
-    //
-    // Even if the previous component has been destroy, the values that was bind to an element in the DOM 
-    // are still present "somewhere" in angular "structure".
-    // When we load the component , angular will first initialize the values with the old one before binding it to 
-    // the new one . Depending on the performance of network / browser , we can see briefly on the screen the previous values.
-    // To avoid that , we shall init as soon as possible the values bind in the HTML.
-
-    private initAllBindedVariables()
-    {
-        this._htmlContent = ""; 
-        this.fullscreen = false;
-        this.showMaxAndReduceButton = false;
-        this.showAckButton = false;
-        this.showActionButton = false;
-        this.showEditAndDeleteButton = false ;
-        this.showDetailCardHeader = false;
-        this.isActionEnabled = false;
-        this.lttdExpiredIsTrue = false;
-        this.displayDeleteResult = false;
-    }
-
     private setButtonsVisibility() {
         if (this._appService.pageType === PageType.ARCHIVE) this.showButtons = false;
         else this.showButtons = true;
@@ -284,7 +261,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     ngDoCheck() {
+        const previous = this.lttdExpiredIsTrue;
         this.checkLttdExpired();
+        if (previous != this.lttdExpiredIsTrue) {
+            templateGateway.setLttdExpired(this.lttdExpiredIsTrue);
+        }
     }
 
     checkLttdExpired(): void {
@@ -328,11 +309,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         if (formResult.valid) {
 
             const card: CardForPublishing = {
-                publisher: this.user.entities[0],
+                publisher: this.getUserEntityToRespond(),
                 publisherType: 'ENTITY',
                 processVersion: this.card.processVersion,
                 process: this.card.process,
-                processInstanceId: `${this.card.processInstanceId}_${this.user.entities[0]}`,
+                processInstanceId: `${this.card.processInstanceId}_${this.getUserEntityToRespond()}`,
                 state: this._responseData.state,
                 startDate: this.card.startDate,
                 endDate: this.card.endDate,
@@ -436,7 +417,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     closeDetails() {
         this.updateReadCardStatusOnUI();
-        if (this.parentModalRef) this.parentModalRef.close();
+        if (this.parentModalRef)  {
+            this.parentModalRef.close();
+            this.store.dispatch(new ClearLightCardSelection());
+        }
         else this._appService.closeDetails(this.currentPath);
     }
 
@@ -449,7 +433,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     ngOnChanges(): void {
-        this.initAllBindedVariables();
         this.initializeHrefsOfCssLink();
         this.checkIfHasAlreadyResponded();
         this.initializeHandlebarsTemplates();
@@ -464,11 +447,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         }
         this.setButtonsVisibility();
         this.setShowDetailCardHeader();
-
+        
     }
 
     private setEntitiesToRespond() {
         this._listEntitiesToRespond = new Array<EntityMessage>();
+        this._userEntitiesAllowedToRespond = [];
         if (this.card.entitiesAllowedToRespond) {
             this.card.entitiesAllowedToRespond.forEach(entity => {
                 const entityName = this.getEntityName(entity);
@@ -480,6 +464,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                         });
                 }
             });
+            this._userEntitiesAllowedToRespond = this.card.entitiesAllowedToRespond.filter(x => this.user.entities.includes(x));
         }
     }
 
@@ -499,10 +484,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
 
     private isUserInEntityAllowedToRespond(): boolean {
-        if (this.card.entitiesAllowedToRespond) return this.card.entitiesAllowedToRespond.includes(this.user.entities[0]);
-        else return false;
+        return this._userEntitiesAllowedToRespond.length === 1;
     }
 
+    private getUserEntityToRespond() : string {
+        return this._userEntitiesAllowedToRespond.length === 1 ? this._userEntitiesAllowedToRespond[0] : null;
+    }
 
     private doesTheUserHavePermissionToRespond(): boolean {
         let permission = false;
@@ -594,6 +581,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                             setTimeout(() => { // wait for script loading before calling them in template 
                                 templateGateway.applyChildCards();
                                 if (this.hasAlreadyResponded) templateGateway.lockAnswer();
+                                if (this.card.lttd && this.lttdExpiredIsTrue) {
+                                    templateGateway.setLttdExpired(true);
+                                }
+
+                                templateGateway.setScreenSize(this.screenSize);
                             }, 10);
                         }, 10);
                     }, () => {
@@ -682,6 +674,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     setFullScreen(active) {
         this.fullscreen = active;
+        templateGateway.setScreenSize(active? 'lg' : 'md');
     }
 
     ngOnDestroy() {

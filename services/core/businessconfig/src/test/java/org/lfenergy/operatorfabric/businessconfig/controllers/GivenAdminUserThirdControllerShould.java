@@ -282,6 +282,32 @@ class GivenAdminUserBusinessconfigControllerShould {
                     .andExpect(jsonPath("$.locale.fr.processgroup1", is("Groupe de process 1")))
                     .andExpect(jsonPath("$.locale.fr.processgroup2", is("Groupe de process 2")));
         }
+
+        @Test
+        void createProcessGroupsWithDuplicateProcessInSameGroup() throws Exception {
+            Path pathToProcessGroupsFile = Paths.get("./build/test-data/processgroups_with_duplicate_in_same_group.json");
+
+            MockMultipartFile processGroupsFile = new MockMultipartFile("file",
+                    "processgroups_with_duplicate_in_same_group.json", MediaType.TEXT_PLAIN_VALUE, Files
+                    .readAllBytes(pathToProcessGroupsFile));
+
+            mockMvc.perform(multipart("/businessconfig/processgroups").file(processGroupsFile))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message", is("There is a duplicate process in the file you have sent")));
+        }
+
+        @Test
+        void createProcessGroupsWithDuplicateProcessInDifferentGroups() throws Exception {
+            Path pathToProcessGroupsFile = Paths.get("./build/test-data/processgroups_with_duplicate_in_different_groups.json");
+
+            MockMultipartFile processGroupsFile = new MockMultipartFile("file",
+                    "processgroups_with_duplicate_in_different_groups.json", MediaType.TEXT_PLAIN_VALUE, Files
+                    .readAllBytes(pathToProcessGroupsFile));
+
+            mockMvc.perform(multipart("/businessconfig/processgroups").file(processGroupsFile))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message", is("There is a duplicate process in the file you have sent")));
+        }
         
         @Nested
         @WithMockOpFabUser(login="adminUser", roles = {"ADMIN"})

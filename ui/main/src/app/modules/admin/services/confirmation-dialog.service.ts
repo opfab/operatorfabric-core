@@ -1,18 +1,30 @@
-import { Injectable } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ConfirmationDialogComponent } from '../components/confirmation-dialog/confirmation-dialog.component';
+/* Copyright (c) 2020, RTEi (http://www.rte-international.com)
+ * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+
+import {Injectable} from '@angular/core';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {ConfirmationDialogComponent} from '../components/confirmation-dialog/confirmation-dialog.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConfirmationDialogService {
+  // TODO Is it really necessary ? Couldn't that be handled by the confirmation-dialog-component as it doesn't seem reusable ?
 
   constructor(private modalService: NgbModal) { }
 
   public confirm(
     title: string,
     message: string,
-    btnOkText: string = 'OK',
+    btnOkText: string = 'OK', // TODO I18N ?
     btnCancelText: string = 'Cancel'): Promise<boolean> {
     const modalRef = this.modalService.open(ConfirmationDialogComponent);
     modalRef.componentInstance.title = title;

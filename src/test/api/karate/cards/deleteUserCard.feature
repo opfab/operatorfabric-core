@@ -6,11 +6,21 @@ Feature: deleteUserCards tests
     * def authToken = signIn.authToken
     * def signInAsTSO = call read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
+    * def signInAsTSO2 = call read('../common/getToken.feature') { username: 'operator2'}
+    * def authTokenAsTSO2 = signInAsTSO2.authToken
 
     * def groupKarate =
 """
 {
   "id" : "groupKarateDeleteUserCards",
+  "name" : "groupKarate name",
+  "description" : "groupKarate description"
+}
+"""
+    * def groupKarate2 =
+"""
+{
+  "id" : "groupKarateDeleteUserCards2",
   "name" : "groupKarate name",
   "description" : "groupKarate description"
 }
@@ -35,14 +45,42 @@ Feature: deleteUserCards tests
 }
 """
 
+    * def perimeterWriteForState2 =
+"""
+{
+  "id" : "perimeterKarateDeleteUserCards2",
+  "process" : "processDeleteUserCard",
+  "stateRights" : [
+      {
+        "state" : "state1",
+        "right" : "Write"
+      },
+      {
+        "state" : "state2",
+        "right" : "Write"
+      }
+  ]
+}
+"""
+
     * def operator1Array =
 """
 [   "operator1"
 ]
 """
+    * def operator2Array =
+"""
+[   "operator2"
+]
+"""
     * def groupArray =
 """
 [   "groupKarateDeleteUserCards"
+]
+"""
+    * def group2Array =
+"""
+[   "groupKarateDeleteUserCards2"
 ]
 """
 
@@ -55,11 +93,27 @@ Feature: deleteUserCards tests
     And match response.name == groupKarate.name
     And match response.id == groupKarate.id
 
+  Scenario: Create groupKarate2
+    Given url opfabUrl + 'users/groups'
+    And header Authorization = 'Bearer ' + authToken
+    And request groupKarate2
+    When method post
+    Then match response.description == groupKarate2.description
+    And match response.name == groupKarate2.name
+    And match response.id == groupKarate2.id
+
 
   Scenario: Add operator1 to groupKarate
     Given url opfabUrl + 'users/groups/' + groupKarate.id + '/users'
     And header Authorization = 'Bearer ' + authToken
     And request operator1Array
+    When method patch
+    And status 200
+
+  Scenario: Add operator2 to groupKarate2
+    Given url opfabUrl + 'users/groups/' + groupKarate2.id + '/users'
+    And header Authorization = 'Bearer ' + authToken
+    And request operator2Array
     When method patch
     And status 200
 
@@ -70,11 +124,24 @@ Feature: deleteUserCards tests
     And request perimeter
     When method post
 
+  Scenario: Create perimeterWriteForState2
+    Given url opfabUrl + 'users/perimeters'
+    And header Authorization = 'Bearer ' + authToken
+    And request perimeterWriteForState2
+    When method post
+
 
   Scenario: Put groupKarate for perimeter
     Given url opfabUrl + 'users/perimeters/'+ perimeter.id + '/groups'
     And header Authorization = 'Bearer ' + authToken
     And request groupArray
+    When method put
+    Then status 200
+
+  Scenario: Put groupKarate2 for perimeterWriteForState2
+    Given url opfabUrl + 'users/perimeters/'+ perimeterWriteForState2.id + '/groups'
+    And header Authorization = 'Bearer ' + authToken
+    And request group2Array
     When method put
     Then status 200
 
@@ -84,7 +151,6 @@ Feature: deleteUserCards tests
 """
 {
 	"publisher" : "ENTITY1",
-	"publisherType" : "ENTITY",
 	"processVersion" : "1",
 	"process"  :"processDeleteUserCard",
 	"processInstanceId" : "processDeleteUserCardOk",
@@ -102,7 +168,6 @@ Feature: deleteUserCards tests
 """
 {
 	"publisher" : "publisherKarate",
-	"publisherType" : "EXTERNAL",
 	"processVersion" : "1",
 	"process"  :"processDeleteUserCard",
 	"processInstanceId" : "processDeleteUserCardForbidden1",
@@ -120,7 +185,6 @@ Feature: deleteUserCards tests
 """
 {
 	"publisher" : "ENTITY2",
-	"publisherType" : "ENTITY",
 	"processVersion" : "1",
 	"process"  :"processDeleteUserCard",
 	"processInstanceId" : "processDeleteUserCardForbidden2",
@@ -138,7 +202,6 @@ Feature: deleteUserCards tests
 """
 {
 	"publisher" : "ENTITY1",
-	"publisherType" : "ENTITY",
 	"processVersion" : "1",
 	"process"  :"processDeleteUserCard",
 	"processInstanceId" : "processDeleteUserCardForbidden3",
@@ -153,7 +216,8 @@ Feature: deleteUserCards tests
 """
 
 # Push cardForDeleteOk
-  Given url opfabPublishCardUrl + 'cards'
+  Given url opfabPublishCardUrl + 'cards/userCard'
+  And header Authorization = 'Bearer ' + authTokenAsTSO
   And request cardForDeleteOk
   When method post
   Then status 201
@@ -168,7 +232,8 @@ Feature: deleteUserCards tests
   And match response.count == 1
 
 # Push cardForDeleteForbidden2
-   Given url opfabPublishCardUrl + 'cards'
+   Given url opfabPublishCardUrl + 'cards/userCard'
+   And header Authorization = 'Bearer ' + authTokenAsTSO2
    And request cardForDeleteForbidden2
    When method post
    Then status 201
@@ -176,7 +241,8 @@ Feature: deleteUserCards tests
 
 
 # Push cardForDeleteForbidden3
-   Given url opfabPublishCardUrl + 'cards'
+   Given url opfabPublishCardUrl + 'cards/userCard'
+   And header Authorization = 'Bearer ' + authTokenAsTSO2
    And request cardForDeleteForbidden3
    When method post
    Then status 201

@@ -15,13 +15,12 @@ import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-
-import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 public interface UserUtilitiesCommonToCardRepository<T extends Card> {
@@ -63,8 +62,6 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
     }
 
     default Criteria computeCriteriaForUser(CurrentUserWithPerimeters currentUserWithPerimeters) {
-        List<Criteria> criteriaList = new ArrayList<>();
-        List<Criteria> criteria = new ArrayList<>();
         String login = currentUserWithPerimeters.getUserData().getLogin();
         List<String> groups = currentUserWithPerimeters.getUserData().getGroups();
         List<String> entities = currentUserWithPerimeters.getUserData().getEntities();

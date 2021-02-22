@@ -14,19 +14,7 @@ Feature: Add perimeters/group for action test
   "process" : "userCardExamples",
   "stateRights" : [
     {
-      "state" : "messageState",
-      "right" : "ReceiveAndWrite"
-    },
-    {
       "state" : "conferenceState",
-      "right" : "ReceiveAndWrite"
-    },
-    {
-      "state" : "questionState",
-      "right" : "ReceiveAndWrite"
-    },
-    {
-      "state" : "taskState",
       "right" : "ReceiveAndWrite"
     },
     {

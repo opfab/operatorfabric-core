@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,21 +7,23 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { Injectable } from '@angular/core';
-import { CrudService } from './crud-service';
-import { Observable } from 'rxjs';
-import { Group } from '@ofModel/group.model';
-import { environment } from '@env/environment';
-import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { ErrorService } from './error-service';
+import {Observable, Subject} from 'rxjs';
+import {Group} from '@ofModel/group.model';
+import {environment} from '@env/environment';
+import {HttpClient} from '@angular/common/http';
+import {catchError, takeUntil, tap} from 'rxjs/operators';
+import {Injectable, OnDestroy} from '@angular/core';
+import {CachedCrudService} from '@ofServices/cached-crud-service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GroupsService extends ErrorService implements CrudService {
+export class GroupsService extends CachedCrudService implements OnDestroy {
 
   readonly groupsUrl: string;
+  private _groups: Group[];
+
+  private ngUnsubscribe$ = new Subject<void>();
 
   /**
    * @constructor
@@ -31,24 +33,65 @@ export class GroupsService extends ErrorService implements CrudService {
     super();
     this.groupsUrl = `${environment.urls.groups}`;
   }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe$.next();
+    this.ngUnsubscribe$.complete();
+  }
+
   deleteById(id: string) {
-    const url = `${this.groupsUrl}/groups/${id}`;
+    const url = `${this.groupsUrl}/${id}`;
     return this.httpClient.delete(url).pipe(
-      catchError((error: Response) => this.handleError(error))
+      catchError((error: Response) => this.handleError(error)),
+        tap(() => {
+          this.deleteFromCachedGroups(id);
+        })
     );
+  }
+
+  private deleteFromCachedGroups(id: string): void {
+    this._groups = this._groups.filter(group => group.id !== id);
+  }
+
+  private updateCachedGroups(groupData: Group): void {
+    const updatedGroups = this._groups.filter(group => group.id !== groupData.id);
+    updatedGroups.push(groupData);
+    this._groups = updatedGroups;
   }
 
   getAllGroups(): Observable<Group[]> {
     return this.httpClient.get<Group[]>(`${this.groupsUrl}`).pipe(
-      catchError((error: Response) => this.handleError)
+      catchError((error: Response) => this.handleError(error))
     );
   }
 
+  public loadAllGroupsData(): Observable<any> {
+    return this.getAllGroups()
+        .pipe(takeUntil(this.ngUnsubscribe$)
+            , tap(
+                (groups) => {
+                  if (!!groups) {
+                    this._groups = groups;
+                    console.log(new Date().toISOString(), 'List of groups loaded');
+                  }
+                }, (error) => console.error(new Date().toISOString(), 'an error occurred', error)
+            ));
+  }
 
+  public getGroups(): Group[] {
+    return this._groups;
+  }
 
-  updateGroup(groupsData: Group): Observable<Group> {
-    return this.httpClient.post<Group>(`${this.groupsUrl}`, groupsData).pipe(
-      catchError((error: Response) => this.handleError)
+  public getCachedValues(): Array<Group> {
+    return this.getGroups();
+  }
+
+  updateGroup(groupData: Group): Observable<Group> {
+    return this.httpClient.post<Group>(`${this.groupsUrl}`, groupData).pipe(
+      catchError((error: Response) => this.handleError(error)),
+        tap(() => {
+          this.updateCachedGroups(groupData);
+        })
     );
   }
 

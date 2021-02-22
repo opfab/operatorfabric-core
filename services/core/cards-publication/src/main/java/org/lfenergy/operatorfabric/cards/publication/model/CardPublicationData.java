@@ -13,11 +13,7 @@ package org.lfenergy.operatorfabric.cards.publication.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Singular;
+import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -160,9 +156,18 @@ public class CardPublicationData implements Card {
                 .summary(((I18nPublicationData) this.getSummary()).copy())
                 .publisherType(this.getPublisherType())
                 .secondsBeforeTimeSpanForReminder(this.secondsBeforeTimeSpanForReminder);
-                ;
+
         if(this.getTimeSpans()!=null)
             result.timeSpansSet(new HashSet<>(this.getTimeSpans()));
         return result.build();
+    }
+
+
+    public Boolean getKeepChildCards() {
+        return keepChildCards;
+    }
+
+    public void setKeepChildCards(Boolean keepChildCards) {
+        this.keepChildCards = keepChildCards != null ? keepChildCards : false;
     }
 }

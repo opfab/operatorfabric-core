@@ -1,4 +1,5 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)Copyright (c) 2020, RTEi (http://www.rte-international.com)
+ * Copyright (c) 2020, RTEi (http://www.rte-international.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,8 +7,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
-
 
 import {ModuleWithProviders, NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
@@ -22,16 +21,14 @@ import {FilterService} from '@ofServices/filter.service';
 import {ConfigService} from '@ofServices/config.service';
 import {I18nService} from '@ofServices/i18n.service';
 import {SettingsService} from '@ofServices/settings.service';
-import { UserService } from './user.service';
-import { NotifyService } from '@ofServices/notify.service';
+import {UserService} from './user.service';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {GlobalStyleService} from '@ofServices/global-style.service';
-import { AppService } from './app.service';
-import { DataTableShareService } from 'app/modules/admin/services/data.service';
-import { GroupsService } from './groups.service';
-import { EntitiesService } from './entities.service';
-import { ExportService } from './export.service';
-import { ReminderService} from '@ofServices/reminder/reminder.service';
+import {AppService} from './app.service';
+import {GroupsService} from './groups.service';
+import {EntitiesService} from './entities.service';
+import {ExportService} from './export.service';
+import {ReminderService} from '@ofServices/reminder/reminder.service';
 
 @NgModule({
     imports: [
@@ -56,16 +53,14 @@ import { ReminderService} from '@ofServices/reminder/reminder.service';
         UserService,
         GroupsService,
         EntitiesService,
-        NotifyService,
         SoundNotificationService,
         GlobalStyleService,
         AppService,
-        DataTableShareService,
         ReminderService
     ]
 })
 export class ServicesModule {
-    static forRoot(): ModuleWithProviders {
+    static forRoot(): ModuleWithProviders<ServicesModule> {
         return {
             ngModule: ServicesModule
         };

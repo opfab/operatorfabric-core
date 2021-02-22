@@ -39,11 +39,10 @@ import {UserCardModule} from '../usercard/usercard.module';
         NO_ERRORS_SCHEMA
       ],
     providers: [HandlebarsService],
-    entryComponents: []
 })
 
 export class CardsModule {
-    static forRoot(): ModuleWithProviders {
+    static forRoot(): ModuleWithProviders<CardsModule> {
         return {
             ngModule: CardsModule,
             providers: [ProcessesService]

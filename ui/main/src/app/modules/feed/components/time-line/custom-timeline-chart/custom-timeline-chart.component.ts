@@ -21,17 +21,19 @@ import {
   ViewEncapsulation,
   OnDestroy
 } from '@angular/core';
-import { scaleLinear, scaleTime } from 'd3-scale';
-import { BaseChartComponent, calculateViewDimensions, ChartComponent, ViewDimensions } from '@swimlane/ngx-charts';
+import {scaleLinear, scaleTime} from 'd3-scale';
+import {BaseChartComponent, calculateViewDimensions, ChartComponent, ViewDimensions} from '@swimlane/ngx-charts';
 import * as moment from 'moment';
 import {select, Store} from '@ngrx/store';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {AppState} from '@ofStore/index';
-import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import {Router} from '@angular/router';
+import {Subject} from 'rxjs';
+import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
-import { getNextTimeForRepeating } from '@ofServices/reminder/reminderUtils';
+import {getNextTimeForRepeating} from '@ofServices/reminder/reminderUtils';
+import {ConditionalExpr} from '@angular/compiler';
+import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -50,10 +52,10 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   public xTicksTwoFormat: string;
   public title: string;
   public oldWidth = 0;
-  
+  public openPopover: NgbPopover;
 
 
-  @ViewChild(ChartComponent, { read: ElementRef, static: false }) chart: ElementRef;
+  @ViewChild(ChartComponent, { read: ElementRef }) chart: ElementRef;
   public dims: ViewDimensions;
   public xDomain: any;
   public yScale: any;
@@ -520,7 +522,11 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     return Math.max(this.xScale(this.xRealTimeLine),50); // To avoid going to much on the left, 50px min
   }
 
-  feedCircleHovered(myCircle): void {
+  feedCircleHovered(myCircle, p): void {
+    if (this.openPopover) {
+      this.openPopover.close();
+    }
+    this.openPopover = p;
     this.currentCircleHovered = myCircle;
   }
 

@@ -8,9 +8,9 @@
 	},
 	"states": {
 		"messageState" : {
-			"detailTitle" : { "key" : "detail.title"},
 			"templateName" : "template",
-			"styles" : [ "style" ]
+			"styles" : [ "style" ],
+			"type" : "CANCELED"
 		},
 		"questionState": {
 		  "name": "question.title",
@@ -24,12 +24,10 @@
 		  "response": {
 			"state": "questionState"
 		  },
-		  "detailTitle": {
-			"key": "question.title"
-		  },
 		  "templateName": "question",
 		  "styles": [],
-		  "acknowledgmentAllowed": "Never"
+		  "acknowledgmentAllowed": "Never",
+		  "type" : "INPROGRESS"
 		},   
 		"incidentInProgressState": {
 		  "name": "incidentInProgress.name",
@@ -43,12 +41,10 @@
 		  "response": {
 			"state": "incidentInProgressState"
 		  },
-		  "detailTitle": {
-			"key": "incidentInProgress.name"
-		  },
 		  "templateName": "incidentInProgress",
 		  "styles": [],
-		  "acknowledgmentAllowed": "Always"
+		  "acknowledgmentAllowed": "Always",
+		  "type" : "FINISHED"
 		}
 	  }
 }

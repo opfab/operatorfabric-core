@@ -37,12 +37,15 @@ import javax.validation.ConstraintViolation;
 
 import org.lfenergy.operatorfabric.businessconfig.model.*;
 import org.lfenergy.operatorfabric.businessconfig.model.Process;
+import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
+import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.utilities.PathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
@@ -62,6 +65,8 @@ public class ProcessesService implements ResourceLoaderAware {
 
 	private static final String PATH_PREFIX = "file:";
     private static final String CONFIG_FILE_NAME = "config.json";
+    private static final String DUPLICATE_PROCESS_IN_PROCESS_GROUPS_FILE = "There is a duplicate process in the file you have sent";
+
     @Value("${operatorfabric.businessconfig.storage.path}")
     private String storagePath;
     private ObjectMapper objectMapper;
@@ -309,6 +314,20 @@ public class ProcessesService implements ResourceLoaderAware {
 		}
     }
 
+    public boolean checkNoDuplicateProcessInUploadedFile(ProcessGroupsData newProcessGroups) {
+        HashMap<String, Integer> mapOfProcesses = new HashMap<>();
+
+        for (ProcessGroup group : newProcessGroups.getGroups()) {
+            for (String process : group.getProcesses()) {
+                if (mapOfProcesses.containsKey(process))
+                    return false;
+                else
+                    mapOfProcesses.put(process, 1);
+            }
+        }
+        return true;
+    }
+
     /**
      * Updates or creates processgroups file from a file uploaded from POST /businessconfig/processgroups
      *
@@ -324,6 +343,13 @@ public class ProcessesService implements ResourceLoaderAware {
 
         ProcessGroupsData newProcessGroups = objectMapper.readValue(is, ProcessGroupsData.class);
         is.reset();
+
+        if (! checkNoDuplicateProcessInUploadedFile(newProcessGroups))
+            throw new ApiErrorException(
+                    ApiError.builder()
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message(DUPLICATE_PROCESS_IN_PROCESS_GROUPS_FILE)
+                            .build());
 
         //copy file
         PathUtils.copyInputStreamToFile(is, rootPath.toString() + "/processGroups.json");

@@ -9,17 +9,11 @@
 
 import {Injectable} from '@angular/core';
 import {AppState} from '@ofStore/index';
-import {CardService} from '@ofServices/card.service';
 import {Action, Store} from '@ngrx/store';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Observable} from 'rxjs';
-import {
-    HandleUnexpectedError,
-    MonitoringActionType,
-    SendMonitoringQuery,
-    UpdateMonitoringFilter
-} from '@ofActions/monitoring.actions';
-import {catchError, map, tap} from 'rxjs/operators';
+import {HandleUnexpectedError, MonitoringActionType, SendMonitoringQuery, UpdateMonitoringFilter} from '@ofActions/monitoring.actions';
+import {catchError, map} from 'rxjs/operators';
 
 @Injectable()
 export class MonitoringEffects {

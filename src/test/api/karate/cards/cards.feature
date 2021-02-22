@@ -510,3 +510,41 @@ Scenario: Push a card for a user with no group and no entity
     When method get
     Then status 200
     And match response.data.message == 'a message for user with no group and no entity'
+
+
+Scenario: Push card with null keepChilCards and publisherType
+
+    * def parentCard2 =
+"""
+{
+	"publisher" : "api_test",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "processKeepChildCardsNull",
+	"state": "messageState",
+	"groupRecipients": ["Dispatcher"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+    "keepChildCards": null,
+	"publisherType": null,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title2"},
+	"data" : {"message":"test externalRecipients"}
+}
+"""
+
+# Push parent card
+    Given url opfabPublishCardUrl + 'cards'
+    And request parentCard2
+    When method post
+    Then status 201
+    And match response.count == 1
+    And match response.message == "All pushedCards were successfully handled"
+
+#get parent card id
+    Given url opfabUrl + 'cards/cards/api_test.processKeepChildCardsNull'
+    And header Authorization = 'Bearer ' + authToken
+    When method get
+    Then status 200
+    And match response.card.keepChildCards == false
+	And match response.card.publisherType == "EXTERNAL"

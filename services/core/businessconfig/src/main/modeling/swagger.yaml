@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: OperatorFabric BusinessconfigParty Management API
-  version: 2.0.0.RELEASE
+  version: 2.1.0.RELEASE
   title: Businessconfig Management
   termsOfService: ''
   contact:
@@ -371,9 +371,6 @@ definitions:
             userCard:
               description : User card template and visibility options
               $ref: '#/definitions/UserCard'
-            detailTitle:
-              description: Detail i18n title
-              $ref: '#/definitions/I18n'
             templateName:
               description: >-
                 Name of the template to use
@@ -384,6 +381,9 @@ definitions:
               type: array
               items:
                 type: string
+            type:
+              description: Type of state ("INPROGRESS", "FINISHED" or "CANCELED")
+              $ref: '#/definitions/TypeOfStateEnum'
       uiVisibility:
         type: object
         properties:
@@ -404,16 +404,8 @@ definitions:
       name: some_business_process.label
       version: v1.0
       initial_state:
-        detailTitle:
-          key: template.title
-          parameters:
-            param: value
         templateName: template1
       other_state:
-        detailTitle:
-          key: template2.title
-          parameters:
-            param: value
         templateName: template2
         styles:
           - my-template.css
@@ -483,6 +475,18 @@ definitions:
       - Always
       - Never
       - OnlyWhenResponseDisabledForUser
+
+  TypeOfStateEnum:
+    type: string
+    description: |-
+      Type of state >
+      * INPROGRESS - In Progress
+      * FINISHED - Finished
+      * CANCELED - Canceled
+    enum:
+      - INPROGRESS
+      - FINISHED
+      - CANCELED
 
   ProcessGroup:
     description: Object containing a list of processes.

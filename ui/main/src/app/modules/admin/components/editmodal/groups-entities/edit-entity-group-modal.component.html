@@ -1,0 +1,59 @@
+<!-- Copyright (c) 2020, RTEi (http://www.rte-international.com)           -->
+<!-- Copyright (c) 2021, RTE (http://www.rte-france.com)                   -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<div class="modal-content">
+  <div class="modal-header">
+    <span class="modal-title" *ngIf="row">{{row.id}}</span>
+    <span class="modal-title" *ngIf="!row && type==='group'" translate>admin.input.group.add</span>
+    <span class="modal-title" *ngIf="!row && type==='entity'" translate>admin.input.entity.add</span>
+    <button id="opfab-admin-edit-group-btn-close"  (click)="dismissModal('Cross click')" type="button" class="close" data-dismiss="modal"
+            aria-label="Close"><span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="entityGroupForm" class="opfab-form-lighter">
+      <div class="container">
+        <div class="col">
+
+          <div *ngIf="!row" class="opfab-input row">
+            <label for="id" translate>admin.input.id.label</label>
+            <input formControlName="id" name="id" id="id" type="text">
+          </div>
+          <div *ngIf="id.invalid" class="row alert alert-danger">
+            <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
+            <div *ngIf="id.errors.minlength" translate>admin.input.id.minLength</div>
+          </div>
+
+          <div class="opfab-input row">
+            <label for="name" translate>admin.input.name.label</label>
+            <input formControlName="name" name="name" id="name" type="text">
+          </div>
+          <div *ngIf="name.invalid" class=" row alert alert-danger">
+            <div *ngIf="name.errors.required" translate>admin.input.name.required</div>
+          </div>
+
+          <div class="opfab-input row">
+            <label for="description" translate>admin.input.description</label>
+            <input formControlName="description" name="description" id="description" type="text">
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="modal-footer" style="border-top: none">
+      <button id="opfab-admin-edit-group-btn-cancel" type="button" (click)="dismissModal('Cancel click')" class="opfab-btn-cancel" data-dismiss="modal"
+              translate>admin.input.close</button>
+      <button id="opfab-admin-group-btn-add" [disabled]="!entityGroupForm.valid" *ngIf="!row && type==='group'" (click)="update()" class="opfab-btn"
+              translate>admin.input.group.add</button>
+      <button id="opfab-admin-entity-btn-add" [disabled]="!entityGroupForm.valid" *ngIf="!row && type==='entity'" (click)="update()" class="opfab-btn"
+              translate>admin.input.entity.add</button>
+      <button id="opfab-admin-user-btn-save" [disabled]="!entityGroupForm.valid" *ngIf="row" (click)="update()" class="opfab-btn"
+              translate>admin.input.save</button>
+    </div>
+  </div>
+</div>

@@ -317,15 +317,9 @@ These command line should return a `200 http status` response with the details o
   "version": "1",
   "states" : {
           "start" : {
-            "detailTitle" : {
-              "key" : "start.first.title"
-            },
-            "templateName" : "template1"        
+            "templateName" : "template1"
           },
           "end" : {
-            "detailTitle" : {
-              "key" : "end.first.title"
-            },
             "templateName" : "template2",
             "styles" : [ "bundleTest.css" ]
           }
@@ -340,11 +334,15 @@ section which resumes how to resolve common problems.
 
 == Processes groups
 
-OperatorFabric offers the possibility of defining processes groups. These groups have an impact only on the UI, for example on the notification configuration screen, by offering a more organized view of all the processes.
+OperatorFabric offers the possibility of defining process groups. These groups have an impact only on the UI, for
+example on the notification configuration screen, by offering a more organized view of all the processes.
+
+IMPORTANT: A process can only belong to one process group.
 
 To define processes groups, you have to upload a file via a `POST` http request as described in the
-ifdef::single-page-doc[<<../api/businessconfig/#/businessconfig/uploadProcessgroups, Businessconfig Service API documentation>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/api/businessconfig/#/businessconfig/uploadProcessgroups, Businessconfig Service API documentation>>]
+
+ifdef::single-page-doc[link:../api/businessconfig/index.html#/businessconfig/uploadProcessgroups[Businessconfig Service API documentation]]
+ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/businessconfig/index.html#/default/uploadProcessgroups[Businessconfig Service API documentation]]
 .
 
 *Example*

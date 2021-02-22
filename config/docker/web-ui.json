@@ -1,4 +1,6 @@
 {
+  "environmentName": "TEST ENV",
+  "environmentColor": "blue",
   "checkPerimeterForResponseCard": true,
   "archive": {
     "filters": {

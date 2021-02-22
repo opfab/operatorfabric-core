@@ -8,66 +8,16 @@
     "calendar": true
   },
   "states": {
-    "messageState": {
-      "name": "message.title",
-      "color": "#CC9900",
-      "userCard" : {
-        "template" : "usercard_message"
-      },
-      "detailTitle": {
-        "key": "message.title"
-      },
-      "templateName": "message",
-      "styles": [],
-      "acknowledgmentAllowed": "Always"
-    },
     "conferenceState": {
       "name": "conference.title",
       "color": "#CC9900",
       "userCard" : {
         "template" : "usercard_conference"
       },
-      "detailTitle": {
-        "key": "conference.title"
-      },
       "templateName": "conference",
       "styles": [],
       "acknowledgmentAllowed": "Always"
     },
-    "questionState": {
-      "name": "question.title",
-      "showDetailCardHeader": false,
-      "color": "#0070C0",
-      "userCard" : {
-				"template" : "usercard_question",
-				"severityVisible" : false,
-				"startDateVisible" : true,
-				"endDateVisible" : true
-			},
-      "response": {
-        "state": "questionState"
-      },
-      "detailTitle": {
-        "key": "question.title"
-      },
-      "templateName": "question",
-      "styles": [],
-      "acknowledgmentAllowed": "Never"
-    },
-    "taskState": {
-      "name": "task.title",
-      "color": "#0070C0",
-      "userCard" : {
-        "template" : "usercard_task"
-      },
-      "detailTitle": {
-        "key": "task.title"
-      },
-      "templateName": "task",
-      "styles": [
-      ],
-      "acknowledgmentAllowed": "Always"
-    },    
     "incidentInProgressState": {
       "name": "incidentInProgress.name",
       "userCard" : {
@@ -79,9 +29,6 @@
       "color": "#CC9900",
       "response": {
         "state": "incidentInProgressState"
-      },
-      "detailTitle": {
-        "key": "incidentInProgress.name"
       },
       "templateName": "incidentInProgress",
       "styles": [],

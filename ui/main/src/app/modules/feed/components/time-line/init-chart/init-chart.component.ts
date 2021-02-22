@@ -9,15 +9,14 @@
 
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 import * as moment from 'moment';
-import {Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {FilterType} from '@ofServices/filter.service';
 import {ApplyFilter} from '@ofActions/feed.actions';
 import {TimeService} from '@ofServices/time.service';
-import { GlobalStyleService } from '@ofServices/global-style.service';
+import {GlobalStyleService} from '@ofServices/global-style.service';
 
 
 const forwardWeekConf = {
@@ -38,7 +37,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
     public cardsData: any[];
     public myDomain: number[];
     public domainId: string;
-    
+
 
     // required for domain movements specifications
     public followClockTick: boolean;
@@ -53,7 +52,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
     public endDate;
 
 
-    constructor(private store: Store<AppState>, private time: TimeService,private globalStyleService: GlobalStyleService) {
+    constructor(private store: Store<AppState>, private time: TimeService, private globalStyleService: GlobalStyleService) {
     }
 
 
@@ -198,9 +197,9 @@ export class InitChartComponent implements OnInit, OnDestroy {
             case '7D':
                 return this.time.formatDateTime(value);
             case 'W':
-                return this.time.formatDate(value);;
+                return this.time.formatDate(value);
             case 'M':
-                return this.time.formatDate(value);;
+                return this.time.formatDate(value);
             case 'Y':
                 return date.format('yyyy');
             default:

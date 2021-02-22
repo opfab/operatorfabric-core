@@ -8,7 +8,6 @@
 	},
 	"states": {
 		"messageState" : {
-			"detailTitle" : { "key" : "detail.title"},
 			"templateName" : "template",
 			"styles" : [ "style" ]
 		},
@@ -23,9 +22,6 @@
 				},
 		  "response": {
 			"state": "questionState"
-		  },
-		  "detailTitle": {
-			"key": "question.title"
 		  },
 		  "templateName": "question",
 		  "styles": [],
@@ -42,9 +38,6 @@
 		  "color": "#FAF0AF",
 		  "response": {
 			"state": "incidentInProgressState"
-		  },
-		  "detailTitle": {
-			"key": "incidentInProgress.name"
 		  },
 		  "templateName": "incidentInProgress",
 		  "styles": [],

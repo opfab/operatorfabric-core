@@ -8,25 +8,25 @@
  */
 
 
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { navigationRoutes } from '../../app-routing.module';
-import { Store } from '@ngrx/store';
-import { TryToLogOut } from '@ofActions/authentication.actions';
-import { AppState } from '@ofStore/index';
-import { selectCurrentUrl } from '@ofSelectors/router.selectors';
-import { LoadMenu } from '@ofActions/menu.actions';
-import { selectMenuStateMenu } from '@ofSelectors/menu.selectors';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Menu } from '@ofModel/menu.model';
-import { map, tap } from 'rxjs/operators';
-import * as _ from 'lodash';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {navigationRoutes} from '../../app-routing.module';
+import {Store} from '@ngrx/store';
+import {TryToLogOut} from '@ofActions/authentication.actions';
+import {AppState} from '@ofStore/index';
+import {selectCurrentUrl} from '@ofSelectors/router.selectors';
+import {LoadMenu} from '@ofActions/menu.actions';
+import {selectMenuStateMenu} from '@ofSelectors/menu.selectors';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {Menu} from '@ofModel/menu.model';
+import {map, tap} from 'rxjs/operators';
+import * as _ from 'lodash-es';
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {Route} from '@angular/router';
 import {ConfigService} from '@ofServices/config.service';
-import {QueryAllEntities} from "@ofActions/user.actions";
-import { UserService } from '@ofServices/user.service';
-import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { AppService } from '@ofServices/app.service';
+import {QueryAllEntities} from '@ofActions/user.actions';
+import {UserService} from '@ofServices/user.service';
+import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {AppService} from '@ofServices/app.service';
 
 @Component({
     selector: 'of-navbar',
@@ -43,9 +43,9 @@ export class NavbarComponent implements OnInit {
   expandedMenu: boolean[] = [];
   
   modalRef: NgbModalRef;
-  @ViewChild('userCard', null) userCardTemplate: ElementRef;
+  @ViewChild('userCard') userCardTemplate: ElementRef;
 
-  @ViewChild('about', null) aboutTemplate: ElementRef;
+  @ViewChild('about') aboutTemplate: ElementRef;
 
   customLogo: string;
   height: number;
@@ -55,11 +55,15 @@ export class NavbarComponent implements OnInit {
   displayFeedConfiguration: boolean;
   displayCreateUserCard: boolean;
   displayCalendar: boolean;
+  displayEnvironmentName = false;
+  environmentName : string;
+  environmentColor : string;
   nightDayMode = false;
 
   constructor(private store: Store<AppState>, private globalStyleService: GlobalStyleService, private configService: ConfigService
     , private userService: UserService, private modalService: NgbModal, private appService: AppService) {
 
+      this.currentPath = ['']; // Initializing currentPath to avoid 'undefined' errors when it is used to determine 'active' look in template
   }
 
     ngOnInit() {
@@ -116,6 +120,10 @@ export class NavbarComponent implements OnInit {
     this.displayFeedConfiguration = !this.configService.getConfigValue('feedConfiguration.hidden');
     this.displayCreateUserCard = ! hiddenMenus.includes("usercard");
     this.displayCalendar = ! hiddenMenus.includes("calendar");
+    this.environmentName = this.configService.getConfigValue('environmentName');
+    this.environmentColor = this.configService.getConfigValue('environmentColor','blue');
+    if (!!this.environmentName) this.displayEnvironmentName = true
+
   }
 
   private getCurrentUserMenus(menus: Menu[]): Menu[] {

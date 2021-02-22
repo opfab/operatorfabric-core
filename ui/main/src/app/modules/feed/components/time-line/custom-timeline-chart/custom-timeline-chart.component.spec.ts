@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,10 +14,9 @@ import {APP_BASE_HREF, CommonModule} from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule} from '@angular/forms';
 import {NgxChartsModule} from '@swimlane/ngx-charts';
-import {DebugElement, NO_ERRORS_SCHEMA} from '@angular/core';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
 import * as moment from 'moment';
 import {MouseWheelDirective} from '../directives/mouse-wheel.directive';
-import * as _ from 'lodash';
 import {Store, StoreModule} from '@ngrx/store';
 import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
 import {CustomRouterStateSerializer} from '@ofStates/router.state';
@@ -25,6 +24,7 @@ import {TimeService} from '@ofServices/time.service';
 import {appReducer, storeConfig} from '@ofStore/index';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 describe('CustomTimelineChartComponent', () => {
   let component: CustomTimelineChartComponent;
@@ -40,8 +40,9 @@ describe('CustomTimelineChartComponent', () => {
         FormsModule,
         StoreModule.forRoot(appReducer, storeConfig),
         RouterTestingModule,
-        StoreRouterConnectingModule,
+        StoreRouterConnectingModule.forRoot(),
         NgxChartsModule,
+        NgbModule,
         HttpClientTestingModule],
       declarations: [ CustomTimelineChartComponent,
    MouseWheelDirective],

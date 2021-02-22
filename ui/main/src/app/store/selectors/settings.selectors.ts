@@ -11,7 +11,7 @@
 import {AppState} from '@ofStore/index';
 import {createSelector} from '@ngrx/store';
 import {SettingsState} from '@ofStates/settings.state';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 
 export const selectSettings = (state: AppState) => state.settings;
 export const selectSettingsLoaded = createSelector(selectSettings, (settingsState: SettingsState) => settingsState.loaded);
