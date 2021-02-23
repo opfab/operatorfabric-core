@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,26 +8,25 @@
  */
 
 
-
 import {Action} from '@ngrx/store';
 import {Guid} from 'guid-typescript';
-import {Message} from "@ofModel/message.model";
+import {Message} from '@ofModel/message.model';
 
 export enum AuthenticationActionTypes {
     InitAuthStatus = '[Authentication] Init Authentication Status'
-    ,CheckAuthenticationStatus = '[Authentication] Check Authentication Status'
-    ,AcceptLogIn = '[Authentication] Accept the user log in attempt'
-    ,RejectLogIn = '[Authentication] Reject the user log in attempt'
-    ,TryToLogIn = '[Authentication] Try to log the user in'
-    ,TryToLogOut = '[Authentication] Try to log the user out'
-    ,AcceptLogOut = '[Authentication] Accept the user log out attempt'
-    ,AcceptLogOutSuccess = '[Authentication] Success Accept the user log out attempt'
-    ,CheckImplicitFlowAuthenticationStatus = '[Authentication] Check Authentication Status specifically for the Implicit Flow'
-    ,UselessAuthAction = '[Authentication] Test purpose action'
+    , CheckAuthenticationStatus = '[Authentication] Check Authentication Status'
+    , AcceptLogIn = '[Authentication] Accept the user log in attempt'
+    , RejectLogIn = '[Authentication] Reject the user log in attempt'
+    , TryToLogIn = '[Authentication] Try to log the user in'
+    , TryToLogOut = '[Authentication] Try to log the user out'
+    , AcceptLogOut = '[Authentication] Accept the user log out attempt'
+    , AcceptLogOutSuccess = '[Authentication] Success Accept the user log out attempt'
+    , CheckImplicitFlowAuthenticationStatus = '[Authentication] Check Authentication Status specifically for the Implicit Flow'
+    , UselessAuthAction = '[Authentication] Test purpose action'
     // TODO the following actions should be merge with password and code flow management of authentication
-    ,ImplicitallyAuthenticated = '[Authentication] User is authentication using Implicit Flow' 
-    ,UnAuthenticationFromImplicitFlow = '[Authentication] User is log out by implicit Flow internal managment'
-    ,UnableToRefreshOrGetToken = '[Authentication] The token can not be refresh or we cannot get a token'
+    , ImplicitlyAuthenticated = '[Authentication] User is authentication using Implicit Flow'
+    , UnAuthenticationFromImplicitFlow = '[Authentication] User is log out by implicit Flow internal management'
+    , UnableToRefreshOrGetToken = '[Authentication] The token can not be refresh or we cannot get a token'
 }
 
 /**
@@ -38,8 +37,8 @@ export class PayloadForSuccessfulAuthentication {
                 public clientId: Guid,
                 public token: string,
                 public expirationDate: Date,
-                public firstName?:string,
-                public lastName?:string) {
+                public firstName?: string,
+                public lastName?: string) {
     }
 }
 
@@ -51,7 +50,7 @@ export class InitAuthStatus implements Action {
     /* istanbul ignore next */
     readonly type = AuthenticationActionTypes.InitAuthStatus;
     /* istanbul ignore next */
-    constructor(public payload:{code: string}){}
+    constructor(public payload: {code: string}) {}
 }
 
 /**
@@ -81,10 +80,10 @@ export class AcceptLogIn implements Action {
  */
 export class TryToLogIn implements Action {
     /* istanbul ignore next */
-    readonly type= AuthenticationActionTypes.TryToLogIn;
+    readonly type = AuthenticationActionTypes.TryToLogIn;
 
     /* istanbul ignore next */
-    constructor(public payload: {username: string, password: string}){}
+    constructor(public payload: {username: string, password: string}) {}
 }
 
 /**
@@ -112,11 +111,7 @@ export class RejectLogIn implements Action {
  *
  */
 export class AcceptLogOut implements Action {
-    /* istanbul ignore next */
     readonly type = AuthenticationActionTypes.AcceptLogOut;
-     
-    /* istanbul ignore next */
-     constructor(){}
 }
 
 /**
@@ -133,7 +128,7 @@ export class CheckImplicitFlowAuthenticationStatus implements Action {
     readonly type = AuthenticationActionTypes.CheckImplicitFlowAuthenticationStatus;
 }
 
-export class UselessAuthAction implements  Action{
+export class UselessAuthAction implements  Action {
     /* istanbul ignore next */
     readonly type = AuthenticationActionTypes.UselessAuthAction;
 
@@ -141,7 +136,7 @@ export class UselessAuthAction implements  Action{
 
 export class ImplicitlyAuthenticated implements Action {
     /* istanbul ignore next */
-    readonly type = AuthenticationActionTypes.ImplicitallyAuthenticated;
+    readonly type = AuthenticationActionTypes.ImplicitlyAuthenticated;
 }
 
 export class UnAuthenticationFromImplicitFlow implements Action {

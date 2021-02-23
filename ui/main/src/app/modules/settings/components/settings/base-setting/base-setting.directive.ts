@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  */
 
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Directive, Injectable, Input, OnDestroy, OnInit} from '@angular/core';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {PatchSettings} from '@ofActions/settings.actions';
@@ -19,11 +19,9 @@ import {FormGroup} from '@angular/forms';
 import * as _ from 'lodash-es';
 import {selectIdentifier} from '@ofSelectors/authentication.selectors';
 
-@Component({
-    selector: 'of-base-setting',
-    templateUrl: './base-setting.component.html'
-})
-export class BaseSettingComponent implements OnInit, OnDestroy {
+@Directive()
+@Injectable()
+export abstract class BaseSettingDirective implements OnInit, OnDestroy {
 
     @Input() public settingPath: string;
     @Input() public messagePlaceholder: string;
@@ -33,7 +31,7 @@ export class BaseSettingComponent implements OnInit, OnDestroy {
     form: FormGroup;
     private baseSettings = {};
 
-    constructor(protected store: Store<AppState>) {
+    protected constructor(protected store: Store<AppState>) {
 
     }
 
@@ -73,9 +71,7 @@ export class BaseSettingComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe$.complete();
     }
 
-    protected updateValue(value: any) {
-
-    }
+    protected abstract updateValue(value: any);
 
     protected initFormGroup(): FormGroup {
         return null;

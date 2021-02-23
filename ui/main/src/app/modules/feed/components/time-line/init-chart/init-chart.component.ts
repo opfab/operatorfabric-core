@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  */
 
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import * as _ from 'lodash-es';
 import * as moment from 'moment';
 import {Store} from '@ngrx/store';
@@ -16,20 +16,14 @@ import {AppState} from '@ofStore/index';
 import {FilterType} from '@ofServices/filter.service';
 import {ApplyFilter} from '@ofActions/feed.actions';
 import {TimeService} from '@ofServices/time.service';
-import {GlobalStyleService} from '@ofServices/global-style.service';
 
-
-const forwardWeekConf = {
-    start: {year: 0, month: 0, week: 1, day: 0, hour: 0, minute: 0, second: 0},
-    end: {year: 0, month: 0, week: 1, day: 0, hour: 0, minute: 0, second: 0}
-};
 
 @Component({
     selector: 'of-init-chart',
     templateUrl: './init-chart.component.html',
     styleUrls: ['./init-chart.component.scss']
 })
-export class InitChartComponent implements OnInit, OnDestroy {
+export class InitChartComponent implements OnInit {
 
     @Input() confDomain;
 
@@ -52,7 +46,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
     public endDate;
 
 
-    constructor(private store: Store<AppState>, private time: TimeService, private globalStyleService: GlobalStyleService) {
+    constructor(private store: Store<AppState>, private time: TimeService) {
     }
 
 
@@ -112,11 +106,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
 
     selectZoomButton(buttonTitle) {
         this.buttonList.forEach(button => {
-            if (button.buttonTitle === buttonTitle) {
-                button.selected = true;
-            } else {
-                button.selected = false;
-            }
+            button.selected = button.buttonTitle === buttonTitle;
         });
     }
 
@@ -138,7 +128,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
             }
             case '7D': {
                 startDomain = moment().minutes(0).second(0).millisecond(0).subtract(12, 'hours');
-                // set position to a mutliple of 4
+                // set position to a multiple of 4
                 for (let i = 0; i < 4; i++) {
                     if (((startDomain.hours() - i) % 4) === 0) {
                         startDomain.subtract(i, 'hours');
@@ -207,13 +197,9 @@ export class InitChartComponent implements OnInit, OnDestroy {
         }
     }
 
-
-    ngOnDestroy() {
-    }
-
     /**
      :
-     * apply arrow button clicked : switch the graph context with the zoom level configurated
+     * apply arrow button clicked : switch the graph context with the zoom level configured
      * at the left or right of our actual button selected
      * @param direction receive by child component custom-timeline-chart
      */
@@ -254,8 +240,8 @@ export class InitChartComponent implements OnInit, OnDestroy {
             startDomain = this.goForward(startDomain);
             endDomain = this.goForward(endDomain);
         } else {
-            startDomain = this.goBackword(startDomain);
-            endDomain = this.goBackword(endDomain);
+            startDomain = this.goBackward(startDomain);
+            endDomain = this.goBackward(endDomain);
         }
 
         this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
@@ -278,7 +264,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
         }
     }
 
-    goBackword(dateToMove: moment.Moment) {
+    goBackward(dateToMove: moment.Moment) {
         switch (this.domainId) {
             case 'TR':
                 return dateToMove.subtract(2, 'hour');
