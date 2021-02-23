@@ -19,6 +19,7 @@ import {DatetimeFilterModule} from '../share/datetime-filter/datetime-filter.mod
 import {MultiFilterModule} from 'app/modules/share/multi-filter/multi-filter.module';
 import {CardDetailModule} from 'app/modules/share/card-detail/card-detail.module';
 import {ArchivesEntryPointComponent} from './archives-entry-point.component';
+import {ArchivesLoggingFiltersModule} from "../share/archives-logging-filters/archives-logging-filters.module";
 
 @NgModule({
   imports: [
@@ -30,7 +31,8 @@ import {ArchivesEntryPointComponent} from './archives-entry-point.component';
     NgbModule,
     DatetimeFilterModule,
     MultiFilterModule,
-    CardDetailModule
+    CardDetailModule,
+    ArchivesLoggingFiltersModule
 
   ],
   declarations: [

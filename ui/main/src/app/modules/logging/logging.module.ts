@@ -18,6 +18,7 @@ import {LoggingComponent} from './logging.component';
 import {LoggingFiltersComponent} from './components/logging-filters/logging-filters.component';
 import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
 import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
+import {ArchivesLoggingFiltersModule} from "../share/archives-logging-filters/archives-logging-filters.module";
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
         TranslateModule,
         NgbModule,
         DatetimeFilterModule,
-        MultiFilterModule
+        MultiFilterModule,
+        ArchivesLoggingFiltersModule
     ],
     declarations: [
     LoggingComponent,
