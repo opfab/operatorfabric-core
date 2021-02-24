@@ -16,11 +16,12 @@ import {Subject, throwError} from 'rxjs';
 import {ConfirmationDialogService} from '../../services/confirmation-dialog.service';
 import {AppError} from '../../../../common/error/app-error';
 import {CrudService} from '@ofServices/crud-service';
-import {ActionCellRendererComponent} from './action-cell-renderer.component';
-import {EntityCellRendererComponent} from './entity-cell-renderer.component';
-import {GroupCellRendererComponent} from './group-cell-renderer.component';
+import {ActionCellRendererComponent} from '../cell-renderers/action-cell-renderer.component';
+import {EntityCellRendererComponent} from '../cell-renderers/entity-cell-renderer.component';
+import {GroupCellRendererComponent} from '../cell-renderers/group-cell-renderer.component';
 import {AdminItemType, SharingService} from '../../services/sharing.service';
 import {takeUntil} from 'rxjs/operators';
+import {StateRightsCellRendererComponent} from '../cell-renderers/state-rights-cell-renderer.component';
 
 @Directive()
 @Injectable()
@@ -32,6 +33,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
   // (e.g. EntitiesTableComponent) as they depend on the type of the table
   /** Modal component to open when editing an item from the table (e.g. `EditEntityGroupModal`) */
   public editModalComponent;
+  public modalOptions = {};
   /** Type of data managed by the table (e.g. `AdminItemType.ENTITY`) */
   protected tableType: AdminItemType;
   /** Relevant fields for this data type. They will be used to populate the table columns */
@@ -60,7 +62,8 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
       frameworkComponents : {
         actionCellRenderer: ActionCellRendererComponent,
         groupCellRenderer: GroupCellRendererComponent,
-        entityCellRenderer: EntityCellRendererComponent
+        entityCellRenderer: EntityCellRendererComponent,
+        stateRightsCellRenderer: StateRightsCellRendererComponent
       },
       domLayout: 'autoHeight',
       defaultColDef : {
@@ -79,7 +82,9 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         'dataColumn': {
           sortable: true,
           filter: true,
-          flex: 2
+          wrapText: true,
+          autoHeight: true,
+          flex: 4,
         }
       },
       localeTextFunc : function (key) {
@@ -162,7 +167,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     // This method might be flagged as "unused" by IDEs but it's actually called through the ActionCellRendererComponent
     const columnId = params.colDef.colId;
     if (columnId === 'edit') {
-      const modalRef = this.modalService.open(this.editModalComponent);
+      const modalRef = this.modalService.open(this.editModalComponent,this.modalOptions);
       modalRef.componentInstance.type = this.tableType;
       modalRef.componentInstance.row = params.data; // This passes the data from the edited row to the modal to initialize input values.
       modalRef.result.then(
@@ -199,7 +204,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
   }
 
   createNewItem(): void {
-    const modalRef = this.modalService.open(this.editModalComponent);
+    const modalRef = this.modalService.open(this.editModalComponent,this.modalOptions);
     modalRef.componentInstance.type = this.tableType;
     modalRef.result.then(
         // Hooking the refresh of the data to the closing of the modal seemed simpler than setting up

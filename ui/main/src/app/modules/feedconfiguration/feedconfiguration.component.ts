@@ -8,19 +8,20 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '@ofStore/index';
-import { UserService } from '@ofServices/user.service';
-import { Process } from '@ofModel/processes.model';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
-import { UserWithPerimeters } from '@ofModel/userWithPerimeters.model';
-import { ProcessesService } from '@ofServices/processes.service';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { SettingsService } from '@ofServices/settings.service';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {UserService} from '@ofServices/user.service';
+import {Process} from '@ofModel/processes.model';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
+import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {ProcessesService} from '@ofServices/processes.service';
+import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {SettingsService} from '@ofServices/settings.service';
 import {CardService} from '@ofServices/card.service';
 import {EmptyLightCards} from '@ofActions/light-card.actions';
-import {TranslateService} from "@ngx-translate/core";
+import {TranslateService} from '@ngx-translate/core';
+import {Utilities} from '../../common/utilities';
 
 
 @Component({
@@ -35,16 +36,16 @@ export class FeedconfigurationComponent implements OnInit {
     processesDefinition: Process[];
     processGroupsData: {id: string, groupLabel?: string, processes: string[]}[];
     processesWithoutGroup: { idProcess: string,
-                             processLabel: string }[];
+        processLabel: string }[];
     currentUserWithPerimeters: UserWithPerimeters;
     processesStatesLabels: Map<string, { processLabel: string,
-                                         states:
-                                             { stateLabel: string,
-                                               stateControlIndex: number
-                                             }[]
-                                       }>;
+        states:
+            { stateLabel: string,
+                stateControlIndex: number
+            }[]
+    }>;
     preparedListOfProcessesStates: { processId: string,
-                                     stateId: string }[];
+        stateId: string }[];
 
     modalRef: NgbModalRef;
 
@@ -62,11 +63,11 @@ export class FeedconfigurationComponent implements OnInit {
                 private translateService: TranslateService
     ) {
         this.processesStatesLabels = new Map<string, {processLabel: string,
-                                                      states:
-                                                          { stateLabel: string,
-                                                            stateControlIndex: number
-                                                          }[]
-                                                     }> ();
+            states:
+                { stateLabel: string,
+                    stateControlIndex: number
+                }[]
+        }> ();
         this.preparedListOfProcessesStates = [];
         this.processesWithoutGroup = [];
         this.processesDefinition = this.processesService.getAllProcesses();
@@ -88,12 +89,12 @@ export class FeedconfigurationComponent implements OnInit {
     private makeProcessesWithoutGroup() {
         this.processesDefinition.forEach(process => {
             if (! this.findInProcessGroups(process.id)) {
-                let processLabel = (!!process.name) ? this.getI18nPrefixFromProcess(process) + process.name :
-                    this.getI18nPrefixFromProcess(process) + process.id;
+                let processLabel = (!!process.name) ? Utilities.getI18nPrefixFromProcess(process) + process.name :
+                    Utilities.getI18nPrefixFromProcess(process) + process.id;
 
                 this.translateService.get(processLabel).subscribe(translate => { processLabel = translate; });
                 this.processesWithoutGroup.push({idProcess: process.id,
-                                                 processLabel: processLabel});
+                    processLabel: processLabel});
             }
         });
         this.processesWithoutGroup.sort((obj1, obj2) => this.compareObj(obj1.processLabel, obj2.processLabel));
@@ -102,8 +103,8 @@ export class FeedconfigurationComponent implements OnInit {
     private addCheckboxesInFormArray() {
 
         const processesStatesNotNotified = ((!! this.currentUserWithPerimeters.processesStatesNotNotified) ?
-                                               this.currentUserWithPerimeters.processesStatesNotNotified :
-                                               null);
+            this.currentUserWithPerimeters.processesStatesNotNotified :
+            null);
 
         this.processesDefinition.forEach(process => {
             for (const key in process.states) {
@@ -126,14 +127,14 @@ export class FeedconfigurationComponent implements OnInit {
                 const statesArray: { stateLabel: string, stateControlIndex: number }[]
                     = new Array<{stateLabel: string, stateControlIndex: number}>();
 
-                let processLabel = (!!process.name) ? this.getI18nPrefixFromProcess(process) + process.name :
-                    this.getI18nPrefixFromProcess(process) + process.id;
+                let processLabel = (!!process.name) ? Utilities.getI18nPrefixFromProcess(process) + process.name :
+                    Utilities.getI18nPrefixFromProcess(process) + process.id;
                 this.translateService.get(processLabel).subscribe(translate => { processLabel = translate; });
 
                 for (const key in process.states) {
                     const value = process.states[key];
-                    let stateLabel = (!!value.name) ? this.getI18nPrefixFromProcess(process) + value.name :
-                        this.getI18nPrefixFromProcess(process) + key;
+                    let stateLabel = (!!value.name) ? Utilities.getI18nPrefixFromProcess(process) + value.name :
+                        Utilities.getI18nPrefixFromProcess(process) + key;
 
                     this.translateService.get(stateLabel).subscribe(translate => { stateLabel = translate; });
 
@@ -145,7 +146,7 @@ export class FeedconfigurationComponent implements OnInit {
                 }
                 statesArray.sort((obj1, obj2) => this.compareObj(obj1.stateLabel, obj2.stateLabel));
                 this.processesStatesLabels.set(process.id, {processLabel: processLabel,
-                                                            states: statesArray});
+                    states: statesArray});
             }
         }
     }
@@ -182,17 +183,17 @@ export class FeedconfigurationComponent implements OnInit {
 
         const processesStatesNotNotifiedUpdate = new Map<string, string[]>();
         this.feedConfigurationForm.value.processesStates.map((checked, i) => {
-                if (! checked) {
-                    const currentProcessId = this.preparedListOfProcessesStates[i].processId;
-                    const currentStateId = this.preparedListOfProcessesStates[i].stateId;
+            if (! checked) {
+                const currentProcessId = this.preparedListOfProcessesStates[i].processId;
+                const currentStateId = this.preparedListOfProcessesStates[i].stateId;
 
-                    const statesNotNotifiedUpdate = processesStatesNotNotifiedUpdate.get(currentProcessId);
-                    if (!! statesNotNotifiedUpdate)
-                        statesNotNotifiedUpdate.push(this.preparedListOfProcessesStates[i].stateId);
-                    else
-                        processesStatesNotNotifiedUpdate.set(currentProcessId, [currentStateId]);
-                }
-            });
+                const statesNotNotifiedUpdate = processesStatesNotNotifiedUpdate.get(currentProcessId);
+                if (!! statesNotNotifiedUpdate)
+                    statesNotNotifiedUpdate.push(this.preparedListOfProcessesStates[i].stateId);
+                else
+                    processesStatesNotNotifiedUpdate.set(currentProcessId, [currentStateId]);
+            }
+        });
 
         this.settingsService.patchUserSettings({login: this.currentUserWithPerimeters.userData.login,
             processesStatesNotNotified: Object.fromEntries(processesStatesNotNotifiedUpdate)})
@@ -217,10 +218,6 @@ export class FeedconfigurationComponent implements OnInit {
                     this.displaySendResultError = true;
                 }
             );
-    }
-
-    getI18nPrefixFromProcess(process: Process): string {
-        return process.id + '.' + process.version + '.';
     }
 
     open(content) {

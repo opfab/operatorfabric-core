@@ -267,16 +267,27 @@
       "group": {
         "id": "Id",
         "name": "Nom",
+        "perimeters" : "Périmètres",
         "description": "Description",
-        "confirmDelete": "Voulez vous vraiment supprimer le groupe",
+        "confirmDelete": "Voulez-vous vraiment supprimer le groupe",
         "add":"Ajouter un nouveau groupe"
       },
       "entity": {
         "id": "Id",
         "name": "Nom",
+        "parents": "Entités parentes",
         "description": "Description",
-        "confirmDelete": "Voulez vous vraiment supprimer l'entité",
+        "confirmDelete": "Voulez-vous vraiment supprimer l'entité",
         "add":"Ajouter une nouvelle entité"
+      },
+      "perimeter": {
+        "id": "Id",
+        "process": "Processus",
+        "stateRights": "Permissions sur les états",
+        "state": "Etat",
+        "right": "Permission",
+        "confirmDelete": "Voulez-vous vraiment supprimer le périmètre",
+        "add":"Ajouter un nouveau périmètre"
       },
       "user": {
         "login": "Identifiant",
@@ -284,7 +295,7 @@
         "firstName": "Prénom",
         "groups": "Groupes",
         "entities": "Entités",
-        "confirmDelete": "Voulez vous vraiment supprimer l'utilisateur",
+        "confirmDelete": "Voulez-vous vraiment supprimer l'utilisateur",
         "add":"Ajouter un nouvel utilisateur"
       },
       "edit": "Editer",
@@ -295,7 +306,8 @@
       "confirm":"Confirmez...",
       "login": {
         "required": "L'identifiant est obligatoire.",
-        "minLength": "L'identifiant doit avoir au moins 4 caractères."
+        "minLength": "L'identifiant doit avoir au moins 4 caractères.",
+        "pattern": "L'identifiant ne peut contenir que les caractères suivants : lettres, _, - ou chiffres."
       },
       "firstName": {
         "required": "Le prénom est obligatoire."
@@ -306,6 +318,7 @@
       "id": {
         "required": "L'identifiant est obligatoire.",
         "minLength": "L'identifiant doit avoir au moins 2 caractères.",
+        "pattern": "L'identifiant ne peut contenir que les caractères suivants : lettres, _, - ou chiffres.",
         "label":"Id"
       },
       "name": {
@@ -318,7 +331,8 @@
     "tabs": {
       "users": "Gestion des utilisateurs",
       "groups": "Gestion des groupes",
-      "entities": "Gestion des entités"
+      "entities": "Gestion des entités",
+      "perimeters": "Gestion des périmètres"
     }
   },
   "service": {

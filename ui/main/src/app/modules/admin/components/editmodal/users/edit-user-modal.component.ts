@@ -49,7 +49,7 @@ export class EditUserModalComponent implements OnInit {
 
     this.userForm = new FormGroup({
       login: new FormControl(''
-          , [Validators.required, Validators.minLength(4)]),
+          , [Validators.required, Validators.minLength(4), Validators.pattern(/^[A-z\d\-_]+$/)]),
       firstName: new FormControl('', [Validators.required]),
       lastName: new FormControl('', [Validators.required]),
       groups: new FormControl([]),
@@ -61,7 +61,7 @@ export class EditUserModalComponent implements OnInit {
   ngOnInit() {
     if (this.row) { // If the modal is used for edition, initialize the modal with current data from this row
 
-      // For 'simple' fields (where the value is directly displayed), we use the entityGroupForm's patching method
+      // For 'simple' fields (where the value is directly displayed), we use the form's patching method
       const {login, firstName, lastName} = this.row;
       this.userForm.patchValue({login, firstName, lastName}, { onlySelf: false });
 

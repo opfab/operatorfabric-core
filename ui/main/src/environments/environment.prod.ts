@@ -19,12 +19,12 @@ export const environment = {
         users: '/users',
         groups: '/users/groups',
         entities: '/users/entities',
+        perimeters: '/users/perimeters',
         archives : '',
         processes: '/businessconfig/processes',
         processGroups: '/businessconfig/processgroups',
         config: '/config/web-ui.json',
-        menuConfig: '/config/ui-menu.json',
-        time: '/time'
+        menuConfig: '/config/ui-menu.json'
 
     },
     paths: {

@@ -21,7 +21,7 @@ export class UsersTableComponent extends AdminTableDirective implements OnInit {
 
   tableType = AdminItemType.USER;
   fields = [new Field('login'), new Field('firstName'), new Field('lastName'),
-    new Field('groups', 5, 'groupCellRenderer'), new Field('entities', 5, 'entityCellRenderer')];
+    new Field('groups', 8, 'groupCellRenderer'), new Field('entities', 8, 'entityCellRenderer')];
   idField = 'login';
   editModalComponent = EditUserModalComponent;
 

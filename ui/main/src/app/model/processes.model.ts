@@ -31,11 +31,8 @@ export class Process {
             return null;
         }
     }
+
 }
-
-export const unfouundProcess: Process = new Process('', '', 'process.not-found',
-     [], null, null);
-
 
 export class UiVisibility {
 
@@ -87,11 +84,9 @@ export class Response {
 
 export enum AcknowledgmentAllowedEnum {
     ALWAYS = 'Always',
-    NEVER = 'Never', 
+    NEVER = 'Never',
     ONLY_WHEN_RESPONSE_DISABLED_FOR_USER = 'OnlyWhenResponseDisabledForUser'
 }
-
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 export enum InputType {
     TEXT,

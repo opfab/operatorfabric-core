@@ -40,7 +40,7 @@ import {LightCard, Severity} from '@ofModel/light-card.model';
 import {AppService, PageType} from '@ofServices/app.service';
 import {User} from '@ofModel/user.model';
 import {Map} from '@ofModel/map';
-import {RightsEnum, userRight} from '@ofModel/userWithPerimeters.model';
+import {userRight} from '@ofModel/userWithPerimeters.model';
 import {ClearLightCardSelection, UpdateALightCard} from '@ofStore/actions/light-card.actions';
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
@@ -50,6 +50,7 @@ import {ConfigService} from '@ofServices/config.service';
 import {TimeService} from '@ofServices/time.service';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {MessageLevel} from '@ofModel/message.model';
+import {RightsEnum} from '@ofModel/perimeter.model';
 
 
 declare const templateGateway: any;
@@ -164,13 +165,13 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     open(content) {
-        const modalOptions = { windowClass : "opfab-modal-content"}
+        const modalOptions = { windowClass : 'opfab-modal-content'};
         this.modalRef = this.modalService.open(content, modalOptions);
     }
 
     adaptTemplateSize() {
         const cardTemplate = document.getElementById('div-card-template');
-        if (!!cardTemplate) {  
+        if (!!cardTemplate) {
             const diffWindow = cardTemplate.getBoundingClientRect();
             const divBtn = document.getElementById('div-detail-btn');
 
@@ -295,10 +296,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
 
     getPublishDateTranslationParams(): any {
-        const param = {
+        return {
             'time': this.time.formatDateTime(this.card.publishDate)
-        }
-        return param;
+        };
     }
 
 
@@ -495,8 +495,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         let permission = false;
         this.userService.getCurrentUserWithPerimeters().computedPerimeters.forEach(perim => {
             if ((perim.process === this.card.process) && (perim.state === this._responseData.state)
-                && (this.compareRightAction(perim.rights, RightsEnum.Write)
-                    || this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
+                && (DetailComponent.compareRightAction(perim.rights, RightsEnum.Write)
+                    || DetailComponent.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
                 permission = true;
                 return true;
             }
@@ -520,8 +520,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             userWithPerimeters.computedPerimeters.forEach(perim => {
                 if ((perim.process === this.card.process) &&
                     (perim.state === this.card.state)
-                    && (this.compareRightAction(perim.rights, RightsEnum.Write)
-                        || this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
+                    && (DetailComponent.compareRightAction(perim.rights, RightsEnum.Write)
+                        || DetailComponent.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
                     permission = true;
                     return true;
                 }
@@ -530,7 +530,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         return permission;
     }
 
-    private compareRightAction(userRights: RightsEnum, rightsAction: RightsEnum): boolean {
+    private static compareRightAction(userRights: RightsEnum, rightsAction: RightsEnum): boolean {
         return (userRight(userRights) - userRight(rightsAction)) === 0;
     }
 

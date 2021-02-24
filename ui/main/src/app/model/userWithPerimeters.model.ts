@@ -7,7 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { User } from '@ofModel/user.model';
+import {User} from '@ofModel/user.model';
+import {RightsEnum} from '@ofModel/perimeter.model';
 
 
 export class UserWithPerimeters {
@@ -27,11 +28,6 @@ export class ComputedPerimeter {
         readonly rights: RightsEnum
     ) { }
 
-}
-
-
-export enum RightsEnum {
-    Write = 'Write', ReceiveAndWrite = 'ReceiveAndWrite', Receive = 'Receive'
 }
 
 
