@@ -545,8 +545,11 @@ type-ahead > .badge-primary {
 
 }
 
-.opfab-multiselect .c-token {
-  width: 85%;
+// Apply only on archives and logging pages as we want only one value in to see in the input field 
+.archives-page .opfab-multiselect .c-token,
+.archives-login .opfab-multiselect .c-token
+ {
+ width: 85%;
 }
 
 .opfab-multiselect::after {
