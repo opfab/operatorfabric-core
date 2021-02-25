@@ -7,34 +7,36 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { Component, OnDestroy, TemplateRef, ElementRef, OnInit, Input } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { AppState } from '@ofStore/index';
-import { CardService } from '@ofServices/card.service';
-import { UserService } from '@ofServices/user.service';
-import { Card, CardData,fromCardToCardForPublishing, TimeSpan} from '@ofModel/card.model';
-import { I18n } from '@ofModel/i18n.model';
-import { Subject } from 'rxjs';
-import { Process } from '@ofModel/processes.model';
-import { TimeService } from '@ofServices/time.service';
-import { Severity } from '@ofModel/light-card.model';
-import { Guid } from 'guid-typescript';
-import { NgbDateStruct,NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
-import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
-import { UserWithPerimeters, RightsEnum, ComputedPerimeter } from '@ofModel/userWithPerimeters.model';
-import { EntitiesService } from '@ofServices/entities.service';
-import { ProcessesService } from '@ofServices/processes.service';
-import { ActivatedRoute} from '@angular/router';
-import { DateTimeNgb, getDateTimeNgbFromMoment } from '@ofModel/datetime-ngb.model';
+import {Component, ElementRef, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
+import {FormControl, FormGroup} from '@angular/forms';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {CardService} from '@ofServices/card.service';
+import {UserService} from '@ofServices/user.service';
+import {Card, CardData, fromCardToCardForPublishing, TimeSpan} from '@ofModel/card.model';
+import {I18n} from '@ofModel/i18n.model';
+import {Subject} from 'rxjs';
+import {Process} from '@ofModel/processes.model';
+import {TimeService} from '@ofServices/time.service';
+import {Severity} from '@ofModel/light-card.model';
+import {Guid} from 'guid-typescript';
+import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
+import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {EntitiesService} from '@ofServices/entities.service';
+import {ProcessesService} from '@ofServices/processes.service';
+import {ActivatedRoute} from '@angular/router';
+import {DateTimeNgb, getDateTimeNgbFromMoment} from '@ofModel/datetime-ngb.model';
 import * as moment from 'moment-timezone';
-import { HandlebarsService } from '../cards/services/handlebars.service';
-import { DetailContext } from '@ofModel/detail-context.model';
-import { map } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
-import { MessageLevel } from '@ofModel/message.model';
-import { AlertMessage } from '@ofStore/actions/alert.actions';
+import {HandlebarsService} from '../cards/services/handlebars.service';
+import {DetailContext} from '@ofModel/detail-context.model';
+import {map} from 'rxjs/operators';
+import {TranslateService} from '@ngx-translate/core';
+import {MessageLevel} from '@ofModel/message.model';
+import {AlertMessage} from '@ofStore/actions/alert.actions';
+import {RightsEnum} from '@ofModel/perimeter.model';
+import {Utilities} from '../../common/utilities';
 
 declare const templateGateway: any;
 
@@ -63,24 +65,24 @@ export class UserCardComponent implements OnDestroy, OnInit {
     });
 
     stateOptions: any[];
-    recipientsOptions = new Array();
+    recipientsOptions = [];
     selectedRecipients = [];
     dropdownSettings = {};
-    processOptions = new Array();
-    processOptionsWhenSelectedService = new Array();
-    serviceOptions = new Array();
+    processOptions = [];
+    processOptionsWhenSelectedService = [];
+    serviceOptions = [];
 
     selectedProcess: Process;
     selectedState: string;
     processesPerServices = new Map();
     servicePerProcesses = new Map();
-    processesWithoutService = new Array();
+    processesWithoutService = [];
     statesPerProcesses = new Map();
     userCardTemplate: SafeHtml;
     editCardMode = false;
     cardToEdit: CardData;
 
-    @Input() cardIdToEdit = null; 
+    @Input() cardIdToEdit = null;
     public card: Card;
 
     readonly defaultStartDate = new Date().valueOf() + 60000;
@@ -92,9 +94,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
     public displaySendingCardInProgress = false;
 
     modalRef: NgbModalRef;
-    severityVisible: boolean = true;
-    startDateVisible: boolean = true;
-    endDateVisible: boolean = true;
+    severityVisible = true;
+    startDateVisible = true;
+    endDateVisible = true;
 
     displayForm() {
         return !!this.processOptions && this.processOptions.length > 0;
@@ -151,12 +153,11 @@ export class UserCardComponent implements OnDestroy, OnInit {
             badgeShowLimit: 30,
             enableSearchFilter: true
         };
-        
+
         this.loadCardForEdition();
     }
 
-    loadCardForEdition()
-    {
+    loadCardForEdition() {
         if (!!this.cardIdToEdit) {
                     this.editCardMode = true;
             this.cardService.loadCard(this.cardIdToEdit).subscribe(card => {
@@ -167,7 +168,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
                         if (serviceForCardToEdit)
                             this.messageForm.get('service').setValue(serviceForCardToEdit);
                         else
-                            this.messageForm.get('service').setValue("--");
+                            this.messageForm.get('service').setValue('--');
 
                         this.messageForm.get('process').setValue(this.cardToEdit.card.process);
                         this.messageForm.get('state').setValue(this.cardToEdit.card.state);
@@ -186,12 +187,12 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.recipientsOptions.sort(( a, b ) => a.itemName.localeCompare(b.itemName));
     }
 
-    
+
     loadAllProcessAndStateInUserPerimeter(): void {
         this.processesDefinition = this.processesService.getAllProcesses();
         const processesInPerimeter: Set<string> = new Set();
         this.currentUserWithPerimeters.computedPerimeters.forEach(perimeter => {
-                    if (this.userCanSendCard(perimeter)) processesInPerimeter.add(perimeter.process);
+                    if (UserCardComponent.userCanSendCard(perimeter)) processesInPerimeter.add(perimeter.process);
                 });
 
         this.processesDefinition.forEach(process => {
@@ -205,10 +206,8 @@ export class UserCardComponent implements OnDestroy, OnInit {
                 });
     }
 
-    isProcessInProcessesGroup(idProcess: string, processesGroup: {id: string, processes: string[]}) : boolean {
-        if (processesGroup.processes.find(process => process === idProcess))
-            return true;
-        return false;
+    isProcessInProcessesGroup(idProcess: string, processesGroup: {id: string, processes: string[]}): boolean {
+        return !!processesGroup.processes.find(process => process === idProcess);
     }
 
     loadAllServicesRelatingToUserPerimeter(): void {
@@ -232,9 +231,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
         if (this.processOptions.length > numberOfProcessesAttachedToAService) {
             this.loadProcessesWithoutService();
-            this.serviceOptions.push({value: "--", label: "service.defaultLabel"});
+            this.serviceOptions.push({value: '--', label: 'service.defaultLabel'});
         }
-        for (let serviceId of this.processesPerServices.keys())
+        for (const serviceId of this.processesPerServices.keys())
             this.serviceOptions.push({value: serviceId, label: serviceId});
     }
 
@@ -243,7 +242,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.processesWithoutService = this.processOptions.filter(processOption => processesWithService.indexOf(processOption.value) < 0);
     }
 
-    private userCanSendCard(perimeter: ComputedPerimeter): boolean {
+    private static userCanSendCard(perimeter: ComputedPerimeter): boolean {
         return ((perimeter.rights === RightsEnum.ReceiveAndWrite)
             || (perimeter.rights === RightsEnum.Write));
     }
@@ -252,11 +251,11 @@ export class UserCardComponent implements OnDestroy, OnInit {
         const statesList = [];
         this.currentUserWithPerimeters.computedPerimeters.forEach(
             perimeter => {
-                if ((perimeter.process === process.id) && this.userCanSendCard(perimeter)) {
+                if ((perimeter.process === process.id) && UserCardComponent.userCanSendCard(perimeter)) {
                     const state = process.states[perimeter.state];
                     if (!!state) {
                         if (!!state.userCard) {
-                            const label = !!state.name ? (new I18n(this.getI18nPrefixFromProcess(process)
+                            const label = !!state.name ? (new I18n(Utilities.getI18nPrefixFromProcess(process)
                                 + state.name)) : perimeter.state;
                             const stateEntry = { value: perimeter.state, label: label };
                             statesList.push(stateEntry);
@@ -281,7 +280,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
     changeProcessesWhenSelectService(): void {
         this.messageForm.get('service').valueChanges.subscribe((service) => {
             if (!!service) {
-                if (service == '--')
+                if (service === '--')
                     this.processOptionsWhenSelectedService = this.processesWithoutService;
                 else
                     this.processOptionsWhenSelectedService = this.processesPerServices.get(service);
@@ -349,7 +348,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     reinsertScripts(): void {
         const scripts = <HTMLScriptElement[]>this.element.nativeElement.getElementsByTagName('script');
-        Array.prototype.forEach.call(scripts, script => {   //scripts.foreach does not work ... 
+        Array.prototype.forEach.call(scripts, script => {   // scripts.foreach does not work ...
             const scriptCopy = document.createElement('script');
             scriptCopy.type = script.type ? script.type : 'text/javascript';
             if (!!script.innerHTML) {
@@ -393,7 +392,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         }
 
         const selectedRecipients = this.recipientForm.value['recipients'];
-        const recipients = new Array();
+        const recipients = [];
         if (selectedRecipients.length < 1) {
             this.displayMessage('userCard.error.noRecipientSelected', null, MessageLevel.ERROR);
             return;
@@ -414,7 +413,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         let endDate = this.messageForm.get('endDate').value;
         if (!endDate)  endDate = this.endDateVisible ? this.defaultEndDate : null;
         else endDate = this.createTimestampFromValue(endDate);
-        
+
         const title = (!!specificInformation.card.title) ? specificInformation.card.title : 'UNDEFINED';
         const summary = (!!specificInformation.card.summary) ? specificInformation.card.summary : 'UNDEFINED';
         const keepChildCards = (!!specificInformation.card.keepChildCards) ? specificInformation.card.keepChildCards : false;
@@ -462,7 +461,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
             data: specificInformation.card.data,
         } as Card;
 
-        this.displayPreview= true;
+        this.displayPreview = true;
     }
 
 
@@ -470,19 +469,13 @@ export class UserCardComponent implements OnDestroy, OnInit {
         const { date, time } = value;
         if (date) {
             return this.timeService.toNgBNumberTimestamp(this.transformToTimestamp(date, time));
-            // TODO Why do we need 2 transformations? What is an NgBTimestamp vs a plain Timestamp?
         } else {
             return null;
         }
-    }
+    };
 
     transformToTimestamp(date: NgbDateStruct, time: NgbTimeStruct): string {
         return new DateTimeNgb(date, time).formatDateTime();
-    }
-    
-
-    getI18nPrefixFromProcess = (process: Process): string => {
-        return process.id + '.' + process.version + '.';
     }
 
     getEntityName(id: string): string {
@@ -510,7 +503,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
                         this.displayMessage('userCard.cardSendWithNoError', null, MessageLevel.INFO);
                     }
 
-                    this.modal.dismiss("Close");
+                    this.modal.dismiss('Close');
                 },
                 err => {
                     console.error('Error when sending card :', err);

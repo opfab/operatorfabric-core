@@ -16,7 +16,7 @@ import {selectLinesOfLoggingResult} from '@ofSelectors/logging.selectors';
 import {map, takeUntil} from 'rxjs/operators';
 import {LoggingFiltersComponent} from './components/logging-filters/logging-filters.component';
 import {ProcessesService} from '@ofServices/processes.service';
-import {Process} from '@ofModel/processes.model';
+import {Utilities} from '../../common/utilities';
 
 @Component({
     selector: 'of-logging',
@@ -32,7 +32,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
     canDisplayNoResultMessage = false;
     unsubscribe$: Subject<void> = new Subject<void>();
 
-    processValueForFilter = new Array();
+    processValueForFilter = [];
     processStateDescription = new Map();
 
     constructor(private store: Store<AppState>, private processesService: ProcessesService) {
@@ -46,10 +46,8 @@ export class LoggingComponent implements OnInit, OnDestroy {
                this.processValueForFilter.push({id: id, itemName: itemName, i18nPrefix: `${process.id}.${process.version}` });
            }
 
-            for (const key in process.states) {
-                this.processStateDescription.set(process.id + '.' + key,
-                    this.getI18nPrefixFromProcess(process) + process.states[key].description);
-            }
+            for (const key in process.states) this.processStateDescription.set(process.id + '.' + key,
+                Utilities.getI18nPrefixFromProcess(process) + process.states[key].description);
         });
     }
 
@@ -73,10 +71,6 @@ export class LoggingComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
-    }
-
-    getI18nPrefixFromProcess(process: Process): string {
-        return process.id + '.' + process.version + '.';
     }
 
 }

@@ -8,7 +8,7 @@
  */
 
 
-import {Component, Input, OnInit, OnChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {I18n} from '@ofModel/i18n.model';
 import {FormControl, FormGroup} from '@angular/forms';
@@ -27,6 +27,7 @@ export class SingleFilterComponent implements OnInit, OnChanges {
   @Input() public parentForm: FormGroup;
   @Input() public filterPath: string;
   @Input() public valuesInObservable: Observable<any>;
+  @Input() public prefixWithValue: boolean;
 
   constructor(private translateService: TranslateService) {
     this.parentForm = new FormGroup({

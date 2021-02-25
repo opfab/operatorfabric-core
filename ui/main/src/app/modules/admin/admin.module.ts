@@ -17,18 +17,25 @@ import {AdminRoutingModule} from './admin-routing.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {AppErrorHandler} from 'app/common/error/app-error-handler';
 import {ConfirmationDialogComponent} from './components/confirmation-dialog/confirmation-dialog.component';
-import {EditEntityGroupModalComponent} from './components/editmodal/groups-entities/edit-entity-group-modal.component';
 import {UsersTableComponent} from './components/table/users-table.component';
 import {EditUserModalComponent} from './components/editmodal/users/edit-user-modal.component';
 import {EntitiesTableComponent} from './components/table/entities-table.component';
 import {GroupsTableComponent} from './components/table/groups-table.component';
 import {AgGridModule} from 'ag-grid-angular';
 import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
-import {ArrayCellRendererComponent} from './components/table/array-cell-renderer.component';
-import {ActionCellRendererComponent} from './components/table/action-cell-renderer.component';
-import {GroupCellRendererComponent} from './components/table/group-cell-renderer.component';
-import {EntityCellRendererComponent} from './components/table/entity-cell-renderer.component';
+import {ArrayCellRendererComponent} from './components/cell-renderers/array-cell-renderer.component';
+import {ActionCellRendererComponent} from './components/cell-renderers/action-cell-renderer.component';
+import {GroupCellRendererComponent} from './components/cell-renderers/group-cell-renderer.component';
+import {EntityCellRendererComponent} from './components/cell-renderers/entity-cell-renderer.component';
 import {SharingService} from './services/sharing.service';
+import {PerimetersTableComponent} from './components/table/perimeters-table.component';
+import {StateRightsCellRendererComponent} from './components/cell-renderers/state-rights-cell-renderer.component';
+import {EditEntityModalComponent} from './components/editmodal/entities/edit-entity-modal.component';
+import {EditGroupModalComponent} from './components/editmodal/groups/edit-group-modal.component';
+import {EditPerimeterModalComponent} from './components/editmodal/perimeters/edit-perimeter-modal.component';
+import {SingleFilterModule} from '../share/single-filter/single-filter.module';
+import {ProcessCellRendererComponent} from './components/cell-renderers/process-cell-renderer.component';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -36,13 +43,18 @@ import {SharingService} from './services/sharing.service';
     UsersTableComponent,
     EntitiesTableComponent,
     GroupsTableComponent,
+    PerimetersTableComponent,
     EditUserModalComponent,
     ConfirmationDialogComponent,
-    EditEntityGroupModalComponent,
+    EditEntityModalComponent,
+    EditGroupModalComponent,
+    EditPerimeterModalComponent,
     ActionCellRendererComponent,
     ArrayCellRendererComponent,
     GroupCellRendererComponent,
-    EntityCellRendererComponent
+    EntityCellRendererComponent,
+    ProcessCellRendererComponent,
+    StateRightsCellRendererComponent
   ],
 
 
@@ -54,12 +66,15 @@ import {SharingService} from './services/sharing.service';
     , CommonModule
     , MultiFilterModule
     , TranslateModule
+    , NgbModule
     , AgGridModule.withComponents([[
       ActionCellRendererComponent,
       ArrayCellRendererComponent,
       GroupCellRendererComponent,
-      EntityCellRendererComponent
-    ]])
+      EntityCellRendererComponent,
+      ProcessCellRendererComponent,
+      StateRightsCellRendererComponent
+    ]]), SingleFilterModule
   ],
   providers: [
     { provide: ErrorHandler, useClass: AppErrorHandler },

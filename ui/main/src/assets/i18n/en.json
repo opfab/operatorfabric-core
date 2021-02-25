@@ -268,15 +268,26 @@
         "id": "Id",
         "name": "Name",
         "description": "Description",
+        "perimeters" : "Perimeters",
         "confirmDelete": "Do you really want to delete group",
         "add": "Add new group"
       },
       "entity": {
         "id": "Id",
         "name": "Name",
+        "parents": "Parent Entities",
         "description": "Description",
         "confirmDelete": "Do you really want to delete entity",
         "add": "Add new entity"
+      },
+      "perimeter": {
+        "id": "Id",
+        "process": "Process",
+        "stateRights": "State Rights",
+        "state": "State",
+        "right": "Right",
+        "confirmDelete": "Do you really want to delete perimeter",
+        "add":"Add new perimeter"
       },
       "user": {
         "login": "Login",
@@ -295,7 +306,8 @@
       "confirm": "Please confirm...",
       "login": {
         "required": "Login is required.",
-        "minLength": "Login should be minimum 4 characters."
+        "minLength": "Login should be minimum 4 characters.",
+        "pattern": "Login should only contain the following characters: letters, _, - or digits."
       },
       "firstName": {
         "required": "First name is required."
@@ -306,6 +318,7 @@
       "id": {
         "required": "Id is required.",
         "minLength": "Id should be minimum 2 characters.",
+        "pattern": "Id should only contain the following characters: letters, _, - or digits.",
         "label":"Id"
       },
       "name": {
@@ -316,9 +329,10 @@
       "lines": "lines per page"
     },
     "tabs": {
-      "users": "Users management",
-      "groups": "Groups management",
-      "entities": "Entities management"
+      "users": "Users Management",
+      "groups": "Groups Management",
+      "entities": "Entities Management",
+      "perimeters": "Perimeters Management"
     }
   },
   "service": {

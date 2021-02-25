@@ -11,17 +11,18 @@
 import {Component, OnInit} from '@angular/core';
 import {AdminTableDirective, Field} from './admin-table.directive';
 import {AdminItemType} from '../../services/sharing.service';
-import {EditGroupModalComponent} from '../editmodal/groups/edit-group-modal.component';
+import {EditPerimeterModalComponent} from '../editmodal/perimeters/edit-perimeter-modal.component';
 
 @Component({
   templateUrl: 'admin-table.directive.html',
-  selector: 'of-groups-table'
+  selector: 'of-perimeters-table'
 })
-export class GroupsTableComponent extends AdminTableDirective implements OnInit {
+export class PerimetersTableComponent extends AdminTableDirective implements OnInit {
 
-  tableType = AdminItemType.GROUP;
-  fields = [new Field('id', 3), new Field('name', 3), new Field('description', 4), new Field('perimeters', 6)];
+  tableType = AdminItemType.PERIMETER;
+  fields = [new Field('id'), new Field('process'), new Field('stateRights', 7, 'stateRightsCellRenderer')];
   idField = 'id';
-  editModalComponent = EditGroupModalComponent;
+  editModalComponent = EditPerimeterModalComponent;
+  modalOptions = {size: 'xl'};
 
 }

@@ -11,43 +11,38 @@
 import {Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
+import {StateRight} from '@ofModel/perimeter.model';
 
 @Component({
-  selector: 'of-action-cell-renderer',
-  templateUrl: 'action-cell-renderer.component.html',
+  selector: 'of-state-rights-cell-renderer',
+  templateUrl: './state-rights-cell-renderer.component.html',
+  styleUrls: ['./state-rights-cell-renderer.component.scss']
 })
-export class ActionCellRendererComponent implements ICellRendererAngularComp {
+export class StateRightsCellRendererComponent implements ICellRendererAngularComp {
+
+  constructor() {
+  }
 
   // For explanations regarding ag-grid CellRenderers see
   // https://www.ag-grid.com/documentation/angular/component-cell-renderer/#example-rendering-using-angular-components
-  public params: any;
-  private actionType: string;
+  private _stateRightsValues: StateRight[];
 
-  // Defines icons to display depending on action type
-  private actionIconsMapping = {
-    'edit': 'fas fa-pen',
-    'delete': 'far fa-trash-alt'
-  };
 
   agInit(params: any): void {
-    this.params = params;
-    this.actionType = this.params.colDef.colId;
+
+          this._stateRightsValues = params.getValue();
+
   }
 
-  public openModalFromParent() {
-    this.params.context.componentParent.openActionModal(this.params);
-  }
-
-
-  // noinspection JSUnusedLocalSymbols
-  /** This method returns true to signal to the grid that this renderer doesn't need to be recreated if the underlying data changes
+    /** This method returns true to signal to the grid that this renderer doesn't need to be recreated if the underlying data changes
    *  See https://www.ag-grid.com/documentation/angular/component-cell-renderer/#handling-refresh
    * */
   refresh(params: ICellRendererParams): boolean {
     return true;
   }
 
-  getIconForAction(): string {
-    return this.actionIconsMapping[this.actionType];
+  get stateRightsValues(): StateRight[] {
+    return this._stateRightsValues;
   }
+
 }
