@@ -42,6 +42,7 @@ include 'services:core:users'
 include 'web-ui'
 include 'ui:main'
 include 'externalApp'
+include 'clientApp'
 
 project(':client:businessconfig').name = 'businessconfig-client-data'
 project(':client:cards').name = 'cards-client-data'
@@ -53,6 +54,7 @@ project(':services:core:cards-consultation').name = 'cards-consultation-business
 project(':web-ui').name = 'web-ui'
 project(':ui:main').name = 'main-user-interface'
 project(':externalApp').projectDir = file('src/test/externalApp')
+project(':clientApp').projectDir = file('src/test/clientApp')
 
 //we check if the modules have gradle configuration files
 rootProject.children.each { project ->
