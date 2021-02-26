@@ -17,9 +17,9 @@
 
 <br />
 
-IMPACTED SERVICES : <br/><br/>
-<div>
-    <table style="width: 100%">
+<div class="opfab-border-box">
+    <label> IMPACTED SERVICES </label>
+    <table style="margin-bottom: -5px;width: 100%">
         <tr>
             <td> <label class="opfab-checkbox"> SERVICE A <input type="checkbox" id="SA" {{conditionalAttribute card.data.impacts.SA 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
             <td> <label class="opfab-checkbox"> SERVICE B <input type="checkbox" id="SB" {{conditionalAttribute card.data.impacts.SB 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
@@ -31,6 +31,7 @@ IMPACTED SERVICES : <br/><br/>
     </table>
 </div>
 <br/>
+
 <div class="opfab-input">
     <label for="OTHERS"> OTHER IMPACTS </label>
     <input id="OTHERS" name="OTHERS"
