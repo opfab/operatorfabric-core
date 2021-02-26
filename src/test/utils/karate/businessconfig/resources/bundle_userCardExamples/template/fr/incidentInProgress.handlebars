@@ -24,11 +24,11 @@
 <div >
 
 
-    <strong> <center> Merci de saisir les impacts que vous identifiez de votre coté </center>  </strong>
+   <div style="text-align: center;"> <strong>  Merci de saisir les impacts que vous identifiez de votre coté </strong> </div>
 
     <br/>
     <br />
-    <table width="100%">
+    <table style="width: 100%">
         <tr>
             <td> <label class="opfab-checkbox"> SERVICE A <input type="checkbox" id="SA">   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
             <td> <label class="opfab-checkbox"> SERVICE B <input type="checkbox" id="SB">   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
@@ -42,7 +42,7 @@
 <br/>
 <br/>
 <div class="opfab-input">
-    <label> AUTRES IMPACTS </label>
+    <label for="OTHERS"> AUTRES IMPACTS </label>
     <input id="OTHERS" name="OTHERS">
 </div>
 
@@ -78,14 +78,14 @@
 
         if (templateGateway.childCards[0]) {
             let childsDiv = document.getElementById("childs-div");
-            let responses = ' <strong> REPONSES RECUES : </strong> <center> <br/>'
-            responses += ' <table width="100%""> <tr> <th> Entity </th>';
+            let responses = ' <strong> REPONSES RECUES : </strong> <br/>';
+            responses += ' <table style="width: 100%"> <tr> <th> Entity </th>';
             responses += ' <th> Service A </th> <th> Service B </th> <th> Service C </th> <th> Service D </th> <th>Service E </th> <th> Service F </th>';
             responses += ' </tr>';
 
-            templateGateway.childCards.forEach((c, i) => {
+            templateGateway.childCards.forEach((c) => {
                 const entityName = templateGateway.getEntityName(c.publisher);
-                responses += `<tr> <td> ${entityName} </td>`
+                responses += `<tr> <td> ${entityName} </td>`;
                 if (c.data.impacts.SA)  responses += `<td style="color:red;">  OUI </td>`;
                 else  responses += `<td>  NON </td>`;
                 if (c.data.impacts.SB)  responses += `<td style="color:red;">  OUI </td>`;
@@ -106,11 +106,11 @@
 
             childsDiv.innerHTML = responses;
         }
-    }
+    };
 
     templateGateway.validyForm = function () {
 
-        const S1 = document.getElementById('SA').checked;
+        const SA = document.getElementById('SA').checked;
         const SB = document.getElementById('SB').checked;
         const SC = document.getElementById('SC').checked;
         const SD = document.getElementById('SD').checked;
@@ -129,7 +129,7 @@
                 SF: SF,
                 OTHERS: OTHERS
             }
-        }
+        };
 
         return {
             valid: true,
@@ -139,4 +139,3 @@
 </script>
 
 
-</p>

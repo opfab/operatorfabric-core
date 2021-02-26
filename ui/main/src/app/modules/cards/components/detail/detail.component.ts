@@ -119,7 +119,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     public isActionEnabled = false;
     public lttdExpiredIsTrue: boolean;
-    public cardStateName: string;
     public hasAlreadyResponded = false;
 
     unsubscribe$: Subject<void> = new Subject<void>();
@@ -145,6 +144,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     modalRef: NgbModalRef;
 
     public displayDeleteResult = false;
+
+    private static compareRightAction(userRights: RightsEnum, rightsAction: RightsEnum): boolean {
+        return (userRight(userRights) - userRight(rightsAction)) === 0;
+    }
 
     constructor(private element: ElementRef,
                 private businessconfigService: ProcessesService,
@@ -184,7 +187,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
             cardTemplate.style.height = `${cardTemplateHeight}px`;
             cardTemplate.style.overflowX = 'hidden';
-        }  
+        }
     }
 
     ngAfterViewChecked() {
@@ -250,9 +253,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private setButtonsVisibility() {
-        if (this._appService.pageType === PageType.ARCHIVE) this.showButtons = false;
-        else this.showButtons = true;
-        if ((this._appService.pageType !== PageType.CALENDAR)&& (this._appService.pageType !== PageType.MONITORING)) {
+        this.showButtons = this._appService.pageType !== PageType.ARCHIVE;
+        if ((this._appService.pageType !== PageType.CALENDAR) && (this._appService.pageType !== PageType.MONITORING)) {
             this.showMaxAndReduceButton = true;
         }
         this.showCloseButton = true;
@@ -264,7 +266,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     ngDoCheck() {
         const previous = this.lttdExpiredIsTrue;
         this.checkLttdExpired();
-        if (previous != this.lttdExpiredIsTrue) {
+        if (previous !== this.lttdExpiredIsTrue) {
             templateGateway.setLttdExpired(this.lttdExpiredIsTrue);
         }
     }
@@ -394,12 +396,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     markAsReadIfNecessary() {
         if (this.card.hasBeenRead === false) {
-            // we do not set the card as read in the UI yet , as we want to keep 
-            // the card as unread in the feed 
-            // we will set it read in the UI and in the feed when 
+            // we do not set the card as read in the UI yet , as we want to keep
+            // the card as unread in the feed
+            // we will set it read in the UI and in the feed when
             //  - we close the card
             //  - we exit the feed (i.e destroy the card)
-            //  - we change card 
+            //  - we change card
 
             this.cardSetToReadButNotYetOnUI = this.card;
             this.cardService.postUserCardRead(this.card.uid).subscribe();
@@ -420,8 +422,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         if (this.parentModalRef)  {
             this.parentModalRef.close();
             this.store.dispatch(new ClearLightCardSelection());
-        }
-        else this._appService.closeDetails(this.currentPath);
+        } else this._appService.closeDetails(this.currentPath);
     }
 
     // for certain types of template , we need to reload it to take into account
@@ -440,14 +441,14 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.markAsReadIfNecessary();
 
         this.message = {display: false, text: undefined, className: undefined};
-        
+
         if (this._responseData != null && this._responseData !== undefined) {
             this.setEntitiesToRespond();
             this.setIsActionEnabled();
         }
         this.setButtonsVisibility();
         this.setShowDetailCardHeader();
-        
+
     }
 
     private setEntitiesToRespond() {
@@ -487,7 +488,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         return this._userEntitiesAllowedToRespond.length === 1;
     }
 
-    private getUserEntityToRespond() : string {
+    private getUserEntityToRespond(): string {
         return this._userEntitiesAllowedToRespond.length === 1 ? this._userEntitiesAllowedToRespond[0] : null;
     }
 
@@ -505,7 +506,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private isAcknowledgmentAllowed(): boolean {
-        return (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS || 
+        return (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS ||
             (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER && !this.isActionEnabled));
     }
 
@@ -528,10 +529,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             });
         }
         return permission;
-    }
-
-    private static compareRightAction(userRights: RightsEnum, rightsAction: RightsEnum): boolean {
-        return (userRight(userRights) - userRight(rightsAction)) === 0;
     }
 
     get listVisibleEntitiesToRespond() {
@@ -578,7 +575,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                         this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
                         setTimeout(() => { // wait for DOM rendering
                             this.reinsertScripts();
-                            setTimeout(() => { // wait for script loading before calling them in template 
+                            setTimeout(() => { // wait for script loading before calling them in template
                                 templateGateway.applyChildCards();
                                 if (this.hasAlreadyResponded) templateGateway.lockAnswer();
                                 if (this.card.lttd && this.lttdExpiredIsTrue) {
@@ -662,6 +659,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     editCard(): void {
+
+        // We close the card detail in the background to avoid interference when executing the template for the edition preview.
+        // Otherwise, this can cause issues with templates functions referencing elements by id as there are two elements with the same id
+        // in the document.
+        this.closeDetails();
+
         if (!!this.parentModalRef) this.parentModalRef.close();
 
         const options: NgbModalOptions = {
@@ -669,12 +672,21 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             backdrop: 'static'
         };
         this.modalRef = this.modalService.open(this.userCardTemplate, options);
-  
+
+        // Once the edition is complete or canceled, we reopen the card detail (see above).
+        this.modalRef.result.then(
+            () => { // If modal is closed
+                this._appService.reopenDetails(this.currentPath, this.card.id);
+            },
+            () => {
+                this._appService.reopenDetails(this.currentPath, this.card.id);
+            });
+
     }
 
     setFullScreen(active) {
         this.fullscreen = active;
-        templateGateway.setScreenSize(active? 'lg' : 'md');
+        templateGateway.setScreenSize(active ? 'lg' : 'md');
     }
 
     ngOnDestroy() {

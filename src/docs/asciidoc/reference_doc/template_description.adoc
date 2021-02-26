@@ -445,6 +445,16 @@ Return an array that is a merge of the two arrays.
 {{/each}}
 ....
 
+[[conditionalAttribute]]
+=== conditionalAttribute
+
+Adds the specified attribute to an HTML element if the given condition is truthy.
+This is useful for attributes such as `checked` where it is the presence or absence of the attribute that matters (i.e.
+an checkbox with `checked=false` will still be checked).
+....
+<input type="checkbox" id="optionA" {{conditionalAttribute card.data.optionA 'checked'}}></input>
+....
+
 [[opfab_template_style]]
 == OperatorFabric css styles
 
