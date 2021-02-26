@@ -465,11 +465,12 @@ OperatorFabric defines a `css class` that you should use so your templates don't
 * opfab-select : select input field
 * opfab-radio-button : radio button input field
 * opfab-checkbox : checkbox input field
-* opfab-table : a HTML table 
+* opfab-table : a HTML table
+* opfab-border-box : a box with a label  
 
 These styles are especially useful for templates used in user card or card with responses.
 
-Your can find example using these classes in the OperatorFabric core repository (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/utils/karate/businessconfig/resources/bundle_userCardExamples[src/test/utils/karate/businessconfig/resources/bundle_userCardExamples]).
+Your can find example using these classes in the OperatorFabric core repository (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/utils/karate/businessconfig/resources[src/test/utils/karate/businessconfig/resources]).
 
 
 == Charts 
