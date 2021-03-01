@@ -689,6 +689,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         templateGateway.setScreenSize(active ? 'lg' : 'md');
     }
 
+    public isSmallscreen()
+    {
+      return (window.innerWidth <1000);
+    }
+
     ngOnDestroy() {
         this.updateReadCardStatusOnUI();
         templateGateway.childCards = [];
