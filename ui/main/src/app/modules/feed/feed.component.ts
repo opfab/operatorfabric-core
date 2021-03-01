@@ -31,6 +31,7 @@ export class FeedComponent implements OnInit {
     selection$: Observable<string>;
     hideTimeLine: boolean;
 
+
     constructor(private store: Store<AppState>, private  configService: ConfigService) {
     }
 
@@ -59,6 +60,11 @@ export class FeedComponent implements OnInit {
             this.store.dispatch(new ApplyFilter(BUSINESS_DATE_FILTER_INITIALISATION));
         }
 
+    }
+
+    public isSmallscreen()
+    {
+      return (window.innerWidth <1000 || window.innerHeight <800 );
     }
 
 }

@@ -11,7 +11,7 @@
 <div>
     
     <div class="fixed-height-main-layout opfab_timeline_margin" *ngIf="!hideTimeLine">
-       <div>
+       <div [hidden]="isSmallscreen()">
            <of-time-line></of-time-line> 
         </div> 
     </div>
