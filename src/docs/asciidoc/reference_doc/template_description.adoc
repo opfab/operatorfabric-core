@@ -455,6 +455,16 @@ an checkbox with `checked=false` will still be checked).
 <input type="checkbox" id="optionA" {{conditionalAttribute card.data.optionA 'checked'}}></input>
 ....
 
+[[json]]
+=== json 
+
+Convert the element in json, this can be useful to use the element as a javascript object in the template. For example : 
+
+....
+var myAttribute = {{json data.myAttribute}};
+....
+
+
 [[opfab_template_style]]
 == OperatorFabric css styles
 
