@@ -20,7 +20,7 @@
 
 
 
-<div >
+<div id="services">
 
 
      <div style="text-align: center;"> <strong>Please fill in the impacts from your perspective </strong> </div>
@@ -45,7 +45,7 @@
 </div>
 <br/>
 <br/>
-<div class="opfab-input">
+<div id="other-impacts" class="opfab-input">
     <label for="OTHERS"> OTHER IMPACTS </label>
     <input id="OTHERS" name="OTHERS">
 </div>
@@ -139,5 +139,15 @@
             valid: true,
             formData: formData
         };
+    }
+
+    templateGateway.setUserCanRespond = function(responseEnabled) {
+        if (responseEnabled) {
+            document.getElementById('services').style.display = '';
+            document.getElementById('other-impacts').style.display = '';
+        } else {
+            document.getElementById('services').style.display = 'none';
+            document.getElementById('other-impacts').style.display = 'none'
+        }
     }
 </script>
