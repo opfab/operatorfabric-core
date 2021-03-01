@@ -169,8 +169,11 @@ export class UserCardComponent implements OnDestroy, OnInit {
                             this.messageForm.get('service').setValue(serviceForCardToEdit);
                         else
                             this.messageForm.get('service').setValue('--');
+                        
+                        this.messageForm.get('service').disable();
 
                         this.messageForm.get('process').setValue(this.cardToEdit.card.process);
+                        this.messageForm.get('process').disable();
                         this.messageForm.get('state').setValue(this.cardToEdit.card.state);
                         this.messageForm.get('startDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.startDate)));
                         this.messageForm.get('endDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.endDate)));
@@ -367,8 +370,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
     onSubmitForm(template: TemplateRef<any>) {
         const formValue = this.messageForm.value;
 
+        const processValue = this.editCardMode ? this.cardToEdit.card.process : formValue['process'];
         const selectedProcess = this.processesDefinition.find(process => {
-            return process.id === formValue['process'];
+            return process.id === processValue;
         });
         const processVersion = selectedProcess.version;
         const state = formValue['state'];
