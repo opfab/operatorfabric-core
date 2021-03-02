@@ -29,6 +29,234 @@ following helpers :
 
 == OperatorFabric specific handlebars helpers
 
+[[arrayContains]]
+=== arrayContains
+
+Verify if an array contains a specified element. If the array does contain the element, it returns true. Otherwise, it returns false.
+
+....
+<p {{#if (arrayContains colors 'red')}}class="text-danger"{{/if}}>test</p>
+....
+
+If the colors array contains 'red', the output is:
+
+....
+<p class="text-danger">test</p>
+....
+
+[[arrayContainsOneOf]]
+=== arrayContainsOneOf
+
+If the first array contains at least one element of the second array, return true. Otherwise, return false.
+
+....
+{{#if (arrayContainsOneOf arr1 arr2)}}
+  <p>Arr1 contains at least one element of arr2</p>
+{{/if}}
+....
+
+
+[[bool]]
+=== bool
+
+returns a boolean result value on an arithmetical operation (including object
+equality) or boolean operation.
+
+Arguments: - v1: left value operand - op: operator (string value) - v2: right
+value operand
+
+arithmetical operators:
+
+ - ==
+ - ===
+ - !=
+ - !==
+ - <
+ - <=
+ - >
+ - >=
+
+boolean operators:
+
+- &&
+- ||
+
+examples:
+
+....
+{{#if (bool v1 '<' v2)}}
+  v1 is strictly lower than v2
+{{else}}
+ V2 is lower or equal to v1
+{{/if}}
+....
+
+[[conditionalAttribute]]
+=== conditionalAttribute
+
+Adds the specified attribute to an HTML element if the given condition is truthy.
+This is useful for attributes such as `checked` where it is the presence or absence of the attribute that matters (i.e.
+an checkbox with `checked=false` will still be checked).
+....
+<input type="checkbox" id="optionA" {{conditionalAttribute card.data.optionA 'checked'}}></input>
+....
+
+[[dateformat]]
+=== dateFormat
+
+formats the submitted parameters (millisecond since epoch) using
+https://momentjs.com/[mement.format]. The locale used is the current user
+selected one, the format is "format" hash parameter
+(https://handlebarsjs.com/[see Handlebars doc Literals section]).
+
+....
+{{dateFormat card.data.birthday format="MMMM Do YYYY, h:mm:ss a"}}
+....
+
+
+[[i18n]]
+=== i18n
+
+outputs a i18n result from a key and some parameters. There are two ways of
+configuration :
+
+* Pass an object as sole argument. The object must contain a key field (string)
+and an optional parameter field (map of parameterKey => value)
++
+....
+{{i18n card.data.i18nTitle}}
+....
+* Pass a string key as sole argument and use hash parameters
+(https://handlebarsjs.com/[see Handlebars doc Literals section]) for i18n string
+parameters.
+
+....
+<!--
+emergency.title=Emergency situation happened on {{date}}. Cause : {{cause}}.
+-->
+{{i18n "emergency.title" date="2018-06-14" cause="Broken Coffee Machine"}}
+....
+
+outputs
+
+....
+Emergency situation happened on 2018-06-14. Cause : Broken Cofee Machine
+....
+
+
+[[json]]
+=== json 
+
+Convert the element in json, this can be useful to use the element as a javascript object in the template. For example : 
+
+....
+var myAttribute = {{json data.myAttribute}};
+....
+
+=== keepSpacesAndEndOfLine
+
+Convert a string to a light HTML by replacing :
+
+  -  each new line character with <br/>
+  -  spaces with \&nbsp; when there is at least two consecutive spaces.
+
+
+[[keyValue]]
+=== keyValue
+
+This allows to traverse a map.
+
+Notice that this should normally be feasible by using the built-in each helper, but a client was having some troubles using it so we added this custom helper.
+
+....
+{{#keyValue studentGrades}}
+  <p>{{key}}: {{value}}</p>
+{{/keyValue}}
+....
+
+If the value of the studentGrades map is:
+
+....
+{
+  'student1': 15,
+  'student2': 12,
+  'student3': 9
+}
+....
+
+The output will be:
+
+....
+<p>student1: 15</p>
+<p>student2: 12</p>
+<p>student3: 9</p>
+....
+
+[[math]]
+=== math
+
+returns the result of a mathematical operation.
+
+arguments:
+
+- v1: left value operand
+- op: operator (string value)
+- v2: right value operand
+
+arithmetical operators:
+
+* +
+* -
+* *
+* /
+* %
+
+example:
+
+....
+{{math 1 '+' 2}}
+....
+
+[[mergeArrays]]
+=== mergeArrays
+
+Return an array that is a merge of the two arrays.
+
+....
+{{#each (mergeArrays arr1 arr2)}}
+  <p>{{@index}} element: {{this}}</p>
+{{/each}}
+....
+
+[[now]]
+=== now
+
+outputs the current date in millisecond from epoch. The date is computed from
+application internal time service and thus may be different from the date that
+one can compute from javascript api which relies on the browsers' system time.
+
+NB: Due to Handlebars limitation you must provide at least one argument to
+helpers otherwise, Handlebars will confuse a helper and a variable. In the
+bellow example, we simply pass an empty string.
+
+example:
+
+....
+<div>{{now ""}}</div>
+<br>
+<div>{{dateFormat (now "") format="MMMM Do YYYY, h:mm:ss a"}}</div>
+....
+
+outputs
+
+....
+<div>1551454795179</div>
+<br>
+<div>mars 1er 2019, 4:39:55 pm</div>
+....
+
+for a local set to `FR_fr`
+
 [[numberformat]]
 === numberFormat
 
@@ -42,16 +270,13 @@ parameters (https://handlebarsjs.com/[see Handlebars doc Literals section]).
 {{numberFormat card.data.price style="currency" currency="EUR"}}
 ....
 
-[[dateformat]]
-=== dateFormat
+[[preservespace]]
+=== preserveSpace
 
-formats the submitted parameters (millisecond since epoch) using
-https://momentjs.com/[mement.format]. The locale used is the current user
-selected one, the format is "format" hash parameter
-(https://handlebarsjs.com/[see Handlebars doc Literals section]).
+preserves space in parameter string to avoid html standard space trimming.
 
 ....
-{{dateFormat card.data.birthday format="MMMM Do YYYY, h:mm:ss a"}}
+{{preserveSpace card.data.businessId}}
 ....
 
 [[slice]]
@@ -101,169 +326,6 @@ outputs:
   <li>bar</li>
   <li>baz</li>
 </ul>
-....
-
-[[now]]
-=== now
-
-outputs the current date in millisecond from epoch. The date is computed from
-application internal time service and thus may be different from the date that
-one can compute from javascript api which relies on the browsers' system time.
-
-NB: Due to Handlebars limitation you must provide at least one argument to
-helpers otherwise, Handlebars will confuse a helper and a variable. In the
-bellow example, we simply pass an empty string.
-
-example:
-
-....
-<div>{{now ""}}</div>
-<br>
-<div>{{dateFormat (now "") format="MMMM Do YYYY, h:mm:ss a"}}</div>
-....
-
-outputs
-
-....
-<div>1551454795179</div>
-<br>
-<div>mars 1er 2019, 4:39:55 pm</div>
-....
-
-for a local set to `FR_fr`
-
-[[preservespace]]
-=== preserveSpace
-
-preserves space in parameter string to avoid html standard space trimming.
-
-....
-{{preserveSpace card.data.businessId}}
-....
-
-[[bool]]
-=== bool
-
-returns a boolean result value on an arithmetical operation (including object
-equality) or boolean operation.
-
-Arguments: - v1: left value operand - op: operator (string value) - v2: right
-value operand
-
-arithmetical operators:
-
- - ==
- - ===
- - !=
- - !==
- - <
- - <=
- - >
- - >=
-
-boolean operators:
-
-- &&
-- ||
-
-examples:
-
-....
-{{#if (bool v1 '<' v2)}}
-  v1 is strictly lower than v2
-{{else}}
- V2 is lower or equal to v1
-{{/if}}
-....
-
-[[math]]
-=== math
-
-returns the result of a mathematical operation.
-
-arguments:
-
-- v1: left value operand
-- op: operator (string value)
-- v2: right value operand
-
-arithmetical operators:
-
-* +
-* -
-* *
-* /
-* %
-
-example:
-
-....
-{{math 1 '+' 2}}
-....
-
-[[split]]
-=== split
-
-splits a string into an array based on a split string.
-
-example:
-
-....
-<ul>
-{{#each (split 'my.example.string' '.')}}
-  <li>{{this}}</li>
-{{/each}}
-</ul>
-....
-
-outputs
-
-....
-<ul>
-  <li>my</li>
-  <li>example</li>
-  <li>string</li>
-</ul>
-....
-
-[[svg]]
-=== svg
-
-outputs a svg tag with lazy loading, and missing image replacement message. The
-image url is the concatenation of an arbitrary number of helper arguments
-
-....
-{{{svg baseUri scheduledOpId "/" substation "/before/" 
-computationPhaseOrdinal}}}
-....
-
-[[i18n]]
-=== i18n
-
-outputs a i18n result from a key and some parameters. There are two ways of
-configuration :
-
-* Pass an object as sole argument. The object must contain a key field (string)
-and an optional parameter field (map of parameterKey => value)
-+
-....
-{{i18n card.data.i18nTitle}}
-....
-* Pass a string key as sole argument and use hash parameters
-(https://handlebarsjs.com/[see Handlebars doc Literals section]) for i18n string
-parameters.
-
-....
-<!--
-emergency.title=Emergency situation happened on {{date}}. Cause : {{cause}}.
--->
-{{i18n "emergency.title" date="2018-06-14" cause="Broken Coffee Machine"}}
-....
-
-outputs
-
-....
-Emergency situation happened on 2018-06-14. Cause : Broken Cofee Machine
 ....
 
 [[sort]]
@@ -333,20 +395,43 @@ outputs :
 </ul>
 ....
 
-[[arrayContains]]
-=== arrayContains
 
-Verify if an array contains a specified element. If the array does contain the element, it returns true. Otherwise, it returns false.
+[[split]]
+=== split
 
-....
-<p {{#if (arrayContains colors 'red')}}class="text-danger"{{/if}}>test</p>
-....
+splits a string into an array based on a split string.
 
-If the colors array contains 'red', the output is:
+example:
 
 ....
-<p class="text-danger">test</p>
+<ul>
+{{#each (split 'my.example.string' '.')}}
+  <li>{{this}}</li>
+{{/each}}
+</ul>
 ....
+
+outputs
+
+....
+<ul>
+  <li>my</li>
+  <li>example</li>
+  <li>string</li>
+</ul>
+....
+
+[[svg]]
+=== svg
+
+outputs a svg tag with lazy loading, and missing image replacement message. The
+image url is the concatenation of an arbitrary number of helper arguments
+
+....
+{{{svg baseUri scheduledOpId "/" substation "/before/" 
+computationPhaseOrdinal}}}
+....
+
 
 [[times]]
 === times
@@ -385,75 +470,6 @@ If the value of the key variable is "TEST", the output will be:
 tests
 ....
 
-[[keyValue]]
-=== keyValue
-
-This allows to traverse a map.
-
-Notice that this should normally be feasible by using the built-in each helper, but a client was having some troubles using it so we added this custom helper.
-
-....
-{{#keyValue studentGrades}}
-  <p>{{key}}: {{value}}</p>
-{{/keyValue}}
-....
-
-If the value of the studentGrades map is:
-
-....
-{
-  'student1': 15,
-  'student2': 12,
-  'student3': 9
-}
-....
-
-The output will be:
-
-....
-<p>student1: 15</p>
-<p>student2: 12</p>
-<p>student3: 9</p>
-....
-
-=== keepSpacesAndEndOfLine
-
-Convert a string to a light HTML by replacing :
-
-  -  each new line character with <br/>
-  -  spaces with \&nbsp; when there is at least two consecutive spaces.
-
-[[arrayContainsOneOf]]
-=== arrayContainsOneOf
-
-If the first array contains at least one element of the second array, return true. Otherwise, return false.
-
-....
-{{#if (arrayContainsOneOf arr1 arr2)}}
-  <p>Arr1 contains at least one element of arr2</p>
-{{/if}}
-....
-
-[[mergeArrays]]
-=== mergeArrays
-
-Return an array that is a merge of the two arrays.
-
-....
-{{#each (mergeArrays arr1 arr2)}}
-  <p>{{@index}} element: {{this}}</p>
-{{/each}}
-....
-
-[[conditionalAttribute]]
-=== conditionalAttribute
-
-Adds the specified attribute to an HTML element if the given condition is truthy.
-This is useful for attributes such as `checked` where it is the presence or absence of the attribute that matters (i.e.
-an checkbox with `checked=false` will still be checked).
-....
-<input type="checkbox" id="optionA" {{conditionalAttribute card.data.optionA 'checked'}}></input>
-....
 
 [[opfab_template_style]]
 == OperatorFabric css styles
