@@ -17,7 +17,8 @@
       "templateName": "task",
       "styles": [
       ],
-      "acknowledgmentAllowed": "Always"
+      "acknowledgmentAllowed": "Always",
+      "type" : "INPROGRESS"
     }
   }
 }

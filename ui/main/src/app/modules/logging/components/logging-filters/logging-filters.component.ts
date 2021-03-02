@@ -52,7 +52,7 @@ export class LoggingFiltersComponent implements OnInit, OnDestroy {
                 tags: new FormControl([]),
                 state: new FormControl([]),
                 process: new FormControl([]),
-                service: new FormControl([]),
+                processGroup: new FormControl([]),
                 publishDateFrom: new FormControl(''),
                 publishDateTo: new FormControl(''),
                 activeFrom: new FormControl(''),

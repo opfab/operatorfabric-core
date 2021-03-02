@@ -59,7 +59,7 @@
           <th scope="col" translate>archive.result.businessPeriod</th>
           <th scope="col" translate>archive.result.title</th>
           <th scope="col" translate>archive.result.summary</th>
-          <th *ngIf="filtersTemplate.displayServiceFilter()" scope="col" translate>archive.result.service</th>
+          <th *ngIf="filtersTemplate.displayProcessGroupFilter()" scope="col" translate>archive.result.processGroup</th>
         </tr>
       </thead>
 
@@ -73,7 +73,7 @@
         <td translate [translateParams]="card.summary.parameters">
           {{ card.process + '.' + card.processVersion + '.' + card.summary.key}}
         </td>
-        <td *ngIf="filtersTemplate.displayServiceFilter()" translate>{{ filtersTemplate.findServiceLabelForProcess(card.process) }}</td>
+        <td *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>{{ processesService.findProcessGroupLabelForProcess(card.process) }}</td>
       </tr>
     </table>
     <div class="opfab-archive-pagination">

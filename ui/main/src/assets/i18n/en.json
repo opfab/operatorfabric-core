@@ -139,7 +139,7 @@
       "businessPeriod" : "BUSINESS PERIOD",
       "title" : "TITLE",
       "summary": "SUMMARY",
-      "service": "SERVICE"
+      "processGroup": "SERVICE"
     },
     "noResult": "Your search did not match any results.",
     "exportToExcel" : "Export data",
@@ -154,7 +154,7 @@
     "summary": "SUMMARY",
     "description": "DESCRIPTION",
     "sender": "ACTOR",
-    "service": "SERVICE",
+    "processGroup": "SERVICE",
     "noResult": "Your search did not match any results.",
     "ExportTOExcel": "Export data",
     "resultsNumber":"Results number"
@@ -164,14 +164,23 @@
     "showFilters" : "Show Filters",
     "noSelection" : "NA",
     "filters": {
-      "process": "PROCESS",
-      "selectProcessText": "Select a Process"
+      "processGroup" : "SERVICE",
+      "selectProcessGroupText" : "Select a Service",
+      "process" : "PROCESS",
+      "selectProcessText" : "Select a Process",
+      "typeOfState" : {
+        "typeOfState" : "PROCESS STATUS",
+        "selectTypeOfStateText" : "Select a Process status",
+        "INPROGRESS" : "IN PROGRESS",
+        "FINISHED": "FINISHED",
+        "CANCELED" : "CANCELED"
+      }
     },
     "time": "TIME",
     "businessPeriod": "BUSINESS PERIOD",
     "title": "TITLE",
     "summary": "SUMMARY",
-    "status": "STATUS",
+    "typeOfState": "PROCESS STATUS",
     "severity": "SEVERITY",
     "seeDetails": "SEE DETAILS",
     "ExportTOExcel": "Export data"
@@ -207,7 +216,7 @@
     },
     "filters": {
       "severity": "SEVERITY",
-      "service": "SERVICE",
+      "processGroup": "SERVICE",
       "process": "PROCESS",
       "state": "STATE",
       "startDate":  "START DATE",
@@ -335,7 +344,7 @@
       "perimeters": "Perimeters Management"
     }
   },
-  "service": {
+  "processGroup": {
     "defaultLabel": "--"
   },
   "ag-grid": {
@@ -355,11 +364,11 @@
     "page": "Page"
   },
   "filters": {
-    "service": "SERVICE",
+    "processGroup": "SERVICE",
     "process": "PROCESS",
     "state": "STATE",
     "tags": "TAGS",
-    "selectServiceText": "Select a Service",
+    "selectProcessGroupText": "Select a Service",
     "selectProcessText": "Select a Process",
     "selectStateText": "Select a State",
     "selectTagText": "Select a Tag"

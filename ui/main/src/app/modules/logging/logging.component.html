@@ -17,7 +17,7 @@
 <div  *ngIf="(loggingResult$|async) as line ; else noResult" style="margin-left:5%;margin-right:5%">
     <of-logging-table [results]="line"
                       [processStateDescription]="processStateDescription"
-                      [displayServiceColumn]="this.filters.filtersTemplate.displayServiceFilter()" >
+                      [displayProcessGroupColumn]="this.filters.filtersTemplate.displayProcessGroupFilter()">
     </of-logging-table>
 </div>
 

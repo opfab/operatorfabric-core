@@ -139,7 +139,7 @@
       "businessPeriod" : "PERIODE METIER",
       "title" : "TITRE",
       "summary": "RESUME",
-      "service": "SERVICE"
+      "processGroup": "SERVICE"
     },
     "noResult": "Votre recherche ne correspond à aucun résultat.",
     "exportToExcel" : "Exporter les données",
@@ -154,7 +154,7 @@
     "summary": "RESUME",
     "description": "DESCRIPTION",
     "sender": "EMETTEUR",
-    "service": "SERVICE",
+    "processGroup": "SERVICE",
     "noResult": "Votre recherche ne correspond à aucun résultat.",
     "ExportTOExcel": "Exporter les données",
     "resultsNumber":"Nombre de résultats"
@@ -164,14 +164,23 @@
     "showFilters" : "Afficher les filtres",
     "noSelection" : "NA",
     "filters": {
+      "processGroup" : "SERVICE",
+      "selectProcessGroupText" : "Sélectionner un Service",
       "process": "PROCESSUS",
-      "selectProcessText": "Sélectionner un Processus"
+      "selectProcessText": "Sélectionner un Processus",
+      "typeOfState": {
+        "typeOfState": "ÉTAT DU PROCESSUS",
+        "selectTypeOfStateText": "Sélectionner un État de processus",
+        "INPROGRESS": "EN COURS",
+        "FINISHED": "TERMINÉ",
+        "CANCELED": "ANNULÉ"
+      }
     },
     "time": "DATE",
     "businessPeriod": "PERIODE METIER",
     "title": "TITRE",
     "summary": "RESUME",
-    "status": "STATUS",
+    "typeOfState": "ÉTAT DU PROCESSUS",
     "severity": "SEVERITE",
     "seeDetails": "VOIR LES DETAILS",
     "ExportTOExcel": "Exporter les données"
@@ -207,7 +216,7 @@
     },
     "filters": {
       "severity": "SEVERITE",
-      "service": "SERVICE",
+      "processGroup": "SERVICE",
       "process": "PROCESSUS",
       "state": "ETAT",
       "startDate": "DATE DE DEBUT ",
@@ -335,7 +344,7 @@
       "perimeters": "Gestion des périmètres"
     }
   },
-  "service": {
+  "processGroup": {
     "defaultLabel": "--"
   },
   "ag-grid": {
@@ -355,11 +364,11 @@
     "page": "Page"
   },
   "filters": {
-    "service": "SERVICE",
+    "ProcessGroup": "SERVICE",
     "process": "PROCESSUS",
     "state": "ETAT",
     "tags": "ETIQUETTES",
-    "selectServiceText": "Sélectionner un Service",
+    "selectProcessGroupText": "Sélectionner un Service",
     "selectProcessText": "Sélectionner un Processus",
     "selectStateText": "Sélectionner un Etat",
     "selectTagText": "Sélectionner une Etiquette"

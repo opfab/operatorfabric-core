@@ -14,7 +14,7 @@ import {environment} from '@env/environment';
 import {merge, Observable, of, Subject} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {catchError, map, skip, tap} from 'rxjs/operators';
-import {Process} from '@ofModel/processes.model';
+import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {Card} from '@ofModel/card.model';
 import {select, Store} from '@ngrx/store';
 import {selectLinesOfLoggingResult} from '@ofStore/selectors/logging.selectors';
@@ -32,6 +32,8 @@ export class ProcessesService {
     private processes: Process[];
     private processGroups: {id: string, processes: string[]}[];
     private translationsLoaded = new Subject();
+
+    private typeOfStatesPerProcessAndState: Map<string, TypeOfStateEnum>;
 
     constructor(private httpClient: HttpClient, private translateService: TranslateService, private store: Store<AppState>
     ) {
@@ -222,4 +224,57 @@ export class ProcessesService {
         };
     }
 
+    public findProcessGroupForProcess(processId : string) : string {
+        for (let group of this.processGroups) {
+            if (group.processes.find(process => process == processId))
+                return group.id;
+        }
+        return '';
+    }
+
+    public getProcessesPerProcessGroups(): Map<any, any> {
+        let processesPerProcessGroups = new Map();
+
+        this.getAllProcesses().forEach(process => {
+
+            const processGroupId = this.findProcessGroupForProcess(process.id);
+            if (processGroupId != '') {
+                let processes = (!! processesPerProcessGroups.get(processGroupId) ? processesPerProcessGroups.get(processGroupId) : []);
+                processes.push({id: process.id, itemName: process.name, i18nPrefix: `${process.id}.${process.version}`});
+                processesPerProcessGroups.set(processGroupId, processes);
+            }
+        });
+        return processesPerProcessGroups;
+    }
+
+    public getProcessesWithoutProcessGroup(): any[] {
+        let processesWithoutProcessGroup = [];
+
+        this.getAllProcesses().forEach(process => {
+            const processGroupId = this.findProcessGroupForProcess(process.id);
+            if (processGroupId == '')
+                processesWithoutProcessGroup.push({ id: process.id, itemName: process.name, i18nPrefix: `${process.id}.${process.version}` });
+        });
+        return processesWithoutProcessGroup;
+    }
+
+    public findProcessGroupLabelForProcess(processId : string) : string {
+        const processGroupId = this.findProcessGroupForProcess(processId);
+        return (!! processGroupId && processGroupId != '') ? processGroupId : "processGroup.defaultLabel";
+    }
+
+    private loadTypeOfStatesPerProcessAndState() {
+        this.typeOfStatesPerProcessAndState = new Map();
+
+        for (let process of this.processes) {
+            for (let state in process.states)
+                this.typeOfStatesPerProcessAndState.set(process.id + '.' + state, process.states[state].type);
+        }
+    }
+
+    public getTypeOfStatesPerProcessAndState(): Map<string, TypeOfStateEnum> {
+        if (! this.typeOfStatesPerProcessAndState)
+            this.loadTypeOfStatesPerProcessAndState();
+        return this.typeOfStatesPerProcessAndState;
+    }
 }

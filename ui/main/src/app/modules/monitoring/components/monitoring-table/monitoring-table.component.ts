@@ -22,6 +22,7 @@ import {LoadCard} from '@ofActions/card.actions';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
+import {ProcessesService} from "@ofServices/processes.service";
 
 @Component({
     selector: 'of-monitoring-table',
@@ -32,6 +33,7 @@ export class MonitoringTableComponent implements OnDestroy {
 
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
     @Input() result: LineOfMonitoringResult[];
+    @Input() displayProcessGroupColumn: boolean;
     exportMonitoringData: Array<any> = [];
     unsubscribe$: Subject<void> = new Subject<void>();
     modalRef: NgbModalRef;
@@ -41,6 +43,7 @@ export class MonitoringTableComponent implements OnDestroy {
                 , private translate: TranslateService
                 , private store: Store<AppState>
                 , private modalService: NgbModal
+                , private processesService: ProcessesService
     ) {
     }
 
@@ -60,30 +63,36 @@ export class MonitoringTableComponent implements OnDestroy {
 
         const timeColumnName = this.translateColumn('monitoring.time');
         const businessPeriodColumnName = this.translateColumn('monitoring.businessPeriod');
+        const processGroupColumnName = this.translateColumn('monitoring.filters.processGroup');
         const processColumnName = this.translateColumn('monitoring.filters.process');
         const titleColumnName = this.translateColumn('monitoring.title');
         const summaryColumnName = this.translateColumn('monitoring.summary');
-        const statusColumnName = this.translateColumn('monitoring.status');
+        const typeOfStateColumnName = this.translateColumn('monitoring.typeOfState');
         const severityColumnName = this.translateColumn('monitoring.severity');
 
         this.result.forEach((line: LineOfMonitoringResult) => {
             if (typeof line !== undefined) {
-                time = this.displayTime(line.creationDateTime);
-                businessPeriod = this.displayTime(line.beginningOfBusinessPeriod).concat(this.displayTime(line.endOfBusinessPeriod));
-                processName = this.translateColumn(line.processName);
-                title = this.translateColumn(line.title.key, line.title.parameters);
-                summary = this.translateColumn(line.summary.key, line.summary.parameters);
-                status = this.translateColumn(line.coordinationStatus);
-
-                this.exportMonitoringData.push({
-                    [timeColumnName]: time,
-                    [businessPeriodColumnName]: businessPeriod,
-                    [processColumnName]: processName,
-                    [titleColumnName]: title,
-                    [summaryColumnName]: summary,
-                    [statusColumnName]: status,
-                    [severityColumnName]: line.severity
-                });
+                if (this.displayProcessGroupColumn)
+                    this.exportMonitoringData.push({
+                        [timeColumnName]: this.displayTime(line.creationDateTime),
+                        [businessPeriodColumnName]: this.displayTime(line.beginningOfBusinessPeriod).concat(this.displayTime(line.endOfBusinessPeriod)),
+                        [processGroupColumnName]: this.translateColumn(this.processesService.findProcessGroupLabelForProcess(line.processId)),
+                        [processColumnName]: this.translateColumn(line.processName),
+                        [titleColumnName]: this.translateColumn(line.title.key, line.title.parameters),
+                        [summaryColumnName]: this.translateColumn(line.summary.key, line.summary.parameters),
+                        [typeOfStateColumnName]: this.translateColumn('monitoring.filters.typeOfState.' + line.typeOfState),
+                        [severityColumnName]: line.severity
+                    });
+                else
+                    this.exportMonitoringData.push({
+                        [timeColumnName]: this.displayTime(line.creationDateTime),
+                        [businessPeriodColumnName]: this.displayTime(line.beginningOfBusinessPeriod).concat(this.displayTime(line.endOfBusinessPeriod)),
+                        [processColumnName]: this.translateColumn(line.processName),
+                        [titleColumnName]: this.translateColumn(line.title.key, line.title.parameters),
+                        [summaryColumnName]: this.translateColumn(line.summary.key, line.summary.parameters),
+                        [typeOfStateColumnName]: this.translateColumn('monitoring.filters.typeOfState.' + line.typeOfState),
+                        [severityColumnName]: line.severity
+                    });
             }
         });
     }
@@ -117,7 +126,6 @@ export class MonitoringTableComponent implements OnDestroy {
             size: 'fullscreen'
         };
         this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
-
     }
 
 }

@@ -7,23 +7,21 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {FilterType} from '@ofServices/filter.service';
 import {ApplyFilter, ResetFilter, ResetFilterForMonitoring} from '@ofActions/feed.actions';
-import {DateTimeNgb, offSetCurrentTime} from '@ofModel/datetime-ngb.model';
 import {ConfigService} from '@ofServices/config.service';
-import moment from 'moment';
 import {Observable, Subject} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {buildSettingsOrConfigSelector} from '@ofStore/selectors/settings.x.config.selectors';
 import {takeUntil} from 'rxjs/operators';
 import {TimeService} from "@ofServices/time.service";
-import {DateTimeFilterValue} from "../../../share/datetime-filter/datetime-filter.component";
-
-const maxVisibleProcessesForSummary = 6;
+import {ProcessesService} from "@ofServices/processes.service";
+import {TypeOfStateEnum} from "@ofModel/processes.model";
+import {TimelineButtonsComponent} from "../../../share/timeline-buttons/timeline-buttons.component";
 
 @Component({
     selector: 'of-monitoring-filters',
@@ -31,6 +29,9 @@ const maxVisibleProcessesForSummary = 6;
     styleUrls: ['./monitoring-filters.component.scss']
 })
 export class MonitoringFiltersComponent implements OnInit, OnDestroy {
+
+    @ViewChild('timelineButtons')
+    timelineButtons: TimelineButtonsComponent;
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -40,70 +41,82 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
     // We should decide on whether we want to use ngrx for this screen (see OC-1271).
     // If so, these can be replaced by storing the values in the monitoring state, and the summary of filters should
     // also take the information from there. If not, we should remove the monitoring state and associated actions (ApplyFilter etc.) altogether.
+    private selectedProcessGroups;
     private selectedProcesses;
-    private pubStart;
-    private pubEnd;
-    private busiStart;
-    private busiEnd;
+    private selectedTypeOfStates;
 
-    // These store the filter values to be displayed in the filter summary when filters are hidden
-    // They differ from the filter values above in the fact that they are already translated and formatted for use in the summary
-    private processSummary;
-    private publishDateFromSummary;
-    private publishDateToSummary;
-    private activeDateFromSummary;
-    private activeDateToSummary;
-
-    dropdownList = [];
-    selectedItems = [];
-    dropdownSettings = {};
+    processesDropdownListPerProcessGroups = new Map();
+    processesWithoutProcessGroupDropdownList = [];
+    processGroupDropdownList = [];
+    processGroupDropdownSettings = {};
+    processDropdownList = [];
+    processDropdownListWhenSelectedProcessGroup = [];
+    processDropdownSettings = {};
+    typeOfStateDropdownList = [];
+    typeOfStateDropdownSettings = {};
     firstQuery: boolean = true;
 
-
-
-    public hideFilters = false;
+    processesGroups: {id: string, processes: string[]}[];
 
     @Input()
     public processData: [];
 
-    public submittedOnce = false;
-
-    constructor(private store: Store<AppState>, private configService: ConfigService, private translate: TranslateService, private time: TimeService,) {
+    constructor(private store: Store<AppState>,
+                private configService: ConfigService,
+                private translate: TranslateService,
+                private time: TimeService,
+                private processesService: ProcessesService) {
 
     }
 
     ngOnInit() {
         this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
+        this.processesGroups = this.processesService.getProcessGroups();
 
         this.monitoringForm = new FormGroup(
             {
+                processGroup: new FormControl([]),
                 process: new FormControl([]),
-                publishDateFrom: new FormControl(''),
-                publishDateTo: new FormControl(''),
-                activeFrom: new FormControl(''),
-                activeTo: new FormControl('')
+                typeOfState: new FormControl([])
             }
         );
-        this.initActiveDatesForm();
+        this.processDropdownList = this.processData;
 
-        this.dropdownList = this.processData;
+        this.loadProcessGroupDropdownListAndProcessesDropdownList();
 
         this.getLocale().pipe(takeUntil(this.unsubscribe$)).subscribe(locale => {
             this.translate.use(locale);
-            this.translate.get(['monitoring.filters.selectProcessText'])
+            this.translate.get(['monitoring.filters.selectProcessGroupText', 'monitoring.filters.selectProcessText',
+                                    'monitoring.filters.typeOfState.selectTypeOfStateText',
+                                    'monitoring.filters.typeOfState.INPROGRESS', 'monitoring.filters.typeOfState.FINISHED',
+                                    'monitoring.filters.typeOfState.CANCELED'])
               .subscribe(translations => {
-                this.dropdownSettings = {
-                    text: translations['monitoring.filters.selectProcessText'],
+                this.processGroupDropdownSettings = {
+                    text: translations['monitoring.filters.selectProcessGroupText'],
                     enableSearchFilter: true,
                     badgeShowLimit: 4,
                     classes: 'custom-class-example'
                 }
+                this.processDropdownSettings = {
+                    text: translations['monitoring.filters.selectProcessText'],
+                    enableSearchFilter: true,
+                    badgeShowLimit: 4,
+                    classes: 'custom-class-example'
+                };
+                this.typeOfStateDropdownSettings = {
+                    text: translations['monitoring.filters.typeOfState.selectTypeOfStateText'],
+                    enableSearchFilter: true,
+                    badgeShowLimit: 3,
+                    classes: 'custom-class-example'
+                };
+                this.typeOfStateDropdownList =
+                    [{id: TypeOfStateEnum.INPROGRESS, itemName: translations['monitoring.filters.typeOfState.INPROGRESS']},
+                     {id: TypeOfStateEnum.FINISHED, itemName: translations['monitoring.filters.typeOfState.FINISHED']},
+                     {id: TypeOfStateEnum.CANCELED, itemName: translations['monitoring.filters.typeOfState.CANCELED']}];
               })
             });
-
-        const hideFiltersInStorage = localStorage.getItem('opfab.hideMonitoringFilters');
-        this.hideFilters = (hideFiltersInStorage === 'true');
-
+        this.store.dispatch(new ResetFilterForMonitoring());
+        this.changeProcessesWhenSelectProcessGroup();
         this.sendQuery();
     }
 
@@ -111,72 +124,121 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
         return this.store.select(buildSettingsOrConfigSelector('locale'));
     }
 
-    initActiveDatesForm() {
-        const start = moment();
-        start.add(-2, 'hours');
-        const end = moment();
-        end.add(+2, 'days');
-        this.monitoringForm.controls.activeFrom.patchValue({'date': {'year': start.year(), 'month': start.month() + 1, 'day': start.date()}, 'time': {'hour': start.hour(), 'minute': start.minute()}});
-        this.monitoringForm.controls.activeTo.patchValue({'date': {'year': end.year(), 'month': end.month() + 1, 'day': end.date()}, 'time': {'hour': end.hour(), 'minute': end.minute()}});
-        this.monitoringForm.controls.activeFrom.updateValueAndValidity({onlySelf: false, emitEvent: true});
-        this.monitoringForm.controls.activeTo.updateValueAndValidity({onlySelf: false, emitEvent: true});
+    displayProcessGroupsFilter() {
+        return !!this.processGroupDropdownList && this.processGroupDropdownList.length > 1 ;
+    }
 
-        // Show init dates on summary (in case the monitoring screen is opened with filters hidden)
-        this.activeDateFromSummary = this.formValueToString(this.monitoringForm.get('activeFrom').value);
-        this.activeDateToSummary = this.formValueToString(this.monitoringForm.get('activeTo').value);
+    addProcessesDropdownList(processesDropdownList: any[]): void {
+        processesDropdownList.forEach( processDropdownList =>
+            this.processDropdownListWhenSelectedProcessGroup.push(processDropdownList) );
+    }
 
+    changeProcessesWhenSelectProcessGroup(): void {
+        this.monitoringForm.get('processGroup').valueChanges.subscribe((selectedProcessGroups) => {
+
+            if (!! selectedProcessGroups && selectedProcessGroups.length > 0) {
+                this.processDropdownListWhenSelectedProcessGroup = [];
+                selectedProcessGroups.forEach(processGroup => {
+
+                    if (processGroup.id == '--')
+                        this.addProcessesDropdownList(this.processesWithoutProcessGroupDropdownList);
+                    else
+                        this.addProcessesDropdownList(this.processesDropdownListPerProcessGroups.get(processGroup.id));
+                });
+            }
+            else
+                this.processDropdownListWhenSelectedProcessGroup = [];
+        });
+    }
+
+    findProcessesIdForProcessGroups(processGroupIds: string[]) : string[]{
+        const processesId = [];
+
+        processGroupIds.forEach(processGroupId => {
+            if (processGroupId == '--')
+                this.processesWithoutProcessGroupDropdownList.forEach(process => processesId.push(process.id))
+            else
+                this.processesDropdownListPerProcessGroups.get(processGroupId).forEach(process => processesId.push(process.id))
+        });
+        return processesId;
+    }
+
+    filterByProcesses(selectedProcessGroups: any, selectedProcesses: any) {
+        const processGroupIds  = selectedProcessGroups.value ? Array.prototype.map.call(selectedProcessGroups.value, item => item.id) : [];
+        let processesIdForFilter = this.findProcessesIdForProcessGroups(processGroupIds);
+
+        const selectedProcessesId  = selectedProcesses.value ? Array.prototype.map.call(selectedProcesses.value, item => item.id) : [];
+        if (selectedProcessesId.length)
+            processesIdForFilter = selectedProcessesId;
+
+        let procFilter;
+
+        if (processesIdForFilter.length > 0)
+        {
+            procFilter = {
+                name: FilterType.PROCESS_FILTER
+                , active: true
+                , status: {processes: processesIdForFilter}
+            };
+        }
+        else {
+            procFilter = {
+                name: FilterType.PROCESS_FILTER
+                , active: false
+                , status: null
+            };
+        }
+        this.store.dispatch(new ApplyFilter(procFilter));
+    }
+
+    filterByTypeOfStates(selectedTypeOfStates: any) {
+        const typeOfStates  = selectedTypeOfStates.value ? Array.prototype.map.call(selectedTypeOfStates.value, item => item.id) : [];
+        let typeOfStatesFilter;
+
+        if (typeOfStates.length > 0)
+        {
+            const typeOfStatesPerProcessAndState = this.processesService.getTypeOfStatesPerProcessAndState();
+            typeOfStatesFilter = {
+                name: FilterType.TYPEOFSTATE_FILTER
+                , active: true
+                , status: {typeOfStates: typeOfStates, mapOfTypeOfStates: typeOfStatesPerProcessAndState}
+            };
+        }
+        else {
+            typeOfStatesFilter = {
+                name: FilterType.TYPEOFSTATE_FILTER
+                , active: false
+                , status: null
+            };
+        }
+        this.store.dispatch(new ApplyFilter(typeOfStatesFilter));
+    }
+
+    public loadProcessGroupDropdownListAndProcessesDropdownList(): void {
+
+        this.processesDropdownListPerProcessGroups = this.processesService.getProcessesPerProcessGroups();
+        this.processesWithoutProcessGroupDropdownList = this.processesService.getProcessesWithoutProcessGroup();
+
+        if (this.processesWithoutProcessGroupDropdownList.length > 0)
+            this.processGroupDropdownList.push({ id: '--', itemName: "processGroup.defaultLabel" });
+
+        const processGroups = Array.from(this.processesDropdownListPerProcessGroups.keys());
+        processGroups.forEach(processGroup => this.processGroupDropdownList.push({ id: processGroup, itemName: processGroup }));
     }
 
     sendQuery() {
 
+        this.selectedProcessGroups = this.monitoringForm.get('processGroup');
         this.selectedProcesses = this.monitoringForm.get('process');
-        this.pubStart = this.monitoringForm.get('publishDateFrom');
-        this.pubEnd = this.monitoringForm.get('publishDateTo');
-        this.busiStart = this.monitoringForm.get('activeFrom');
-        this.busiEnd = this.monitoringForm.get('activeTo');
+        this.selectedTypeOfStates = this.monitoringForm.get('typeOfState');
 
         if (this.firstQuery || this.hasFormControlValueChanged( this.selectedProcesses)
-            || this.hasFormControlValueChanged( this.pubStart) || this.hasFormControlValueChanged( this.pubEnd)
-            || this.hasFormControlValueChanged( this.busiStart) || this.hasFormControlValueChanged( this.busiEnd)) {
-            this.store.dispatch(new ResetFilterForMonitoring());
+            || this.hasFormControlValueChanged( this.selectedProcessGroups)
+            || this.hasFormControlValueChanged( this.selectedTypeOfStates)
+            || this.hasFormControlValueChanged( this.timelineButtons.startDate) || this.hasFormControlValueChanged( this.timelineButtons.endDate)) {
 
-            if ( this.selectedProcesses.value) {
-                const processesId  = Array.prototype.map.call( this.selectedProcesses.value, item => item.id);
-                if (processesId.length >0 ) 
-                {
-                    const procFilter = {
-                        name: FilterType.PROCESS_FILTER
-                        , active: true
-                        , status: {processes: processesId}
-                    };
-                    this.store.dispatch(new ApplyFilter(procFilter));
-                }
-                
-            }
-
-            if (this.hasFormControlValueChanged( this.pubStart)
-                || this.hasFormControlValueChanged( this.pubEnd)) {
-
-                const start = this.extractDateOrDefaultOne( this.pubStart,  offSetCurrentTime([{amount: -2, unit: 'hours'}]));
-                const end = this.extractDateOrDefaultOne( this.pubEnd, offSetCurrentTime([{amount: 2, unit: 'days'}]));
-                const publishDateFilter = {
-                    name: FilterType.PUBLISHDATE_FILTER
-                    , active: true
-                    , status: {
-                        start: start,
-                        end: end
-                    }
-                };
-                this.store.dispatch(new ApplyFilter(publishDateFilter));
-            }
-            
-            const bstart = this.extractDateOrDefaultOne( this.busiStart,  offSetCurrentTime([{amount: -2, unit: 'hours'}]));
-            const bend = this.extractDateOrDefaultOne( this.busiEnd, offSetCurrentTime([{amount: 2, unit: 'days'}]));
-                
-                this.store.dispatch(new ApplyFilter({
-                    name: FilterType.BUSINESSDATE_FILTER, active: true,
-                    status: {start: bstart, end: bend}
-                    }));
+            this.filterByProcesses(this.selectedProcessGroups, this.selectedProcesses);
+            this.filterByTypeOfStates(this.selectedTypeOfStates);
         }
         this.firstQuery = false;
     }
@@ -191,54 +253,10 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
         return false;
     }
 
-    extractDateOrDefaultOne(form: AbstractControl, defaultDate: any) {
-        const val = form.value;
-        const finallyUsedDate = (!!val && val !== '') ? val : defaultDate;
-        if (!finallyUsedDate) {
-            return -1;
-        }
-        const converter = new DateTimeNgb(finallyUsedDate.date, finallyUsedDate.time);
-        return converter.convertToNumber();
-    }
-
     resetForm() {
         this.monitoringForm.reset();
-        this.initActiveDatesForm();
         this.firstQuery = true;
         this.sendQuery();
-    }
-
-    showOrHideFilters() {
-        // Update summary of filters
-        // There is no need to use observables are the summary should only be updated when it is needed, rather than react to every selection change
-        //This takes advantage of the translation managed by the filter component to produce the list of available processes rather than do the translation again.
-        this.processSummary = this.selectedProcesses?this.selectedProcesses.value:[];
-        this.publishDateFromSummary = this.formValueToString(this.pubStart.value);
-        this.publishDateToSummary = this.formValueToString(this.pubEnd.value);
-        this.activeDateFromSummary = this.formValueToString(this.busiStart.value);
-        this.activeDateToSummary = this.formValueToString(this.busiEnd.value);
-
-        this.hideFilters = !this.hideFilters;
-        localStorage.setItem('opfab.hideMonitoringFilters', this.hideFilters.toString());
-
-    }
-
-    formValueToString(value : DateTimeFilterValue) : string {
-        //Using formatDateTime instead of a pipe to take into account the custom format that might be defined in config
-        return value?this.time.formatDateTime(this.formValueToDate(value)):"";
-    }
-
-    formValueToDate(value : DateTimeFilterValue) : Date {
-        //Note the -1 for the month because the Date constructor takes the month as a number between 0 and 11 (January to December) as parameter
-        return new Date(value.date.year,value.date.month -1, value.date.day,value.time.hour,value.time.minute);
-    }
-
-    listVisibleProcessesForSummary() {
-        return this.processSummary.length > maxVisibleProcessesForSummary? this.processSummary.slice(0, maxVisibleProcessesForSummary) : this.processSummary;
-    }
-
-    listDropdownProcessesForSummary() {
-        return this.processSummary.length > maxVisibleProcessesForSummary ? this.processSummary.slice(maxVisibleProcessesForSummary) : [];
     }
 
     ngOnDestroy() {
