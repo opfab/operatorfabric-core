@@ -81,7 +81,14 @@
         "style"
       ],
       "acknowledgmentAllowed": "OnlyWhenResponseDisabledForUser"
-    },   
+    },
+    "multipleOptionsResponseState": {
+      "name": "multipleOptionsResponseState.title",
+      "description": "multipleOptionsResponseState.description",
+      "color": "#0070C0",
+      "acknowledgmentAllowed": "Always",
+      "templateName": "multipleOptionsResponseState"
+    },
     "responseState": {
       "name": "response.title",
       "description": "responseState.description",
