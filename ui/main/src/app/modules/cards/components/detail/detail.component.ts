@@ -70,6 +70,7 @@ class FormResult {
     valid: boolean;
     errorMsg: string;
     formData: any;
+    responseState?: string;
 }
 
 const enum ResponseI18nKeys {
@@ -316,7 +317,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 processVersion: this.card.processVersion,
                 process: this.card.process,
                 processInstanceId: `${this.card.processInstanceId}_${this.getUserEntityToRespond()}`,
-                state: this._responseData.state,
+                state: formResult.responseState ? formResult.responseState : this._responseData.state,
                 startDate: this.card.startDate,
                 endDate: this.card.endDate,
                 severity: Severity.INFORMATION,
@@ -338,6 +339,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                     rep => {
                         if (rep['count'] === 0 && rep['message'].includes('Error')) {
                             this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
+                            console.error(rep['message']);
                         } else {
                           this.hasAlreadyResponded = true;
                           templateGateway.lockAnswer();

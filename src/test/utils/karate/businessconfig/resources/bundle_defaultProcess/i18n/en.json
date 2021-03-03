@@ -7,11 +7,11 @@
 	"chartDetail" : { "title":"A Chart"},
 	"chartLine" : { "title":"Electricity consumption forecast"},
 	"question" : {"title": "⚡ Planned Outage","button" : {"text" :"Send your response"}},
-	"contingencies": {"title" : "⚠️ Network Contingencies ⚠️","summary":"Contingencies report for french network"},
+	"contingencies": {"title" : "⚠️ Network Contingencies ⚠️","summary":"Contingencies report for French network"},
 	"response" : { "title":"Planned outage date response"},
 	"menu": {
 		"label": "Test Process Menu",
-		"first":"Operator Fabric Documentation",
+		"first":"OperatorFabric Documentation",
 		"second":"LF Energy"
 	},
 
@@ -34,6 +34,10 @@
 	"questionState": {
 		"title": "Action required",
 		"description": "Question state"
+	},
+	"multipleOptionsResponseState": {
+		"title": "Additional information required",
+		"description": "Follow-up Question state"
 	},
 	"responseState": {
 		"description": "Response state"
