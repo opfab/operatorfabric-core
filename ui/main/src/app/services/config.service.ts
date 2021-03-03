@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -71,14 +71,13 @@ export class ConfigService {
         const menu = menus.find(m => m.id === id);
         if (menu) {
             const entry = menu.entries.filter(e => e.id === menuEntryId);
-
             if (entry.length === 1) {
                 return of(entry[0].url);
             } else {
-                throwError(new Error('No such menu entry.'));
+                return throwError(new Error('No such menu entry.'));
             }
         } else {
-            throwError(new Error('No such menu entry.'));
+            return throwError(new Error('No such menu entry.'));
         }
     }
 

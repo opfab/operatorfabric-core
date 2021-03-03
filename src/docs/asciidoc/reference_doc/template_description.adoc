@@ -502,3 +502,32 @@ To adapt the template content on screen size it is possible to receive from Oper
 
 - 'md' : medium size window
 - 'lg' : large size window
+
+=== Redirect to business application from a card
+
+It's possible to redirect from a card to a business application declared in `ui-menu.json`.
+
+This can be done by calling the following function from the template :
+
+....
+templateGateway.redirectToBusinessMenu(idMenu,idEntry)
+....
+
+  - idMenu is the id of the menu defined in ui-menu.json 
+  - idEntry is the id of the entry defined in ui-menu.json 
+
+It is also possible to append parameters to the url that will be called:
+
+....
+templateGateway.redirectToBusinessMenu('myMenu','myEntry','param1=aParam&param2=anotherParam')
+....
+
+For example:
+
+.src/test/utils/karate/businessconfig/resources/bundle_defaultProcess/template/en/chart.handlebars
+[source,html]
+----
+include::../../../test/utils/karate/businessconfig/resources/bundle_defaultProcess/template/en/chart.handlebars[tag=templateGateway.redirectToBusinessMenu_example]
+----
+
+This can be useful to pass context from the card to the business application.
