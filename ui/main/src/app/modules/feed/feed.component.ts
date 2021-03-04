@@ -62,9 +62,13 @@ export class FeedComponent implements OnInit {
 
     }
 
-    public isSmallscreen()
+    public enoughSpaceForTimeLine()
     {
-      return (window.innerWidth <1000 || window.innerHeight <800 );
+      return (window.innerWidth >1000 && window.innerHeight > 700 );
     }
 
+    public enoughSpaceForCardDetail()
+    {
+      return (window.innerWidth > 1000);
+    }
 }

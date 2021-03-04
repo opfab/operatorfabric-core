@@ -11,13 +11,13 @@
 <div>
     
     <div class="fixed-height-main-layout opfab_timeline_margin" *ngIf="!hideTimeLine">
-       <div [hidden]="isSmallscreen()">
+       <div [hidden]="!enoughSpaceForTimeLine()">
            <of-time-line></of-time-line> 
         </div> 
     </div>
 
     <div id="parentFeedContent" class="row calc-height-main-layout" style="margin-left: 38px;margin-right:20px;display:flex">
-        <div style="padding-left: 0px;width:440px">
+        <div style="padding-left: 0px"  [class.opfab-standard-screen]="enoughSpaceForCardDetail()" [class.opfab-small-screen]="!enoughSpaceForCardDetail()">
             <of-card-list [lightCards]="lightCards$|async" [selection]="selection$"></of-card-list>
         </div>
         <div  style="padding-left: 0px;width:calc(100% - 440px)">
