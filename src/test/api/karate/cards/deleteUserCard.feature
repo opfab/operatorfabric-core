@@ -201,7 +201,7 @@ Feature: deleteUserCards tests
     * def cardForDeleteForbidden3 =
 """
 {
-	"publisher" : "ENTITY1",
+	"publisher" : "ENTITY2",
 	"processVersion" : "1",
 	"process"  :"processDeleteUserCard",
 	"processInstanceId" : "processDeleteUserCardForbidden3",

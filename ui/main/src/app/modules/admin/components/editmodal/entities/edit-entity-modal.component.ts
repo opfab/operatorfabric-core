@@ -26,7 +26,8 @@ export class EditEntityModalComponent implements OnInit {
     id: new FormControl(''
       , [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-z\d\-_]+$/)]),
     name: new FormControl('', [Validators.required]),
-    description: new FormControl('')
+    description: new FormControl(''),
+    entityAllowedToSendCard: new FormControl(false),
   });
 
   @Input() row: any;
@@ -65,7 +66,7 @@ export class EditEntityModalComponent implements OnInit {
     this.id.setValue((this.id.value as string).trim());
     this.name.setValue((this.name.value as string).trim());
     this.description.setValue((this.description.value as string).trim());
-
+    this.entityAllowedToSendCard.setValue(this.entityAllowedToSendCard.value as boolean);
   }
 
   get id() {
@@ -78,6 +79,10 @@ export class EditEntityModalComponent implements OnInit {
 
   get description() {
     return this.entityForm.get('description') as FormControl;
+  }
+
+  get entityAllowedToSendCard() {
+    return this.entityForm.get('entityAllowedToSendCard') as FormControl;
   }
 
   dismissModal(reason: string): void {

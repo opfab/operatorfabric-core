@@ -229,7 +229,7 @@ class CardProcessServiceShould {
         ArrayList<String> externalRecipients = new ArrayList<>();
         externalRecipients.add("api_test_externalRecipient1");
 
-        CardPublicationData card = CardPublicationData.builder().publisher("PUBLISHER_1").processVersion("O")
+        CardPublicationData card = CardPublicationData.builder().publisher("newPublisherId").processVersion("O")
                 .processInstanceId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
                 .process("PROCESS_CARD_USER")
                 .state("STATE1")
@@ -253,6 +253,29 @@ class CardProcessServiceShould {
 
     }
 
+    @Test
+    void createUserCardsWithWrongPublisher() throws URISyntaxException {
+        ArrayList<String> externalRecipients = new ArrayList<>();
+        externalRecipients.add("api_test_externalRecipient1");
+
+        CardPublicationData card = CardPublicationData.builder().publisher("PUBLISHER_X").processVersion("O")
+                .processInstanceId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
+                .process("PROCESS_CARD_USER")
+                .state("STATE1")
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now())
+                .externalRecipients(externalRecipients)
+                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                .state("state1")
+                .build();
+
+        StepVerifier.create(cardProcessingService.processUserCards(Flux.just(card), currentUserWithPerimeters))
+                .expectNextMatches(r -> r.getCount().equals(0)).verifyComplete();
+        checkCardCount(0);
+        checkArchiveCount(0);
+
+    }
 
     @Test
     void childCards() throws URISyntaxException {
@@ -278,7 +301,7 @@ class CardProcessServiceShould {
         ArrayList<String> externalRecipients = new ArrayList<>();
         externalRecipients.add("api_test_externalRecipient1");
 
-        CardPublicationData card = CardPublicationData.builder().publisher("PUBLISHER_1").processVersion("O")
+        CardPublicationData card = CardPublicationData.builder().publisher("newPublisherId").processVersion("O")
                 .processInstanceId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
                 .process("PROCESS_CARD_USER")
                 .parentCardId(cards.get(0).getId())
@@ -353,7 +376,7 @@ class CardProcessServiceShould {
         HoursAndMinutes hoursAndMinutes = new HoursAndMinutesPublicationData(2,10);
         RecurrencePublicationData recurrence = new RecurrencePublicationData("timezone",daysOfWeek,hoursAndMinutes, duration);
 
-        CardPublicationData newCard = CardPublicationData.builder().publisher("PUBLISHER_1")
+        CardPublicationData newCard = CardPublicationData.builder().publisher("publisher(")
                 .processVersion("0.0.1").processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                 .startDate(start).title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").parameter("arg1", "value1")
@@ -396,7 +419,7 @@ class CardProcessServiceShould {
     }
 
     private boolean checkCardPublisherId(CardPublicationData card) {
-        if (user.getEntities().get(0).equals(card.getPublisher())) {
+        if (user.getEntities().contains(card.getPublisher())) {
             return true;
         } else {
             log.warn("Expected card publisher id is " + user.getEntities().get(0) + " but it was " + card.getPublisher());

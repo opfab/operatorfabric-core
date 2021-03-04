@@ -50,15 +50,23 @@ operatorfabric.users.default:
       name: ReadOnly
       description: ReadOnly Group
   entities:
-    - id: ENTITY1
-      name: Control Room 1
-      description: Control Room 1
-    - id: ENTITY2
-      name: Control Room 2
-      description: Control Room 2
-    - id: ENTITY3
-      name: Control Room 3
-      description: Control Room 3
-    - id: ENTITY4
-      name: IT Supervision Center 
-      description: IT Supervision Center
+   - id: ENTITY1
+     name: Control Room 1
+     description: Control Room 1
+     parents : ["ALLCONTROLROOMS"]
+   - id: ENTITY2
+     name: Control Room 2
+     description: Control Room 2
+     parents : ["ALLCONTROLROOMS"]
+   - id: ENTITY3
+     name: Control Room 3
+     description: Control Room 3
+     parents : ["ALLCONTROLROOMS"]
+   - id: ALLCONTROLROOMS
+     name: All Control Rooms 
+     description: All Control Rooms
+     entityAllowedToSendCard: false
+   - id: ENTITY4
+     name: IT Supervision Center 
+     description: IT Supervision Center 
+

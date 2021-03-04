@@ -55,7 +55,7 @@ ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/deployment/inde
 The notion of entity is loose and can be used to model organizations structures(examples : control center, company , department... ).
 Entities are used to send cards to several users without a name specifically. The information about membership to an
 entity is stored in the user's data (`entities` field of the `user` object). In Entity objects, the `parents` property (array) expresses the fact that this entity is a part of one or several other entities. This feature allows cards to be sent to a group of entities without having to repeat the detailed list of entities for each card.
-
+The boolean property `entityAllowedToSendCard` (default value `true`) can be used to mark an Entity as not eligible as card publisher. This can be useful for a group of entities where only child entities should be used as card publishers while the parent is just a logical group usable as card recipient.
 
 Examples using entities can be found 
 ifdef::single-page-doc[<<_send_to_several_users, here>>]
