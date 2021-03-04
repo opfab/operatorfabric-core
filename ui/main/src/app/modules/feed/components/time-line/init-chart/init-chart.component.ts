@@ -76,8 +76,16 @@ export class InitChartComponent implements OnInit {
             this.buttonList.push(defaultConfig);
         }
         // Set the zoom activated
-        if (this.buttonList.length > 0) {
-            this.changeGraphConf(this.buttonList[0]);
+        let initialGraphConf = this.buttonList.length > 0 ? this.buttonList[0] : null;
+        
+        const savedDomain = localStorage.getItem('opfab.timeLine.domain');
+
+        if (!!savedDomain) {
+            initialGraphConf = this.buttonList.find(b => b.domainId === savedDomain);
+        }
+        
+        if (!!initialGraphConf) {
+            this.changeGraphConf(initialGraphConf);
         }
     }
 
@@ -101,6 +109,7 @@ export class InitChartComponent implements OnInit {
         this.selectZoomButton(conf.buttonTitle);
         this.domainId = conf.domainId;
         this.setDefaultStartAndEndDomain();
+        localStorage.setItem('opfab.timeLine.domain', this.domainId);
     }
 
 
