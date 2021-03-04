@@ -23,6 +23,7 @@ java -jar karate.jar                              \
       cards/postCardWithNoState.feature           \
       cards/postCardFor3Users.feature             \
       cards/postCardFor3UsersDeprecated.feature   \
+      cards/postCardsEntitiesToRespond.feature \
       cards/deleteCardFor3Users.feature           \
       cards/post2CardsInOneRequest.feature        \
       cards/post1CardThenUpdateThenDelete.feature \

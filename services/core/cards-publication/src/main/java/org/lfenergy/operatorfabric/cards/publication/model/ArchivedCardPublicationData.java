@@ -74,8 +74,11 @@ public class ArchivedCardPublicationData implements Card {
     @Indexed
     private List<String> entityRecipients;
     private List<String> externalRecipients;
-    @Singular("entitiesAllowedToRespond")
+    @Singular("entityAllowedToRespond")
     private List<String> entitiesAllowedToRespond;
+    @Singular("entitiyRequiredToRespond")
+    private List<String> entitiesRequiredToRespond;
+
 
     @Transient
     private Boolean hasBeenAcknowledged;
@@ -114,6 +117,7 @@ public class ArchivedCardPublicationData implements Card {
         this.entityRecipients = card.getEntityRecipients() == null ? null : new ArrayList<>(card.getEntityRecipients());
         this.externalRecipients = card.getExternalRecipients() == null ? null : new ArrayList<>(card.getExternalRecipients());
         this.entitiesAllowedToRespond = card.getEntitiesAllowedToRespond() == null ? null : new ArrayList<>(card.getEntitiesAllowedToRespond());
+        this.entitiesRequiredToRespond = card.getEntitiesRequiredToRespond() == null ? null : new ArrayList<>(card.getEntitiesRequiredToRespond());
         this.processStateKey = process + "." + state;
         this.publisherType = card.getPublisherType();
         this.secondsBeforeTimeSpanForReminder = card.getSecondsBeforeTimeSpanForReminder();

@@ -123,7 +123,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     unsubscribe$: Subject<void> = new Subject<void>();
     public hrefsOfCssLink = new Array<SafeResourceUrl>();
-    private _listEntitiesToRespond = new Array<EntityMessage>();
+    private _listEntitiesToRespondForHeader = new Array<EntityMessage>();
     private _userEntitiesAllowedToRespond: string[];
     private _htmlContent: SafeHtml;
     private _userContext: UserContext;
@@ -454,29 +454,46 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private setEntitiesToRespond() {
-        this._listEntitiesToRespond = new Array<EntityMessage>();
+        this._listEntitiesToRespondForHeader = new Array<EntityMessage>();
         this._userEntitiesAllowedToRespond = [];
 
         if (this.card.entitiesAllowedToRespond) {
 
-            const entitiesToRespond = this.entitiesService.getEntities().filter(entity  => this.card.entitiesAllowedToRespond.includes(entity.id));
-            const allowed = this.entitiesService.getEntitiesAllowedToRespond(entitiesToRespond).map(entity => entity.id);
+            const entitiesAllowedToRespond = this.entitiesService.getEntitiesFromIds(this.card.entitiesAllowedToRespond);
+            const allowed = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond).map(entity => entity.id);
             console.log(new Date().toISOString(), ' Detail card - entities allowed to respond = ', allowed);
 
-            allowed.forEach(entity => {
-                const entityName = this.entitiesService.getEntityName(entity);
-                if (entityName) {
-                    this._listEntitiesToRespond.push(
-                        {
-                            name: entityName,
-                            color: this.checkEntityAnswered(entity) ? EntityMsgColor.GREEN : EntityMsgColor.ORANGE
-                        });
-                }
-            });
+            // This will be overwritten by the block below if entitiesRequiredToRespond is set and not empty/null
+            // This is to avoid repeating the creation of the allowed list
+            this._listEntitiesToRespondForHeader = this.createEntityHeaderFromList(allowed);
 
             this._userEntitiesAllowedToRespond = allowed.filter(x => this.user.entities.includes(x));
             console.log(new Date().toISOString(), ' Detail card - users entities allowed to respond = ', this._userEntitiesAllowedToRespond);
+
         }
+
+        if(this.card.entitiesRequiredToRespond&&this.card.entitiesRequiredToRespond.length>0) {
+            const entitiesRequiredToRespond = this.entitiesService.getEntitiesFromIds(this.card.entitiesRequiredToRespond);
+            const required = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesRequiredToRespond).map(entity => entity.id);
+            this._listEntitiesToRespondForHeader = this.createEntityHeaderFromList(required);
+        }
+    }
+
+    /** @param entities as list of strings
+     * @return `EntityMessage` array (containing entity name and color based on response status)*/
+    private createEntityHeaderFromList(entities : string[]) {
+        const entityHeader = new Array<EntityMessage>();
+        entities.forEach(entity => {
+            const entityName = this.entitiesService.getEntityName(entity);
+            if (entityName) {
+                entityHeader.push(
+                    {
+                        name: entityName,
+                        color: this.checkEntityAnswered(entity) ? EntityMsgColor.GREEN : EntityMsgColor.ORANGE
+                    });
+            }
+        });
+        return entityHeader;
     }
 
     private setIsActionEnabled() {
@@ -548,11 +565,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     get listVisibleEntitiesToRespond() {
-        return this._listEntitiesToRespond.length > maxVisibleEntitiesToRespond ? this._listEntitiesToRespond.slice(0, maxVisibleEntitiesToRespond) : this._listEntitiesToRespond;
+        return this._listEntitiesToRespondForHeader.length > maxVisibleEntitiesToRespond ? this._listEntitiesToRespondForHeader.slice(0, maxVisibleEntitiesToRespond) : this._listEntitiesToRespondForHeader;
     }
 
     get listDropdownEntitiesToRespond() {
-        return this._listEntitiesToRespond.length > maxVisibleEntitiesToRespond ? this._listEntitiesToRespond.slice(maxVisibleEntitiesToRespond) : [];
+        return this._listEntitiesToRespondForHeader.length > maxVisibleEntitiesToRespond ? this._listEntitiesToRespondForHeader.slice(maxVisibleEntitiesToRespond) : [];
     }
 
     checkEntityAnswered(entity: string): boolean {

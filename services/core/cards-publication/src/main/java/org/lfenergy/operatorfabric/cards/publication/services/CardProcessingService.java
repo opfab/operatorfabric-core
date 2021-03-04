@@ -175,16 +175,20 @@ public class CardProcessingService {
             throw new ConstraintViolationException(results);
 
         // constraint check : endDate must be after startDate
-        if (! checkIsEndDateAfterStartDate(c))
+        if (!checkIsEndDateAfterStartDate(c))
             throw new ConstraintViolationException("constraint violation : endDate must be after startDate", null);
 
         // constraint check : timeSpans list : each end date must be after his start date
-        if (! checkIsAllTimeSpanEndDateAfterStartDate(c))
+        if (!checkIsAllTimeSpanEndDateAfterStartDate(c))
             throw new ConstraintViolationException("constraint violation : TimeSpan.end must be after TimeSpan.start", null);
 
         // constraint check : process and state must not contain "." (because we use it as a separator)
-        if (! checkIsDotCharacterNotInProcessAndState(c))
+        if (!checkIsDotCharacterNotInProcessAndState(c))
             throw new ConstraintViolationException("constraint violation : character '.' is forbidden in process and state", null);
+
+        // constraint check: if it is present, entitiesRequiredToRespond should only contain entities from entitiesAllowedToRespond
+        if(!checkEntitiesRequiredToRespondIsSubsetOfEntitiesAllowedToRespond(c))
+            throw new ConstraintViolationException("constraint violation : entitiesRequiredToRespond should be a subset of entitiesAllowedToRespond", null);
     }
 
     boolean checkIsParentCardIdExisting(CardPublicationData c){
@@ -224,6 +228,18 @@ public class CardProcessingService {
             }
         }
         return true;
+    }
+
+    boolean checkEntitiesRequiredToRespondIsSubsetOfEntitiesAllowedToRespond(CardPublicationData c) {
+        List<String> entitiesRequiredToRespond = c.getEntitiesRequiredToRespond();
+        if(entitiesRequiredToRespond == null) return true;
+        else {
+            List<String> entitiesAllowedToRespond = c.getEntitiesAllowedToRespond();
+            if(entitiesAllowedToRespond == null) return false;
+            else {
+                return entitiesAllowedToRespond.containsAll(entitiesRequiredToRespond);
+            }
+        }
     }
 
     /**

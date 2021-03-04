@@ -99,9 +99,12 @@ public class CardPublicationData implements Card {
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> groupRecipients;
-    @Singular("entitiesAllowedToRespond")
+    @Singular("entityAllowedToRespond")
     @Indexed
     private List<String> entitiesAllowedToRespond;
+    @Singular("entityRequiredToRespond")
+    @Indexed
+    private List<String> entitiesRequiredToRespond;
     @Singular
     @Indexed
     private List<String> entityRecipients;

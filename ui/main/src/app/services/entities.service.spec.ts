@@ -79,7 +79,7 @@ describe('EntitiesService', () => {
         const selectedEntities: Entity[] = [];
         selectedEntities.push(entity2);
         selectedEntities.push(entity3);
-        const allowedEntities = entitiesService.getEntitiesAllowedToRespond(selectedEntities);
+        const allowedEntities = entitiesService.resolveEntitiesAllowedToSendCards(selectedEntities);
         expect(allowedEntities.length).toBe(3);
         expect(allowedEntities[0].id).toBe('ENTITY2');
         expect(allowedEntities[1].id).toBe('ENTITY3.1.2');
@@ -107,7 +107,7 @@ describe('EntitiesService', () => {
         const selectedEntities: Entity[] = [];
         selectedEntities.push(entityGroup);
 
-        const allowedEntities = entitiesService.getEntitiesAllowedToRespond(selectedEntities);
+        const allowedEntities = entitiesService.resolveEntitiesAllowedToSendCards(selectedEntities);
         expect(allowedEntities.length).toBe(1);
         expect(allowedEntities[0].id).toBe('ENTITYGROUP');
       });
@@ -135,7 +135,7 @@ describe('EntitiesService', () => {
         selectedEntities.push(entity2);
         selectedEntities.push(entityGroup);
   
-        const allowedEntities = entitiesService.getEntitiesAllowedToRespond(selectedEntities);
+        const allowedEntities = entitiesService.resolveEntitiesAllowedToSendCards(selectedEntities);
         expect(allowedEntities.length).toBe(2);
         expect(allowedEntities[0].id).toBe('ENTITY1');
         expect(allowedEntities[1].id).toBe('ENTITY2');
