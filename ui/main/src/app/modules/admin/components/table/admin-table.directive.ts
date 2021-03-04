@@ -11,7 +11,7 @@
 import {Directive, Injectable, OnDestroy, OnInit} from '@angular/core';
 import {ColDef, GridOptions, ICellRendererParams} from 'ag-grid-community';
 import {TranslateService} from '@ngx-translate/core';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import {Subject, throwError} from 'rxjs';
 import {ConfirmationDialogService} from '../../services/confirmation-dialog.service';
 import {AppError} from '../../../../common/error/app-error';
@@ -26,28 +26,6 @@ import {StateRightsCellRendererComponent} from '../cell-renderers/state-rights-c
 @Directive()
 @Injectable()
 export abstract class AdminTableDirective implements OnInit, OnDestroy {
-
-  unsubscribe$: Subject<void> = new Subject<void>();
-
-  // These fields will be initialized in the concrete classes extending `AdminTableDirective`
-  // (e.g. EntitiesTableComponent) as they depend on the type of the table
-  /** Modal component to open when editing an item from the table (e.g. `EditEntityGroupModal`) */
-  public editModalComponent;
-  public modalOptions = {};
-  /** Type of data managed by the table (e.g. `AdminItemType.ENTITY`) */
-  protected tableType: AdminItemType;
-  /** Relevant fields for this data type. They will be used to populate the table columns */
-  protected fields: Field[];
-  /** Among these fields, which one represents an item's unique id (e.g. `id`) */
-  protected idField: string;
-
-  // ag-grid configuration objects
-  public gridOptions;
-  public gridApi;
-  public rowData: any;
-
-  protected i18NPrefix = 'admin.input.';
-  protected crudService: CrudService;
 
   constructor(
       protected translateService: TranslateService,
@@ -99,6 +77,34 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     // Defining a custom cellRenderer was necessary (instead of using onCellClicked & an inline cellRenderer) because of
     // the need to call a method from the parent component
   }
+  /** Default options for edition modals. */
+  protected static defaultModalOptions: NgbModalOptions = {
+    backdrop: 'static' // Modal shouldn't close even if we click outside it
+  };
+
+  unsubscribe$: Subject<void> = new Subject<void>();
+
+  // These fields will be initialized in the concrete classes extending `AdminTableDirective`
+  // (e.g. EntitiesTableComponent) as they depend on the type of the table
+  /** Modal component to open when editing an item from the table (e.g. `EditEntityGroupModal`) */
+  public editModalComponent;
+  /** Default modal options can be added to or overridden using this property in the xxx-table components extending the directive. */
+  public modalOptions: NgbModalOptions = AdminTableDirective.defaultModalOptions;
+
+  /** Type of data managed by the table (e.g. `AdminItemType.ENTITY`) */
+  protected tableType: AdminItemType;
+  /** Relevant fields for this data type. They will be used to populate the table columns */
+  protected fields: Field[];
+  /** Among these fields, which one represents an item's unique id (e.g. `id`) */
+  protected idField: string;
+
+  // ag-grid configuration objects
+  public gridOptions;
+  public gridApi;
+  public rowData: any;
+
+  protected i18NPrefix = 'admin.input.';
+  protected crudService: CrudService;
 
   ngOnInit() {
     this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.tableType);
@@ -167,7 +173,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     // This method might be flagged as "unused" by IDEs but it's actually called through the ActionCellRendererComponent
     const columnId = params.colDef.colId;
     if (columnId === 'edit') {
-      const modalRef = this.modalService.open(this.editModalComponent,this.modalOptions);
+      const modalRef = this.modalService.open(this.editModalComponent, this.modalOptions);
       modalRef.componentInstance.type = this.tableType;
       modalRef.componentInstance.row = params.data; // This passes the data from the edited row to the modal to initialize input values.
       modalRef.result.then(
@@ -204,7 +210,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
   }
 
   createNewItem(): void {
-    const modalRef = this.modalService.open(this.editModalComponent,this.modalOptions);
+    const modalRef = this.modalService.open(this.editModalComponent, this.modalOptions);
     modalRef.componentInstance.type = this.tableType;
     modalRef.result.then(
         // Hooking the refresh of the data to the closing of the modal seemed simpler than setting up

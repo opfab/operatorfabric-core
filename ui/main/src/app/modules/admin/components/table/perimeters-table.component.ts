@@ -23,6 +23,6 @@ export class PerimetersTableComponent extends AdminTableDirective implements OnI
   fields = [new Field('id'), new Field('process'), new Field('stateRights', 7, 'stateRightsCellRenderer')];
   idField = 'id';
   editModalComponent = EditPerimeterModalComponent;
-  modalOptions = {size: 'xl'};
+  modalOptions = {...AdminTableDirective.defaultModalOptions, size: 'xl'};
 
 }
