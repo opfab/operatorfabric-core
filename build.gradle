@@ -27,7 +27,6 @@ ext {
             starterWeb              : "org.springframework.boot:spring-boot-starter-web:${versions['spring.boot']}",
             starterWebflux          : "org.springframework.boot:spring-boot-starter-webflux:${versions['spring.boot']}",
             actuator                : "org.springframework.boot:spring-boot-starter-actuator:${versions['spring.boot']}",
-            micrometer              : "io.micrometer:micrometer-registry-prometheus:latest.release",
             starterAop              : "org.springframework.boot:spring-boot-starter-aop:${versions['spring.boot']}",
             starterJetty            : "org.springframework.boot:spring-boot-starter-jetty:${versions['spring.boot']}",
             starterRabbitmq         : "org.springframework.boot:spring-boot-starter-amqp:${versions['spring.boot']}",
@@ -74,7 +73,8 @@ ext {
             feignMock      : "io.github.openfeign:feign-mock:${versions['feign']}",
             feignJackson   : "io.github.openfeign:feign-jackson:${versions['feign']}",
             jacksonAnnotations   : "com.fasterxml.jackson.core:jackson-annotations:${versions['jacksonAnnotations']}",
-            collections4   : "org.apache.commons:commons-collections4:${versions['apache.commons.collections4']}"
+            collections4   : "org.apache.commons:commons-collections4:${versions['apache.commons.collections4']}",
+            micrometer     : "io.micrometer:micrometer-registry-prometheus:${versions['micrometer']}"
     ]
 
     generator = [
