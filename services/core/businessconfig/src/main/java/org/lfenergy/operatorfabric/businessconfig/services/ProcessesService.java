@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,32 +11,12 @@
 
 package org.lfenergy.operatorfabric.businessconfig.services;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.stream.Stream;
-
-import javax.annotation.PostConstruct;
-import javax.validation.ConstraintViolation;
-
-import org.lfenergy.operatorfabric.businessconfig.model.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.businessconfig.model.Process;
+import org.lfenergy.operatorfabric.businessconfig.model.*;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.utilities.PathUtils;
@@ -49,11 +29,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
-
-import lombok.extern.slf4j.Slf4j;
+import javax.annotation.PostConstruct;
+import javax.validation.ConstraintViolation;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * Processes Service for managing business processes definition and resources
@@ -479,13 +465,13 @@ public class ProcessesService implements ResourceLoaderAware {
 			}
 			//delete version folder
 			PathUtils.delete(processVersionPath);
-			log.debug("removed process:{} whith version:{} from filesystem", id, version);
+			log.debug("removed process:{} with version:{} from filesystem", id, version);
 			completeCache.remove(id,version);
 		}
 	}
 
     /**
-     * Resets data (only used in tests)
+     * Removes all configuration bundles from storage and clears all caches
      *
      * @throws IOException multiple underlying cases (file system access, file system manipulation - deletion)
      */
@@ -493,8 +479,10 @@ public class ProcessesService implements ResourceLoaderAware {
         Resource resource = this.resourceLoader.getResource(PATH_PREFIX + this.storagePath);
         File file = resource.getFile();
         if(file.exists()) {
-            try (Stream<Path> pathStream = Files.walk(PathUtils.getPath(file), 1)) {
+            Path storageRoot = PathUtils.getPath(file);
+            try (Stream<Path> pathStream = Files.walk(storageRoot, 1)) {
                 pathStream
+                        .filter(path -> path != storageRoot) // Avoid deleting the storage root folder
                         .forEach(PathUtils::silentDelete);
             }finally {
                 this.completeCache.clear();

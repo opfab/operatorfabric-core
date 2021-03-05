@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.springtools.configuration.test.WithMockOpFabUser;
 import org.lfenergy.operatorfabric.businessconfig.application.IntegrationTestApplication;
 import org.lfenergy.operatorfabric.businessconfig.services.ProcessesService;
+import org.lfenergy.operatorfabric.utilities.PathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -37,19 +38,12 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.lfenergy.operatorfabric.test.AssertUtils.assertException;
 import static org.lfenergy.operatorfabric.utilities.PathUtils.copy;
-import static org.lfenergy.operatorfabric.utilities.PathUtils.silentDelete;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 
-/**
- * <p></p>
- * Created on 17/04/18
- *
- *
- */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {IntegrationTestApplication.class})
 @ActiveProfiles("test")
@@ -80,8 +74,6 @@ class GivenNonAdminUserBusinessconfigControllerShould {
     @AfterAll
     void dispose() throws IOException {
         service.clear();
-        if (Files.exists(testDataDir))
-            Files.walk(testDataDir, 1).forEach(p -> silentDelete(p));
     }
 
     @Test
@@ -267,8 +259,9 @@ class GivenNonAdminUserBusinessconfigControllerShould {
         	
         	@BeforeEach
             void setup() throws Exception {
-        		if (Files.exists(testDataDir))
-  			      Files.walk(testDataDir, 1).forEach(p -> silentDelete(p));
+                // This will also delete the businessconfig-storage root folder, but in this case it's needed as
+                // the following copy would fail if the folder already existed.
+        		if (Files.exists(testDataDir)) Files.walk(testDataDir, 1).forEach(PathUtils::silentDelete);
   			    copy(Paths.get("./src/test/docker/volume/businessconfig-storage"), testDataDir);
   			    service.loadCache();
             }
