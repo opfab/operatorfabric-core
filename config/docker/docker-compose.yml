@@ -29,6 +29,9 @@ services:
   users:
     container_name: users
     image: "lfeoperatorfabric/of-users-business-service:SNAPSHOT"
+    depends_on:
+      - mongodb
+      - rabbitmq
     user: ${USER_ID}:${USER_GID}
     ports:
      - "2103:8080"
@@ -64,6 +67,7 @@ services:
     image: "lfeoperatorfabric/of-cards-publication-business-service:SNAPSHOT"
     depends_on:
       - mongodb
+      - rabbitmq
     user: ${USER_ID}:${USER_GID}
     ports:
      - "2102:8080"
@@ -79,6 +83,9 @@ services:
   cards-consultation:
     container_name: cards-consultation
     image: "lfeoperatorfabric/of-cards-consultation-business-service:SNAPSHOT"
+    depends_on:
+      - mongodb
+      - rabbitmq
     user: ${USER_ID}:${USER_GID}
     ports:
      - "2104:8080"
