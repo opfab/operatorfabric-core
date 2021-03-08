@@ -25,6 +25,7 @@ import {ExportService} from '@ofServices/export.service';
 import {TranslateService} from '@ngx-translate/core';
 import {Card} from '@ofModel/card.model';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
+import { EntitiesService } from '@ofServices/entities.service';
 
 
 @Component({
@@ -51,6 +52,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
     @ViewChild('filters') filtersTemplate: ArchivesLoggingFiltersComponent;
     selectedCard: Card;
+    fromEntitySelectedCard = null;
 
     constructor(private store: Store<AppState>,
                 private processesService: ProcessesService,
@@ -58,7 +60,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 private timeService: TimeService,
                 private cardService: CardService,
                 private translate: TranslateService,
-                private modalService: NgbModal
+                private modalService: NgbModal,
+                private entitiesService: EntitiesService
     ) {
 
         this.archiveForm = new FormGroup({
@@ -181,17 +184,25 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 const options: NgbModalOptions = {
                     size: 'fullscreen'
                 };
+                this.computeFromEntity();
                 this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
             }
         );
     }
 
-    getPublishDateTranslationParams(): any {
-        return {
-            'time': this.timeService.formatDateTime(this.selectedCard.publishDate)
-        };
+    private computeFromEntity()
+    {
+        if (this.selectedCard.publisherType === 'ENTITY' )  this.fromEntitySelectedCard = this.entitiesService.getEntityName(this.selectedCard.publisher);
+        else this.fromEntitySelectedCard = null;
     }
 
+    getFormattedPublishDate(): any {
+        return this.timeService.formatDate(this.selectedCard.publishDate)
+    }
+
+    getFormattedPublishTime(): any {
+        return this.timeService.formatTime(this.selectedCard.publishDate)
+    }
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();

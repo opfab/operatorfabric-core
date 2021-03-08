@@ -97,8 +97,14 @@
 
           <div id='div-detail-btn'>
 
-            <span class="opfab-card-received-footer" translate
-              [translateParams]="getPublishDateTranslationParams()">feed.received</span>
+            <span class="opfab-card-received-footer">
+              <span translate>feed.received</span>
+              {{getFormattedPublishDate()}} <span translate> feed.at </span> {{getFormattedPublishTime()}}
+              <span *ngIf="fromEntity">
+                <span translate> feed.from</span>
+                {{fromEntity}}
+              </span>
+            </span>
             <div *ngIf="showButtons" style="text-align: right;">
               <button id="opfab-card-details-btn-response" class="opfab-btn"
                 *ngIf='showActionButton && isActionEnabled && !isLocked' translate

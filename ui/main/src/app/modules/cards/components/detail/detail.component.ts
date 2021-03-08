@@ -44,7 +44,6 @@ import {userRight} from '@ofModel/userWithPerimeters.model';
 import {ClearLightCardSelection, UpdateALightCard} from '@ofStore/actions/light-card.actions';
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
-import {Entity} from '@ofModel/entity.model';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {ConfigService} from '@ofServices/config.service';
 import {TimeService} from '@ofServices/time.service';
@@ -140,6 +139,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public showActionButton = false;
     public showEditAndDeleteButton = false ;
     public showDetailCardHeader = false;
+    public fromEntity = null;
     private cardSetToReadButNotYetOnUI;
 
     modalRef: NgbModalRef;
@@ -296,14 +296,13 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         return this.card.hasBeenAcknowledged ? AckI18nKeys.BUTTON_TEXT_UNACK : AckI18nKeys.BUTTON_TEXT_ACK;
     }
 
-
-
-    getPublishDateTranslationParams(): any {
-        return {
-            'time': this.time.formatDateTime(this.card.publishDate)
-        };
+    getFormattedPublishDate(): any {
+        return  this.time.formatDate(this.card.publishDate);
     }
 
+    getFormattedPublishTime(): any {
+        return  this.time.formatTime(this.card.publishDate);
+    }
 
     submitResponse() {
 
@@ -450,6 +449,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         }
         this.setButtonsVisibility();
         this.setShowDetailCardHeader();
+        this.computeFromEntity();
 
     }
 
@@ -464,11 +464,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             console.log(new Date().toISOString(), ' Detail card - entities allowed to respond = ', allowed);
 
             allowed.forEach(entity => {
-                const entityName = this.getEntityName(entity);
+                const entityName = this.entitiesService.getEntityName(entity);
                 if (entityName) {
                     this._listEntitiesToRespond.push(
                         {
-                            name: entityName.name,
+                            name: entityName,
                             color: this.checkEntityAnswered(entity) ? EntityMsgColor.GREEN : EntityMsgColor.ORANGE
                         });
                 }
@@ -486,6 +486,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             this.isActionEnabled = this.isUserInEntityAllowedToRespond();
         else
             this.isActionEnabled = (this.isUserInEntityAllowedToRespond() && this.doesTheUserHavePermissionToRespond());
+    }
+
+    private computeFromEntity()
+    {
+        if (this.card.publisherType === 'ENTITY' )  this.fromEntity = this.entitiesService.getEntityName(this.card.publisher);
+        else this.fromEntity = null;
     }
 
 
@@ -547,10 +553,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     get listDropdownEntitiesToRespond() {
         return this._listEntitiesToRespond.length > maxVisibleEntitiesToRespond ? this._listEntitiesToRespond.slice(maxVisibleEntitiesToRespond) : [];
-    }
-
-    getEntityName(id: string): Entity {
-        return this.entitiesService.getEntities().find(entity => entity.id === id);
     }
 
     checkEntityAnswered(entity: string): boolean {

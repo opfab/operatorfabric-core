@@ -89,7 +89,9 @@
       "acknowledged": "Acquittée",
       "lttd": "Temps restant pour décider"
     },
-    "received": "Reçu à {{time}}"
+    "received": "Reçu le",
+    "at" : "à",
+    "from": "de"
   },
   "login": {
     "reset": "RaZ",

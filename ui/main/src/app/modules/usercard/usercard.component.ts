@@ -458,6 +458,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
             id: 'dummyId',
             publishDate: null,
             publisher: publisher,
+            publisherType : 'ENTITY',
             processVersion: processVersion,
             process: selectedProcess.id,
             processInstanceId: processInstanceId,

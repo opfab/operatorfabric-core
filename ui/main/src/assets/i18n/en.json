@@ -89,7 +89,9 @@
       "acknowledged": "Acknowledged",
       "lttd": "Time remaining to decide"
     },
-    "received": "Received at {{time}}"
+    "received": "Received on",
+    "at": "at",
+    "from" : "from"
   },
   "login": {
     "reset": "Reset",
