@@ -133,3 +133,8 @@ or `Write` for the chosen process and state. For example:
 
 NOTE: Using the `ReceiveAndWrite` right instead of the `Write` right allows the user to receive the card they sent and
 edit or delete it.
+
+
+== Misc
+
+When a user send a card, it is always send to himself whatever he chooses in the recipient list.
