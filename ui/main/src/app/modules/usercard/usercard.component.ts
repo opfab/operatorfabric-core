@@ -367,7 +367,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.store.dispatch(new AlertMessage({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}}));
     }
 
-    onSubmitForm(template: TemplateRef<any>) {
+    prepareCard() {
         const formValue = this.messageForm.value;
 
         const processValue = this.editCardMode ? this.cardToEdit.card.process : formValue['process'];
@@ -454,6 +454,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
             severity: severity,
             hasBeenAcknowledged: false,
             hasBeenRead: false,
+            userRecipients : [this.currentUserWithPerimeters.userData.login],
             entityRecipients: recipients,
             entitiesAllowedToRespond: entitiesAllowedToRespond,
             externalRecipients: null,
