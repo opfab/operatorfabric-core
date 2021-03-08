@@ -49,15 +49,12 @@ the home repository of `OperatorFabric`.
 
 === A Minimal Configuration for `gradle` Build
 
-The gradle build of `OperatorFabric` needs two docker containers running:
+The gradle build of `OperatorFabric` requires (for the unit tests) two docker containers running:
 
 * RabbitMQ;
 * MongoDB.
 
 Launch them using the `${OF_HOME}/src/main/docker/test-environment/docker-compose.yml`.
-
-Remind that, during a gradle build the `test` task runs before the `assemble` one.
-The Unit tests depend on those two software.
 
 === Enabling local quality report generation
 
