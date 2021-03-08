@@ -137,4 +137,4 @@ edit or delete it.
 
 == Misc
 
-When a user send a card, it is always send to himself whatever he chooses in the recipient list.
+When a user send a card, it is always sent to himself whatever he chooses in the recipient list.
