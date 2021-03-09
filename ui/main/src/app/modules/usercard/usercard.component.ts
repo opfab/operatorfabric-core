@@ -203,8 +203,10 @@ export class UserCardComponent implements OnDestroy, OnInit {
                         const _i18nPrefix = process.id + '.' + process.version + '.';
                         const label = process.name ? (_i18nPrefix + process.name) : process.id;
                         const processToShow = { value: process.id, label: label };
-                        this.processOptions.push(processToShow);
+                        
                         this.loadStatesForProcess(process);
+                        // Add process option only if there is at least one state
+                        if (this.statesPerProcesses.get(process.id).length > 0) this.processOptions.push(processToShow);
                     }
                 });
     }
@@ -255,20 +257,25 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.currentUserWithPerimeters.computedPerimeters.forEach(
             perimeter => {
                 if ((perimeter.process === process.id) && UserCardComponent.userCanSendCard(perimeter)) {
-                    const state = process.states[perimeter.state];
-                    if (!!state) {
-                        if (!!state.userCard) {
-                            const label = !!state.name ? (new I18n(Utilities.getI18nPrefixFromProcess(process)
-                                + state.name)) : perimeter.state;
-                            const stateEntry = { value: perimeter.state, label: label };
-                            statesList.push(stateEntry);
-                        }
-                    } else console.log('WARNING : state', perimeter.state , 'is present in perimeter for process'
-                                    , process.id , 'but not in process definition');
-
+                    const state = this.getStateFromProcessDefinition(process,perimeter.state)
+                    if (!!state) statesList.push(state);
                 }
             });
         this.statesPerProcesses.set(process.id, statesList);
+
+    }
+
+    getStateFromProcessDefinition(process: Process, stateId: string) {
+        const stateFromProcessDefinition = process.states[stateId];
+        if (!!stateFromProcessDefinition) {
+            if (!!stateFromProcessDefinition.userCard) {
+                const label = !!stateFromProcessDefinition.name ? (new I18n(Utilities.getI18nPrefixFromProcess(process)
+                    + stateFromProcessDefinition.name)) : stateId;
+                return { value: stateId, label: label };
+            }
+        } else console.log('WARNING : state', stateId, 'is present in perimeter for process'
+            , process.id, 'but not in process definition');
+        return null;
     }
 
 
