@@ -203,8 +203,10 @@ export class UserCardComponent implements OnDestroy, OnInit {
                         const _i18nPrefix = process.id + '.' + process.version + '.';
                         const label = process.name ? (_i18nPrefix + process.name) : process.id;
                         const processToShow = { value: process.id, label: label };
-                        this.processOptions.push(processToShow);
+                        
                         this.loadStatesForProcess(process);
+                        // Add process option only if there is at least one state
+                        if (this.statesPerProcesses.get(process.id).length > 0) this.processOptions.push(processToShow);
                     }
                 });
     }
