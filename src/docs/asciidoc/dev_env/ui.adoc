@@ -124,3 +124,12 @@ on https://jasmine.github.io[Jasmine] using https://karma-runner.github.io[Karma
 . if needed, enable a card-operation test flow using the script `${OF_HOME}/service/core/cards-publication/src/main/bin/push_cards_loop.sh`;
 . launch an angular server with the command: `ng serve`;
 . test your changes in your browser using this url: `http://localhost:4200` which leads to `http://localhost:4200/#/feed`.
+
+NOTE: If `ng serve` returns the error `Command 'ng' not found`, install the Angular CLI globally with the following
+command.
++
+`npm install -g @angular/cli`
++
+This will install the latest version of the Angular command line, which might not be in line with the one used by the
+project, but it's not an issue as when you run `ng serve` the local version of the Angular CLI
+(as defined in the package.json file) will be used.
