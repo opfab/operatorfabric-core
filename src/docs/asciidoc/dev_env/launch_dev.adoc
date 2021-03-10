@@ -133,7 +133,7 @@ bin/run_all.sh status
 
 == Log into the UI
 
-*_URL:_* localhost:2002/ui/ +
+*_URL:_* localhost:2002/ +
 *_login:_* operator1 +
 *_password:_* test
 

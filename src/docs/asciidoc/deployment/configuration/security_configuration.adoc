@@ -135,7 +135,7 @@ These two modes share the same way of declaring the delegate URL.
           "provider": "Opfab Keycloak",
           "delegate-url": "http://localhost:89/auth/realms/dev/protocol/openid-connect/auth?response_type=code&client_id=opfab-client"
       },
-      "logout-url":"http://localhost:89/auth/realms/dev/protocol/openid-connect/logout?redirect_uri=http://localhost:2002/ui/",
+      "logout-url":"http://localhost:89/auth/realms/dev/protocol/openid-connect/logout?redirect_uri=http://localhost:2002/",
     "provider-realm": "dev",
     "provider-url": "http://localhost:89"
     }
@@ -170,7 +170,7 @@ To enable IMPLICIT Flow authentication the following properties need to be set:
           "provider": "Opfab Keycloak",
           "delegate-url": "http://localhost:89/auth/realms/dev"
       },
-      "logout-url":"http://localhost:89/auth/realms/dev/protocol/openid-connect/logout?redirect_uri=http://localhost:2002/ui/",
+      "logout-url":"http://localhost:89/auth/realms/dev/protocol/openid-connect/logout?redirect_uri=http://localhost:2002/",
     "provider-realm": "dev",
     "provider-url": "http://localhost:89"
       }
