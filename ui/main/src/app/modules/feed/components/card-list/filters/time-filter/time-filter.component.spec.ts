@@ -61,7 +61,7 @@ describe('TimeFilterComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should update filter on state change', fakeAsync(() =>  {
+    xit('should update filter on state change', fakeAsync(() =>  {
 
         const start = moment();
         const end = moment().add('month',1);

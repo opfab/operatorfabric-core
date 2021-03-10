@@ -18,7 +18,8 @@ export enum FeedActionTypes {
     ChangeSort = '[Feed] Change sort order',
     ResetFilter = '[Feed] Reset filter Status',
     ApplySeveralFilters = '[Feed] Change several filters Status at Once',
-    ChangeReadSort = "[Feed] Sort by read"
+    ChangeReadSort = "[Feed] Switch read sort ",
+    DeactivateReadSort = "[Feed] Do not sort by read "
 }
 
 export class ApplyFilter implements Action {
@@ -44,6 +45,13 @@ export class ChangeReadSort implements Action {
     }
 }
 
+export class DeactivateReadSort implements Action {
+    readonly type = FeedActionTypes.DeactivateReadSort;
+
+    constructor() {
+    }
+}
+
 export class ResetFilter implements  Action {
     readonly type  = FeedActionTypes.ResetFilter;
 }
@@ -58,5 +66,6 @@ export type FeedActions =
     ApplyFilter
     | ChangeSort
     | ChangeReadSort
+    | DeactivateReadSort
     | ResetFilter
     | ApplySeveralFilters;
