@@ -15,7 +15,6 @@ If you're using certificates (for example for Keycloak) that are not from a cert
 this will cause errors such as this one:
 
 image::certificate_error.png[Missing certificate error message]
-//TODO Replace by text error message so it comes up in search
 
 If that is the case, you can pass the additional authorities or certificates that you use to the containers at runtime.
 

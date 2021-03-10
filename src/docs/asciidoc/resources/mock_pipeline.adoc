@@ -16,7 +16,8 @@ master branch, to our docker images or to the documentation. We didn't find any 
 we decided to create a complete mock pipeline replicating the actual pipeline.
 This is a short summary of the necessary steps.
 
-//TODO Check if this is still accurate after the migration to travis-ci.com (OC-1110)
+IMPORTANT: This document reflects the steps to create the pipeline on travis-ci.org and might not be completely
+accurate now that we've migrated to travis-ci.com.
 
 == GitHub
 . Create organization opfab-mock

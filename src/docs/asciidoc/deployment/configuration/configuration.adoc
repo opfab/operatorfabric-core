@@ -8,10 +8,9 @@
 
 
 
-:springboot_doc: https://docs.spring.io/spring-boot/docs/2.1.2.RELEASE/
+:springboot_doc: https://docs.spring.io/spring-boot/docs/2.4.0-M1/reference/htmlsingle/
 :mongo_doc: https://docs.mongodb.com/manual/reference/
 :spring_kafka_doc: https://docs.spring.io/spring-kafka/reference/html/
-//TODO Check if versions are correct
 
 = Configuration
 

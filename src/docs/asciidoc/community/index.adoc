@@ -64,8 +64,6 @@ include::workflow.adoc[leveloffset=+2]
 
 === Code Guidelines
 
-//TODO add style guidelines
-
 * We don't mention specific authors by name in each file (in Javadoc or in the documentation for example), so as not
 to have to maintain these mentions (since this information is tracked by git anyway).
 * For ui code, you must use a linter with rules provided in ui/main/tslint.json
@@ -156,8 +154,5 @@ could be interested in:
 
 And if you're interested in LF Energy in general:
 https://lists.lfenergy.org/g/lfenergy[LF Energy General Discussion]
-
-=== JIRA
-//TODO OC-887
 
 include::CODE_OF_CONDUCT.adoc[leveloffset=+1]

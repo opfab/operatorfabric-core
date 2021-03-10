@@ -17,14 +17,13 @@ import {ConfirmationDialogComponent} from '../components/confirmation-dialog/con
   providedIn: 'root'
 })
 export class ConfirmationDialogService {
-  // TODO Is it really necessary ? Couldn't that be handled by the confirmation-dialog-component as it doesn't seem reusable ?
 
   constructor(private modalService: NgbModal) { }
 
   public confirm(
     title: string,
     message: string,
-    btnOkText: string = 'OK', // TODO I18N ?
+    btnOkText: string = 'OK',
     btnCancelText: string = 'Cancel'): Promise<boolean> {
     const modalRef = this.modalService.open(ConfirmationDialogComponent);
     modalRef.componentInstance.title = title;

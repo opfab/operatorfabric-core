@@ -63,12 +63,6 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
-
-/**
- * <p>
- * </p>
- * Created on 30/07/18
- */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = CardPublicationApplication.class)
 @ActiveProfiles(profiles = {"native", "test"})
@@ -511,7 +505,6 @@ class CardProcessServiceShould {
                 .expectNextMatches(r -> r.intValue()==thereShouldBeOneCardLess).verifyComplete();
     }
 
-    // FIXME unify way test cards are created throughout tests
     private List<CardPublicationData> instantiateSeveralRandomCards(EasyRandom randomGenerator, int cardNumber) {
 
         List<CardPublicationData> cardsList = randomGenerator.objects(CardPublicationData.class, cardNumber)

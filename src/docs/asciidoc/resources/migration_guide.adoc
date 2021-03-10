@@ -200,10 +200,6 @@ split them into several bundles. The `id` of the bundles should match the `proce
 
 . Run the following scripts in the mongo shell to copy the value of `publisherVersion` to a new `processVersion` field and to copy the value of `processId` to a new `processInstanceId` field for all cards (current and archived):
 
-
-
-
-//TODO Detail steps to mongo shell ?
 +
 .Current cards
 [source, shell]

@@ -513,7 +513,6 @@ export class UserCardComponent implements OnDestroy, OnInit {
             .subscribe(
                 resp => {
                     const msg = resp.message;
-                    // TODO better way to handle perimeter errors
                     if (!!msg && msg.includes('unable')) {
                         console.log('Impossible to send card , error message from service : ', msg);
                         this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);

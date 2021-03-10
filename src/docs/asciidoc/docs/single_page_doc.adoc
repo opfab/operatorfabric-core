@@ -12,9 +12,9 @@
 
 = OperatorFabric Documentation
 
-include::../architecture/index.adoc[]
-
 include::../getting_started/index.adoc[]
+
+include::../architecture/index.adoc[]
 
 include::../reference_doc/index.adoc[]
 
@@ -28,6 +28,3 @@ include::../CICD/index.adoc[]
 
 include::../resources/index.adoc[]
 
-//TODO Add introduction and move architecture after getting started?
-
-//TODO Reorder

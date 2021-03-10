@@ -143,7 +143,6 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
 
         return query;
     }
-    //TODO Catch errors if dates or page param are not parseable as Int?
 
 
     private List<Criteria> regularParametersCriteria(MultiValueMap<String, String> params) {
@@ -161,7 +160,6 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         return criteria;
     }
 
-    //TODO Note in doc that this assumes params to be unique, otherwise will take first occurrence
     private List<Criteria> publishDateCriteria(MultiValueMap<String, String> params) {
 
         List<Criteria> criteria = new ArrayList<>();

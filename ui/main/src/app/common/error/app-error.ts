@@ -8,7 +8,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-// TODO I'm not sure why this class is necessary. What does new AppError(null) mean??
 export class AppError {
 
   public originalError;

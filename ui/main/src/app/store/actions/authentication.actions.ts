@@ -23,7 +23,6 @@ export enum AuthenticationActionTypes {
     , AcceptLogOutSuccess = '[Authentication] Success Accept the user log out attempt'
     , CheckImplicitFlowAuthenticationStatus = '[Authentication] Check Authentication Status specifically for the Implicit Flow'
     , UselessAuthAction = '[Authentication] Test purpose action'
-    // TODO the following actions should be merge with password and code flow management of authentication
     , ImplicitlyAuthenticated = '[Authentication] User is authentication using Implicit Flow'
     , UnAuthenticationFromImplicitFlow = '[Authentication] User is log out by implicit Flow internal management'
     , UnableToRefreshOrGetToken = '[Authentication] The token can not be refresh or we cannot get a token'

@@ -291,8 +291,6 @@ public class TestUtilities {
         return false;
     }
 
-    //TODO Method to check if a flux of pages are sorted
-//
     public static CardConsultationData configureRecipientReferencesAndStartDate(CardConsultationData card, String user, Instant startDate, String[] groups, String[] entities) {
         card.setStartDate(startDate);
         card.setGroupRecipients(groups != null ? Arrays.asList(groups) : null);

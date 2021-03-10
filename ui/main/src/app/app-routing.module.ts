@@ -64,7 +64,6 @@ const routes: Routes = [
         redirectTo: defaultPath
     }
 ];
-// TODO manage visible path more gently
 const startIndex = 0;
 const numberOfHiddenRoutes = 6 ; // 'Calendar' 'businessconfigparty', 'settings', 'navbar', 'admin', 'feedconfiguration'
 const manageIndexesWhichBeginAtZero = 1;

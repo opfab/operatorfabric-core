@@ -195,7 +195,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     this.confirmationDialogService.confirm(
         this.translateService.instant('admin.input.confirm'),
         this.translateService.instant('admin.input.' + this.tableType + '.confirmDelete') + ' ' + row[this.idField] + '?',
-        'OK', // TODO Refactor to avoid translate.instant ? OK is not i18ed ?
+        'OK',
         this.translateService.instant('admin.input.cancel')
     ).then((confirmed) => {
       if (confirmed) {
