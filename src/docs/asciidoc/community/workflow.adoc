@@ -10,11 +10,6 @@
 
 = Contribution Workflow
 
-//TODO Make sure everything that is stated is enforced (or log it in an issue)
-//TODO Check base branch for PRs
-//TODO Limit which branches can be merged into develop or master
-//TODO Manage who can merge/push into master, merge into develop, create release branches?
-
 The project started out using a
 link:https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow[Feature Branch workflow], but
 as the project team grew and we needed to manage support to previous releases we decided to switch to a workflow
@@ -29,11 +24,7 @@ project, which is a parameter for certain build tasks and for our CICD pipeline.
 
 == Principles
 
-//TODO Create diagram with all branches
-
 === `develop` branch
-
-//TODO Add main branches image
 
 The role of the `develop` branch is quite similar to that of the `master` branch in our previous "Feature Branch"
 workflow.
@@ -79,8 +70,6 @@ link:https://help.github.com/en/github/collaborating-with-issues-and-pull-reques
 features (comments, proposed changes, etc.) to make changes to the PR until it meets the project requirements.
 . Once it is ready to be included in the next version, the pull request is then merged back into `develop`.
 
-//TODO Add feature_branches image
-
 *Naming convention:* Feature branches names should always start with the reference of the JIRA issue they're addressing,
 optionally followed by additional information if several branches are associated with a given JIRA issue.
 
@@ -97,9 +86,6 @@ optionally followed by additional information if several branches are associated
 Commit messages should also start with the JIRA issue ID between brackets: `[OC-123] My commit message`
 
 This allows the branch, PR and commits to be directly accessible from the JIRA issue.
-
-//TODO Link to section describing JIRA workflow once it's written
-//TODO When should we delete supporting branches?
 
 === Release branches
 
@@ -131,7 +117,6 @@ Example: The valid branch name for the branch bringing 1.3.0.RELEASE into `maste
 
 === Hotfix branches
 
-//TODO
 Work in progress: detail hotfix branches lifecycle and constraints.
 
 *Naming convention:* Hotfix branches names should always start with "HF_" and the reference of the JIRA issue they're
@@ -241,7 +226,6 @@ below to make sure your branch meets its criteria.
 Once you feel your branch is ready, submit a pull request. Open pull requests are then reviewed by the core maintainers
 to assign a reviewer to each of them.
 
-//TODO Explain process for forks/external PRs
 To do so, go to the `branches` tab of the repository as described above.
 Click the "New Pull Request" button for your branch.
 
@@ -392,7 +376,6 @@ Once the pull request meets all the criteria from the above check list, you can 
 image::existing_PR_check_base.png[]
 
 . If that is not the case, you can edit the base branch by clicking the `Edit` button in the top right corner.
-//TODO Check if in this case the PR build is re-run ? If not conflicts or build issues might go un-detected
 
 . Click the `merge pull request` button at the bottom of the PR page
 

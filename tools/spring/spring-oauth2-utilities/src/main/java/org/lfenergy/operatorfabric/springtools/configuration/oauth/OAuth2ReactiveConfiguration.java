@@ -24,9 +24,6 @@ import reactor.core.publisher.Mono;
 /**
  * <p>Authentication configuration for webflux</p>
  *
- * FIXME probably useless since Spring security 5.1.1. Check it.
- *
- *
  */
 @Configuration
 public class OAuth2ReactiveConfiguration extends OAuth2GenericConfiguration{

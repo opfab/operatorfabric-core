@@ -111,7 +111,7 @@ state.
 .src/test/utils/karate/businessconfig/resources/bundle_defaultProcess/template/en/question.handlebars
 [source,js]
 ----
-include::../../../test/utils/karate/businessconfig/resources/bundle_userCardExamples/template/en/question.handlebars[tag=templateGateway.validyForm_example]
+include::../../../test/utils/karate/businessconfig/resources/bundle_defaultProcess/template/en/question.handlebars[tag=templateGateway.validyForm_example]
 ----
 
 === Define permissions

@@ -23,11 +23,6 @@ to the account of any member of the team.
 
 == CICD Pipeline
 
-=== GitHub
-
-Work in progress
-//TODO Describe two repos, groups, branch protection rules
-
 === Travis CI
 
 We use Travis CI to manage our pipeline. As of today, it is composed of 7 stages:
@@ -79,8 +74,6 @@ of the repository). This is because the `sonar-scanner` step it comprises requir
 https://sonarcloud.io/dashboard?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core[SonarCloud], see below for details)
 that is not shared with external PRs for security reasons, so this would cause the stage (and the build) to fail.
 This is why in the case of external PRs the `test` phase is ran instead (leaving out sonar-scanner).
-
-//TODO Finish explanations
 
 === SonarCloud
 

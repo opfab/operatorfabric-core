@@ -153,7 +153,6 @@ HTTP/1.1 200 OK
 
 === Update user details
 
-//TODO Check if it hasn't been replaced with create
 As shown by this result, the firstName of the new operator has been misspelled.
 We need
 ifdef::single-page-doc[link:../api/users/index.html#/users/updateUser[to update the existing user]]

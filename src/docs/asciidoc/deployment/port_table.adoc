@@ -10,8 +10,6 @@
 
 = Service port table
 
-//TODO Check that it is correct and up to date
-
 By default all service built artifacts are configured with server.port set
 to 8080
 

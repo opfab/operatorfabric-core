@@ -123,7 +123,7 @@ public class ArchivedCardRepositoryShould {
 
     @BeforeEach
     private void initCardData() {
-        //TODO Limit test data to what's really necessary
+
         int processNo = 0;
         //create past cards
         persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusTwo, nowMinusOne, login1, new String[]{"rte","operator"}, new String[]{"entity1","entity2"}));
@@ -646,7 +646,5 @@ public class ArchivedCardRepositoryShould {
                 .verify();
 
     }
-
-    //TODO Add test to make sure results are ordered between pages
 
 }

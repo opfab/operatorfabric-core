@@ -63,7 +63,6 @@ export class SoundNotificationService {
   handleCards(lightCards: LightCard[], currentlyVisibleIds: string[]) {
     from(lightCards).subscribe(
         // There is no need to unsubscribe because this is by essence a finite observable
-        // TODO Possible improvement: all cards in an operation have the same publishDate (to be checked)
         // so we could do this check only once by operation and either handle all cards or dismiss the batch entirely
         (card: LightCard) => {
               // Check whether card has just been published and whether it is currently visible in the feed

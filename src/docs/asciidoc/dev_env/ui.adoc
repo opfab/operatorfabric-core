@@ -21,13 +21,12 @@ SPA:: stands for *Single Page Application*
 == Run
 
 === Front End development
-//TODO Explain that the back needs to be running to be able to test in 4200. Replace steps below by link to appropriate doc
 
 OperatorFabric uses 4 external services to run properly :
  
  * an event queue: RabbitMQ;
  * a no SQL database: MongoDB;
- * an authentication provider: keycloak;
+ * an authentication provider: Keycloak;
  * a web server: Nginx.
 
 Those instances are available as docker images in the project.
