@@ -79,6 +79,10 @@ jobs:
       script:
         - ./gradlew --build-cache generateSwaggerUI asciidoctor
         - ./CICD/travis/upload_doc.sh
+    - stage: doc-latest
+      script:
+        - ./gradlew --build-cache generateSwaggerUI asciidoctor
+        - ./CICD/travis/upload_doc.sh --updateLatest true
     - stage: doc-dry-run
       script:
         - ./gradlew --build-cache generateSwaggerUI asciidoctor
@@ -106,13 +110,15 @@ stages:
   - name: test-sonar
     if: NOT (type = pull_request AND head_repo != opfab/operatorfabric-core)
   - name: doc
-    if: ((((type = cron OR commit_message =~ ci_documentation) AND branch = develop) OR branch = master) AND NOT type = pull_request)
+    if: ((((type = cron OR commit_message =~ ci_documentation) AND branch = develop) OR branch = master OR (commit_message =~ ci_documentation AND NOT commit_message =~ ci_latest AND branch =~ .+hotfixes$)) AND NOT type = pull_request)
+  - name: doc-latest
+    if: (branch = master OR (branch =~ .+hotfixes$ AND commit_message =~ ci_latest)) AND NOT type = pull_request
   - name: doc-dry-run
-    if: (branch =~ .+release$) OR (NOT (branch IN (master,develop)) AND commit_message =~ ci_documentation)
+    if: (NOT branch =~ .+hotfixes$) AND (NOT (branch IN (master,develop)) AND commit_message =~ ci_documentation)
   - name: docker-push-version
-    if: (((type = cron OR commit_message =~ ci_docker) AND branch = develop) OR branch = master) AND NOT type = pull_request
+    if: (((type = cron OR commit_message =~ ci_docker) AND (branch = develop OR branch =~ .+hotfixes$)) OR branch = master) AND NOT type = pull_request
   - name: docker-push-latest
-    if: branch = master AND commit_message =~ ci_latest AND NOT type = pull_request
+    if: branch = master OR (branch =~ .+hotfixes$ AND commit_message =~ ci_latest) AND NOT type = pull_request
   - name: docker-tag-version
     if: (branch =~ .+release$) OR (NOT (branch IN (master,develop)) AND commit_message =~ ci_docker)
 before_cache:

@@ -61,8 +61,8 @@ echo "check_version: branch $branch, version $version"
 [[ $branch == 'develop' ]] && { [[ $version == 'SNAPSHOT' ]] && exit 0 || echo "check_version failed: for branch develop version should be SNAPSHOT."; exit 1;}
 [[ $branch == 'master' ]] && { [[ $version =~ [0-9]+\.[0-9]+\.[0-9]+\.RELEASE$ ]] && exit 0 || echo "check_version failed: for branch master version should be X.X.X.RELEASE."; exit 1;}
 [[ $branch =~ [0-9]+\.[0-9]+\.[0-9]+\.release$ ]] && { [[ $version == ${branch^^} ]] && exit 0 || echo "check_version failed: for release branch $branch version should be ${branch^^}."; exit 1;}
-[[ $branch =~ OC-.+$ ]] && { [[ $version == 'SNAPSHOT' ]] && exit 0 || echo "check_version failed: for feature branches version should be SNAPSHOT."; exit 1;}
-[[ $branch =~ HF_OC-.+$ ]] && { [[ $version =~ [0-9]+\.[0-9]+\.[0-9]+\.RELEASE$ ]] && exit 0 || echo "check_version failed: for hotfix branches version should be X.X.X.RELEASE."; exit 1;}
+[[ $branch =~ OC-.+$ ]] && { [[ $version == 'SNAPSHOT' || $version =~ [0-9]+\.[0-9]+\.[0-9]+\.RELEASE$ ]] && exit 0 || echo "check_version failed: for feature branches version should be SNAPSHOT or X.X.X.RELEASE."; exit 1;}
+[[ $branch =~ [0-9]+\.[0-9]+\.hotfixes$ ]] && { [[ $version =~ [0-9]+\.[0-9]+\.[0-9]+\.RELEASE$ ]] && exit 0 || echo "check_version failed: for hotfixes branch version should be X.X.X.RELEASE."; exit 1;}
 
 echo "check_version failed: unhandled branch type"
 exit 1;
