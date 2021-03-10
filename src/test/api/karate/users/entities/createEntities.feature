@@ -20,7 +20,8 @@ Feature: CreateEntities
 {
   "id" : "entityKarate1",
   "name" : "entityKarate1 name",
-  "description" : "I Love Karate"
+  "description" : "I Love Karate",
+  "entityAllowedToSendCard" : false
 }
 """
     * def wrongEntity =
@@ -42,6 +43,7 @@ Feature: CreateEntities
     And match response.description == entity.description
     And match response.name == entity.name
     And match response.id == entity.id
+    And match response.entityAllowedToSendCard == true
 
   Scenario: Update my entity
 
@@ -54,6 +56,7 @@ Feature: CreateEntities
     And match response.description == entityUpdated.description
     And match response.name == entityUpdated.name
     And match response.id == entity.id
+    And match response.entityAllowedToSendCard == false
 
   Scenario: create without admin role
         #HForbiden without admin role, expected response 403

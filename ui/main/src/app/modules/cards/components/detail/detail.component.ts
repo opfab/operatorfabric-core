@@ -456,8 +456,14 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private setEntitiesToRespond() {
         this._listEntitiesToRespond = new Array<EntityMessage>();
         this._userEntitiesAllowedToRespond = [];
+
         if (this.card.entitiesAllowedToRespond) {
-            this.card.entitiesAllowedToRespond.forEach(entity => {
+
+            const entitiesToRespond = this.entitiesService.getEntities().filter(entity  => this.card.entitiesAllowedToRespond.includes(entity.id));
+            const allowed = this.entitiesService.getEntitiesAllowedToRespond(entitiesToRespond).map(entity => entity.id);
+            console.log(new Date().toISOString(), ' Detail card - entities allowed to respond = ', allowed);
+
+            allowed.forEach(entity => {
                 const entityName = this.getEntityName(entity);
                 if (entityName) {
                     this._listEntitiesToRespond.push(
@@ -467,7 +473,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                         });
                 }
             });
-            this._userEntitiesAllowedToRespond = this.card.entitiesAllowedToRespond.filter(x => this.user.entities.includes(x));
+
+            this._userEntitiesAllowedToRespond = allowed.filter(x => this.user.entities.includes(x));
+            console.log(new Date().toISOString(), ' Detail card - users entities allowed to respond = ', this._userEntitiesAllowedToRespond);
         }
     }
 

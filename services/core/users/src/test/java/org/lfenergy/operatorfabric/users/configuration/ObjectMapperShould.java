@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -93,7 +93,8 @@ public class ObjectMapperShould {
         String stringEntity = "{" +
                 "\"id\": \"TESTENTITY\"," +
                 "\"name\": \"Test Entity\"," +
-                "\"description\": \"An entity used for tests\"" +
+                "\"description\": \"An entity used for tests\"," +
+                "\"entityAllowedToSendCard\": false" +
                 "}";
         Entity entity = mapper.readValue(stringEntity, Entity.class);
         assertThat(entity).isNotNull();
@@ -101,5 +102,6 @@ public class ObjectMapperShould {
         assertThat(entity.getId()).isEqualTo("TESTENTITY");
         assertThat(entity.getName()).isEqualTo("Test Entity");
         assertThat(entity.getDescription()).isEqualTo("An entity used for tests");
+        assertThat(entity.getEntityAllowedToSendCard()).isFalse();
     }
 }

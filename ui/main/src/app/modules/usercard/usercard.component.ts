@@ -37,6 +37,7 @@ import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {Utilities} from '../../common/utilities';
+import {Entity} from '@ofModel/entity.model';
 
 declare const templateGateway: any;
 
@@ -64,6 +65,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         };
     });
 
+    entities: Entity[];
     stateOptions: any[];
     recipientsOptions = [];
     selectedRecipients = [];
@@ -184,7 +186,8 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
 
     loadAllEntities(): void {
-        this.entitiesService.getEntities().forEach(entity =>
+        this.entities = this.entitiesService.getEntities();
+        this.entities.forEach(entity =>
             this.recipientsOptions.push({ id: entity.id, itemName: entity.name }));
 
         this.recipientsOptions.sort(( a, b ) => a.itemName.localeCompare(b.itemName));
@@ -409,11 +412,15 @@ export class UserCardComponent implements OnDestroy, OnInit {
             return;
         } else selectedRecipients.forEach(entity => recipients.push(entity.id));
 
+        const publisher =  this.currentUserWithPerimeters.userData.entities.find(userEntity => {
+            const entity = this.entities.find(e => e.id === userEntity);
+            return entity.entityAllowedToSendCard;
+        });
 
         const entitiesAllowedToRespond = [];
         if (selectedProcess.states[state].response) {
                 recipients.forEach(entity => {
-                    if (!this.currentUserWithPerimeters.userData.entities.includes(entity)) entitiesAllowedToRespond.push(entity);
+                    if (entity != publisher) entitiesAllowedToRespond.push(entity);
                 });
         }
 
@@ -443,7 +450,6 @@ export class UserCardComponent implements OnDestroy, OnInit {
             else timeSpans = [new TimeSpan(startDate , endDate )];
         }
 
-
         let processInstanceId ;
         if (this.editCardMode) processInstanceId = this.cardToEdit.card.processInstanceId;
         else processInstanceId  = Guid.create().toString();
@@ -451,7 +457,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.card = {
             id: 'dummyId',
             publishDate: null,
-            publisher: this.currentUserWithPerimeters.userData.entities[0],
+            publisher: publisher,
             processVersion: processVersion,
             process: selectedProcess.id,
             processInstanceId: processInstanceId,

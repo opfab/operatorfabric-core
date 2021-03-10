@@ -168,7 +168,32 @@ Feature: UserCards tests
 }
 """
 
-    # Push user card without authentication
+# Push user card with wrong publisher
+    Given url opfabPublishCardUrl + 'cards/userCard'
+    And request card
+    When method post
+    Then status 401
+
+
+    * def card =
+"""
+{
+	"publisher" : "ENTITY1",
+	"processVersion" : "1",
+	"process"  :"process_1",
+	"processInstanceId" : "process_id_w",
+	"state": "state2",
+	"groupRecipients": ["Dispatcher"],
+	"externalRecipients" : ["api_test_externalRecipient1"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"a message"}
+}
+"""
+
+# Push user card without authentication
     Given url opfabPublishCardUrl + 'cards/userCard'
     And request card
     When method post
@@ -195,7 +220,7 @@ Feature: UserCards tests
     * def card =
 """
 {
-	"publisher" : "cardTest2",
+	"publisher" : "ENTITY1",
 	"processVersion" : "1",
 	"process"  :"process_2",
 	"processInstanceId" : "process_o",
@@ -342,7 +367,7 @@ Feature: UserCards tests
     * def childCard1 =
 """
 {
-	"publisher" : "cardTest4",
+	"publisher" : "ENTITY1",
 	"processVersion" : "1",
 	"process"  :"process_1",
 	"processInstanceId" : "process_id_4",
@@ -380,7 +405,7 @@ Feature: UserCards tests
     * def childCard2 =
 """
 {
-	"publisher" : "cardTest5",
+	"publisher" : "ENTITY1",
 	"processVersion" : "1",
 	"process"  :"process_1",
 	"processInstanceId" : "process_id_5",

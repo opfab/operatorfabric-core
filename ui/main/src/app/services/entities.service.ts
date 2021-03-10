@@ -117,4 +117,19 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
     templateGateway.setEntityNames(entityNames);
   }
 
+  public getEntitiesAllowedToRespond(selected: Entity[]) : Entity[] {
+    let allowed = new Set<Entity>();
+    selected.forEach(entity => {
+        if (entity.entityAllowedToSendCard) {
+            allowed.add(entity);
+        } else {
+          const childs = this._entities.filter(child => child.parents.includes(entity.id));
+          const childsAllowed = this.getEntitiesAllowedToRespond(childs);
+          childsAllowed.forEach(c => allowed.add(c));
+        }
+    })
+
+    return Array.from(allowed);
+  }
+
 }

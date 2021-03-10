@@ -277,6 +277,7 @@
         "name": "Name",
         "parents": "Parent Entities",
         "description": "Description",
+        "entityAllowedToSendCard": "Card sending allowed",
         "confirmDelete": "Do you really want to delete entity",
         "add": "Add new entity"
       },
@@ -326,7 +327,8 @@
         "label":"Name"
       },
       "description": "Description",
-      "lines": "lines per page"
+      "lines": "lines per page",
+      "entityAllowedToSendCard": "Card sending allowed"
     },
     "tabs": {
       "users": "Users Management",
