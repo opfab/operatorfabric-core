@@ -112,6 +112,12 @@ export function reducer(
                 sortByRead: !state.sortByRead
             };
         }
+        case FeedActionTypes.DeactivateReadSort: {
+            return {
+                ...state,
+                sortByRead: false
+            };
+        }
         case LightCardActionTypes.UpdateALightCard: {
             return LightCardAdapter.upsertOne(action.payload.card, state);
         }

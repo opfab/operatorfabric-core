@@ -15,7 +15,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
 import { selectSubscriptionOpen } from '@ofStore/selectors/cards-subscription.selectors';
 import { ConfigService} from "@ofServices/config.service";
-import { ChangeReadSort } from '@ofStore/actions/feed.actions';
+import { DeactivateReadSort } from '@ofStore/actions/feed.actions';
 
 @Component({
   selector: 'of-filters',
@@ -32,7 +32,8 @@ export class FiltersComponent implements OnInit {
   hideReadSort: boolean;
   hideSeveritySort: boolean;
 
-  constructor(private store: Store<AppState>,private  configService: ConfigService) { }
+  constructor(private store: Store<AppState>,private  configService: ConfigService) { 
+    }
 
   ngOnInit() {
     this.hideTags = this.configService.getConfigValue('settings.tags.hide',false);
@@ -46,7 +47,7 @@ export class FiltersComponent implements OnInit {
     this.filterByPublishDate = !this.configService.getConfigValue('feed.timeline.hide',false);
     // Change default readSort 
     if (this.hideReadSort) {
-      this.store.dispatch(new ChangeReadSort());
+      this.store.dispatch(new DeactivateReadSort());
     }
   }
 
