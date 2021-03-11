@@ -65,7 +65,7 @@ Started with pid: 7501
 
 Wait a moment before trying to connect to the`SPA`, leaving time for the OperatorFabricServices to boot up completely.
 
-The `SPA`, on a local machine, is available at the following Url: `http://localhost:2002/ui/`.
+The `SPA`, on a local machine, is available at the following Url: `http://localhost:2002/`.
 
 To log in you need to use a valid user among the following: `operator1`, `operator3` or `admin`.
 The common password is `test` for them all.
@@ -82,7 +82,7 @@ For more realistic card sending use, once Karate env correctly configured, the K
 ** `${OF_HOME}/src/test/utils/karate/loadBundles.sh`
 ** `${OF_HOME}/src/test/utils/karate/postTestCards.sh`
 
-Once logged in, after one of those scripts have been running, you should be able to see some cards displayed in `http://localhost:2002/ui/feed`.
+Once logged in, after one of those scripts have been running, you should be able to see some cards displayed in `http://localhost:2002/`.
 
 
 == Build

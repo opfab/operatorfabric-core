@@ -86,7 +86,7 @@ cd ./config/docker
 ./docker-compose.sh
 ----
 
-. After a little while, log into the application UI at *localhost:2002/ui/* using admin/test as credentials.
+. After a little while, log into the application UI at *localhost:2002/* using admin/test as credentials.
 +
 WARNING: Don't forget the *final slash* in the URL or you will get an error.
 
