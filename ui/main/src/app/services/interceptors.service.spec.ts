@@ -22,7 +22,7 @@ describe('Interceptor', () => {
     let authenticationService: SpyObj<AuthenticationService>;
 
     beforeEach(() => {
-        const authenticationServiceSpy = createSpyObj(['getSecurityHeader']);
+        const authenticationServiceSpy = createSpyObj(['getSecurityHeader', 'isAuthModeNone']);
         TestBed.configureTestingModule({
             providers: [TokenInjector,
                 {provide: AuthenticationService, useValue: authenticationServiceSpy},
@@ -30,6 +30,7 @@ describe('Interceptor', () => {
         });
         authenticationService = injectedSpy(AuthenticationService);
         authenticationServiceSpy.getSecurityHeader.and.returnValue({'Authorization': `Bearer dummyToken`});
+        authenticationServiceSpy.isAuthModeNone.and.returnValue(false);
     });
 
     it('should leave headers untouched for the "token checking" end-point'
