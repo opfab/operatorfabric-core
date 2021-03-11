@@ -20,6 +20,7 @@ import { Subject } from 'rxjs';
 import { ConfigService } from '@ofServices/config.service';
 import { AppService, PageType } from '@ofServices/app.service';
 import { TranslateService } from '@ngx-translate/core';
+import { EntitiesService } from '@ofServices/entities.service';
 
 @Component({
     selector: 'of-light-card',
@@ -35,6 +36,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
     protected _i18nPrefix: string;
     cardTitle: string;
     dateToDisplay: string;
+    fromEntity = null;
 
     private ngUnsubscribe: Subject<void> = new Subject<void>();
 
@@ -45,7 +47,8 @@ export class LightCardComponent implements OnInit, OnDestroy {
         private time: TimeService,
         private configService: ConfigService,
         private _appService: AppService,
-        protected translate: TranslateService
+        private entitiesService: EntitiesService,
+        protected translate: TranslateService,
     ) {
      }
 
@@ -60,7 +63,14 @@ export class LightCardComponent implements OnInit, OnDestroy {
                     this.currentPath = urlParts[1];
                 }
             });
+        this.computeFromEntity();
         this.computeDisplayedDate();
+    }
+
+    computeFromEntity()
+    {
+        if (this.lightCard.publisherType === 'ENTITY' )  this.fromEntity = this.entitiesService.getEntityName(this.lightCard.publisher);
+        else this.fromEntity = null;
     }
 
     computeDisplayedDate() {
