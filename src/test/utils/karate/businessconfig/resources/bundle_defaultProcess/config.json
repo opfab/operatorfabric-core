@@ -13,7 +13,8 @@
       "description": "messageState.description",
       "color": "#CC9900",
       "userCard" : {
-        "template" : "usercard_message"
+        "template" : "usercard_message",
+        "lttdVisible" : false
       },
       "templateName": "template",
       "styles": [
@@ -49,7 +50,8 @@
       "description": "processState.description",
       "color": "#0070C0",
       "userCard" : {
-        "template" : "usercard_process"
+        "template" : "usercard_process",
+        "lttdVisible" : false
       },
       "templateName": "process",
       "styles": [

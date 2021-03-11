@@ -26,5 +26,6 @@ Feature: Bundle
     And match response.states.questionState.userCard.severityVisible == false
     And match response.states.questionState.userCard.startDateVisible == true
     And match response.states.questionState.userCard.endDateVisible == true
+    And match response.states.questionState.userCard.lttdVisible == true
     And match response.states.questionState.showDetailCardHeader == false
     And match response.states.messageState.userCard.template == 'usercard_message'

@@ -12,7 +12,8 @@
       "name": "task.title",
       "color": "#0070C0",
       "userCard" : {
-        "template" : "usercard_task"
+        "template" : "usercard_task",
+        "lttdVisible" : false
       },
       "templateName": "task",
       "styles": [

@@ -12,7 +12,8 @@
       "name": "message.title",
       "color": "#CC9900",
       "userCard" : {
-        "template" : "usercard_message"
+        "template" : "usercard_message",
+        "lttdVisible" : false
       },
       "templateName": "message",
       "styles": [],
@@ -27,7 +28,8 @@
 				"template" : "usercard_question",
 				"severityVisible" : false,
 				"startDateVisible" : true,
-				"endDateVisible" : true
+				"endDateVisible" : true,
+        "lttdVisible" : true
 			},
       "response": {
         "state": "questionState"

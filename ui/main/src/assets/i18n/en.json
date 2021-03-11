@@ -223,6 +223,7 @@
       "state": "STATE",
       "startDate":  "START DATE",
       "endDate":  "END DATE",
+      "lttd": "LIMIT DATE FOR RESPONSE",
       "recipients": "RECIPIENTS"
     },
     "options": {

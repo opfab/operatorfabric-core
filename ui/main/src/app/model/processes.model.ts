@@ -67,6 +67,7 @@ export class UserCard {
         readonly severityVisible?: boolean,
         readonly startDateVisible?: boolean,
         readonly endDateVisible?: boolean,
+        readonly lttdVisible?: boolean,
     ) {
     }
 }
