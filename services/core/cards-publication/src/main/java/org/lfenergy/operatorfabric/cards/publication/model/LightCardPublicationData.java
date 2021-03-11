@@ -74,14 +74,14 @@ public class LightCardPublicationData implements LightCard {
     private Boolean keepChildCards = false;
 
     private List<String> entitiesAllowedToRespond;
+    private List<String> entitiesRequiredToRespond;
 
     private PublisherTypeEnum publisherType;
 
     private Integer  secondsBeforeTimeSpanForReminder;
 
     /**
-     * return timespans, may be null
-     * @return
+     * @return timespans, may be null
      */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Override

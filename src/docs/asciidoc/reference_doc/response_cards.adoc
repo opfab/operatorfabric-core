@@ -8,15 +8,21 @@
 [[response_cards]]
 = Response cards
 
-Within your template, you can allow the user to perform some action (respond to a form, answer a question, ...). The user fills these information and then clicks on a submit button. When he submits this action, a new card is created and emitted to a third-party tool.
+Within your template, you can allow the user to perform some actions (respond to a form, answer a question, ...).
+The user fills these information and then clicks on a submit button. When he submits this action, a new card is created
+and emitted to a third-party tool.
 
-This card is called "a child card" as it is attached to the card where the question came from : "the parent card". This child card is also sent to the users that have received the parent card. From the ui point of view, the information of the child cards can be integrated in real time in the parent card if configured.
+This card is called "a child card" as it is attached to the card where the question came from : "the parent card". This
+child card is also sent to the users that have received the parent card. From the ui point of view, the information of
+the child cards can be integrated in real time in the parent card if configured.
 
 The process can be represented as follows :
 
 image::ResponseCardSequence.jpg[,align="center"]
 
-Notice that the response will be associated to the entity and not to the user, i.e the user responds on behalf of his entity. A user can respond more than one time to a card (a future evolution could add the possibility to limit to one response per entity).
+Notice that the response will be associated to the entity and not to the user, i.e the user responds on behalf of his
+entity. A user can respond more than one time to a card (a future evolution could add the possibility to limit to one
+response per entity).
 
 You can view a screenshot of an example of card with responses : 
 
@@ -26,9 +32,12 @@ image::ResponseCardScreenshot2.png[,align="center"]
 
 === Define a third party tool
 
-The response card is to be received by a third party application for business processing. The third-party application will receive the card as an HTTP POST request. The card is in json format (the same format as when we send a card). The field data in the json contains the user response.
+The response card is to be received by a third party application for business processing. The third-party application
+will receive the card as an HTTP POST request. The card is in json format (the same format as when we send a card).
+The field data in the json contains the user response.
 
-The url of the third party receiving the response card is to be set in the .yml of the publication service. Here is an example with two third parties configured.
+The url of the third party receiving the response card is to be set in the .yml of the publication service. Here is
+an example with two third parties configured.
 ....
 externalRecipients-url: "{\
            third-party1: \"http://thirdparty1/test1\", \
@@ -41,7 +50,8 @@ The name to use for the third-party is the publisherId of the parent card.
 
 [WARNING]
 ====
-For the url, do not use localhost if you run OperatorFabric in a docker, as the publication-service will not be able to join your third party. 
+For the url, do not use localhost if you run OperatorFabric in a docker, as the publication-service will not be able to
+join your third party.
 ====
 
 === Configure the response in config.json
@@ -145,6 +155,7 @@ NOTE: If you don't want OperatorFabric to check for user perimeter when respondi
 
 The question card is like a usual card except that you have the field "entitiesAllowedToRespond" to set with the
 entities allowed to respond to the card. If the user is not in the entity, he will not be able to respond.
+
 ....
 
 ...
@@ -161,7 +172,30 @@ NOTE: By default, OperatorFabric considers that if the parent card (question car
 are deleted. If you want to keep the child cards when the parent card is changed, then you must add in the parent
 card the field "keepChildCards" and set it to true.
 
+The header in the card details will list the entities from which a response is expected, color-coding them depending
+on whether they've already responded (green) or not (orange).
 
+NOTE: You can also set the property `entitiesRequiredToRespond` to differentiate between entities can respond
+(`entitiesAllowedToRespond`) and those who must respond (`entitiesRequiredToRespond`).
+
+....
+
+...
+"process"  :"defaultProcess",
+"processInstanceId" : "process4",
+"state": "questionState",
+"entitiesAllowedToRespond": ["ENTITY1","ENTITY2","ENTITY3"],
+"entitiesRequiredToRespond": ["ENTITY1","ENTITY2"],
+"severity" : "ACTION",
+...
+
+....
+
+If `entitiesRequiredToRespond` is set and not empty, the card detail header will use this list instead of
+`entitiesAllowedToRespond`.
+
+IMPORTANT: If set, `entitiesRequiredToRespond` should be a subset of `entitiesAllowedToRespond` or the card will be
+rejected.
 
 == Integrate child cards 
 

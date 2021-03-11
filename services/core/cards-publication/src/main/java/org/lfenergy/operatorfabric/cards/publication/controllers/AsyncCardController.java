@@ -34,7 +34,7 @@ public class AsyncCardController {
     private CardProcessingService cardProcessingService;
 
     /**
-     *  DEPRECATED / ONLY FOR COMPATIBILIY / NOT ASYNCHRONE ANYMORE 
+     *  DEPRECATED / ONLY FOR COMPATIBILITY / NOT ASYNCHRONOUS ANYMORE
      * 
      * <p>POST cards to create/update new cards.</p>
      * <p>Always returns {@link HttpStatus#ACCEPTED}</p>

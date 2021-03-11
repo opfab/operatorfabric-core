@@ -74,14 +74,14 @@ public class LightCardConsultationData implements LightCard {
     private String initialParentCardUid;
 
     private List<String> entitiesAllowedToRespond;
+    private List<String> entitiesRequiredToRespond;
 
     private PublisherTypeEnum publisherType;
 
     private Integer  secondsBeforeTimeSpanForReminder;
 
     /**
-     * return timespans, may return null
-     * @return
+     * @return timespans, may return null
      */
     @JsonProperty("timeSpans")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
