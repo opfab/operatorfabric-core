@@ -14,8 +14,8 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
   keycloak:
-    image: jboss/keycloak:6.0.1
-    command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/keycloak/export
+    image: jboss/keycloak:12.0.2
+    command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/keycloak/export -Dkeycloak.profile.feature.upload_scripts=enabled
     environment:
       - KEYCLOAK_USER=admin
       - KEYCLOAK_PASSWORD=admin
