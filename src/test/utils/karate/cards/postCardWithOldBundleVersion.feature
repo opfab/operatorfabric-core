@@ -26,6 +26,7 @@ Scenario: Post card with old version of bundle
 			"groupRecipients": ["Dispatcher"],
 			"severity" : "INFORMATION",
 			"startDate" : startDate,
+			"endDate" : endDate,
 			"summary" : {"key" : "defaultProcess.summary"},
 			"title" : {"key" : "defaultProcess.title"},
 			"data" : {"message":" Information card number 1"},

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,6 @@ package org.lfenergy.operatorfabric.cards.consultation.repositories;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,14 +27,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -232,6 +229,27 @@ public class CardRepositoryShould {
        
     }
 
+    @Test
+    public void getTwoCardsInRangeWitnNoEnd()
+    {
+        persistCard(createSimpleCard("1", now, nowMinusOne, nowPlusThree, LOGIN,null, null));
+        persistCard(createSimpleCard("2", now, nowMinusOne, null, LOGIN, null,null));
+        persistCard(createSimpleCard("3", now, nowPlusOne, null, LOGIN,null,null));
+
+        StepVerifier.create(repository.getCardOperations(null, now,nowPlusTwo, adminUser)
+                .doOnNext(TestUtilities::logCardOperation))
+                .assertNext(op -> {
+                    assertThat(op.getCard()).isNotNull();
+                    assertCard(op,"PROCESS.PROCESS1", "PUBLISHER", "0");
+                })
+                .assertNext(op -> {
+                    assertThat(op.getCard()).isNotNull();
+                    assertCard(op,"PROCESS.PROCESS3", "PUBLISHER", "0");
+                })
+                .expectComplete()
+                .verify();
+       
+    }
     
     @Test
     public void getZeroCardAfterPublishDate()

@@ -27,6 +27,7 @@ Scenario:  Push an alarm contingency card
 			"userRecipients": ["operator1"],
 			"severity" : "ALARM",
 			"startDate" : startDate,
+            "endDate": endDateTimeSpans,
 			"lttd" : lttdDate,
 			"timeSpans" : [
 				{"start" : startDateTimeSpans ,"end" : endDateTimeSpans}

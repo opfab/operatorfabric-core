@@ -30,6 +30,7 @@ Scenario: Post a process card
 			"groupRecipients": ["Dispatcher"],
 			"severity" : "COMPLIANT",
 			"startDate" : startDate,
+			"endDate" : endDateTimeSpans1,
 			"summary" : {"key" : "message.summary"},
 			"title" : {"key" : "processState.title" , "parameters" : {"status":"calcul"}},
 			"data" : {"state":"calcul1","stateName":"CALCUL1"},

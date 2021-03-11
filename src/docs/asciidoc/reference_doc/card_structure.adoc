@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -114,8 +114,7 @@ ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/i
 
 === Business period 
 
-We define the business period as starting form startDate to endDate.  The card will be visible on the UI if the business period overlap the user chosen period (i.e the period selected on  the timeline). If endDate is not set, the  card will be visible as soon as the startDate is before the end of the chosen period.
-
+We define the business period as starting form startDate to endDate.  The card will be visible on the UI if the business period overlap the user chosen period (i.e the period selected on  the timeline). If endDate is not set, the card will be visible as soon as the startDate is between start and end date of the chosen period.
 
 === Store information 
 

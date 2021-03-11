@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -200,20 +200,18 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
             criteria.add(new Criteria().orOperator(
                     //Case 1: Card start date is included in query filter range
                     where(START_DATE_FIELD).gte(activeFrom).lte(activeTo),
-                    //Case 2: Card start date is before start of query filter range
+                    //Case 2: Card start date is before start of query filter range and end date after start of query filter
                     new Criteria().andOperator(
-                            where(START_DATE_FIELD).lte(activeFrom),
-                            new Criteria().orOperator(
-                                    where(END_DATE_FIELD).is(null),
-                                    where(END_DATE_FIELD).gte(activeFrom)
-                            )
+                        where(START_DATE_FIELD).lte(activeFrom),
+                        where(END_DATE_FIELD).gte(activeFrom))
                     )
-            ));
+			);
+
         } else if (params.containsKey(ACTIVE_FROM_PARAM)) {
             Instant activeFrom = Instant.ofEpochMilli(Long.parseLong(params.getFirst(ACTIVE_FROM_PARAM)));
             criteria.add(new Criteria().orOperator(
-                    where(END_DATE_FIELD).is(null),
-                    where(END_DATE_FIELD).gte(activeFrom)
+                where(END_DATE_FIELD).gte(activeFrom),
+                where(START_DATE_FIELD).gte(activeFrom)
             ));
         } else if (params.containsKey(ACTIVE_TO_PARAM)) {
             Instant activeTo = Instant.ofEpochMilli(Long.parseLong(params.getFirst(ACTIVE_TO_PARAM)));

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -119,19 +119,18 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 	}
 
 	private Criteria getCriteriaForRange(Instant rangeStart,Instant rangeEnd)
-	{
-		
+	{	
 		if (rangeStart==null) return where(END_DATE_FIELD).lte(rangeEnd);
-		if (rangeEnd==null) return where(START_DATE_FIELD).gte(rangeStart);
+		if (rangeEnd==null) return new Criteria().orOperator(
+			where(END_DATE_FIELD).gte(rangeStart),
+			where(START_DATE_FIELD).gte(rangeStart)
+		);
 		return new Criteria().orOperator(
 			where(START_DATE_FIELD).gte(rangeStart).lte(rangeEnd),
 			where(END_DATE_FIELD).gte(rangeStart).lte(rangeEnd),
 			new Criteria().andOperator(
-							where(START_DATE_FIELD).lte(rangeStart), 
-							new Criteria().orOperator(
-									where(END_DATE_FIELD).is(null), 
-									where(END_DATE_FIELD).gte(rangeEnd))
-							)
+				where(START_DATE_FIELD).lte(rangeStart),
+				where(END_DATE_FIELD).gte(rangeEnd))
 			);
 	}
 

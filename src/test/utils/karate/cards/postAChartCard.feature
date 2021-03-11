@@ -28,6 +28,7 @@ Scenario: Push card with a chart
 			"groupRecipients": ["Dispatcher"],
 			"severity" : "INFORMATION",
 			"startDate" : startDate,
+			"endDate": endDateTimeSpans,
 			"summary" : {"key" : "message.summary"},
 			"title" : {"key" : "chartDetail.title"},
 			"data" : {"values":[12, 19, 3, 5, 2, 3]},
