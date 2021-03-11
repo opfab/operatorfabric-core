@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -71,13 +71,13 @@ export class FilterService {
             (card: LightCard, status) => {
                 if (!!status.start && !!status.end) {
                     if (!card.endDate) {
-                        return card.startDate <= status.end;
+                        return status.start <= card.startDate && card.startDate <= status.end;
                     }
                     return status.start <= card.startDate && card.startDate <= status.end
                         || status.start <= card.endDate && card.endDate <= status.end
                         || card.startDate <= status.start && status.end <= card.endDate;
                 } else if (!!status.start) {
-                    return !card.endDate || status.start <= card.endDate;
+                    return (!card.endDate && card.startDate >= status.start) || (!!card.endDate && status.start <= card.endDate);
                 } else if (!!status.end) {
                     return card.startDate <= status.end;
                 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,6 @@
 
 package org.lfenergy.operatorfabric.cards.consultation.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -22,19 +21,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.cards.consultation.TestUtilities;
 import org.lfenergy.operatorfabric.cards.consultation.application.IntegrationTestApplication;
 import org.lfenergy.operatorfabric.cards.consultation.model.CardOperation;
-import org.lfenergy.operatorfabric.cards.consultation.model.CardOperationConsultationData;
-import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.repositories.CardRepository;
 import org.lfenergy.operatorfabric.cards.consultation.services.CardSubscriptionService;
 import org.lfenergy.operatorfabric.springtools.configuration.test.UserServiceCacheTestApplication;
 import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.lfenergy.operatorfabric.users.model.User;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.FanoutExchange;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.core.publisher.Flux;
@@ -205,60 +198,48 @@ public class CardOperationsControllerShould {
                         .rangeEnd(nowPlusThree)
                         .notification(false).build()
         ));
-        Set<String> cardIds = new HashSet<String>();
         StepVerifier.FirstStep<CardOperation> verifier = StepVerifier.create(publisher.map(s -> TestUtilities.readCardOperation(mapper, s)).doOnNext(TestUtilities::logCardOperation));
         verifier
                 .assertNext(op->{
                         assertThat(op.getCard()).isNotNull();
+                        assertThat(op.getCard().getId()).isEqualTo("PROCESS.PROCESS2");
                         assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                        cardIds.add(op.getCard().getId());
                 })
                 .assertNext(op->{
                         assertThat(op.getCard()).isNotNull();
+                        assertThat(op.getCard().getId()).isEqualTo("PROCESS.PROCESS3");
                         assertThat(op.getPublishDate()).isEqualTo(nowPlusOne);
-                        cardIds.add(op.getCard().getId());
                 })
                 .assertNext(op->{
                         assertThat(op.getCard()).isNotNull();
+                        assertThat(op.getCard().getId()).isEqualTo("PROCESS.PROCESS4");
                         assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                        cardIds.add(op.getCard().getId());
                 })
                 .assertNext(op->{
                         assertThat(op.getCard()).isNotNull();
+                        assertThat(op.getCard().getId()).isEqualTo("PROCESS.PROCESS5");
                         assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                        cardIds.add(op.getCard().getId());
                 })
                 .assertNext(op->{
                         assertThat(op.getCard()).isNotNull();
+                        assertThat(op.getCard().getId()).isEqualTo("PROCESS.PROCESS6");
                         assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                        cardIds.add(op.getCard().getId());
                 })
                 .assertNext(op->{
                         assertThat(op.getCard()).isNotNull();
+                        assertThat(op.getCard().getId()).isEqualTo("PROCESS.PROCESS8");
                         assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                        cardIds.add(op.getCard().getId());
                 })
                 .assertNext(op->{
                         assertThat(op.getCard()).isNotNull();
-                        assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                        cardIds.add(op.getCard().getId());
-                })
-                .assertNext(op->{
-                        assertThat(op.getCard()).isNotNull();
+                        assertThat(op.getCard().getId()).isEqualTo("PROCESS.PROCESS10");
                         assertThat(op.getPublishDate()).isEqualTo(nowPlusOne);
-                        cardIds.add(op.getCard().getId());
                 })
                 .expectComplete()
                 .verify();
-        assertThat(cardIds.contains("PROCESS.PROCESS7"));
-        assertThat(cardIds.contains("PROCESS.PROCESS4"));
-        assertThat(cardIds.contains("PROCESS.PROCESS5"));
-        assertThat(cardIds.contains("PROCESS.PROCESS8"));
-        assertThat(cardIds.contains("PROCESS.PROCESS2"));
-        assertThat(cardIds.contains("PROCESS.PROCESS6"));
     }
-    @Test
 
+    @Test
     private Runnable createUpdateSubscriptionTask() {
         return () -> {
             log.info("execute update subscription task");
