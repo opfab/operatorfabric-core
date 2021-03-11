@@ -22,76 +22,10 @@
     margin-bottom: 10px;
   }
 
-  .opfab-business-period {
-    font-size : 15px;
-    width: 100%;
-    background-color: var(--opfab-timeline-bgcolor);
-    text-align: center;
-  }
-
   .opfab-timeline-grid {
     display: grid;
     grid-template-columns: 20px auto 10px;
     align-items: center;
-  }
-
-  .opfab-menu-timeline {
-    
-    position: relative;
-    max-height: 40px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-
-
-
-    #opfab-menu-timeline-links {
-      position: absolute;
-      flex-grow: 1;
-      right: 10px;
-      font-size: 13px;
-      color:var(--opfab-navbar-color);
-      background-color: var(--opfab-bgcolor);
-      margin-top: -10px;
-      text-decoration: none;
-      border-radius: 5px;
-      padding-bottom: 5px;
-
-      ul {
-        margin: 0;
-        list-style: none;
-        display: flex;
-        justify-content: flex-end;
-
-        
-        li {
-
-          padding-left: 0px;
-          padding-right: 25px;
-          .link-selected {
-            color:var(--opfab-navbar-color-active);
-            font-weight: bold;
-            text-decoration: underline;
-          }
-
-          .link-unselect {
-            background-color: var(--opfab-bgcolor);
-            color:var(--opfab-navbar-color);
-              }
-
-          .circle-btn {
-            border-radius: 50%;
-            border: none;
-          }
-        }
-        li:hover {
-          color: var(--opfab-navbar-color-active);
-          font-weight: bold;
-        }
-      }
-    }
   }
 }
 

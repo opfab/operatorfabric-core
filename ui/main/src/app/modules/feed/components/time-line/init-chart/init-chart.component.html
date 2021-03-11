@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -8,41 +8,15 @@
 
 
 <div class="timeline">
-  <div class="opfab-menu-timeline">
-    <div *ngIf='hideTimeLine' class="opfab-business-period">
-    
-      <span translate>timeline.businessPeriod </span> : {{startDate}} -- {{endDate}}
 
-
-    </div>
-    <div id="opfab-menu-timeline-links">
-      <ul>
-        <li *ngIf='hideTimeLine'>
-          <a (click)="moveDomain(false)"> &lt;&lt;
-          </a>
-        </li>
-
-        <li *ngFor="let button of buttonList">
-          <a id="opfab-timeline-link-period-{{button.domainId}}" [ngClass]="button.selected ? 'link-selected' : 'link-unselect'" (click)="changeGraphConf(button)"
-            translate>
-            {{button.buttonTitle}}
-          </a>
-        </li>
-
-        <li *ngIf='hideTimeLine' >
-          <a (click)="moveDomain(true)">
-            &gt;&gt;
-          </a>
-        </li>
-      </ul>
-    </div>
+  <div style="margin-right: 10px;">
+    <of-timeline-buttons [isMonitoringScreen]="false" #timelineButtons>
+    </of-timeline-buttons>
   </div>
 
-
-
-  <div class="opfab-timeline-grid" *ngIf="!hideTimeLine">
+  <div class="opfab-timeline-grid" *ngIf="!this.timelineButtons.hideTimeLine">
     <div class="opfab-move-domain">
-      <a id="opfab-timeline-link-move-left" (click)="moveDomain(false)"> &lt;&lt;
+      <a id="opfab-timeline-link-move-left" (click)="this.timelineButtons.moveDomain(false)"> &lt;&lt;
       </a>
     </div>
     <!--
@@ -55,12 +29,13 @@
    (zoomChange) call when custom timeline chart change his domain
   -->
 
-    <of-custom-timeline-chart class="of-custom-timeline-chart" [prod]="true" [domainId]="domainId"
-      [valueDomain]="myDomain" [followClockTick]="followClockTick" (zoomChange)="applyNewZoom($event)">
+    <of-custom-timeline-chart class="of-custom-timeline-chart" [prod]="true" [domainId]="this.timelineButtons.domainId"
+                              [valueDomain]="this.timelineButtons.myDomain" [followClockTick]="this.timelineButtons.followClockTick"
+                              (zoomChange)="this.timelineButtons.applyNewZoom($event)">
     </of-custom-timeline-chart>
 
     <div class="opfab-move-domain">
-      <a id="opfab-timeline-link-move-right" (click)="moveDomain(true)">
+      <a id="opfab-timeline-link-move-right" (click)="this.timelineButtons.moveDomain(true)">
         &gt;&gt;
       </a>
     </div>
@@ -68,10 +43,10 @@
   </div>
 </div>
 <div class="opfab-showhide-timeline">
-  <div id="opfab-timeline-link-hide-timeline" *ngIf="!hideTimeLine" >
-    <a (click)="showOrHideTimeline()">˄ &nbsp;&nbsp; <span translate> timeline.hideTimeline </span></a>
+  <div id="opfab-timeline-link-hide-timeline" *ngIf="!this.timelineButtons.hideTimeLine" >
+    <a (click)="this.timelineButtons.showOrHideTimeline()">˄ &nbsp;&nbsp; <span translate> timeline.hideTimeline </span></a>
   </div>
-  <div id="opfab-timeline-link-show-timeline" *ngIf="hideTimeLine">
-    <a  (click)="showOrHideTimeline()">˅ &nbsp;&nbsp; <span translate> timeline.showTimeline </span></a>
+  <div id="opfab-timeline-link-show-timeline" *ngIf="this.timelineButtons.hideTimeLine">
+    <a  (click)="this.timelineButtons.showOrHideTimeline()">˅ &nbsp;&nbsp; <span translate> timeline.showTimeline </span></a>
   </div>
 </div>

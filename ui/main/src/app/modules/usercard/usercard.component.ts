@@ -71,14 +71,14 @@ export class UserCardComponent implements OnDestroy, OnInit {
     selectedRecipients = [];
     dropdownSettings = {};
     processOptions = [];
-    processOptionsWhenSelectedService = [];
-    serviceOptions = [];
+    processOptionsWhenSelectedProcessGroup = [];
+    processGroupOptions = [];
 
     selectedProcess: Process;
     selectedState: string;
-    processesPerServices = new Map();
-    servicePerProcesses = new Map();
-    processesWithoutService = [];
+    processesPerProcessGroups = new Map();
+    processGroupPerProcesses = new Map();
+    processesWithoutProcessGroup = [];
     statesPerProcesses = new Map();
     userCardTemplate: SafeHtml;
     editCardMode = false;
@@ -104,8 +104,8 @@ export class UserCardComponent implements OnDestroy, OnInit {
         return !!this.processOptions && this.processOptions.length > 0;
     }
 
-    displayServiceFilter() {
-        return !!this.serviceOptions && this.serviceOptions.length > 1 ;
+    displayProcessGroupFilter() {
+        return !!this.processGroupOptions && this.processGroupOptions.length > 1 ;
     }
 
     constructor(private store: Store<AppState>,
@@ -128,11 +128,11 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.processGroups = this.processesService.getProcessGroups();
         this.loadAllEntities();
         this.loadAllProcessAndStateInUserPerimeter();
-        this.loadAllServicesRelatingToUserPerimeter();
+        this.loadAllProcessGroupsRelatingToUserPerimeter();
 
         this.messageForm = new FormGroup({
             severity: new FormControl(''),
-            service: new FormControl(''),
+            processGroup: new FormControl(''),
             process: new FormControl(''),
             state: new FormControl(''),
             startDate: new FormControl(''),
@@ -147,7 +147,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
         this.changeSeverityToDefaultValue();
         this.changeStatesWhenSelectProcess();
-        this.changeProcessesWhenSelectService();
+        this.changeProcessesWhenSelectProcessGroup();
         this.loadTemplateWhenStateChange();
 
         this.dropdownSettings = {
@@ -166,13 +166,13 @@ export class UserCardComponent implements OnDestroy, OnInit {
                         this.cardToEdit = card;
                         this.messageForm.get('severity').setValue(this.cardToEdit.card.severity);
 
-                        const serviceForCardToEdit = this.servicePerProcesses.get(this.cardToEdit.card.process);
-                        if (serviceForCardToEdit)
-                            this.messageForm.get('service').setValue(serviceForCardToEdit);
+                        const processGroupForCardToEdit = this.processGroupPerProcesses.get(this.cardToEdit.card.process);
+                        if (processGroupForCardToEdit)
+                            this.messageForm.get('processGroup').setValue(processGroupForCardToEdit);
                         else
-                            this.messageForm.get('service').setValue('--');
+                            this.messageForm.get('processGroup').setValue('--');
                         
-                        this.messageForm.get('service').disable();
+                        this.messageForm.get('processGroup').disable();
 
                         this.messageForm.get('process').setValue(this.cardToEdit.card.process);
                         this.messageForm.get('process').disable();
@@ -218,8 +218,8 @@ export class UserCardComponent implements OnDestroy, OnInit {
         return !!processesGroup.processes.find(process => process === idProcess);
     }
 
-    loadAllServicesRelatingToUserPerimeter(): void {
-        let numberOfProcessesAttachedToAService = 0;
+    loadAllProcessGroupsRelatingToUserPerimeter(): void {
+        let numberOfProcessesAttachedToAProcessGroup = 0;
 
         this.processGroups.forEach(group => {
 
@@ -227,27 +227,27 @@ export class UserCardComponent implements OnDestroy, OnInit {
             this.processOptions.forEach(processOption => {
                 if (this.isProcessInProcessesGroup(processOption.value, group)) {
                     processOptions.push(processOption);
-                    numberOfProcessesAttachedToAService++;
+                    numberOfProcessesAttachedToAProcessGroup++;
 
-                    this.servicePerProcesses.set(processOption.value, group.id);
+                    this.processGroupPerProcesses.set(processOption.value, group.id);
                 }
             });
 
             if (processOptions.length > 0)
-                this.processesPerServices.set(group.id, processOptions);
+                this.processesPerProcessGroups.set(group.id, processOptions);
         });
 
-        if (this.processOptions.length > numberOfProcessesAttachedToAService) {
-            this.loadProcessesWithoutService();
-            this.serviceOptions.push({value: '--', label: 'service.defaultLabel'});
+        if (this.processOptions.length > numberOfProcessesAttachedToAProcessGroup) {
+            this.loadProcessesWithoutProcessGroup();
+            this.processGroupOptions.push({value: '--', label: 'processGroup.defaultLabel'});
         }
-        for (const serviceId of this.processesPerServices.keys())
-            this.serviceOptions.push({value: serviceId, label: serviceId});
+        for (const processGroupId of this.processesPerProcessGroups.keys())
+            this.processGroupOptions.push({value: processGroupId, label: processGroupId});
     }
 
-    loadProcessesWithoutService(): void {
-        const processesWithService = Array.from(this.servicePerProcesses.keys());
-        this.processesWithoutService = this.processOptions.filter(processOption => processesWithService.indexOf(processOption.value) < 0);
+    loadProcessesWithoutProcessGroup(): void {
+        const processesWithProcessGroup = Array.from(this.processGroupPerProcesses.keys());
+        this.processesWithoutProcessGroup = this.processOptions.filter(processOption => processesWithProcessGroup.indexOf(processOption.value) < 0);
     }
 
     private static userCanSendCard(perimeter: ComputedPerimeter): boolean {
@@ -290,15 +290,15 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     }
 
-    changeProcessesWhenSelectService(): void {
-        this.messageForm.get('service').valueChanges.subscribe((service) => {
-            if (!!service) {
-                if (service === '--')
-                    this.processOptionsWhenSelectedService = this.processesWithoutService;
+    changeProcessesWhenSelectProcessGroup(): void {
+        this.messageForm.get('processGroup').valueChanges.subscribe((processGroup) => {
+            if (!!processGroup) {
+                if (processGroup === '--')
+                    this.processOptionsWhenSelectedProcessGroup = this.processesWithoutProcessGroup;
                 else
-                    this.processOptionsWhenSelectedService = this.processesPerServices.get(service);
+                    this.processOptionsWhenSelectedProcessGroup = this.processesPerProcessGroups.get(processGroup);
 
-                this.selectedProcess = this.processOptionsWhenSelectedService[0].value;
+                this.selectedProcess = this.processOptionsWhenSelectedProcessGroup[0].value;
                 this.messageForm.get('process').setValue(this.selectedProcess);
             }
         });

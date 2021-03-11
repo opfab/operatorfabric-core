@@ -18,7 +18,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import * as moment from 'moment';
 import {I18n} from '@ofModel/i18n.model';
 import {MonitoringFiltersComponent} from './components/monitoring-filters/monitoring-filters.component';
-import {Process} from '@ofModel/processes.model';
+import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {ProcessesService} from '@ofServices/processes.service';
 
 @Component({
@@ -28,7 +28,7 @@ import {ProcessesService} from '@ofServices/processes.service';
 })
 export class MonitoringComponent implements OnInit, OnDestroy {
 
-    @ViewChild(MonitoringFiltersComponent)
+    @ViewChild('filters')
     filters: MonitoringFiltersComponent;
 
     monitoringResult$: Observable<LineOfMonitoringResult[]>;
@@ -63,8 +63,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
                         return null;
                     }
                     return cards.map(card => {
-                            let color = 'white';
-                            let name: string;
+                            let typeOfState: TypeOfStateEnum;
                             const procId = card.process;
                             if (!!this.mapOfProcesses && this.mapOfProcesses.has(procId) && !card.parentCardId) {
                                 const currentProcess = this.mapOfProcesses.get(procId);
@@ -74,11 +73,10 @@ export class MonitoringComponent implements OnInit, OnDestroy {
                                  * and thus currentProcess.extractState(…) throws an error
                                  */
                                 const state = Process.prototype.extractState.call(currentProcess, card);
-                                if (!!state && !!state.color) {
-                                    color = state.color;
-                                    name = state.name;
+                                if (!!state && !!state.type) {
+                                    typeOfState = state.type;
                                 }
-                                 return (
+                                return (
                                     {
                                         creationDateTime: moment(card.publishDate),
                                         beginningOfBusinessPeriod: moment(card.startDate),
@@ -86,11 +84,10 @@ export class MonitoringComponent implements OnInit, OnDestroy {
                                         title: this.prefixI18nKey(card, 'title'),
                                         summary: this.prefixI18nKey(card, 'summary'),
                                         processName: this.prefixForTranslation(card, currentProcess.name),
-                                        coordinationStatusColor: color,
-                                        coordinationStatus: this.prefixForTranslation(card, name),
                                         cardId: card.id,
-                                        severity: card.severity.toLocaleLowerCase()
-
+                                        severity: card.severity.toLocaleLowerCase(),
+                                        processId: procId,
+                                        typeOfState: typeOfState
                                     } as LineOfMonitoringResult);
                             }
 
@@ -115,7 +112,5 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     prefixForTranslation(card: LightCard, key: string): string {
         return `${card.process}.${card.processVersion}.${key}`;
     }
-
-
 
 }

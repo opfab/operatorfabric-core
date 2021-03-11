@@ -55,7 +55,8 @@ export class State {
         readonly color?: string,
         readonly userCard?: UserCard,
         readonly description?: string,
-        readonly showDetailCardHeader?: boolean
+        readonly showDetailCardHeader?: boolean,
+        readonly type?: TypeOfStateEnum
     ) {
     }
 }
@@ -86,6 +87,12 @@ export enum AcknowledgmentAllowedEnum {
     ALWAYS = 'Always',
     NEVER = 'Never',
     ONLY_WHEN_RESPONSE_DISABLED_FOR_USER = 'OnlyWhenResponseDisabledForUser'
+}
+
+export enum TypeOfStateEnum {
+    INPROGRESS = 'INPROGRESS',
+    FINISHED = 'FINISHED',
+    CANCELED = 'CANCELED'
 }
 
 export enum InputType {

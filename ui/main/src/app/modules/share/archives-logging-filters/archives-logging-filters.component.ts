@@ -28,7 +28,6 @@ export enum FilterDateTypes {
     PUBLISH_DATE_TO_PARAM = 'publishDateTo',
     ACTIVE_FROM_PARAM = 'activeFrom',
     ACTIVE_TO_PARAM = 'activeTo'
-
 }
 
 export const checkElement = (enumeration: typeof FilterDateTypes, value: string): boolean => {
@@ -58,18 +57,18 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     filters;
 
     // Filter values
-    serviceDropdownList = [];
-    serviceDropdownSettings = {};
+    processesDropdownListPerProcessGroups = new Map();
+    processesWithoutProcessGroupDropdownList = [];
+    processGroupDropdownList = [];
+    processGroupDropdownSettings = {};
     processDropdownList = [];
-    processDropdownListWhenSelectedService = [];
-    processesWithoutServiceDropdownList = [];
+    processDropdownListWhenSelectedProcessGroup = [];
     processDropdownSettings = {};
     stateDropdownListWhenSelectedProcess = [];
     stateDropdownSettings = {};
     tagsDropdownList = [];
     tagsDropdownSettings = {};
 
-    processesDropdownListPerServices = new Map();
     statesDropdownListPerProcesses = new Map();
     processesGroups: {id: string, processes: string[]}[];
 
@@ -92,23 +91,23 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
             }
             this.processDropdownList.push({ id: id, itemName: itemName, i18nPrefix: `${process.id}.${process.version}` });
         });
-        this.processDropdownListWhenSelectedService = [];
+        this.processDropdownListWhenSelectedProcessGroup = [];
         this.stateDropdownListWhenSelectedProcess = [];
 
         if (!!this.tags) {
             this.tags.forEach(tag => this.tagsDropdownList.push({ id: tag.value, itemName: tag.label }));
         }
 
-        this.loadAllProcessesPerServices();
+        this.loadProcessGroupDropdownListAndProcessesDropdownList();
         this.loadAllStatesPerProcesses();
 
         this.getLocale().pipe(takeUntil(this.unsubscribe$)).subscribe(locale => {
             this.translate.use(locale);
-            this.translate.get(['filters.selectServiceText','filters.selectProcessText','filters.selectStateText',
+            this.translate.get(['filters.selectProcessGroupText','filters.selectProcessText','filters.selectStateText',
                 'filters.selectTagText'])
                 .subscribe(translations => {
-                    this.serviceDropdownSettings = {
-                        text: translations['filters.selectServiceText'],
+                    this.processGroupDropdownSettings = {
+                        text: translations['filters.selectProcessGroupText'],
                         badgeShowLimit: 1,
                         enableSearchFilter: true
                     }
@@ -130,8 +129,20 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
                 })
         });
 
-        this.changeProcessesWhenSelectService();
+        this.changeProcessesWhenSelectProcessGroup();
         this.changeStatesWhenSelectProcess();
+    }
+
+    public loadProcessGroupDropdownListAndProcessesDropdownList(): void {
+
+        this.processesDropdownListPerProcessGroups = this.processesService.getProcessesPerProcessGroups();
+        this.processesWithoutProcessGroupDropdownList = this.processesService.getProcessesWithoutProcessGroup();
+
+        if (this.processesWithoutProcessGroupDropdownList.length > 0)
+            this.processGroupDropdownList.push({ id: '--', itemName: "processGroup.defaultLabel" });
+
+        const processGroups = Array.from(this.processesDropdownListPerProcessGroups.keys());
+        processGroups.forEach(processGroup => this.processGroupDropdownList.push({ id: processGroup, itemName: processGroup }));
     }
 
     /**
@@ -150,8 +161,8 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
                         const ids = [];
                         if (key == 'state')
                             this.stateFilterToMap(element);
-                        else if (key == 'service')
-                            this.serviceFilterToMap(element);
+                        else if (key == 'processGroup')
+                            this.processGroupFilterToMap(element);
                         else {
                             element.forEach(val => ids.push(val.id));
                             this.filters.set(key, ids);
@@ -177,14 +188,14 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
         this.filters.set('state', ids);
     }
 
-    serviceFilterToMap(element: any) {
+    processGroupFilterToMap(element: any) {
         const ids = [];
 
-        element.forEach(service => {
-            if (service.id == '--')
-                this.processesWithoutServiceDropdownList.forEach(process => ids.push(process.id))
+        element.forEach(processGroup => {
+            if (processGroup.id == '--')
+                this.processesWithoutProcessGroupDropdownList.forEach(process => ids.push(process.id))
             else
-                this.processesDropdownListPerServices.get(service.id).forEach(process => ids.push(process.id))
+                this.processesDropdownListPerProcessGroups.get(processGroup.id).forEach(process => ids.push(process.id))
         });
 
         if (!this.filters.get('process'))
@@ -193,7 +204,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
 
     addProcessesDropdownList(processesDropdownList: any[]): void {
         processesDropdownList.forEach( processDropdownList =>
-            this.processDropdownListWhenSelectedService.push(processDropdownList) );
+            this.processDropdownListWhenSelectedProcessGroup.push(processDropdownList) );
     }
 
     addStatesDropdownList(statesDropdownList: any[]): void {
@@ -201,21 +212,21 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
             this.stateDropdownListWhenSelectedProcess.push(stateDropdownList) );
     }
 
-    changeProcessesWhenSelectService(): void {
-        this.parentForm.get('service').valueChanges.subscribe((selectedServices) => {
+    changeProcessesWhenSelectProcessGroup(): void {
+        this.parentForm.get('processGroup').valueChanges.subscribe((selectedProcessGroups) => {
 
-            if (!! selectedServices && selectedServices.length > 0) {
-                this.processDropdownListWhenSelectedService = [];
-                selectedServices.forEach(service => {
+            if (!! selectedProcessGroups && selectedProcessGroups.length > 0) {
+                this.processDropdownListWhenSelectedProcessGroup = [];
+                selectedProcessGroups.forEach(processGroup => {
 
-                    if (service.id == '--')
-                        this.addProcessesDropdownList(this.processesWithoutServiceDropdownList);
+                    if (processGroup.id == '--')
+                        this.addProcessesDropdownList(this.processesWithoutProcessGroupDropdownList);
                     else
-                        this.addProcessesDropdownList(this.processesDropdownListPerServices.get(service.id));
+                        this.addProcessesDropdownList(this.processesDropdownListPerProcessGroups.get(processGroup.id));
                 });
             }
             else
-                this.processDropdownListWhenSelectedService = [];
+                this.processDropdownListWhenSelectedProcessGroup = [];
         });
     }
 
@@ -233,33 +244,6 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
         });
     }
 
-    findServiceForProcess(processId : string) : string {
-        for (let group of this.processesGroups) {
-            if (group.processes.find(process => process == processId))
-                return group.id;
-        }
-        return '';
-    }
-
-    loadAllProcessesPerServices(): void {
-        this.processesService.getAllProcesses().forEach(process => {
-
-            const service = this.findServiceForProcess(process.id);
-            if (service != '') {
-                let processes = (!! this.processesDropdownListPerServices.get(service) ? this.processesDropdownListPerServices.get(service) : []);
-                processes.push({id: process.id, itemName: process.name, i18nPrefix: `${process.id}.${process.version}`});
-                this.processesDropdownListPerServices.set(service, processes);
-            }
-            else
-                this.processesWithoutServiceDropdownList.push({ id: process.id, itemName: process.name, i18nPrefix: `${process.id}.${process.version}` });
-        });
-        if (this.processesWithoutServiceDropdownList.length > 0)
-            this.serviceDropdownList.push({ id: '--', itemName: "service.defaultLabel" });
-
-        const services = Array.from(this.processesDropdownListPerServices.keys());
-        services.forEach(service => this.serviceDropdownList.push({ id: service, itemName: service }));
-    }
-
     loadAllStatesPerProcesses(): void {
         this.processesService.getAllProcesses().forEach(process => {
 
@@ -270,17 +254,12 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
         });
     }
 
-    displayServiceFilter() {
-        return !!this.serviceDropdownList && this.serviceDropdownList.length > 1 ;
+    displayProcessGroupFilter() {
+        return !!this.processGroupDropdownList && this.processGroupDropdownList.length > 1 ;
     }
 
     protected getLocale(): Observable<string> {
         return this.store.select(buildSettingsOrConfigSelector('locale'));
-    }
-
-    findServiceLabelForProcess(processId : string) : string {
-        const serviceId = this.findServiceForProcess(processId);
-        return (!! serviceId && serviceId != '') ? serviceId : "service.defaultLabel";
     }
 
     ngOnDestroy() {

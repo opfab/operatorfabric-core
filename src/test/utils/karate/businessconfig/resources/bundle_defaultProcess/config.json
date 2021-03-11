@@ -19,7 +19,8 @@
       "styles": [
         "style"
       ],
-      "acknowledgmentAllowed": "Always"
+      "acknowledgmentAllowed": "Always",
+      "type" : "INPROGRESS"
     },
     "chartState": {
       "name": "chartDetail.title",
@@ -29,7 +30,8 @@
       "styles": [
         "style"
       ],
-      "acknowledgmentAllowed": "Always"
+      "acknowledgmentAllowed": "Always",
+      "type" : "FINISHED"
     },
     "chartLineState": {
       "name": "chartLine.title",
@@ -39,7 +41,8 @@
       "styles": [
         "style"
       ],
-      "acknowledgmentAllowed": "Always"
+      "acknowledgmentAllowed": "Always",
+      "type" : "CANCELED"
     },
     "processState": {
       "name": "process.label",
@@ -52,7 +55,8 @@
       "styles": [
         "style"
       ],
-      "acknowledgmentAllowed": "Always"
+      "acknowledgmentAllowed": "Always",
+      "type" : "INPROGRESS"
     },
     "contingenciesState": {
       "name": "contingencies.title",
@@ -62,7 +66,8 @@
       "styles": [
         "contingencies"
       ],
-      "acknowledgmentAllowed": "Always"
+      "acknowledgmentAllowed": "Always",
+      "type" : "INPROGRESS"
     },
     "questionState": {
       "name": "questionState.title",
@@ -80,7 +85,8 @@
       "styles": [
         "style"
       ],
-      "acknowledgmentAllowed": "OnlyWhenResponseDisabledForUser"
+      "acknowledgmentAllowed": "OnlyWhenResponseDisabledForUser",
+      "type" : "INPROGRESS"
     },
     "multipleOptionsResponseState": {
       "name": "multipleOptionsResponseState.title",
@@ -97,7 +103,8 @@
       "styles": [
         "style"
       ],
-      "acknowledgmentAllowed": "Always"
+      "acknowledgmentAllowed": "Always",
+      "type" : "INPROGRESS"
     }
 
   }

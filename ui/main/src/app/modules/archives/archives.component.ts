@@ -68,7 +68,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             tags: new FormControl([]),
             state: new FormControl([]),
             process: new FormControl([]),
-            service: new FormControl([]),
+            processGroup: new FormControl([]),
             publishDateFrom: new FormControl(),
             publishDateTo: new FormControl(''),
             activeFrom: new FormControl(''),
@@ -135,19 +135,19 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 const businessDateColumnName = this.translateColumn('archive.result.businessPeriod');
                 const titleColumnName = this.translateColumn('archive.result.title');
                 const summaryColumnName = this.translateColumn('archive.result.summary');
-                const serviceColumnName = this.translateColumn('archive.result.service');
+                const processGroupColumnName = this.translateColumn('archive.result.processGroup');
 
                 lines.forEach((card: LightCard) => {
                     if (typeof card !== undefined) {
                         // TO DO translation for old process should be done  , but loading local arrive to late , solution to find
-                        if (this.filtersTemplate.displayServiceFilter())
+                        if (this.filtersTemplate.displayProcessGroupFilter())
                             exportArchiveData.push({
                                 [severityColumnName]: card.severity,
                                 [publishDateColumnName]: this.timeService.formatDateTime(card.publishDate),
                                 [businessDateColumnName]: this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
                                 [titleColumnName]: this.translateColumn(card.process + '.' + card.processVersion + '.' + card.title.key, card.title.parameters),
                                 [summaryColumnName]: this.translateColumn(card.process + '.' + card.processVersion + '.' + card.summary.key, card.summary.parameters),
-                                [serviceColumnName]: this.translateColumn(this.filtersTemplate.findServiceLabelForProcess(card.process))
+                                [processGroupColumnName]: this.translateColumn(this.processesService.findProcessGroupLabelForProcess(card.process))
                             });
                         else
                             exportArchiveData.push({

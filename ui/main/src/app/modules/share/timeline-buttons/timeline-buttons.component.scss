@@ -1,0 +1,76 @@
+/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+@import "~assets/styles/_variables.scss";
+
+.opfab-menu-timeline {
+
+  position: relative;
+  max-height: 40px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+
+
+  #opfab-menu-timeline-links {
+    position: absolute;
+    flex-grow: 1;
+    font-size: 13px;
+    color: var(--opfab-navbar-color);
+    background-color: var(--opfab-bgcolor);
+    text-decoration: none;
+    border-radius: 5px;
+    padding-bottom: 5px;
+    margin-top: -10px;
+
+    ul {
+      margin: 0;
+      list-style: none;
+      display: flex;
+      justify-content: flex-end;
+
+
+      li {
+
+        padding-left: 0px;
+        padding-right: 25px;
+
+        .link-selected {
+          color: var(--opfab-navbar-color-active);
+          font-weight: bold;
+          text-decoration: underline;
+        }
+
+        .link-unselect {
+          background-color: var(--opfab-bgcolor);
+          color: var(--opfab-navbar-color);
+        }
+
+        .circle-btn {
+          border-radius: 50%;
+          border: none;
+        }
+      }
+
+      li:hover {
+        color: var(--opfab-navbar-color-active);
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+.opfab-business-period {
+  font-size : 15px;
+  width: 100%;
+  background-color: var(--opfab-timeline-bgcolor);
+  text-align: center;
+}

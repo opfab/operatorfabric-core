@@ -16,7 +16,8 @@
       },
       "templateName": "message",
       "styles": [],
-      "acknowledgmentAllowed": "Always"
+      "acknowledgmentAllowed": "Always",
+      "type" : "INPROGRESS"
     },
     "questionState": {
       "name": "question.title",
@@ -33,7 +34,8 @@
       },
       "templateName": "question",
       "styles": [],
-      "acknowledgmentAllowed": "Never"
+      "acknowledgmentAllowed": "Never",
+      "type" : "INPROGRESS"
     }
   }
 }

@@ -132,6 +132,23 @@ export class FilterService {
         );
     }
 
+    private initTypeOfStateFilter()  {
+        return new Filter(
+            (card: LightCard, status) => {
+                const typeOfStatesList = status.typeOfStates;
+
+                if (!! typeOfStatesList) {
+                    const typeOfStateOfTheCard = status.mapOfTypeOfStates.get(card.process + '.' + card.state);
+                    return typeOfStatesList.includes(typeOfStateOfTheCard);
+                }
+                // permissive filter
+                return true;
+            },
+            false,
+            {typeOfStates: null}
+        );
+    }
+
     private initFilters(filterOnAck: boolean): Map<string, Filter> {
         const filters = new Map();
         filters.set(FilterType.TYPE_FILTER, this.initTypeFilter());
@@ -143,6 +160,7 @@ export class FilterService {
             filters.set(FilterType.ACKNOWLEDGEMENT_FILTER, this.initAcknowledgementFilter());
 
         filters.set(FilterType.PROCESS_FILTER, this.initProcessFilter());
+        filters.set(FilterType.TYPEOFSTATE_FILTER, this.initTypeOfStateFilter());
         return filters;
     }
 }
@@ -156,7 +174,8 @@ export enum FilterType {
     PUBLISHDATE_FILTER,
     ACKNOWLEDGEMENT_FILTER,
     TEST_FILTER,
-    PROCESS_FILTER
+    PROCESS_FILTER,
+    TYPEOFSTATE_FILTER
 }
 export const BUSINESS_DATE_FILTER_INITIALISATION = {
     name: FilterType.BUSINESSDATE_FILTER,

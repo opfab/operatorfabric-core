@@ -9,18 +9,18 @@
 <div style="display: flex;">
 <!--2 columns in this case-->
 <!--First column-->
-<div *ngIf="displayServiceFilter() || tags" style="margin-right:40px">
+<div *ngIf="displayProcessGroupFilter() || tags" style="margin-right:40px">
     <div  style="min-width:300px;max-width:400px;margin-top: 28px;margin-bottom: 54px;">
-        <of-multi-filter *ngIf="displayServiceFilter()" filterPath="service" id="service" [parentForm]="this.parentForm"
-                         [values]="serviceDropdownList" [dropdownSettings]="serviceDropdownSettings" [selectedItems]="[]"
+        <of-multi-filter *ngIf="displayProcessGroupFilter()" filterPath="processGroup" id="processGroup" [parentForm]="this.parentForm"
+                         [values]="processGroupDropdownList" [dropdownSettings]="processGroupDropdownSettings" [selectedItems]="[]"
                          i18nRootLabelKey="filters.">
         </of-multi-filter>
-        <of-multi-filter *ngIf="! displayServiceFilter() && tags" filterPath="tags" id="tags" [parentForm]="this.parentForm"
+        <of-multi-filter *ngIf="! displayProcessGroupFilter() && tags" filterPath="tags" id="tags" [parentForm]="this.parentForm"
                          [values]="tagsDropdownList" [dropdownSettings]="tagsDropdownSettings" [selectedItems]="[]"
                          i18nRootLabelKey="filters.">
         </of-multi-filter>
     </div>
-    <div *ngIf="displayServiceFilter() && tags" style="min-width:300px;max-width:400px;">
+    <div *ngIf="displayProcessGroupFilter() && tags" style="min-width:300px;max-width:400px;">
         <of-multi-filter filterPath="tags" id="tags" [parentForm]="this.parentForm" [values]="tagsDropdownList"
                          [dropdownSettings]="tagsDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="filters.">
         </of-multi-filter>
@@ -28,14 +28,14 @@
 </div>
 
 <!--Second column-->
-<div *ngIf="displayServiceFilter() || tags" style="margin-right:40px">
+<div *ngIf="displayProcessGroupFilter() || tags" style="margin-right:40px">
     <div style="min-width:300px;max-width:400px;margin-top:28px;margin-bottom: 54px;">
-        <of-multi-filter [hidden]="displayServiceFilter()" filterPath="process" id="process" [parentForm]="this.parentForm"
+        <of-multi-filter [hidden]="displayProcessGroupFilter()" filterPath="process" id="process" [parentForm]="this.parentForm"
                          [values]="processDropdownList" [dropdownSettings]="processDropdownSettings" [selectedItems]="[]"
                          i18nRootLabelKey="filters.">
         </of-multi-filter>
-        <of-multi-filter [hidden]="! displayServiceFilter()" filterPath="process" id="process" [parentForm]="this.parentForm"
-                         [values]="processDropdownListWhenSelectedService" [dropdownSettings]="processDropdownSettings" [selectedItems]="[]"
+        <of-multi-filter [hidden]="! displayProcessGroupFilter()" filterPath="process" id="process" [parentForm]="this.parentForm"
+                         [values]="processDropdownListWhenSelectedProcessGroup" [dropdownSettings]="processDropdownSettings" [selectedItems]="[]"
                          i18nRootLabelKey="filters.">
         </of-multi-filter>
     </div>
@@ -48,7 +48,7 @@
 </div>
 
 <!--Only one column in this case-->
-<div *ngIf="! displayServiceFilter() && ! tags" style="margin-right:40px">
+<div *ngIf="! displayProcessGroupFilter() && ! tags" style="margin-right:40px">
     <div style="min-width:300px;max-width:400px;margin-top:28px;margin-bottom: 54px;">
         <of-multi-filter filterPath="process" id="process" [parentForm]="this.parentForm"
                          [values]="processDropdownList" [dropdownSettings]="processDropdownSettings" [selectedItems]="[]"
