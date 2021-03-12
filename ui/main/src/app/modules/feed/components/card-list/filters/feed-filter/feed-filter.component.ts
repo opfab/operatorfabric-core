@@ -29,7 +29,6 @@ import moment from 'moment';
     encapsulation: ViewEncapsulation.None
 })
 export class FeedFilterComponent implements OnInit, OnDestroy {
-    @Input() filterByPublishDate: boolean;
     @Input() hideTimerTags: boolean;
     @Input() hideAckFilter: boolean;
 
@@ -175,8 +174,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     initDateTimeFilter() {
 
-        if (this.filterByPublishDate) this.dateFilterType = FilterType.PUBLISHDATE_FILTER;
-        else this.dateFilterType = FilterType.BUSINESSDATE_FILTER;
+        this.dateFilterType = FilterType.PUBLISHDATE_FILTER;
 
         const savedStart = localStorage.getItem('opfab.feed.filter.start');
         const savedEnd = localStorage.getItem('opfab.feed.filter.end');

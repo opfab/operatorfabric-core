@@ -71,7 +71,6 @@ a|card time display mode in the feed. Values :
  - PUBLICATION: displays card with publication date;
  - LTTD: displays card with lttd date;
  - NONE: nothing displayed.
-|feed.timeline.hide|false|no|If set to true, the time line is not loaded in the feed screen. If the timeline is not loaded , the time filter on the feed is filtering on business date otherwise it is filtering on publish date.
 |feed.card.hideTimeFilter|false|no|Control if you want to show or hide the time filter in the feed page
 |feed.card.hideAckFilter|false|no|Control if you want to show or hide the acknowledgement filter in the feed page
 |feed.card.hideReadSort|false|no|Control if you want to show or hide the option to sort cards by read status in the feed page

@@ -37,7 +37,6 @@
     },
     "notify": false,
     "timeline": {
-      "hide" : false,
       "domains": [
         "TR",
         "J",
