@@ -34,22 +34,30 @@ export class FeedconfigurationComponent implements OnInit {
     feedConfigurationForm: FormGroup;
 
     processesDefinition: Process[];
-    processGroupsData: {id: string, groupLabel?: string, processes: string[]}[];
+    processGroupsAndLabels: { groupId: string,
+                              groupLabel: string,
+                              processes:
+                                  {
+                                      processId: string,
+                                      processLabel: string
+                                  } []
+                            } [];
     processesWithoutGroup: { idProcess: string,
-        processLabel: string }[];
+                             processLabel: string
+                           } [];
     currentUserWithPerimeters: UserWithPerimeters;
     processesStatesLabels: Map<string, { processLabel: string,
-        states:
-            { stateLabel: string,
-                stateControlIndex: number
-            }[]
-    }>;
+                                         states:
+                                             { stateLabel: string,
+                                               stateControlIndex: number
+                                             } []
+                                       } >;
     preparedListOfProcessesStates: { processId: string,
-        stateId: string }[];
+                                     stateId: string
+                                   } [];
 
     modalRef: NgbModalRef;
 
-    public displaySendResultOk = false;
     public displaySendResultError = false;
     messageAfterSavingSettings: string;
 
@@ -79,8 +87,8 @@ export class FeedconfigurationComponent implements OnInit {
     }
 
     private findInProcessGroups(processIdToFind: string): boolean {
-        for (const processGroup of this.processGroupsData.values()) {
-            if (processGroup.processes.includes(processIdToFind))
+        for (const processGroup of this.processGroupsAndLabels.values()) {
+            if (processGroup.processes.find(process => process.processId == processIdToFind))
                 return true;
         }
         return false;
@@ -161,16 +169,12 @@ export class FeedconfigurationComponent implements OnInit {
         this.userService.currentUserWithPerimeters().subscribe(result => {
             this.currentUserWithPerimeters = result;
 
-            this.processGroupsData = this.processesService.getProcessGroups();
-            this.processGroupsData.forEach(group => {
-                this.translateService.get(group.id).subscribe(translate => {
-                    group.groupLabel = translate;
-                });
-
-                group.processes.sort();
+            this.processGroupsAndLabels = this.processesService.getProcessGroupsAndLabels();
+            this.processGroupsAndLabels.forEach(group => {
+                group.processes.sort((obj1, obj2) => this.compareObj(obj1.processLabel, obj2.processLabel));
             });
 
-            this.processGroupsData.sort((obj1, obj2) => this.compareObj(obj1.groupLabel, obj2.groupLabel));
+            this.processGroupsAndLabels.sort((obj1, obj2) => this.compareObj(obj1.groupLabel, obj2.groupLabel));
 
             this.computePreparedListOfProcessesStatesAndProcessesStatesLabels();
             this.makeProcessesWithoutGroup();
