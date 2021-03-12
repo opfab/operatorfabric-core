@@ -42,6 +42,11 @@
 
         padding-left: 0px;
         padding-right: 25px;
+        // The following 3 lines avoid having the text go an a new line 
+        // Arise only on chrome (OC-1563)
+        text-overflow: clip;
+        white-space: nowrap;
+        overflow: hidden;
 
         .link-selected {
           color: var(--opfab-navbar-color-active);
