@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020-2021, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -41,7 +41,7 @@
         const state = document.getElementById('state').value;
         const card = {
             summary: { key: "message.summary" },
-            title: { key: "processState.title" },
+            title: { key: "processState.title", parameters: {status: state}  },
             data: { state: state }
         };
         return {
