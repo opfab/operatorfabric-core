@@ -1,18 +1,18 @@
 // ***********************************************
-// 
-// 
-// 
 //
-// 
-// 
-// 
+//
+//
+//
+//
+//
+//
 // ***********************************************
 
-let OpFabUrlCards="http://52.143.149.242:2102/cards"
-let OpFafUrlToken="http://52.143.149.242:80/auth/token"
-let OpFafUrlAuth="http://52.143.149.242/ui/#/"
-let OpFafUrlLang="http://52.143.149.242:80/users/users/"
-//let OpFafUrlAuth="http://52.143.149.242:89/auth/realms/dev/protocol/openid-connect/auth?response_type=code&client_id=opfab-client&redirect_uri=http://52.143.149.242:2002/ui/"
+let OpFabUrlCards="http://localhost:2102/cards"
+let OpFafUrlToken="http://localhost:89/auth/token"
+let OpFafUrlAuth="http://localhost:2002/ui/#/"
+let OpFafUrlLang="http://localhost:80/users/users/"
+//let OpFafUrlAuth="http://localhost:89/auth/realms/dev/protocol/openid-connect/auth?response_type=code&client_id=opfab-client&redirect_uri=http://localhost:2002/ui/"
 
 
 Cypress.Commands.add('PushCard', (processName, processVersion, publisherName, processId, message, severity, startDate, endDate)=>
@@ -41,7 +41,7 @@ Cypress.Commands.add('PushCard', (processName, processVersion, publisherName, pr
                 cy.expect(response.status).to.eq(201);
                 cy.expect(response.body).to.have.property('count', 1);
                 cy.expect(response.body).to.have.property('message', 'All pushedCards were successfully handled')
- 
+
                 })
         })
 
@@ -73,7 +73,7 @@ Cypress.Commands.add('PushCard', (processName, processVersion, publisherName, pr
                 cy.expect(response.status).to.eq(201);
                 cy.expect(response.body).to.have.property('count', 1);
                 cy.expect(response.body).to.have.property('message', 'All pushedCards were successfully handled')
- 
+
                 })
         })
 
@@ -88,7 +88,7 @@ Cypress.Commands.add('PushCard', (processName, processVersion, publisherName, pr
             //type password
             cy.get('#opfab-password').should('be.visible')
             cy.get('#opfab-password').type(password)
-            
+
             //press login button
             cy.get('#opfab-login-btn-submit').click()
             cy.get('#opfab-login-btn-submit').should('be.visible')
@@ -101,9 +101,9 @@ Cypress.Commands.add('PushCard', (processName, processVersion, publisherName, pr
 
         Cypress.Commands.add('checkCardContent', (processName,processInstanceId,cardTitle,dateDisplayed,color,detailsFirst,detailsSecond,cardSummmary)=>
         {
-          //check card title 
+          //check card title
           cy.get('#opfab-feed-light-card-'+processName+'-'+processInstanceId+' > :nth-child(1) > .p-1 > [style="display: flex;"] > .card-title').click()
-          cy.get('#opfab-feed-light-card-'+processName+'-'+processInstanceId+' > :nth-child(1) > .p-1 > [style="display: flex;"] > .card-title').contains(cardTitle) 
+          cy.get('#opfab-feed-light-card-'+processName+'-'+processInstanceId+' > :nth-child(1) > .p-1 > [style="display: flex;"] > .card-title').contains(cardTitle)
           cy.should('be.visible')
           //check card's business period
           cy.get('#opfab-feed-light-card-'+processName+'-'+processInstanceId+' > :nth-child(1) > .p-1 > [style="display: flex; width: 100%; margin-top: 5px;"] > .card-subtitle').contains(dateDisplayed)
@@ -116,7 +116,7 @@ Cypress.Commands.add('PushCard', (processName, processVersion, publisherName, pr
           cy.get('.opfab-menu-item-left > .opfab-tab').contains(cardTitle)
           cy.should('be.visible')
           cy.get('h4').contains(detailsFirst);
-          
+
           cy.should('be.visible')
           cy.get('.template-style').contains(detailsSecond)
           cy.should('be.visible')
@@ -135,24 +135,24 @@ Cypress.Commands.add('PushCard', (processName, processVersion, publisherName, pr
         {
             cy.get('#opfab-navbar-menu-archives').click()
         })
- 
+
         Cypress.Commands.add('goToFeed', ()=>
         {
             cy.get('#opfab-navbar-menu-feed').click()
         })
- 
+
         Cypress.Commands.add('goToSettings', ()=>
         {
             cy.get('#opfab-navbar-drop_user_menu').click()
             cy.get('#opfab-navbar-right-menu-settings > [translate=""]').click()
- 
+
         })
         Cypress.Commands.add('goToAbout', ()=>
         {
             cy.get('#opfab-navbar-drop_user_menu').click()
             cy.get('a[routerlink="/about"]').click();
         })
- 
+
         Cypress.Commands.add('getToken', (user,password)=>
         { cy.log(user)
             let token;
@@ -202,12 +202,12 @@ Cypress.Commands.add('PushCard', (processName, processVersion, publisherName, pr
                                     expect(response.status).to.eql(200);
                                 }).then(response =>{
                                     return lang;
-                                })                               
+                                })
                 })                
             })
- 
-  
- 
+
+
+
     Cypress.Commands.add('ChangeLang', (currentLanguage,user,password)=>
     {
         let token;
@@ -234,7 +234,7 @@ Cypress.Commands.add('PushCard', (processName, processVersion, publisherName, pr
                 token = response.body.access_token;
                 cy.request({
                         method : 'PUT',
-                        url : 'http://52.143.149.242:80/users/users/tso1-operator/settings',
+                        url : 'http://localhost:80/users/users/tso1-operator/settings',
                      failOnStatusCode: false,
                         auth: {
                             'bearer': token
@@ -278,44 +278,44 @@ Cypress.Commands.add('PushCard', (processName, processVersion, publisherName, pr
         cy.should('have.css', 'background-color',color);
         }
     })
- 
 
- 
+
+
     Cypress.Commands.add('checkMenus',(lang)=>
     {
         if(lang === 'fr')
-        {           
+        {
             cy.goToFeed();
             cy.get('.mr-auto > :nth-child(1) > .nav-link').contains('Flux de cartes').should('be.visible')
             cy.log("Feed menu checked")
-            cy.get('.mr-auto > :nth-child(2) > .nav-link').contains('Création de cartes').should('be.visible') 
+            cy.get('.mr-auto > :nth-child(2) > .nav-link').contains('Création de cartes').should('be.visible')
             cy.log("Card creation checked")
-            cy.get('.mr-auto > :nth-child(3) > .nav-link').contains('Archives').should('be.visible') 
+            cy.get('.mr-auto > :nth-child(3) > .nav-link').contains('Archives').should('be.visible')
             cy.log("Archives MENU  checked")
-            cy.get('.mr-auto > :nth-child(4) > .nav-link').contains('Monitoring').should('be.visible') 
+            cy.get('.mr-auto > :nth-child(4) > .nav-link').contains('Monitoring').should('be.visible')
             cy.log("Monitoring menu  checked")
-            cy.get('.mr-auto > :nth-child(5) > .nav-link').contains('Logging').should('be.visible') 
+            cy.get('.mr-auto > :nth-child(5) > .nav-link').contains('Logging').should('be.visible')
             cy.log("Logging menu checked")
-            cy.get('.mr-auto > :nth-child(6) > .nav-link').contains('Calendrier').should('be.visible') 
+            cy.get('.mr-auto > :nth-child(6) > .nav-link').contains('Calendrier').should('be.visible')
             cy.log("Archives menu checked")
         }else{
             cy.goToFeed();
             cy.get('.mr-auto > :nth-child(1) > .nav-link').contains('Card Feed').should('be.visible')
             cy.log("Feed menu checked")
-            cy.get('.mr-auto > :nth-child(2) > .nav-link').contains('Card Creation').should('be.visible') 
+            cy.get('.mr-auto > :nth-child(2) > .nav-link').contains('Card Creation').should('be.visible')
             cy.log("Card creation checked")
-            cy.get('.mr-auto > :nth-child(3) > .nav-link').contains('Archives').should('be.visible') 
+            cy.get('.mr-auto > :nth-child(3) > .nav-link').contains('Archives').should('be.visible')
             cy.log("Archives MENU  checked")
-            cy.get('.mr-auto > :nth-child(4) > .nav-link').contains('Monitoring').should('be.visible') 
+            cy.get('.mr-auto > :nth-child(4) > .nav-link').contains('Monitoring').should('be.visible')
             cy.log("Monitoring menu  checked")
-            cy.get('.mr-auto > :nth-child(5) > .nav-link').contains('Logging').should('be.visible') 
+            cy.get('.mr-auto > :nth-child(5) > .nav-link').contains('Logging').should('be.visible')
             cy.log("Logging  menu  checked")
-            cy.get('.mr-auto > :nth-child(6) > .nav-link').contains('Calendar').should('be.visible') 
+            cy.get('.mr-auto > :nth-child(6) > .nav-link').contains('Calendar').should('be.visible')
             cy.log("Calendar menu  checked")
         }
-    })   
+    })
     Cypress.Commands.add('changeLangManually',(lang)=>
-    {   
+    {
         if (lang=='fr'){
             cy.get('#opfab-setting-locale').click();
             cy.get('select').eq(0).select('en')
@@ -326,7 +326,7 @@ Cypress.Commands.add('PushCard', (processName, processVersion, publisherName, pr
            lang='fr';
          }
     })
- 
+
 Cypress.Commands.add('checkFeed', (user,lang,color,dateDisplayed)=>
     {
         if (lang ==='en') {
@@ -341,7 +341,7 @@ Cypress.Commands.add('checkFeed', (user,lang,color,dateDisplayed)=>
             cy.should('have.css', 'background-color',color);
             cy.get(':nth-child(1) > .col-12 > of-card > .card > .card-body > .badge-border');
             cy.should('be.visible');
-            cy.should('have.css', 'background-color',color);   
+            cy.should('have.css', 'background-color',color);
         }else{
             cy.get(':nth-child(1) > .col-12 > of-card > .card > .card-header > .p-1 > .card-title').contains('Message')
             cy.get(':nth-child(1) > .col-12 > of-card > .card > .card-header > .p-1 > .card-subtitle').contains(dateDisplayed).click({ force: true })
@@ -360,13 +360,13 @@ Cypress.Commands.add('checkFeed', (user,lang,color,dateDisplayed)=>
     Cypress.Commands.add('goToFeedSeverityFilter', ()=>
     cy.get('of-type-filter > .btn').click()
     )
- 
+
     Cypress.Commands.add('checkFeedSeverityFilter', (lang)=>
      {
         if (lang ==='en') {
- 
+
     cy.get('.popover-header > span').contains('Type').should('be.visible')//check title
- 
+
     cy.get(':nth-child(1) > .form-check-label').contains('Alarm').should('be.visible')
     cy.get(':nth-child(2) > .form-check-label').contains('Action').should('be.visible')
     cy.get(':nth-child(3) > .form-check-label').contains('Compliant').should('be.visible')
@@ -382,7 +382,7 @@ Cypress.Commands.add('checkFeed', (user,lang,color,dateDisplayed)=>
      Cypress.Commands.add('goToFeedTimeFilter', ()=>
      { cy.get('of-time-filter > .btn').click()
     })
- 
+
      Cypress.Commands.add('checkFeedTimeFilter', (lang)=>
      {
          if (lang ==='fr') {
@@ -399,23 +399,23 @@ Cypress.Commands.add('checkFeed', (user,lang,color,dateDisplayed)=>
         cy.get('#confirm_button').contains('OK').should('be.visible')
     }
      })
- 
+
      Cypress.Commands.add('checkDarkMode', ()=>
      {
         cy.get('.opfab-colors')
         cy.should('be.visible')
         cy.should('have.css', 'background-color','rgb(52, 58, 64)')
      })
- 
+
      Cypress.Commands.add('checkDayMode', ()=>
      {
         cy.get('.opfab-colors')
         cy.should('be.visible')
         cy.should('have.css', 'background-color','rgb(255, 255, 255)')
- 
+
      })
 
-  
+
 Cypress.Commands.add('removeCard', (id)=>
 {
     cy.request({
@@ -424,6 +424,6 @@ Cypress.Commands.add('removeCard', (id)=>
                 }).then(response =>{
                  cy.expect(response.status).to.eq(200);
                  cy.log(response)
-                            })      
+                            })
 })
- 
+

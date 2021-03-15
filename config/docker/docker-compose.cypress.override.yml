@@ -1,0 +1,12 @@
+version: '2.1'
+services:
+  web-ui:
+    image: "lfeoperatorfabric/of-web-ui:SNAPSHOT"
+    ports:
+    - "2002:80"
+    depends_on:
+      - users
+      - businessconfig
+      - cards-consultation
+    volumes:
+      - "./web-ui-cypress.json:/usr/share/nginx/html/opfab/web-ui.json"

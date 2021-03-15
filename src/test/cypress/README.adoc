@@ -1,0 +1,73 @@
+= Cypress Tests ReadMe
+
+NOTE: All paths for cd are given assuming you're starting from `$OF_HOME`.
+
+== Installation
+
+Before running Cypress tests for the first time you need to install it using NPM.
+
+[source,bash]
+----
+cd src/test
+npm install
+----
+
+== Cypress file structure
+
+By default, all test files are located in `cypress/integration` but it is possible to put it on another directory
+
+The `commands.js` file under `cypress/support` is used to create custom commands and overwrite existing commands.
+
+== Launching the OpFab instance to test
+
+The Cypress test rely on a running OpFab instance that is an adaptation from the config/docker docker-compose file.
+For example, as Cypress doesn't allow navigation to different origins within the same test, the OpFab instance needs
+to use the `PASSWORD` authentication mode rather than `CODE`.
+
+To launch such an instance:
+
+[source,bash]
+----
+cd /config/docker
+docker-compose down <1>
+./docker-compose-cypress.sh <2>
+----
+<1> Remove existing config/docker containers to avoid conflicts
+<2> Start "Cypress-flavoured" containers
+
+NOTE: If you need to further adapt the Cypress instance, you can make changes to the `web-ui-cypress.json` and
+`docker-compose.cypress.override.yml` files.
+
+After you're done with your tests, you can stop and destroy containers (as it is better to start with fresh containers to avoid
+side-effects from previous tests) with the following commands:
+
+[source,bash]
+----
+cd /config/docker
+docker-compose down
+----
+
+== Running existing tests
+
+To launch the Cypress test runner:
+
+[source,bash]
+----
+cd src/test
+/node_modules/.bin/cypress open
+----
+
+This will open the Cypress test runner. Either click on the test you want to run or `run all X tests` on the right to
+run all existing tests.
+
+NOTE: You can select the browser (and version) that you want to use from a dropdown list on the right. The list will
+display the browsers that are currently installed on your computer (and supported by Cypress).
+
+== Creating new tests
+
+Create a new XXXX.spec.js file under `cypress/integration`
+
+NOTE: We will need to define a convention for naming and organizing tests.
+
+Start writing tests, cypress is well documented https://docs.cypress.io/api/api/table-of-contents.html
+
