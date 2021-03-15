@@ -190,11 +190,11 @@ Within the `delegate-url` property `dev` is the keycloak client realm of Operato
 For keycloak instance used for development purposes, this `delegate-url` correspond to the realm under which the client `opfab-client` is registred.
 The url look up by the implicit ui mechanism is `http://localhost:89/auth/realms/dev/.well-known/openid-configuration`.
 
-==== Example of configuration for NONE Flow
+===  NONE Flow
 
 The configuration for the NONE flow is a bit different because the token isn't handled/visible in the front-end.
 
-===== Nginx 
+==== Nginx 
 
 The following variables can be removed:
 
@@ -216,7 +216,7 @@ location /auth/code/ {
   return 401;
 }
 ----
-===== Web-ui.json
+==== Web-ui.json
 
 Set the security.oauth2.flow.mode to `NONE`;
 
@@ -229,6 +229,8 @@ Settings that are not required are:
 * delegate-url
 * provider-realm
 
+
+==== Example of configuration 
 [source, json]
 ----
 {
