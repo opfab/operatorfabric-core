@@ -19,11 +19,13 @@ import {
     CheckAuthenticationStatus,
     InitAuthStatus,
     PayloadForSuccessfulAuthentication,
+    RejectLogIn,
     UnableToRefreshOrGetToken,
     UnAuthenticationFromImplicitFlow
 } from '@ofActions/authentication.actions';
 import {environment} from '@env/environment';
 import {GuidService} from '@ofServices/guid.service';
+import { UserService } from '@ofServices/user.service';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {ConfigService} from '@ofServices/config.service';
@@ -34,6 +36,8 @@ import {EventType as OAuthType, JwksValidationHandler, OAuthEvent, OAuthService}
 import {implicitAuthenticationConfigFallback} from '@ofServices/authentication/auth-implicit-flow.config';
 import {redirectToCurrentLocation} from '../../app-routing.module';
 import {Router} from '@angular/router';
+import { Message, MessageLevel } from '@ofModel/message.model';
+import { I18n } from '@ofModel/i18n.model';
 
 
 export enum LocalStorageAuthContent {
@@ -68,6 +72,7 @@ export class AuthenticationService {
      * @constructor
      * @param httpClient - Angular build-in
      * @param guidService - create and store the unique id for this application and user
+     * @param userService - user service
      * @param store - NGRX store
      * @param oauthService - manage implicit flow for OAuth2
      * @param router - angular router service
@@ -76,6 +81,7 @@ export class AuthenticationService {
      */
     constructor(private httpClient: HttpClient
         , private guidService: GuidService
+        , private userService: UserService
         , private store: Store<AppState>
         , private oauthService: OAuthService
         , private router: Router
@@ -108,6 +114,9 @@ export class AuthenticationService {
      * @param mode - extracted from config web-service settings
      */
     instantiateAuthModeHandler(mode: string): AuthenticationModeHandler {
+        if (mode.toLowerCase() === 'none') { 
+            return new NoAuthenticationHandler(this.store,this.router,this.userService,this.guidService);
+        }
         if (mode.toLowerCase() === 'implicit') {
             this.implicitConf = {
                 ...this.implicitConf
@@ -372,6 +381,10 @@ export class AuthenticationService {
         this.authModeHandler.initializeAuthentication(window.location.href);
     }
 
+    public isAuthModeNone(): boolean {
+        const mode = this.getAuthenticationMode();
+        return mode === 'NONE';
+    }
 
     public isAuthModeCodeOrImplicitFlow(): boolean {
         const mode = this.getAuthenticationMode();
@@ -526,6 +539,42 @@ export class ImplicitAuthenticationHandler implements AuthenticationModeHandler 
 
     public extractToken(): string {
         return this.storage.getItem('access_token');
+    }
+
+}
+
+// Use in case we have no authentication process via opfab 
+// The token is provide by an intermediate between the browser and the web-ui (Specific SSO implementation)
+// We get the user information by calling endpoint /currentUserWithPerimeters
+export class NoAuthenticationHandler implements AuthenticationModeHandler {
+    constructor( private store: Store<AppState>,private router: Router, private userService: UserService, private guidService: GuidService) {
+    }
+
+    initializeAuthentication(currentLocationHref: string) {
+        const currentUser = this.userService.currentUserWithPerimeters();
+        currentUser.subscribe(foundUser => {
+            if (foundUser != null) {
+                const existingUser = this.userService.askUserApplicationRegistered(foundUser.userData.login);
+                existingUser.subscribe(registeredUser => {
+                    if (registeredUser != null) {
+                        console.log(new Date().toISOString(), 'Registered User ('+ foundUser.userData.login +') found');
+                        const clientId = this.guidService.getCurrentGuid();
+                        this.store.dispatch(new AcceptLogIn(new PayloadForSuccessfulAuthentication(foundUser.userData.login,clientId,null,null, foundUser.userData.firstName, foundUser.userData.lastName)));
+                        redirectToCurrentLocation(this.router);
+                    }
+                    else {
+                        console.log(new Date().toISOString(), 'Registered User ('+ foundUser.userData.login +') not found');
+                        this.store.dispatch(new RejectLogIn({error: new Message('Unable to authenticate the user', MessageLevel.ERROR, new I18n('login.error.authenticate', null))}));
+                    }
+                });
+            } else {
+                this.store.dispatch(new RejectLogIn({error: new Message('Unable to authenticate the user', MessageLevel.ERROR, new I18n('login.error.authenticate', null))}));
+            }
+        });
+    }
+
+    public extractToken(): string {
+        return "";
     }
 
 }

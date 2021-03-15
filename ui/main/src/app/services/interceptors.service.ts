@@ -29,7 +29,8 @@ export class TokenInjector implements HttpInterceptor {
         const url = request.url;
 
         const notCheckTokenRequest = !(url.endsWith('/auth/check_token') || url.endsWith('/auth/token') || url.endsWith('/auth/code'));
-        if (notCheckTokenRequest) {
+        const authModeNone = this.authService.isAuthModeNone();
+        if (notCheckTokenRequest && !authModeNone) {
             const securityHeader = this.authService.getSecurityHeader();
             const update = {setHeaders: securityHeader};
             request = request.clone(update);
