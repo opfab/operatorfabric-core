@@ -78,6 +78,7 @@ it('Check nav bar translation',()=>{
 })
 
 it('Check Feed Filters  translation',()=>{
+    cy.LogOpFab(login, password)
     cy.get('#opfab-feed-filter-btn-filter').should('be.visible')
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
     cy.get('#opfab-feed-filter-btn-filter').click()
@@ -132,6 +133,7 @@ it('Check Feed Filters  translation',()=>{
 })
 
     it('Check sorting options translation',()=>{
+        cy.LogOpFab(login, password)
     cy.get('#opfab-feed-filter-btn-sort').should('be.visible')
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
     cy.get('#opfab-feed-filter-btn-sort').click()
@@ -165,51 +167,51 @@ it('Check archives',()=>{
     cy.get('#opfab-navbar-menu-archives').click()
     cy.should('be.visible')
 
-    cy.get('#service > :nth-child(1) > .opfab-multiselect > [translate=""]').contains('SERVICE')
+    cy.get('#processGroup .opfab-multiselect > label').contains('SERVICE')
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
     cy.should('be.visible')
 
-    cy.get(':nth-child(2) > :nth-child(1) > .opfab-multiselect > [translate=""]').contains('PROCESSUS')
+    cy.get('#process:not([hidden]) .opfab-multiselect > label').contains('PROCESSUS')
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
     cy.should('be.visible')
 
-    cy.get('[style="margin-left: 40px; margin-right: 30px; width: 230px; min-width: 230px;"] > :nth-child(1) > of-datetime-filter.ng-untouched > table.ng-star-inserted > tr > :nth-child(1) > .nopaddingrow > label').contains("PUBLIE A PARTIR DE")
+    cy.get('of-datetime-filter[filterPath="publishDateFrom"] label').contains("PUBLIE A PARTIR DE")
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
     cy.should('be.visible')
 
-    cy.get('[style="margin-left: 40px; width: 230px; min-width: 230px;"] > :nth-child(1) > of-datetime-filter.ng-untouched > table.ng-star-inserted > tr > :nth-child(1) > .nopaddingrow > label').contains("ACTIVE A PARTIR DE")
+    cy.get('of-datetime-filter[filterPath="activeFrom"] label').contains("ACTIVE A PARTIR DE")
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
     cy.should('be.visible')
 
-    cy.get('#tags > :nth-child(1) > .opfab-multiselect > [translate=""]').contains("ETIQUETTES")
+    cy.get('#tags .opfab-multiselect > label').contains("ETIQUETTES")
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
     cy.should('be.visible')
 
-    cy.get('#state > :nth-child(1) > .opfab-multiselect > [translate=""]').contains("ETAT")
+    cy.get('#state .opfab-multiselect > label').contains("ETAT")
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
     cy.should('be.visible')
 
-    cy.get('[style="margin-left: 40px; margin-right: 30px; width: 230px; min-width: 230px;"] > :nth-child(2) > of-datetime-filter.ng-untouched > table.ng-star-inserted > tr > :nth-child(1) > .nopaddingrow > label').contains('PUBLIE JUSQU\'A')
+    cy.get('of-datetime-filter[filterPath="publishDateTo"] label').contains('PUBLIE JUSQU\'A')
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
     cy.should('be.visible')
 
-    cy.get('[style="margin-left: 40px; width: 230px; min-width: 230px;"] > :nth-child(2) > of-datetime-filter.ng-untouched > table.ng-star-inserted > tr > :nth-child(1) > .nopaddingrow > label').contains("ACTIVE JUSQU\'A")
+    cy.get('of-datetime-filter[filterPath="activeTo"] label').contains("ACTIVE JUSQU\'A")
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
     cy.should('be.visible')
 
-    cy.get('#service > :nth-child(1) > .opfab-multiselect > angular2-multiselect.ng-untouched > .cuppa-dropdown > .selected-list > .c-btn > :nth-child(1)').contains("Sélectionner un Service")
+    cy.get('#processGroup .opfab-multiselect span').contains("Sélectionner un Service")
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
     cy.should('be.visible')
 
-    cy.get(':nth-child(2) > :nth-child(1) > .opfab-multiselect > angular2-multiselect.ng-untouched > .cuppa-dropdown > .selected-list > .c-btn > :nth-child(1)').contains("Sélectionner un Processus")
+    cy.get('#process:not([hidden]) .opfab-multiselect span').contains("Sélectionner un Processus")
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
     cy.should('be.visible')
 
-    cy.get('#tags > :nth-child(1) > .opfab-multiselect > angular2-multiselect.ng-untouched > .cuppa-dropdown > .selected-list > .c-btn > :nth-child(1)').contains("Sélectionner une Etiquette")
+    cy.get('#tags .opfab-multiselect span').contains("Sélectionner une Etiquette")
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
     cy.should('be.visible')
 
-    cy.get('#state > :nth-child(1) > .opfab-multiselect > angular2-multiselect.ng-untouched > .cuppa-dropdown > .selected-list > .c-btn > :nth-child(1)').contains("Sélectionner un Etat")
+    cy.get('#state .opfab-multiselect span').contains("Sélectionner un Etat")
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
     cy.should('be.visible')
 
@@ -217,41 +219,35 @@ it('Check archives',()=>{
     cy.should('have.css', 'color', 'rgb(255, 255, 255)')
     cy.should('be.visible')
 
-    cy.should('be.visible') 
     cy.wait(500) 
-
 
 })
 
 it('Check Monitoring',()=>{
+    cy.LogOpFab(login, password)
     cy.wait(500)
     //Go to monitoring 
     cy.get('#opfab-navbar-menu-monitoring').click()
 
     //Check each  field label
-    cy.get('.opfab-multiselect > [translate=""]').contains('PROCESSUS')
+    cy.get('#processGroup .opfab-multiselect > label').contains('SERVICE')
+    cy.should('have.css', 'color', 'rgb(186, 186, 186)')
+    cy.should('be.visible')
+
+    cy.get('#processGroup .opfab-multiselect span').contains("Sélectionner un Service")
+    cy.should('have.css', 'color', 'rgb(186, 186, 186)')
+    cy.should('be.visible')
+
+    cy.get('#process:not([hidden]) .opfab-multiselect > label').contains('PROCESSUS')
+    cy.should('have.css', 'color', 'rgb(186, 186, 186)')
+    cy.should('be.visible')
+
+    cy.get('#process:not([hidden]) .opfab-multiselect span').contains('Sélectionner un Processus')
     cy.should('be.visible')
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
 
-    cy.get('.c-btn > :nth-child(1)').contains('Sélectionner un Processus')
-    cy.should('be.visible')
-    cy.should('have.css', 'color', 'rgb(186, 186, 186)')
-
-    cy.get('[style="margin-left: 40px; margin-right: 30px; width: 230px; min-width: 230px;"] > :nth-child(1) > of-datetime-filter.ng-untouched > table.ng-star-inserted > tr > :nth-child(1) > .nopaddingrow > label').contains("PUBLIE A PARTIR DE")
-    cy.should('be.visible')
-    cy.should('have.css', 'color', 'rgb(186, 186, 186)')
-
-    cy.get('[style="margin-left: 40px; width: 230px; min-width: 230px;"] > :nth-child(1) > of-datetime-filter.ng-untouched > table.ng-star-inserted > tr > :nth-child(1) > .nopaddingrow > label').contains("ACTIVE A PARTIR DE")
-    cy.should('be.visible')
-    cy.should('have.css', 'color', 'rgb(186, 186, 186)')
-
-    cy.get('[style="margin-left: 40px; margin-right: 30px; width: 230px; min-width: 230px;"] > :nth-child(2) > of-datetime-filter.ng-untouched > table.ng-star-inserted > tr > :nth-child(1) > .nopaddingrow > label').contains('PUBLIE JUSQU\'A')
-    cy.should('be.visible')
-    cy.should('have.css', 'color', 'rgb(186, 186, 186)')
-
-    cy.get('[style="margin-left: 40px; width: 230px; min-width: 230px;"] > :nth-child(2) > of-datetime-filter.ng-untouched > table.ng-star-inserted > tr > :nth-child(1) > .nopaddingrow > label').contains("ACTIVE JUSQU\'A")
-    cy.should('be.visible')
-    cy.should('have.css', 'color', 'rgb(186, 186, 186)')
+    //TODO Add tests process status
+    //TODO Add tests for business period header
 
     cy.get('#opfab-monitoring-btn-search').contains('RECHERCHER')
     cy.should('be.visible')
@@ -266,70 +262,73 @@ it('Check Monitoring',()=>{
 
 
 it('Check Logging',()=>{
-
+    cy.LogOpFab(login, password)
+    cy.wait(500)
     //Go to Logging page
     cy.get('#opfab-navbar-menu-logging').click()
 
     //Check each  field label
-
-    cy.get('#service > :nth-child(1) > .opfab-multiselect > [translate=""]').contains('SERVICE')
-    cy.should('be.visible')
+    cy.get('#processGroup .opfab-multiselect > label').contains('SERVICE')
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
-
-    cy.get(':nth-child(2) > :nth-child(1) > .opfab-multiselect > [translate=""]').contains('PROCESSUS')
     cy.should('be.visible')
-    cy.should('have.css', 'color', 'rgb(186, 186, 186)')
 
-    cy.get('[style="margin-left: 40px; margin-right: 30px; width: 230px; min-width: 230px;"] > :nth-child(1) > of-datetime-filter.ng-untouched > table.ng-star-inserted > tr > :nth-child(1) > .nopaddingrow > label').contains("PUBLIE A PARTIR DE")
-    cy.should('be.visible')
+    cy.get('#process:not([hidden]) .opfab-multiselect > label').contains('PROCESSUS')
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
+    cy.should('be.visible')
 
-    cy.get('[style="margin-left: 40px; width: 230px; min-width: 230px;"] > :nth-child(1) > of-datetime-filter.ng-untouched > table.ng-star-inserted > tr > :nth-child(1) > .nopaddingrow > label').contains("ACTIVE A PARTIR DE")
-    cy.should('be.visible')
+    cy.get('of-datetime-filter[filterPath="publishDateFrom"] label').contains("PUBLIE A PARTIR DE")
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
+    cy.should('be.visible')
 
-    cy.get('#tags > :nth-child(1) > .opfab-multiselect > [translate=""]').contains("ETIQUETTES")
-    cy.should('be.visible')
+    cy.get('of-datetime-filter[filterPath="activeFrom"] label').contains("ACTIVE A PARTIR DE")
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
+    cy.should('be.visible')
 
-    cy.get('#state > :nth-child(1) > .opfab-multiselect > [translate=""]').contains("ETAT")
-    cy.should('be.visible')
+    cy.get('#tags .opfab-multiselect > label').contains("ETIQUETTES")
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
+    cy.should('be.visible')
 
-    cy.get('[style="margin-left: 40px; margin-right: 30px; width: 230px; min-width: 230px;"] > :nth-child(2) > of-datetime-filter.ng-untouched > table.ng-star-inserted > tr > :nth-child(1) > .nopaddingrow > label').contains('PUBLIE JUSQU\'A')
-    cy.should('be.visible')
+    cy.get('#state .opfab-multiselect > label').contains("ETAT")
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
+    cy.should('be.visible')
 
-    cy.get('[style="margin-left: 40px; width: 230px; min-width: 230px;"] > :nth-child(2) > of-datetime-filter.ng-untouched > table.ng-star-inserted > tr > :nth-child(1) > .nopaddingrow > label').contains("ACTIVE JUSQU\'A")
-    cy.should('be.visible')
+    cy.get('of-datetime-filter[filterPath="publishDateTo"] label').contains('PUBLIE JUSQU\'A')
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
+    cy.should('be.visible')
+
+    cy.get('of-datetime-filter[filterPath="activeTo"] label').contains("ACTIVE JUSQU\'A")
+    cy.should('have.css', 'color', 'rgb(186, 186, 186)')
+    cy.should('be.visible')
+
+    cy.get('#processGroup .opfab-multiselect span').contains("Sélectionner un Service")
+    cy.should('have.css', 'color', 'rgb(186, 186, 186)')
+    cy.should('be.visible')
+
+    cy.get('#process:not([hidden]) .opfab-multiselect span').contains("Sélectionner un Processus")
+    cy.should('have.css', 'color', 'rgb(186, 186, 186)')
+    cy.should('be.visible')
+
+    cy.get('#tags .opfab-multiselect span').contains("Sélectionner une Etiquette")
+    cy.should('have.css', 'color', 'rgb(186, 186, 186)')
+    cy.should('be.visible')
+
+    cy.get('#state .opfab-multiselect span').contains("Sélectionner un Etat")
+    cy.should('have.css', 'color', 'rgb(186, 186, 186)')
+    cy.should('be.visible')
 
     cy.get('#opfab-logging-btn-search').contains('RECHERCHER')
-    cy.should('be.visible')
     cy.should('have.css', 'color', 'rgb(255, 255, 255)')
+    cy.should('be.visible')
 
     cy.get('#opfab-logging-btn-cancel').contains('REINITIALISER')
     cy.should('be.visible')
-    cy.should('have.css', 'color', 'rgb(39, 132, 255)')     
+    cy.should('have.css', 'color', 'rgb(39, 132, 255)')
 
-    cy.get('#service > :nth-child(1) > .opfab-multiselect > angular2-multiselect.ng-untouched > .cuppa-dropdown > .selected-list > .c-btn > :nth-child(1)').contains("Sélectionner un Service")
-    cy.should('be.visible')
-    cy.should('have.css', 'color', 'rgb(186, 186, 186)')
-
-    cy.get(':nth-child(2) > :nth-child(1) > .opfab-multiselect > angular2-multiselect.ng-untouched > .cuppa-dropdown > .selected-list > .c-btn > :nth-child(1)').contains("Sélectionner un Processus")
-    cy.should('be.visible')
-    cy.should('have.css', 'color', 'rgb(186, 186, 186)')
-
-    cy.get('#tags > :nth-child(1) > .opfab-multiselect > angular2-multiselect.ng-untouched > .cuppa-dropdown > .selected-list > .c-btn > :nth-child(1)').contains("Sélectionner une Etiquette")
-    cy.should('be.visible') 
-    cy.should('have.css', 'color', 'rgb(186, 186, 186)')
-    cy.get('#state > :nth-child(1) > .opfab-multiselect > angular2-multiselect.ng-untouched > .cuppa-dropdown > .selected-list > .c-btn > :nth-child(1)').contains("Sélectionner un Etat")
-    cy.should('be.visible')
-    cy.should('have.css', 'color', 'rgb(186, 186, 186)') 
-    cy.wait(500)    
+    cy.wait(500)
 
 })
     it('user name',()=>{
+        cy.LogOpFab(login, password)
     cy.get('.user-name').contains(login)
     cy.should('be.visible')
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')     
@@ -337,7 +336,8 @@ it('Check Logging',()=>{
 })
 
 it('Check banner',()=>{
-cy.get('[style="width: 80px; height: 87px; overflow: hidden; margin-top: -30px; margin-bottom: -20px; margin-left: -50px; margin-right: -15px;"] > div').contains('TEST ENV')
+    cy.LogOpFab(login, password)
+cy.get('[style="width: 80px; height: 87px; overflow: hidden; margin-top: -30px; margin-bottom: -20px; margin-left: -50px; margin-right: -15px;"] > div').contains('CYPRESS TEST ENV')
 cy.should('be.visible')
 cy.should('have.css', 'color', 'rgb(255, 255, 255)')
 

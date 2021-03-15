@@ -1,4 +1,4 @@
-describe ('CheckTranslations',()=>{
+describe ('UserCardResponses',()=>{
 //check the current language
 
 // In this test the card will be sent to the following groups Dispatcher,Planner, Supervisor
@@ -22,7 +22,7 @@ describe ('CheckTranslations',()=>{
     let green='rgb(0, 128, 0)'
     let bleue='rgb(39, 132, 255)'
 
-//ENTUTY ALLOWDED TO RESPONSE 
+//ENTUTY ALLOWDED TO RESPONSE
 
     let entity1= "Control Room 1"
     let entity2= "Control Room 2"
@@ -58,16 +58,16 @@ describe ('CheckTranslations',()=>{
     let publishDateDisplayed2 = Cypress.moment().format('HH:mm DD/MM/YYYY')
     let startDate2 = Cypress.moment().add(1,'hour').format('x')
     let startdatedisplayed2 = Cypress.moment().add(1,'hour').format('HH:mm DD/MM/YYYY')
-    
+
     let startDateint2 = parseInt(startDate2)
     let endDatedisplayed2 = (Cypress.moment().add(1,'hour').add(1, 'day').format('HH:mm DD/MM/YYYY'))
     const endDate2= parseInt(Cypress.moment().add(1,'hour').add(1, 'day').format('x'))
     let dateDisplayed2= "("+ startdatedisplayed2 + " - " + endDatedisplayed2 + ")"
     let lttd2=parseInt(Cypress.moment().add(4,'second').format('x'))
-    
 
 
-    //Confirmation Message while creating a new card 
+
+    //Confirmation Message while creating a new card
 
     let confirmationFr='Votre réponse est confirmée. Merci!'
     let confirmationEn='Your answer is confirmed. Thank you!'
@@ -86,14 +86,13 @@ describe ('CheckTranslations',()=>{
     cy.LogOpFab(login, password)
     cy.wait(500)
     cy.goToSettings()
-  
     cy.get('#opfab-setting-locale').select('fr')
     cy.wait(500)
     cy.goToFeed()
     cy.PushActionCard(processName1, publisherV1, publisherName1, processInstanceId1, state1, severity1, startDateint1, endDate1,lttd)
     cy.wait(1000)
 
-    cy.get('#opfab-feed-light-card-'+processName1+'-'+processInstanceId1+' :nth-child(1) > .p-1 > [style="display: flex;"] > .card-title') .click({ force: true }) 
+    cy.get('#opfab-feed-light-card-'+processName1+'-'+processInstanceId1+' :nth-child(1) > .p-1 > [style="display: flex;"] > .card-title') .click({ force: true })
 
     cy.get('[style="padding-left: 15px;"]').contains("Status")
     cy.should('be.visible')
@@ -132,9 +131,11 @@ describe ('CheckTranslations',()=>{
 
 it('Set current language En, verify previous card for operator2',()=>{
     cy.LogOpFab(login2, password)
+    cy.goToSettings()
+    cy.get('#opfab-setting-locale').select('en')
     cy.wait(500)
-
-    cy.get('#opfab-feed-light-card-'+processName1+'-'+processInstanceId1+' :nth-child(1) > .p-1 > [style="display: flex;"] > .card-title') .click({ force: true }) 
+    cy.goToFeed()
+    cy.get('#opfab-feed-light-card-'+processName1+'-'+processInstanceId1+' :nth-child(1) > .p-1 > [style="display: flex;"] > .card-title') .click({ force: true })
 
     cy.get('[style="padding-left: 15px;"]').contains("Status")
     cy.should('be.visible')
@@ -199,13 +200,13 @@ it('Set current language En, verify previous card for operator2',()=>{
     cy.wait(400)
 
 
-    //check card content 
+    //check card content
 
     cy.get('center > h4').contains("Responses received")
     cy.get('tbody > :nth-child(1) > :nth-child(1)').contains('Entity')
-    cy.get('tbody > :nth-child(1) > :nth-child(2)').contains('10/08/2020 8PM-10PM')
-    cy.get('tbody > :nth-child(1) > :nth-child(3)').contains('10/08/2020 10PM-12PM')
-    cy.get('tbody > :nth-child(1) > :nth-child(4)').contains('11/08/2020 8PM-12PM')
+    cy.get('tbody > :nth-child(1) > :nth-child(2)').contains('10/08/2020 8AM-10AM')
+    cy.get('tbody > :nth-child(1) > :nth-child(3)').contains('10/08/2020 10AM-12PM')
+    cy.get('tbody > :nth-child(1) > :nth-child(4)').contains('11/08/2020 8AM-10AM')
 
     cy.get('tbody > :nth-child(2) > :nth-child(1)').contains(entity2)
     cy.get('tbody > :nth-child(2) > :nth-child(2)').contains('OK')
@@ -214,14 +215,16 @@ it('Set current language En, verify previous card for operator2',()=>{
 
 })
 
-   
+
 it('log in with operator 1, check last card update, and answer on behalf of control room 1',()=>{
 
 
-    //login has to belong to Control room 1 
+    //login has to belong to Control room 1
     cy.LogOpFab(login,password)
+    cy.goToSettings()
+    cy.get('#opfab-setting-locale').select('fr')
     cy.wait(500)
-
+    cy.goToFeed()
     cy.get('#opfab-feed-light-card-'+processName1+'-'+processInstanceId1+' :nth-child(1) > .p-1 > [style="display: flex;"] > .card-title') .click({ force: true })
 
     //Check card content
@@ -290,20 +293,17 @@ it('log in with operator 1, check last card update, and answer on behalf of cont
 
     cy.get('.opfab-question-card-state-name').contains("Action requise")
     cy.should('be.visible')
-    cy.should('have.css', 'color',orange) 
-    //check card content 
+    cy.should('have.css', 'color',orange)
+    //check card content
 
-    cy.get('.form-group > h4').contains('Indisponibilité de 2 heures à prevoir pour la ligne HVDC france-angleterre')
-    //cy.get('.form-group > :nth-child(5)').contains('Le 10/08/2020 entre 8h et 10h') 
-   // cy.get('.form-group > :nth-child(6)').contains('Le 10/08/2020 entre 10h et 12h') 
-    //cy.get('.form-group > :nth-child(7)').contains('Le 11/08/2020 entre 8h et 10h') 
+    cy.get('.form-group > h4').contains('Indisponibilité de 2 heures à prevoir pour la ligne HVDC France-Angleterre')
 
     // to be corrected
     cy.get('center > h4').contains("Responses reçues")
     cy.get('tbody > :nth-child(1) > :nth-child(1)').contains('Entity')
     cy.get('tbody > :nth-child(1) > :nth-child(2)').contains('10/08/2020 8h-10h')
     cy.get('tbody > :nth-child(1) > :nth-child(3)').contains('10/08/2020 10h-12h')
-    cy.get('tbody > :nth-child(1) > :nth-child(4)').contains('11/08/2020 8-12h')
+    cy.get('tbody > :nth-child(1) > :nth-child(4)').contains('11/08/2020 8h-10h')
 
     cy.get('tbody > :nth-child(2) > :nth-child(1)').contains(entity2)
     cy.get('tbody > :nth-child(2) > :nth-child(2)').contains('OK')
@@ -316,36 +316,36 @@ it('log in with operator 1, check last card update, and answer on behalf of cont
     cy.get('tbody > :nth-child(3) > :nth-child(4)').contains('OK')
 
 })
-   
+
 it('log in with operator3, check last card update, and modify the answer on behalf of control room 1',()=>{
 
 
     cy.LogOpFab(login3, password)
     cy.wait(500)
     cy.goToSettings()
-  
     cy.get('#opfab-setting-locale').select('fr')
+
     cy.wait(500)
     cy.goToFeed()
 
     cy.wait(500)
 
-    cy.get('#opfab-feed-light-card-'+processName1+'-'+processInstanceId1+' :nth-child(1) > .p-1 > [style="display: flex;"] > .card-title') .click({ force: true }) 
+    cy.get('#opfab-feed-light-card-'+processName1+'-'+processInstanceId1+' :nth-child(1) > .p-1 > [style="display: flex;"] > .card-title') .click({ force: true })
 
 
-    //check card content 
+    //check card content
 
-    cy.get('.form-group > h4').contains('Indisponibilité de 2 heures à prevoir pour la ligne HVDC france-angleterre')
-    //cy.get('.form-group > :nth-child(5)').contains('Le 10/08/2020 entre 8h et 10h') 
-   // cy.get('.form-group > :nth-child(6)').contains('Le 10/08/2020 entre 10h et 12h') 
-    //cy.get('.form-group > :nth-child(7)').contains('Le 11/08/2020 entre 8h et 10h') 
+    cy.get('.form-group > h4').contains('Indisponibilité de 2 heures à prevoir pour la ligne HVDC France-Angleterre')
+    //cy.get('.form-group > :nth-child(5)').contains('Le 10/08/2020 entre 8h et 10h')
+   // cy.get('.form-group > :nth-child(6)').contains('Le 10/08/2020 entre 10h et 12h')
+    //cy.get('.form-group > :nth-child(7)').contains('Le 11/08/2020 entre 8h et 10h')
 
     // to be corrected
     cy.get('center > h4').contains("Responses reçues")
     cy.get('tbody > :nth-child(1) > :nth-child(1)').contains('Entity')
     cy.get('tbody > :nth-child(1) > :nth-child(2)').contains('10/08/2020 8h-10h')
     cy.get('tbody > :nth-child(1) > :nth-child(3)').contains('10/08/2020 10h-12h')
-    cy.get('tbody > :nth-child(1) > :nth-child(4)').contains('11/08/2020 8-12h')
+    cy.get('tbody > :nth-child(1) > :nth-child(4)').contains('11/08/2020 8h-10h')
 
     cy.get('tbody > :nth-child(2) > :nth-child(1)').contains(entity2)
     cy.get('tbody > :nth-child(2) > :nth-child(2)').contains('OK')
@@ -376,11 +376,11 @@ it('log in with operator3, check last card update, and modify the answer on beha
 
 
 
-    // full size card 
+    // full size card
 
     cy.get('.opfab-menu-icon').click()
 
-    //modify card response 
+    //modify card response
     cy.get('#opfab-card-details-btn-response').contains(modificationLabelFr).click()
     cy.get(':nth-child(6) > .opfab-checkbox-checkmark').click()
 
@@ -395,12 +395,12 @@ it('log in with operator3, check last card update, and modify the answer on beha
         cy.should('have.css', 'background-color','rgba(0, 0, 0, 0)')
         cy.should('have.css', 'color',white)
 
-    //recheck card content 
+    //recheck card content
     cy.get('center > h4').contains("Responses reçues")
     cy.get('tbody > :nth-child(1) > :nth-child(1)').contains('Entity')
     cy.get('tbody > :nth-child(1) > :nth-child(2)').contains('10/08/2020 8h-10h')
     cy.get('tbody > :nth-child(1) > :nth-child(3)').contains('10/08/2020 10h-12h')
-    cy.get('tbody > :nth-child(1) > :nth-child(4)').contains('11/08/2020 8-12h')
+    cy.get('tbody > :nth-child(1) > :nth-child(4)').contains('11/08/2020 8h-10h')
 
     cy.get('tbody > :nth-child(2) > :nth-child(1)').contains(entity2)
     cy.get('tbody > :nth-child(2) > :nth-child(2)').contains('OK')
@@ -437,13 +437,13 @@ it('log in with operator3, check last card update, and modify the answer on beha
 
 })
 
-   
+
 it('log in with operator4 , check last card update, verify that he can\'t modify the card',()=>{
 
     cy.LogOpFab(login4, password)
     cy.wait(500)
     cy.goToSettings()
-  
+
     cy.get('#opfab-setting-locale').select('fr')
     cy.wait(500)
     cy.goToFeed()
@@ -451,19 +451,19 @@ it('log in with operator4 , check last card update, verify that he can\'t modify
 
     cy.wait(500)
 
-    cy.get('#opfab-feed-light-card-'+processName1+'-'+processInstanceId1+' :nth-child(1) > .p-1 > [style="display: flex;"] > .card-title') .click({ force: true }) 
+    cy.get('#opfab-feed-light-card-'+processName1+'-'+processInstanceId1+' :nth-child(1) > .p-1 > [style="display: flex;"] > .card-title') .click({ force: true })
 
 
-    //check card content 
+    //check card content
 
-    cy.get('.form-group > h4').contains('Indisponibilité de 2 heures à prevoir pour la ligne HVDC france-angleterre')
+    cy.get('.form-group > h4').contains('Indisponibilité de 2 heures à prevoir pour la ligne HVDC France-Angleterre')
 
 
     cy.get('center > h4').contains("Responses reçues")
     cy.get('tbody > :nth-child(1) > :nth-child(1)').contains('Entity')
     cy.get('tbody > :nth-child(1) > :nth-child(2)').contains('10/08/2020 8h-10h')
     cy.get('tbody > :nth-child(1) > :nth-child(3)').contains('10/08/2020 10h-12h')
-    cy.get('tbody > :nth-child(1) > :nth-child(4)').contains('11/08/2020 8-12h')
+    cy.get('tbody > :nth-child(1) > :nth-child(4)').contains('11/08/2020 8h-10h')
 
     cy.get('tbody > :nth-child(2) > :nth-child(1)').contains(entity2)
     cy.get('tbody > :nth-child(2) > :nth-child(2)').contains('OK')
@@ -510,10 +510,10 @@ it('log in with operator4 , check last card update, verify that he can\'t modify
 it('Send a card that is about to expire and verify that the validation buttons are disabled',()=>{
 
 
-    //login has to belong to Control room 1 
+    //login has to belong to Control room 1
     cy.LogOpFab(login,password)
     cy.wait(500)
-    //Send an expired card 
+    //Send an expired card
     cy.PushActionCard(processName2, publisherV2, publisherName2, processInstanceId2, state2, severity2, startDateint2, endDate2,lttd2)
     cy.wait(500)
 
@@ -525,12 +525,12 @@ it('Send a card that is about to expire and verify that the validation buttons a
     cy.get('#opfab-card-details-btn-response').should('be.visible')
     cy.should('have.css', 'background-color','rgb(43, 53, 63)')
     cy.get('#opfab-feed-light-card-'+processName2+'-'+processInstanceId2+'> :nth-child(1) > .p-1 > [style="display: flex; width: 100%; margin-top: 5px;"] > .ml-auto > .d-flex > of-countdown > :nth-child(1) > :nth-child(2) > .lttd-text').contains('Terminée')
-   
+
 })
 it('verify that the validation button is disabled for entity 2 as well',()=>{
 
 
-    //login has to belong to Control room 2 
+    //login has to belong to Control room 2
     cy.LogOpFab(login2,password)
     cy.wait(500)
 
@@ -542,6 +542,6 @@ it('verify that the validation button is disabled for entity 2 as well',()=>{
 
     //light card check that it displays "finshed"
     cy.get('#opfab-feed-light-card-'+processName2+'-'+processInstanceId2+'> :nth-child(1) > .p-1 > [style="display: flex; width: 100%; margin-top: 5px;"] > .ml-auto > .d-flex > of-countdown > :nth-child(1) > :nth-child(2) > .lttd-text').contains('Finished')
-   
+
 })
 })

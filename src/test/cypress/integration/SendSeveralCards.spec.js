@@ -5,7 +5,7 @@ describe ('Send cards',()=>{
     let password='test'
     let red = 'rgb(238, 0, 0)'
     let green = 'rgb(0, 187, 3)'
-    let bleue = 'rgb(16, 116, 173)'
+    let blue = 'rgb(16, 116, 173)'
     let orange = 'rgb(253, 147, 18)'
     //Send 7 different cards and then check all pages
 
@@ -232,6 +232,12 @@ let dateDisplayed12= "("+ startdatedisplayed12 + " - " + endDatedisplayed12+ ")"
     cy.PushCard(processName11, publisherV11, publisherName11, processInstanceId11, state11, severity11, startDateint11, endDate11)
     cy.wait(1200)
     cy.PushCard(processName12, publisherV12, publisherName12, processInstanceId12, state12, severity12, startDateint12, endDate12)
+
+        //Change locale to English as rest of the test relies on French translations
+        cy.goToSettings()
+        cy.get('#opfab-setting-locale').select('en')
+        cy.wait(500)
+        cy.goToFeed()
 
     //Ack card n 3
     cy.get('#opfab-feed-light-card-defaultProcess-cypress-test-3 > :nth-child(1) > .p-1 > [style="display: flex; width: 100%; margin-top: 5px;"] > .card-subtitle').click({ force: true })

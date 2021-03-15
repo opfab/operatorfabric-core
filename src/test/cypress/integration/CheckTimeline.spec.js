@@ -1,6 +1,5 @@
-describe ('CheckTranslations',()=>{
-   //check the current language
-   
+describe ('CheckTimeline',()=>{
+
        let login='operator1'
        let password='test'
        let red = 'rgb(238, 0, 0)'
@@ -177,7 +176,7 @@ describe ('CheckTranslations',()=>{
 
 
    
-       it('Set english version',()=>{
+       it('Send cards for timeline',()=>{
        cy.LogOpFab(login, password)
        cy.wait(500)
        cy.PushCard(processName1, publisherV1, publisherName1, processInstanceId1, state1, severity1, startDateint1, endDate1)
@@ -213,7 +212,7 @@ describe ('CheckTranslations',()=>{
       cy.get(':nth-child(14) > .ng-star-inserted > text').contains('1')
       cy.get(':nth-child(16) > .ng-star-inserted > text').contains('1')
       cy.get(':nth-child(12) > .ng-star-inserted > text').contains('2')
-      cy.get(':nth-child(13) > .ng-star-inserted > text').contains('1')
+      cy.get(':nth-child(13) > .ng-star-inserted > text').contains('2')
       cy.get(':nth-child(15) > .ng-star-inserted > text').contains('1')
       cy.get(':nth-child(17) > .ng-star-inserted > text').contains('2')
 

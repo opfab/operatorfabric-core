@@ -1,6 +1,6 @@
 // This test sends a card with a random severtiy and check after it content
 //This test won't work if cards are displayed according to their severity. It works only the default display mode
-describe ('Create A Card Manually',()=>{
+describe ('UsercardCreation',()=>{
 
   let login='operator1'
   let password='test'
@@ -19,9 +19,9 @@ it('go to card creation and create a card', ()=>{
    cy.get(':nth-child(1) > .opfab-checkbox > .opfab-checkbox-checkmark').click()
    cy.get('#OTHERS').type('Manual Test')
    cy.get('.c-btn').click()
-   cy.get('.lazyContainer > :nth-child(1)').click()
    cy.get('.lazyContainer > :nth-child(2)').click()
    cy.get('.lazyContainer > :nth-child(3)').click()
+   cy.get('.lazyContainer > :nth-child(4)').click()
    cy.get('#opfab-usercard-btn-prepareCard').click()
    cy.wait(500)
 
@@ -41,7 +41,7 @@ it('go to card creation and create a card', ()=>{
    cy.get('#div-detail-msg > #opfab-usercard-close > span').click()
    cy.contains(startDate+' - )').click()
    //cy.contains('IT Incident SI en cours')
-   cy.get('center').contains('Merci de saisir les impacts que vous identifiez de votre coté')
+   cy.get('strong').contains('Merci de saisir les impacts que vous identifiez de votre coté')
    cy.get('#div-card-template > :nth-child(1) > :nth-child(1)').contains('Description de l\'incident')
    cy.get('#div-card-template > :nth-child(1) > :nth-child(4)').contains('Services impactés vu SI')
 })   

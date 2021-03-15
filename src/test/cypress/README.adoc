@@ -38,6 +38,14 @@ docker-compose down <1>
 NOTE: If you need to further adapt the Cypress instance, you can make changes to the `web-ui-cypress.json` and
 `docker-compose.cypress.override.yml` files.
 
+You also need to set up some perimeters and bundles for the tests. To do so:
+
+----
+cd /src/test/utils/karate
+./loadBundles.sh
+./setPerimeterForTest.sh
+----
+
 After you're done with your tests, you can stop and destroy containers (as it is better to start with fresh containers to avoid
 side-effects from previous tests) with the following commands:
 
@@ -46,7 +54,6 @@ side-effects from previous tests) with the following commands:
 cd /config/docker
 docker-compose down
 ----
-
 == Running existing tests
 
 To launch the Cypress test runner:
@@ -62,6 +69,25 @@ run all existing tests.
 
 NOTE: You can select the browser (and version) that you want to use from a dropdown list on the right. The list will
 display the browsers that are currently installed on your computer (and supported by Cypress).
+
+== Clearing MongoDB
+
+If you want to start with a clean database (from the cards and archived cards point of view), you can purge the
+associated collections through the MongoDB shell with the following commands:
+
+[source,bash]
+----
+docker exec -it docker_mongodb_1 bash
+mongo "mongodb://root:password@localhost:27017/?authSource=admin&authMode=scram-sha1"
+use operator-fabric
+db.cards.remove({})
+db.archivedCards.remove({})
+----
+
+== Current status of tests
+
+All tests except timeline business periods are mostly passing when run against empty card/archived cards collections.
+However, they are currently quite flaky especially when involving dates (round up errors for example).
 
 == Creating new tests
 
