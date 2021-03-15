@@ -240,7 +240,7 @@
     "processInstanceId": "Identifiant",
     "state": "État",
     "recipients": "DESTINATAIRES:",
-    "feedPreview": "PREVISUALISATION FEED:",
+    "feedPreview": "PREVISUALISATION FLUX DE CARTES:",
     "contentPreview": "PREVISUALISATION CONTENU:",
     "send-another-one": "ENVOYER UNE AUTRE CARTE",
     "cardSendWithNoError": "Votre carte est publiée",
