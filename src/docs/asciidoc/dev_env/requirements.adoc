@@ -20,16 +20,16 @@ below for details on:
 == Tools and libraries
 
 * Gradle 6 +
-* Java 8.0 +
-* Maven 3.5.3 +
+* Java 11.0 +
 * Docker
 * Docker Compose with 2.1+ file format support
 * Chrome (needed for UI tests in build)
+* Angular CLI
 
-NOTE: the current Jdk used for the project is Java 8.0.252-zulu.
+NOTE: the current Jdk used for the project is Java 11.0.9-zulu.
 
 IMPORTANT: It is highly recommended to use https://sdkman.io/[sdkman] and
-https://github.com/nvm-sh/nvm[nvm] to manage tools versions.
+https://github.com/nvm-sh/nvm[nvm] to manage tools versions. The following steps rely on these tools.
 
 Once you have installed sdkman and nvm, you can **source** the following
 script to set up your development environment (appropriate versions of Gradle,
@@ -45,7 +45,7 @@ source bin/load_environment_light.sh
 
 * RabbitMQ 3.7.6 +: AMQP messaging layer allows inter
 service communication
-* MongoDB 4.0 +: Card persistent storage
+* MongoDB 4.4 +: Card persistent storage
 
 RabbitMQ is required for :
 
@@ -65,4 +65,4 @@ link:https://github.com/opfab/operatorfabric-core/tree/master/src/main/docker[sr
 
 == Browser support
 
-Project is supported on recent version of firefox , chromium and chrome 
+The project is tested on recent versions of Firefox, Chromium and Chrome.

@@ -11,41 +11,21 @@
 import {Directive, Injectable, OnDestroy, OnInit} from '@angular/core';
 import {ColDef, GridOptions, ICellRendererParams} from 'ag-grid-community';
 import {TranslateService} from '@ngx-translate/core';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import {Subject, throwError} from 'rxjs';
 import {ConfirmationDialogService} from '../../services/confirmation-dialog.service';
 import {AppError} from '../../../../common/error/app-error';
 import {CrudService} from '@ofServices/crud-service';
-import {ActionCellRendererComponent} from './action-cell-renderer.component';
-import {EntityCellRendererComponent} from './entity-cell-renderer.component';
-import {GroupCellRendererComponent} from './group-cell-renderer.component';
+import {ActionCellRendererComponent} from '../cell-renderers/action-cell-renderer.component';
+import {EntityCellRendererComponent} from '../cell-renderers/entity-cell-renderer.component';
+import {GroupCellRendererComponent} from '../cell-renderers/group-cell-renderer.component';
 import {AdminItemType, SharingService} from '../../services/sharing.service';
 import {takeUntil} from 'rxjs/operators';
+import {StateRightsCellRendererComponent} from '../cell-renderers/state-rights-cell-renderer.component';
 
 @Directive()
 @Injectable()
 export abstract class AdminTableDirective implements OnInit, OnDestroy {
-
-  unsubscribe$: Subject<void> = new Subject<void>();
-
-  // These fields will be initialized in the concrete classes extending `AdminTableDirective`
-  // (e.g. EntitiesTableComponent) as they depend on the type of the table
-  /** Modal component to open when editing an item from the table (e.g. `EditEntityGroupModal`) */
-  public editModalComponent;
-  /** Type of data managed by the table (e.g. `AdminItemType.ENTITY`) */
-  protected tableType: AdminItemType;
-  /** Relevant fields for this data type. They will be used to populate the table columns */
-  protected fields: Field[];
-  /** Among these fields, which one represents an item's unique id (e.g. `id`) */
-  protected idField: string;
-
-  // ag-grid configuration objects
-  public gridOptions;
-  public gridApi;
-  public rowData: any;
-
-  protected i18NPrefix = 'admin.input.';
-  protected crudService: CrudService;
 
   constructor(
       protected translateService: TranslateService,
@@ -60,7 +40,8 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
       frameworkComponents : {
         actionCellRenderer: ActionCellRendererComponent,
         groupCellRenderer: GroupCellRendererComponent,
-        entityCellRenderer: EntityCellRendererComponent
+        entityCellRenderer: EntityCellRendererComponent,
+        stateRightsCellRenderer: StateRightsCellRendererComponent
       },
       domLayout: 'autoHeight',
       defaultColDef : {
@@ -79,7 +60,9 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         'dataColumn': {
           sortable: true,
           filter: true,
-          flex: 2
+          wrapText: true,
+          autoHeight: true,
+          flex: 4,
         }
       },
       localeTextFunc : function (key) {
@@ -94,6 +77,34 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     // Defining a custom cellRenderer was necessary (instead of using onCellClicked & an inline cellRenderer) because of
     // the need to call a method from the parent component
   }
+  /** Default options for edition modals. */
+  protected static defaultModalOptions: NgbModalOptions = {
+    backdrop: 'static' // Modal shouldn't close even if we click outside it
+  };
+
+  unsubscribe$: Subject<void> = new Subject<void>();
+
+  // These fields will be initialized in the concrete classes extending `AdminTableDirective`
+  // (e.g. EntitiesTableComponent) as they depend on the type of the table
+  /** Modal component to open when editing an item from the table (e.g. `EditEntityGroupModal`) */
+  public editModalComponent;
+  /** Default modal options can be added to or overridden using this property in the xxx-table components extending the directive. */
+  public modalOptions: NgbModalOptions = AdminTableDirective.defaultModalOptions;
+
+  /** Type of data managed by the table (e.g. `AdminItemType.ENTITY`) */
+  protected tableType: AdminItemType;
+  /** Relevant fields for this data type. They will be used to populate the table columns */
+  protected fields: Field[];
+  /** Among these fields, which one represents an item's unique id (e.g. `id`) */
+  protected idField: string;
+
+  // ag-grid configuration objects
+  public gridOptions;
+  public gridApi;
+  public rowData: any;
+
+  protected i18NPrefix = 'admin.input.';
+  protected crudService: CrudService;
 
   ngOnInit() {
     this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.tableType);
@@ -162,15 +173,17 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     // This method might be flagged as "unused" by IDEs but it's actually called through the ActionCellRendererComponent
     const columnId = params.colDef.colId;
     if (columnId === 'edit') {
-      const modalRef = this.modalService.open(this.editModalComponent);
+      const modalRef = this.modalService.open(this.editModalComponent, this.modalOptions);
       modalRef.componentInstance.type = this.tableType;
       modalRef.componentInstance.row = params.data; // This passes the data from the edited row to the modal to initialize input values.
       modalRef.result.then(
           () => { // If modal is closed
             this.refreshData(); // This refreshes the data when the modal is closed after a change
           },
-          () => { }); // If the modal is dismissed (by clicking the "close" button, the top right cross icon
-      // or clicking outside the modal, there is no need to refresh the data
+          () => {
+            // If the modal is dismissed (by clicking the "close" button, the top right cross icon
+            // or clicking outside the modal, there is no need to refresh the data
+          });
     }
     if (columnId === 'delete') {
       this.openDeleteConfirmationDialog(params.data);
@@ -182,7 +195,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     this.confirmationDialogService.confirm(
         this.translateService.instant('admin.input.confirm'),
         this.translateService.instant('admin.input.' + this.tableType + '.confirmDelete') + ' ' + row[this.idField] + '?',
-        'OK', // TODO Refactor to avoid translate.instant ? OK is not i18ed ?
+        'OK',
         this.translateService.instant('admin.input.cancel')
     ).then((confirmed) => {
       if (confirmed) {
@@ -197,7 +210,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
   }
 
   createNewItem(): void {
-    const modalRef = this.modalService.open(this.editModalComponent);
+    const modalRef = this.modalService.open(this.editModalComponent, this.modalOptions);
     modalRef.componentInstance.type = this.tableType;
     modalRef.result.then(
         // Hooking the refresh of the data to the closing of the modal seemed simpler than setting up
@@ -206,8 +219,10 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
           this.refreshData(); // This refreshes the data when the modal is closed after a change
           // Data creation doesn't need to be propagated to the user table
         },
-        () => { }); // If modal is dismissed (by clicking the "close" button, the top right cross icon
-    // or clicking outside the modal, there is no need to refresh the data
+        () => {
+          // If modal is dismissed (by clicking the "close" button, the top right cross icon
+          // or clicking outside the modal, there is no need to refresh the data
+        });
   }
 
   refreshData() {

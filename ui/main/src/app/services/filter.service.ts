@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -71,13 +71,13 @@ export class FilterService {
             (card: LightCard, status) => {
                 if (!!status.start && !!status.end) {
                     if (!card.endDate) {
-                        return card.startDate <= status.end;
+                        return status.start <= card.startDate && card.startDate <= status.end;
                     }
                     return status.start <= card.startDate && card.startDate <= status.end
                         || status.start <= card.endDate && card.endDate <= status.end
                         || card.startDate <= status.start && status.end <= card.endDate;
                 } else if (!!status.start) {
-                    return !card.endDate || status.start <= card.endDate;
+                    return (!card.endDate && card.startDate >= status.start) || (!!card.endDate && status.start <= card.endDate);
                 } else if (!!status.end) {
                     return card.startDate <= status.end;
                 }
@@ -132,6 +132,23 @@ export class FilterService {
         );
     }
 
+    private initTypeOfStateFilter()  {
+        return new Filter(
+            (card: LightCard, status) => {
+                const typeOfStatesList = status.typeOfStates;
+
+                if (!! typeOfStatesList) {
+                    const typeOfStateOfTheCard = status.mapOfTypeOfStates.get(card.process + '.' + card.state);
+                    return typeOfStatesList.includes(typeOfStateOfTheCard);
+                }
+                // permissive filter
+                return true;
+            },
+            false,
+            {typeOfStates: null}
+        );
+    }
+
     private initFilters(filterOnAck: boolean): Map<string, Filter> {
         const filters = new Map();
         filters.set(FilterType.TYPE_FILTER, this.initTypeFilter());
@@ -143,6 +160,7 @@ export class FilterService {
             filters.set(FilterType.ACKNOWLEDGEMENT_FILTER, this.initAcknowledgementFilter());
 
         filters.set(FilterType.PROCESS_FILTER, this.initProcessFilter());
+        filters.set(FilterType.TYPEOFSTATE_FILTER, this.initTypeOfStateFilter());
         return filters;
     }
 }
@@ -156,7 +174,8 @@ export enum FilterType {
     PUBLISHDATE_FILTER,
     ACKNOWLEDGEMENT_FILTER,
     TEST_FILTER,
-    PROCESS_FILTER
+    PROCESS_FILTER,
+    TYPEOFSTATE_FILTER
 }
 export const BUSINESS_DATE_FILTER_INITIALISATION = {
     name: FilterType.BUSINESSDATE_FILTER,

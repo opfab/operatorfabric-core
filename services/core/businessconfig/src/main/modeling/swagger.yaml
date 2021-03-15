@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: OperatorFabric BusinessconfigParty Management API
-  version: 2.1.0.RELEASE
+  version: 2.2.0.RELEASE
   title: Businessconfig Management
   termsOfService: ''
   contact:

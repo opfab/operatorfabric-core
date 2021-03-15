@@ -14,7 +14,12 @@ Api testing with Karate DSL
 1. Download the latest `karate.jar` from link:++https://github.com/intuit/karate/releases/++[Karate github release page]
 2. Put it in the karate directory, rename it to `karate.jar` to use it easily.
 
-IMPORTANT: If your OperatorFabric instance is not running on localhost, you need to replace localhost with the address of your running instance within the `karate-config.js` file.
+IMPORTANT: Some tests are failing with the latest version of Karate (v0.9.6) so for the time being please use
+link:https://github.com/intuit/karate/releases/tag/v0.9.5[v0.9.5] instead.
+Issue link:https://opfab.atlassian.net/browse/OC-1537[OC-1537] has been logged to look into it.
+
+IMPORTANT: If your OperatorFabric instance is not running on localhost, you need to replace localhost with the address
+of your running instance within the `karate-config.js` file.
 
 ## Usage
 

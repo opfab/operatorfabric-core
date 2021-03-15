@@ -22,8 +22,6 @@ import static org.assertj.core.api.Assertions.entry;
 
 public class UserSettingsDataShould {
 
-    //TODO Add tests for new settings
-
     @Test
     public void encapsulateTagSet(){
         UserSettingsData userData = UserSettingsData.builder().defaultTag("test1").defaultTag("test2").build();

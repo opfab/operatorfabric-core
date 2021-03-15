@@ -10,8 +10,8 @@
 
 import {Component, OnInit} from '@angular/core';
 import {AdminTableDirective, Field} from './admin-table.directive';
-import {EditEntityGroupModalComponent} from '../editmodal/groups-entities/edit-entity-group-modal.component';
 import {AdminItemType} from '../../services/sharing.service';
+import {EditGroupModalComponent} from '../editmodal/groups/edit-group-modal.component';
 
 @Component({
   templateUrl: 'admin-table.directive.html',
@@ -20,8 +20,8 @@ import {AdminItemType} from '../../services/sharing.service';
 export class GroupsTableComponent extends AdminTableDirective implements OnInit {
 
   tableType = AdminItemType.GROUP;
-  fields = [new Field('id'), new Field('name'), new Field('description')];
+  fields = [new Field('id', 3), new Field('name', 3), new Field('description', 4), new Field('perimeters', 6)];
   idField = 'id';
-  editModalComponent = EditEntityGroupModalComponent;
+  editModalComponent = EditGroupModalComponent;
 
 }

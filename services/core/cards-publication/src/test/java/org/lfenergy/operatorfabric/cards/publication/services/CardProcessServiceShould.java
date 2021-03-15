@@ -63,12 +63,6 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
-
-/**
- * <p>
- * </p>
- * Created on 30/07/18
- */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = CardPublicationApplication.class)
 @ActiveProfiles(profiles = {"native", "test"})
@@ -229,7 +223,7 @@ class CardProcessServiceShould {
         ArrayList<String> externalRecipients = new ArrayList<>();
         externalRecipients.add("api_test_externalRecipient1");
 
-        CardPublicationData card = CardPublicationData.builder().publisher("PUBLISHER_1").processVersion("O")
+        CardPublicationData card = CardPublicationData.builder().publisher("newPublisherId").processVersion("O")
                 .processInstanceId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
                 .process("PROCESS_CARD_USER")
                 .state("STATE1")
@@ -253,6 +247,29 @@ class CardProcessServiceShould {
 
     }
 
+    @Test
+    void createUserCardsWithWrongPublisher() throws URISyntaxException {
+        ArrayList<String> externalRecipients = new ArrayList<>();
+        externalRecipients.add("api_test_externalRecipient1");
+
+        CardPublicationData card = CardPublicationData.builder().publisher("PUBLISHER_X").processVersion("O")
+                .processInstanceId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
+                .process("PROCESS_CARD_USER")
+                .state("STATE1")
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now())
+                .externalRecipients(externalRecipients)
+                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                .state("state1")
+                .build();
+
+        StepVerifier.create(cardProcessingService.processUserCards(Flux.just(card), currentUserWithPerimeters))
+                .expectNextMatches(r -> r.getCount().equals(0)).verifyComplete();
+        checkCardCount(0);
+        checkArchiveCount(0);
+
+    }
 
     @Test
     void childCards() throws URISyntaxException {
@@ -278,7 +295,7 @@ class CardProcessServiceShould {
         ArrayList<String> externalRecipients = new ArrayList<>();
         externalRecipients.add("api_test_externalRecipient1");
 
-        CardPublicationData card = CardPublicationData.builder().publisher("PUBLISHER_1").processVersion("O")
+        CardPublicationData card = CardPublicationData.builder().publisher("newPublisherId").processVersion("O")
                 .processInstanceId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
                 .process("PROCESS_CARD_USER")
                 .parentCardId(cards.get(0).getId())
@@ -353,7 +370,7 @@ class CardProcessServiceShould {
         HoursAndMinutes hoursAndMinutes = new HoursAndMinutesPublicationData(2,10);
         RecurrencePublicationData recurrence = new RecurrencePublicationData("timezone",daysOfWeek,hoursAndMinutes, duration);
 
-        CardPublicationData newCard = CardPublicationData.builder().publisher("PUBLISHER_1")
+        CardPublicationData newCard = CardPublicationData.builder().publisher("publisher(")
                 .processVersion("0.0.1").processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                 .startDate(start).title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").parameter("arg1", "value1")
@@ -396,7 +413,7 @@ class CardProcessServiceShould {
     }
 
     private boolean checkCardPublisherId(CardPublicationData card) {
-        if (user.getEntities().get(0).equals(card.getPublisher())) {
+        if (user.getEntities().contains(card.getPublisher())) {
             return true;
         } else {
             log.warn("Expected card publisher id is " + user.getEntities().get(0) + " but it was " + card.getPublisher());
@@ -488,7 +505,6 @@ class CardProcessServiceShould {
                 .expectNextMatches(r -> r.intValue()==thereShouldBeOneCardLess).verifyComplete();
     }
 
-    // FIXME unify way test cards are created throughout tests
     private List<CardPublicationData> instantiateSeveralRandomCards(EasyRandom randomGenerator, int cardNumber) {
 
         List<CardPublicationData> cardsList = randomGenerator.objects(CardPublicationData.class, cardNumber)
@@ -517,10 +533,15 @@ class CardProcessServiceShould {
         LocalTime nine = LocalTime.of(9, 0);
         LocalTime fifteen = LocalTime.of(17, 0);
 
+        // entitiesRequiredToRespond is excluded from the randomization (field will be null) because otherwise the
+        // the card would not abide by the constraint that entitiesRequiredToRespond should be a subset of
+        // entitiesAllowedToRespond.This will be tested in dedicated tests.
         EasyRandomParameters parameters = new EasyRandomParameters().seed(5467L).objectPoolSize(100)
                 .randomizationDepth(3).charset(forName("UTF-8")).timeRange(nine, fifteen)
                 .dateRange(today, tomorrow).stringLengthRange(5, 50).collectionSizeRange(1, 10)
-                .excludeField(named("data")).excludeField(named("parameters"))
+                .excludeField(named("data"))
+                .excludeField(named("parameters"))
+                .excludeField(named("entitiesRequiredToRespond"))
                 .excludeField(named("shardKey"))
                 .randomize(named("recipient").and(FieldPredicates.ofType(Recipient.class))
                                 .and(FieldPredicates.inClass(CardPublicationData.class)),
@@ -1054,5 +1075,74 @@ class CardProcessServiceShould {
         CardPublicationData firstCard = cardRepository.findById(cards.get(0).getId()).block();
         Assertions.assertThat(firstCard.getKeepChildCards()).isNotNull();
         Assertions.assertThat(firstCard.getKeepChildCards()).isFalse();
+    }
+
+    @Test
+    void processCardWithEntitiesRequiredToRespondCorrectlySet() {
+
+        // Generate random card (this generator is common to all tests so it just generates a random list for
+        // entitiesAllowedToRespond and ignores entitiesRequiredToRespond
+        EasyRandom easyRandom = instantiateRandomCardGenerator();
+        int numberOfCards = 1;
+        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
+
+        cards.get(0).setParentCardId(null);
+        cards.get(0).setInitialParentCardUid(null);
+
+        // Generate a list of entitiesAllowedToRespond and take a subset of that list to create entitiesRequiredToRespond
+        int numberOfEntitiesAllowedToRespond = 10;
+        List<String> entitiesAllowedToRespond = easyRandom.objects(String.class, numberOfEntitiesAllowedToRespond)
+                .collect(Collectors.toList());
+
+        Collections.shuffle(entitiesAllowedToRespond);
+        int numberOfEntitiesRequiredToRespond = 3;
+
+        List<String> entitiesRequiredToRespond = entitiesAllowedToRespond.subList(0, numberOfEntitiesRequiredToRespond);
+
+        cards.get(0).setEntitiesAllowedToRespond(entitiesAllowedToRespond);
+        cards.get(0).setEntitiesRequiredToRespond(entitiesRequiredToRespond);
+
+        cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
+                .subscribe();
+
+        Long block = cardRepository.count().block();
+        Assertions.assertThat(block).withFailMessage(
+                "The number of registered cards should be '%d' but is " + "'%d' actually",
+                numberOfCards, block).isEqualTo(numberOfCards);
+    }
+
+    @Test
+    void processCardWithEntitiesRequiredToRespondIncorrectlySet() {
+
+        // Generate random card (this generator is common to all tests so it just generates a random list for
+        // entitiesAllowedToRespond and ignores entitiesRequiredToRespond
+        EasyRandom easyRandom = instantiateRandomCardGenerator();
+        int numberOfCards = 3;
+        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
+
+        cards.get(0).setParentCardId(null);
+        cards.get(0).setInitialParentCardUid(null);
+
+        // Generate a list of entitiesAllowedToRespond and use it to initialize entitiesRequiredToRespond as well
+        int numberOfEntitiesAllowedToRespond = 10;
+        List<String> entitiesAllowedToRespond = easyRandom.objects(String.class, numberOfEntitiesAllowedToRespond)
+                .collect(Collectors.toList());
+
+        List<String> entitiesRequiredToRespond = new ArrayList<>(entitiesAllowedToRespond);
+
+        // Take one entity out of entitiesAllowedToRespond to make sure entitiesRequiredToRespond is not a subset of
+        // entitiesRequiredToRespond
+        entitiesAllowedToRespond.remove(0);
+
+        cards.get(0).setEntitiesAllowedToRespond(entitiesAllowedToRespond);
+        cards.get(0).setEntitiesRequiredToRespond(entitiesRequiredToRespond);
+
+        cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
+                .subscribe();
+
+        Long block = cardRepository.count().block();
+        Assertions.assertThat(block).withFailMessage(
+                "The number of registered cards should be '%d' but is " + "'%d' actually",
+                numberOfCards, block).isEqualTo(0);
     }
 }

@@ -146,7 +146,7 @@ IMPORTANT: Don't use *sudo* to build OperatorFabric otherwise unexpected problem
 When using the following command line:
 [source]
 ----
-curl http://localhost:2002/ui/
+curl http://localhost:2002/
 ----
 
 .Error message

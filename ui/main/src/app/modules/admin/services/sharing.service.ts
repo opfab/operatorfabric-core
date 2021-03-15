@@ -16,6 +16,7 @@ import {CrudService} from '@ofServices/crud-service';
 import {CachedCrudService} from '@ofServices/cached-crud-service';
 import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {PerimetersService} from '@ofServices/perimeters.service';
 
 /** The aim of this service is to provide the services that need to be shared between components of the admin screen. For example, a single
  * instance of `EntitiesService` should be used across all components so a update to the cache is visible from all components.
@@ -31,13 +32,15 @@ export class SharingService implements OnDestroy {
 
     constructor(private entitiesService: EntitiesService,
                 private groupsService: GroupsService,
-                private userService: UserService) {
+                private userService: UserService,
+                private perimetersService: PerimetersService) {
 
         this._paginationPageSize$ = new ReplaySubject<number>();
 
-        // Initialization necessary for groups selection dropdown in modals and to display names instead of codes
+        // Initialization necessary for groups/perimeters selection dropdown in modals and to display names instead of codes
         // As it is only necessary for admin purposes, it's done here rather than in the app initialization code
         this.groupsService.loadAllGroupsData().pipe(takeUntil(this.unsubscribe$)).subscribe();
+        this.perimetersService.loadAllPerimetersData().pipe(takeUntil(this.unsubscribe$)).subscribe();
     }
 
     /** This is a factory method returning the appropriate `CrudService` depending on the type passed as parameter.
@@ -47,6 +50,7 @@ export class SharingService implements OnDestroy {
             case AdminItemType.ENTITY: return this.entitiesService;
             case AdminItemType.GROUP: return this.groupsService;
             case AdminItemType.USER: return this.userService;
+            case AdminItemType.PERIMETER: return this.perimetersService;
             default: throw Error('No CrudService associated with ' + adminItemType);
         }
     }
@@ -57,6 +61,7 @@ export class SharingService implements OnDestroy {
         switch (adminItemType) {
             case AdminItemType.ENTITY: return this.entitiesService;
             case AdminItemType.GROUP: return this.groupsService;
+            case AdminItemType.PERIMETER: return this.perimetersService;
             default: throw Error('No CachedCrudService associated with ' + adminItemType);
         }
     }
@@ -81,5 +86,7 @@ export class SharingService implements OnDestroy {
 export enum AdminItemType {
     USER = 'user',
     ENTITY = 'entity',
-    GROUP = 'group'
+    GROUP = 'group',
+    PERIMETER = 'perimeter',
+    PROCESS = 'process'
 }

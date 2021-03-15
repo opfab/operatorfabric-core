@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -7,13 +7,13 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-<div *ngIf=hasLinkType(LynkType.TAB)>
+<div *ngIf=hasLinkType(LinkType.TAB)>
   <a id="opfab-navbar-menu-{{menu.id}}" class="text-link " [href]="menuEntry.url" target="_blank" rel="noopener noreferrer" translate>{{menu.id}}.{{menuEntry.label}}</a>
 </div>
-<div *ngIf=hasLinkType(LynkType.IFRAME)>
+<div *ngIf=hasLinkType(LinkType.IFRAME)>
   <a id="opfab-navbar-menu-{{menu.id}}" class="text-link " [routerLink]="['/businessconfigparty',menu.id,menuEntry.id]" translate>{{menu.id}}.{{menuEntry.label}}</a>
 </div>
-<div *ngIf=hasLinkType(LynkType.BOTH)>
+<div *ngIf=hasLinkType(LinkType.BOTH)>
   <a id="opfab-navbar-menu-{{menu.id}}" class="text-link " [routerLink]="['/businessconfigparty',menu.id,menuEntry.id]" translate>{{menu.id}}.{{menuEntry.label}}</a>
   <a id="opfab-navbar-menu-icon-{{menu.id}}" class="icon-link " [href]="menuEntry.url" rel="noopener noreferrer" target="_blank">
     <fa-icon icon="external-link-alt"></fa-icon>

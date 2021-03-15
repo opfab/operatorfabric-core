@@ -20,5 +20,5 @@ COPY add-certificates.sh /add-certificates.sh
 COPY java-config-docker-entrypoint.sh /docker-entrypoint.sh
 COPY common-docker.yml /config/common-docker.yml
 COPY ${JAR_FILE} app.jar
-COPY cards-consultation-docker.yml /config/
+COPY cards-consultation-docker.yml /config/application-docker.yml
 ENTRYPOINT ["/docker-entrypoint.sh"]

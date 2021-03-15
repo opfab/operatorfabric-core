@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,16 +10,15 @@
 
 const templateGateway = {
     opfabEntityNames : null, 
-
-    validyForm: function(formData=null) {
-        console.log(new Date().toISOString() , ` Template.js : no validyForm method define in template , valid set to true`);
-        return this.isValid = undefined;
-    },
+    childCards: [],
 
     setEntityNames: function(entityNames){
         this.opfabEntityNames = entityNames;
        },
+
        
+    // UTILITIES FOR TEMPLATE 
+
     getEntityName: function(entityId) {
         if (!this.opfabEntityNames) {
             console.log(new Date().toISOString() , ` Template.js : no entities information loaded`);
@@ -32,12 +31,43 @@ const templateGateway = {
         return this.opfabEntityNames.get(entityId);
     },
 
+    redirectToBusinessMenu: function(menuId,menuItemId,params){
+        const urlSplit = document.location.href.split('#');
+        var  newUrl =  urlSplit[0] + '#/businessconfigparty/' + menuId + '/' + menuItemId ;
+        if (!!params) newUrl +=  '?' + params;
+        document.location.href = newUrl;
+    },
+
+
+    //
+    // FUNCTIONS TO OVERRIDE BY TEMPLATES 
+    //
+    // Opfab call this function to inform the template that the card is locked 
     lockAnswer: function() {},
-    applyChildCards: function() {},
+
+    // Opfab call this function to inform the template that the card is unlocked 
     unlockAnswer: function() {},
+    
+    // Opfab call this function to inform that the template has to apply child cards (called after template rendering and after change in child cards)
+    applyChildCards: function() {},
+
+    // Opfab call this function when lttd expire with expired set to true 
     setLttdExpired: function(expired) {},
+
+    // Opfab call this method to inform the template of the size of the screen dedicated to the card 
+    // size = 'md' for standard size 
+    // size = 'lg' for large size , i.e when the card is in full screen mode
     setScreenSize: function(size) {},
-    childCards: []
+
+    // Opfab call this method to tell the template if the user can respond to the card
+    // responseEnabled set to true if possible , false otherwise 
+    setUserCanRespond: function(responseEnabled) {},
+
+    // Opfab call this method to get the form result when user want to send response 
+    validyForm: function() {
+        console.log(new Date().toISOString() , ` Template.js : no validyForm method define in template , valid set to true`);
+        return this.isValid = undefined;
+    }
     
 };
 

@@ -26,11 +26,9 @@ public class UserCardProcessorImpl implements UserCardProcessor {
 
         Optional<List<String>> entitiesUser= Optional.ofNullable(user.getUserData().getEntities());
 
-        //take first entity of the user as the card publisher id
-        if(entitiesUser.isPresent() && !entitiesUser.get().isEmpty()) {
-            card.setPublisher(entitiesUser.get().get(0));
-            return entitiesUser.get().get(0);
-
+        //Check thah publisher is included in user entities
+        if(entitiesUser.isPresent() && !entitiesUser.get().isEmpty() && entitiesUser.get().contains(card.getPublisher()) ) {
+            return card.getPublisher();
         }
         //no possible calculation of publisher id from card and user arguments,
         // throw a runtime exception to be handled by Mono.onErrorResume()

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,6 +31,7 @@ import {TimeService} from '@ofServices/time.service';
 import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
 import { FeedSortComponent } from './components/card-list/filters/feed-sort/feed-sort.component';
 import { LightCardModule } from 'app/modules/share/light-card/light-card.module';
+import {TimelineButtonsModule} from "../share/timeline-buttons/timeline-buttons.module";
 
 @NgModule({
     imports: [
@@ -45,7 +46,8 @@ import { LightCardModule } from 'app/modules/share/light-card/light-card.module'
         CardsModule,
         DatetimeFilterModule,
         FeedRoutingModule,
-        LightCardModule
+        LightCardModule,
+        TimelineButtonsModule
     ],
     declarations: [CardListComponent,
         FeedComponent,

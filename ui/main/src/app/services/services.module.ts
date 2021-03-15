@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)Copyright (c) 2020, RTEi (http://www.rte-international.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * Copyright (c) 2020, RTEi (http://www.rte-international.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -27,7 +27,6 @@ import {GlobalStyleService} from '@ofServices/global-style.service';
 import {AppService} from './app.service';
 import {GroupsService} from './groups.service';
 import {EntitiesService} from './entities.service';
-import {ExportService} from './export.service';
 import {ReminderService} from '@ofServices/reminder/reminder.service';
 
 @NgModule({
@@ -38,7 +37,6 @@ import {ReminderService} from '@ofServices/reminder/reminder.service';
         ConfigService,
         SettingsService,
         CardService,
-        ExportService,
         AuthenticationService,
         TimeService,
         ProcessesService,

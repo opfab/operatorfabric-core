@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: OperatorFabric User Management API
-  version: 2.1.0.RELEASE
+  version: 2.2.0.RELEASE
   title: User Management
   termsOfService: ''
   contact:
@@ -99,6 +99,8 @@ definitions:
         type: string
       description:
         type: string
+      entityAllowedToSendCard:
+        type: boolean
       parents:
         type: array
         items:

@@ -62,7 +62,6 @@ found under *src/docs/asciidoc/docs* in the link:{opfab_core_repo}[operatorfabri
 
 . In the link:{opfab_core_repo}[operatorfabric-core repository] release-notes.adoc file, replace the `Version SNAPSHOT`
 title by `Version X.X.X.RELEASE`
-//TODO Make that part of prepare version script
 
 . In the link:{jira_release_page}[releases page on JIRA], change the name from "Next Version" to "X.X.X.RELEASE"
 

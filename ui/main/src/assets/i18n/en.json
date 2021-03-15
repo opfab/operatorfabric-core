@@ -89,7 +89,9 @@
       "acknowledged": "Acknowledged",
       "lttd": "Time remaining to decide"
     },
-    "received": "Received at {{time}}"
+    "received": "Received on",
+    "at": "at",
+    "from" : "from"
   },
   "login": {
     "reset": "Reset",
@@ -128,10 +130,6 @@
   },
   "archive": {
     "filters": {
-      "service": "SERVICE",
-      "process": "PROCESS",
-      "state": "STATE",
-      "tags": "TAGS",
       "publishDateFrom": "PUBLISH FROM",
       "publishDateTo": "PUBLISH TO",
       "activeFrom": "ACTIVE FROM",
@@ -143,26 +141,22 @@
       "businessPeriod" : "BUSINESS PERIOD",
       "title" : "TITLE",
       "summary": "SUMMARY",
-      "service": "SERVICE"
+      "processGroup": "SERVICE"
     },
     "noResult": "Your search did not match any results.",
     "exportToExcel" : "Export data",
-    "resultsNumber":"Results number",
-    "selectServiceText": "Select a Service",
-    "selectProcessText": "Select a Process",
-    "selectStateText": "Select a State",
-    "selectTagText": "Select a Tag"
+    "resultsNumber":"Results number"
   },
   "logging": {
     "filters": {
-      "process": "PROCESS",
-      "selectProcessText": "Select a Process"
+      "process": "PROCESS"
     },
     "timeOfAction": "TIME OF ACTION",
     "title": "TITLE",
     "summary": "SUMMARY",
     "description": "DESCRIPTION",
     "sender": "ACTOR",
+    "processGroup": "SERVICE",
     "noResult": "Your search did not match any results.",
     "ExportTOExcel": "Export data",
     "resultsNumber":"Results number"
@@ -172,14 +166,23 @@
     "showFilters" : "Show Filters",
     "noSelection" : "NA",
     "filters": {
-      "process": "PROCESS",
-      "selectProcessText": "Select a Process"
+      "processGroup" : "SERVICE",
+      "selectProcessGroupText" : "Select a Service",
+      "process" : "PROCESS",
+      "selectProcessText" : "Select a Process",
+      "typeOfState" : {
+        "typeOfState" : "PROCESS STATUS",
+        "selectTypeOfStateText" : "Select a Process status",
+        "INPROGRESS" : "IN PROGRESS",
+        "FINISHED": "FINISHED",
+        "CANCELED" : "CANCELED"
+      }
     },
     "time": "TIME",
     "businessPeriod": "BUSINESS PERIOD",
     "title": "TITLE",
     "summary": "SUMMARY",
-    "status": "STATUS",
+    "typeOfState": "PROCESS STATUS",
     "severity": "SEVERITY",
     "seeDetails": "SEE DETAILS",
     "ExportTOExcel": "Export data"
@@ -215,7 +218,7 @@
     },
     "filters": {
       "severity": "SEVERITY",
-      "service": "SERVICE",
+      "processGroup": "SERVICE",
       "process": "PROCESS",
       "state": "STATE",
       "startDate":  "START DATE",
@@ -276,15 +279,27 @@
         "id": "Id",
         "name": "Name",
         "description": "Description",
+        "perimeters" : "Perimeters",
         "confirmDelete": "Do you really want to delete group",
         "add": "Add new group"
       },
       "entity": {
         "id": "Id",
         "name": "Name",
+        "parents": "Parent Entities",
         "description": "Description",
+        "entityAllowedToSendCard": "Card sending allowed",
         "confirmDelete": "Do you really want to delete entity",
         "add": "Add new entity"
+      },
+      "perimeter": {
+        "id": "Id",
+        "process": "Process",
+        "stateRights": "State Rights",
+        "state": "State",
+        "right": "Right",
+        "confirmDelete": "Do you really want to delete perimeter",
+        "add":"Add new perimeter"
       },
       "user": {
         "login": "Login",
@@ -303,7 +318,8 @@
       "confirm": "Please confirm...",
       "login": {
         "required": "Login is required.",
-        "minLength": "Login should be minimum 4 characters."
+        "minLength": "Login should be minimum 4 characters.",
+        "pattern": "Login should only contain the following characters: letters, _, - or digits."
       },
       "firstName": {
         "required": "First name is required."
@@ -314,6 +330,7 @@
       "id": {
         "required": "Id is required.",
         "minLength": "Id should be minimum 2 characters.",
+        "pattern": "Id should only contain the following characters: letters, _, - or digits.",
         "label":"Id"
       },
       "name": {
@@ -321,15 +338,17 @@
         "label":"Name"
       },
       "description": "Description",
-      "lines": "lines per page"
+      "lines": "lines per page",
+      "entityAllowedToSendCard": "Card sending allowed"
     },
     "tabs": {
-      "users": "Users management",
-      "groups": "Groups management",
-      "entities": "Entities management"
+      "users": "Users Management",
+      "groups": "Groups Management",
+      "entities": "Entities Management",
+      "perimeters": "Perimeters Management"
     }
   },
-  "service": {
+  "processGroup": {
     "defaultLabel": "--"
   },
   "ag-grid": {
@@ -347,5 +366,15 @@
     "to": "to",
     "of": "of",
     "page": "Page"
+  },
+  "filters": {
+    "processGroup": "SERVICE",
+    "process": "PROCESS",
+    "state": "STATE",
+    "tags": "TAGS",
+    "selectProcessGroupText": "Select a Service",
+    "selectProcessText": "Select a Process",
+    "selectStateText": "Select a State",
+    "selectTagText": "Select a Tag"
   }
 }

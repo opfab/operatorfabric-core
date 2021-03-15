@@ -1,0 +1,113 @@
+Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespond set
+
+  Background:
+   #Getting token for admin and operator1 user calling getToken.feature
+    * def signInAsTSO = call read('../common/getToken.feature') { username: 'operator1'}
+    * def authTokenAsTSO = signInAsTSO.authToken
+
+
+  Scenario: Push cards with compliant values of entitiesAllowedToRespond and entitiesRequiredToRespond
+
+    * def card1 =
+"""
+{
+	"publisher" : "api_test",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process1",
+	"state": "messageState",
+	"groupRecipients": ["Dispatcher"],
+	"entitiesAllowedToRespond": ["ENTITY1"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"new message"}
+}
+"""
+
+# Push card with only entitiesAllowedToRespond set
+    Given url opfabPublishCardUrl + 'cards'
+    And request card1
+    When method post
+    Then status 201
+    And match response.count == 1
+
+    * def card2 =
+"""
+{
+	"publisher" : "api_test",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process1",
+	"state": "messageState",
+	"groupRecipients": ["Dispatcher"],
+	"entitiesAllowedToRespond": ["ENTITY1","ENTITY2","ENTITY3"],
+	"entitiesRequiredToRespond": ["ENTITY1","ENTITY2"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"new message"}
+}
+"""
+
+# Push card with entitiesAllowedToRespond set and entitiesRequiredToRespond set to a subset of entitiesAllowedToRespond
+    Given url opfabPublishCardUrl + 'cards'
+    And request card2
+    When method post
+    Then status 201
+    And match response.count == 1
+
+  Scenario: Push cards non-compliant values of entitiesAllowedToRespond and entitiesRequiredToRespond
+
+    * def card3 =
+"""
+{
+	"publisher" : "api_test",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process1",
+	"state": "messageState",
+	"groupRecipients": ["Dispatcher"],
+	"entitiesRequiredToRespond": ["ENTITY3"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"new message"}
+}
+"""
+
+# Push card with only entitiesRequiredToRespond set
+    Given url opfabPublishCardUrl + 'cards'
+    And request card3
+    When method post
+    Then status 201
+    And match response.count == 0
+
+    * def card4 =
+"""
+{
+	"publisher" : "api_test",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process1",
+	"state": "messageState",
+	"groupRecipients": ["Dispatcher"],
+	"entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
+	"entitiesRequiredToRespond": ["ENTITY2","ENTITY3"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"new message"}
+}
+"""
+
+# Push card with both properties set but with entitiesRequiredToRespond containing entities that are not in entitiesAllowedToRespond
+    Given url opfabPublishCardUrl + 'cards'
+    And request card4
+    When method post
+    Then status 201
+    And match response.count == 0

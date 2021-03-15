@@ -11,16 +11,16 @@
     <form [formGroup]="messageForm" class="opfab-form-lighter">
         <div class="row">
 
-            <div class="col" *ngIf="displayServiceFilter()">
-                <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="service"
-                    [values]="serviceOptions"></of-single-filter>
+            <div class="col" *ngIf="displayProcessGroupFilter()">
+                <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="processGroup"
+                    [values]="processGroupOptions"></of-single-filter>
             </div>
             <div class="col">
-                <of-single-filter [hidden]="displayServiceFilter()" i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
-                    [values]="processOptions"></of-single-filter>
+                <of-single-filter [hidden]="displayProcessGroupFilter()" i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
+                                  [values]="processOptions"></of-single-filter>
 
-                <of-single-filter [hidden]="! displayServiceFilter()" i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
-                                  [values]="processOptionsWhenSelectedService"></of-single-filter>
+                <of-single-filter [hidden]="! displayProcessGroupFilter()" i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
+                                  [values]="processOptionsWhenSelectedProcessGroup"></of-single-filter>
             </div>
             <div class="col">
                 <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="state"
@@ -87,7 +87,7 @@
     <br />
     <div style="text-align: center;width:100%">
         <button id="opfab-usercard-btn-cancel" class="opfab-btn-cancel" (click)="cancel()" translate> userCard.refuse</button>
-        <button id="opfab-usercard-btn-prepareCard" type="button" class="opfab-btn" [disabled]="!selectedProcess" (click)="onSubmitForm(resumeCardBeforeSend)" translate>
+        <button id="opfab-usercard-btn-prepareCard" type="button" class="opfab-btn" [disabled]="!selectedProcess" (click)="prepareCard()" translate>
             userCard.prepareCard
 
         </button>

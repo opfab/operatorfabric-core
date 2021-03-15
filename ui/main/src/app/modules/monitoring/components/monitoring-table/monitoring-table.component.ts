@@ -22,6 +22,7 @@ import {LoadCard} from '@ofActions/card.actions';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
+import {ProcessesService} from "@ofServices/processes.service";
 
 @Component({
     selector: 'of-monitoring-table',
@@ -32,6 +33,7 @@ export class MonitoringTableComponent implements OnDestroy {
 
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
     @Input() result: LineOfMonitoringResult[];
+    @Input() displayProcessGroupColumn: boolean;
     exportMonitoringData: Array<any> = [];
     unsubscribe$: Subject<void> = new Subject<void>();
     modalRef: NgbModalRef;
@@ -39,9 +41,9 @@ export class MonitoringTableComponent implements OnDestroy {
 
     constructor(readonly timeService: TimeService
                 , private translate: TranslateService
-                , private exportService: ExportService
                 , private store: Store<AppState>
                 , private modalService: NgbModal
+                , private processesService: ProcessesService
     ) {
     }
 
@@ -59,51 +61,57 @@ export class MonitoringTableComponent implements OnDestroy {
         this.exportMonitoringData = [];
         let time: string, businessPeriod: string, processName: any, title: any, summary: any, status: any;
 
-        const timeColumnName = this.translateColomn('monitoring.time');
-        const businessPeriodColumnName = this.translateColomn('monitoring.businessPeriod');
-        const processColumnName = this.translateColomn('monitoring.filters.process');
-        const titleColumnName = this.translateColomn('monitoring.title');
-        const summaryColumnName = this.translateColomn('monitoring.summary');
-        const statusColumnName = this.translateColomn('monitoring.status');
-        const severityColumnName = this.translateColomn('monitoring.severity');
+        const timeColumnName = this.translateColumn('monitoring.time');
+        const businessPeriodColumnName = this.translateColumn('monitoring.businessPeriod');
+        const processGroupColumnName = this.translateColumn('monitoring.filters.processGroup');
+        const processColumnName = this.translateColumn('monitoring.filters.process');
+        const titleColumnName = this.translateColumn('monitoring.title');
+        const summaryColumnName = this.translateColumn('monitoring.summary');
+        const typeOfStateColumnName = this.translateColumn('monitoring.typeOfState');
+        const severityColumnName = this.translateColumn('monitoring.severity');
 
         this.result.forEach((line: LineOfMonitoringResult) => {
             if (typeof line !== undefined) {
-                time = this.displayTime(line.creationDateTime);
-                businessPeriod = this.displayTime(line.beginningOfBusinessPeriod).concat(this.displayTime(line.endOfBusinessPeriod));
-                processName = this.translateColomn(line.processName);
-                title = this.translateColomn(line.title.key, line.title.parameters);
-                summary = this.translateColomn(line.summary.key, line.summary.parameters);
-                status = this.translateColomn(line.coordinationStatus);
-
-                this.exportMonitoringData.push({
-                    [timeColumnName]: time,
-                    [businessPeriodColumnName]: businessPeriod,
-                    [processColumnName]: processName,
-                    [titleColumnName]: title,
-                    [summaryColumnName]: summary,
-                    [statusColumnName]: status,
-                    [severityColumnName]: line.severity
-                });
+                if (this.displayProcessGroupColumn)
+                    this.exportMonitoringData.push({
+                        [timeColumnName]: this.displayTime(line.creationDateTime),
+                        [businessPeriodColumnName]: this.displayTime(line.beginningOfBusinessPeriod).concat(this.displayTime(line.endOfBusinessPeriod)),
+                        [processGroupColumnName]: this.translateColumn(this.processesService.findProcessGroupLabelForProcess(line.processId)),
+                        [processColumnName]: this.translateColumn(line.processName),
+                        [titleColumnName]: this.translateColumn(line.title.key, line.title.parameters),
+                        [summaryColumnName]: this.translateColumn(line.summary.key, line.summary.parameters),
+                        [typeOfStateColumnName]: this.translateColumn('monitoring.filters.typeOfState.' + line.typeOfState),
+                        [severityColumnName]: line.severity
+                    });
+                else
+                    this.exportMonitoringData.push({
+                        [timeColumnName]: this.displayTime(line.creationDateTime),
+                        [businessPeriodColumnName]: this.displayTime(line.beginningOfBusinessPeriod).concat(this.displayTime(line.endOfBusinessPeriod)),
+                        [processColumnName]: this.translateColumn(line.processName),
+                        [titleColumnName]: this.translateColumn(line.title.key, line.title.parameters),
+                        [summaryColumnName]: this.translateColumn(line.summary.key, line.summary.parameters),
+                        [typeOfStateColumnName]: this.translateColumn('monitoring.filters.typeOfState.' + line.typeOfState),
+                        [severityColumnName]: line.severity
+                    });
             }
         });
     }
 
     export(): void {
         this.initExportMonitoringData();
-        this.exportService.exportAsExcelFile(this.exportMonitoringData, 'Monitoring');
+        ExportService.exportAsExcelFile(this.exportMonitoringData, 'Monitoring');
     }
 
-    translateColomn(key: string | Array<string>, interpolateParams?: Object): any {
-        let translatedColomn: number;
+    translateColumn(key: string | Array<string>, interpolateParams?: Object): any {
+        let translatedColumn: number;
 
         this.translate.get(key, interpolateParams)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((translate) => {
-                translatedColomn = translate;
+                translatedColumn = translate;
             });
 
-        return translatedColomn;
+        return translatedColumn;
     }
 
     ngOnDestroy() {
@@ -118,7 +126,6 @@ export class MonitoringTableComponent implements OnDestroy {
             size: 'fullscreen'
         };
         this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
-
     }
 
 }

@@ -7,7 +7,7 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <div>
-        <of-monitoring-filters
+        <of-monitoring-filters #filters
                 [processData]="processValueForFilter"
         ></of-monitoring-filters>
 </div>
@@ -15,7 +15,9 @@
 <div style="height:5%"> </div>
 
 <div *ngIf="(monitoringResult$|async) as line ; else noResult" style="margin-left:5%;margin-right:5%">
-    <of-monitoring-table [result]="monitoringResult$|async"></of-monitoring-table>
+    <of-monitoring-table [result]="monitoringResult$|async"
+                         [displayProcessGroupColumn]="this.filters.displayProcessGroupsFilter()">
+    </of-monitoring-table>
 </div>
 
 <ng-template #noResult>

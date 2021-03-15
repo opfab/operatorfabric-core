@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -228,11 +228,11 @@ public class TestUtilities {
             result = (
                     //Case 1: Card start date is included in query filter range
                     (cardStart.compareTo(rangeStart) >= 0 && cardStart.compareTo(rangeEnd) <= 0) ||
-                            //Case 2: Card start date is before start of query filter range
-                            (cardStart.compareTo(rangeStart) <= 0 && (cardEnd == null || cardEnd.compareTo(rangeStart) >= 0))
+                            //Case 2: Card start date is before start of query filter range and end date after start of query filter
+                            (cardStart.compareTo(rangeStart) <= 0 && cardEnd.compareTo(rangeStart) >= 0)
             );
         } else if (rangeStart != null) {
-            result = ((cardEnd == null) || cardEnd.compareTo(rangeStart) >= 0);
+            result = cardStart.compareTo(rangeStart) >= 0 || cardEnd.compareTo(rangeStart) >= 0;
         } else if (rangeEnd != null) {
             result = cardStart.compareTo(rangeEnd) <= 0;
         }
@@ -291,8 +291,6 @@ public class TestUtilities {
         return false;
     }
 
-    //TODO Method to check if a flux of pages are sorted
-//
     public static CardConsultationData configureRecipientReferencesAndStartDate(CardConsultationData card, String user, Instant startDate, String[] groups, String[] entities) {
         card.setStartDate(startDate);
         card.setGroupRecipients(groups != null ? Arrays.asList(groups) : null);

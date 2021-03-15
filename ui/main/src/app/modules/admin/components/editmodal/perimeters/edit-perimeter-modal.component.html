@@ -1,0 +1,76 @@
+<!-- Copyright (c) 2020, RTEi (http://www.rte-international.com)           -->
+<!-- Copyright (c) 2021, RTE (http://www.rte-france.com)                   -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<div class="modal-content">
+  <div class="modal-header">
+    <span class="modal-title" *ngIf="row">{{row.id}}</span>
+    <span class="modal-title" *ngIf="!row" translate>admin.input.perimeter.add</span>
+    <button id="opfab-admin-edit-perimeter-btn-close" (click)="dismissModal('Cross click')" type="button" class="close" data-dismiss="modal"
+            aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="perimeterForm" class="opfab-form-lighter">
+      <div class="container">
+        <div class="col">
+
+          <div *ngIf="!row" class="opfab-input row">
+            <label for="id" translate>admin.input.perimeter.id</label>
+            <input formControlName="id" name="id" id="id" type="text">
+          </div>
+
+          <div *ngIf="id.invalid" class="row alert alert-danger">
+            <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
+            <div *ngIf="id.errors.minlength" translate>admin.input.id.minLength</div>
+            <div *ngIf="id.errors.pattern" translate>admin.input.id.pattern</div>
+          </div>
+
+          <div class="row">
+            <of-single-filter i18nRootLabelKey="admin.input.perimeter." [parentForm]="perimeterForm" filterPath="process"
+                              [values]="processOptions" [prefixWithValue]=true style="position:relative"></of-single-filter>
+          </div>
+
+        </div>
+
+        <form [formGroup]="perimeterForm">
+          <div formArrayName="stateRights">
+            <div class="row" *ngFor="let stateRight of perimeterForm.get('stateRights')['controls']; let i = index"
+                 [formGroupName]="i">
+              <div class="col-7">
+                <of-single-filter i18nRootLabelKey="admin.input.perimeter." [parentForm]="stateRight" filterPath="state"
+                                  [values]="stateOptions" [prefixWithValue]=true></of-single-filter>
+              </div>
+              <div class="col-3">
+                <of-single-filter i18nRootLabelKey="admin.input.perimeter." [parentForm]="stateRight" filterPath="right"
+                                  [values]="rightOptions"></of-single-filter>
+              </div>
+              <div class="col icons">
+                <em class="far fa-trash-alt" (click)="removeOrClearStateRight(i)"></em>
+              </div>
+              <div class="col icons">
+                <em class="fas fa-plus-circle" (click)="addStateRightFormGroup()"></em>
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </form>
+
+    <div class="modal-footer" style="border-top: none">
+      <button id="opfab-admin-perimeter-btn-close" type="button" (click)="dismissModal('Cancel click')" class="opfab-btn-cancel" data-dismiss="modal"
+              translate>admin.input.close</button>
+      <button id="opfab-admin-perimeter-btn-add" [disabled]="!perimeterForm.valid" *ngIf="!row" (click)="create()" class="opfab-btn"
+              translate>admin.input.perimeter.add</button>
+      <button id="opfab-admin-perimeter-btn-save" [disabled]="!perimeterForm.valid" *ngIf="row" (click)="update()" class="opfab-btn"
+              translate>admin.input.save</button>
+    </div>
+  </div>
+</div>

@@ -37,3 +37,4 @@ The results of these queries are limited to cards that the user is allowed to se
 
 If a card is sent to an entity and a group, then this user must be part of both the group and the entity.
 
+NOTE: Currently, child cards are not shown in the Archives, only the parent card is shown.

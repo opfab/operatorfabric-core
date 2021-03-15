@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 
 package org.lfenergy.operatorfabric.users.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,7 +37,10 @@ public class EntityData implements Entity {
     private String id;
     private String name;
     private String description;
-    @JsonIgnore
+
+    @Builder.Default
+    private Boolean entityAllowedToSendCard = true;
+
     private Set<String> parents;
 
     public EntityData(Entity entity) {
@@ -46,6 +48,7 @@ public class EntityData implements Entity {
         this.id = entity.getId();
         this.name = entity.getName();
         this.description = entity.getDescription();
+        this.entityAllowedToSendCard = entity.getEntityAllowedToSendCard();
         this.parents = entity.getParents().stream().collect(Collectors.toSet());
     }
 

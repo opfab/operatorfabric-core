@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -123,7 +123,7 @@ public class ArchivedCardRepositoryShould {
 
     @BeforeEach
     private void initCardData() {
-        //TODO Limit test data to what's really necessary
+
         int processNo = 0;
         //create past cards
         persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusTwo, nowMinusOne, login1, new String[]{"rte","operator"}, new String[]{"entity1","entity2"}));
@@ -377,7 +377,7 @@ public class ArchivedCardRepositoryShould {
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
-                    assertThat(page.getTotalElements()).isEqualTo(5);
+                    assertThat(page.getTotalElements()).isEqualTo(4);
                     assertThat(page.getTotalPages()).isEqualTo(1);
                     //Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
@@ -404,7 +404,7 @@ public class ArchivedCardRepositoryShould {
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
-                    assertThat(page.getTotalElements()).isEqualTo(7);
+                    assertThat(page.getTotalElements()).isEqualTo(5);
                     assertThat(page.getTotalPages()).isEqualTo(1);
                     //Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
@@ -428,7 +428,7 @@ public class ArchivedCardRepositoryShould {
         Instant start = nowPlusTwo;
 
         queryParams.add("activeFrom", Long.toString(start.toEpochMilli()));
-        queryParams.add("size","3");
+        queryParams.add("size","2");
 
         //Page 1
         queryParams.add("page","0");
@@ -436,11 +436,11 @@ public class ArchivedCardRepositoryShould {
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
-                    int expectedNbOfElements = 7;
+                    int expectedNbOfElements = 5;
                     assertThat(page.getTotalElements()).isEqualTo(expectedNbOfElements);
                     int expectedNbOfPages = 3;
                     assertThat(page.getTotalPages()).isEqualTo(expectedNbOfPages);
-                    int expectedNbOfElementsForTheFirstPage = 3;
+                    int expectedNbOfElementsForTheFirstPage = 2;
                     assertThat(page.getContent().size()).isEqualTo(expectedNbOfElementsForTheFirstPage);
                     //Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
@@ -457,11 +457,11 @@ public class ArchivedCardRepositoryShould {
         params = of(currentUser1,queryParams);
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
-                    int expectedNbOfElements = 7;
+                    int expectedNbOfElements = 5;
                     assertThat(page.getTotalElements()).isEqualTo(expectedNbOfElements);
                     int expectedNbOfPages = 3;
                     assertThat(page.getTotalPages()).isEqualTo(expectedNbOfPages);
-                    int expectedNbOfElementsForTheSecondPage = 3;
+                    int expectedNbOfElementsForTheSecondPage = 2;
                     assertThat(page.getContent().size()).isEqualTo(expectedNbOfElementsForTheSecondPage);
                     //Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
@@ -474,11 +474,12 @@ public class ArchivedCardRepositoryShould {
                 .verify();
 
         //Page 3
+
         queryParams.set("page","2");
         params = of(currentUser1,queryParams);
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
-                    int expectedNbOfElements = 7;
+                    int expectedNbOfElements = 5;
                     assertThat(page.getTotalElements()).isEqualTo(expectedNbOfElements);
                     int expectedNbOfPages = 3;
                     assertThat(page.getTotalPages()).isEqualTo(expectedNbOfPages);
@@ -545,7 +546,7 @@ public class ArchivedCardRepositoryShould {
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
-                    assertThat(page.getTotalElements()).isEqualTo(4);
+                    assertThat(page.getTotalElements()).isEqualTo(3);
                     assertThat(page.getTotalPages()).isEqualTo(1);
                     //Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
@@ -646,7 +647,5 @@ public class ArchivedCardRepositoryShould {
                 .verify();
 
     }
-
-    //TODO Add test to make sure results are ordered between pages
 
 }

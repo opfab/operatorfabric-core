@@ -40,16 +40,16 @@ import {LightCard, Severity} from '@ofModel/light-card.model';
 import {AppService, PageType} from '@ofServices/app.service';
 import {User} from '@ofModel/user.model';
 import {Map} from '@ofModel/map';
-import {RightsEnum, userRight} from '@ofModel/userWithPerimeters.model';
+import {userRight} from '@ofModel/userWithPerimeters.model';
 import {ClearLightCardSelection, UpdateALightCard} from '@ofStore/actions/light-card.actions';
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
-import {Entity} from '@ofModel/entity.model';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {ConfigService} from '@ofServices/config.service';
 import {TimeService} from '@ofServices/time.service';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {MessageLevel} from '@ofModel/message.model';
+import {RightsEnum} from '@ofModel/perimeter.model';
 
 
 declare const templateGateway: any;
@@ -69,6 +69,7 @@ class FormResult {
     valid: boolean;
     errorMsg: string;
     formData: any;
+    responseState?: string;
 }
 
 const enum ResponseI18nKeys {
@@ -118,12 +119,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     public isActionEnabled = false;
     public lttdExpiredIsTrue: boolean;
-    public cardStateName: string;
     public hasAlreadyResponded = false;
 
     unsubscribe$: Subject<void> = new Subject<void>();
     public hrefsOfCssLink = new Array<SafeResourceUrl>();
-    private _listEntitiesToRespond = new Array<EntityMessage>();
+    private _listEntitiesToRespondForHeader = new Array<EntityMessage>();
     private _userEntitiesAllowedToRespond: string[];
     private _htmlContent: SafeHtml;
     private _userContext: UserContext;
@@ -139,11 +139,16 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public showActionButton = false;
     public showEditAndDeleteButton = false ;
     public showDetailCardHeader = false;
+    public fromEntity = null;
     private cardSetToReadButNotYetOnUI;
 
     modalRef: NgbModalRef;
 
     public displayDeleteResult = false;
+
+    private static compareRightAction(userRights: RightsEnum, rightsAction: RightsEnum): boolean {
+        return (userRight(userRights) - userRight(rightsAction)) === 0;
+    }
 
     constructor(private element: ElementRef,
                 private businessconfigService: ProcessesService,
@@ -164,13 +169,13 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     open(content) {
-        const modalOptions = { windowClass : "opfab-modal-content"}
+        const modalOptions = { windowClass : 'opfab-modal-content'};
         this.modalRef = this.modalService.open(content, modalOptions);
     }
 
     adaptTemplateSize() {
         const cardTemplate = document.getElementById('div-card-template');
-        if (!!cardTemplate) {  
+        if (!!cardTemplate) {
             const diffWindow = cardTemplate.getBoundingClientRect();
             const divBtn = document.getElementById('div-detail-btn');
 
@@ -183,7 +188,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
             cardTemplate.style.height = `${cardTemplateHeight}px`;
             cardTemplate.style.overflowX = 'hidden';
-        }  
+        }
     }
 
     ngAfterViewChecked() {
@@ -249,9 +254,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private setButtonsVisibility() {
-        if (this._appService.pageType === PageType.ARCHIVE) this.showButtons = false;
-        else this.showButtons = true;
-        if ((this._appService.pageType !== PageType.CALENDAR)&& (this._appService.pageType !== PageType.MONITORING)) {
+        this.showButtons = this._appService.pageType !== PageType.ARCHIVE;
+        if ((this._appService.pageType !== PageType.CALENDAR) && (this._appService.pageType !== PageType.MONITORING)) {
             this.showMaxAndReduceButton = true;
         }
         this.showCloseButton = true;
@@ -263,7 +267,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     ngDoCheck() {
         const previous = this.lttdExpiredIsTrue;
         this.checkLttdExpired();
-        if (previous != this.lttdExpiredIsTrue) {
+        if (previous !== this.lttdExpiredIsTrue) {
             templateGateway.setLttdExpired(this.lttdExpiredIsTrue);
         }
     }
@@ -292,15 +296,13 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         return this.card.hasBeenAcknowledged ? AckI18nKeys.BUTTON_TEXT_UNACK : AckI18nKeys.BUTTON_TEXT_ACK;
     }
 
-
-
-    getPublishDateTranslationParams(): any {
-        const param = {
-            'time': this.time.formatDateTime(this.card.publishDate)
-        }
-        return param;
+    getFormattedPublishDate(): any {
+        return  this.time.formatDate(this.card.publishDate);
     }
 
+    getFormattedPublishTime(): any {
+        return  this.time.formatTime(this.card.publishDate);
+    }
 
     submitResponse() {
 
@@ -314,7 +316,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 processVersion: this.card.processVersion,
                 process: this.card.process,
                 processInstanceId: `${this.card.processInstanceId}_${this.getUserEntityToRespond()}`,
-                state: this._responseData.state,
+                state: formResult.responseState ? formResult.responseState : this._responseData.state,
                 startDate: this.card.startDate,
                 endDate: this.card.endDate,
                 severity: Severity.INFORMATION,
@@ -336,6 +338,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                     rep => {
                         if (rep['count'] === 0 && rep['message'].includes('Error')) {
                             this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
+                            console.error(rep['message']);
                         } else {
                           this.hasAlreadyResponded = true;
                           templateGateway.lockAnswer();
@@ -394,12 +397,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     markAsReadIfNecessary() {
         if (this.card.hasBeenRead === false) {
-            // we do not set the card as read in the UI yet , as we want to keep 
-            // the card as unread in the feed 
-            // we will set it read in the UI and in the feed when 
+            // we do not set the card as read in the UI yet , as we want to keep
+            // the card as unread in the feed
+            // we will set it read in the UI and in the feed when
             //  - we close the card
             //  - we exit the feed (i.e destroy the card)
-            //  - we change card 
+            //  - we change card
 
             this.cardSetToReadButNotYetOnUI = this.card;
             this.cardService.postUserCardRead(this.card.uid).subscribe();
@@ -420,8 +423,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         if (this.parentModalRef)  {
             this.parentModalRef.close();
             this.store.dispatch(new ClearLightCardSelection());
-        }
-        else this._appService.closeDetails(this.currentPath);
+        } else this._appService.closeDetails(this.currentPath);
     }
 
     // for certain types of template , we need to reload it to take into account
@@ -440,32 +442,58 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.markAsReadIfNecessary();
 
         this.message = {display: false, text: undefined, className: undefined};
-        
+
         if (this._responseData != null && this._responseData !== undefined) {
             this.setEntitiesToRespond();
             this.setIsActionEnabled();
         }
         this.setButtonsVisibility();
         this.setShowDetailCardHeader();
-        
+        this.computeFromEntity();
+
     }
 
     private setEntitiesToRespond() {
-        this._listEntitiesToRespond = new Array<EntityMessage>();
+        this._listEntitiesToRespondForHeader = new Array<EntityMessage>();
         this._userEntitiesAllowedToRespond = [];
+
         if (this.card.entitiesAllowedToRespond) {
-            this.card.entitiesAllowedToRespond.forEach(entity => {
-                const entityName = this.getEntityName(entity);
-                if (entityName) {
-                    this._listEntitiesToRespond.push(
-                        {
-                            name: entityName.name,
-                            color: this.checkEntityAnswered(entity) ? EntityMsgColor.GREEN : EntityMsgColor.ORANGE
-                        });
-                }
-            });
-            this._userEntitiesAllowedToRespond = this.card.entitiesAllowedToRespond.filter(x => this.user.entities.includes(x));
+
+            const entitiesAllowedToRespond = this.entitiesService.getEntitiesFromIds(this.card.entitiesAllowedToRespond);
+            const allowed = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond).map(entity => entity.id);
+            console.log(new Date().toISOString(), ' Detail card - entities allowed to respond = ', allowed);
+
+            // This will be overwritten by the block below if entitiesRequiredToRespond is set and not empty/null
+            // This is to avoid repeating the creation of the allowed list
+            this._listEntitiesToRespondForHeader = this.createEntityHeaderFromList(allowed);
+
+            this._userEntitiesAllowedToRespond = allowed.filter(x => this.user.entities.includes(x));
+            console.log(new Date().toISOString(), ' Detail card - users entities allowed to respond = ', this._userEntitiesAllowedToRespond);
+
         }
+
+        if(this.card.entitiesRequiredToRespond&&this.card.entitiesRequiredToRespond.length>0) {
+            const entitiesRequiredToRespond = this.entitiesService.getEntitiesFromIds(this.card.entitiesRequiredToRespond);
+            const required = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesRequiredToRespond).map(entity => entity.id);
+            this._listEntitiesToRespondForHeader = this.createEntityHeaderFromList(required);
+        }
+    }
+
+    /** @param entities as list of strings
+     * @return `EntityMessage` array (containing entity name and color based on response status)*/
+    private createEntityHeaderFromList(entities : string[]) {
+        const entityHeader = new Array<EntityMessage>();
+        entities.forEach(entity => {
+            const entityName = this.entitiesService.getEntityName(entity);
+            if (entityName) {
+                entityHeader.push(
+                    {
+                        name: entityName,
+                        color: this.checkEntityAnswered(entity) ? EntityMsgColor.GREEN : EntityMsgColor.ORANGE
+                    });
+            }
+        });
+        return entityHeader;
     }
 
     private setIsActionEnabled() {
@@ -475,6 +503,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             this.isActionEnabled = this.isUserInEntityAllowedToRespond();
         else
             this.isActionEnabled = (this.isUserInEntityAllowedToRespond() && this.doesTheUserHavePermissionToRespond());
+    }
+
+    private computeFromEntity()
+    {
+        if (this.card.publisherType === 'ENTITY' )  this.fromEntity = this.entitiesService.getEntityName(this.card.publisher);
+        else this.fromEntity = null;
     }
 
 
@@ -487,7 +521,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         return this._userEntitiesAllowedToRespond.length === 1;
     }
 
-    private getUserEntityToRespond() : string {
+    private getUserEntityToRespond(): string {
         return this._userEntitiesAllowedToRespond.length === 1 ? this._userEntitiesAllowedToRespond[0] : null;
     }
 
@@ -495,8 +529,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         let permission = false;
         this.userService.getCurrentUserWithPerimeters().computedPerimeters.forEach(perim => {
             if ((perim.process === this.card.process) && (perim.state === this._responseData.state)
-                && (this.compareRightAction(perim.rights, RightsEnum.Write)
-                    || this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
+                && (DetailComponent.compareRightAction(perim.rights, RightsEnum.Write)
+                    || DetailComponent.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
                 permission = true;
                 return true;
             }
@@ -505,7 +539,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private isAcknowledgmentAllowed(): boolean {
-        return (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS || 
+        return (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS ||
             (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER && !this.isActionEnabled));
     }
 
@@ -520,8 +554,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             userWithPerimeters.computedPerimeters.forEach(perim => {
                 if ((perim.process === this.card.process) &&
                     (perim.state === this.card.state)
-                    && (this.compareRightAction(perim.rights, RightsEnum.Write)
-                        || this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
+                    && (DetailComponent.compareRightAction(perim.rights, RightsEnum.Write)
+                        || DetailComponent.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
                     permission = true;
                     return true;
                 }
@@ -530,20 +564,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         return permission;
     }
 
-    private compareRightAction(userRights: RightsEnum, rightsAction: RightsEnum): boolean {
-        return (userRight(userRights) - userRight(rightsAction)) === 0;
-    }
-
     get listVisibleEntitiesToRespond() {
-        return this._listEntitiesToRespond.length > maxVisibleEntitiesToRespond ? this._listEntitiesToRespond.slice(0, maxVisibleEntitiesToRespond) : this._listEntitiesToRespond;
+        return this._listEntitiesToRespondForHeader.length > maxVisibleEntitiesToRespond ? this._listEntitiesToRespondForHeader.slice(0, maxVisibleEntitiesToRespond) : this._listEntitiesToRespondForHeader;
     }
 
     get listDropdownEntitiesToRespond() {
-        return this._listEntitiesToRespond.length > maxVisibleEntitiesToRespond ? this._listEntitiesToRespond.slice(maxVisibleEntitiesToRespond) : [];
-    }
-
-    getEntityName(id: string): Entity {
-        return this.entitiesService.getEntities().find(entity => entity.id === id);
+        return this._listEntitiesToRespondForHeader.length > maxVisibleEntitiesToRespond ? this._listEntitiesToRespondForHeader.slice(maxVisibleEntitiesToRespond) : [];
     }
 
     checkEntityAnswered(entity: string): boolean {
@@ -578,7 +604,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                         this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
                         setTimeout(() => { // wait for DOM rendering
                             this.reinsertScripts();
-                            setTimeout(() => { // wait for script loading before calling them in template 
+                            setTimeout(() => { // wait for script loading before calling them in template
                                 templateGateway.applyChildCards();
                                 if (this.hasAlreadyResponded) templateGateway.lockAnswer();
                                 if (this.card.lttd && this.lttdExpiredIsTrue) {
@@ -586,6 +612,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                                 }
 
                                 templateGateway.setScreenSize(this.screenSize);
+                                templateGateway.setUserCanRespond(this.isActionEnabled);
                             }, 10);
                         }, 10);
                     }, () => {
@@ -662,6 +689,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     editCard(): void {
+
+        // We close the card detail in the background to avoid interference when executing the template for the edition preview.
+        // Otherwise, this can cause issues with templates functions referencing elements by id as there are two elements with the same id
+        // in the document.
+        this.closeDetails();
+
         if (!!this.parentModalRef) this.parentModalRef.close();
 
         const options: NgbModalOptions = {
@@ -669,12 +702,26 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             backdrop: 'static'
         };
         this.modalRef = this.modalService.open(this.userCardTemplate, options);
-  
+
+        // Once the edition is complete or canceled, we reopen the card detail (see above).
+        this.modalRef.result.then(
+            () => { // If modal is closed
+                this._appService.reopenDetails(this.currentPath, this.card.id);
+            },
+            () => {
+                this._appService.reopenDetails(this.currentPath, this.card.id);
+            });
+
     }
 
     setFullScreen(active) {
         this.fullscreen = active;
-        templateGateway.setScreenSize(active? 'lg' : 'md');
+        templateGateway.setScreenSize(active ? 'lg' : 'md');
+    }
+
+    public isSmallscreen()
+    {
+      return (window.innerWidth <1000);
     }
 
     ngOnDestroy() {

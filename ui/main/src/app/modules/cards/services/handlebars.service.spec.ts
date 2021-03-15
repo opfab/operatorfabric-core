@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,29 +8,27 @@
  */
 
 
-
 import {getTestBed, TestBed} from '@angular/core/testing';
 
 import {ProcessesService} from '@ofServices/processes.service';
 import {HttpClientTestingModule, HttpTestingController, TestRequest} from '@angular/common/http/testing';
 import {environment} from '@env/environment';
-import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
-import {RouterTestingModule} from "@angular/router/testing";
-import {Store, StoreModule} from "@ngrx/store";
-import {appReducer, AppState} from "@ofStore/index";
-import {getOneRandomCard,AuthenticationImportHelperForSpecs, BusinessconfigI18nLoaderFactory} from "@tests/helpers";
-import {LightCard} from "@ofModel/light-card.model";
-import {ServicesModule} from "@ofServices/services.module";
-import {HandlebarsService} from "./handlebars.service";
-import {Guid} from "guid-typescript";
-import {I18n} from "@ofModel/i18n.model";
-import * as moment from "moment";
-import {UserContext} from "@ofModel/user-context.model";
-import {DetailContext} from "@ofModel/detail-context.model";
+import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
+import {RouterTestingModule} from '@angular/router/testing';
+import {Store, StoreModule} from '@ngrx/store';
+import {appReducer, AppState} from '@ofStore/index';
+import {AuthenticationImportHelperForSpecs, BusinessconfigI18nLoaderFactory, getOneRandomCard} from '@tests/helpers';
+import {LightCard} from '@ofModel/light-card.model';
+import {ServicesModule} from '@ofServices/services.module';
+import {HandlebarsService} from './handlebars.service';
+import {Guid} from 'guid-typescript';
+import {I18n} from '@ofModel/i18n.model';
+import * as moment from 'moment';
+import {UserContext} from '@ofModel/user-context.model';
+import {DetailContext} from '@ofModel/detail-context.model';
 
 function computeTemplateUri(templateName) {
     return `${environment.urls.processes}/testProcess/templates/${templateName}`;
-    //TODO OC-1009 Why is the pprocess hardcoded? It needs to match the one set by default in getOneRandomCard.
 }
 
 describe('Handlebars Services', () => {
@@ -87,6 +85,8 @@ describe('Handlebars Services', () => {
                 unsortedNumbers: [2, 1, 4, 0, 5, 3],
                 numberStrings: ['0', '1', '2', '3', '4', '5'],
                 arrays: [[], [0, 1, 2], ['0', '1', '2', '3']],
+                undefinedValue: undefined,
+                nullValue: null,
                 booleans: [false, true],
                 splitString: 'a.split.string',
                 pythons: {
@@ -140,51 +140,51 @@ describe('Handlebars Services', () => {
             });
         }
 
-        it('complile polyIf helper ==', (done) => {
+        it('compile polyIf helper ==', (done) => {
             expectIfCond(card, 'card.data.numbers.[0]', '==', 'card.data.numbers.[0]', 'true', done);
             expectIfCond(card, 'card.data.numbers.[0]', '==', 'card.data.numbers.[1]', 'false', done);
             expectIfCond(card, 'card.data.numbers.[0]', '==', 'card.data.numberStrings.[0]', 'true', done);
         });
-        it('complile polyIf helper ===', (done) => {
+        it('compile polyIf helper ===', (done) => {
             expectIfCond(card, 'card.data.numbers.[0]', '===', 'card.data.numbers.[0]', 'true', done);
             expectIfCond(card, 'card.data.numbers.[0]', '===', 'card.data.numberStrings.[0]', 'false', done);
         });
-        it('complile polyIf helper <', (done) => {
+        it('compile polyIf helper <', (done) => {
             // expectIfCond(card, 'card.data.numbers.[0]', '<', 'card.data.numbers.[1]', 'true');
             expectIfCond(card, 'card.data.numbers.[0]', '<', 'card.data.numberStrings.[1]', 'true', done);
             expectIfCond(card, 'card.data.numbers.[1]', '<', 'card.data.numbers.[0]', 'false', done);
             expectIfCond(card, 'card.data.numbers.[1]', '<', 'card.data.numbers.[1]', 'false', done);
         });
-        it('complile polyIf helper >', (done) => {
+        it('compile polyIf helper >', (done) => {
             expectIfCond(card, 'card.data.numbers.[1]', '>', 'card.data.numbers.[0]', 'true', done);
             expectIfCond(card, 'card.data.numbers.[1]', '>', 'card.data.numberStrings.[0]', 'true', done);
             expectIfCond(card, 'card.data.numbers.[0]', '>', 'card.data.numbers.[1]', 'false', done);
             expectIfCond(card, 'card.data.numbers.[1]', '>', 'card.data.numbers.[1]', 'false', done);
         });
-        it('complile polyIf helper <=', (done) => {
+        it('compile polyIf helper <=', (done) => {
             expectIfCond(card, 'card.data.numbers.[0]', '<=', 'card.data.numbers.[1]', 'true', done);
             expectIfCond(card, 'card.data.numbers.[0]', '<=', 'card.data.numberStrings.[1]', 'true', done);
             expectIfCond(card, 'card.data.numbers.[1]', '<=', 'card.data.numbers.[0]', 'false', done);
             expectIfCond(card, 'card.data.numbers.[1]', '<=', 'card.data.numbers.[1]', 'true', done);
             expectIfCond(card, 'card.data.numbers.[1]', '<=', 'card.data.numberStrings.[1]', 'true', done);
         });
-        it('complile polyIf helper >=', (done) => {
+        it('compile polyIf helper >=', (done) => {
             expectIfCond(card, 'card.data.numbers.[1]', '>=', 'card.data.numbers.[0]', 'true', done);
             expectIfCond(card, 'card.data.numbers.[1]', '>=', 'card.data.numberStrings.[0]', 'true', done);
             expectIfCond(card, 'card.data.numbers.[0]', '>=', 'card.data.numbers.[1]', 'false', done);
             expectIfCond(card, 'card.data.numbers.[1]', '>=', 'card.data.numbers.[1]', 'true', done);
             expectIfCond(card, 'card.data.numbers.[1]', '>=', 'card.data.numberStrings.[1]', 'true', done);
         });
-        it('complile polyIf helper !=', (done) => {
+        it('compile polyIf helper !=', (done) => {
             expectIfCond(card, 'card.data.numbers.[0]', '!=', 'card.data.numbers.[0]', 'false', done);
             expectIfCond(card, 'card.data.numbers.[0]', '!=', 'card.data.numbers.[1]', 'true', done);
             expectIfCond(card, 'card.data.numbers.[0]', '!=', 'card.data.numberStrings.[0]', 'false', done);
         });
-        it('complile polyIf helper !==', (done) => {
+        it('compile polyIf helper !==', (done) => {
             expectIfCond(card, 'card.data.numbers.[0]', '!==', 'card.data.numbers.[0]', 'false', done);
             expectIfCond(card, 'card.data.numbers.[0]', '!==', 'card.data.numberStrings.[0]', 'true', done);
         });
-        it('complile polyIf helper &&', (done) => {
+        it('compile polyIf helper &&', (done) => {
             expectIfCond(card, 'card.data.booleans.[0]', '&&', 'card.data.booleans.[0]', 'false', done);
             expectIfCond(card, 'card.data.booleans.[0]', '&&', 'card.data.numbers.[0]', 'false', done);
             expectIfCond(card, 'card.data.booleans.[0]', '&&', 'card.data.numberStrings.[0]', 'false', done);
@@ -193,7 +193,7 @@ describe('Handlebars Services', () => {
             expectIfCond(card, 'card.data.booleans.[1]', '&&', 'card.data.numbers.[2]', 'true', done);
             expectIfCond(card, 'card.data.booleans.[1]', '&&', 'card.data.numberStrings.[3]', 'true', done);
         });
-        it('complile polyIf helper ||', (done) => {
+        it('compile polyIf helper ||', (done) => {
             expectIfCond(card, 'card.data.booleans.[0]', '||', 'card.data.booleans.[0]', 'false', done);
             expectIfCond(card, 'card.data.booleans.[0]', '||', 'card.data.numbers.[0]', 'false', done);
             expectIfCond(card, 'card.data.booleans.[0]', '||', 'card.data.numberStrings.[0]', 'true', done);
@@ -216,7 +216,42 @@ describe('Handlebars Services', () => {
                 expect(call.request.method).toBe('GET');
                 call.flush('{{arrayAtIndexLength card.data.arrays 1}}');
             });
-        })
+        });
+
+        function expectConditionalAttribute(card, condition, attribute, expectedResult: string, done) {
+            const templateName = Guid.create().toString();
+            const testedExpression = `{{conditionalAttribute ${condition} ${attribute}}}`;
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
+                .subscribe((result) => {
+                    console.debug(`testing [${testedExpression}], result [${result}], expected [${expectedResult}]`);
+                    expect(result).toEqual(expectedResult,
+                        `Expected result to be ${expectedResult} when testing [${condition}]`);
+                    done();
+                });
+            let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
+            expect(calls.length).toEqual(1);
+            calls.forEach(call => {
+                expect(call.request.method).toBe('GET');
+                call.flush(testedExpression);
+            });
+        }
+
+        it('compile conditionalAttribute', (done) => {
+            // The attribute will show up if the property exists and is truthy
+            expectConditionalAttribute(card, 'card.data.booleans.[0]', '\'someAttribute\'', '', done);
+            expectConditionalAttribute(card, 'card.data.booleans.[1]', '\'someAttribute\'', 'someAttribute', done);
+            expectConditionalAttribute(card, 'card.data.name', '\'someAttribute\'', 'someAttribute', done);
+            expectConditionalAttribute(card, 'card.data.some.property.that.doesnt.exist', '\'someAttribute\'', '', done);
+            expectConditionalAttribute(card, 'card.data.undefinedValue', '\'someAttribute\'', '', done);
+            expectConditionalAttribute(card, 'card.data.nullValue', '\'someAttribute\'', '', done);
+
+            // The condition can also be an expression using other helpers
+            expectConditionalAttribute(card, '(bool card.data.name "===" \'something\')', '\'someAttribute\'', 'someAttribute', done);
+
+            // The attribute itself can also come from the card data
+            expectConditionalAttribute(card, 'card.data.booleans.[1]', 'card.data.name', 'something', done);
+        });
+
         it('compile arrayAtIndexLength Alt', (done) => {
             const templateName = Guid.create().toString();
             handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
@@ -517,7 +552,7 @@ describe('Handlebars Services', () => {
                     expect(lines[3]).toMatch(/         <\/script>/);
                     done();
                 });
-            let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
+            const calls = httpMock.match(req => req.url === computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
             calls.forEach(call => {
                 expect(call.request.method).toBe('GET');

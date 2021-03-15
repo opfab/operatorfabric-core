@@ -13,5 +13,5 @@ cp $JAVA_HOME/jre/lib/security/cacerts /tmp
 chmod u+w /tmp/cacerts
 ./add-certificates.sh /certificates_to_add /tmp/cacerts
 
-java -agentlib:jdwp=transport=dt_socket,address=5005,server=y,suspend=n -Djavax.net.ssl.trustStore=/tmp/cacerts -Djava.security.egd=file:/dev/./urandom  -jar /app.jar $JAVA_OPTIONS
+java -agentlib:jdwp=transport=dt_socket,address=5005,server=y,suspend=n -Djavax.net.ssl.trustStore=/tmp/cacerts -Djava.security.egd=file:/dev/./urandom $JAVA_OPTIONS -jar /app.jar
 

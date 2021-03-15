@@ -45,8 +45,6 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
                 Arrays.asList(customUser.roles()),
                 customUser.entities() != null ? Arrays.asList(customUser.entities()) : null);
 
-        //Authentication auth = new UsernamePasswordAuthenticationToken(principal, "password", principal.getAuthorities());
-        //TODO do the same for User service if proven useful
         String tokenValue = "dummyTokenValue";
         Instant issuedAt = Instant.now();
         Instant expiresAt = Instant.now().plus(365, ChronoUnit.DAYS);

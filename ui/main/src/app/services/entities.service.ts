@@ -102,6 +102,10 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
     return this._entities;
   }
 
+  public getEntitiesFromIds(listOfIds: string[]): Entity[] {
+        return this.getEntities().filter(entity  => listOfIds.includes(entity.id));
+  }
+
   public getCachedValues(): Array<Entity> {
       return this.getEntities();
   }
@@ -115,6 +119,24 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
     const entityNames  = new Map();
     this._entities.forEach(entity =>  entityNames.set(entity.id, entity.name));
     templateGateway.setEntityNames(entityNames);
+  }
+
+  /** Given a list of entities that might contain parent entities, this method returns the list of entities
+   *  that can actually send cards
+   * */
+  public resolveEntitiesAllowedToSendCards(selected: Entity[]) : Entity[] {
+    let allowed = new Set<Entity>();
+    selected.forEach(entity => {
+        if (entity.entityAllowedToSendCard) {
+            allowed.add(entity);
+        } else {
+          const childs = this._entities.filter(child => child.parents.includes(entity.id));
+          const childsAllowed = this.resolveEntitiesAllowedToSendCards(childs);
+          childsAllowed.forEach(c => allowed.add(c));
+        }
+    })
+
+    return Array.from(allowed);
   }
 
 }

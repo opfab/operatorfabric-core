@@ -8,11 +8,19 @@ A Chart
 <table width="100%">
     <tr> 
         <td width="25%"></td>
-<td><canvas id="myChart" width='400' height='250' ></canvas> </td>
+<td><canvas id="myChart" width='400' height='230' ></canvas> </td>
 <td  width="25%"></td>
     </tr>
 </table>
 
+<!-- test for calling business application from a card -->
+<br/>
+<br/>
+<!-- The below 'tag' comment (and matching end tag) is directed at asciidoctor to include this snippet as an example
+in the documentation, it should not be used in actual templates. -->
+<!-- tag::templateGateway.redirectToBusinessMenu_example[] -->
+<a href="javascript:templateGateway.redirectToBusinessMenu('menu1','uid_test_0','search=chart&fulltext=1')"> Want more information about charts ? </a>
+<!-- end::templateGateway.redirectToBusinessMenu_example[] -->
 <script>
 var ctx = document.getElementById('myChart').getContext('2d');
 var myChart = new Chart(ctx, {

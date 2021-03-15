@@ -16,17 +16,18 @@ import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from '@ofServices/crud-service';
 
 @Component({
-  selector: 'of-edit-entity-group-modal',
-  templateUrl: './edit-entity-group-modal.component.html',
-  styleUrls: ['./edit-entity-group-modal.component.scss']
+  selector: 'of-edit-entity-modal',
+  templateUrl: './edit-entity-modal.component.html',
+  styleUrls: ['./edit-entity-modal.component.scss']
 })
-export class EditEntityGroupModalComponent implements OnInit {
+export class EditEntityModalComponent implements OnInit {
 
-  entityGroupForm = new FormGroup({
+  entityForm = new FormGroup({
     id: new FormControl(''
-      , [Validators.required, Validators.minLength(2)]),
+      , [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-z\d\-_]+$/)]),
     name: new FormControl('', [Validators.required]),
-    description: new FormControl('')
+    description: new FormControl(''),
+    entityAllowedToSendCard: new FormControl(false),
   });
 
   @Input() row: any;
@@ -43,7 +44,7 @@ export class EditEntityGroupModalComponent implements OnInit {
   ngOnInit() {
     this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.type);
     if (this.row) { // If the modal is used for edition, initialize the modal with current data from this row
-      this.entityGroupForm.patchValue(this.row, { onlySelf: true });
+      this.entityForm.patchValue(this.row, { onlySelf: true });
     }
   }
 
@@ -53,31 +54,35 @@ export class EditEntityGroupModalComponent implements OnInit {
     // user chose to perform an action (here, update the selected item).
     // This is important as code in the corresponding table components relies on the resolution of the
     // `NgbModalRef.result` promise to trigger a refresh of the data shown on the table.
-    this.crudService.update(this.entityGroupForm.value).subscribe(() => {
+    this.crudService.update(this.entityForm.value).subscribe(() => {
       this.activeModal.close('Update button clicked on ' + this.type + ' modal');
     });
   }
 
   private cleanForm() {
     if (this.row) {
-      this.entityGroupForm.value['id'] = this.row.id;
+      this.entityForm.value['id'] = this.row.id;
     }
     this.id.setValue((this.id.value as string).trim());
     this.name.setValue((this.name.value as string).trim());
     this.description.setValue((this.description.value as string).trim());
-
+    this.entityAllowedToSendCard.setValue(this.entityAllowedToSendCard.value as boolean);
   }
 
   get id() {
-    return this.entityGroupForm.get('id') as FormControl;
+    return this.entityForm.get('id') as FormControl;
   }
 
   get name() {
-    return this.entityGroupForm.get('name') as FormControl;
+    return this.entityForm.get('name') as FormControl;
   }
 
   get description() {
-    return this.entityGroupForm.get('description') as FormControl;
+    return this.entityForm.get('description') as FormControl;
+  }
+
+  get entityAllowedToSendCard() {
+    return this.entityForm.get('entityAllowedToSendCard') as FormControl;
   }
 
   dismissModal(reason: string): void {

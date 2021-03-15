@@ -8,15 +8,21 @@
 [[response_cards]]
 = Response cards
 
-Within your template, you can allow the user to perform some action (respond to a form, answer a question, ...). The user fills these information and then clicks on a submit button. When he submits this action, a new card is created and emitted to a third-party tool.
+Within your template, you can allow the user to perform some actions (respond to a form, answer a question, ...).
+The user fills these information and then clicks on a submit button. When he submits this action, a new card is created
+and emitted to a third-party tool.
 
-This card is called "a child card" as it is attached to the card where the question came from : "the parent card". This child card is also sent to the users that have received the parent card. From the ui point of view, the information of the child cards can be integrated in real time in the parent card if configured.
+This card is called "a child card" as it is attached to the card where the question came from : "the parent card". This
+child card is also sent to the users that have received the parent card. From the ui point of view, the information of
+the child cards can be integrated in real time in the parent card if configured.
 
 The process can be represented as follows :
 
 image::ResponseCardSequence.jpg[,align="center"]
 
-Notice that the response will be associated to the entity and not to the user, i.e the user responds on behalf of his entity. A user can respond more than one time to a card (a future evolution could add the possibility to limit to one response per entity).
+Notice that the response will be associated to the entity and not to the user, i.e the user responds on behalf of his
+entity. A user can respond more than one time to a card (a future evolution could add the possibility to limit to one
+response per entity).
 
 You can view a screenshot of an example of card with responses : 
 
@@ -26,9 +32,12 @@ image::ResponseCardScreenshot2.png[,align="center"]
 
 === Define a third party tool
 
-The response card is to be received by a third party application for business processing. The third-party application will receive the card as an HTTP POST request. The card is in json format (the same format as when we send a card). The field data in the json contains the user response.
+The response card is to be received by a third party application for business processing. The third-party application
+will receive the card as an HTTP POST request. The card is in json format (the same format as when we send a card).
+The field data in the json contains the user response.
 
-The url of the third party receiving the response card is to be set in the .yml of the publication service. Here is an example with two third parties configured.
+The url of the third party receiving the response card is to be set in the .yml of the publication service. Here is
+an example with two third parties configured.
 ....
 externalRecipients-url: "{\
            third-party1: \"http://thirdparty1/test1\", \
@@ -41,12 +50,14 @@ The name to use for the third-party is the publisherId of the parent card.
 
 [WARNING]
 ====
-For the url, do not use localhost if you run OperatorFabric in a docker, as the publication-service will not be able to join your third party. 
+For the url, do not use localhost if you run OperatorFabric in a docker, as the publication-service will not be able to
+join your third party.
 ====
 
 === Configure the response in config.json
 
-A card can have a response only if it's in a process/state that is configured for. To do that you need to setup the good  configuration in the config.json of the concerned process. Here is an example of configuration :
+A card can have a response only if it's in a process/state that is configured for. To do that you need to define the
+appropriate configuration in the config.json of the concerned process. Here is an example of configuration:
 
 ....
 {
@@ -75,31 +86,49 @@ A card can have a response only if it's in a process/state that is configured fo
 }
 ....
 
-We define here a state name "questionState" with a response field. Now, if we send a card with process "defaultProcess" and state "questionState" , the user will have the possibility to respond if he has the good privileges. 
+We define here a state name "questionState" with a response field. Now, if we send a card with process "defaultProcess"
+and state "questionState", the user will have the possibility to respond if he has the required privileges.
 
 - The field "state" in the response field is used to define the state to use for the response (the child card).
-- The field "externalRecipients" define the recipients of the response card. These recipients are keys referenced in the config file of cards-publication service, in "externalRecipients-url" element. This field is optional.
-- The field "btnColor" define the color of the submit button for the response, it is optional and there is 3 possibilities : RED , GREEN , YELLOW 
-- The field "btnText"is the i18n key of the title of the submit button, it is optional.
+- The field "externalRecipients" define the recipients of the response card. These recipients are keys referenced in
+the config file of cards-publication service, in "externalRecipients-url" element. This field is optional.
+- The field "btnColor" define the color of the submit button for the response, it is optional and there are 3
+possibilities : RED , GREEN , YELLOW
+- The field "btnText" is the i18n key of the title of the submit button, it is optional.
 
+NOTE: The state to be used for the response can also be set dynamically based on the contents of the card or the
+response by returning it in the `templateGateway.validyForm` method (see below for details).
 
 === Design the question form in the template
 
 For the user to response you need to define the response form in the template with standard HTML syntax   
 
-To enable operator fabric to send the response, you need to implement a javascript function in your template called templateGateway.validyForm which return an object containing three fields :
+To enable operator fabric to send the response, you need to implement a javascript function in your template called
+`templateGateway.validyForm` which returns an object containing four fields :
 
 - valid (_boolean_) : true if the user input is valid
 - errorMsg (_string_) : message in case of invalid user input. If valid is true this field is not necessary.
 - formData (_any_) : the user input to send in the data field of the child card. If valid is false this field is not necessary.
+- responseState : name of the response state to use. This field is not mandatory, if it is not set the state defined in
+`config.json` will be used for the response.
 
-This method will be called by OperatorFabric when user click on the button to send the response 
+This method will be called by OperatorFabric when the user clicks on the button to send the response.
 
-You can find an example in the file src/test/utils/karate/businessconfig/resources/bundle_defaultProcess/template/en/question.handlebars.
+In the example below, the `validyForm` creates a `formData` object by retrieving the user's inputs from the HTML.
+In addition, if the user chose several options, it overrides the response state defined in the `config.json` with another
+state.
+
+.src/test/utils/karate/businessconfig/resources/bundle_defaultProcess/template/en/question.handlebars
+[source,js]
+----
+include::../../../test/utils/karate/businessconfig/resources/bundle_defaultProcess/template/en/question.handlebars[tag=templateGateway.validyForm_example]
+----
 
 === Define permissions
 
-To respond to a card a user must have the right privileges, it is done using "perimeters". The user must be in a group that is attached to a perimeter with  a right "Write" for the concerned process/state, the state being the response state defined in the config.json.
+To respond to a card a user must have the right privileges, it is done using "perimeters". The user must be in a group
+that is attached to a perimeter with  a right "Write" for the concerned process/state, the state being the response
+state defined in the config.json.
 
 Here is an example of definition of a perimeter : 
 ....
@@ -117,13 +146,16 @@ Here is an example of definition of a perimeter :
 
 To configure it in OperatorFabric , you need to make a POST of this json file to the end point /users/perimeters. 
 
-To add it to a group name for example "mygroup", you need to make a PATCH request  to end point 'users/groups/mygroup/perimeters' with payload ["perimeterQuestion"]
+To add it to a group name for example "mygroup", you need to make a PATCH request  to endpoint
+'users/groups/mygroup/perimeters' with payload ["perimeterQuestion"]
 
 NOTE: If you don't want OperatorFabric to check for user perimeter when responding to a card, you can add the variable "checkPerimeterForResponseCard" and set it to false, in the config file of cards-publication and in web-ui.json.
 
 == Send a question card
 
-The question card is like a usual card except that you have the field "entitiesAllowedToRespond" to set with the entities allowed to respond to the card. If the user is not in the entity, he will not be able to respond.
+The question card is like a usual card except that you have the field "entitiesAllowedToRespond" to set with the
+entities allowed to respond to the card. If the user is not in the entity, he will not be able to respond.
+
 ....
 
 ...
@@ -136,9 +168,34 @@ The question card is like a usual card except that you have the field "entitiesA
 
 ....
 
-NOTE: By default, OperatorFabric considers that if the parent card (question card) is modified, then the child cards are deleted. If you want to keep the child cards when the parent card is changed, then you must add in the parent card the field "keepChildCards" and set it to true.
+NOTE: By default, OperatorFabric considers that if the parent card (question card) is modified, then the child cards
+are deleted. If you want to keep the child cards when the parent card is changed, then you must add in the parent
+card the field "keepChildCards" and set it to true.
 
+The header in the card details will list the entities from which a response is expected, color-coding them depending
+on whether they've already responded (green) or not (orange).
 
+NOTE: You can also set the property `entitiesRequiredToRespond` to differentiate between entities can respond
+(`entitiesAllowedToRespond`) and those who must respond (`entitiesRequiredToRespond`).
+
+....
+
+...
+"process"  :"defaultProcess",
+"processInstanceId" : "process4",
+"state": "questionState",
+"entitiesAllowedToRespond": ["ENTITY1","ENTITY2","ENTITY3"],
+"entitiesRequiredToRespond": ["ENTITY1","ENTITY2"],
+"severity" : "ACTION",
+...
+
+....
+
+If `entitiesRequiredToRespond` is set and not empty, the card detail header will use this list instead of
+`entitiesAllowedToRespond`.
+
+IMPORTANT: If set, `entitiesRequiredToRespond` should be a subset of `entitiesAllowedToRespond` or the card will be
+rejected.
 
 == Integrate child cards 
 
@@ -152,7 +209,8 @@ This method will be called by OperatorFabric when loading the card and every tim
 
 === Entity name 
 
-If you want to show the name of an entity that send the response, you need to get the id of the entity via the publisher field of the child card and then you  can get the name of the entity by calling _templateGateway.getEntityName(entityId)_
+If you want to show the name of an entity that send the response, you need to get the id of the entity via the publisher
+field of the child card and then you  can get the name of the entity by calling _templateGateway.getEntityName(entityId)_
 
 === Example 
 
@@ -160,8 +218,10 @@ You can find an example in the file src/test/utils/karate/businessconfig/resourc
 
 == Lock mechanism
 
-When a user has never answered to a response card, the button will be marked as "VALIDATE ANSWER" and the card will be unlocked.
-When the user responds for the first time (and the response succeeds), the button will then be marked as "MODIFY ANSWER" and the information that the card has been locked will be sent to the third template (by calling the _templateGateway.lockAnswer()_ function).
+When a user has never answered to a response card, the button will be marked as "VALIDATE ANSWER" and the card will be
+unlocked.
+When the user responds for the first time (and the response succeeds), the button will then be marked as "MODIFY ANSWER"
+and the information that the card has been locked will be sent to the third template (by calling the _templateGateway.lockAnswer()_ function).
 
 Once a user has responded to a response card, its entity status will be considered as "already answered" for this card.
 Then all the users having the same entity will be in this status for this card.
@@ -171,6 +231,10 @@ From there, as soon as they will open this card the button will be marked as "MO
 The user can then click on "MODIFY ANSWER" and the button will come back to its initial state ("VALIDATE ANSWER") and the information that the user wants to modify its initial answer will be sent to the third template (by calling the _templateGateway.unlockAnswer()_ function).
 
 Once again, after validating its answer, the information will be sent to the third template that the card has been locked (by calling the templateGateway.lockAnswer() function).
+
+== Response enabled
+The template will be informed if the current user has the permission to answer by calling the _templateGateway.setUserCanRespond(boolean)_ function.
+An example of templateGateway.setUserCanRespond() implementation can be found in the file src/test/utils/karate/businessconfig/resources/bundle_defaultProcess/template/en/incidentInProgress.handlebars.
 
 == Last Time to Decide (`lttd`)
 

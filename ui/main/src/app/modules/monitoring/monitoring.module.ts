@@ -19,6 +19,7 @@ import { MonitoringTableComponent } from './components/monitoring-table/monitori
 import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
 import {AppRoutingModule} from '../../app-routing.module';
 import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
+import {TimelineButtonsModule} from "../share/timeline-buttons/timeline-buttons.module";
 
 
 
@@ -28,16 +29,16 @@ import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
       MonitoringFiltersComponent,
       MonitoringTableComponent
   ],
-  imports: [
-    CommonModule
-      , FormsModule
-      , ReactiveFormsModule
-      , CardsModule
-      , TranslateModule
-      , NgbModule
-      , DatetimeFilterModule
-      , AppRoutingModule
-      , MultiFilterModule
-  ]
+    imports: [
+        CommonModule
+        , FormsModule
+        , ReactiveFormsModule
+        , CardsModule
+        , TranslateModule
+        , NgbModule
+        , DatetimeFilterModule
+        , AppRoutingModule
+        , MultiFilterModule, TimelineButtonsModule
+    ]
 })
 export class MonitoringModule { }

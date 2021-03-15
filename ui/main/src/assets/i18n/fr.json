@@ -21,7 +21,7 @@
   "timeline": {
     "hideTimeline" : "Masquer la timeline",
     "showTimeline" : "Afficher la Timeline",
-    "businessPeriod": "Periode métier",
+    "businessPeriod": "Période métier",
     "buttonTitle": {
       "TR": "Temps réel",
       "J": "Jour",
@@ -89,7 +89,9 @@
       "acknowledged": "Acquittée",
       "lttd": "Temps restant pour décider"
     },
-    "received": "Reçu à {{time}}"
+    "received": "Reçu le",
+    "at" : "à",
+    "from": "de"
   },
   "login": {
     "reset": "RaZ",
@@ -128,10 +130,6 @@
   },
   "archive": {
     "filters": {
-      "service": "SERVICE",
-      "process": "PROCESSUS",
-      "state": "ETAT",
-      "tags": "ETIQUETTES",
       "publishDateFrom": "PUBLIE A PARTIR DE",
       "publishDateTo": "PUBLIE JUSQU'A",
       "activeFrom": "ACTIVE A PARTIR DE",
@@ -143,26 +141,22 @@
       "businessPeriod" : "PERIODE METIER",
       "title" : "TITRE",
       "summary": "RESUME",
-      "service": "SERVICE"
+      "processGroup": "SERVICE"
     },
     "noResult": "Votre recherche ne correspond à aucun résultat.",
     "exportToExcel" : "Exporter les données",
-    "resultsNumber":"Nombre de résultats",
-    "selectServiceText": "Sélectionner un Service",
-    "selectProcessText": "Sélectionner un Processus",
-    "selectStateText": "Sélectionner un Etat",
-    "selectTagText": "Sélectionner une Etiquette"
+    "resultsNumber":"Nombre de résultats"
   },
   "logging": {
     "filters": {
-      "process": "PROCESSUS",
-      "selectProcessText": "Sélectionner un Processus"
+      "process": "PROCESSUS"
     },
     "timeOfAction": "MOMENT DE L'ACTION",
     "title": "TITRE",
     "summary": "RESUME",
     "description": "DESCRIPTION",
     "sender": "EMETTEUR",
+    "processGroup": "SERVICE",
     "noResult": "Votre recherche ne correspond à aucun résultat.",
     "ExportTOExcel": "Exporter les données",
     "resultsNumber":"Nombre de résultats"
@@ -172,14 +166,23 @@
     "showFilters" : "Afficher les filtres",
     "noSelection" : "NA",
     "filters": {
+      "processGroup" : "SERVICE",
+      "selectProcessGroupText" : "Sélectionner un Service",
       "process": "PROCESSUS",
-      "selectProcessText": "Sélectionner un Processus"
+      "selectProcessText": "Sélectionner un Processus",
+      "typeOfState": {
+        "typeOfState": "ÉTAT DU PROCESSUS",
+        "selectTypeOfStateText": "Sélectionner un État de processus",
+        "INPROGRESS": "EN COURS",
+        "FINISHED": "TERMINÉ",
+        "CANCELED": "ANNULÉ"
+      }
     },
     "time": "DATE",
     "businessPeriod": "PERIODE METIER",
     "title": "TITRE",
     "summary": "RESUME",
-    "status": "STATUS",
+    "typeOfState": "ÉTAT DU PROCESSUS",
     "severity": "SEVERITE",
     "seeDetails": "VOIR LES DETAILS",
     "ExportTOExcel": "Exporter les données"
@@ -215,7 +218,7 @@
     },
     "filters": {
       "severity": "SEVERITE",
-      "service": "SERVICE",
+      "processGroup": "SERVICE",
       "process": "PROCESSUS",
       "state": "ETAT",
       "startDate": "DATE DE DEBUT ",
@@ -237,7 +240,7 @@
     "processInstanceId": "Identifiant",
     "state": "État",
     "recipients": "DESTINATAIRES:",
-    "feedPreview": "PREVISUALISATION FEED:",
+    "feedPreview": "PREVISUALISATION FLUX DE CARTES:",
     "contentPreview": "PREVISUALISATION CONTENU:",
     "send-another-one": "ENVOYER UNE AUTRE CARTE",
     "cardSendWithNoError": "Votre carte est publiée",
@@ -275,16 +278,28 @@
       "group": {
         "id": "Id",
         "name": "Nom",
+        "perimeters" : "Périmètres",
         "description": "Description",
-        "confirmDelete": "Voulez vous vraiment supprimer le groupe",
+        "confirmDelete": "Voulez-vous vraiment supprimer le groupe",
         "add":"Ajouter un nouveau groupe"
       },
       "entity": {
         "id": "Id",
         "name": "Nom",
+        "parents": "Entités parentes",
         "description": "Description",
-        "confirmDelete": "Voulez vous vraiment supprimer l'entité",
+        "entityAllowedToSendCard": "Envoi de carte autorisé",
+        "confirmDelete": "Voulez-vous vraiment supprimer l'entité",
         "add":"Ajouter une nouvelle entité"
+      },
+      "perimeter": {
+        "id": "Id",
+        "process": "Processus",
+        "stateRights": "Permissions sur les états",
+        "state": "Etat",
+        "right": "Permission",
+        "confirmDelete": "Voulez-vous vraiment supprimer le périmètre",
+        "add":"Ajouter un nouveau périmètre"
       },
       "user": {
         "login": "Identifiant",
@@ -292,7 +307,7 @@
         "firstName": "Prénom",
         "groups": "Groupes",
         "entities": "Entités",
-        "confirmDelete": "Voulez vous vraiment supprimer l'utilisateur",
+        "confirmDelete": "Voulez-vous vraiment supprimer l'utilisateur",
         "add":"Ajouter un nouvel utilisateur"
       },
       "edit": "Editer",
@@ -303,7 +318,8 @@
       "confirm":"Confirmez...",
       "login": {
         "required": "L'identifiant est obligatoire.",
-        "minLength": "L'identifiant doit avoir au moins 4 caractères."
+        "minLength": "L'identifiant doit avoir au moins 4 caractères.",
+        "pattern": "L'identifiant ne peut contenir que les caractères suivants : lettres, _, - ou chiffres."
       },
       "firstName": {
         "required": "Le prénom est obligatoire."
@@ -314,6 +330,7 @@
       "id": {
         "required": "L'identifiant est obligatoire.",
         "minLength": "L'identifiant doit avoir au moins 2 caractères.",
+        "pattern": "L'identifiant ne peut contenir que les caractères suivants : lettres, _, - ou chiffres.",
         "label":"Id"
       },
       "name": {
@@ -321,15 +338,17 @@
         "label":"Nom"
       },
       "description": "Description",
-      "lines": "lignes par page"
+      "lines": "lignes par page",
+      "entityAllowedToSendCard": "Envoi de carte autorisé"
     },
     "tabs": {
       "users": "Gestion des utilisateurs",
       "groups": "Gestion des groupes",
-      "entities": "Gestion des entités"
+      "entities": "Gestion des entités",
+      "perimeters": "Gestion des périmètres"
     }
   },
-  "service": {
+  "processGroup": {
     "defaultLabel": "--"
   },
   "ag-grid": {
@@ -347,5 +366,15 @@
     "to": "à",
     "of": "de",
     "page": "Page"
+  },
+  "filters": {
+    "ProcessGroup": "SERVICE",
+    "process": "PROCESSUS",
+    "state": "ETAT",
+    "tags": "ETIQUETTES",
+    "selectProcessGroupText": "Sélectionner un Service",
+    "selectProcessText": "Sélectionner un Processus",
+    "selectStateText": "Sélectionner un Etat",
+    "selectTagText": "Sélectionner une Etiquette"
   }
 }

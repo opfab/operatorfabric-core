@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * Copyright (c) 2020, RTEi (http://www.rte-international.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -12,7 +12,7 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { LineOfLoggingResult } from '@ofModel/line-of-logging-result.model';
 import { TimeService } from '@ofServices/time.service';
 import { Moment } from 'moment-timezone';
-import { CardService } from '../../../../services/card.service';
+import { CardService } from '@ofServices/card.service';
 import { selectLoggingCount, selectLoggingFilter } from '@ofSelectors/logging.selectors';
 import { Store, select } from '@ngrx/store';
 import { Page } from '@ofModel/page.model';
@@ -23,6 +23,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { ExportService } from '@ofServices/export.service';
 import { FlushLoggingResult, UpdateLoggingPage } from '@ofStore/actions/logging.actions';
 import { ConfigService } from '@ofServices/config.service';
+import { LoggingComponent } from '../../logging.component';
+import {ProcessesService} from "@ofServices/processes.service";
 
 
 @Component({
@@ -32,9 +34,9 @@ import { ConfigService } from '@ofServices/config.service';
 })
 export class LoggingTableComponent implements OnInit, OnDestroy {
 
-
     @Input() results: LineOfLoggingResult[];
     @Input() processStateDescription: Map<string, string>;
+    @Input() displayProcessGroupColumn: boolean;
     displayedResult: string;
     exportLoggingData: Array<any> ;
     page = 0;
@@ -44,8 +46,13 @@ export class LoggingTableComponent implements OnInit, OnDestroy {
     unsubscribe$: Subject<void> = new Subject<void>();
 
 
-    constructor(public timeService: TimeService, private cardService: CardService,
-        private store: Store<AppState>, private translate: TranslateService, private exportService: ExportService, private configService: ConfigService) {
+    constructor(public timeService: TimeService,
+                private cardService: CardService,
+                private store: Store<AppState>,
+                private translate: TranslateService,
+                private configService: ConfigService,
+                private parentComponent: LoggingComponent,
+                private processesService: ProcessesService) {
     }
 
     ngOnInit() {
@@ -55,7 +62,7 @@ export class LoggingTableComponent implements OnInit, OnDestroy {
             catchError(err => of(0))
         );
         this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
-    
+
         this.store.select(selectLoggingFilter)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(filters => {
@@ -87,24 +94,35 @@ export class LoggingTableComponent implements OnInit, OnDestroy {
             .subscribe((page: Page<LineOfLoggingResult>) => {
                 const lines = page.content;
 
-                const timeOfActionColumnName = this.translateColomn('logging.timeOfAction');
-                const titleColumnName = this.translateColomn('logging.title');
-                const summaryColumnName = this.translateColomn('logging.summary');
-                const descriptionColumnName = this.translateColomn('logging.description');
-                const senderColumnName = this.translateColomn('logging.sender');
+                const timeOfActionColumnName = this.translateColumn('logging.timeOfAction');
+                const titleColumnName = this.translateColumn('logging.title');
+                const summaryColumnName = this.translateColumn('logging.summary');
+                const descriptionColumnName = this.translateColumn('logging.description');
+                const senderColumnName = this.translateColumn('logging.sender');
+                const processGroupColumnName = this.translateColumn('logging.processGroup');
 
                 lines.forEach( (line: LineOfLoggingResult) => {
                     if (typeof line !== undefined) {
-                        this.exportLoggingData.push({
-                            [timeOfActionColumnName]: this.timeService.formatDateTime(line.businessDate),
-                            [titleColumnName]: this.translateColomn(line.i18nKeyForTitle.key, line.i18nKeyForTitle.parameters),
-                            [summaryColumnName]: this.translateColomn(line.i18nKeyForSummary.key, line.i18nKeyForSummary.parameters),
-                            [descriptionColumnName]: this.translateColomn(this.processStateDescription.get(line.process + '.' + line.state)),
-                            [senderColumnName]: line.sender
-                        });
+                        if (this.displayProcessGroupColumn)
+                            this.exportLoggingData.push({
+                                [timeOfActionColumnName]: this.timeService.formatDateTime(line.businessDate),
+                                [titleColumnName]: this.translateColumn(line.i18nKeyForTitle.key, line.i18nKeyForTitle.parameters),
+                                [summaryColumnName]: this.translateColumn(line.i18nKeyForSummary.key, line.i18nKeyForSummary.parameters),
+                                [descriptionColumnName]: this.translateColumn(this.processStateDescription.get(line.process + '.' + line.state)),
+                                [senderColumnName]: line.sender,
+                                [processGroupColumnName]: this.translateColumn(this.processesService.findProcessGroupLabelForProcess(line.process))
+                            });
+                        else
+                            this.exportLoggingData.push({
+                                [timeOfActionColumnName]: this.timeService.formatDateTime(line.businessDate),
+                                [titleColumnName]: this.translateColumn(line.i18nKeyForTitle.key, line.i18nKeyForTitle.parameters),
+                                [summaryColumnName]: this.translateColumn(line.i18nKeyForSummary.key, line.i18nKeyForSummary.parameters),
+                                [descriptionColumnName]: this.translateColumn(this.processStateDescription.get(line.process + '.' + line.state)),
+                                [senderColumnName]: line.sender
+                            });
                     }
                 });
-                this.exportService.exportAsExcelFile(this.exportLoggingData, 'Logging');
+                ExportService.exportAsExcelFile(this.exportLoggingData, 'Logging');
             });
     }
 
@@ -112,14 +130,14 @@ export class LoggingTableComponent implements OnInit, OnDestroy {
         this.initExportLoggingData();
     }
 
-    translateColomn(key: string | Array<string>, interpolateParams?: Object): any {
-        let translatedColomn: number;
+    translateColumn(key: string | Array<string>, interpolateParams?: Object): any {
+        let translatedColumn: number;
 
         this.translate.get(key, interpolateParams)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((translate) => { translatedColomn = translate; });
+            .subscribe((translate) => { translatedColumn = translate; });
 
-        return translatedColomn;
+        return translatedColumn;
     }
 
 

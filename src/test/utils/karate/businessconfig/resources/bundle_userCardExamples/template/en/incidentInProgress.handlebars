@@ -20,31 +20,33 @@
 
 
 
-<div >
+<div id="services">
 
 
-    <strong> <center> Please fill in the impacts from your perspective  </center> </strong>
+     <div style="text-align: center;"> <strong>Please fill in the impacts from your perspective </strong> </div>
 
     <br/>
     <br />
-
-    <table width="100%">
-        <tr>
-            <td> <label class="opfab-checkbox"> SERVICE A <input type="checkbox" id="SA">   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
-            <td> <label class="opfab-checkbox"> SERVICE B <input type="checkbox" id="SB">   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
-            <td> <label class="opfab-checkbox"> SERVICE C <input type="checkbox" id="SC">   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
-            <td> <label class="opfab-checkbox"> SERVICE D <input type="checkbox" id="SD">   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
-            <td> <label class="opfab-checkbox"> SERVICE E <input type="checkbox" id="SE">   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
-            <td> <label class="opfab-checkbox"> SERVICE F <input type="checkbox" id="SF">   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
-        </tr>
-    </table>
+    <div class="opfab-border-box">
+        <label> SERVICES </label>
+        <table style="margin-bottom: -5px;width:100%">
+            <tr>
+                <td> <label class="opfab-checkbox"> SERVICE A <input type="checkbox" id="SA">   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
+                <td> <label class="opfab-checkbox"> SERVICE B <input type="checkbox" id="SB">   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
+                <td> <label class="opfab-checkbox"> SERVICE C <input type="checkbox" id="SC">   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
+                <td> <label class="opfab-checkbox"> SERVICE D <input type="checkbox" id="SD">   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
+                <td> <label class="opfab-checkbox"> SERVICE E <input type="checkbox" id="SE">   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
+                <td> <label class="opfab-checkbox"> SERVICE F <input type="checkbox" id="SF">   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
+            </tr>   
+        </table>
+    </div>
 
 
 </div>
 <br/>
 <br/>
-<div class="opfab-input">
-    <label> OTHER IMPACTS </label>
+<div id="other-impacts" class="opfab-input">
+    <label for="OTHERS"> OTHER IMPACTS </label>
     <input id="OTHERS" name="OTHERS">
 </div>
 
@@ -80,14 +82,14 @@
 
         if (templateGateway.childCards[0]) {
             let childsDiv = document.getElementById("childs-div");
-            let responses = '<strong> RESPONSES RECEIVED : </strong> <center> <br/>'
-            responses += ' <table width="100%""> <tr> <th> Entity </th>';
+            let responses = '<strong> RESPONSES RECEIVED : </strong> <br/>';
+            responses += ' <table style="width: 100%"> <tr> <th> Entity </th>';
             responses += ' <th> Service A </th> <th> Service B </th> <th> Service C </th> <th> Service D </th> <th>Service E </th> <th> Service F </th>';
             responses += ' </tr>';
 
-            templateGateway.childCards.forEach((c, i) => {
+            templateGateway.childCards.forEach((c) => {
                  const entityName = templateGateway.getEntityName(c.publisher);
-                responses += `<tr> <td> ${entityName} </td>`
+                responses += `<tr> <td> ${entityName} </td>`;
                 if (c.data.impacts.SA)  responses += `<td style="color:red;">  YES </td>`;
                 else  responses += `<td>  NO </td>`;
                 if (c.data.impacts.SB)  responses += `<td style="color:red;">  YES </td>`;
@@ -108,13 +110,11 @@
 
             childsDiv.innerHTML = responses;
         }
-    }
-
-    templateGateway.applyChildCards();
+    };
 
     templateGateway.validyForm = function () {
 
-        const S1 = document.getElementById('SA').checked;
+        const SA = document.getElementById('SA').checked;
         const SB = document.getElementById('SB').checked;
         const SC = document.getElementById('SC').checked;
         const SD = document.getElementById('SD').checked;
@@ -133,14 +133,21 @@
                 SF: SF,
                 OTHERS: OTHERS
             }
-        }
+        };
 
         return {
             valid: true,
             formData: formData
         };
     }
+
+    templateGateway.setUserCanRespond = function(responseEnabled) {
+        if (responseEnabled) {
+            document.getElementById('services').style.display = '';
+            document.getElementById('other-impacts').style.display = '';
+        } else {
+            document.getElementById('services').style.display = 'none';
+            document.getElementById('other-impacts').style.display = 'none'
+        }
+    }
 </script>
-
-
-</p>

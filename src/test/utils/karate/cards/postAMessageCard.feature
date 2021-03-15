@@ -26,6 +26,7 @@ Scenario: Post a message card
 			"groupRecipients": ["Dispatcher"],
 			"severity" : "INFORMATION",
 			"startDate" : startDate,
+			"endDate" : endDate,
 			"summary" : {"key" : "message.summary"},
 			"title" : {"key" : "message.title"},
 			"data" : {"message":" Information card number 1"},

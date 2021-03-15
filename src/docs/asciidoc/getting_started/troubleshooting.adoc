@@ -11,8 +11,6 @@
 [[troubleshooting_bundle]]
 = Troubleshooting
 
-//TODO Merge with other troubleshooting?
-
 == My bundle is not loaded
 
 The server send a `+{"status":"BAD_REQUEST","message":"unable to open submitted 

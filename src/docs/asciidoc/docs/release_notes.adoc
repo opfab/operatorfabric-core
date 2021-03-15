@@ -1,67 +1,63 @@
-// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-= Version 2.1.0.RELEASE
+
+= Version 2.2.0.RELEASE
 
 == Features
+- UI :
+*  OC-1440 : New logging screen filters
+*  OC-1512 : Adapt UI for small screens (Feed)
+*  OC-1529 : Show card entity publisher on feed and card detail
+*  OC-1441 : New monitoring screen
+*  OC-1515 : Memorize choosen domain for timeline
+*  OC-1499 : Disable service and process fields when editing a user card
 
-- OC-1395 : When user exits the feed screen or exits operator fabric his filters/sorts options are memorized, when he
-goes back the filters/sorts options are set to the memorized values.
-- OC-1399 : Notification Screen - Display the states, process and process groups in alphabetical order
-- OC-1438 : Add the possibility to show environment name in the top right corner
-- OC-1201 : Inform the template when lttd has expired
-- OC-1396 : Communicate to the template the screen size calling setScreenSize() method
-- OC-1400 : Add "service" field in the free message feature
-- OC-1270 : Timeline circles : open popover on mouseover
-- OC-964 : Deal with user in more than one entity
-+
-Now if the entity to respond with cannot be resolved because a user is a member of several entities that are allowed to
-respond to a card, the response action is disabled.
-- OC-1431 - Display names rather than IDs for entities/groups in the users table (Administration)
+
+- Administration feature :
+* OC-1089 : Add perimeter management to admin screen
+* OC-1524 : Admin UI - Avoid dismissal of modals on outside click
+
+- Card templating :
+* OC-1503 : Add an opfab style for border box with label in example templates
+* OC-1508 : Communicate to the template if the user can respond by calling templateGateway.setUserCanRespond(boolean) function
+* OC-1498 : Add the possibility to set the response state from the template (See the documentation for details).
+
+
+- Misc :
+* OC-1446 : In client lib avoid serialization of null fields:  You can now find an example client application using the client library to send a card under src/test/clientApp.
+* OC-1530 : Usercard : when sending the card send it as well to the current user
+* OC-1257 : Set groups of entities compatible with response card. Added "entityAllowedToSendCard " boolean field to Entity.
+* OC-1506 : A new optional field "entitiesRequiredToRespond" has been added to cards. If it is present, this list will be used to display the expected responses in the card detail header instead of the list from "entitiesAllowedToRespond".
+If present, "entitiesRequiredToRespond" should be a subset of "entitiesAllowedToRespond" or the card will be rejected.
+* OC-1531 : Change rule of visibility for cards with no endDate : card will be visible when startDate is between start and end of chosen period. It applies to feed , archives , monitoring and loggin screens
+* OC-1451 : Add support for Authorization flow 'NONE'
 
 == Bugs
 
-- OC-1428 : Fix bug on Feed Filter when setting only date and not time
-- OC-1436 : Error message does not appear correctly in usercard
-- OC-1452 : Translation error : criticity -> criticality
-- OC-890 : When using PASSWORD flow, once the token is expired the user isn't notified
-- OC-1472 : Card detail show last seen card for few instants before showing the selected card (rework of OC-1419)
-- OC-1347 : Fix bug with keepChildCards default value
-- OC-1459 : Admin - Propagate entity/group update to users
-- OC-1469 : Fix Bug - publisherType not set to external when receiving a card via card endPoint
-- OC-1478 : Fix Bug in calendar day mode when event spans multiple days
-- OC-1489 : Fix bug on delayed display of countdown counter
-- OC-1425 : Export data : title of the columns are not translated
-- OC-1496 : Admin UI : In day mode : when trying to delete user/group/entity, popup is displayed in night mode
+- OC-1502 : Correct rendering of chosen values in multi-select input field
+- OC-1497 : Fixing issue with card edition and IT incident example
+- OC-1464 : Fix bug when deleting all bundles
+- OC-1526 : Fixes configuration in cards-consultation and cards-publication docker images
++
+NOTE : 2.1.0.RELEASE images for these two services did not take custom configuration passed through docker-compose into account properly
+- OC-1532 : Usercard - if process has no state available for sending card , do not show it
+- OC-1563 : Bug Chrome - Timeline domain list on two lines sometimes
+- OC-1540 : Moved JAVA_OPTIONS environment parameter in docker-entrypoint shell script. In the old position it was placed behind the -jar parameter. This caused java to skip the JAVA_OPTIONS and ignore the optional extra settings.
 
 == Tasks
 
-- OC-1283 : Allow external config location for docker-compose
+- OC-1514 : Add documentation for json handlebars helper
+- OC-1511 : Permit to add param to third party iframe defined in menu configuration
 +
-This can be useful to avoid committing test or demo-specific configuration.
-See https://opfab.github.io/documentation/archives/2.1.0.RELEASE/docs/single_page_doc.html#_specify_an_external_configuration[documentation].
-- OC-1361 : Remove old notification feature via the browser
-- OC-1407 : Remove detailTitle in bundle config -> the title of the card always comes from the title field of the card
+NOTE : This allows business applications to be called from cards with some of the card's context.
 +
-IMPORTANT: Please remove detailTitle properties from your bundles.
-+
-- Rework of the admin screen (OC-1191, OC-1434, OC-1457)
-- Upgrade Angular from v8.2 to v10.2 and related tasks (OC-1061, OC-1392, OC-1437, OC-1468)
-- OC-1409 : When pushing the process group file check for duplicate processes
-- OC-1430 : Adapt api testing script to first stop and remove existing containers
-- OC-1447 : Introduce notion of type of state
-+
-NOTE: This shouldn't have any impact for deployments using docker. If you need to build the UI however,
-you need to run "npm install" first to get the new dependencies. We found it best to delete the node_modules folder
-before running npm_install to avoid errors.
-In addition, see the https://opfab.github.io/documentation/archives/2.1.0.RELEASE/docs/single_page_doc.html#_build[documentation]
-to troubleshoot any errors.
-+
-- Documentation updates (OC-1427, OC-1429)
-- OC-1083 : Refactoring of NGNX endpoints for groups and entities : "/users/entities" instead of "/entities"
-and "/users/groups" instead of "/groups"
-- OC-1439 : New archives screen filters
+- OC-1521 : Upgrade to MongoDB 4.4.4
+- OC-1473 : Upgrade to keycloak 12.0.2
+- OC-1519 : Start users, cards-consultation and cards-publication after mongo and rabbit (in docker-compose)
+- OC-1555 : Permit to access opfab directly from localhost:2002 without /ui/
+

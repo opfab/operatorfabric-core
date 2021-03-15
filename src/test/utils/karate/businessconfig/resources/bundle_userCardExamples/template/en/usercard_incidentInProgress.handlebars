@@ -10,41 +10,36 @@
 <br/>
 <br/>
 <div class="opfab-textarea">
-    <label> INCIDENT DESCRIPTION </label>
+    <label for="message"> INCIDENT DESCRIPTION </label>
     <textarea id="message" name="message" placeholder="Write something.."
         style="width:100%"> {{card.data.message}} </textarea>
 </div>
 
 <br />
 
-IMPACTED SERVICES : <br/><br/>
-<div>
-    <table width="100%">
+<div class="opfab-border-box">
+    <label> IMPACTED SERVICES </label>
+    <table style="margin-bottom: -5px;width: 100%">
         <tr>
-            <td> <label class="opfab-checkbox"> SERVICE A <input type="checkbox" id="SA">   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
-            <td> <label class="opfab-checkbox"> SERVICE B <input type="checkbox" id="SB">   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
-            <td> <label class="opfab-checkbox"> SERVICE C <input type="checkbox" id="SC">   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
-            <td> <label class="opfab-checkbox"> SERVICE D <input type="checkbox" id="SD">   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
-            <td> <label class="opfab-checkbox"> SERVICE E <input type="checkbox" id="SE">   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
-            <td> <label class="opfab-checkbox"> SERVICE F <input type="checkbox" id="SF">   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
+            <td> <label class="opfab-checkbox"> SERVICE A <input type="checkbox" id="SA" {{conditionalAttribute card.data.impacts.SA 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
+            <td> <label class="opfab-checkbox"> SERVICE B <input type="checkbox" id="SB" {{conditionalAttribute card.data.impacts.SB 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
+            <td> <label class="opfab-checkbox"> SERVICE C <input type="checkbox" id="SC" {{conditionalAttribute card.data.impacts.SC 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
+            <td> <label class="opfab-checkbox"> SERVICE D <input type="checkbox" id="SD" {{conditionalAttribute card.data.impacts.SD 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
+            <td> <label class="opfab-checkbox"> SERVICE E <input type="checkbox" id="SE" {{conditionalAttribute card.data.impacts.SE 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
+            <td> <label class="opfab-checkbox"> SERVICE F <input type="checkbox" id="SF" {{conditionalAttribute card.data.impacts.SF 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label>   </td>
         </tr>
     </table>
 </div>
 <br/>
+
 <div class="opfab-input">
-    <label> OTHER IMPACTS </label>
-    <input id="OTHERS" name="OTHERS" 
+    <label for="OTHERS"> OTHER IMPACTS </label>
+    <input id="OTHERS" name="OTHERS"
         style="width:100%" value="{{card.data.impacts.OTHERS}}">
 </div>
 <br/>
 <script>
 
-    document.getElementById("SA").checked = "{{card.data.impacts.SA}}";
-    document.getElementById("SB").checked = "{{card.data.impacts.SB}}";
-    document.getElementById("SC").checked = "{{card.data.impacts.SC}}";
-    document.getElementById("SD").checked = "{{card.data.impacts.SD}}";
-    document.getElementById("SE").checked = "{{card.data.impacts.SE}}";
-    document.getElementById("SF").checked = "{{card.data.impacts.SF}}";
 
 
     templateGateway.getSpecificCardInformation = function () {
