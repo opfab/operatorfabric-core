@@ -34,7 +34,6 @@ Feature: Archives
 	"groupRecipients": ["Dispatcher"],
 	"severity" : "ACTION",
 	"startDate" : 1583333122000,
-	"endDate" : 1583733122000,
 	"lttd" : 1583339602000,
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
@@ -248,6 +247,14 @@ Feature: Archives
     Then status 200
     And print response
      And assert response.numberOfElements == 9
+
+   Scenario: filter by activeFrom after startDate of card with no endDate
+    Given url opfabUrl + 'cards/archives/' +'?activeFrom=1583333123000'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 200
+    And print response
+     And assert response.numberOfElements == 8
 
    Scenario: filter by activeTo
      Given url opfabUrl + 'cards/archives/' +'?activeTo=1653186770481'
