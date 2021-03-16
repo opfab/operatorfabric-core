@@ -38,7 +38,6 @@
     },
     "notify": false,
     "timeline": {
-      "hide" : false,
       "domains": [
         "7D",
         "W",
