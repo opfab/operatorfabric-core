@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,8 +8,7 @@
  */
 
 
-
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {ListSettingComponent} from './list-setting.component';
 import {Store} from "@ngrx/store";
@@ -22,10 +21,10 @@ import {PatchSettings} from "@ofActions/settings.actions";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {I18n} from "@ofModel/i18n.model";
 import {emptyAppState4Test, injectedSpy} from '@tests/helpers';
-import createSpyObj = jasmine.createSpyObj;
-import SpyObj = jasmine.SpyObj;
 import {authInitialState} from "@ofStates/authentication.state";
 import {configInitialState} from "@ofStates/config.state";
+import createSpyObj = jasmine.createSpyObj;
+import SpyObj = jasmine.SpyObj;
 
 describe('ListSettingComponent', () => {
     let component: ListSettingComponent;
@@ -37,8 +36,8 @@ describe('ListSettingComponent', () => {
         authentication: {...authInitialState, identifier: 'test'},
         config:configInitialState
     };
-    beforeEach(async(() => {
-        const storeSpy = createSpyObj('Store', ['dispatch', 'select']);
+    beforeEach(waitForAsync(() => {
+        const storeSpy: Store<AppState> = createSpyObj('Store', ['dispatch', 'select']);
 
         TestBed.configureTestingModule({
             imports: [
@@ -54,7 +53,7 @@ describe('ListSettingComponent', () => {
 
     beforeEach(() => {
         translateService = TestBed.inject(TranslateService);
-        mockStore = injectedSpy(Store);
+        mockStore = injectedSpy(Store) as SpyObj<Store<AppState>>;
         mockStore.select.and.callFake(selector => {
             return of({
                 ...emptyAppState, settings: {

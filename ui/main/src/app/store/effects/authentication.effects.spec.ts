@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,7 @@ import {
     TryToLogIn,
 } from '@ofActions/authentication.actions';
 
-import {async, TestBed} from '@angular/core/testing';
+import {TestBed, waitForAsync} from '@angular/core/testing';
 import {provideMockActions} from '@ngrx/effects/testing';
 import {Observable, of, throwError} from 'rxjs';
 
@@ -37,11 +37,11 @@ import {hot} from 'jasmine-marbles';
 import * as moment from 'moment';
 import {Message} from '@ofModel/message.model';
 import {CardService} from '@ofServices/card.service';
+import {TranslateModule, TranslateService} from "@ngx-translate/core";
+import {ConfigService} from '@ofServices/config.service';
+import {injectedSpy} from '@tests/helpers';
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
-import { TranslateModule, TranslateService} from "@ngx-translate/core";
-import { ConfigService } from '@ofServices/config.service';
-import {injectedSpy} from '@tests/helpers';
 
 describe('AuthenticationEffects', () => {
     let actions$: Observable<any>;
@@ -53,7 +53,7 @@ describe('AuthenticationEffects', () => {
     let translate: TranslateService;
     let configService: SpyObj<ConfigService>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         const routerSpy = createSpyObj('Router', ['navigate']);
         const authenticationServiceSpy = createSpyObj('authenticationService'
             , ['extractToken',
@@ -98,7 +98,7 @@ describe('AuthenticationEffects', () => {
         authenticationService = injectedSpy(AuthenticationService);
         cardService = injectedSpy(CardService);
         router = injectedSpy(Router);
-        mockStore = injectedSpy(Store);
+        mockStore = injectedSpy(Store) as SpyObj<Store<AppState>>;;
         configService = injectedSpy(ConfigService);
     });
 
