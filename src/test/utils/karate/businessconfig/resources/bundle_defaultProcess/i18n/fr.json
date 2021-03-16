@@ -25,7 +25,7 @@
 		"description": "Courbe de consommation électrique"
 	},
 	"processState": {
-		"title":"Etat du processus {{status}}",
+		"title":"Etat du processus ({{status}})",
 		"description": "Processus"
 	},
 	"contingenciesState": {
