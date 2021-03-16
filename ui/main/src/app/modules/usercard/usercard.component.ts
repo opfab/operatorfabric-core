@@ -419,9 +419,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
         const entitiesAllowedToRespond = [];
         if (selectedProcess.states[state].response) {
-                recipients.forEach(entity => {
-                    if (entity != publisher) entitiesAllowedToRespond.push(entity);
-                });
+            recipients.forEach(entity => {
+                entitiesAllowedToRespond.push(entity);
+            });
         }
 
         let startDate = this.messageForm.get('startDate').value;

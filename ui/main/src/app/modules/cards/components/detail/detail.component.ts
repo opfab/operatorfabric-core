@@ -460,14 +460,14 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         if (this.card.entitiesAllowedToRespond) {
 
             const entitiesAllowedToRespond = this.entitiesService.getEntitiesFromIds(this.card.entitiesAllowedToRespond);
-            const allowed = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond).map(entity => entity.id);
+            const allowed = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond).map(entity => entity.id).filter(x =>  x !== this.card.publisher);
             console.log(new Date().toISOString(), ' Detail card - entities allowed to respond = ', allowed);
 
             // This will be overwritten by the block below if entitiesRequiredToRespond is set and not empty/null
             // This is to avoid repeating the creation of the allowed list
             this._listEntitiesToRespondForHeader = this.createEntityHeaderFromList(allowed);
 
-            this._userEntitiesAllowedToRespond = allowed.filter(x => this.user.entities.includes(x));
+            this._userEntitiesAllowedToRespond = allowed.filter(x =>this.user.entities.includes(x));
             console.log(new Date().toISOString(), ' Detail card - users entities allowed to respond = ', this._userEntitiesAllowedToRespond);
 
         }
