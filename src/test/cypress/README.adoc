@@ -8,15 +8,15 @@ Before running Cypress tests for the first time you need to install it using NPM
 
 [source,bash]
 ----
-cd src/test
+cd src/test/cypress
 npm install
 ----
 
 == Cypress file structure
 
-By default, all test files are located in `cypress/integration` but it is possible to put it on another directory
+By default, all test files are located in `cypress/cypress/integration` but it is possible to put it on another directory
 
-The `commands.js` file under `cypress/support` is used to create custom commands and overwrite existing commands.
+The `commands.js` file under `cypress/cypress/support` is used to create custom commands and overwrite existing commands.
 
 == Launching the OpFab instance to test
 
@@ -60,8 +60,8 @@ To launch the Cypress test runner:
 
 [source,bash]
 ----
-cd src/test
-/node_modules/.bin/cypress open
+cd src/test/cypress
+./node_modules/.bin/cypress open
 ----
 
 This will open the Cypress test runner. Either click on the test you want to run or `run all X tests` on the right to
@@ -91,7 +91,7 @@ However, they are currently quite flaky especially when involving dates (round u
 
 == Creating new tests
 
-Create a new XXXX.spec.js file under `cypress/integration`
+Create a new XXXX.spec.js file under `cypress/cypress/integration`
 
 NOTE: We will need to define a convention for naming and organizing tests.
 
