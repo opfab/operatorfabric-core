@@ -132,8 +132,7 @@ config/dev/nginx.conf
 # MacOS metadata files
 **/.DS_Store
 
-# Node installation for end-to-end testing (so far, Cypress)
-src/test/node_modules
-src/test/package-lock.json
-
 # Cypress
+src/test/cypress/node_modules
+src/test/cypress/package-lock.json
+
