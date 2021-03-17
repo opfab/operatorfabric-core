@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,10 +20,10 @@ import {LoadCard} from '@ofActions/card.actions';
 import {MockStore, provideMockStore} from '@ngrx/store/testing';
 import {provideMockActions} from '@ngrx/effects/testing';
 import {Observable} from 'rxjs';
-import {async, TestBed} from '@angular/core/testing';
-import SpyObj = jasmine.SpyObj;
+import {TestBed, waitForAsync} from '@angular/core/testing';
 import {SoundNotificationService} from "@ofServices/sound-notification.service";
 import {feedInitialState} from "@ofStates/feed.state";
+import SpyObj = jasmine.SpyObj;
 
 describe('CardOperationEffects', () => {
     let actions$: Observable<any>;
@@ -40,7 +40,7 @@ describe('CardOperationEffects', () => {
         },
     } as AppState;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         cardServiceSpy = jasmine.createSpyObj('CardService', ['loadCard']);
         soundNotificationServiceSpy = jasmine.createSpyObj('SoundNotificationService',['handleCards']);
         TestBed.configureTestingModule({

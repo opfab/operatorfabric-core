@@ -14,7 +14,7 @@ import {LoginComponent} from './modules/login/login.component';
 import {LoggingComponent} from './modules/logging/logging.component';
 import {MonitoringComponent} from './modules/monitoring/monitoring.component';
 import {CalendarComponent} from './modules/calendar/calendar.component';
-import { ArchivesEntryPointComponent } from './modules/archives/archives-entry-point.component'
+import {ArchivesEntryPointComponent} from './modules/archives/archives-entry-point.component'
 
 const defaultPath = '/feed';
 const archivePath = 'archives';
@@ -88,13 +88,16 @@ export function redirectToCurrentLocation(currentRouter: Router): void {
 @NgModule({
     imports: [
         RouterModule.forRoot(routes, {
-            enableTracing: false, preloadingStrategy:
-            PreloadAllModules,
-            /* sets initialNavigation to false is needed to enable authentication implicit flow
-            * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
-            */
-            initialNavigation: false
-        })],
+    enableTracing: false, preloadingStrategy: PreloadAllModules,
+    /* sets initialNavigation to false is needed to enable authentication implicit flow
+    * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
+    */
+    /* sets initialNavigation to false is needed to enable authentication implicit flow
+* otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
+*/
+    initialNavigation: 'disabled',
+    relativeLinkResolution: 'legacy'
+})],
     exports: [RouterModule]
 })
 export class AppRoutingModule {

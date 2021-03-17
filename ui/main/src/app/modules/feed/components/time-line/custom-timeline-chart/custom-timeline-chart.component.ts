@@ -13,13 +13,15 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  Inject,
   Input,
   NgZone,
+  OnDestroy,
   OnInit,
   Output,
+  PLATFORM_ID,
   ViewChild,
-  ViewEncapsulation,
-  OnDestroy
+  ViewEncapsulation
 } from '@angular/core';
 import {scaleLinear, scaleTime} from 'd3-scale';
 import {BaseChartComponent, calculateViewDimensions, ChartComponent, ViewDimensions} from '@swimlane/ngx-charts';
@@ -32,7 +34,6 @@ import {Subject} from 'rxjs';
 import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
 import {getNextTimeForRepeating} from '@ofServices/reminder/reminderUtils';
-import {ConditionalExpr} from '@angular/compiler';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 
 
@@ -139,8 +140,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   @Output() zoomChange: EventEmitter<string> = new EventEmitter<string>();
   @Output() widthChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor(chartElement: ElementRef, zone: NgZone, cd: ChangeDetectorRef, private store: Store<AppState>, private router: Router) {
-    super(chartElement, zone, cd);
+  constructor(chartElement: ElementRef, zone: NgZone, cd: ChangeDetectorRef, private store: Store<AppState>, private router: Router, @Inject(PLATFORM_ID) platformId: any) {
+    super(chartElement, zone, cd, platformId);
   }
 
   ngOnInit(): void {

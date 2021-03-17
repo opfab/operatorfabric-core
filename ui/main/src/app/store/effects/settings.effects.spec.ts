@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
 
 
 import {SettingsEffects} from './settings.effects';
@@ -20,20 +19,20 @@ import {
     SettingsActions,
     SettingsActionTypes
 } from "@ofActions/settings.actions";
-import {async} from "@angular/core/testing";
+import {waitForAsync} from "@angular/core/testing";
 import {SettingsService} from "@ofServices/settings.service";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
+import {UserApplicationRegistered} from '@ofStore/actions/user.actions';
+import {User} from '@ofModel/user.model';
 import SpyObj = jasmine.SpyObj;
-import { UserApplicationRegistered } from '@ofStore/actions/user.actions';
-import { User } from '@ofModel/user.model';
 
 describe('SettingsEffects', () => {
     let effects: SettingsEffects;
     let settingsService: SpyObj<SettingsService>;
     let mockStore: SpyObj<Store<AppState>>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         console.log('before each');
         settingsService = jasmine.createSpyObj('SettingsService', ['fetchUserSettings','patchUserSettings']);
         mockStore = jasmine.createSpyObj('Store', ['dispatch', 'select']);

@@ -8,7 +8,7 @@
  */
 
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {InitChartComponent} from './init-chart.component';
 import {APP_BASE_HREF, CommonModule} from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -37,7 +37,7 @@ describe('InitChartComponent', () => {
   let fixture: ComponentFixture<InitChartComponent>;
   let fixture2: ComponentFixture<TimelineButtonsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [CommonModule,
         BrowserAnimationsModule,
