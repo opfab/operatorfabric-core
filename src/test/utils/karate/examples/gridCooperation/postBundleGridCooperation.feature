@@ -12,7 +12,7 @@ Feature: Bundle
      # Push bundle
     Given url opfabUrl + 'businessconfig/processes'
     And header Authorization = 'Bearer ' + authToken
-    And multipart field file = read('bundle_gridCooperation.tar.gz')
+    And multipart file file = {read:'resources/bundle_gridCooperation.tar.gz', contentType: 'application/gzip'}
     When method post
     Then status 201
 

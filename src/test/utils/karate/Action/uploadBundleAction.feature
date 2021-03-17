@@ -15,7 +15,7 @@ Feature: uploadBundleAction
     # Push bundle
     Given url opfabUrl + '/businessconfig/processes'
     And header Authorization = 'Bearer ' + authToken
-    And multipart field file = read('bundle_test_action.tar.gz')
+    And multipart file file = {read:'bundle_test_action.tar.gz', contentType: 'application/gzip'}
     When method post
     Then print response
     And status 201

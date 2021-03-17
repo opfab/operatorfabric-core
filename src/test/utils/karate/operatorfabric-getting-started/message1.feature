@@ -11,7 +11,7 @@ Feature: Message with two different bundle versions
     # Push bundle message version
     Given url opfabUrl + 'businessconfig/processes'
     And header Authorization = 'Bearer ' + authToken
-    And multipart field file = read('resources/bundles/bundle_message.tar.gz')
+    And multipart file file = {read:'resources/bundles/bundle_message.tar.gz', contentType: 'application/gzip'}
     When method post
     Then status 201
 

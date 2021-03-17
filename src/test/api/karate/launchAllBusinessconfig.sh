@@ -21,9 +21,7 @@ java -jar karate.jar                      \
       businessconfig/uploadBundle.feature                 \
       businessconfig/getABusinessconfig.feature           \
       businessconfig/getCss.feature                       \
-      businessconfig/getDetailsBusinessconfig.feature     \
       businessconfig/getI18n.feature                      \
-      businessconfig/getBusinessconfigActions.feature     \
       businessconfig/getBusinessconfig.feature            \
       businessconfig/getBusinessconfigTemplate.feature    \
       businessconfig/getProcessGroups.feature             \
