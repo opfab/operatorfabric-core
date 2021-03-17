@@ -185,10 +185,6 @@ public class CardProcessingService {
         // constraint check : process and state must not contain "." (because we use it as a separator)
         if (!checkIsDotCharacterNotInProcessAndState(c))
             throw new ConstraintViolationException("constraint violation : character '.' is forbidden in process and state", null);
-
-        // constraint check: if it is present, entitiesRequiredToRespond should only contain entities from entitiesAllowedToRespond
-        if(!checkEntitiesRequiredToRespondIsSubsetOfEntitiesAllowedToRespond(c))
-            throw new ConstraintViolationException("constraint violation : entitiesRequiredToRespond should be a subset of entitiesAllowedToRespond", null);
     }
 
     boolean checkIsParentCardIdExisting(CardPublicationData c){
@@ -228,18 +224,6 @@ public class CardProcessingService {
             }
         }
         return true;
-    }
-
-    boolean checkEntitiesRequiredToRespondIsSubsetOfEntitiesAllowedToRespond(CardPublicationData c) {
-        List<String> entitiesRequiredToRespond = c.getEntitiesRequiredToRespond();
-        if(entitiesRequiredToRespond == null) return true;
-        else {
-            List<String> entitiesAllowedToRespond = c.getEntitiesAllowedToRespond();
-            if(entitiesAllowedToRespond == null) return false;
-            else {
-                return entitiesAllowedToRespond.containsAll(entitiesRequiredToRespond);
-            }
-        }
     }
 
     /**
