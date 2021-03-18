@@ -14,7 +14,7 @@ Feature: Bundle
     # Push bundle
     Given url opfabUrl + '/businessconfig/processes'
     And header Authorization = 'Bearer ' + authToken
-    And multipart field file = read('resources/bundle_api_test.tar.gz')
+    And multipart file file = {read:'resources/bundle_api_test.tar.gz', contentType: 'application/gzip'}
     When method post
     Then print response
     And status 201
@@ -22,7 +22,7 @@ Feature: Bundle
   Scenario: Post Bundle without authentication
     # for the time being returns 403 instead of 401
     Given url opfabUrl + '/businessconfig/processes'
-    And multipart field file = read('resources/bundle_api_test.tar.gz')
+    And multipart file file = {read:'resources/bundle_api_test.tar.gz', contentType: 'application/gzip'}
     When method post
     Then print response
     And status 401
@@ -32,7 +32,7 @@ Feature: Bundle
         # for the time being returns 401 instead of 403
     Given url opfabUrl + '/businessconfig/processes'
     And header Authorization = 'Bearer ' + authTokenAsTSO
-    And multipart field file = read('resources/bundle_api_test.tar.gz')
+    And multipart file file = {read:'resources/bundle_api_test.tar.gz', contentType: 'application/gzip'}
     When method post
     Then print response
     And status 403
@@ -43,7 +43,7 @@ Feature: Bundle
     # Push bundle
     Given url opfabUrl + '/businessconfig/processes'
     And header Authorization = 'Bearer ' + authToken
-    And multipart field file = read('resources/bundle_api_test_v2.tar.gz')
+    And multipart file file = {read:'resources/bundle_api_test_v2.tar.gz', contentType: 'application/gzip'}
     When method post
     Then print response
     And status 201
@@ -54,7 +54,7 @@ Feature: Bundle
     # Push bundle
     Given url opfabUrl + '/businessconfig/processes'
     And header Authorization = 'Bearer ' + authToken
-    And multipart field file = read('resources/bundle_test_action.tar.gz')
+    And multipart file file = {read:'resources/bundle_test_action.tar.gz', contentType: 'application/gzip'}
     When method post
     Then print response
     And status 201
@@ -64,7 +64,7 @@ Feature: Bundle
     # Push bundle
     Given url opfabUrl + '/businessconfig/processes'
     And header Authorization = 'Bearer ' + authToken
-    And multipart field file = read('resources/bundle_api_test_apogee.tar.gz')
+    And multipart file file = {read:'resources/bundle_api_test_apogee.tar.gz', contentType: 'application/gzip'}
     When method post
     Then print response
     And status 201

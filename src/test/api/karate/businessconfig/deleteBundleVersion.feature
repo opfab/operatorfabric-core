@@ -15,7 +15,7 @@ Feature: deleteBundleVersion
           # Push bundle
       Given url opfabUrl + '/businessconfig/processes'
       And header Authorization = 'Bearer ' + authToken
-      And multipart field file = read('resources/bundle_api_test.tar.gz')
+      And multipart file file = {read:'resources/bundle_api_test.tar.gz', contentType: 'application/gzip'}
       When method post
       Then print response
       And status 201
@@ -24,7 +24,7 @@ Feature: deleteBundleVersion
           # Push bundle
       Given url opfabUrl + '/businessconfig/processes'
       And header Authorization = 'Bearer ' + authToken
-      And multipart field file = read('resources/bundle_api_test_v2.tar.gz')
+      And multipart file file = {read:'resources/bundle_api_test_v2.tar.gz', contentType: 'application/gzip'}
       When method post
       Then print response
       And status 201
@@ -86,7 +86,7 @@ Feature: deleteBundleVersion
           # Push bundle
       Given url opfabUrl + '/businessconfig/processes'
       And header Authorization = 'Bearer ' + authToken
-      And multipart field file = read('resources/bundle_api_test_v2.tar.gz')
+      And multipart file file = {read:'resources/bundle_api_test_v2.tar.gz', contentType: 'application/gzip'}
       When method post
       Then print response
       And status 201
