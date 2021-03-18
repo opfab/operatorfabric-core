@@ -11,7 +11,6 @@ import {Component, DoCheck, Input, OnChanges, OnDestroy, OnInit, ViewChild} from
 import {CountdownComponent, CountdownConfig, CountdownEvent} from 'ngx-countdown';
 import {AppService, PageType} from "@ofServices/app.service";
 import {ConfigService} from "@ofServices/config.service";
-import {UserService} from "@ofServices/user.service";
 import {Card} from "@ofModel/card.model";
 import {LightCard} from "@ofModel/light-card.model";
 
@@ -36,7 +35,6 @@ export class CountDownComponent implements OnInit, DoCheck, OnChanges, OnDestroy
     MILLISECONDS_SECOND = 1000;
 
     constructor(private configService: ConfigService,
-                private userService: UserService,
                 private _appService: AppService) {
     }
 
@@ -62,19 +60,6 @@ export class CountDownComponent implements OnInit, DoCheck, OnChanges, OnDestroy
         }
     }
 
-    public isValidatelttd(): boolean {
-
-        if (!this.isArchivePageType()) {
-            if (!!this.card.entitiesAllowedToRespond) {
-                const intersection = this.card.entitiesAllowedToRespond.filter(x => this.userService.getCurrentUserWithPerimeters().userData.entities.includes(x));
-                return intersection.length === 1;
-            } else {
-                return true;
-            }
-        }
-        return false;
-    }
-
     isTimeToStartCountDown(): boolean {
         const delta = this.getSecondsBeforeLttd();
         return delta > 0 && delta <= this.secondsBeforeLttdForClockDisplay;
@@ -97,7 +82,7 @@ export class CountDownComponent implements OnInit, DoCheck, OnChanges, OnDestroy
 
     startCountdownWhenNecessary() {
 
-        if (this.card.lttd === null || !this.isValidatelttd()) {
+        if (this.card.lttd === null) {
             this.enableLastTimeToAct = false;
             this.countdown.stop();
         } else if (this.getSecondsBeforeLttd() <= 0) {
@@ -130,10 +115,6 @@ export class CountDownComponent implements OnInit, DoCheck, OnChanges, OnDestroy
                 this.stopCountDown();
             }
         }
-    }
-
-    isArchivePageType(): boolean {
-        return this._appService.pageType == PageType.ARCHIVE;
     }
 
     ngOnDestroy(): void {
