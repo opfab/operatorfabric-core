@@ -534,3 +534,5 @@ definitions:
         type: boolean      
       endDateVisible: 
         type: boolean
+      lttdVisible: 
+        type: boolean

@@ -12,7 +12,8 @@
       "name": "conference.title",
       "color": "#CC9900",
       "userCard" : {
-        "template" : "usercard_conference"
+        "template" : "usercard_conference",
+        "lttdVisible" : false
       },
       "templateName": "conference",
       "styles": [],
@@ -25,7 +26,8 @@
 				"template" : "usercard_incidentInProgress",
 				"severityVisible" : true,
 				"startDateVisible" : false,
-				"endDateVisible" : false
+				"endDateVisible" : false,
+        "lttdVisible" : false
 			},
       "color": "#CC9900",
       "response": {

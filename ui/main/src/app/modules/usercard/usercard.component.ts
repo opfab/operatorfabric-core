@@ -89,6 +89,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     readonly defaultStartDate = new Date().valueOf() + 60000;
     readonly defaultEndDate = new Date().valueOf() + 60000 * 60 * 24;
+    readonly defaultLttdDate = new Date().valueOf() + 60000 * 60 * 24;
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -99,6 +100,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
     severityVisible = true;
     startDateVisible = true;
     endDateVisible = true;
+    lttdVisible = true;
 
     displayForm() {
         return !!this.processOptions && this.processOptions.length > 0;
@@ -137,6 +139,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
             state: new FormControl(''),
             startDate: new FormControl(''),
             endDate: new FormControl(''),
+            lttd: new FormControl(''),
             comment: new FormControl('')
         });
 
@@ -180,6 +183,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
                         this.messageForm.get('startDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.startDate)));
                         if (this.cardToEdit.card.endDate || this.endDateVisible)
                             this.messageForm.get('endDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.endDate)));
+                        this.messageForm.get('lttd').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.lttd)));
                         this.selectedRecipients = this.cardToEdit.card.entityRecipients;
             });
         }
@@ -352,10 +356,12 @@ export class UserCardComponent implements OnDestroy, OnInit {
             this.severityVisible = (userCard.severityVisible === undefined) ? true : userCard.severityVisible;
             this.startDateVisible = (userCard.startDateVisible === undefined) ? true : userCard.startDateVisible;
             this.endDateVisible = (userCard.endDateVisible === undefined) ? true : userCard.endDateVisible;
+            this.lttdVisible = (userCard.lttdVisible === undefined) ? true : userCard.lttdVisible;
         } else {
             this.severityVisible = true;
             this.startDateVisible = true;
             this.endDateVisible = true;
+            this.lttdVisible = true;
         }
 
     }
@@ -429,9 +435,15 @@ export class UserCardComponent implements OnDestroy, OnInit {
         if (!startDate) startDate = this.defaultStartDate;
         else startDate = this.createTimestampFromValue(startDate);
 
+        let lttd = this.messageForm.get('lttd').value;
+        if (!lttd)  lttd = this.lttdVisible ? this.defaultLttdDate : null;
+        else lttd = this.createTimestampFromValue(lttd);
+
         let endDate = this.messageForm.get('endDate').value;
-        if (!endDate)  endDate = this.endDateVisible ? this.defaultEndDate : null;
+        if (!endDate)  endDate = this.endDateVisible ? this.defaultEndDate : this.lttdVisible ? lttd : null;
         else endDate = this.createTimestampFromValue(endDate);
+
+
 
         const title = (!!specificInformation.card.title) ? specificInformation.card.title : 'UNDEFINED';
         const summary = (!!specificInformation.card.summary) ? specificInformation.card.summary : 'UNDEFINED';
@@ -466,6 +478,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
             state: state,
             startDate: startDate,
             endDate: endDate,
+            lttd: lttd,
             severity: severity,
             hasBeenAcknowledged: false,
             hasBeenRead: false,
