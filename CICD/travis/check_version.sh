@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+# Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,7 @@ display_usage() {
 	echo -e "\tcheck_version.sh [OPTIONS] \n"
 	echo -e "options:\n"
 	echo -e "\t-b, --branch  : string. Branch on which Travis is running the build"
-	echo -e "\t-b, --version  : string. Version set for current repository state"
+	echo -e "\t-v, --version  : string. Version set for current repository state"
 }
 
 # Read parameters
@@ -58,11 +58,16 @@ fi
 
 echo "check_version: branch $branch, version $version"
 
+minor_version_pattern='([0-9]+\.[0-9]+)'
+if [[ $branch =~ $minor_version_pattern\.hotfixes$ ]] ; then
+    minor_version=${BASH_REMATCH[1]}
+    [[ $version =~ $minor_version\.[0-9]+\.RELEASE$ ]] && exit 0 || echo "check_version failed: for hotfixes branch $branch version should be $minor_version.X.RELEASE."; exit 1;
+fi
+
 [[ $branch == 'develop' ]] && { [[ $version == 'SNAPSHOT' ]] && exit 0 || echo "check_version failed: for branch develop version should be SNAPSHOT."; exit 1;}
 [[ $branch == 'master' ]] && { [[ $version =~ [0-9]+\.[0-9]+\.[0-9]+\.RELEASE$ ]] && exit 0 || echo "check_version failed: for branch master version should be X.X.X.RELEASE."; exit 1;}
 [[ $branch =~ [0-9]+\.[0-9]+\.[0-9]+\.release$ ]] && { [[ $version == ${branch^^} ]] && exit 0 || echo "check_version failed: for release branch $branch version should be ${branch^^}."; exit 1;}
-[[ $branch =~ OC-.+$ ]] && { [[ $version == 'SNAPSHOT' ]] && exit 0 || echo "check_version failed: for feature branches version should be SNAPSHOT."; exit 1;}
-[[ $branch =~ HF_OC-.+$ ]] && { [[ $version =~ [0-9]+\.[0-9]+\.[0-9]+\.RELEASE$ ]] && exit 0 || echo "check_version failed: for hotfix branches version should be X.X.X.RELEASE."; exit 1;}
+[[ $branch =~ OC-.+$ ]] && { [[ $version == 'SNAPSHOT' || $version =~ [0-9]+\.[0-9]+\.[0-9]+\.RELEASE$ ]] && exit 0 || echo "check_version failed: for feature branches version should be SNAPSHOT or X.X.X.RELEASE."; exit 1;}
 
 echo "check_version failed: unhandled branch type"
 exit 1;
