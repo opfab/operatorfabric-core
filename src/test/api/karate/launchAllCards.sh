@@ -1,6 +1,6 @@
 #/bin/sh
 
-# Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+# Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,30 +9,5 @@
 # This file is part of the OperatorFabric project.
 
 
-java -jar karate.jar                              \
-      cards/fetchArchivedCardsWithParams.feature  \
-      cards/cards.feature                         \
-      cards/cardsWithTimespans.feature            \
-      cards/fetchArchivedCard.feature             \
-      cards/getCardSubscription.feature           \
-      cards/userCards.feature                     \
-      cards/cardsUserAcks.feature                 \
-      cards/cardsUserRead.feature                 \
-      cards/userAcknowledgmentUpdateCheck.feature \
-      cards/postCardWithNoProcess.feature         \
-      cards/postCardWithNoState.feature           \
-      cards/postCardFor3Users.feature             \
-      cards/postCardFor3UsersDeprecated.feature   \
-      cards/postCardsEntitiesToRespond.feature \
-      cards/deleteCardFor3Users.feature           \
-      cards/post2CardsInOneRequest.feature        \
-      cards/post1CardThenUpdateThenDelete.feature \
-      cards/getArchive.feature                    \
-      cards/post2CardsGroupRouting.feature        \
-      cards/post2CardsGroupRoutingDeprecated.feature  \
-      cards/post1BigCards.feature                 \
-      cards/deleteUserCard.feature                    
-      #cards/updateCardSubscription.feature
-      #cards/delete3BigCards.feature               
-
+java -jar karate.jar `cat cardTests.txt`
 
