@@ -30,7 +30,10 @@ We use Travis CI to manage our pipeline. As of today, it is composed of 7 stages
 test-sonar:: Builds the commit, runs tests and sonar analysis
 test:: Similar to `test-sonar` but without sonar analysis
 doc:: Generates the documentation (from asciidoc sources and API documentation) and pushes it to the opfab.github.io
-repository to update the website.
+repository to update the documentation for this release on the website.
+doc-latest:: Generates the documentation (from asciidoc sources and API documentation) and pushes it to the
+opfab.github.io repository to update the documentation for this release, as well as the "current" documentation on the
+website.
 doc-dry-run:: Generates the documentation without pushing it
 docker-push-version:: Builds Docker images, tags them with the current version (either `SNAPSHOT` or `X.X.X.RELEASE`) and
 pushes them to DockerHub
@@ -54,18 +57,19 @@ doc hook:: stands for adding the keyword `ci_documentation` to the commit messag
 docker hook:: stands for adding the keyword `ci_docker` to the commit message
 latest hook:: stands for adding the keyword `ci_latest` to the commit message
 
-.Summary of stage triggers
-[caption="", cols="3,^1,^1,^1,^1,^1,^1,^1,^1,^1,^1,^1", stripes=even]
+.Summary of stage triggers depending on branch
+[caption="", cols="3,^1,^1,^1,^1,^1,^1,^1,^1,^1,^1,^1,^1,^1,^1", stripes=even]
 |==========================
-h|      4+h|develop h|release 2+h|master 3+h|feature or hotfix h| pull request
-h|Stage              h|CRON h|push h|doc hook h|docker hook h|push h|push h|latest hook h|push h|doc hook h|docker hook h|push
-e|test-sonar          |X|X| | |X|X| |X| | |internal
-e|test                | | | | | | | | | | |external
-e|doc                 |X| |X| | |X| | | | |
-e|doc-dry-run         | | | | |X| | | |X| |
-e|docker-push-version |X| | |X| |X| | | | |
-e|docker-push-latest  | | | | | | |X| | | |
-e|docker-tag-version  | | | | |X| | | | |X|
+h|      4+h|develop h|release h|master 4+h|hotfixes 3+h|feature h| pull request
+h|Stage              h|CRON h|push h|doc hook h|docker hook h|push h|push h|push h|doc hook h|docker hook h|latest hook h|push h|doc hook h|docker hook h|push
+e|test-sonar          |X|X| | |X|X|X| | | |X| | |internal
+e|test                | | | | | | | | | | | | | |external
+e|doc                 |X| |X| | | | |X| | | | | |
+e|doc-latest          | | | | | |X| | | |X| | | |
+e|doc-dry-run         | | | | |X| | | | | | |X| |
+e|docker-push-version |X| | |X| |X| | |X| | | | |
+e|docker-push-latest  | | | | | |X| | | |X| | | |
+e|docker-tag-version  | | | | |X| | | | | | | |X|
 |==========================
 
 * The `test-sonar` phase is ran for every build except those triggered by external PRs (i.e. originating from a fork

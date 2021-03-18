@@ -25,7 +25,7 @@ Version numbers for X.Y.Z.RELEASE should be understood like this:
 the same major version.
 * Z: Patch, a patch version only contains bug fixes of current minor version
 
-== Releasing a Version
+== Releasing a Major or Minor Version
 
 IMPORTANT: To release a version we use some Travis dedicated jobs. These jobs are triggered by specific commit keywords
 and rely on the VERSION file at the root of this repository to know which version is being produced.
@@ -52,9 +52,9 @@ explanations if need be.
 . On the link:{opfab_core_repo}[operatorfabric-core repository], create a branch off the `develop` branch named
 `X.X.X.release` (note the lowercase `release` to distinguish it from `X.X.X.RELEASE` tags).
 +
-```
+----
 git checkout -b X.X.X.release
-```
+----
 
 . Cut the contents from the release_notes.adoc file from the
 link:https://github.com/opfab/release-notes/[release-notes repository] and paste it to the release_notes.adoc file
@@ -67,9 +67,9 @@ title by `Version X.X.X.RELEASE`
 
 . Use the ./CICD/prepare_release_version.sh script to automatically perform all the necessary changes:
 +
-```
+----
 ./CICD/prepare_release_version.sh -v X.X.X.RELEASE
-```
+----
 +
 You should get the following output:
 +
@@ -95,16 +95,16 @@ This script performs the following changes:
 +
 . Commit the changes with the template message:
 +
-```
+----
 git add .
 git commit -m "[RELEASE] X.X.X.RELEASE"
-```
+----
 +
 . Push the commit
 +
-```
+----
 git push --set-upstream origin X.X.X.release
-```
+----
 
 . Check that the build is correctly triggered
 +
@@ -117,6 +117,11 @@ image::release_branch_build.png[Running build for release branch screenshot]
 Wait for the build to complete (around 20 minutes) and check that all stages have been successful.
 This ensures that the code builds, tests are OK and there is no error preventing documentation or Docker images
 generation.
+
+NOTE: Specific keywords such as "ci_docker" etc. are no longer required in the case of a release on master as
+by design any release on master becomes the "latest" version, so docker images generation (both for the version
+tag and the latest tag) and documentation update (both for the release and the "current" folder) should always
+be triggered.
 
 === Merging the release branch into `master`
 
@@ -184,29 +189,29 @@ that it's working correctly.
 
 In the "Releases" screen, release `X.X.X.RELEASE`.
 
-== Advertising the new release on the LFE mailing list
+=== Advertising the new release on the LFE mailing list
 
 . Send an email to the opfab-announce@lists.lfenergy.org mailing list with a link to the release notes on the website.
 
 NOTE: Here is the link to the link:https://lists.lfenergy.org/g/main[administration website for the LFE mailing lists]
 in case there is an issue.
 
-== Preparing the next version
+=== Preparing the next version
 
 IMPORTANT: You should wait for all the tasks associated with creating the X.X.X.RELEASE
 version to finish and make sure that they've had the expected output before starting the
 preparation of the next version. This is because any committed/pushed changes preparing the
 new version will make rolling back or correcting any mistake on the release more complicated.
 
-=== In Jira
+==== In Jira
 
 In the "Releases" screen create a new release called `Next Release`.
 
-=== On the release-notes repository
+==== On the release-notes repository
 
 Remove the items listed in the release_notes.adoc file so it's ready for the next version.
 
-=== On the operatorfabric-core repository
+==== On the operatorfabric-core repository
 
 Now that the release branch has served its purpose, it should be deleted so as not to clutter the repository and to
 avoid confusion with the actual release commit tagged on `master`.
@@ -217,3 +222,65 @@ git branch -d X.X.X.release <1>
 <1> Delete the branch locally
 
 NOTE: The branch will automatically be deleted from GitHub after it is merged (new repository policy).
+
+== Releasing a Patch (Hotfixes) Version
+
+Let's say fixes are needed on version X.X.0.RELEASE, and will be released as X.X.X.RELEASE. If it's the first patch 
+version to be released for this minor version (i.e. version X.X.1.RELEASE), you will need to create the `X.X.hotfixes` 
+branch.
+To do so:
+
+[source,bash]
+----
+git checkout X.X.0.RELEASE <1>
+git checkout -b X.X.hotfixes <2>
+----
+<1> Checkout X.X.0.RELEASE tag
+<2> Create (and checkout) branch `X.X.hotfixes` from this commit
+
+If branch `X.X.hotfixes` already exists, you can just check it out.
+
+[source,bash]
+----
+git checkout X.X.hotfixes
+----
+
+You also need to create the corresponding release on JIRA so it can be defined as "Fix version" once the fixes are 
+completed.
+
+Then, follow the process described
+ifdef::single-page-doc[<<working_on_hotfix, here>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/community/index.adoc#working_on_hotfix, here>>] to
+create feature branches, work on fixes and merge them back into `X.X.hotfixes`.
+
+Once all the big fixes that need to go into the version X.X.X.RELEASE have been merged into branch `X.X.hotfix`, you
+can release the patch version. To do so:
+
+. Write a release notes detailing the bug fixes in the release_notes.adoc file found under 
+*src/docs/asciidoc/docs* in the link:{opfab_core_repo}[operatorfabric-core repository].
+
+. Make sure all the issues that have been fixed have "X.X.X.RELEASE" as their "Fix Version" on JIRA.
+
+. Use the ./CICD/prepare_release_version.sh script to automatically perform all the necessary changes:
++
+----
+./CICD/prepare_release_version.sh -v X.X.X.RELEASE
+----
++
+. Commit the changes, tag them and push both to GitHub:
++
+----
+git add .
+git commit -m "[RELEASE] X.X.X.RELEASE ci_docker ci_documentation" <1>
+git tag X.X.X.RELEASE <2>
+git push <3>
+git push origin X.X.X.RELEASE <4>
+----
+<1> Commit the changes
+<2> Tag the release
+<3> Push the commit
+<4> Push the tag
+
+IMPORTANT: In the case of a patch on the last major/minor version tagged on master, this version will become the
+`latest` version. In this case, add `ci_latest` instead of `ci_docker ci_documentation` to the commit message
+to also update the `latest` docker images on DockerHub and the `current` documentation on the website.
