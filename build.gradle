@@ -81,8 +81,6 @@ ext {
             swagger                 : "io.swagger:swagger-codegen-cli:${versions['swagger']}",
             swaggerGeneratorPlugin  : "gradle.plugin.org.hidetake:gradle-swagger-generator-plugin:${versions['swagger.generator.plugin']}",
             swaggerUI               : "org.webjars:swagger-ui:${versions['swaggerUI']}",
-            springfoxSwagger2       : "io.springfox:springfox-swagger2:${versions['springfox']}",
-            springfoxSwaggerUI      : "io.springfox:springfox-swagger-ui:${versions['springfox']}"
     ]
 
     plugin = [

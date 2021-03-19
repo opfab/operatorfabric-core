@@ -30,7 +30,6 @@ subprojects {
     dependencies {
         swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
         swaggerUI generator.swaggerUI
-//        compile generator.springfoxSwagger2
         annotationProcessor misc.lombok
         implementation misc.lombok
         // compileOnly misc.lombok
