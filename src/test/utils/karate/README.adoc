@@ -35,7 +35,8 @@ The result will be available in the `target` repository.
 To display fancy cards into a running OperatorFabric instance:
 
 ....
-./loadBundle.sh && ./postTestCards.sh
+./../../resources/bundles/loadAllBundles.sh 
+./postTestCards.sh
 ....
 
 To clean up :
