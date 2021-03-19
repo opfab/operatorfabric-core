@@ -65,7 +65,7 @@ export class HandlebarsService {
     }
 
     private static registerBool() {
-        Handlebars.registerHelper('bool', function (v1, operator, v2, options) {
+        Handlebars.registerHelper('bool', function (v1, operator, v2) {
             switch (operator) {
                 case '==':
                     // tslint:disable-next-line:triple-equals
@@ -96,7 +96,7 @@ export class HandlebarsService {
     }
 
     private static registerArrayAtIndexLength() {
-        Handlebars.registerHelper('arrayAtIndexLength', function (value, index, options) {
+        Handlebars.registerHelper('arrayAtIndexLength', function (value, index) {
             return value[index].length;
         });
     }
@@ -111,7 +111,7 @@ export class HandlebarsService {
     }
 
     private static registerMath() {
-        Handlebars.registerHelper('math', function(lvalue, operator, rvalue, options) {
+        Handlebars.registerHelper('math', function(lvalue, operator, rvalue) {
             let result;
             switch (operator) {
                 case '+': result = lvalue + rvalue; break;
@@ -125,7 +125,7 @@ export class HandlebarsService {
     }
 
     private static registerArrayAtIndex() {
-        Handlebars.registerHelper('arrayAtIndex', function (value, index, options) {
+        Handlebars.registerHelper('arrayAtIndex', function (value, index) {
             return value[index];
         });
     }
@@ -162,19 +162,19 @@ export class HandlebarsService {
     }
 
     private static registerPreserveSpace() {
-        Handlebars.registerHelper('preserveSpace', function (value, options) {
+        Handlebars.registerHelper('preserveSpace', function (value) {
             return value.replace(/ /g, '\u00A0');
         });
     }
 
     private static registerArrayContains() {
-        Handlebars.registerHelper('arrayContains', function(arr, value, options) {
+        Handlebars.registerHelper('arrayContains', function(arr, value) {
             return arr.includes(value);
         });
     }
 
     private static registerArrayContainsOneOf() {
-        Handlebars.registerHelper('arrayContainsOneOf', function(arr1, arr2, options) {
+        Handlebars.registerHelper('arrayContainsOneOf', function(arr1, arr2) {
             return arr1.some( ai => arr2.includes(ai) );
         });
     }
@@ -189,7 +189,7 @@ export class HandlebarsService {
     }
 
     private static registerToBreakage() {
-        Handlebars.registerHelper('toBreakage', function (word, breakage, options) {
+        Handlebars.registerHelper('toBreakage', function (word, breakage) {
             switch (breakage) {
                 case 'lowercase':
                     return word.toLowerCase();
@@ -223,7 +223,7 @@ export class HandlebarsService {
     }
 
     private static registerKeepSpacesAndEndOfLine() {
-        Handlebars.registerHelper('keepSpacesAndEndOfLine', function (value, options) {
+        Handlebars.registerHelper('keepSpacesAndEndOfLine', function (value) {
             let  result =  Handlebars.escapeExpression(value);
             result = result.replace(/\n/g, '<br/>');
             result = result.replace(/\s\s/g, '&nbsp;&nbsp;');
@@ -233,7 +233,7 @@ export class HandlebarsService {
     }
 
     private static registerMergeArrays() {
-      Handlebars.registerHelper('mergeArrays', function (arr1, arr2, options) {
+      Handlebars.registerHelper('mergeArrays', function (arr1, arr2) {
         return arr1.concat(arr2);
       });
     }
@@ -372,7 +372,7 @@ export class HandlebarsService {
     }
 
     private registerNow() {
-        Handlebars.registerHelper('now', function (options) {
+        Handlebars.registerHelper('now', function () {
             return moment().valueOf();
         });
     }
