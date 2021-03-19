@@ -20,15 +20,7 @@
             },
             "externalRecipients": ["externalRecipient1", "externalRecipient2"]
           },
-          "templateName": "template",
-          "actions": {
-            "action1": {
-              "type": "URL",
-              "label": {
-                "key": "my.card.my.action.label"
-              }
-            }
-          }
+          "templateName": "template"
         }
       }
     }
