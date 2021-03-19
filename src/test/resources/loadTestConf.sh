@@ -9,8 +9,17 @@
 # This file is part of the OperatorFabric project.
 
 
-for d in */; do
-bundle=${d:0:-1}  #remove last character /
- ./loadBundle.sh $bundle $1
-done
-
+url=$1 
+if [[ -z $url ]]
+then
+	url="http://localhost"
+fi
+(
+	cd bundles
+	./deleteAllBundles.sh $url
+	./loadAllBundles.sh $url
+	cd ../processGroups
+	./loadProcessGroups.sh processGroups.json $url
+	cd ../perimeters
+	./createAllPerimeter.sh $url
+)

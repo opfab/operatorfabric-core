@@ -9,8 +9,17 @@
 # This file is part of the OperatorFabric project.
 
 
-for d in */; do
-bundle=${d:0:-1}  #remove last character /
- ./loadBundle.sh $bundle $1
-done
-
+url=$1 
+if [[ -z $url ]]
+then
+	url="http://localhost"
+fi
+(
+	cd cards
+	./sendCard.sh defaultProcess/message.json $url
+	./sendCard.sh defaultProcess/chart.json $url
+	./sendCard.sh defaultProcess/process.json $url
+	./sendCard.sh defaultProcess/question.json $url
+	./sendCard.sh defaultProcess/chartLine.json $url
+	./sendCard.sh defaultProcess/contingencies.json $url
+)

@@ -1,0 +1,14 @@
+{
+	"id" : "userCardExamples",
+	"process" : "userCardExamples",
+	"stateRights" : [
+	  {
+		"state" : "conferenceState",
+		"right" : "ReceiveAndWrite"
+	  },
+	  {
+		"state" : "incidentInProgressState",
+		"right" : "ReceiveAndWrite"
+	  }
+	]
+  }

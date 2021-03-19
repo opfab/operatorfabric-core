@@ -30,7 +30,7 @@
         "display": "BUSINESS"
       },
       "hideAckFilter": false,
-      "secondsBeforeLttdForClockDisplay": 3700,
+      "secondsBeforeLttdForClockDisplay": 7500,
       "hideReadSort": false,
       "hideSeveritySort": false
     },
@@ -128,7 +128,7 @@
     "styleWhenNightDayModeDesactivated" : "NIGHT"
   },
   "navbar": {
-    "hidden": ["logging","monitoring","usercard"],
+    "hidden": [],
     "businessmenus" : {"type":"BOTH"}
   },
   "admin": {

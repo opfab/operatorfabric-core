@@ -118,10 +118,10 @@ In the example below, the `validyForm` creates a `formData` object by retrieving
 In addition, if the user chose several options, it overrides the response state defined in the `config.json` with another
 state.
 
-.src/test/utils/karate/businessconfig/resources/bundle_defaultProcess/template/en/question.handlebars
+.src/test/resources/bundles/defaultProcess_V1/template/en/question.handlebars
 [source,js]
 ----
-include::../../../test/utils/karate/businessconfig/resources/bundle_defaultProcess/template/en/question.handlebars[tag=templateGateway.validyForm_example]
+include::../../../test/resources/bundles/defaultProcess_V1/template/en/question.handlebars[tag=templateGateway.validyForm_example]
 ----
 
 === Define permissions
@@ -214,7 +214,7 @@ field of the child card and then you  can get the name of the entity by calling 
 
 === Example 
 
-You can find an example in the file src/test/utils/karate/businessconfig/resources/bundle_defaultProcess/template/en/question.handlebars.
+You can find an example in the file src/test/resources/bundles/defaultProcess_V1/template/en/question.handlebars.
 
 == Lock mechanism
 
@@ -234,7 +234,7 @@ Once again, after validating its answer, the information will be sent to the thi
 
 == Response enabled
 The template will be informed if the current user has the permission to answer by calling the _templateGateway.setUserCanRespond(boolean)_ function.
-An example of templateGateway.setUserCanRespond() implementation can be found in the file src/test/utils/karate/businessconfig/resources/bundle_defaultProcess/template/en/incidentInProgress.handlebars.
+An example of templateGateway.setUserCanRespond() implementation can be found in the file src/test/resources/bundles/defaultProcess_V1/template/en/incidentInProgress.handlebars.
 
 == Last Time to Decide (`lttd`)
 

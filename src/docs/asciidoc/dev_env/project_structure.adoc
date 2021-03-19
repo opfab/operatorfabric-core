@@ -96,7 +96,7 @@ tests and demonstrations
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/src/test[test]
 *** link:https://github.com/opfab/operatorfabric-core/tree/master/src/test/api[api] : karate code for automatic api testing (non-regression tests)
 *** link:https://github.com/opfab/operatorfabric-core/tree/master/src/test/cypress[cypress] : cypress code for automatic ui testing
-*** link:https://github.com/opfab/operatorfabric-core/tree/master/src/test/utils[utils] : karate code for manual testing 
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources[resources] : scripts and data for manual testing 
 * link:https://github.com/opfab/operatorfabric-core/tree/master/tools[tools]
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/tools/generic[generic]: Generic (as opposed to Spring-related)
 utility code

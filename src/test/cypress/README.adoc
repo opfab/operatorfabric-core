@@ -41,9 +41,8 @@ NOTE: If you need to further adapt the Cypress instance, you can make changes to
 You also need to set up some perimeters and bundles for the tests. To do so:
 
 ----
-cd /src/test/utils/karate
-./loadBundles.sh
-./setPerimeterForTest.sh
+cd /src/test/resources
+loadTestConf.sh
 ----
 
 After you're done with your tests, you can stop and destroy containers (as it is better to start with fresh containers to avoid

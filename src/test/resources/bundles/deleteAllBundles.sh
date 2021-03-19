@@ -8,9 +8,16 @@
 # SPDX-License-Identifier: MPL-2.0
 # This file is part of the OperatorFabric project.
 
+url=$2 
+if [ -z $url ] 
+then
+	url="http://localhost"
+fi
 
-for d in */; do
-bundle=${d:0:-1}  #remove last character /
- ./loadBundle.sh $bundle $1
-done
+echo "Will delete all bundles on $url"
+source ../getToken.sh $url
+curl -s -X DELETE "$url:2100/businessconfig/processes/" -H "Authorization:Bearer $token"
+echo ""
+
+
 

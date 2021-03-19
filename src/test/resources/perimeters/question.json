@@ -1,0 +1,26 @@
+{
+	"id" : "question",
+	"process" : "defaultProcess",
+	"stateRights" : [
+	  {
+		"state" : "responseState",
+		"right" : "Write"
+	  },
+		  {
+		"state" : "questionState",
+		"right" : "ReceiveAndWrite"
+	  },
+			  {
+		"state" : "multipleOptionsResponseState",
+		"right" : "ReceiveAndWrite"
+	  },
+	  {
+		"state" : "messageState",
+		"right" : "ReceiveAndWrite"
+	  },
+	  {
+		"state" : "processState",
+		"right" : "ReceiveAndWrite"
+	  }
+	]
+  }

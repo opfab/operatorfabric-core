@@ -1,0 +1,72 @@
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+# operatorfabric-api-testing
+
+Api testing with Karate DSL 
+
+## Install needed jar
+
+1. Download the latest `karate.jar` from link:++https://github.com/intuit/karate/releases/++[Karate github release page]
+2. Put it in the karate directory, rename it to `karate.jar` to use it easily.
+
+IMPORTANT: If your OperatorFabric instance is not running on localhost, you need to replace localhost with the address
+of your running instance within the `karate-config.js` file.
+
+## Usage
+
+Run the following command lines form this folder.
+
+### Run a feature
+....
+java -jar karate.jar myfeature.feature
+....
+
+The result will be available in the `target` repository.
+
+
+### Non regression tests
+
+You can launch operatorFabric non-regression tests via 3 scripts in src/test/api/karate:
+
+- launchAllBusinessconfig.sh
+- launchAllUsers.sh
+- launchAllCards.sh
+
+For the launchAllCards script to run properly, you need to start a third party test server : 
+
+....
+cd src/test/externalApp
+gradle bootRun
+....
+
+To have the test passed, you need to have a clean Mongo DB database.
+
+## Clean Up Mongo DB
+
+### Connect to running instance
+
+....
+docker exec -it test-quality-environment_mongodb_1 mongo --username root --password password --authenticationDatabase admin
+....
+
+where `test-quality-environment_mongodb_1` is the  docker container name of the current MongoDB instance.
+
+This command line opens directly the mongo shell of the mongoDB docker instance.
+
+### Remove cards and archiveCards collections
+
+The following commands, run into the mongo shell, remove the whole collections of `cards` and `archivedCards`
+
+....
+use operator-fabric
+db.cards.remove({})
+db.archivedCards.remove({})
+....
+
+
+

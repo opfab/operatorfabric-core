@@ -486,12 +486,12 @@ OperatorFabric defines a `css class` that you should use so your templates don't
 
 These styles are especially useful for templates used in user card or card with responses.
 
-Your can find example using these classes in the OperatorFabric core repository (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/utils/karate/businessconfig/resources[src/test/utils/karate/businessconfig/resources]).
+Your can find example using these classes in the OperatorFabric core repository (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/resources/bundles[src/test/resources/bundles]).
 
 
 == Charts 
 
-The library https://www.chartjs.org/[charts.js] is integrated in OperatorFabric, it means it's possible to show charts in cards, you can find a bundle example in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/utils/karate/businessconfig/resources/bundle_defautlProcess[src/test/utils/karate/businessconfig/resources/bundle_defaultProcess]).
+The library https://www.chartjs.org/[charts.js] is integrated in OperatorFabric, it means it's possible to show charts in cards, you can find a bundle example in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/resources/bundles/defautlProcess_V1[src/test/resources/bundle/defaultProcess_V1]).
 
 
 == OperatorFabric specific functions
@@ -524,10 +524,10 @@ templateGateway.redirectToBusinessMenu('myMenu','myEntry','param1=aParam&param2=
 
 For example:
 
-.src/test/utils/karate/businessconfig/resources/bundle_defaultProcess/template/en/chart.handlebars
+.src/test/resources/bundles/defaultProcess_V1/template/en/chart.handlebars
 [source,html]
 ----
-include::../../../test/utils/karate/businessconfig/resources/bundle_defaultProcess/template/en/chart.handlebars[tag=templateGateway.redirectToBusinessMenu_example]
+include::../../../test/resources/bundles/defaultProcess_V1/template/en/chart.handlebars[tag=templateGateway.redirectToBusinessMenu_example]
 ----
 
 This can be useful to pass context from the card to the business application.

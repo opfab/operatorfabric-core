@@ -4,24 +4,26 @@
       "id": "service1",
       "processes": [
         "defaultProcess",
-        "userCardExamples"
+        "gridCooperation"
       ]
     },
     {
       "id": "service2",
       "processes": [
-        "userCardExamples2"
+        "userCardExamples",
+        "userCardExamples2",
+        "userCardExamples3"
       ]
     }
   ],
   "locale": {
     "en": {
-      "service1": "Service number 1",
-      "service2": "Service number 2"
+      "service1": "Base Examples",
+      "service2": "User card  examples "
     },
     "fr": {
-      "service1": "Service numéro 1",
-      "service2": "Service numéro 2"
+      "service1": "Examples de base",
+      "service2": "Examples cartes utilisateurs "
     }
   }
 }
