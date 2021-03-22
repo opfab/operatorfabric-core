@@ -49,7 +49,12 @@
               <span class="opfab-checkbox-checkmark"></span>
             </label>
           </div>
-
+          <div class="row">
+            <of-multi-filter filterPath="parents" id="parents" [parentForm]="entityForm"
+                             [values]="entitiesDropdownList" [dropdownSettings]="entitiesDropdownSettings" [selectedItems]="selectedEntities"
+                             i18nRootLabelKey="admin.input.entity.">
+            </of-multi-filter>
+          </div>
         </div>
       </div>
     </form>

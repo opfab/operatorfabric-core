@@ -14,6 +14,8 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from '@ofServices/crud-service';
+import {EntitiesService} from '@ofServices/entities.service';
+import {Entity} from '@ofModel/entity.model';
 
 @Component({
   selector: 'of-edit-entity-modal',
@@ -28,16 +30,26 @@ export class EditEntityModalComponent implements OnInit {
     name: new FormControl('', [Validators.required]),
     description: new FormControl(''),
     entityAllowedToSendCard: new FormControl(false),
+    parents: new FormControl([]),
   });
 
   @Input() row: any;
   @Input() type: AdminItemType;
 
+  entities: Entity[];
+  entitiesDropdownList = [];
+  selectedEntities = [];
+  entitiesDropdownSettings = {
+    badgeShowLimit: 3,
+    enableSearchFilter: true
+  };
+
   private crudService: CrudService;
 
   constructor(
     private activeModal: NgbActiveModal,
-    private dataHandlingService: SharingService
+    private dataHandlingService: SharingService,
+    private entitiesService: EntitiesService
   ) {
   }
 
@@ -45,11 +57,26 @@ export class EditEntityModalComponent implements OnInit {
     this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.type);
     if (this.row) { // If the modal is used for edition, initialize the modal with current data from this row
       this.entityForm.patchValue(this.row, { onlySelf: true });
+      this.selectedEntities = this.row.parents;
     }
+
+    // Initialize value lists for Entities 
+    this.entities = this.entitiesService.getEntities();
+    this.entities.forEach((entity) => {
+      const id = entity.id;
+      if (!this.row || id !== this.row.id ) {
+        let itemName = entity.name;
+        if (!itemName) {
+          itemName = id;
+        }
+        this.entitiesDropdownList.push({ id: id, itemName: itemName });
+      }
+    });
   }
 
   update() {
     this.cleanForm();
+    this.parents.setValue(this.parents.value.map(entity => entity.id));
     // We call the activeModal "close" method and not "dismiss" to indicate that the modal was closed because the
     // user chose to perform an action (here, update the selected item).
     // This is important as code in the corresponding table components relies on the resolution of the
@@ -84,6 +111,11 @@ export class EditEntityModalComponent implements OnInit {
   get entityAllowedToSendCard() {
     return this.entityForm.get('entityAllowedToSendCard') as FormControl;
   }
+
+  get parents() {
+    return this.entityForm.get('parents') as FormControl;
+  }
+
 
   dismissModal(reason: string): void {
     this.activeModal.dismiss(reason);
