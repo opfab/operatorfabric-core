@@ -194,8 +194,11 @@ NOTE: You can also set the property `entitiesRequiredToRespond` to differentiate
 If `entitiesRequiredToRespond` is set and not empty, the card detail header will use this list instead of
 `entitiesAllowedToRespond`.
 
-IMPORTANT: If set, `entitiesRequiredToRespond` should be a subset of `entitiesAllowedToRespond` or the card will be
-rejected.
+IMPORTANT: If set, `entitiesRequiredToRespond` does not have to be a subset of `entitiesAllowedToRespond`. To determine
+if a user has the right to respond, OperatorFabric consider the union of the two lists.
+
+WARNING: If several entities are allowed/required to respond and if the user is part of several of these entities, so
+the ability for the user to respond to this card is desactivated.
 
 == Integrate child cards 
 

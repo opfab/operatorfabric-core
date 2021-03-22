@@ -533,15 +533,11 @@ class CardProcessServiceShould {
         LocalTime nine = LocalTime.of(9, 0);
         LocalTime fifteen = LocalTime.of(17, 0);
 
-        // entitiesRequiredToRespond is excluded from the randomization (field will be null) because otherwise the
-        // the card would not abide by the constraint that entitiesRequiredToRespond should be a subset of
-        // entitiesAllowedToRespond.This will be tested in dedicated tests.
         EasyRandomParameters parameters = new EasyRandomParameters().seed(5467L).objectPoolSize(100)
                 .randomizationDepth(3).charset(forName("UTF-8")).timeRange(nine, fifteen)
                 .dateRange(today, tomorrow).stringLengthRange(5, 50).collectionSizeRange(1, 10)
                 .excludeField(named("data"))
                 .excludeField(named("parameters"))
-                .excludeField(named("entitiesRequiredToRespond"))
                 .excludeField(named("shardKey"))
                 .randomize(named("recipient").and(FieldPredicates.ofType(Recipient.class))
                                 .and(FieldPredicates.inClass(CardPublicationData.class)),
@@ -1078,46 +1074,12 @@ class CardProcessServiceShould {
     }
 
     @Test
-    void processCardWithEntitiesRequiredToRespondCorrectlySet() {
+    void processCardWithEntitiesRequiredToRespondNotSubsetOfEntitiesAllowedToRespond() {
 
         // Generate random card (this generator is common to all tests so it just generates a random list for
-        // entitiesAllowedToRespond and ignores entitiesRequiredToRespond
+        // entitiesAllowedToRespond and for entitiesRequiredToRespond
         EasyRandom easyRandom = instantiateRandomCardGenerator();
         int numberOfCards = 1;
-        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
-
-        cards.get(0).setParentCardId(null);
-        cards.get(0).setInitialParentCardUid(null);
-
-        // Generate a list of entitiesAllowedToRespond and take a subset of that list to create entitiesRequiredToRespond
-        int numberOfEntitiesAllowedToRespond = 10;
-        List<String> entitiesAllowedToRespond = easyRandom.objects(String.class, numberOfEntitiesAllowedToRespond)
-                .collect(Collectors.toList());
-
-        Collections.shuffle(entitiesAllowedToRespond);
-        int numberOfEntitiesRequiredToRespond = 3;
-
-        List<String> entitiesRequiredToRespond = entitiesAllowedToRespond.subList(0, numberOfEntitiesRequiredToRespond);
-
-        cards.get(0).setEntitiesAllowedToRespond(entitiesAllowedToRespond);
-        cards.get(0).setEntitiesRequiredToRespond(entitiesRequiredToRespond);
-
-        cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
-                .subscribe();
-
-        Long block = cardRepository.count().block();
-        Assertions.assertThat(block).withFailMessage(
-                "The number of registered cards should be '%d' but is " + "'%d' actually",
-                numberOfCards, block).isEqualTo(numberOfCards);
-    }
-
-    @Test
-    void processCardWithEntitiesRequiredToRespondIncorrectlySet() {
-
-        // Generate random card (this generator is common to all tests so it just generates a random list for
-        // entitiesAllowedToRespond and ignores entitiesRequiredToRespond
-        EasyRandom easyRandom = instantiateRandomCardGenerator();
-        int numberOfCards = 3;
         List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
 
         cards.get(0).setParentCardId(null);
@@ -1143,6 +1105,6 @@ class CardProcessServiceShould {
         Long block = cardRepository.count().block();
         Assertions.assertThat(block).withFailMessage(
                 "The number of registered cards should be '%d' but is " + "'%d' actually",
-                numberOfCards, block).isEqualTo(0);
+                numberOfCards, block).isEqualTo(numberOfCards);
     }
 }

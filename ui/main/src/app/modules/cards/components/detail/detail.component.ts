@@ -457,9 +457,15 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this._listEntitiesToRespondForHeader = new Array<EntityMessage>();
         this._userEntitiesAllowedToRespond = [];
 
-        if (this.card.entitiesAllowedToRespond) {
+        let entitiesAllowedToRespondAndEntitiesRequiredToRespond = [];
+        if (this.card.entitiesAllowedToRespond)
+            entitiesAllowedToRespondAndEntitiesRequiredToRespond = entitiesAllowedToRespondAndEntitiesRequiredToRespond.concat(this.card.entitiesAllowedToRespond);
+        if (this.card.entitiesRequiredToRespond)
+            entitiesAllowedToRespondAndEntitiesRequiredToRespond = entitiesAllowedToRespondAndEntitiesRequiredToRespond.concat(this.card.entitiesRequiredToRespond);
 
-            const entitiesAllowedToRespond = this.entitiesService.getEntitiesFromIds(this.card.entitiesAllowedToRespond);
+        if (entitiesAllowedToRespondAndEntitiesRequiredToRespond) {
+
+            const entitiesAllowedToRespond = this.entitiesService.getEntitiesFromIds(entitiesAllowedToRespondAndEntitiesRequiredToRespond);
             const allowed = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond).map(entity => entity.id).filter(x =>  x !== this.card.publisher);
             console.log(new Date().toISOString(), ' Detail card - entities allowed to respond = ', allowed);
 
@@ -467,12 +473,13 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             // This is to avoid repeating the creation of the allowed list
             this._listEntitiesToRespondForHeader = this.createEntityHeaderFromList(allowed);
 
-            this._userEntitiesAllowedToRespond = allowed.filter(x =>this.user.entities.includes(x));
+            this._userEntitiesAllowedToRespond = allowed.filter(x => this.user.entities.includes(x));
             console.log(new Date().toISOString(), ' Detail card - users entities allowed to respond = ', this._userEntitiesAllowedToRespond);
-
+            if (this._userEntitiesAllowedToRespond.length > 1)
+                console.log(new Date().toISOString(), 'Warning : user can respond on behalf of more than one entity, so response is disabled');
         }
 
-        if(this.card.entitiesRequiredToRespond&&this.card.entitiesRequiredToRespond.length>0) {
+        if (this.card.entitiesRequiredToRespond && this.card.entitiesRequiredToRespond.length > 0) {
             const entitiesRequiredToRespond = this.entitiesService.getEntitiesFromIds(this.card.entitiesRequiredToRespond);
             const required = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesRequiredToRespond).map(entity => entity.id);
             this._listEntitiesToRespondForHeader = this.createEntityHeaderFromList(required);
