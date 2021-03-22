@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,8 @@
 
 
 package org.lfenergy.operatorfabric.users.repositories;
+
+import java.util.List;
 
 import org.lfenergy.operatorfabric.users.model.EntityData;
 import org.springframework.data.domain.Page;
@@ -24,5 +26,6 @@ import org.springframework.stereotype.Repository;
 public interface EntityRepository extends MongoRepository<EntityData,String> {
 
     Page<EntityData> findAll(Pageable pageable);
+    List<EntityData> findByParentsContaining(String entityId);
 
 }
