@@ -102,9 +102,6 @@ describe('AuthenticationEffects', () => {
         configService = injectedSpy(ConfigService);
     });
 
-    it('should be created', () => {
-        expect(effects).toBeTruthy();
-    });
 
     describe('TryToLogIn', () => {
         it('should success if JWT is generated from backend', () => {

@@ -32,9 +32,6 @@ describe('EntitiesService', () => {
   afterEach(() => {
     httpMock.verify();
   });
-  it('should be created', () => {
-    expect(entitiesService).toBeTruthy();
-  });
 
   describe('#getAllEntities', () => {
     it('should return an Observable<Entity[]>', () => {

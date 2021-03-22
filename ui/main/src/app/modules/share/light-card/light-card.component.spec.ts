@@ -113,19 +113,4 @@ describe('LightCardComponent', () => {
         });
 
 
-
-    function verifyCorrectInterval(testedString: string) {
-        const minimalLengthOfDisplayDateWithStartAndEndDateInEnglishLocale = 39;
-        const maximalLengthOfDisplayDateWithStartAndEndDateInEnglishLocale = 41;
-        verifyCorrectString(testedString, minimalLengthOfDisplayDateWithStartAndEndDateInEnglishLocale
-            , maximalLengthOfDisplayDateWithStartAndEndDateInEnglishLocale);
-    }
-
-    function verifyCorrectString(testedString: string, min: number, max: number) {
-        expect(testedString).toBeTruthy();
-        const testedLength = testedString.length;
-        expect(testedLength).toBeGreaterThanOrEqual(min);
-        expect(testedLength).toBeLessThanOrEqual(max);
-    }
-
 });
