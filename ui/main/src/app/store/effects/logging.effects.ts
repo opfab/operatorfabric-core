@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
 
 import {Injectable} from '@angular/core';
 import {CardService} from '@ofServices/card.service';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {AppState} from '@ofStore/index';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
@@ -31,8 +31,8 @@ export class LoggingEffects {
     constructor(private store: Store<AppState>, private actions$: Actions, private service: CardService) {
     }
 
-    @Effect()
-    queryLoggingCards: Observable<Action> = this.actions$.pipe(
+    
+    queryLoggingCards: Observable<Action> = createEffect(() => this.actions$.pipe(
         ofType(LoggingActionType.SendLoggingQuery),
         // update the filter state and the archive list
         switchMap((action: SendLoggingQuery) => {
@@ -45,10 +45,10 @@ export class LoggingEffects {
             console.log("error when query logging card  ",error);
             return caught;
         })
-    );
+    ));
 
-    @Effect()
-    queryLoggingPage: Observable<Action> = this.actions$.pipe(
+    
+    queryLoggingPage: Observable<Action> = createEffect(() => this.actions$.pipe(
         ofType(LoggingActionType.UpdateLoggingPage),
         withLatestFrom(this.store.select(selectLoggingFilter)),
         map(([action, filters]) => {
@@ -60,6 +60,6 @@ export class LoggingEffects {
             console.log("error when query logging page ",error);
             return caught;
         })
-    );
+    ));
 
 }

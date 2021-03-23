@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,7 @@
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {UserService} from '@ofServices/user.service';
 import {Observable} from 'rxjs';
 import {
@@ -40,12 +40,12 @@ export class UserEffects {
     }
 
     /**
-     * after that the user is authentificated throught the token,
+     * after that the user is authenticated through the token,
      * detect if the user is already registered in the application and raise the UserApplicationRegistered action
      * if not, set the creation user workflow
      */
-    @Effect()
-    checkUserApplication: Observable<UserActions> = this.actions$
+    
+    checkUserApplication: Observable<UserActions> = createEffect(() => this.actions$
         .pipe(
             ofType(AuthenticationActionTypes.AcceptLogIn),
             switchMap((action: AcceptLogIn) => {
@@ -60,15 +60,15 @@ export class UserEffects {
                         })
                     );
             })
-        );
+        ));
 
 
     /**
      * create the user application (first time in the application)
      * raise an CreateUserApplicationOnSuccess action or CreateUserApplicationOnFailure action.
      */
-    @Effect()
-    CreateUserApplication: Observable<UserActions> = this.actions$
+    
+    CreateUserApplication: Observable<UserActions> = createEffect(() => this.actions$
         .pipe(
             ofType(UserActionsTypes.CreateUserApplication),
             switchMap((action: CreateUserApplication) => {
@@ -85,28 +85,28 @@ export class UserEffects {
                         })
                     );
             }),
-        );
+        ));
 
     /**
      * transition to the userApplicationRegistered action after an CreateUserApplicationOnSuccess action
      */
-    @Effect()
-    transition2UserApplicationRegistered: Observable<UserActions> = this.actions$
+    
+    transition2UserApplicationRegistered: Observable<UserActions> = createEffect(() => this.actions$
         .pipe(
             ofType(UserActionsTypes.CreateUserApplicationOnSuccess),
             map((action: CreateUserApplicationOnSuccess) => {
                 const userDataPayload = action.payload.user;
                 return new UserApplicationRegistered({user: userDataPayload});
             })
-        );
+        ));
 
     /**
      * Query all existing entities from the Users service
      */
-    @Effect()
-    loadAllEntities: Observable<UserActions> = this.actions$.pipe(
+    
+    loadAllEntities: Observable<UserActions> = createEffect(() => this.actions$.pipe(
         ofType(UserActionsTypes.QueryAllEntities),
         switchMap(() => this.userService.queryAllEntities()),
         map((allEntities: Entity[]) => new LoadAllEntities({entities: allEntities}))
-    );
+    ));
 }
