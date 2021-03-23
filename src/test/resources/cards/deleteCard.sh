@@ -8,9 +8,14 @@
 # SPDX-License-Identifier: MPL-2.0
 # This file is part of the OperatorFabric project.
 
-
-for d in */; do
-bundle=${d:0:-1}  #remove last character /
- ./loadBundle.sh $bundle $1
-done
-
+url=$2
+if [ -z $url ] 
+then
+	url="http://localhost"
+fi
+if [ -z $1 ]
+then
+    echo "Usage deleteCard card_id opfab_url"
+else
+    curl -s -X DELETE $url:2102/cards/$1 -H "Content-type:application/json"
+fi

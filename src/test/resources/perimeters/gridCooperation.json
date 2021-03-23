@@ -1,0 +1,30 @@
+{
+	"id" : "gridCooperation",
+	"process" : "gridCooperation",
+	"stateRights" : [
+	  {
+		"state" : "action-FrEs-IGCC-export-0",
+		"right" : "Receive"
+	  },
+	  {
+		"state" : "action-FrEs-IGCC-export-300",
+		"right" : "Receive"
+	  },
+	  {
+		"state" : "action-FrEs-IGCC-import-0",
+		"right" : "Receive"
+	  },
+	  {
+		"state" : "action-FrEs-IGCC-import-300",
+		"right" : "Receive"
+	  },
+	  {
+		"state" : "compliant-FrEs-IGCC",
+		"right" : "Receive"
+	  },
+	  {
+		"state" : "timeout-FrEs-IGCC",
+		"right" : "Receive"
+	  }
+	]
+  }

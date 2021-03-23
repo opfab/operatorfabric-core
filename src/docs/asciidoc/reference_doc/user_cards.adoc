@@ -93,7 +93,7 @@ with the value of the field `message` from the card's data.
 The second part is a javascript method you need to implement to allow OperatorFabric to get your specific data .
 
 To have a better understanding of this feature, we encourage you to have a look at the examples in the OperatorFabric
-core repository under (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/utils/karate/businessconfig/resources/bundle_userCardExamples[src/test/utils/karate/businessconfig/resources/bundle_userCardExamples]).
+core repository under (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/resources/bundles/userCardExamples[src/test/resources/bundles/userCardExamples]).
 
 
 == Method getSpecificCardInformation

@@ -8,19 +8,17 @@
 # SPDX-License-Identifier: MPL-2.0
 # This file is part of the OperatorFabric project.
 
-url=$2 
+
+url=$3 
 if [ -z $url ] 
 then
 	url="http://localhost"
 fi
-if [ -z $1 ]
+if [ -z $1 ] || [ -z $2 ]
 then
-    echo "Usage deleteBundle bundle_name opfab_url"
+    echo "Usage : addPerimeterToGroup perimeter_id group_id opfab_url"
 else
-	echo "Will delete bundle $1 on $url"
-	source ../getToken.sh $url
-	curl -s -X DELETE "$url:2100/businessconfig/processes/$1" -H "Authorization:Bearer $token"
-	echo ""
+    source ../getToken.sh $url
+    echo "Add perimeter $1 to group $2"
+    curl -X PATCH $url:2002/users/groups/$2/perimeters -H "Content-type:application/json" -H "Authorization:Bearer $token" --data "[\"$1\"]"
 fi
-
-

@@ -9,8 +9,17 @@
 # This file is part of the OperatorFabric project.
 
 
-for d in */; do
-bundle=${d:0:-1}  #remove last character /
- ./loadBundle.sh $bundle $1
-done
-
+url=$2 
+if [ -z $url ] 
+then
+	url="http://localhost"
+fi
+if [ -z $1 ]
+then
+    echo "Usage deletePerimeter perimeter_name opfab_url"
+else
+    source ../getToken.sh $url
+    echo "delete perimeter $1 on $url "
+    curl -X DELETE $url:2103/perimeters/$1 -H "Authorization:Bearer $token"
+    echo ""
+fi
