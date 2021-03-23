@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
 
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Observable} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
 import {ConfigService} from '@ofServices/config.service';
@@ -38,8 +38,8 @@ export class FeedFiltersEffects {
 
     }
 
-    @Effect()
-    initTagFilterOnLoadedSettings: Observable<Action> = this.actions$
+    
+    initTagFilterOnLoadedSettings: Observable<Action> = createEffect(() => this.actions$
         .pipe(
             ofType<LoadSettingsSuccess>(SettingsActionTypes.LoadSettingsSuccess),
             map(action => {
@@ -55,19 +55,19 @@ export class FeedFiltersEffects {
             map(v => {
                 return new ApplyFilter({name: FilterType.TAG_FILTER, active: true, status: {tags: v}});
             })
-        );
+        ));
 
-    @Effect()
-    resetFeedFilter: Observable<Action> = this.actions$
+    
+    resetFeedFilter: Observable<Action> = createEffect(() => this.actions$
         .pipe(
             ofType<ResetFilter>(FeedActionTypes.ResetFilter),
             map(() => new ApplySeveralFilters({filterStatuses: this.service.defaultFilters()}))
-        );
+        ));
 
-    @Effect()
-    resetFeedFilterForMonitoring: Observable<Action> = this.actions$
+    
+    resetFeedFilterForMonitoring: Observable<Action> = createEffect(() => this.actions$
         .pipe(
             ofType<ResetFilterForMonitoring>(FeedActionTypes.ResetFilterForMonitoring),
             map(() => new ApplySeveralFilters({filterStatuses: this.service.defaultFiltersForMonitoring()}))
-        );
+        ));
 }
