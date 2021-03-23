@@ -128,7 +128,7 @@
     "styleWhenNightDayModeDesactivated" : "NIGHT"
   },
   "navbar": {
-    "hidden": [],
+    "hidden": ["logging","monitoring","usercard"],
     "businessmenus" : {"type":"BOTH"}
   },
   "admin": {
