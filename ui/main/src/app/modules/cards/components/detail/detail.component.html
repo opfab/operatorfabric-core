@@ -67,8 +67,8 @@
             <div style="width:30%;">
               <span style="padding-left:15px" translate>response.status</span> :
               <span class="opfab-question-card-state-name" translate>{{i18nPrefix+this.cardState.name}} &nbsp;</span>
-              <span *ngIf="!!this.card.lttd"> |</span>
-              <of-countdown [card]="card"></of-countdown>
+              <span *ngIf="!!this.card.lttd"> |<of-countdown [lttd]="this.card.lttd"></of-countdown></span>
+             
             </div>
 
             <div style="width:70%;text-align: right">

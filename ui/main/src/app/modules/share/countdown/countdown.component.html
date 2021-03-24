@@ -6,19 +6,13 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
+<ng-template #tipLttd>
+    <span translate>feed.tips.lttd</span>
+</ng-template>
 
-<span [hidden]="!this.enableLastTimeToAct">
-
-    <ng-template #tipLttd>
-        <span translate>feed.tips.lttd</span>
-    </ng-template>
-
-    <span [hidden]="this.stopTime" placement="right" [ngbPopover]="tipLttd" popoverClass="opfab-popover" container="body" triggers="mouseenter:mouseleave">
-        <countdown #countdown class="lttd-timeleft" [config]='prettyConfig' (event)="onTimerFinished($event)" ></countdown>
-        <em class="far fa-clock lttd-icon lttd-timeleft"></em>
-    </span>
-    <span [hidden]="!this.stopTime" placement="right" [ngbPopover]="tipLttd" popoverClass="opfab-popover" container="body" triggers="mouseenter:mouseleave">
-          <span class="lttd-text" translate>feed.filters.time.lttd.label </span>  
-         <span><em class="far fa-clock lttd-icon" ></em></span> 
-    </span>
+<span *ngIf="this.countDown.isCounting()" class="lttd-timeleft" placement="right" [ngbPopover]="tipLttd" popoverClass="opfab-popover" container="body" triggers="mouseenter:mouseleave">{{this.countDown.getCountDown()}}<em class="far fa-clock lttd-icon lttd-timeleft"></em>
+</span>
+<span *ngIf="this.countDown.isEnded()" placement="right" [ngbPopover]="tipLttd" popoverClass="opfab-popover" container="body" triggers="mouseenter:mouseleave">
+        <span class="lttd-text" translate>feed.lttdFinished </span>  
+        <span><em class="far fa-clock lttd-icon" ></em></span> 
 </span>

@@ -48,8 +48,8 @@
         "titleIfFilterBasedOnBusinessDate": "Business period",
         "start.label": "Start",
         "end.label": "End",
-        "active.label": "Active",
-        "lttd.label": "Finished"
+        "active.label": "Active"
+        
       },
       "type": {
         "title": "Type",
@@ -89,6 +89,7 @@
       "acknowledged": "Acknowledged",
       "lttd": "Time remaining to decide"
     },
+    "lttdFinished": "Finished",
     "received": "Received on",
     "at": "at",
     "from" : "from"
