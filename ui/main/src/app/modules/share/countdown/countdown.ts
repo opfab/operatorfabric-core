@@ -26,36 +26,36 @@ export class CountDown {
 
     private computeCountDown() {
         if (this.stop) return;
-        const remindingTime  = this.endTime - new Date().valueOf();
-        if (remindingTime < 0 ) {
+        const remindingTime = this.endTime - new Date().valueOf();
+        if (remindingTime < 0) {
             this.counting = false;
             this.ended = true;
-        } else {
+            return;
+        } 
+        if (remindingTime < this.milliSecondsBeforeEndTimeForStartingCount) {
 
-            if (remindingTime < this.milliSecondsBeforeEndTimeForStartingCount) {
+            this.counting = true;
+            const remindingTimeInSeconds = Math.round(remindingTime / 1000);
 
-                this.counting = true;
-                const remindingTimeInSeconds = Math.round( remindingTime/ 1000);
+            const hours = Math.floor(remindingTimeInSeconds / 3600);
+            const minutes = Math.floor((remindingTimeInSeconds % 3600) / 60);
+            const seconds = remindingTimeInSeconds % 60;
 
-                const hours = Math.floor(remindingTimeInSeconds / 3600);
-                const minutes = Math.floor((remindingTimeInSeconds % 3600) / 60);
-                const seconds = remindingTimeInSeconds % 60;
+            const minutesAsString = this.convertNumberOnTwoDigitString(minutes);
+            const secondsAsString = this.convertNumberOnTwoDigitString(seconds);
 
-                let minutesAsString;
-                if (minutes < 10) minutesAsString = '0' + minutes;
-                else minutesAsString = minutes
-
-                let secondsAsString;
-                if (seconds < 10) secondsAsString = '0' + seconds;
-                else secondsAsString = seconds
-
-                if (hours != 0) this.countDown = hours + ':' + minutesAsString + ':' + secondsAsString;
-                else this.countDown = minutesAsString + ':' + secondsAsString;
-            }
-            // reprocess 500ms after
-            setTimeout(() => this.computeCountDown(), 500);
+            this.countDown = minutesAsString + ':' + secondsAsString;
+            if (hours != 0) this.countDown = hours + ':' + this.countDown;
         }
+        // reprocess 500ms after
+        setTimeout(() => this.computeCountDown(), 500);
     }
+
+    private convertNumberOnTwoDigitString(numberToConvert: number): string {
+        if (numberToConvert < 10) return '0' + numberToConvert;
+        return numberToConvert.toString();
+    }
+
 
     public isCounting(): boolean {
         return this.counting;
