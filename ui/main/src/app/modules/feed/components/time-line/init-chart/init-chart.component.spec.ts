@@ -80,48 +80,6 @@ describe('InitChartComponent', () => {
     expect(component).toBeTruthy();
   });
 
-
-  xit('should apply different zoom movements on timeline' +
-      'should verify domain value is changed after calling moveDomain function', () => {
-    fixture.detectChanges();
-    const tmp = timelineButtonsComponent.buttonTitle;
-    timelineButtonsComponent.applyNewZoom('drag');
-    expect(tmp).toEqual(timelineButtonsComponent.buttonTitle);
-
-    timelineButtonsComponent.followClockTickMode = true;
-    expect(timelineButtonsComponent.followClockTick).toBeTruthy();
-    expect(timelineButtonsComponent.myDomain).toEqual([1, 2]);
-
-    // check domain change after call moveDomain function with any buttonTitle
-    let domain = timelineButtonsComponent.myDomain;
-    timelineButtonsComponent.moveDomain(true);
-    expect(timelineButtonsComponent.followClockTick).toBeFalsy();
-    expect(domain).not.toEqual(timelineButtonsComponent.myDomain);
-    domain = timelineButtonsComponent.myDomain;
-    timelineButtonsComponent.moveDomain(false);
-    expect(domain).not.toEqual(timelineButtonsComponent.myDomain);
-
-    timelineButtonsComponent.followClockTick = true;
-    domain = timelineButtonsComponent.myDomain;
-    timelineButtonsComponent.buttonTitle = 'M';
-    timelineButtonsComponent.moveDomain(true);
-    expect(timelineButtonsComponent.followClockTick).toBeFalsy();
-    expect(domain).not.toEqual(timelineButtonsComponent.myDomain);
-    domain = timelineButtonsComponent.myDomain;
-    timelineButtonsComponent.moveDomain(false);
-    expect(domain).not.toEqual(timelineButtonsComponent.myDomain);
-
-    domain = timelineButtonsComponent.myDomain;
-    timelineButtonsComponent.buttonTitle = 'Y';
-    timelineButtonsComponent.moveDomain(true);
-    expect(domain).not.toEqual(timelineButtonsComponent.myDomain);
-    domain = timelineButtonsComponent.myDomain;
-    timelineButtonsComponent.moveDomain(false);
-    expect(domain).not.toEqual(timelineButtonsComponent.myDomain);
-    expect(component).toBeTruthy();
-  });
-
-
   it('check applyNewZoom function with only one button' +
       'forward level activated is different', () => {
     fixture.detectChanges();

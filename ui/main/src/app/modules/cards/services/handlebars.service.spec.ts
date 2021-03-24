@@ -72,10 +72,6 @@ describe('Handlebars Services', () => {
         httpMock.verify();
     });
 
-    it('should be created', () => {
-        expect(handlebarsService).toBeTruthy();
-    });
-
     describe('#executeTemplate', () => {
         let userContext = new UserContext('jdoe', 'token', 'John', 'Doe');
         let card = getOneRandomCard({
@@ -127,7 +123,6 @@ describe('Handlebars Services', () => {
             const templateName = Guid.create().toString();
             handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
-                    console.debug(`testing [${v1} ${cond} ${v2}], result ${result}, expected ${expectedResult}`);
                     expect(result).toEqual(expectedResult,
                         `Expected result to be ${expectedResult} when testing [${v1} ${cond} ${v2}]`);
                     done();
@@ -223,7 +218,6 @@ describe('Handlebars Services', () => {
             const testedExpression = `{{conditionalAttribute ${condition} ${attribute}}}`;
             handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
-                    console.debug(`testing [${testedExpression}], result [${result}], expected [${expectedResult}]`);
                     expect(result).toEqual(expectedResult,
                         `Expected result to be ${expectedResult} when testing [${condition}]`);
                     done();
