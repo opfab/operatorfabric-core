@@ -214,7 +214,8 @@
       "notAvailable": "Fonctionnalité non disponible",
       "noRecipientSelected" : "Vous devez au moins choisir un destinataire",
       "templateError" : "Erreur technique : template non conforme",
-      "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques"
+      "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques",
+      "endDateBeforeStartDate": "La date de fin doit être postérieure à la date de début"
     },
     "filters": {
       "severity": "SEVERITE",
