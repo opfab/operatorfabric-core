@@ -1,5 +1,10 @@
 {
   "extends": [
     "config:base"
-  ]
+  ],
+  "stabilityDays": 15,
+  "prCreation": "not-pending",
+  "branchPrefix": "OC-1590_",
+  "branchConcurrentLimit": 10,
+  "prConcurrentLimit":5
 }
