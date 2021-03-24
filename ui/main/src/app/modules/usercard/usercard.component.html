@@ -15,14 +15,17 @@
                 <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="processGroup"
                     [values]="processGroupOptions"></of-single-filter>
             </div>
-            <div class="col">
-                <of-single-filter [hidden]="displayProcessGroupFilter()" i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
-                                  [values]="processOptions"></of-single-filter>
 
-                <of-single-filter [hidden]="! displayProcessGroupFilter()" i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
+            <div class="col" *ngIf="! displayProcessGroupFilter() && !! processOptions && processOptions.length > 1">
+                <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
+                                  [values]="processOptions"></of-single-filter>
+            </div>
+            <div class="col" *ngIf="displayProcessGroupFilter() && !! processOptionsWhenSelectedProcessGroup && processOptionsWhenSelectedProcessGroup.length > 1">
+                <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
                                   [values]="processOptionsWhenSelectedProcessGroup"></of-single-filter>
             </div>
-            <div class="col">
+
+            <div class="col" *ngIf="!! stateOptions && stateOptions.length > 1">
                 <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="state"
                     [values]="stateOptions"></of-single-filter>
 
