@@ -1,19 +1,17 @@
-// ***********************************************
-//
-//
-//
-//
-//
-//
-//
-// ***********************************************
-
 let OpFabUrlCards="http://localhost:2102/cards"
 let OpFafUrlToken="http://localhost:89/auth/token"
 let OpFafUrlAuth="http://localhost:2002/ui/#/"
 let OpFafUrlLang="http://localhost:80/users/users/"
-//let OpFafUrlAuth="http://localhost:89/auth/realms/dev/protocol/openid-connect/auth?response_type=code&client_id=opfab-client&redirect_uri=http://localhost:2002/ui/"
+//TODO Have these url rely on baseUrl or move to separate config file
 
+//TODO Check that all commands are used
+
+
+const ONE_SECOND = 1000;
+
+Cypress.Commands.add('waitDefaultTime', () => {
+    cy.wait(Cypress.env('defaultWaitTime'))
+})
 
 Cypress.Commands.add('PushCard', (processName, processVersion, publisherName, processId, message, severity, startDate, endDate)=>
 {
@@ -74,6 +72,38 @@ Cypress.Commands.add('PushActionCard', (processName, processVersion, publisherNa
         cy.expect(response.body).to.have.property('count', 1);
         cy.expect(response.body).to.have.property('message', 'All pushedCards were successfully handled')
 
+    })
+})
+
+//TODO opfab-client should be configurable?a
+Cypress.Commands.add('getToken', (username,password) => {
+    cy.request({
+            method: 'POST',
+            url: 'http://localhost:2002/auth/token',
+            form: true,
+            body: {
+                username: username,
+                password: password,
+                grant_type: 'password',
+                client_id: 'opfab-client'
+            }
+        }
+    ).its('body').as('getTokenResponse')
+})
+
+//TODO Are there other things that are set up in localstorage or session as part of logging in (keycloak cookies?)
+//TODO token url should be variable
+//TODO Handle other authentication modes?
+Cypress.Commands.add('visitWithToken', (url) => {
+    cy.visit(url,{
+        onBeforeLoad (window) {
+            // and before the page finishes loading
+            // set the user object in local storage
+            window.localStorage.setItem('identifier', this.getTokenResponse.identifier);
+            window.localStorage.setItem('token', this.getTokenResponse.access_token);
+            window.localStorage.setItem('expirationDate', Date.now() + ONE_SECOND * this.getTokenResponse.expires_in);
+            window.localStorage.setItem('clientId', 1); //TODO See if we need to do something more complicated
+        },
     })
 })
 
@@ -153,25 +183,6 @@ Cypress.Commands.add('goToAbout', ()=>
     cy.get('a[routerlink="/about"]').click();
 })
 
-Cypress.Commands.add('getToken', (user,password)=>
-{ cy.log(user)
-    let token;
-    cy.request({
-        method : 'POST',
-        url : OpFafUrlToken,
-        form : true,
-        body: {
-            'username' : user,
-            'password' : password,
-            'grant_type' : 'password',
-            'client_id' : 'opfab-client',
-            'secret' : 'opfab-keycloack-secret'
-        }
-    }).then(response =>{
-        token = response.body.access_token;
-        return token
-    });
-})
 Cypress.Commands.add('getLang', (user,password)=>
 {
     let token;

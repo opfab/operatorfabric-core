@@ -26,11 +26,11 @@ describe ('Check filter business period french version',()=>{
 
     beforeEach('Login, set FR and go to feed', ()=> {
         cy.LogOpFab(login, password)
-        cy.wait(500)
+        cy.waitDefaultTime()
         cy.goToSettings()
         // set to english
         cy.get('#opfab-setting-locale').select('fr')
-        cy.wait(500)
+        cy.waitDefaultTime()
 
         //go to feed
         cy.goToFeed()

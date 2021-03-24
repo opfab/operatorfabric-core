@@ -7,12 +7,12 @@ describe ('CheckTranslations',()=>{
     it('Set French version',()=>{
 
     cy.LogOpFab(login, password)
-    cy.wait(500)  
+    cy.waitDefaultTime()
 
     cy.goToSettings()
   
     cy.get('#opfab-setting-locale').select('fr')
-    cy.wait(500)
+    cy.waitDefaultTime()
 })
     
 it('Check nav bar translation',()=>{  
@@ -43,7 +43,7 @@ it('Check nav bar translation',()=>{
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
 
     cy.log('Navbar labels check sucessfully')
-    cy.wait(500)
+    cy.waitDefaultTime()
 
 })   
 
@@ -74,7 +74,7 @@ it('Check nav bar translation',()=>{
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
 
     cy.should('be.visible')
-    cy.wait(500)
+    cy.waitDefaultTime()
 })
 
 it('Check Feed Filters  translation',()=>{
@@ -129,7 +129,7 @@ it('Check Feed Filters  translation',()=>{
     cy.get('#opfab-feed-filter-dateTimeTo > table.ng-star-inserted > tr > :nth-child(1) > .nopaddingrow > label').contains('Fin')
     cy.should('be.visible')
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
-    cy.wait(500)
+    cy.waitDefaultTime()
 })
 
     it('Check sorting options translation',()=>{
@@ -156,7 +156,7 @@ it('Check Feed Filters  translation',()=>{
     cy.should('be.visible')
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
 
-    cy.wait(500)
+    cy.waitDefaultTime()
 
 })
 
@@ -219,13 +219,13 @@ it('Check archives',()=>{
     cy.should('have.css', 'color', 'rgb(255, 255, 255)')
     cy.should('be.visible')
 
-    cy.wait(500) 
+    cy.waitDefaultTime()
 
 })
 
 it('Check Monitoring',()=>{
     cy.LogOpFab(login, password)
-    cy.wait(500)
+    cy.waitDefaultTime()
     //Go to monitoring 
     cy.get('#opfab-navbar-menu-monitoring').click()
 
@@ -256,14 +256,14 @@ it('Check Monitoring',()=>{
     cy.get('#opfab-monitoring-btn-reset').contains('REINITIALISER')
     cy.should('be.visible')
     cy.should('have.css', 'color', 'rgb(39, 132, 255)')
-    cy.wait(500)
+    cy.waitDefaultTime()
 
 })
 
 
 it('Check Logging',()=>{
     cy.LogOpFab(login, password)
-    cy.wait(500)
+    cy.waitDefaultTime()
     //Go to Logging page
     cy.get('#opfab-navbar-menu-logging').click()
 
@@ -324,7 +324,7 @@ it('Check Logging',()=>{
     cy.should('be.visible')
     cy.should('have.css', 'color', 'rgb(39, 132, 255)')
 
-    cy.wait(500)
+    cy.waitDefaultTime()
 
 })
     it('user name',()=>{
