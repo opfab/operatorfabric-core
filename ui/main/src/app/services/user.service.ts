@@ -11,12 +11,13 @@
 
 import {environment} from '@env/environment';
 import {Observable, Subject} from 'rxjs';
-import {Entity, User} from '@ofModel/user.model';
+import {User} from '@ofModel/user.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {HttpClient} from '@angular/common/http';
 import {catchError, takeUntil, tap} from 'rxjs/operators';
 import {CrudService} from './crud-service';
 import {Injectable} from '@angular/core';
+import {Entity} from '@ofModel/entity.model';
 
 @Injectable({
   providedIn: 'root'
