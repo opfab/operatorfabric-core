@@ -108,7 +108,7 @@ export class LoggingTableComponent implements OnInit, OnDestroy {
                                 [timeOfActionColumnName]: this.timeService.formatDateTime(line.businessDate),
                                 [titleColumnName]: this.translateColumn(line.i18nKeyForTitle.key, line.i18nKeyForTitle.parameters),
                                 [summaryColumnName]: this.translateColumn(line.i18nKeyForSummary.key, line.i18nKeyForSummary.parameters),
-                                [descriptionColumnName]: this.translateColumn(this.processStateDescription.get(line.process + '.' + line.state)),
+                                [descriptionColumnName]: !!this.processStateDescription.get(line.process + '.' + line.state) ? this.translateColumn(this.processStateDescription.get(line.process + '.' + line.state)) : '',
                                 [senderColumnName]: line.sender,
                                 [processGroupColumnName]: this.translateColumn(this.processesService.findProcessGroupLabelForProcess(line.process))
                             });
@@ -117,7 +117,7 @@ export class LoggingTableComponent implements OnInit, OnDestroy {
                                 [timeOfActionColumnName]: this.timeService.formatDateTime(line.businessDate),
                                 [titleColumnName]: this.translateColumn(line.i18nKeyForTitle.key, line.i18nKeyForTitle.parameters),
                                 [summaryColumnName]: this.translateColumn(line.i18nKeyForSummary.key, line.i18nKeyForSummary.parameters),
-                                [descriptionColumnName]: this.translateColumn(this.processStateDescription.get(line.process + '.' + line.state)),
+                                [descriptionColumnName]: !!this.processStateDescription.get(line.process + '.' + line.state) ? this.translateColumn(this.processStateDescription.get(line.process + '.' + line.state)) : '',
                                 [senderColumnName]: line.sender
                             });
                     }
