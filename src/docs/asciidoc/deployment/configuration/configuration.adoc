@@ -191,6 +191,6 @@ externalRecipients-url: "{\
            }"
 ----
 
-Note that `topicname` is a placeholder for now. All response cards are returned via the same Kafka topic.
+Note that `topicname` is a placeholder for now. All response cards are returned via the same Kafka response topic, as specified in the `opfab.kafka.topics.response-card` field.
 
 Also note enabling Kafka does not disable the REST interface.
