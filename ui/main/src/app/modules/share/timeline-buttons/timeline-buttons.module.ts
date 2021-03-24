@@ -12,7 +12,6 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {CountdownModule} from 'ngx-countdown';
 import {TimelineButtonsComponent} from "./timeline-buttons.component";
 
 
@@ -23,8 +22,7 @@ import {TimelineButtonsComponent} from "./timeline-buttons.component";
         FormsModule,
         ReactiveFormsModule,
         TranslateModule,
-        NgbModule,
-        CountdownModule
+        NgbModule
     ],
     exports: [TimelineButtonsComponent]
 })

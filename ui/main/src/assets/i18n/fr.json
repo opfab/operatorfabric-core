@@ -48,8 +48,7 @@
         "titleIfFilterBasedOnBusinessDate": "Période métier",
         "start.label": "Début",
         "end.label": "Fin",
-        "active.label": "Actif",
-        "lttd.label": "Terminée"
+        "active.label": "Actif"
       },
       "type": {
         "title": "Type",
@@ -89,6 +88,7 @@
       "acknowledged": "Acquittée",
       "lttd": "Temps restant pour décider"
     },
+    "lttdFinished": "Terminée",
     "received": "Reçu le",
     "at" : "à",
     "from": "de"
@@ -214,7 +214,8 @@
       "notAvailable": "Fonctionnalité non disponible",
       "noRecipientSelected" : "Vous devez au moins choisir un destinataire",
       "templateError" : "Erreur technique : template non conforme",
-      "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques"
+      "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques",
+      "endDateBeforeStartDate": "La date de fin doit être postérieure à la date de début"
     },
     "filters": {
       "severity": "SEVERITE",

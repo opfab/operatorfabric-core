@@ -48,8 +48,8 @@
         "titleIfFilterBasedOnBusinessDate": "Business period",
         "start.label": "Start",
         "end.label": "End",
-        "active.label": "Active",
-        "lttd.label": "Finished"
+        "active.label": "Active"
+        
       },
       "type": {
         "title": "Type",
@@ -89,6 +89,7 @@
       "acknowledged": "Acknowledged",
       "lttd": "Time remaining to decide"
     },
+    "lttdFinished": "Finished",
     "received": "Received on",
     "at": "at",
     "from" : "from"
@@ -214,7 +215,8 @@
       "notAvailable": "Feature not available",
       "noRecipientSelected": "You must at least choose one recipient",
       "templateError": "Technical error : invalid template",
-      "impossibleToSendCard": "Impossible to send card for technical reasons"
+      "impossibleToSendCard": "Impossible to send card for technical reasons",
+      "endDateBeforeStartDate": "End date must be after start date"
     },
     "filters": {
       "severity": "SEVERITY",

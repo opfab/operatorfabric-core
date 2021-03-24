@@ -54,10 +54,31 @@ To enable Kafka support you need to set the `kafka.consumer.group_id property` i
         group-id: opfab-command
 ----
 
-The default topic from which the messages are consumed is called 'opfab'. This setting can be modified by setting `opfab.kafka.card.topics.topicname`.
+The default topic from which the messages are consumed is called `opfab`. This setting can be modified by setting `opfab.kafka.card.topics.topicname`.
+The default topic to which messages are produced is called `opfab-response`. This setting can be modified by setting the `opfab.kafka.topics.response-card`, see below.
 
-Make sure you also set the registry to either an empty string (`""`) or to the server providing the schema registry service.
+The default Kafka Avro serializers and deserializers need a registry service. Make sure the registry service setting is provided in
+the `card-publication.yml` file. When you use the provided `KafkaAvroWithoutRegistrySerializer` and
+`KafkaAvroWithoutRegistryDeserializer` no schema registry setting is needed.
+
 With the default settings, the Kafka consumer expects a broker running on http//127.0.0.1:9092 and a schema registry on http://127.0.0.1:8081.
+
+Example settings for the cards-publication.yml file:
+[source,yaml]
+----
+opfab:
+  kafka:
+    topics:
+      card:
+        topicname: opfab
+      response-card:
+        topicname: opfab-response
+    schema:
+      registry:
+        url: http://localhost:8081
+
+----
+
 <<Cards-publication service>> for more settings.
 
 See link:{kafka_schema}[Schema management] for detailed information on using and benefits of a schema registry.
@@ -97,8 +118,7 @@ spring:
 To send a CardCommand to OperatorFabric, start by implementing a simple Kafka producer by following for example link:{spring_kafka_doc}[Spring for Apache Kafka].
 Note that some properties of CardCommand or its embedded Card are required. If not set, the card will be rejected by OperatorFabric.
 
-When you dump the card (which is about to be put on a topic) to stdout, you should see something like the line below. Do ignore the actual values from
-the dump below.
+When you dump the card (which is about to be put on a topic) to stdout, you should see something like the line below. Do ignore the actual values from the dump below.
 
 [source, json]
 ----
@@ -157,4 +177,4 @@ externalRecipients-url: "{\
            }"
 ----
 
-Note that `topicname` is a placeholder for now. All response cards are returned via the same Kafka topic.
+Note that `topicname` is a placeholder for now. All response cards are returned via the same Kafka response topic, as specified in the `opfab.kafka.topics.response-card` field.

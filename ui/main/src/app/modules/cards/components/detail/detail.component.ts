@@ -268,7 +268,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         const previous = this.lttdExpiredIsTrue;
         this.checkLttdExpired();
         if (previous !== this.lttdExpiredIsTrue) {
-            templateGateway.setLttdExpired(this.lttdExpiredIsTrue);
+            // Wait one second before sending the information to the template
+            // to be synchronized with the countdown in card header and feed 
+            setTimeout( () => templateGateway.setLttdExpired(this.lttdExpiredIsTrue),1000);
         }
     }
 

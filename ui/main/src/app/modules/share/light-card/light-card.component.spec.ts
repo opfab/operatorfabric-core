@@ -19,7 +19,6 @@ import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {ProcessesService} from '@ofServices/processes.service';
-import {CountdownConfig, CountdownGlobalConfig} from 'ngx-countdown';
 import {ServicesModule} from '@ofServices/services.module';
 import {Router} from '@angular/router';
 import 'moment/locale/fr';
@@ -29,10 +28,6 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountDownModule} from '../countdown/countdown.module';
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
-
-export function countdownConfigFactory(): CountdownConfig {
-    return { format: `mm:ss` };
-  }
 
 
 describe('LightCardComponent', () => {
@@ -70,7 +65,6 @@ describe('LightCardComponent', () => {
             providers: [
                 {provide: store, useClass: Store},
                 {provide: Router, useValue: myrout},
-                {provide: CountdownGlobalConfig, useFactory: countdownConfigFactory},
                 ProcessesService,
                 {provide: 'TimeEventSource', useValue: null},
                 TimeService, I18nService
@@ -112,20 +106,5 @@ describe('LightCardComponent', () => {
         expect(FiveJune2019at10AMDateString).toEqual('05/06/2019 10:00');
         });
 
-
-
-    function verifyCorrectInterval(testedString: string) {
-        const minimalLengthOfDisplayDateWithStartAndEndDateInEnglishLocale = 39;
-        const maximalLengthOfDisplayDateWithStartAndEndDateInEnglishLocale = 41;
-        verifyCorrectString(testedString, minimalLengthOfDisplayDateWithStartAndEndDateInEnglishLocale
-            , maximalLengthOfDisplayDateWithStartAndEndDateInEnglishLocale);
-    }
-
-    function verifyCorrectString(testedString: string, min: number, max: number) {
-        expect(testedString).toBeTruthy();
-        const testedLength = testedString.length;
-        expect(testedLength).toBeGreaterThanOrEqual(min);
-        expect(testedLength).toBeLessThanOrEqual(max);
-    }
 
 });

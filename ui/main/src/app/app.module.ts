@@ -25,7 +25,6 @@ import {OAuthModule} from 'angular-oauth2-oidc';
 import {LoggingModule} from './modules/logging/logging.module';
 import {MonitoringModule} from './modules/monitoring/monitoring.module';
 import {AdminModule} from './modules/admin/admin.module';
-import {CountdownConfig, CountdownGlobalConfig, CountdownModule} from 'ngx-countdown';
 import {CalendarModule} from './modules/calendar/calendar.module';
 import {AppErrorHandler} from './common/error/app-error-handler';
 import {ArchivesModule} from './modules/archives/archives.module';
@@ -33,10 +32,6 @@ import {NavbarModule} from './modules/navbar/navbar.module';
 import {NgbModalModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {FontAwesomeIconsModule} from './modules/utilities/fontawesome-icons.module';
 
-
-export function countdownConfigFactory(): CountdownConfig {
-    return { format: `mm:ss` };
-  }
 
 @NgModule({
   imports: [
@@ -58,7 +53,6 @@ export function countdownConfigFactory(): CountdownConfig {
     NgbModalModule,
     AppRoutingModule,
     AdminModule,
-    CountdownModule,
     CalendarModule,
     NavbarModule
   ],
@@ -68,7 +62,6 @@ export function countdownConfigFactory(): CountdownConfig {
 
 
   providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy },
-  { provide: CountdownGlobalConfig, useFactory: countdownConfigFactory },
   { provide: ErrorHandler, useClass: AppErrorHandler }
   ],
   bootstrap: [AppComponent]

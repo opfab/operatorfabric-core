@@ -39,8 +39,8 @@
                 <p *ngIf="this.dateToDisplay" class="card-subtitle">({{this.dateToDisplay}})</p>
 
                 <div class="ml-auto align-self-center pr-2">
-                    <div class="d-flex align-items-end flex-row" style="margin-top: -0.5rem">
-                        <of-countdown [card]="lightCard"></of-countdown>
+                    <div class="d-flex align-items-end flex-row" style="margin-top: -0.5rem" >
+                        <of-countdown  *ngIf="!!lightCard.lttd" [lttd]="lightCard.lttd"></of-countdown>
                     </div>
                 </div>
             </div>

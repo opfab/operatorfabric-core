@@ -443,7 +443,10 @@ export class UserCardComponent implements OnDestroy, OnInit {
         if (!endDate)  endDate = this.endDateVisible ? this.defaultEndDate : this.lttdVisible ? lttd : null;
         else endDate = this.createTimestampFromValue(endDate);
 
-
+        if (!!endDate && endDate < startDate) {
+            this.displayMessage('userCard.error.endDateBeforeStartDate','',MessageLevel.ERROR);
+            return;
+        }
 
         const title = (!!specificInformation.card.title) ? specificInformation.card.title : 'UNDEFINED';
         const summary = (!!specificInformation.card.summary) ? specificInformation.card.summary : 'UNDEFINED';
