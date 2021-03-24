@@ -5,7 +5,7 @@ plugins {
     id "org.asciidoctor.convert" version "1.5.10"
     id "maven-publish"
     id "signing"
-    id "org.owasp.dependencycheck" version "5.2.0"
+    id "org.owasp.dependencycheck" version "5.3.2.1"
     id 'org.springframework.boot' version '2.4.0-M1'
     id 'org.sonarqube' version '3.0' apply false
 }
