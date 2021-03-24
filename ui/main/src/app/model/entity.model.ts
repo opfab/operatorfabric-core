@@ -12,11 +12,11 @@
 export class Entity {
 
     public constructor(
-    readonly id:string,
-    readonly name:string,
-    readonly description:string,
-    readonly entityAllowedToSendCard:boolean,
+    readonly id: string,
+    readonly name: string,
+    readonly description: string,
+    readonly entityAllowedToSendCard: boolean,
     readonly parents: string[]
-){}
+) {}
 
 }

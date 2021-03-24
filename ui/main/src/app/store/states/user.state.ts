@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,16 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Entity} from "@ofModel/user.model";
+import {Entity} from '@ofModel/entity.model';
 
 export interface UserState {
-    registered : boolean,
-    group : string[]
-    allEntities: Entity[]
+    registered: boolean;
+    group: string[];
+    allEntities: Entity[];
 }
 
-export const userInitialState : UserState = {
+export const userInitialState: UserState = {
     registered : false,
     group : null,
     allEntities: null
-}
+};
