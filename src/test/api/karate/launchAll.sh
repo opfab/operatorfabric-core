@@ -9,4 +9,8 @@
 # This file is part of the OperatorFabric project.
 
 rm -rf target
+echo "Zip all bundles"
+cd businessconfig/resources
+./packageBundles.sh
+cd ../..
 java -jar karate.jar    `cat businessConfigTests.txt` `cat cardTests.txt` `cat userTests.txt` `cat adminTests.txt`
