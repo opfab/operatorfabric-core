@@ -35,7 +35,7 @@
             <br />
         </div>
         <br />
-        <div class="row opfab-feedconfiguration-processlist">
+        <div class="row opfab-feedconfiguration-processlist" *ngIf="!! processesWithoutGroup && processesWithoutGroup.length">
             <div class="col-md" *ngFor="let process of processesWithoutGroup; ">
                 <p class="font-weight-bold">{{process.processLabel}}</p>
                 <div style="margin-left: 20px;">
