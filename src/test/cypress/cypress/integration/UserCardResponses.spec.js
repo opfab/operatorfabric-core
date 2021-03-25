@@ -84,13 +84,13 @@ describe ('UserCardResponses',()=>{
 
     it('Set current language Fr, Send a card to operator 1 and 2 and verify for operator1 ',()=>{
     cy.LogOpFab(login, password)
-    cy.wait(500)
+    cy.waitDefaultTime()
     cy.goToSettings()
     cy.get('#opfab-setting-locale').select('fr')
-    cy.wait(500)
+    cy.waitDefaultTime()
     cy.goToFeed()
     cy.PushActionCard(processName1, publisherV1, publisherName1, processInstanceId1, state1, severity1, startDateint1, endDate1,lttd)
-    cy.wait(1000)
+    cy.waitDefaultTime()
 
     cy.get('#opfab-feed-light-card-'+processName1+'-'+processInstanceId1+' :nth-child(1) > .p-1 > [style="display: flex;"] > .card-title') .click({ force: true })
 
@@ -124,7 +124,7 @@ describe ('UserCardResponses',()=>{
 
     cy.log('Card checked for '+ login)
 
-    cy.wait(400)
+    cy.waitDefaultTime()
 
 
 })
@@ -133,7 +133,7 @@ it('Set current language En, verify previous card for operator2',()=>{
     cy.LogOpFab(login2, password)
     cy.goToSettings()
     cy.get('#opfab-setting-locale').select('en')
-    cy.wait(500)
+    cy.waitDefaultTime()
     cy.goToFeed()
     cy.get('#opfab-feed-light-card-'+processName1+'-'+processInstanceId1+' :nth-child(1) > .p-1 > [style="display: flex;"] > .card-title') .click({ force: true })
 
@@ -179,7 +179,7 @@ it('Set current language En, verify previous card for operator2',()=>{
     cy.should('have.css', 'color',white)
 
     cy.get('#div-detail-msg').click()
-    cy.wait(400)
+    cy.waitDefaultTime()
 
     cy.get('[style="width: 70%; text-align: right;"] > :nth-child(3)').contains(entity1)
     cy.should('be.visible')
@@ -197,7 +197,7 @@ it('Set current language En, verify previous card for operator2',()=>{
 
     cy.log('Card checked for '+ login2)
 
-    cy.wait(400)
+    cy.waitDefaultTime()
 
 
     //check card content
@@ -223,7 +223,7 @@ it('log in with operator 1, check last card update, and answer on behalf of cont
     cy.LogOpFab(login,password)
     cy.goToSettings()
     cy.get('#opfab-setting-locale').select('fr')
-    cy.wait(500)
+    cy.waitDefaultTime()
     cy.goToFeed()
     cy.get('#opfab-feed-light-card-'+processName1+'-'+processInstanceId1+' :nth-child(1) > .p-1 > [style="display: flex;"] > .card-title') .click({ force: true })
 
@@ -321,14 +321,14 @@ it('log in with operator3, check last card update, and modify the answer on beha
 
 
     cy.LogOpFab(login3, password)
-    cy.wait(500)
+    cy.waitDefaultTime()
     cy.goToSettings()
     cy.get('#opfab-setting-locale').select('fr')
 
-    cy.wait(500)
+    cy.waitDefaultTime()
     cy.goToFeed()
 
-    cy.wait(500)
+    cy.waitDefaultTime()
 
     cy.get('#opfab-feed-light-card-'+processName1+'-'+processInstanceId1+' :nth-child(1) > .p-1 > [style="display: flex;"] > .card-title') .click({ force: true })
 
@@ -441,15 +441,15 @@ it('log in with operator3, check last card update, and modify the answer on beha
 it('log in with operator4 , check last card update, verify that he can\'t modify the card',()=>{
 
     cy.LogOpFab(login4, password)
-    cy.wait(500)
+    cy.waitDefaultTime()
     cy.goToSettings()
 
     cy.get('#opfab-setting-locale').select('fr')
-    cy.wait(500)
+    cy.waitDefaultTime()
     cy.goToFeed()
 
 
-    cy.wait(500)
+    cy.waitDefaultTime()
 
     cy.get('#opfab-feed-light-card-'+processName1+'-'+processInstanceId1+' :nth-child(1) > .p-1 > [style="display: flex;"] > .card-title') .click({ force: true })
 
@@ -512,10 +512,10 @@ it('Send a card that is about to expire and verify that the validation buttons a
 
     //login has to belong to Control room 1
     cy.LogOpFab(login,password)
-    cy.wait(500)
+    cy.waitDefaultTime()
     //Send an expired card
     cy.PushActionCard(processName2, publisherV2, publisherName2, processInstanceId2, state2, severity2, startDateint2, endDate2,lttd2)
-    cy.wait(500)
+    cy.waitDefaultTime()
 
     //Check the card specially that the button to validate the answer is disabled
     cy.get('#opfab-feed-light-card-'+processName2+'-'+processInstanceId2+' :nth-child(1) > .p-1 > [style="display: flex;"] > .card-title') .click({ force: true })
@@ -532,7 +532,7 @@ it('verify that the validation button is disabled for entity 2 as well',()=>{
 
     //login has to belong to Control room 2
     cy.LogOpFab(login2,password)
-    cy.wait(500)
+    cy.waitDefaultTime()
 
     cy.get('#opfab-feed-light-card-'+processName2+'-'+processInstanceId2+' :nth-child(1) > .p-1 > [style="display: flex;"] > .card-title') .click({ force: true })
     cy.get('#opfab-card-details-btn-response').should('be.disabled')

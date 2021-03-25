@@ -208,35 +208,35 @@ let dateDisplayed12= "("+ startdatedisplayed12 + " - " + endDatedisplayed12+ ")"
 
     it('Send 12 cards',()=>{
     cy.LogOpFab(login, password)
-    cy.wait(500)
+    cy.waitDefaultTime()
     cy.PushCard(processName1, publisherV1, publisherName1, processInstanceId1, state1, severity1, startDateint1, endDate1)
-    cy.wait(1000)
+    cy.waitDefaultTime()
     cy.PushCard(processName2, publisherV2, publisherName2, processInstanceId2, state2, severity2, startDateint2, endDate2)
-    cy.wait(2000)
+    cy.waitDefaultTime()
     cy.PushCard(processName3, publisherV3, publisherName3, processInstanceId3, state3, severity3, startDateint3, endDate3)
-    cy.wait(1200)
+    cy.waitDefaultTime()
     cy.PushCard(processName4, publisherV4, publisherName4, processInstanceId4, state4, severity4, startDateint4, endDate4)
-    cy.wait(500)
+    cy.waitDefaultTime()
     cy.PushCard(processName5, publisherV5, publisherName5, processInstanceId5, state5, severity5, startDateint5, endDate5)
-    cy.wait(1000)
+    cy.waitDefaultTime()
     cy.PushCard(processName6, publisherV6, publisherName6, processInstanceId6, state6, severity6, startDateint6, endDate6)
-    cy.wait(1200)
+    cy.waitDefaultTime()
     cy.PushCard(processName7, publisherV7, publisherName7, processInstanceId7, state7, severity7, startDateint7, endDate7)
-    cy.wait(1200)
+    cy.waitDefaultTime()
     cy.PushCard(processName8, publisherV8, publisherName8, processInstanceId8, state8, severity8, startDateint8, endDate8)
-    cy.wait(1200)
+    cy.waitDefaultTime()
     cy.PushCard(processName9, publisherV9, publisherName9, processInstanceId9, state9, severity9, startDateint9, endDate9)
-    cy.wait(1200)
+    cy.waitDefaultTime()
     cy.PushCard(processName10, publisherV10, publisherName10, processInstanceId10, state10, severity10, startDateint10, endDate10)
-    cy.wait(1200)
+    cy.waitDefaultTime()
     cy.PushCard(processName11, publisherV11, publisherName11, processInstanceId11, state11, severity11, startDateint11, endDate11)
-    cy.wait(1200)
+    cy.waitDefaultTime()
     cy.PushCard(processName12, publisherV12, publisherName12, processInstanceId12, state12, severity12, startDateint12, endDate12)
 
         //Change locale to English as rest of the test relies on French translations
         cy.goToSettings()
         cy.get('#opfab-setting-locale').select('en')
-        cy.wait(500)
+        cy.waitDefaultTime()
         cy.goToFeed()
 
     //Ack card n 3
@@ -256,7 +256,7 @@ let dateDisplayed12= "("+ startdatedisplayed12 + " - " + endDatedisplayed12+ ")"
 // check acknowledged car by applying a filter
     cy.get('#opfab-feed-filter-btn-filter').click()
     
-    cy.wait(900)
+    cy.waitDefaultTime()
     cy.get('#ack-filter-form > :nth-child(2) > [translate=""]').click()
 //Check that the ACK icone is visible
     cy.get('#opfab-feed-light-card-defaultProcess-cypress-test-4 > :nth-child(1) > .p-1 > [style="display: flex;"] > .ml-auto > .d-flex > .p-2 > .fa').should('be.visible')
@@ -298,7 +298,7 @@ cy.get('#opfab-feed-light-card-defaultProcess-cypress-test-4 > :nth-child(1) > .
 cy.get('#opfab-feed-light-card-defaultProcess-cypress-test-4 > :nth-child(1) > .p-1 > [style="display: flex; width: 100%; margin-top: 5px;"] > .card-subtitle').should('not.exist')
 
 cy.get('#opfab-feed-filter-btn-filter').click()
-cy.wait(900)
+cy.waitDefaultTime()
 cy.get('#ack-filter-form > :nth-child(2) > [translate=""]').click()
 
 })

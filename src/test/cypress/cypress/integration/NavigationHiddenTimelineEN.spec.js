@@ -26,11 +26,11 @@ describe ('Hide timeline and check the business periods displayed',()=>{
 
     beforeEach('Login, set EN and go to feed', ()=> {
         cy.LogOpFab(login, password)
-        cy.wait(500)
+        cy.waitDefaultTime()
         cy.goToSettings()
         // set to english
         cy.get('#opfab-setting-locale').select('en')
-        cy.wait(500)
+        cy.waitDefaultTime()
 
         //go to feed
         cy.goToFeed()

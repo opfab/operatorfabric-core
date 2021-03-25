@@ -96,3 +96,8 @@ NOTE: We will need to define a convention for naming and organizing tests.
 
 Start writing tests, cypress is well documented https://docs.cypress.io/api/api/table-of-contents.html
 
+== Configuration
+
+* The base url of the OperatorFabric instance you're testing against can be changed in `cypress.json`.
+* Using the custom-defined command cy.waitDefaultTime() instead of cy.wait(XXX) allows the wait time to be changed
+globally for all steps using the defaultWaitTime enviroment variable defined in `cypress.json`.

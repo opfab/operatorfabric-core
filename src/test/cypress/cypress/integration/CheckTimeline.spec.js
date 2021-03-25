@@ -178,25 +178,25 @@ describe ('CheckTimeline',()=>{
    
        it('Send cards for timeline',()=>{
        cy.LogOpFab(login, password)
-       cy.wait(500)
+       cy.waitDefaultTime()
        cy.PushCard(processName1, publisherV1, publisherName1, processInstanceId1, state1, severity1, startDateint1, endDate1)
-       cy.wait(2000)
+       cy.waitDefaultTime()
        cy.PushCard(processName2, publisherV2, publisherName2, processInstanceId2, state2, severity2, startDateint2, endDate2)
-       cy.wait(2500)
+       cy.waitDefaultTime()
        cy.PushCard(processName3, publisherV3, publisherName3, processInstanceId3, state3, severity3, startDateint3, endDate3)
-       cy.wait(1500)
+       cy.waitDefaultTime()
        cy.PushCard(processName4, publisherV4, publisherName4, processInstanceId4, state4, severity4, startDateint4, endDate4)
-       cy.wait(500)
+       cy.waitDefaultTime()
        cy.PushCard(processName5, publisherV5, publisherName5, processInstanceId5, state5, severity5, startDateint5, endDate5)
-       cy.wait(2000)
+       cy.waitDefaultTime()
        cy.PushCard(processName6, publisherV6, publisherName6, processInstanceId6, state6, severity6, startDateint6, endDate6)
-       cy.wait(1500)
+       cy.waitDefaultTime()
        cy.PushCard(processName7, publisherV7, publisherName7, processInstanceId7, state7, severity7, startDateint7, endDate7)
-       cy.wait(1500)
+       cy.waitDefaultTime()
        cy.PushCard(processName8, publisherV8, publisherName8, processInstanceId8, state8, severity8, startDateint8, endDate8)
-       cy.wait(1500)
+       cy.waitDefaultTime()
        cy.PushCard(processName9, publisherV9, publisherName9, processInstanceId9, state9, severity9, startDateint9, endDate9)
-       cy.wait(1500)
+       cy.waitDefaultTime()
        cy.PushCard(processName10, publisherV10, publisherName10, processInstanceId10, state10, severity10, startDateint10, endDate10)
 
        //Check real time view
@@ -206,7 +206,7 @@ describe ('CheckTimeline',()=>{
       //Check Year view
 
       cy.get('#opfab-timeline-link-period-Y').click()
-      cy.wait(200)
+      cy.waitDefaultTime()
 
       cy.get(':nth-child(18) > .ng-star-inserted > text').contains('1')
       cy.get(':nth-child(14) > .ng-star-inserted > text').contains('1')

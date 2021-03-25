@@ -23,7 +23,7 @@ it('go to card creation and create a card', ()=>{
    cy.get('.lazyContainer > :nth-child(3)').click()
    cy.get('.lazyContainer > :nth-child(4)').click()
    cy.get('#opfab-usercard-btn-prepareCard').click()
-   cy.wait(500)
+   cy.waitDefaultTime()
 
    //Check the preview
 

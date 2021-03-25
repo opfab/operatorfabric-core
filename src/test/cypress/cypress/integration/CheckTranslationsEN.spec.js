@@ -7,12 +7,12 @@ describe ('CheckTranslations',()=>{
         it('Set French version',()=>{
     
         cy.LogOpFab(login, password)
-        cy.wait(500)  
+        cy.waitDefaultTime()
     
         cy.goToSettings()
       
         cy.get('#opfab-setting-locale').select('en')
-        cy.wait(500)
+        cy.waitDefaultTime()
     })
         
     it('Check nav bar english translation',()=>{  
@@ -125,7 +125,7 @@ describe ('CheckTranslations',()=>{
         cy.get('#opfab-feed-filter-dateTimeTo > table.ng-star-inserted > tr > :nth-child(1) > .nopaddingrow > label').contains('End')
         cy.should('be.visible')
         cy.should('have.css', 'color', 'rgb(186, 186, 186)')
-        cy.wait(500)
+        cy.waitDefaultTime()
     })
     
         it('Check sorting options translation',()=>{
@@ -152,7 +152,7 @@ describe ('CheckTranslations',()=>{
         cy.should('be.visible')
         cy.should('have.css', 'color', 'rgb(186, 186, 186)')
     
-        cy.wait(500)
+        cy.waitDefaultTime()
     
     })
     
@@ -215,13 +215,13 @@ describe ('CheckTranslations',()=>{
         cy.should('have.css', 'color', 'rgb(255, 255, 255)')
         cy.should('be.visible')
 
-        cy.wait(500)
+        cy.waitDefaultTime()
 
     })
     
     it('Check Monitoring',()=>{
         cy.LogOpFab(login, password)
-        cy.wait(500)
+        cy.waitDefaultTime()
         //Go to monitoring
         cy.get('#opfab-navbar-menu-monitoring').click()
     
@@ -252,14 +252,14 @@ describe ('CheckTranslations',()=>{
         cy.get('#opfab-monitoring-btn-reset').contains('RESET')
         cy.should('be.visible')
         cy.should('have.css', 'color', 'rgb(39, 132, 255)')
-        cy.wait(500)
+        cy.waitDefaultTime()
     
     })
     
     
     it('Check Logging',()=>{
         cy.LogOpFab(login, password)
-        cy.wait(500)
+        cy.waitDefaultTime()
         //Go to Logging page
         cy.get('#opfab-navbar-menu-logging').click()
 
@@ -320,7 +320,7 @@ describe ('CheckTranslations',()=>{
         cy.should('be.visible')
         cy.should('have.css', 'color', 'rgb(39, 132, 255)')
 
-        cy.wait(500)
+        cy.waitDefaultTime()
     })
         it('user name',()=>{
             cy.LogOpFab(login, password)

@@ -9,7 +9,7 @@ describe ('BasicCheck',()=>{
     let publisherV = "1"
     let state = "messageState"
     let login='operator1'
-    let psswrd='test'
+    let password='test'
     let publishDate = Cypress.moment();
     let publishDateDisplayed = publishDate.format('DD/MM/YYYY')
     //TODO Find a better way to handle locale-dependant formatting
@@ -46,7 +46,7 @@ describe ('BasicCheck',()=>{
     it('login and send a card', ()=>{
 
         cy.log(severity)
-        cy.LogOpFab(login,psswrd)
+        cy.LogOpFab(login,password)
 
         cy.log('publishDate '+publishDate)
         cy.log ('startDate '+startDate)
@@ -63,7 +63,8 @@ describe ('BasicCheck',()=>{
         cy.get('#opfab-setting-locale').select('en')
 
         cy.goToFeed()
-        cy.wait(1000)
+        cy.waitDefaultTime()
+        cy.waitDefaultTime()
         // Check card created
         cy.get('#opfab-feed-light-card-'+processName+'-'+processInstanceId+' .card-subtitle').click({ force: true })
 
@@ -86,12 +87,12 @@ describe ('BasicCheck',()=>{
         cy.get('.opfab-card-received-footer').contains('Received on '+publishDateDisplayed+' at '+publishTimeDisplayedEN)
         cy.get('#opfab-card-details-btn-ack').contains('ACKNOWLEDGE AND CLOSE')
         cy.log('card checked')
-        cy.wait(200)
+        cy.waitDefaultTime()
 
 
         cy.goToSettings()
         cy.get('#opfab-setting-locale').select('fr')
-        cy.wait(500)
+        cy.waitDefaultTime()
         cy.goToFeed()
 
         cy.get('#opfab-feed-light-card-'+processName+'-'+processInstanceId+'> :nth-child(1) > .p-1 > [style="display: flex; width: 100%; margin-top: 5px;"] > .card-subtitle').click({ force: true })

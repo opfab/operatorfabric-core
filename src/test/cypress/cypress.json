@@ -1,4 +1,8 @@
 {
+  "baseUrl": "http://localhost:2002/ui/",
   "viewportWidth": 1848,
-  "viewportHeight": 949
+  "viewportHeight": 949,
+  "env": {
+    "defaultWaitTime": 500
+  }
 }
