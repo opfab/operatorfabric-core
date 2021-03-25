@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,6 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -489,6 +490,35 @@ class EntitiesControllerShould {
                     .andExpect(jsonPath("$.message", is(String.format(EntitiesController.ENTITY_NOT_FOUND_MSG, "unknownEntitySoFar"))))
                     .andExpect(jsonPath("$.errors").doesNotExist())
             ;
+        }
+
+        @Test
+        void deleteEntityFromChildEntities() throws Exception {
+            EntityData p1 = EntityData.builder()
+                .id("PARENT1")
+                .name("Parent Room")
+                .description("Parent Room")
+                .build();
+            entityRepository.insert(p1);
+
+            EntityData e1 = entityRepository.findById("ENTITY1").get();
+            assertThat(e1).isNotNull();
+            e1.setParents(Arrays.asList("PARENT1"));
+            entityRepository.save(e1);
+            assertThat(e1.getParents().size()).isEqualTo(1);
+            assertThat(e1.getParents().get(0)).isEqualTo("PARENT1");
+
+            mockMvc.perform(delete("/entities/PARENT1")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                    .andExpect(status().isOk())
+            ;
+            assertThat(entityRepository.findById("PARENT1")).isEmpty();
+
+            EntityData e1after = entityRepository.findById("ENTITY1").get();
+            assertThat(e1after).isNotNull();
+            assertThat(e1after.getParents()).isEmpty();
+
         }
 
         @Test
