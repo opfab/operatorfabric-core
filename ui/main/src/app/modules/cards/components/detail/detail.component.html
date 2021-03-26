@@ -10,8 +10,7 @@
   <div style="display: block;  margin-top:16px;">
     <ul class="nav nav-tabs opfab-line-undertab">
       <li class="nav-item opfab-tab opfab-menu-item-left" data-toggle="tab">
-        <span class="opfab-tab text-uppercase" translate
-          [translateParams]="card.title?.parameters">{{i18nPrefix+card.title.key}}</span>
+          <span class="opfab-tab text-uppercase" >{{i18nPrefix+card.title.key | translate:card.title?.parameters}}</span>
       </li>
       <li *ngIf="showButtons" class="nav-item opfab-menu-item-right">
         <div *ngIf="!isSmallscreen()" style="display:flex">
