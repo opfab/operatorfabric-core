@@ -20,7 +20,7 @@ import {select, Store} from '@ngrx/store';
 import {selectLinesOfLoggingResult} from '@ofStore/selectors/logging.selectors';
 import {AppState} from '@ofStore/index';
 import {selectLastCards} from '@ofStore/selectors/feed.selectors';
-import {Utilities} from "../common/utilities";
+import {Utilities} from '../common/utilities';
 
 
 @Injectable()
@@ -136,7 +136,7 @@ export class ProcessesService {
         return this.processGroups;
     }
 
-    private getProcess(processId: string): Process {
+    public getProcess(processId: string): Process {
         return this.processes.find(process => processId === process.id);
     }
 

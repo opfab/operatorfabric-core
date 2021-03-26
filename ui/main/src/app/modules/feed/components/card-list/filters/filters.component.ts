@@ -30,7 +30,7 @@ export class FiltersComponent implements OnInit {
   hideReadSort: boolean;
   hideSeveritySort: boolean;
 
-  constructor(private store: Store<AppState>,private  configService: ConfigService) { }
+  constructor(private store: Store<AppState>, private configService: ConfigService) { }
 
   ngOnInit() {
     this.hideTags = this.configService.getConfigValue('settings.tags.hide',false);

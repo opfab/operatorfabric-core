@@ -33,7 +33,8 @@
       "hideAckFilter": false,
       "secondsBeforeLttdForClockDisplay": 7500,
       "hideReadSort": false,
-      "hideSeveritySort": false
+      "hideSeveritySort": false,
+      "hideAckAllCardsFeature": false
     },
     "notify": false,
     "timeline": {

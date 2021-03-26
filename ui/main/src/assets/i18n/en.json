@@ -89,6 +89,13 @@
       "acknowledged": "Acknowledged",
       "lttd": "Time remaining to decide"
     },
+    "acknowledgeAllCards": {
+      "label": "Acknowledge all cards",
+      "popup": {
+        "title": "CONFIRMATION",
+        "doYouReallyWant": "This will ack all visible cards of your feed, please confirm"
+      }
+    },
     "lttdFinished": "Finished",
     "received": "Received on",
     "at": "at",

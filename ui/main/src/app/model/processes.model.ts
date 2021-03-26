@@ -11,6 +11,7 @@
 import {Card} from '@ofModel/card.model';
 import {I18n} from '@ofModel/i18n.model';
 import {Map as OfMap} from '@ofModel/map';
+import {LightCard} from '@ofModel/light-card.model';
 
 export class Process {
     /* istanbul ignore next */
@@ -24,7 +25,7 @@ export class Process {
     ) {
     }
 
-    public extractState(card: Card): State {
+    public extractState(card: Card | LightCard): State {
         if (!!this.states && !!card.state && this.states[card.state]) {
             return this.states[card.state];
         } else {
