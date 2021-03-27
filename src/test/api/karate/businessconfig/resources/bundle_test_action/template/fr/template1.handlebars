@@ -37,8 +37,8 @@
 
   templateGateway.applyChildCards();
 
-  templateGateway.validyForm = function(formData) {
-    if (validateResponse(formData.opfabOpinion[0])) {
+  templateGateway.getUserResponse = function(responseCardData) {
+    if (validateResponse(responseCardData.opfabOpinion[0])) {
       this.isValid = true;
     } else {
       this.isValid = false;

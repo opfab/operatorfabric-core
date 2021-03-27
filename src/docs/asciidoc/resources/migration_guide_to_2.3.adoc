@@ -1,0 +1,77 @@
+// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 2.2.2 to release 2.3.0
+
+== Communication between template and opfab
+
+=== Getting response data from template 
+
+Some renaming has been done in version 2.3.0 :
+
+ - the method to have the response information from template is rename in _getUserResponse_ instead of _validyForm_. 
+
+ - the return object of this method shall now contains the response data in field _responseCardData_ instead of _formData_
+
+So if you have the following code in your template : 
+
+[source,javascript]
+----
+
+    templateGateway.validyForm = function () {
+        const response = document.getElementById('response').value;
+        const formData = { response: response };
+        return {
+            valid: true,
+            formData: formData
+        };
+    }
+----
+
+It must be modify this way : 
+
+[source,javascript]
+----
+    templateGateway.getUserResponse = function () {
+        const response = document.getElementById('response').value;
+        const responseCardData = { response: response };
+        return {
+            valid: true,
+            responseCardData: responseCardData
+        };
+
+    }
+----
+
+=== Getting the information if the user can respond
+
+To know from a template that the user can respond to a card you must now call templateGateway.isUserAllowedToRespond() instead of implementing the method templateGateway.setUserCanRespond() 
+
+
+So if you have the following code in your template : 
+
+[source,javascript]
+----
+    templateGateway.setUserCanRespond = function(responseEnabled) {
+        if (responseEnabled) {
+            // do something
+        } else {
+            // do something
+        }
+    }
+----
+
+It must be modify this way :
+
+[source,javascript]
+----
+    if (templateGateway.isUserAllowedToRespond()) {
+         // do something
+    } else {
+        // do something
+    }
+----

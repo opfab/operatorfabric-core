@@ -51,19 +51,19 @@
     }
   }
 
-  templateGateway.validyForm = function() {
+  templateGateway.getUserResponse = function() {
 
-    const formData = {};
+    const responseCardData = {};
 
     const formElement = document.getElementById('opfab-form');
     for (const [key, value] of [... new FormData(formElement)]) {
-        (key in formData) ? formData[key].push(value) : formData[key] = [value];
+        (key in responseCardData) ? responseCardData[key].push(value) : responseCardData[key] = [value];
     }
 
-    if (validateResponse(formData.opfabOpinion[0])) {
+    if (validateResponse(responseCardData.opfabOpinion[0])) {
       return {
         valid: true,
-        formData: formData
+        responseCardData: responseCardData
       };
     } else {
       return {

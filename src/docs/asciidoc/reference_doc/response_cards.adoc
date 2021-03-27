@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -97,31 +97,31 @@ possibilities : RED , GREEN , YELLOW
 - The field "btnText" is the i18n key of the title of the submit button, it is optional.
 
 NOTE: The state to be used for the response can also be set dynamically based on the contents of the card or the
-response by returning it in the `templateGateway.validyForm` method (see below for details).
+response by returning it in the `templateGateway.getUserResponse` method (see below for details).
 
 === Design the question form in the template
 
 For the user to response you need to define the response form in the template with standard HTML syntax   
 
 To enable operator fabric to send the response, you need to implement a javascript function in your template called
-`templateGateway.validyForm` which returns an object containing four fields :
+`templateGateway.getUserResponse` which returns an object containing four fields :
 
 - valid (_boolean_) : true if the user input is valid
 - errorMsg (_string_) : message in case of invalid user input. If valid is true this field is not necessary.
-- formData (_any_) : the user input to send in the data field of the child card. If valid is false this field is not necessary.
+- responseCardData (_any_) : the user input to send in the data field of the child card. If valid is false this field is not necessary.
 - responseState : name of the response state to use. This field is not mandatory, if it is not set the state defined in
 `config.json` will be used for the response.
 
 This method will be called by OperatorFabric when the user clicks on the button to send the response.
 
-In the example below, the `validyForm` creates a `formData` object by retrieving the user's inputs from the HTML.
+In the example below, the `getUserResponse` creates a `responseCardData` object by retrieving the user's inputs from the HTML.
 In addition, if the user chose several options, it overrides the response state defined in the `config.json` with another
 state.
 
 .src/test/resources/bundles/defaultProcess_V1/template/en/question.handlebars
 [source,js]
 ----
-include::../../../test/resources/bundles/defaultProcess_V1/template/en/question.handlebars[tag=templateGateway.validyForm_example]
+include::../../../test/resources/bundles/defaultProcess_V1/template/en/question.handlebars[tag=templateGateway.getUserResponse_example]
 ----
 
 === Define permissions
@@ -236,9 +236,9 @@ The user can then click on "MODIFY ANSWER" and the button will come back to its 
 Once again, after validating its answer, the information will be sent to the third template that the card has been locked (by calling the templateGateway.lockAnswer() function).
 
 == Response enabled
-The template will be informed if the current user has the permission to answer by calling the _templateGateway.setUserCanRespond(boolean)_ function.
-An example of templateGateway.setUserCanRespond() implementation can be found in the file src/test/resources/bundles/defaultProcess_V1/template/en/incidentInProgress.handlebars.
+The template can know if the current user has the permission to answer by calling the _templateGateway.isUserAllowedToRespond()_ function.
+An example of _templateGateway.isUserAllowedToRespond()_ usage can be found in the file src/test/resources/bundles/defaultProcess_V1/template/en/incidentInProgress.handlebars.
 
 == Last Time to Decide (`lttd`)
 
-If the card has a last time to decide (lttd) configured, when the time is expired this information will be sent to the third template (by calling the template.setLttdExpired(true) function).
+If the card has a last time to decide (lttd) configured, when the time is expired this information will be sent to the third template (by calling the _templateGateway.setLttdExpired(true)_ function).
