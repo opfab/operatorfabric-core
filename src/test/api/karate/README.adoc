@@ -9,11 +9,6 @@
 
 Api testing with Karate DSL 
 
-## Install needed jar
-
-1. Download the latest `karate.jar` from link:++https://github.com/intuit/karate/releases/++[Karate github release page]
-2. Put it in the karate directory, rename it to `karate.jar` to use it easily.
-
 IMPORTANT: If your OperatorFabric instance is not running on localhost, you need to replace localhost with the address
 of your running instance within the `karate-config.js` file.
 
@@ -23,7 +18,7 @@ Run the following command lines form this folder.
 
 ### Run a feature
 ....
-java -jar karate.jar myfeature.feature
+gradle karate --args=myfeature.feature
 ....
 
 The result will be available in the `target` repository.
@@ -31,18 +26,7 @@ The result will be available in the `target` repository.
 
 ### Non regression tests
 
-You can launch operatorFabric non-regression tests via 3 scripts in src/test/api/karate:
-
-- launchAllBusinessconfig.sh
-- launchAllUsers.sh
-- launchAllCards.sh
-
-For the launchAllCards script to run properly, you need to start a third party test server : 
-
-....
-cd src/test/externalApp
-gradle bootRun
-....
+You can launch operatorFabric non-regression tests via the script launchAll.sh
 
 To have the test passed, you need to have a clean Mongo DB database.
 

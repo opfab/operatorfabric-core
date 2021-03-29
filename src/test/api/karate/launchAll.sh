@@ -13,4 +13,4 @@ echo "Zip all bundles"
 cd businessconfig/resources
 ./packageBundles.sh
 cd ../..
-java -jar karate.jar    `cat businessConfigTests.txt` `cat cardTests.txt` `cat userTests.txt` `cat adminTests.txt`
+gradle karate --args="`cat businessConfigTests.txt` `cat cardTests.txt` `cat userTests.txt` `cat adminTests.txt`"

@@ -18,4 +18,4 @@ cd businessconfig/resources
 cd ../..
 
 echo "Launch Karate test"
-java -jar karate.jar   `cat businessConfigTests.txt` 
+gradle karate --args="`cat businessConfigTests.txt`" 

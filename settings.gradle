@@ -43,6 +43,7 @@ include 'web-ui'
 include 'ui:main'
 include 'externalApp'
 include 'clientApp'
+include 'karateTests'
 
 project(':client:businessconfig').name = 'businessconfig-client-data'
 project(':client:cards').name = 'cards-client-data'
@@ -55,6 +56,7 @@ project(':web-ui').name = 'web-ui'
 project(':ui:main').name = 'main-user-interface'
 project(':externalApp').projectDir = file('src/test/externalApp')
 project(':clientApp').projectDir = file('src/test/clientApp')
+project(':karateTests').projectDir = file('src/test/api/karate')
 
 //we check if the modules have gradle configuration files
 rootProject.children.each { project ->
@@ -63,5 +65,4 @@ rootProject.children.each { project ->
     assert project.buildFile.exists()
     assert project.buildFile.isFile()
 }
-include 'aop-process'
 

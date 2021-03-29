@@ -9,6 +9,6 @@
 # This file is part of the OperatorFabric project.
 
 
-java -jar karate.jar  `cat userJwtModeTests.txt`
+gradle karate --args="`cat userJwtModeTests.txt`"
 
 
