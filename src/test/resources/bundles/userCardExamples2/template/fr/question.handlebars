@@ -39,12 +39,12 @@
         }
     }
 
-    templateGateway.validyForm = function () {
+    templateGateway.getUserResponse = function () {
         const response = document.getElementById('response').value;
-        const formData = { response: response };
+        const responseCardData = { response: response };
         return {
             valid: true,
-            formData: formData
+            responseCardData: responseCardData
         };
 
     }

@@ -68,7 +68,7 @@ class EntityMessage {
 class FormResult {
     valid: boolean;
     errorMsg: string;
-    formData: any;
+    responseCardData: any;
     responseState?: string;
 }
 
@@ -128,7 +128,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private _htmlContent: SafeHtml;
     private _userContext: UserContext;
     private _lastCards$: Observable<LightCard[]>;
-    private _responseData: Response;
     message: Message = {display: false, text: undefined, className: undefined};
 
     public fullscreen = false;
@@ -261,7 +260,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.showCloseButton = true;
         this.showEditAndDeleteButton = this.doesTheUserHavePermissionToDeleteOrEditCard();
         this.showAckButton = this.isAcknowledgmentAllowed() && (this._appService.pageType !== PageType.CALENDAR);
-        this.showActionButton =  (!!this._responseData);
+        this.showActionButton =  (!!this.cardState.response);
     }
 
     ngDoCheck() {
@@ -283,7 +282,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     get responseDataParameters(): Map<string> {
-        return this._responseData.btnText ? this._responseData.btnText.parameters : undefined;
+        return this.cardState.response.btnText ? this.cardState.response.btnText.parameters : undefined;
     }
 
     get btnText(): string {
@@ -291,7 +290,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     get responseDataExists(): boolean {
-        return this._responseData != null && this._responseData !== undefined;
+        return this.cardState.response != null && this.cardState.response !== undefined;
     }
 
     get btnAckText(): string {
@@ -308,9 +307,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     submitResponse() {
 
-        const formResult: FormResult = templateGateway.validyForm();
+        const responseData: FormResult = templateGateway.getUserResponse();
 
-        if (formResult.valid) {
+        if (responseData.valid) {
 
             const card: CardForPublishing = {
                 publisher: this.getUserEntityToRespond(),
@@ -318,17 +317,17 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 processVersion: this.card.processVersion,
                 process: this.card.process,
                 processInstanceId: `${this.card.processInstanceId}_${this.getUserEntityToRespond()}`,
-                state: formResult.responseState ? formResult.responseState : this._responseData.state,
+                state: responseData.responseState ? responseData.responseState : this.cardState.response.state,
                 startDate: this.card.startDate,
                 endDate: this.card.endDate,
                 severity: Severity.INFORMATION,
                 entityRecipients: this.card.entityRecipients,
                 userRecipients: this.card.userRecipients,
                 groupRecipients: this.card.groupRecipients,
-                externalRecipients: this._responseData.externalRecipients,
+                externalRecipients: this.cardState.response.externalRecipients,
                 title: this.card.title,
                 summary: this.card.summary,
-                data: formResult.formData,
+                data: responseData.responseCardData,
                 recipient: this.card.recipient,
                 parentCardId: this.card.id,
                 initialParentCardUid: this.card.uid
@@ -354,8 +353,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 );
 
         } else {
-            (formResult.errorMsg && formResult.errorMsg !== '') ?
-                this.displayMessage(formResult.errorMsg, null, MessageLevel.ERROR) :
+            (responseData.errorMsg && responseData.errorMsg !== '') ?
+                this.displayMessage(responseData.errorMsg, null, MessageLevel.ERROR) :
                 this.displayMessage(ResponseI18nKeys.FORM_ERROR_MSG, null, MessageLevel.ERROR);
         }
     }
@@ -437,18 +436,18 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     ngOnChanges(): void {
+
+        if (this.cardState.response != null && this.cardState.response !== undefined) {
+            this.setEntitiesToRespond();
+            this.setIsActionEnabled();
+        }
+
         this.initializeHrefsOfCssLink();
         this.checkIfHasAlreadyResponded();
         this.initializeHandlebarsTemplates();
         this.updateReadCardStatusOnUI();
         this.markAsReadIfNecessary();
-
         this.message = {display: false, text: undefined, className: undefined};
-
-        if (this._responseData != null && this._responseData !== undefined) {
-            this.setEntitiesToRespond();
-            this.setIsActionEnabled();
-        }
         this.setButtonsVisibility();
         this.setShowDetailCardHeader();
         this.computeFromEntity();
@@ -537,7 +536,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private doesTheUserHavePermissionToRespond(): boolean {
         let permission = false;
         this.userService.getCurrentUserWithPerimeters().computedPerimeters.forEach(perim => {
-            if ((perim.process === this.card.process) && (perim.state === this._responseData.state)
+            if ((perim.process === this.card.process) && (perim.state === this.cardState.response.state)
                 && (DetailComponent.compareRightAction(perim.rights, RightsEnum.Write)
                     || DetailComponent.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
                 permission = true;
@@ -603,11 +602,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private initializeHandlebarsTemplatesProcess() {
       templateGateway.childCards = this.childCards;
       templateGateway.isLocked = this.isLocked;
-        this._responseData = this.cardState.response;
+      templateGateway.userAllowedToRespond = this.isActionEnabled;
         const templateName = this.cardState.templateName;
         if (!!templateName) {
             this.handlebars.executeTemplate(templateName,
-                new DetailContext(this.card, this._userContext, this._responseData))
+                new DetailContext(this.card, this._userContext, this.cardState.response))
                 .subscribe(
                     html => {
                         this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
@@ -619,9 +618,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                                 if (this.card.lttd && this.lttdExpiredIsTrue) {
                                     templateGateway.setLttdExpired(true);
                                 }
-
                                 templateGateway.setScreenSize(this.screenSize);
-                                templateGateway.setUserCanRespond(this.isActionEnabled);
                             }, 10);
                         }, 10);
                     }, () => {

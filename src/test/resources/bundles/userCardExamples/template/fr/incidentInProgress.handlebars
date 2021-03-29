@@ -112,7 +112,7 @@
         }
     };
 
-    templateGateway.validyForm = function () {
+    templateGateway.getUserResponse = function () {
 
         const SA = document.getElementById('SA').checked;
         const SB = document.getElementById('SB').checked;
@@ -122,7 +122,7 @@
         const SF = document.getElementById('SF').checked;
         const OTHERS = document.getElementById('OTHERS').value;
 
-        const formData = {
+        const responseCardData = {
             impacts:
             {
                 SA: SA,
@@ -137,19 +137,17 @@
 
         return {
             valid: true,
-            formData: formData
+            responseCardData: responseCardData
         };
     }
-
-    templateGateway.setUserCanRespond = function(responseEnabled) {
-        if (responseEnabled) {
-            document.getElementById('services').style.display = '';
-            document.getElementById('other-impacts').style.display = '';
-        } else {
-            document.getElementById('services').style.display = 'none';
-            document.getElementById('other-impacts').style.display = 'none'
-        }
+    if (templateGateway.isUserAllowedToRespond()) {
+        document.getElementById('services').style.display = '';
+        document.getElementById('other-impacts').style.display = '';
+    } else {
+        document.getElementById('services').style.display = 'none';
+        document.getElementById('other-impacts').style.display = 'none'
     }
+
 </script>
 
 
