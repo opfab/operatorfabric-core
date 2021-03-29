@@ -3,7 +3,7 @@ Feature: Cards
 
 Background: 
 
-  * def signIn = call read('../common/getToken.feature') { username: 'operator1'}
+  * def signIn = callonce read('../common/getToken.feature') { username: 'operator1'}
   * def authToken = signIn.authToken
 
 Scenario: Check Archives / must insert 10 cards first with other scenarios

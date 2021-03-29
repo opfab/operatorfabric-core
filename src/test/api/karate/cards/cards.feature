@@ -3,9 +3,9 @@ Feature: Cards
 
   Background:
 
-    * def signIn = call read('../common/getToken.feature') { username: 'operator1'}
+    * def signIn = callonce read('../common/getToken.feature') { username: 'operator1'}
     * def authToken = signIn.authToken
-    * def signInUserWithNoGroupNoEntity = call read('../common/getToken.feature') { username: 'userwithnogroupnoentity'}
+    * def signInUserWithNoGroupNoEntity = callonce read('../common/getToken.feature') { username: 'userwithnogroupnoentity'}
     * def authTokenUserWithNoGroupNoEntity = signInUserWithNoGroupNoEntity.authToken
 
   Scenario: Post card

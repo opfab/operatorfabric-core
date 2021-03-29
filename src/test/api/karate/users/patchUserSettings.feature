@@ -2,11 +2,11 @@ Feature: patch user settings
 
   Background:
    #Getting token for admin and operator1 user calling getToken.feature
-    * def signIn = call read('../common/getToken.feature') { username: 'admin'}
+    * def signIn = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = call read('../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
-   # * def signInAsUser = call read('getToken.feature') { username: 'user'}
+   # * def signInAsUser = callonce read('getToken.feature') { username: 'user'}
    # * def authTokenAsUser = signInAsUser.authToken
 
 
@@ -71,8 +71,7 @@ Feature: patch user settings
     And header Authorization = 'Bearer ' + authToken
     And request userSettings
     When method patch
-    Then print response
-    And status 200
+    Then status 200
     And match response.login == userSettings.login
     And match response.description == userSettings.description
     And match response.timeZone == userSettings.timeZone
@@ -87,8 +86,7 @@ Feature: patch user settings
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And request userSettingsDispatcher
     When method patch
-    Then print response
-    And status 200
+    Then status 200
     And match response.login == userSettingsDispatcher.login
     And match response.description == userSettingsDispatcher.description
     And match response.timeZone == userSettingsDispatcher.timeZone

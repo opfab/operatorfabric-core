@@ -2,9 +2,9 @@ Feature: get card Subscription
 
   Background:
    #Getting token for admin and operator1 user calling getToken.feature
-    * def signIn = call read('../common/getToken.feature') { username: 'admin'}
+    * def signIn = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = call read('../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
 
@@ -41,14 +41,12 @@ Feature: get card Subscription
       Given url opfabUrl + 'cards/cardSubscription' +'?clientId=abc0123456789def'
       And header Authorization = 'Bearer ' + authToken
       When method get
-      Then print response
-      And status 200
+      Then status 200
 
     Scenario: Without authentication
       Given url opfabUrl + 'cards/cardSubscription'
       When method get
-      Then print response
-      And status 401
+      Then status 401
 
     Scenario: get card subscription with user operator1
 
@@ -72,16 +70,14 @@ Feature: get card Subscription
       Given url opfabUrl + 'cards/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&rangeStart='+ pastStartDate + '&rangeEnd=' + pastEndDate
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method get
-      Then print response
-      And status 200
+      Then status 200
       And match response == ''
 
     # Get subscription and check that card is returned
       Given url opfabUrl + 'cards/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&rangeStart='+ startDate + '&rangeEnd=' + endDate
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method get
-      Then print response
-      And status 200
+      Then status 200
       And match response contains '"card":{"uid":"' + cardUid + '"'
 
     # delete card
@@ -94,6 +90,5 @@ Feature: get card Subscription
       Given url opfabUrl + 'cards/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&rangeStart='+ startDate + '&rangeEnd=' + endDate
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method get
-      Then print response
-      And status 200
+      Then status 200
       And match response == ''

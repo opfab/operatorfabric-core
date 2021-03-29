@@ -9,5 +9,5 @@
 # This file is part of the OperatorFabric project.
 
 
-gradle karate --args="`cat cardTests.txt`"
+../../../../gradlew karate --args="`cat cardTests.txt`"
 

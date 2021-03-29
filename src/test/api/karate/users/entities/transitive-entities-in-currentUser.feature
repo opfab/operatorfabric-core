@@ -1,15 +1,15 @@
 Feature: Check addition of transitive entities to user
 
     Background:
-        * def adminSignIn = call read('../../common/getToken.feature') { username: 'admin'}
+        * def adminSignIn = callonce read('../../common/getToken.feature') { username: 'admin'}
         * def adminToken = adminSignIn.authToken
-        * def rootSignIn = call read('../../common/getToken.feature') { username: 'user_test_api_2'}
+        * def rootSignIn = callonce read('../../common/getToken.feature') { username: 'user_test_api_2'}
         * def rootToken = rootSignIn.authToken
-		* def singleSignIn = call read('../../common/getToken.feature') { username: 'user_test_api_1'}
+		* def singleSignIn = callonce read('../../common/getToken.feature') { username: 'user_test_api_1'}
 		* def singleToken =  singleSignIn.authToken
-		* def childAndGrandChildSignIn = call read('../../common/getToken.feature') { username: 'user_test_api_3'}
+		* def childAndGrandChildSignIn = callonce read('../../common/getToken.feature') { username: 'user_test_api_3'}
 		* def childAndGrandChildToken = childAndGrandChildSignIn.authToken
-		* def withoutChildSignIn = call read('../../common/getToken.feature') { username: 'user_test_api_4'}
+		* def withoutChildSignIn = callonce read('../../common/getToken.feature') { username: 'user_test_api_4'}
 		* def withoutChildToken = withoutChildSignIn.authToken
 
         # entities

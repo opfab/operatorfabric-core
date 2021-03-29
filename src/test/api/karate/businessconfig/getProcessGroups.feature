@@ -2,9 +2,9 @@ Feature: getProcessGroups
 
   Background:
    #Getting token for admin and operator1 user calling getToken.feature
-    * def signIn = call read('../common/getToken.feature') { username: 'admin'}
+    * def signIn = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = call read('../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
 
@@ -55,5 +55,4 @@ Feature: getProcessGroups
   Scenario: List existing process groups without authentication
     Given url opfabUrl + '/businessconfig/processgroups'
     When method GET
-    Then print response
-    And status 401
+    Then status 401

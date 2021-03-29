@@ -2,7 +2,7 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
 
   Background:
    #Getting token for admin and operator1 user calling getToken.feature
-    * def signInAsTSO = call read('../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
 

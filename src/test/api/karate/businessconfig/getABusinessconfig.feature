@@ -2,7 +2,7 @@ Feature: Bundle
 
   Background:
     # Get admin token
-    * def signIn = call read('../common/getToken.feature') { username: 'admin'}
+    * def signIn = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
 
   Scenario: check bundle
@@ -39,5 +39,4 @@ Feature: Bundle
     # Check bundle
     Given url opfabUrl + '/businessconfig/processes/api_test'
     When method GET
-    Then print response
-    And status 401
+    Then status 401

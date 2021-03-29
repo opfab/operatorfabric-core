@@ -31,9 +31,9 @@ echo "Start opfab"
 cd config/docker
 ./docker-compose.sh
 echo "Starting in progress..."
-sleep 90 
-echo "Start karate testing"
 cd ../../src/test/api/karate
+./waitForOpfabToStart.sh
+echo "Start karate testing"
 ./launchAll.sh
 google-chrome target/karate-reports/karate-summary.html &
 )

@@ -1,10 +1,9 @@
 Feature: getBusinessconfigTemplate
 
   Background:
-   #Getting token for admin and operator1 user calling getToken.feature
-    * def signIn = call read('../common/getToken.feature') { username: 'admin'}
+    * def signIn = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = call read('../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
     * def process = 'api_test'
     * def templateName = 'template'
@@ -19,7 +18,6 @@ Given url opfabUrl + '/businessconfig/processes/'+ process +'/templates/' + temp
 And header Authorization = 'Bearer ' + authToken
 When method GET
 Then status 200
-And print response
 And match response contains '{{card.data.message}}'
 
 
@@ -37,7 +35,6 @@ And match response contains '{{card.data.message}}'
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then status 404
-    And print response
 
 
   Scenario: Check wrong language
@@ -47,7 +44,6 @@ And match response contains '{{card.data.message}}'
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then status 404
-    And print response
 
   Scenario: Check wrong Template
 
@@ -55,4 +51,3 @@ And match response contains '{{card.data.message}}'
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then status 404
-    And print response
