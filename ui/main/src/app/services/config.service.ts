@@ -36,13 +36,8 @@ export class ConfigService {
             config => this.config = config));
     }
 
-    getConfigValue(path:string, fallback: any = null)
-    {
-        const result = _.get(this.config, path, null);
-        if (!result && fallback) {
-            return fallback;
-        }
-        return result;
+    getConfigValue(path: string, fallback: any = null) {
+        return _.get(this.config, path, fallback);
     }
 
     loadMenuTranslations(): Observable<Locale[]> {
