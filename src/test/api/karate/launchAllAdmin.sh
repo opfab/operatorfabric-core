@@ -9,4 +9,4 @@
 # This file is part of the OperatorFabric project.
 
 
-java -jar karate.jar  `cat adminTests.txt`
+gradle karate --args="`cat adminTests.txt`"
