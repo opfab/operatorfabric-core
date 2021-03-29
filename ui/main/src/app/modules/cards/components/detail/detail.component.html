@@ -65,7 +65,7 @@
           <div class="flex-container">
             <div style="width:30%;">
               <span style="padding-left:15px" translate>response.status</span> :
-              <span class="opfab-question-card-state-name" translate>{{i18nPrefix+this.cardState.name}} &nbsp;</span>
+              <span class="opfab-question-card-state-name" >{{i18nPrefix+this.cardState.name | translate}} &nbsp;</span>
               <span *ngIf="!!this.card.lttd"> |<of-countdown [lttd]="this.card.lttd"></of-countdown></span>
              
             </div>
@@ -106,17 +106,16 @@
             </span>
             <div *ngIf="showButtons" style="text-align: right;">
               <button id="opfab-card-details-btn-response" class="opfab-btn"
-                *ngIf='showActionButton && isActionEnabled && !isLocked' translate
-                [translateParams]="responseDataParameters" [disabled]='lttdExpiredIsTrue || !isActionEnabled'
-                (click)='submitResponse()'>{{btnText}}</button>
+                *ngIf='showActionButton && isActionEnabled && !isLocked' [disabled]='lttdExpiredIsTrue || !isActionEnabled'
+                (click)='submitResponse()'>{{btnText | translate:responseDataParameters}}</button>
               <button id="opfab-card-details-btn-response" class="opfab-btn"
                 [disabled]='lttdExpiredIsTrue || !isActionEnabled' translate
                 *ngIf='showActionButton && isActionEnabled && isLocked' (click)='unlockAnswer()'>
                 response.btnUnlock
               </button>
 
-              <button id="opfab-card-details-btn-ack" class="opfab-btn" *ngIf='showAckButton' translate
-                (click)='acknowledge()'>{{btnAckText}}</button>
+              <button id="opfab-card-details-btn-ack" class="opfab-btn" *ngIf='showAckButton'
+                (click)='acknowledge()'>{{btnAckText|translate}}</button>
             </div>
           </div>
 
