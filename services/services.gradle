@@ -21,7 +21,7 @@ buildscript {
 }
 subprojects {
     /////// PLUGINS
-    if (!project.name.equals("infra")&&!project.name.equals("core")) {
+    if (!project.name.equals("core")) {
         apply plugin: 'java'
         apply plugin: 'jacoco'
         apply plugin: plugin.bom
@@ -60,7 +60,7 @@ subprojects {
             testImplementation.exclude module: "junit"
         }
 
-        /////// CONFIGURAdiscoveryTION
+        /////// CONFIGURATION
 
         // Boot
 
