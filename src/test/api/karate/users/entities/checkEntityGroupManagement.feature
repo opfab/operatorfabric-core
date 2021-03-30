@@ -2,7 +2,7 @@ Feature: CheckEntityGroupManagement
 
     Background:
     #Getting token for admin
-    * def signIn = call read('../../common/getToken.feature') {username: 'admin' }
+    * def signIn = callonce read('../../common/getToken.feature') {username: 'admin' }
     * def adminAuthToken = signIn.authToken
     # entity definition
     * def entity0_With1UnknownParent =

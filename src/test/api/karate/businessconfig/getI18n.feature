@@ -2,9 +2,9 @@ Feature: getI18n
 
   Background:
    #Getting token for admin and operator1 user calling getToken.feature
-    * def signIn = call read('../common/getToken.feature') { username: 'admin'}
+    * def signIn = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = call read('../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
     * def process = 'api_test'
     * def templateName = 'template'
@@ -18,23 +18,19 @@ Feature: getI18n
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then status 200
-    And print response
 
   Scenario: Check i18n file without authentication
 
     Given url opfabUrl + '/businessconfig/processes/'+ process +'/i18n/' + '?locale=' + fileLanguage + '&version='+ businessconfigVersion
     When method GET
     Then status 401
-    And print response
 
   Scenario: Check unknown i18n file version
 
     Given url opfabUrl + '/businessconfig/processes/'+ process +'/i18n/' + '?locale=' + fileLanguage + '&version=9999999'
     And header Authorization = 'Bearer ' + authToken
     When method GET
-   Then print response
-   And status 404
-
+   Then status 404
 
 
   Scenario: Check unknown i18n file language
@@ -42,13 +38,11 @@ Feature: getI18n
     Given url opfabUrl + '/businessconfig/processes/'+ process +'/i18n/' + '?locale=DD' + '&version='+ businessconfigVersion
     And header Authorization = 'Bearer ' + authToken
     When method GET
-    Then print response
-    And status 404
+    Then status 404
 
   Scenario: Check i18n for an unknown businessconfig
 
     Given url opfabUrl + '/businessconfig/processes/unknownBusinessconfig/i18n/' + '?locale=fr' + '&version='+ businessconfigVersion
     And header Authorization = 'Bearer ' + authToken
     When method GET
-    Then print response
-    And status 404
+    Then  status 404
