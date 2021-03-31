@@ -67,18 +67,6 @@ definitions:
       - COMPLIANT
       - INFORMATION
     example: INFORMATION
-  TitlePositionEnum:
-    type: string
-    description: |-
-      Possible title positions >
-      * UP - At the top of the detail
-      * DOWN - At the bottom of the detail
-      * NONE - Not displayed
-    enum:
-      - UP
-      - DOWN
-      - NONE
-    example: UP
   RecipientEnum:
     type: string
     description: >-

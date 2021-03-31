@@ -80,11 +80,6 @@ export class CardForPublishing {
     }
 }
 
-export enum TitlePosition {
-    UP, DOWN, NONE
-
-}
-
 
 export class Recipient {
     constructor(
