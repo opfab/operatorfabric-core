@@ -11,9 +11,9 @@
   <div class="modal-header">
     <span class="modal-title" *ngIf="row">{{row.id}}</span>
     <span class="modal-title" *ngIf="!row" translate>admin.input.{{type}}.add</span>
-    <button id="opfab-admin-edit-btn-close"  (click)="dismissModal('Cross click')" type="button" class="close" data-dismiss="modal"
-            aria-label="Close"><span aria-hidden="true">&times;</span>
-    </button>
+    <div id="opfab-admin-edit-btn-close" class="opfab-close-modal-icon" aria-label="Close" (click)="dismissModal('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </div>
   </div>
   <div class="modal-body">
     <form [formGroup]="groupForm" class="opfab-form-lighter">
