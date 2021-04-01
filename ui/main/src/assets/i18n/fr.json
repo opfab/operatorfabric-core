@@ -88,6 +88,13 @@
       "acknowledged": "Acquittée",
       "lttd": "Temps restant pour décider"
     },
+    "acknowledgeAllCards": {
+      "label": "Acquitter toutes les cartes",
+      "popup": {
+        "title": "CONFIRMATION",
+        "doYouReallyWant": "Toutes les cartes visibles du flux de cartes vont être acquittées, merci de confirmer"
+      }
+    },
     "lttdFinished": "Terminée",
     "received": "Reçu le",
     "at" : "à",

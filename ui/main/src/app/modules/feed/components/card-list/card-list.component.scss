@@ -28,6 +28,25 @@
   margin-right: 20px;
   margin-left: 1px;
   border-color:var(--opfab-card-tab-border-color);
-
 }
 
+.opfab-ack-all-cards {
+  background-color: var(--opfab-bgcolor);
+  text-align: center;
+  font-size: 13px;
+  padding-top: 5px;
+  padding-right: 20px;
+}
+
+.opfab-ack-all-cards a:hover {
+  color: var(--opfab-navbar-color-active);
+  font-weight: bold;
+}
+
+.modal-header{
+  font-size: 20px;
+}
+
+.modal-body{
+  font-size: 16px;
+}
