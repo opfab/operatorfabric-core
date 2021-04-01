@@ -68,9 +68,10 @@
     <ng-template #confirmationPopup let-modal>
         <div class="modal-header">
             <h4 translate> feedConfiguration.popup.title </h4>
-            <button id="opfab-feedconfiguration-btn-close" type="button" class="close" aria-label="Close" (click)="modalRef.dismiss('Cross click')">
+            <div id="opfab-feedconfiguration-btn-close" class="opfab-close-modal-icon" aria-label="Close"
+                 (click)="modalRef.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
-            </button>
+            </div>
         </div>
         <div class="modal-body text-center">
             <p translate>feedConfiguration.popup.areYouSure</p>
