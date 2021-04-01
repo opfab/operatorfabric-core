@@ -731,6 +731,25 @@ paths:
           description: created
           schema:
             $ref: '#/definitions/CardCreationReport'
+    delete:
+      tags:
+        - cards
+        - deletion
+      summary: delete cards
+      description: >-
+        Delete cards from OperatorFabric where card endDate is before the specified date or where 
+        card has no endDate and startDate is before the specified date.
+      operationId: deleteCards
+      consumes:
+        - application/json
+      parameters:
+        - in: query
+        - name: endDateBefore
+        - type: number
+        - required: true
+      responses:
+        '200':
+          description: OK
   /archives:
     get:
       tags:

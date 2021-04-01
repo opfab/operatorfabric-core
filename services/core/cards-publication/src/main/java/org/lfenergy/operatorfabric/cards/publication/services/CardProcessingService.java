@@ -246,6 +246,10 @@ public class CardProcessingService {
         });
     }
 
+    public void deleteCards(Instant endDateBefore) {
+        cardRepositoryService.deleteCardsByEndDateBefore(endDateBefore);
+    }
+
     public void deleteCards(List<CardPublicationData> cardPublicationData) {
         cardPublicationData.forEach(x->deleteCard(x.getId()));
     }
@@ -343,5 +347,5 @@ public class CardProcessingService {
         return traceReposiory.findByCardUidAndActionAndUserName(cardUid, AopTraceType.ACK.getAction(),name);
     }
 
-	
+    
 }

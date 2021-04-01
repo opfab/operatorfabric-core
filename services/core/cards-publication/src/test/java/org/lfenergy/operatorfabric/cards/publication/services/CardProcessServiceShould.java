@@ -53,6 +53,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static java.nio.charset.Charset.forName;
@@ -1106,5 +1107,49 @@ class CardProcessServiceShould {
         Assertions.assertThat(block).withFailMessage(
                 "The number of registered cards should be '%d' but is " + "'%d' actually",
                 numberOfCards, block).isEqualTo(numberOfCards);
+    }
+
+    @Test
+    void deleteCards_by_endDate() {
+
+        EasyRandom easyRandom = instantiateRandomCardGenerator();
+        int numberOfCards = 10;
+
+        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
+        
+        Instant ref = Instant.now();
+        AtomicInteger i = new AtomicInteger(1);
+        cards.forEach(c -> {
+            c.setParentCardId(null);
+            c.setInitialParentCardUid(null);
+
+            if (i.get() % 2 == 0) {
+                c.setEndDate(null);
+            } else {
+                c.setEndDate(ref.minus(i.get(),ChronoUnit.DAYS));
+            }
+            // last 2 card should not be removed
+            if (i.get() > 8) {
+                c.setEndDate(ref.plus(1,ChronoUnit.DAYS));
+            }
+            // second card should not be removed
+            if (i.get() == 2) {
+                c.setStartDate(ref.plus(i.incrementAndGet(),ChronoUnit.DAYS));
+            } else  {
+                c.setStartDate(ref.minus(i.incrementAndGet(),ChronoUnit.DAYS));
+            }
+
+        });
+
+        StepVerifier.create(cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards]))))
+                .expectNextMatches(r -> r.getCount().equals(numberOfCards)).verifyComplete();
+
+        cardProcessingService.deleteCards(Instant.now());
+
+        /* 7 cards should be removed */
+        int thereShouldBeOneCardLess = numberOfCards - 7;
+
+        StepVerifier.create(cardRepository.count())
+                .expectNextMatches(r -> r.intValue()==thereShouldBeOneCardLess).verifyComplete();
     }
 }
