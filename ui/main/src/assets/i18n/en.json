@@ -293,7 +293,9 @@
         "description": "Description",
         "entityAllowedToSendCard": "Card sending allowed",
         "confirmDelete": "Do you really want to delete entity",
-        "add": "Add new entity"
+        "add": "Add new entity",
+        "true": "Yes",
+        "false": "No"
       },
       "perimeter": {
         "id": "Id",

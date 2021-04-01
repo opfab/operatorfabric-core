@@ -9,7 +9,7 @@
  */
 
 import {Directive, Injectable, OnDestroy, OnInit} from '@angular/core';
-import {ColDef, GridOptions, ICellRendererParams} from 'ag-grid-community';
+import {ColDef, GridOptions, ICellRendererParams, ValueFormatterParams} from 'ag-grid-community';
 import {TranslateService} from '@ngx-translate/core';
 import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import {Subject, throwError} from 'rxjs';
@@ -151,6 +151,10 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
       };
       if (!!field.flex) columnDef['flex'] = field.flex;
       if (!!field.cellRendererName) columnDef['cellRenderer'] = field.cellRendererName;
+      if (!!field.valueFormatter) {
+        columnDef['valueFormatter'] = field.valueFormatter;
+      }
+
       columnDefs[index] = columnDef;
     });
 
@@ -167,6 +171,10 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     };
 
     return columnDefs;
+  }
+
+  translateValue(params: ValueFormatterParams) : string {
+    return params.context.componentParent.translateService.instant(params.context.componentParent.i18NPrefix + params.context.componentParent.tableType + '.' + params.value);
   }
 
   openActionModal(params) {
@@ -241,14 +249,16 @@ export class Field {
   public name: string;
   public flex: number;
   public cellRendererName: string;
+  public valueFormatter: any;
 
   /**@param name: should match the property name in the underlying row data. Will be used as key to find i18n label for the column header.
    @param flex: Sets the column size relative to others
    @param cellRendererName: needs to match one of the renderers defined under `frameworkComponents` in the `gridOptions` above.
    * */
-  constructor(name: string, flex?: number, cellRendererName?: string) {
+  constructor(name: string, flex?: number, cellRendererName?: string, valueFormatter?: any) {
     this.name = name;
     this.flex = flex;
     this.cellRendererName = cellRendererName;
+    this.valueFormatter = valueFormatter;
   }
 }
