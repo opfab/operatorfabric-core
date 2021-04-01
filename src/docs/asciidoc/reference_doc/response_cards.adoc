@@ -239,6 +239,10 @@ Once again, after validating its answer, the information will be sent to the thi
 The template can know if the current user has the permission to answer by calling the _templateGateway.isUserAllowedToRespond()_ function.
 An example of _templateGateway.isUserAllowedToRespond()_ usage can be found in the file src/test/resources/bundles/defaultProcess_V1/template/en/incidentInProgress.handlebars.
 
+== Response required
+The template can know if the current user is member of an Entity required to respond by calling the _templateGateway.isUserMemberOfAnEntityRequiredToRespond()_ function.
+An example of _templateGateway.isUserMemberOfAnEntityRequiredToRespond()_ usage can be found in the file src/test/resources/bundles/defaultProcess_V1/template/en/question.handlebars.
+ 
 == Last Time to Decide (`lttd`)
 
 If the card has a last time to decide (lttd) configured, when the time is expired this information will be sent to the third template (by calling the _templateGateway.setLttdExpired(true)_ function).

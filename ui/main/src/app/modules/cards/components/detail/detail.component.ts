@@ -61,6 +61,7 @@ class Message {
 }
 
 class EntityMessage {
+    id: string;
     name: string;
     color: EntityMsgColor;
 }
@@ -123,6 +124,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     unsubscribe$: Subject<void> = new Subject<void>();
     public hrefsOfCssLink = new Array<SafeResourceUrl>();
+    private _listEntitiesRequiredToRespond: string[];
     private _listEntitiesToRespondForHeader = new Array<EntityMessage>();
     private _userEntitiesAllowedToRespond: string[];
     private _htmlContent: SafeHtml;
@@ -482,8 +484,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
         if (this.card.entitiesRequiredToRespond && this.card.entitiesRequiredToRespond.length > 0) {
             const entitiesRequiredToRespond = this.entitiesService.getEntitiesFromIds(this.card.entitiesRequiredToRespond);
-            const required = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesRequiredToRespond).map(entity => entity.id);
-            this._listEntitiesToRespondForHeader = this.createEntityHeaderFromList(required);
+            this._listEntitiesRequiredToRespond = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesRequiredToRespond).map(entity => entity.id);
+            this._listEntitiesToRespondForHeader = this.createEntityHeaderFromList(this._listEntitiesRequiredToRespond);
         }
     }
 
@@ -496,6 +498,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             if (entityName) {
                 entityHeader.push(
                     {
+                        id: entity,
                         name: entityName,
                         color: this.checkEntityAnswered(entity) ? EntityMsgColor.GREEN : EntityMsgColor.ORANGE
                     });
@@ -603,7 +606,15 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
       templateGateway.childCards = this.childCards;
       templateGateway.isLocked = this.isLocked;
       templateGateway.userAllowedToRespond = this.isActionEnabled;
-        const templateName = this.cardState.templateName;
+
+      if (this._listEntitiesRequiredToRespond && this._listEntitiesRequiredToRespond.length > 0) {
+        const userEntitiesRequiredToRespond = this._listEntitiesRequiredToRespond.filter(entityId => this.user.entities.includes(entityId));
+        templateGateway.userMemberOfAnEntityRequiredToRespond = userEntitiesRequiredToRespond.length > 0;
+      } else {
+        templateGateway.userMemberOfAnEntityRequiredToRespond = false;
+      }
+
+      const templateName = this.cardState.templateName;
         if (!!templateName) {
             this.handlebars.executeTemplate(templateName,
                 new DetailContext(this.card, this._userContext, this.cardState.response))

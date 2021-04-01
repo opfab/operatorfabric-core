@@ -12,6 +12,7 @@ const templateGateway = {
     opfabEntityNames : null, 
     childCards: [],
     userAllowedToRespond : false,
+    userMemberOfAnEntityRequiredToRespond : false,
 
     setEntityNames: function(entityNames){
         this.opfabEntityNames = entityNames;
@@ -44,6 +45,11 @@ const templateGateway = {
     //  - he is member of a group having a perimeter permitting the response 
     isUserAllowedToRespond  : function() {
         return this.userAllowedToRespond;
+    },
+
+    // True if user is member of an entity required to respond to the current card
+    isUserMemberOfAnEntityRequiredToRespond: function() {
+        return this.userMemberOfAnEntityRequiredToRespond;
     },
     
     //
