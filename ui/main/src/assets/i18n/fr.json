@@ -299,7 +299,9 @@
         "description": "Description",
         "entityAllowedToSendCard": "Envoi de carte autorisé",
         "confirmDelete": "Voulez-vous vraiment supprimer l'entité",
-        "add":"Ajouter une nouvelle entité"
+        "add":"Ajouter une nouvelle entité",
+        "true": "Oui",
+        "false": "Non"
       },
       "perimeter": {
         "id": "Id",
