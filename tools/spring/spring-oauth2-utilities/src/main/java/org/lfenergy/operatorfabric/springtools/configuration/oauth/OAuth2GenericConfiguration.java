@@ -55,6 +55,8 @@ import java.util.List;
 @Slf4j
 public class OAuth2GenericConfiguration {
 
+
+
     @Autowired
     protected UserServiceCache userServiceCache;
     
@@ -85,14 +87,6 @@ public class OAuth2GenericConfiguration {
         };
     }
 
-    /**
-     * Declares a Feign interceptor that adds oauth2 user authentication to headers
-     * @return oauth2 feign interceptor
-     */
-    @Bean
-    public RequestInterceptor oauth2FeignRequestInterceptor() {
-        return new OAuth2FeignRequestInterceptor();
-    }
 
     @Bean
     public Encoder jacksonEncoder() {
@@ -109,10 +103,8 @@ public class OAuth2GenericConfiguration {
     public AbstractAuthenticationToken generateOpFabJwtAuthenticationToken(Jwt jwt) {
         
         String principalId = jwt.getClaimAsString(jwtProperties.getLoginClaim());
-        OAuth2JwtProcessingUtilities.token.set(jwt);
-       
+        UserServiceCache.setTokenForUserRequest(principalId,jwt.getTokenValue());
         CurrentUserWithPerimeters currentUserWithPerimeters = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalId);
-        OAuth2JwtProcessingUtilities.token.remove();
         User user = currentUserWithPerimeters.getUserData();
 
         // override the groups list from JWT mode, otherwise, default mode is OPERATOR_FABRIC
@@ -126,7 +118,6 @@ public class OAuth2GenericConfiguration {
         
         return new OpFabJwtAuthenticationToken(jwt, currentUserWithPerimeters, authorities);
     }
-    
 
 	/**
 	 * Creates group list from a jwt
