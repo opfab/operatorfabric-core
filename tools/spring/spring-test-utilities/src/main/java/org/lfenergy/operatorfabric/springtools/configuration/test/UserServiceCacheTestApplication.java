@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,12 +30,7 @@ import feign.mock.MockClient;
 import feign.mock.MockTarget;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * <p></p>
- * Created on 28/01/19
- *
- *
- */
+
 @SpringBootApplication
 @EnableConfigurationProperties
 @Slf4j
@@ -51,19 +46,6 @@ public class UserServiceCacheTestApplication {
     @Bean
     public MockClient mockClient(){
 
-        //Create MockClient and set behaviour
-        String stringUser1 = "{" +
-                "\"login\": \"jmcclane\"," +
-                "\"firstName\": \"John\"," +
-                "\"lastName\": \"McClane\"," +
-                "\"groups\": [\"good_guys\",\"user\"]" +
-                "}";
-        String stringUser2 = "{" +
-                "\"login\": \"hgruber\"," +
-                "\"firstName\": \"Hans\"," +
-                "\"lastName\": \"Gruber\"," +
-                "\"groups\": [\"bad_guys\",\"admin\"]" +
-                "}";
         String stringTestUserWithPerimeter = "{" + 
             "\"userData\": {" +
                 "\"login\": \"testuser\"," +
@@ -82,10 +64,7 @@ public class UserServiceCacheTestApplication {
 
 
         MockClient mockClient = new MockClient();
-        mockClient = mockClient
-                .ok(HttpMethod.GET, "/users/jmcclane", stringUser1)
-                .ok(HttpMethod.GET, "/users/hgruber", stringUser2)
-                .ok(HttpMethod.GET, "/CurrentUserWithPerimeters", stringTestUserWithPerimeter);
+        mockClient = mockClient.ok(HttpMethod.GET, "/CurrentUserWithPerimeters", stringTestUserWithPerimeter);
 
         return mockClient;
     }
@@ -100,7 +79,6 @@ public class UserServiceCacheTestApplication {
                 .client(mockClient)
                 .contract(new SpringMvcContract()) // Needed because spring-cloud-starter-feign implements a default Contract class "SpringMvcContract". See https://github.com/spring-cloud/spring-cloud-netflix/issues/760
                 .target(new MockTarget<>(UserServiceProxy.class));
-
 
         return mockUserServiceProxy;
     }

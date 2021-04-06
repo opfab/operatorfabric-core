@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,9 @@ package org.lfenergy.operatorfabric.springtools.configuration.oauth;
 
 import feign.FeignException;
 import org.lfenergy.operatorfabric.users.model.User;
+
+import java.util.Hashtable;
+
 import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -34,22 +37,24 @@ public class UserServiceCache {
     @Autowired
     private UserServiceProxy proxy;
 
-    /** Retrieve user data from cache or from Users service through proxy
-     * @param principalId of the user to be retrieved
-     * @return {@link User}
-     */
-    @Cacheable(value = "user", key = "{#principalId}")
-    public User fetchUserFromCacheOrProxy(String principalId) throws FeignException {
-        return proxy.fetchUser(principalId);
+    public static Hashtable<String,String> tokens = new Hashtable<String,String>();
+
+    // The token is stored in the service as when the org.lfenergy.operatorfabric.cards.consultation.services.CardSubscription 
+    // class call the cache , it does not have the user token 
+    // it is set each time the user make a request as it can have been refresh in between 
+    public static void setTokenForUserRequest(String user,String token)
+    {
+        tokens.put(user, token);
     }
+
 
     /** Retrieve current user data with his perimeters from cache or from Users service through proxy
      * @param principalId of the user to be retrieved
      * @return {@link CurrentUserWithPerimeters}
      */
-    @Cacheable(value = "user", key = "{#principalId}")
-    public CurrentUserWithPerimeters fetchCurrentUserWithPerimetersFromCacheOrProxy(String principalId) throws FeignException {
-        return proxy.fetchCurrentUserWithPerimeters();
+    @Cacheable(value = "user", key = "{#user}")
+    public CurrentUserWithPerimeters fetchCurrentUserWithPerimetersFromCacheOrProxy(String user) throws FeignException {
+        return proxy.fetchCurrentUserWithPerimeters("Bearer " + tokens.get(user));
     }
 
     /** Clear all cached user data
