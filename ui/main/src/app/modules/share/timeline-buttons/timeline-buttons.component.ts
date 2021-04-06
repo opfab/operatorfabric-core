@@ -126,7 +126,10 @@ export class TimelineButtonsComponent implements OnInit {
         const savedDomain = localStorage.getItem('opfab.timeLine.domain');
 
         if (!!savedDomain) {
-            initialGraphConf = this.buttonList.find(b => b.domainId === savedDomain);
+            const savedConf = this.buttonList.find(b => b.domainId === savedDomain);
+            if (!!savedConf) {
+                initialGraphConf = savedConf;
+            }
         }
 
         if (!!initialGraphConf) {
