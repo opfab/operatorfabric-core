@@ -61,6 +61,7 @@ class Message {
 }
 
 class EntityMessage {
+    id: string;
     name: string;
     color: EntityMsgColor;
 }
@@ -68,7 +69,7 @@ class EntityMessage {
 class FormResult {
     valid: boolean;
     errorMsg: string;
-    formData: any;
+    responseCardData: any;
     responseState?: string;
 }
 
@@ -123,12 +124,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     unsubscribe$: Subject<void> = new Subject<void>();
     public hrefsOfCssLink = new Array<SafeResourceUrl>();
+    private _listEntitiesRequiredToRespond: string[];
     private _listEntitiesToRespondForHeader = new Array<EntityMessage>();
     private _userEntitiesAllowedToRespond: string[];
     private _htmlContent: SafeHtml;
     private _userContext: UserContext;
     private _lastCards$: Observable<LightCard[]>;
-    private _responseData: Response;
     message: Message = {display: false, text: undefined, className: undefined};
 
     public fullscreen = false;
@@ -261,14 +262,16 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.showCloseButton = true;
         this.showEditAndDeleteButton = this.doesTheUserHavePermissionToDeleteOrEditCard();
         this.showAckButton = this.isAcknowledgmentAllowed() && (this._appService.pageType !== PageType.CALENDAR);
-        this.showActionButton =  (!!this._responseData);
+        this.showActionButton =  (!!this.cardState.response);
     }
 
     ngDoCheck() {
         const previous = this.lttdExpiredIsTrue;
         this.checkLttdExpired();
         if (previous !== this.lttdExpiredIsTrue) {
-            templateGateway.setLttdExpired(this.lttdExpiredIsTrue);
+            // Wait one second before sending the information to the template
+            // to be synchronized with the countdown in card header and feed 
+            setTimeout( () => templateGateway.setLttdExpired(this.lttdExpiredIsTrue),1000);
         }
     }
 
@@ -281,7 +284,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     get responseDataParameters(): Map<string> {
-        return this._responseData.btnText ? this._responseData.btnText.parameters : undefined;
+        return this.cardState.response.btnText ? this.cardState.response.btnText.parameters : undefined;
     }
 
     get btnText(): string {
@@ -289,7 +292,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     get responseDataExists(): boolean {
-        return this._responseData != null && this._responseData !== undefined;
+        return this.cardState.response != null && this.cardState.response !== undefined;
     }
 
     get btnAckText(): string {
@@ -306,9 +309,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     submitResponse() {
 
-        const formResult: FormResult = templateGateway.validyForm();
+        const responseData: FormResult = templateGateway.getUserResponse();
 
-        if (formResult.valid) {
+        if (responseData.valid) {
 
             const card: CardForPublishing = {
                 publisher: this.getUserEntityToRespond(),
@@ -316,17 +319,17 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 processVersion: this.card.processVersion,
                 process: this.card.process,
                 processInstanceId: `${this.card.processInstanceId}_${this.getUserEntityToRespond()}`,
-                state: formResult.responseState ? formResult.responseState : this._responseData.state,
+                state: responseData.responseState ? responseData.responseState : this.cardState.response.state,
                 startDate: this.card.startDate,
                 endDate: this.card.endDate,
                 severity: Severity.INFORMATION,
                 entityRecipients: this.card.entityRecipients,
                 userRecipients: this.card.userRecipients,
                 groupRecipients: this.card.groupRecipients,
-                externalRecipients: this._responseData.externalRecipients,
+                externalRecipients: this.cardState.response.externalRecipients,
                 title: this.card.title,
                 summary: this.card.summary,
-                data: formResult.formData,
+                data: responseData.responseCardData,
                 recipient: this.card.recipient,
                 parentCardId: this.card.id,
                 initialParentCardUid: this.card.uid
@@ -352,8 +355,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 );
 
         } else {
-            (formResult.errorMsg && formResult.errorMsg !== '') ?
-                this.displayMessage(formResult.errorMsg, null, MessageLevel.ERROR) :
+            (responseData.errorMsg && responseData.errorMsg !== '') ?
+                this.displayMessage(responseData.errorMsg, null, MessageLevel.ERROR) :
                 this.displayMessage(ResponseI18nKeys.FORM_ERROR_MSG, null, MessageLevel.ERROR);
         }
     }
@@ -435,18 +438,18 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     ngOnChanges(): void {
+
+        if (this.cardState.response != null && this.cardState.response !== undefined) {
+            this.setEntitiesToRespond();
+            this.setIsActionEnabled();
+        }
+
         this.initializeHrefsOfCssLink();
         this.checkIfHasAlreadyResponded();
         this.initializeHandlebarsTemplates();
         this.updateReadCardStatusOnUI();
         this.markAsReadIfNecessary();
-
         this.message = {display: false, text: undefined, className: undefined};
-
-        if (this._responseData != null && this._responseData !== undefined) {
-            this.setEntitiesToRespond();
-            this.setIsActionEnabled();
-        }
         this.setButtonsVisibility();
         this.setShowDetailCardHeader();
         this.computeFromEntity();
@@ -457,10 +460,16 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this._listEntitiesToRespondForHeader = new Array<EntityMessage>();
         this._userEntitiesAllowedToRespond = [];
 
-        if (this.card.entitiesAllowedToRespond) {
+        let entitiesAllowedToRespondAndEntitiesRequiredToRespond = [];
+        if (this.card.entitiesAllowedToRespond)
+            entitiesAllowedToRespondAndEntitiesRequiredToRespond = entitiesAllowedToRespondAndEntitiesRequiredToRespond.concat(this.card.entitiesAllowedToRespond);
+        if (this.card.entitiesRequiredToRespond)
+            entitiesAllowedToRespondAndEntitiesRequiredToRespond = entitiesAllowedToRespondAndEntitiesRequiredToRespond.concat(this.card.entitiesRequiredToRespond);
 
-            const entitiesAllowedToRespond = this.entitiesService.getEntitiesFromIds(this.card.entitiesAllowedToRespond);
-            const allowed = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond).map(entity => entity.id);
+        if (entitiesAllowedToRespondAndEntitiesRequiredToRespond) {
+
+            const entitiesAllowedToRespond = this.entitiesService.getEntitiesFromIds(entitiesAllowedToRespondAndEntitiesRequiredToRespond);
+            const allowed = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond).map(entity => entity.id).filter(x =>  x !== this.card.publisher);
             console.log(new Date().toISOString(), ' Detail card - entities allowed to respond = ', allowed);
 
             // This will be overwritten by the block below if entitiesRequiredToRespond is set and not empty/null
@@ -469,13 +478,14 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
             this._userEntitiesAllowedToRespond = allowed.filter(x => this.user.entities.includes(x));
             console.log(new Date().toISOString(), ' Detail card - users entities allowed to respond = ', this._userEntitiesAllowedToRespond);
-
+            if (this._userEntitiesAllowedToRespond.length > 1)
+                console.log(new Date().toISOString(), 'Warning : user can respond on behalf of more than one entity, so response is disabled');
         }
 
-        if(this.card.entitiesRequiredToRespond&&this.card.entitiesRequiredToRespond.length>0) {
+        if (this.card.entitiesRequiredToRespond && this.card.entitiesRequiredToRespond.length > 0) {
             const entitiesRequiredToRespond = this.entitiesService.getEntitiesFromIds(this.card.entitiesRequiredToRespond);
-            const required = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesRequiredToRespond).map(entity => entity.id);
-            this._listEntitiesToRespondForHeader = this.createEntityHeaderFromList(required);
+            this._listEntitiesRequiredToRespond = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesRequiredToRespond).map(entity => entity.id);
+            this._listEntitiesToRespondForHeader = this.createEntityHeaderFromList(this._listEntitiesRequiredToRespond);
         }
     }
 
@@ -488,6 +498,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             if (entityName) {
                 entityHeader.push(
                     {
+                        id: entity,
                         name: entityName,
                         color: this.checkEntityAnswered(entity) ? EntityMsgColor.GREEN : EntityMsgColor.ORANGE
                     });
@@ -528,7 +539,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private doesTheUserHavePermissionToRespond(): boolean {
         let permission = false;
         this.userService.getCurrentUserWithPerimeters().computedPerimeters.forEach(perim => {
-            if ((perim.process === this.card.process) && (perim.state === this._responseData.state)
+            if ((perim.process === this.card.process) && (perim.state === this.cardState.response.state)
                 && (DetailComponent.compareRightAction(perim.rights, RightsEnum.Write)
                     || DetailComponent.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
                 permission = true;
@@ -594,11 +605,19 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private initializeHandlebarsTemplatesProcess() {
       templateGateway.childCards = this.childCards;
       templateGateway.isLocked = this.isLocked;
-        this._responseData = this.cardState.response;
-        const templateName = this.cardState.templateName;
+      templateGateway.userAllowedToRespond = this.isActionEnabled;
+
+      if (this._listEntitiesRequiredToRespond && this._listEntitiesRequiredToRespond.length > 0) {
+        const userEntitiesRequiredToRespond = this._listEntitiesRequiredToRespond.filter(entityId => this.user.entities.includes(entityId));
+        templateGateway.userMemberOfAnEntityRequiredToRespond = userEntitiesRequiredToRespond.length > 0;
+      } else {
+        templateGateway.userMemberOfAnEntityRequiredToRespond = false;
+      }
+
+      const templateName = this.cardState.templateName;
         if (!!templateName) {
             this.handlebars.executeTemplate(templateName,
-                new DetailContext(this.card, this._userContext, this._responseData))
+                new DetailContext(this.card, this._userContext, this.cardState.response))
                 .subscribe(
                     html => {
                         this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
@@ -610,9 +629,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                                 if (this.card.lttd && this.lttdExpiredIsTrue) {
                                     templateGateway.setLttdExpired(true);
                                 }
-
                                 templateGateway.setScreenSize(this.screenSize);
-                                templateGateway.setUserCanRespond(this.isActionEnabled);
                             }, 10);
                         }, 10);
                     }, () => {

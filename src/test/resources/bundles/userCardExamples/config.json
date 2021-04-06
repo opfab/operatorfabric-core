@@ -1,0 +1,42 @@
+{
+  "id": "userCardExamples",
+  "name": "userCardExamples.label",
+  "version": "1",
+  "uiVisibility": {
+    "monitoring": true,
+    "logging": true,
+    "calendar": true
+  },
+  "states": {
+    "conferenceState": {
+      "name": "conference.title",
+      "color": "#CC9900",
+      "userCard" : {
+        "template" : "usercard_conference",
+        "lttdVisible" : false
+      },
+      "templateName": "conference",
+      "styles": [],
+      "acknowledgmentAllowed": "Always",
+      "type" : "INPROGRESS"
+    },
+    "incidentInProgressState": {
+      "name": "incidentInProgress.name",
+      "userCard" : {
+				"template" : "usercard_incidentInProgress",
+				"severityVisible" : true,
+				"startDateVisible" : false,
+				"endDateVisible" : false,
+        "lttdVisible" : false
+			},
+      "color": "#CC9900",
+      "response": {
+        "state": "incidentInProgressState"
+      },
+      "templateName": "incidentInProgress",
+      "styles": [],
+      "acknowledgmentAllowed": "OnlyWhenResponseDisabledForUser",
+      "type" : "INPROGRESS"
+    }
+  }
+}

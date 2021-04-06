@@ -1,0 +1,43 @@
+{
+  "id": "userCardExamples2",
+  "name": "userCardExamples2.label",
+  "version": "1",
+  "uiVisibility": {
+    "monitoring": true,
+    "logging": true,
+    "calendar": true
+  },
+  "states": {
+    "messageState": {
+      "name": "message.title",
+      "color": "#CC9900",
+      "userCard" : {
+        "template" : "usercard_message",
+        "lttdVisible" : false
+      },
+      "templateName": "message",
+      "styles": [],
+      "acknowledgmentAllowed": "Always",
+      "type" : "INPROGRESS"
+    },
+    "questionState": {
+      "name": "question.title",
+      "showDetailCardHeader": false,
+      "color": "#0070C0",
+      "userCard" : {
+				"template" : "usercard_question",
+				"severityVisible" : false,
+				"startDateVisible" : true,
+				"endDateVisible" : true,
+        "lttdVisible" : true
+			},
+      "response": {
+        "state": "questionState"
+      },
+      "templateName": "question",
+      "styles": [],
+      "acknowledgmentAllowed": "Never",
+      "type" : "INPROGRESS"
+    }
+  }
+}

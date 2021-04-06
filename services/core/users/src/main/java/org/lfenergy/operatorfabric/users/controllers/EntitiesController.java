@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -192,6 +192,8 @@ public class EntitiesController implements EntitiesApi {
         // First we have to delete the links between the users who are part of the entity to delete, and the entity
         removeTheReferenceToTheEntityForMemberUsers(id);
 
+        removeTheReferenceToTheEntityForChildEntities(id);
+
         // Then we can delete the entity
         entityRepository.delete(foundEntityData);
 
@@ -210,6 +212,18 @@ public class EntitiesController implements EntitiesApi {
             userRepository.saveAll(foundUsers);
         }
     }
+
+    // Remove the link between the entity and all its child entities
+    private void removeTheReferenceToTheEntityForChildEntities(String idEntity) {
+        List<EntityData> foundChilds = entityRepository.findByParentsContaining(idEntity);
+        for (EntityData childData : foundChilds) {
+            List<String> parents = childData.getParents();
+            parents.remove(idEntity);
+            childData.setParents(parents);
+        }
+        entityRepository.saveAll(foundChilds);
+    }
+    
 
     private EntityData findEntityOrThrow(String id) {
         return entityRepository.findById(id).orElseThrow(

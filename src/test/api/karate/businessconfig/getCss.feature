@@ -2,11 +2,11 @@ Feature: get stylesheet
 
   Background:
     # Get admin token
-    * def signIn = call read('../common/getToken.feature') { username: 'admin'}
+    * def signIn = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
 
     # Get TSO-operator
-    * def signInAsTSO = call read('../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
     * def process = 'api_test'
@@ -40,13 +40,11 @@ Scenario:Check stylesheet
     Given url opfabUrl + '/businessconfig/processes/' + process + '/css/' + cssName + '?version=9999999999'
     And header Authorization = 'Bearer ' + authToken
     When method GET
-    Then print response
-    And status 404
+    Then status 404
 
   Scenario: Check stylesheet for an nonexisting businessconfig
 
    Given url opfabUrl + '/businessconfig/processes/unknownBusinessconfig/css/style?version=2'
     And header Authorization = 'Bearer ' + authToken
     When method GET
-    Then print response
-    And status 404
+    Then status 404

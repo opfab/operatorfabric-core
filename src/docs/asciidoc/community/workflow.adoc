@@ -43,23 +43,42 @@ for details).
 
 === `master` branch
 
-_"When the source code in the develop branch reaches a stable point and is ready to be released, all of the changes
+_"When the source code in the develop branch reaches a stable point and is ready to be released, all the changes
 should be merged back into master somehow and then tagged with a release number."_
 
-This means that any commit on master is a production-ready release, be it a patch, a minor or a major version.
+This means that any commit on master is a production-ready release, be it a minor or a major version.
 
 Any commit on `master` triggers a Travis build generating and pushing documentation and docker images for the
-corresponding release version. If the `ci_latest` keyword is used in the commit message, the docker images are also
-tagged with `latest`.
+corresponding release version. As a version released from master is also by design the latest version, it will also
+update the `latest` docker images and the `current` documentation folder on the website.
+
+=== Hotfix branches
+
+While minor and major versions are tagged in increasing and linear order on the `master` branch, it might be necessary
+to create patches on previous releases.
+
+To do so, we create hotfix branches branching off version commits on the `master` branch.
+
+For example, the `1.8.hotfixes` branch branches off the commit tagged `1.8.0.RELEASE` on the `master` branch, and will
+contain tags for `1.8.1.RELEASE`, `1.8.2.RELEASE` and so on.
+
+*Naming convention:* Hotfix branches names should always start with the two digits representing the minor version
+they're patching, followed by ".hotfixes".
+
+.Examples of valid feature branch names:
+* 1.8.hotfixes
+* 2.0.hotfixes
 
 === Feature branches
 
-Feature branches are used to develop new features or fix bugs *for the next release*. The version number for this next
-release is usually not known during the developments as it is its final contents that will determine whether it's a
-major or minor version (or even a simple patch).
-By contrast, hotfix branches fix bugs in existing releases and give rise to new patches.
+Feature branches are used to develop new features or fix bugs described in JIRA issues.
+They have two distinct use cases with similar workflows.
 
-The lifecycle of feature branches is as follows:
+==== Feature branches for the next release
+
+These feature branches are used to develop new features or fix bugs *for the next release*.
+
+Their lifecycle is as follows:
 
 . A new feature branch is branched off `develop` before starting work on a feature or bug.
 . Once the developments are deemed ready by the developer(s) working on the feature, a pull request should be created
@@ -69,6 +88,18 @@ for this branch.
 link:https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests[Git Hub pull requests]
 features (comments, proposed changes, etc.) to make changes to the PR until it meets the project requirements.
 . Once it is ready to be included in the next version, the pull request is then merged back into `develop`.
+
+==== Feature branches for hotfixes
+
+These feature branches fix bugs in existing releases and give rise to new patches.
+
+Their lifecycle is similar to regular feature branches, except they should be branched off (and merged back to) the
+`X.X.hotfixes` branch corresponding to the release they are fixing.
+
+Example: A feature branch working on bug OC-1234 affecting version 1.8.0.RELEASE should be branched off
+branch `1.8.hotfixes`.
+
+==== Common conventions
 
 *Naming convention:* Feature branches names should always start with the reference of the JIRA issue they're addressing,
 optionally followed by additional information if several branches are associated with a given JIRA issue.
@@ -108,31 +139,13 @@ is to detect any issue with this generation before moving to master.
 Finally, the `X.X.X.release` can be merged into `master`, triggering
 The resulting merge commit on `master` should then be tagged with `X.X.X.RELEASE`.
 
-All commits on `master` should be merge commits from `release` branches, direct pushes on master will be disabled.
+All commits on `master` should be merged commits from `release` branches, direct pushes on master will be disabled in
+the future.
 
 *Naming convention:* The name of a release branch should match the repository version it is meant to merge into
 `master` but in lower case to avoid confusion with release tags on master.
 
 Example: The valid branch name for the branch bringing 1.3.0.RELEASE into `master` is 1.3.0.release
-
-=== Hotfix branches
-
-Work in progress: detail hotfix branches lifecycle and constraints.
-
-*Naming convention:* Hotfix branches names should always start with "HF_" and the reference of the JIRA issue they're
-addressing, optionally followed by additional information if several branches are associated with a given JIRA issue.
-
-.Examples of valid hotfix branch names:
-* HF_OC-123
-* HF_OC-123_Documentation
-* HF_OC-123_1
-
-.Examples of invalid hotfix branch names:
-* 123
-* OC-123
-* OC123
-* HF_SomeTextDescribingTheFix
-* SomeTextDescribingTheFix
 
 == Examples and commands
 
@@ -147,7 +160,7 @@ The repository version in `master` is `1.3.0.RELEASE`, and the `develop` branch 
 have been added to `develop` to change the repository version to `SNAPSHOT` and implement the changes necessary for
 Git flow.
 
-=== Starting work on a new feature
+=== Starting work on a new feature for the next version
 
 Let's say we want to start working on feature OC-Feature1 described in our JIRA.
 
@@ -207,7 +220,7 @@ Feel free to add a copyright header (on top of the existing ones) to files you c
 for examples.
 ====
 
-=== Submitting a pull request
+=== Submitting a pull request to develop
 
 Once you are satisfied with the state of your developments, you can submit it as a pull request.
 
@@ -231,8 +244,7 @@ Click the "New Pull Request" button for your branch.
 
 image::feature1_new_PR.png[]
 
-If you haven't done so before, *read through the PR checklist* pasted in the comment block, and then *replace it with your
-own comment* containing a short summary of the PR goal and any information that should go into the release notes.
+Add a comment containing a short summary of the PR goal and any information that should go into the release notes.
 It's especially important for PRs that have a direct impact on existing OperatorFabric deployments, to alert administrators
 of the impacts of deploying a new version and help them with the migration.
 Whenever possible/relevant, a link to the corresponding documentation is appreciated.
@@ -316,12 +328,16 @@ automatically.
 
 image::feature1_PR_autom_merge_OK.png[]
 
+[[working_on_hotfix]]
+=== Working on a fix for a previous version
+
+To work on a fix for an existing version, the steps are similar to those described above, substituting `X.X.hotfix` for
+`develop`.
+
 === Reviewing a Pull Request
 
-As of today, only developers from the `reviewers` group can merge pull requests into `develop`, but this shouldn't
+Only developers from the `reviewers` group can merge pull requests into `develop`, but this shouldn't
 stop anyone interested in the topic of a PR to comment and review it.
-
-
 
 ==== Reviewer check list 
 
@@ -360,8 +376,8 @@ Compile and run OperatorFabric docker images is the most effective way to check 
 . Stop the `test-environment` docker-compose;
 . Go to `${OF_HOME}/config/docker`;
 . Run the `./docker-compose.sh` script (or use the `docker-compose.yml` with a `docker-compose` command);
-. Go to `${OF_HOME}/src/test/utils/karate`;
-. Run the following scripts: `./loadBundle.sh && ./setPerimeterForTest.sh && ./postTestCards.sh`;
+. Go to `${OF_HOME}/src/test/resources/`;
+. Run the following scripts: `./loadTestConf.sh &&  ./send6TestCards.sh`;
 . Open the front-end in a browser and look for any regression.
 
 To automate build and API testing, you can use `${OF_HOME}/src/test/api/karate/buildAndLaunchAll.sh`. 
@@ -371,7 +387,7 @@ To automate build and API testing, you can use `${OF_HOME}/src/test/api/karate/b
 Once the pull request meets all the criteria from the above check list, you can merge it into the `develop` branch.
 
 . Go to the pull request page on GitHub
-. Check that the base branch for the pull request is `develop`. This information is visible at the top of the page.
+. Check that the base branch for the pull request is `develop` (or `X.X.hotfixes`). This information is visible at the top of the page.
 +
 image::existing_PR_check_base.png[]
 
@@ -381,7 +397,7 @@ image::existing_PR_check_base.png[]
 
 . Go to the https://opfab.atlassian.net[JIRA] page for the corresponding issue and
 +
-* Set the `Fix version` field to `Next Version`
+* Set the `Fix version` field to `Next Version` (or the corresponding `X.X.X.RELEASE` in the case of a hotfix)
 * Set the `Status` field to `Done`
 
 . Go to the link:https://github.com/opfab/release-notes/[release-notes repository] and add the issue to the list with

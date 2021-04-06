@@ -8,42 +8,39 @@
 
 
 
-<div id="opfab-feed-light-card-{{lightCard.process}}-{{lightCard.processInstanceId}}" class="card light-card-detail " 
-[class.light-card-detail-selected]="open"  
-[class.light-card-detail-unselected]="!open" 
-[class.light-card-detail-unread]="displayUnreadIcon && !isArchivePageType() && !lightCard.hasBeenRead"
- (click)="select()">
+<div id="opfab-feed-light-card-{{lightCard.process}}-{{lightCard.processInstanceId}}" class="card light-card-detail "
+    [class.light-card-detail-selected]="open" [class.light-card-detail-unselected]="!open"
+    [class.light-card-detail-unread]="displayUnreadIcon && !isArchivePageType() && !lightCard.hasBeenRead"
+    (click)="select()">
     <div class="d-flex  p-0 border-0">
         <div class="badge-border  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}}">
         </div>
         <div class="p-1" style="width: 100%">
             <div style="display: flex;">
-            <p class="card-title "> 
-                 <span class="text-uppercase" translate [translateParams]="lightCard.title.parameters">{{i18nPrefix + lightCard.title.key}} </span>
-                 <span *ngIf ="fromEntity">
-                     <span translate> feed.from</span> 
-                     <span class="text-uppercase" > {{fromEntity}}</span>
-                 </span>   
-            </p>
-            <div class="ml-auto align-self-center pr-2" style="margin-right:-5px; margin-top: -10px;">
-                <div class="d-flex align-items-end flex-column">
-                    <ng-template #tipAcknowledged>
-                        <span translate>feed.tips.acknowledged</span>
-                    </ng-template>
-                    <div *ngIf="lightCard.hasBeenAcknowledged" class="p-2" placement="right" [ngbPopover]="tipAcknowledged" popoverClass="opfab-popover"
-                    container="body" triggers="mouseenter:mouseleave">
-                        <em style="color: #0082FF;" class="fa fa-check"></em>
+                <p class="card-title ">
+                    <span class="text-uppercase" translate [translateParams]="lightCard.title.parameters">{{i18nPrefix +
+                        lightCard.title.key}} </span>
+                </p>
+                <div class="ml-auto align-self-center pr-2" style="margin-right:-5px; margin-top: -10px;">
+                    <div class="d-flex align-items-end flex-column">
+                        <ng-template #tipAcknowledged>
+                            <span translate>feed.tips.acknowledged</span>
+                        </ng-template>
+                        <div *ngIf="lightCard.hasBeenAcknowledged" class="p-2" placement="right"
+                            [ngbPopover]="tipAcknowledged" popoverClass="opfab-popover" container="body"
+                            triggers="mouseenter:mouseleave">
+                            <em style="color: #0082FF;" class="fa fa-check"></em>
+                        </div>
                     </div>
-                  </div>
-            </div>
+                </div>
             </div>
             <div style="display: flex; width: 100%;margin-top: 5px;">
-                
+
                 <p *ngIf="this.dateToDisplay" class="card-subtitle">({{this.dateToDisplay}})</p>
-                
+
                 <div class="ml-auto align-self-center pr-2">
                     <div class="d-flex align-items-end flex-row" style="margin-top: -0.5rem" >
-                        <of-countdown [card]="lightCard"></of-countdown>
+                        <of-countdown  *ngIf="!!lightCard.lttd" [lttd]="lightCard.lttd"></of-countdown>
                     </div>
                 </div>
             </div>
@@ -54,7 +51,16 @@
     <div class="d-flex p-0 border-0">
         <div class="badge-border  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}}"></div>
         <div class="p-1">
-            <span *ngIf="open"><div id="opfab-selected-card" translate [translateParams]="lightCard.summary.parameters">{{i18nPrefix + lightCard.summary.key}}</div></span>
+            <span *ngIf="open">
+                <span id="opfab-selected-card" translate [translateParams]="lightCard.summary.parameters">{{i18nPrefix +
+                    lightCard.summary.key}}</span>
+                <span id="opfab-form-entity" *ngIf="fromEntity">
+                    
+                    <span translate> feed.from</span>
+                    <span class="text-uppercase"> {{fromEntity}}</span>
+          
+                </span>
+            </span>
         </div>
     </div>
     <div class="badge-border  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}} "></div>

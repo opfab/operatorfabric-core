@@ -15,14 +15,17 @@
                 <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="processGroup"
                     [values]="processGroupOptions"></of-single-filter>
             </div>
-            <div class="col">
-                <of-single-filter [hidden]="displayProcessGroupFilter()" i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
-                                  [values]="processOptions"></of-single-filter>
 
-                <of-single-filter [hidden]="! displayProcessGroupFilter()" i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
+            <div class="col" *ngIf="! displayProcessGroupFilter() && !! processOptions && processOptions.length > 1">
+                <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
+                                  [values]="processOptions"></of-single-filter>
+            </div>
+            <div class="col" *ngIf="displayProcessGroupFilter() && !! processOptionsWhenSelectedProcessGroup && processOptionsWhenSelectedProcessGroup.length > 1">
+                <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
                                   [values]="processOptionsWhenSelectedProcessGroup"></of-single-filter>
             </div>
-            <div class="col">
+
+            <div class="col" *ngIf="!! stateOptions && stateOptions.length > 1">
                 <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="state"
                     [values]="stateOptions"></of-single-filter>
 
@@ -51,12 +54,16 @@
             </label>
         </div>
         <div class="justify-content-center" style="display:flex;width:100%;align-content:center;flex-wrap: wrap;">
-            <div *ngIf="startDateVisible" style="width:280px; margin-right: 50px; margin-left: 50px;">
+            <div *ngIf="startDateVisible" style="width:280px; margin-right: 30px; margin-left: 30px;">
                 <of-datetime-filter filterPath="startDate" formControlName="startDate" labelKey="userCard.filters."
                     [offset]="[{amount:1,unit:'minute'}]" ></of-datetime-filter>
             </div>
-            <div *ngIf="endDateVisible" style="width: 280px; margin-right: 50px; margin-left: 50px;">
+            <div *ngIf="endDateVisible" style="width: 280px; margin-right: 30px; margin-left: 30px;">
                 <of-datetime-filter filterPath="endDate" formControlName="endDate" labelKey="userCard.filters."
+                    [offset]="[{amount:1,unit:'day'}]"></of-datetime-filter>
+            </div>
+            <div *ngIf="lttdVisible" style="width: 280px; margin-right: 30px; margin-left: 30px;">
+                <of-datetime-filter filterPath="lttd" formControlName="lttd" labelKey="userCard.filters."
                     [offset]="[{amount:1,unit:'day'}]"></of-datetime-filter>
             </div>
         </div>

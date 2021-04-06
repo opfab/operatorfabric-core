@@ -1,0 +1,53 @@
+<br />
+<h2 style="text-align: center;"> {{card.data.question}} </h2>
+
+<br />
+
+<div class="opfab-input">
+    <label> RESPONSE </label>
+    <input id="response" name="reponse">
+</div>
+
+
+<br/>
+<br/>
+
+<div id="childs-div"></div>
+
+
+<script>
+
+    templateGateway.applyChildCards = () => {
+
+        if (templateGateway.childCards[0]) {
+            let childsDiv = document.getElementById("childs-div");
+            let responses = ' <h3>Response received </h3><center> <br/>'
+            responses += ' <table width="100%""> <tr> <th> Entity </th>';
+            responses += ' <th> response </th>';
+            responses += ' </tr>';
+
+            templateGateway.childCards.forEach((c, i) => {
+                console.log("data child = ", c.data);
+                responses += `<tr> <td> ${c.publisher} </td>`
+                responses += `<td> ${c.data.response} </td>`;
+                responses += "</tr>";
+            });
+
+            responses += '</table> </center> <br/> <br/>';
+
+            childsDiv.innerHTML = responses;
+        }
+    }
+
+    templateGateway.getUserResponse = function () {
+        const response = document.getElementById('response').value;
+        const responseCardData = { response: response };
+        return {
+            valid: true,
+            responseCardData: responseCardData
+        };
+
+    }
+</script>
+
+</p>

@@ -2,11 +2,11 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
 
   Background:
    #Getting token for admin and operator1 user calling getToken.feature
-    * def signInAsTSO = call read('../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
 
-  Scenario: Push cards with compliant values of entitiesAllowedToRespond and entitiesRequiredToRespond
+  Scenario: Push cards with different values of entitiesAllowedToRespond and entitiesRequiredToRespond (all these tests correspond to successful cards creations)
 
     * def card1 =
 """
@@ -59,7 +59,6 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
     Then status 201
     And match response.count == 1
 
-  Scenario: Push cards non-compliant values of entitiesAllowedToRespond and entitiesRequiredToRespond
 
     * def card3 =
 """
@@ -84,7 +83,7 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
     And request card3
     When method post
     Then status 201
-    And match response.count == 0
+    And match response.count == 1
 
     * def card4 =
 """
@@ -110,4 +109,4 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
     And request card4
     When method post
     Then status 201
-    And match response.count == 0
+    And match response.count == 1

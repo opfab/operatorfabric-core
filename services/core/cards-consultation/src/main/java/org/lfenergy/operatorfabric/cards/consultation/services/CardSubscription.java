@@ -93,9 +93,22 @@ public class CardSubscription {
         this.queueName = computeSubscriptionId(userLogin + GROUPS_SUFFIX, this.clientId);
     }
 
-    public void updateCurrentUserWithPerimeters(){
+    public void updateCurrentUserWithPerimeters() {
         if (userServiceCache != null)
-            currentUserWithPerimeters = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(userLogin);
+            try {
+                currentUserWithPerimeters = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(userLogin);
+
+            } catch (Exception exc) {
+                // This situation arise when the usercache has been cleared and the token is expired
+                // in this case the service cannot retrieve the user information 
+                // it arise only in implicit mode as the user is not deconnected 
+                // if token expired due to silent refresh mechanism
+                //
+                // When the user will make another request (for example : click on a card feed) 
+                // the new token will be set and it will then retrieve user information on next call 
+                // 
+                log.info("Cannot get new perimeter for user {} , use old one ", userLogin);
+            }
     }
 
     public static String computeSubscriptionId(String prefix, String clientId) {

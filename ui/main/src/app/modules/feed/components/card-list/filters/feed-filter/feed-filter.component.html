@@ -67,11 +67,8 @@
     
     <div *ngIf="!(hideTimerTags)" style="width:300px">
 
-        <div class="row opfab-filter-header" *ngIf="filterByPublishDate">
+        <div class="row opfab-filter-header">
             <span translate>feed.filters.time.titleIfFilterBasedOnPublishDate</span>
-        </div>
-        <div class="row opfab-ilter-header" *ngIf="!filterByPublishDate">
-            <span translate>feed.filters.time.titleIfFilterBasedOnBusinessDate</span>
         </div>
 
         <form class="opfab-time-filter" [formGroup]="timeFilterForm" id="time-filter-form">

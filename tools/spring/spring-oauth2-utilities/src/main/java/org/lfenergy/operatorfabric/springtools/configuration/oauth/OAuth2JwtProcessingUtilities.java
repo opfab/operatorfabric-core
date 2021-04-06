@@ -14,8 +14,6 @@ package org.lfenergy.operatorfabric.springtools.configuration.oauth;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.oauth2.jwt.Jwt;
-
 import java.util.List;
 
 /**
@@ -24,12 +22,6 @@ import java.util.List;
  *
  */
 public class OAuth2JwtProcessingUtilities {
-
-    /**
-     * Store Jwt token in local thread to allow passing token through non communicating APIs (spring / feign)
-     */
-    public static final ThreadLocal<Jwt> token = new ThreadLocal<>();
-
     /**
      * Creates Authority list from user's groups (ROLE_[group name])
      * @param user user model data

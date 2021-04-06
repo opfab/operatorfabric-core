@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,10 +9,10 @@
 
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {CardService} from '@ofServices/card.service';
 import {Observable, of} from 'rxjs';
-import {catchError, filter, map, switchMap,withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, map, switchMap, withLatestFrom} from 'rxjs/operators';
 import {
     HandleUnexpectedError,
     LightCardActionTypes,
@@ -41,8 +41,8 @@ export class CardOperationEffects {
 
 
 
-    @Effect({dispatch: false})
-    triggerSoundNotifications = this.actions$
+    
+    triggerSoundNotifications = createEffect(() => this.actions$
         /* Creating a dedicated effect was necessary because this handling needs to be done once the added cards have been
          * processed since we take a look at the feed state to know if the card is currently visible or not */
         .pipe(
@@ -57,11 +57,11 @@ export class CardOperationEffects {
                     this.soundNotificationService.handleCards(lightCards, currentlyVisibleIds);
                 }
             )
-        );
+        ), {dispatch: false});
 
 
-    @Effect({dispatch: false})
-    triggerSoundNotificationsWhenRemind = this.actions$
+    
+    triggerSoundNotificationsWhenRemind = createEffect(() => this.actions$
         .pipe(
             ofType(LightCardActionTypes.UpdateALightCard),
             map((updateCard: UpdateALightCard) => {
@@ -69,10 +69,10 @@ export class CardOperationEffects {
                     // in case it is a remind the card is update with hasBeenRead set to false
                     if (!card.hasBeenRead) this.soundNotificationService.playSoundForCard(card);
                 })
-        );
+        ), {dispatch: false});
 
-    @Effect()
-    updateSubscription: Observable<any> = this.actions$
+    
+    updateSubscription: Observable<any> = createEffect(() => this.actions$
         .pipe(
             ofType(FeedActionTypes.ApplyFilter),
             filter((af: ApplyFilter) => af.payload.name === FilterType.BUSINESSDATE_FILTER),
@@ -85,16 +85,16 @@ export class CardOperationEffects {
                 this.store.dispatch(new HandleUnexpectedError({error: error}));
                 return caught;
             })
-        );
+        ), { dispatch: false });
 
-    @Effect()
-    refreshIfSelectedCard: Observable<Action> = this.actions$
+    
+    refreshIfSelectedCard: Observable<Action> = createEffect(() => this.actions$
         .pipe(
             ofType(LightCardActionTypes.LoadLightCardsSuccess),
             map((a: LoadLightCardsSuccess) => a.payload.lightCards), // retrieve list of added light cards from action payload
             withLatestFrom(this.store.select(selectCardStateSelectedId)), // retrieve currently selected card
             switchMap(([lightCards, selectedCardId]) => lightCards.filter(card => card.id === selectedCardId)), // keep only lightCards matching the process id of current selected card
             map(lightCard => new LoadCard({id: lightCard.id})) // if any, trigger refresh by firing LoadCard
-        )
+        ))
     ;
 }

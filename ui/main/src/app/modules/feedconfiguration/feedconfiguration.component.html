@@ -13,14 +13,14 @@
   
 
     <form [formGroup]="feedConfigurationForm">
-        <div *ngFor="let processGroup of processGroupsData; " class="opfab-feedconfiguration-processlist">
+        <div *ngFor="let processGroup of processGroupsAndLabels; " class="opfab-feedconfiguration-processlist">
             <h5 class="font-weight-bold">{{processGroup.groupLabel}}</h5>
             <div class="row">
-                <div class="col-md" *ngFor="let processKey of processGroup.processes; ">
-                    <div *ngIf="processesStatesLabels.get(processKey)">
-                        <p class="font-weight-bold">{{processesStatesLabels.get(processKey).processLabel}}</p>
+                <div class="col-md" *ngFor="let processIdAndLabel of processGroup.processes; ">
+                    <div *ngIf="processesStatesLabels.get(processIdAndLabel.processId)">
+                        <p class="font-weight-bold">{{processesStatesLabels.get(processIdAndLabel.processId).processLabel}}</p>
                         <div style="margin-left: 20px;" >
-                            <div class="row" formArrayName="processesStates" *ngFor="let state of processesStatesLabels.get(processKey).states; ">
+                            <div class="row" formArrayName="processesStates" *ngFor="let state of processesStatesLabels.get(processIdAndLabel.processId).states; ">
                                 <label class="opfab-checkbox">{{state.stateLabel}}
                                     <input type="checkbox"[formControlName]=state.stateControlIndex [id]=state.stateControlIndex >
                                     <span class="opfab-checkbox-checkmark"></span>
@@ -35,7 +35,7 @@
             <br />
         </div>
         <br />
-        <div class="row opfab-feedconfiguration-processlist">
+        <div class="row opfab-feedconfiguration-processlist" *ngIf="!! processesWithoutGroup && processesWithoutGroup.length">
             <div class="col-md" *ngFor="let process of processesWithoutGroup; ">
                 <p class="font-weight-bold">{{process.processLabel}}</p>
                 <div style="margin-left: 20px;">
@@ -68,9 +68,10 @@
     <ng-template #confirmationPopup let-modal>
         <div class="modal-header">
             <h4 translate> feedConfiguration.popup.title </h4>
-            <button id="opfab-feedconfiguration-btn-close" type="button" class="close" aria-label="Close" (click)="modalRef.dismiss('Cross click')">
+            <div id="opfab-feedconfiguration-btn-close" class="opfab-close-modal-icon" aria-label="Close"
+                 (click)="modalRef.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
-            </button>
+            </div>
         </div>
         <div class="modal-body text-center">
             <p translate>feedConfiguration.popup.areYouSure</p>

@@ -12,7 +12,6 @@
   "delegatePattern": true,
   "singleContentTypes": false,
   "importMappings" : {
-    "ActionEnum": "org.lfenergy.operatorfabric.businessconfig.model.ActionEnum",
     "EpochDate": "java.time.Instant",
     "LongInteger": "java.lang.Long"
   }

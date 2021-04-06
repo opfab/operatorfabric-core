@@ -11,6 +11,8 @@
 const templateGateway = {
     opfabEntityNames : null, 
     childCards: [],
+    userAllowedToRespond : false,
+    userMemberOfAnEntityRequiredToRespond : false,
 
     setEntityNames: function(entityNames){
         this.opfabEntityNames = entityNames;
@@ -38,7 +40,18 @@ const templateGateway = {
         document.location.href = newUrl;
     },
 
+    // True if user is allowed to respond to the current card :
+    //  - his entity is allowed to respond 
+    //  - he is member of a group having a perimeter permitting the response 
+    isUserAllowedToRespond  : function() {
+        return this.userAllowedToRespond;
+    },
 
+    // True if user is member of an entity required to respond to the current card
+    isUserMemberOfAnEntityRequiredToRespond: function() {
+        return this.userMemberOfAnEntityRequiredToRespond;
+    },
+    
     //
     // FUNCTIONS TO OVERRIDE BY TEMPLATES 
     //
@@ -59,13 +72,9 @@ const templateGateway = {
     // size = 'lg' for large size , i.e when the card is in full screen mode
     setScreenSize: function(size) {},
 
-    // Opfab call this method to tell the template if the user can respond to the card
-    // responseEnabled set to true if possible , false otherwise 
-    setUserCanRespond: function(responseEnabled) {},
-
     // Opfab call this method to get the form result when user want to send response 
-    validyForm: function() {
-        console.log(new Date().toISOString() , ` Template.js : no validyForm method define in template , valid set to true`);
+    getUserResponse: function() {
+        console.log(new Date().toISOString() , ` Template.js : no getUserResponse method define in template , valid set to true`);
         return this.isValid = undefined;
     }
     

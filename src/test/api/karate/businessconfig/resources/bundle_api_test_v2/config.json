@@ -19,7 +19,8 @@
 					"template" : "usercard_question",
 					"severityVisible" : false,
 					"startDateVisible" : true,
-					"endDateVisible" : true
+					"endDateVisible" : true,
+					"lttdVisible" : true
 				},
 		  "response": {
 			"state": "questionState"
@@ -35,7 +36,8 @@
 					"template" : "usercard_incidentInProgress",
 					"severityVisible" : true,
 					"startDateVisible" : false,
-					"endDateVisible" : false
+					"endDateVisible" : false,
+					"lttdVisible" : false
 				},
 		  "color": "#FAF0AF",
 		  "response": {

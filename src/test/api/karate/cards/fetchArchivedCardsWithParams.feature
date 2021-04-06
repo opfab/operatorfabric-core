@@ -3,7 +3,7 @@ Feature: Archives
 
   Background:
 
-    * def signInAsTSO = call read('../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
   Scenario: Post 10 cards, fill the archive
@@ -34,7 +34,6 @@ Feature: Archives
 	"groupRecipients": ["Dispatcher"],
 	"severity" : "ACTION",
 	"startDate" : 1583333122000,
-	"endDate" : 1583733122000,
 	"lttd" : 1583339602000,
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
@@ -198,7 +197,6 @@ Feature: Archives
     And header Authorization = 'Bearer ' + authTokenAsTSO
     Then method get
     Then status 200
-    And print response
     And match response.numberOfElements == 9
 
     Scenario: change number of elements
@@ -207,7 +205,6 @@ Feature: Archives
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
-    And print response
     And match response.size == 5
     And match response.numberOfElements == 5
 
@@ -217,28 +214,24 @@ Feature: Archives
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
-    And print response
     And assert response.numberOfElements == 9
 
    Scenario: without authentication
     Given url opfabUrl + 'cards/archives/' +'?publisher=api_test'
     When method get
     Then status 401
-    And print response
 
    Scenario: filter on tag
       Given url opfabUrl + 'cards/archives/' +'?tags=API'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
-    And print response
 
    Scenario: filter on a given publish date
     Given url opfabUrl + 'cards/archives/' +'?publishDateFrom=1553186770481'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
-    And print response
     And assert response.numberOfElements == 9
 
    Scenario: filter by activeFrom
@@ -246,15 +239,20 @@ Feature: Archives
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
-    And print response
      And assert response.numberOfElements == 9
+
+   Scenario: filter by activeFrom after startDate of card with no endDate
+    Given url opfabUrl + 'cards/archives/' +'?activeFrom=1583333123000'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 200
+     And assert response.numberOfElements == 8
 
    Scenario: filter by activeTo
      Given url opfabUrl + 'cards/archives/' +'?activeTo=1653186770481'
      And header Authorization = 'Bearer ' + authTokenAsTSO
      When method get
      Then status 200
-     And print response
      And assert response.numberOfElements == 9
 
   Scenario: filter process
@@ -262,7 +260,6 @@ Feature: Archives
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
-    And print response
     And assert response.numberOfElements == 9
 
   Scenario: fetch all archived cards, child cards included
@@ -270,7 +267,6 @@ Feature: Archives
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
-    And print response
     And assert response.numberOfElements == 10
 
   Scenario: fetch archived cards, child cards excluded
@@ -278,7 +274,6 @@ Feature: Archives
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
-    And print response
     And assert response.numberOfElements == 9
 
   Scenario: fetch archived cards (child cards excluded by default)
@@ -286,5 +281,4 @@ Feature: Archives
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
-    And print response
     And assert response.numberOfElements == 9

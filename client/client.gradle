@@ -12,7 +12,6 @@ buildscript {
     }
 
     dependencies {
-        //classpath testing.junit5Plugin
         classpath generator.swaggerGeneratorPlugin
     }
 }
@@ -23,17 +22,14 @@ subprojects {
     apply plugin: 'jacoco'
     apply plugin: plugin.swagger
     apply plugin: 'maven-publish'
-    apply plugin: 'signing'
 
     /////// COMPILATION
 
     dependencies {
         swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
         swaggerUI generator.swaggerUI
-//        compile generator.springfoxSwagger2
         annotationProcessor misc.lombok
         implementation misc.lombok
-        // compileOnly misc.lombok
         testRuntimeOnly testing.junit5Engine
         testImplementation testing.junit5Api
         testCompile boot.starterTest, testing.assertJ, misc.lombok
@@ -155,9 +151,5 @@ subprojects {
                }
 
        }
-//    apply plugin: 'signing'
-//    signing {
-//		useGpgCmd()
-//        	sign publishing.publications.mavenJava
-//	    }
+
 }

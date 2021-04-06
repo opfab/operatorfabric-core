@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: OperatorFabric Card Consumer Service
-  version: 2.2.0.RELEASE
+  version: 2.3.0.RELEASE
   title: Card Management API
   termsOfService: ''
   contact:
@@ -67,30 +67,6 @@ definitions:
       - COMPLIANT
       - INFORMATION
     example: INFORMATION
-  ActionEnum:
-    type: string
-    description: |-
-      Action type >
-      * EXTERNAL - Not defined (not implemented)
-      * URL - The action is tied to a url which must conform the specification of 3rd Party actions (see reference manual)
-      * JNLP - The action triggers a JNLP link (not implemented)
-    enum:
-      - EXTERNAL
-      - URL
-      - JNLP
-    example: URL
-  TitlePositionEnum:
-    type: string
-    description: |-
-      Possible title positions >
-      * UP - At the top of the detail
-      * DOWN - At the bottom of the detail
-      * NONE - Not displayed
-    enum:
-      - UP
-      - DOWN
-      - NONE
-    example: UP
   RecipientEnum:
     type: string
     description: >-
@@ -350,8 +326,9 @@ definitions:
           type: string
         example: ["Dispatcher","Planner"]
         description: >-
-          List of entities that have to respond (should be a subset of entitiesAllowedToRespond). If present and not
-          empty, this list will be used for display in the card detail header instead of entitiesAllowedToRespond.
+          List of entities that have to respond. It will be taken into account in addition to entitiesAllowedToRespond
+          to determine if a user can send a response. If present and not empty, this list will be used for display in the
+          card detail header instead of entitiesAllowedToRespond.
       entityRecipients:
         description: List of entity recipients
         type: array
@@ -505,8 +482,9 @@ definitions:
           type: string
         example: ["Dispatcher","Planner"]
         description: >-
-          List of entities that have to respond (should be a subset of entitiesAllowedToRespond). If present and not
-          empty, this list will be used for display in the card detail header instead of entitiesAllowedToRespond.
+          List of entities that have to respond. It will be taken into account in addition to entitiesAllowedToRespond
+          to determine if a user can send a response. If present and not empty, this list will be used for display in the
+          card detail header instead of entitiesAllowedToRespond.
       title:
         description: Card i18n title
         $ref: '#/definitions/I18n'

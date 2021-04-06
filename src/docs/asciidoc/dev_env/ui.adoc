@@ -79,8 +79,8 @@ ${OF_HOME}/services/core/cards-publication/src/main/bin/push_cards_loop.sh
 
 For more realistic card sending use, once Karate env correctly configured, the Karate scripts called :
 
-** `${OF_HOME}/src/test/utils/karate/loadBundles.sh`
-** `${OF_HOME}/src/test/utils/karate/postTestCards.sh`
+** `${OF_HOME}/src/test/resources/loadTestConf.sh`
+** `${OF_HOME}/src/test/resources/send6TestCards.sh`
 
 Once logged in, after one of those scripts have been running, you should be able to see some cards displayed in `http://localhost:2002/`.
 

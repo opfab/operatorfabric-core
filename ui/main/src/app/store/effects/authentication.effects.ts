@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,9 +8,8 @@
  */
 
 
-
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Observable, of} from 'rxjs';
 import {Action, Store} from '@ngrx/store';
 import {
@@ -68,7 +67,7 @@ export class AuthenticationEffects {
      * the login payload to get an authentication token from the authentication service if the authentication is
      * valid and emit an {AcceptLogin} action with it.
      * For invalid authentication it emits a {RejectLogIn} Action with the message "unable to authenticate the user"
-     * as paload
+     * as payload
      *
      * This effect should take action after the user has submitted login information in the login page by clicking
      * on the login button.
@@ -77,8 +76,8 @@ export class AuthenticationEffects {
      * @name TryToLogIn
      * @typedef {Observable<AuthenticationActions>}
      */
-    @Effect()
-    TryToLogIn: Observable<AuthenticationActions> =
+    
+    TryToLogIn: Observable<AuthenticationActions> = createEffect(() =>
         this.actions$
             .pipe(
                 ofType(AuthenticationActionTypes.TryToLogIn),
@@ -94,7 +93,7 @@ export class AuthenticationEffects {
                             }
                         ));
                 })
-            );
+            ));
 
 
 
@@ -109,19 +108,19 @@ export class AuthenticationEffects {
      * @name TryToLogOut
      * @typedef {Observable<AuthenticationActions>}
      */
-    @Effect()
-    TryToLogOut: Observable<Action> =
+    
+    TryToLogOut: Observable<Action> = createEffect(() =>
         this.actions$.pipe(
             ofType(AuthenticationActionTypes.TryToLogOut),
             switchMap(() => {
                 this.resetState();
                 return of(new EmptyLightCards(), new ClearCard(), new AcceptLogOut());
             })
-        );
+        ));
 
     /**
      * This {Observable} of {AuthenticationActions} listens for {AuthenticationActionTypes.AcceptLogOut} type.
-     * It tells the {Router} service to navigate to the Login page. and emit an {AcceptLogOutSucess} Action.
+     * It tells the {Router} service to navigate to the Login page. and emit an {AcceptLogOutSuccess} Action.
      *
      * This {Effect} should be called as a consequence of a {TryLogOut} action
      *
@@ -130,15 +129,15 @@ export class AuthenticationEffects {
      * @typedef {Observable<AuthenticationActions>}
      *
      */
-    @Effect()
-    AcceptLogOut: Observable<AuthenticationActions> =
+    
+    AcceptLogOut: Observable<AuthenticationActions> = createEffect(() =>
         this.actions$.pipe(
             ofType(AuthenticationActionTypes.AcceptLogOut),
             map(() => {
                 this.router.navigate(['/login']);
                 return new AcceptLogOutSuccess();
             })
-        );
+        ));
     /**
      * This {Observable} of {AuthenticationActions} listens for {AuthenticationActionTypes.RejectLogIn} type.
      * It tells the {AuthenticationService} to clear authentication information from the system
@@ -149,18 +148,18 @@ export class AuthenticationEffects {
      * @name RejectLogInAttempt
      * @typedef {Observable<AuthenticationActions>}
      */
-    @Effect()
-    RejectLogInAttempt: Observable<AuthenticationActions> =
+    
+    RejectLogInAttempt: Observable<AuthenticationActions> = createEffect(() =>
         this.actions$.pipe(ofType(AuthenticationActionTypes.RejectLogIn),
             tap(() => {
                 this.authService.clearAuthenticationInformation();
             }),
-            map(() => new AcceptLogOut()));
+            map(() => new AcceptLogOut())));
 
     /**
      * This {Observable} of {AuthenticationActions} listens for {AuthenticationActionTypes.CheckAuthenticationStatus} type.
      *It extract the current authentication information if any and checks its validity, the expiration date.
-     *  If it's OK then an {AcceptLogIn} Action with check result as payload is emittedby calling
+     *  If it's OK then an {AcceptLogIn} Action with check result as payload is emitted by calling
      *  the {handleLogInAttempt} @method,
      *
      *  otherwise a {RejectedLogIn} Action is emitted by calling the {handleRejectedLogin} @method.
@@ -173,8 +172,8 @@ export class AuthenticationEffects {
      * @typedef {Observable<AuthenticationActions>}
      *
      */
-    @Effect()
-    CheckAuthentication: Observable<AuthenticationActions> =
+    
+    CheckAuthentication: Observable<AuthenticationActions> = createEffect(() =>
         this.actions$
             .pipe(
                 ofType(AuthenticationActionTypes.CheckAuthenticationStatus),
@@ -235,18 +234,18 @@ export class AuthenticationEffects {
                         new I18n('login.error.unexpected', parameters)
                     )));
                 })
-            );
+            ));
 
 
-    @Effect()
-    UnableToRefreshToken: Observable<Action> =
+    
+    UnableToRefreshToken: Observable<Action> = createEffect(() =>
         this.actions$.pipe(
             ofType(AuthenticationActionTypes.UnableToRefreshOrGetToken),
             switchMap(() => {
                 window.alert(this.translate.instant("login.error.disconnected"));
                 return of(new TryToLogOut());
             })
-        );
+        ));
 
     handleErrorOnTokenGeneration(errorResponse, category: string) {
         let message, key;

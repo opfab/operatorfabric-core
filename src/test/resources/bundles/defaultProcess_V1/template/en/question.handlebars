@@ -1,0 +1,124 @@
+
+
+<form id='question-form'>
+   <div class="form-group">
+      <h4>  Outage needed for 2 hours on the France-England HVDC line</h4>
+      <br/>
+       Could you please confirm the time frames that are ok for you ?  <br/> <br/>
+       <label class="opfab-checkbox" style="margin-left:40px"> The 10/08/2021 between 8AM and 10AM <input type="checkbox" id="choice1" name="choice1" >  <span class="opfab-checkbox-checkmark"> </span> </label>
+       <label class="opfab-checkbox" style="margin-left:40px"> The 10/08/2021 between 10AM and 12PM <input type="checkbox" id="choice2" name="choice2" >  <span class="opfab-checkbox-checkmark"> </span> </label>
+       <label class="opfab-checkbox" style="margin-left:40px"> The 11/08/2021 between 8AM and 10AM <input type="checkbox" id="choice3" name="choice3" >  <span class="opfab-checkbox-checkmark"> </span> </label>
+    </div>
+    <div id="responseRequired"></div>
+    <div id="responseDisabled" style="color: red"></div>
+</form> 
+
+<br/>
+<br/>
+
+
+<div id="childs-div"></div>
+
+<script>
+
+  templateGateway.applyChildCards = () => {
+    if (templateGateway.childCards[0])
+    {
+    let childsDiv = document.getElementById("childs-div");
+    let responses  = '<center> <h4>Responses received </h4> <br/>';
+    responses += ' <table width="100%""> <tr> <th> Entity </th>';
+    responses += ' <th> 10/08/2020 8AM-10AM </th>';
+    responses += ' <th> 10/08/2020 10AM-12PM </th>';
+    responses += ' <th> 11/08/2020 8AM-10AM </th>';
+    responses += ' </tr>';
+     
+   templateGateway.childCards.forEach( (c, i) => {
+      const entityName = templateGateway.getEntityName(c.publisher);
+      responses += `<tr> <td> ${entityName} </td>`;
+      if (c.data.choice1) responses += "<td> OK </td>";
+      else responses  += "<td> NOK </td>";
+      if (c.data.choice2) responses += "<td> OK </td>";
+      else responses += "<td> NOK </td>";
+     if (c.data.choice3) responses += "<td> OK </td>";
+      else responses += "<td> NOK </td>";
+      responses += "</tr>";
+    }); 
+
+     responses += '</table> </center> <br/> <br/>';
+
+
+     childsDiv.innerHTML = responses ;
+    }
+  };
+
+  // The below 'tag' comment (and matching end tag) is directed at asciidoctor to include this snippet as an example in the
+  // documentation, it should not be used in actual templates.
+  //tag::templateGateway.getUserResponse_example[]
+  templateGateway.getUserResponse = function() {
+
+    const responseCardData = {};
+    const formElement = document.getElementById('question-form');
+    for (const [key, value] of [... new FormData(formElement)]) {
+        (key in responseCardData) ? responseCardData[key].push(value) : responseCardData[key] = [value];
+    }
+
+    const result = {
+        valid: true,
+        responseCardData: responseCardData
+    };
+
+      // If the user chose several options, we decide to move the process to a specific state, for example to ask a follow-up question (what's their preferred option).
+    const choiceRequiresFollowUp = Object.entries(responseCardData).length>1;
+    if(choiceRequiresFollowUp) result['responseState'] = 'multipleOptionsResponseState';
+
+    return result;
+
+    };
+  //end::templateGateway.getUserResponse_example[]
+
+  templateGateway.lockAnswer = function() {
+      document.getElementById('choice1').disabled = true;
+      document.getElementById('choice2').disabled = true;
+      document.getElementById('choice3').disabled = true;
+  };
+
+  templateGateway.unlockAnswer = function() {
+      document.getElementById('choice1').disabled = false;
+      document.getElementById('choice2').disabled = false;
+      document.getElementById('choice3').disabled = false;
+
+  };
+
+  templateGateway.setLttdExpired = function(expired) {
+      const responseEnabled = document.getElementById('responseDisabled');
+      if (responseEnabled != null) {
+        if (expired) {
+            const responseRequired = document.getElementById('responseRequired');
+            if (responseRequired != null) {
+              responseRequired.innerHTML="";
+            }
+            responseEnabled.innerHTML="Response time has expired";
+            templateGateway.lockAnswer();
+        } else {
+            responseEnabled.innerHTML="";
+            templateGateway.unlockAnswer();
+        }
+      }
+  }
+
+
+  if (templateGateway.isUserMemberOfAnEntityRequiredToRespond()) {
+
+      const responseRequired = document.getElementById('responseRequired');
+      if (responseRequired != null) {
+        responseRequired.innerHTML="Your response is required";
+      }
+  } else {
+      if (responseRequired != null) {
+        responseRequired.innerHTML="";
+      }
+  }
+
+</script>
+
+

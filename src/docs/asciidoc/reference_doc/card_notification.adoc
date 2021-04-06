@@ -44,7 +44,8 @@ To offer the possibility for the user to acknowledged card, it has to be configu
 - "OnlyWhenResponseDisabledForUser": acknowledgement allowed only when 
 the response is disabled for the user
 
-You can see examples in src/test/utils/karate/businessconfig/resources/bundle_defaultProcess/config.json
+You can see examples in src/test/resources/bundles/defaultProcess_V1/config.json
+
 [[card_reminder]]
 == Card reminder 
 

@@ -25,7 +25,7 @@
     "buttonTitle": {
       "TR": "Real Time",
       "J": "Day",
-      "7D": "7 Day",
+      "7D": "7 Days",
       "W": "Week",
       "M": "Month",
       "Y": "Year"
@@ -48,8 +48,8 @@
         "titleIfFilterBasedOnBusinessDate": "Business period",
         "start.label": "Start",
         "end.label": "End",
-        "active.label": "Active",
-        "lttd.label": "Finished"
+        "active.label": "Active"
+        
       },
       "type": {
         "title": "Type",
@@ -89,6 +89,14 @@
       "acknowledged": "Acknowledged",
       "lttd": "Time remaining to decide"
     },
+    "acknowledgeAllCards": {
+      "label": "Acknowledge all cards",
+      "popup": {
+        "title": "CONFIRMATION",
+        "doYouReallyWant": "This will ack all visible cards of your feed, please confirm"
+      }
+    },
+    "lttdFinished": "Finished",
     "received": "Received on",
     "at": "at",
     "from" : "from"
@@ -214,7 +222,8 @@
       "notAvailable": "Feature not available",
       "noRecipientSelected": "You must at least choose one recipient",
       "templateError": "Technical error : invalid template",
-      "impossibleToSendCard": "Impossible to send card for technical reasons"
+      "impossibleToSendCard": "Impossible to send card for technical reasons",
+      "endDateBeforeStartDate": "End date must be after start date"
     },
     "filters": {
       "severity": "SEVERITY",
@@ -223,6 +232,7 @@
       "state": "STATE",
       "startDate":  "START DATE",
       "endDate":  "END DATE",
+      "lttd": "LIMIT DATE FOR RESPONSE",
       "recipients": "RECIPIENTS"
     },
     "options": {
@@ -290,7 +300,9 @@
         "description": "Description",
         "entityAllowedToSendCard": "Card sending allowed",
         "confirmDelete": "Do you really want to delete entity",
-        "add": "Add new entity"
+        "add": "Add new entity",
+        "true": "Yes",
+        "false": "No"
       },
       "perimeter": {
         "id": "Id",

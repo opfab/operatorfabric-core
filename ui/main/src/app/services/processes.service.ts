@@ -20,6 +20,7 @@ import {select, Store} from '@ngrx/store';
 import {selectLinesOfLoggingResult} from '@ofStore/selectors/logging.selectors';
 import {AppState} from '@ofStore/index';
 import {selectLastCards} from '@ofStore/selectors/feed.selectors';
+import {Utilities} from '../common/utilities';
 
 
 @Injectable()
@@ -133,6 +134,50 @@ export class ProcessesService {
 
     public getProcessGroups(): {id: string, processes: string[]}[] {
         return this.processGroups;
+    }
+
+    public getProcess(processId: string): Process {
+        return this.processes.find(process => processId === process.id);
+    }
+
+    public getProcessGroupsAndLabels(): { groupId: string,
+                                          groupLabel: string,
+                                          processes:
+                                              {
+                                                 processId: string,
+                                                 processLabel: string
+                                              } []
+                                        } [] {
+
+        const processGroupsAndLabels = [];
+
+        this.getProcessGroups().forEach(group => {
+            let groupLabel = '';
+            const processIdAndLabels = [];
+
+            this.translateService.get(group.id).subscribe(translate => { groupLabel = translate; });
+
+            group.processes.forEach(processId => {
+                const processDefinition = this.getProcess(processId);
+
+                if (processDefinition) {
+                    const processLabel = (!!processDefinition.name) ?
+                        Utilities.getI18nPrefixFromProcess(processDefinition) + processDefinition.name :
+                        Utilities.getI18nPrefixFromProcess(processDefinition) + processDefinition.id;
+
+                    this.translateService.get(processLabel).subscribe(translate => {
+                        processIdAndLabels.push({ processId: processId, processLabel: translate });
+                    });
+                } else
+                    processIdAndLabels.push({processId: processId, processLabel: ''});
+            });
+
+            processGroupsAndLabels.push({ groupId: group.id,
+                                          groupLabel: groupLabel,
+                                          processes: processIdAndLabels
+                                        });
+        });
+        return processGroupsAndLabels;
     }
 
     queryProcessFromCard(card: Card): Observable<Process> {

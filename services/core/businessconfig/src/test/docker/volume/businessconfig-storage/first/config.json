@@ -7,15 +7,7 @@
   ],
   "states": {
     "testState": {
-      "templateName": "template",
-      "actions": {
-        "testAction": {
-          "type": "URL",
-          "label": {
-            "key": "my.card.my.action.label"
-          }
-        }
-      }
+      "templateName": "template"
     }
   }
 }

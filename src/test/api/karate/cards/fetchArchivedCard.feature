@@ -2,9 +2,9 @@ Feature: fetchArchive
 
   Background:
 
-    * def signIn = call read('../common/getToken.feature') { username: 'operator1'}
+    * def signIn = callonce read('../common/getToken.feature') { username: 'operator1'}
     * def authToken = signIn.authToken
-    * def signInTSO2 = call read('../common/getToken.feature') { username: 'operator2'}
+    * def signInTSO2 = callonce read('../common/getToken.feature') { username: 'operator2'}
     * def authTokenTSO2 = signInTSO2.authToken
 
   Scenario: fetchArchive

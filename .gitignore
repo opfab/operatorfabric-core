@@ -128,3 +128,11 @@ config/docker/businessconfig-storage/**
 
 # now script generated
 config/dev/nginx.conf
+
+# MacOS metadata files
+**/.DS_Store
+
+# Cypress
+src/test/cypress/node_modules
+src/test/cypress/package-lock.json
+

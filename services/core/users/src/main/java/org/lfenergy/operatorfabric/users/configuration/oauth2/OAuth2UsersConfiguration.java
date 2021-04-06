@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -77,8 +77,7 @@ public class OAuth2UsersConfiguration {
                 String principalId = jwt.getClaimAsString(jwtProperties.getLoginClaim());
                 log.debug("USER {}  with the token : \n{}", principalId, jwt.getTokenValue());
 
-                OAuth2JwtProcessingUtilities.token.set(jwt);
-
+            
                 Optional<UserData> optionalUser = userRepository.findById(principalId);
 
                 UserData user;
@@ -89,7 +88,7 @@ public class OAuth2UsersConfiguration {
                     log.warn("user virtual(nonexistent in opfab) : '{}'", user.toString());
                 }
 
-                OAuth2JwtProcessingUtilities.token.remove();
+    
 
                 if (groupsProperties.getMode() == GroupsMode.JWT) {
                     // override the groups list from JWT mode, otherwise, default mode is OPERATOR_FABRIC

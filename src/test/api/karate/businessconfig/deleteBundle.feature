@@ -15,25 +15,22 @@ Feature: deleteBundle
           # Push bundle
       Given url opfabUrl + '/businessconfig/processes'
       And header Authorization = 'Bearer ' + authToken
-      And multipart field file = read('resources/bundle_api_test.tar.gz')
+      And multipart file file = {read:'resources/bundle_api_test.tar.gz', contentType: 'application/gzip'}
       When method post
-      Then print response
-      And status 201
+      Then status 201
 
   Scenario: Delete a Businessconfig without authentication
     # Delete bundle
     Given url opfabUrl + '/businessconfig/processes/api_test'
     When method DELETE
-    Then print response
-    And status 401
+    Then status 401
 
   Scenario: Delete a Businessconfig Version with a authentication having insufficient privileges
     # Delete bundle
     Given url opfabUrl + '/businessconfig/processes/api_test'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method DELETE
-    Then print response
-    And status 403
+    Then status 403
 
   Scenario: Delete a Businessconfig
     # Delete bundle
@@ -41,7 +38,6 @@ Feature: deleteBundle
     And header Authorization = 'Bearer ' + authToken
     When method DELETE
     Then status 204
-    And print response
     And assert response.length == 0
 
   Scenario: check bundle doesn't exist anymore
@@ -57,6 +53,5 @@ Feature: deleteBundle
     And header Authorization = 'Bearer ' + authToken
     When method DELETE
     Then status 404
-    And print response
 
 

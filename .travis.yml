@@ -68,17 +68,28 @@ jobs:
       script:
         - docker login --username ${DOCKER_CLOUD_USER} --password ${DOCKER_CLOUD_PWD}
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
-        - ./gradlew --build-cache copyDependencies test jacocoTestReport
+        - ./gradlew --build-cache copyDependencies test jacocoTestReport dockerTag${OF_VERSION}
         # [OC-865] Dropping dependency messing with typescript version as a workaround until sonar bug is fixed
         # See https://github.com/SonarSource/SonarJS/issues/1928 and https://community.sonarsource.com/t/error-about-unsupported-ts-version-while-project-is-using-supported-version/15776
         - rm -r ui/main/node_modules/@compodoc/ngd-core
         - rm -r ui/main/node_modules/ts-simple-ast
         - sonar-scanner
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
+        - cd config/docker
+        - ./docker-compose.sh
+        - cd ../../src/test/api/karate
+        - ./waitForOpfabToStart.sh
+        - ./launchAll.sh
+        - cd ../../../../config/docker
+        - docker-compose down
     - stage: doc
       script:
         - ./gradlew --build-cache generateSwaggerUI asciidoctor
         - ./CICD/travis/upload_doc.sh
+    - stage: doc-latest
+      script:
+        - ./gradlew --build-cache generateSwaggerUI asciidoctor
+        - ./CICD/travis/upload_doc.sh --updateLatest true
     - stage: doc-dry-run
       script:
         - ./gradlew --build-cache generateSwaggerUI asciidoctor
@@ -106,13 +117,15 @@ stages:
   - name: test-sonar
     if: NOT (type = pull_request AND head_repo != opfab/operatorfabric-core)
   - name: doc
-    if: ((((type = cron OR commit_message =~ ci_documentation) AND branch = develop) OR branch = master) AND NOT type = pull_request)
+    if: ((((type = cron OR commit_message =~ ci_documentation) AND branch = develop) OR (commit_message =~ ci_documentation AND NOT commit_message =~ ci_latest AND branch =~ .+hotfixes$)) AND NOT type = pull_request)
+  - name: doc-latest
+    if: (branch = master OR (branch =~ .+hotfixes$ AND commit_message =~ ci_latest)) AND NOT type = pull_request
   - name: doc-dry-run
-    if: (branch =~ .+release$) OR (NOT (branch IN (master,develop)) AND commit_message =~ ci_documentation)
+    if: (NOT branch =~ .+hotfixes$) AND (NOT (branch IN (master,develop)) AND commit_message =~ ci_documentation)
   - name: docker-push-version
-    if: (((type = cron OR commit_message =~ ci_docker) AND branch = develop) OR branch = master) AND NOT type = pull_request
+    if: (((type = cron OR commit_message =~ ci_docker) AND (branch = develop OR branch =~ .+hotfixes$)) OR branch = master) AND NOT type = pull_request
   - name: docker-push-latest
-    if: branch = master AND commit_message =~ ci_latest AND NOT type = pull_request
+    if: branch = master OR (branch =~ .+hotfixes$ AND commit_message =~ ci_latest) AND NOT type = pull_request
   - name: docker-tag-version
     if: (branch =~ .+release$) OR (NOT (branch IN (master,develop)) AND commit_message =~ ci_docker)
 before_cache:

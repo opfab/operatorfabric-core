@@ -2,7 +2,7 @@ Feature: Security
 
   Background:
    #Getting token for admin and operator1 user calling getToken.feature
-    * def signInAsTSO = call read('../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
     * def process = 'api_test'
     * def templateName = 'template'
@@ -24,4 +24,3 @@ Given url opfabUrl + '/businessconfig/processes/'+ process +'/templates/' + wron
 And header Authorization = 'Bearer ' + authTokenAsTSO
 When method GET
 Then status 401
-And print response

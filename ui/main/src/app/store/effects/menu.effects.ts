@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,21 +8,15 @@
  */
 
 
-
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {AppState} from '@ofStore/index';
-import {
-    LoadMenu,
-    LoadMenuFailure,
-    LoadMenuSuccess,
-    MenuActionTypes,
-} from '@ofActions/menu.actions';
+import {LoadMenu, LoadMenuFailure, LoadMenuSuccess, MenuActionTypes,} from '@ofActions/menu.actions';
 import {Router} from '@angular/router';
-import { ConfigService } from '@ofServices/config.service';
+import {ConfigService} from '@ofServices/config.service';
 
 @Injectable()
 export class MenuEffects {
@@ -35,8 +29,8 @@ export class MenuEffects {
     ) {
     }
 
-    @Effect()
-    load: Observable<Action> = this.actions$
+    
+    load: Observable<Action> = createEffect(() => this.actions$
         .pipe(
             ofType<LoadMenu>(MenuActionTypes.LoadMenu),
             switchMap(action =>  this.service.computeMenu()),
@@ -48,7 +42,7 @@ export class MenuEffects {
                 this.store.dispatch(new LoadMenuFailure(err));
                 return caught;
             })
-        );
+        ));
 
 
 

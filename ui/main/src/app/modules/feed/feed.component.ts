@@ -16,9 +16,6 @@ import {LightCard} from '@ofModel/light-card.model';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
 import {catchError, delay, map} from 'rxjs/operators';
 import * as moment from 'moment';
-import {ConfigService} from '@ofServices/config.service';
-import {ApplyFilter} from '@ofStore/actions/feed.actions';
-import {BUSINESS_DATE_FILTER_INITIALISATION} from '@ofServices/filter.service';
 
 @Component({
     selector: 'of-cards',
@@ -29,10 +26,9 @@ export class FeedComponent implements OnInit {
 
     lightCards$: Observable<LightCard[]>;
     selection$: Observable<string>;
-    hideTimeLine: boolean;
 
 
-    constructor(private store: Store<AppState>, private  configService: ConfigService) {
+    constructor(private store: Store<AppState>) {
     }
 
     ngOnInit() {
@@ -43,23 +39,11 @@ export class FeedComponent implements OnInit {
             catchError(err => of([]))
         );
         this.selection$ = this.store.select(feedSelectors.selectLightCardSelection);
-        this.hideTimeLine =  this.configService.getConfigValue('feed.timeline.hide', false);
-
-        this.initBusinessDateFilterIfTimelineIsHide();
 
         moment.updateLocale('en', { week: {
             dow: 6, // First day of week is Saturday
             doy: 12 // First week of year must contain 1 January (7 + 6 - 1)
         }});
-    }
-
-    // if timeline is present , the filter is initialize by the timeline
-    private initBusinessDateFilterIfTimelineIsHide() {
-
-        if (this.hideTimeLine) {
-            this.store.dispatch(new ApplyFilter(BUSINESS_DATE_FILTER_INITIALISATION));
-        }
-
     }
 
     public enoughSpaceForTimeLine()

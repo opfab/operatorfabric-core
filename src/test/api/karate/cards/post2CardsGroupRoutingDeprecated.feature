@@ -3,9 +3,9 @@ Feature: Cards routing
 
 Background: 
 
-  * def signInTso1 = call read('../common/getToken.feature') { username: 'operator1'}
+  * def signInTso1 = callonce read('../common/getToken.feature') { username: 'operator1'}
   * def authTokenTso1 = signInTso1.authToken
-  * def signInTso2 = call read('../common/getToken.feature') { username: 'operator2'}
+  * def signInTso2 = callonce read('../common/getToken.feature') { username: 'operator2'}
   * def authTokenTso2 = signInTso2.authToken
 
 

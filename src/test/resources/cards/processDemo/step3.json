@@ -1,0 +1,13 @@
+{
+	"publisher" : "publisher_test",
+	"processVersion" : "1",
+	"process"  :"defaultProcess",
+	"processInstanceId" : "processProcess",
+	"state": "processState",
+	"groupRecipients": ["Dispatcher"],
+	"severity" : "ALARM",
+	"startDate" : ${current_date_in_milliseconds_from_epoch_plus_2hours},
+	"summary" : {"key" : "message.summary"},
+	"title" : {"key" : "processState.title" , "parameters" : {"status":"CALCUL2"}},
+	"data" : {"state":"calcul2","stateName":"CALCUL2","error":"true"}
+}

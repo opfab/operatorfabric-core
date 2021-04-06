@@ -27,11 +27,10 @@ export class FiltersComponent implements OnInit {
   hideAckFilter: boolean;
   hideTags: boolean;
   hideTimerTags: boolean;
-  filterByPublishDate : boolean = true;
   hideReadSort: boolean;
   hideSeveritySort: boolean;
 
-  constructor(private store: Store<AppState>,private  configService: ConfigService) { }
+  constructor(private store: Store<AppState>, private configService: ConfigService) { }
 
   ngOnInit() {
     this.hideTags = this.configService.getConfigValue('settings.tags.hide',false);
@@ -39,10 +38,6 @@ export class FiltersComponent implements OnInit {
     this.hideAckFilter = this.configService.getConfigValue('feed.card.hideAckFilter',false);
     this.hideReadSort = this.configService.getConfigValue('feed.card.hideReadSort',false);
     this.hideSeveritySort = this.configService.getConfigValue('feed.card.hideSeveritySort',false);
-    
-    // When time line is hide , we use a date filter by business date and not publish date
-    this.filterByPublishDate = !this.configService.getConfigValue('feed.timeline.hide',false);
-
   }
 
 

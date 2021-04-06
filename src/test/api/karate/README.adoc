@@ -1,0 +1,56 @@
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+# operatorfabric-api-testing
+
+Api testing with Karate DSL 
+
+IMPORTANT: If your OperatorFabric instance is not running on localhost, you need to replace localhost with the address
+of your running instance within the `karate-config.js` file.
+
+## Usage
+
+Run the following command lines form this folder.
+
+### Run a feature
+....
+gradle karate --args=myfeature.feature
+....
+
+The result will be available in the `target` repository.
+
+
+### Non regression tests
+
+You can launch operatorFabric non-regression tests via the script launchAll.sh
+
+To have the test passed, you need to have a clean Mongo DB database.
+
+## Clean Up Mongo DB
+
+### Connect to running instance
+
+....
+docker exec -it test-quality-environment_mongodb_1 mongo --username root --password password --authenticationDatabase admin
+....
+
+where `test-quality-environment_mongodb_1` is the  docker container name of the current MongoDB instance.
+
+This command line opens directly the mongo shell of the mongoDB docker instance.
+
+### Remove cards and archiveCards collections
+
+The following commands, run into the mongo shell, remove the whole collections of `cards` and `archivedCards`
+
+....
+use operator-fabric
+db.cards.remove({})
+db.archivedCards.remove({})
+....
+
+
+

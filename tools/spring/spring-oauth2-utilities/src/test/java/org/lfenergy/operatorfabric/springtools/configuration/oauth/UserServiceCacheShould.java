@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,18 +16,15 @@ import feign.mock.MockClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.lfenergy.operatorfabric.springtools.configuration.test.UserServiceCacheTestApplication;
-import org.lfenergy.operatorfabric.users.model.User;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * <p></p>
- * Created on 28/01/19
- *
- *
- */
+import java.util.Map;
+
+
 @SpringBootTest(classes = UserServiceCacheTestApplication.class)
 public class UserServiceCacheShould {
 
@@ -51,55 +48,75 @@ public class UserServiceCacheShould {
 
     @Test
     public void mockClientRequestsAreResetBeforeEachTest(){
-        assertThat(mockClient.verifyTimes(HttpMethod.GET, "/users/"+"jmmclane",0)).isEmpty();
+        assertThat(mockClient.verifyTimes(HttpMethod.GET, "/CurrentUserWithPerimeters",0)).isEmpty();
     }
 
     @Test
     public void shouldReturnCorrectUserData(){
-        String principalID ="jmcclane";
-        User user = userServiceCache.fetchUserFromCacheOrProxy(principalID);
+        String principalID ="testuser";
+        CurrentUserWithPerimeters user = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalID);
         assertThat(user).isNotNull();
-        assertThat(user).isInstanceOf(User.class);
-        assertThat(user.getLogin()).isEqualTo(principalID);
-        assertThat(user.getGroups()).containsExactlyInAnyOrder("good_guys","user");
-        assertThat(user.getFirstName()).isEqualTo("John");
-        assertThat(user.getLastName()).isEqualTo("McClane");
+        assertThat(user).isInstanceOf(CurrentUserWithPerimeters.class);
+        assertThat(user.getUserData().getLogin()).isEqualTo(principalID);
+        assertThat(user.getUserData().getGroups()).containsExactlyInAnyOrder("testgroup1");
+        assertThat(user.getUserData().getFirstName()).isEqualTo("John");
+        assertThat(user.getUserData().getLastName()).isEqualTo("McClane");
+    }
+
+    @Test 
+    public void shouldInsertToken() {
+        String user1 ="testuser";
+        String user2 ="testuser2";
+        UserServiceCache.setTokenForUserRequest(user1, "testtoken");
+        UserServiceCache.setTokenForUserRequest(user2, "testtoken2");
+        CurrentUserWithPerimeters user = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(user1);
+        Map headers  = mockClient.verifyOne(HttpMethod.GET, "/CurrentUserWithPerimeters").headers();
+        String token = headers.get("Authorization").toString();
+        assertThat(token).isEqualTo("[Bearer testtoken]");
+        mockClient.resetRequests();
+        user = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(user2);
+        headers  = mockClient.verifyOne(HttpMethod.GET, "/CurrentUserWithPerimeters").headers();
+        token = headers.get("Authorization").toString();
+        assertThat(token).isEqualTo("[Bearer testtoken2]");
+        
     }
 
     @Test
     public void shouldNotHitCacheForFirstCall(){
-        String principalID ="jmcclane";
+        String principalID ="testuser";
         //First call
-        userServiceCache.fetchUserFromCacheOrProxy(principalID);
-        mockClient.verifyTimes(HttpMethod.GET, "/users/"+principalID, 1);
+        userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalID);
+        mockClient.verifyTimes(HttpMethod.GET, "/CurrentUserWithPerimeters", 1);
     }
 
     @Test
     public void shouldReturnSameDataForSecondCall(){
-        String principalID ="jmcclane";
+        String principalID ="testuser";
 
         //First call
-        User user1 = userServiceCache.fetchUserFromCacheOrProxy(principalID);
+        CurrentUserWithPerimeters user1 = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalID);
 
         //Second call
-        User user2 = userServiceCache.fetchUserFromCacheOrProxy(principalID);
+        CurrentUserWithPerimeters user2 = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalID);
 
         assertThat(user1).isNotNull();
         assertThat(user1).isEqualTo(user2);
     }
+
 
     @Test
     public void shouldHitCacheForSecondCall(){
         String principalID ="jmcclane";
 
         //First call
-        userServiceCache.fetchUserFromCacheOrProxy(principalID);
+        userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalID);
 
         //Second call
-        userServiceCache.fetchUserFromCacheOrProxy(principalID);
+        userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalID);
 
-        mockClient.verifyTimes(HttpMethod.GET, "/users/"+principalID, 1);
+        mockClient.verifyTimes(HttpMethod.GET, "/CurrentUserWithPerimeters", 1);
     }
+
 
     @Test
     public void shouldClearSelectedCache(){
@@ -107,20 +124,18 @@ public class UserServiceCacheShould {
         String principalID2 = "hgruber";
 
         //First call
-        userServiceCache.fetchUserFromCacheOrProxy(principalID1);
-        userServiceCache.fetchUserFromCacheOrProxy(principalID2);
+        userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalID1);
+        userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalID2);
 
         //Clear cache only for principalID1
         userServiceCache.clearUserCache(principalID1);
 
         //Second call
-        userServiceCache.fetchUserFromCacheOrProxy(principalID1);
-        userServiceCache.fetchUserFromCacheOrProxy(principalID2);
+        userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalID1);
+        userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalID2);
 
         //Check number of calls
-        mockClient.verifyTimes(HttpMethod.GET, "/users/"+principalID1, 2);
-        mockClient.verifyTimes(HttpMethod.GET, "/users/"+principalID2, 1);
+        mockClient.verifyTimes(HttpMethod.GET, "/CurrentUserWithPerimeters", 3);
     }
-
 
 }

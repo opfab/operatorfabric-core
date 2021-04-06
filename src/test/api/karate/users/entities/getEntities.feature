@@ -2,9 +2,9 @@ Feature: Get Entities
 
   Background:
    #Getting token for admin and operator1 user calling getToken.feature
-    * def signIn = call read('../../common/getToken.feature') { username: 'admin'}
+    * def signIn = callonce read('../../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = call read('../../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
 
@@ -15,7 +15,6 @@ Feature: Get Entities
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And print response
     And def entityId = response[0].id
 
 

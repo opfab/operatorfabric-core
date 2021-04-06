@@ -833,4 +833,12 @@ html, body { height: 100%; }
           header-column-resize-handle-color: var(--opfab-table-border-color)
 ));
 
+  .ag-theme-alpine {
+    color: var(--opfab-text-color);
+  }
+
+  .ag-menu {
+    background: var(--opfab-bgcolor-darker);
+  }
+
 }

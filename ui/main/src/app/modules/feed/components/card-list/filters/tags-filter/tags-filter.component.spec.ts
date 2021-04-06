@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,8 +8,7 @@
  */
 
 
-
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {TagsFilterComponent} from './tags-filter.component';
 import {TypeaheadModule} from "ngx-type-ahead";
@@ -29,7 +28,7 @@ describe('TagsFilterComponent', () => {
     let store: Store<AppState>;
     let filterService: FilterService;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [TypeaheadModule,
                 FormsModule,

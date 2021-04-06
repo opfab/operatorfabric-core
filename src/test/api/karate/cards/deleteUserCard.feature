@@ -2,11 +2,11 @@ Feature: deleteUserCards tests
 
   Background:
    #Getting token for admin and operator1 user calling getToken.feature
-    * def signIn = call read('../common/getToken.feature') { username: 'admin'}
+    * def signIn = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = call read('../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
-    * def signInAsTSO2 = call read('../common/getToken.feature') { username: 'operator2'}
+    * def signInAsTSO2 = callonce read('../common/getToken.feature') { username: 'operator2'}
     * def authTokenAsTSO2 = signInAsTSO2.authToken
 
     * def groupKarate =

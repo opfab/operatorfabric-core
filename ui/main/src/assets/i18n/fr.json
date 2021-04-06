@@ -48,8 +48,7 @@
         "titleIfFilterBasedOnBusinessDate": "Période métier",
         "start.label": "Début",
         "end.label": "Fin",
-        "active.label": "Actif",
-        "lttd.label": "Terminée"
+        "active.label": "Actif"
       },
       "type": {
         "title": "Type",
@@ -89,6 +88,14 @@
       "acknowledged": "Acquittée",
       "lttd": "Temps restant pour décider"
     },
+    "acknowledgeAllCards": {
+      "label": "Acquitter toutes les cartes",
+      "popup": {
+        "title": "CONFIRMATION",
+        "doYouReallyWant": "Toutes les cartes visibles du flux de cartes vont être acquittées, merci de confirmer"
+      }
+    },
+    "lttdFinished": "Terminée",
     "received": "Reçu le",
     "at" : "à",
     "from": "de"
@@ -214,7 +221,8 @@
       "notAvailable": "Fonctionnalité non disponible",
       "noRecipientSelected" : "Vous devez au moins choisir un destinataire",
       "templateError" : "Erreur technique : template non conforme",
-      "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques"
+      "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques",
+      "endDateBeforeStartDate": "La date de fin doit être postérieure à la date de début"
     },
     "filters": {
       "severity": "SEVERITE",
@@ -223,6 +231,7 @@
       "state": "ETAT",
       "startDate": "DATE DE DEBUT ",
       "endDate": "DATE DE FIN ",
+      "lttd": "DATE LIMITE DE RÉPONSE",
       "recipients": "DESTINATAIRES"
     },
     "options": {
@@ -290,7 +299,9 @@
         "description": "Description",
         "entityAllowedToSendCard": "Envoi de carte autorisé",
         "confirmDelete": "Voulez-vous vraiment supprimer l'entité",
-        "add":"Ajouter une nouvelle entité"
+        "add":"Ajouter une nouvelle entité",
+        "true": "Oui",
+        "false": "Non"
       },
       "perimeter": {
         "id": "Id",

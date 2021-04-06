@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,8 +8,7 @@
  */
 
 
-
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {TypeAheadSettingsComponent} from './type-ahead-settings.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -21,10 +20,10 @@ import {settingsInitialState} from "@ofStates/settings.state";
 import {map} from "rxjs/operators";
 import {PatchSettings} from "@ofActions/settings.actions";
 import {emptyAppState4Test, injectedSpy} from '@tests/helpers';
-import createSpyObj = jasmine.createSpyObj;
-import SpyObj = jasmine.SpyObj;
 import {authInitialState} from "@ofStates/authentication.state";
 import {configInitialState} from "@ofStates/config.state";
+import createSpyObj = jasmine.createSpyObj;
+import SpyObj = jasmine.SpyObj;
 
 describe('TypeAheadSettingsComponent', () => {
     let component: TypeAheadSettingsComponent;
@@ -36,7 +35,7 @@ describe('TypeAheadSettingsComponent', () => {
         config: configInitialState
     };
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         const storeSpy = createSpyObj('Store', ['dispatch', 'select']);
         TestBed.configureTestingModule({
             imports: [
@@ -51,7 +50,7 @@ describe('TypeAheadSettingsComponent', () => {
     }));
 
     beforeEach(() => {
-        store = injectedSpy(Store);
+        store = injectedSpy(Store) as SpyObj<Store<AppState>>;;
         store.select.and.callFake(selector => {
             return of({
                 ...emptyAppState, settings: {

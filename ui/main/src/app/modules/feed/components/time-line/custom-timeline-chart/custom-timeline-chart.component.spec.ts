@@ -8,7 +8,7 @@
  */
 
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {CustomTimelineChartComponent} from './custom-timeline-chart.component';
 import {APP_BASE_HREF, CommonModule} from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -33,7 +33,7 @@ describe('CustomTimelineChartComponent', () => {
   const startDate = moment().startOf('year');
   const endDate = moment().startOf('year').add(1,'year');
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [CommonModule,
         BrowserAnimationsModule,

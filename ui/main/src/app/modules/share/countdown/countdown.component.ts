@@ -7,137 +7,39 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, DoCheck, Input, OnChanges, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {CountdownComponent, CountdownConfig, CountdownEvent} from 'ngx-countdown';
-import {AppService, PageType} from "@ofServices/app.service";
+import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
 import {ConfigService} from "@ofServices/config.service";
-import {UserService} from "@ofServices/user.service";
-import {Card} from "@ofModel/card.model";
-import {LightCard} from "@ofModel/light-card.model";
+import { CountDown} from './countdown';
 
 @Component({
     selector: 'of-countdown',
     templateUrl: './countdown.component.html',
     styleUrls: ['./countdown.component.scss']
 })
-export class CountDownComponent implements OnInit, DoCheck, OnChanges, OnDestroy {
+export class CountDownComponent implements OnInit, OnDestroy , OnChanges {
 
-    @Input() public card: Card | LightCard;
+    @Input() public lttd: number;
 
-    @ViewChild('countdown', { static: true })
-    private countdown: CountdownComponent;
-
-    prettyConfig: CountdownConfig;
-    enableLastTimeToAct = false;
-    stopTime = false;
+    public countDown;
     secondsBeforeLttdForClockDisplay: number;
-    interval: any;
-    hideHourInCountDown = false;
-    MILLISECONDS_SECOND = 1000;
 
-    constructor(private configService: ConfigService,
-                private userService: UserService,
-                private _appService: AppService) {
+    constructor(private configService: ConfigService) {
     }
 
     ngOnInit() {
         this.secondsBeforeLttdForClockDisplay = this.configService.getConfigValue('feed.card.secondsBeforeLttdForClockDisplay', false);
-        this.startCountdownWhenNecessary();
+        this.countDown = new CountDown(this.lttd,this.secondsBeforeLttdForClockDisplay);
     }
 
-    ngOnChanges() {
-        this.startCountdownWhenNecessary();
-    }
-
-    ngDoCheck() {
-        if (!!this.card.lttd && !this.hideHourInCountDown) {
-            const leftTimeSeconds = this.getSecondsBeforeLttd();
-            if (leftTimeSeconds < 3600) {
-                this.prettyConfig = {
-                    leftTime: leftTimeSeconds,
-                    format: 'mm:ss'
-                };
-                this.hideHourInCountDown = true;
-            }
+    ngOnChanges()
+    {
+        if (this.countDown)  {
+            this.countDown.stopCountDown();
+            this.countDown = new CountDown(this.lttd,this.secondsBeforeLttdForClockDisplay);
         }
     }
-
-    public isValidatelttd(): boolean {
-
-        if (!this.isArchivePageType()) {
-            if (!!this.card.entitiesAllowedToRespond) {
-                const intersection = this.card.entitiesAllowedToRespond.filter(x => this.userService.getCurrentUserWithPerimeters().userData.entities.includes(x));
-                return intersection.length === 1;
-            } else {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    isTimeToStartCountDown(): boolean {
-        const delta = this.getSecondsBeforeLttd();
-        return delta > 0 && delta <= this.secondsBeforeLttdForClockDisplay;
-    }
-
-    startCountDownConfig() {
-        const leftTimeSeconds = this.getSecondsBeforeLttd();
-        this.prettyConfig = {
-            leftTime: leftTimeSeconds,
-            format: leftTimeSeconds >= 3600 ? 'HH:mm:ss' : 'mm:ss'
-        };
-        this.enableLastTimeToAct = true;
-        this.stopTime = false;
-        this.countdown.begin();
-    }
-
-    getSecondsBeforeLttd(): number {
-        return Math.floor((this.card.lttd - new Date().getTime()) / this.MILLISECONDS_SECOND);
-    }
-
-    startCountdownWhenNecessary() {
-
-        if (this.card.lttd === null || !this.isValidatelttd()) {
-            this.enableLastTimeToAct = false;
-            this.countdown.stop();
-        } else if (this.getSecondsBeforeLttd() <= 0) {
-            this.stopCountDown();
-        } else {
-            this.startCountDownConfigWhenNecessary();
-            this.interval = setInterval(() => {
-                this.startCountDownConfigWhenNecessary()
-            }, this.MILLISECONDS_SECOND);
-        }
-    }
-
-    startCountDownConfigWhenNecessary() {
-        if (this.isTimeToStartCountDown()) {
-            this.startCountDownConfig();
-            clearInterval(this.interval);
-            return;
-        }
-    }
-
-    stopCountDown() {
-        this.enableLastTimeToAct = true;
-        this.stopTime = true;
-        this.countdown.stop();
-    }
-
-    onTimerFinished($event: CountdownEvent) {
-        if ($event.action === 'done') {
-            if (this.card.lttd != null && this.getSecondsBeforeLttd() <= 0) {
-                this.stopCountDown();
-            }
-        }
-    }
-
-    isArchivePageType(): boolean {
-        return this._appService.pageType == PageType.ARCHIVE;
-    }
-
     ngOnDestroy(): void {
-        clearInterval(this.interval);
+        this.countDown.stopCountDown();
     }
 
 }

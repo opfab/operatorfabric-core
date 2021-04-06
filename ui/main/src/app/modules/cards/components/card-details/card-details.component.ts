@@ -63,7 +63,12 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
                     this.businessconfigService.queryProcess(this.card.process, this.card.processVersion)
                         .pipe(takeUntil(this.unsubscribe$))
                         .subscribe(businessconfig => {
-                                if (!!businessconfig)  this.cardState = businessconfig.extractState(this.card);
+                                if (!!businessconfig) {
+                                    this.cardState = businessconfig.extractState(this.card);
+                                    if (! this.cardState)
+                                        console.log(new Date().toISOString(), 'WARNING impossible to load state',
+                                            this.card.state, 'for process', this.card.process);
+                                }
 
                             },
                             error => console.log(`something went wrong while trying to fetch process for`

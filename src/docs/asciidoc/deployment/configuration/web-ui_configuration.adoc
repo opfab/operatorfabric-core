@@ -71,11 +71,11 @@ a|card time display mode in the feed. Values :
  - PUBLICATION: displays card with publication date;
  - LTTD: displays card with lttd date;
  - NONE: nothing displayed.
-|feed.timeline.hide|false|no|If set to true, the time line is not loaded in the feed screen. If the timeline is not loaded , the time filter on the feed is filtering on business date otherwise it is filtering on publish date.
 |feed.card.hideTimeFilter|false|no|Control if you want to show or hide the time filter in the feed page
 |feed.card.hideAckFilter|false|no|Control if you want to show or hide the acknowledgement filter in the feed page
 |feed.card.hideReadSort|false|no|Control if you want to show or hide the option to sort cards by read status in the feed page
 |feed.card.hideSeveritySort|false|no|Control if you want to show or hide the option to sort cards by severity in the feed page
+|feed.card.hideAckAllCardsFeature|true|no|Control if you want to show or hide the option for acknowledging all the visible cards of the feed
 |feed.card.secondsBeforeLttdForClockDisplay|180|no| Number of seconds before lttd when a clock is activated in cards on the feed 
 
 |feed.timeline.domains|["TR", "J", "7D", "W", "M", "Y"]|no| List of domains to show on the timeline, possible domains are : "TR", "J", "7D", "W", "M", "Y".
@@ -90,7 +90,7 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 
 |archive.filters.page.size|10|no|The page size of archive filters
 |archive.filters.tags.list||no|List of tags to choose from in the corresponding filter in archives
-|settings.tags.hide||no|Control if you want to show or hide the tags filter in settings and feed page 
+|settings.tags.hide||no|Control if you want to show or hide the tags filter in feed page
 |settings.nightDayMode|false|no|if you want to activate toggle for night or day mode 
 |settings.styleWhenNightDayModeDesactivated||no|style to apply if not using day night mode, possible value are DAY or NIGHT 
 |settings.dateFormat|Value from the browser configuration|no|Format for date rendering (example : DD/MM/YYYY )

@@ -30,13 +30,13 @@
         "display": "BUSINESS"
       },
       "hideAckFilter": false,
-      "secondsBeforeLttdForClockDisplay": 3700,
+      "secondsBeforeLttdForClockDisplay": 7500,
       "hideReadSort": false,
-      "hideSeveritySort": false
+      "hideSeveritySort": false,
+      "hideAckAllCardsFeature": true
     },
     "notify": false,
     "timeline": {
-      "hide": false,
       "domains": [
         "TR",
         "J",

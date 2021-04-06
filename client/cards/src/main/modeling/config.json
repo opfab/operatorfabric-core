@@ -14,9 +14,7 @@
   "importMappings": {
     "CardOperationTypeEnum": "org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum",
     "SeverityEnum": "org.lfenergy.operatorfabric.cards.model.SeverityEnum",
-    "ActionEnum": "org.lfenergy.operatorfabric.cards.model.ActionEnum",
     "InputEnum": "org.lfenergy.operatorfabric.cards.model.InputEnum",
-    "TitlePositionEnum": "org.lfenergy.operatorfabric.cards.model.TitlePositionEnum",
     "RecipientEnum": "org.lfenergy.operatorfabric.cards.model.RecipientEnum",
     "EpochDate": "java.time.Instant",
     "PublisherTypeEnum": "org.lfenergy.operatorfabric.cards.model.PublisherTypeEnum"

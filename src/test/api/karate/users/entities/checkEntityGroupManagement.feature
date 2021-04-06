@@ -2,7 +2,7 @@ Feature: CheckEntityGroupManagement
 
     Background:
     #Getting token for admin
-    * def signIn = call read('../../common/getToken.feature') {username: 'admin' }
+    * def signIn = callonce read('../../common/getToken.feature') {username: 'admin' }
     * def adminAuthToken = signIn.authToken
     # entity definition
     * def entity0_With1UnknownParent =
@@ -119,6 +119,20 @@ Feature: CheckEntityGroupManagement
         When method post
         Then status 201
 
+    Scenario: Delte entity referenced by another entity
+
+        Given url opfabUrl + 'users/entities/entity1-groupTest'
+        And header Authorization = 'Bearer ' + adminAuthToken
+        When method delete
+        Then status 200
+
+    # Chech that reference to parent entity is removed fron child
+        Given url opfabUrl + 'users/entities/entity4-groupTest'
+        And header Authorization = 'Bearer ' + adminAuthToken
+        When method get
+        Then status 200
+        And match response.parents == []
+
     Scenario Outline: Clean entity test collection from the previous added entities in this feature
 
         Given url opfabUrl + 'users/entities/' + <entityId>
@@ -129,7 +143,6 @@ Feature: CheckEntityGroupManagement
         Examples:
             | entityId            | expectedStatus  |
             | 'entity0-groupTest' |       200       |
-            | 'entity1-groupTest' |       200       |
             | 'entity2-groupTest' |       200       |
             | 'entity3-groupTest' |       200       |
             | 'entity4-groupTest' |       200       |

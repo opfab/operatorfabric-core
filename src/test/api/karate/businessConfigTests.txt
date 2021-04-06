@@ -1,0 +1,12 @@
+      businessconfig/deleteBundle.feature `#nice to be the very first one`\
+      businessconfig/deleteBundleVersion.feature          \
+      businessconfig/uploadBundle.feature                 \
+      businessconfig/getABusinessconfig.feature           \
+      businessconfig/getCss.feature                       \
+      businessconfig/getI18n.feature                      \
+      businessconfig/getBusinessconfig.feature            \
+      businessconfig/getBusinessconfigTemplate.feature    \
+      businessconfig/getProcessGroups.feature             \
+      businessconfig/uploadProcessGroupsFile.feature      \
+      businessconfig/getResponseBusinessconfig.feature    \
+      businessconfig/security.feature                     \

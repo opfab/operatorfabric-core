@@ -11,6 +11,39 @@
 
 . ${BASH_SOURCE%/*}/../../bin/load_variables.sh
 
+updateLatest=false
+
+display_usage() {
+	echo "This script gets the documentation from the website in its current state, "
+	echo -e "Usage:\n"
+	echo -e "\tcheck_version.sh [OPTIONS] \n"
+	echo -e "options:\n"
+	echo -e "\t-b, --commitMessage  : boolean. If set to true, the script also updates the latest documentation (found under current in the website). Defaults to $updateLatest\n"
+}
+
+# Read parameters
+while [[ $# -gt 0 ]]
+do
+key="$1"
+# echo $key
+case $key in
+    -u|--updateLatest)
+    updateLatest="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    -h|--help)
+    shift # past argument
+display_usage
+    exit 0
+    ;;
+    *)    # unknown option
+    POSITIONAL+=("$1") # save it in an array for later
+    shift # past argument
+    ;;
+esac
+done
+
 CURRENT_PATH=$(pwd)
 GH_REPO=github.com/opfab/opfab.github.io.git
 HTTP_REPO="https://opfabtech:${GH_DOC_TOKEN}@${GH_REPO}"
@@ -28,8 +61,10 @@ fi
 if [[ $OF_VERSION =~ .+RELEASE$ ]]; then
   # Clear existing documentation in archive for current version
   rm -r $HOME/documentation/documentation/archives/$OF_VERSION/*
-  # Update current documentation
-  rm -r $HOME/documentation/documentation/current/*
+
+  # If updateLatest is true, update current documentation
+  if [[ $updateLatest = true ]]; then
+    rm -r $HOME/documentation/documentation/current/*
     # Copy API documentation for each component
     for prj in "${OF_CLIENT_REL_COMPONENTS[@]}"; do
       echo "copying $prj documentation"
@@ -39,6 +74,8 @@ if [[ $OF_VERSION =~ .+RELEASE$ ]]; then
     # Copy asciidoctor documentation (including images)
     mkdir -p $HOME/documentation/documentation/current/
     cp -r $OF_HOME/build/asciidoc/html5/* $HOME/documentation/documentation/current/
+  fi
+
 fi
 
 # For archives
