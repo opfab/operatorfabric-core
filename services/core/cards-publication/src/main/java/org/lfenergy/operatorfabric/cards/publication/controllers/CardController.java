@@ -27,6 +27,7 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.time.Instant;
 import java.util.Optional;
 
 /**
@@ -57,6 +58,13 @@ public class CardController {
             return card;
         }));
 
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public Void deleteCards(@RequestParam String endDateBefore) {
+        cardProcessingService.deleteCards(parseAsInstant(endDateBefore));
+        return null;
     }
 
     @PostMapping("/userCard")
@@ -187,4 +195,9 @@ public class CardController {
 
     }
 
+        /** Takes string representing number of milliseconds since Epoch and returns corresponding Instant
+     * */
+    private static Instant parseAsInstant(String instantAsEpochMillString) {
+        return instantAsEpochMillString==null?null:Instant.ofEpochMilli(Long.parseLong(instantAsEpochMillString));
+    }
 }

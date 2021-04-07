@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,7 @@
 
 package org.lfenergy.operatorfabric.cards.publication.services;
 
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
@@ -22,6 +23,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -127,4 +129,13 @@ public class CardRepositoryService {
 		}
 		return res;
 	}
+
+    public DeleteResult deleteCardsByEndDateBefore(Instant endDateBefore) {
+        Query findCardByEndDateBefore = new Query();
+        Criteria endDateCriteria = new Criteria().andOperator(Criteria.where("endDate").ne(null), Criteria.where("endDate").lt(endDateBefore));
+        Criteria startDateCriteria = new Criteria().andOperator(Criteria.where("endDate").exists(false), Criteria.where("startDate").lt(endDateBefore));
+
+        findCardByEndDateBefore.addCriteria(new Criteria().orOperator(endDateCriteria, startDateCriteria));
+        return template.remove(findCardByEndDateBefore, CardPublicationData.class);
+    }
 }

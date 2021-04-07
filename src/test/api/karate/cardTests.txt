@@ -20,3 +20,4 @@
       cards/post2CardsGroupRoutingDeprecated.feature  \
       cards/post1BigCards.feature                 \
       cards/deleteUserCard.feature                \   
+      cards/deleteCardsByEndDate.feature          \   
