@@ -121,7 +121,6 @@ src/test/**/*.tar.gz
 ui/main/node_modules
 ui/main/reports
 ui/main/report.html
-ui/main/package-lock.json
 
 # Bundles for docker config 
 config/docker/businessconfig-storage/**
@@ -134,5 +133,4 @@ config/dev/nginx.conf
 
 # Cypress
 src/test/cypress/node_modules
-src/test/cypress/package-lock.json
 
