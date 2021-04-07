@@ -5,7 +5,7 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-= Migration Guide from release 2.2.2 to release 2.3.0
+= Migration Guide from release 2.2.0 to release 2.3.0
 
 == Communication between template and opfab
 
