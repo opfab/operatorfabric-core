@@ -42,8 +42,15 @@ export class PerimetersService extends CachedCrudService implements OnDestroy {
   deleteById(id: string) {
     const url = `${this.perimetersUrl}/${id}`;
     return this.httpClient.delete(url).pipe(
-      catchError((error: Response) => this.handleError(error))
+      catchError((error: Response) => this.handleError(error)),
+      tap(() => {
+        this.deleteFromCachedPerimeters(id);
+      })
     );
+  }
+
+  private deleteFromCachedPerimeters(id: string): void {
+    this._perimeters = this._perimeters.filter(perimeter => perimeter.id !== id);
   }
 
   private updateCachedPerimeters(perimeterData: Perimeter): void {
