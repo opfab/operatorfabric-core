@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,20 +9,25 @@
 
 
 
-package org.lfenergy.operatorfabric.cards.model;
+package org.opfab.client.cards.model;
 
 /**
- * the severity of the card subject:
+ * Recipient type enumeration
+ * 
  * <dl>
- *     <dt>ADD</dt><dd>Operation lists cards object to add</dd>
- *     <dt>UPDATE</dt><dd>Operation lists cards object to update</dd>
- *     <dt>DELETE</dt><dd>Operation lists card ids to delete</dd>
+ *   <dt>DEADEND</dt><dd>Card is sent to no one (Mostly for testing purposes)</dd>
+ *   <dt>GROUP</dt><dd>Card is sent to a whole group</dd>
+ *   <dt>UNION</dt><dd>Card is sent to the union of underlying recipients</dd>
+ *   <dt>USER</dt><dd>Card is sent to a specified user</dd>
  * </dl>
  * Note : This enum is created by hand because Swagger can't handle enums. It should match the corresponding enum definition in the Cards API.
  *
  */
-public enum CardOperationTypeEnum {
+public enum RecipientEnum {
   
-  ADD,UPDATE,DELETE
+  DEADEND,
+  GROUP,
+  UNION,
+  USER
 }
 

@@ -10,18 +10,18 @@
 package org.lfenergy.operatorfabric.cards.consultation.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
-import org.awaitility.core.ConditionTimeoutException;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
+import org.assertj.core.api.Assertions;
+import org.awaitility.core.ConditionTimeoutException;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.cards.consultation.application.IntegrationTestApplication;
 import org.lfenergy.operatorfabric.springtools.configuration.test.UserServiceCacheTestApplication;
-import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
-import org.lfenergy.operatorfabric.users.model.User;
+import org.opfab.client.users.model.CurrentUserWithPerimeters;
+import org.opfab.client.users.model.User;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.test.StepVerifier;
-
 
 import java.util.ArrayList;
 import java.util.Date;

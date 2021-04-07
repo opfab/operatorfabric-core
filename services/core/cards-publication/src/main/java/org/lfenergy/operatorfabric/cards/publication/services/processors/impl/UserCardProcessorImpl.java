@@ -2,9 +2,9 @@ package org.lfenergy.operatorfabric.cards.publication.services.processors.impl;
 
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.services.processors.UserCardProcessor;
-import org.lfenergy.operatorfabric.users.model.ComputedPerimeter;
-import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
-import org.lfenergy.operatorfabric.users.model.RightsEnum;
+import org.opfab.client.users.model.ComputedPerimeter;
+import org.opfab.client.users.model.CurrentUserWithPerimeters;
+import org.opfab.client.users.model.RightsEnum;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;

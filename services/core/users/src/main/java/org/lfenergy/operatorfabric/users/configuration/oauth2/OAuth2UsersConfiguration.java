@@ -13,8 +13,6 @@ package org.lfenergy.operatorfabric.users.configuration.oauth2;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2JwtProcessingUtilities;
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.JwtProperties;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsMode;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsProperties;
@@ -62,10 +60,10 @@ public class OAuth2UsersConfiguration {
 
     /**
      * Generates a converter that converts {@link Jwt} to
-     * {@link OpFabJwtAuthenticationToken} whose principal is a {@link User} model
+     * {@link OpFabUsersJwtAuthenticationToken} whose principal is a {@link User} model
      * object
      *
-     * @return Converter from {@link Jwt} to {@link OpFabJwtAuthenticationToken}
+     * @return Converter from {@link Jwt} to {@link OpFabUsersJwtAuthenticationToken}
      */
     @Bean
     public Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter(@Autowired UserRepository userRepository) {
@@ -102,7 +100,7 @@ public class OAuth2UsersConfiguration {
                 log.debug("user [{}] has these roles {} through the {} mode"
                         , principalId, authorities.toString(), groupsProperties.getMode());
 
-                return new OpFabJwtAuthenticationToken(jwt, user, authorities);
+                return new OpFabUsersJwtAuthenticationToken(jwt, user, authorities);
             }
 
 

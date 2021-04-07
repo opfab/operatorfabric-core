@@ -17,16 +17,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.cards.consultation.TestUtilities;
 import org.lfenergy.operatorfabric.cards.consultation.application.IntegrationTestApplication;
-import org.lfenergy.operatorfabric.cards.consultation.model.*;
-import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
-import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
-import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
-import org.lfenergy.operatorfabric.users.model.User;
+import org.lfenergy.operatorfabric.cards.consultation.model.CardConsultationData;
+import org.lfenergy.operatorfabric.cards.consultation.model.CardOperation;
+import org.lfenergy.operatorfabric.cards.consultation.model.I18nConsultationData;
+import org.lfenergy.operatorfabric.cards.consultation.model.RecipientConsultationData;
+import org.opfab.client.cards.model.RecipientEnum;
+import org.opfab.client.cards.model.SeverityEnum;
+import org.opfab.client.users.model.CurrentUserWithPerimeters;
+import org.opfab.client.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import reactor.test.StepVerifier;
 
 import java.time.Instant;

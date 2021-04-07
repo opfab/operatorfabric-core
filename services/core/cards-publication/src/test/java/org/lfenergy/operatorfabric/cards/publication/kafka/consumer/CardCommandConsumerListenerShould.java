@@ -12,15 +12,17 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lfenergy.operatorfabric.avro.CardCommand;
-import org.lfenergy.operatorfabric.avro.CommandType;
 import org.lfenergy.operatorfabric.cards.publication.kafka.command.CommandHandler;
 import org.lfenergy.operatorfabric.cards.publication.kafka.command.CreateCardCommandHandler;
 import org.lfenergy.operatorfabric.cards.publication.kafka.command.DeleteCardCommandHandler;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.opfab.client.avro.CardCommand;
+import org.opfab.client.avro.CommandType;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 

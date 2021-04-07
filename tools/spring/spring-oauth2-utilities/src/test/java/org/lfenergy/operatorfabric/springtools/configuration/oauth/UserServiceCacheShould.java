@@ -16,13 +16,13 @@ import feign.mock.MockClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.lfenergy.operatorfabric.springtools.configuration.test.UserServiceCacheTestApplication;
-import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
+import org.opfab.client.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest(classes = UserServiceCacheTestApplication.class)

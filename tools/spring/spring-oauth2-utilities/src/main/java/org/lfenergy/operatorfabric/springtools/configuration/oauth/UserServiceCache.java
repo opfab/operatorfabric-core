@@ -12,16 +12,15 @@
 package org.lfenergy.operatorfabric.springtools.configuration.oauth;
 
 import feign.FeignException;
-import org.lfenergy.operatorfabric.users.model.User;
-
-import java.util.Hashtable;
-
-import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
+import org.opfab.client.users.model.CurrentUserWithPerimeters;
+import org.opfab.client.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Component;
+
+import java.util.Hashtable;
 
 /**
  * <p>This class is responsible for retrieving {@link User} information either from cache or from the {@link UserServiceProxy},

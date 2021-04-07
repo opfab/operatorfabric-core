@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
 
 
 
-package org.lfenergy.operatorfabric.businessconfig.model;
+package org.opfab.client.cards.model;
 
 /**
  * The type of input
@@ -23,7 +23,6 @@ package org.lfenergy.operatorfabric.businessconfig.model;
  *     <dt>STATIC</dt><dd>This input won't be displayed, it may serve as a constant parameter</dd>
  * </dl>
  * Note : This enum is created by hand because Swagger can't handle enums. It should match the corresponding enum definition in the Cards API.
- *
  *
  */
 public enum InputEnum {

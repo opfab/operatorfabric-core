@@ -12,10 +12,10 @@
   "delegatePattern": true,
   "singleContentTypes": false,
   "importMappings" : {
-    "CardOperationTypeEnum": "org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum",
-    "SeverityEnum": "org.lfenergy.operatorfabric.cards.model.SeverityEnum",
-    "InputEnum": "org.lfenergy.operatorfabric.cards.model.InputEnum",
-    "RecipientEnum": "org.lfenergy.operatorfabric.cards.model.RecipientEnum",
+    "CardOperationTypeEnum": "org.opfab.client.cards.model.CardOperationTypeEnum",
+    "SeverityEnum": "org.opfab.client.cards.model.SeverityEnum",
+    "InputEnum": "org.opfab.client.cards.model.InputEnum",
+    "RecipientEnum": "org.opfab.client.cards.model.RecipientEnum",
     "EpochDate": "java.time.Instant",
     "LongInteger": "java.lang.Long"
   },

@@ -16,10 +16,10 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.lfenergy.operatorfabric.avro.Card;
 import org.lfenergy.operatorfabric.cards.publication.configuration.json.CardsModule;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.springtools.json.InstantModule;
+import org.opfab.client.avro.Card;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;

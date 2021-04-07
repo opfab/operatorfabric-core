@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 
 package org.lfenergy.operatorfabric.springtools.configuration.oauth;
 
-import feign.*;
+import feign.FeignException;
 import feign.codec.Decoder;
 import feign.codec.Encoder;
 import feign.jackson.JacksonDecoder;
@@ -20,8 +20,8 @@ import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.JwtProper
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsMode;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsProperties;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsUtils;
-import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
-import org.lfenergy.operatorfabric.users.model.User;
+import org.opfab.client.users.model.CurrentUserWithPerimeters;
+import org.opfab.client.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.openfeign.EnableFeignClients;

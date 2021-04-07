@@ -1,7 +1,7 @@
 {
   "type": "record",
   "name": "Card",
-  "namespace": "org.lfenergy.operatorfabric.avro",
+  "namespace": "org.opfab.client.avro",
   "fields": [
     {
       "name": "parentCardId",

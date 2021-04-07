@@ -18,8 +18,8 @@ import org.jeasy.random.EasyRandomParameters;
 import org.jeasy.random.FieldPredicates;
 import org.jetbrains.annotations.NotNull;
 import org.lfenergy.operatorfabric.cards.consultation.model.*;
-import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
-import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
+import org.opfab.client.cards.model.RecipientEnum;
+import org.opfab.client.cards.model.SeverityEnum;
 import org.springframework.data.domain.Page;
 
 import java.io.IOException;
@@ -36,7 +36,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.nio.charset.Charset.forName;
-import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.*;
+import static org.opfab.client.cards.model.RecipientEnum.*;
 
 @Slf4j
 public class TestUtilities {

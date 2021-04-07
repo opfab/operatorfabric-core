@@ -12,11 +12,11 @@ package org.lfenergy.operatorfabric.cards.publication.kafka.card;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.avro.Card;
-import org.lfenergy.operatorfabric.avro.CardCommand;
-import org.lfenergy.operatorfabric.avro.CommandType;
 import org.lfenergy.operatorfabric.cards.publication.kafka.CardObjectMapper;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
+import org.opfab.client.avro.Card;
+import org.opfab.client.avro.CardCommand;
+import org.opfab.client.avro.CommandType;
 import org.springframework.stereotype.Component;
 
 @Slf4j

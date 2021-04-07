@@ -101,7 +101,7 @@
     "tslint": "6.1.3",
     "typescript": "4.0.7"
   },
-  "browserslist": [ 
+  "browserslist": [
     "last 10 Chrome major version",
     "last 10 Firefox major version",
     "last 2 Edge major versions",

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.lfenergy.operatorfabric.businessconfig.model;
+package org.opfab.client.businessconfig.model;
 
 /**
  * Type of state

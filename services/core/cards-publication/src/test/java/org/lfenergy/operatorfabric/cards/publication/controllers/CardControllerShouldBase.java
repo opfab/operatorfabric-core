@@ -1,7 +1,17 @@
 package org.lfenergy.operatorfabric.cards.publication.controllers;
 
-import static java.nio.charset.Charset.forName;
-import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
+import org.jeasy.random.EasyRandom;
+import org.jeasy.random.EasyRandomParameters;
+import org.jeasy.random.FieldPredicates;
+import org.jetbrains.annotations.NotNull;
+import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.model.I18nPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.model.RecipientPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.repositories.CardRepositoryForTest;
+import org.opfab.client.cards.model.SeverityEnum;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -10,18 +20,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.jeasy.random.EasyRandom;
-import org.jeasy.random.EasyRandomParameters;
-import org.jeasy.random.FieldPredicates;
-import org.jetbrains.annotations.NotNull;
-import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
-import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.I18nPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.RecipientPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.repositories.CardRepositoryForTest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Flux;
+import static java.nio.charset.Charset.forName;
+import static org.opfab.client.cards.model.RecipientEnum.DEADEND;
 
 public abstract class CardControllerShouldBase {
 	

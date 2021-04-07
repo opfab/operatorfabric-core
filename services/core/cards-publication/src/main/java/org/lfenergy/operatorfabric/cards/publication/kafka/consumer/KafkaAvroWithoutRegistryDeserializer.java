@@ -16,7 +16,7 @@ import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.specific.SpecificDatumReader;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Deserializer;
-import org.lfenergy.operatorfabric.avro.CardCommand;
+import org.opfab.client.avro.CardCommand;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

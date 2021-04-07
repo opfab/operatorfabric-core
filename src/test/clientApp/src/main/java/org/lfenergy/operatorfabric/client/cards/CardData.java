@@ -8,11 +8,10 @@
  */
 package org.lfenergy.operatorfabric.client.cards;
 
-import org.lfenergy.operatorfabric.cards.model.Card;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.opfab.client.cards.model.Card;
 
 @Getter
 @NoArgsConstructor
