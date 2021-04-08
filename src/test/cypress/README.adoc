@@ -24,11 +24,13 @@ The Cypress test rely on a running OpFab instance that is an adaptation from the
 For example, as Cypress doesn't allow navigation to different origins within the same test, the OpFab instance needs
 to use the `PASSWORD` authentication mode rather than `CODE`.
 
+=== Full docker mode
+
 To launch such an instance:
 
 [source,bash]
 ----
-cd /config/docker
+cd config/docker
 docker-compose down <1>
 ./docker-compose-cypress.sh <2>
 ----
@@ -41,7 +43,7 @@ NOTE: If you need to further adapt the Cypress instance, you can make changes to
 You also need to set up some perimeters and bundles for the tests. To do so:
 
 ----
-cd /src/test/resources
+cd src/test/resources
 loadTestConf.sh
 ----
 
@@ -50,9 +52,20 @@ side-effects from previous tests) with the following commands:
 
 [source,bash]
 ----
-cd /config/docker
+cd config/docker
 docker-compose down
 ----
+
+=== Dev mode
+
+You can also launch operator-fabric in dev mode. To do so, follow the steps described above, substituting
+`config/dev` for `config/docker`. Then run the core services with the following command:
+
+[source,bash]
+----
+./bin/run_all.sh start
+----
+
 == Running existing tests
 
 To launch the Cypress test runner:
@@ -68,6 +81,27 @@ run all existing tests.
 
 NOTE: You can select the browser (and version) that you want to use from a dropdown list on the right. The list will
 display the browsers that are currently installed on your computer (and supported by Cypress).
+
+== Running tests on 4200 (ng serve)
+
+Follow the steps described above in "Dev mode" to start a Cypress-flavoured OpFab instance in development mode, then
+run ng serve to start a dynamically generated ui on port 4200:
+
+[source,bash]
+----
+cd ui/main
+ng serve
+----
+
+Then launch the Cypress test runner as follows:
+
+To launch the Cypress test runner:
+
+[source,bash]
+----
+cd src/test/cypress
+./node_modules/.bin/cypress open --config baseUrl=http://localhost:4200
+----
 
 == Clearing MongoDB
 

@@ -3,6 +3,7 @@
   "viewportWidth": 1848,
   "viewportHeight": 949,
   "env": {
-    "defaultWaitTime": 500
+    "defaultWaitTime": 500,
+    "opFabCardsUrl": "http://localhost:2102/cards"
   }
 }
