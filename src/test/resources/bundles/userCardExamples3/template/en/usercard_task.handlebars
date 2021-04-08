@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020-2021, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -18,13 +18,13 @@
     <label> REPEAT EVERY</label>
     <table width="100%" style="margin-bottom: -5px;">
         <tr>
-            <td><label class="opfab-checkbox"> MONDAY <input type="checkbox" id="Monday">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox"> TUESDAY <input type="checkbox" id="Tuesday">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox"> WEDNESDAY <input type="checkbox" id="Wednesday">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox"> THURSDAY <input type="checkbox" id="Thursday">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox"> FRIDAY <input type="checkbox" id="Friday">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox"> SATURDAY <input type="checkbox" id="Saturday">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox"> SUNDAY <input type="checkbox" id="Sunday">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox"> MONDAY <input type="checkbox" id="Monday" {{conditionalAttribute (arrayContains card.data.daysOfWeek 1) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox"> TUESDAY <input type="checkbox" id="Tuesday" {{conditionalAttribute (arrayContains card.data.daysOfWeek 2) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox"> WEDNESDAY <input type="checkbox" id="Wednesday" {{conditionalAttribute (arrayContains card.data.daysOfWeek 3) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox"> THURSDAY <input type="checkbox" id="Thursday" {{conditionalAttribute (arrayContains card.data.daysOfWeek 4) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox"> FRIDAY <input type="checkbox" id="Friday" {{conditionalAttribute (arrayContains card.data.daysOfWeek 5) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox"> SATURDAY <input type="checkbox" id="Saturday" {{conditionalAttribute (arrayContains card.data.daysOfWeek 6) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox"> SUNDAY <input type="checkbox" id="Sunday" {{conditionalAttribute (arrayContains card.data.daysOfWeek 7) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
 
         </tr>
     </table>
@@ -43,14 +43,14 @@
             <td style="width:10%">
                 <div class="opfab-input">
                     <label> HOUR </label>
-                    <input style="text-align:center" size="10" maxlength="2" type="text" id="hours">
+                    <input style="text-align:center" size="10" maxlength="2" type="text" id="hours"  value="{{card.data.hours}}">
                 </div>
             </td>
     
             <td style="width:10%">
                 <div class="opfab-input">
                     <label> MIN </label>
-                    <input style="text-align:center" size="10" maxlength="2" type="text" id="minutes">
+                    <input style="text-align:center" size="10" maxlength="2" type="text" id="minutes" value="{{card.data.minutes}}">
                 </div>
             </td>
             <td style="width:6%">
@@ -59,7 +59,7 @@
             <td style="width:32%">
                 <div class="opfab-input">
                     <label> TASK DURATION (MINUTES) </label>
-                    <input size="3" maxlength="3" type="text" id="durationInMinutes" value="15">
+                    <input size="3" maxlength="3" type="text" id="durationInMinutes" value="{{#if card.data.durationInMinutes}}{{card.data.durationInMinutes}}{{else}}15{{/if}}">
                 </div>
             </td>
             <td style="width:6%">
@@ -88,6 +88,7 @@
         const durationInMinutes =  document.getElementById('durationInMinutes').value;
 
        const daysOfWeek = [];
+       
         if (document.getElementById("Monday").checked) daysOfWeek.push(1);
         if (document.getElementById("Tuesday").checked) daysOfWeek.push(2);
         if (document.getElementById("Wednesday").checked) daysOfWeek.push(3);
@@ -110,8 +111,8 @@
                 taskDescription: taskDescription,
                 hours: hours,
                 minutes: minutes,
-                daysOfWeek: daysOfWeek,
-                durationInMinutes: durationInMinutes
+                durationInMinutes: durationInMinutes,
+                daysOfWeek: daysOfWeek
             }
         };
         return {

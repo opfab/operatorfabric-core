@@ -169,7 +169,7 @@ export class HandlebarsService {
 
     private static registerArrayContains() {
         Handlebars.registerHelper('arrayContains', function(arr, value) {
-            return arr.includes(value);
+            return !!arr && arr.includes(value);
         });
     }
 
