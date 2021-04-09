@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,145 +7,120 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.lfenergy.operatorfabric.cards.publication.controllers;
-
-
-import static org.awaitility.Awaitility.await;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.is;
-
-
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.xml.transform.Templates;
 
 import org.assertj.core.api.Assertions;
-import org.jeasy.random.EasyRandom;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication;
-import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
-import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.repositories.ArchivedCardRepositoryForTest;
+import org.lfenergy.operatorfabric.cards.publication.application.UnitTestApplication;
+import org.lfenergy.operatorfabric.cards.publication.configuration.TestCardReceiver;
+import org.lfenergy.operatorfabric.cards.publication.repositories.CardRepositoryForTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.test.context.web.WebAppConfiguration;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.hamcrest.Matchers.is;
 
-/**
- * <p></p>
- * Created on 26/10/18
- *
- */
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = CardPublicationApplication.class)
-@AutoConfigureWebTestClient
-@ActiveProfiles(profiles = {"native", "test"})
+@SpringBootTest(classes = UnitTestApplication.class)
+@ActiveProfiles("test")
+@WebAppConfiguration
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Slf4j
-@Tag("end-to-end")
-@Tag("mongo")
-class CardControllerShould extends CardControllerShouldBase {
+class CardControllerShould {
 
+    private MockMvc mockMvc;
 
     @Autowired
-    private ArchivedCardRepositoryForTest archiveRepository;
+    private WebApplicationContext webApplicationContext;
+
+    @Autowired
+    private CardRepositoryForTest cardRepository;
+
+    @BeforeAll
+    private void setup() throws Exception {
+        this.mockMvc = webAppContextSetup(webApplicationContext)
+                .apply(springSecurity())
+                .build();
+    }
+
+    @AfterAll
+    void clean() {
+        cardRepository.deleteAll();
+    }
+
+    private String getCard() {
+        return "{" + "\"publisher\" : \"api_test\"," + "\"processVersion\" : \"1\"," + "\"process\"  :\"api_test\","
+                + "\"processInstanceId\" : \"process1\"," + "\"state\": \"messageState\","
+                + "\"groupRecipients\": [\"Dispatcher\"]," + "\"severity\" : \"INFORMATION\","
+                + "\"startDate\" : 1553186770681," + "\"summary\" : {\"key\" : \"defaultProcess.summary\"},"
+                + "\"title\" : {\"key\" : \"defaultProcess.title\"}," + "\"data\" : {\"message\":\"a message\"}" + "}";
+    }
 
 
-    @AfterEach
-    public void cleanAfter() {
-        cardRepository.deleteAll().subscribe();
-        archiveRepository.deleteAll().subscribe();
+    @Test
+    void postCardWithDepracatedEndPoint() throws Exception {
+
+        mockMvc.perform(post("/cards").contentType(MediaType.APPLICATION_JSON).content(getCard()))
+                .andExpect(status().isCreated()).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.count", is(1)));
     }
 
     @Test
-    void createSyncCards() {
-        this.webTestClient.post().uri("/cards").accept(MediaType.APPLICATION_JSON)
-                .body(generateCards(), CardPublicationData.class)
-                .exchange()
-                .expectBody(CardCreationReportData.class)
-                .value(hasProperty("count", is(5)));
-        Assertions.assertThat(cardRepository.count().block()).isEqualTo(4);
-        Assertions.assertThat(archiveRepository.count().block()).isEqualTo(5);
-    }
+    void postCard() throws Exception {
 
-    // removes cards
-    @Test
-    void deleteSynchronously_An_ExistingCard_whenT_ItSIdIsProvided() {
-
-        EasyRandom randomGenerator = instantiateEasyRandom();
-
-        int numberOfCards = 10;
-        List<CardPublicationData> cardsInRepository = instantiateCardPublicationData(randomGenerator, numberOfCards);
-
-        cardRepository.saveAll(cardsInRepository).subscribe();
-
-
-        String existingId = cardsInRepository.get(0).getId();
-
-
-        String testedId = existingId;
-        this.webTestClient.delete().uri("/cards/" + testedId).accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isOk();
-        Assertions.assertThat(cardRepository.count().block()).isEqualTo(numberOfCards - 1);
-
-    }
-    
-    @Test
-    void keepTheCardRepository_Untouched_when_ARandomId_isGiven() {
-
-        EasyRandom randomGenerator = instantiateEasyRandom();
-
-        int cardNumber = 10;
-        List<CardPublicationData> cardsInRepository = instantiateCardPublicationData(randomGenerator, cardNumber);
-
-        cardRepository.saveAll(cardsInRepository).subscribe();
-
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(
-                () -> {
-                    Long block = cardRepository.count().block();
-                    Assertions.assertThat(block)
-                            .withFailMessage("The number of registered cards should be %d but is %d"
-                                    , cardNumber
-                                    , block)
-                            .isEqualTo(cardNumber);
-                }
-        );
-
-        String testedId = randomGenerator.nextObject(String.class);
-        this.webTestClient.delete().uri("/cards/" + testedId).accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isNotFound();
-
-        Assertions.assertThat(cardRepository.count().block()).isEqualTo(cardNumber);
-
-
+        mockMvc.perform(post("/cards").contentType(MediaType.APPLICATION_JSON).content(getCard()))
+                .andExpect(status().isCreated()).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.count", is(1)));
     }
 
     @Test
-    void deleteUserCardWithUnauthenticatedUser() throws Exception {
+    void deleteCard() throws Exception {
 
-        EasyRandom randomGenerator = instantiateEasyRandom();
+        mockMvc.perform(post("/cards").contentType(MediaType.APPLICATION_JSON).content(getCard()));
+        mockMvc.perform(delete("/cards/api_test.process1"))
+                .andExpect(status().isOk());
+        Assertions.assertThat(cardRepository.count()).isEqualTo(0);
+    }
 
-        int numberOfCards = 1;
-        List<CardPublicationData> cardsInRepository = instantiateCardPublicationData(randomGenerator, numberOfCards);
 
-        cardRepository.saveAll(cardsInRepository).subscribe();
+    @Test
+    void deleteAnNonexistingCard() throws Exception {
 
-        String existingId = cardsInRepository.get(0).getId();
+        mockMvc.perform(post("/cards").contentType(MediaType.APPLICATION_JSON).content(getCard()));
+        mockMvc.perform(delete("/cards/api_test.process2"))
+                .andExpect(status().isNotFound());
+        Assertions.assertThat(cardRepository.count()).isEqualTo(1);
+    }
 
-        webTestClient.delete().uri("/cards/userCard/" + existingId).exchange().expectStatus().isUnauthorized();
+
+    @Test
+    void deleteAUserCardWithNoAuthentication() throws Exception {
+
+        mockMvc.perform(post("/cards").contentType(MediaType.APPLICATION_JSON).content(getCard()));
+        mockMvc.perform(delete("/cards/userCard/api_test.process1"))
+                .andExpect(status().isForbidden());
+        Assertions.assertThat(cardRepository.count()).isEqualTo(1);
     }
 
 }

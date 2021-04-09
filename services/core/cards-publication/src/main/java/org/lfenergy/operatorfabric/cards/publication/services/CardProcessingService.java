@@ -31,8 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -40,7 +38,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
 
 /**
  * <p>
@@ -65,93 +62,53 @@ public class CardProcessingService {
     @Autowired
     private ExternalAppClientImpl externalAppClient;
     @Autowired
-    private TraceReposiory traceReposiory;
+    private TraceRepository traceRepository;
 
-    private Mono<CardCreationReportData> processCards(Flux<CardPublicationData> pushedCards, Optional<CurrentUserWithPerimeters> user) {
 
-        long windowStart = Instant.now().toEpochMilli();
+    public CardCreationReportData processCard(CardPublicationData card) {
+        card.setPublisherType(PublisherTypeEnum.EXTERNAL);
+        return processOneCard(card, Optional.empty());
+    }
 
-        
-        //delete child cards process should be prior to cards updates
-        Flux<CardPublicationData> cards = deleteChildCardsProcess(pushedCards);
-        cards = registerRecipientProcess(cards);
-        cards = registerValidationProcess(cards);
+    public CardCreationReportData processUserCard(CardPublicationData card, CurrentUserWithPerimeters user) {
+        card.setPublisherType(PublisherTypeEnum.ENTITY);
+        return processOneCard(card, Optional.of(user));
+    }
 
-        if (user.isPresent()) {
-            cards = userCardPublisherProcess(cards,user.get());
-            cards = sendCardToExternalAppProcess(cards);
+    private CardCreationReportData processOneCard(CardPublicationData card, Optional<CurrentUserWithPerimeters> user) {
+        try {
+            validate(card);
+            recipientProcessor.processAll(card);
+            card.prepare(Instant.ofEpochMilli(Math.round(Instant.now().toEpochMilli() / 1000d) * 1000));
+            if (user.isPresent()) {
+                userCardProcessor.processPublisher(card, user.get());
+                externalAppClient.sendCardToExternalApplication(card);
+            }
+            deleteChildCardsProcess(card);
+            cardRepositoryService.saveCard(card);
+            cardRepositoryService.saveCardToArchive(new ArchivedCardPublicationData(card));
+            cardNotificationService.notifyOneCard(card, CardOperationTypeEnum.ADD);
+            log.debug("Card persisted (process = {} , processInstanceId= {} , state = {} ", card.getProcess(),card.getProcessInstanceId(),card.getState());
+            return new CardCreationReportData(1, "PushedCard was successfully handled");
+
+        } catch (Exception exc) {
+            log.error("Unexpected error during pushed Card persistence", exc);
+            return new CardCreationReportData(0, "Error, unable to handle pushed Card: " + exc.getMessage());
         }
 
-        return registerPersistenceAndNotificationProcess(cards, windowStart)
-                .doOnNext(count -> log.debug("{} pushed Cards persisted", count))
-                .map(count -> new CardCreationReportData(count, "All pushedCards were successfully handled"))
-                .onErrorResume(e -> {
-                    log.error("Unexpected error during pushed Cards persistence", e);
-                    return Mono.just(
-                            new CardCreationReportData(0, "Error, unable to handle pushed Cards: " + e.getMessage()));
-                });
     }
 
-    private Flux<CardPublicationData> deleteChildCardsProcess(Flux<CardPublicationData> cards) {
-        return cards.doOnNext(card -> {
-
-            if (! card.getKeepChildCards()) {
-                String idCard = card.getProcess() + "." + card.getProcessInstanceId();
-                Optional<List<CardPublicationData>> childCard = cardRepositoryService.findChildCard(cardRepositoryService.findCardById(idCard));
-                if (childCard.isPresent()) {
-                    deleteCards(childCard.get());
-                }
+    private Void deleteChildCardsProcess(CardPublicationData card) {
+        if (! card.getKeepChildCards()) {
+            String idCard = card.getProcess() + "." + card.getProcessInstanceId();
+            Optional<List<CardPublicationData>> childCard = cardRepositoryService.findChildCard(cardRepositoryService.findCardById(idCard));
+            if (childCard.isPresent()) {
+                deleteCards(childCard.get());
             }
-        });
+        }
+        return null;
     }
 
-
-
-    public Mono<CardCreationReportData> processCards(Flux<CardPublicationData> pushedCards) {
-        return processCards(pushedCards, Optional.empty());
-    }
-
-    public Mono<CardCreationReportData> processUserCards(Flux<CardPublicationData> pushedCards, CurrentUserWithPerimeters user) {
-        return processCards(pushedCards, Optional.of(user));
-    }
-
-
-    private Flux<CardPublicationData> registerRecipientProcess(Flux<CardPublicationData> cards) {
-        return cards.doOnNext(ignoreErrorDo(recipientProcessor::processAll));
-    }
-
-    private Flux<CardPublicationData> userCardPublisherProcess(Flux<CardPublicationData> cards, CurrentUserWithPerimeters user) {
-        return cards.doOnNext(card-> userCardProcessor.processPublisher(card,user));
-    }
-
-    private Flux<CardPublicationData> sendCardToExternalAppProcess(Flux<CardPublicationData> cards) {
-        return cards.doOnNext(card-> externalAppClient.sendCardToExternalApplication(card));
-    }
-
-    private static Consumer<CardPublicationData> ignoreErrorDo(Consumer<CardPublicationData> onNext) {
-        return c -> {
-            try {
-                onNext.accept(c);
-            } catch (Exception e) {
-                log.warn("Error arose and will be ignored", e);
-            }
-        };
-    }
-
-    /**
-     * Registers validation process in flux. If an error arise it breaks the
-     * process.
-     *
-     * @param cards
-     * @return
-     */
-    private Flux<CardPublicationData> registerValidationProcess(Flux<CardPublicationData> cards) {
-        return cards
-                // prepare card computed data (id, shardkey)
-                .doOnNext(c -> c.prepare(Instant.ofEpochMilli(Math.round(Instant.now().toEpochMilli() / 1000d) * 1000)))
-                // JSR303 bean validation of card
-                .doOnNext(this::validate);
-    }
 
     /**
      * Apply bean validation to card
@@ -226,25 +183,6 @@ public class CardProcessingService {
         return true;
     }
 
-    /**
-     * Save and notify card
-     *
-     * @param cards
-     * @param windowStart
-     * @return
-     */
-    private Mono<Integer>  registerPersistenceAndNotificationProcess(Flux<CardPublicationData> cards, long windowStart) {
-
-        return cards.doOnNext(card -> {
-            cardRepositoryService.saveCard(card);
-            cardRepositoryService.saveCardToArchive(new ArchivedCardPublicationData(card));
-            cardNotificationService.notifyOneCard(card, CardOperationTypeEnum.ADD);
-        }).reduce(0, (count, card) -> count + 1).doOnNext(size -> {
-            if (size > 0 && log.isDebugEnabled()) {
-                logMeasures(windowStart, size);
-            }
-        });
-    }
 
     public void deleteCards(Instant endDateBefore) {
         cardRepositoryService.deleteCardsByEndDateBefore(endDateBefore);
@@ -313,38 +251,26 @@ public class CardProcessingService {
         }
         return false;
     }
-
-	public Mono<UserBasedOperationResult> processUserAcknowledgement(Mono<String> cardUid, User user) {
-		return cardUid.map(uid -> cardRepositoryService.addUserAck(user, uid));
+    
+	public UserBasedOperationResult processUserAcknowledgement(String cardUid, User user) {
+		return cardRepositoryService.addUserAck(user, cardUid);
 	}
 
-	public Mono<UserBasedOperationResult> processUserRead(Mono<String> cardUid, String userName) {
-		return cardUid.map(uid -> cardRepositoryService.addUserRead(userName, uid));
+
+	public UserBasedOperationResult processUserRead(String cardUid, String userName) {
+		return cardRepositoryService.addUserRead(userName, cardUid);
     }
 
-    public Mono<UserBasedOperationResult> deleteUserRead(Mono<String> cardUid, String userName) {
-		return cardUid.map(_cardUid -> cardRepositoryService.deleteUserRead(userName, _cardUid));
+    public UserBasedOperationResult deleteUserRead(String cardUid, String userName) {
+		return cardRepositoryService.deleteUserRead(userName,cardUid);
 	}
 
-    /**
-     * Logs card count and elapsed time since window start
-     *
-     * @param windowStart
-     * @param count
-     */
-    private void logMeasures(long windowStart, long count) {
-        long windowDuration = System.nanoTime() - windowStart;
-        double windowDurationMillis = windowDuration / 1000000d;
-        double cardWindowDurationMillis = windowDurationMillis / count;
-        log.debug("{} cards handled in {} ms each (total: {})", count, cardWindowDurationMillis, windowDurationMillis);
-    }
-
-	public Mono<UserBasedOperationResult> deleteUserAcknowledgement(Mono<String> cardUid, String userName) {
-		return cardUid.map(_cardUid -> cardRepositoryService.deleteUserAck(userName, _cardUid));
+	public UserBasedOperationResult deleteUserAcknowledgement(String cardUid, String userName) {
+		return cardRepositoryService.deleteUserAck(userName, cardUid);
 	}
 
-    public Mono<UserActionTraceData> findTraceByCardUid(String name, String cardUid) {
-        return traceReposiory.findByCardUidAndActionAndUserName(cardUid, AopTraceType.ACK.getAction(),name);
+    public UserActionTraceData findTraceByCardUid(String name, String cardUid) {
+        return traceRepository.findByCardUidAndActionAndUserName(cardUid, AopTraceType.ACK.getAction(),name);
     }
 
     

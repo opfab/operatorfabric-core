@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,15 +28,9 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * <p></p>
- * Created on 06/08/18
- *
- *
- */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes={UnitTestApplication.class, JacksonConfig.class})
-@ActiveProfiles(profiles = {"native"})
+@ActiveProfiles(profiles = {"native","test"})
 @Slf4j
 public class ObjectMapperShould {
 

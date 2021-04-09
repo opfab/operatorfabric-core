@@ -29,5 +29,5 @@ Feature: Cards
 
     And request card
     When method post
-    Then status 201
-    And match response.count == 0
+    Then status 400
+

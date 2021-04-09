@@ -38,7 +38,6 @@ Cypress.Commands.add('PushCard', (processName, processVersion, publisherName, pr
     }).then(response =>{
         cy.expect(response.status).to.eq(201);
         cy.expect(response.body).to.have.property('count', 1);
-        cy.expect(response.body).to.have.property('message', 'All pushedCards were successfully handled')
 
     })
 })
@@ -70,7 +69,6 @@ Cypress.Commands.add('PushActionCard', (processName, processVersion, publisherNa
     }).then(response =>{
         cy.expect(response.status).to.eq(201);
         cy.expect(response.body).to.have.property('count', 1);
-        cy.expect(response.body).to.have.property('message', 'All pushedCards were successfully handled')
 
     })
 })
