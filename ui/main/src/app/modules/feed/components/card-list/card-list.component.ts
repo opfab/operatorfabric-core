@@ -15,14 +15,15 @@ import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ConfigService} from '@ofServices/config.service';
 import {MessageLevel} from '@ofModel/message.model';
-import {CardService} from '@ofServices/card.service';
 import {AlertMessage} from '@ofActions/alert.actions';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {UpdateALightCard} from '@ofActions/light-card.actions';
-import {AcknowledgmentAllowedEnum, Process} from '@ofModel/processes.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {AppService} from '@ofServices/app.service';
+import {AcknowledgeService} from '@ofServices/acknowledge.service';
+import {UserService} from '@ofServices/user.service';
+import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {EntitiesService} from '@ofServices/entities.service';
 
 
 @Component({
@@ -38,15 +39,20 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     modalRef: NgbModalRef;
     hideAckAllCardsFeature: boolean;
     ackAllCardsDemandTimestamp: number;
+    currentUserWithPerimeters: UserWithPerimeters;
 
     domCardListElement;
 
     constructor(private modalService: NgbModal,
                 private configService: ConfigService,
-                private cardService: CardService,
                 private store: Store<AppState>,
                 private processesService: ProcessesService,
-                private _appService: AppService) { }
+                private acknowledgeService: AcknowledgeService,
+                private userService: UserService,
+                private entitiesService: EntitiesService,
+                private _appService: AppService) {
+        this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+    }
 
     ngOnInit(): void {
         this.domCardListElement = document.getElementById('opfab-card-list');
@@ -67,41 +73,23 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     acknowledgeAllVisibleCardsInTheFeed() {
         this.lightCards.forEach(lightCard => {
+
+            const processDefinition = this.processesService.getProcess(lightCard.process);
+
             if (! lightCard.hasBeenAcknowledged && this.isCardPublishedBeforeAckDemand(lightCard)
-                && this.isAcknowledgmentAllowed(lightCard))
-                this.acknowledgeCard(lightCard);
+                && this.acknowledgeService.isAcknowledgmentAllowed(this.currentUserWithPerimeters, lightCard, processDefinition)) {
+                try {
+                    this.acknowledgeService.acknowledgeCard(lightCard);
+                } catch (err) {
+                    console.error(err);
+                    this.displayMessage('response.error.ack', null, MessageLevel.ERROR);
+                }
+            }
         });
     }
 
     isCardPublishedBeforeAckDemand(lightCard: LightCard): boolean {
         return lightCard.publishDate < this.ackAllCardsDemandTimestamp;
-    }
-
-    isAcknowledgmentAllowed(lightCard: LightCard): boolean {
-        const processDefinition = this.processesService.getProcess(lightCard.process);
-        if (!! processDefinition) {
-            const lightCardState = Process.prototype.extractState.call(processDefinition, lightCard);
-
-            if (!! lightCardState)
-                return lightCardState.acknowledgmentAllowed !== AcknowledgmentAllowedEnum.NEVER;
-        }
-        return false;
-    }
-
-    acknowledgeCard(lightCard: LightCard) {
-        this.cardService.postUserAcknowledgement(lightCard.uid).subscribe(resp => {
-            if (resp.status === 201 || resp.status === 200) {
-                this.updateAcknowledgementOnLightCard(lightCard, true);
-            } else {
-                console.error('the remote acknowledgement endpoint returned an error status(%d)', resp.status);
-                this.displayMessage('response.error.ack', null, MessageLevel.ERROR);
-            }
-        });
-    }
-
-    updateAcknowledgementOnLightCard(lightCard: LightCard, hasBeenAcknowledged: boolean) {
-        const updatedLightCard = {...lightCard, hasBeenAcknowledged: hasBeenAcknowledged};
-        this.store.dispatch(new UpdateALightCard({card: updatedLightCard}));
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {

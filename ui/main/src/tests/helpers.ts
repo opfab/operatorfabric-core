@@ -197,7 +197,13 @@ export function getOneRandomCard(cardTemplate?:any): Card {
         generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
         getRandomI18nData(),
         getRandomI18nData(),
-        cardTemplate.data ? cardTemplate.data : {data: "data"}
+        cardTemplate.data ? cardTemplate.data : {data: "data"},
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        cardTemplate.entitiesAllowedToRespond ? cardTemplate.entitiesAllowedToRespond : null,
+        cardTemplate.entitiesRequiredToRespond ? cardTemplate.entitiesRequiredToRespond : null
     );
     return oneCard;
 }
