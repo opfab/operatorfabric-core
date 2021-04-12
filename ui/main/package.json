@@ -59,7 +59,7 @@
     "ngx-bootstrap": "6.2.0",
     "ngx-countdown": "11.0.3",
     "ngx-type-ahead": "2.0.1",
-    "rxjs": "6.6.6",
+    "rxjs": "6.6.7",
     "svg-pan-zoom": "3.6.1",
     "tslib": "2.1.0",
     "xlsx": "0.16.9",
