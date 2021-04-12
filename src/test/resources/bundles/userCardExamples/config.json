@@ -10,6 +10,7 @@
   "states": {
     "conferenceState": {
       "name": "conference.title",
+      "description": "conference.title",
       "color": "#CC9900",
       "userCard" : {
         "template" : "usercard_conference",
@@ -22,6 +23,7 @@
     },
     "incidentInProgressState": {
       "name": "incidentInProgress.name",
+      "description": "incidentInProgress.name",
       "userCard" : {
 				"template" : "usercard_incidentInProgress",
 				"severityVisible" : true,

@@ -66,6 +66,9 @@
         }
       }
     }
+  },
+  "apogeeseaState" : {
+    "description": "apogeesea"
   }
 
 }
