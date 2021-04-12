@@ -52,6 +52,7 @@
                 status: status
             }
         };
+        if (status==="error") card.data.error="true";
         return {
             valid: true,
             card: card
