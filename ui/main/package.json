@@ -76,7 +76,7 @@
     "@ngrx/schematics": "11.0.1",
     "@types/file-saver": "2.0.1",
     "@types/handlebars": "4.0.40",
-    "@types/jasmine": "3.6.7",
+    "@types/jasmine": "3.6.9",
     "@types/jasminewd2": "2.0.8",
     "@types/lodash": "4.14.168",
     "@types/moment": "2.13.0",
