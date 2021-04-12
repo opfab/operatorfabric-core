@@ -9,36 +9,42 @@
 	"states": {
 		"timeout-FrEs-IGCC": {
 			"name":  "timeout-FrEs-IGCC.title",
+			"description":  "timeout-FrEs-IGCC.title",
 			"acknowledgmentAllowed": "Always",
 			"color": "red",
 			"templateName": "timeout-FrEs-IGCC"
 		},
 		"action-FrEs-IGCC-export-0": {
 			"name":  "action-FrEs-IGCC-export-0.title",
+			"description":  "action-FrEs-IGCC-export-0.title",
 			"acknowledgmentAllowed": "Always",
 			"color": "red",
 			"templateName": "action-FrEs-IGCC-export-0"
 		},
 		"action-FrEs-IGCC-export-300": {
 			"name":  "action-FrEs-IGCC-export-300.title",
+			"description":  "action-FrEs-IGCC-export-300.title",
 			"acknowledgmentAllowed": "Always",
 			"color": "orange",
 			"templateName": "action-FrEs-IGCC-export-300"
 		},
 		"action-FrEs-IGCC-import-0": {
 			"name":  "action-FrEs-IGCC-import-0.title",
+			"description":  "action-FrEs-IGCC-import-0.title",
 			"acknowledgmentAllowed": "Always",
 			"color": "red",
 			"templateName": "action-FrEs-IGCC-import-0"
 		},
 		"action-FrEs-IGCC-import-300": {
 			"name":  "action-FrEs-IGCC-import-300.title",
+			"description":  "action-FrEs-IGCC-import-300.title",
 			"acknowledgmentAllowed": "Always",
 			"color": "orange",
 			"templateName": "action-FrEs-IGCC-import-300"
 		},
 		"compliant-FrEs-IGCC": {
 			"name":  "compliant-FrEs-IGCC.title",
+			"description":  "compliant-FrEs-IGCC.title",
 			"acknowledgmentAllowed": "Always",
 			"color": "green",
 			"templateName": "compliant-FrEs-IGCC"
