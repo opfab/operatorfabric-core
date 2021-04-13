@@ -10,7 +10,7 @@ Cypress.Commands.add('PushCard', (processName, processVersion, publisherName, pr
 {
     cy.request({
         method : 'POST',
-        url : Cypress.env('opFabCardsUrl'),
+        url : Cypress.env('host')+':2102/cards',
         body: {
             "publisher" : publisherName,
             "processVersion" : processVersion,
@@ -39,7 +39,7 @@ Cypress.Commands.add('PushActionCard', (processName, processVersion, publisherNa
 {
     cy.request({
         method : 'POST',
-        url : Cypress.env('opFabCardsUrl'),
+        url : Cypress.env('host')+':2102/cards',
         body: {
             "publisher" : publisherName,
             "processVersion" : processVersion,
@@ -131,7 +131,7 @@ Cypress.Commands.add('checkCardContent', (processName,processInstanceId,cardTitl
     cy.get('#opfab-feed-light-card-'+processName+'-'+processInstanceId+' > :nth-child(1) > .p-1 > [style="display: flex; width: 100%; margin-top: 5px;"] > .card-subtitle').contains(dateDisplayed)
     cy.should('be.visible')
     //Check card summary
-    cy.get('#opfab-selected-card').contains(cardSummmary)
+    cy.get('#opfab-selected-card-summary').contains(cardSummmary)
     cy.should('be.visible')
     //check card details
 
@@ -334,7 +334,7 @@ Cypress.Commands.add('removeCard', (id)=>
 {
     cy.request({
         method : 'DELETE',
-        url : Cypress.env('opFabCardsUrl')+ id,
+        url : Cypress.env('host')+':2102/cards'+id,
     }).then(response =>{
         cy.expect(response.status).to.eq(200);
         cy.log(response)

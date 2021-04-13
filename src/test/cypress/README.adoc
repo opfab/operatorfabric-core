@@ -119,8 +119,8 @@ db.archivedCards.remove({})
 
 == Current status of tests
 
-All tests except timeline business periods are mostly passing when run against empty card/archived cards collections.
-However, they are currently quite flaky especially when involving dates (round up errors for example).
+All tests should be passing when run alone (i.e. not with run all specs) against empty card/archived cards collections.
+However, tests in the "Flaky" folder can sometimes fail because they involve dates (round up errors for example).
 
 == Creating new tests
 
@@ -128,10 +128,38 @@ Create a new XXXX.spec.js file under `cypress/cypress/integration`
 
 NOTE: We will need to define a convention for naming and organizing tests.
 
-Start writing tests, cypress is well documented https://docs.cypress.io/api/api/table-of-contents.html
+=== Useful documentation
+
+==== Cypress Documentation
+* https://docs.cypress.io/guides/references/assertions#Common-Assertions[Most Common Assertions]
+* https://docs.cypress.io/guides/references/assertions[Assertions Reference]
+
+==== Other links
+* https://medium.com/slido-dev-blog/cypress-tips-4-testing-lists-of-items-dccd4b688816[Testing lists of items]
+* https://developer.mozilla.org/en/docs/Learn/HTML/Howto/Use_data_attributes[Use data attributes]
+* https://codelikethis.com/lessons/javascript/cypress#anchor/nothing_happens_immediately[Nothing happens immediately]
+
+=== Guidelines and tips
+
+* Use the https://docs.cypress.io/api/commands/get#Get-in-within[find or within commands] rather than complex CSS
+selectors to target descendants elements.
+* If you want to access aliases using the `this` keyword, make sure you are using anonymous functions rather than fat
+arrow functions, otherwise use cy.get('@myAlias') to access it asynchronously
+(https://docs.cypress.io/guides/core-concepts/variables-and-aliases#Avoiding-the-use-of-this[the documentation]
+has recently been updated on this topic).
+* When running tests, make sure that you are not connected to OpFab as it can cause unexpected behaviour with read
+cards for example.
+* When chaining a `should` assertion to a `cy.get` command that returns several elements, it will pass if it is true for
+ANY of these elements. Use each + callback to check that an assertion is true on every element.
+
 
 == Configuration
 
-* The base url of the OperatorFabric instance you're testing against can be changed in `cypress.json`.
-* Using the custom-defined command cy.waitDefaultTime() instead of cy.wait(XXX) allows the wait time to be changed
-globally for all steps using the defaultWaitTime enviroment variable defined in `cypress.json`.
+In `cypress.json`:
+
+* `baseUrl`: The base url of the OperatorFabric instance you're testing against. It will be appended in front of any
+    `visit` call.
+* `env.host`: The host corresponding to the OperatorFabric instance you're testing against. It will be used for API
+calls.
+* `env.defaultWaitTime`: Using the custom-defined command cy.waitDefaultTime() instead of cy.wait(XXX) allows the wait
+time to be changed globally for all steps to the value defined by this property.
