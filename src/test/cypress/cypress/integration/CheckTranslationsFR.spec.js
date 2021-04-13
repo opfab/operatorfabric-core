@@ -122,11 +122,12 @@ it('Check Feed Filters  translation',()=>{
     cy.should('be.visible')
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
 
-    cy.get('#opfab-feed-filter-dateTimeFrom > table.ng-star-inserted > tr > :nth-child(1) > .nopaddingrow > label').contains('Début')
+
+    cy.get('#opfab-feed-filter-dateTimeFrom > table > tr > :nth-child(1) label').contains('Début')
     cy.should('be.visible')
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
 
-    cy.get('#opfab-feed-filter-dateTimeTo > table.ng-star-inserted > tr > :nth-child(1) > .nopaddingrow > label').contains('Fin')
+    cy.get('#opfab-feed-filter-dateTimeTo > table > tr > :nth-child(1) label').contains('Fin')
     cy.should('be.visible')
     cy.should('have.css', 'color', 'rgb(186, 186, 186)')
     cy.waitDefaultTime()
