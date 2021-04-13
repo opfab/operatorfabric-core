@@ -6,5 +6,10 @@
   "prCreation": "not-pending",
   "branchPrefix": "OC-1590_",
   "branchConcurrentLimit": 10,
-  "prConcurrentLimit":5
+  "prConcurrentLimit":5,
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "**/vendor/**"
+  ]
 }
