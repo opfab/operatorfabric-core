@@ -8,6 +8,9 @@
 # SPDX-License-Identifier: MPL-2.0
 # This file is part of the OperatorFabric project.
 
+# This starts by moving to the directory where the script is located so the paths below still work even if the script
+# is called from another folder
+cd "$(dirname "${BASH_SOURCE[0]}")"
 
 url=$1 
 if [[ -z $url ]]
@@ -20,6 +23,7 @@ fi
 	./loadAllBundles.sh $url
 	cd ../processGroups
 	./loadProcessGroups.sh processGroups.json $url
+	#TODO Clear perimeters first?
 	cd ../perimeters
 	./createAllPerimeter.sh $url
 )
