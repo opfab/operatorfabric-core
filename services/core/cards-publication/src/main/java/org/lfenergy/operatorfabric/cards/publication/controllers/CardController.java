@@ -10,20 +10,20 @@
 
 package org.lfenergy.operatorfabric.cards.publication.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.aop.process.mongo.models.UserActionTraceData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.PublisherTypeEnum;
 import org.lfenergy.operatorfabric.cards.publication.services.CardProcessingService;
 import org.lfenergy.operatorfabric.cards.publication.services.CardRepositoryService;
+import org.lfenergy.operatorfabric.cards.publication.services.UserBasedOperationResult;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.server.reactive.ServerHttpResponse;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -35,29 +35,18 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/cards")
+@Slf4j
 
 public class CardController {
 
     @Autowired
     private CardProcessingService cardProcessingService;
-    @Autowired
-    private CardRepositoryService cardRepositoryService;
 
 
-    /**
-     * POST cards to create/update new cards
-     *
-     * @param cards cards to create publisher
-     * @return contains number of cards created and optional message
-     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public @Valid Mono<CardCreationReportData> createCards(@Valid @RequestBody Flux<CardPublicationData> cards) {
-        return cardProcessingService.processCards(cards.map(card -> {
-            card.setPublisherType(PublisherTypeEnum.EXTERNAL);
-            return card;
-        }));
-
+    public @Valid CardCreationReportData createCardOld(@Valid @RequestBody CardPublicationData card) {
+        return cardProcessingService.processCard(card);
     }
 
     @DeleteMapping
@@ -69,47 +58,36 @@ public class CardController {
 
     @PostMapping("/userCard")
     @ResponseStatus(HttpStatus.CREATED)
-    public @Valid Mono<CardCreationReportData> createUserCards(@Valid @RequestBody Flux<CardPublicationData> cards, Principal principal) {
+    public @Valid CardCreationReportData createUserCard(@Valid @RequestBody CardPublicationData card, Principal principal) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
-        return cardProcessingService.processUserCards(cards.map(card -> {
-            card.setPublisherType(PublisherTypeEnum.ENTITY);
-            return card;
-        }), user);
+        return cardProcessingService.processUserCard(card,user);
     }
 
     @DeleteMapping("/userCard/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Mono<Void> deleteUserCard(@PathVariable String id, ServerHttpResponse response, Principal principal) {
+    public Void deleteUserCard(@PathVariable String id, HttpServletResponse response, Principal principal) {
 
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
-
         try {
             Optional<CardPublicationData> deletedCard = cardProcessingService.deleteUserCard(id, user);
-            return Mono.just(deletedCard).doOnNext(dc -> {
-                if (!dc.isPresent()) {
-                    response.setStatusCode(HttpStatus.NOT_FOUND);
+            if (!deletedCard.isPresent()) {
+                    response.setStatus(404);
                 }
-            }).then();
         }
         catch (Exception e) {
-            return Mono.just(Mono.empty()).doOnNext(dc ->
-                    response.setStatusCode(HttpStatus.FORBIDDEN)
-            ).then();
+                    response.setStatus(403);
         }
+        return null;
 
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Mono<Void> deleteCards(@PathVariable String id, ServerHttpResponse response) {
+    public Void deleteCards(@PathVariable String id, HttpServletResponse response) {
         Optional<CardPublicationData> deletedCard = cardProcessingService.deleteCard(id);
-        return Mono.just(deletedCard).doOnNext(dc -> {
-            if (!dc.isPresent()) {
-                response.setStatusCode(HttpStatus.NOT_FOUND);
-            }
-        }).then();
+        if (!deletedCard.isPresent()) response.setStatus(404);
+        else response.setStatus(200);
+        return null;
     }
 
     /**
@@ -118,18 +96,19 @@ public class CardController {
      * @param cardUid Id to create publisher
      */
     @PostMapping("/userAcknowledgement/{cardUid}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Mono<Void> postUserAcknowledgement(Principal principal,
-                                              @PathVariable("cardUid") String cardUid, ServerHttpResponse response) {
+    public Void postUserAcknowledgement(Principal principal,
+                                              @PathVariable("cardUid") String cardUid, HttpServletResponse response) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
-        return cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), user.getUserData()).doOnNext(result -> {
-            if (!result.isCardFound()) {
-                response.setStatusCode(HttpStatus.NOT_FOUND);
-            } else if (!result.getOperationDone()) {
-                response.setStatusCode(HttpStatus.OK);
-            }
-        }).then();
+
+        UserBasedOperationResult result=  cardProcessingService.processUserAcknowledgement(cardUid,user.getUserData());
+ 
+        if (!result.isCardFound()) response.setStatus(404);
+        else  {
+            if (!result.getOperationDone()) response.setStatus(200);
+            else response.setStatus(201);
+        }
+        return null;
     }
 
     /**
@@ -138,16 +117,15 @@ public class CardController {
      * @param cardUid of the card that has been read
      */
     @PostMapping("/userCardRead/{cardUid}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Mono<Void> postUserCardRead(Principal principal,
-                                       @PathVariable("cardUid") String cardUid, ServerHttpResponse response) {
-        return cardProcessingService.processUserRead(Mono.just(cardUid), principal.getName()).doOnNext(result -> {
-            if (!result.isCardFound()) {
-                response.setStatusCode(HttpStatus.NOT_FOUND);
-            } else if (!result.getOperationDone()) {
-                response.setStatusCode(HttpStatus.OK);
-            }
-        }).then();
+    public Void postUserCardRead(Principal principal,
+                                       @PathVariable("cardUid") String cardUid, HttpServletResponse response) {
+        UserBasedOperationResult result= cardProcessingService.processUserRead(cardUid, principal.getName());
+        if (!result.isCardFound()) response.setStatus(404); 
+        else { 
+            if (!result.getOperationDone()) response.setStatus(200);
+            else response.setStatus(201);
+        }
+        return null;
     }
 
     /**
@@ -156,17 +134,15 @@ public class CardController {
      * @param cardUid Id to create publisher
      */
     @DeleteMapping("/userAcknowledgement/{cardUid}")
-    @ResponseStatus(HttpStatus.OK)
-    public Mono<Void> deleteUserAcknowledgement(Principal principal, @PathVariable("cardUid") String cardUid,
-                                                ServerHttpResponse response) {
-        return cardProcessingService.deleteUserAcknowledgement(Mono.just(cardUid),
-                principal.getName()).doOnNext(result -> {
-            if (!result.isCardFound()) {
-                response.setStatusCode(HttpStatus.NOT_FOUND);
-            } else if (!result.getOperationDone()) {
-                response.setStatusCode(HttpStatus.NO_CONTENT);
+    public Void deleteUserAcknowledgement(Principal principal, @PathVariable("cardUid") String cardUid,
+                                                HttpServletResponse response) {
+        UserBasedOperationResult result = cardProcessingService.deleteUserAcknowledgement(cardUid, principal.getName());
+        if (!result.isCardFound()) response.setStatus(404);
+        else {
+            if (!result.getOperationDone()) response.setStatus(204);
+            else response.setStatus(200);
             }
-        }).then();
+        return null;
     }
 
         /**
@@ -175,22 +151,20 @@ public class CardController {
      * @param cardUid Id of the card to update
      */
     @DeleteMapping("/userCardRead/{cardUid}")
-    @ResponseStatus(HttpStatus.OK)
-    public Mono<Void> deleteUserRead(Principal principal, @PathVariable("cardUid") String cardUid,
-                                                ServerHttpResponse response) {
-        return cardProcessingService.deleteUserRead(Mono.just(cardUid),
-                principal.getName()).doOnNext(result -> {
-            if (!result.isCardFound()) {
-                response.setStatusCode(HttpStatus.NOT_FOUND);
-            } else if (!result.getOperationDone()) {
-                response.setStatusCode(HttpStatus.NO_CONTENT);
+    public Void deleteUserRead(Principal principal, @PathVariable("cardUid") String cardUid,
+                                                HttpServletResponse response) {
+        UserBasedOperationResult result =  cardProcessingService.deleteUserRead(cardUid,principal.getName());
+        if (!result.isCardFound()) response.setStatus(404);
+        else {
+            if (!result.getOperationDone()) response.setStatus(204);
+            else response.setStatus(200);
             }
-        }).then();
+        return null;
     }
 
     @GetMapping("traces/ack/{cardUid}")
     @ResponseStatus(HttpStatus.OK)
-    public @Valid Mono<UserActionTraceData> searchTraces(Principal principal, @PathVariable String cardUid) {
+    public @Valid UserActionTraceData searchTraces(Principal principal, @PathVariable String cardUid) {
         return cardProcessingService.findTraceByCardUid(principal.getName(), cardUid);
 
     }

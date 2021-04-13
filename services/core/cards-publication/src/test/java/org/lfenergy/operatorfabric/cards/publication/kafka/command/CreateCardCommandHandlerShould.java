@@ -1,4 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
+ * Copyright (c) 2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -69,10 +70,10 @@ class CreateCardCommandHandlerShould {
         when(cardCommandMock.getCard()).thenReturn(cardMock);
         when(objectMapper.writeValueAsString(any())).thenReturn("");
         when(objectMapper.readValue(anyString(), eq(CardPublicationData.class))).thenReturn(cardPublicationDataMock);
-        when(cardProcessingService.processCards(any())).thenReturn(Mono.just(new CardCreationReportData()));
+        when(cardProcessingService.processCard(any())).thenReturn(new CardCreationReportData());
         cut.executeCommand(cardCommandMock);
 
-        verify(cardProcessingService, times(1)).processCards(any());
+        verify(cardProcessingService, times(1)).processCard(any());
     }
 
 }

@@ -1,4 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
+ * Copyright (c) 2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +18,6 @@ import org.lfenergy.operatorfabric.avro.CommandType;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.services.CardProcessingService;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,7 +39,7 @@ public class UpdateCardCommandHandler extends BaseCommandHandler implements Comm
 
         CardPublicationData card = buildCardPublicationData(cardCommand);
         if (card != null) {
-            cardProcessingService.processCards(Flux.just(card)).subscribe();
+            cardProcessingService.processCard(card);
         }
     }
 }

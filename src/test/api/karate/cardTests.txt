@@ -13,7 +13,6 @@
       cards/postCardFor3UsersDeprecated.feature   \
       cards/postCardsEntitiesToRespond.feature \
       cards/deleteCardFor3Users.feature           \
-      cards/post2CardsInOneRequest.feature        \
       cards/post1CardThenUpdateThenDelete.feature \
       cards/getArchive.feature                    \
       cards/post2CardsGroupRouting.feature        \

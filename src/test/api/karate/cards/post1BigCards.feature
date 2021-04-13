@@ -35,13 +35,4 @@ Then status 200
 
 
 
-* def card = read("resources/bigCard2.json")
-
-# Push 2 big Card in one request 
-#Given url opfabPublishCardUrl + 'cards' 
-#And request card  
-#When method post
-#Then status 201
-#And match response.count == 2
-
 

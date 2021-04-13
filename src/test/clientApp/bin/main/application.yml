@@ -1,0 +1,6 @@
+spring:
+  main:
+    web-application-type: none
+logging:
+  level:
+    org.springframework.web.client.RestTemplate: DEBUG

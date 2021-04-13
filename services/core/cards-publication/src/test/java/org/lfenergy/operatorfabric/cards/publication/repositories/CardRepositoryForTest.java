@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,21 +11,18 @@
 
 package org.lfenergy.operatorfabric.cards.publication.repositories;
 
+import java.util.Optional;
+
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Mono;
 
-/**
- * <p>Auto generated spring mongo reactive repository to access Card collection</p>
- *
- */
 @Repository
-public interface CardRepositoryForTest extends ReactiveMongoRepository<CardPublicationData,String> {
+public interface CardRepositoryForTest extends MongoRepository<CardPublicationData,String> {
 
-    public Mono<CardPublicationData> findByProcessInstanceId(String processInstanceId);
+    public <List> CardPublicationData findByProcessInstanceId(String processInstanceId);
     
-    public Mono<CardPublicationData> findByUid(String Uid);
+    public Optional <CardPublicationData> findByUid(String Uid);
 
-    public Mono<CardPublicationData> findById(String id);
+    public Optional<CardPublicationData> findById(String id);
 }

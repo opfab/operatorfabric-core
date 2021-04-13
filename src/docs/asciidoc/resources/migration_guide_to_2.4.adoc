@@ -1,0 +1,17 @@
+// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 2.3.0 to release 2.4.0
+
+== Send card 
+
+The API does not have anymore an endpoint to send an Array of card. 
+
+- The endPoint `cards` now receive only one card 
+- The endPoint `async/cards` does not longer exist 
+
+So if you use to send card as array, you need to modify your code to send it one by one via endpoint `cards`

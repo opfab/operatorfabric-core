@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,20 +8,17 @@
  */
 
 
-
 package org.lfenergy.operatorfabric.cards.publication.repositories;
 
+import java.util.List;
+
 import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
 
-/**
- * <p>Auto generated spring mongo reactive repository to access Archived Card collection</p>
- *
- */
+
 @Repository
-public interface ArchivedCardRepositoryForTest extends ReactiveMongoRepository<ArchivedCardPublicationData,String> {
+public interface ArchivedCardRepositoryForTest extends MongoRepository<ArchivedCardPublicationData,String> {
 
-    public Flux<ArchivedCardPublicationData> findByProcessInstanceId(String processInstanceId);
+    public List<ArchivedCardPublicationData> findByProcessInstanceId(String processInstanceId);
 }

@@ -1,3 +1,13 @@
+/* Copyright (c) 2020-2021, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+
 package org.lfenergy.operatorfabric.cards.publication.controllers;
 
 import static java.nio.charset.Charset.forName;
@@ -9,6 +19,7 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
@@ -20,16 +31,12 @@ import org.lfenergy.operatorfabric.cards.publication.model.I18nPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.RecipientPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.repositories.CardRepositoryForTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Flux;
+
 
 public abstract class CardControllerShouldBase {
-	
-	@Autowired
-    protected CardRepositoryForTest cardRepository;
-    
-    @Autowired
-    protected WebTestClient webTestClient;
+
+
+
 	
 	protected List<CardPublicationData> instantiateCardPublicationData(EasyRandom randomGenerator, int cardNumber) {
         return randomGenerator.objects(CardPublicationData.class, cardNumber).collect(Collectors.toList());
@@ -60,69 +67,78 @@ public abstract class CardControllerShouldBase {
         return new EasyRandom(parameters);
     }
 
-    protected Flux<CardPublicationData> generateCards() {
-        return Flux.just(
-                CardPublicationData.builder()
-                        .publisher("PUBLISHER_1")
-                        .processVersion("O")
-                        .processInstanceId("PROCESS_1")
-                        .severity(SeverityEnum.ALARM)
-                        .title(I18nPublicationData.builder().key("title").build())
-                        .summary(I18nPublicationData.builder().key("summary").build())
-                        .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-                        .process("process1")
-                        .state("state1")
-                        .build(),
-                CardPublicationData.builder()
-                        .publisher("PUBLISHER_2")
-                        .processVersion("O")
-                        .processInstanceId("PROCESS_1")
-                        .severity(SeverityEnum.INFORMATION)
-                        .title(I18nPublicationData.builder().key("title").build())
-                        .summary(I18nPublicationData.builder().key("summary").build())
-                        .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-                        .process("process2")
-                        .state("state2")
-                        .build(),
-                CardPublicationData.builder()
-                        .publisher("PUBLISHER_2")
-                        .processVersion("O")
-                        .processInstanceId("PROCESS_2")
-                        .severity(SeverityEnum.COMPLIANT)
-                        .title(I18nPublicationData.builder().key("title").build())
-                        .summary(I18nPublicationData.builder().key("summary").build())
-                        .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-                        .process("process3")
-                        .state("state3")
-                        .build(),
-                CardPublicationData.builder()
-                        .publisher("PUBLISHER_1")
-                        .processVersion("O")
-                        .processInstanceId("PROCESS_2")
-                        .severity(SeverityEnum.INFORMATION)
-                        .title(I18nPublicationData.builder().key("title").build())
-                        .summary(I18nPublicationData.builder().key("summary").build())
-                        .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-                        .process("process4")
-                        .state("state4")
-                        .build(),
-                CardPublicationData.builder()
-                        .publisher("PUBLISHER_1")
-                        .processVersion("O")
-                        .processInstanceId("PROCESS_1")
-                        .severity(SeverityEnum.INFORMATION)
-                        .title(I18nPublicationData.builder().key("title").build())
-                        .summary(I18nPublicationData.builder().key("summary").build())
-                        .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-                        .process("process1")
-                        .state("state5")
-                        .build()
+    protected  List<CardPublicationData>  generateCards() {
+        ArrayList cards = new ArrayList();
+        cards.add( CardPublicationData.builder()
+                .publisher("PUBLISHER_1")
+                .processVersion("O")
+                .processInstanceId("PROCESS_1")
+                .severity(SeverityEnum.ALARM)
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now())
+                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                .process("process1")
+                .state("state1")
+                .build()
         );
+        cards.add( CardPublicationData.builder()
+                .publisher("PUBLISHER_2")
+                .processVersion("O")
+                .processInstanceId("PROCESS_1")
+                .severity(SeverityEnum.INFORMATION)
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now())
+                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                .process("process2")
+                .state("state2")
+                .build()
+        );
+        cards.add( 
+                CardPublicationData.builder()
+                .publisher("PUBLISHER_2")
+                .processVersion("O")
+                .processInstanceId("PROCESS_2")
+                .severity(SeverityEnum.COMPLIANT)
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now())
+                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                .process("process3")
+                .state("state3")
+                .build()
+        );
+        cards.add( 
+                CardPublicationData.builder()
+                .publisher("PUBLISHER_1")
+                .processVersion("O")
+                .processInstanceId("PROCESS_2")
+                .severity(SeverityEnum.INFORMATION)
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now())
+                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                .process("process4")
+                .state("state4")
+                .build()
+        );
+        cards.add( 
+                CardPublicationData.builder()
+                .publisher("PUBLISHER_1")
+                .processVersion("O")
+                .processInstanceId("PROCESS_1")
+                .severity(SeverityEnum.INFORMATION)
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now())
+                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                .process("process1")
+                .state("state5")
+                .build()
+        );
+
+        return cards;
     }
 
 }

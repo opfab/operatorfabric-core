@@ -1,4 +1,13 @@
-package org.lfenergy.operatorfabric.cards.publication.controllers;
+/* Copyright (c) 2020-2021, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+ package org.lfenergy.operatorfabric.cards.publication.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -7,27 +16,33 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication;
+import org.lfenergy.operatorfabric.cards.publication.application.UnitTestApplication;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.repositories.CardRepositoryForTest;
 import org.lfenergy.operatorfabric.cards.publication.services.CardProcessingService;
 import org.lfenergy.operatorfabric.springtools.configuration.test.WithMockOpFabUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import reactor.test.StepVerifier;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.context.WebApplicationContext;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 import java.util.List;
-
+import java.util.Optional;
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = CardPublicationApplication.class)
-@AutoConfigureWebTestClient(timeout = "100000")//100 seconds
-@ActiveProfiles(profiles = { "native", "test" })
+@SpringBootTest(classes = UnitTestApplication.class)
+@ActiveProfiles("test")
+@WebAppConfiguration
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Slf4j
-@Tag("end-to-end")
-@Tag("mongo")
 @WithMockOpFabUser(login = "someUser", roles = { "AROLE" })
-@TestInstance(Lifecycle.PER_CLASS)
 public class CardControllerProcessUserReadShould extends CardControllerShouldBase {
 
 	String cardUid;
@@ -36,48 +51,56 @@ public class CardControllerProcessUserReadShould extends CardControllerShouldBas
 	@Autowired
 	private CardProcessingService cardProcessingService;
 
+	@Autowired
+    private CardRepositoryForTest cardRepository;
+
+	private MockMvc mockMvc;
+
+    @Autowired
+    private WebApplicationContext webApplicationContext;
 
 	@BeforeAll
-	void setup() {
+	private void setup() throws Exception {
+		this.mockMvc = webAppContextSetup(webApplicationContext).apply(springSecurity()).build();
 		EasyRandom randomGenerator = instantiateEasyRandom();
 		List<CardPublicationData> cardsInRepository = instantiateCardPublicationData(randomGenerator, cardNumber);
 		cardUid = cardsInRepository.get(0).getUid();
 		cardNeverContainsReadsUid = cardsInRepository.get(1).getUid();
 		cardsInRepository.get(1).setUsersReads(null);
-		StepVerifier.create(cardRepository.saveAll(cardsInRepository))
-				.expectNextCount(cardNumber).verifyComplete();
+		cardRepository.saveAll(cardsInRepository);
 	}
+
 
 	@AfterAll
 	void clean() {
-		cardRepository.deleteAll().subscribe();
+		cardRepository.deleteAll();
 	}
 	
 	@Test
 	void processUserReadOfUnexistingCard() throws Exception {
 		String cardUid = "NotExistingCardUid";		
-		CardPublicationData card = cardRepository.findByUid(cardUid).block();
-		Assertions.assertThat(card).isNull();
-		webTestClient.post().uri("/cards/userCardRead/" + cardUid).exchange().expectStatus().isNotFound().expectBody().isEmpty();		
+		Optional <CardPublicationData> card = cardRepository.findByUid(cardUid);
+		Assertions.assertThat(card.isPresent()).isFalse();
+		mockMvc.perform(post("/cards/userCardRead/" + cardUid)).andExpect(status().isNotFound());
 	}
 
 	@Test
 	void deleteUserReadOfUnexistingCard() throws Exception {
 		String cardUid = "NotExistingCardUid";
-		CardPublicationData card = cardRepository.findByUid(cardUid).block();
-		Assertions.assertThat(card).isNull();
-		webTestClient.delete().uri("/cards/userCardRead/" + cardUid).exchange().expectStatus().isNotFound().expectBody().isEmpty();		
+		Optional <CardPublicationData> card = cardRepository.findByUid(cardUid);
+		Assertions.assertThat(card.isPresent()).isFalse();
+		mockMvc.perform(delete("/cards/userCardRead/" + cardUid)).andExpect(status().isNotFound());		
 	}
 	
 	@Test
 	void processUserRead() throws Exception {
-		Assertions.assertThat(cardRepository.count().block()).isEqualTo(cardNumber);
-		CardPublicationData card = cardRepository.findByUid(cardUid).block();
-		int initialNumOfReads = card.getUsersReads() != null ? card.getUsersReads().size() : 0;
-		webTestClient.post().uri("/cards/userCardRead/" + cardUid).exchange().expectStatus().isCreated().expectBody().isEmpty();
-		card = cardRepository.findByUid(cardUid).block();
-		Assertions.assertThat(card.getUsersReads()).contains("someUser");
-		Assertions.assertThat(card.getUsersReads().size()).isEqualTo(initialNumOfReads + 1);
+		Assertions.assertThat(cardRepository.count()).isEqualTo(cardNumber);
+		Optional <CardPublicationData> card = cardRepository.findByUid(cardUid);
+		int initialNumOfReads = card.get().getUsersReads() != null ? card.get().getUsersReads().size() : 0;
+		mockMvc.perform(post("/cards/userCardRead/" + cardUid)).andExpect(status().isCreated());
+		card = cardRepository.findByUid(cardUid);
+		Assertions.assertThat(card.get().getUsersReads()).contains("someUser");
+		Assertions.assertThat(card.get().getUsersReads().size()).isEqualTo(initialNumOfReads + 1);
 	}
 
 	@Nested
@@ -87,14 +110,13 @@ public class CardControllerProcessUserReadShould extends CardControllerShouldBas
 		@Test
 		void processUserRead() throws Exception {
 
-			Assertions.assertThat(cardRepository.count().block()).isEqualTo(cardNumber);
-			CardPublicationData card = cardRepository.findByUid(cardUid).block();
-			int initialNumOfReads = card.getUsersReads() != null ? card.getUsersReads().size() : 0;
-			webTestClient.post().uri("/cards/userCardRead/" + cardUid).exchange().expectStatus().isCreated()
-					.expectBody().isEmpty();
-			card = cardRepository.findByUid(cardUid).block();
-			Assertions.assertThat(card.getUsersReads()).contains("someUser", "someOtherUser");
-			Assertions.assertThat(card.getUsersReads().size()).isEqualTo(initialNumOfReads + 1);
+			Assertions.assertThat(cardRepository.count()).isEqualTo(cardNumber);
+			Optional <CardPublicationData> card = cardRepository.findByUid(cardUid);
+			int initialNumOfReads = card.get().getUsersReads() != null ? card.get().getUsersReads().size() : 0;
+			mockMvc.perform(post("/cards/userCardRead/" + cardUid)).andExpect(status().isCreated());
+			card = cardRepository.findByUid(cardUid);
+			Assertions.assertThat(card.get().getUsersReads()).contains("someUser", "someOtherUser");
+			Assertions.assertThat(card.get().getUsersReads().size()).isEqualTo(initialNumOfReads + 1);
 
 		}
 
@@ -106,14 +128,13 @@ public class CardControllerProcessUserReadShould extends CardControllerShouldBas
 			@Test
 			void processUserRead() throws Exception {
 
-				Assertions.assertThat(cardRepository.count().block()).isEqualTo(cardNumber);
-				CardPublicationData card = cardRepository.findByUid(cardUid).block();
-				int initialNumOfReads = card.getUsersReads() != null ? card.getUsersReads().size() : 0;
-				webTestClient.post().uri("/cards/userCardRead/" + cardUid).exchange().expectStatus().isOk()
-						.expectBody().isEmpty();
-				card = cardRepository.findByUid(cardUid).block();
-				Assertions.assertThat(card.getUsersReads()).contains("someUser", "someOtherUser");
-				Assertions.assertThat(card.getUsersReads().size()).isEqualTo(initialNumOfReads);
+				Assertions.assertThat(cardRepository.count()).isEqualTo(cardNumber);
+				Optional <CardPublicationData> card = cardRepository.findByUid(cardUid);
+				int initialNumOfReads = card.get().getUsersReads() != null ? card.get().getUsersReads().size() : 0;
+				mockMvc.perform(post("/cards/userCardRead/" + cardUid)).andExpect(status().isOk());
+				card = cardRepository.findByUid(cardUid);
+				Assertions.assertThat(card.get().getUsersReads()).contains("someUser", "someOtherUser");
+				Assertions.assertThat(card.get().getUsersReads().size()).isEqualTo(initialNumOfReads);
 			}
 			@Nested
 			@WithMockOpFabUser(login = "someUser", roles = { "AROLE" })
@@ -123,15 +144,14 @@ public class CardControllerProcessUserReadShould extends CardControllerShouldBas
 				@Test
 				void processUserRead() throws Exception {
 
-					Assertions.assertThat(cardRepository.count().block()).isEqualTo(cardNumber);
-					CardPublicationData card = cardRepository.findByUid(cardUid).block();
-					Assertions.assertThat(card.getUsersReads()).contains("someUser");
-					int initialNumOfReads = card.getUsersReads().size();
-					webTestClient.delete().uri("/cards/userCardRead/" + cardUid).exchange().expectStatus()
-							.isOk();
-					card = cardRepository.findByUid(cardUid).block();
-					Assertions.assertThat(card.getUsersReads()).doesNotContain("someUser");
-					Assertions.assertThat(card.getUsersReads().size()).isEqualTo(initialNumOfReads - 1);
+					Assertions.assertThat(cardRepository.count()).isEqualTo(cardNumber);
+					Optional <CardPublicationData> card = cardRepository.findByUid(cardUid);
+					Assertions.assertThat(card.get().getUsersReads()).contains("someUser");
+					int initialNumOfReads = card.get().getUsersReads().size();
+					mockMvc.perform(delete("/cards/userCardRead/" + cardUid)).andExpect(status().isOk());
+					card = cardRepository.findByUid(cardUid);
+					Assertions.assertThat(card.get().getUsersReads()).doesNotContain("someUser");
+					Assertions.assertThat(card.get().getUsersReads().size()).isEqualTo(initialNumOfReads - 1);
 				}
 
 				@Nested
@@ -142,15 +162,14 @@ public class CardControllerProcessUserReadShould extends CardControllerShouldBas
 					@Test
 					void processUserRead() throws Exception {
 
-						Assertions.assertThat(cardRepository.count().block()).isEqualTo(cardNumber);
-						CardPublicationData card = cardRepository.findByUid(cardUid).block();
-						Assertions.assertThat(card.getUsersReads()).doesNotContain("someUser");
-						int initialNumOfReads = card.getUsersReads().size();
-						webTestClient.delete().uri("/cards/userCardRead/" + cardUid).exchange()
-								.expectStatus().isNoContent();
-						card = cardRepository.findByUid(cardUid).block();
-						Assertions.assertThat(card.getUsersReads()).doesNotContain("someUser");
-						Assertions.assertThat(card.getUsersReads().size()).isEqualTo(initialNumOfReads);
+						Assertions.assertThat(cardRepository.count()).isEqualTo(cardNumber);
+						Optional <CardPublicationData> card = cardRepository.findByUid(cardUid);
+						Assertions.assertThat(card.get().getUsersReads()).doesNotContain("someUser");
+						int initialNumOfReads = card.get().getUsersReads().size();
+						mockMvc.perform(delete("/cards/userCardRead/" + cardUid)).andExpect(status().isNoContent());
+						card = cardRepository.findByUid(cardUid);
+						Assertions.assertThat(card.get().getUsersReads()).doesNotContain("someUser");
+						Assertions.assertThat(card.get().getUsersReads().size()).isEqualTo(initialNumOfReads);
 					}
 
 				}

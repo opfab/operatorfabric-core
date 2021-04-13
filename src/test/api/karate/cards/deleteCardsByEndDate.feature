@@ -8,11 +8,10 @@ Feature: Delete Cards by end date before
     * def signInAsTSO = call read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
-  Scenario: Post three cards in one request
+  Scenario: Post 4 cards and  delete
 
-    * def card =
+    * def card1 =
 """
-[
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
@@ -27,6 +26,9 @@ Feature: Delete Cards by end date before
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"a message"}
 }
+"""
+    * def card2 =
+"""
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
@@ -39,7 +41,10 @@ Feature: Delete Cards by end date before
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"new message (card 1)"}
-},
+}
+"""
+    * def card3 =
+"""
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
@@ -53,7 +58,10 @@ Feature: Delete Cards by end date before
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"new message (card2) "}
-},
+}
+"""
+    * def card4 =
+"""
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
@@ -67,16 +75,28 @@ Feature: Delete Cards by end date before
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"new message (card2) "}
 }
-]
 """
 
-# Push 3 card
+# Push 4 card
     Given url opfabPublishCardUrl + 'cards'
-    And request card
+    And request card1
     When method post
     Then status 201
-    And match response.count == 4
 
+    Given url opfabPublishCardUrl + 'cards'
+    And request card2
+    When method post
+    Then status 201
+
+	Given url opfabPublishCardUrl + 'cards'
+    And request card3
+    When method post
+    Then status 201
+
+    Given url opfabPublishCardUrl + 'cards'
+    And request card4
+    When method post
+    Then status 201
 
   Scenario: Delete the cards before date as admin
 
