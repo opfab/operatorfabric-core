@@ -121,13 +121,14 @@
 
           <ng-template #doYouReallyWantToDeleteCardPopup let-modal>
             <div class="modal-header">
-              <span translate> userCard.deleteCard.doYouReallyWant </span>
+              <span translate> userCard.deleteCard.title </span>
               <div id="opfab-card-details-delete-btn-close" class="opfab-close-modal-icon" aria-label="Close"
                 (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
               </div>
             </div>
             <div class="modal-body text-center">
+              <p translate> userCard.deleteCard.doYouReallyWant </p>
               <button id="opfab-card-details-delete-btn-cancel" type="button" class="opfab-btn-cancel"
                 (click)="declineDeleteCard()" translate>button.cancel</button>
               <button id="opfab-card-details-delete-btn-confirm" type="button" class="opfab-btn"
@@ -137,7 +138,7 @@
 
           <ng-template #cardDeletedWithNoErrorPopup let-modal>
             <div class="modal-header text-center">
-              <h4 class="modal-title w-100" translate> userCard.deleteCard.cardDeletedWithNoError </h4>
+              <span class="modal-title w-100" translate> userCard.deleteCard.cardDeletedWithNoError </span>
               <div id="opfab-card-details-delete-btn-close" class="opfab-close-modal-icon" aria-label="Close"
                    (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
@@ -151,7 +152,7 @@
 
           <ng-template #impossibleToDeleteCardPopup let-modal>
             <div class="modal-header text-center">
-              <h4 class="modal-title w-100" translate> userCard.deleteCard.error.impossibleToDeleteCard </h4>
+              <span class="modal-title w-100" translate> userCard.deleteCard.error.impossibleToDeleteCard </span>
               <div id="opfab-card-details-delete-error-btn-close" class="opfab-close-modal-icon" aria-label="Close"
                    (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>

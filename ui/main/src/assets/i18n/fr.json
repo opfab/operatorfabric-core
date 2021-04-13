@@ -254,6 +254,7 @@
     "send-another-one": "ENVOYER UNE AUTRE CARTE",
     "cardSendWithNoError": "Votre carte est publiée",
     "deleteCard": {
+      "title" : "CONFIRMATION",
       "doYouReallyWant": "Voulez-vous vraiment supprimer cette carte ?",
       "cardDeletedWithNoError": "Carte supprimée",
       "error": {
