@@ -524,7 +524,7 @@ it('Send a card that is about to expire and verify that the validation buttons a
     cy.get('#opfab-card-details-btn-response').should('be.disabled')
     cy.get('#opfab-card-details-btn-response').should('be.visible')
     cy.should('have.css', 'background-color','rgb(43, 53, 63)')
-    cy.get('#opfab-feed-light-card-'+processName2+'-'+processInstanceId2+'> :nth-child(1) > .p-1 > [style="display: flex; width: 100%; margin-top: 5px;"] > .ml-auto > .d-flex > of-countdown > :nth-child(1) > :nth-child(2) > .lttd-text').contains('Terminée')
+    cy.get('#opfab-feed-light-card-'+processName2+'-'+processInstanceId2+' .lttd-text').contains('Terminée')
 
 })
 it('verify that the validation button is disabled for entity 2 as well',()=>{
@@ -541,7 +541,7 @@ it('verify that the validation button is disabled for entity 2 as well',()=>{
     cy.should('have.css', 'background-color','rgb(43, 53, 63)')
 
     //light card check that it displays "finshed"
-    cy.get('#opfab-feed-light-card-'+processName2+'-'+processInstanceId2+'> :nth-child(1) > .p-1 > [style="display: flex; width: 100%; margin-top: 5px;"] > .ml-auto > .d-flex > of-countdown > :nth-child(1) > :nth-child(2) > .lttd-text').contains('Finished')
+    cy.get('#opfab-feed-light-card-'+processName2+'-'+processInstanceId2+' .lttd-text').contains('Finished')
 
 })
 })

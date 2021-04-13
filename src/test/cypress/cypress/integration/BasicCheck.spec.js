@@ -75,7 +75,7 @@ describe ('BasicCheck',()=>{
         cy.get('.opfab-menu-item-left > .opfab-tab').contains('Message')
         cy.get('.template-style').contains("a message")
 
-        cy.get('#opfab-selected-card').contains('Message received')
+        cy.get('#opfab-selected-card-summary').contains('Message received')
 
         cy.get('#opfab-feed-light-card-'+processName+'-'+processInstanceId+' > :nth-child(1) > .badge-border')
         cy.should('be.visible');
@@ -102,7 +102,7 @@ describe ('BasicCheck',()=>{
         cy.get('.opfab-menu-item-left > .opfab-tab').contains('Message')
         cy.get('.template-style').contains("a message")
 
-        cy.get('#opfab-selected-card').contains('Message reçu')
+        cy.get('#opfab-selected-card-summary').contains('Message reçu')
 
         cy.get('#opfab-feed-light-card-'+processName+'-'+processInstanceId+' > :nth-child(1) > .badge-border')
         cy.should('be.visible');
