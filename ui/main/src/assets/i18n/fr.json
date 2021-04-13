@@ -258,6 +258,7 @@
       "doYouReallyWant": "Voulez-vous vraiment supprimer cette carte ?",
       "cardDeletedWithNoError": "Carte supprimée",
       "error": {
+        "title": "Erreur",
         "impossibleToDeleteCard": "Impossible de supprimer la carte pour des raisons techniques"
       }
     },

@@ -225,7 +225,7 @@ export class FeedconfigurationComponent implements OnInit {
     }
 
     open(content) {
-        this.modalRef = this.modalService.open(content);
+        this.modalRef = this.modalService.open(content, {centered: true});
     }
 
     compareObj(obj1, obj2) {
