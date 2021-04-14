@@ -15,7 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Singular;
 import lombok.Value;
-import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
+import org.opfab.users.model.CurrentUserWithPerimeters;
 
 import java.time.Instant;
 import java.util.List;

@@ -11,10 +11,14 @@
 package org.opfab.users.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.users.configuration.oauth2.UserExtractor;
-import org.lfenergy.operatorfabric.users.model.*;
-import org.lfenergy.operatorfabric.users.repositories.EntityRepository;
-import org.lfenergy.operatorfabric.users.services.UserServiceImp;
+import org.opfab.users.configuration.oauth2.UserExtractor;
+import org.opfab.users.model.*;
+import org.opfab.users.repositories.EntityRepository;
+import org.opfab.users.services.UserServiceImp;
+import org.opfab.users.model.CurrentUserWithPerimetersData;
+import org.opfab.users.model.EntityData;
+import org.opfab.users.model.GroupData;
+import org.opfab.users.model.PerimeterData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

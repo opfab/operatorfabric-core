@@ -10,8 +10,8 @@
 
 package org.opfab.cards.consultation.repositories;
 
-import org.lfenergy.operatorfabric.cards.consultation.model.Card;
-import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
+import org.opfab.cards.consultation.model.Card;
+import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;

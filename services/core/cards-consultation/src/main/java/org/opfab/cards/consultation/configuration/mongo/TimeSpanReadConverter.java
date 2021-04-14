@@ -12,8 +12,8 @@
 package org.opfab.cards.consultation.configuration.mongo;
 
 import org.bson.Document;
-import org.lfenergy.operatorfabric.cards.consultation.model.TimeSpan;
-import org.lfenergy.operatorfabric.cards.consultation.model.TimeSpanConsultationData;
+import org.opfab.cards.consultation.model.TimeSpan;
+import org.opfab.cards.consultation.model.TimeSpanConsultationData;
 import org.springframework.core.convert.converter.Converter;
 
 import java.time.Instant;

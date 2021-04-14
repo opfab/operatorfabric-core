@@ -17,9 +17,10 @@ import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 import org.jeasy.random.FieldPredicates;
 import org.jetbrains.annotations.NotNull;
-import org.lfenergy.operatorfabric.cards.consultation.model.*;
-import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
-import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
+import org.opfab.cards.consultation.model.*;
+import org.opfab.cards.consultation.model.*;
+import org.opfab.cards.model.RecipientEnum;
+import org.opfab.cards.model.SeverityEnum;
 import org.springframework.data.domain.Page;
 
 import java.io.IOException;

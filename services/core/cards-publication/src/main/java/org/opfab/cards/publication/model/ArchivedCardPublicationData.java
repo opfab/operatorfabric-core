@@ -14,7 +14,7 @@ package org.opfab.cards.publication.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Singular;
-import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
+import org.opfab.cards.model.SeverityEnum;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;

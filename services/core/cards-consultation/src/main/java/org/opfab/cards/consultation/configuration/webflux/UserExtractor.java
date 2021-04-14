@@ -10,9 +10,9 @@
 
 package org.opfab.cards.consultation.configuration.webflux;
 
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
-import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
-import org.lfenergy.operatorfabric.users.model.User;
+import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
+import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.users.model.User;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import reactor.core.publisher.Mono;
 

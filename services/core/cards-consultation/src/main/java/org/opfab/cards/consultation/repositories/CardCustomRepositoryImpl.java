@@ -10,18 +10,19 @@
 package org.opfab.cards.consultation.repositories;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.cards.consultation.model.CardOperation;
-import org.lfenergy.operatorfabric.cards.consultation.model.CardConsultationData;
-import org.lfenergy.operatorfabric.cards.consultation.model.CardOperationConsultationData;
-import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
-import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
-import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
+import org.opfab.cards.consultation.model.CardConsultationData;
+import org.opfab.cards.consultation.model.CardOperation;
+import org.opfab.cards.consultation.model.CardOperationConsultationData;
+import org.opfab.cards.consultation.model.LightCardConsultationData;
+import org.opfab.cards.model.CardOperationTypeEnum;
+import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;

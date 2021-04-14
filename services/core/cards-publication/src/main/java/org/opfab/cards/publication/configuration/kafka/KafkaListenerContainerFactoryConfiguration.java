@@ -11,9 +11,9 @@ package org.opfab.cards.publication.configuration.kafka;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.avro.CardCommand;
-import org.lfenergy.operatorfabric.cards.publication.kafka.command.CommandHandler;
-import org.lfenergy.operatorfabric.cards.publication.kafka.consumer.CardCommandConsumerListener;
+import org.opfab.avro.CardCommand;
+import org.opfab.cards.publication.kafka.command.CommandHandler;
+import org.opfab.cards.publication.kafka.consumer.CardCommandConsumerListener;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;

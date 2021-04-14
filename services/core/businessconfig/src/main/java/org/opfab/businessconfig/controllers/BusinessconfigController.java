@@ -12,11 +12,11 @@
 package org.opfab.businessconfig.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.businessconfig.model.Process;
-import org.lfenergy.operatorfabric.businessconfig.model.*;
-import org.lfenergy.operatorfabric.businessconfig.services.ProcessesService;
-import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
-import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
+import org.opfab.businessconfig.model.Process;
+import org.opfab.businessconfig.model.*;
+import org.opfab.businessconfig.services.ProcessesService;
+import org.opfab.springtools.error.model.ApiError;
+import org.opfab.springtools.error.model.ApiErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;

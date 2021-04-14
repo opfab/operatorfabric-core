@@ -11,8 +11,8 @@
 
 package org.opfab.cards.publication.services;
 
-import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.Recipient;
+import org.opfab.cards.publication.model.CardPublicationData;
+import org.opfab.cards.publication.model.Recipient;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;

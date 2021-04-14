@@ -12,7 +12,7 @@
 package org.opfab.users.application.configuration;
 
 import lombok.AllArgsConstructor;
-import org.lfenergy.operatorfabric.users.model.User;
+import org.opfab.users.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;

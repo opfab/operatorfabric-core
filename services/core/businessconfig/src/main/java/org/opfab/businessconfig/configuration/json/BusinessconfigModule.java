@@ -12,8 +12,8 @@
 package org.opfab.businessconfig.configuration.json;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import org.lfenergy.operatorfabric.businessconfig.model.*;
-import org.lfenergy.operatorfabric.businessconfig.model.Process;
+import org.opfab.businessconfig.model.Process;
+import org.opfab.businessconfig.model.*;
 
 /**
  * Jackson (JSON) Business Module configuration

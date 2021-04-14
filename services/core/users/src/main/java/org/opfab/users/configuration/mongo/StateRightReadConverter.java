@@ -11,9 +11,9 @@
 package org.opfab.users.configuration.mongo;
 
 import org.bson.Document;
-import org.lfenergy.operatorfabric.users.model.RightsEnum;
-import org.lfenergy.operatorfabric.users.model.StateRight;
-import org.lfenergy.operatorfabric.users.model.StateRightData;
+import org.opfab.users.model.RightsEnum;
+import org.opfab.users.model.StateRight;
+import org.opfab.users.model.StateRightData;
 import org.springframework.core.convert.converter.Converter;
 
 

@@ -11,10 +11,10 @@
 package org.opfab.cards.consultation.repositories;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.cards.consultation.model.ArchivedCardConsultationData;
-import org.lfenergy.operatorfabric.cards.consultation.model.LightCard;
-import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
-import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
+import org.opfab.cards.consultation.model.ArchivedCardConsultationData;
+import org.opfab.cards.consultation.model.LightCard;
+import org.opfab.cards.consultation.model.LightCardConsultationData;
+import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;

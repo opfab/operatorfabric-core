@@ -12,8 +12,8 @@
 package org.opfab.cards.publication.configuration.mongo;
 
 import org.bson.Document;
-import org.lfenergy.operatorfabric.cards.publication.model.TimeSpan;
-import org.lfenergy.operatorfabric.cards.publication.model.TimeSpanPublicationData;
+import org.opfab.cards.publication.model.TimeSpan;
+import org.opfab.cards.publication.model.TimeSpanPublicationData;
 import org.springframework.core.convert.converter.Converter;
 
 import java.time.Instant;

@@ -9,8 +9,8 @@
 
 package org.opfab.cards.publication.kafka.command;
 
-import org.lfenergy.operatorfabric.avro.CardCommand;
-import org.lfenergy.operatorfabric.avro.CommandType;
+import org.opfab.avro.CardCommand;
+import org.opfab.avro.CommandType;
 
 public interface CommandHandler {
 

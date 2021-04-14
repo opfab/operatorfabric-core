@@ -14,7 +14,7 @@ package org.opfab.cards.publication.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.Accessors;
-import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
+import org.opfab.cards.model.CardOperationTypeEnum;
 
 import java.time.Instant;
 import java.util.List;

@@ -12,7 +12,7 @@
 package org.opfab.cards.consultation.configuration.json;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import org.lfenergy.operatorfabric.cards.consultation.model.*;
+import org.opfab.cards.consultation.model.*;
 
 /**
  * Jackson (JSON) Business Module configuration

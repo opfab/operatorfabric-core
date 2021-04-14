@@ -14,9 +14,9 @@ package org.opfab.cards.publication.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
-import org.lfenergy.operatorfabric.cards.publication.model.CardOperationData;
-import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
+import org.opfab.cards.model.CardOperationTypeEnum;
+import org.opfab.cards.publication.model.CardOperationData;
+import org.opfab.cards.publication.model.CardPublicationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 

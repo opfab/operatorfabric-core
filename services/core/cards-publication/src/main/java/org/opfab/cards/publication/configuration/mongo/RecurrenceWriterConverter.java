@@ -12,9 +12,9 @@
 package org.opfab.cards.publication.configuration.mongo;
 
 import org.bson.Document;
-import org.lfenergy.operatorfabric.cards.publication.model.RecurrencePublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.HoursAndMinutes;
-import org.lfenergy.operatorfabric.cards.publication.model.HoursAndMinutesPublicationData;
+import org.opfab.cards.publication.model.RecurrencePublicationData;
+import org.opfab.cards.publication.model.HoursAndMinutes;
+import org.opfab.cards.publication.model.HoursAndMinutesPublicationData;
 
 
 import java.util.List;

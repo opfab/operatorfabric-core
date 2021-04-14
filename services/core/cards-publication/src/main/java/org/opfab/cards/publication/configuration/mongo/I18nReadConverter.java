@@ -12,8 +12,8 @@
 package org.opfab.cards.publication.configuration.mongo;
 
 import org.bson.Document;
-import org.lfenergy.operatorfabric.cards.publication.model.I18n;
-import org.lfenergy.operatorfabric.cards.publication.model.I18nPublicationData;
+import org.opfab.cards.publication.model.I18n;
+import org.opfab.cards.publication.model.I18nPublicationData;
 import org.springframework.core.convert.converter.Converter;
 
 import java.util.Map;

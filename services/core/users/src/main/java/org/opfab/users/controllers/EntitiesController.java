@@ -11,15 +11,15 @@
 
 package org.opfab.users.controllers;
 
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.UpdatedUserEvent;
-import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
-import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
-import org.lfenergy.operatorfabric.users.model.Entity;
-import org.lfenergy.operatorfabric.users.model.EntityData;
-import org.lfenergy.operatorfabric.users.model.UserData;
-import org.lfenergy.operatorfabric.users.repositories.EntityRepository;
-import org.lfenergy.operatorfabric.users.repositories.UserRepository;
-import org.lfenergy.operatorfabric.users.utils.EntityCycleDetector;
+import org.opfab.springtools.configuration.oauth.UpdatedUserEvent;
+import org.opfab.springtools.error.model.ApiError;
+import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.users.model.Entity;
+import org.opfab.users.model.EntityData;
+import org.opfab.users.model.UserData;
+import org.opfab.users.repositories.EntityRepository;
+import org.opfab.users.repositories.UserRepository;
+import org.opfab.users.utils.EntityCycleDetector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.bus.ServiceMatcher;
 import org.springframework.context.ApplicationEventPublisher;

@@ -10,12 +10,12 @@ package org.opfab.cards.publication.services.clients.impl;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
-import org.lfenergy.operatorfabric.cards.publication.kafka.producer.ResponseCardProducer;
-import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.I18nPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.RecipientPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.TimeSpanPublicationData;
+import org.opfab.cards.model.SeverityEnum;
+import org.opfab.cards.publication.kafka.producer.ResponseCardProducer;
+import org.opfab.cards.publication.model.CardPublicationData;
+import org.opfab.cards.publication.model.I18nPublicationData;
+import org.opfab.cards.publication.model.RecipientPublicationData;
+import org.opfab.cards.publication.model.TimeSpanPublicationData;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;

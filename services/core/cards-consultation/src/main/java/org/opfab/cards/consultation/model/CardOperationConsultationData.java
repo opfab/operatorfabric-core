@@ -12,9 +12,11 @@
 package org.opfab.cards.consultation.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-
-import lombok.*;
-import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.opfab.cards.model.CardOperationTypeEnum;
 
 import java.time.Instant;
 

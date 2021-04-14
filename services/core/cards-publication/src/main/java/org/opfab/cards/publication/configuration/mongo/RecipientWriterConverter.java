@@ -12,9 +12,9 @@
 package org.opfab.cards.publication.configuration.mongo;
 
 import org.bson.Document;
-import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
-import org.lfenergy.operatorfabric.cards.publication.model.Recipient;
-import org.lfenergy.operatorfabric.cards.publication.model.RecipientPublicationData;
+import org.opfab.cards.model.RecipientEnum;
+import org.opfab.cards.publication.model.Recipient;
+import org.opfab.cards.publication.model.RecipientPublicationData;
 import org.springframework.core.convert.converter.Converter;
 
 import java.util.List;

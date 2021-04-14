@@ -10,9 +10,8 @@
 package org.opfab.cards.consultation.services;
 
 import lombok.extern.slf4j.Slf4j;
-
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.UserServiceCache;
-import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
+import org.opfab.springtools.configuration.oauth.UserServiceCache;
+import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -20,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
-
 
 import java.util.Date;
 import java.util.Map;

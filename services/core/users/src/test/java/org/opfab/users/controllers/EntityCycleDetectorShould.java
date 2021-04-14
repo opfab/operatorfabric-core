@@ -1,9 +1,9 @@
 package org.opfab.users.controllers;
 
 import org.junit.jupiter.api.Test;
-import org.lfenergy.operatorfabric.users.model.Entity;
-import org.lfenergy.operatorfabric.users.model.EntityData;
-import org.lfenergy.operatorfabric.users.utils.EntityCycleDetector;
+import org.opfab.users.model.Entity;
+import org.opfab.users.model.EntityData;
+import org.opfab.users.utils.EntityCycleDetector;
 
 import java.util.*;
 import java.util.stream.Collectors;

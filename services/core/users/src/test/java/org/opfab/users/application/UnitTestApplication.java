@@ -11,17 +11,18 @@
 
 package org.opfab.users.application;
 
-import org.lfenergy.operatorfabric.springtools.configuration.mongo.EnableOperatorFabricMongo;
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.JwtProperties;
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsProperties;
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsUtils;
-import org.lfenergy.operatorfabric.users.configuration.DataInitComponent;
-import org.lfenergy.operatorfabric.users.configuration.json.JacksonConfig;
-import org.lfenergy.operatorfabric.users.configuration.mongo.LocalMongoConfiguration;
-import org.lfenergy.operatorfabric.users.configuration.users.UsersProperties;
-import org.lfenergy.operatorfabric.users.controllers.*;
-import org.lfenergy.operatorfabric.users.repositories.UserRepository;
-import org.lfenergy.operatorfabric.users.services.UserServiceImp;
+import org.opfab.springtools.configuration.mongo.EnableOperatorFabricMongo;
+import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
+import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsProperties;
+import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsUtils;
+import org.opfab.users.configuration.DataInitComponent;
+import org.opfab.users.configuration.json.JacksonConfig;
+import org.opfab.users.configuration.mongo.LocalMongoConfiguration;
+import org.opfab.users.configuration.users.UsersProperties;
+import org.opfab.users.controllers.*;
+import org.opfab.users.controllers.*;
+import org.opfab.users.repositories.UserRepository;
+import org.opfab.users.services.UserServiceImp;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
