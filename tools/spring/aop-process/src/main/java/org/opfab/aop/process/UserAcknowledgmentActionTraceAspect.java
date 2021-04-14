@@ -27,7 +27,7 @@ public class UserAcknowledgmentActionTraceAspect extends MongoActionTraceAspect 
 
     @Value("${operatorfabric.businessLogActivated:false}") boolean isBusinessLogActivated;
 
-    @AfterReturning(pointcut="execution(* org.lfenergy.operatorfabric.cards.publication.services.CardRepositoryService.addUserAck(..))",
+    @AfterReturning(pointcut="execution(* org.opfab.cards.publication.services.CardRepositoryService.addUserAck(..))",
             returning = "result")
     public void after(JoinPoint joinPoint,Object result) {
 
