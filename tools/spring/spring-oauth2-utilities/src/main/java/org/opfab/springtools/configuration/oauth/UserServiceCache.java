@@ -12,11 +12,11 @@
 package org.opfab.springtools.configuration.oauth;
 
 import feign.FeignException;
-import org.lfenergy.operatorfabric.users.model.User;
+import org.opfab.users.model.User;
 
 import java.util.Hashtable;
 
-import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
+import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;

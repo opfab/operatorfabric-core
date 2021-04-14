@@ -13,9 +13,11 @@ package org.opfab.users.configuration;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.users.configuration.users.UsersProperties;
-import org.lfenergy.operatorfabric.users.model.*;
-import org.lfenergy.operatorfabric.users.repositories.*;
+import org.opfab.users.configuration.users.UsersProperties;
+import org.opfab.users.model.*;
+import org.opfab.users.repositories.*;
+import org.opfab.users.model.*;
+import org.opfab.users.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;

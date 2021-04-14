@@ -12,8 +12,8 @@
 package org.opfab.springtools.configuration.oauth;
 
 import lombok.Getter;
-import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
-import org.lfenergy.operatorfabric.users.model.User;
+import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.users.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;

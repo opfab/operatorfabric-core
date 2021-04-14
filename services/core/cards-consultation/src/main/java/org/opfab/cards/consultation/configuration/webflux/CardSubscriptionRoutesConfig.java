@@ -12,11 +12,11 @@
 package org.opfab.cards.consultation.configuration.webflux;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.cards.consultation.controllers.CardOperationsController;
-import org.lfenergy.operatorfabric.cards.consultation.controllers.CardOperationsGetParameters;
-import org.lfenergy.operatorfabric.cards.consultation.model.CardSubscriptionDto;
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
-import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
+import org.opfab.cards.consultation.controllers.CardOperationsController;
+import org.opfab.cards.consultation.controllers.CardOperationsGetParameters;
+import org.opfab.cards.consultation.model.CardSubscriptionDto;
+import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
+import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

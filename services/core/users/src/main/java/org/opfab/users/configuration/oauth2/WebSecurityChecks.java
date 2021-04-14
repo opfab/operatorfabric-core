@@ -11,7 +11,7 @@
 
 package org.opfab.users.configuration.oauth2;
 
-import org.lfenergy.operatorfabric.users.model.User;
+import org.opfab.users.model.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 

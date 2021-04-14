@@ -13,8 +13,8 @@ package org.opfab.cards.publication.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.cards.model.CardOperation;
-import org.lfenergy.operatorfabric.cards.publication.model.CardOperationData;
+import org.opfab.cards.model.CardOperation;
+import org.opfab.cards.publication.model.CardOperationData;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -12,9 +12,9 @@
 package org.opfab.cards.publication.configuration.mongo;
 
 import org.bson.Document;
-import org.lfenergy.operatorfabric.cards.publication.model.Recurrence;
-import org.lfenergy.operatorfabric.cards.publication.model.RecurrencePublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.TimeSpan;
+import org.opfab.cards.publication.model.Recurrence;
+import org.opfab.cards.publication.model.RecurrencePublicationData;
+import org.opfab.cards.publication.model.TimeSpan;
 import org.springframework.core.convert.converter.Converter;
 
 import java.time.Instant;

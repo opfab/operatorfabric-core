@@ -12,8 +12,8 @@
 package org.opfab.cards.consultation.configuration.mongo;
 
 import org.bson.Document;
-import org.lfenergy.operatorfabric.cards.consultation.model.I18n;
-import org.lfenergy.operatorfabric.cards.consultation.model.I18nConsultationData;
+import org.opfab.cards.consultation.model.I18n;
+import org.opfab.cards.consultation.model.I18nConsultationData;
 import org.springframework.core.convert.converter.Converter;
 
 import java.util.Map;

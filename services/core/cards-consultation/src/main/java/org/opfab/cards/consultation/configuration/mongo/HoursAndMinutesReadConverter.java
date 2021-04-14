@@ -12,8 +12,8 @@
 package org.opfab.cards.consultation.configuration.mongo;
 
 import org.bson.Document;
-import org.lfenergy.operatorfabric.cards.consultation.model.HoursAndMinutes;
-import org.lfenergy.operatorfabric.cards.consultation.model.HoursAndMinutesConsultationData;
+import org.opfab.cards.consultation.model.HoursAndMinutes;
+import org.opfab.cards.consultation.model.HoursAndMinutesConsultationData;
 
 public class HoursAndMinutesReadConverter {
 

@@ -11,7 +11,7 @@
 
 package org.opfab.springtools.configuration.oauth;
 
-import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
+import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;

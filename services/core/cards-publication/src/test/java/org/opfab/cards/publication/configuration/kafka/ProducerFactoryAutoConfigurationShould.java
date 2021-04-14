@@ -10,8 +10,8 @@ package org.opfab.cards.publication.configuration.kafka;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lfenergy.operatorfabric.avro.CardCommand;
-import org.lfenergy.operatorfabric.cards.publication.kafka.SchemaRegistryProperties;
+import org.opfab.avro.CardCommand;
+import org.opfab.cards.publication.kafka.SchemaRegistryProperties;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;

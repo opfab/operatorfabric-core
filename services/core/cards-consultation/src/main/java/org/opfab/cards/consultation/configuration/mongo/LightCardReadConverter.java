@@ -11,11 +11,11 @@ package org.opfab.cards.consultation.configuration.mongo;
 
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
-import org.lfenergy.operatorfabric.cards.consultation.model.LightCard;
-import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
-import org.lfenergy.operatorfabric.cards.consultation.model.PublisherTypeEnum;
-import org.lfenergy.operatorfabric.cards.consultation.model.TimeSpanConsultationData;
-import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
+import org.opfab.cards.consultation.model.LightCard;
+import org.opfab.cards.consultation.model.LightCardConsultationData;
+import org.opfab.cards.consultation.model.PublisherTypeEnum;
+import org.opfab.cards.consultation.model.TimeSpanConsultationData;
+import org.opfab.cards.model.SeverityEnum;
 import org.springframework.core.convert.converter.Converter;
 
 import java.util.List;

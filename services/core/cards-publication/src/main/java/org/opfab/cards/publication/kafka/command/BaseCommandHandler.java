@@ -14,10 +14,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.avro.Card;
-import org.lfenergy.operatorfabric.avro.CardCommand;
-import org.lfenergy.operatorfabric.cards.publication.kafka.CardObjectMapper;
-import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
+import org.opfab.avro.Card;
+import org.opfab.avro.CardCommand;
+import org.opfab.cards.publication.kafka.CardObjectMapper;
+import org.opfab.cards.publication.model.CardPublicationData;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;

@@ -10,8 +10,8 @@
 
 package org.opfab.users.configuration.oauth2;
 
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
-import org.lfenergy.operatorfabric.users.model.User;
+import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
+import org.opfab.users.model.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;

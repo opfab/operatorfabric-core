@@ -25,12 +25,10 @@ import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 import org.jeasy.random.FieldPredicates;
 import org.jetbrains.annotations.NotNull;
-import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
-import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.I18nPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.RecipientPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.repositories.CardRepositoryForTest;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.opfab.cards.model.SeverityEnum;
+import org.opfab.cards.publication.model.CardPublicationData;
+import org.opfab.cards.publication.model.I18nPublicationData;
+import org.opfab.cards.publication.model.RecipientPublicationData;
 
 
 public abstract class CardControllerShouldBase {

@@ -9,21 +9,20 @@
 
 package org.opfab.client;
 
-import java.time.Instant;
-import java.util.List;
-
-import org.lfenergy.operatorfabric.cards.model.Card;
-import org.lfenergy.operatorfabric.cards.model.CardCreationReport;
-import org.lfenergy.operatorfabric.cards.model.I18n;
-import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
-import org.lfenergy.operatorfabric.client.cards.CardClient;
-import org.lfenergy.operatorfabric.client.security.AuthClient;
+import lombok.extern.slf4j.Slf4j;
+import org.opfab.cards.model.Card;
+import org.opfab.cards.model.CardCreationReport;
+import org.opfab.cards.model.I18n;
+import org.opfab.cards.model.SeverityEnum;
+import org.opfab.client.cards.CardClient;
+import org.opfab.client.security.AuthClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import lombok.extern.slf4j.Slf4j;
+import java.time.Instant;
+import java.util.List;
 
 @Slf4j
 @SpringBootApplication

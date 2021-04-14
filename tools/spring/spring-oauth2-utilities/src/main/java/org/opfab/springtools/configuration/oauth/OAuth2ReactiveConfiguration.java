@@ -11,7 +11,7 @@
 
 package org.opfab.springtools.configuration.oauth;
 
-import org.lfenergy.operatorfabric.users.model.User;
+import org.opfab.users.model.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;

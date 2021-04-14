@@ -12,13 +12,17 @@
 package org.opfab.users.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.UpdatedUserEvent;
-import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
-import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
-import org.lfenergy.operatorfabric.users.model.*;
-import org.lfenergy.operatorfabric.users.repositories.UserRepository;
-import org.lfenergy.operatorfabric.users.repositories.UserSettingsRepository;
-import org.lfenergy.operatorfabric.users.services.UserService;
+import org.opfab.springtools.configuration.oauth.UpdatedUserEvent;
+import org.opfab.springtools.error.model.ApiError;
+import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.users.model.*;
+import org.opfab.users.repositories.UserRepository;
+import org.opfab.users.repositories.UserSettingsRepository;
+import org.opfab.users.services.UserService;
+import org.opfab.users.model.GroupData;
+import org.opfab.users.model.PerimeterData;
+import org.opfab.users.model.UserData;
+import org.opfab.users.model.UserSettingsData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.bus.ServiceMatcher;
 import org.springframework.context.ApplicationEventPublisher;

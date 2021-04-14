@@ -9,13 +9,9 @@
 
 package org.opfab.client.cards;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.lfenergy.operatorfabric.cards.model.Card;
-import org.lfenergy.operatorfabric.cards.model.CardCreationReport;
-import org.lfenergy.operatorfabric.client.common.HttpClientInterceptor;
+import org.opfab.cards.model.Card;
+import org.opfab.cards.model.CardCreationReport;
+import org.opfab.client.common.HttpClientInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
@@ -24,6 +20,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class CardClient {

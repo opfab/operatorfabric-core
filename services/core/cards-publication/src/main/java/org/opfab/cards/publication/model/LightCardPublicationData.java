@@ -13,7 +13,7 @@ package org.opfab.cards.publication.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
+import org.opfab.cards.model.SeverityEnum;
 import org.springframework.data.annotation.Transient;
 
 import java.time.Instant;

@@ -11,11 +11,11 @@ package org.opfab.cards.publication.kafka.command;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.avro.Card;
-import org.lfenergy.operatorfabric.avro.CardCommand;
-import org.lfenergy.operatorfabric.avro.CommandType;
-import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.services.CardProcessingService;
+import org.opfab.avro.Card;
+import org.opfab.avro.CardCommand;
+import org.opfab.avro.CommandType;
+import org.opfab.cards.publication.model.CardPublicationData;
+import org.opfab.cards.publication.services.CardProcessingService;
 import org.springframework.stereotype.Component;
 
 @Slf4j

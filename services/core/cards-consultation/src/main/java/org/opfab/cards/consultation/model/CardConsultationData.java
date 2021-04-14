@@ -14,7 +14,7 @@ package org.opfab.cards.consultation.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
+import org.opfab.cards.model.SeverityEnum;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;

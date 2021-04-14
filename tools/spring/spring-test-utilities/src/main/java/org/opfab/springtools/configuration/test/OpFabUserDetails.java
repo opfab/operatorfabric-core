@@ -11,8 +11,8 @@
 
 package org.opfab.springtools.configuration.test;
 
-import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
-import org.lfenergy.operatorfabric.users.model.User;
+import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.users.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

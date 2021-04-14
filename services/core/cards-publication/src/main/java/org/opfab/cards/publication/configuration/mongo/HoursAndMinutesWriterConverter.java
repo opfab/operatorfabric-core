@@ -10,7 +10,7 @@
 package org.opfab.cards.publication.configuration.mongo;
 
 import org.bson.Document;
-import org.lfenergy.operatorfabric.cards.publication.model.HoursAndMinutes;
+import org.opfab.cards.publication.model.HoursAndMinutes;
 
 public  class HoursAndMinutesWriterConverter {
 

@@ -10,9 +10,9 @@
 package org.opfab.cards.consultation.repositories;
 
 
-import org.lfenergy.operatorfabric.cards.consultation.model.CardConsultationData;
-import org.lfenergy.operatorfabric.cards.consultation.model.CardOperation;
-import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
+import org.opfab.cards.consultation.model.CardConsultationData;
+import org.opfab.cards.consultation.model.CardOperation;
+import org.opfab.users.model.CurrentUserWithPerimeters;
 import reactor.core.publisher.Flux;
 
 import java.time.Instant;

@@ -12,8 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
-import org.lfenergy.operatorfabric.aop.process.mongo.models.UserActionTraceData;
-import org.lfenergy.operatorfabric.users.model.User;
+import org.opfab.aop.process.mongo.models.UserActionTraceData;
+import org.opfab.users.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 

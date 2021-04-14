@@ -1,9 +1,9 @@
 package org.opfab.users.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
-import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
-import org.lfenergy.operatorfabric.users.model.Entity;
+import org.opfab.springtools.error.model.ApiError;
+import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.users.model.Entity;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
