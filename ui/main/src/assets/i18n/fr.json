@@ -329,7 +329,7 @@
       "confirm":"Confirmez...",
       "login": {
         "required": "L'identifiant est obligatoire.",
-        "minLength": "L'identifiant doit avoir au moins 4 caractères.",
+        "minLength": "L'identifiant doit avoir au moins 2 caractères.",
         "pattern": "L'identifiant ne peut contenir que les caractères suivants : lettres, _, - ou chiffres."
       },
       "firstName": {
