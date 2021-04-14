@@ -49,7 +49,7 @@ export class EditUserModalComponent implements OnInit {
 
     this.userForm = new FormGroup({
       login: new FormControl(''
-          , [Validators.required, Validators.minLength(4), Validators.pattern(/^[A-z\d\-_]+$/)]),
+          , [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-z\d\-_]+$/)]),
       firstName: new FormControl('', [Validators.required]),
       lastName: new FormControl('', [Validators.required]),
       groups: new FormControl([]),
