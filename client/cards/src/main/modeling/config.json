@@ -1,22 +1,22 @@
 {
   "library": "spring-boot",
   "java8": true,
-  "modelPackage": "org.lfenergy.operatorfabric.cards.model",
+  "modelPackage": "org.opfab.cards.model",
   "hideGenerationTimestamp": true,
-  "apiPackage": "org.lfenergy.operatorfabric.cards.controllers",
-  "configPackage": "org.lfenergy.operatorfabric.cards.config",
-  "invokerPackage": "org.lfenergy.operatorfabric.cards.invokers",
+  "apiPackage": "org.opfab.cards.controllers",
+  "configPackage": "org.opfab.cards.config",
+  "invokerPackage": "org.opfab.cards.invokers",
   "dateLibrary": "java8",
   "useBeanValidation": false,
   "interfaceOnly": false,
   "delegatePattern": true,
   "singleContentTypes": false,
   "importMappings": {
-    "CardOperationTypeEnum": "org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum",
-    "SeverityEnum": "org.lfenergy.operatorfabric.cards.model.SeverityEnum",
-    "InputEnum": "org.lfenergy.operatorfabric.cards.model.InputEnum",
-    "RecipientEnum": "org.lfenergy.operatorfabric.cards.model.RecipientEnum",
+    "CardOperationTypeEnum": "org.opfab.cards.model.CardOperationTypeEnum",
+    "SeverityEnum": "org.opfab.cards.model.SeverityEnum",
+    "InputEnum": "org.opfab.cards.model.InputEnum",
+    "RecipientEnum": "org.opfab.cards.model.RecipientEnum",
     "EpochDate": "java.time.Instant",
-    "PublisherTypeEnum": "org.lfenergy.operatorfabric.cards.model.PublisherTypeEnum"
+    "PublisherTypeEnum": "org.opfab.cards.model.PublisherTypeEnum"
   }
 }

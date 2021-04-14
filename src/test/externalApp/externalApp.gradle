@@ -27,7 +27,7 @@ configurations {
 //create a single Jar with all dependencies
 jar {
 	    manifest {
-	        attributes 'Main-Class': 'org.lfenergy.operatorfabric.externalApp.ExternalAppApplication'
+	        attributes 'Main-Class': 'org.opfab.externalApp.ExternalAppApplication'
 	    }
 	 
 	    from {

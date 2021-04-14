@@ -1,11 +1,11 @@
 {
   "library": "spring-boot",
   "java8": true,
-  "modelPackage": "org.lfenergy.operatorfabric.users.model",
+  "modelPackage": "org.opfab.users.model",
   "hideGenerationTimestamp": true,
-  "apiPackage": "org.lfenergy.operatorfabric.users.controllers",
-  "configPackage": "org.lfenergy.operatorfabric.users.config",
-  "invokerPackage": "org.lfenergy.operatorfabric.users.invokers",
+  "apiPackage": "org.opfab.users.controllers",
+  "configPackage": "org.opfab.users.config",
+  "invokerPackage": "org.opfab.users.invokers",
   "dateLibrary": "java8",
   "useBeanValidation": false,
   "interfaceOnly": false,
@@ -13,6 +13,6 @@
   "singleContentTypes": false,
   "importMappings": {
     "EpochDate": "java.time.Instant",
-    "RightsEnum": "org.lfenergy.operatorfabric.users.model.RightsEnum"
+    "RightsEnum": "org.opfab.users.model.RightsEnum"
   }
 }

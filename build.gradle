@@ -17,7 +17,7 @@ file("versions.properties").withReader { reader ->
 
 ext {
     operatorfabric = [
-            group: "org.lfenergy.operatorfabric",
+            group: "org.opfab",
             version: version = rootProject.file('VERSION').text.trim(),
             revisionDate: revisionDate = new Date().format('dd MMMM yyyy')
     ]
