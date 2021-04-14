@@ -110,7 +110,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     open(content) {
         this.ackAllCardsDemandTimestamp = Date.now();
-        this.modalRef = this.modalService.open(content);
+        this.modalRef = this.modalService.open(content, {centered: true});
     }
 
     confirmAckAllCards() {

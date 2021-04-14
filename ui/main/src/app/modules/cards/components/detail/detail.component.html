@@ -152,13 +152,15 @@
 
           <ng-template #impossibleToDeleteCardPopup let-modal>
             <div class="modal-header text-center">
-              <span class="modal-title w-100" translate> userCard.deleteCard.error.impossibleToDeleteCard </span>
+              <span class="modal-title w-100" translate> userCard.deleteCard.error.title </span>
               <div id="opfab-card-details-delete-error-btn-close" class="opfab-close-modal-icon" aria-label="Close"
                    (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
               </div>
             </div>
             <div class="modal-body text-center">
+              <p translate> userCard.deleteCard.error.impossibleToDeleteCard </p>
+
               <button id="opfab-card-details-delete-error-btn-close" type="button" class="opfab-btn"
                 (click)="modal.dismiss()" translate>button.ok</button>
             </div>

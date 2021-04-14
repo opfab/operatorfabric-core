@@ -170,7 +170,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     open(content) {
-        const modalOptions = { windowClass : 'opfab-modal-content'};
+        const modalOptions = {centered: true};
         this.modalRef = this.modalService.open(content, modalOptions);
     }
 

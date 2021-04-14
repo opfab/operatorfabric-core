@@ -259,6 +259,7 @@
       "doYouReallyWant": "Do you really want to delete this card ?",
       "cardDeletedWithNoError": "Card deleted",
       "error": {
+        "title": "Error",
         "impossibleToDeleteCard": "Impossible to delete card for technical reasons"
       }
     },
