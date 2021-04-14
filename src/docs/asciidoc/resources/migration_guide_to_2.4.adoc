@@ -15,3 +15,9 @@ The API does not have anymore an endpoint to send an Array of card.
 - The endPoint `async/cards` does not longer exist 
 
 So if you use to send card as array, you need to modify your code to send it one by one via endpoint `cards`
+
+== Package name change
+
+The name of the packages in the OperatorFabric code has been changed from `org.lfenergy.operatorfabric.*` to
+`org.opfab.*` in preparation for an upload of the client library to Maven Central.
+You need to update any code using the client library to reflect this name change.
