@@ -740,6 +740,8 @@ html, body { height: 100%; }
 .modal-body{
   background-color: var(--opfab-bgcolor);
   color: var(--opfab-textcolor);
+  font-size: 16px;
+  font-weight: 400;
 }
 
 .modal-header{

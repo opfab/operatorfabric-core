@@ -255,6 +255,7 @@
     "send-another-one": "SEND ANOTHER CARD",
     "cardSendWithNoError": "Your card is published",
     "deleteCard": {
+      "title" : "CONFIRMATION",
       "doYouReallyWant": "Do you really want to delete this card ?",
       "cardDeletedWithNoError": "Card deleted",
       "error": {
