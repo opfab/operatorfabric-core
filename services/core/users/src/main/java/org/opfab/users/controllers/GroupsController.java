@@ -88,6 +88,11 @@ public class GroupsController implements GroupsApi {
         if(groupRepository.findById(group.getId()).orElse(null) == null){
             response.addHeader("Location", request.getContextPath() + "/groups/" + group.getId());
             response.setStatus(201);
+        } else {
+            List<UserData> users = userRepository.findByGroupSetContaining(group.getId());
+            users.forEach(foundUser -> {
+                publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), foundUser.getLogin()));
+            });
         }
         return groupRepository.save((GroupData)group);
     }
