@@ -693,16 +693,17 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                     this.modalRef.close();
                     if (status === 200) {
                         this.closeDetails();
-                        this.open(this.cardDeletedWithNoErrorPopupRef);
+                        this.displayMessage("userCard.deleteCard.cardDeletedWithNoError", null, MessageLevel.INFO);
                     } else {
                         console.log('Impossible to delete card , error status from service : ', status);
-                        this.open(this.impossibleToDeleteCardPopupRef);
+                        this.displayMessage("userCard.deleteCard.error.impossibleToDeleteCard ", null, MessageLevel.ERROR);
+
                     }
                 },
                 err => {
                     console.error('Error when deleting card :', err);
                     this.modalRef.close();
-                    this.open(this.impossibleToDeleteCardPopupRef);
+                    this.displayMessage("userCard.deleteCard.error.impossibleToDeleteCard ", null, MessageLevel.ERROR);
                 }
             );
     }
