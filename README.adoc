@@ -25,8 +25,7 @@ image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.oper
 Smells,link=https://sonarcloud.io/component_measures?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=Maintainability]
 image:https://img.shields.io/website-up-down-green-red/http/opfab.github.io.svg[Website
 opfab.github.io,link=http://opfab.github.io/]
-image:https://img.shields.io/badge/Join%20us%20on-Spectrum-%237473C0.svg[Join
-us on Spectrum,link=https://spectrum.chat/opfab]
+image:https://bestpractices.coreinfrastructure.org/projects/4806/badge[CII Best Practices, https://bestpractices.coreinfrastructure.org/projects/4806]
 
 == Introduction
 
