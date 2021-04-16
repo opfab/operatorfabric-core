@@ -25,7 +25,7 @@ image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.oper
 Smells,link=https://sonarcloud.io/component_measures?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=Maintainability]
 image:https://img.shields.io/website-up-down-green-red/http/opfab.github.io.svg[Website
 opfab.github.io,link=http://opfab.github.io/]
-image:https://bestpractices.coreinfrastructure.org/projects/4806/badge[CII Best Practices, https://bestpractices.coreinfrastructure.org/projects/4806]
+image:https://bestpractices.coreinfrastructure.org/projects/4806/badge[CII Best Practices,link=https://bestpractices.coreinfrastructure.org/projects/4806]
 
 == Introduction
 
@@ -86,8 +86,6 @@ cd ./config/docker
 ----
 
 . After a little while, log into the application UI at *localhost:2002/* using admin/test as credentials.
-+
-WARNING: Don't forget the *final slash* in the URL or you will get an error.
 
 . Push cards using the following test script
 +
