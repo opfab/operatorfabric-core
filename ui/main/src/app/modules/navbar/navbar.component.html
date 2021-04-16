@@ -19,11 +19,10 @@
       </div>
     </ng-template>
   </a>
-  <button class="navbar-toggler" type="button" (click)="navbarCollapsed = !navbarCollapsed"
-    [attr.aria-expanded]="!navbarCollapsed" aria-controls="navbarContent" aria-expanded="false"
-    aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+
+<div class="navbar-toggler opfab-navbar" style="flex-basis: 85%;flex-grow: 1;border: 0" id="navbarCollapsed" >
+  <ng-container *ngTemplateOutlet="menuCollapsedContent"></ng-container>
+  </div>
   <div class="collapse navbar-collapse " id="navbarContent" [ngbCollapse]="navbarCollapsed">
     <ul class="navbar-nav mr-auto ">
       <!-- Links to OperatorFabric pages as defined in app-rooting.module.ts (e.g. Card Feed, Archive) -->
@@ -84,6 +83,47 @@
   </div>
 
 </nav>
+
+<ng-template #menuCollapsedContent>
+  <ul class="navbar-nav mr-auto " style="flex-direction: row; float:left;">
+    <li class="nav-item" [class.active]="'feed' === currentPath[1]">
+      <a id="opfab-navbar-menu-feed" class="nav-link" routerLink="/feed"  routerLinkActive #rla="routerLinkActive"
+        translate>{{'menu.feed'}}</a>
+    </li>
+  </ul>
+  <ul class="navbar-nav mr-auto " style="flex-direction: row; float:right;margin-top: 10px">
+
+    <li class="nav-item">
+      <a id="opfab-navbar-right-menu-settings" class="opfab-right-menu-link" routerLink="/settings"  routerLinkActive #rla="routerLinkActive">
+        <div class="opfab-menu-icon opfab-menu-icon-parameters"></div>
+      </a>
+    </li>
+
+    <li class="nav-item" *ngIf="(displayFeedConfiguration)">
+      <a  id="opfab-navbar-right-menu-feedconfiguration" class="opfab-right-menu-link" routerLink="/feedconfiguration"  routerLinkActive
+        #rla="routerLinkActive">
+        <div class="opfab-menu-icon opfab-menu-icon-notification"></div>
+      </a>
+    </li>
+
+    <li class="nav-item" *ngIf="(nightDayMode)">
+      <a id="opfab-navbar-right-menu-night-mode" *ngIf="(!(getNightMode()|async))" class="opfab-right-menu-link" (click)='switchToNightMode()'>
+        <div class="opfab-menu-icon opfab-menu-icon-dark-light"></div>
+      </a>
+      <a id="opfab-navbar-right-menu-day-mode"  *ngIf="(getNightMode()|async)" class="opfab-right-menu-link"  (click)='switchToDayMode()'>
+        <div class="opfab-menu-icon opfab-menu-icon-dark-light"></div>
+      </a>
+    </li>
+    
+    <li class="nav-item">
+      <form>
+        <a id="opfab-navbar-right-menu-logout"  class="opfab-right-menu-link" (click)="logOut()" href="javascript:void(0)">
+          <div class="opfab-menu-icon opfab-menu-icon-logout"></div>
+        </a>
+      </form>
+    </li>
+  </ul>
+</ng-template>
 
 
 <ng-template #menuContent>
