@@ -14,12 +14,14 @@ package org.opfab.businessconfig.controllers;
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.businessconfig.model.Process;
 import org.opfab.businessconfig.model.*;
+import org.opfab.businessconfig.services.MonitoringService;
 import org.opfab.businessconfig.services.ProcessesService;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,16 +43,18 @@ import java.util.List;
 public class BusinessconfigController implements BusinessconfigApi {
 
     public static final String UNABLE_TO_LOAD_FILE_MSG = "Unable to load submitted file";
-    private ProcessesService service;
+    private ProcessesService processService;
+    private MonitoringService monitoringService;
 
     @Autowired
-    public BusinessconfigController(ProcessesService service) {
-        this.service = service;
+    public BusinessconfigController(ProcessesService processService, MonitoringService monitoringService) {
+        this.processService = processService;
+        this.monitoringService = monitoringService;
     }
 
     @Override
     public byte[] getCss(HttpServletRequest request, HttpServletResponse response, String processId, String cssFileName, String version) throws IOException {
-        Resource resource = service.fetchResource(processId, ResourceTypeEnum.CSS, version, cssFileName);
+        Resource resource = processService.fetchResource(processId, ResourceTypeEnum.CSS, version, cssFileName);
         return loadResource(resource);
     }
 
@@ -70,7 +74,7 @@ public class BusinessconfigController implements BusinessconfigApi {
 
     @Override
     public byte[] getI18n(HttpServletRequest request, HttpServletResponse response, String processId, String locale, String version) throws IOException {
-        Resource resource = service.fetchResource(processId, ResourceTypeEnum.I18N, version, locale, null);
+        Resource resource = processService.fetchResource(processId, ResourceTypeEnum.I18N, version, locale, null);
         return loadResource(resource);
     }
 
@@ -79,13 +83,13 @@ public class BusinessconfigController implements BusinessconfigApi {
     public byte[] getTemplate(HttpServletRequest request, HttpServletResponse response, String processId, String templateName, String locale, String version) throws
             IOException {
         Resource resource;
-        resource = service.fetchResource(processId, ResourceTypeEnum.TEMPLATE, version, locale, templateName);
+        resource = processService.fetchResource(processId, ResourceTypeEnum.TEMPLATE, version, locale, templateName);
         return loadResource(resource);
     }
 
     @Override
     public Process getProcess(HttpServletRequest request, HttpServletResponse response, String processId, String version) {
-        Process process = service.fetch(processId, version);
+        Process process = processService.fetch(processId, version);
         if (process == null) {
             throw new ApiErrorException(ApiError.builder()
                     .status(HttpStatus.NOT_FOUND)
@@ -97,18 +101,18 @@ public class BusinessconfigController implements BusinessconfigApi {
 
     @Override
     public List<Process> getProcesses(HttpServletRequest request, HttpServletResponse response) {
-        return service.listProcesses();
+        return processService.listProcesses();
     }
 
     @Override
     public ProcessGroups getProcessgroups(HttpServletRequest request, HttpServletResponse response) {
-        return service.getProcessGroupsCache();
+        return processService.getProcessGroupsCache();
     }
 
     @Override
     public Process uploadBundle(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file) {
         try (InputStream is = file.getInputStream()) {
-            Process result = service.updateProcess(is);
+            Process result = processService.updateProcess(is);
             response.addHeader("Location", request.getContextPath() + "/businessconfig/processes/" + result.getId());
             response.setStatus(201);
             return result;
@@ -138,7 +142,7 @@ public class BusinessconfigController implements BusinessconfigApi {
     @Override
     public Void uploadProcessgroups(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file) {
         try (InputStream is = file.getInputStream()) {
-            service.updateProcessGroupsFile(is);
+            processService.updateProcessGroupsFile(is);
             response.addHeader("Location", request.getContextPath() + "/businessconfig/processgroups");
             response.setStatus(201);
             return null;
@@ -167,7 +171,7 @@ public class BusinessconfigController implements BusinessconfigApi {
 
     @Override
     public Void clearProcesses(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        service.clear();
+        processService.clear();
         response.setStatus(204);
         return null;
     }
@@ -209,7 +213,7 @@ public class BusinessconfigController implements BusinessconfigApi {
 	public Void deleteBundle(HttpServletRequest request, HttpServletResponse response, String processId)
 			throws Exception {
 		try {
-			service.delete(processId);
+			processService.delete(processId);
 			// leaving response body empty
 			response.setStatus(204);
 			return null;
@@ -231,7 +235,7 @@ public class BusinessconfigController implements BusinessconfigApi {
 	public Void deleteBundleVersion(HttpServletRequest request, HttpServletResponse response, String processId,
 			String version) throws Exception {
 		try {
-			service.deleteVersion(processId,version);
+			processService.deleteVersion(processId,version);
 			// leaving response body empty
 			response.setStatus(204);
 			return null;
@@ -248,4 +252,19 @@ public class BusinessconfigController implements BusinessconfigApi {
 					message, e);
 		}
 	}
+
+
+    @Override
+    public Monitoring getMonitoring(HttpServletRequest request, HttpServletResponse response) {
+        return monitoringService.getMonitoring();
+    }
+
+    @Override
+    public Void postMonitoring(HttpServletRequest request, HttpServletResponse response, @RequestBody Monitoring monitoring) throws Exception  {
+        monitoringService.setMonitoring(monitoring);
+        response.setStatus(201);
+        return null;
+    }
+
+
 }
