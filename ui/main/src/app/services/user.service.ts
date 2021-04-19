@@ -107,23 +107,12 @@ export class UserService extends CrudService {
   }
 
   public isCurrentUserAdmin(): boolean {
-    if (!this._userWithPerimeters) {
-      this.currentUserWithPerimeters().subscribe((userWithPerimeters) => {
-        this._userWithPerimeters = userWithPerimeters;
-      }, (error) => console.error(new Date().toISOString(), 'an error occurred', error));
-    }
-    return (this.getCurrentUserWithPerimeters().userData.groups.filter(group => group === 'ADMIN').length > 0);
+    return this.isCurrentUserInAnyGroup(['ADMIN']);
   }
 
   public isCurrentUserInAnyGroup(groups: string[]): boolean {
-    if (!groups) {
+    if (!groups)
       return false;
-    }
-    if (!this._userWithPerimeters) {
-      this.currentUserWithPerimeters().subscribe((userWithPerimeters) => {
-        this._userWithPerimeters = userWithPerimeters;
-      }, (error) => console.error(new Date().toISOString(), 'an error occurred', error));
-    }
-    return (this.getCurrentUserWithPerimeters().userData.groups.filter(group => groups.indexOf(group) >= 0).length > 0);
+    return (this._userWithPerimeters.userData.groups.filter(group => groups.indexOf(group) >= 0).length > 0);
   }
 }
