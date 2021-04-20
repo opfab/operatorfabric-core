@@ -12,7 +12,6 @@ import {Injectable} from '@angular/core';
 import {AcknowledgmentAllowedEnum, Process} from '@ofModel/processes.model';
 import {Card} from '@ofModel/card.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {Entity} from '@ofModel/entity.model';
 import {LightCard} from '@ofModel/light-card.model';
 import {UpdateALightCard} from '@ofActions/light-card.actions';
 import {Store} from '@ngrx/store';
@@ -58,7 +57,7 @@ export class AcknowledgeService {
         this.store.dispatch(new UpdateALightCard({card: updatedLightCard}));
     }
 
-    isAcknowledgmentAllowed(user: UserWithPerimeters, card: Card|LightCard, processDefinition: Process, listEntities: Entity[]): boolean {
+    isAcknowledgmentAllowed(user: UserWithPerimeters, card: Card|LightCard, processDefinition: Process): boolean {
         const state = Process.prototype.extractState.call(processDefinition, card);
 
         if (!! state) {
@@ -67,6 +66,6 @@ export class AcknowledgeService {
             if (state.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS)
                 return true;
         }
-        return ! this.actionService.isUserEnabledToRespond(user, card, processDefinition, listEntities);
+        return ! this.actionService.isUserEnabledToRespond(user, card, processDefinition);
     }
 }

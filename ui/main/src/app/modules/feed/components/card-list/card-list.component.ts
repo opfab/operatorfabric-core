@@ -24,7 +24,6 @@ import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {UserService} from '@ofServices/user.service';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {EntitiesService} from '@ofServices/entities.service';
-import {Entity} from '@ofModel/entity.model';
 
 
 @Component({
@@ -41,7 +40,6 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     hideAckAllCardsFeature: boolean;
     ackAllCardsDemandTimestamp: number;
     currentUserWithPerimeters: UserWithPerimeters;
-    listEntities: Entity[];
 
     domCardListElement;
 
@@ -54,7 +52,6 @@ export class CardListComponent implements AfterViewChecked, OnInit {
                 private entitiesService: EntitiesService,
                 private _appService: AppService) {
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
-        this.listEntities = this.entitiesService.getEntities();
     }
 
     ngOnInit(): void {
@@ -80,7 +77,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
             const processDefinition = this.processesService.getProcess(lightCard.process);
 
             if (! lightCard.hasBeenAcknowledged && this.isCardPublishedBeforeAckDemand(lightCard)
-                && this.acknowledgeService.isAcknowledgmentAllowed(this.currentUserWithPerimeters, lightCard, processDefinition, this.listEntities)) {
+                && this.acknowledgeService.isAcknowledgmentAllowed(this.currentUserWithPerimeters, lightCard, processDefinition)) {
                 try {
                     this.acknowledgeService.acknowledgeCard(lightCard);
                 } catch (err) {

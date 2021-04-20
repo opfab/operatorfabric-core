@@ -124,18 +124,15 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
   /** Given a list of entities that might contain parent entities, this method returns the list of entities
    *  that can actually send cards
    * */
-  public resolveEntitiesAllowedToSendCards(selected: Entity[], listEntities?: Entity[]): Entity[] {
+  public resolveEntitiesAllowedToSendCards(selected: Entity[]): Entity[] {
     const allowed = new Set<Entity>();
     selected.forEach(entity => {
         if (entity.entityAllowedToSendCard) {
             allowed.add(entity);
         } else {
             let children: Entity[];
-            if (listEntities)
-                children = listEntities.filter(child => child.parents.includes(entity.id));
-            else
-                children = this._entities.filter(child => child.parents.includes(entity.id));
-          const childrenAllowed = this.resolveEntitiesAllowedToSendCards(children);
+            children = this._entities.filter(child => child.parents.includes(entity.id));
+            const childrenAllowed = this.resolveEntitiesAllowedToSendCards(children);
             childrenAllowed.forEach(c => allowed.add(c));
         }
     });

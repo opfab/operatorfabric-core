@@ -11,7 +11,6 @@ import { Injectable } from '@angular/core';
 import {userRight, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {Card} from '@ofModel/card.model';
 import {Process} from '@ofModel/processes.model';
-import {Entity} from '@ofModel/entity.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {ConfigService} from '@ofServices/config.service';
 import {EntitiesService} from '@ofServices/entities.service';
@@ -26,17 +25,17 @@ export class ActionService {
   constructor(private configService: ConfigService,
               private entitiesService: EntitiesService) { }
 
-  public isUserEnabledToRespond(user: UserWithPerimeters, card: Card, processDefinition: Process, listEntities: Entity[]): boolean {
+  public isUserEnabledToRespond(user: UserWithPerimeters, card: Card, processDefinition: Process): boolean {
     const checkPerimeterForResponseCard = this.configService.getConfigValue('checkPerimeterForResponseCard');
 
     if (checkPerimeterForResponseCard === false)
-      return this.isUserInEntityAllowedToRespond(user, card, listEntities);
+      return this.isUserInEntityAllowedToRespond(user, card);
     else
-      return this.isUserInEntityAllowedToRespond(user, card, listEntities)
+      return this.isUserInEntityAllowedToRespond(user, card)
           && this.doesTheUserHavePermissionToRespond(user, card, processDefinition);
   }
 
-  private isUserInEntityAllowedToRespond(user: UserWithPerimeters, card: Card, listEntities: Entity[]): boolean {
+  private isUserInEntityAllowedToRespond(user: UserWithPerimeters, card: Card): boolean {
     let userEntitiesAllowedToRespond = [];
     let entitiesAllowedToRespondAndEntitiesRequiredToRespond = [];
 
@@ -49,10 +48,10 @@ export class ActionService {
 
     if (entitiesAllowedToRespondAndEntitiesRequiredToRespond) {
 
-      const entitiesAllowedToRespond = listEntities.filter(entity =>
+      const entitiesAllowedToRespond = this.entitiesService.getEntities().filter(entity =>
           entitiesAllowedToRespondAndEntitiesRequiredToRespond.includes(entity.id));
 
-      const allowed = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond, listEntities)
+      const allowed = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond)
           .map(entity => entity.id).filter(x =>  x !== card.publisher);
 
       console.log(new Date().toISOString(), ' Detail card - entities allowed to respond = ', allowed);

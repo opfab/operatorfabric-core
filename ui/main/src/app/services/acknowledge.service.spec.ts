@@ -21,7 +21,8 @@ import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {StoreModule} from '@ngrx/store';
 import {appReducer} from '@ofStore/index';
 import {ConfigService} from '@ofServices/config.service';
-import {Entity} from '@ofModel/entity.model';
+import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesServiceMock} from '@tests/mocks/entities.service.mock';
 
 
 describe('AcknowledgeService testing ', () => {
@@ -30,15 +31,12 @@ describe('AcknowledgeService testing ', () => {
     let card: Card, cardForEntityParent: Card;
     let userMemberOfEntity1: User, userMemberOfEntity2: User;
     let statesList;
-    let listEntities: Entity[] = [];
-    let entityAllControlRooms: Entity, entity1: Entity, entity2: Entity;
 
     beforeEach(() => {
         statesList = new OfMap();
-        listEntities = [];
 
         TestBed.configureTestingModule({
-            providers: [ConfigService],
+            providers: [ConfigService, {provide: EntitiesService, useClass: EntitiesServiceMock}],
             imports: [StoreModule.forRoot(appReducer),
                       HttpClientTestingModule]
         });
@@ -48,13 +46,6 @@ describe('AcknowledgeService testing ', () => {
         cardForEntityParent = getOneRandomCard({process: 'testProcess', processVersion: '1', state: 'testState', entitiesAllowedToRespond: ['ALLCONTROLROOMS']});
         userMemberOfEntity1 = new User('userTest', 'firstName', 'lastName', ['group1'], ['ENTITY1']);
         userMemberOfEntity2 = new User('userTest', 'firstName', 'lastName', ['group1'], ['ENTITY2']);
-
-        entityAllControlRooms = new Entity('ALLCONTROLROOMS', 'All Control Rooms', 'All Control Rooms', false, []);
-        entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', true, ['ALLCONTROLROOMS']);
-        entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', true, []);
-        listEntities.push(entity1);
-        listEntities.push(entity2);
-        listEntities.push(entityAllControlRooms);
     });
 
     it('acknowledgmentAllowed of the state is Never, isAcknowledgmentAllowed() must return false', () => {
@@ -64,7 +55,7 @@ describe('AcknowledgeService testing ', () => {
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1,
             [{process: 'testProcess', state: 'testState', rights: RightsEnum.Receive}]);
 
-        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition, listEntities);
+        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
         expect(res).toBeFalse();
     });
 
@@ -75,7 +66,7 @@ describe('AcknowledgeService testing ', () => {
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1,
             [{process: 'testProcess', state: 'testState', rights: RightsEnum.Receive}]);
 
-        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition, listEntities);
+        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
         expect(res).toBeTrue();
     });
 
@@ -90,7 +81,7 @@ describe('AcknowledgeService testing ', () => {
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1,
             [{process: 'testProcess', state: 'responseState', rights: RightsEnum.Receive}]);
 
-        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition, listEntities);
+        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
         expect(res).toBeTrue();
     });
 
@@ -105,7 +96,7 @@ describe('AcknowledgeService testing ', () => {
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1,
             [{process: 'testProcess', state: 'responseState', rights: RightsEnum.Write}]);
 
-        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition, listEntities);
+        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
         expect(res).toBeFalse();
     });
 
@@ -120,7 +111,7 @@ describe('AcknowledgeService testing ', () => {
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1,
             [{process: 'testProcess', state: 'responseState', rights: RightsEnum.ReceiveAndWrite}]);
 
-        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition, listEntities);
+        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
         expect(res).toBeFalse();
     });
 
@@ -135,7 +126,7 @@ describe('AcknowledgeService testing ', () => {
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity2,
             [{process: 'testProcess', state: 'responseState', rights: RightsEnum.Receive}]);
 
-        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition, listEntities);
+        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
         expect(res).toBeTrue();
     });
 
@@ -150,7 +141,7 @@ describe('AcknowledgeService testing ', () => {
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity2,
             [{process: 'testProcess', state: 'responseState', rights: RightsEnum.Write}]);
 
-        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition, listEntities);
+        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
         expect(res).toBeTrue();
     });
 
@@ -165,7 +156,7 @@ describe('AcknowledgeService testing ', () => {
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity2,
             [{process: 'testProcess', state: 'responseState', rights: RightsEnum.ReceiveAndWrite}]);
 
-        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition, listEntities);
+        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
         expect(res).toBeTrue();
     });
 
@@ -180,7 +171,7 @@ describe('AcknowledgeService testing ', () => {
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1,
             [{process: 'testProcess', state: 'responseState', rights: RightsEnum.Write}]);
 
-        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, cardForEntityParent, processDefinition, listEntities);
+        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, cardForEntityParent, processDefinition);
         expect(res).toBeFalse();
     });
 
@@ -195,7 +186,7 @@ describe('AcknowledgeService testing ', () => {
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1,
             [{process: 'testProcess', state: 'responseState', rights: RightsEnum.Receive}]);
 
-        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, cardForEntityParent, processDefinition, listEntities);
+        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, cardForEntityParent, processDefinition);
         expect(res).toBeTrue();
     });
 
