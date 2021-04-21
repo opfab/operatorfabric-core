@@ -269,22 +269,22 @@ export class ProcessesService {
         };
     }
 
-    public findProcessGroupForProcess(processId : string) : string {
-        for (let group of this.processGroups) {
-            if (group.processes.find(process => process == processId))
+    public findProcessGroupForProcess(processId: string): string {
+        for (const group of this.processGroups) {
+            if (group.processes.find(process => process === processId))
                 return group.id;
         }
         return '';
     }
 
     public getProcessesPerProcessGroups(): Map<any, any> {
-        let processesPerProcessGroups = new Map();
+        const processesPerProcessGroups = new Map();
 
         this.getAllProcesses().forEach(process => {
 
             const processGroupId = this.findProcessGroupForProcess(process.id);
-            if (processGroupId != '') {
-                let processes = (!! processesPerProcessGroups.get(processGroupId) ? processesPerProcessGroups.get(processGroupId) : []);
+            if (processGroupId !== '') {
+                const processes = (!! processesPerProcessGroups.get(processGroupId) ? processesPerProcessGroups.get(processGroupId) : []);
                 processes.push({id: process.id, itemName: process.name, i18nPrefix: `${process.id}.${process.version}`});
                 processesPerProcessGroups.set(processGroupId, processes);
             }
@@ -293,26 +293,26 @@ export class ProcessesService {
     }
 
     public getProcessesWithoutProcessGroup(): any[] {
-        let processesWithoutProcessGroup = [];
+        const processesWithoutProcessGroup = [];
 
         this.getAllProcesses().forEach(process => {
             const processGroupId = this.findProcessGroupForProcess(process.id);
-            if (processGroupId == '')
+            if (processGroupId === '')
                 processesWithoutProcessGroup.push({ id: process.id, itemName: process.name, i18nPrefix: `${process.id}.${process.version}` });
         });
         return processesWithoutProcessGroup;
     }
 
-    public findProcessGroupLabelForProcess(processId : string) : string {
+    public findProcessGroupLabelForProcess(processId: string): string {
         const processGroupId = this.findProcessGroupForProcess(processId);
-        return (!! processGroupId && processGroupId != '') ? processGroupId : "processGroup.defaultLabel";
+        return (!! processGroupId && processGroupId !== '') ? processGroupId : 'processGroup.defaultLabel';
     }
 
     private loadTypeOfStatesPerProcessAndState() {
         this.typeOfStatesPerProcessAndState = new Map();
 
-        for (let process of this.processes) {
-            for (let state in process.states)
+        for (const process of this.processes) {
+            for (const state in process.states)
                 this.typeOfStatesPerProcessAndState.set(process.id + '.' + state, process.states[state].type);
         }
     }

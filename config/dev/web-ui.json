@@ -3,6 +3,7 @@
   "environmentName": "DEV ENV",
   "environmentColor": "green",
   "checkPerimeterForResponseCard": true,
+  "checkPerimeterForSearchFields": false,
   "archive": {
     "filters": {
       "page": {

@@ -18,10 +18,11 @@ import {Observable, Subject} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {buildSettingsOrConfigSelector} from '@ofStore/selectors/settings.x.config.selectors';
 import {takeUntil} from 'rxjs/operators';
-import {TimeService} from "@ofServices/time.service";
-import {ProcessesService} from "@ofServices/processes.service";
-import {TypeOfStateEnum} from "@ofModel/processes.model";
-import {TimelineButtonsComponent} from "../../../share/timeline-buttons/timeline-buttons.component";
+import {TimeService} from '@ofServices/time.service';
+import {ProcessesService} from '@ofServices/processes.service';
+import {TypeOfStateEnum} from '@ofModel/processes.model';
+import {TimelineButtonsComponent} from '../../../share/timeline-buttons/timeline-buttons.component';
+import {UserService} from '@ofServices/user.service';
 
 @Component({
     selector: 'of-monitoring-filters',
@@ -57,6 +58,7 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
     firstQuery: boolean = true;
 
     processesGroups: {id: string, processes: string[]}[];
+    checkPerimeterForSearchFields: boolean;
 
     @Input()
     public processData: [];
@@ -65,12 +67,14 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
                 private configService: ConfigService,
                 private translate: TranslateService,
                 private time: TimeService,
-                private processesService: ProcessesService) {
+                private processesService: ProcessesService,
+                private userService: UserService) {
 
     }
 
     ngOnInit() {
         this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
+        this.checkPerimeterForSearchFields = this.configService.getConfigValue('checkPerimeterForSearchFields', false);
         this.processesGroups = this.processesService.getProcessGroups();
 
         this.monitoringForm = new FormGroup(
@@ -96,7 +100,7 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
                     enableSearchFilter: true,
                     badgeShowLimit: 4,
                     classes: 'custom-class-example'
-                }
+                };
                 this.processDropdownSettings = {
                     text: translations['monitoring.filters.selectProcessText'],
                     enableSearchFilter: true,
@@ -113,7 +117,7 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
                     [{id: TypeOfStateEnum.INPROGRESS, itemName: translations['monitoring.filters.typeOfState.INPROGRESS']},
                      {id: TypeOfStateEnum.FINISHED, itemName: translations['monitoring.filters.typeOfState.FINISHED']},
                      {id: TypeOfStateEnum.CANCELED, itemName: translations['monitoring.filters.typeOfState.CANCELED']}];
-              })
+              });
             });
         this.store.dispatch(new ResetFilterForMonitoring());
         this.changeProcessesWhenSelectProcessGroup();
@@ -124,8 +128,12 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
         return this.store.select(buildSettingsOrConfigSelector('locale'));
     }
 
-    displayProcessGroupsFilter() {
+    displayProcessGroupsFilter(): boolean {
         return !!this.processGroupDropdownList && this.processGroupDropdownList.length > 1 ;
+    }
+
+    isThereProcessGroup(): boolean {
+        return !!this.processesGroups && this.processesGroups.length > 0;
     }
 
     addProcessesDropdownList(processesDropdownList: any[]): void {
@@ -140,25 +148,24 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
                 this.processDropdownListWhenSelectedProcessGroup = [];
                 selectedProcessGroups.forEach(processGroup => {
 
-                    if (processGroup.id == '--')
+                    if (processGroup.id === '--')
                         this.addProcessesDropdownList(this.processesWithoutProcessGroupDropdownList);
                     else
                         this.addProcessesDropdownList(this.processesDropdownListPerProcessGroups.get(processGroup.id));
                 });
-            }
-            else
+            } else
                 this.processDropdownListWhenSelectedProcessGroup = [];
         });
     }
 
-    findProcessesIdForProcessGroups(processGroupIds: string[]) : string[]{
+    findProcessesIdForProcessGroups(processGroupIds: string[]): string[] {
         const processesId = [];
 
         processGroupIds.forEach(processGroupId => {
-            if (processGroupId == '--')
-                this.processesWithoutProcessGroupDropdownList.forEach(process => processesId.push(process.id))
+            if (processGroupId === '--')
+                this.processesWithoutProcessGroupDropdownList.forEach(process => processesId.push(process.id));
             else
-                this.processesDropdownListPerProcessGroups.get(processGroupId).forEach(process => processesId.push(process.id))
+                this.processesDropdownListPerProcessGroups.get(processGroupId).forEach(process => processesId.push(process.id));
         });
         return processesId;
     }
@@ -173,15 +180,13 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
 
         let procFilter;
 
-        if (processesIdForFilter.length > 0)
-        {
+        if (processesIdForFilter.length > 0) {
             procFilter = {
                 name: FilterType.PROCESS_FILTER
                 , active: true
                 , status: {processes: processesIdForFilter}
             };
-        }
-        else {
+        } else {
             procFilter = {
                 name: FilterType.PROCESS_FILTER
                 , active: false
@@ -195,16 +200,14 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
         const typeOfStates  = selectedTypeOfStates.value ? Array.prototype.map.call(selectedTypeOfStates.value, item => item.id) : [];
         let typeOfStatesFilter;
 
-        if (typeOfStates.length > 0)
-        {
+        if (typeOfStates.length > 0) {
             const typeOfStatesPerProcessAndState = this.processesService.getTypeOfStatesPerProcessAndState();
             typeOfStatesFilter = {
                 name: FilterType.TYPEOFSTATE_FILTER
                 , active: true
                 , status: {typeOfStates: typeOfStates, mapOfTypeOfStates: typeOfStatesPerProcessAndState}
             };
-        }
-        else {
+        } else {
             typeOfStatesFilter = {
                 name: FilterType.TYPEOFSTATE_FILTER
                 , active: false
@@ -219,11 +222,27 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
         this.processesDropdownListPerProcessGroups = this.processesService.getProcessesPerProcessGroups();
         this.processesWithoutProcessGroupDropdownList = this.processesService.getProcessesWithoutProcessGroup();
 
+        if (this.checkPerimeterForSearchFields)
+            this.filterProcessesWithStatesWithReceiveRights();
+
         if (this.processesWithoutProcessGroupDropdownList.length > 0)
-            this.processGroupDropdownList.push({ id: '--', itemName: "processGroup.defaultLabel" });
+            this.processGroupDropdownList.push({ id: '--', itemName: 'processGroup.defaultLabel' });
 
         const processGroups = Array.from(this.processesDropdownListPerProcessGroups.keys());
         processGroups.forEach(processGroup => this.processGroupDropdownList.push({ id: processGroup, itemName: processGroup }));
+    }
+
+    private filterProcessesWithStatesWithReceiveRights(): void {
+        this.processesWithoutProcessGroupDropdownList = this.processesWithoutProcessGroupDropdownList.filter(processData =>
+            this.userService.isReceiveRightsForProcess(processData.id));
+
+        this.processesDropdownListPerProcessGroups.forEach((processList, processGroupId) => {
+            processList = processList.filter(processData => this.userService.isReceiveRightsForProcess(processData.id));
+            if (! processList.length)
+                this.processesDropdownListPerProcessGroups.delete(processGroupId);
+            else
+                this.processesDropdownListPerProcessGroups.set(processGroupId, processList);
+        });
     }
 
     sendQuery() {
