@@ -2,14 +2,9 @@ plugins {
     id 'java'
 }
 
-ext {
-    karateVersion = '1.0.1'
-}
-
 dependencies {
-    testCompile "com.intuit.karate:karate-junit5:${karateVersion}"
+    testCompile testing.karate
 }
-
 
 test {
     useJUnitPlatform()

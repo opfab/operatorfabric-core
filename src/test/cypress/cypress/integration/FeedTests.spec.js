@@ -6,12 +6,6 @@ describe ('FeedScreen tests',function () {
         // This clears existing processGroups, bundles and perimeters and load the test configuration
         cy.exec('cd .. && ./resources/loadTestConf.sh '+Cypress.env('host'));
 
-        let cards = [
-            {
-
-            }
-        ]
-
 
     });
 
@@ -25,6 +19,11 @@ describe ('FeedScreen tests',function () {
     it('Check card reception and read behaviour', function () {
 
         cy.LogOpFab('operator1','test');
+
+        // Set feed sort to "Date" so the cards don't move down the feed once they're read (see OC-1669)
+        cy.get('#opfab-feed-filter-btn-sort').click();
+        cy.get('#sort-form').find('input[value=date]').parent().click();
+        cy.get('#opfab-feed-filter-btn-sort').click();
 
         // operator1 should see 6 cards in their feed
         cy.get('of-light-card').should('have.length',6);
@@ -85,6 +84,10 @@ describe ('FeedScreen tests',function () {
                 .should('have.css', 'font-weight')
                 .and('match', /400|normal/);
         });
+
+        // TODO Test on other card that it gets read when clicking cross
+
+        // TODO Test read if navigating to other page and back
 
 
 
