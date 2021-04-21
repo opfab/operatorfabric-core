@@ -50,6 +50,7 @@ import {TimeService} from '@ofServices/time.service';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {MessageLevel} from '@ofModel/message.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
+import {AcknowledgeService} from '@ofServices/acknowledge.service';
 
 
 declare const templateGateway: any;
@@ -162,7 +163,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 private entitiesService: EntitiesService,
                 private modalService: NgbModal,
                 private configService: ConfigService,
-                private time: TimeService) {
+                private time: TimeService,
+                private acknowledgeService: AcknowledgeService) {
     }
 
     get isLocked() {
@@ -368,7 +370,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     acknowledge() {
         if (this.card.hasBeenAcknowledged) {
-            this.cardService.deleteUserAcknowledgement(this.card.uid).subscribe(resp => {
+            this.acknowledgeService.deleteUserAcknowledgement(this.card.uid).subscribe(resp => {
                 if (resp.status === 200 || resp.status === 204) {
                     this.card = {...this.card, hasBeenAcknowledged: false};
                     this.updateAcknowledgementOnLightCard(false);
@@ -378,7 +380,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 }
             });
         } else {
-            this.cardService.postUserAcknowledgement(this.card.uid).subscribe(resp => {
+            this.acknowledgeService.postUserAcknowledgement(this.card.uid).subscribe(resp => {
                 if (resp.status === 201 || resp.status === 200) {
                     this.updateAcknowledgementOnLightCard(true);
                     this.closeDetails();
