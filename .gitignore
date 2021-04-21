@@ -133,4 +133,5 @@ config/dev/nginx.conf
 
 # Cypress
 src/test/cypress/node_modules
-
+src/test/cypress/cypress/screenshots
+src/test/cypress/cypress/videos

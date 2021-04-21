@@ -61,7 +61,8 @@ ext {
             junit5Plugin    : "org.junit.platform:junit-platform-gradle-plugin:${versions['junit5.platform']}",
             assertJ         : "org.assertj:assertj-core:${versions['assertj']}",
             reactor         : "io.projectreactor:reactor-test",
-            awaitility      : "org.awaitility:awaitility-kotlin:${versions['awaitility']}"
+            awaitility      : "org.awaitility:awaitility-kotlin:${versions['awaitility']}",
+            karate          : "com.intuit.karate:karate-junit5:${versions['karate']}"
     ]
 
 
