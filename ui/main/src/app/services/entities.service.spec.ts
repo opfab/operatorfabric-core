@@ -53,7 +53,7 @@ describe('EntitiesService', () => {
   
 
   describe('#getEntitiesAllowedToRespond', () => {
-    it('shoud return 3 entities', () => {
+    it('should return 3 entities', () => {
       const listEntities: Entity[] = [];
       const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', true, []);
       const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', true, []);
@@ -88,7 +88,7 @@ describe('EntitiesService', () => {
 
     });
 
-    it('shoud return 1 entity', () => {
+    it('should return 1 entity', () => {
       const listEntities: Entity[] = [];
 
       const entityGroup = new Entity('ENTITYGROUP', 'Control Rooms', 'Control Rooms', true, []);
@@ -114,7 +114,7 @@ describe('EntitiesService', () => {
 
     });
 
-    it('shoud return 2 entity', () => {
+    it('should return 2 entities', () => {
       const listEntities: Entity[] = [];
   
       const entityGroup = new Entity('ENTITYGROUP', 'Control Rooms', 'Control Rooms', false, []);
@@ -141,6 +141,54 @@ describe('EntitiesService', () => {
       expect(req.request.method).toBe('GET');
       req.flush(listEntities);
   
+    });
+  });
+
+  describe('#resolveChildEntitiesByLevel', () => {
+    it('should return the child entities with the specified connection level', () => {
+      const listEntities: Entity[] = [];
+      const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', true, []);
+      const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', true, []);
+      const entity3 = new Entity('ENTITY3', 'Control Room 3', 'Control Room 3', false, []);
+      const entity3_1 = new Entity('ENTITY3.1', 'Control Room 3.1', 'Control Room 3.1', false, ['ENTITY3']);
+      const entity3_1_1 = new Entity('ENTITY3.1.1', 'Control Room 3.1.1', 'Control Room 3.1.1', false, ['ENTITY3.1']);
+      const entity3_1_2 = new Entity('ENTITY3.1.2', 'Control Room 3.1.2', 'Control Room 3.1.2', true, ['ENTITY3.1']);
+      const entity3_2 = new Entity('ENTITY3.2', 'Control Room 3.2', 'Control Room 3.2', true, ['ENTITY3']);
+
+      listEntities.push(entity1);
+      listEntities.push(entity2);
+      listEntities.push(entity3);
+      listEntities.push(entity3_1);
+      listEntities.push(entity3_1_1);
+      listEntities.push(entity3_1_2);
+      listEntities.push(entity3_2);
+
+      entitiesService.loadAllEntitiesData().subscribe(result => {
+        expect(result.length).toBe(7);
+        const allowedEntities = entitiesService.resolveChildEntitiesByLevel("ENTITY1", 0);
+        expect(allowedEntities.length).toBe(1);
+        expect(allowedEntities[0].id).toBe('ENTITY1');
+
+        const allowedEntities1 = entitiesService.resolveChildEntitiesByLevel("ENTITY3", 1);
+        expect(allowedEntities1.length).toBe(2);
+        expect(allowedEntities1[0].id).toBe('ENTITY3.1');
+        expect(allowedEntities1[1].id).toBe('ENTITY3.2');
+
+        const allowedEntities2 = entitiesService.resolveChildEntitiesByLevel("ENTITY3", 2);
+        expect(allowedEntities2.length).toBe(2);
+        expect(allowedEntities2[0].id).toBe('ENTITY3.1.1');
+        expect(allowedEntities2[1].id).toBe('ENTITY3.1.2');
+
+        const allowedEntities3 = entitiesService.resolveChildEntitiesByLevel("ENTITY2", 1);
+        expect(allowedEntities3.length).toBe(0);
+
+        const allowedEntities4 = entitiesService.resolveChildEntitiesByLevel("ENTITY2", 2);
+        expect(allowedEntities4.length).toBe(0);
+      });
+      const req = httpMock.expectOne(`${environment.urls.entities}`);
+      expect(req.request.method).toBe('GET');
+      req.flush(listEntities);
+
     });
   });
 
