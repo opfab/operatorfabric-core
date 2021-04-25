@@ -15,6 +15,7 @@ import {merge, Observable, of, Subject} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {catchError, map, skip, tap} from 'rxjs/operators';
 import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
+import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {Card} from '@ofModel/card.model';
 import {select, Store} from '@ngrx/store';
 import {selectLinesOfLoggingResult} from '@ofStore/selectors/logging.selectors';
@@ -27,12 +28,14 @@ import {Utilities} from '../common/utilities';
 export class ProcessesService {
     readonly processesUrl: string;
     readonly processGroupsUrl: string;
+    readonly monitoringConfigUrl: string;
     private urlCleaner: HttpUrlEncodingCodec;
     private processCache = new Map();
     private translationsAlreadyLoaded = new Set<string>();
     private processes: Process[];
     private processGroups: {id: string, processes: string[]}[];
     private translationsLoaded = new Subject();
+    private monitoringConfig: MonitoringConfig;
 
     private typeOfStatesPerProcessAndState: Map<string, TypeOfStateEnum>;
 
@@ -41,6 +44,7 @@ export class ProcessesService {
         this.urlCleaner = new HttpUrlEncodingCodec();
         this.processesUrl = `${environment.urls.processes}`;
         this.processGroupsUrl = `${environment.urls.processGroups}`;
+        this.monitoringConfigUrl = `${environment.urls.monitoringConfig}`;
         this.loadTranslationIfNeededAfterLoadingLoggingCard();
         this.loadTranslationIfNeededAfterLoadingCard();
     }
@@ -124,6 +128,20 @@ export class ProcessesService {
         });
     }
 
+
+    public loadMonitoringConfig(): Observable<MonitoringConfig> {
+        return this.httpClient.get<MonitoringConfig>(this.monitoringConfigUrl)
+            .pipe(
+                map(monitoringConfig => {
+                        if (!!monitoringConfig) {
+                            this.monitoringConfig = monitoringConfig;
+                            console.log(new Date().toISOString(), 'Monitoring config loaded');
+                        }
+                        else  console.log(new Date().toISOString(), 'No monitoring config to load');
+                        return monitoringConfig;
+                    }, (error) => console.error(new Date().toISOString(), 'An error occurred when loading monitoringConfig', error)
+                ));
+    }
     public areTranslationsLoaded(): Observable<any> {
         return this.translationsLoaded;
     }
@@ -135,6 +153,11 @@ export class ProcessesService {
     public getProcessGroups(): {id: string, processes: string[]}[] {
         return this.processGroups;
     }
+
+    public getMonitoringConfig(): any {
+        return this.monitoringConfig;
+    }
+
 
     public getProcess(processId: string): Process {
         return this.processes.find(process => processId === process.id);
