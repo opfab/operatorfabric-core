@@ -1,0 +1,52 @@
+{
+  "export": 
+  {
+    "fields":
+    [
+      {
+        "columnName": "Creation Date",
+        "jsonField" : "card.publishDate"
+      },
+      {
+        "columnName": "Business Date - start",
+        "jsonField" : "card.startDate"
+      },
+      {
+        "columnName": "Business Date - end",
+        "jsonField" : "card.endDate"
+      },
+      {
+        "columnName": "Service",
+        "jsonField" : "card.processGroup"
+      },
+      {
+        "columnName": "Process",
+        "jsonField" : "card.processName"
+      },
+      {
+        "columnName": "Title",
+        "jsonField" : "card.title"
+      },
+      {
+        "columnName": "Summary",
+        "jsonField" : "card.summary"
+      },
+      {
+        "columnName": "Status",
+        "jsonField" : "card.typeOfState"
+      },
+      {
+        "columnName": "Severity",
+        "jsonField" : "card.severity"
+      },
+      {
+        "jsonField" : "childCards",
+        "fields" : [
+          { "columnName": "Response from", "jsonField": "publisher" },
+          { "columnName": "Response date","jsonField": "publishDate"},
+          { "columnName": "Response ","jsonField": "data.response"}
+        ]
+      }
+    ]
+  }
+}
