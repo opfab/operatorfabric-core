@@ -9,12 +9,12 @@
 
 == Send card 
 
-The API does not have anymore an endpoint to send an Array of card. 
+The API does not provide an endpoint to send an array of cards anymore.
 
-- The endPoint `cards` now receive only one card 
-- The endPoint `async/cards` does not longer exist 
+- The endpoint `cards` now accepts only one card
+- The endpoint `async/cards` no longer exists
 
-So if you use to send card as array, you need to modify your code to send it one by one via endpoint `cards`
+So if you used to send several cards as array, you need to modify your code to send hem one by one via endpoint `cards`.
 
 == Package name change
 

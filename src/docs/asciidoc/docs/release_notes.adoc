@@ -1,14 +1,77 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
+= Version 2.4.0.RELEASE
 
-= Version SNAPSHOT
+== Features
 
-//The release notes are managed in an outside repository to avoid constantly having conflicts when merging PRs on the
-//develop branch. See https://github.com/opfab/release-notes/.
-//The content from this repository is then pasted back to this file during the release process.
+* OC-1602 : Add delete cards endpoint to delete multiple cards by date criteria
+* OC-1636 : UserCard : Choose the first service in the list by default
+* OC-1652 : Admin screen : permit to create logins of 3 characters
 
+.Visual changes
+* OC-1609 : Confirmation popups : harmonize size for text and title
+* OC-1613 : Confirmation popup shall be on the middle of the screen
+* OC-1657 : Card deletion result should be displayed with an alert message instead of popover
+
+== Bugs
+
+.Administration screen
+
+* OC-1621 : Admin UI - When deleting a Perimeter remove from cache as well
+* OC-1634 : When changing perimeter attached to a group it is not propagated to the card-publication service
+
+.User cards
+
+* OC-1624 : Card preview in user card shall not set the template in full screen mode
+* OC-1644 : When only one process is accessible to usercard , it does not work
+* OC-1674 : Editing a usercard : multi-select component for state field is not set with the right value
+
+.Feed screen
+
+* OC-1623 : Fix bug when removing a timeline domain from web-ui configuration
+* OC-1641 : When card selected in the feed is updated, it should stay unread
+* OC-1604 : Acknowledge all cards : manage states with acknowledgmentAllowed set to "OnlyWhenResponseDisabledForUser"
+* OC-1654 : After an update of a question card, the entities that have already answered shall be orange in card header
++
+NOTE: The entities will be marked in green only once they give an answer to the updated version of card.
+
+.Miscellaneous
+
+* OC-1627 : Tasks card example does not fill the repetition date, duration and hour/min when editing the card
+* OC-1607 : Remove reactive code from card publication and solve a bug (hang of HTTP requests)
++
+IMPORTANT: This changes things for card-sending endpoints (see the
+https://opfab.github.io/documentation/archives/2.3.0.RELEASE/docs/single_page_doc.html#_migration_guide_from_release_2_3_0_to_release_2_4_0[migration guide])
++
+* OC-1585 : Authorization mode 'NONE' fix with CardService and Perimeters.
+
+== Tasks
+
+.Cypress testing
+
+* OC-1635 : Allow Cypress tests to run with ng serve
+* OC-1640 : Implement basic test plan as Cypress test using resources scripts
+
+.Documentation and examples
+
+* OC-1625 : Usercard process template example : store in the card data the status value
+* OC-1622 : Set a value for state.description fields in all card examples
+
+.CI and refactoring
+* OC-1630 : Adding package-lock.json to git for npm ci
++
+_From now on, to build the ui:_
++
+_If you have changed anything in the package.json, use *npm install* to install/update the dependency and update the package-lock.json accordingly._
++
+_If you just want to reproduce the current state of the ui, use *npm ci* instead: it will clear node_modules and install dependencies using the versions stated in package-lock.json, ensuring that what your local development environment is identical to what's being built on the CI/CD pipeline._
++
+* OC-1611 : Remove core-js dependency
+* OC-1656 : user.service.ts : rework isCurrentUserAdmin() and isCurrentUserInAnyGroup()
+* OC-1661 : Removing inconsistent tooling configuration and changing gradle node plugin
+* OC-1664 : UI tests - removal of unused class ProcessesServiceMock
