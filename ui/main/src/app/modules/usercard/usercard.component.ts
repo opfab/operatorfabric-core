@@ -16,7 +16,7 @@ import {UserService} from '@ofServices/user.service';
 import {Card, CardData, fromCardToCardForPublishing, TimeSpan} from '@ofModel/card.model';
 import {I18n} from '@ofModel/i18n.model';
 import {Subject} from 'rxjs';
-import {Process} from '@ofModel/processes.model';
+import {Process, Recipient} from '@ofModel/processes.model';
 import {TimeService} from '@ofServices/time.service';
 import {Severity} from '@ofModel/light-card.model';
 import {Guid} from 'guid-typescript';
@@ -368,6 +368,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
             this.startDateVisible = (userCard.startDateVisible === undefined) ? true : userCard.startDateVisible;
             this.endDateVisible = (userCard.endDateVisible === undefined) ? true : userCard.endDateVisible;
             this.lttdVisible = (userCard.lttdVisible === undefined) ? true : userCard.lttdVisible;
+            if (!!userCard.recipientList) {
+                this.loadRecipientListForState(userCard.recipientList)
+            }
         } else {
             this.severityVisible = true;
             this.startDateVisible = true;
@@ -375,6 +378,28 @@ export class UserCardComponent implements OnDestroy, OnInit {
             this.lttdVisible = true;
         }
 
+    }
+
+    loadRecipientListForState(recipients: Recipient[]): void {
+        this.recipientsOptions = [];
+        recipients.forEach(r => {
+            if (!!r.levels) {
+                r.levels.forEach(l => {
+                    this.entitiesService.resolveChildEntitiesByLevel(r.id, l).forEach(entity => {
+                        if (!this.recipientsOptions.find(o => o.id === entity.id)) {
+                            this.recipientsOptions.push({ id: entity.id, itemName: entity.name });
+                        }
+                    })
+                })
+            } else {
+                if (!this.recipientsOptions.find(o => o.id === r.id)) {
+                    const entity = this.entities.find(e => e.id === r.id);
+                    this.recipientsOptions.push({ id: entity.id, itemName: entity.name });
+                }
+            }         
+        });
+
+        this.recipientsOptions.sort(( a, b ) => a.itemName.localeCompare(b.itemName));
     }
 
     reinsertScripts(): void {
