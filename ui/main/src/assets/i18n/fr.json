@@ -254,6 +254,7 @@
     "send-another-one": "ENVOYER UNE AUTRE CARTE",
     "cardSendWithNoError": "Votre carte est publiée",
     "deleteCard": {
+      "title" : "CONFIRMATION",
       "doYouReallyWant": "Voulez-vous vraiment supprimer cette carte ?",
       "cardDeletedWithNoError": "Carte supprimée",
       "error": {
@@ -329,7 +330,7 @@
       "confirm":"Confirmez...",
       "login": {
         "required": "L'identifiant est obligatoire.",
-        "minLength": "L'identifiant doit avoir au moins 4 caractères.",
+        "minLength": "L'identifiant doit avoir au moins 2 caractères.",
         "pattern": "L'identifiant ne peut contenir que les caractères suivants : lettres, _, - ou chiffres."
       },
       "firstName": {

@@ -8,7 +8,9 @@
 
 
 
-<div id="opfab-feed-light-card-{{lightCard.process}}-{{lightCard.processInstanceId}}" class="card light-card-detail "
+<div id="opfab-feed-light-card-{{lightCard.process}}-{{lightCard.processInstanceId}}"
+     attr.data-urlId="{{lightCard.process}}.{{lightCard.processInstanceId}}"
+     class="card light-card-detail "
     [class.light-card-detail-selected]="open" [class.light-card-detail-unselected]="!open"
     [class.light-card-detail-unread]="displayUnreadIcon && !isArchivePageType() && !lightCard.hasBeenRead"
     (click)="select()">
@@ -52,7 +54,7 @@
         <div class="badge-border  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}}"></div>
         <div class="p-1">
             <span *ngIf="open">
-                <span id="opfab-selected-card" translate [translateParams]="lightCard.summary.parameters">{{i18nPrefix +
+                <span id="opfab-selected-card-summary" translate [translateParams]="lightCard.summary.parameters">{{i18nPrefix +
                     lightCard.summary.key}}</span>
                 <span id="opfab-form-entity" *ngIf="fromEntity">
                     

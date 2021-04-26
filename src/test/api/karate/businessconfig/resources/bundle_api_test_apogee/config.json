@@ -8,8 +8,8 @@
   ],
   "i18nLabelKey": "businessconfig.label",
   "states": {
-    "APOGEESEA": {
-      "actions": { }
-    }
+      "APOGEESEA": {
+          "description": "apogeeseaState.description" 
+       }
   }
 }

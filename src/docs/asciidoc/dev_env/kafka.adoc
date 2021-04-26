@@ -87,9 +87,9 @@ See link:{kafka_schema}[Schema management] for detailed information on using and
 == Listener / deserializer
 Most of the OperatorFabric Kafka implementation can be found at
 
-`org.lfenergy.operatorfabric.cards.publication.kafka`:: for
+`org.opfab.cards.publication.kafka`:: for
 the implementation of the deserializers and mapping of Kafka topics to OperatorFabric cards and
-`org.lfenergy.operatorfabric.autoconfigure.kafka` ::
+`org.opfab.autoconfigure.kafka` ::
 for the various Kafka configuration options.
 
 === Kafka OperatorFabric AVRO schema

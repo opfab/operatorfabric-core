@@ -118,11 +118,11 @@ describe ('CheckTranslations',()=>{
         cy.should('be.visible')
         cy.should('have.css', 'color', 'rgb(186, 186, 186)')
     
-        cy.get('#opfab-feed-filter-dateTimeFrom > table.ng-star-inserted > tr > :nth-child(1) > .nopaddingrow > label').contains('Start')
+        cy.get('#opfab-feed-filter-dateTimeFrom > table > tr > :nth-child(1) label').contains('Start')
         cy.should('be.visible')
         cy.should('have.css', 'color', 'rgb(186, 186, 186)')
     
-        cy.get('#opfab-feed-filter-dateTimeTo > table.ng-star-inserted > tr > :nth-child(1) > .nopaddingrow > label').contains('End')
+        cy.get('#opfab-feed-filter-dateTimeTo > table > tr > :nth-child(1) label').contains('End')
         cy.should('be.visible')
         cy.should('have.css', 'color', 'rgb(186, 186, 186)')
         cy.waitDefaultTime()

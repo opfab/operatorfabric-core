@@ -7,10 +7,9 @@ Feature: Archives
     * def authTokenAsTSO = signInAsTSO.authToken
 
   Scenario: Post 10 cards, fill the archive
-    * def card =
+    * def card1 =
 """
-
-[{
+{
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
@@ -24,7 +23,10 @@ Feature: Archives
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"new message (card 1)"}
-},
+}
+"""
+	* def card2 =
+"""
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
@@ -38,7 +40,10 @@ Feature: Archives
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"new message (card2) "}
-},
+}
+"""
+	* def card3 =
+"""
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
@@ -53,7 +58,10 @@ Feature: Archives
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"new message (card 3)"}
-},
+}
+"""
+	* def card4 =
+"""
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
@@ -68,7 +76,10 @@ Feature: Archives
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"new message (card4) "}
-},
+}
+"""
+	* def card5 =
+"""
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
@@ -83,7 +94,10 @@ Feature: Archives
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"new message (card 5)"}
-},
+}
+"""
+	* def card6 =
+"""
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
@@ -99,7 +113,10 @@ Feature: Archives
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"new message (card 6) "}
 
-},
+}
+"""
+	* def card7 =
+"""
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
@@ -114,7 +131,10 @@ Feature: Archives
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"new message (card 7)"}
-},
+}
+"""
+	* def card8 =
+"""
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
@@ -129,7 +149,10 @@ Feature: Archives
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"new message (card8) "}
-},
+}
+"""
+	* def card9 =
+"""
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
@@ -145,7 +168,10 @@ Feature: Archives
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"new message (card 9)"}
-},
+}
+"""
+	* def card10 =
+"""
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
@@ -162,7 +188,6 @@ Feature: Archives
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"new message (card10) "}
 }
-]
 """
     * def mycard =
 """
@@ -184,12 +209,56 @@ Feature: Archives
     	]
 }
 """
-# Push card
+# Push cards
     Given url opfabPublishCardUrl + 'cards'
-    And request card
+    And request card1
     When method post
     Then status 201
-    And match response.count == 10
+
+    Given url opfabPublishCardUrl + 'cards'
+    And request card2
+    When method post
+    Then status 201
+
+	Given url opfabPublishCardUrl + 'cards'
+    And request card3
+    When method post
+    Then status 201
+
+	Given url opfabPublishCardUrl + 'cards'
+    And request card4
+    When method post
+    Then status 201
+
+	Given url opfabPublishCardUrl + 'cards'
+    And request card5
+    When method post
+    Then status 201
+
+	Given url opfabPublishCardUrl + 'cards'
+    And request card6
+    When method post
+    Then status 201
+
+	Given url opfabPublishCardUrl + 'cards'
+    And request card7
+    When method post
+    Then status 201
+
+	Given url opfabPublishCardUrl + 'cards'
+    And request card8
+    When method post
+    Then status 201
+
+	Given url opfabPublishCardUrl + 'cards'
+    And request card9
+    When method post
+    Then status 201
+
+	Given url opfabPublishCardUrl + 'cards'
+    And request card10
+    When method post
+    Then status 201
 
  Scenario: fetch the first page
 

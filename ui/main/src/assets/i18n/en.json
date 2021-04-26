@@ -255,6 +255,7 @@
     "send-another-one": "SEND ANOTHER CARD",
     "cardSendWithNoError": "Your card is published",
     "deleteCard": {
+      "title" : "CONFIRMATION",
       "doYouReallyWant": "Do you really want to delete this card ?",
       "cardDeletedWithNoError": "Card deleted",
       "error": {
@@ -330,7 +331,7 @@
       "confirm": "Please confirm...",
       "login": {
         "required": "Login is required.",
-        "minLength": "Login should be minimum 4 characters.",
+        "minLength": "Login should be minimum 2 characters.",
         "pattern": "Login should only contain the following characters: letters, _, - or digits."
       },
       "firstName": {

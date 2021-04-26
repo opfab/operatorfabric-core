@@ -24,11 +24,13 @@ The Cypress test rely on a running OpFab instance that is an adaptation from the
 For example, as Cypress doesn't allow navigation to different origins within the same test, the OpFab instance needs
 to use the `PASSWORD` authentication mode rather than `CODE`.
 
+=== Full docker mode
+
 To launch such an instance:
 
 [source,bash]
 ----
-cd /config/docker
+cd config/docker
 docker-compose down <1>
 ./docker-compose-cypress.sh <2>
 ----
@@ -41,7 +43,7 @@ NOTE: If you need to further adapt the Cypress instance, you can make changes to
 You also need to set up some perimeters and bundles for the tests. To do so:
 
 ----
-cd /src/test/resources
+cd src/test/resources
 loadTestConf.sh
 ----
 
@@ -50,9 +52,20 @@ side-effects from previous tests) with the following commands:
 
 [source,bash]
 ----
-cd /config/docker
+cd config/docker
 docker-compose down
 ----
+
+=== Dev mode
+
+You can also launch operator-fabric in dev mode. To do so, follow the steps described above, substituting
+`config/dev` for `config/docker`. Then run the core services with the following command:
+
+[source,bash]
+----
+./bin/run_all.sh start
+----
+
 == Running existing tests
 
 To launch the Cypress test runner:
@@ -68,6 +81,27 @@ run all existing tests.
 
 NOTE: You can select the browser (and version) that you want to use from a dropdown list on the right. The list will
 display the browsers that are currently installed on your computer (and supported by Cypress).
+
+== Running tests on 4200 (ng serve)
+
+Follow the steps described above in "Dev mode" to start a Cypress-flavoured OpFab instance in development mode, then
+run ng serve to start a dynamically generated ui on port 4200:
+
+[source,bash]
+----
+cd ui/main
+ng serve
+----
+
+Then launch the Cypress test runner as follows:
+
+To launch the Cypress test runner:
+
+[source,bash]
+----
+cd src/test/cypress
+./node_modules/.bin/cypress open --config baseUrl=http://localhost:4200
+----
 
 == Clearing MongoDB
 
@@ -85,8 +119,8 @@ db.archivedCards.remove({})
 
 == Current status of tests
 
-All tests except timeline business periods are mostly passing when run against empty card/archived cards collections.
-However, they are currently quite flaky especially when involving dates (round up errors for example).
+All tests should be passing when run alone (i.e. not with run all specs) against empty card/archived cards collections.
+However, tests in the "Flaky" folder can sometimes fail because they involve dates (round up errors for example).
 
 == Creating new tests
 
@@ -94,10 +128,38 @@ Create a new XXXX.spec.js file under `cypress/cypress/integration`
 
 NOTE: We will need to define a convention for naming and organizing tests.
 
-Start writing tests, cypress is well documented https://docs.cypress.io/api/api/table-of-contents.html
+=== Useful documentation
+
+==== Cypress Documentation
+* https://docs.cypress.io/guides/references/assertions#Common-Assertions[Most Common Assertions]
+* https://docs.cypress.io/guides/references/assertions[Assertions Reference]
+
+==== Other links
+* https://medium.com/slido-dev-blog/cypress-tips-4-testing-lists-of-items-dccd4b688816[Testing lists of items]
+* https://developer.mozilla.org/en/docs/Learn/HTML/Howto/Use_data_attributes[Use data attributes]
+* https://codelikethis.com/lessons/javascript/cypress#anchor/nothing_happens_immediately[Nothing happens immediately]
+
+=== Guidelines and tips
+
+* Use the https://docs.cypress.io/api/commands/get#Get-in-within[find or within commands] rather than complex CSS
+selectors to target descendants elements.
+* If you want to access aliases using the `this` keyword, make sure you are using anonymous functions rather than fat
+arrow functions, otherwise use cy.get('@myAlias') to access it asynchronously
+(https://docs.cypress.io/guides/core-concepts/variables-and-aliases#Avoiding-the-use-of-this[the documentation]
+has recently been updated on this topic).
+* When running tests, make sure that you are not connected to OpFab as it can cause unexpected behaviour with read
+cards for example.
+* When chaining a `should` assertion to a `cy.get` command that returns several elements, it will pass if it is true for
+ANY of these elements. Use each + callback to check that an assertion is true on every element.
+
 
 == Configuration
 
-* The base url of the OperatorFabric instance you're testing against can be changed in `cypress.json`.
-* Using the custom-defined command cy.waitDefaultTime() instead of cy.wait(XXX) allows the wait time to be changed
-globally for all steps using the defaultWaitTime enviroment variable defined in `cypress.json`.
+In `cypress.json`:
+
+* `baseUrl`: The base url of the OperatorFabric instance you're testing against. It will be appended in front of any
+    `visit` call.
+* `env.host`: The host corresponding to the OperatorFabric instance you're testing against. It will be used for API
+calls.
+* `env.defaultWaitTime`: Using the custom-defined command cy.waitDefaultTime() instead of cy.wait(XXX) allows the wait
+time to be changed globally for all steps to the value defined by this property.

@@ -37,13 +37,22 @@
 <script>
     selectedProcessState = "{{card.data.state}}";
     if (selectedProcessState.length >0) document.getElementById('state').value = selectedProcessState; 
+
+    selectedProcessStatus = "{{card.data.status}}";
+    if (selectedProcessStatus.length >0) document.getElementById('status').value = selectedProcessStatus;
+
     templateGateway.getSpecificCardInformation = function () {
         const state = document.getElementById('state').value;
+        const status = document.getElementById('status').value;
         const card = {
             summary: { key: "message.summary" },
             title: { key: "processState.title", parameters: {status: state}  },
-            data: { state: state }
+            data: { 
+                state: state,
+                status: status
+            }
         };
+        if (status==="error") card.data.error="true";
         return {
             valid: true,
             card: card

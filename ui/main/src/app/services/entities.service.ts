@@ -24,7 +24,7 @@ declare const templateGateway: any;
 export class EntitiesService extends CachedCrudService implements OnDestroy {
 
  readonly entitiesUrl: string;
- private _entities: Entity[];
+ protected _entities: Entity[];
  private ngUnsubscribe$ = new Subject<void>();
   /**
    * @constructor
@@ -124,17 +124,18 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
   /** Given a list of entities that might contain parent entities, this method returns the list of entities
    *  that can actually send cards
    * */
-  public resolveEntitiesAllowedToSendCards(selected: Entity[]) : Entity[] {
-    let allowed = new Set<Entity>();
+  public resolveEntitiesAllowedToSendCards(selected: Entity[]): Entity[] {
+    const allowed = new Set<Entity>();
     selected.forEach(entity => {
         if (entity.entityAllowedToSendCard) {
             allowed.add(entity);
         } else {
-          const childs = this._entities.filter(child => child.parents.includes(entity.id));
-          const childsAllowed = this.resolveEntitiesAllowedToSendCards(childs);
-          childsAllowed.forEach(c => allowed.add(c));
+            let children: Entity[];
+            children = this._entities.filter(child => child.parents.includes(entity.id));
+            const childrenAllowed = this.resolveEntitiesAllowedToSendCards(children);
+            childrenAllowed.forEach(c => allowed.add(c));
         }
-    })
+    });
 
     return Array.from(allowed);
   }

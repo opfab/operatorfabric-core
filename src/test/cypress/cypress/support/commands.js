@@ -1,11 +1,4 @@
-let OpFabUrlCards="http://localhost:2102/cards"
-let OpFafUrlToken="http://localhost:89/auth/token"
-let OpFafUrlAuth="http://localhost:2002/ui/#/"
-let OpFafUrlLang="http://localhost:80/users/users/"
-//TODO Have these url rely on baseUrl or move to separate config file
-
 //TODO Check that all commands are used
-
 
 const ONE_SECOND = 1000;
 
@@ -17,7 +10,7 @@ Cypress.Commands.add('PushCard', (processName, processVersion, publisherName, pr
 {
     cy.request({
         method : 'POST',
-        url : OpFabUrlCards,
+        url : Cypress.env('host')+':2102/cards',
         body: {
             "publisher" : publisherName,
             "processVersion" : processVersion,
@@ -38,7 +31,6 @@ Cypress.Commands.add('PushCard', (processName, processVersion, publisherName, pr
     }).then(response =>{
         cy.expect(response.status).to.eq(201);
         cy.expect(response.body).to.have.property('count', 1);
-        cy.expect(response.body).to.have.property('message', 'All pushedCards were successfully handled')
 
     })
 })
@@ -47,7 +39,7 @@ Cypress.Commands.add('PushActionCard', (processName, processVersion, publisherNa
 {
     cy.request({
         method : 'POST',
-        url : OpFabUrlCards,
+        url : Cypress.env('host')+':2102/cards',
         body: {
             "publisher" : publisherName,
             "processVersion" : processVersion,
@@ -70,12 +62,12 @@ Cypress.Commands.add('PushActionCard', (processName, processVersion, publisherNa
     }).then(response =>{
         cy.expect(response.status).to.eq(201);
         cy.expect(response.body).to.have.property('count', 1);
-        cy.expect(response.body).to.have.property('message', 'All pushedCards were successfully handled')
 
     })
 })
 
-//TODO opfab-client should be configurable?a
+//TODO opfab-client should be configurable?
+//TODO url should be based on baseUrl
 Cypress.Commands.add('getToken', (username,password) => {
     cy.request({
             method: 'POST',
@@ -109,7 +101,7 @@ Cypress.Commands.add('visitWithToken', (url) => {
 
 Cypress.Commands.add('LogOpFab',(username, password)=>
 {   //go to login page
-    cy.visit(OpFafUrlAuth)
+    cy.visit('')
 
     //type login
     cy.get('#opfab-login').should('be.visible')
@@ -139,7 +131,7 @@ Cypress.Commands.add('checkCardContent', (processName,processInstanceId,cardTitl
     cy.get('#opfab-feed-light-card-'+processName+'-'+processInstanceId+' > :nth-child(1) > .p-1 > [style="display: flex; width: 100%; margin-top: 5px;"] > .card-subtitle').contains(dateDisplayed)
     cy.should('be.visible')
     //Check card summary
-    cy.get('#opfab-selected-card').contains(cardSummmary)
+    cy.get('#opfab-selected-card-summary').contains(cardSummmary)
     cy.should('be.visible')
     //check card details
 
@@ -183,83 +175,6 @@ Cypress.Commands.add('goToAbout', ()=>
     cy.get('a[routerlink="/about"]').click();
 })
 
-Cypress.Commands.add('getLang', (user,password)=>
-{
-    let token;
-    let lang;
-    cy.request({
-        method : 'POST',
-        url : OpFafUrlToken,
-        form : true,
-        body: {
-            'username' : user,
-            'password' : password,
-            'grant_type' : 'password',
-            'client_id' : 'opfab-client',
-            'secret' : 'opfab-keycloack-secret'
-        }
-    }).then(response =>{
-        token = response.body.access_token;
-        cy.log(token)
-        cy.request({
-            method : 'GET',
-            url : OpFafUrlLang+user+"/settings",
-            failOnStatusCode: false,
-            auth: {
-                'bearer': token
-            }
-        }).then(response =>{
-            lang = response.body.locale;
-            expect(response.status).to.eql(200);
-        }).then(response =>{
-            return lang;
-        })
-    })
-})
-
-
-
-Cypress.Commands.add('ChangeLang', (currentLanguage,user,password)=>
-{
-    let token;
-    let lang;
-    if (currentLanguage === 'en') {
-        lang ='fr'
-    }
-    else {
-        lang ='en'
-    }
-    cy.request({
-        method : 'POST',
-        url : OpFafUrlToken,
-        //failOnStatusCode: false,
-        form : true,
-        body: {
-            'username' : user,
-            'password' : password,
-            'grant_type' : 'password',
-            'client_id' : 'opfab-client',
-            'secret' : 'opfab-keycloack-secret'
-        }
-    }).then(response =>{
-        token = response.body.access_token;
-        cy.request({
-            method : 'PUT',
-            url : 'http://localhost:80/users/users/tso1-operator/settings',
-            failOnStatusCode: false,
-            auth: {
-                'bearer': token
-            },
-            body: {
-                'login' : user,
-                'locale' : lang
-            }
-        }).then(response =>{
-            lang = response.body.locale;
-            expect(response.status).to.eql(200);
-            cy.log(lang);
-        })
-    })})
 
 Cypress.Commands.add('checkArchivedCard', (user,lang,color,dateDisplayed)=>
 {
@@ -323,18 +238,6 @@ Cypress.Commands.add('checkMenus',(lang)=>
         cy.log("Logging  menu  checked")
         cy.get('.mr-auto > :nth-child(6) > .nav-link').contains('Calendar').should('be.visible')
         cy.log("Calendar menu  checked")
-    }
-})
-Cypress.Commands.add('changeLangManually',(lang)=>
-{
-    if (lang=='fr'){
-        cy.get('#opfab-setting-locale').click();
-        cy.get('select').eq(0).select('en')
-        lang='en'
-    } else {
-        cy.get('#opfab-setting-locale').click();
-        cy.get('select').eq(0).select('fr');
-        lang='fr';
     }
 })
 
@@ -431,7 +334,7 @@ Cypress.Commands.add('removeCard', (id)=>
 {
     cy.request({
         method : 'DELETE',
-        url : OpFabUrlCards+ id,
+        url : Cypress.env('host')+':2102/cards'+id,
     }).then(response =>{
         cy.expect(response.status).to.eq(200);
         cy.log(response)

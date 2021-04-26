@@ -30,7 +30,7 @@ swaggerSources {
     endpoints {
         inputFile = file('../cards-publication/src/main/modeling/swagger.yaml')
         code {
-            language = 'org.lfenergy.operatorfabric.generators.OpfabSpringGenerator'
+            language = 'org.opfab.generators.OpfabSpringGenerator'
             configFile = file('src/main/modeling/config.json')
             outputDir = file("./build/swagger")
             templateDir = file('../src/main/resources/swagger-templates')

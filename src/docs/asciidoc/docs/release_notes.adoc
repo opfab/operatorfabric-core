@@ -5,70 +5,73 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-= Version 2.3.0.RELEASE
-
-This release changes the way of exchanging between opfab and template when using response cards. If you are using response cards, you must modify your templates .To migrate your templates, see https://opfab.github.io/documentation/current/docs/single_page_doc.html#_migration_guide_from_release_2_2_0_to_release_2_3_0
-
+= Version 2.4.0.RELEASE
 
 == Features
 
-* OC-1562 : Remove web-ui option to hidetime line as the user can himself hide timeline
-* OC-1227 : Add lttd field as an option in user card
-* OC-1572 : Do not use entiyAllowedToRespond to show/hide the clock for last time to decide
-* OC-1505 : Add parent entities to edition modal in Admin
-* OC-1491 : UserCard: check that end date is after start date, show a clear error message otherwise
-* OC-1589 : Move the "from entity" for user cards from title to summary in feed
-* OC-1606 : Add method isUserMemberOfAnEntityRequiredToRespond() for card template
-* OC-1288 : Add a link to acknowledge all notification in 1 click (optional feature)
+* OC-1602 : Add delete cards endpoint to delete multiple cards by date criteria
+* OC-1636 : UserCard : Choose the first service in the list by default
+* OC-1652 : Admin screen : permit to create logins of 3 characters
+
+.Visual changes
+* OC-1609 : Confirmation popups : harmonize size for text and title
+* OC-1613 : Confirmation popup shall be on the middle of the screen
+* OC-1657 : Card deletion result should be displayed with an alert message instead of popover
 
 == Bugs
 
-* OC-1538 : FeedNotification configuration - processes not sorted by their label
-* OC-1560 : User card : fix title when using "process example" template
-* OC-1509 : Fix recurring error message when posting user cards (endDate constraint)
-* OC-1559 : EntitiesRequiredToRespond constraint doesn't handle parent entities
-* OC-1582 : Fix bug when exporting to excel in logging screen
-* OC-1581 : Deleting an entity that is listed as parent entity in some children entities should cause it to be removed from said children
-* OC-1591 : Notification configuration screen : bug in display near the "save" button
-* OC-1598 : ConfigService.getConfigValue() : function always returns the fallback if the variable is a boolean set to false (in web-ui.json)
-* OC-1608 : Timeline buttons : replace "7 Day" by "7 Days"
-* OC-1628 : BUG - Feed - receiving cards : changing a user setting stops cards reception
-* OC-1629 : Bug when resetting user cache in consultation card service
+.Administration screen
+
+* OC-1621 : Admin UI - When deleting a Perimeter remove from cache as well
+* OC-1634 : When changing perimeter attached to a group it is not propagated to the card-publication service
+
+.User cards
+
+* OC-1624 : Card preview in user card shall not set the template in full screen mode
+* OC-1644 : When only one process is accessible to usercard , it does not work
+* OC-1674 : Editing a usercard : multi-select component for state field is not set with the right value
+
+.Feed screen
+
+* OC-1623 : Fix bug when removing a timeline domain from web-ui configuration
+* OC-1641 : When card selected in the feed is updated, it should stay unread
+* OC-1604 : Acknowledge all cards : manage states with acknowledgmentAllowed set to "OnlyWhenResponseDisabledForUser"
+* OC-1654 : After an update of a question card, the entities that have already answered shall be orange in card header
++
+NOTE: The entities will be marked in green only once they give an answer to the updated version of card.
+
+.Miscellaneous
+
+* OC-1627 : Tasks card example does not fill the repetition date, duration and hour/min when editing the card
+* OC-1607 : Remove reactive code from card publication and solve a bug (hang of HTTP requests)
++
+IMPORTANT: This changes things for card-sending endpoints (see the
+https://opfab.github.io/documentation/archives/2.3.0.RELEASE/docs/single_page_doc.html#_migration_guide_from_release_2_3_0_to_release_2_4_0[migration guide])
++
+* OC-1585 : Authorization mode 'NONE' fix with CardService and Perimeters.
 
 == Tasks
 
-* OC-1556 : Modify Karate API test to add test card with no end date
-* OC-1566 : Adapt doc for settings.tags.hide option
-* OC-1552 : Entity emitting the card shall not be able to respond
-* OC-1476 : Migrating ngrx from v9 to v10. Replace deprecated Effect decorator (OC-1579)
-* OC-1462 : Admin UI - Adapt column fiter to night mode
-* OC-1471 : Updating to Angular v11 and bringing dependencies up to date
+.Cypress testing
+
+* OC-1635 : Allow Cypress tests to run with ng serve
+* OC-1640 : Implement basic test plan as Cypress test using resources scripts
+
+.Documentation and examples
+
+* OC-1625 : Usercard process template example : store in the card data the status value
+* OC-1622 : Set a value for state.description fields in all card examples
+
+.CI and refactoring
+* OC-1630 : Adding package-lock.json to git for npm ci
 +
-NOTE: This shouldn’t have any impact for deployments using docker. If you need to build the UI however, you need to run "npm install" first to get the new dependencies. In addition, see the documentation to troubleshoot any errors.
+_From now on, to build the ui:_
 +
-* OC-1567 : Activate nginx gzip compression
-* OC-1537 : Fix karate tests to work with Karate 1.0.0
-* OC-1554 : Adapting CICD for hotfixes
-* OC-1575 : Refacto api tests launching to adapt for karate 1.0.0
-* OC-1571 : Create a repository with common bundles
-* OC-1522 : Remove unused SpringFox dependency
-* OC-1578 : Create shell scripts for creating/deleting perimeters and cards. It replaces karate scripts (in src/test/utils/karate) for manual testing
-* OC-1580 : Remove irrelevant UI tests
-* OC-1573 : Re-factorize countdown module
-* OC-1588 : Minor Kafka documentation update. Now mentions the card response topic setting.
-* OC-1569 : Remove unused ui-home-e2e project configuration in angular.json
-* OC-1487 : UI - User model exports (duplicate) Entity class
-* OC-1536 : Usercard - Do not show Process or State if only one choice
-* OC-1590 : Update dependencies (Update nginx to v1.19.9,gradle to v6.8.3, keycloak to v12.0.4 )
-* OC-1601 : Launch api tests via gradle
-* OC-1282 : Test with karate endpoint cardSubscription
-* OC-1481 : When card references an existing process but for a state that doesn't exist, an error should be thrown
-* OC-1597 : Improve communication between template and opfab
+_If you have changed anything in the package.json, use *npm install* to install/update the dependency and update the package-lock.json accordingly._
 +
-IMPORTANT: This change the way of exchanging between opfab and template when using response cards . If you are using response cards, you must modify your templates . To migrate your templates, see https://opfab.github.io/documentation/current/docs/single_page_doc.html#_migration_guide_from_release_2_2_0_to_release_2_3_0
+_If you just want to reproduce the current state of the ui, use *npm ci* instead: it will clear node_modules and install dependencies using the versions stated in package-lock.json, ensuring that what your local development environment is identical to what's being built on the CI/CD pipeline._
 +
-* OC-1605 : Stop angular building for IE11
-* OC-666  : Execute api none regression tests in travis build process
-* OC-1586 : Remove TitlePositionEnum (dead code)
-* OC-1610 : Confirmation popups : harmonize the closing cross
-* OC-1594 : Translate true/false values in the Entity admin table
+* OC-1611 : Remove core-js dependency
+* OC-1656 : user.service.ts : rework isCurrentUserAdmin() and isCurrentUserInAnyGroup()
+* OC-1661 : Removing inconsistent tooling configuration and changing gradle node plugin
+* OC-1664 : UI tests - removal of unused class ProcessesServiceMock

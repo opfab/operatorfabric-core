@@ -44,7 +44,6 @@ export class CardService {
     readonly cardsUrl: string;
     readonly archivesUrl: string;
     readonly cardsPubUrl: string;
-    readonly userAckUrl: string;
     readonly userCardReadUrl: string;
     readonly userCardUrl: string;
     private lastHeardBeatDate: number;
@@ -65,7 +64,6 @@ export class CardService {
         this.cardsUrl = `${environment.urls.cards}/cards`;
         this.archivesUrl = `${environment.urls.cards}/archives`;
         this.cardsPubUrl = `${environment.urls.cardspub}/cards`;
-        this.userAckUrl = `${environment.urls.cardspub}/cards/userAcknowledgement`;
         this.userCardReadUrl = `${environment.urls.cardspub}/cards/userCardRead`;
         this.userCardUrl = `${environment.urls.cardspub}/cards/userCard`;
     }
@@ -108,10 +106,14 @@ export class CardService {
 
     private getCardSubscription(): Observable<CardOperation> {
         // security header needed here as SSE request are not intercepted by our header interceptor
+        let securityHeader;
+        if (!this.authService.isAuthModeNone()) {
+            securityHeader = this.authService.getSecurityHeader();
+        }
         const eventSource = new EventSourcePolyfill(
             `${this.cardOperationsUrl}&notification=true`
             , {
-                headers: this.authService.getSecurityHeader(),
+                headers: securityHeader,
                 // if necessary , we cans set here  heartbeatTimeout: xxx (in ms)
             });
         return Observable.create(observer => {
@@ -229,16 +231,7 @@ export class CardService {
     }
 
     postCard(card: CardForPublishing): any {
-        const headers = this.authService.getSecurityHeader();
-        return this.httpClient.post<CardForPublishing>(`${this.cardsPubUrl}/userCard`, card, {headers});
-    }
-
-    postUserAcknowledgement(cardUid: string): Observable<HttpResponse<void>> {
-        return this.httpClient.post<void>(`${this.userAckUrl}/${cardUid}`, null, {observe: 'response'});
-    }
-
-    deleteUserAcknowledgement(cardUid: string): Observable<HttpResponse<void>> {
-        return this.httpClient.delete<void>(`${this.userAckUrl}/${cardUid}`, {observe: 'response'});
+        return this.httpClient.post<CardForPublishing>(`${this.cardsPubUrl}/userCard`, card);
     }
 
     deleteCard(card: Card): Observable<HttpResponse<void>> {

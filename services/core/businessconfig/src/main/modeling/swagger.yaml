@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: OperatorFabric BusinessconfigParty Management API
-  version: 2.3.0.RELEASE
+  version: 2.4.0.RELEASE
   title: Businessconfig Management
   termsOfService: ''
   contact:
@@ -534,5 +534,5 @@ definitions:
         type: boolean      
       endDateVisible: 
         type: boolean
-      lttdVisible:
+      lttdVisible: 
         type: boolean

@@ -10,6 +10,7 @@
   "states": {
     "taskState": {
       "name": "task.title",
+      "description": "task.title",
       "color": "#0070C0",
       "userCard" : {
         "template" : "usercard_task",

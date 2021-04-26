@@ -18,13 +18,17 @@ import { AppState } from '@ofStore/index';
 import { fetchLightCard, selectLastCards } from '@ofStore/selectors/feed.selectors';
 import { take } from 'rxjs/operators';
 import { ReminderList } from './reminderList';
+import { AcknowledgeService } from '@ofServices/acknowledge.service';
 
 @Injectable()
 export class ReminderService {
 
     private reminderList: ReminderList;
 
-    constructor(private store: Store<AppState>, private processService: ProcessesService, private cardService: CardService) {
+    constructor(private store: Store<AppState>,
+                private processService: ProcessesService,
+                private cardService: CardService,
+                private acknowledgeService: AcknowledgeService) {
     }
 
 
@@ -57,7 +61,7 @@ export class ReminderService {
                 if (!!lightCard) {
 
                     this.reminderList.setCardHasBeenRemind(lightCard);
-                    this.cardService.deleteUserAcknowledgement(lightCard.uid).subscribe(resp => {
+                    this.acknowledgeService.deleteUserAcknowledgement(lightCard.uid).subscribe(resp => {
                         if (!(resp.status === 200 || resp.status === 204))
                             console.error(new Date().toISOString(),
                                 'Reminder : the remote acknowledgement endpoint returned an error status(%d)', resp.status);

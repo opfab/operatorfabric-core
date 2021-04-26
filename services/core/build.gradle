@@ -49,7 +49,7 @@ subprojects {
         endpoints {
             inputFile = file('src/main/modeling/swagger.yaml')
             code {
-                language = 'org.lfenergy.operatorfabric.generators.OpfabSpringGenerator'
+                language = 'org.opfab.generators.OpfabSpringGenerator'
                 configFile = file('src/main/modeling/config.json')
                 outputDir = file("./build/swagger")
                 templateDir = file('../src/main/resources/swagger-templates')
@@ -71,7 +71,7 @@ subprojects {
        systemProperty 'debugOperations', 'true'
        args ("generate",
          "-i", "$project.projectDir/src/main/modeling/swagger.yaml",
-         "-l", "org.lfenergy.operatorfabric.generators.OpfabSpringGenerator",
+         "-l", "org.opfab.generators.OpfabSpringGenerator",
          "-c", "$project.projectDir/src/main/modeling/config.json",
          "-o", "$project.projectDir/build/swagger-analyse")
          doFirst {

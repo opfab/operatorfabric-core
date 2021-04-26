@@ -33,6 +33,7 @@ declare const templateGateway: any;
 export class CardDetailComponent implements OnInit, OnDestroy {
 
     @Input() card: Card;
+    @Input() screenSize: string = 'md';
 
     public active = false;
     unsubscribe$: Subject<void> = new Subject<void>();
@@ -118,7 +119,8 @@ export class CardDetailComponent implements OnInit, OnDestroy {
                     this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
                     setTimeout(() => { // wait for DOM rendering
                         this.reinsertScripts();
-                        templateGateway.setScreenSize('lg');
+                        console.log("SCREENSIZE: " + this.screenSize)
+                        templateGateway.setScreenSize(this.screenSize);
                     }, 10);
                 }, () =>  {
                     console.log('WARNING impossible to load template ', this.templateName);

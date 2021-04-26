@@ -3,7 +3,7 @@ server:
 spring:
   application:
     name: cards-consultation
-#logging.level.org.lfenergy.operatorfabric: debug
+#logging.level.org.opfab: debug
 #here we put urls for all feign clients
 users:
   ribbon:

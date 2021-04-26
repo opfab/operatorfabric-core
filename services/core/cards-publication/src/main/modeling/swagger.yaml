@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: OperatorFabric Card Consumer Service
-  version: 2.3.0.RELEASE
+  version: 2.4.0.RELEASE
   title: Card Management API
   termsOfService: ''
   contact:
@@ -591,29 +591,6 @@ definitions:
       - ENTITY
     example: EXTERNAL
 paths:
-  /async/cards:
-    post:
-      tags:
-        - cards
-        - creation
-      summary: publish cards
-      description: >-
-        Publish one or more cards to OperatorFabric
-        The response for this method is always a `201` status. To make sure the cards have been published, check the
-        count returned in the body of the request.
-      operationId: publishCardsAsync
-      consumes:
-        - application/json
-      parameters:
-        - name: cards
-          in: body
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Card'
-      responses:
-        '202':
-          description: accepted
   /cardSubscription:
     get:
       tags:
@@ -700,25 +677,42 @@ paths:
   /cards:
     post:
       tags:
-        - cards
+        - card
         - creation
       summary: publish cards
-      description: Publish one or more card to OperatorFabric. Be careful, to know if the cards were published well, then it is necessary to consult the report returned in the body of the request (do not rely only on the response code).
-      operationId: publishCards
+      description: Publish one card to OperatorFabric 
+      operationId: publishCard
       consumes:
         - application/json
       parameters:
-        - name: cards
+        - name: card
           in: body
           schema:
-            type: array
-            items:
               $ref: '#/definitions/Card'
       responses:
         '201':
           description: created
           schema:
             $ref: '#/definitions/CardCreationReport'
+    delete:
+      tags:
+        - cards
+        - deletion
+      summary: delete cards
+      description: >-
+        Delete cards from OperatorFabric where card endDate is before the specified date or where 
+        card has no endDate and startDate is before the specified date.
+      operationId: deleteCards
+      consumes:
+        - application/json
+      parameters:
+        - in: query
+        - name: endDateBefore
+        - type: number
+        - required: true
+      responses:
+        '200':
+          description: OK
   /archives:
     get:
       tags:

@@ -499,8 +499,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   }
 
   scrollToSelectedCard() {
-    // wait for 500ms to be sure the card is selected and scroll to the card with his id (opfab-selected-card)
-    setTimeout(() => { document.getElementById('opfab-selected-card').scrollIntoView({behavior: 'smooth', block: 'center'}); }, 500);
+    // wait for 500ms to be sure the card is selected and scroll to the card with his id (opfab-selected-card-summary)
+    setTimeout(() => { document.getElementById('opfab-selected-card-summary').scrollIntoView({behavior: 'smooth', block: 'center'}); }, 500);
   }
 
   checkInsideDomain(date): boolean {

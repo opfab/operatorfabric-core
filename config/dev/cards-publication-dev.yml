@@ -7,12 +7,12 @@ spring:
     value:
       delegate:
         class: io.confluent.kafka.serializers.KafkaAvroDeserializer
-#        class: org.lfenergy.operatorfabric.cards.publication.kafka.consumer.KafkaAvroWithoutRegistryDeserializer
+#        class: org.opfab.cards.publication.kafka.consumer.KafkaAvroWithoutRegistryDeserializer
   serializer:
     value:
       delegate:
         class: io.confluent.kafka.serializers.KafkaAvroSerializer
-#        class: org.lfenergy.operatorfabric.cards.publication.kafka.producer.KafkaAvroWithoutRegistrySerializer
+#        class: org.opfab.cards.publication.kafka.producer.KafkaAvroWithoutRegistrySerializer
 # uncomment kafka.consumer.group-id to enable Kafka
 #  kafka:
 #    consumer:

@@ -10,6 +10,7 @@
   "states": {
     "messageState": {
       "name": "message.title",
+      "description": "message.title",
       "color": "#CC9900",
       "userCard" : {
         "template" : "usercard_message",
@@ -22,6 +23,7 @@
     },
     "questionState": {
       "name": "question.title",
+      "description": "question.title",
       "showDetailCardHeader": false,
       "color": "#0070C0",
       "userCard" : {

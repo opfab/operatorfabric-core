@@ -130,7 +130,6 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.processGroups = this.processesService.getProcessGroups();
         this.loadAllEntities();
         this.loadAllProcessAndStateInUserPerimeter();
-        this.loadAllProcessGroupsRelatingToUserPerimeter();
 
         this.messageForm = new FormGroup({
             severity: new FormControl(''),
@@ -143,15 +142,23 @@ export class UserCardComponent implements OnDestroy, OnInit {
             comment: new FormControl('')
         });
 
+        this.changeSeverityToDefaultValue();
+        this.changeStatesWhenSelectProcess();
+        this.changeProcessesWhenSelectProcessGroup();
+        this.loadTemplateWhenStateChange();
+        this.loadAllProcessGroupsRelatingToUserPerimeter();
+
+        if (!this.cardIdToEdit && this.processGroupOptions.length == 0 && this.processOptions.length > 0) {
+            this.selectedProcess = this.processOptions[0].value;
+            this.messageForm.get('process').setValue(this.selectedProcess);
+        }
+
         this.recipientForm = new FormGroup({
             recipients: new FormControl([])
         });
 
 
-        this.changeSeverityToDefaultValue();
-        this.changeStatesWhenSelectProcess();
-        this.changeProcessesWhenSelectProcessGroup();
-        this.loadTemplateWhenStateChange();
+
 
         this.dropdownSettings = {
             text: '',
@@ -248,6 +255,10 @@ export class UserCardComponent implements OnDestroy, OnInit {
         }
         for (const processGroupId of this.processesPerProcessGroups.keys())
             this.processGroupOptions.push({value: processGroupId, label: processGroupId});
+        
+        if (!this.cardIdToEdit && this.processGroupOptions.length > 0) {
+            this.messageForm.get('processGroup').setValue(this.processGroupOptions[0].value);
+        }
     }
 
     loadProcessesWithoutProcessGroup(): void {

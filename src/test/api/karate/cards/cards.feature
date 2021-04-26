@@ -132,56 +132,8 @@ Feature: Cards
 ]
 """
 
-# Push card
-    Given url opfabPublishCardUrl + 'cards'
-    And request card
-    When method post
-    Then status 201
-    And match response.count == 2
 
-
-  Scenario: Post two cards in one request, including one card in wrong format (severity field missing in second card)
-
-    * def card =
-"""
-[
-{
-	"publisher" : "api_test",
-	"processVersion" : "1",
-	"process"  :"api_test",
-	"processInstanceId" : "process2CardsIncludingOneCardKO1",
-	"state": "messageState",
-	"groupRecipients": ["Dispatcher"],
-	"severity" : "COMPLIANT",
-	"startDate" : 1553186770681,
-	"summary" : {"key" : "defaultProcess.summary"},
-	"title" : {"key" : "defaultProcess.title"},
-	"data" : {"message":"new message (card 1)"}
-},
-{
-	"publisher" : "api_test",
-	"processVersion" : "1",
-	"process"  :"api_test",
-	"processInstanceId" : "process2CardsIncludingOneCardKO2",
-	"state": "messageState",
-	"groupRecipients": ["Dispatcher"],
-	"startDate" : 1553186770681,
-	"summary" : {"key" : "defaultProcess.summary"},
-	"title" : {"key" : "defaultProcess.title"},
-	"data" : {"message":"new message (card2) "}
-}
-]
-"""
-
-# Push card
-    Given url opfabPublishCardUrl + 'cards'
-    And request card
-    When method post
-    Then status 201
-    And match response.count == 0
-
-
-  Scenario:  Post card with new attribute externalRecipients
+  Scenario:  Post card with attribute externalRecipients
 
     * def card =
 """
@@ -369,7 +321,7 @@ Scenario:  Post card with correct parentCardId and initialParentCardUid
     When method post
     Then status 201
     And match response.count == 1
-    And match response.message == "All pushedCards were successfully handled"
+    And match response.message == "PushedCard was successfully handled"
 
 Scenario: Push card and its two child cards, then get the parent card
 
@@ -396,7 +348,6 @@ Scenario: Push card and its two child cards, then get the parent card
     When method post
     Then status 201
     And match response.count == 1
-    And match response.message == "All pushedCards were successfully handled"
 
 #get parent card id
     Given url opfabUrl + 'cards/cards/api_test.process1'
@@ -451,7 +402,6 @@ Scenario: Push card and its two child cards, then get the parent card
     When method post
     Then status 201
     And match response.count == 1
-    And match response.message == "All pushedCards were successfully handled"
 
 # Push the two child cards
     Given url opfabPublishCardUrl + 'cards'
@@ -459,7 +409,6 @@ Scenario: Push card and its two child cards, then get the parent card
     When method post
     Then status 201
     And match response.count == 1
-    And match response.message == "All pushedCards were successfully handled"
 
 # Get the parent card with its two child cards
 
@@ -539,7 +488,6 @@ Scenario: Push card with null keepChilCards and publisherType
     When method post
     Then status 201
     And match response.count == 1
-    And match response.message == "All pushedCards were successfully handled"
 
 #get parent card id
     Given url opfabUrl + 'cards/cards/api_test.processKeepChildCardsNull'
