@@ -148,7 +148,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.loadTemplateWhenStateChange();
         this.loadAllProcessGroupsRelatingToUserPerimeter();
 
-        if (this.processGroupOptions.length == 0 && this.processOptions.length > 0) {
+        if (!this.cardIdToEdit && this.processGroupOptions.length == 0 && this.processOptions.length > 0) {
             this.selectedProcess = this.processOptions[0].value;
             this.messageForm.get('process').setValue(this.selectedProcess);
         }
@@ -256,7 +256,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         for (const processGroupId of this.processesPerProcessGroups.keys())
             this.processGroupOptions.push({value: processGroupId, label: processGroupId});
         
-        if (this.processGroupOptions.length > 0) {
+        if (!this.cardIdToEdit && this.processGroupOptions.length > 0) {
             this.messageForm.get('processGroup').setValue(this.processGroupOptions[0].value);
         }
     }
