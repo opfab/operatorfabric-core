@@ -15,7 +15,7 @@
 
 .Visual changes
 * OC-1609 : Confirmation popups : harmonize size for text and title
-* OC-1613 : Confirmation popup shall be on the middle of the screen
+* OC-1613 : Confirmation popup shall be in the middle of the screen
 * OC-1657 : Card deletion result should be displayed with an alert message instead of popover
 
 == Bugs
@@ -46,7 +46,7 @@ NOTE: The entities will be marked in green only once they give an answer to the 
 * OC-1607 : Remove reactive code from card publication and solve a bug (hang of HTTP requests)
 +
 IMPORTANT: This changes things for card-sending endpoints (see the
-https://opfab.github.io/documentation/archives/2.3.0.RELEASE/docs/single_page_doc.html#_migration_guide_from_release_2_3_0_to_release_2_4_0[migration guide])
+https://opfab.github.io/documentation/archives/2.4.0.RELEASE/docs/single_page_doc.html#_migration_guide_from_release_2_3_0_to_release_2_4_0[migration guide])
 +
 * OC-1585 : Authorization mode 'NONE' fix with CardService and Perimeters.
 
