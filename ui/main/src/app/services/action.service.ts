@@ -73,7 +73,6 @@ export class ActionService {
           && (this.compareRightAction(perim.rights, RightsEnum.Write)
               || this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
         permission = true;
-        return true;
       }
     });
     return permission;
