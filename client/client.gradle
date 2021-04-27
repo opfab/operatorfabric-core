@@ -22,6 +22,7 @@ subprojects {
     apply plugin: 'jacoco'
     apply plugin: plugin.swagger
     apply plugin: 'maven-publish'
+    apply plugin: 'signing'
 
     /////// COMPILATION
 
@@ -101,55 +102,83 @@ subprojects {
     tasks.compileTestJava.dependsOn generateSwaggerCode
     tasks.generateSwaggerCodeModel.dependsOn ':tools:swagger-spring-generators:assemble'
 
+
+    /** Configuration of publication of client jars to Maven Central */
+
     task sourcesJar(type: Jar){
-           archiveClassifier='sources'
-           from sourceSets.main.allJava
-       }
+        archiveClassifier='sources'
+        from sourceSets.main.allJava
+    }
 
-       task javadocJar(type: Jar){
-           archiveClassifier = 'javadoc'
-           from javadoc.destinationDir
-       }
+    task javadocJar(type: Jar){
+        archiveClassifier = 'javadoc'
+        from javadoc.destinationDir
+    }
 
-       publishing{
-               publications{
-                   mavenJava(MavenPublication){
-                       from components.java
-                       artifact sourcesJar
-                       artifact javadocJar
-                       version="${project.version}"
-       pom{
-		licenses{
-			license{
-			name = 'Mozilla Public License Version 2.0'
-			url = 'https://www.mozilla.org/en-US/MPL/'
-		}
-		}
-		scm {
-		url = 'https://github.com/opfab/operatorfabric-core'
-		connection = 'scm:git@github.com:opfab/operatorfabric-core.git'
-		developerConnection = 'scm:git:ssh://git@github.com:opfab/operatorfabric-core.git'
-       }
-                   }
-               }
-	       }
-           repositories{
-               maven{
-                   url='https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-    // CI doesn't need ossrh configuration
-                   if(! hasProperty("ossrhUsername")){
-                       ext.ossrhUsername=""
-                   }
-                   if(! hasProperty("ossrhPassword")){
-                       ext.ossrhPassword=""
-                   }
-                   credentials {
-                       username = ossrhUsername
-                       password = ossrhPassword
-                   }
-               }
-               }
+    publishing{
+        publications{
+            clientLibraryMaven(MavenPublication){
+                from components.java
+                artifact sourcesJar
+                artifact javadocJar
 
-       }
+                pom {
+                    name="${operatorfabric.name}"
+                    description="${operatorfabric.description}"
+                    version="${project.version}"
+                    url="${operatorfabric.url}"
+                    licenses{
+                        license{
+                            name = 'Mozilla Public License Version 2.0'
+                            url = 'https://www.mozilla.org/en-US/MPL/'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'freddidierRTE'
+                            name = 'Frédéric Didier'
+                            email = 'frederic-f.didier@rte-france.com'
+                        }
+                        developer {
+                            id = 'AlexGuironnetRTE'
+                            name = 'Alexandra Guironnet'
+                            email = 'alexandra.guironnet@rte-france.com'
+                        }
+                    }
+                    scm {
+                        url = 'https://github.com/opfab/operatorfabric-core'
+                        connection = 'scm:git:git://github.com:opfab/operatorfabric-core.git'
+                        developerConnection = 'scm:git:ssh://github.com:opfab/operatorfabric-core.git'
+                    }
+                }
+            }
+        }
 
+        repositories{
+
+            maven{
+
+                name = 'ossrh' //The name serves as prefix for the username and password properties taken from the gradle.properties file as credentials
+
+                def releasesRepoUrl = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+                def snapshotsRepoUrl = layout.buildDirectory.dir('repos/snapshots')
+
+                // The Sonatype staging repo doesn't accept snapshot versions so when executing the publishing task on
+                // a snapshot version the produced artifacts will appear in the build directory (see path above).
+                if (project.version.endsWith("SNAPSHOT")) {
+                    url snapshotsRepoUrl
+                } else {
+                    url releasesRepoUrl
+                    credentials(PasswordCredentials)
+                }
+
+            }
+        }
+
+    }
+
+    signing {
+        useGpgCmd() //These is needed to work with GPG2 See https://github.com/gradle/gradle/issues/888#issuecomment-708439524
+        sign publishing.publications.clientLibraryMaven
+    }
 }

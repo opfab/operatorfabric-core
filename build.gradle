@@ -17,9 +17,12 @@ file("versions.properties").withReader { reader ->
 
 ext {
     operatorfabric = [
-            group: "org.opfab",
+            group: 'org.opfab',
+            name: 'operatorbabric',
+            description : 'OperatorFabric is a modular, extensible, industrial-strength platform for use in electricity, water, and other utility operations.',
             version: version = rootProject.file('VERSION').text.trim(),
-            revisionDate: revisionDate = new Date().format('dd MMMM yyyy')
+            revisionDate: revisionDate = new Date().format('dd MMMM yyyy'),
+            url: 'https://opfab.org'
     ]
 
     boot = [
