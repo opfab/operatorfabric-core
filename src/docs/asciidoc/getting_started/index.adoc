@@ -415,7 +415,7 @@ To view the card in the time line, you need to set times in the card using timeS
 	"summary" : {"key" : "maintenanceProcess.summary"},
 	"title" : {"key" : "maintenanceProcess.title"},
 	"data" : {
-		"operationDescription":"Maintenance operation on the International France England (IFA) Hight Voltage line ",
+		"operationDescription":"Maintenance operation on the International France England (IFA) High Voltage line ",
 		"operationResponsible":"RTE",
 		"contactPoint":"By Phone : +33 1 23 45 67 89 ",
 		"comment":"Operation has no impact on service"
