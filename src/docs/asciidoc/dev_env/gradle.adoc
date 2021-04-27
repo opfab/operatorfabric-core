@@ -5,9 +5,6 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-
-
-
 [[gradle_tasks]]
 = Gradle Tasks
 
@@ -46,8 +43,6 @@ during development
 ** copyCompileClasspathDependencies: copy compile classpath dependencies,
 catching lombok that must be sent for sonarqube
 
-
-
 === tools/generic
 
 * Test tasks
@@ -55,6 +50,57 @@ catching lombok that must be sent for sonarqube
 build/test-data/
 ** compressTestArchive: compress the contents of /src/test/data/archive to
 /build/test-data/archive.tar.gz
+
+== Client Library
+
+The jars produced by the projects under "client" will now be published to Maven Central after each release to make
+integration in client applications more manageable (see https://central.sonatype.org/publish[the official Sonatype
+documentation]) for more information about the requirements and publishing process.
+
+To that end, we are using:
+
+* the https://docs.gradle.org/current/userguide/publishing_maven.html[Maven Publish] Gradle plugin to take care of the
+metadata (producing the required pom.xml for example) and publishing the artifacts to a staging repository
+* the https://docs.gradle.org/current/userguide/signing_plugin.html[Signing] Gradle plugin to sign the produced artifacts
+using a GPG key.
+
+[[client_lib_pub_conf]]
+=== Configuration
+
+For the signing task to work, you need to set the following properties in your gradle.properties file:
+
+----
+signing.gnupg.keyName=ID_OF_THE_GPG_KEY_TO_USE
+signing.secretKeyRingFile=LOCATION_OF_THE_KEYRING_HOLDING_THE_GPG_KEY
+----
+
+For the publication to the staging repository (OSSRH) to work, you need to set the credentials in your gradle.properties file:
+
+----
+ossrhUsername=SONATYPE_JIRA_USERNAME
+ossrhPassword=SONATYPE_JIRA_PASSWORD
+----
+
+NOTE: The credentials need to belong to an account that has been granted the required privileges on the project (this
+is done by Sonatype on request via the same JIRA).
+
+=== Relevant tasks
+
+These plugins and the associated configuration in the `client.gradle` file make the following tasks available:
+
+* `publishClientLibraryMavenPublicationToOssrhRepository`: this will publish the client jars to the OSSRH repository (in the
+case of a X.X.X.RELEASE version) or to a `repos` directory in the build directory (in the case of a `SNAPSHOT` version).
+
+* `publishClientLibraryMavenPublicationToMavenLocal`: this will publish the client jars to the local Maven repository
+
+The publication tasks will call the signing task automatically.
+
+See the plugins documentations for more details on the other tasks available and the dependencies between them.
+
+NOTE: As the client library publication is currently the only configured publication in our build, it is also possible
+to use the corresponding aggregate tasks as shortcuts: `publish` instead of
+`publishClientLibraryMavenPublicationToOssrhRepository` and `publishToMavenLocal` instead of
+`publishClientLibraryMavenPublicationToMavenLocal`.
 
 == Gradle Plugins
 
