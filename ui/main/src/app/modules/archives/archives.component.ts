@@ -159,7 +159,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                             });
                     }
                 });
-                ExportService.exportAsExcelFile(exportArchiveData, 'Archive');
+                ExportService.exportJsonToExcelFile(exportArchiveData, 'Archive');
             });
     }
 

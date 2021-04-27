@@ -122,7 +122,7 @@ export class LoggingTableComponent implements OnInit, OnDestroy {
                             });
                     }
                 });
-                ExportService.exportAsExcelFile(this.exportLoggingData, 'Logging');
+                ExportService.exportJsonToExcelFile(this.exportLoggingData, 'Logging');
             });
     }
 
