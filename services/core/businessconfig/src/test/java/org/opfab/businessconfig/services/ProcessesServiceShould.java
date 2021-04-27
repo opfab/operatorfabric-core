@@ -25,6 +25,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -52,17 +53,19 @@ class ProcessesServiceShould {
 
     @BeforeEach
     void prepare() throws IOException {
-        copy(Paths.get("./src/test/docker/volume/businessconfig-storage"), testDataDir);
+        // Delete and recreate bundle directory to start with clean data 
+        restoreBundleDirectory();
         service.loadCache();
         service.loadProcessGroupsCache();
     }
 
     @AfterAll
-    static void dispose() throws IOException {
-        // This will also delete the businessconfig-storage root folder, but in this case it's needed as
-        // the following copy would fail if the folder already existed.
-        if (Files.exists(testDataDir)) Files.walk(testDataDir, 1).forEach(PathUtils::silentDelete);
+    void restoreBundleDirectory() throws IOException{
+        if (Files.exists(testDataDir))  Files.walk(testDataDir, 1).forEach(PathUtils::silentDelete);
+        copy(Paths.get("./src/test/docker/volume/businessconfig-storage"), testDataDir);
+
     }
+
 
     @Test
     void listProcesses() {
