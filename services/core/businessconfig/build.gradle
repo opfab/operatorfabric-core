@@ -63,7 +63,7 @@ task copyProcessGroupsFile3(type: Exec) {
 
 task copyMonitoringFile(type: Exec){
     description 'copy monitoring.json file for businessconfig party configuration data for tests in build/test-data'
-    workingDir "$project.projectDir/src/test/data/"
+    workingDir "$project.projectDir/src/test/docker/volume/businessconfig-storage"
     executable "bash"
     args "-c", "cp monitoring.json $project.projectDir/build/test-data/businessconfig-storage/monitoring.json"
 }
@@ -112,7 +112,7 @@ copyProcessGroupsFile2.dependsOn prepareTestDataDir
 copyProcessGroupsFile3.dependsOn prepareTestDataDir
 copyMonitoringFile.dependsOn prepareTestDataDir
 test.dependsOn prepareTestDataDir,compressBundle1Data,compressBundle2Data,copyProcessGroupsFile,copyProcessGroupsFile2,copyProcessGroupsFile3,copyMonitoringFile
-unitTest.dependsOn prepareTestDataDir,compressBundle1Data,compressBundle2Data,copyProcessGroupsFile,copyProcessGroupsFile2,copyProcessGroupsFile3
+unitTest.dependsOn prepareTestDataDir,compressBundle1Data,compressBundle2Data,copyProcessGroupsFile,copyProcessGroupsFile2,copyProcessGroupsFile3,copyMonitoringFile
 bootRun.dependsOn createDevData
 
 // <<<<< Test data tasks
