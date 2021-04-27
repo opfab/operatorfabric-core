@@ -32,6 +32,8 @@ include::user_cards.adoc[leveloffset=+1]
 
 include::archives.adoc[leveloffset=+1]
 
+include::monitoring.adoc[leveloffset=+1]
+
 include::users_management.adoc[leveloffset=+1]
 
 include::ui_customization.adoc[leveloffset=+1]

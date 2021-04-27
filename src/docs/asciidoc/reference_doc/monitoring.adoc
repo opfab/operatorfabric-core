@@ -1,0 +1,35 @@
+// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+
+
+= Monitoring
+
+NOTE: This feature is experimental 
+
+The monitoring screen is a realtime view of processes based on current cards received by the user (i.e the last version of cards visible by the logged user). It can be seen as an another view of the feed. 
+
+The feature can be disabled via configuration in web-ui.json (by adding `"monitoring"` in array `navbar.hidden` )
+
+Not all the cards are visible, it depends on the business process. For a card to be visible in this screen, the parameter `uiVisibility.monitoring` must be set to `true` in the corresponding config.json.
+
+
+== Export configuration 
+
+An excel export function is available in the monitoring screen, the content of the export can be configured. The configuration is to be defined via a json description to send to the businessconfig service through the /businessconfig/monitoring endpoint.
+
+In opfab git repository, you can find in directory https://github.com/opfab/operatorfabric-core/tree/develop/src/test/resources/monitoringConfig[src/test/resources/monitoringConfig]  : 
+  
+  - a script to load a monitoring configuration `loadMonitoringConfig.sh`
+
+  - an example of configuration in `monitoringConfig.json`
+
+
+A description of the structure of the configuration can be found in 
+ifdef::single-page-doc[link:../api/businessconfig/[the businessconfig api documentation]]
+ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/businessconfig/[the businessconfig api documentation]]
+
