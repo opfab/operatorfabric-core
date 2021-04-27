@@ -51,6 +51,7 @@ import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {MessageLevel} from '@ofModel/message.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
+import {ActionService} from '@ofServices/action.service';
 
 
 declare const templateGateway: any;
@@ -164,7 +165,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 private modalService: NgbModal,
                 private configService: ConfigService,
                 private time: TimeService,
-                private acknowledgeService: AcknowledgeService) {
+                private acknowledgeService: AcknowledgeService,
+                private actionService: ActionService) {
     }
 
     get isLocked() {
@@ -516,45 +518,21 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private setIsActionEnabled() {
-        const checkPerimeterForResponseCard = this.configService.getConfigValue('checkPerimeterForResponseCard');
-
-        if (checkPerimeterForResponseCard === false)
-            this.isActionEnabled = this.isUserInEntityAllowedToRespond();
-        else
-            this.isActionEnabled = (this.isUserInEntityAllowedToRespond() && this.doesTheUserHavePermissionToRespond());
+        this.isActionEnabled = this.actionService.isUserEnabledToRespond(this.userService.getCurrentUserWithPerimeters(),
+            this.card, this.businessconfigService.getProcess(this.card.process));
     }
 
-    private computeFromEntity()
-    {
+    private computeFromEntity() {
         if (this.card.publisherType === 'ENTITY' )  this.fromEntity = this.entitiesService.getEntityName(this.card.publisher);
         else this.fromEntity = null;
     }
-
 
     private setShowDetailCardHeader() {
         this.showDetailCardHeader = (this.cardState.showDetailCardHeader === null) || (this.cardState.showDetailCardHeader === true);
     }
 
-
-    private isUserInEntityAllowedToRespond(): boolean {
-        return this._userEntitiesAllowedToRespond.length === 1;
-    }
-
     private getUserEntityToRespond(): string {
         return this._userEntitiesAllowedToRespond.length === 1 ? this._userEntitiesAllowedToRespond[0] : null;
-    }
-
-    private doesTheUserHavePermissionToRespond(): boolean {
-        let permission = false;
-        this.userService.getCurrentUserWithPerimeters().computedPerimeters.forEach(perim => {
-            if ((perim.process === this.card.process) && (perim.state === this.cardState.response.state)
-                && (DetailComponent.compareRightAction(perim.rights, RightsEnum.Write)
-                    || DetailComponent.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
-                permission = true;
-                return true;
-            }
-        });
-        return permission;
     }
 
     private isAcknowledgmentAllowed(): boolean {
@@ -745,9 +723,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         templateGateway.setScreenSize(active ? 'lg' : 'md');
     }
 
-    public isSmallscreen()
-    {
-      return (window.innerWidth <1000);
+    public isSmallscreen() {
+      return (window.innerWidth < 1000);
     }
 
     ngOnDestroy() {
