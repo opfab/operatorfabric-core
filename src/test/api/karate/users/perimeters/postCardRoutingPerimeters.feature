@@ -153,7 +153,6 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     And request cardForGroup
     When method post
     Then status 201
-    And match response.count == 1
 
 
   Scenario: Push the card 'cardForEntityWithoutPerimeter'
@@ -161,7 +160,6 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     And request cardForEntityWithoutPerimeter
     When method post
     Then status 201
-    And match response.count == 1
 
 
   Scenario: Push the card 'cardForEntityAndPerimeter'
@@ -169,7 +167,6 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     And request cardForEntityAndPerimeter
     When method post
     Then status 201
-    And match response.count == 1
 
 
   Scenario: Push the card 'cardForEntityAndGroup'
@@ -177,7 +174,6 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     And request cardForEntityAndGroup
     When method post
     Then status 201
-    And match response.count == 1
 
 
   Scenario: Push the card 'cardForEntityAndOtherGroupAndPerimeter'
@@ -185,7 +181,6 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     And request cardForEntityAndOtherGroupAndPerimeter
     When method post
     Then status 201
-    And match response.count == 1
 
 
   Scenario: Get the card 'cardForGroup'

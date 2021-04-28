@@ -35,8 +35,7 @@ Feature: CardsUserRead
     And request card
     When method post
     Then status 201
-    And match response.count == 1
-    
+
 #get card with user operator1 and check it hasn't been read yet
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken

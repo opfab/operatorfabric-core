@@ -52,12 +52,7 @@ Go in directory `client/example1` and send a card, using the provided script :
 ./sendCard.sh card.json 
 ----
 
-The result should be a 201 Http status, and a json object such as:
-
-[source,JSON]
-----
-{"count":1,"message":"All pushedCards were successfully handled"}
-----
+The result should be a 201 Http status.
 
 See the result in the UI, you should see a card, if you click on it you'll see the detail
 
@@ -495,12 +490,7 @@ Use the provided script :
 ./sendCard.sh cardSentToEntity.json
 ----
 
-The result should be a 201 Http status, and a json object such as:
-
-[source,JSON]
-----
-{"count":1,"message":"All pushedCards were successfully handled"}
-----
+The result should be a 201 Http status.
 
 See the result in the UI, you should not see the card.
 
@@ -580,12 +570,7 @@ Use the provided script :
 ./sendCard.sh cardSentToEntityAndGroup_1.json
 ----
 
-The result should be a 201 Http status, and a json object such as:
-
-[source,JSON]
-----
-{"count":1,"message":"All pushedCards were successfully handled"}
-----
+The result should be a 201 Http status.
 
 See the result in the UI, you should see the card.
 
@@ -617,12 +602,7 @@ Use the provided script :
 ./sendCard.sh cardSentToEntityAndGroup_2.json
 ----
 
-The result should be a 201 Http status, and a json object such as:
-
-[source,JSON]
-----
-{"count":1,"message":"All pushedCards were successfully handled"}
-----
+The result should be a 201 Http status.
 
 See the result in the UI, you should see the card.
 

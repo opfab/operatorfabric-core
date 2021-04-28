@@ -10,7 +10,6 @@
 package org.opfab.client.cards;
 
 import org.opfab.cards.model.Card;
-import org.opfab.cards.model.CardCreationReport;
 import org.opfab.client.common.HttpClientInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -31,12 +30,12 @@ public class CardClient {
     @Autowired
     public RestTemplateBuilder builder;
 
-    public CardCreationReport postCard(String url, Card card) {
+    public String postCard(String url, Card card) {
         RestTemplate restTemplate = builder.build();
         restTemplate.setInterceptors(List.of(new HttpClientInterceptor()));
 
         HttpEntity<Card> request = new HttpEntity<>(card);
-        ResponseEntity<CardCreationReport> response = restTemplate.postForEntity(url, request, CardCreationReport.class);
+        ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
         return response.getBody();
     }
 

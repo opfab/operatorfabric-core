@@ -343,13 +343,13 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe(
                     rep => {
-                        if (rep['count'] === 0 && rep['message'].includes('Error')) {
+                        if (rep.status !== 201) {
                             this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
-                            console.error(rep['message']);
+                            console.error(rep);
                         } else {
-                          this.hasAlreadyResponded = true;
-                          templateGateway.lockAnswer();
-                          this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
+                            this.hasAlreadyResponded = true;
+                            templateGateway.lockAnswer();
+                            this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
                         }
                     },
                     err => {

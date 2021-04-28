@@ -16,7 +16,6 @@ import org.opfab.aop.process.AopTraceType;
 import org.opfab.aop.process.mongo.models.UserActionTraceData;
 import org.opfab.cards.model.CardOperationTypeEnum;
 import org.opfab.cards.publication.model.ArchivedCardPublicationData;
-import org.opfab.cards.publication.model.CardCreationReportData;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.model.PublisherTypeEnum;
 import org.opfab.cards.publication.services.clients.impl.ExternalAppClientImpl;
@@ -65,37 +64,29 @@ public class CardProcessingService {
     private TraceRepository traceRepository;
 
 
-    public CardCreationReportData processCard(CardPublicationData card) {
+    public void processCard(CardPublicationData card) {
         card.setPublisherType(PublisherTypeEnum.EXTERNAL);
-        return processOneCard(card, Optional.empty());
+        processOneCard(card, Optional.empty());
     }
 
-    public CardCreationReportData processUserCard(CardPublicationData card, CurrentUserWithPerimeters user) {
+    public void processUserCard(CardPublicationData card, CurrentUserWithPerimeters user) {
         card.setPublisherType(PublisherTypeEnum.ENTITY);
-        return processOneCard(card, Optional.of(user));
+        processOneCard(card, Optional.of(user));
     }
 
-    private CardCreationReportData processOneCard(CardPublicationData card, Optional<CurrentUserWithPerimeters> user) {
-        try {
-            validate(card);
-            recipientProcessor.processAll(card);
-            card.prepare(Instant.ofEpochMilli(Math.round(Instant.now().toEpochMilli() / 1000d) * 1000));
-            if (user.isPresent()) {
-                userCardProcessor.processPublisher(card, user.get());
-                externalAppClient.sendCardToExternalApplication(card);
-            }
-            deleteChildCardsProcess(card);
-            cardRepositoryService.saveCard(card);
-            cardRepositoryService.saveCardToArchive(new ArchivedCardPublicationData(card));
-            cardNotificationService.notifyOneCard(card, CardOperationTypeEnum.ADD);
-            log.debug("Card persisted (process = {} , processInstanceId= {} , state = {} ", card.getProcess(),card.getProcessInstanceId(),card.getState());
-            return new CardCreationReportData(1, "PushedCard was successfully handled");
-
-        } catch (Exception exc) {
-            log.error("Unexpected error during pushed Card persistence", exc);
-            return new CardCreationReportData(0, "Error, unable to handle pushed Card: " + exc.getMessage());
+    private void processOneCard(CardPublicationData card, Optional<CurrentUserWithPerimeters> user) {
+        validate(card);
+        recipientProcessor.processAll(card);
+        card.prepare(Instant.ofEpochMilli(Math.round(Instant.now().toEpochMilli() / 1000d) * 1000));
+        if (user.isPresent()) {
+            userCardProcessor.processPublisher(card, user.get());
+            externalAppClient.sendCardToExternalApplication(card);
         }
-
+        deleteChildCardsProcess(card);
+        cardRepositoryService.saveCard(card);
+        cardRepositoryService.saveCardToArchive(new ArchivedCardPublicationData(card));
+        cardNotificationService.notifyOneCard(card, CardOperationTypeEnum.ADD);
+        log.debug("Card persisted (process = {} , processInstanceId= {} , state = {} ", card.getProcess(),card.getProcessInstanceId(),card.getState());
     }
 
     private Void deleteChildCardsProcess(CardPublicationData card) {
