@@ -44,7 +44,6 @@ And request card
 And header Content-Type = 'application/json'
 When method post
 Then status 201
-And match response.count == 1
 
 #get card with user operator1
 Given url opfabUrl + 'cards/cards/api_test.process3users' 

@@ -48,7 +48,6 @@ Feature: Cards with timespans
     And request card
     When method post
     Then status 201
-    And match response.count == 1
 
 
   Scenario: Delete the card
@@ -111,7 +110,6 @@ Scenario: When post a card with no timeZone in timespan recurrence , it set the 
     And request card
     When method post
     Then status 201
-    And match response.count == 1
 
 
 #get card with user operator1

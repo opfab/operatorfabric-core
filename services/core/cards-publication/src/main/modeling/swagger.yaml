@@ -106,20 +106,6 @@ definitions:
       parameters:
         EN: My Title
         FR: Mon Titre
-  CardCreationReport:
-    type: object
-    properties:
-      count:
-        type: integer
-        description: Number of created cards
-      message:
-        type: string
-    required:
-      - count
-      - message
-    example:
-      count: 10
-      message: Cards successfully created.
   CardOperation:
     type: object
     description: >-
@@ -679,7 +665,7 @@ paths:
       tags:
         - card
         - creation
-      summary: publish cards
+      summary: publish card
       description: Publish one card to OperatorFabric 
       operationId: publishCard
       consumes:
@@ -692,8 +678,8 @@ paths:
       responses:
         '201':
           description: created
-          schema:
-            $ref: '#/definitions/CardCreationReport'
+        '400':
+          description: bad request
     delete:
       tags:
         - cards

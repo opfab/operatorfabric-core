@@ -31,7 +31,6 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
     And request card1
     When method post
     Then status 201
-    And match response.count == 1
 
     * def card2 =
 """
@@ -57,7 +56,6 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
     And request card2
     When method post
     Then status 201
-    And match response.count == 1
 
 
     * def card3 =
@@ -83,7 +81,6 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
     And request card3
     When method post
     Then status 201
-    And match response.count == 1
 
     * def card4 =
 """
@@ -109,4 +106,3 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
     And request card4
     When method post
     Then status 201
-    And match response.count == 1

@@ -189,7 +189,6 @@ Feature: Check addition of transitive entities to user
     	And request <card>
     	When method post
     	Then status 201
-    	And match response.count == 1
 
     	Examples:
         	|card            |

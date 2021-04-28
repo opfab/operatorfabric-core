@@ -30,7 +30,6 @@ import org.opfab.cards.publication.repositories.ArchivedCardRepositoryForTest;
 import org.opfab.cards.publication.repositories.CardRepositoryForTest;
 import org.opfab.cards.publication.repositories.TraceRepositoryForTest;
 import org.opfab.users.model.*;
-import org.opfab.cards.publication.model.*;
 import org.opfab.users.model.RightsEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -215,8 +214,8 @@ class CardProcessServiceShould {
     @Test
     void createCards() {
         generateCards().forEach(card -> { cardProcessingService.processCard(card); });
-        checkCardCount(4);
-        checkArchiveCount(5);
+        Assertions.assertThat(checkCardCount(5)).isTrue();
+        Assertions.assertThat(checkArchiveCount(5)).isTrue();
     }
 
     private static final String EXTERNALAPP_URL = "http://localhost:8090/test";
@@ -244,8 +243,9 @@ class CardProcessServiceShould {
                 .andRespond(withStatus(HttpStatus.ACCEPTED)
                 );
 
-        Assertions.assertThat(cardProcessingService.processUserCard(card, currentUserWithPerimeters).getCount()).isEqualTo(1);
-        checkCardPublisherId(card);
+        Assertions.assertThatCode(() -> cardProcessingService.processUserCard(card, currentUserWithPerimeters))
+            .doesNotThrowAnyException();
+        Assertions.assertThat(checkCardPublisherId(card)).isTrue();
 
     }
 
@@ -266,10 +266,11 @@ class CardProcessServiceShould {
                 .state("state1")
                 .build();
 
-        Assertions.assertThat(cardProcessingService.processUserCard(card, currentUserWithPerimeters).getCount()).isEqualTo(0);
-        checkCardCount(0);
-        checkArchiveCount(0);
-
+        Assertions.assertThatThrownBy(() -> cardProcessingService.processUserCard(card, currentUserWithPerimeters))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessageContaining("action not authorized, the card is rejected");
+        Assertions.assertThat(checkCardCount(0)).isTrue();
+        Assertions.assertThat(checkArchiveCount(0)).isTrue();
     }
 
     @Test
@@ -315,8 +316,9 @@ class CardProcessServiceShould {
                 .andRespond(withStatus(HttpStatus.ACCEPTED)
                 );
 
-        Assertions.assertThat(cardProcessingService.processUserCard(card, currentUserWithPerimeters).getCount()).isEqualTo(1);
-        checkCardPublisherId(card);
+        Assertions.assertThatCode(() -> cardProcessingService.processUserCard(card, currentUserWithPerimeters))
+                .doesNotThrowAnyException();
+        Assertions.assertThat(checkCardPublisherId(card)).isTrue();
 
 
 
@@ -336,9 +338,10 @@ class CardProcessServiceShould {
 
     @Test
     void createCardWithError() {
-        cardProcessingService.processCard(generateWrongCardData("PUBLISHER_1", "PROCESS_1"));
-        checkCardCount(0);
-        checkArchiveCount(0);
+        Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(generateWrongCardData("PUBLISHER_1", "PROCESS_1")))
+                .isInstanceOf(ConstraintViolationException.class);
+        Assertions.assertThat(checkCardCount(0)).isTrue();
+        Assertions.assertThat(checkArchiveCount(0)).isTrue();
     }
 
     @Test
@@ -806,7 +809,7 @@ class CardProcessServiceShould {
     @Test
     void validate_processOk() {
 
-        Assertions.assertThat(cardProcessingService.processCard(
+        Assertions.assertThatCode(() -> cardProcessingService.processCard(
                 CardPublicationData.builder()
                         .uid("uid_1")
                         .publisher("PUBLISHER_1").processVersion("O")
@@ -819,7 +822,7 @@ class CardProcessServiceShould {
                                 .start(Instant.ofEpochMilli(123l)).build())
                         .process("process1")
                         .state("state1")
-                        .build()).getCount().equals(1)).isTrue();
+                        .build())).doesNotThrowAnyException();
 
         CardPublicationData childCard = CardPublicationData.builder()
                 .parentCardId("process1.PROCESS_1")
@@ -864,7 +867,7 @@ class CardProcessServiceShould {
     @Test
     void validate_initialParentCardUid_NotPresentInDb() {
 
-        Assertions.assertThat(cardProcessingService.processCard(
+        Assertions.assertThatCode(() -> cardProcessingService.processCard(
                 CardPublicationData.builder()
                         .uid("uid_1")
                         .publisher("PUBLISHER_1").processVersion("O")
@@ -877,7 +880,7 @@ class CardProcessServiceShould {
                                 .start(Instant.ofEpochMilli(123l)).build())
                         .process("process1")
                         .state("state1")
-                        .build()).getCount().equals(1)).isTrue();
+                        .build())).doesNotThrowAnyException();
 
         CardPublicationData childCard = CardPublicationData.builder()
                 .parentCardId("process1.PROCESS_1")

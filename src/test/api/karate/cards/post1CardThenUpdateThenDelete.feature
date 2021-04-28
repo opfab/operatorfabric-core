@@ -31,7 +31,6 @@ Given url opfabPublishCardUrl + 'cards'
 And request card  
 When method post
 Then status 201
-And match response.count == 1
 
 #get card with user operator1
 Given url opfabUrl + 'cards/cards/api_test.process1' 
@@ -73,7 +72,6 @@ Given url opfabPublishCardUrl + 'cards'
 And request card  
 When method post
 Then status 201
-And match response.count == 1
 
 #get card with user operator1
 Given url opfabUrl + 'cards/cards/api_test.process1' 

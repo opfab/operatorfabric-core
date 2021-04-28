@@ -566,9 +566,10 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.cardService.postCard(fromCardToCardForPublishing(this.card))
             .subscribe(
                 resp => {
-                    const msg = resp.message;
-                    if (!!msg && msg.includes('unable')) {
-                        console.log('Impossible to send card , error message from service : ', msg);
+                    if (resp.status !== 201) {
+                        const msg = (!! resp.message ? resp.message : '');
+                        const error = (!! resp.error ? resp.error : '');
+                        console.log('Impossible to send card , message from service : ', msg, '. Error message : ', error);
                         this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
                     } else {
                         this.displayMessage('userCard.cardSendWithNoError', null, MessageLevel.INFO);

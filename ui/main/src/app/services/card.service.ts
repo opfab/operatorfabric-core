@@ -231,7 +231,7 @@ export class CardService {
     }
 
     postCard(card: CardForPublishing): any {
-        return this.httpClient.post<CardForPublishing>(`${this.cardsPubUrl}/userCard`, card);
+        return this.httpClient.post<CardForPublishing>(`${this.cardsPubUrl}/userCard`, card, {observe: 'response'});
     }
 
     deleteCard(card: Card): Observable<HttpResponse<void>> {
