@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -75,7 +74,7 @@ public class MonitoringService implements ResourceLoaderAware {
         return monitoring;
     }
 
-    public void setMonitoring(Monitoring monitoring) throws Exception {
+    public void setMonitoring(Monitoring monitoring) throws IOException {
         this.monitoring =  monitoring;
         saveMonitoringFile();
     }
