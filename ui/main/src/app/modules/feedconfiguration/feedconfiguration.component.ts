@@ -163,7 +163,7 @@ export class FeedconfigurationComponent implements OnInit {
     /** cleaning of the two arrays : processGroupsAndLabels and processesWithoutGroup
      * processGroupsAndLabels : we don't display process which doesn't have any state with Receive right
      *                          and we don't display process group which doesn't have any process
-     * processesWithoutGroup : we don't display process which doesn't have any state with Receive right*/
+     * processesWithoutGroup : we don't display process which doesn't have any state with Receive or ReceiveAndWrite right*/
     private removeProcessesWithoutStatesWithReceiveRights() {
         this.processGroupsAndLabels.forEach((processGroupData, index) => {
             processGroupData.processes = processGroupData.processes.filter(processData => !! this.processesStatesLabels.get(processData.processId));
