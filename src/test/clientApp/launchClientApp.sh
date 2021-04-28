@@ -8,6 +8,7 @@
 # SPDX-License-Identifier: MPL-2.0
 # This file is part of the OperatorFabric project.
 
+OF_VERSION=$(cat "$OF_HOME/VERSION")
 
-java -jar build/libs/clientApp-SNAPSHOT.jar
+java -jar build/libs/clientApp-$OF_VERSION.jar
 
