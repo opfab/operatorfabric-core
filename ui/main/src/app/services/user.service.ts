@@ -18,6 +18,7 @@ import {catchError, takeUntil, tap} from 'rxjs/operators';
 import {CrudService} from './crud-service';
 import {Injectable} from '@angular/core';
 import {Entity} from '@ofModel/entity.model';
+import {RightsEnum} from '@ofModel/perimeter.model';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,8 @@ export class UserService extends CrudService {
   readonly userUrl: string;
   private _userWithPerimeters: UserWithPerimeters;
   private ngUnsubscribe = new Subject<void>();
+  private _userRightsPerProcessAndState: Map<string, RightsEnum>;
+  private _receiveRightPerProcess: Map<string, number>;
 
   /**
    * @constructor
@@ -34,6 +37,8 @@ export class UserService extends CrudService {
   constructor(private httpClient: HttpClient) {
     super();
     this.userUrl = `${environment.urls.users}`;
+    this._userRightsPerProcessAndState = new Map();
+    this._receiveRightPerProcess = new Map();
   }
 
   deleteById(login: string) {
@@ -97,6 +102,7 @@ export class UserService extends CrudService {
           if (!!userWithPerimeters) {
             this._userWithPerimeters = userWithPerimeters;
             console.log(new Date().toISOString(), 'User perimeter loaded');
+            this.loadUserRightsPerProcessAndState();
           }
         }, (error) => console.error(new Date().toISOString(), 'An error occurred when loading perimeter', error)
       ));
@@ -114,5 +120,25 @@ export class UserService extends CrudService {
     if (!groups)
       return false;
     return (this._userWithPerimeters.userData.groups.filter(group => groups.indexOf(group) >= 0).length > 0);
+  }
+
+  private loadUserRightsPerProcessAndState() {
+    this._userRightsPerProcessAndState = new Map();
+    this._userWithPerimeters.computedPerimeters.forEach(computedPerimeter => {
+      this._userRightsPerProcessAndState.set(computedPerimeter.process + '.' + computedPerimeter.state, computedPerimeter.rights);
+      if ((computedPerimeter.rights === RightsEnum.Receive) || (computedPerimeter.rights === RightsEnum.ReceiveAndWrite))
+        this._receiveRightPerProcess.set(computedPerimeter.process, 1);
+    });
+  }
+
+  public isReceiveRightsForProcessAndState(processId: string, stateId: string): boolean {
+    const rights = this._userRightsPerProcessAndState.get(processId + '.' + stateId);
+    if (rights && (rights === RightsEnum.Receive || rights === RightsEnum.ReceiveAndWrite))
+      return true;
+    return false;
+  }
+
+  public isReceiveRightsForProcess(processId: string): boolean {
+    return !! this._receiveRightPerProcess.get(processId);
   }
 }

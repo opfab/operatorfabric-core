@@ -17,10 +17,10 @@
             <h5 class="font-weight-bold">{{processGroup.groupLabel}}</h5>
             <div class="row">
                 <div class="col-md" *ngFor="let processIdAndLabel of processGroup.processes; ">
-                    <div *ngIf="processesStatesLabels.get(processIdAndLabel.processId)">
-                        <p class="font-weight-bold">{{processesStatesLabels.get(processIdAndLabel.processId).processLabel}}</p>
+                    <div *ngIf="processesStatesLabels.get(processIdAndLabel.processId) as processData">
+                        <p class="font-weight-bold">{{processData.processLabel}}</p>
                         <div style="margin-left: 20px;" >
-                            <div class="row" formArrayName="processesStates" *ngFor="let state of processesStatesLabels.get(processIdAndLabel.processId).states; ">
+                            <div class="row" formArrayName="processesStates" *ngFor="let state of processData.states; ">
                                 <label class="opfab-checkbox">{{state.stateLabel}}
                                     <input type="checkbox"[formControlName]=state.stateControlIndex [id]=state.stateControlIndex >
                                     <span class="opfab-checkbox-checkmark"></span>
