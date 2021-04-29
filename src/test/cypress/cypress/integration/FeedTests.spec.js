@@ -2,25 +2,18 @@
 describe ('FeedScreen tests',function () {
 
     before('Set up configuration', function () {
-
-        // This clears existing processGroups, bundles and perimeters and load the test configuration
-        cy.exec('cd .. && ./resources/loadTestConf.sh '+Cypress.env('host'));
-
-
+        cy.loadTestConf();
     });
 
     beforeEach('Send test cards', function () {
-
-        cy.exec('cd .. && ./resources/delete6TestCards.sh '+Cypress.env('host'));
-        cy.exec('cd .. && ./resources/send6TestCards.sh '+Cypress.env('host'));
-
+        cy.sendTestCards();
     });
 
     it('Check card reception and read behaviour', function () {
 
-        cy.LogOpFab('operator1','test');
+        cy.loginOpFab('operator1','test');
 
-        // Set feed sort to "Date" so the cards don't move down the feed once they're read (see OC-1669)
+        // Set feed sort to "Date" so the cards don't move down the feed once they're read
         cy.get('#opfab-feed-filter-btn-sort').click();
         cy.get('#sort-form').find('input[value=date]').parent().click();
         cy.get('#opfab-feed-filter-btn-sort').click();
@@ -61,19 +54,26 @@ describe ('FeedScreen tests',function () {
                 cy.get('of-card-details').find('of-detail');
             });
 
-        // Click on the second card:
+
+
+        // Click on the second card (taken from first card's siblings to avoid clicking the same card twice):
         // - it should move to the side
         // - browser should navigate to url of corresponding card
         // - a card detail should be displayed
-        cy.get('of-light-card').eq(1).click()
-            .find('[id^=opfab-feed-light-card]')
-            .should('have.class', 'light-card-detail-selected')
-            .should('have.css', 'margin-left','20px')
-            .invoke('attr', 'data-urlId')
-            .then((urlId) => {
-                cy.hash().should('eq', '#/feed/cards/'+urlId);
-                cy.get('of-card-details').find('of-detail');
-            });
+        cy.get('@firstCardUrlId').then((firstCardUrlId) => {
+            cy.get(`[data-urlId="${firstCardUrlId}"]`).parent().parent().parent().siblings().eq(0).click()
+                .find('[id^=opfab-feed-light-card]')
+                .should('have.class', 'light-card-detail-selected')
+                .should('have.css', 'margin-left','20px')
+                .invoke('attr', 'data-urlId')
+                .then((urlId) => {
+                    cy.hash().should('eq', '#/feed/cards/'+urlId);
+                    cy.get('of-card-details').find('of-detail');
+                });
+        });
+
+        // Temporary fix for the `cy...failed because the element has been detached from the DOM` error (see OC-1669)
+        cy.waitDefaultTime();
 
         // First card should no longer be bold and to the side
         cy.get('@firstCardUrlId').then((firstCardUrlId) => {
@@ -88,6 +88,8 @@ describe ('FeedScreen tests',function () {
         // TODO Test on other card that it gets read when clicking cross
 
         // TODO Test read if navigating to other page and back
+
+        // TODO Test with sort set to unread first
 
 
 
