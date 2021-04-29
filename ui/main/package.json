@@ -57,7 +57,7 @@
     "ng-event-source": "1.0.14",
     "ngx-bootstrap": "6.2.0",
     "ngx-type-ahead": "2.0.1",
-    "rxjs": "6.6.7",
+    "rxjs": "7.0.0",
     "svg-pan-zoom": "3.6.1",
     "tslib": "2.2.0",
     "xlsx": "0.16.9"
