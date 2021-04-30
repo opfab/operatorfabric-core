@@ -111,6 +111,9 @@
                 <div *ngFor="let entityId of card.entityRecipients">
                     <span  style="text-align: center;">&nbsp; {{getEntityName(entityId)}} &nbsp; </span>
                 </div>
+                <div *ngIf="! card.entityRecipients.length">
+                    <span style="color:red" translate>userCard.youAreTheOnlyRecipient</span>
+                </div>
             </div>
         </div>
         <div>

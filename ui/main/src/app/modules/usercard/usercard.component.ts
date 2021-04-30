@@ -450,10 +450,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
         const selectedRecipients = this.recipientForm.value['recipients'];
         const recipients = [];
-        if (selectedRecipients.length < 1) {
-            this.displayMessage('userCard.error.noRecipientSelected', null, MessageLevel.ERROR);
-            return;
-        } else selectedRecipients.forEach(entity => recipients.push(entity.id));
+        selectedRecipients.forEach(entity => recipients.push(entity.id));
 
         const publisher =  this.currentUserWithPerimeters.userData.entities.find(userEntity => {
             const entity = this.entities.find(e => e.id === userEntity);
