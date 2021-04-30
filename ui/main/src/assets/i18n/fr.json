@@ -219,7 +219,6 @@
     "editTitle" : "EDITION D'UNE CARTE",
     "error": {
       "notAvailable": "Fonctionnalité non disponible",
-      "noRecipientSelected" : "Vous devez au moins choisir un destinataire",
       "templateError" : "Erreur technique : template non conforme",
       "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques",
       "endDateBeforeStartDate": "La date de fin doit être postérieure à la date de début"
@@ -249,6 +248,7 @@
     "processInstanceId": "Identifiant",
     "state": "État",
     "recipients": "DESTINATAIRES:",
+    "youAreTheOnlyRecipient": "Vous êtes l'unique destinataire de cette carte",
     "feedPreview": "PREVISUALISATION FLUX DE CARTES:",
     "contentPreview": "PREVISUALISATION CONTENU:",
     "send-another-one": "ENVOYER UNE AUTRE CARTE",
