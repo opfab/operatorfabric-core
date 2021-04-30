@@ -20,8 +20,6 @@ import org.opfab.cards.consultation.application.IntegrationTestApplication;
 import org.opfab.cards.consultation.model.*;
 import org.opfab.cards.consultation.model.CardConsultationData;
 import org.opfab.cards.consultation.model.I18nConsultationData;
-import org.opfab.cards.consultation.model.RecipientConsultationData;
-import org.opfab.cards.model.RecipientEnum;
 import org.opfab.cards.model.SeverityEnum;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.User;
@@ -145,17 +143,6 @@ public class CardRepositoryShould {
                         .severity(SeverityEnum.ALARM)
                         .title(I18nConsultationData.builder().key("title").build())
                         .summary(I18nConsultationData.builder().key("summary").build())
-                        .recipient(RecipientConsultationData.builder()
-                                .type(RecipientEnum.UNION)
-                                .recipient(RecipientConsultationData.builder()
-                                        .type(RecipientEnum.GROUP)
-                                        .identity("group1")
-                                        .build())
-                                .recipient(RecipientConsultationData.builder()
-                                        .type(RecipientEnum.GROUP)
-                                        .identity("group2")
-                                        .build())
-                                .build())
                         .entityRecipients(new ArrayList<String>(Arrays.asList("entity1", "entity2")))
                         .build();
         prepareCard(card, Instant.now());

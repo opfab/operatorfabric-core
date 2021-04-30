@@ -49,8 +49,6 @@ public class CardProcessingService {
 
 
     @Autowired
-    private RecipientProcessor recipientProcessor;
-    @Autowired
     private LocalValidatorFactoryBean localValidatorFactoryBean;
     @Autowired
     private CardNotificationService cardNotificationService;
@@ -76,7 +74,6 @@ public class CardProcessingService {
 
     private void processOneCard(CardPublicationData card, Optional<CurrentUserWithPerimeters> user) {
         validate(card);
-        recipientProcessor.processAll(card);
         card.prepare(Instant.ofEpochMilli(Math.round(Instant.now().toEpochMilli() / 1000d) * 1000));
         if (user.isPresent()) {
             userCardProcessor.processPublisher(card, user.get());

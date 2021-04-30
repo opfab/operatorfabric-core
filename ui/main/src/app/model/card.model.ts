@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -38,7 +38,6 @@ export class Card {
         readonly externalRecipients?: string[],
         readonly entitiesAllowedToRespond?: string[],
         readonly entitiesRequiredToRespond?: string[],
-        readonly recipient?: Recipient,
         readonly parentCardId?: string,
         readonly initialParentCardUid?: string,
         readonly keepChildCards?: boolean,
@@ -69,7 +68,6 @@ export class CardForPublishing {
         readonly externalRecipients?: string[],
         readonly entitiesAllowedToRespond?: string[],
         readonly entitiesRequiredToRespond?: string[],
-        readonly recipient?: Recipient,
         readonly parentCardId?: string,
         readonly initialParentCardUid?: string,
         readonly keepChildCards?: boolean,
@@ -78,19 +76,6 @@ export class CardForPublishing {
         readonly timeSpans?: TimeSpan[]
     ) {
     }
-}
-
-
-export class Recipient {
-    constructor(
-        readonly type?: RecipientEnum,
-        readonly recipients?: Recipient[],
-        readonly identity?: string
-    ) {}
-}
-
-export enum RecipientEnum {
-    DEADEND, GROUP, UNION, USER
 }
 
 export class CardData {
@@ -153,7 +138,6 @@ export function fromCardToCardForPublishing(card: Card): CardForPublishing {
         card.externalRecipients,
         card.entitiesAllowedToRespond,
         card.entitiesRequiredToRespond,
-        card.recipient,
         card.parentCardId,
         card.initialParentCardUid,
         card.keepChildCards,

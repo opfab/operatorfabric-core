@@ -334,7 +334,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 title: this.card.title,
                 summary: this.card.summary,
                 data: responseData.responseCardData,
-                recipient: this.card.recipient,
                 parentCardId: this.card.id,
                 initialParentCardUid: this.card.uid
             };
