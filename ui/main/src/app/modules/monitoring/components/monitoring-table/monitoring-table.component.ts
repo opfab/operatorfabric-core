@@ -14,7 +14,6 @@ import {TimeService} from '@ofServices/time.service';
 import {Moment} from 'moment-timezone';
 import {TranslateService} from '@ngx-translate/core';
 import {ExportService} from '@ofServices/export.service';
-
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {SelectLightCard} from '@ofActions/light-card.actions';
@@ -23,10 +22,10 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {ProcessesService} from "@ofServices/processes.service";
-import { MonitoringConfig } from '@ofModel/monitoringConfig.model';
-import { JsonToArray } from 'app/common/jsontoarray/json-to-array';
-import { CardService } from '@ofServices/card.service';
-import { Process } from '@ofModel/processes.model';
+import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
+import {JsonToArray} from 'app/common/jsontoarray/json-to-array';
+import {CardService} from '@ofServices/card.service';
+import {Process} from '@ofModel/processes.model';
 
 @Component({
     selector: 'of-monitoring-table',
