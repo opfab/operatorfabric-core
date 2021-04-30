@@ -11,22 +11,22 @@
 
 NOTE: This feature is experimental 
 
-The monitoring screen is a realtime view of processes based on current cards received by the user (i.e the last version of cards visible by the logged user). It can be seen as an another view of the feed. 
+The monitoring screen is a realtime view of processes based on current cards received by the user (i.e the last version of cards visible by the user). It can be seen as an another view of the feed. 
 
 The feature can be disabled via configuration in web-ui.json (by adding `"monitoring"` in array `navbar.hidden` )
 
-Not all the cards are visible, it depends on the business process. For a card to be visible in this screen, the parameter `uiVisibility.monitoring` must be set to `true` in the corresponding config.json.
-
+Not all the cards are visible, it depends on the business process they are part of. For a card to be visible in this screen, the parameter `uiVisibility.monitoring` must be set to `true` in the config.json file of its process.
 
 == Export configuration 
 
-An excel export function is available in the monitoring screen, the content of the export can be configured. The configuration is to be defined via a json description to send to the businessconfig service through the /businessconfig/monitoring endpoint.
+An Excel export function is available in the monitoring screen, the content of the export can be configured. 
+To do so, a json file describing the expected output can be sent to the businessconfig service through the /businessconfig/monitoring endpoint.
 
 In opfab git repository, you can find in directory https://github.com/opfab/operatorfabric-core/tree/develop/src/test/resources/monitoringConfig[src/test/resources/monitoringConfig]  : 
   
   - a script to load a monitoring configuration `loadMonitoringConfig.sh`
 
-  - an example of configuration in `monitoringConfig.json`
+  - an example of configuration in `monitoringConfig.json` (for the response fields to be filled , you need to need to respond to a card question in process userCardExamples2 )
 
 
 A description of the structure of the configuration can be found in 
