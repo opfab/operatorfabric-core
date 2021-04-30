@@ -69,7 +69,7 @@ export class ActionService {
     user.computedPerimeters.forEach(perim => {
       const stateOfTheCard = Process.prototype.extractState.call(processDefinition, card);
 
-      if ((!! stateOfTheCard) && (perim.process === card.process) && (perim.state === stateOfTheCard.response.state)
+      if ((!! stateOfTheCard) && (perim.process === card.process) && (!!stateOfTheCard.response) && (perim.state === stateOfTheCard.response.state)
           && (this.compareRightAction(perim.rights, RightsEnum.Write)
               || this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
         permission = true;

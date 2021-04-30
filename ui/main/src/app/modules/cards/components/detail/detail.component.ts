@@ -536,6 +536,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private isAcknowledgmentAllowed(): boolean {
+
+        // default value is true 
+        if (!this.cardState.acknowledgmentAllowed) return true;
+
         return (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS ||
             (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER && !this.isActionEnabled));
     }
@@ -619,11 +623,14 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                             }, 10);
                         }, 10);
                     }, () => {
-                        console.log('WARNING impossible to load template ', templateName);
+                        console.log(new Date().toISOString(),'WARNING impossible to load template ', templateName);
                         this._htmlContent = this.sanitizer.bypassSecurityTrustHtml('');
                     }
                 );
-        } else console.log('WARNING No template for state ', this.card.state);
+        } else {
+            this._htmlContent = " TECHNICAL ERROR - NO TEMPLATE AVAILABLE";
+            console.log(new Date().toISOString(), `WARNING No template for process ${this.card.process} version ${this.card.processVersion} with state ${this.card.state}`);
+        }
     }
 
     private initializeHandlebarsTemplates() {
