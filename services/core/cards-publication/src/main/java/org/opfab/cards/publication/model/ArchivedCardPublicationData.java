@@ -63,7 +63,6 @@ public class ArchivedCardPublicationData implements Card {
     private Instant endDate;
     private SeverityEnum severity;
     private List<String> tags;
-    private Recipient recipient;
     private Object data;
     @Indexed
     private int shardKey;
@@ -109,7 +108,6 @@ public class ArchivedCardPublicationData implements Card {
         this.title = card.getTitle();
         this.summary = card.getSummary();
         this.tags = card.getTags() == null ? null : new ArrayList<>(card.getTags());
-        this.recipient = card.getRecipient();
         this.severity = card.getSeverity();
         this.data = card.getData();
         this.userRecipients = card.getUserRecipients() == null ? null : new ArrayList<>(card.getUserRecipients());

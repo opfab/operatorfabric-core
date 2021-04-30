@@ -63,7 +63,8 @@ public class CardNotificationService {
         }
         CardOperationData cardOperation = builderEncapsulator.builder().build();
         List<String> listOfGroupRecipients = new ArrayList<>();
-        card.getGroupRecipients().forEach(group -> listOfGroupRecipients.add(group));
+        if (card.getGroupRecipients() != null)
+            card.getGroupRecipients().forEach(group -> listOfGroupRecipients.add(group));
         cardOperation.setGroupRecipientsIds(listOfGroupRecipients);
 
         List<String> listOfEntityRecipients = new ArrayList<>();

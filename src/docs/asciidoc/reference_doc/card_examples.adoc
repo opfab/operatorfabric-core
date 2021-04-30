@@ -130,20 +130,6 @@ Another example, if a card is destined to the operators of `Dispatcher` and `Pla
 ....
 
 
-There is and alternative way to declare recipients of card, this syntax is more complex and will be deprecated:
-
-....
-"recipient":{ 
-	"type":"UNION",
-	"recipients":[
-		{ "type": "GROUP", "identity":"Dispatcher"},
-		{ "type": "USER", "identity":"operator2"}
-		]
-	}
-....
-
-
-
 == Regular Card
 
 The previous cards were nearly empty regarding information carrying. In fact, cards are intended to contain more information than a title and a summary. The optional attribute `data` is here for that. This attribute is destined to contain any `json` object. The creator of the card is free to put any information needed as long as it's in a `json` format.

@@ -11,7 +11,6 @@
 package org.opfab.cards.publication.controllers;
 
 import static java.nio.charset.Charset.forName;
-import static org.opfab.cards.model.RecipientEnum.DEADEND;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -28,7 +27,6 @@ import org.jetbrains.annotations.NotNull;
 import org.opfab.cards.model.SeverityEnum;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.model.I18nPublicationData;
-import org.opfab.cards.publication.model.RecipientPublicationData;
 
 
 public abstract class CardControllerShouldBase {
@@ -75,7 +73,6 @@ public abstract class CardControllerShouldBase {
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .process("process1")
                 .state("state1")
                 .build()
@@ -88,7 +85,6 @@ public abstract class CardControllerShouldBase {
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .process("process2")
                 .state("state2")
                 .build()
@@ -102,7 +98,6 @@ public abstract class CardControllerShouldBase {
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .process("process3")
                 .state("state3")
                 .build()
@@ -116,7 +111,6 @@ public abstract class CardControllerShouldBase {
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .process("process4")
                 .state("state4")
                 .build()
@@ -130,7 +124,6 @@ public abstract class CardControllerShouldBase {
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .process("process1")
                 .state("state5")
                 .build()

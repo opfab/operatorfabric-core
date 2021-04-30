@@ -70,7 +70,6 @@ public class CardConsultationData implements Card {
     @Singular
     private List<String> tags;
     
-    private Recipient recipient;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;
     @Indexed

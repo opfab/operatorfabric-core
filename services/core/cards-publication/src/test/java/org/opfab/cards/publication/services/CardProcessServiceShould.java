@@ -21,7 +21,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.aop.process.mongo.models.UserActionTraceData;
-import org.opfab.cards.model.RecipientEnum;
 import org.opfab.cards.model.SeverityEnum;
 import org.opfab.cards.publication.application.UnitTestApplication;
 import org.opfab.cards.publication.configuration.TestCardReceiver;
@@ -56,7 +55,6 @@ import java.util.stream.Collectors;
 import static java.nio.charset.Charset.forName;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.jeasy.random.FieldPredicates.named;
-import static org.opfab.cards.model.RecipientEnum.DEADEND;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
@@ -156,7 +154,6 @@ class CardProcessServiceShould {
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                         .timeSpan(TimeSpanPublicationData.builder()
                                 .start(Instant.ofEpochMilli(123l)).build())
                         .process("process1")
@@ -169,7 +166,6 @@ class CardProcessServiceShould {
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                         .process("process2")
                         .state("state2")
                         .build());
@@ -179,7 +175,6 @@ class CardProcessServiceShould {
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                         .process("process3")
                         .state("state3")
                         .build());
@@ -189,7 +184,6 @@ class CardProcessServiceShould {
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                         .process("process4")
                         .state("state4")
                         .build());
@@ -199,7 +193,6 @@ class CardProcessServiceShould {
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                         .process("process5")
                         .state("state5")
                         .build());
@@ -233,7 +226,6 @@ class CardProcessServiceShould {
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
                 .externalRecipients(externalRecipients)
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .state("state1")
                 .build();
 
@@ -262,7 +254,6 @@ class CardProcessServiceShould {
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
                 .externalRecipients(externalRecipients)
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .state("state1")
                 .build();
 
@@ -306,7 +297,6 @@ class CardProcessServiceShould {
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
                 .externalRecipients(externalRecipients)
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .state("state1")
                 .build();
 
@@ -377,12 +367,6 @@ class CardProcessServiceShould {
                         .build())
                 .endDate(start.plusSeconds(60)).lttd(start.minusSeconds(600))
                 .tag("tag1").tag("tag2").data(data)
-                .recipient(RecipientPublicationData.builder().type(RecipientEnum.UNION)
-                        .recipient(RecipientPublicationData.builder().type(RecipientEnum.USER)
-                                .identity("graham").build())
-                        .recipient(RecipientPublicationData.builder().type(RecipientEnum.USER)
-                                .identity("eric").build())
-                        .build())
                 .entityRecipients(entityRecipients)
                 .timeSpan(TimeSpanPublicationData.builder().start(Instant.ofEpochMilli(123l)).recurrence(recurrence).build())
                 .process("process1")
@@ -531,9 +515,6 @@ class CardProcessServiceShould {
                 .excludeField(named("data"))
                 .excludeField(named("parameters"))
                 .excludeField(named("shardKey"))
-                .randomize(named("recipient").and(FieldPredicates.ofType(Recipient.class))
-                                .and(FieldPredicates.inClass(CardPublicationData.class)),
-                        () -> RecipientPublicationData.builder().type(DEADEND).build())
                 .scanClasspathForConcreteTypes(true).overrideDefaultInitialization(false)
                 .ignoreRandomizationErrors(true);
 
@@ -817,7 +798,6 @@ class CardProcessServiceShould {
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                         .timeSpan(TimeSpanPublicationData.builder()
                                 .start(Instant.ofEpochMilli(123l)).build())
                         .process("process1")
@@ -832,7 +812,6 @@ class CardProcessServiceShould {
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .timeSpan(TimeSpanPublicationData.builder()
                         .start(Instant.ofEpochMilli(123l)).build())
                 .process("process2")
@@ -853,7 +832,6 @@ class CardProcessServiceShould {
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .timeSpan(TimeSpanPublicationData.builder()
                         .start(Instant.ofEpochMilli(123l)).build())
                 .build();
@@ -875,7 +853,6 @@ class CardProcessServiceShould {
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                         .timeSpan(TimeSpanPublicationData.builder()
                                 .start(Instant.ofEpochMilli(123l)).build())
                         .process("process1")
@@ -890,7 +867,6 @@ class CardProcessServiceShould {
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .timeSpan(TimeSpanPublicationData.builder()
                         .start(Instant.ofEpochMilli(123l)).build())
                 .process("process2")
@@ -914,7 +890,6 @@ class CardProcessServiceShould {
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .timeSpan(TimeSpanPublicationData.builder()
                         .start(Instant.ofEpochMilli(123l)).build())
                 .process("process1")

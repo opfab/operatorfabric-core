@@ -18,8 +18,6 @@ import org.jeasy.random.EasyRandomParameters;
 import org.jeasy.random.FieldPredicates;
 import org.jetbrains.annotations.NotNull;
 import org.opfab.cards.consultation.model.*;
-import org.opfab.cards.consultation.model.*;
-import org.opfab.cards.model.RecipientEnum;
 import org.opfab.cards.model.SeverityEnum;
 import org.springframework.data.domain.Page;
 
@@ -37,7 +35,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.nio.charset.Charset.forName;
-import static org.opfab.cards.model.RecipientEnum.*;
 
 @Slf4j
 public class TestUtilities {
@@ -106,7 +103,6 @@ public class TestUtilities {
                 .severity(SeverityEnum.ALARM)
                 .title(I18nConsultationData.builder().key("title").build())
                 .summary(I18nConsultationData.builder().key("summary").build())
-                .recipient(computeRecipient(login, groups))
                 .usersAcks(userAcks!=null ? Arrays.asList(userAcks) : null)
                 .usersReads(userReads!=null ? Arrays.asList(userReads) : null);
 
@@ -119,36 +115,6 @@ public class TestUtilities {
         CardConsultationData card = cardBuilder.build();
         prepareCard(card, publication);
         return card;
-    }
-
-    private static Recipient computeRecipient(String login, String... groups) {
-        Recipient userRecipient = null;
-        Recipient groupRecipient = null;
-        if (login != null) {
-            userRecipient = RecipientConsultationData.builder()
-                    .type(USER)
-                    .identity(login)
-                    .build();
-        }
-
-        if (groups != null && groups.length > 0) {
-            RecipientConsultationData.RecipientConsultationDataBuilder groupRecipientBuilder = RecipientConsultationData.builder()
-                    .type(UNION);
-            for (String group : groups)
-                groupRecipientBuilder.recipient(RecipientConsultationData.builder().type(GROUP).identity(group).build());
-            groupRecipient = groupRecipientBuilder.build();
-        }
-
-        if (userRecipient != null && groupRecipient != null)
-            return RecipientConsultationData.builder().type(UNION).recipient(userRecipient).recipient(groupRecipient).build();
-        else if (userRecipient != null)
-            return userRecipient;
-        else if (groupRecipient != null)
-            return groupRecipient;
-
-        return RecipientConsultationData.builder()
-                .type(RecipientEnum.DEADEND)
-                .build();
     }
 
     public static CardOperation readCardOperation(ObjectMapper mapper, String s) {
@@ -197,7 +163,6 @@ public class TestUtilities {
                 .severity(SeverityEnum.ALARM)
                 .title(I18nConsultationData.builder().key("title").build())
                 .summary(I18nConsultationData.builder().key("summary").build())
-                .recipient(computeRecipient(login, groups))
                 .publisherType(PublisherTypeEnum.EXTERNAL)
                 ;
 

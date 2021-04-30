@@ -87,8 +87,6 @@ public class CardPublicationData implements Card {
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<? extends TimeSpan> timeSpans;
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private Recipient recipient;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;
     @Indexed

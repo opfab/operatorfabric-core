@@ -69,9 +69,6 @@ public class ArchivedCardConsultationData implements Card {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
     private List<String> tags;
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    @JsonIgnore
-    private Recipient recipient;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;
     @Indexed

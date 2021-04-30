@@ -137,7 +137,7 @@ NOTE: Using the `ReceiveAndWrite` right instead of the `Write` right allows the 
 edit or delete it.
 
 == Recipients
-When sending a user card, by default it is possibile to choose the recipients from all the available entities. To limit the list of available recipients it is possible to configure the field `recipientList` in `config.json`
+When sending a user card, by default it is possible to choose the recipients from all the available entities. To limit the list of available recipients it is possible to configure the field `recipientList` in `config.json`
 
 For example : 
 

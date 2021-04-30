@@ -15,7 +15,6 @@
     "CardOperationTypeEnum": "org.opfab.cards.model.CardOperationTypeEnum",
     "SeverityEnum": "org.opfab.cards.model.SeverityEnum",
     "InputEnum": "org.opfab.cards.model.InputEnum",
-    "RecipientEnum": "org.opfab.cards.model.RecipientEnum",
     "EpochDate": "java.time.Instant",
     "PublisherTypeEnum": "org.opfab.cards.model.PublisherTypeEnum"
   }

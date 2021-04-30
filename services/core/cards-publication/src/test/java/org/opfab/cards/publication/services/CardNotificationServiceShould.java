@@ -17,13 +17,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.cards.model.CardOperationTypeEnum;
-import org.opfab.cards.model.RecipientEnum;
 import org.opfab.cards.model.SeverityEnum;
 import org.opfab.cards.publication.configuration.TestCardReceiver;
 import org.opfab.cards.publication.model.CardOperationData;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.model.I18nPublicationData;
-import org.opfab.cards.publication.model.RecipientPublicationData;
 import org.opfab.cards.publication.application.UnitTestApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +29,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -50,9 +49,6 @@ class CardNotificationServiceShould {
     @Autowired
     TestCardReceiver testCardReceiver;
 
-    @Autowired
-    RecipientProcessor recipientProcessor;
-
     @BeforeEach
     @AfterEach
     public void clearData(){
@@ -71,36 +67,9 @@ class CardNotificationServiceShould {
            .title(I18nPublicationData.builder().key("title").build())
            .summary(I18nPublicationData.builder().key("summary").parameter("arg1","value1").build())
            .lttd(start.minusSeconds(600))
-           .recipient(
-              RecipientPublicationData.builder()
-                 .type(RecipientEnum.UNION)
-                 .recipient(
-                    RecipientPublicationData.builder()
-                       .type(RecipientEnum.USER)
-                       .identity("graham")
-                       .build()
-                 )
-                 .recipient(
-                    RecipientPublicationData.builder()
-                       .type(RecipientEnum.USER)
-                       .identity("eric")
-                       .build()
-                 )
-                 .recipient(
-                    RecipientPublicationData.builder()
-                    .type(RecipientEnum.GROUP)
-                    .identity("mytso")
-                    .build()
-                 )
-                 .recipient(
-                    RecipientPublicationData.builder()
-                       .type(RecipientEnum.GROUP)
-                       .identity("admin")
-                       .build()
-                 )
-                 .build())
+           .userRecipients(Arrays.asList("graham", "eric"))
+           .groupRecipients(Arrays.asList("mytso", "admin"))
            .build();
-        recipientProcessor.processAll(newCard);
 
         cardNotificationService.notifyOneCard(newCard,CardOperationTypeEnum.ADD);
         await().pollDelay(1, TimeUnit.SECONDS).until(()->true);

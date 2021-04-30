@@ -16,3 +16,9 @@ The endPoint `cards` now returns :
 - status code 400 (Bad request) in case of a request with wrong data.
 
 So if you use CardCreationReport object when you send card, you need to modify your code to not use it anymore and to test the status code returned.
+
+== Card recipients
+
+The deprecated card field `recipient` is now deleted. So you have to use the fields `userRecipients`, `groupRecipients`
+and `entityRecipients` to send a card.
+
