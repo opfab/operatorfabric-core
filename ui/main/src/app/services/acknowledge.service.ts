@@ -58,6 +58,8 @@ export class AcknowledgeService {
     }
 
     isAcknowledgmentAllowed(user: UserWithPerimeters, card: Card|LightCard, processDefinition: Process): boolean {
+
+        if (!processDefinition) return true;
         const state = Process.prototype.extractState.call(processDefinition, card);
 
         if (!! state) {
@@ -65,7 +67,8 @@ export class AcknowledgeService {
                 return false;
             if (state.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS)
                 return true;
+            return !this.actionService.isUserEnabledToRespond(user, card, processDefinition);
         }
-        return ! this.actionService.isUserEnabledToRespond(user, card, processDefinition);
+        return true;
     }
 }

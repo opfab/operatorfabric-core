@@ -19,7 +19,7 @@ import {UserService} from '@ofServices/user.service';
 import {User} from '@ofModel/user.model';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {AppService} from '@ofServices/app.service';
-import {State as CardState} from '@ofModel/processes.model';
+import {State as CardState, State} from '@ofModel/processes.model';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -57,22 +57,33 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
         this.store.select(cardSelectors.selectCardStateSelectedWithChildCards)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(([card, childCards]: [Card, Card[]]) => {
-                this.card = card;
-                this.childCards = childCards;
                 if (!!card) {
-                    this.businessconfigService.queryProcess(this.card.process, this.card.processVersion)
+                    this.businessconfigService.queryProcess(card.process, card.processVersion)
                         .pipe(takeUntil(this.unsubscribe$))
                         .subscribe(businessconfig => {
-                                if (!!businessconfig) {
-                                    this.cardState = businessconfig.extractState(this.card);
-                                    if (! this.cardState)
-                                        console.log(new Date().toISOString(), 'WARNING impossible to load state',
-                                            this.card.state, 'for process', this.card.process);
+                            this.card = card;
+                            this.childCards = childCards;
+                            if (!!businessconfig) {
+                                this.cardState = businessconfig.extractState(card);
+                                if (!this.cardState) {
+                                    console.log(new Date().toISOString(), `WARNING state ${card.state} does not exist for process ${card.process}`);
+                                    this.cardState = new State();
                                 }
+                            }
+                            else {
+                                console.log(new Date().toISOString(), `WARNING process `
+                                    + ` ${card.process} with version ${card.processVersion} does not exist.`)
+                                this.cardState = new State();
+                            }
 
-                            },
-                            error => console.log(`something went wrong while trying to fetch process for`
-                                + ` ${this.card.process} with ${this.card.processVersion} version.`)
+                        },
+                            error => {
+                                console.log(new Date().toISOString(), `WARNING process `
+                                    + ` ${card.process} with version ${card.processVersion} does not exist.`);
+                                this.card = card;
+                                this.childCards = childCards;
+                                this.cardState = new State();
+                            }
                         );
                 }
             });

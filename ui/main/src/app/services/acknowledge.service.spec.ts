@@ -52,6 +52,38 @@ describe('AcknowledgeService testing ', () => {
         userMemberOfEntity2 = new User('userTest', 'firstName', 'lastName', ['group1'], ['ENTITY2']);
     });
 
+
+    it('acknowledgmentAllowed of the state is not present , isAcknowledgmentAllowed() must return true (default value)', () => {
+
+        statesList['testState'] = new State(null, null, null,  null);
+        const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
+        const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1,
+            [{process: 'testProcess', state: 'testState', rights: RightsEnum.Receive}]);
+
+        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
+        expect(res).toBeTrue();
+    });
+
+    it('process does not exist , isAcknowledgmentAllowed() must return true (default value)', () => {
+        const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1,
+            [{process: 'testProcess', state: 'testState', rights: RightsEnum.Receive}]);
+        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, null);
+        expect(res).toBeTrue();
+    });
+
+
+    it('state does not exist , isAcknowledgmentAllowed() must return true (default value)', () => {
+
+        statesList['dummyState'] = new State(null, null, null,  null);
+        const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
+        const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1,
+            [{process: 'testProcess', state: 'testState', rights: RightsEnum.Receive}]);
+
+        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
+        expect(res).toBeTrue();
+    });
+
+
     it('acknowledgmentAllowed of the state is Never, isAcknowledgmentAllowed() must return false', () => {
 
         statesList['testState'] = new State(null, null, null, AcknowledgmentAllowedEnum.NEVER);
