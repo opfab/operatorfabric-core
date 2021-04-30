@@ -31,7 +31,7 @@ import org.opfab.cards.consultation.configuration.webflux.CardRoutesConfig;
 import org.opfab.cards.consultation.model.CardConsultationData;
 import org.opfab.cards.consultation.model.CardData;
 import org.opfab.cards.consultation.repositories.CardRepository;
-import org.opfab.springtools.configuration.test.WithMockOpFabUser;
+import org.opfab.springtools.configuration.test.WithMockOpFabUserReactive;
 import org.opfab.test.EmptyListComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -68,7 +68,7 @@ public class CardRoutesShould {
     }
 
     @Nested
-    @WithMockOpFabUser(login="userWithGroup", roles = {"SOME_GROUP"})
+    @WithMockOpFabUserReactive(login="userWithGroup", roles = {"SOME_GROUP"})
     public class GivenUserWithGroupCardRoutesShould {
 
         @Test
@@ -220,7 +220,7 @@ public class CardRoutesShould {
     }
 
     @Nested
-    @WithMockOpFabUser(login="userWithNoGroup", roles = {})
+    @WithMockOpFabUserReactive(login="userWithNoGroup", roles = {})
     public class GivenUserWithNoGroupCardRoutesShould {
 
         @Test
@@ -239,7 +239,7 @@ public class CardRoutesShould {
     }
 
     @Nested
-    @WithMockOpFabUser(login="userWithGroupAndEntity", roles={"SOME_GROUP"}, entities={"SOME_ENTITY"})
+    @WithMockOpFabUserReactive(login="userWithGroupAndEntity", roles={"SOME_GROUP"}, entities={"SOME_ENTITY"})
     public class GivenUserWithGroupAndEntityCardRoutesShould {
 
         @Test

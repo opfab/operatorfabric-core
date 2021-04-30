@@ -46,6 +46,9 @@ public class UserData implements User {
     @Singular("group")
     private Set<String> groupSet;
 
+    @Singular("authorizedIPAddresses")
+    private Set<String> authorizedIPAddresses;
+
     public UserData(User user){
         this();
         this.login = user.getLogin();
@@ -53,7 +56,7 @@ public class UserData implements User {
         this.lastName = user.getLastName();
         this.entities = new HashSet<>(user.getEntities());
         this.groupSet = new HashSet<>(user.getGroups());
-
+        this.authorizedIPAddresses = new HashSet<>(user.getAuthorizedIPAddresses());
     }
 
     public void addGroup(String group){
@@ -111,4 +114,29 @@ public class UserData implements User {
 
     }
 
+
+    public void addAuthorizedIPAddress(String address){
+        if(null== authorizedIPAddresses){
+            this.authorizedIPAddresses=new HashSet<>();
+        }
+        authorizedIPAddresses.add(address);
+    }
+
+
+    @Override
+    public List<String> getAuthorizedIPAddresses() {
+        if(authorizedIPAddresses == null)
+            return Collections.emptyList();
+        return new ArrayList<>(authorizedIPAddresses);
+    }
+
+    @Override
+    public void setAuthorizedIPAddresses(List<String> authorizedIPAddresses) {
+        this.authorizedIPAddresses = new HashSet<>(authorizedIPAddresses);
+    }
+
+    public void deleteAuthorizedIPAddress(String address) {
+        authorizedIPAddresses.remove(address);
+
+    }
 }

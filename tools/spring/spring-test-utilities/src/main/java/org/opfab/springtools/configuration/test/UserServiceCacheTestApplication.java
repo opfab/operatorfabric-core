@@ -64,7 +64,7 @@ public class UserServiceCacheTestApplication {
 
 
         MockClient mockClient = new MockClient();
-        mockClient = mockClient.ok(HttpMethod.GET, "/CurrentUserWithPerimeters", stringTestUserWithPerimeter);
+        mockClient = mockClient.ok(HttpMethod.GET, "/internal/CurrentUserWithPerimeters", stringTestUserWithPerimeter);
 
         return mockClient;
     }

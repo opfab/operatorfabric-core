@@ -9,9 +9,10 @@
 
 
 
-package org.opfab.cards.consultation.configuration.webflux;
+ package org.opfab.cards.consultation.configuration.webflux;
 
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -33,21 +34,19 @@ import reactor.core.publisher.Mono;
 @EnableWebFluxSecurity
 public class WebSecurityConfiguration {
 
+    public static final String PROMETHEUS_PATH = "/actuator/prometheus**";
 
-    public static final String PROMETHEUS_PATH ="/actuator/prometheus**";
+
     /**
      * Secures access (all uris are secured)
      *
-     * @param http
-     *    http security configuration
-     * @param opfabReactiveJwtConverter
-     *    OperatorFabric authentication converter
+     * @param http                      http security configuration
+     * @param opfabReactiveJwtConverter OperatorFabric authentication converter
      * @return http security filter chain
      */
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http,
-                                                            Converter<Jwt, Mono<AbstractAuthenticationToken>>
-                                                                    opfabReactiveJwtConverter) {
+            Converter<Jwt, Mono<AbstractAuthenticationToken>> opfabReactiveJwtConverter) {
         configureCommon(http);
         http
                 .oauth2ResourceServer()
@@ -57,14 +56,16 @@ public class WebSecurityConfiguration {
         return http.build();
     }
 
-    /**This method handles the configuration to be shared with the test WebSecurityConfiguration class (access rules to be tested)
-     * */
+    /**
+     * This method handles the configuration to be shared with the test
+     * WebSecurityConfiguration class (access rules to be tested)
+     */
     public static void configureCommon(final ServerHttpSecurity http) {
         http
                 .headers().frameOptions().disable()
                 .and()
                 .authorizeExchange()
-                .pathMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll() 
-                .anyExchange().authenticated();
+                .pathMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
+                .anyExchange().access(new IpAddressAuthorizationManager());
     }
 }

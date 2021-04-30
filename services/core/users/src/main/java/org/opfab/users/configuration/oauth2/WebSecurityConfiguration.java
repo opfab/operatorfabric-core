@@ -11,7 +11,6 @@
 
 package org.opfab.users.configuration.oauth2;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -21,6 +20,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.jwt.Jwt;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * OAuth 2 http authentication configuration and access rules
@@ -40,10 +41,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public static final String ENTITIES_PATH = "/entities/**";
     public static final String ENTITIES = "/entities";
     public static final String PERIMETERS_PATH = "/perimeters/**";
+    public static final String CURRENTUSER_INTERNAL_PATH = "/internal/CurrentUserWithPerimeters";
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String IS_ADMIN_OR_OWNER = "hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)";
-    public static final String IS_ADMIN_AND_NOT_OWNER = "hasRole('ADMIN') and ! @webSecurityChecks.checkUserLogin(authentication,#login)";
-    
+    public static final String IS_ADMIN_OR_OWNER_AND_IP_ALLOWED = "( ( hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login) ) and @webSecurityChecks.checkUserIpAddress(authentication) )";
+    public static final String IS_ADMIN_AND_NOT_OWNER_AND_IP_ALLOWED = "hasRole('ADMIN') and ! @webSecurityChecks.checkUserLogin(authentication,#login) and @webSecurityChecks.checkUserIpAddress(authentication)";
+    public static final String IS_ADMIN_AND_IP_ALLOWED = "hasRole('ADMIN') and @webSecurityChecks.checkUserIpAddress(authentication)";
+    public static final String AUTH_AND_IP_ALLOWED = "isAuthenticated() and @webSecurityChecks.checkUserIpAddress(authentication)";
+
     @Autowired
     WebSecurityChecks webSecurityChecks;
 
@@ -56,8 +61,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .oauth2ResourceServer()
                 .jwt()
-                .jwtAuthenticationConverter(opfabJwtConverter)
-        ;
+                .jwtAuthenticationConverter(opfabJwtConverter);
+
     }
 
     /**This method handles the configuration to be shared with the test WebSecurityConfiguration class (access rules to be tested)
@@ -66,20 +71,21 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll() 
-                .antMatchers(HttpMethod.GET, USER_PATH).access(IS_ADMIN_OR_OWNER)
-                .antMatchers(HttpMethod.PUT, USER_PATH).access(IS_ADMIN_OR_OWNER)
-                .antMatchers(HttpMethod.DELETE, USER_PATH).access(IS_ADMIN_AND_NOT_OWNER)
-                .antMatchers(HttpMethod.GET, USERS_SETTINGS_PATH).access(IS_ADMIN_OR_OWNER)
-                .antMatchers(HttpMethod.PUT, USERS_SETTINGS_PATH).access(IS_ADMIN_OR_OWNER)
-                .antMatchers(HttpMethod.PATCH, USERS_SETTINGS_PATH).access(IS_ADMIN_OR_OWNER)
-                .antMatchers(HttpMethod.GET, USERS_PERIMETERS_PATH).access(IS_ADMIN_OR_OWNER)
-                .antMatchers(USERS_PATH).hasRole(ADMIN_ROLE)
-                .antMatchers(GROUPS_PATH).hasRole(ADMIN_ROLE)
-                .antMatchers(HttpMethod.GET, ENTITIES).authenticated()      // OC-1067 : we authorize all users for GET /entities
-                .antMatchers(ENTITIES_PATH).hasRole(ADMIN_ROLE)
-                .antMatchers(PERIMETERS_PATH).hasRole(ADMIN_ROLE)
-                .anyRequest().authenticated();
+                .antMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll()
+                .antMatchers(HttpMethod.GET, USER_PATH).access(IS_ADMIN_OR_OWNER_AND_IP_ALLOWED)
+                .antMatchers(HttpMethod.PUT, USER_PATH).access(IS_ADMIN_OR_OWNER_AND_IP_ALLOWED)
+                .antMatchers(HttpMethod.DELETE, USER_PATH).access(IS_ADMIN_AND_NOT_OWNER_AND_IP_ALLOWED)
+                .antMatchers(HttpMethod.GET, USERS_SETTINGS_PATH).access(IS_ADMIN_OR_OWNER_AND_IP_ALLOWED)
+                .antMatchers(HttpMethod.PUT, USERS_SETTINGS_PATH).access(IS_ADMIN_OR_OWNER_AND_IP_ALLOWED)
+                .antMatchers(HttpMethod.PATCH, USERS_SETTINGS_PATH).access(IS_ADMIN_OR_OWNER_AND_IP_ALLOWED)
+                .antMatchers(HttpMethod.GET, USERS_PERIMETERS_PATH).access(IS_ADMIN_OR_OWNER_AND_IP_ALLOWED)
+                .antMatchers(USERS_PATH).access(IS_ADMIN_AND_IP_ALLOWED)
+                .antMatchers(GROUPS_PATH).access(IS_ADMIN_AND_IP_ALLOWED)
+                .antMatchers(HttpMethod.GET, ENTITIES).access(AUTH_AND_IP_ALLOWED)      // OC-1067 : we authorize all users for GET /entities
+                .antMatchers(ENTITIES_PATH).access(IS_ADMIN_AND_IP_ALLOWED)
+                .antMatchers(PERIMETERS_PATH).access(IS_ADMIN_AND_IP_ALLOWED)
+                .antMatchers(CURRENTUSER_INTERNAL_PATH).authenticated()
+                .anyRequest().access(AUTH_AND_IP_ALLOWED);
     }
 
 }

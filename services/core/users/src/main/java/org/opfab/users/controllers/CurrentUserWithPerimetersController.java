@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  * CurrentUserWithPerimetersController, documented at {@link CurrentUserWithPerimetersApi}
  */
 @RestController
-@RequestMapping("/CurrentUserWithPerimeters")
+@RequestMapping({"/CurrentUserWithPerimeters","/internal/CurrentUserWithPerimeters"})
 @Slf4j
 public class CurrentUserWithPerimetersController implements CurrentUserWithPerimetersApi, UserExtractor {
 

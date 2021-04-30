@@ -98,6 +98,10 @@ public class OAuth2GenericConfiguration {
         return new JacksonDecoder();
     }
 
+    @Bean
+    public WebSecurityChecks webSecurityChecks() {
+        return new WebSecurityChecks();
+    }
 
 
     public AbstractAuthenticationToken generateOpFabJwtAuthenticationToken(Jwt jwt) {

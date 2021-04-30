@@ -34,4 +34,6 @@ public @interface WithMockOpFabUser {
     String[] roles() default "";
 
     String[] entities() default "";
+
+    String[] authorizedIPAddresses() default {};
 }

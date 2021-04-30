@@ -6,7 +6,6 @@ spring:
   application:
     name: users
 
-
 operatorfabric.users.default:
   users:
     - login: admin

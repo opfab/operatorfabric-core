@@ -48,7 +48,7 @@ public class UserServiceCacheShould {
 
     @Test
     public void mockClientRequestsAreResetBeforeEachTest(){
-        assertThat(mockClient.verifyTimes(HttpMethod.GET, "/CurrentUserWithPerimeters",0)).isEmpty();
+        assertThat(mockClient.verifyTimes(HttpMethod.GET, "/internal/CurrentUserWithPerimeters",0)).isEmpty();
     }
 
     @Test
@@ -70,12 +70,12 @@ public class UserServiceCacheShould {
         UserServiceCache.setTokenForUserRequest(user1, "testtoken");
         UserServiceCache.setTokenForUserRequest(user2, "testtoken2");
         CurrentUserWithPerimeters user = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(user1);
-        Map headers  = mockClient.verifyOne(HttpMethod.GET, "/CurrentUserWithPerimeters").headers();
+        Map headers  = mockClient.verifyOne(HttpMethod.GET, "/internal/CurrentUserWithPerimeters").headers();
         String token = headers.get("Authorization").toString();
         assertThat(token).isEqualTo("[Bearer testtoken]");
         mockClient.resetRequests();
         user = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(user2);
-        headers  = mockClient.verifyOne(HttpMethod.GET, "/CurrentUserWithPerimeters").headers();
+        headers  = mockClient.verifyOne(HttpMethod.GET, "/internal/CurrentUserWithPerimeters").headers();
         token = headers.get("Authorization").toString();
         assertThat(token).isEqualTo("[Bearer testtoken2]");
         
@@ -86,7 +86,7 @@ public class UserServiceCacheShould {
         String principalID ="testuser";
         //First call
         userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalID);
-        mockClient.verifyTimes(HttpMethod.GET, "/CurrentUserWithPerimeters", 1);
+        mockClient.verifyTimes(HttpMethod.GET, "/internal/CurrentUserWithPerimeters", 1);
     }
 
     @Test
@@ -114,7 +114,7 @@ public class UserServiceCacheShould {
         //Second call
         userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalID);
 
-        mockClient.verifyTimes(HttpMethod.GET, "/CurrentUserWithPerimeters", 1);
+        mockClient.verifyTimes(HttpMethod.GET, "/internal/CurrentUserWithPerimeters", 1);
     }
 
 
@@ -135,7 +135,7 @@ public class UserServiceCacheShould {
         userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalID2);
 
         //Check number of calls
-        mockClient.verifyTimes(HttpMethod.GET, "/CurrentUserWithPerimeters", 3);
+        mockClient.verifyTimes(HttpMethod.GET, "/internal/CurrentUserWithPerimeters", 3);
     }
 
 }
