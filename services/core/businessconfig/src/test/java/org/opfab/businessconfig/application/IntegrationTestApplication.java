@@ -20,9 +20,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
 @Import({ProcessesService.class, MonitoringService.class, CustomExceptionHandler.class, JacksonConfig.class, BusinessconfigController.class})
+@ImportResource({"classpath:/security.xml"})
+
 public class IntegrationTestApplication {
 
     public static void main(String[] args) {

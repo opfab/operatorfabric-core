@@ -21,7 +21,7 @@ import org.opfab.cards.consultation.application.IntegrationTestApplication;
 import org.opfab.cards.consultation.configuration.webflux.ArchivedCardRoutesConfig;
 import org.opfab.cards.consultation.model.ArchivedCardConsultationData;
 import org.opfab.cards.consultation.repositories.ArchivedCardRepository;
-import org.opfab.springtools.configuration.test.WithMockOpFabUser;
+import org.opfab.springtools.configuration.test.WithMockOpFabUserReactive;
 import org.opfab.test.EmptyListComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -64,7 +64,7 @@ public class ArchivedCardRoutesShould {
     }
 
     @Nested
-    @WithMockOpFabUser(login="userWithGroup", roles = {"SOME_GROUP"})
+    @WithMockOpFabUserReactive(login="userWithGroup", roles = {"SOME_GROUP"})
     public class GivenUserWithGroupArchivedCardRoutesShould {
 
         @Test
@@ -103,7 +103,7 @@ public class ArchivedCardRoutesShould {
     }
 
     @Nested
-    @WithMockOpFabUser(login="userWithNoGroup", roles = {})
+    @WithMockOpFabUserReactive(login="userWithNoGroup", roles = {})
     public class GivenUserWithNoGroupArchivedCardRoutesShould {
 
         @Test
@@ -122,7 +122,7 @@ public class ArchivedCardRoutesShould {
     }
 
     @Nested
-    @WithMockOpFabUser(login="userWithGroupAndEntity", roles={"SOME_GROUP"}, entities={"SOME_ENTITY"})
+    @WithMockOpFabUserReactive(login="userWithGroupAndEntity", roles={"SOME_GROUP"}, entities={"SOME_ENTITY"})
     public class GivenUserWithGroupAndEntityArchivedCardRoutesShould {
 
         @Test

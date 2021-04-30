@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 @FeignClient("users")
 public interface UserServiceProxy {
 
-    @GetMapping(value = "/CurrentUserWithPerimeters",
+    @GetMapping(value = "/internal/CurrentUserWithPerimeters",
             produces = { "application/json" })
     CurrentUserWithPerimeters fetchCurrentUserWithPerimeters(@RequestHeader("Authorization") String token) ;
 }

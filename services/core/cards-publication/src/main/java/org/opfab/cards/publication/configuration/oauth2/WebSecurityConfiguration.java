@@ -12,6 +12,9 @@
 package org.opfab.cards.publication.configuration.oauth2;
 
 import lombok.extern.slf4j.Slf4j;
+
+import org.opfab.springtools.configuration.oauth.WebSecurityChecks;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -31,6 +34,10 @@ import org.springframework.security.oauth2.jwt.Jwt;
 @Profile(value = {"!test"})
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    public static final String AUTH_AND_IP_ALLOWED = "isAuthenticated() and @webSecurityChecks.checkUserIpAddress(authentication)";
+
+    @Autowired
+    WebSecurityChecks webSecurityChecks;
 
     @Autowired
     private Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter;
@@ -48,9 +55,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public static void configureCommon(final HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/cards/userCard/**").authenticated()
+                .antMatchers("/cards/userCard/**").access(AUTH_AND_IP_ALLOWED)
                 .antMatchers("/**").permitAll();
                 
     }
+
+    
 
 }

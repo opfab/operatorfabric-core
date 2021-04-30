@@ -23,7 +23,8 @@ Feature: Update existing user
 {
   "login" : "loginKarate5",
   "firstName" : "name update Karate5",
-  "lastName" : "last name update Karate5"
+  "lastName" : "last name update Karate5",
+  "authorizedIPAddresses" : ['127.0.0.1','192.168.0.1']
 }
 """
 
@@ -83,3 +84,7 @@ Feature: Update existing user
     And match response.login == karate.lowerCase(userUpdate.login)
     And match response.firstName == userUpdate.firstName
     And match response.lastName == userUpdate.lastName
+    And match response.authorizedIPAddresses contains '127.0.0.1'
+    And match response.authorizedIPAddresses contains '192.168.0.1'
+
+    

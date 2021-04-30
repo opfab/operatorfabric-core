@@ -20,7 +20,8 @@ spring:
       database: operator-fabric
       uris:
         - mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin&authMode=scram-sha1
-
+server:
+  forward-headers-strategy: framework
 operatorfabric:
   security:
     oauth2:

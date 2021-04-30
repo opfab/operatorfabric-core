@@ -50,7 +50,8 @@ import org.springframework.context.annotation.ImportResource;
     CardRepositoryService.class, UserCardProcessorImpl.class, ExternalAppClientImpl.class , ResponseCardProducer.class
 , CardCommandFactory.class, CardObjectMapper.class, TestCardReceiver.class , TestConsumerConfig.class, JacksonConfig.class
 , Common.class , CardController.class, WebSecurityConfigurationTest.class })
-@ImportResource("classpath:/amqp.xml")
+@ImportResource({"classpath:/amqp.xml", "classpath:/security.xml"})
+
 public class UnitTestApplication {
 
     public static void main(String[] args) {
