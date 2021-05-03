@@ -350,6 +350,13 @@ definitions:
         type: array
         items:
           type: string
+  Connection:
+    type: object
+    description: Object representing a user connection (subscription)
+    properties:
+      login:
+        type: string
+        description: Login of user
   LightCard:
     type: object
     description: >-
