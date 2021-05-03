@@ -57,15 +57,15 @@ jobs:
         # Launch karate tests
         - cd config/docker
         - ./docker-compose.sh
-        - cd ../../src/test/resources
+        - cd ../../bin
         - ./waitForOpfabToStart.sh
-        - cd ../api/karate
+        - cd ../src/test/api/karate
         - ./launchAll.sh
         - cd ../../../../config/docker
         - docker-compose down
         # Launch cypress tests
         - ./docker-compose-cypress.sh
-        - cd ../../src/test/resources
+        - cd ../../bin
         - ./waitForOpfabToStart.sh
         - cd $OF_HOME
         - ./gradlew runCypressTests

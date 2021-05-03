@@ -17,10 +17,10 @@
 # Launch OpFab and wait for it to start
 cd ../../../config/docker || exit 1;
 ./docker-compose-cypress.sh
-cd ../../src/test/resources || exit 1;
+cd ../../bin || exit 1;
 ./waitForOpfabToStart.sh
 
 # Run Cypress tests
-cd ../cypress || exit 1;
+cd ../src/test/cypress || exit 1;
 ./node_modules/.bin/cypress run --config video=false
 
