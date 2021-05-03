@@ -93,6 +93,11 @@ public class CardSubscription {
         this.queueName = computeSubscriptionId(userLogin + GROUPS_SUFFIX, this.clientId);
     }
 
+    public String getUserLogin()
+    {
+        return userLogin;
+    }
+
     public void updateCurrentUserWithPerimeters() {
         if (userServiceCache != null)
             try {

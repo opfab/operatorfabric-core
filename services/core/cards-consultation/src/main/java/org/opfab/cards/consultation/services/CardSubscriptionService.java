@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -219,5 +220,10 @@ public class CardSubscriptionService {
         this.cache.forEach((k,v)->v.clearSubscription());
         this.cache.clear();
         this.pendingEvict.clear();
+    }
+
+    public Collection<CardSubscription> getSubscriptions()
+    {
+        return cache.values();
     }
 }
