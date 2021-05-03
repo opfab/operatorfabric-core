@@ -31,7 +31,7 @@
             <td translate>{{line.processName}}</td>
             <td translate [translateParams]="line.title.parameters">{{line.title.key}}</td>
             <td translate [translateParams]="line.summary.parameters">{{line.summary.key}}</td>
-            <td translate>monitoring.filters.typeOfState.{{line.typeOfState}} </td>
+            <td class="opfab-monitoring-typeOfState-{{line.typeOfState}}" translate>monitoring.filters.typeOfState.{{line.typeOfState}} </td>
         </tr>
     </tbody>
 </table>
