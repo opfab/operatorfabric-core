@@ -6,8 +6,7 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
-<div [hidden]="displayPreview" [hidden]="displaySendingCardInProgress" *ngIf="displayForm()" class="container" style="padding-top:20px">
+<div [hidden]="displayPreview" [hidden]="displaySendingCardInProgress" *ngIf="!pageLoading && displayForm()" class="container" style="padding-top:20px">
     <form [formGroup]="messageForm" class="opfab-form-lighter">
         <div class="row">
 

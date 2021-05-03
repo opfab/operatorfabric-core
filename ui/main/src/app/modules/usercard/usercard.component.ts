@@ -102,6 +102,8 @@ export class UserCardComponent implements OnDestroy, OnInit {
     endDateVisible = true;
     lttdVisible = true;
 
+    pageLoading = true;
+
     displayForm() {
         return !!this.processOptions && this.processOptions.length > 0;
     }
@@ -125,6 +127,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
     }
 
     ngOnInit() {
+        this.pageLoading = true;
 
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         this.processGroups = this.processesService.getProcessGroups();
@@ -165,13 +168,16 @@ export class UserCardComponent implements OnDestroy, OnInit {
             badgeShowLimit: 30,
             enableSearchFilter: true
         };
-
-        this.loadCardForEdition();
+        if (!!this.cardIdToEdit) {
+            this.loadCardForEdition();
+        } else {
+            this.pageLoading = false;
+        }
+        
     }
 
     loadCardForEdition() {
-        if (!!this.cardIdToEdit) {
-                    this.editCardMode = true;
+            this.editCardMode = true;
             this.cardService.loadCard(this.cardIdToEdit).subscribe(card => {
                         this.cardToEdit = card;
                         this.messageForm.get('severity').setValue(this.cardToEdit.card.severity);
@@ -192,8 +198,8 @@ export class UserCardComponent implements OnDestroy, OnInit {
                             this.messageForm.get('endDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.endDate)));
                         if (!!this.cardToEdit.card.lttd) this.messageForm.get('lttd').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.lttd)));
                         this.selectedRecipients = this.cardToEdit.card.entityRecipients;
+                        this.pageLoading = false;
             });
-        }
     }
 
 
