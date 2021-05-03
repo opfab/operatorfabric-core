@@ -16,7 +16,6 @@ waitService() {
         then
             printf '%s' "."
         else 
-            echo 
             echo $(date) - "Opfab service $1 is started"
             break;
         fi  
