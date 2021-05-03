@@ -107,9 +107,9 @@
             <div class="opfab-section-header">
                 <span translate>userCard.recipients</span>
             </div>
-            <div style="display: inline-flex;">
-                <div *ngFor="let entityId of card.entityRecipients">
-                    <span  style="text-align: center;">&nbsp; {{getEntityName(entityId)}} &nbsp; </span>
+            <div style="display: flex;flex-wrap: wrap;">
+                <div *ngFor="let entityId of card.entityRecipients" style="padding-right: 10px">
+                    <span>&nbsp; {{getEntityName(entityId)}} &nbsp; </span>
                 </div>
             </div>
         </div>
