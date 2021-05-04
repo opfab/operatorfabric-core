@@ -14,12 +14,11 @@ import {CardService} from '@ofServices/card.service';
 import {Observable, of} from 'rxjs';
 import {catchError, filter, map, switchMap, withLatestFrom} from 'rxjs/operators';
 import {
-    HandleUnexpectedError,
     LightCardActionTypes,
     LoadLightCardsSuccess,
     UpdateALightCard
 } from '@ofActions/light-card.actions';
-import {Action, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {ApplyFilter, FeedActionTypes} from '@ofActions/feed.actions';
 import {FilterType} from '@ofServices/filter.service';
@@ -47,14 +46,14 @@ export class CardOperationEffects {
          * processed since we take a look at the feed state to know if the card is currently visible or not */
         .pipe(
             ofType(LightCardActionTypes.LoadLightCardsSuccess),
-            map((loadedCardAction: LoadLightCardsSuccess) => loadedCardAction.payload.lightCards),
+            map((loadedCardAction: LoadLightCardsSuccess) => loadedCardAction.payload.lightCard),
             withLatestFrom(this.store.select(selectSortedFilterLightCardIds)),
             /* Since both this effect and the feed state update are triggered by LoadLightCardSuccess, there could
             * theoretically be an issue if the feed state update by the reducer hasn't been done before we take the
             * list of visible cards using withLatestFrom. However, this hasn't cropped up in any of the tests so far so
             * we'll deal with it if the need arises.*/
-            map(([lightCards, currentlyVisibleIds]) => {
-                    this.soundNotificationService.handleCards(lightCards, currentlyVisibleIds);
+            map(([lightCard, currentlyVisibleIds]) => {
+                    this.soundNotificationService.handleCards(lightCard, currentlyVisibleIds);
                 }
             )
         ), {dispatch: false});
@@ -82,19 +81,20 @@ export class CardOperationEffects {
                 }
             ),
             catchError((error, caught) => {
-                this.store.dispatch(new HandleUnexpectedError({error: error}));
+                console.error('CardOperationEffect - Error in update subscription ', error);
                 return caught;
             })
         ), { dispatch: false });
 
     
-    refreshIfSelectedCard: Observable<Action> = createEffect(() => this.actions$
+    refreshIfSelectedCard: Observable<any> = createEffect(() => this.actions$
         .pipe(
             ofType(LightCardActionTypes.LoadLightCardsSuccess),
-            map((a: LoadLightCardsSuccess) => a.payload.lightCards), // retrieve list of added light cards from action payload
+            map((a: LoadLightCardsSuccess) => a.payload.lightCard), 
             withLatestFrom(this.store.select(selectCardStateSelectedId)), // retrieve currently selected card
-            switchMap(([lightCards, selectedCardId]) => lightCards.filter(card => card.id === selectedCardId)), // keep only lightCards matching the process id of current selected card
-            map(lightCard => new LoadCard({id: lightCard.id})) // if any, trigger refresh by firing LoadCard
-        ))
-    ;
+            switchMap(([lightCard, selectedCardId]) =>  {
+                if (lightCard.id === selectedCardId)  this.store.dispatch(new LoadCard({id: lightCard.id}));
+                return of();
+            })
+            ), { dispatch: false });
 }

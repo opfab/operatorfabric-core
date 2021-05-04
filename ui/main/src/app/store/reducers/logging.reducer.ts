@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,18 +19,10 @@ export function reducer(
         case LoggingActionType.FlushLoggingResult: {
             return loggingInitialState;
         }
-        case LoggingActionType.SendLoggingQuery: {
-            return {
-                ...state,
-                loading: true
-
-            };
-        }
         case LoggingActionType.LoggingQuerySuccess: {
             return {
                 ...state,
-                resultPage: action.payload.resultPage,
-                loading: false
+                resultPage: action.payload.resultPage
             };
         }
         default: {

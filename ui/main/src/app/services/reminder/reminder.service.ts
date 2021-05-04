@@ -15,7 +15,7 @@ import { CardService } from '@ofServices/card.service';
 import { ProcessesService } from '@ofServices/processes.service';
 import { UpdateALightCard } from '@ofStore/actions/light-card.actions';
 import { AppState } from '@ofStore/index';
-import { fetchLightCard, selectLastCards } from '@ofStore/selectors/feed.selectors';
+import { fetchLightCard, selectLastCard } from '@ofStore/selectors/feed.selectors';
 import { take } from 'rxjs/operators';
 import { ReminderList } from './reminderList';
 import { AcknowledgeService } from '@ofServices/acknowledge.service';
@@ -49,8 +49,8 @@ export class ReminderService {
 
     private listenForCardsToAddInReminder() {
         this.store.pipe(
-            select(selectLastCards))
-            .subscribe(cards => cards.forEach(card => this.reminderList.addAReminder(card)));
+            select(selectLastCard))
+            .subscribe(card => {if (!!card) this.reminderList.addAReminder(card)});
     }
 
 

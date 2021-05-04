@@ -25,21 +25,17 @@ import {AppState} from '@ofStore/index';
 import {
     CardActionTypes,
     ClearCard,
-    LoadArchivedCard,
-    LoadArchivedCardFailure,
-    LoadArchivedCardSuccess,
     LoadCard,
     LoadCardFailure,
     LoadCardSuccess
 } from '@ofActions/card.actions';
-import {Card} from '@ofModel/card.model';
 import {ClearLightCardSelection, LightCardActionTypes} from '@ofStore/actions/light-card.actions';
 
-// those effects are unused for the moment
+
 @Injectable()
 export class CardEffects {
 
-    /* istanbul ignore next */
+
     constructor(private store: Store<AppState>,
                 private actions$: Actions,
                 private service: CardService) {}
@@ -51,17 +47,6 @@ export class CardEffects {
         map(cardData => new LoadCardSuccess({card: cardData.card, childCards: cardData.childCards})),
         catchError((err, caught) => {
             this.store.dispatch(new LoadCardFailure(err));
-            return caught;
-        })
-    ));
-
-    
-    loadArchivedById: Observable<Action> = createEffect(() => this.actions$.pipe(
-        ofType<LoadArchivedCard>(CardActionTypes.LoadArchivedCard),
-        switchMap(action => this.service.loadArchivedCard(action.payload.id)),
-        map((card: Card) => new LoadArchivedCardSuccess({card: card})),
-        catchError((err, caught) => {
-            this.store.dispatch(new LoadArchivedCardFailure(err));
             return caught;
         })
     ));

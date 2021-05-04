@@ -25,7 +25,7 @@ import {Card, CardForPublishing} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../../services/handlebars.service';
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
-import {AcknowledgmentAllowedEnum, Response, State as CardState} from '@ofModel/processes.model';
+import {AcknowledgmentAllowedEnum, State as CardState} from '@ofModel/processes.model';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -33,9 +33,9 @@ import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
 import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {UserContext} from '@ofModel/user-context.model';
 import {map, skip, take, takeUntil} from 'rxjs/operators';
-import {fetchLightCard, selectLastCards} from '@ofStore/selectors/feed.selectors';
+import {fetchLightCard, selectLastCard} from '@ofStore/selectors/feed.selectors';
 import {CardService} from '@ofServices/card.service';
-import {Observable, Subject, zip} from 'rxjs';
+import {Subject} from 'rxjs';
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {AppService, PageType} from '@ofServices/app.service';
 import {User} from '@ofModel/user.model';
@@ -131,7 +131,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private _userEntitiesAllowedToRespond: string[];
     private _htmlContent: SafeHtml;
     private _userContext: UserContext;
-    private _lastCards$: Observable<LightCard[]>;
     message: Message = {display: false, text: undefined, className: undefined};
 
     public fullscreen = false;
@@ -215,47 +214,42 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
       templateGateway.unlockAnswer();
     }
 
-    // -------------------------------------------------------------- //
-
     ngOnInit() {
         this.reloadTemplateWhenGlobalStyleChange();
         if (this._appService.pageType !== PageType.ARCHIVE) {
-
             this.setEntitiesToRespond();
-
-            this._lastCards$ = this.store.select(selectLastCards);
-
-            this._lastCards$
-                .pipe(
-                    takeUntil(this.unsubscribe$),
-                    map(lastCards =>
-                        lastCards.filter(card =>
-                            card.parentCardId === this.card.id &&
-                            !this.childCards.map(childCard => childCard.uid).includes(card.uid))
-                    ),
-                    map(childCards => childCards.map(c => this.cardService.loadCard(c.id)))
-                )
-                .subscribe(childCardsObs => {
-                    zip(...childCardsObs)
-                        .pipe(takeUntil(this.unsubscribe$), map(cards => cards.map(cardData => cardData.card)))
-                        .subscribe(newChildCards => {
-
-                            const reducer = (accumulator, currentValue) => {
-                                accumulator[currentValue.id] = currentValue;
-                                return accumulator;
-                            };
-
-                            this.childCards = Object.values({
-                                ...this.childCards.reduce(reducer, {}),
-                                ...newChildCards.reduce(reducer, {}),
-                            });
-
-                            templateGateway.childCards = this.childCards;
-                            this.setEntitiesToRespond();
-                            templateGateway.applyChildCards();
-                        });
-                });
+            this.integrateChildCardsInRealTime();
         }
+    }
+
+
+    private integrateChildCardsInRealTime() {
+        this.store.select(selectLastCard)
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                map(lastCard => {
+                    if (!!lastCard) {
+                            if (lastCard.parentCardId === this.card.id &&
+                            !this.childCards.map(childCard => childCard.uid).includes(lastCard.uid)) {
+                                this.integrateOneChildCard(lastCard);                              
+                            }
+                    }
+                })).subscribe()
+    }
+
+    private integrateOneChildCard(newChildCard:Card)
+    {
+        this.cardService.loadCard(newChildCard.id).subscribe (
+            cardData => {
+                const newChildArray = this.childCards.filter(childCard => childCard.id !== cardData.card.id);
+                newChildArray.push(cardData.card);
+                this.childCards = newChildArray;
+                templateGateway.childCards = this.childCards;
+                this.setEntitiesToRespond();
+                templateGateway.applyChildCards();
+            } 
+        )
+ 
     }
 
     private setButtonsVisibility() {

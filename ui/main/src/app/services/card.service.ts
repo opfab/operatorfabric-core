@@ -29,7 +29,6 @@ import {I18n} from '@ofModel/i18n.model';
 import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
 import {
     AddLightCardFailure,
-    HandleUnexpectedError,
     LoadLightCardsSuccess,
     RemoveLightCard
 } from '@ofActions/light-card.actions';
@@ -80,11 +79,11 @@ export class CardService {
                     switch (operation.type) {
                         case CardOperationType.ADD:
                             console.log(new Date().toISOString(), `CardService - Receive card to add id=`, operation.card.id);
-                            this.store.dispatch(new LoadLightCardsSuccess({lightCards: [operation.card]}));
+                            this.store.dispatch(new LoadLightCardsSuccess({lightCard: operation.card}));
                             break;
                         case CardOperationType.DELETE:
                             console.log(new Date().toISOString(), `CardService - Receive card to delete id=`, operation.cardId);
-                            this.store.dispatch(new RemoveLightCard({cards: [operation.cardId]}));
+                            this.store.dispatch(new RemoveLightCard({card: operation.cardId}));
                             break;
                         default:
                             this.store.dispatch(new AddLightCardFailure(
@@ -98,7 +97,6 @@ export class CardService {
             );
         catchError((error, caught) => {
             console.error('CardService - Global  error in subscription ', error);
-            this.store.dispatch(new HandleUnexpectedError({error: error}));
             return caught;
         });
     }

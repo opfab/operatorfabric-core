@@ -13,7 +13,6 @@ import {Action, Store} from '@ngrx/store';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Observable} from 'rxjs';
 import {
-    HandleUnexpectedError,
     MonitoringActionType,
     SendMonitoringQuery,
     UpdateMonitoringFilter
@@ -32,7 +31,7 @@ export class MonitoringEffects {
         map((action: SendMonitoringQuery) => action.payload.params),
         map( (params: Map<string, string[]>) =>  new UpdateMonitoringFilter({filters: params})),
         catchError((error, caught) => {
-            this.store.dispatch(new HandleUnexpectedError({error: error}));
+            console.error('MonitoringEffects - Error in queryMonitoringResult ', error)
             return caught;
         })
     ));

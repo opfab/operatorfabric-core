@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,8 +17,7 @@ import {FilterService, FilterType} from '@ofServices/filter.service';
  * The Feed State consist of:
  *  * EntityState of LightCard
  *  * selectedCardId: the currently selected card id
- *  * lastCards the last cards added / updated to the feed
- *  * loading: whether there is an ongoing state modification
+ *  * lastCard the last card added / updated to the feed
  *  * message: last message during state processing
  *  * filters: a collection of filter to apply to the rendered feed
  *  * sortBySeverity: Indicates whether the cards in the feed should be sorted by severity before being sorted by
@@ -26,9 +25,7 @@ import {FilterService, FilterType} from '@ofServices/filter.service';
  */
 export interface CardFeedState extends EntityState<LightCard> {
     selectedCardId: string;
-    lastCards: LightCard[];
-    loading: boolean;
-    error: string;
+    lastCard: LightCard;
     filters: Map<FilterType, Filter>;
     sortBySeverity: boolean;
     sortByRead: boolean;
@@ -93,9 +90,7 @@ function getDefaultFilter() {
 export const feedInitialState: CardFeedState = LightCardAdapter.getInitialState(
     {
         selectedCardId: null,
-        lastCards: [],
-        loading: false,
-        error: '',
+        lastCard: null,
         filters: getDefaultFilter(),
         sortBySeverity: false,
         sortByRead: true
