@@ -10,22 +10,19 @@
 
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Action, Store} from '@ngrx/store';
+import {Action} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
-import {AppState} from '@ofStore/index';
-import {LoadMenu, LoadMenuFailure, LoadMenuSuccess, MenuActionTypes,} from '@ofActions/menu.actions';
-import {Router} from '@angular/router';
+import {LoadMenu, LoadMenuSuccess, MenuActionTypes,} from '@ofActions/menu.actions';
 import {ConfigService} from '@ofServices/config.service';
 
 @Injectable()
 export class MenuEffects {
 
-    /* istanbul ignore next */
-    constructor(private store: Store<AppState>,
+
+    constructor(
                 private actions$: Actions,
-                private service: ConfigService,
-                private router: Router
+                private service: ConfigService
     ) {
     }
 
@@ -39,7 +36,6 @@ export class MenuEffects {
             ),
             catchError((err, caught) => {
                 console.error(new Date().toISOString(),err);
-                this.store.dispatch(new LoadMenuFailure(err));
                 return caught;
             })
         ));

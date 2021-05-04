@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,41 +31,25 @@ export function reducer(
     switch (action.type) {
         case LightCardActionTypes.LoadLightCardsSuccess: {
             return {
-                ...LightCardAdapter.upsertMany(action.payload.lightCards, state),
-                loading: false,
-                lastCards: action.payload.lightCards
+                ...LightCardAdapter.upsertOne(action.payload.lightCard, state),
+                lastCard: action.payload.lightCard
             };
         }
         case LightCardActionTypes.EmptyLightCards: {
             return {
                 ...LightCardAdapter.removeAll(state),
-                selectedCardId: null,
-                loading: false,
-                lastCards: []
+                selectedCardId: null
             };
         }
-
         case LightCardActionTypes.RemoveLightCard: {
             return {
-                ...LightCardAdapter.removeMany(action.payload.cards, state),
-                loading: false,
-                lastCards: []
+                ...LightCardAdapter.removeOne(action.payload.card, state)
             };
         }
-        case LightCardActionTypes.LoadLightCardsFailure: {
-            return {
-                ...state,
-                loading: false,
-                error: `error while loading cards: '${action.payload.error}'`,
-                lastCards: []
-            };
-        }
-
         case LightCardActionTypes.SelectLightCard: {
             return {
                 ...state,
                 selectedCardId: action.payload.selectedCardId,
-                lastCards: []
             };
         }
 
@@ -78,10 +62,7 @@ export function reducer(
 
         case LightCardActionTypes.AddLightCardFailure: {
             return {
-                ...state,
-                loading: false,
-                error: `error while adding a single lightCard: '${action.payload.error}'`,
-                lastCards: []
+                ...state
             };
         }
 
@@ -93,7 +74,6 @@ export function reducer(
                 filters.set(payload.name, filter);
                 return {
                     ...state,
-                    loading: false,
                     filters: filters
                 };
             } else {

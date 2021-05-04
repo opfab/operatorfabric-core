@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,28 +25,24 @@ export class FlushLoggingResult implements Action {
 
 export class SendLoggingQuery implements Action {
     readonly type = LoggingActionType.SendLoggingQuery;
-
     constructor(public payload: { params: Map<string, string[]> }) {
     }
 }
 
 export class UpdateLoggingFilter implements Action {
     readonly type = LoggingActionType.UpdateLoggingFilter;
-
     constructor(public payload: { filters: Map<String, string[]> }) {
     }
 }
 
 export class LoggingQuerySuccess implements Action {
     readonly type = LoggingActionType.LoggingQuerySuccess;
-
     constructor(public payload: { resultPage: Page<LineOfLoggingResult> }) {
     }
 }
 
 export class UpdateLoggingPage implements Action {
     readonly type = LoggingActionType.UpdateLoggingPage;
-
     constructor(public payload: { page: number }) {
     }
 }

@@ -76,7 +76,8 @@ describe('SoundNotificationService', () => {
     const informationCard = getOneRandomLightCard({severity:Severity.INFORMATION, publishDate:today}); //This one shouldn't be notified
 
     expect(playSound).toHaveBeenCalledTimes(0);
-    service.handleCards([actionCard,informationCard],[actionCard.id,informationCard.id]);
+    service.handleCards(actionCard,[actionCard.id,informationCard.id]);
+    service.handleCards(informationCard,[actionCard.id,informationCard.id]);
     expect(playSound).toHaveBeenCalledTimes(1);
     expect(playSound).toHaveBeenCalledWith(service.actionSound);
 
@@ -95,7 +96,11 @@ describe('SoundNotificationService', () => {
     const informationCard = getOneRandomLightCard({severity:Severity.INFORMATION, publishDate:today});
 
     expect(playSound).toHaveBeenCalledTimes(0);
-    service.handleCards([alarmCard,actionCard,compliantCard,informationCard],[alarmCard.id, actionCard.id, compliantCard.id, informationCard.id]);
+    service.handleCards(alarmCard,[alarmCard.id, actionCard.id, compliantCard.id, informationCard.id]);
+    service.handleCards(actionCard,[alarmCard.id, actionCard.id, compliantCard.id, informationCard.id]);
+    service.handleCards(compliantCard,[alarmCard.id, actionCard.id, compliantCard.id, informationCard.id]);
+    service.handleCards(informationCard,[alarmCard.id, actionCard.id, compliantCard.id, informationCard.id]);
+ 
     expect(playSound).toHaveBeenCalledTimes(4);
     expect(playSound).toHaveBeenCalledWith(service.alarmSound);
     expect(playSound).toHaveBeenCalledWith(service.actionSound);
@@ -111,7 +116,7 @@ describe('SoundNotificationService', () => {
     const today = new Date().getTime();
     const card = getOneRandomLightCard({publishDate:today});
 
-    service.handleCards([card],[card.id]);
+    service.handleCards(card,[card.id]);
     expect(playSound).not.toHaveBeenCalled();
 
   });
@@ -123,7 +128,7 @@ describe('SoundNotificationService', () => {
     const today = new Date().getTime();
     const card = getOneRandomLightCard({ publishDate: today});
 
-    service.handleCards([card],[card.id]);
+    service.handleCards(card,[card.id]);
     expect(playSound).not.toHaveBeenCalled();
 
   });
@@ -137,7 +142,7 @@ describe('SoundNotificationService', () => {
     const today = new Date().getTime();
     const card = getOneRandomLightCard({ publishDate: today});
 
-    service.handleCards([card],[]);
+    service.handleCards(card,[]);
     expect(playSound).not.toHaveBeenCalled();
 
   });
@@ -149,7 +154,7 @@ describe('SoundNotificationService', () => {
     const past = new Date().getTime() - service.recentThreshold * 10; //PublishDate that is way past the recent threshold
     const card = getOneRandomLightCard({ publishDate: past});
 
-    service.handleCards([card],[card.id]);
+    service.handleCards(card,[card.id]);
     expect(playSound).not.toHaveBeenCalled();
 
   });

@@ -12,7 +12,6 @@
 import {Injectable} from '@angular/core';
 import {PlatformLocation} from "@angular/common";
 import {LightCard, Severity} from "@ofModel/light-card.model";
-import {from} from "rxjs";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
@@ -60,18 +59,11 @@ export class SoundNotificationService {
 
   }
 
-  handleCards(lightCards: LightCard[], currentlyVisibleIds: string[]) {
-    from(lightCards).subscribe(
-        // There is no need to unsubscribe because this is by essence a finite observable
-        // so we could do this check only once by operation and either handle all cards or dismiss the batch entirely
-        (card: LightCard) => {
+  handleCards(card: LightCard, currentlyVisibleIds: string[]) {
               // Check whether card has just been published and whether it is currently visible in the feed
           if (((new Date().getTime() - card.publishDate) <= this.recentThreshold) && (currentlyVisibleIds.includes(card.id))) {
             this.playSoundForCard(card);
           }
-        }
-    );
-
   }
 
   playSoundForCard(card: LightCard) {

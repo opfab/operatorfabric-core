@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,16 +16,12 @@ export enum MonitoringActionType {
     , UpdateMonitoringFilter = '[Monitoring] Update Filters'
     , MonitoringQuerySuccess = '[Monitoring] Notify successful query'
     , UpdateMonitoringPage = '[Monitoring] Update query result page'
-    , HandleUnexpectedError = '[Monitoring] Throw an unexpcted error'
-
 }
 
 export class SendMonitoringQuery implements Action {
     readonly type = MonitoringActionType.SendMonitoringQuery;
-
     constructor(public payload: { params: Map<string, string[]> }) {
     }
-
 }
 
 export class UpdateMonitoringFilter implements Action {
@@ -46,16 +42,9 @@ export class UpdateMonitoringPage implements Action {
     }
 }
 
-export class HandleUnexpectedError implements Action {
-    readonly type = MonitoringActionType.HandleUnexpectedError;
-    constructor(public payload: { error: any}) {
-    }
-}
-
 export type MonitoringAction =
     | SendMonitoringQuery
     | UpdateMonitoringFilter
     | MonitoringQuerySuccess
     | UpdateMonitoringPage
-    | HandleUnexpectedError
     ;

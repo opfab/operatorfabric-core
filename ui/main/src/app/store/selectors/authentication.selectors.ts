@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,13 +9,11 @@
 
 
 import {createFeatureSelector, createSelector} from '@ngrx/store';
-import * as fromAuthentication from '@ofStore/reducers/authentication.reducer';
 import {AuthState} from '@ofStates/authentication.state';
 import * as _ from 'lodash-es';
 
 export const selectAuthenticationState = createFeatureSelector<AuthState>('authentication');
 
-export const selectExpirationTime = createSelector(selectAuthenticationState, fromAuthentication.getExpirationTime);
 export const selectCode = createSelector(selectAuthenticationState, (authState) => authState.code);
 export const selectMessage = createSelector(selectAuthenticationState, (authState) => authState.message);
 export const selectIdentifier = createSelector(selectAuthenticationState, (authState) => authState.identifier);
@@ -25,5 +23,3 @@ export const selectUserNameOrIdentifier = createSelector(selectAuthenticationSta
     }
     return authState.identifier;
 });
-export const selectIsImplicitlyAuthenticated = createSelector(selectAuthenticationState
-    , (authState) => authState.isImplicitlyAuthenticated);

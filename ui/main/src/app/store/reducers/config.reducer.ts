@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,10 +20,7 @@ export function reducer(
         case ConfigActionTypes.LoadConfigSuccess: {
             return {
                 ...state,
-                config: action.payload.config,
-                loading: false,
-                loaded:true,
-                retry:0
+                config: action.payload.config
             };
         }
         default: {

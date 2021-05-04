@@ -24,15 +24,12 @@ export enum FeedActionTypes {
 
 export class ApplyFilter implements Action {
     readonly type = FeedActionTypes.ApplyFilter;
-
-    /* istanbul ignore next */
     constructor(public payload: { name: FilterType, active: boolean, status: any }) {
     }
 }
 
 export class ChangeSort implements Action {
     readonly type = FeedActionTypes.ChangeSort;
-
 }
 
 export class ChangeReadSort implements Action {
@@ -49,7 +46,6 @@ export class ResetFilterForMonitoring implements  Action {
 
 export class ApplySeveralFilters implements Action {
     readonly type = FeedActionTypes.ApplySeveralFilters;
-
     constructor(public payload: {filterStatuses: Map<FilterType, Filter>}) {
     }
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,11 +19,8 @@ import {
     getSeveralRandomLightCards
 } from '@tests/helpers';
 import {
-    AddLightCardFailure,
     ClearLightCardSelection,
     EmptyLightCards,
-    LoadLightCardsFailure,
-    LoadLightCardsSuccess
 } from '@ofActions/light-card.actions';
 import {ApplyFilter, ChangeReadSort, ChangeSort} from '@ofActions/feed.actions';
 import {Filter} from '@ofModel/feed-filter.model';
@@ -53,71 +50,16 @@ describe('LightCard Reducer', () => {
 
     });
 
-    describe('LoadLightCardsFailure', () => {
-        it('should leave state unchanged with an additional message message', () => {
-
-
-            const severalRandomLightCards = getSeveralRandomLightCards(5);
-
-            const previousState = lightCardEntityAdapter.setAll(severalRandomLightCards, feedInitialState);
-
-            const currentError = new Error(getRandomAlphanumericValue(5, 12));
-            const loadLightCardsFailureAction = new LoadLightCardsFailure({error: currentError});
-
-            const actualState = reducer(previousState, loadLightCardsFailureAction);
-            expect(actualState).toBeTruthy();
-            expect(actualState.loading).toEqual(previousState.loading);
-            expect(actualState.entities).toEqual(previousState.entities);
-            const actualError = actualState.error;
-            expect(actualError).not.toEqual(previousState.error);
-            expect(actualError).toEqual(`error while loading cards: '${currentError}'`);
-
-        });
-    });
     describe('EmptyLightCards', () => {
         it('should empty entities', () => {
             const severalRandomLightCards = getSeveralRandomLightCards(5);
             const previousState = lightCardEntityAdapter.setAll(severalRandomLightCards, feedInitialState);
             const actualState = reducer(previousState, new EmptyLightCards());
             expect(actualState).toBeTruthy();
-            expect(actualState.loading).toEqual(false);
             expect(lightCardEntityAdapter.getSelectors().selectTotal(actualState)).toEqual(0);
-            expect(actualState.lastCards).toEqual([]);
+            expect(actualState.lastCard).toEqual(null);
         });
     });
-
-    describe('LoadLightCardsSuccess', () => {
-        it('should add cards to state', () => {
-            const severalRandomLightCards = getSeveralRandomLightCards(5);
-            const actualState = reducer(feedInitialState, new LoadLightCardsSuccess({lightCards: severalRandomLightCards}));
-            expect(actualState).toBeTruthy();
-            expect(actualState.loading).toEqual(false);
-            expect(lightCardEntityAdapter.getSelectors().selectAll(actualState).map(c => c.id).sort())
-                .toEqual(severalRandomLightCards.map(c => c.id).sort());
-            expect(actualState.lastCards.map(c => c.id).sort()).toEqual(severalRandomLightCards.map(c => c.id).sort());
-        });
-    });
-
-    describe('AddLightCardFailure', () => {
-        it('should leave state unchanged with an additional message message', () => {
-            const severalRandomLightCards = getSeveralRandomLightCards(5);
-            const previousState = lightCardEntityAdapter.setAll(severalRandomLightCards, feedInitialState);
-
-            const currentError = new Error(getRandomAlphanumericValue(5, 12));
-            const addLightCardFailureAction = new AddLightCardFailure({error: currentError});
-
-            const actualState = reducer(previousState, addLightCardFailureAction);
-
-            expect(actualState).toBeTruthy();
-            expect(actualState.loading).toEqual(previousState.loading);
-            expect(actualState.entities).toEqual(previousState.entities);
-            const actualError = actualState.error;
-            expect(actualError).not.toEqual(previousState.error);
-            expect(actualError).toEqual(`error while adding a single lightCard: '${currentError}'`);
-
-        });
-    });
-
 
     describe('apply filter action', () => {
         it('should return state with filter updated', () => {
@@ -154,8 +96,7 @@ describe('LightCard Reducer', () => {
             const previousState: CardFeedState = LightCardAdapter.getInitialState(
                 {
                     selectedCardId: getRandomAlphanumericValue(5, 10),
-                    lastCards: [],
-                    loading: false,
+                    lastCard: null,
                     error: '',
                     filters: new Map(),
                     sortBySeverity: false,
@@ -165,8 +106,7 @@ describe('LightCard Reducer', () => {
             const expectedState: CardFeedState = LightCardAdapter.getInitialState(
                 {
                     selectedCardId: null,
-                    lastCards: [],
-                    loading: false,
+                    lastCard: null,
                     error: '',
                     filters: new Map(),
                     sortBySeverity: false,
@@ -190,8 +130,7 @@ describe('LightCard Reducer', () => {
             const previousState: CardFeedState = LightCardAdapter.getInitialState(
                 {
                     selectedCardId: initialSelectedCardId,
-                    lastCards: [],
-                    loading: false,
+                    lastCard: null,
                     error: '',
                     filters: new Map(),
                     sortBySeverity: initialSort,
@@ -201,8 +140,7 @@ describe('LightCard Reducer', () => {
             const expectedState: CardFeedState = LightCardAdapter.getInitialState(
                 {
                     selectedCardId: initialSelectedCardId,
-                    lastCards: [],
-                    loading: false,
+                    lastCard: null,
                     error: '',
                     filters: new Map(),
                     sortBySeverity: !initialSort,
@@ -226,8 +164,7 @@ describe('LightCard Reducer', () => {
             const previousState: CardFeedState = LightCardAdapter.getInitialState(
                 {
                     selectedCardId: initialSelectedCardId,
-                    lastCards: [],
-                    loading: false,
+                    lastCard: null,
                     error: '',
                     filters: new Map(),
                     sortBySeverity: false,
@@ -237,8 +174,7 @@ describe('LightCard Reducer', () => {
             const expectedState: CardFeedState = LightCardAdapter.getInitialState(
                 {
                     selectedCardId: initialSelectedCardId,
-                    lastCards: [],
-                    loading: false,
+                    lastCard: null,
                     error: '',
                     filters: new Map(),
                     sortBySeverity: false,
