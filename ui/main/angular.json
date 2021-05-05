@@ -145,6 +145,7 @@
   },
   "defaultProject": "ui-home",
   "cli": {
+    "analytics": false,
     "defaultCollection": "@ngrx/schematics"
   }
 }
