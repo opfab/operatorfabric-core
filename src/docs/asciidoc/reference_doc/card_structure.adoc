@@ -40,8 +40,8 @@ The `processVersion` field indicate which version of the process should be used 
 A card is associated to a given process, which defines how it is rendered, but it is also more precisely associated to
 a *specific instance* of this process. The `processInstanceId` field contains the unique identifier of the process instance.
 
-=== State in the process (`state`)
-The card represent a specific state in the process. In addition to the process, this information is used to resolve the presentation
+==== State in the process (`state`)
+The card represents a specific state in the process. In addition to the process, this information is used to resolve the presentation
 resources used to render the card and card details.
 
 [[start_date]]
@@ -111,6 +111,20 @@ Fixes the moment until when a `response` is possible for the card. After this mo
 Fixes the time for remind before the event define by the card see  
 ifdef::single-page-doc[<<card_reminder, Card reminder>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#card_reminder, Card reminder>>]
+
+==== Publisher type (`publisherType`)
+
+* EXTERNAL - The sender is an external service
+* ENTITY - The sender of the card is the user on behalf of the entity
+
+==== Representative (`representative`)
+
+Used in case of sending card as a representative of an entity or a publisher (unique ID of the entity or publisher)
+
+==== Representative Type (`representativeType`)
+
+* EXTERNAL - The representative is an external service
+* ENTITY - The representative is an entity
 
 === Business period 
 

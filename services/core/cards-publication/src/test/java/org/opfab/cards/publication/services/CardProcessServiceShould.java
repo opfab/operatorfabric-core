@@ -372,6 +372,8 @@ class CardProcessServiceShould {
                 .process("process1")
                 .state("state1")
                 .publisherType(PublisherTypeEnum.EXTERNAL)
+                .representative("ENTITY1")
+                .representativeType(PublisherTypeEnum.ENTITY)
                 .secondsBeforeTimeSpanForReminder(new Integer(1000))
                 .build();
         cardProcessingService.processCard(newCard);

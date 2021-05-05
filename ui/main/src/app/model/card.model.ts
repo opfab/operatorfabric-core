@@ -42,6 +42,8 @@ export class Card {
         readonly initialParentCardUid?: string,
         readonly keepChildCards?: boolean,
         readonly publisherType?: PublisherType | string,
+        readonly representative?: string,
+        readonly representativeType?: PublisherType | string,
         public secondsBeforeTimeSpanForReminder?: number,
         public timeSpans?: TimeSpan[]
     ) {
@@ -72,6 +74,8 @@ export class CardForPublishing {
         readonly initialParentCardUid?: string,
         readonly keepChildCards?: boolean,
         readonly publisherType?: PublisherType | string,
+        readonly representative?: string,
+        readonly representativeType?: PublisherType | string,
         readonly secondsBeforeTimeSpanForReminder?: number,
         readonly timeSpans?: TimeSpan[]
     ) {
@@ -115,7 +119,8 @@ export class HourAndMinutes {
 export function fromCardToLightCard(card: Card): LightCard {
     return new LightCard(card.uid, card.id, card.publisher, card.processVersion, card.publishDate, card.startDate
         , card.endDate, card.severity, card.hasBeenAcknowledged, card.hasBeenRead, card.processInstanceId
-        , card.lttd, card.title, card.summary, null, [], card.process, card.state, card.parentCardId, card.initialParentCardUid);
+        , card.lttd, card.title, card.summary, null, [], card.process, card.state, card.parentCardId,
+        card.initialParentCardUid, card.representative, card.representativeType);
 }
 
 export function fromCardToCardForPublishing(card: Card): CardForPublishing {
@@ -142,6 +147,8 @@ export function fromCardToCardForPublishing(card: Card): CardForPublishing {
         card.initialParentCardUid,
         card.keepChildCards,
         card.publisherType,
+        card.representative,
+        card.representativeType,
         card.secondsBeforeTimeSpanForReminder,
         card.timeSpans
     );

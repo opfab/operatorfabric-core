@@ -141,7 +141,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public showActionButton = false;
     public showEditAndDeleteButton = false ;
     public showDetailCardHeader = false;
-    public fromEntity = null;
+    public fromEntityOrRepresentative = null;
     private lastCardSetToReadButNotYetOnFeed;
 
     modalRef: NgbModalRef;
@@ -455,8 +455,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.message = {display: false, text: undefined, className: undefined};
         this.setButtonsVisibility();
         this.setShowDetailCardHeader();
-        this.computeFromEntity();
-
+        this.computeFromEntityOrRepresentative();
     }
 
     private setEntitiesToRespond() {
@@ -515,9 +514,18 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             this.card, this.businessconfigService.getProcess(this.card.process));
     }
 
-    private computeFromEntity() {
-        if (this.card.publisherType === 'ENTITY' )  this.fromEntity = this.entitiesService.getEntityName(this.card.publisher);
-        else this.fromEntity = null;
+    private computeFromEntityOrRepresentative() {
+        if (this.card.publisherType === 'ENTITY') {
+            this.fromEntityOrRepresentative = this.entitiesService.getEntityName(this.card.publisher);
+
+            if (!!this.card.representativeType && !!this.card.representative) {
+                const representative = this.card.representativeType === 'ENTITY' ?
+                    this.entitiesService.getEntityName(this.card.representative) : this.card.representative;
+
+                this.fromEntityOrRepresentative += ' (' + representative + ')';
+            }
+        } else
+            this.fromEntityOrRepresentative = null;
     }
 
     private setShowDetailCardHeader() {

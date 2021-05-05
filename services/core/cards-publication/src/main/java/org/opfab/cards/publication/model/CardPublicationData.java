@@ -123,6 +123,9 @@ public class CardPublicationData implements Card {
     @Builder.Default
     private PublisherTypeEnum publisherType = PublisherTypeEnum.EXTERNAL;
 
+    private String  representative;
+    private PublisherTypeEnum representativeType;
+
     private Integer  secondsBeforeTimeSpanForReminder;
 
     public void prepare(Instant publishDate) {
@@ -156,6 +159,8 @@ public class CardPublicationData implements Card {
                 .title(((I18nPublicationData) this.getTitle()).copy())
                 .summary(((I18nPublicationData) this.getSummary()).copy())
                 .publisherType(this.getPublisherType())
+                .representative(this.getRepresentative())
+                .representativeType(this.getRepresentativeType())
                 .secondsBeforeTimeSpanForReminder(this.secondsBeforeTimeSpanForReminder);
 
         if(this.getTimeSpans()!=null)
