@@ -46,7 +46,7 @@
     "ag-grid-community": "25.2.0",
     "angular-oauth2-oidc": "10.0.3",
     "angular2-multiselect-dropdown": "4.6.10",
-    "bootstrap": "4.6.0",
+    "bootstrap": "5.0.0",
     "file-saver-es": "2.0.5",
     "guid-typescript": "1.0.9",
     "handlebars": "4.7.7",
