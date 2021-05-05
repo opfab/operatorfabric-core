@@ -52,6 +52,7 @@ export class HandlebarsService {
         HandlebarsService.registerKeepSpacesAndEndOfLine();
         HandlebarsService.registerMergeArrays();
         HandlebarsService.registerConditionalAttribute();
+        HandlebarsService.registerReplace();
         this.store.select(buildSettingsOrConfigSelector('locale')).subscribe(locale => this.changeLocale(locale));
     }
 
@@ -169,7 +170,7 @@ export class HandlebarsService {
 
     private static registerArrayContains() {
         Handlebars.registerHelper('arrayContains', function(arr, value) {
-            return !!arr && arr.includes(value);
+            return arr.includes(value);
         });
     }
 
@@ -237,6 +238,12 @@ export class HandlebarsService {
         return arr1.concat(arr2);
       });
     }
+
+    private static registerReplace() {
+          Handlebars.registerHelper('replace', function( find, replace, string) {
+            return string.replaceAll( find, replace );
+          });
+        }
 
     private static registerConditionalAttribute() {
         Handlebars.registerHelper('conditionalAttribute', function (condition, attribute) {
