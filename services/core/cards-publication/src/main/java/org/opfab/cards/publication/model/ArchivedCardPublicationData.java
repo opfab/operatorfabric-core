@@ -88,6 +88,9 @@ public class ArchivedCardPublicationData implements Card {
 
     private PublisherTypeEnum publisherType;
 
+    private String  representative;
+    private PublisherTypeEnum representativeType;
+
     private Integer  secondsBeforeTimeSpanForReminder;
 
     public ArchivedCardPublicationData(CardPublicationData card){
@@ -118,6 +121,8 @@ public class ArchivedCardPublicationData implements Card {
         this.entitiesRequiredToRespond = card.getEntitiesRequiredToRespond() == null ? null : new ArrayList<>(card.getEntitiesRequiredToRespond());
         this.processStateKey = process + "." + state;
         this.publisherType = card.getPublisherType();
+        this.representative = card.getRepresentative();
+        this.representativeType = card.getRepresentativeType();
         this.secondsBeforeTimeSpanForReminder = card.getSecondsBeforeTimeSpanForReminder();
     }
 

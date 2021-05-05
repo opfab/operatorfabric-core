@@ -24,7 +24,7 @@ import { ExportService } from '@ofServices/export.service';
 import { FlushLoggingResult, UpdateLoggingPage } from '@ofStore/actions/logging.actions';
 import { ConfigService } from '@ofServices/config.service';
 import { LoggingComponent } from '../../logging.component';
-import {ProcessesService} from "@ofServices/processes.service";
+import {ProcessesService} from '@ofServices/processes.service';
 
 
 @Component({
@@ -103,13 +103,16 @@ export class LoggingTableComponent implements OnInit, OnDestroy {
 
                 lines.forEach( (line: LineOfLoggingResult) => {
                     if (typeof line !== undefined) {
+
+                        const sender = line.sender + (line.representative.length ? ' (' + line.representative + ')' : '');
+                        const description = !!this.processStateDescription.get(line.process + '.' + line.state) ? this.translateColumn(this.processStateDescription.get(line.process + '.' + line.state)) : '';
                         if (this.displayProcessGroupColumn)
                             this.exportLoggingData.push({
                                 [timeOfActionColumnName]: this.timeService.formatDateTime(line.businessDate),
                                 [titleColumnName]: this.translateColumn(line.i18nKeyForTitle.key, line.i18nKeyForTitle.parameters),
                                 [summaryColumnName]: this.translateColumn(line.i18nKeyForSummary.key, line.i18nKeyForSummary.parameters),
-                                [descriptionColumnName]: !!this.processStateDescription.get(line.process + '.' + line.state) ? this.translateColumn(this.processStateDescription.get(line.process + '.' + line.state)) : '',
-                                [senderColumnName]: line.sender,
+                                [descriptionColumnName]: description,
+                                [senderColumnName]: sender,
                                 [processGroupColumnName]: this.translateColumn(this.processesService.findProcessGroupLabelForProcess(line.process))
                             });
                         else
@@ -117,8 +120,8 @@ export class LoggingTableComponent implements OnInit, OnDestroy {
                                 [timeOfActionColumnName]: this.timeService.formatDateTime(line.businessDate),
                                 [titleColumnName]: this.translateColumn(line.i18nKeyForTitle.key, line.i18nKeyForTitle.parameters),
                                 [summaryColumnName]: this.translateColumn(line.i18nKeyForSummary.key, line.i18nKeyForSummary.parameters),
-                                [descriptionColumnName]: !!this.processStateDescription.get(line.process + '.' + line.state) ? this.translateColumn(this.processStateDescription.get(line.process + '.' + line.state)) : '',
-                                [senderColumnName]: line.sender
+                                [descriptionColumnName]: description,
+                                [senderColumnName]: sender
                             });
                     }
                 });

@@ -27,11 +27,7 @@ import {catchError, map} from 'rxjs/operators';
 import * as moment from 'moment';
 import {I18n} from '@ofModel/i18n.model';
 import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
-import {
-    AddLightCardFailure,
-    LoadLightCardsSuccess,
-    RemoveLightCard
-} from '@ofActions/light-card.actions';
+import {AddLightCardFailure, LoadLightCardsSuccess, RemoveLightCard} from '@ofActions/light-card.actions';
 import {EntitiesService} from '@ofServices/entities.service';
 
 @Injectable()
@@ -251,10 +247,19 @@ export class CardService {
                 const cards = page.content;
                 const lines = cards.map((card: LightCard) => {
                     const i18nPrefix = `${card.process}.${card.processVersion}.`;
+
                     const publisherType = card.publisherType;
                     const enumThirdParty = PublisherType.EXTERNAL;
                     const isThirdPartyPublisher = enumThirdParty === PublisherType[publisherType];
                     const sender = (isThirdPartyPublisher) ? card.publisher : this.entitiesService.getEntityName(card.publisher);
+
+                    let representative = '';
+                    if (!!card.representativeType && !!card.representative) {
+                        const representativeType = card.representativeType;
+                        const isThirdPartyRepresentative = enumThirdParty === PublisherType[representativeType];
+                        representative = (isThirdPartyRepresentative) ? card.representative : this.entitiesService.getEntityName(card.representative);
+                    }
+
                     return ({
                         process: card.process,
                         processVersion: card.processVersion,
@@ -263,7 +268,8 @@ export class CardService {
                         businessDate: moment(card.publishDate),
                         i18nKeyForTitle: this.addPrefix(i18nPrefix, card.title),
                         i18nKeyForSummary: this.addPrefix(i18nPrefix, card.summary),
-                        sender: sender
+                        sender: sender,
+                        representative: representative
                     } as LineOfLoggingResult);
                 });
                 return {

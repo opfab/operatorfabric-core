@@ -103,6 +103,8 @@ public class CardConsultationData implements Card {
     @Transient
     private Boolean hasBeenRead;
     private PublisherTypeEnum publisherType;
+    private String  representative;
+    private PublisherTypeEnum representativeType;
     private Integer  secondsBeforeTimeSpanForReminder;
     
     

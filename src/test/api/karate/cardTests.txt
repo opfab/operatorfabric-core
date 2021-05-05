@@ -16,5 +16,6 @@
       cards/getArchive.feature                    \
       cards/post2CardsGroupRouting.feature        \
       cards/post1BigCards.feature                 \
-      cards/deleteUserCard.feature                \   
-      cards/deleteCardsByEndDate.feature          \   
+      cards/deleteUserCard.feature                \
+      cards/deleteCardsByEndDate.feature          \
+      cards/cardsWithRepresentative.feature       \
