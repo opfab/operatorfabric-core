@@ -29,6 +29,14 @@ Cypress.Commands.add('loadTestConf', () => {
 })
 
 Cypress.Commands.add('sendTestCards', () => {
-    cy.exec('cd .. && ./resources/delete6TestCards.sh '+Cypress.env('host'));
     cy.exec('cd .. && ./resources/send6TestCards.sh '+Cypress.env('host'));
+})
+
+Cypress.Commands.add('sendCard', (cardFile) => {
+    cy.exec('cd ../resources/cards/ && ./sendCard.sh '+ cardFile + ' ' + Cypress.env('host'));
+})
+
+
+Cypress.Commands.add('deleteTestCards', () => {
+    cy.exec('cd .. && ./resources/delete6TestCards.sh '+Cypress.env('host'));
 })

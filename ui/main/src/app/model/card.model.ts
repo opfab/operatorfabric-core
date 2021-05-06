@@ -25,6 +25,7 @@ export class Card {
         readonly severity: Severity,
         public hasBeenAcknowledged: boolean = false,
         readonly hasBeenRead: boolean = false,
+        readonly hasChildCardFromCurrentUserEntity: boolean = false,
         readonly process?: string,
         readonly processInstanceId?: string,
         readonly state?: string,
@@ -118,9 +119,9 @@ export class HourAndMinutes {
 
 export function fromCardToLightCard(card: Card): LightCard {
     return new LightCard(card.uid, card.id, card.publisher, card.processVersion, card.publishDate, card.startDate
-        , card.endDate, card.severity, card.hasBeenAcknowledged, card.hasBeenRead, card.processInstanceId
+        , card.endDate, card.severity, card.hasBeenAcknowledged, card.hasBeenRead, card.hasChildCardFromCurrentUserEntity, card.processInstanceId
         , card.lttd, card.title, card.summary, null, [], card.process, card.state, card.parentCardId,
-        card.initialParentCardUid, card.representative, card.representativeType);
+        card.initialParentCardUid, card.keepChildCards,card.representative, card.representativeType);
 }
 
 export function fromCardToCardForPublishing(card: Card): CardForPublishing {

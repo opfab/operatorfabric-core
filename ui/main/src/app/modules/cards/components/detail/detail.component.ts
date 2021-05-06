@@ -33,7 +33,7 @@ import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
 import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {UserContext} from '@ofModel/user-context.model';
 import {map, skip, take, takeUntil} from 'rxjs/operators';
-import {fetchLightCard, selectLastCard} from '@ofStore/selectors/feed.selectors';
+import {fetchLightCard, selectLastCardLoaded} from '@ofStore/selectors/feed.selectors';
 import {CardService} from '@ofServices/card.service';
 import {Subject} from 'rxjs';
 import {LightCard, Severity} from '@ofModel/light-card.model';
@@ -224,14 +224,14 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
 
     private integrateChildCardsInRealTime() {
-        this.store.select(selectLastCard)
+        this.store.select(selectLastCardLoaded)
             .pipe(
                 takeUntil(this.unsubscribe$),
-                map(lastCard => {
-                    if (!!lastCard) {
-                            if (lastCard.parentCardId === this.card.id &&
-                            !this.childCards.map(childCard => childCard.uid).includes(lastCard.uid)) {
-                                this.integrateOneChildCard(lastCard);                              
+                map(lastCardLoaded => {
+                    if (!!lastCardLoaded) {
+                            if (lastCardLoaded.parentCardId === this.card.id &&
+                            !this.childCards.map(childCard => childCard.uid).includes(lastCardLoaded.uid)) {
+                                this.integrateOneChildCard(lastCardLoaded);                              
                             }
                     }
                 })).subscribe()

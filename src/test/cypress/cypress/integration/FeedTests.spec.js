@@ -3,11 +3,14 @@ describe ('FeedScreen tests',function () {
 
     before('Set up configuration', function () {
         cy.loadTestConf();
-    });
-
-    beforeEach('Send test cards', function () {
+        cy.deleteTestCards();
         cy.sendTestCards();
     });
+
+    after('Clean', function () {
+        cy.deleteTestCards();
+    });
+
 
     it('Check card reception and read behaviour', function () {
 

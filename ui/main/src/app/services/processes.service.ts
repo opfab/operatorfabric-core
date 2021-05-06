@@ -20,7 +20,7 @@ import {Card} from '@ofModel/card.model';
 import {select, Store} from '@ngrx/store';
 import {selectLinesOfLoggingResult} from '@ofStore/selectors/logging.selectors';
 import {AppState} from '@ofStore/index';
-import {selectLastCard} from '@ofStore/selectors/feed.selectors';
+import {selectLastCardLoaded} from '@ofStore/selectors/feed.selectors';
 import {Utilities} from '../common/utilities';
 
 
@@ -51,7 +51,7 @@ export class ProcessesService {
 
     private loadTranslationIfNeededAfterLoadingCard() {
         this.store.pipe(
-            select(selectLastCard))
+            select(selectLastCardLoaded))
             .subscribe(card => { if (!!card) this.loadTranslationsForProcess(card.process, card.processVersion)});
     }
 

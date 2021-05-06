@@ -26,8 +26,8 @@ export const {
 export const selectLightCardSelection = createSelector(
     selectLightCardsState,
     state => state.selectedCardId);
-export const selectLastCard = createSelector(selectLightCardsState,
-    state => state.lastCard);
+export const selectLastCardLoaded = createSelector(selectLightCardsState,
+    state => state.lastCardLoaded);
 
 export const selectFilter = createSelector(selectLightCardsState,
     state => state.filters);

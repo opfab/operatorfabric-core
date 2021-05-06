@@ -57,7 +57,7 @@ describe('LightCard Reducer', () => {
             const actualState = reducer(previousState, new EmptyLightCards());
             expect(actualState).toBeTruthy();
             expect(lightCardEntityAdapter.getSelectors().selectTotal(actualState)).toEqual(0);
-            expect(actualState.lastCard).toEqual(null);
+            expect(actualState.lastCardLoaded).toEqual(null);
         });
     });
 
@@ -96,7 +96,7 @@ describe('LightCard Reducer', () => {
             const previousState: CardFeedState = LightCardAdapter.getInitialState(
                 {
                     selectedCardId: getRandomAlphanumericValue(5, 10),
-                    lastCard: null,
+                    lastCardLoaded: null,
                     error: '',
                     filters: new Map(),
                     sortBySeverity: false,
@@ -106,7 +106,7 @@ describe('LightCard Reducer', () => {
             const expectedState: CardFeedState = LightCardAdapter.getInitialState(
                 {
                     selectedCardId: null,
-                    lastCard: null,
+                    lastCardLoaded: null,
                     error: '',
                     filters: new Map(),
                     sortBySeverity: false,
@@ -130,7 +130,7 @@ describe('LightCard Reducer', () => {
             const previousState: CardFeedState = LightCardAdapter.getInitialState(
                 {
                     selectedCardId: initialSelectedCardId,
-                    lastCard: null,
+                    lastCardLoaded: null,
                     error: '',
                     filters: new Map(),
                     sortBySeverity: initialSort,
@@ -140,7 +140,7 @@ describe('LightCard Reducer', () => {
             const expectedState: CardFeedState = LightCardAdapter.getInitialState(
                 {
                     selectedCardId: initialSelectedCardId,
-                    lastCard: null,
+                    lastCardLoaded: null,
                     error: '',
                     filters: new Map(),
                     sortBySeverity: !initialSort,
@@ -164,7 +164,7 @@ describe('LightCard Reducer', () => {
             const previousState: CardFeedState = LightCardAdapter.getInitialState(
                 {
                     selectedCardId: initialSelectedCardId,
-                    lastCard: null,
+                    lastCardLoaded: null,
                     error: '',
                     filters: new Map(),
                     sortBySeverity: false,
@@ -174,7 +174,7 @@ describe('LightCard Reducer', () => {
             const expectedState: CardFeedState = LightCardAdapter.getInitialState(
                 {
                     selectedCardId: initialSelectedCardId,
-                    lastCard: null,
+                    lastCardLoaded: null,
                     error: '',
                     filters: new Map(),
                     sortBySeverity: false,

@@ -27,7 +27,11 @@ import {catchError, map} from 'rxjs/operators';
 import * as moment from 'moment';
 import {I18n} from '@ofModel/i18n.model';
 import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
-import {AddLightCardFailure, LoadLightCardsSuccess, RemoveLightCard} from '@ofActions/light-card.actions';
+import {
+    AddLightCardFailure,
+    LoadLightCard,
+    RemoveLightCard
+} from '@ofActions/light-card.actions';
 import {EntitiesService} from '@ofServices/entities.service';
 
 @Injectable()
@@ -75,7 +79,7 @@ export class CardService {
                     switch (operation.type) {
                         case CardOperationType.ADD:
                             console.log(new Date().toISOString(), `CardService - Receive card to add id=`, operation.card.id);
-                            this.store.dispatch(new LoadLightCardsSuccess({lightCard: operation.card}));
+                            this.store.dispatch(new LoadLightCard({lightCard: operation.card}));
                             break;
                         case CardOperationType.DELETE:
                             console.log(new Date().toISOString(), `CardService - Receive card to delete id=`, operation.cardId);
