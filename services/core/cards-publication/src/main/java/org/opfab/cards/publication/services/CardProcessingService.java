@@ -63,7 +63,7 @@ public class CardProcessingService {
 
 
     public void processCard(CardPublicationData card) {
-        card.setPublisherType(PublisherTypeEnum.EXTERNAL);
+        if (card.getPublisherType()==null) card.setPublisherType(PublisherTypeEnum.EXTERNAL);
         processOneCard(card, Optional.empty());
     }
 
