@@ -86,7 +86,8 @@
     },
     "tips": {
       "acknowledged": "Acquittée",
-      "lttd": "Temps restant pour décider"
+      "lttd": "Temps restant pour décider",
+      "hasAResponseFromYourEntity" : "Votre entité a déjà répondu"
     },
     "acknowledgeAllCards": {
       "label": "Acquitter toutes les cartes",

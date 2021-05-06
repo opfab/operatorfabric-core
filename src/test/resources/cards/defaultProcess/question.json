@@ -4,7 +4,7 @@
 		"process"  :"defaultProcess",
 		"processInstanceId" : "process4",
 		"state": "questionState",
-		"groupRecipients": ["Dispatcher", "Planner"],
+		"userRecipients": ["operator1", "operator2","operator3","operator4"],
 		"entitiesAllowedToRespond": ["ENTITY1","ENTITY2","ENTITY3"],
 		"entitiesRequiredToRespond": ["ENTITY1","ENTITY2"],
 		"severity" : "ACTION",

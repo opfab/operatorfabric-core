@@ -12,9 +12,10 @@ import {Action} from '@ngrx/store';
 import {LightCard} from '@ofModel/light-card.model';
 
 export enum LightCardActionTypes {
-    LoadLightCards = '[LCard] Load',
     EmptyLightCards = '[LCard] Empty',
-    LoadLightCardsSuccess = '[LCard] Load Success',
+    LoadLightCard = '[LCard] Load Light Card from subscription',
+    LoadLightChildCard = '[LCard] Load Light Child Card', 
+    LoadLightParentCard = '[LCard] Load Light Parent Card', 
     SelectLightCard = '[LCard] Select One',
     ClearLightCardSelection = '[LCard] Clear Light Card Selection',
     AddLightCardFailure = '[LCard] Add Light Card Fail',
@@ -23,20 +24,28 @@ export enum LightCardActionTypes {
     LightCardAlreadyUpdated = '[LCard] Light Card already Updated'
 }
 
-export class LoadLightCards implements Action {
-    readonly type = LightCardActionTypes.LoadLightCards;
-}
 
 export class EmptyLightCards implements Action {
     readonly type = LightCardActionTypes.EmptyLightCards;
 }
 
-export class LoadLightCardsSuccess implements Action {
-    readonly type = LightCardActionTypes.LoadLightCardsSuccess;
+export class LoadLightCard implements Action {
+    readonly type = LightCardActionTypes.LoadLightCard;
     constructor(public payload: {lightCard: LightCard} ) {
     }
 }
 
+export class LoadLightChildCard implements Action {
+    readonly type = LightCardActionTypes.LoadLightChildCard;
+    constructor(public payload: {lightCard: LightCard,isFromCurrentUserEntity: boolean} ) {
+    }
+}
+
+export class LoadLightParentCard implements Action {
+    readonly type = LightCardActionTypes.LoadLightParentCard;
+    constructor(public payload: {lightCard: LightCard} ) {
+    }
+}
 
 export class SelectLightCard implements Action {
     readonly type = LightCardActionTypes.SelectLightCard;
@@ -72,8 +81,9 @@ export class LightCardAlreadyUpdated implements Action {
 }
 
 export type LightCardActions =
-    LoadLightCards
-    | LoadLightCardsSuccess
+    LoadLightCard
+    | LoadLightChildCard
+    | LoadLightParentCard
     | SelectLightCard
     | ClearLightCardSelection
     | AddLightCardFailure

@@ -17,7 +17,7 @@ import {FilterService, FilterType} from '@ofServices/filter.service';
  * The Feed State consist of:
  *  * EntityState of LightCard
  *  * selectedCardId: the currently selected card id
- *  * lastCard the last card added / updated to the feed
+ *  * lastCardLoaded the last card added / updated to the feed
  *  * message: last message during state processing
  *  * filters: a collection of filter to apply to the rendered feed
  *  * sortBySeverity: Indicates whether the cards in the feed should be sorted by severity before being sorted by
@@ -25,7 +25,7 @@ import {FilterService, FilterType} from '@ofServices/filter.service';
  */
 export interface CardFeedState extends EntityState<LightCard> {
     selectedCardId: string;
-    lastCard: LightCard;
+    lastCardLoaded: LightCard;
     filters: Map<FilterType, Filter>;
     sortBySeverity: boolean;
     sortByRead: boolean;
@@ -90,7 +90,7 @@ function getDefaultFilter() {
 export const feedInitialState: CardFeedState = LightCardAdapter.getInitialState(
     {
         selectedCardId: null,
-        lastCard: null,
+        lastCardLoaded: null,
         filters: getDefaultFilter(),
         sortBySeverity: false,
         sortByRead: true

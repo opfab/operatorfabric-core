@@ -87,7 +87,8 @@
     },
     "tips": {
       "acknowledged": "Acknowledged",
-      "lttd": "Time remaining to decide"
+      "lttd": "Time remaining to decide",
+      "hasAResponseFromYourEntity" : "Your entity has already respond"
     },
     "acknowledgeAllCards": {
       "label": "Acknowledge all cards",

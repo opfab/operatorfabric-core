@@ -24,15 +24,23 @@
                         lightCard.title.key}} </span>
                 </p>
                 <div class="ml-auto align-self-center pr-2" style="margin-right:-5px; margin-top: -10px;">
-                    <div class="d-flex align-items-end flex-column">
+                    <div class="d-flex align-items-end flex-row">
+                        <ng-template #tipHasAResponseFromYourEntity>
+                            <span translate>feed.tips.hasAResponseFromYourEntity</span>
+                        </ng-template>
+                        <span *ngIf="lightCard.hasChildCardFromCurrentUserEntity" id="opfab-feed-lightcard-hasChildCardFromCurrentUserEntity" class="p-2"
+                            [ngbPopover]="tipHasAResponseFromYourEntity" popoverClass="opfab-popover" container="body"
+                            triggers="mouseenter:mouseleave">
+                            <em style="color: #0082FF;" class="fa fa-reply"></em>
+                        </span>
                         <ng-template #tipAcknowledged>
                             <span translate>feed.tips.acknowledged</span>
                         </ng-template>
-                        <div *ngIf="lightCard.hasBeenAcknowledged" class="p-2" placement="right"
+                        <span *ngIf="lightCard.hasBeenAcknowledged" class="p-2"
                             [ngbPopover]="tipAcknowledged" popoverClass="opfab-popover" container="body"
                             triggers="mouseenter:mouseleave">
                             <em style="color: #0082FF;" class="fa fa-check"></em>
-                        </div>
+                        </span>
                     </div>
                 </div>
             </div>

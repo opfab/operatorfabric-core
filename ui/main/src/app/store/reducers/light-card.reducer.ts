@@ -13,6 +13,8 @@ import {CardFeedState, feedInitialState, LightCardAdapter} from '@ofStates/feed.
 import {FeedActions, FeedActionTypes} from '@ofActions/feed.actions';
 import {FilterType} from '@ofServices/filter.service';
 import {Filter} from '@ofModel/feed-filter.model';
+import {Card} from '@ofModel/card.model';
+import {Update} from '@ngrx/entity';
 
 export function changeActivationAndStatusOfFilter(filters: Map<FilterType, Filter>
     , payload: { name: FilterType; active: boolean; status: any }) {
@@ -29,11 +31,32 @@ export function reducer(
 
 
     switch (action.type) {
-        case LightCardActionTypes.LoadLightCardsSuccess: {
+
+        case LightCardActionTypes.LoadLightParentCard: {
             return {
                 ...LightCardAdapter.upsertOne(action.payload.lightCard, state),
-                lastCard: action.payload.lightCard
+                lastCardLoaded: action.payload.lightCard
             };
+        }
+
+        case LightCardActionTypes.LoadLightChildCard: {
+            if (action.payload.isFromCurrentUserEntity) {
+                const updateIsFromUserEntity: Update<Card> = {
+                    id: action.payload.lightCard.parentCardId,
+                    changes: {
+                        hasChildCardFromCurrentUserEntity: true
+                    }
+                }
+                return {
+                    ...LightCardAdapter.updateOne(updateIsFromUserEntity, state),
+                    lastCardLoaded: action.payload.lightCard
+                }
+            }
+            return {
+                ...state,
+                lastCardLoaded: action.payload.lightCard
+            }
+
         }
         case LightCardActionTypes.EmptyLightCards: {
             return {

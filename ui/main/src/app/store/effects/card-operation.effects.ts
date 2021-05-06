@@ -15,7 +15,9 @@ import {Observable, of} from 'rxjs';
 import {catchError, filter, map, switchMap, withLatestFrom} from 'rxjs/operators';
 import {
     LightCardActionTypes,
-    LoadLightCardsSuccess,
+    LoadLightCard,
+    LoadLightChildCard,
+    LoadLightParentCard,
     UpdateALightCard
 } from '@ofActions/light-card.actions';
 import {Store} from '@ngrx/store';
@@ -25,7 +27,9 @@ import {FilterType} from '@ofServices/filter.service';
 import {selectCardStateSelectedId} from '@ofSelectors/card.selectors';
 import {LoadCard} from '@ofActions/card.actions';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
-import {selectSortedFilterLightCardIds} from '@ofSelectors/feed.selectors';
+import {selectLightCardsState, selectSortedFilterLightCardIds} from '@ofSelectors/feed.selectors';
+import {LightCard} from '@ofModel/light-card.model';
+import {UserService} from '@ofServices/user.service';
 
 
 @Injectable()
@@ -35,20 +39,48 @@ export class CardOperationEffects {
     constructor(private store: Store<AppState>,
                 private actions$: Actions,
                 private service: CardService,
-                private soundNotificationService: SoundNotificationService) {
+                private soundNotificationService: SoundNotificationService,
+                private userService: UserService) {
     }
 
 
+    loadLightCard = createEffect(() => this.actions$
+        .pipe(
+            ofType(LightCardActionTypes.LoadLightCard),
+            map((loadedCardAction: LoadLightCard) => loadedCardAction.payload.lightCard),
+            withLatestFrom(this.store.select(selectLightCardsState)),
+            map(([lightCard, state]) => {
+                if (!!lightCard.parentCardId) {
+                    return new LoadLightChildCard({lightCard: lightCard,isFromCurrentUserEntity : this.doesChildCardIsFromCurrentUserEntity(lightCard)});
+                }
+                else {
+                    let card: LightCard  = {...lightCard} ;
+                    card.hasChildCardFromCurrentUserEntity = this.doesNewCardVersionHasChildFromCurrentUserEntity(state.entities[card.id],card);
+                    return new LoadLightParentCard({lightCard: card});
+                }
+            }
+            )
+        ));
+
+    private doesChildCardIsFromCurrentUserEntity(childCard) : boolean 
+    {
+        return this.userService.getCurrentUserWithPerimeters().userData.entities.some((entity) => entity === childCard.publisher);
+    }
+
+    private doesNewCardVersionHasChildFromCurrentUserEntity(oldCardVersion,newCard) : boolean 
+    {
+        return  (oldCardVersion && newCard.keepChildCards && oldCardVersion.hasChildCardFromCurrentUserEntity);
+    }
 
     
     triggerSoundNotifications = createEffect(() => this.actions$
         /* Creating a dedicated effect was necessary because this handling needs to be done once the added cards have been
          * processed since we take a look at the feed state to know if the card is currently visible or not */
         .pipe(
-            ofType(LightCardActionTypes.LoadLightCardsSuccess),
-            map((loadedCardAction: LoadLightCardsSuccess) => loadedCardAction.payload.lightCard),
+            ofType(LightCardActionTypes.LoadLightParentCard),
+            map((loadedCardAction: LoadLightParentCard) => loadedCardAction.payload.lightCard),
             withLatestFrom(this.store.select(selectSortedFilterLightCardIds)),
-            /* Since both this effect and the feed state update are triggered by LoadLightCardSuccess, there could
+            /* Since both this effect and the feed state update are triggered by LoadLightParentCard, there could
             * theoretically be an issue if the feed state update by the reducer hasn't been done before we take the
             * list of visible cards using withLatestFrom. However, this hasn't cropped up in any of the tests so far so
             * we'll deal with it if the need arises.*/
@@ -89,8 +121,8 @@ export class CardOperationEffects {
     
     refreshIfSelectedCard: Observable<any> = createEffect(() => this.actions$
         .pipe(
-            ofType(LightCardActionTypes.LoadLightCardsSuccess),
-            map((a: LoadLightCardsSuccess) => a.payload.lightCard), 
+            ofType(LightCardActionTypes.LoadLightParentCard),
+            map((a: LoadLightParentCard) => a.payload.lightCard), 
             withLatestFrom(this.store.select(selectCardStateSelectedId)), // retrieve currently selected card
             switchMap(([lightCard, selectedCardId]) =>  {
                 if (lightCard.id === selectedCardId)  this.store.dispatch(new LoadCard({id: lightCard.id}));
