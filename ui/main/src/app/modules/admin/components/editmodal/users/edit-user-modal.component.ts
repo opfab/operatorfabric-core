@@ -50,8 +50,8 @@ export class EditUserModalComponent implements OnInit {
     this.userForm = new FormGroup({
       login: new FormControl(''
           , [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-z\d\-_]+$/)]),
-      firstName: new FormControl('', [Validators.required]),
-      lastName: new FormControl('', [Validators.required]),
+      firstName: new FormControl('', []),
+      lastName: new FormControl('', []),
       groups: new FormControl([]),
       entities: new FormControl([])
     });
@@ -112,8 +112,10 @@ export class EditUserModalComponent implements OnInit {
       this.userForm.value['login'] = this.row.login;
     }
     this.login.setValue((this.login.value as string).trim());
-    this.lastName.setValue((this.lastName.value as string).trim());
-    this.firstName.setValue((this.firstName.value as string).trim());
+    if (!!this.lastName.value) 
+      this.lastName.setValue((this.lastName.value as string).trim());
+    if (!!this.firstName.value) 
+      this.firstName.setValue((this.firstName.value as string).trim());
 
   }
 
