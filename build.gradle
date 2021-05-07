@@ -1,7 +1,7 @@
 import com.github.jk1.license.render.*
 plugins {
     id "com.github.jk1.dependency-license-report" version "1.16"
-    id "com.github.node-gradle.node" version "3.0.1"
+    id "com.github.node-gradle.node" version "3.1.0"
     id "org.asciidoctor.convert" version "2.4.0"
     id "maven-publish"
     id "signing"
