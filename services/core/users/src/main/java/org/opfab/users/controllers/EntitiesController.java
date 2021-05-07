@@ -69,7 +69,7 @@ public class EntitiesController implements EntitiesApi {
 
         for (UserData userData : foundUsers) {
             userData.addEntity(id);
-            publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
+            publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getBusId(), userData.getLogin()));
         }
         userRepository.saveAll(foundUsers);
         return null;
@@ -119,7 +119,7 @@ public class EntitiesController implements EntitiesApi {
 
         if(foundUser!=null) {
                 foundUser.deleteEntity(id);
-                publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), foundUser.getLogin()));
+                publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getBusId(), foundUser.getLogin()));
             userRepository.save(foundUser);
         }
         return null;
@@ -175,7 +175,7 @@ public class EntitiesController implements EntitiesApi {
                             u.deleteEntity(id);
                             newUsersInEntity.remove(u.getLogin());
                             //Fire an UpdatedUserEvent for all users that are updated because they're removed from the entity
-                            publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), u.getLogin()));
+                            publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getBusId(), u.getLogin()));
                         }).collect(Collectors.toList());
 
         userRepository.saveAll(toUpdate);
@@ -207,7 +207,7 @@ public class EntitiesController implements EntitiesApi {
         if (foundUsers != null) {
             for (UserData userData : foundUsers) {
                 userData.deleteEntity(idEntity);
-                publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
+                publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getBusId(), userData.getLogin()));
             }
             userRepository.saveAll(foundUsers);
         }

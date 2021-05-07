@@ -117,7 +117,7 @@ public class UserServiceImp implements UserService {
         List<UserData> foundUsers = userRepository.findByGroupSetContaining(groupId);
         if (foundUsers != null) {
             for (UserData userData : foundUsers)
-                publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
+                publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getBusId(), userData.getLogin()));
         }
     }
 

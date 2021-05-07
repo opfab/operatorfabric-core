@@ -6,7 +6,7 @@ plugins {
     id "maven-publish"
     id "signing"
     id "org.owasp.dependencycheck" version "6.1.6"
-    id 'org.springframework.boot' version '2.4.0-M1'
+    id 'org.springframework.boot' version '2.4.5'
     id 'org.sonarqube' version '3.2.0' apply false
 }
 
@@ -55,7 +55,8 @@ ext {
             starterBus            : "org.springframework.cloud:spring-cloud-starter-bus-amqp",
             starterStream         : "org.springframework.cloud:spring-cloud-starter-stream-rabbit",
             starterFeign          : "org.springframework.cloud:spring-cloud-starter-openfeign",
-            ribbon                : "org.springframework.cloud:spring-cloud-starter-netflix-ribbon"
+            ribbon                : "org.springframework.cloud:spring-cloud-starter-netflix-ribbon:${versions['spring.cloud.starter.netflix.ribbon']}",
+            loadbalancer          : "org.springframework.cloud:spring-cloud-starter-loadbalancer"
     ]
 
     testing = [

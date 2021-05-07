@@ -94,7 +94,7 @@ public class UsersController implements UsersApi {
         userService.createUser(user);
 
         if(!created)
-            publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), login));
+            publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getBusId(), login));
         
         return user;
     }
@@ -129,7 +129,7 @@ public class UsersController implements UsersApi {
     public UserSettings patchUserSettings(HttpServletRequest request, HttpServletResponse response, String login, UserSettings userSettings) throws Exception {
         UserSettingsData settings = userSettingsRepository.findById(login)
                 .orElse(UserSettingsData.builder().login(login).build());
-        if (userSettings.getProcessesStatesNotNotified()!=null) publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), login));
+        if (userSettings.getProcessesStatesNotNotified()!=null) publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getBusId(), login));
         return userSettingsRepository.save(settings.patch(userSettings));
     }
 
@@ -194,7 +194,7 @@ public class UsersController implements UsersApi {
         ));
 
         if (foundUser != null) {
-            publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), foundUser.getLogin()));
+            publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getBusId(), foundUser.getLogin()));
             userRepository.delete(foundUser);
         }
         return null;
