@@ -54,9 +54,10 @@ contain a valid `Signed-off-by` line.
 These processes and templates have been adapted from the ones defined by the link:https://github.com/powsybl[PowSyBl]
 project.
 
-== Reporting Bugs and Suggesting Enhancements
+== Reporting Bugs or Vulnerabilities and Suggesting Enhancements
 
-Reporting bug and suggesting enhancements shall be done via issues on github.
+Anyone is welcome to report bugs and suggest enhancements or new features by opening a GitHub issue on this repository.
+Vulnerabilities can be reported publicly in the same way.
 
 == Contributing Code or Documentation
 
