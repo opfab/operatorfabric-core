@@ -80,7 +80,7 @@ The following example is nearly the same as the previous one except for the reci
 }
 ....
 
-Here, the recipient is an entity, the `ENTITY1`, and there is no group recipient anymore. So all users who have a receive right (`Receive` or `ReceiveAndWrite`) for the process/state of the card and who are members of this entity will receive the card. More information on perimeter can be found in
+Here, the recipient is an entity, `ENTITY1`, and there is no group recipient anymore. So all users who have a receive right (`Receive` or `ReceiveAndWrite`) for the process/state of the card and who are members of this entity will receive the card. More information on perimeters can be found in
 ifdef::single-page-doc[<<'users_management,user documentation'>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#users_management, user documentation>>]
 
@@ -112,7 +112,7 @@ Given this group :
 }
 ....
 
-Perimeters can only be linked to groups. So let's link the perimeter `perimeter1` to the group `group1`, you can do this with this command line for example ($token is your access token) :
+Perimeters can only be linked to groups, so let's link the perimeter `perimeter1` to the group `group1`. You can do this with this command line for example ($token is your access token) :
 ....
 curl -X PUT http://localhost:2103/perimeters/perimeter1/groups -H "Content-type:application/json" -H "Authorization:Bearer $token" --data "[\"group1\"]"
 ....
@@ -237,7 +237,6 @@ At the card level, the attributes in the card telling OperatorFabric which templ
 ....
 
 So here a single custom data is defined and it's `rootProp`. This attribute is used by the template called by the `templateName` attribute.
-
 
 
 
