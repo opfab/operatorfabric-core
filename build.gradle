@@ -10,8 +10,6 @@ plugins {
     id 'org.sonarqube' version '3.2.0' apply false
 }
 
-// Dummy comment to try and trigger whitesource security analysis
-
 ext.versions = new Properties()
 file("versions.properties").withReader { reader ->
     versions.load(reader)
