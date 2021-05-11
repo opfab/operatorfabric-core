@@ -113,7 +113,7 @@ class GroupsControllerShould {
         userRepository.insert(u1);
         userRepository.insert(u2);
         userRepository.insert(u3);
-        GroupData g1, g2;
+        GroupData g1, g2, adminGroup;
         g1 = GroupData.builder()
            .id("MONTY")
            .name("Monty Pythons")
@@ -126,8 +126,14 @@ class GroupsControllerShould {
            .description("The cast of a really successful comedy")
            .perimeter("PERIMETER1_1")
            .build();
+        adminGroup = GroupData.builder()
+           .id("ADMIN")
+           .name("ADMINISTRATORS")
+           .description("Administrators group")
+           .build();
         groupRepository.insert(g1);
         groupRepository.insert(g2);
+        groupRepository.insert(adminGroup);
 
         PerimeterData p1, p2, p3;
 
@@ -174,7 +180,7 @@ class GroupsControllerShould {
             result
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$", hasSize(2)))
+                    .andExpect(jsonPath("$", hasSize(3)))
             ;
         }
 
@@ -237,7 +243,7 @@ class GroupsControllerShould {
             mockMvc.perform(get("/groups"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$", hasSize(3)));
+                    .andExpect(jsonPath("$", hasSize(4)));
 
             mockMvc.perform(get("/groups/MARXB"))
                     .andExpect(status().isOk())
@@ -269,7 +275,7 @@ class GroupsControllerShould {
             mockMvc.perform(get("/groups"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$", hasSize(2)));
+                    .andExpect(jsonPath("$", hasSize(3)));
 
             mockMvc.perform(get("/groups/WANDA"))
                     .andExpect(status().isOk())
@@ -607,6 +613,12 @@ class GroupsControllerShould {
             assertThat(gchapman.getGroups()).isEmpty();
 
             assertThat(groupRepository.findById("MONTY")).isEmpty();
+
+            mockMvc.perform(delete("/groups/ADMIN")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                    .andExpect(status().isForbidden())
+            ;
         }
 
         @Test
