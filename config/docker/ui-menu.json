@@ -82,19 +82,19 @@
       "i18n": {
         "menu1": {
           "title": {
-            "single": "Premiere menu"
+            "single": "Premier menu"
           },
           "entry": {
-            "single": "Unique menu entry"
+            "single": "Unique élément"
           }
         },
         "menu2": {
           "title": {
-            "multi": "Deuxieme menu"
+            "multi": "Deuxième menu"
           },
           "entry": {
-            "entry1": "Premiere menu entry",
-            "entry2": "Deuxieme menu entry"
+            "entry1": "Premier élément",
+            "entry2": "Deuxième élément"
           }
         },
         "adminmenu": {
