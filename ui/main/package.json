@@ -63,8 +63,8 @@
     "xlsx": "0.16.9"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "0.1102.12",
-    "@angular/cli": "11.2.12",
+    "@angular-devkit/build-angular": "0.1102.13",
+    "@angular/cli": "11.2.13",
     "@angular/compiler-cli": "11.2.12",
     "@angular/language-service": "11.2.12",
     "@babel/compat-data": "7.14.0",
