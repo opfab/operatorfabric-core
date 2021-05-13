@@ -60,7 +60,7 @@
     "rxjs": "6.6.7",
     "svg-pan-zoom": "3.6.1",
     "tslib": "2.2.0",
-    "xlsx": "0.16.9"
+    "xlsx": "0.17.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.1102.12",
