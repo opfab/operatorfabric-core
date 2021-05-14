@@ -53,7 +53,10 @@ export class AcknowledgeService {
     }
 
     updateAcknowledgementOnLightCard(lightCard: LightCard, hasBeenAcknowledged: boolean) {
-        const updatedLightCard = {...lightCard, hasBeenAcknowledged: hasBeenAcknowledged};
+        // If the card has been acknowledged, set it as read as well otherwise leave it as is.
+        // This is to prevent firing two updates, one for the ack and one for the read, which messed with sounds
+        const hasBeenRead = hasBeenAcknowledged ? true : lightCard.hasBeenRead;
+        const updatedLightCard = {...lightCard, hasBeenAcknowledged: hasBeenAcknowledged, hasBeenRead: hasBeenRead};
         this.store.dispatch(new UpdateALightCard({card: updatedLightCard}));
     }
 

@@ -390,8 +390,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     updateAcknowledgementOnLightCard(hasBeenAcknowledged: boolean) {
         this.store.select(fetchLightCard(this.card.id)).pipe(take(1))
             .subscribe((lightCard: LightCard) => {
-                const updatedLighCard = {...lightCard, hasBeenAcknowledged: hasBeenAcknowledged};
-                this.store.dispatch(new UpdateALightCard({card: updatedLighCard}));
+                // If the card has been acknowledged, set it as read as well otherwise leave it as is.
+                // This is to prevent firing two updates, one for the ack and one for the read, which messed with sounds
+                const hasBeenRead = hasBeenAcknowledged ? true : lightCard.hasBeenRead;
+                const updatedLightCard = {...lightCard, hasBeenAcknowledged: hasBeenAcknowledged, hasBeenRead: hasBeenRead};
+                this.store.dispatch(new UpdateALightCard({card: updatedLightCard}));
             });
     }
 

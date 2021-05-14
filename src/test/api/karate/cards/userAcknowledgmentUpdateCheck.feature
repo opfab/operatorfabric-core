@@ -41,7 +41,7 @@ Feature: CardsUserAcknowledgementUpdateCheck
     And match response.card.hasBeenAcknowledged == false
     And def uid = response.card.uid
 
-#make an acknoledgement to the card with operator1
+#make an acknowledgement to the card with operator1
     Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken
     And request ''

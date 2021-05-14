@@ -428,7 +428,7 @@ definitions:
           $ref: '#/definitions/TimeSpan'
       hasBeenAcknowledged:
         type: boolean
-        description: Is true if the card was acknoledged by current user
+        description: Is true if the card was acknowledged by current user
       hasBeenRead:
         type: boolean
         description: Is true if the card was read by current user  
