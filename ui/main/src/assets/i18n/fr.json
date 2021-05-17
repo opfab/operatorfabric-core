@@ -320,6 +320,7 @@
         "firstName": "Prénom",
         "groups": "Groupes",
         "entities": "Entités",
+        "authorizedIPAddresses": "Adresses IP autorisées",
         "confirmDelete": "Voulez-vous vraiment supprimer l'utilisateur",
         "add":"Ajouter un nouvel utilisateur"
       },
