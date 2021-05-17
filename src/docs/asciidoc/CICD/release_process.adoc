@@ -276,7 +276,7 @@ git branch -d X.X.X.release <1>
 ----
 <1> Delete the branch locally
 
-NOTE: The branch will automatically be deleted from GitHub after it is merged (new repository policy).
+NOTE: You should also delete the branch on GitHub.
 
 == Releasing a Patch (Hotfixes) Version
 
