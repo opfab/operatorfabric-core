@@ -99,19 +99,7 @@ project owner.
 
 === Technical Steering Committee
 
-The Technical Steering Committee (TSC) is composed of voting members elected by the active Committers as described in
-the project’s Technical Charter.
-
-OperatorFabric TSC voting members are:
-
-* link:https://github.com/freddidierRTE[Frédéric Didier]
-* link:https://github.com/0x62646f727465[Boris Dolley]
-* link:https://github.com/AlexGuironnetRTE[Alexandra Guironnet]
-* link:https://github.com/vlo-rte[Valérie Longa]
-* Floris van der Meulen
-* link:https://github.com/gtrimbach-RTE[Guillaume Trimbach]
-
-Boris Dolley will chair the TSC, with Alexandra Guironnet as his deputy.
+See the https://opfab.github.io/pages/tsc.html[dedicated page] for more details on the Technical Steering Committee (scheduled meetings, minutes of past meetings, etc.).
 
 === Contributors
 
@@ -139,10 +127,6 @@ Our website contains all the documentation and resources we're currently working
 *This documentation is our priority* right now so future contributors can quickly find their way around the project.
 Needless to say, it's a work in progress so feel free to tell us what you feel is missing or what type of documentation
 you would be interested in as a contributor.
-
-TIP: We also use this website to broadcast any news we have about the project so don't hesitate to subscribe to the
-RSS feed on the home page to be informed of any update.
-
 
 === LF Energy Mailing Lists
 
