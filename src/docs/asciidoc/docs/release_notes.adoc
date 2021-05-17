@@ -1,14 +1,59 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
+= Version 2.5.0.RELEASE
 
-= Version SNAPSHOT
+== Features
+* UserCard
+- OC-1584 : Permit to have a restricted list of recipients
+- OC-1682 : Let the possibility to have no recipient
 
-//The release notes are managed in an outside repository to avoid constantly having conflicts when merging PRs on the
-//develop branch. See https://github.com/opfab/release-notes/.
-//The content from this repository is then pasted back to this file during the release process.
+* Monitoring
+- OC-1692 : Monitoring screen - set text color for Process Status value
+- OC-1442 : Add the possibility to have a specific export format in monitoring
+ +
+See the https://opfab.github.io/documentation/current/docs/single_page_doc.html#_export_configuration[documentation] for details on how to configure it.
 
+* Tech
+- OC-1649 : New handlebars helper : replace character
+- OC-1648 : Add an option for control of IP address for user access (WIP)
+- OC-255, OC-1513 : Making the client library available in Maven Central
++
+Starting from this release, you can now pull the client library as a regular dependency rather than building the jar locally. The clientApp example is now relying on these published jars.
+
+* UI:
+- OC-1612 : Improve design for very small screen
+- OC-1653 : See on feed when there is a response form the entity of the user
+
+* Misc :
+- OC-1639 : Add option to use user perimeter to populate services/process/state list in archives/logging/monitoring/feedconfiguration
+- OC-1655 : Add representative concept when sending card
+
+== Bugs
+
+* OC-1673 : Editing a usercard : a wrong template is loaded at the beginning of display
+* OC-1684 : Bug in usercard preview when displaying a lot of recipients
+* OC-1704 : Correct bug when displaying feed on mobile phone
+* OC-1715 : Acknowledging a card shouldn't trigger sound
+
+== Tasks
+
+* OC-1659 : Refactoring DetailComponent for using functions of new UI service "ActionService"
+* OC-1646 : Change the response of the card creation endpoint
++
+IMPORTANT: Please see our https://opfab.github.io/documentation/current/docs/single_page_doc.html#_migration_guide_from_release_2_4_0_to_release_2_5_0[migration guide]
++
+* OC-1690 : Improve card detail view when state or process does not exist
+* OC-1619 : Remove "recipient" deprecated card field
++
+IMPORTANT: This deprecated field is now deleted, so please see our https://opfab.github.io/documentation/current/docs/single_page_doc.html#_migration_guide_from_release_2_4_0_to_release_2_5_0[migration guide]
++
+* OC-1693 : Add an option that waits for opfab to start in run_all.sh
+* OC-1577 : Documentation - add an example for routing card with perimeter
+* OC-1696 : Name and surname should not be mandatory in admin screen
+* OC-1670 : Deletion of ADMIN group should not be possible
+* OC-1702 : Upgrade to last version of chart.js

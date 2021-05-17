@@ -26,7 +26,7 @@ services:
       - "89:8080"
       - "90:9990"
   web-ui:
-    image: "lfeoperatorfabric/of-web-ui:SNAPSHOT"
+    image: "lfeoperatorfabric/of-web-ui:2.5.0.RELEASE"
     #user: ${USER_ID}:${USER_GID}
     ports:
       - "2002:80"
@@ -38,6 +38,6 @@ services:
       - "./nginx.conf:/etc/nginx/conf.d/default.conf"
       - "./loggingResults:/etc/nginx/html/logging"
   ext-app:
-    image: "lfeoperatorfabric/of-external-app:SNAPSHOT"
+    image: "lfeoperatorfabric/of-external-app:2.5.0.RELEASE"
     ports:
       - "8090:8090"
