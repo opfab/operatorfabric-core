@@ -321,6 +321,7 @@
         "firstName": "First name",
         "groups": "Groups",
         "entities": "Entities",
+        "authorizedIPAddresses": "Authorized IP addresses",
         "confirmDelete": "Do you really want to delete user",
         "add": "Add new user"
       },
