@@ -31,7 +31,8 @@
       <td translate >{{processStateDescription.get(element.process + '.' + element.state)}}
       </td>
 
-      <td>{{element.sender}}</td>
+      <td *ngIf="!element.representative.length; else representativeBlock">{{element.sender}}</td>
+      <ng-template #representativeBlock><td>{{element.sender}} ({{element.representative}})</td></ng-template>
       <td *ngIf="displayProcessGroupColumn" translate>{{ processesService.findProcessGroupLabelForProcess(element.process) }}</td>
     </tr>
   </table>

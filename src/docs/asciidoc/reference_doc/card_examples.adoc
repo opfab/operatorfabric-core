@@ -19,7 +19,7 @@ The following card contains only the mandatory attributes.
 
 ....
 {
-	"publisher":"Dispatcher",
+	"publisher":"TEST_PUBLISHER",
 	"processVersion":"0.1",
 	"process":"process",
 	"processInstanceId":"process-000",
@@ -33,7 +33,7 @@ The following card contains only the mandatory attributes.
 }
 ....
 
-This an information about the process instance `process-000` of process `process`, sent by `Dispatcher`. The title and the summary refer to `i18n` keys
+This an information about the process instance `process-000` of process `process`, sent by `TEST_PUBLISHER`. The title and the summary refer to `i18n` keys
 defined in the associated `i18n` files of the process. This card is displayable since the first january 2019 and
 should only be received by the user using the `operator1` login.
 
@@ -45,7 +45,7 @@ The following example is nearly the same as the previous one except for the reci
 
 ....
 {
-	"publisher":"Dispatcher",
+	"publisher":"TEST_PUBLISHER",
 	"processVersion":"0.1",
 	"process":"process",
 	"processInstanceId":"process-000",
@@ -61,6 +61,74 @@ The following example is nearly the same as the previous one except for the reci
 Here, the recipient is a group, the `Dispatcher`. So all users who are members of this group will receive the card.
 
 
+==== Simple case (sending to an entity)
+
+The following example is nearly the same as the previous one except for the recipient.
+
+....
+{
+	"publisher":"TEST_PUBLISHER",
+	"processVersion":"0.1",
+	"process":"process",
+	"processInstanceId":"process-000",
+	"state":"myState",
+	"startDate":1546297200000,
+	"severity":"INFORMATION",
+	"title":{"key":"card.title.key"},
+	"summary":{"key":"card.summary.key"},
+	"entityRecipients" : ["ENTITY1"]
+}
+....
+
+Here, the recipient is an entity, `ENTITY1`, and there is no group recipient anymore. So all users who have a receive right (`Receive` or `ReceiveAndWrite`) for the process/state of the card and who are members of this entity will receive the card. More information on perimeters can be found in
+ifdef::single-page-doc[<<'users_management,user documentation'>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#users_management, user documentation>>]
+
+Example :
+Given this perimeter :
+....
+{
+    "id" : "perimeter1",
+    "process" : "process",
+    "stateRights" : [
+        {
+            "state" : "myState",
+            "right" : "Receive"
+        },
+        {
+            "state" : "myState2",
+            "right" : "Write"
+        }
+    ]
+}
+....
+
+Given this group :
+....
+{
+    "id": "group1",
+    "name": "group number 1",
+    "description": "group number 1 for documentation example"
+}
+....
+
+Perimeters can only be linked to groups, so let's link the perimeter `perimeter1` to the group `group1`. You can do this with this command line for example ($token is your access token) :
+....
+curl -X PUT http://localhost:2103/perimeters/perimeter1/groups -H "Content-type:application/json" -H "Authorization:Bearer $token" --data "[\"group1\"]"
+....
+
+Then you can see `group1` is now :
+....
+{
+    "id": "group1",
+    "name": "group number 1",
+    "description": "group number 1 for documentation example",
+    "perimeters": ["perimeter1"]
+}
+....
+
+If the connected user is a member of `group1`, then he has a `Receive` right on process/state `process/myState`. So if the user is also a member of `ENTITY1` then he will receive the card.
+
 
 ==== Simple case (sending to a group and an entity)
 
@@ -68,7 +136,7 @@ The following example is nearly the same as the previous one except for the reci
 
 ....
 {
-	"publisher":"Dispatcher",
+	"publisher":"TEST_PUBLISHER",
 	"processVersion":"0.1",
 	"process":"process",
 	"processInstanceId":"process-000",
@@ -82,31 +150,10 @@ The following example is nearly the same as the previous one except for the reci
 }
 ....
 
-Here, the recipients are a group and an entity, the `Dispatcher` group and `ENTITY1` entity. So all users who are both members
-of this group and this entity will receive the card.
+Here, the recipients are a group and an entity, the `Dispatcher` group and `ENTITY1` entity. In this case, there are two possibilities to receive the card.
 
-==== Simple case (sending to an entity)
-
-The following example is nearly the same as the previous one except for the recipient.
-
-....
-{
-	"publisher":"Dispatcher",
-	"processVersion":"0.1",
-	"process":"process",
-	"processInstanceId":"process-000",
-	"state":"myState",
-	"startDate":1546297200000,
-	"severity":"INFORMATION",
-	"title":{"key":"card.title.key"},
-	"summary":{"key":"card.summary.key"},
-	"entityRecipients" : ["ENTITY1"]
-}
-....
-
-Here, the recipient is an entity and there is no more groups. So all users who has the right perimeter and who are members of this entity will receive the card. More information on perimeter can be found in 
-ifdef::single-page-doc[<<'users_management,user documentation'>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#users_management, user documentation>>]
+- First possibility : the user is both a member of this entity and a member of this group.
+- Second possibility : the user is a member of this entity and has a receive right (`Receive` or `ReceiveAndWrite`)  for the process/state of the card within his perimeters.
 
 
 ==== Complex case
@@ -130,20 +177,6 @@ Another example, if a card is destined to the operators of `Dispatcher` and `Pla
 ....
 
 
-There is and alternative way to declare recipients of card, this syntax is more complex and will be deprecated:
-
-....
-"recipient":{ 
-	"type":"UNION",
-	"recipients":[
-		{ "type": "GROUP", "identity":"Dispatcher"},
-		{ "type": "USER", "identity":"operator2"}
-		]
-	}
-....
-
-
-
 == Regular Card
 
 The previous cards were nearly empty regarding information carrying. In fact, cards are intended to contain more information than a title and a summary. The optional attribute `data` is here for that. This attribute is destined to contain any `json` object. The creator of the card is free to put any information needed as long as it's in a `json` format.
@@ -154,7 +187,7 @@ For this example we will use our previous example for the `Dispatcher` group wit
 
 ....
 {
-	"publisher":"Dispatcher",
+	"publisher":"TEST_PUBLISHER",
 	"processVersion":"0.1",
 	"process":"process",
 	"processInstanceId":"process-000",
@@ -204,7 +237,6 @@ At the card level, the attributes in the card telling OperatorFabric which templ
 ....
 
 So here a single custom data is defined and it's `rootProp`. This attribute is used by the template called by the `templateName` attribute.
-
 
 
 

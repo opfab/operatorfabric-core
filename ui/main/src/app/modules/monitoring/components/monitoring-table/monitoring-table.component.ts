@@ -14,7 +14,6 @@ import {TimeService} from '@ofServices/time.service';
 import {Moment} from 'moment-timezone';
 import {TranslateService} from '@ngx-translate/core';
 import {ExportService} from '@ofServices/export.service';
-
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {SelectLightCard} from '@ofActions/light-card.actions';
@@ -23,6 +22,10 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {ProcessesService} from "@ofServices/processes.service";
+import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
+import {JsonToArray} from 'app/common/jsontoarray/json-to-array';
+import {CardService} from '@ofServices/card.service';
+import {Process} from '@ofModel/processes.model';
 
 @Component({
     selector: 'of-monitoring-table',
@@ -35,6 +38,8 @@ export class MonitoringTableComponent implements OnDestroy {
     @Input() result: LineOfMonitoringResult[];
     @Input() displayProcessGroupColumn: boolean;
     exportMonitoringData: Array<any> = [];
+    jsonToArray : JsonToArray;
+    monitoringConfig: MonitoringConfig ; 
     unsubscribe$: Subject<void> = new Subject<void>();
     modalRef: NgbModalRef;
 
@@ -44,7 +49,9 @@ export class MonitoringTableComponent implements OnDestroy {
                 , private store: Store<AppState>
                 , private modalService: NgbModal
                 , private processesService: ProcessesService
+                , private cardService : CardService
     ) {
+        this.monitoringConfig = processesService.getMonitoringConfig();
     }
 
 
@@ -56,7 +63,7 @@ export class MonitoringTableComponent implements OnDestroy {
         return '';
     }
 
-    initExportMonitoringData(): void {
+    initStandardExportMonitoringData(): void {
 
         this.exportMonitoringData = [];
         let time: string, businessPeriod: string, processName: any, title: any, summary: any, status: any;
@@ -98,8 +105,51 @@ export class MonitoringTableComponent implements OnDestroy {
     }
 
     export(): void {
-        this.initExportMonitoringData();
-        ExportService.exportAsExcelFile(this.exportMonitoringData, 'Monitoring');
+        // if monitoring has a specific configuration 
+        if (this.monitoringConfig && this.monitoringConfig.export && this.monitoringConfig.export.fields ) {
+            this.jsonToArray = new JsonToArray(this.monitoringConfig.export.fields);
+            this.processMonitoringForExport(0);
+        }
+        // generic export 
+        else {
+            this.initStandardExportMonitoringData();
+            ExportService.exportJsonToExcelFile(this.exportMonitoringData, 'Monitoring');
+        }
+    }
+
+    processMonitoringForExport(lineNumber: number) {
+        if (lineNumber === this.result.length) ExportService.exportArrayToExcelFile(this.jsonToArray.getResultingArray(), 'Monitoring');
+        else {
+            this.cardService.loadCard(this.result[lineNumber].cardId).subscribe( card => {
+                this.jsonToArray.add(this.cardPreprocessingBeforeExport(card));
+                this.processMonitoringForExport(++lineNumber);
+            });
+        }
+    }
+
+    cardPreprocessingBeforeExport(card: any): any {
+        const prefix =  `${card.card.process}.${card.card.processVersion}`;
+        card.card.publishDate = this.displayTime(card.card.publishDate);
+        card.card.startDate = this.displayTime(card.card.startDate);
+        card.card.endDate = this.displayTime(card.card.endDate);
+        card.card.processGroup = this.translateValue(this.processesService.findProcessGroupLabelForProcess(card.card.process));
+        const process:Process = this.processesService.getProcess(card.card.process);
+        if (!!process) {
+                card.card.processName = this.translateValue(`${prefix}.${process.name}`);
+                const state = process.states[card.card.state];
+                if (!!state) card.card.typeOfState = this.translateValue('monitoring.filters.typeOfState.' + state.type);
+        }
+        card.card.title = this.translateValue(`${prefix}.${card.card.title.key}`, card.card.title.parameters);
+        card.card.summary =  this.translateValue(`${prefix}.${card.card.summary.key}`, card.card.summary.parameters);
+
+        card.childCards.forEach(childCard => {
+            childCard.publishDate = this.displayTime(childCard.publishDate);
+        });
+        return card;
+    }
+
+    translateValue(key: string, interpolateParams?: Object): any {
+        return this.translate.instant(key, interpolateParams); // we can use synchronous method as translation has already been load for UI before
     }
 
     translateColumn(key: string | Array<string>, interpolateParams?: Object): any {

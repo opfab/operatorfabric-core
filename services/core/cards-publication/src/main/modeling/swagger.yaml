@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: OperatorFabric Card Consumer Service
-  version: 2.4.0.RELEASE
+  version: 2.5.0.RELEASE
   title: Card Management API
   termsOfService: ''
   contact:
@@ -67,26 +67,6 @@ definitions:
       - COMPLIANT
       - INFORMATION
     example: INFORMATION
-  RecipientEnum:
-    type: string
-    description: >-
-      Recipient type >
-
-      * DEADEND - Card is sent to no one (mostly for testing purposes)
-
-      * GROUP - Card is sent to every user belonging to a group (identity)
-
-      * USER - Card is sent to a single user (identity)
-
-      * UNION - Card is sent to users according to the union of a recipient
-      list  (recipients)
-
-    enum:
-      - DEADEND
-      - GROUP
-      - USER
-      - UNION
-    example: GROUP
   I18n:
     type: object
     description: describes an i18n label
@@ -106,20 +86,6 @@ definitions:
       parameters:
         EN: My Title
         FR: Mon Titre
-  CardCreationReport:
-    type: object
-    properties:
-      count:
-        type: integer
-        description: Number of created cards
-      message:
-        type: string
-    required:
-      - count
-      - message
-    example:
-      count: 10
-      message: Cards successfully created.
   CardOperation:
     type: object
     description: >-
@@ -149,35 +115,6 @@ definitions:
       type: DELETE
       cardId:
         - 12345
-  Recipient:
-    description: Recipient object defines rules for recipient computation
-    type: object
-    properties:
-      type:
-        $ref: '#/definitions/RecipientEnum'
-        description: >-
-          Specifies the recipient type. Please note that DEADEND
-          do not expose any other properties
-      recipients:
-        type: array
-        items:
-          $ref: '#/definitions/Recipient'
-        description: >-
-          Used by UNION with multiple Recipients.
-      identity:
-        type: string
-        description: 'Used by USER, GROUP'
-    required:
-      - type
-    example:
-      type: UNION
-      recipients:
-        - type: GROUP
-          identity: myGroupA
-        - type: GROUP
-          identity: myGroupB
-        - type: USER
-          identity: aGivenUser
   TimeSpan:
     type: object
     description: An object to define a business time span
@@ -295,9 +232,6 @@ definitions:
       summary:
         description: Card i18n summary
         $ref: '#/definitions/I18n'
-      recipient:
-        description: Recipient computation rule
-        $ref: '#/definitions/Recipient'
       userRecipients:
         description: List of user recipients
         type: array
@@ -345,6 +279,11 @@ definitions:
         type: boolean
         description: Is true if the card was read by current user
       publisherType:
+        $ref: '#/definitions/PublisherTypeEnum'
+      representative:
+        type: string
+        description: Used in case of sending card as a representative of an entity or a publisher (unique ID of the entity or publisher)
+      representativeType:
         $ref: '#/definitions/PublisherTypeEnum'
       secondsBeforeTimeSpanForReminder:
         type: integer
@@ -397,15 +336,6 @@ definitions:
         parameters:
           EN: Summary of card content
           FR: Resume du contenu de la carte
-      recipient:
-        type: UNION
-        recipients:
-          - type: GROUP
-            identity: myGroupA
-          - type: GROUP
-            identity: myGroupB
-          - type: USER
-            identity: aGivenUser
   Subscription:
     type: object
     description: LightCard Subscription object
@@ -498,7 +428,7 @@ definitions:
           $ref: '#/definitions/TimeSpan'
       hasBeenAcknowledged:
         type: boolean
-        description: Is true if the card was acknoledged by current user
+        description: Is true if the card was acknowledged by current user
       hasBeenRead:
         type: boolean
         description: Is true if the card was read by current user  
@@ -509,6 +439,11 @@ definitions:
         type: string
         description: The uid of the initial parent card if it's a child card (optional). When a card is updated, its id is still the same but not its uid, that's why we store this field initialParentCardUid.
       publisherType:
+        $ref: '#/definitions/PublisherTypeEnum'
+      representative:
+        type: string
+        description: Used in case of sending card as a representative of an entity or a publisher (unique ID of the entity or publisher)
+      representativeType:
         $ref: '#/definitions/PublisherTypeEnum'
       secondsBeforeTimeSpanForReminder:
         type: integer
@@ -679,7 +614,7 @@ paths:
       tags:
         - card
         - creation
-      summary: publish cards
+      summary: publish card
       description: Publish one card to OperatorFabric 
       operationId: publishCard
       consumes:
@@ -692,8 +627,8 @@ paths:
       responses:
         '201':
           description: created
-          schema:
-            $ref: '#/definitions/CardCreationReport'
+        '400':
+          description: bad request
     delete:
       tags:
         - cards

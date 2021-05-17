@@ -36,6 +36,7 @@ import java.nio.file.Paths;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.opfab.test.AssertUtils.assertException;
 import static org.opfab.utilities.PathUtils.copy;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -220,7 +221,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
     @WithMockOpFabUser(login="nonAdminUser", roles = {"someRole"})
     class CreateContent {
         @Test
-        void create() throws Exception {
+        void notAllowBundleToBePost() throws Exception {
             Path pathToBundle = Paths.get("./build/test-data/bundles/second-2.1.tar.gz");
             MockMultipartFile bundle = new MockMultipartFile("file", "second-2.1.tar.gz", "application/gzip", Files
                     .readAllBytes(pathToBundle));
@@ -235,7 +236,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
         }
 
         @Test
-        void createProcessGroups() throws Exception {
+        void notAllowProcessGroupsToBePost() throws Exception {
             Path pathToProcessGroupsFile = Paths.get("./build/test-data/processgroups.json");
 
             MockMultipartFile processGroupsFile = new MockMultipartFile("file", "processgroups.json", MediaType.TEXT_PLAIN_VALUE, Files
@@ -250,7 +251,18 @@ class GivenNonAdminUserBusinessconfigControllerShould {
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.groups", hasSize(0)));
         }
-        
+
+        @Test
+        void notAllowMonitoringToBePosted() throws Exception {
+
+                mockMvc.perform(post("/businessconfig/monitoring").contentType(MediaType.APPLICATION_JSON)
+                                .content("{}")).andExpect(status().isForbidden());
+
+                mockMvc.perform(get("/businessconfig/monitoring")).andExpect(status().isOk())
+                                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(jsonPath("$.export.fields[0].columnName", is(notNullValue())));
+        }
+
         @Nested
         @WithMockOpFabUser(login="nonAdminUser", roles = {"someRole"})
         class DeleteOnlyOneProcess {

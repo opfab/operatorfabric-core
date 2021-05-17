@@ -24,6 +24,7 @@ CURRENT_PATH=$(pwd)
 resetConfiguration=true
 businessServices=( "users" "cards-consultation" "cards-publication" "businessconfig")
 offline=false
+waitForOpfabToStart=false
 
 function join_by { local IFS="$1"; shift; echo "$*"; }
 
@@ -37,6 +38,7 @@ function display_usage() {
 	echo -e "\t-s, --services\t: list of comma separated services. Business services to run. Defaults to " $(join_by ","  "${businessServices[@]}")
 	echo -e "\t-r, --reset\t: true or false. Resets service data. Defaults to $resetConfiguration."
 	echo -e "\t-o, --offline\t: true or false. When gradle is invoked, it will be invoked offline. Defaults to $offline.\n"
+  echo -e "\t-w, --waitForOpfabToStart\t: true or false , if true the script exits only when opfab is up. Defaults to false.\n"
 }
 
 while [[ $# -gt 0 ]]
@@ -58,6 +60,10 @@ case $key in
     offline="$2"
     shift # past argument
     shift # past value
+    ;;
+    -w|--waitForOpfabToStart)
+    waitForOpfabToStart=true
+    shift # past argument
     ;;
     -h|--help)
     display_usage
@@ -253,3 +259,9 @@ case $command in
   display_usage
   ;;
 esac
+
+if [ "$waitForOpfabToStart" = true ]; then
+    if [ $command = "start" ] || [ $command = "restart" ]; then 
+      ./bin/waitForOpfabToStart.sh
+    fi
+fi

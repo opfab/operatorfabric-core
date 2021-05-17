@@ -138,7 +138,6 @@ Feature: UserCards tests
     And request card
     When method post
     Then status 201
-    And match response.count == 1
 
 
 #get card with user operator1
@@ -206,7 +205,6 @@ Feature: UserCards tests
     And request card
     When method post
     Then status 201
-    And match response.count == 1
 
 
 #get card with user operator1
@@ -239,8 +237,7 @@ Feature: UserCards tests
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card
     When method post
-    Then status 201
-    And match response.count != 1
+    Then status 403
 
 
 
@@ -255,7 +252,6 @@ Feature: UserCards tests
     And request card
     When method post
     Then status 201
-    And match response.count == 1
 
 
   Scenario: We update the parent card (which id is : initial.initialCardProcess, with keepChildCards=true), then we check that child card was not deleted
@@ -294,7 +290,6 @@ Feature: UserCards tests
     And request card
     When method post
     Then status 201
-    And match response.count == 1
 
 # verify that child card was not deleted after parent card update
     Given url opfabUrl + 'cards/cards/process_2.process_o'
@@ -338,7 +333,6 @@ Feature: UserCards tests
     And request card
     When method post
     Then status 201
-    And match response.count == 1
 
 # verify that child card was deleted after parent card update
     Given url opfabUrl + 'cards/cards/process_2.process_o'
@@ -390,7 +384,6 @@ Feature: UserCards tests
     And request childCard1
     When method post
     Then status 201
-    And match response.count == 1
 
 # We check that the child card exists (childCard1)
     Given url opfabUrl + 'cards/cards/process_1.process_id_4'
@@ -428,7 +421,6 @@ Feature: UserCards tests
     And request childCard2
     When method post
     Then status 201
-    And match response.count == 1
 
 # We check that the child card exists (childCard2)
     Given url opfabUrl + 'cards/cards/process_1.process_id_5'

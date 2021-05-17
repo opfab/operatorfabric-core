@@ -69,9 +69,19 @@ export class UserCard {
         readonly startDateVisible?: boolean,
         readonly endDateVisible?: boolean,
         readonly lttdVisible?: boolean,
+        readonly recipientList?: Recipient[]
     ) {
     }
 }
+
+export class Recipient {
+    constructor(
+        readonly id: string,
+        readonly levels?: number[]
+    ) {
+    }
+}
+
 export class Response {
     /* istanbul ignore next */
     constructor(

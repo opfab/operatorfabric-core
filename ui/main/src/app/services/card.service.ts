@@ -29,8 +29,7 @@ import {I18n} from '@ofModel/i18n.model';
 import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
 import {
     AddLightCardFailure,
-    HandleUnexpectedError,
-    LoadLightCardsSuccess,
+    LoadLightCard,
     RemoveLightCard
 } from '@ofActions/light-card.actions';
 import {EntitiesService} from '@ofServices/entities.service';
@@ -80,11 +79,11 @@ export class CardService {
                     switch (operation.type) {
                         case CardOperationType.ADD:
                             console.log(new Date().toISOString(), `CardService - Receive card to add id=`, operation.card.id);
-                            this.store.dispatch(new LoadLightCardsSuccess({lightCards: [operation.card]}));
+                            this.store.dispatch(new LoadLightCard({lightCard: operation.card}));
                             break;
                         case CardOperationType.DELETE:
                             console.log(new Date().toISOString(), `CardService - Receive card to delete id=`, operation.cardId);
-                            this.store.dispatch(new RemoveLightCard({cards: [operation.cardId]}));
+                            this.store.dispatch(new RemoveLightCard({card: operation.cardId}));
                             break;
                         default:
                             this.store.dispatch(new AddLightCardFailure(
@@ -98,7 +97,6 @@ export class CardService {
             );
         catchError((error, caught) => {
             console.error('CardService - Global  error in subscription ', error);
-            this.store.dispatch(new HandleUnexpectedError({error: error}));
             return caught;
         });
     }
@@ -231,7 +229,7 @@ export class CardService {
     }
 
     postCard(card: CardForPublishing): any {
-        return this.httpClient.post<CardForPublishing>(`${this.cardsPubUrl}/userCard`, card);
+        return this.httpClient.post<CardForPublishing>(`${this.cardsPubUrl}/userCard`, card, {observe: 'response'});
     }
 
     deleteCard(card: Card): Observable<HttpResponse<void>> {
@@ -253,10 +251,19 @@ export class CardService {
                 const cards = page.content;
                 const lines = cards.map((card: LightCard) => {
                     const i18nPrefix = `${card.process}.${card.processVersion}.`;
+
                     const publisherType = card.publisherType;
                     const enumThirdParty = PublisherType.EXTERNAL;
                     const isThirdPartyPublisher = enumThirdParty === PublisherType[publisherType];
                     const sender = (isThirdPartyPublisher) ? card.publisher : this.entitiesService.getEntityName(card.publisher);
+
+                    let representative = '';
+                    if (!!card.representativeType && !!card.representative) {
+                        const representativeType = card.representativeType;
+                        const isThirdPartyRepresentative = enumThirdParty === PublisherType[representativeType];
+                        representative = (isThirdPartyRepresentative) ? card.representative : this.entitiesService.getEntityName(card.representative);
+                    }
+
                     return ({
                         process: card.process,
                         processVersion: card.processVersion,
@@ -265,7 +272,8 @@ export class CardService {
                         businessDate: moment(card.publishDate),
                         i18nKeyForTitle: this.addPrefix(i18nPrefix, card.title),
                         i18nKeyForSummary: this.addPrefix(i18nPrefix, card.summary),
-                        sender: sender
+                        sender: sender,
+                        representative: representative
                     } as LineOfLoggingResult);
                 });
                 return {

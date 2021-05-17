@@ -24,7 +24,7 @@ To start OperatorFabric, you first need to clone the getting started git
 ----
 git clone https://github.com/opfab/operatorfabric-getting-started.git
 ----
-Launch the `startserver.sh` in the server directory. You need to wait for all the services to start (it usually takes one minute to start), it is done when no more logs are written on the output (It could continue to log but slowly).
+Launch the `startserver.sh` in the server directory. You need to wait for all the services to start (it usually takes one minute to start), it is done when the console prompt is available again.
 
 Test the connection to the UI: to connect to OperatorFabric, open in a browser the following page: http://localhost:2002/ui/ and use `operator1` as login and `test` as password.
 
@@ -52,12 +52,7 @@ Go in directory `client/example1` and send a card, using the provided script :
 ./sendCard.sh card.json 
 ----
 
-The result should be a 201 Http status, and a json object such as:
-
-[source,JSON]
-----
-{"count":1,"message":"All pushedCards were successfully handled"}
-----
+The result should be a 201 Http status.
 
 See the result in the UI, you should see a card, if you click on it you'll see the detail
 
@@ -250,7 +245,7 @@ You should received the following JSON in response, describing your bundle.
 
 [source,JSON]
 ----
-{"id":"defaultProcess","name":null,"version":"2","uiVisibility":null,"states":{"messageState":{"responseData":null,"acknowledgementAllowed":true,"color":null,"name":null,"userCard":null,"templateName":"template","styles":["style"],"acknowledgmentAllowed":true,"response":null}}}
+{"id":"defaultProcess","name":"process.name","version":"2","states":{"messageState":{"responseData":null,"acknowledgmentAllowed":"Always","color":null,"name":null,"description":null,"showDetailCardHeader":null,"userCard":null,"templateName":"template","styles":["style"],"type":null,"response":null}},"uiVisibility":null}
 ----
 
 ==== Send a card 
@@ -415,9 +410,11 @@ To view the card in the time line, you need to set times in the card using timeS
 	"summary" : {"key" : "maintenanceProcess.summary"},
 	"title" : {"key" : "maintenanceProcess.title"},
 	"data" : {
-		"operationDescription":"Maintenance operation on the International France England (IFA) Hight Voltage line ",
+		"operationDescription":"Maintenance operation on the International France England (IFA) High Voltage line ",
 		"operationResponsible":"RTE",
 		"contactPoint":"By Phone : +33 1 23 45 67 89 ",
+		"operationStartingTime":"Wed 11 dec 2019 8pm",
+		"operationEndTime":"Thu 12 dec 2019 10am",
 		"comment":"Operation has no impact on service"
 		},
 	"timeSpans" : [
@@ -495,12 +492,7 @@ Use the provided script :
 ./sendCard.sh cardSentToEntity.json
 ----
 
-The result should be a 201 Http status, and a json object such as:
-
-[source,JSON]
-----
-{"count":1,"message":"All pushedCards were successfully handled"}
-----
+The result should be a 201 Http status.
 
 See the result in the UI, you should not see the card.
 
@@ -532,7 +524,7 @@ The result should be a 201 Http status, and a json object such as:
 
 [source,JSON]
 ----
-{"id":"getting-startedPerimeter","process":"defaultProcess","stateRights":[{"state":"messageState1","right":"Receive"},{"state":"messageState2","right":"ReceiveAndWrite"}]}
+{"id":"getting-startedPerimeter","process":"defaultProcess","stateRights":[{"state":"messageState","right":"Receive"}]}
 ----
 
 Now let's attach this perimeter to the Dispatcher group.
@@ -580,12 +572,7 @@ Use the provided script :
 ./sendCard.sh cardSentToEntityAndGroup_1.json
 ----
 
-The result should be a 201 Http status, and a json object such as:
-
-[source,JSON]
-----
-{"count":1,"message":"All pushedCards were successfully handled"}
-----
+The result should be a 201 Http status.
 
 See the result in the UI, you should see the card.
 
@@ -617,12 +604,7 @@ Use the provided script :
 ./sendCard.sh cardSentToEntityAndGroup_2.json
 ----
 
-The result should be a 201 Http status, and a json object such as:
-
-[source,JSON]
-----
-{"count":1,"message":"All pushedCards were successfully handled"}
-----
+The result should be a 201 Http status.
 
 See the result in the UI, you should see the card.
 

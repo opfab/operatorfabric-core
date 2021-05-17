@@ -8,20 +8,21 @@
  */
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {ConfigService} from "@ofServices/config.service";
-import {Card} from "@ofModel/card.model";
-import {LightCard} from "@ofModel/light-card.model";
-import {FormGroup} from "@angular/forms";
-import {ProcessesService} from "@ofServices/processes.service";
-import {takeUntil} from "rxjs/operators";
-import {Observable, Subject} from "rxjs";
-import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
-import {Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
-import {TranslateService} from "@ngx-translate/core";
-import {TimeService} from "@ofServices/time.service";
-import {NgbDateStruct, NgbTimeStruct} from "@ng-bootstrap/ng-bootstrap";
-import {DateTimeNgb} from "@ofModel/datetime-ngb.model";
+import {ConfigService} from '@ofServices/config.service';
+import {Card} from '@ofModel/card.model';
+import {LightCard} from '@ofModel/light-card.model';
+import {FormGroup} from '@angular/forms';
+import {ProcessesService} from '@ofServices/processes.service';
+import {takeUntil} from 'rxjs/operators';
+import {Observable, Subject} from 'rxjs';
+import {buildSettingsOrConfigSelector} from '@ofSelectors/settings.x.config.selectors';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {TranslateService} from '@ngx-translate/core';
+import {TimeService} from '@ofServices/time.service';
+import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
+import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
+import {UserService} from '@ofServices/user.service';
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -71,16 +72,19 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
 
     statesDropdownListPerProcesses = new Map();
     processesGroups: {id: string, processes: string[]}[];
+    checkPerimeterForSearchFields: boolean;
 
     constructor(private store: Store<AppState>,
                 private translate: TranslateService,
                 private configService: ConfigService,
                 private timeService: TimeService,
-                private processesService: ProcessesService) {
+                private processesService: ProcessesService,
+                private userService: UserService) {
     }
 
     ngOnInit() {
         this.tags = this.configService.getConfigValue('archive.filters.tags.list');
+        this.checkPerimeterForSearchFields = this.configService.getConfigValue('checkPerimeterForSearchFields', false);
         this.processesGroups = this.processesService.getProcessGroups();
 
         this.processesService.getAllProcesses().forEach((process) => {
@@ -98,35 +102,35 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
             this.tags.forEach(tag => this.tagsDropdownList.push({ id: tag.value, itemName: tag.label }));
         }
 
-        this.loadProcessGroupDropdownListAndProcessesDropdownList();
         this.loadAllStatesPerProcesses();
+        this.loadProcessGroupDropdownListAndProcessesDropdownList();
 
         this.getLocale().pipe(takeUntil(this.unsubscribe$)).subscribe(locale => {
             this.translate.use(locale);
-            this.translate.get(['filters.selectProcessGroupText','filters.selectProcessText','filters.selectStateText',
+            this.translate.get(['filters.selectProcessGroupText', 'filters.selectProcessText', 'filters.selectStateText',
                 'filters.selectTagText'])
                 .subscribe(translations => {
                     this.processGroupDropdownSettings = {
                         text: translations['filters.selectProcessGroupText'],
                         badgeShowLimit: 1,
                         enableSearchFilter: true
-                    }
+                    };
                     this.processDropdownSettings = {
                         text: translations['filters.selectProcessText'],
                         badgeShowLimit: 1,
                         enableSearchFilter: true
-                    }
+                    };
                     this.stateDropdownSettings = {
                         text: translations['filters.selectStateText'],
                         badgeShowLimit: 1,
                         enableSearchFilter: true
-                    }
+                    };
                     this.tagsDropdownSettings = {
                         text: translations['filters.selectTagText'],
                         badgeShowLimit: 1,
                         enableSearchFilter: true
                     };
-                })
+                });
         });
 
         this.changeProcessesWhenSelectProcessGroup();
@@ -138,17 +142,33 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
         this.processesDropdownListPerProcessGroups = this.processesService.getProcessesPerProcessGroups();
         this.processesWithoutProcessGroupDropdownList = this.processesService.getProcessesWithoutProcessGroup();
 
+        if (this.checkPerimeterForSearchFields)
+            this.filterProcessesWithStatesWithReceiveRights();
+
         if (this.processesWithoutProcessGroupDropdownList.length > 0)
-            this.processGroupDropdownList.push({ id: '--', itemName: "processGroup.defaultLabel" });
+            this.processGroupDropdownList.push({ id: '--', itemName: 'processGroup.defaultLabel' });
 
         const processGroups = Array.from(this.processesDropdownListPerProcessGroups.keys());
         processGroups.forEach(processGroup => this.processGroupDropdownList.push({ id: processGroup, itemName: processGroup }));
     }
 
+    private filterProcessesWithStatesWithReceiveRights(): void {
+        this.processesWithoutProcessGroupDropdownList = this.processesWithoutProcessGroupDropdownList.filter(processData =>
+            !!this.statesDropdownListPerProcesses.get(processData.id));
+
+        this.processesDropdownListPerProcessGroups.forEach((processList, processGroupId) => {
+            processList = processList.filter(processData => !!this.statesDropdownListPerProcesses.get(processData.id));
+            if (! processList.length)
+                this.processesDropdownListPerProcessGroups.delete(processGroupId);
+            else
+                this.processesDropdownListPerProcessGroups.set(processGroupId, processList);
+        });
+    }
+
     /**
      * Transforms the filters list to Map
      */
-    filtersToMap = (filters: any) : void => {
+    filtersToMap = (filters: any): void => {
         this.filters = new Map();
         Object.keys(filters).forEach(key => {
             const element = filters[key];
@@ -159,9 +179,9 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
                 else {
                     if (element.length) {
                         const ids = [];
-                        if (key == 'state')
+                        if (key === 'state')
                             this.stateFilterToMap(element);
-                        else if (key == 'processGroup')
+                        else if (key === 'processGroup')
                             this.processGroupFilterToMap(element);
                         else {
                             element.forEach(val => ids.push(val.id));
@@ -192,10 +212,10 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
         const ids = [];
 
         element.forEach(processGroup => {
-            if (processGroup.id == '--')
-                this.processesWithoutProcessGroupDropdownList.forEach(process => ids.push(process.id))
+            if (processGroup.id === '--')
+                this.processesWithoutProcessGroupDropdownList.forEach(process => ids.push(process.id));
             else
-                this.processesDropdownListPerProcessGroups.get(processGroup.id).forEach(process => ids.push(process.id))
+                this.processesDropdownListPerProcessGroups.get(processGroup.id).forEach(process => ids.push(process.id));
         });
 
         if (!this.filters.get('process'))
@@ -219,13 +239,12 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
                 this.processDropdownListWhenSelectedProcessGroup = [];
                 selectedProcessGroups.forEach(processGroup => {
 
-                    if (processGroup.id == '--')
+                    if (processGroup.id === '--')
                         this.addProcessesDropdownList(this.processesWithoutProcessGroupDropdownList);
                     else
                         this.addProcessesDropdownList(this.processesDropdownListPerProcessGroups.get(processGroup.id));
                 });
-            }
-            else
+            } else
                 this.processDropdownListWhenSelectedProcessGroup = [];
         });
     }
@@ -238,8 +257,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
                 selectedProcesses.forEach(process =>
                     this.addStatesDropdownList(this.statesDropdownListPerProcesses.get(process.id))
                 );
-            }
-            else
+            } else
                 this.stateDropdownListWhenSelectedProcess = [];
         });
     }
@@ -247,15 +265,28 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     loadAllStatesPerProcesses(): void {
         this.processesService.getAllProcesses().forEach(process => {
 
-            let statesDropdownList = [];
-            for (let state in process.states)
-                statesDropdownList.push({id: process.id + '.' + state, itemName: process.states[state].name, i18nPrefix: `${process.id}.${process.version}`});
-            this.statesDropdownListPerProcesses.set(process.id, statesDropdownList);
+            const statesDropdownList = [];
+            for (const state in process.states) {
+
+                if ((!this.checkPerimeterForSearchFields) || this.userService.isReceiveRightsForProcessAndState(process.id, state)) {
+                    statesDropdownList.push({
+                        id: process.id + '.' + state,
+                        itemName: process.states[state].name,
+                        i18nPrefix: `${process.id}.${process.version}`
+                    });
+                }
+            }
+            if (statesDropdownList.length)
+                this.statesDropdownListPerProcesses.set(process.id, statesDropdownList);
         });
     }
 
     displayProcessGroupFilter() {
         return !!this.processGroupDropdownList && this.processGroupDropdownList.length > 1 ;
+    }
+
+    isThereProcessGroup(): boolean {
+        return !!this.processesGroups && this.processesGroups.length > 0;
     }
 
     protected getLocale(): Observable<string> {

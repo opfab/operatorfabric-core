@@ -52,7 +52,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
     @ViewChild('filters') filtersTemplate: ArchivesLoggingFiltersComponent;
     selectedCard: Card;
-    fromEntitySelectedCard = null;
+    fromEntityOrRepresentativeSelectedCard = null;
 
     constructor(private store: Store<AppState>,
                 private processesService: ProcessesService,
@@ -159,7 +159,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                             });
                     }
                 });
-                ExportService.exportAsExcelFile(exportArchiveData, 'Archive');
+                ExportService.exportJsonToExcelFile(exportArchiveData, 'Archive');
             });
     }
 
@@ -190,10 +190,18 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         );
     }
 
-    private computeFromEntity()
-    {
-        if (this.selectedCard.publisherType === 'ENTITY' )  this.fromEntitySelectedCard = this.entitiesService.getEntityName(this.selectedCard.publisher);
-        else this.fromEntitySelectedCard = null;
+    private computeFromEntity() {
+        if (this.selectedCard.publisherType === 'ENTITY') {
+            this.fromEntityOrRepresentativeSelectedCard = this.entitiesService.getEntityName(this.selectedCard.publisher);
+
+            if (!!this.selectedCard.representativeType && !!this.selectedCard.representative) {
+                const representative = this.selectedCard.representativeType === 'ENTITY' ?
+                    this.entitiesService.getEntityName(this.selectedCard.representative) : this.selectedCard.representative;
+
+                this.fromEntityOrRepresentativeSelectedCard += ' (' + representative + ')';
+            }
+        } else
+            this.fromEntityOrRepresentativeSelectedCard = null;
     }
 
     getFormattedPublishDate(): any {

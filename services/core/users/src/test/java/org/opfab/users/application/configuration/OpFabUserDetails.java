@@ -35,6 +35,7 @@ public class OpFabUserDetails implements UserDetails, User {
     private String lastName = null;
     private List<String> groups = null;
     private List<String> entities = null;
+    private List<String> authorizedIPAddresses = null;
 
     /**
      * Creates Authority list from user's groups (ROLE_[group name])
@@ -177,5 +178,16 @@ public class OpFabUserDetails implements UserDetails, User {
     @Override
     public void setEntities(List<String> entities) {
         this.entities = entities;
+    }
+
+    @Override
+    public List<String> getAuthorizedIPAddresses() {
+        return authorizedIPAddresses;
+    }
+
+    @Override
+    public void setAuthorizedIPAddresses(List<String> authorizedIPAddresses) {
+        this.authorizedIPAddresses = authorizedIPAddresses;
+        
     }
 }

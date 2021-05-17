@@ -24,5 +24,10 @@ describe ('LoginPage',()=>{
 
         //Check that the browser has been redirected to the feed page
         cy.hash().should('eq', '#/feed')
+
+        //Basic check that we got past the login page
+        cy.get('of-navbar').should('exist');
+        // TODO Check other things of the general feed layout: navbar should have at least one item, etc.
+
     })
 })

@@ -139,9 +139,10 @@ export class AppComponent implements OnInit {
             this.entitiesService.loadAllEntitiesData(),
             this.processesService.loadAllProcesses(),
             this.processesService.loadProcessGroups(),
+            this.processesService.loadMonitoringConfig(),
             this.processesService.areTranslationsLoaded(),
             this.cardService.initSubscription)
-            .pipe(skip(5)) // Need to wait for all initialization to complete before loading main components of the application
+            .pipe(skip(6)) // Need to wait for all initialization to complete before loading main components of the application
             .subscribe(() => {
               this.loaded = true;
               this.reminderService.startService(identifier);

@@ -53,11 +53,16 @@ export class AcknowledgeService {
     }
 
     updateAcknowledgementOnLightCard(lightCard: LightCard, hasBeenAcknowledged: boolean) {
-        const updatedLightCard = {...lightCard, hasBeenAcknowledged: hasBeenAcknowledged};
+        // If the card has been acknowledged, set it as read as well otherwise leave it as is.
+        // This is to prevent firing two updates, one for the ack and one for the read, which messed with sounds
+        const hasBeenRead = hasBeenAcknowledged ? true : lightCard.hasBeenRead;
+        const updatedLightCard = {...lightCard, hasBeenAcknowledged: hasBeenAcknowledged, hasBeenRead: hasBeenRead};
         this.store.dispatch(new UpdateALightCard({card: updatedLightCard}));
     }
 
     isAcknowledgmentAllowed(user: UserWithPerimeters, card: Card|LightCard, processDefinition: Process): boolean {
+
+        if (!processDefinition) return true;
         const state = Process.prototype.extractState.call(processDefinition, card);
 
         if (!! state) {
@@ -65,7 +70,8 @@ export class AcknowledgeService {
                 return false;
             if (state.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS)
                 return true;
+            return !this.actionService.isUserEnabledToRespond(user, card, processDefinition);
         }
-        return ! this.actionService.isUserEnabledToRespond(user, card, processDefinition);
+        return true;
     }
 }

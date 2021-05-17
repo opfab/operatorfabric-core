@@ -78,6 +78,9 @@ public class LightCardPublicationData implements LightCard {
 
     private PublisherTypeEnum publisherType;
 
+    private String representative;
+    private PublisherTypeEnum representativeType;
+
     private Integer  secondsBeforeTimeSpanForReminder;
 
     /**

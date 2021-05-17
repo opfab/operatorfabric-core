@@ -18,7 +18,6 @@ import org.opfab.cards.model.SeverityEnum;
 import org.opfab.cards.publication.kafka.CardObjectMapper;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.model.I18nPublicationData;
-import org.opfab.cards.publication.model.RecipientPublicationData;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
@@ -29,7 +28,6 @@ import java.time.Instant;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.nullValue;
-import static org.opfab.cards.model.RecipientEnum.DEADEND;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -68,7 +66,6 @@ class CardCommandFactoryShould {
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .process("process5")
                 .state("state5")
                 .build();

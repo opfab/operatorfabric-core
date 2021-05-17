@@ -52,7 +52,7 @@ Each `menu entry` declares the attributes listed below:
 
 In following example, the configuration file declares two additional business menus.
 The first has only one entry, the second has two entries.
-The sample contain also the i18n translations in english and in french.
+The sample also contains the i18n translations in English and in French.
 
 [source, json]
 ----
@@ -115,16 +115,16 @@ The sample contain also the i18n translations in english and in french.
       "i18n": {
         "menu1": {
           "entry": {
-            "single": "Unique menu entry"
+            "single": "Premier élément"
           }
         },
         "menu2": {
           "title": {
-            "multi": "Deuxieme menu"
+            "multi": "Deuxième menu"
           },
           "entry": {
-            "entry1": "Premiere menu entry",
-            "entry2": "Deuxieme menu entry"
+            "entry1": "Premier élément",
+            "entry2": "Deuxième élément"
           }
         }
       }

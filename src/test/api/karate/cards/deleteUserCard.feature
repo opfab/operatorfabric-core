@@ -221,7 +221,6 @@ Feature: deleteUserCards tests
   And request cardForDeleteOk
   When method post
   Then status 201
-  And match response.count == 1
 
 
 # Push cardForDeleteForbidden1
@@ -229,7 +228,6 @@ Feature: deleteUserCards tests
   And request cardForDeleteForbidden1
   When method post
   Then status 201
-  And match response.count == 1
 
 # Push cardForDeleteForbidden2
    Given url opfabPublishCardUrl + 'cards/userCard'
@@ -237,7 +235,6 @@ Feature: deleteUserCards tests
    And request cardForDeleteForbidden2
    When method post
    Then status 201
-   And match response.count == 1
 
 
 # Push cardForDeleteForbidden3
@@ -246,7 +243,6 @@ Feature: deleteUserCards tests
    And request cardForDeleteForbidden3
    When method post
    Then status 201
-   And match response.count == 1
 
 
   Scenario: delete user card with no authentication, expected response 401

@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: OperatorFabric User Management API
-  version: 2.4.0.RELEASE
+  version: 2.5.0.RELEASE
   title: User Management
   termsOfService: ''
   contact:
@@ -54,6 +54,11 @@ definitions:
           type: string
           uniqueItems: true
       entities:
+        type: array
+        items:
+          type: string
+          uniqueItems: true
+      authorizedIPAddresses:
         type: array
         items:
           type: string

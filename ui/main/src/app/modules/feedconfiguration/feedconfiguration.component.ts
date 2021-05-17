@@ -22,6 +22,7 @@ import {CardService} from '@ofServices/card.service';
 import {EmptyLightCards} from '@ofActions/light-card.actions';
 import {TranslateService} from '@ngx-translate/core';
 import {Utilities} from '../../common/utilities';
+import {ConfigService} from '@ofServices/config.service';
 
 
 @Component({
@@ -34,6 +35,7 @@ export class FeedconfigurationComponent implements OnInit {
     feedConfigurationForm: FormGroup;
 
     processesDefinition: Process[];
+    checkPerimeterForSearchFields: boolean;
     processGroupsAndLabels: { groupId: string,
                               groupLabel: string,
                               processes:
@@ -48,7 +50,8 @@ export class FeedconfigurationComponent implements OnInit {
     currentUserWithPerimeters: UserWithPerimeters;
     processesStatesLabels: Map<string, { processLabel: string,
                                          states:
-                                             { stateLabel: string,
+                                             { stateId: string,
+                                               stateLabel: string,
                                                stateControlIndex: number
                                              } []
                                        } >;
@@ -68,14 +71,10 @@ export class FeedconfigurationComponent implements OnInit {
                 private modalService: NgbModal,
                 private settingsService: SettingsService,
                 private cardService: CardService,
-                private translateService: TranslateService
+                private translateService: TranslateService,
+                private configService: ConfigService
     ) {
-        this.processesStatesLabels = new Map<string, {processLabel: string,
-            states:
-                { stateLabel: string,
-                    stateControlIndex: number
-                }[]
-        }> ();
+        this.processesStatesLabels = new Map();
         this.preparedListOfProcessesStates = [];
         this.processesWithoutGroup = [];
         this.processesDefinition = this.processesService.getAllProcesses();
@@ -88,7 +87,7 @@ export class FeedconfigurationComponent implements OnInit {
 
     private findInProcessGroups(processIdToFind: string): boolean {
         for (const processGroup of this.processGroupsAndLabels.values()) {
-            if (processGroup.processes.find(process => process.processId == processIdToFind))
+            if (processGroup.processes.find(process => process.processId === processIdToFind))
                 return true;
         }
         return false;
@@ -132,31 +131,46 @@ export class FeedconfigurationComponent implements OnInit {
 
             for (const process of this.processesDefinition) {
 
-                const statesArray: { stateLabel: string, stateControlIndex: number }[]
-                    = new Array<{stateLabel: string, stateControlIndex: number}>();
+                const states: { stateId: string, stateLabel: string, stateControlIndex: number }[] = [];
 
-                let processLabel = (!!process.name) ? Utilities.getI18nPrefixFromProcess(process) + process.name :
-                    Utilities.getI18nPrefixFromProcess(process) + process.id;
+                let processLabel = this.computeI18n(process, process.name, process.id);
                 this.translateService.get(processLabel).subscribe(translate => { processLabel = translate; });
 
-                for (const key in process.states) {
-                    const value = process.states[key];
-                    let stateLabel = (!!value.name) ? Utilities.getI18nPrefixFromProcess(process) + value.name :
-                        Utilities.getI18nPrefixFromProcess(process) + key;
+                for (const stateId of Object.keys(process.states)) {
+                    const state = process.states[stateId];
 
-                    this.translateService.get(stateLabel).subscribe(translate => { stateLabel = translate; });
+                    if ((!this.checkPerimeterForSearchFields) || this.userService.isReceiveRightsForProcessAndState(process.id, stateId)) {
+                        let stateLabel = this.computeI18n(process, state.name, stateId);
+                        this.translateService.get(stateLabel).subscribe(translate => { stateLabel = translate; });
 
-                    statesArray.push({stateLabel: stateLabel, stateControlIndex: stateControlIndex});
-                    this.preparedListOfProcessesStates.push({
-                        processId: process.id,
-                        stateId: key});
-                    stateControlIndex++;
+                        states.push({stateId, stateLabel, stateControlIndex});
+                        this.preparedListOfProcessesStates.push({processId: process.id, stateId});
+                        stateControlIndex++;
+                    }
                 }
-                statesArray.sort((obj1, obj2) => this.compareObj(obj1.stateLabel, obj2.stateLabel));
-                this.processesStatesLabels.set(process.id, {processLabel: processLabel,
-                    states: statesArray});
+                if (states.length) {
+                    states.sort((obj1, obj2) => this.compareObj(obj1.stateLabel, obj2.stateLabel));
+                    this.processesStatesLabels.set(process.id, {processLabel, states});
+                }
             }
         }
+    }
+
+    computeI18n(process: Process, dataToFind: string, defaultValue: string): string {
+        return Utilities.getI18nPrefixFromProcess(process) + ((!! dataToFind) ? dataToFind : defaultValue);
+    }
+
+    /** cleaning of the two arrays : processGroupsAndLabels and processesWithoutGroup
+     * processGroupsAndLabels : we don't display process which doesn't have any state with Receive right
+     *                          and we don't display process group which doesn't have any process
+     * processesWithoutGroup : we don't display process which doesn't have any state with Receive or ReceiveAndWrite right*/
+    private removeProcessesWithoutStatesWithReceiveRights() {
+        this.processGroupsAndLabels.forEach((processGroupData, index) => {
+            processGroupData.processes = processGroupData.processes.filter(processData => !! this.processesStatesLabels.get(processData.processId));
+            if (processGroupData.processes.length === 0)
+                this.processGroupsAndLabels.splice(index, 1);
+        });
+        this.processesWithoutGroup = this.processesWithoutGroup.filter(processData => !! this.processesStatesLabels.get(processData.idProcess));
     }
 
     private initForm() {
@@ -166,6 +180,7 @@ export class FeedconfigurationComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.checkPerimeterForSearchFields = this.configService.getConfigValue('checkPerimeterForSearchFields', false);
         this.userService.currentUserWithPerimeters().subscribe(result => {
             this.currentUserWithPerimeters = result;
 
@@ -179,6 +194,8 @@ export class FeedconfigurationComponent implements OnInit {
             this.computePreparedListOfProcessesStatesAndProcessesStatesLabels();
             this.makeProcessesWithoutGroup();
             this.addCheckboxesInFormArray();
+            if (this.checkPerimeterForSearchFields)
+                this.removeProcessesWithoutStatesWithReceiveRights();
         });
     }
 

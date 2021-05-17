@@ -25,7 +25,7 @@ import {Card, CardForPublishing} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../../services/handlebars.service';
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
-import {AcknowledgmentAllowedEnum, Response, State as CardState} from '@ofModel/processes.model';
+import {AcknowledgmentAllowedEnum, State as CardState} from '@ofModel/processes.model';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -33,9 +33,9 @@ import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
 import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {UserContext} from '@ofModel/user-context.model';
 import {map, skip, take, takeUntil} from 'rxjs/operators';
-import {fetchLightCard, selectLastCards} from '@ofStore/selectors/feed.selectors';
+import {fetchLightCard, selectLastCardLoaded} from '@ofStore/selectors/feed.selectors';
 import {CardService} from '@ofServices/card.service';
-import {Observable, Subject, zip} from 'rxjs';
+import {Subject} from 'rxjs';
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {AppService, PageType} from '@ofServices/app.service';
 import {User} from '@ofModel/user.model';
@@ -51,6 +51,7 @@ import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {MessageLevel} from '@ofModel/message.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
+import {ActionService} from '@ofServices/action.service';
 
 
 declare const templateGateway: any;
@@ -130,7 +131,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private _userEntitiesAllowedToRespond: string[];
     private _htmlContent: SafeHtml;
     private _userContext: UserContext;
-    private _lastCards$: Observable<LightCard[]>;
     message: Message = {display: false, text: undefined, className: undefined};
 
     public fullscreen = false;
@@ -141,7 +141,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public showActionButton = false;
     public showEditAndDeleteButton = false ;
     public showDetailCardHeader = false;
-    public fromEntity = null;
+    public fromEntityOrRepresentative = null;
     private lastCardSetToReadButNotYetOnFeed;
 
     modalRef: NgbModalRef;
@@ -164,7 +164,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 private modalService: NgbModal,
                 private configService: ConfigService,
                 private time: TimeService,
-                private acknowledgeService: AcknowledgeService) {
+                private acknowledgeService: AcknowledgeService,
+                private actionService: ActionService) {
     }
 
     get isLocked() {
@@ -213,47 +214,42 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
       templateGateway.unlockAnswer();
     }
 
-    // -------------------------------------------------------------- //
-
     ngOnInit() {
         this.reloadTemplateWhenGlobalStyleChange();
         if (this._appService.pageType !== PageType.ARCHIVE) {
-
             this.setEntitiesToRespond();
-
-            this._lastCards$ = this.store.select(selectLastCards);
-
-            this._lastCards$
-                .pipe(
-                    takeUntil(this.unsubscribe$),
-                    map(lastCards =>
-                        lastCards.filter(card =>
-                            card.parentCardId === this.card.id &&
-                            !this.childCards.map(childCard => childCard.uid).includes(card.uid))
-                    ),
-                    map(childCards => childCards.map(c => this.cardService.loadCard(c.id)))
-                )
-                .subscribe(childCardsObs => {
-                    zip(...childCardsObs)
-                        .pipe(takeUntil(this.unsubscribe$), map(cards => cards.map(cardData => cardData.card)))
-                        .subscribe(newChildCards => {
-
-                            const reducer = (accumulator, currentValue) => {
-                                accumulator[currentValue.id] = currentValue;
-                                return accumulator;
-                            };
-
-                            this.childCards = Object.values({
-                                ...this.childCards.reduce(reducer, {}),
-                                ...newChildCards.reduce(reducer, {}),
-                            });
-
-                            templateGateway.childCards = this.childCards;
-                            this.setEntitiesToRespond();
-                            templateGateway.applyChildCards();
-                        });
-                });
+            this.integrateChildCardsInRealTime();
         }
+    }
+
+
+    private integrateChildCardsInRealTime() {
+        this.store.select(selectLastCardLoaded)
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                map(lastCardLoaded => {
+                    if (!!lastCardLoaded) {
+                            if (lastCardLoaded.parentCardId === this.card.id &&
+                            !this.childCards.map(childCard => childCard.uid).includes(lastCardLoaded.uid)) {
+                                this.integrateOneChildCard(lastCardLoaded);                              
+                            }
+                    }
+                })).subscribe()
+    }
+
+    private integrateOneChildCard(newChildCard:Card)
+    {
+        this.cardService.loadCard(newChildCard.id).subscribe (
+            cardData => {
+                const newChildArray = this.childCards.filter(childCard => childCard.id !== cardData.card.id);
+                newChildArray.push(cardData.card);
+                this.childCards = newChildArray;
+                templateGateway.childCards = this.childCards;
+                this.setEntitiesToRespond();
+                templateGateway.applyChildCards();
+            } 
+        )
+ 
     }
 
     private setButtonsVisibility() {
@@ -332,7 +328,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 title: this.card.title,
                 summary: this.card.summary,
                 data: responseData.responseCardData,
-                recipient: this.card.recipient,
                 parentCardId: this.card.id,
                 initialParentCardUid: this.card.uid
             };
@@ -341,13 +336,13 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe(
                     rep => {
-                        if (rep['count'] === 0 && rep['message'].includes('Error')) {
+                        if (rep.status !== 201) {
                             this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
-                            console.error(rep['message']);
+                            console.error(rep);
                         } else {
-                          this.hasAlreadyResponded = true;
-                          templateGateway.lockAnswer();
-                          this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
+                            this.hasAlreadyResponded = true;
+                            templateGateway.lockAnswer();
+                            this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
                         }
                     },
                     err => {
@@ -395,8 +390,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     updateAcknowledgementOnLightCard(hasBeenAcknowledged: boolean) {
         this.store.select(fetchLightCard(this.card.id)).pipe(take(1))
             .subscribe((lightCard: LightCard) => {
-                const updatedLighCard = {...lightCard, hasBeenAcknowledged: hasBeenAcknowledged};
-                this.store.dispatch(new UpdateALightCard({card: updatedLighCard}));
+                // If the card has been acknowledged, set it as read as well otherwise leave it as is.
+                // This is to prevent firing two updates, one for the ack and one for the read, which messed with sounds
+                const hasBeenRead = hasBeenAcknowledged ? true : lightCard.hasBeenRead;
+                const updatedLightCard = {...lightCard, hasBeenAcknowledged: hasBeenAcknowledged, hasBeenRead: hasBeenRead};
+                this.store.dispatch(new UpdateALightCard({card: updatedLightCard}));
             });
     }
 
@@ -460,8 +458,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.message = {display: false, text: undefined, className: undefined};
         this.setButtonsVisibility();
         this.setShowDetailCardHeader();
-        this.computeFromEntity();
-
+        this.computeFromEntityOrRepresentative();
     }
 
     private setEntitiesToRespond() {
@@ -516,48 +513,37 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private setIsActionEnabled() {
-        const checkPerimeterForResponseCard = this.configService.getConfigValue('checkPerimeterForResponseCard');
-
-        if (checkPerimeterForResponseCard === false)
-            this.isActionEnabled = this.isUserInEntityAllowedToRespond();
-        else
-            this.isActionEnabled = (this.isUserInEntityAllowedToRespond() && this.doesTheUserHavePermissionToRespond());
+        this.isActionEnabled = this.actionService.isUserEnabledToRespond(this.userService.getCurrentUserWithPerimeters(),
+            this.card, this.businessconfigService.getProcess(this.card.process));
     }
 
-    private computeFromEntity()
-    {
-        if (this.card.publisherType === 'ENTITY' )  this.fromEntity = this.entitiesService.getEntityName(this.card.publisher);
-        else this.fromEntity = null;
-    }
+    private computeFromEntityOrRepresentative() {
+        if (this.card.publisherType === 'ENTITY') {
+            this.fromEntityOrRepresentative = this.entitiesService.getEntityName(this.card.publisher);
 
+            if (!!this.card.representativeType && !!this.card.representative) {
+                const representative = this.card.representativeType === 'ENTITY' ?
+                    this.entitiesService.getEntityName(this.card.representative) : this.card.representative;
+
+                this.fromEntityOrRepresentative += ' (' + representative + ')';
+            }
+        } else
+            this.fromEntityOrRepresentative = null;
+    }
 
     private setShowDetailCardHeader() {
         this.showDetailCardHeader = (this.cardState.showDetailCardHeader === null) || (this.cardState.showDetailCardHeader === true);
-    }
-
-
-    private isUserInEntityAllowedToRespond(): boolean {
-        return this._userEntitiesAllowedToRespond.length === 1;
     }
 
     private getUserEntityToRespond(): string {
         return this._userEntitiesAllowedToRespond.length === 1 ? this._userEntitiesAllowedToRespond[0] : null;
     }
 
-    private doesTheUserHavePermissionToRespond(): boolean {
-        let permission = false;
-        this.userService.getCurrentUserWithPerimeters().computedPerimeters.forEach(perim => {
-            if ((perim.process === this.card.process) && (perim.state === this.cardState.response.state)
-                && (DetailComponent.compareRightAction(perim.rights, RightsEnum.Write)
-                    || DetailComponent.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
-                permission = true;
-                return true;
-            }
-        });
-        return permission;
-    }
-
     private isAcknowledgmentAllowed(): boolean {
+
+        // default value is true 
+        if (!this.cardState.acknowledgmentAllowed) return true;
+
         return (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS ||
             (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER && !this.isActionEnabled));
     }
@@ -641,11 +627,14 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                             }, 10);
                         }, 10);
                     }, () => {
-                        console.log('WARNING impossible to load template ', templateName);
+                        console.log(new Date().toISOString(),'WARNING impossible to load template ', templateName);
                         this._htmlContent = this.sanitizer.bypassSecurityTrustHtml('');
                     }
                 );
-        } else console.log('WARNING No template for state ', this.card.state);
+        } else {
+            this._htmlContent = " TECHNICAL ERROR - NO TEMPLATE AVAILABLE";
+            console.log(new Date().toISOString(), `WARNING No template for process ${this.card.process} version ${this.card.processVersion} with state ${this.card.state}`);
+        }
     }
 
     private initializeHandlebarsTemplates() {
@@ -745,9 +734,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         templateGateway.setScreenSize(active ? 'lg' : 'md');
     }
 
-    public isSmallscreen()
-    {
-      return (window.innerWidth <1000);
+    public isSmallscreen() {
+      return (window.innerWidth < 1000);
     }
 
     ngOnDestroy() {

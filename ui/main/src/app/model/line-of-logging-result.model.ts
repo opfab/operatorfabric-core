@@ -20,4 +20,5 @@ export interface LineOfLoggingResult {
     i18nKeyForTitle: I18n;
     i18nKeyForSummary: I18n;
     sender: string;
+    representative: string;
 }

@@ -38,7 +38,7 @@
             "scripts": [
               "node_modules/svg-pan-zoom/dist/svg-pan-zoom.js",
               "src/assets/js/templateGateway.js",
-              "src/assets/js/Chart.min.js"
+              "src/assets/js/chart.min.js"
             ],
             "allowedCommonJsDependencies": [
               "rxjs/internal/Subject",
@@ -145,6 +145,7 @@
   },
   "defaultProject": "ui-home",
   "cli": {
+    "analytics": false,
     "defaultCollection": "@ngrx/schematics"
   }
 }

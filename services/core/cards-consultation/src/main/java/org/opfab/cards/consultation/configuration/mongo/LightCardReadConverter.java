@@ -50,6 +50,9 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
                 .severity(SeverityEnum.valueOf(source.getString("severity")))
                 .usersAcks(source.getList("usersAcks", String.class))
                 .publisherType(PublisherTypeEnum.valueOf(source.getString("publisherType")))
+                .representative(source.getString("representative") == null ? null : source.getString("representative"))
+                .representativeType(source.getString("representativeType") == null ? null :
+                        PublisherTypeEnum.valueOf(source.getString("representativeType")))
                 .secondsBeforeTimeSpanForReminder(source.getInteger("secondsBeforeTimeSpanForReminder"));       
 
         Document titleDoc = (Document) source.get("title");

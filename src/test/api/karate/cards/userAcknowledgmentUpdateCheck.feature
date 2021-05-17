@@ -33,7 +33,6 @@ Feature: CardsUserAcknowledgementUpdateCheck
     And request card
     When method post
     Then status 201
-    And match response.count == 1
 
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
@@ -42,7 +41,7 @@ Feature: CardsUserAcknowledgementUpdateCheck
     And match response.card.hasBeenAcknowledged == false
     And def uid = response.card.uid
 
-#make an acknoledgement to the card with operator1
+#make an acknowledgement to the card with operator1
     Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken
     And request ''
@@ -89,7 +88,6 @@ Feature: CardsUserAcknowledgementUpdateCheck
     And request cardUpdated
     When method post
     Then status 201
-    And match response.count == 1
 
     #get card with user operator1 and check containing any ack
     Given url opfabUrl + 'cards/cards/api_test.process1'

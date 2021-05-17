@@ -30,6 +30,7 @@
         "display": "BUSINESS"
       },
       "hideAckFilter": false,
+      "hideAckAllCardsFeature": false,
       "secondsBeforeLttdForClockDisplay": 3700,
       "hideReadSort": false,
       "hideSeveritySort": false

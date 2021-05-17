@@ -37,7 +37,8 @@
 					"severityVisible" : true,
 					"startDateVisible" : false,
 					"endDateVisible" : false,
-					"lttdVisible" : false
+					"lttdVisible" : false,
+					"recipientList" : [{"id": "ALLCONTROLROOMS", "levels": [0,1]}, {"id": "ENTITY4"}]
 				},
 		  "color": "#FAF0AF",
 		  "response": {

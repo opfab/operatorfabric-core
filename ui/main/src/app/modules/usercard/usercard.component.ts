@@ -16,7 +16,7 @@ import {UserService} from '@ofServices/user.service';
 import {Card, CardData, fromCardToCardForPublishing, TimeSpan} from '@ofModel/card.model';
 import {I18n} from '@ofModel/i18n.model';
 import {Subject} from 'rxjs';
-import {Process} from '@ofModel/processes.model';
+import {Process, Recipient} from '@ofModel/processes.model';
 import {TimeService} from '@ofServices/time.service';
 import {Severity} from '@ofModel/light-card.model';
 import {Guid} from 'guid-typescript';
@@ -102,6 +102,8 @@ export class UserCardComponent implements OnDestroy, OnInit {
     endDateVisible = true;
     lttdVisible = true;
 
+    pageLoading = true;
+
     displayForm() {
         return !!this.processOptions && this.processOptions.length > 0;
     }
@@ -125,6 +127,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
     }
 
     ngOnInit() {
+        this.pageLoading = true;
 
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         this.processGroups = this.processesService.getProcessGroups();
@@ -165,13 +168,16 @@ export class UserCardComponent implements OnDestroy, OnInit {
             badgeShowLimit: 30,
             enableSearchFilter: true
         };
-
-        this.loadCardForEdition();
+        if (!!this.cardIdToEdit) {
+            this.loadCardForEdition();
+        } else {
+            this.pageLoading = false;
+        }
+        
     }
 
     loadCardForEdition() {
-        if (!!this.cardIdToEdit) {
-                    this.editCardMode = true;
+            this.editCardMode = true;
             this.cardService.loadCard(this.cardIdToEdit).subscribe(card => {
                         this.cardToEdit = card;
                         this.messageForm.get('severity').setValue(this.cardToEdit.card.severity);
@@ -192,8 +198,8 @@ export class UserCardComponent implements OnDestroy, OnInit {
                             this.messageForm.get('endDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.endDate)));
                         if (!!this.cardToEdit.card.lttd) this.messageForm.get('lttd').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.lttd)));
                         this.selectedRecipients = this.cardToEdit.card.entityRecipients;
+                        this.pageLoading = false;
             });
-        }
     }
 
 
@@ -368,6 +374,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
             this.startDateVisible = (userCard.startDateVisible === undefined) ? true : userCard.startDateVisible;
             this.endDateVisible = (userCard.endDateVisible === undefined) ? true : userCard.endDateVisible;
             this.lttdVisible = (userCard.lttdVisible === undefined) ? true : userCard.lttdVisible;
+            if (!!userCard.recipientList) {
+                this.loadRecipientListForState(userCard.recipientList)
+            }
         } else {
             this.severityVisible = true;
             this.startDateVisible = true;
@@ -375,6 +384,28 @@ export class UserCardComponent implements OnDestroy, OnInit {
             this.lttdVisible = true;
         }
 
+    }
+
+    loadRecipientListForState(recipients: Recipient[]): void {
+        this.recipientsOptions = [];
+        recipients.forEach(r => {
+            if (!!r.levels) {
+                r.levels.forEach(l => {
+                    this.entitiesService.resolveChildEntitiesByLevel(r.id, l).forEach(entity => {
+                        if (!this.recipientsOptions.find(o => o.id === entity.id)) {
+                            this.recipientsOptions.push({ id: entity.id, itemName: entity.name });
+                        }
+                    })
+                })
+            } else {
+                if (!this.recipientsOptions.find(o => o.id === r.id)) {
+                    const entity = this.entities.find(e => e.id === r.id);
+                    this.recipientsOptions.push({ id: entity.id, itemName: entity.name });
+                }
+            }         
+        });
+
+        this.recipientsOptions.sort(( a, b ) => a.itemName.localeCompare(b.itemName));
     }
 
     reinsertScripts(): void {
@@ -425,10 +456,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
         const selectedRecipients = this.recipientForm.value['recipients'];
         const recipients = [];
-        if (selectedRecipients.length < 1) {
-            this.displayMessage('userCard.error.noRecipientSelected', null, MessageLevel.ERROR);
-            return;
-        } else selectedRecipients.forEach(entity => recipients.push(entity.id));
+        selectedRecipients.forEach(entity => recipients.push(entity.id));
 
         const publisher =  this.currentUserWithPerimeters.userData.entities.find(userEntity => {
             const entity = this.entities.find(e => e.id === userEntity);
@@ -541,9 +569,10 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.cardService.postCard(fromCardToCardForPublishing(this.card))
             .subscribe(
                 resp => {
-                    const msg = resp.message;
-                    if (!!msg && msg.includes('unable')) {
-                        console.log('Impossible to send card , error message from service : ', msg);
+                    if (resp.status !== 201) {
+                        const msg = (!! resp.message ? resp.message : '');
+                        const error = (!! resp.error ? resp.error : '');
+                        console.log('Impossible to send card , message from service : ', msg, '. Error message : ', error);
                         this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
                     } else {
                         this.displayMessage('userCard.cardSendWithNoError', null, MessageLevel.INFO);

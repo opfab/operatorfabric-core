@@ -1,0 +1,24 @@
+// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 2.4.0 to release 2.5.0
+
+== Send card
+
+The API endpoint to send a card doesn't return CardCreationReport object anymore.
+The endPoint `cards` now returns :
+
+- status code 201 (Created) in case of success.
+- status code 400 (Bad request) in case of a request with wrong data.
+
+So if you use CardCreationReport object when you send card, you need to modify your code to not use it anymore and to test the status code returned.
+
+== Card recipients
+
+The deprecated card field `recipient` is now deleted. So you have to use the fields `userRecipients`, `groupRecipients`
+and `entityRecipients` to send a card.
+

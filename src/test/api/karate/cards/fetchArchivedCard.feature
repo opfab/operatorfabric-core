@@ -32,7 +32,6 @@ Feature: fetchArchive
     And request card
     When method post
     Then status 201
-    And match response.count == 1
 
 
 #get card with user operator1
@@ -93,7 +92,6 @@ Feature: fetchArchive
         And request card
         When method post
         Then status 201
-        And match response.count == 1
 
 
 #get card with user operator1

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,8 @@ import {CardFeedState, feedInitialState, LightCardAdapter} from '@ofStates/feed.
 import {FeedActions, FeedActionTypes} from '@ofActions/feed.actions';
 import {FilterType} from '@ofServices/filter.service';
 import {Filter} from '@ofModel/feed-filter.model';
+import {Card} from '@ofModel/card.model';
+import {Update} from '@ngrx/entity';
 
 export function changeActivationAndStatusOfFilter(filters: Map<FilterType, Filter>
     , payload: { name: FilterType; active: boolean; status: any }) {
@@ -29,43 +31,48 @@ export function reducer(
 
 
     switch (action.type) {
-        case LightCardActionTypes.LoadLightCardsSuccess: {
+
+        case LightCardActionTypes.LoadLightParentCard: {
             return {
-                ...LightCardAdapter.upsertMany(action.payload.lightCards, state),
-                loading: false,
-                lastCards: action.payload.lightCards
+                ...LightCardAdapter.upsertOne(action.payload.lightCard, state),
+                lastCardLoaded: action.payload.lightCard
             };
+        }
+
+        case LightCardActionTypes.LoadLightChildCard: {
+            if (action.payload.isFromCurrentUserEntity) {
+                const updateIsFromUserEntity: Update<Card> = {
+                    id: action.payload.lightCard.parentCardId,
+                    changes: {
+                        hasChildCardFromCurrentUserEntity: true
+                    }
+                }
+                return {
+                    ...LightCardAdapter.updateOne(updateIsFromUserEntity, state),
+                    lastCardLoaded: action.payload.lightCard
+                }
+            }
+            return {
+                ...state,
+                lastCardLoaded: action.payload.lightCard
+            }
+
         }
         case LightCardActionTypes.EmptyLightCards: {
             return {
                 ...LightCardAdapter.removeAll(state),
-                selectedCardId: null,
-                loading: false,
-                lastCards: []
+                selectedCardId: null
             };
         }
-
         case LightCardActionTypes.RemoveLightCard: {
             return {
-                ...LightCardAdapter.removeMany(action.payload.cards, state),
-                loading: false,
-                lastCards: []
+                ...LightCardAdapter.removeOne(action.payload.card, state)
             };
         }
-        case LightCardActionTypes.LoadLightCardsFailure: {
-            return {
-                ...state,
-                loading: false,
-                error: `error while loading cards: '${action.payload.error}'`,
-                lastCards: []
-            };
-        }
-
         case LightCardActionTypes.SelectLightCard: {
             return {
                 ...state,
                 selectedCardId: action.payload.selectedCardId,
-                lastCards: []
             };
         }
 
@@ -78,10 +85,7 @@ export function reducer(
 
         case LightCardActionTypes.AddLightCardFailure: {
             return {
-                ...state,
-                loading: false,
-                error: `error while adding a single lightCard: '${action.payload.error}'`,
-                lastCards: []
+                ...state
             };
         }
 
@@ -93,7 +97,6 @@ export function reducer(
                 filters.set(payload.name, filter);
                 return {
                     ...state,
-                    loading: false,
                     filters: filters
                 };
             } else {

@@ -57,7 +57,6 @@ Feature: get card Subscription
       And request card
       When method post
       Then status 201
-      And match response.count == 1
 
     # Get card uid
       Given url opfabUrl + 'cards/cards/api_test.process1'

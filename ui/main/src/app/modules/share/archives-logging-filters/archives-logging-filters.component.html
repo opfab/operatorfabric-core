@@ -30,13 +30,17 @@
 <!--Second column-->
 <div *ngIf="displayProcessGroupFilter() || tags" style="margin-right:40px">
     <div style="min-width:300px;max-width:400px;margin-top:28px;margin-bottom: 54px;">
-        <of-multi-filter [hidden]="displayProcessGroupFilter()" filterPath="process" id="process" [parentForm]="this.parentForm"
+        <of-multi-filter *ngIf="! isThereProcessGroup()" filterPath="process" id="process" [parentForm]="this.parentForm"
                          [values]="processDropdownList" [dropdownSettings]="processDropdownSettings" [selectedItems]="[]"
                          i18nRootLabelKey="filters.">
         </of-multi-filter>
-        <of-multi-filter [hidden]="! displayProcessGroupFilter()" filterPath="process" id="process" [parentForm]="this.parentForm"
+        <of-multi-filter *ngIf="displayProcessGroupFilter()" filterPath="process" id="process" [parentForm]="this.parentForm"
                          [values]="processDropdownListWhenSelectedProcessGroup" [dropdownSettings]="processDropdownSettings" [selectedItems]="[]"
                          i18nRootLabelKey="filters.">
+        </of-multi-filter>
+        <of-multi-filter *ngIf="!displayProcessGroupFilter() && isThereProcessGroup()" filterPath="process" id="process" [parentForm]="this.parentForm"
+                         [values]="processesDropdownListPerProcessGroups.get(processGroupDropdownList[0].id)"
+                         [dropdownSettings]="processDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="filters.">
         </of-multi-filter>
     </div>
     <div style="min-width:300px;max-width:400px;">
@@ -50,9 +54,13 @@
 <!--Only one column in this case-->
 <div *ngIf="! displayProcessGroupFilter() && ! tags" style="margin-right:40px">
     <div style="min-width:300px;max-width:400px;margin-top:28px;margin-bottom: 54px;">
-        <of-multi-filter filterPath="process" id="process" [parentForm]="this.parentForm"
+        <of-multi-filter *ngIf="! isThereProcessGroup()" filterPath="process" id="process" [parentForm]="this.parentForm"
                          [values]="processDropdownList" [dropdownSettings]="processDropdownSettings" [selectedItems]="[]"
                          i18nRootLabelKey="filters.">
+        </of-multi-filter>
+        <of-multi-filter *ngIf="isThereProcessGroup()" filterPath="process" id="process" [parentForm]="this.parentForm"
+                         [values]="processesDropdownListPerProcessGroups.get(processGroupDropdownList[0].id)"
+                         [dropdownSettings]="processDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="filters.">
         </of-multi-filter>
     </div>
     <div style="min-width:300px;max-width:400px;">

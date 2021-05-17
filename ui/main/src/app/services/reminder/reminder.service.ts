@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,7 @@ import { CardService } from '@ofServices/card.service';
 import { ProcessesService } from '@ofServices/processes.service';
 import { UpdateALightCard } from '@ofStore/actions/light-card.actions';
 import { AppState } from '@ofStore/index';
-import { fetchLightCard, selectLastCards } from '@ofStore/selectors/feed.selectors';
+import { fetchLightCard, selectLastCardLoaded } from '@ofStore/selectors/feed.selectors';
 import { take } from 'rxjs/operators';
 import { ReminderList } from './reminderList';
 import { AcknowledgeService } from '@ofServices/acknowledge.service';
@@ -49,8 +49,8 @@ export class ReminderService {
 
     private listenForCardsToAddInReminder() {
         this.store.pipe(
-            select(selectLastCards))
-            .subscribe(cards => cards.forEach(card => this.reminderList.addAReminder(card)));
+            select(selectLastCardLoaded))
+            .subscribe(card => {if (!!card) this.reminderList.addAReminder(card)});
     }
 
 

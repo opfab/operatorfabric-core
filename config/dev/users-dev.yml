@@ -1,6 +1,5 @@
 server:
   port: 2103
-
 spring:
   application:
     name: users

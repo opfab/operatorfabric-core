@@ -11,7 +11,6 @@ package org.opfab.client;
 
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.cards.model.Card;
-import org.opfab.cards.model.CardCreationReport;
 import org.opfab.cards.model.I18n;
 import org.opfab.cards.model.SeverityEnum;
 import org.opfab.client.cards.CardClient;
@@ -67,8 +66,8 @@ public class ClientApplication implements CommandLineRunner {
 		title.setKey("message.title");
 		card.setTitle(title);
 
-		CardCreationReport result = cardClient.postCard(OPFAB_PUBLICATION_URL, card);
-		log.info("Card creation result " + result);
+		String result = cardClient.postCard(OPFAB_PUBLICATION_URL, card);
+		log.info("Card creation result : '" + result + "'");
 		
 		try {
 			String token = authClient.getToken(OPFAB_AUTH_URL);

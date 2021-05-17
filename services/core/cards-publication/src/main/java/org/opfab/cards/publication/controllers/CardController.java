@@ -12,7 +12,6 @@ package org.opfab.cards.publication.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.aop.process.mongo.models.UserActionTraceData;
-import org.opfab.cards.publication.model.CardCreationReportData;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.services.CardProcessingService;
 import org.opfab.cards.publication.services.UserBasedOperationResult;
@@ -44,8 +43,9 @@ public class CardController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public @Valid CardCreationReportData createCardOld(@Valid @RequestBody CardPublicationData card) {
-        return cardProcessingService.processCard(card);
+    public @Valid Void createCardOld(@Valid @RequestBody CardPublicationData card) {
+        cardProcessingService.processCard(card);
+        return null;
     }
 
     @DeleteMapping
@@ -57,10 +57,11 @@ public class CardController {
 
     @PostMapping("/userCard")
     @ResponseStatus(HttpStatus.CREATED)
-    public @Valid CardCreationReportData createUserCard(@Valid @RequestBody CardPublicationData card, Principal principal) {
+    public @Valid Void createUserCard(@Valid @RequestBody CardPublicationData card, Principal principal) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
-        return cardProcessingService.processUserCard(card,user);
+        cardProcessingService.processUserCard(card,user);
+        return null;
     }
 
     @DeleteMapping("/userCard/{id}")

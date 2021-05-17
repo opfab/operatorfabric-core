@@ -28,7 +28,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.hamcrest.Matchers.is;
 
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
@@ -74,16 +73,14 @@ class CardControllerShould {
     void postCardWithDepracatedEndPoint() throws Exception {
 
         mockMvc.perform(post("/cards").contentType(MediaType.APPLICATION_JSON).content(getCard()))
-                .andExpect(status().isCreated()).andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.count", is(1)));
+                .andExpect(status().isCreated());
     }
 
     @Test
     void postCard() throws Exception {
 
         mockMvc.perform(post("/cards").contentType(MediaType.APPLICATION_JSON).content(getCard()))
-                .andExpect(status().isCreated()).andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.count", is(1)));
+                .andExpect(status().isCreated());
     }
 
     @Test

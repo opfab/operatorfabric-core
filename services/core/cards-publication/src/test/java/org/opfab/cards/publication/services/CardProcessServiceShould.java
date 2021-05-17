@@ -21,7 +21,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.aop.process.mongo.models.UserActionTraceData;
-import org.opfab.cards.model.RecipientEnum;
 import org.opfab.cards.model.SeverityEnum;
 import org.opfab.cards.publication.application.UnitTestApplication;
 import org.opfab.cards.publication.configuration.TestCardReceiver;
@@ -30,7 +29,6 @@ import org.opfab.cards.publication.repositories.ArchivedCardRepositoryForTest;
 import org.opfab.cards.publication.repositories.CardRepositoryForTest;
 import org.opfab.cards.publication.repositories.TraceRepositoryForTest;
 import org.opfab.users.model.*;
-import org.opfab.cards.publication.model.*;
 import org.opfab.users.model.RightsEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -57,7 +55,6 @@ import java.util.stream.Collectors;
 import static java.nio.charset.Charset.forName;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.jeasy.random.FieldPredicates.named;
-import static org.opfab.cards.model.RecipientEnum.DEADEND;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
@@ -157,7 +154,6 @@ class CardProcessServiceShould {
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                         .timeSpan(TimeSpanPublicationData.builder()
                                 .start(Instant.ofEpochMilli(123l)).build())
                         .process("process1")
@@ -170,7 +166,6 @@ class CardProcessServiceShould {
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                         .process("process2")
                         .state("state2")
                         .build());
@@ -180,7 +175,6 @@ class CardProcessServiceShould {
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                         .process("process3")
                         .state("state3")
                         .build());
@@ -190,7 +184,6 @@ class CardProcessServiceShould {
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                         .process("process4")
                         .state("state4")
                         .build());
@@ -200,7 +193,6 @@ class CardProcessServiceShould {
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                         .process("process5")
                         .state("state5")
                         .build());
@@ -215,8 +207,8 @@ class CardProcessServiceShould {
     @Test
     void createCards() {
         generateCards().forEach(card -> { cardProcessingService.processCard(card); });
-        checkCardCount(4);
-        checkArchiveCount(5);
+        Assertions.assertThat(checkCardCount(5)).isTrue();
+        Assertions.assertThat(checkArchiveCount(5)).isTrue();
     }
 
     private static final String EXTERNALAPP_URL = "http://localhost:8090/test";
@@ -234,7 +226,6 @@ class CardProcessServiceShould {
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
                 .externalRecipients(externalRecipients)
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .state("state1")
                 .build();
 
@@ -244,8 +235,9 @@ class CardProcessServiceShould {
                 .andRespond(withStatus(HttpStatus.ACCEPTED)
                 );
 
-        Assertions.assertThat(cardProcessingService.processUserCard(card, currentUserWithPerimeters).getCount()).isEqualTo(1);
-        checkCardPublisherId(card);
+        Assertions.assertThatCode(() -> cardProcessingService.processUserCard(card, currentUserWithPerimeters))
+            .doesNotThrowAnyException();
+        Assertions.assertThat(checkCardPublisherId(card)).isTrue();
 
     }
 
@@ -262,14 +254,14 @@ class CardProcessServiceShould {
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
                 .externalRecipients(externalRecipients)
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .state("state1")
                 .build();
 
-        Assertions.assertThat(cardProcessingService.processUserCard(card, currentUserWithPerimeters).getCount()).isEqualTo(0);
-        checkCardCount(0);
-        checkArchiveCount(0);
-
+        Assertions.assertThatThrownBy(() -> cardProcessingService.processUserCard(card, currentUserWithPerimeters))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessageContaining("action not authorized, the card is rejected");
+        Assertions.assertThat(checkCardCount(0)).isTrue();
+        Assertions.assertThat(checkArchiveCount(0)).isTrue();
     }
 
     @Test
@@ -305,7 +297,6 @@ class CardProcessServiceShould {
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
                 .externalRecipients(externalRecipients)
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .state("state1")
                 .build();
 
@@ -315,8 +306,9 @@ class CardProcessServiceShould {
                 .andRespond(withStatus(HttpStatus.ACCEPTED)
                 );
 
-        Assertions.assertThat(cardProcessingService.processUserCard(card, currentUserWithPerimeters).getCount()).isEqualTo(1);
-        checkCardPublisherId(card);
+        Assertions.assertThatCode(() -> cardProcessingService.processUserCard(card, currentUserWithPerimeters))
+                .doesNotThrowAnyException();
+        Assertions.assertThat(checkCardPublisherId(card)).isTrue();
 
 
 
@@ -336,9 +328,10 @@ class CardProcessServiceShould {
 
     @Test
     void createCardWithError() {
-        cardProcessingService.processCard(generateWrongCardData("PUBLISHER_1", "PROCESS_1"));
-        checkCardCount(0);
-        checkArchiveCount(0);
+        Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(generateWrongCardData("PUBLISHER_1", "PROCESS_1")))
+                .isInstanceOf(ConstraintViolationException.class);
+        Assertions.assertThat(checkCardCount(0)).isTrue();
+        Assertions.assertThat(checkArchiveCount(0)).isTrue();
     }
 
     @Test
@@ -374,17 +367,13 @@ class CardProcessServiceShould {
                         .build())
                 .endDate(start.plusSeconds(60)).lttd(start.minusSeconds(600))
                 .tag("tag1").tag("tag2").data(data)
-                .recipient(RecipientPublicationData.builder().type(RecipientEnum.UNION)
-                        .recipient(RecipientPublicationData.builder().type(RecipientEnum.USER)
-                                .identity("graham").build())
-                        .recipient(RecipientPublicationData.builder().type(RecipientEnum.USER)
-                                .identity("eric").build())
-                        .build())
                 .entityRecipients(entityRecipients)
                 .timeSpan(TimeSpanPublicationData.builder().start(Instant.ofEpochMilli(123l)).recurrence(recurrence).build())
                 .process("process1")
                 .state("state1")
                 .publisherType(PublisherTypeEnum.EXTERNAL)
+                .representative("ENTITY1")
+                .representativeType(PublisherTypeEnum.ENTITY)
                 .secondsBeforeTimeSpanForReminder(new Integer(1000))
                 .build();
         cardProcessingService.processCard(newCard);
@@ -528,9 +517,6 @@ class CardProcessServiceShould {
                 .excludeField(named("data"))
                 .excludeField(named("parameters"))
                 .excludeField(named("shardKey"))
-                .randomize(named("recipient").and(FieldPredicates.ofType(Recipient.class))
-                                .and(FieldPredicates.inClass(CardPublicationData.class)),
-                        () -> RecipientPublicationData.builder().type(DEADEND).build())
                 .scanClasspathForConcreteTypes(true).overrideDefaultInitialization(false)
                 .ignoreRandomizationErrors(true);
 
@@ -806,7 +792,7 @@ class CardProcessServiceShould {
     @Test
     void validate_processOk() {
 
-        Assertions.assertThat(cardProcessingService.processCard(
+        Assertions.assertThatCode(() -> cardProcessingService.processCard(
                 CardPublicationData.builder()
                         .uid("uid_1")
                         .publisher("PUBLISHER_1").processVersion("O")
@@ -814,12 +800,11 @@ class CardProcessServiceShould {
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                         .timeSpan(TimeSpanPublicationData.builder()
                                 .start(Instant.ofEpochMilli(123l)).build())
                         .process("process1")
                         .state("state1")
-                        .build()).getCount().equals(1)).isTrue();
+                        .build())).doesNotThrowAnyException();
 
         CardPublicationData childCard = CardPublicationData.builder()
                 .parentCardId("process1.PROCESS_1")
@@ -829,7 +814,6 @@ class CardProcessServiceShould {
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .timeSpan(TimeSpanPublicationData.builder()
                         .start(Instant.ofEpochMilli(123l)).build())
                 .process("process2")
@@ -850,7 +834,6 @@ class CardProcessServiceShould {
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .timeSpan(TimeSpanPublicationData.builder()
                         .start(Instant.ofEpochMilli(123l)).build())
                 .build();
@@ -864,7 +847,7 @@ class CardProcessServiceShould {
     @Test
     void validate_initialParentCardUid_NotPresentInDb() {
 
-        Assertions.assertThat(cardProcessingService.processCard(
+        Assertions.assertThatCode(() -> cardProcessingService.processCard(
                 CardPublicationData.builder()
                         .uid("uid_1")
                         .publisher("PUBLISHER_1").processVersion("O")
@@ -872,12 +855,11 @@ class CardProcessServiceShould {
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                         .timeSpan(TimeSpanPublicationData.builder()
                                 .start(Instant.ofEpochMilli(123l)).build())
                         .process("process1")
                         .state("state1")
-                        .build()).getCount().equals(1)).isTrue();
+                        .build())).doesNotThrowAnyException();
 
         CardPublicationData childCard = CardPublicationData.builder()
                 .parentCardId("process1.PROCESS_1")
@@ -887,7 +869,6 @@ class CardProcessServiceShould {
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .timeSpan(TimeSpanPublicationData.builder()
                         .start(Instant.ofEpochMilli(123l)).build())
                 .process("process2")
@@ -911,7 +892,6 @@ class CardProcessServiceShould {
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .timeSpan(TimeSpanPublicationData.builder()
                         .start(Instant.ofEpochMilli(123l)).build())
                 .process("process1")

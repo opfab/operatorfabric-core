@@ -29,14 +29,15 @@ import static org.opfab.springtools.configuration.oauth.OAuth2JwtProcessingUtili
  */
 public class OpFabUserDetails extends CurrentUserWithPerimeters implements UserDetails {
 
-    public OpFabUserDetails(String login, String firstName, String lastName, List<String> roles, List<String> entities){
-        User userdata = new User();
-        userdata.setLogin(login);
-        userdata.setFirstName(firstName);
-        userdata.setLastName(lastName);
-        userdata.setGroups(roles);
-        userdata.setEntities(entities);
-        this.setUserData(userdata);
+    public OpFabUserDetails(String login, String firstName, String lastName, List<String> roles, List<String> entities, List<String> authorizedIPAddresses){
+        User user = new User();
+        user.setLogin(login);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setGroups(roles);
+        user.setEntities(entities);
+        user.setAuthorizedIPAddresses(authorizedIPAddresses);
+        this.setUserData(user);
     }
 
     /**

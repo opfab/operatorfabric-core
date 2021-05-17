@@ -14,14 +14,18 @@ package org.opfab.businessconfig.application;
 import org.opfab.businessconfig.configuration.json.JacksonConfig;
 import org.opfab.businessconfig.controllers.BusinessconfigController;
 import org.opfab.businessconfig.controllers.CustomExceptionHandler;
+import org.opfab.businessconfig.services.MonitoringService;
 import org.opfab.businessconfig.services.ProcessesService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
-@Import({ProcessesService.class, CustomExceptionHandler.class, JacksonConfig.class, BusinessconfigController.class})
+@Import({ProcessesService.class, MonitoringService.class, CustomExceptionHandler.class, JacksonConfig.class, BusinessconfigController.class})
+@ImportResource({"classpath:/security.xml"})
+
 public class IntegrationTestApplication {
 
     public static void main(String[] args) {

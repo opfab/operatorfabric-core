@@ -12,106 +12,81 @@ import {Action} from '@ngrx/store';
 import {LightCard} from '@ofModel/light-card.model';
 
 export enum LightCardActionTypes {
-    LoadLightCards = '[LCard] Load',
     EmptyLightCards = '[LCard] Empty',
-    LoadLightCardsSuccess = '[LCard] Load Success',
-    LoadLightCardsFailure = '[LCard] Load Fail',
+    LoadLightCard = '[LCard] Load Light Card from subscription',
+    LoadLightChildCard = '[LCard] Load Light Child Card', 
+    LoadLightParentCard = '[LCard] Load Light Parent Card', 
     SelectLightCard = '[LCard] Select One',
     ClearLightCardSelection = '[LCard] Clear Light Card Selection',
     AddLightCardFailure = '[LCard] Add Light Card Fail',
-    HandleUnexpectedError = '[LCard] Handle unexpected error related to authentication issue',
     RemoveLightCard = '[LCard] Remove a card',
     UpdateALightCard = '[LCard] Update a Light Card',
     LightCardAlreadyUpdated = '[LCard] Light Card already Updated'
 }
 
-// needed by NGRX entities
-export class LoadLightCards implements Action {
-    /* istanbul ignore next */
-    readonly type = LightCardActionTypes.LoadLightCards;
-}
 
 export class EmptyLightCards implements Action {
-    /* istanbul ignore next */
     readonly type = LightCardActionTypes.EmptyLightCards;
 }
 
-export class LoadLightCardsSuccess implements Action {
-    readonly type = LightCardActionTypes.LoadLightCardsSuccess;
-
-    constructor(public payload: {lightCards: LightCard[]} ) {
+export class LoadLightCard implements Action {
+    readonly type = LightCardActionTypes.LoadLightCard;
+    constructor(public payload: {lightCard: LightCard} ) {
     }
 }
 
-export class LoadLightCardsFailure implements Action {
-    readonly type = LightCardActionTypes.LoadLightCardsFailure;
+export class LoadLightChildCard implements Action {
+    readonly type = LightCardActionTypes.LoadLightChildCard;
+    constructor(public payload: {lightCard: LightCard,isFromCurrentUserEntity: boolean} ) {
+    }
+}
 
-    /* istanbul ignore next */
-    constructor(public payload: { error: Error }) {
+export class LoadLightParentCard implements Action {
+    readonly type = LightCardActionTypes.LoadLightParentCard;
+    constructor(public payload: {lightCard: LightCard} ) {
     }
 }
 
 export class SelectLightCard implements Action {
-    /* istanbul ignore next */
     readonly type = LightCardActionTypes.SelectLightCard;
-
-    /* istanbul ignore next */
     constructor(public payload: { selectedCardId: string }) {
     }
 
 }
 
 export class ClearLightCardSelection implements Action {
-
     readonly type = LightCardActionTypes.ClearLightCardSelection;
-
 }
 
 export class AddLightCardFailure implements Action {
     readonly type = LightCardActionTypes.AddLightCardFailure;
-
-    /* istanbul ignore next */
-    constructor(public payload: { error: Error }) {
-    }
-}
-
-export class HandleUnexpectedError implements Action {
-    /* istanbul ignore next */
-    readonly type = LightCardActionTypes.HandleUnexpectedError;
-
-    /* istanbul ignore next */
     constructor(public payload: { error: Error }) {
     }
 }
 
 export class RemoveLightCard implements Action {
     readonly type = LightCardActionTypes.RemoveLightCard;
-
-    constructor(public  payload: { cards: string[] }) {
+    constructor(public  payload: { card: string }) {
     }
 }
 
 export class UpdateALightCard implements Action {
     readonly type = LightCardActionTypes.UpdateALightCard;
-
     constructor(public payload: { card: LightCard }) {
     }
 }
 
-
 export class LightCardAlreadyUpdated implements Action {
     readonly type = LightCardActionTypes.LightCardAlreadyUpdated;
-
 }
 
 export type LightCardActions =
-    LoadLightCards
-    | LoadLightCardsSuccess
-    | LoadLightCardsFailure
+    LoadLightCard
+    | LoadLightChildCard
+    | LoadLightParentCard
     | SelectLightCard
     | ClearLightCardSelection
     | AddLightCardFailure
-    | HandleUnexpectedError
     | EmptyLightCards
     | UpdateALightCard
     | LightCardAlreadyUpdated

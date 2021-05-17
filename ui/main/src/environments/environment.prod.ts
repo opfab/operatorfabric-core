@@ -23,6 +23,7 @@ export const environment = {
         archives : '',
         processes: '/businessconfig/processes',
         processGroups: '/businessconfig/processgroups',
+        monitoringConfig: '/businessconfig/monitoring',
         config: '/config/web-ui.json',
         menuConfig: '/config/ui-menu.json'
 

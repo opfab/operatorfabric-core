@@ -70,7 +70,6 @@ public class CardConsultationData implements Card {
     @Singular
     private List<String> tags;
     
-    private Recipient recipient;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;
     @Indexed
@@ -104,6 +103,8 @@ public class CardConsultationData implements Card {
     @Transient
     private Boolean hasBeenRead;
     private PublisherTypeEnum publisherType;
+    private String  representative;
+    private PublisherTypeEnum representativeType;
     private Integer  secondsBeforeTimeSpanForReminder;
     
     

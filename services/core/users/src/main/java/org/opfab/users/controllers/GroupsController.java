@@ -50,6 +50,7 @@ public class GroupsController implements GroupsApi {
     public static final String BAD_USER_LIST_MSG = "Bad user list : user %s not found";
     public static final String BAD_PERIMETER_LIST_MSG = "Bad perimeter list : perimeter %s not found";
     public static final String NO_MATCHING_GROUP_ID_MSG = "Payload Group id does not match URL Group id";
+    public static final String ADMIN_GROUP_ID = "ADMIN";
     @Autowired
     private GroupRepository groupRepository;
     @Autowired
@@ -239,6 +240,14 @@ public class GroupsController implements GroupsApi {
 
         // Only existing group can be deleted
         GroupData foundGroupData = findGroupOrThrow(id);
+
+        // ADMIN group cannot be deleted
+        if (ADMIN_GROUP_ID.equals(id)) {
+            throw new ApiErrorException(
+                        ApiError.builder()
+                                .status(HttpStatus.FORBIDDEN)
+                                .build());
+        }
 
         // First we have to delete the link between the group to delete and its users
         removeTheReferenceToTheGroupForMemberUsers(id);

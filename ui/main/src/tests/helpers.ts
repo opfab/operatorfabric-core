@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -154,6 +154,7 @@ export function getOneRandomLightCard(lightCardTemplate?: any): LightCard {
         lightCardTemplate.severity ? lightCardTemplate.severity : getRandomSeverity(),
         false,
         lightCardTemplate.hasBeenRead ? lightCardTemplate.hasBeenRead : false,
+        false,
         getRandomAlphanumericValue(3, 24),
         lightCardTemplate.lttd ? lightCardTemplate.lttd : generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
         getRandomI18nData(),
@@ -189,6 +190,7 @@ export function getOneRandomCard(cardTemplate?:any): Card {
         cardTemplate.startDate ? cardTemplate.startDate : startTime,
         cardTemplate.endDate ? cardTemplate.endDate : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
         cardTemplate.severity ? cardTemplate.severity : getRandomSeverity(),
+        false,
         false,
         false,
         cardTemplate.process ? cardTemplate.process : 'testProcess',

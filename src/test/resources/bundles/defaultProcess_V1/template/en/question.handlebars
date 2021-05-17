@@ -5,9 +5,9 @@
       <h4>  Outage needed for 2 hours on the France-England HVDC line</h4>
       <br/>
        Could you please confirm the time frames that are ok for you ?  <br/> <br/>
-       <label class="opfab-checkbox" style="margin-left:40px"> The 10/08/2021 between 8AM and 10AM <input type="checkbox" id="choice1" name="choice1" >  <span class="opfab-checkbox-checkmark"> </span> </label>
-       <label class="opfab-checkbox" style="margin-left:40px"> The 10/08/2021 between 10AM and 12PM <input type="checkbox" id="choice2" name="choice2" >  <span class="opfab-checkbox-checkmark"> </span> </label>
-       <label class="opfab-checkbox" style="margin-left:40px"> The 11/08/2021 between 8AM and 10AM <input type="checkbox" id="choice3" name="choice3" >  <span class="opfab-checkbox-checkmark"> </span> </label>
+       <label class="opfab-checkbox" style="margin-left:40px"> The 10/08/2021 between 8AM and 10AM <input type="checkbox" id="choice1" name="choice1" >  <span id="question-choice1"  class="opfab-checkbox-checkmark"> </span> </label>
+       <label class="opfab-checkbox" style="margin-left:40px"> The 10/08/2021 between 10AM and 12PM <input  type="checkbox" id="choice2" name="choice2" >  <span id="question-choice2" class="opfab-checkbox-checkmark"> </span> </label>
+       <label class="opfab-checkbox" style="margin-left:40px"> The 11/08/2021 between 8AM and 10AM <input  type="checkbox" id="choice3" name="choice3" >  <span id="question-choice3" class="opfab-checkbox-checkmark"> </span> </label>
     </div>
     <div id="responseRequired"></div>
     <div id="responseDisabled" style="color: red"></div>
@@ -34,7 +34,7 @@
      
    templateGateway.childCards.forEach( (c, i) => {
       const entityName = templateGateway.getEntityName(c.publisher);
-      responses += `<tr> <td> ${entityName} </td>`;
+      responses += `<tr> <td id="response_from_${c.publisher}"> ${entityName} </td>`;
       if (c.data.choice1) responses += "<td> OK </td>";
       else responses  += "<td> NOK </td>";
       if (c.data.choice2) responses += "<td> OK </td>";

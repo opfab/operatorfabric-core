@@ -101,6 +101,16 @@ an checkbox with `checked=false` will still be checked).
 <input type="checkbox" id="optionA" {{conditionalAttribute card.data.optionA 'checked'}}></input>
 ....
 
+[[replace]]
+=== replace
+
+Replaces all the occurrences in a given string
+You should specify the substring to find, what to replace it with and the input string.
+
+....
+{{replace "&lt;p&gt;" "<p>"  this.value}}
+....
+
 [[dateformat]]
 === dateFormat
 
@@ -145,9 +155,9 @@ Emergency situation happened on 2018-06-14. Cause : Broken Cofee Machine
 
 
 [[json]]
-=== json 
+=== json
 
-Convert the element in json, this can be useful to use the element as a javascript object in the template. For example : 
+Convert the element in json, this can be useful to use the element as a javascript object in the template. For example :
 
 ....
 var myAttribute = {{json data.myAttribute}};
@@ -428,7 +438,7 @@ outputs a svg tag with lazy loading, and missing image replacement message. The
 image url is the concatenation of an arbitrary number of helper arguments
 
 ....
-{{{svg baseUri scheduledOpId "/" substation "/before/" 
+{{{svg baseUri scheduledOpId "/" substation "/before/"
 computationPhaseOrdinal}}}
 ....
 
@@ -477,19 +487,19 @@ tests
 OperatorFabric defines a `css class` that you should use so your templates don't clash with the rest of the OperatorFabric look and feel:
 
 * opfab-input : input field
-* opfab-textarea : text area input field  
+* opfab-textarea : text area input field
 * opfab-select : select input field
 * opfab-radio-button : radio button input field
 * opfab-checkbox : checkbox input field
 * opfab-table : a HTML table
-* opfab-border-box : a box with a label  
+* opfab-border-box : a box with a label
 
 These styles are especially useful for templates used in user card or card with responses.
 
 Your can find example using these classes in the OperatorFabric core repository (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/resources/bundles[src/test/resources/bundles]).
 
 
-== Charts 
+== Charts
 
 The library https://www.chartjs.org/[charts.js] is integrated in OperatorFabric, it means it's possible to show charts in cards, you can find a bundle example in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/resources/bundles/defautlProcess_V1[src/test/resources/bundle/defaultProcess_V1]).
 
@@ -513,8 +523,8 @@ This can be done by calling the following function from the template :
 templateGateway.redirectToBusinessMenu(idMenu,idEntry)
 ....
 
-  - idMenu is the id of the menu defined in ui-menu.json 
-  - idEntry is the id of the entry defined in ui-menu.json 
+  - idMenu is the id of the menu defined in ui-menu.json
+  - idEntry is the id of the entry defined in ui-menu.json
 
 It is also possible to append parameters to the url that will be called:
 

@@ -41,3 +41,6 @@
       users/perimeters/deletePerimeter.feature               \
       users/entities/checkEntityGroupManagement.feature      \
       users/entities/transitive-entities-in-currentUser.feature \
+      users/ipControl.feature \
+
+

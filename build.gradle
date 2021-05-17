@@ -1,13 +1,13 @@
 import com.github.jk1.license.render.*
 plugins {
     id "com.github.jk1.dependency-license-report" version "1.16"
-    id "com.github.node-gradle.node" version "3.0.1"
+    id "com.github.node-gradle.node" version "3.1.0"
     id "org.asciidoctor.convert" version "2.4.0"
     id "maven-publish"
     id "signing"
-    id "org.owasp.dependencycheck" version "6.1.5"
+    id "org.owasp.dependencycheck" version "6.1.6"
     id 'org.springframework.boot' version '2.4.0-M1'
-    id 'org.sonarqube' version '3.1.1' apply false
+    id 'org.sonarqube' version '3.2.0' apply false
 }
 
 ext.versions = new Properties()
@@ -17,9 +17,12 @@ file("versions.properties").withReader { reader ->
 
 ext {
     operatorfabric = [
-            group: "org.opfab",
+            group: 'org.opfab',
+            name: 'operatorbabric',
+            description : 'OperatorFabric is a modular, extensible, industrial-strength platform for use in electricity, water, and other utility operations.',
             version: version = rootProject.file('VERSION').text.trim(),
-            revisionDate: revisionDate = new Date().format('dd MMMM yyyy')
+            revisionDate: revisionDate = new Date().format('dd MMMM yyyy'),
+            url: 'https://opfab.org'
     ]
 
     boot = [
@@ -61,7 +64,8 @@ ext {
             junit5Plugin    : "org.junit.platform:junit-platform-gradle-plugin:${versions['junit5.platform']}",
             assertJ         : "org.assertj:assertj-core:${versions['assertj']}",
             reactor         : "io.projectreactor:reactor-test",
-            awaitility      : "org.awaitility:awaitility-kotlin:${versions['awaitility']}"
+            awaitility      : "org.awaitility:awaitility-kotlin:${versions['awaitility']}",
+            karate          : "com.intuit.karate:karate-junit5:${versions['karate']}"
     ]
 
 

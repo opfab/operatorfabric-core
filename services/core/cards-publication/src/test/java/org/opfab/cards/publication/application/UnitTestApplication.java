@@ -31,7 +31,6 @@ import org.opfab.aop.annotations.EnableAopTraceProcessing;
 import org.opfab.cards.publication.configuration.mongo.LocalMongoConfiguration;
 import org.opfab.cards.publication.services.CardNotificationService;
 import org.opfab.cards.publication.services.CardProcessingService;
-import org.opfab.cards.publication.services.RecipientProcessor;
 import org.opfab.cards.publication.services.CardRepositoryService;
 import org.opfab.cards.publication.services.processors.impl.UserCardProcessorImpl;
 import org.opfab.cards.publication.services.TraceRepository;
@@ -46,11 +45,12 @@ import org.springframework.context.annotation.ImportResource;
 @EnableOperatorFabricMongo
 @EnableMongoRepositories(basePackageClasses = {CardRepositoryForTest.class , TraceRepository.class,  ArchivedCardRepositoryForTest.class})
 @EnableAopTraceProcessing
-@Import({LocalMongoConfiguration.class, CardProcessingService.class, RecipientProcessor.class, CardNotificationService.class,
+@Import({LocalMongoConfiguration.class, CardProcessingService.class, CardNotificationService.class,
     CardRepositoryService.class, UserCardProcessorImpl.class, ExternalAppClientImpl.class , ResponseCardProducer.class
 , CardCommandFactory.class, CardObjectMapper.class, TestCardReceiver.class , TestConsumerConfig.class, JacksonConfig.class
 , Common.class , CardController.class, WebSecurityConfigurationTest.class })
-@ImportResource("classpath:/amqp.xml")
+@ImportResource({"classpath:/amqp.xml", "classpath:/security.xml"})
+
 public class UnitTestApplication {
 
     public static void main(String[] args) {

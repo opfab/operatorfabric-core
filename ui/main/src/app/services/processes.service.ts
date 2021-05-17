@@ -15,11 +15,12 @@ import {merge, Observable, of, Subject} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {catchError, map, skip, tap} from 'rxjs/operators';
 import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
+import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {Card} from '@ofModel/card.model';
 import {select, Store} from '@ngrx/store';
 import {selectLinesOfLoggingResult} from '@ofStore/selectors/logging.selectors';
 import {AppState} from '@ofStore/index';
-import {selectLastCards} from '@ofStore/selectors/feed.selectors';
+import {selectLastCardLoaded} from '@ofStore/selectors/feed.selectors';
 import {Utilities} from '../common/utilities';
 
 
@@ -27,12 +28,14 @@ import {Utilities} from '../common/utilities';
 export class ProcessesService {
     readonly processesUrl: string;
     readonly processGroupsUrl: string;
+    readonly monitoringConfigUrl: string;
     private urlCleaner: HttpUrlEncodingCodec;
     private processCache = new Map();
     private translationsAlreadyLoaded = new Set<string>();
     private processes: Process[];
     private processGroups: {id: string, processes: string[]}[];
     private translationsLoaded = new Subject();
+    private monitoringConfig: MonitoringConfig;
 
     private typeOfStatesPerProcessAndState: Map<string, TypeOfStateEnum>;
 
@@ -41,14 +44,15 @@ export class ProcessesService {
         this.urlCleaner = new HttpUrlEncodingCodec();
         this.processesUrl = `${environment.urls.processes}`;
         this.processGroupsUrl = `${environment.urls.processGroups}`;
+        this.monitoringConfigUrl = `${environment.urls.monitoringConfig}`;
         this.loadTranslationIfNeededAfterLoadingLoggingCard();
         this.loadTranslationIfNeededAfterLoadingCard();
     }
 
     private loadTranslationIfNeededAfterLoadingCard() {
         this.store.pipe(
-            select(selectLastCards))
-            .subscribe(cards =>  cards.forEach(card => this.loadTranslationsForProcess(card.process, card.processVersion)));
+            select(selectLastCardLoaded))
+            .subscribe(card => { if (!!card) this.loadTranslationsForProcess(card.process, card.processVersion)});
     }
 
 
@@ -124,6 +128,20 @@ export class ProcessesService {
         });
     }
 
+
+    public loadMonitoringConfig(): Observable<MonitoringConfig> {
+        return this.httpClient.get<MonitoringConfig>(this.monitoringConfigUrl)
+            .pipe(
+                map(monitoringConfig => {
+                        if (!!monitoringConfig) {
+                            this.monitoringConfig = monitoringConfig;
+                            console.log(new Date().toISOString(), 'Monitoring config loaded');
+                        }
+                        else  console.log(new Date().toISOString(), 'No monitoring config to load');
+                        return monitoringConfig;
+                    }, (error) => console.error(new Date().toISOString(), 'An error occurred when loading monitoringConfig', error)
+                ));
+    }
     public areTranslationsLoaded(): Observable<any> {
         return this.translationsLoaded;
     }
@@ -135,6 +153,11 @@ export class ProcessesService {
     public getProcessGroups(): {id: string, processes: string[]}[] {
         return this.processGroups;
     }
+
+    public getMonitoringConfig(): any {
+        return this.monitoringConfig;
+    }
+
 
     public getProcess(processId: string): Process {
         return this.processes.find(process => processId === process.id);
@@ -269,22 +292,22 @@ export class ProcessesService {
         };
     }
 
-    public findProcessGroupForProcess(processId : string) : string {
-        for (let group of this.processGroups) {
-            if (group.processes.find(process => process == processId))
+    public findProcessGroupForProcess(processId: string): string {
+        for (const group of this.processGroups) {
+            if (group.processes.find(process => process === processId))
                 return group.id;
         }
         return '';
     }
 
     public getProcessesPerProcessGroups(): Map<any, any> {
-        let processesPerProcessGroups = new Map();
+        const processesPerProcessGroups = new Map();
 
         this.getAllProcesses().forEach(process => {
 
             const processGroupId = this.findProcessGroupForProcess(process.id);
-            if (processGroupId != '') {
-                let processes = (!! processesPerProcessGroups.get(processGroupId) ? processesPerProcessGroups.get(processGroupId) : []);
+            if (processGroupId !== '') {
+                const processes = (!! processesPerProcessGroups.get(processGroupId) ? processesPerProcessGroups.get(processGroupId) : []);
                 processes.push({id: process.id, itemName: process.name, i18nPrefix: `${process.id}.${process.version}`});
                 processesPerProcessGroups.set(processGroupId, processes);
             }
@@ -293,26 +316,26 @@ export class ProcessesService {
     }
 
     public getProcessesWithoutProcessGroup(): any[] {
-        let processesWithoutProcessGroup = [];
+        const processesWithoutProcessGroup = [];
 
         this.getAllProcesses().forEach(process => {
             const processGroupId = this.findProcessGroupForProcess(process.id);
-            if (processGroupId == '')
+            if (processGroupId === '')
                 processesWithoutProcessGroup.push({ id: process.id, itemName: process.name, i18nPrefix: `${process.id}.${process.version}` });
         });
         return processesWithoutProcessGroup;
     }
 
-    public findProcessGroupLabelForProcess(processId : string) : string {
+    public findProcessGroupLabelForProcess(processId: string): string {
         const processGroupId = this.findProcessGroupForProcess(processId);
-        return (!! processGroupId && processGroupId != '') ? processGroupId : "processGroup.defaultLabel";
+        return (!! processGroupId && processGroupId !== '') ? processGroupId : 'processGroup.defaultLabel';
     }
 
     private loadTypeOfStatesPerProcessAndState() {
         this.typeOfStatesPerProcessAndState = new Map();
 
-        for (let process of this.processes) {
-            for (let state in process.states)
+        for (const process of this.processes) {
+            for (const state in process.states)
                 this.typeOfStatesPerProcessAndState.set(process.id + '.' + state, process.states[state].type);
         }
     }

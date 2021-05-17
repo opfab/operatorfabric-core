@@ -28,7 +28,13 @@
                                  [dropdownSettings]="processDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="monitoring.filters.">
                 </of-multi-filter>
             </div>
-            <div *ngIf="! displayProcessGroupsFilter()" style="margin-top: 28px;margin-right: 40px;position:relative; min-width:300px;max-width:400px;">
+            <div *ngIf="! displayProcessGroupsFilter() && isThereProcessGroup()" style="margin-top: 28px;margin-right: 40px;position:relative; min-width:300px;max-width:400px;">
+                <of-multi-filter filterPath="process" id="process"
+                                 [parentForm]="monitoringForm" [values]="processesDropdownListPerProcessGroups.get(processGroupDropdownList[0].id)"
+                                 [dropdownSettings]="processDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="monitoring.filters.">
+                </of-multi-filter>
+            </div>
+            <div *ngIf="! displayProcessGroupsFilter() && ! isThereProcessGroup()" style="margin-top: 28px;margin-right: 40px;position:relative; min-width:300px;max-width:400px;">
                 <of-multi-filter filterPath="process" id="process"
                                  [parentForm]="monitoringForm" [values]="processDropdownList"
                                  [dropdownSettings]="processDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="monitoring.filters.">

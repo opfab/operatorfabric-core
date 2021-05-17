@@ -15,8 +15,15 @@ const EXCEL_EXTENSION = '.xlsx';
 
 export abstract class ExportService {
 
-  public static exportAsExcelFile(json: any[], excelFileName: string): void {
-    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
+  public static exportJsonToExcelFile(json: any[], excelFileName: string): void {
+    this.exportWorksheet(XLSX.utils.json_to_sheet(json),excelFileName);
+  }
+
+  public static exportArrayToExcelFile(data: any[][],excelFileName: string): void {
+    this.exportWorksheet(XLSX.utils.aoa_to_sheet(data),excelFileName);
+  }
+
+  private static exportWorksheet(worksheet: XLSX.WorkSheet, excelFileName: string,) {
     const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
     const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     this.saveAsExcelFile(excelBuffer, excelFileName);

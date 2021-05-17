@@ -2,6 +2,7 @@
   "environmentName": "TEST ENV",
   "environmentColor": "blue",
   "checkPerimeterForResponseCard": true,
+  "checkPerimeterForSearchFields": false,
   "archive": {
     "filters": {
       "page": {

@@ -33,7 +33,6 @@ Feature: Cards
     And request card
     When method post
     Then status 201
-    And match response.count == 1
 
 
 
@@ -61,7 +60,6 @@ Feature: Cards
     And request card
     When method post
     Then status 201
-    And match response.count == 1
 
 #get card with user operator1
     Given url opfabUrl + 'cards/cards/api_test.process1'
@@ -158,7 +156,6 @@ Feature: Cards
     And request card
     When method post
     Then status 201
-    And match response.count == 1
 
 #get card with user operator1 and new attribute externalRecipients
     Given url opfabUrl + 'cards/cards/api_test.process1'
@@ -192,7 +189,6 @@ Scenario:  Post card with no recipient but entityRecipients
     And request card
     When method post
     Then status 201
-    And match response.count == 1
 
 Scenario:  Post card with initialParentCardUid not correct
 
@@ -218,9 +214,9 @@ Scenario:  Post card with initialParentCardUid not correct
         Given url opfabPublishCardUrl + 'cards'
         And request card
         When method post
-        Then status 201
-        And match response.count == 0
-        And match response.message contains "The initialParentCardUid 1 is not the uid of any card"
+        Then status 400
+        And match response.message contains "Constraint violation in the request"
+        And match response.errors[0] contains "The initialParentCardUid 1 is not the uid of any card"
 
 Scenario:  Post card with parentCardId not correct
 
@@ -246,9 +242,9 @@ Scenario:  Post card with parentCardId not correct
     Given url opfabPublishCardUrl + 'cards'
     And request card
     When method post
-    Then status 201
-    And match response.count == 0
-    And match response.message contains "The parentCardId 1 is not the id of any card"
+    Then status 400
+    And match response.message contains "Constraint violation in the request"
+    And match response.errors[0] contains "The parentCardId 1 is not the id of any card"
 
 Scenario:  Post card with correct parentCardId but initialParentCardUid not correct
 
@@ -282,9 +278,9 @@ Scenario:  Post card with correct parentCardId but initialParentCardUid not corr
     Given url opfabPublishCardUrl + 'cards'
     And request card
     When method post
-    Then status 201
-    And match response.count == 0
-    And match response.message contains "The initialParentCardUid 1 is not the uid of any card"
+    Then status 400
+    And match response.message contains "Constraint violation in the request"
+    And match response.errors[0] contains "The initialParentCardUid 1 is not the uid of any card"
 
 Scenario:  Post card with correct parentCardId and initialParentCardUid
 
@@ -320,8 +316,6 @@ Scenario:  Post card with correct parentCardId and initialParentCardUid
     And request card
     When method post
     Then status 201
-    And match response.count == 1
-    And match response.message == "PushedCard was successfully handled"
 
 Scenario: Push card and its two child cards, then get the parent card
 
@@ -347,7 +341,6 @@ Scenario: Push card and its two child cards, then get the parent card
     And request parentCard
     When method post
     Then status 201
-    And match response.count == 1
 
 #get parent card id
     Given url opfabUrl + 'cards/cards/api_test.process1'
@@ -401,14 +394,12 @@ Scenario: Push card and its two child cards, then get the parent card
     And request childCard1
     When method post
     Then status 201
-    And match response.count == 1
 
 # Push the two child cards
     Given url opfabPublishCardUrl + 'cards'
     And request childCard2
     When method post
     Then status 201
-    And match response.count == 1
 
 # Get the parent card with its two child cards
 
@@ -443,7 +434,6 @@ Scenario: Push a card for a user with no group and no entity
     And request cardForUserWithNoGroupNoEntity
     When method post
     Then status 201
-    And match response.count == 1
 
 #get card with user userwithnogroupnoentity
     Given url opfabUrl + 'cards/cards/api_test.processForUserWithNoGroupNoEntity'
@@ -487,7 +477,6 @@ Scenario: Push card with null keepChilCards and publisherType
     And request parentCard2
     When method post
     Then status 201
-    And match response.count == 1
 
 #get parent card id
     Given url opfabUrl + 'cards/cards/api_test.processKeepChildCardsNull'

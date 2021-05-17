@@ -232,8 +232,8 @@ and review.
 ====
 
 You should also take a look at the
-ifdef::single-page-doc[<<review_checklist, review check list>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/community/index.adoc#review_checklist, review check list>>]
+ifdef::single-page-doc[<<review_checklist, review checklist>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/community/index.adoc#review_checklist, review checklist>>]
 below to make sure your branch meets its criteria.
 
 Once you feel your branch is ready, submit a pull request. Open pull requests are then reviewed by the core maintainers
@@ -339,7 +339,8 @@ To work on a fix for an existing version, the steps are similar to those describ
 Only developers from the `reviewers` group can merge pull requests into `develop`, but this shouldn't
 stop anyone interested in the topic of a PR to comment and review it.
 
-==== Reviewer check list 
+[[review_checklist]]
+==== Review checklist
 
 * The PR comment contains the text to insert in release note. Otherwise, it should say why this development doesn't need
 to be on the release notes.
@@ -350,9 +351,11 @@ pull requests, this branch should be `develop`.
 no secret information, no malicious changes) and to see if you have remarks on the way things are implemented
 * Check that the commit(s) message(s) is(are) relevant and follow conventions ([OC-XXX] ... )
 * If there is more than one commit, is it meaningful or do we need to squash ?
-* Meaningful and sufficient unit tests for the backend (80% coverage is the threshold)
+* Meaningful and sufficient unit tests for the backend (we aim for 80% coverage)
 * Meaningful unit tests for the frontend (Angular tests can be complex to implement, we should focus on testing complex
 logic and not the framework itself)
+* Note: Because currently Sonar doesn't distinguish between back and front, the quality gate only enforces a 50% coverage
+threshold.
 * Check Sonar analysis on SonarCloud to see if Sonar reports any bugs or code smells on the new code
 * API testing via Karate has been updated
 * Documentation has been updated (especially if configuration is needed)

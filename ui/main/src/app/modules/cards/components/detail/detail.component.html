@@ -99,9 +99,10 @@
             <span class="opfab-card-received-footer">
               <span translate>feed.received</span>
               {{getFormattedPublishDate()}} <span translate> feed.at </span> {{getFormattedPublishTime()}}
-              <span *ngIf="fromEntity">
+
+              <span *ngIf="fromEntityOrRepresentative">
                 <span translate> feed.from</span>
-                {{fromEntity}}
+                {{fromEntityOrRepresentative}}
               </span>
             </span>
             <div *ngIf="showButtons" style="text-align: right;">

@@ -118,11 +118,6 @@ Wait for the build to complete (around 20 minutes) and check that all stages hav
 This ensures that the code builds, tests are OK and there is no error preventing documentation or Docker images
 generation.
 
-NOTE: Specific keywords such as "ci_docker" etc. are no longer required in the case of a release on master as
-by design any release on master becomes the "latest" version, so docker images generation (both for the version
-tag and the latest tag) and documentation update (both for the release and the "current" folder) should always
-be triggered.
-
 === Merging the release branch into `master`
 
 Once the release branch build is passing, you should merge the release branch into `master` to bring the new
@@ -138,8 +133,10 @@ git merge X.X.X.release <3>
 <2> Make sure your local copy is up to date
 <3> Merge the `X.X.X.release` branch into `master`, accepting changes from X.X.X.release in case of conflicts.
 
-IMPORTANT: If you also want the new docker images to be tagged `latest` (as should be the case for most release
-versions), you should add the keyword `ci_latest` to the merge commit message.
+NOTE: Specific keywords such as "ci_docker" etc. are no longer required in the case of a release on master as
+by design any release on master becomes the "latest" version, so docker images generation (both for the version
+tag and the latest tag) and documentation update (both for the release and the "current" folder) should always
+be triggered.
 
 ----
 git tag X.X.X.RELEASE <1>
@@ -184,6 +181,64 @@ previous steps has completed successfully, and you can see X.X.X.RELEASE images 
 
 People who want to experiment with OperatorFabric are pointed to this docker-compose so it's important to make sure
 that it's working correctly.
+
+[[publishing_client_lib_release]]
+=== Publishing the jars for the client library to Maven Central
+
+Once everything else looks ok, you can publish the jars for the client library to MavenCentral. This is done as a last
+step once we are pretty sure we won't need to go back and change things on the release because jars are not meant to be
+removed from Maven Central once they are published (even briefly), and it's not something that could be managed by the
+project.
+
+To do so:
+
+. Set the appropriate properties (credentials and GPG key information) as described in the
+ifdef::single-page-doc[<<client_lib_pub_conf, documentation for the publishing task>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/dev_env/index.adoc#client_lib_pub_conf, documentation for the publishing task>>]
+
+. Run the following command from the project root:
++
+----
+./gradlew publish
+----
++
+. After a while you should be prompted to enter the passphrase for the GPG key.
+
+. Once the task has completed, log in to the https://s01.oss.sonatype.org/[OSSRH Repository] using the same credentials
+as for the Sonatype JIRA.
++
+image::ossrh_repo_welcome.png[Welcome page for the OSSRH repository manager]
+
+. Click on `Staging repositories` link on the left. After a while (and maybe after clicking the refresh button), you
+should see a repository with the name orgopfab-XXXX (where XXXX is a Sonatype-generated id, not related to the
+release number).
++
+image::ossrh_staging_repos.png[Staging repositories]
+
+. Click on the repository then on the "content" tab below to check its content and metadata.
++
+image::check_staging_repo.png[Check staging repository]
+
+. If there is an issue with the repository, click on the "Drop" button and start the process again after making the
+necessary changes. If everything looks in order, click on the "Close" button and add a small comment when prompted to
+confirm.
++
+image::close_staging_repo.png[Close staging repository]
+
+. This will trigger validation of the https://central.sonatype.org/publish/requirements/[Sonatype requirements] (for
+example, making sure that the pom file contains the required information), as you can see from the Activity tab below
+(Refresh might be needed).
++
+image::closing_and_validation_of_repo.png[Closing and validation of the staging repository]
+
+. If all the validations pass, the "Release" button will become available. Click it to send the jars to Maven Central.
+When prompted, write a comment then confirm (keeping the "Automatically Drop" option checked).
++
+image::confirm_release_to_maven_central.png[Release to Maven Central]
+
+. The jars for the release should then be available on the https://repo1.maven.org/maven2/org/opfab/[project space in the Maven repository] within 10 minutes.
+
+. It can take up to two hours for them to appear on the https://search.maven.org/search?q=opfab[Maven Central Repository Search].
 
 === In Jira
 
@@ -284,3 +339,6 @@ git push origin X.X.X.RELEASE <4>
 IMPORTANT: In the case of a patch on the last major/minor version tagged on master, this version will become the
 `latest` version. In this case, add `ci_latest` instead of `ci_docker ci_documentation` to the commit message
 to also update the `latest` docker images on DockerHub and the `current` documentation on the website.
+
+You then need to release the client library jars for the hotfix version. To do so, refer to the
+<<publishing_client_lib_release,corresponding section>> for standard releases.

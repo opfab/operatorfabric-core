@@ -40,13 +40,6 @@ docker-compose down <1>
 NOTE: If you need to further adapt the Cypress instance, you can make changes to the `web-ui-cypress.json` and
 `docker-compose.cypress.override.yml` files.
 
-You also need to set up some perimeters and bundles for the tests. To do so:
-
-----
-cd src/test/resources
-loadTestConf.sh
-----
-
 After you're done with your tests, you can stop and destroy containers (as it is better to start with fresh containers to avoid
 side-effects from previous tests) with the following commands:
 
@@ -103,6 +96,15 @@ cd src/test/cypress
 ./node_modules/.bin/cypress open --config baseUrl=http://localhost:4200
 ----
 
+== Running tests with Gradle
+
+The tests can also be run in command line mode using a Gradle task :
+
+[source,bash]
+----
+./gradlew runCypressTests
+----
+
 == Clearing MongoDB
 
 If you want to start with a clean database (from the cards and archived cards point of view), you can purge the
@@ -133,6 +135,7 @@ NOTE: We will need to define a convention for naming and organizing tests.
 ==== Cypress Documentation
 * https://docs.cypress.io/guides/references/assertions#Common-Assertions[Most Common Assertions]
 * https://docs.cypress.io/guides/references/assertions[Assertions Reference]
+* https://docs.cypress.io/faq/questions/using-cypress-faq[FAQ]
 
 ==== Other links
 * https://medium.com/slido-dev-blog/cypress-tips-4-testing-lists-of-items-dccd4b688816[Testing lists of items]
@@ -151,7 +154,11 @@ has recently been updated on this topic).
 cards for example.
 * When chaining a `should` assertion to a `cy.get` command that returns several elements, it will pass if it is true for
 ANY of these elements. Use each + callback to check that an assertion is true on every element.
-
+* `cy.contains` is a command, not an assertion. If you want to test the attribute, classes, content etc. of an element,
+it's better to target the element by id or data attribute using a `cy.get()` command for example and then chain an
+assertion with `should()`.
+This way, you will get an expected/actual error message if the assertion fails, you will avoid false positives (text is
+found in another sibling element) and hard to debug behaviour with retries.
 
 == Configuration
 

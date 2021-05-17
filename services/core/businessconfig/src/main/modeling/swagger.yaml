@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: OperatorFabric BusinessconfigParty Management API
-  version: 2.4.0.RELEASE
+  version: 2.5.0.RELEASE
   title: Businessconfig Management
   termsOfService: ''
   contact:
@@ -326,6 +326,43 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
+  '/businessconfig/monitoring':       
+    get:
+      summary: Get the monitoring configuration 
+      description: >-
+         Get the monitoring configuration 
+      operationId: getMonitoring
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Monitoring'
+        '401':
+          description: Authentication required
+    post:
+      summary: Post the json defining the monitoring config
+      description: >-
+        Post the json defining the monitoring config
+        This json is saved to disk, under the name 'monitoring.json'.
+      operationId: postMonitoring
+      consumes:
+        - application/json
+      parameters:
+        - name: monitoring
+          in: body
+          schema:
+              $ref: '#/definitions/Monitoring'
+      produces:
+        - application/json
+      responses:
+        '201':
+          description: Successful creation
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
 
 definitions:
   Process:
@@ -536,3 +573,50 @@ definitions:
         type: boolean
       lttdVisible: 
         type: boolean
+      recipientList:
+        type: array
+        items:
+          $ref: '#/definitions/Recipient'
+  Recipient:
+    description: >- 
+      Object containing the id of the recipient entity and an optional list of connection levels 
+      with 0 meaning the entity itself, 1 for first level children, 2 for 2nd level connections, etc.
+    properties:
+      id:
+        type: string
+      levels:
+        type:
+          array
+        items:
+          type: integer
+  
+  Monitoring:
+    description: Configuration for the monitoring screen
+    properties: 
+      export : 
+        description : export configuration
+        $ref: '#/definitions/MonitoringExport'
+  
+  MonitoringExport:
+    description: Configuration for the export feature in the monitoring screen
+    properties:
+      fields: 
+        type: array
+        items: 
+          $ref: '#/definitions/MonitoringExportField'
+  
+  MonitoringExportField: 
+    description: Configuration for Field to export 
+    properties:
+      columnName:
+        description: Name of the colum in export 
+        type: string
+      jsonField:
+        description: Name of the field corresponding to the column name 
+        type: string
+      fields:
+        description: Nested fields description
+        type: array
+        items: 
+          $ref: '#/definitions/MonitoringExportField'
+

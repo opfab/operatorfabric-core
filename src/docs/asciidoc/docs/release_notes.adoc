@@ -5,73 +5,55 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-= Version 2.4.0.RELEASE
+= Version 2.5.0.RELEASE
 
 == Features
+* UserCard
+- OC-1584 : Permit to have a restricted list of recipients
+- OC-1682 : Let the possibility to have no recipient
 
-* OC-1602 : Add delete cards endpoint to delete multiple cards by date criteria
-* OC-1636 : UserCard : Choose the first service in the list by default
-* OC-1652 : Admin screen : permit to create logins of 3 characters
+* Monitoring
+- OC-1692 : Monitoring screen - set text color for Process Status value
+- OC-1442 : Add the possibility to have a specific export format in monitoring
+ +
+See the https://opfab.github.io/documentation/current/docs/single_page_doc.html#_export_configuration[documentation] for details on how to configure it.
 
-.Visual changes
-* OC-1609 : Confirmation popups : harmonize size for text and title
-* OC-1613 : Confirmation popup shall be in the middle of the screen
-* OC-1657 : Card deletion result should be displayed with an alert message instead of popover
+* Tech
+- OC-1649 : New handlebars helper : replace character
+- OC-1648 : Add an option for control of IP address for user access (WIP)
+- OC-255, OC-1513 : Making the client library available in Maven Central
++
+Starting from this release, you can now pull the client library as a regular dependency rather than building the jar locally. The clientApp example is now relying on these published jars.
+
+* UI:
+- OC-1612 : Improve design for very small screen
+- OC-1653 : See on feed when there is a response form the entity of the user
+
+* Misc :
+- OC-1639 : Add option to use user perimeter to populate services/process/state list in archives/logging/monitoring/feedconfiguration
+- OC-1655 : Add representative concept when sending card
 
 == Bugs
 
-.Administration screen
-
-* OC-1621 : Admin UI - When deleting a Perimeter remove from cache as well
-* OC-1634 : When changing perimeter attached to a group it is not propagated to the card-publication service
-
-.User cards
-
-* OC-1624 : Card preview in user card shall not set the template in full screen mode
-* OC-1644 : When only one process is accessible to usercard , it does not work
-* OC-1674 : Editing a usercard : multi-select component for state field is not set with the right value
-
-.Feed screen
-
-* OC-1623 : Fix bug when removing a timeline domain from web-ui configuration
-* OC-1641 : When card selected in the feed is updated, it should stay unread
-* OC-1604 : Acknowledge all cards : manage states with acknowledgmentAllowed set to "OnlyWhenResponseDisabledForUser"
-* OC-1654 : After an update of a question card, the entities that have already answered shall be orange in card header
-+
-NOTE: The entities will be marked in green only once they give an answer to the updated version of card.
-
-.Miscellaneous
-
-* OC-1627 : Tasks card example does not fill the repetition date, duration and hour/min when editing the card
-* OC-1607 : Remove reactive code from card publication and solve a bug (hang of HTTP requests)
-+
-IMPORTANT: This changes things for card-sending endpoints (see the
-https://opfab.github.io/documentation/archives/2.4.0.RELEASE/docs/single_page_doc.html#_migration_guide_from_release_2_3_0_to_release_2_4_0[migration guide])
-+
-* OC-1585 : Authorization mode 'NONE' fix with CardService and Perimeters.
+* OC-1673 : Editing a usercard : a wrong template is loaded at the beginning of display
+* OC-1684 : Bug in usercard preview when displaying a lot of recipients
+* OC-1704 : Correct bug when displaying feed on mobile phone
+* OC-1715 : Acknowledging a card shouldn't trigger sound
 
 == Tasks
 
-.Cypress testing
-
-* OC-1635 : Allow Cypress tests to run with ng serve
-* OC-1640 : Implement basic test plan as Cypress test using resources scripts
-
-.Documentation and examples
-
-* OC-1625 : Usercard process template example : store in the card data the status value
-* OC-1622 : Set a value for state.description fields in all card examples
-
-.CI and refactoring
-* OC-1630 : Adding package-lock.json to git for npm ci
+* OC-1659 : Refactoring DetailComponent for using functions of new UI service "ActionService"
+* OC-1646 : Change the response of the card creation endpoint
 +
-_From now on, to build the ui:_
+IMPORTANT: Please see our https://opfab.github.io/documentation/current/docs/single_page_doc.html#_migration_guide_from_release_2_4_0_to_release_2_5_0[migration guide]
 +
-_If you have changed anything in the package.json, use *npm install* to install/update the dependency and update the package-lock.json accordingly._
+* OC-1690 : Improve card detail view when state or process does not exist
+* OC-1619 : Remove "recipient" deprecated card field
 +
-_If you just want to reproduce the current state of the ui, use *npm ci* instead: it will clear node_modules and install dependencies using the versions stated in package-lock.json, ensuring that what your local development environment is identical to what's being built on the CI/CD pipeline._
+IMPORTANT: This deprecated field is now deleted, so please see our https://opfab.github.io/documentation/current/docs/single_page_doc.html#_migration_guide_from_release_2_4_0_to_release_2_5_0[migration guide]
 +
-* OC-1611 : Remove core-js dependency
-* OC-1656 : user.service.ts : rework isCurrentUserAdmin() and isCurrentUserInAnyGroup()
-* OC-1661 : Removing inconsistent tooling configuration and changing gradle node plugin
-* OC-1664 : UI tests - removal of unused class ProcessesServiceMock
+* OC-1693 : Add an option that waits for opfab to start in run_all.sh
+* OC-1577 : Documentation - add an example for routing card with perimeter
+* OC-1696 : Name and surname should not be mandatory in admin screen
+* OC-1670 : Deletion of ADMIN group should not be possible
+* OC-1702 : Upgrade to last version of chart.js

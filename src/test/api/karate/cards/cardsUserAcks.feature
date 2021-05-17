@@ -35,8 +35,7 @@ Feature: CardsUserAcknowledgement
     And request card
     When method post
     Then status 201
-    And match response.count == 1
-    
+
 #get card with user operator1 and check not containing userAcks items
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
@@ -46,7 +45,7 @@ Feature: CardsUserAcknowledgement
     And def uid = response.card.uid
 
 
-#make an acknoledgement to the card with operator1
+#make an acknowledgement to the card with operator1
     Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken
     And request ''
@@ -70,7 +69,7 @@ Feature: CardsUserAcknowledgement
     And match response.card.uid == uid
 
 
-#make a second acknoledgement to the card with operator2
+#make a second acknowledgement to the card with operator2
     Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken2
     And request ''

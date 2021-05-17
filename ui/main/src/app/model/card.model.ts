@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,6 +25,7 @@ export class Card {
         readonly severity: Severity,
         public hasBeenAcknowledged: boolean = false,
         readonly hasBeenRead: boolean = false,
+        readonly hasChildCardFromCurrentUserEntity: boolean = false,
         readonly process?: string,
         readonly processInstanceId?: string,
         readonly state?: string,
@@ -38,11 +39,12 @@ export class Card {
         readonly externalRecipients?: string[],
         readonly entitiesAllowedToRespond?: string[],
         readonly entitiesRequiredToRespond?: string[],
-        readonly recipient?: Recipient,
         readonly parentCardId?: string,
         readonly initialParentCardUid?: string,
         readonly keepChildCards?: boolean,
         readonly publisherType?: PublisherType | string,
+        readonly representative?: string,
+        readonly representativeType?: PublisherType | string,
         public secondsBeforeTimeSpanForReminder?: number,
         public timeSpans?: TimeSpan[]
     ) {
@@ -69,28 +71,16 @@ export class CardForPublishing {
         readonly externalRecipients?: string[],
         readonly entitiesAllowedToRespond?: string[],
         readonly entitiesRequiredToRespond?: string[],
-        readonly recipient?: Recipient,
         readonly parentCardId?: string,
         readonly initialParentCardUid?: string,
         readonly keepChildCards?: boolean,
         readonly publisherType?: PublisherType | string,
+        readonly representative?: string,
+        readonly representativeType?: PublisherType | string,
         readonly secondsBeforeTimeSpanForReminder?: number,
         readonly timeSpans?: TimeSpan[]
     ) {
     }
-}
-
-
-export class Recipient {
-    constructor(
-        readonly type?: RecipientEnum,
-        readonly recipients?: Recipient[],
-        readonly identity?: string
-    ) {}
-}
-
-export enum RecipientEnum {
-    DEADEND, GROUP, UNION, USER
 }
 
 export class CardData {
@@ -129,8 +119,9 @@ export class HourAndMinutes {
 
 export function fromCardToLightCard(card: Card): LightCard {
     return new LightCard(card.uid, card.id, card.publisher, card.processVersion, card.publishDate, card.startDate
-        , card.endDate, card.severity, card.hasBeenAcknowledged, card.hasBeenRead, card.processInstanceId
-        , card.lttd, card.title, card.summary, null, [], card.process, card.state, card.parentCardId, card.initialParentCardUid);
+        , card.endDate, card.severity, card.hasBeenAcknowledged, card.hasBeenRead, card.hasChildCardFromCurrentUserEntity, card.processInstanceId
+        , card.lttd, card.title, card.summary, null, [], card.process, card.state, card.parentCardId,
+        card.initialParentCardUid, card.keepChildCards,card.representative, card.representativeType);
 }
 
 export function fromCardToCardForPublishing(card: Card): CardForPublishing {
@@ -153,11 +144,12 @@ export function fromCardToCardForPublishing(card: Card): CardForPublishing {
         card.externalRecipients,
         card.entitiesAllowedToRespond,
         card.entitiesRequiredToRespond,
-        card.recipient,
         card.parentCardId,
         card.initialParentCardUid,
         card.keepChildCards,
         card.publisherType,
+        card.representative,
+        card.representativeType,
         card.secondsBeforeTimeSpanForReminder,
         card.timeSpans
     );

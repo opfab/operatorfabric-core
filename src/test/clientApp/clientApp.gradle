@@ -25,26 +25,46 @@ configurations {
 
 //create a single Jar with all dependencies
 jar {
-	    manifest {
-	        attributes 'Main-Class': 'org.opfab.client.ClientApplication'
-	    }
-	 
-	    from {
-	        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-	    }
+	manifest {
+		attributes 'Main-Class': 'org.opfab.client.ClientApplication'
 	}
+
+	from {
+		configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+}
 
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation boot.starterWeb
+	implementation "org.opfab:cards-client-data:${project.version}"
 
-	annotationProcessor 'org.projectlombok:lombok'
-	compile project(':client:cards-client-data')
+	annotationProcessor misc.lombok
 	compile project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-	}
+	testImplementation boot.starterTest
 }
 
 test {
 	useJUnitPlatform()
 }
+
+// If the version is a release, the necessary client jars can be taken from Maven Central.
+if (project.version.endsWith("RELEASE")) {
+	dependencies {
+		implementation project(':client:cards-client-data') // Temporary: This was causing an issue with the release as the corresponding jars are not available yet.
+	}
+} else { // In the case of a SNAPSHOT version however, the jars won't be available on central
+	// If signing key info is set up in the gradle.properties file, the client jars should be signed and published to
+	// maven local then used
+	if(project.hasProperty('signing.gnupg.keyName')) {
+		dependencies {
+			implementation "org.opfab:cards-client-data:${project.version}"
+		}
+		tasks.compileJava.dependsOn ':client:cards-client-data:publishToMavenLocal'
+	} else { // Otherwise, just do a plain gradle dependency on the client project
+		dependencies {
+			implementation project(':client:cards-client-data')
+		}
+	}
+}
+
