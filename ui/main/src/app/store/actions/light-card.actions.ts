@@ -72,8 +72,10 @@ export class RemoveLightCard implements Action {
 
 export class UpdateALightCard implements Action {
     readonly type = LightCardActionTypes.UpdateALightCard;
-    constructor(public payload: { card: LightCard }) {
+    constructor(public payload: { lightCard: LightCard, updateTrigger: UpdateTrigger}) {
     }
+    //The updateTrigger property is used to indicate what triggered the update of the card, so some effects can be
+    //adapted accordingly (sound notifications for example).
 }
 
 export class LightCardAlreadyUpdated implements Action {
@@ -91,3 +93,9 @@ export type LightCardActions =
     | UpdateALightCard
     | LightCardAlreadyUpdated
     | RemoveLightCard;
+
+export enum UpdateTrigger {
+    READ = 'READ',
+    ACKNOWLEDGEMENT = 'ACKNOWLEDGEMENT',
+    REMINDER = 'REMINDER'
+}
