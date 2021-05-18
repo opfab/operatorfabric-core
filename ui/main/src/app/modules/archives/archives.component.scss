@@ -31,8 +31,6 @@
 
   .opfab-archives {
     background-color: var(--opfab-bgcolor-darker);
-    margin-left: 0px;
-    margin-right: 0px;
     padding-left: 5%;
   
   }
@@ -48,6 +46,52 @@
     border-color: var(--opfab-form-border-color);
   
   }
+
+
+  .opfab-publish-date {
+    margin-left:40px;
+    margin-right: 30px;
+    width:230px; 
+    min-width:230px;
+  }
+
+
+  .opfab-buttons {
+    margin-top:15px;
+    margin-left:60px;
+    margin-bottom:22px;
+     margin-top: auto; 
+  }
+
+ // ADAPT MARGINS TO SCREEN SIZE 
+
+  @media all and (max-width: 1700px)  {
+    .opfab-archives {
+      padding-left : 2%;
+    }
+  } 
+      // Remove vertical line when screen to small
+  @media all and (max-width: 1600px)  {
+    .opfab-vertical-bar {
+      border-left-width: 0px;
+      margin: 0px;
+    }
+  } 
+
+  @media all and (max-width: 1550px)  {
+    .opfab-buttons {
+     margin-left:20px;
+    }
+  } 
+
+  @media all and (max-width: 1500px)  {
+    .opfab-publish-date {
+     margin:0px;
+    }
+  } 
+
+ // AND - ADAPT MARGINS TO SCREEN SIZE 
+
 
   .opfab-card-received-footer {
     float: left;
