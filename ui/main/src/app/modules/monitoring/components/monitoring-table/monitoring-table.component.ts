@@ -165,6 +165,9 @@ export class MonitoringTableComponent implements OnDestroy {
     }
 
     ngOnDestroy() {
+        if (!!this.modalRef) {
+            this.modalRef.close();
+        }
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }
