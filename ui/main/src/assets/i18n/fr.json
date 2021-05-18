@@ -222,7 +222,10 @@
       "notAvailable": "Fonctionnalité non disponible",
       "templateError" : "Erreur technique : template non conforme",
       "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques",
-      "endDateBeforeStartDate": "La date de fin doit être postérieure à la date de début"
+      "endDateBeforeStartDate": "La date de fin doit être postérieure à la date de début",
+      "lttdBeforeStartDate": "La date limite de réponse doit être postérieure à la date de début",
+      "lttdAfterEndDate": "La date limite de réponse doit être antérieure à la date de fin"
+      
     },
     "filters": {
       "severity": "SEVERITE",

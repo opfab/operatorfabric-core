@@ -487,6 +487,16 @@ export class UserCardComponent implements OnDestroy, OnInit {
             return;
         }
 
+        if (!!lttd && lttd < startDate) {
+            this.displayMessage('userCard.error.lttdBeforeStartDate','',MessageLevel.ERROR);
+            return;
+        }
+
+        if (!!lttd && !!endDate && lttd > endDate) {
+            this.displayMessage('userCard.error.lttdAfterEndDate','',MessageLevel.ERROR);
+            return;
+        }
+
         const title = (!!specificInformation.card.title) ? specificInformation.card.title : 'UNDEFINED';
         const summary = (!!specificInformation.card.summary) ? specificInformation.card.summary : 'UNDEFINED';
         const keepChildCards = (!!specificInformation.card.keepChildCards) ? specificInformation.card.keepChildCards : false;
