@@ -8,17 +8,17 @@
  */
 
 
-import { Injectable } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { LightCard } from '@ofModel/light-card.model';
-import { CardService } from '@ofServices/card.service';
-import { ProcessesService } from '@ofServices/processes.service';
-import { UpdateALightCard } from '@ofStore/actions/light-card.actions';
-import { AppState } from '@ofStore/index';
-import { fetchLightCard, selectLastCardLoaded } from '@ofStore/selectors/feed.selectors';
-import { take } from 'rxjs/operators';
-import { ReminderList } from './reminderList';
-import { AcknowledgeService } from '@ofServices/acknowledge.service';
+import {Injectable} from '@angular/core';
+import {select, Store} from '@ngrx/store';
+import {LightCard} from '@ofModel/light-card.model';
+import {CardService} from '@ofServices/card.service';
+import {ProcessesService} from '@ofServices/processes.service';
+import {UpdateALightCard, UpdateTrigger} from '@ofStore/actions/light-card.actions';
+import {AppState} from '@ofStore/index';
+import {fetchLightCard, selectLastCardLoaded} from '@ofStore/selectors/feed.selectors';
+import {take} from 'rxjs/operators';
+import {ReminderList} from './reminderList';
+import {AcknowledgeService} from '@ofServices/acknowledge.service';
 
 @Injectable()
 export class ReminderService {
@@ -74,7 +74,7 @@ export class ReminderService {
                     }
                     );
                     const updatedLightCard = { ...lightCard, hasBeenAcknowledged: false, hasBeenRead: false };
-                    this.store.dispatch(new UpdateALightCard({ card: updatedLightCard }));
+                    this.store.dispatch(new UpdateALightCard({ lightCard: updatedLightCard, updateTrigger: UpdateTrigger.REMINDER }));
                 } else { // the card has been deleted in this case
                     this.reminderList.removeAReminder(cardId);
                 }
