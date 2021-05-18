@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  description: OperatorFabric Card Consumer Service
+  description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
   version: SNAPSHOT
   title: Card Management API
   termsOfService: ''
@@ -10,8 +10,8 @@ info:
   license:
     name: Mozilla Public License V2.0
     url: 'http://mozilla.org/MPL/2.0/'
-host: localhost
-basePath: /apis
+host: localhost:2002
+basePath: /cards
 tags:
   - name: cards
     description: Everything concerning cards
@@ -891,13 +891,6 @@ paths:
           description: No action done, the item already exists
         '404':
           description: Try to remove item from unexisting card
-  '/cards/userCardRead/{uid}':
-    parameters:
-      - in: path
-        name: uid
-        type: string
-        required: true
-        description: "The card uid"
     delete:
       operationId: deleteUserRead
       tags:
