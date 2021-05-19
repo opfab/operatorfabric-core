@@ -145,9 +145,9 @@ WARNING: Don't forget the *final slash* in the URL or you will get an error, a `
 
 == Push cards to the feed
 
-You can check that you see cards into the feed by running the
-`push_card_loop.sh` script.
+You can check that you see cards into the feed by running the following scripts.
 [source,shell]
 ----
-services/core/cards-publication/src/main/bin/push_card_loop.sh
+./src/test/resources/loadTestConf.sh
+./src/test/resources/send6TestCards.sh
 ----
