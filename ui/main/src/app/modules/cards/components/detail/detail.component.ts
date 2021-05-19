@@ -597,6 +597,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private initializeHandlebarsTemplatesProcess() {
+      templateGateway.initTemplateGateway();
       templateGateway.childCards = this.childCards;
       templateGateway.isLocked = this.isLocked;
       templateGateway.userAllowedToRespond = this.isActionEnabled;
