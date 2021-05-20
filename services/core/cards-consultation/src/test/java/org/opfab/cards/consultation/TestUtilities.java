@@ -131,7 +131,6 @@ public class TestUtilities {
         card.setUid(UUID.randomUUID().toString());
         card.setPublishDate(publishDate);
         card.setId(card.getProcess() + "." + card.getProcessInstanceId());
-        card.setShardKey(Math.toIntExact(card.getStartDate().toEpochMilli() % 24 * 1000));
     }
 
 
@@ -180,7 +179,6 @@ public class TestUtilities {
     public static void prepareArchivedCard(ArchivedCardConsultationData archivedCard, Instant publishDate) {
         archivedCard.setId(UUID.randomUUID().toString());
         archivedCard.setPublishDate(publishDate);
-        archivedCard.setShardKey(Math.toIntExact(archivedCard.getStartDate().toEpochMilli() % 24 * 1000));
     }
 
     public static boolean checkIfCardActiveInRange(LightCard card, Instant rangeStart, Instant rangeEnd) {

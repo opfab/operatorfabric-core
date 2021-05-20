@@ -89,8 +89,6 @@ public class CardPublicationData implements Card {
     private List<? extends TimeSpan> timeSpans;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;
-    @Indexed
-    private int shardKey;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> userRecipients;
@@ -133,7 +131,6 @@ public class CardPublicationData implements Card {
         this.id = process + "." + processInstanceId;
         if (null == this.uid)
         	this.uid = UUID.randomUUID().toString();
-        this.setShardKey(Math.toIntExact(this.getStartDate().toEpochMilli() % 24 * 1000));
         this.processStateKey = process + "." + state;
     }
 

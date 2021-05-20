@@ -72,8 +72,6 @@ public class CardConsultationData implements Card {
     
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;
-    @Indexed
-    private int shardKey;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
     private List<String> userRecipients;

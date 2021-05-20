@@ -64,8 +64,7 @@ public class ArchivedCardPublicationData implements Card {
     private SeverityEnum severity;
     private List<String> tags;
     private Object data;
-    @Indexed
-    private int shardKey;
+
     private List<String> userRecipients;
     private List<String> groupRecipients;
     @Transient
@@ -105,7 +104,6 @@ public class ArchivedCardPublicationData implements Card {
         this.processInstanceId = card.getProcessInstanceId();
         this.state = card.getState();
         this.startDate = card.getStartDate();
-        this.shardKey = card.getShardKey();
         this.endDate = card.getEndDate();
         this.lttd = card.getLttd();
         this.title = card.getTitle();
