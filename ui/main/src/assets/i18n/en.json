@@ -66,6 +66,9 @@
           "label": "Information"
         }
       },
+      "showCardsWithResponse": {
+        "label": "Cards with response from my entity"
+      },
       "ack": {
         "title": "Acknowledgement",
         "acknowledged": {

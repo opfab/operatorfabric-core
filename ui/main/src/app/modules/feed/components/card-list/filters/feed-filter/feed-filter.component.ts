@@ -31,6 +31,7 @@ import moment from 'moment';
 export class FeedFilterComponent implements OnInit, OnDestroy {
     @Input() hideTimerTags: boolean;
     @Input() hideAckFilter: boolean;
+    @Input() hideResponseFilter: boolean;
 
     dateTimeFilterChange = new Subject();
 
@@ -38,6 +39,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     typeFilterForm: FormGroup;
     ackFilterForm: FormGroup;
     timeFilterForm: FormGroup;
+    responseFilterForm: FormGroup;
 
     private dateFilterType = FilterType.PUBLISHDATE_FILTER;
 
@@ -45,6 +47,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         this.typeFilterForm = this.createFormGroup();
         this.ackFilterForm = this.createAckFormGroup();
         this.timeFilterForm = this.createDateTimeForm();
+        this.responseFilterForm = this.createResponseFormGroup();
     }
 
     private createFormGroup() {
@@ -53,6 +56,12 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             action: new FormControl(),
             compliant: new FormControl(),
             information: new FormControl()
+        }, {updateOn: 'change'});
+    }
+
+    private createResponseFormGroup() {
+        return new FormGroup({
+            responseControl: new FormControl(true),
         }, {updateOn: 'change'});
     }
 
@@ -78,6 +87,10 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.initTypeFilter();
+
+        if (!this.hideResponseFilter) {
+            this.initResponseFilter();
+        }
 
         if (!this.hideAckFilter) {
             this.initAckFilter();
@@ -134,6 +147,40 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
                         status: form
                     }));
                 });
+    }
+
+    private initResponseFilter() {
+
+        const responseValue = localStorage.getItem('opfab.feed.filter.response');
+        const responseUnset = responseValue && responseValue != 'true';
+
+        this.responseFilterForm.get('responseControl').setValue(!responseUnset, {emitEvent: false});
+
+        if (!!responseValue) {
+
+            this.store.dispatch(
+                new ApplyFilter({
+                    name: FilterType.RESPONSE_FILTER,
+                    active: responseUnset,
+                    status: !responseUnset
+                }));
+        }
+
+        this.responseFilterForm
+            .valueChanges
+            .pipe(
+                takeUntil(this.ngUnsubscribe$))
+            .subscribe(form => {
+
+                localStorage.setItem('opfab.feed.filter.response', form.responseControl);
+
+                return this.store.dispatch(
+                    new ApplyFilter({
+                        name: FilterType.RESPONSE_FILTER,
+                        active: !form.responseControl,
+                        status: form.responseControl
+                    }));
+            });
     }
 
     private initAckFilter() {
@@ -246,6 +293,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     isFilterActive(): boolean {
         return !this.typeFilterForm.get('alarm').value || !this.typeFilterForm.get('action').value
             || !this.typeFilterForm.get('compliant').value || !this.typeFilterForm.get('information').value
+            || !this.responseFilterForm.get('responseControl').value
             || this.ackFilterForm.get('ackControl').value === 'ack'
             || !!this.extractTime(this.timeFilterForm.get('dateTimeFrom')) || !!this.extractTime(this.timeFilterForm.get('dateTimeTo'));
     }
@@ -253,6 +301,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     isFilterChanged(): boolean {
         return !this.typeFilterForm.get('alarm').value || !this.typeFilterForm.get('action').value
             || !this.typeFilterForm.get('compliant').value || !this.typeFilterForm.get('information').value
+            || !this.responseFilterForm.get('responseControl').value
             || this.ackFilterForm.get('ackControl').value != 'notack'
             || !!this.extractTime(this.timeFilterForm.get('dateTimeFrom')) || !!this.extractTime(this.timeFilterForm.get('dateTimeTo'));
     }
@@ -262,6 +311,9 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         this.typeFilterForm.get('action').setValue(true, {emitEvent: true});
         this.typeFilterForm.get('compliant').setValue(true, {emitEvent: true});
         this.typeFilterForm.get('information').setValue(true, {emitEvent: true});
+        if (!this.hideResponseFilter) {
+            this.responseFilterForm.get('responseControl').setValue(true, {emitEvent: true});
+        }
         if (!this.hideAckFilter) {
             this.ackFilterForm.get('ackControl').setValue('notack', {emitEvent: true});
         }
