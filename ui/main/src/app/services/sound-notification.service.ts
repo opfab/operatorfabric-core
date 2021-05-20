@@ -14,7 +14,7 @@ import {LightCard, Severity} from "@ofModel/light-card.model";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
-import {LoadLightParentCard, UpdateALightCard, UpdateTrigger} from "@ofActions/light-card.actions";
+import {UpdateTrigger} from "@ofActions/light-card.actions";
 
 @Injectable()
 export class SoundNotificationService {

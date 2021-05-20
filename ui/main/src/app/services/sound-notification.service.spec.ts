@@ -8,7 +8,7 @@
  */
 
 
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
 import { SoundNotificationService } from './sound-notification.service';
 import {StoreModule} from "@ngrx/store";
@@ -234,7 +234,7 @@ describe('SoundNotificationService', () => {
 
   /* For these tests, settings configuration property to true for all severities */
 
-  it('should not play sound if updated card is not visible', () => {
+  it('should not play sound if updated card is not visible, even if it is reminder', () => {
 
     configAllSeveritiesOn();
 
@@ -246,7 +246,7 @@ describe('SoundNotificationService', () => {
 
   });
 
-  it('should play sound if updated card is visible, even if it is not freshly published (', () => {
+  it('should play sound if updated card is reminder and is visible, even if it is not freshly published (', () => {
 
     configAllSeveritiesOn()
 
