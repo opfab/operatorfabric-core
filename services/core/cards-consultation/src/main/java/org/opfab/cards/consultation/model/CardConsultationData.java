@@ -18,7 +18,6 @@ import org.opfab.cards.model.SeverityEnum;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
@@ -58,9 +57,7 @@ public class CardConsultationData implements Card {
     @CreatedDate
     private Instant publishDate;
     private Instant lttd;
-    @Indexed
     private Instant startDate;
-    @Indexed
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Instant endDate;
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -79,13 +76,10 @@ public class CardConsultationData implements Card {
     @Singular
     private List<String> groupRecipients;
     @Singular
-    @Indexed
     private List<String> entityRecipients;
     @Singular("entityAllowedToRespond")
-    @Indexed
     private List<String> entitiesAllowedToRespond;
     @Singular("entityRequiredToRespond")
-    @Indexed
     private List<String> entitiesRequiredToRespond;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
