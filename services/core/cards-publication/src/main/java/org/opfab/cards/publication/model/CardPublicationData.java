@@ -18,7 +18,6 @@ import org.opfab.cards.model.SeverityEnum;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -41,7 +40,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@CompoundIndex(name = "process_state", def = "{'process' : 1, 'state' : 1}")
+
 public class CardPublicationData implements Card {
 
     @Builder.Default
@@ -91,21 +90,20 @@ public class CardPublicationData implements Card {
     private Object data;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @Indexed
     private List<String> userRecipients;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @Indexed
     private List<String> groupRecipients;
     @Singular("entityAllowedToRespond")
-    @Indexed
     private List<String> entitiesAllowedToRespond;
     @Singular("entityRequiredToRespond")
-    @Indexed
     private List<String> entitiesRequiredToRespond;
     @Singular
     @Indexed
     private List<String> entityRecipients;
     @Singular
-    @Indexed
     private List<String> externalRecipients;
     @JsonIgnore
     private List<String> usersAcks;
