@@ -516,7 +516,6 @@ class CardProcessServiceShould {
                 .dateRange(today, tomorrow).stringLengthRange(5, 50).collectionSizeRange(1, 10)
                 .excludeField(named("data"))
                 .excludeField(named("parameters"))
-                .excludeField(named("shardKey"))
                 .scanClasspathForConcreteTypes(true).overrideDefaultInitialization(false)
                 .ignoreRandomizationErrors(true);
 
