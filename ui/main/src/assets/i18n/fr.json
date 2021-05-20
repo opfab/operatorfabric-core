@@ -65,6 +65,9 @@
           "label": "Information"
         }
       },
+      "showCardsWithResponse": {
+        "label": "Cartes avec réponse de mon entité"
+      },
       "ack": {
         "title": "Acquittement",
         "acknowledged": {

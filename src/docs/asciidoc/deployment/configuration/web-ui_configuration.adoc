@@ -73,6 +73,7 @@ a|card time display mode in the feed. Values :
  - NONE: nothing displayed.
 |feed.card.hideTimeFilter|false|no|Control if you want to show or hide the time filter in the feed page
 |feed.card.hideAckFilter|false|no|Control if you want to show or hide the acknowledgement filter in the feed page
+|feed.card.hideResponseFilter|false|no|Control if you want to show or hide the response filter in the feed page
 |feed.card.hideReadSort|false|no|Control if you want to show or hide the option to sort cards by read status in the feed page
 |feed.card.hideSeveritySort|false|no|Control if you want to show or hide the option to sort cards by severity in the feed page
 |feed.card.hideAckAllCardsFeature|true|no|Control if you want to show or hide the option for acknowledging all the visible cards of the feed
