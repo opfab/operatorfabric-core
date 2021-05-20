@@ -30,8 +30,6 @@ import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {selectLightCardsState, selectSortedFilterLightCardIds} from '@ofSelectors/feed.selectors';
 import {LightCard} from '@ofModel/light-card.model';
 import {UserService} from '@ofServices/user.service';
-import {CardsSubscriptionActionTypes} from "@ofActions/cards-subscription.actions";
-
 
 @Injectable()
 export class CardOperationEffects {
