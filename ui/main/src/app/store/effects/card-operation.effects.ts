@@ -18,6 +18,7 @@ import {
     LoadLightCard,
     LoadLightChildCard,
     LoadLightParentCard,
+    NoopAction,
     UpdateALightCard
 } from '@ofActions/light-card.actions';
 import {Store} from '@ngrx/store';
@@ -34,6 +35,7 @@ import {UserService} from '@ofServices/user.service';
 @Injectable()
 export class CardOperationEffects {
 
+    private  orphanedChildCardsFromCurrentEntity : Set <string>  = new Set();
 
     constructor(private store: Store<AppState>,
                 private actions$: Actions,
@@ -49,26 +51,48 @@ export class CardOperationEffects {
             map((loadedCardAction: LoadLightCard) => loadedCardAction.payload.lightCard),
             withLatestFrom(this.store.select(selectLightCardsState)),
             map(([lightCard, state]) => {
-                    if (!!lightCard.parentCardId) {
-                        return new LoadLightChildCard({lightCard: lightCard,isFromCurrentUserEntity : this.doesChildCardIsFromCurrentUserEntity(lightCard)});
+                if (!!lightCard.parentCardId) {
+                    const isFromCurrentUser = this.isChildCardFromCurrentUserEntity(lightCard);
+                    if (isFromCurrentUser) {
+                        if (!state.entities[lightCard.parentCardId]) {
+                             // if parent does not exist yet keep in memory the information that the card with id=parentCardId has a child
+                             // and that this child if from current user entity
+                             // this situation can arise as we do not have the card ordered when received from
+                             // the back via subscription (i.e a child can be received  before his parent)
+                            this.orphanedChildCardsFromCurrentEntity.add(lightCard.parentCardId);
+                            // do not need to load this child card
+                            return new NoopAction();
+                        }
+    
                     }
-                    else {
-                        let card: LightCard  = {...lightCard} ;
-                        card.hasChildCardFromCurrentUserEntity = this.doesNewCardVersionHasChildFromCurrentUserEntity(state.entities[card.id],card);
-                        return new LoadLightParentCard({lightCard: card});
-                    }
+                    return new LoadLightChildCard({lightCard: lightCard, isFromCurrentUserEntity: isFromCurrentUser});
                 }
-            )
+
+                else {
+                    let newCard: LightCard = {...lightCard};
+                    const oldCardVersion = state.entities[newCard.id];
+                    newCard.hasChildCardFromCurrentUserEntity = this.cardHasChildFromCurrentUserEntity(oldCardVersion, newCard);
+                    return new LoadLightParentCard({lightCard: newCard});
+                }
+            })
         ));
 
-    private doesChildCardIsFromCurrentUserEntity(childCard) : boolean
+    private isChildCardFromCurrentUserEntity(childCard) : boolean
     {
         return this.userService.getCurrentUserWithPerimeters().userData.entities.some((entity) => entity === childCard.publisher);
     }
 
-    private doesNewCardVersionHasChildFromCurrentUserEntity(oldCardVersion,newCard) : boolean
+    private cardHasChildFromCurrentUserEntity(oldCardVersion,newCard) : boolean
     {
-        return  (oldCardVersion && newCard.keepChildCards && oldCardVersion.hasChildCardFromCurrentUserEntity);
+        if (oldCardVersion) return  (newCard.keepChildCards && oldCardVersion.hasChildCardFromCurrentUserEntity);
+        else {
+            // if a child card form the current user entity has been loaded in the UI before the parent card 
+            if (this.orphanedChildCardsFromCurrentEntity.has(newCard.id)) {
+                this.orphanedChildCardsFromCurrentEntity.delete(newCard.id);
+                return true;
+            }
+        return false;
+        }
     }
 
     /** This effect triggers sound notifications for new cards as well as for card updates (so far, reminders).

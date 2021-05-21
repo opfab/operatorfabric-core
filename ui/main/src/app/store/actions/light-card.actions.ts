@@ -21,7 +21,8 @@ export enum LightCardActionTypes {
     AddLightCardFailure = '[LCard] Add Light Card Fail',
     RemoveLightCard = '[LCard] Remove a card',
     UpdateALightCard = '[LCard] Update a Light Card',
-    LightCardAlreadyUpdated = '[LCard] Light Card already Updated'
+    LightCardAlreadyUpdated = '[LCard] Light Card already Updated',
+    NoopAction = '[LCard] Nothing to do'
 }
 
 
@@ -82,6 +83,10 @@ export class LightCardAlreadyUpdated implements Action {
     readonly type = LightCardActionTypes.LightCardAlreadyUpdated;
 }
 
+export class NoopAction implements Action {
+    readonly type = LightCardActionTypes.NoopAction;
+}
+
 export type LightCardActions =
     LoadLightCard
     | LoadLightChildCard
@@ -92,7 +97,8 @@ export type LightCardActions =
     | EmptyLightCards
     | UpdateALightCard
     | LightCardAlreadyUpdated
-    | RemoveLightCard;
+    | RemoveLightCard
+    | NoopAction;
 
 export enum UpdateTrigger {
     READ = 'READ',

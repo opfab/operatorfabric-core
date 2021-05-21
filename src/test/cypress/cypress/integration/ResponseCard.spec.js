@@ -52,7 +52,10 @@ describe ('Response card tests',function () {
          
         // See in the feed the fact that user has respond (icon)
         cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity');
-    })
+    });
+
+
+
 
     it('Check card response for operator 2 ', function () {
 
@@ -112,4 +115,39 @@ describe ('Response card tests',function () {
         cy.get('#opfab-card-details-btn-response').should('not.exist');
         
     })
+
+    it ('Check response for  operator 1  is still present after update of card with keepChildCard=true re-logging',function () {
+        cy.sendCard('defaultProcess/questionWithKeepChildCards.json');
+
+        cy.loginOpFab('operator1','test');
+        // See in the feed the fact that user has respond (icon)
+        cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity');
+
+         // Click on the card
+         cy.get('of-light-card').eq(0).click();
+
+         // Check the correct rendering of card 
+         cy.get('#question-choice2');
+ 
+         // Check the old response from ENTITY1 has been integrated in the template 
+         cy.get('#response_from_ENTITY1');
+    });
+
+    it ('Check response for  operator 1  is not present after update of card with keepChildCard= false re-logging',function () {
+        cy.sendCard('defaultProcess/question.json');
+
+        cy.loginOpFab('operator1','test');
+       
+        // Click on the card
+        cy.get('of-light-card').eq(0).click(); 
+
+        // Should not have an icon of response
+        cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity').should('not.exist');;
+
+         // Check the correct rendering of card 
+         cy.get('#question-choice2');
+ 
+         // Check the old response from ENTITY1 has not been integrated in the template 
+         cy.get('#response_from_ENTITY1').should('not.exist');
+    });
 })
