@@ -1,0 +1,21 @@
+ {
+		"publisher" : "processAction",
+		"processVersion" : "1",
+		"process"  :"defaultProcess",
+		"processInstanceId" : "process4",
+		"state": "questionState",
+		"userRecipients": ["operator1", "operator2","operator3","operator4"],
+		"entitiesAllowedToRespond": ["ENTITY1","ENTITY2","ENTITY3"],
+		"entitiesRequiredToRespond": ["ENTITY1","ENTITY2"],
+		"severity" : "ACTION",
+		"startDate" : ${current_date_in_milliseconds_from_epoch},
+		"endDate" : ${current_date_in_milliseconds_from_epoch_plus_8hours},
+		"summary" : {"key" : "message.summary"},
+		"title" : {"key" : "question.title"},
+		"data" : {"message":" Action Card"},
+		"lttd" :  ${current_date_in_milliseconds_from_epoch_plus_3minutes},
+		"timeSpans" : [
+			{"start" :  ${current_date_in_milliseconds_from_epoch_plus_4hours}}
+			],
+        "keepChildCards" : true
+	}
