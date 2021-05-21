@@ -20,6 +20,7 @@ import org.opfab.businessconfig.model.*;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.utilities.PathUtils;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ResourceLoaderAware;
@@ -61,13 +62,15 @@ public class ProcessesService implements ResourceLoaderAware {
     private ResourceLoader resourceLoader;
     private LocalValidatorFactoryBean validator;
     private ProcessGroupsData processGroupsCache;
+    private final RabbitTemplate rabbitTemplate;
     
     @Autowired
-    public ProcessesService(ObjectMapper objectMapper, LocalValidatorFactoryBean validator) {
+    public ProcessesService(ObjectMapper objectMapper, LocalValidatorFactoryBean validator, RabbitTemplate rabbitTemplate) {
         this.objectMapper = objectMapper;
         this.completeCache = HashBasedTable.create();
         this.defaultCache = new HashMap<>();
         this.validator = validator;
+        this.rabbitTemplate = rabbitTemplate;
     }
     
     @PostConstruct
@@ -342,6 +345,7 @@ public class ProcessesService implements ResourceLoaderAware {
 
         //update cache
         processGroupsCache = newProcessGroups;
+        pushProcessChangeInRabbit();
     }
 
     /**
@@ -375,6 +379,9 @@ public class ProcessesService implements ResourceLoaderAware {
         //update caches
         defaultCache.put(process.getId(),process);
         completeCache.put(process.getId(), process.getVersion(), process);
+
+        pushProcessChangeInRabbit();
+
         //retieve newly loaded process from cache
         return fetch(process.getId(), process.getVersion());
     }
@@ -412,6 +419,7 @@ public class ProcessesService implements ResourceLoaderAware {
     	PathUtils.delete(processRootPath);
     	log.debug("removed process:{} from filesystem", id);
     	removeFromCache(id);
+        pushProcessChangeInRabbit();
     }
     
     /**
@@ -467,6 +475,7 @@ public class ProcessesService implements ResourceLoaderAware {
 			PathUtils.delete(processVersionPath);
 			log.debug("removed process:{} with version:{} from filesystem", id, version);
 			completeCache.remove(id,version);
+            pushProcessChangeInRabbit();
 		}
 	}
 
@@ -494,6 +503,7 @@ public class ProcessesService implements ResourceLoaderAware {
             this.defaultCache.clear();
             this.processGroupsCache.clear();
         }
+        pushProcessChangeInRabbit();
     }
         
     /**
@@ -531,6 +541,12 @@ public class ProcessesService implements ResourceLoaderAware {
         	resultMessage = error.orElse("unexpected format error");
         }
     	return Optional.ofNullable(resultMessage);
+    }
+
+    private void pushProcessChangeInRabbit() {
+        rabbitTemplate.convertAndSend("PROCESS_EXCHANGE", "", "BUSINESS_CONFIG_CHANGE");
+        log.debug("Operation BUSINESS_CONFIG_CHANGE sent to PROCESS_EXCHANGE");
+
     }
 
 }
