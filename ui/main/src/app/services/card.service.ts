@@ -33,6 +33,7 @@ import {
     RemoveLightCard
 } from '@ofActions/light-card.actions';
 import {EntitiesService} from '@ofServices/entities.service';
+import {BusinessConfigChangeAction} from '@ofStore/actions/processes.actions';
 
 @Injectable()
 export class CardService {
@@ -134,6 +135,10 @@ export class CardService {
                             break;
                         case 'RESTORE':
                             console.log(new Date().toISOString(), `CardService - Subscription restored with server`);
+                            break;
+                        case 'BUSINESS_CONFIG_CHANGE':
+                            this.store.dispatch(new BusinessConfigChangeAction());
+                            console.log(new Date().toISOString(), `CardService - BUSINESS_CONFIG_CHANGE received`);
                             break;
                         default :
                             return observer.next(JSON.parse(message.data, CardOperation.convertTypeIntoEnum));

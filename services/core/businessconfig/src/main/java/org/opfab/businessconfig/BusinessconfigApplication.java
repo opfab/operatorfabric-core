@@ -16,10 +16,12 @@ import org.opfab.springtools.configuration.oauth.EnableOperatorFabricOAuth2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
 @Slf4j
 @EnableOperatorFabricOAuth2
+@ImportResource("classpath:/amqp.xml")
 public class BusinessconfigApplication {
 
     public static void main(String[] args) {

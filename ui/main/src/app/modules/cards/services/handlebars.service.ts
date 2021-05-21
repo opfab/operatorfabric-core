@@ -22,7 +22,9 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {buildSettingsOrConfigSelector} from '@ofSelectors/settings.x.config.selectors';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class HandlebarsService {
 
     constructor(
@@ -275,6 +277,10 @@ export class HandlebarsService {
             map(s => Handlebars.compile(s)),
             tap(t => this.templateCache[key] = t)
         );
+    }
+
+    public clearCache() {
+        this.templateCache = new Map();
     }
 
     private registerSort() {

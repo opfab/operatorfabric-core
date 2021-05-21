@@ -45,9 +45,11 @@ import java.util.*;
 @EqualsAndHashCode
 public class CardSubscription {
     public static final String GROUPS_SUFFIX = "Groups";
+    public static final String PROCESS_SUFFIX = "Process";
     public static final String DELETE_OPERATION = "DELETE";
     public static final String ERROR_MESSAGE_PARSING = "ERROR during received message parsing";
-    private String queueName;
+    private String cardsQueueName;
+    private String processQueueName;
     private long current = 0;
     @Getter
     private CurrentUserWithPerimeters currentUserWithPerimeters;
@@ -59,8 +61,10 @@ public class CardSubscription {
     private FluxSink<String> messageSink;
     private AmqpAdmin amqpAdmin;
     private FanoutExchange cardExchange;
+    private FanoutExchange processExchange;
     private ConnectionFactory connectionFactory;
     private MessageListenerContainer cardListener;
+    private MessageListenerContainer processListener;
     @Getter
     private Instant startingPublishDate;
     @Getter
@@ -82,15 +86,18 @@ public class CardSubscription {
                             Runnable doOnCancel,
                             AmqpAdmin amqpAdmin,
                             FanoutExchange cardExchange,
+                            FanoutExchange processExchange,
                             ConnectionFactory connectionFactory) {
         userLogin = currentUserWithPerimeters.getUserData().getLogin();
         this.id = computeSubscriptionId(userLogin, clientId);
         this.currentUserWithPerimeters = currentUserWithPerimeters;
         this.amqpAdmin = amqpAdmin;
         this.cardExchange = cardExchange;
+        this.processExchange = processExchange;
         this.connectionFactory = connectionFactory;
         this.clientId = clientId;
-        this.queueName = computeSubscriptionId(userLogin + GROUPS_SUFFIX, this.clientId);
+        this.cardsQueueName = computeSubscriptionId(userLogin + GROUPS_SUFFIX, this.clientId);
+        this.processQueueName = computeSubscriptionId(userLogin + PROCESS_SUFFIX, this.clientId);
     }
 
     public String getUserLogin()
@@ -122,25 +129,28 @@ public class CardSubscription {
 
 
     public void initSubscription(Runnable doOnCancel) {
-        createQueue();
-        this.cardListener = createMessageListenerContainer(queueName);
-        this.publisher  = Flux.create(emitter -> {
-            log.debug("Create message flux for user {}",userLogin);
+        createQueue(cardsQueueName, cardExchange);
+        createQueue(processQueueName, processExchange);
+        this.cardListener = createMessageListenerContainer(cardsQueueName);
+        this.processListener = createMessageListenerContainer(processQueueName);
+        this.publisher = Flux.create(emitter -> {
+            log.debug("Create message flux for user {}", userLogin);
             this.messageSink = emitter;
             registerListener(cardListener);
-            emitter.onRequest(v -> log.debug("STARTING subscription for user {}",userLogin));
-            emitter.onDispose(()->{
-                log.debug("DISPOSING subscription for user {}",userLogin);
+            registerProcessListener(processListener);
+            emitter.onRequest(v -> log.debug("STARTING subscription for user {}", userLogin));
+            emitter.onDispose(() -> {
+                log.debug("DISPOSING subscription for user {}", userLogin);
                 doOnCancel.run();
             });
 
             if (!this.fluxHasBeenFirstInit) {
                 emitter.next("INIT");
                 this.fluxHasBeenFirstInit = true;
-            }
-            else emitter.next("RESTORE");
+            } else
+                emitter.next("RESTORE");
             cardListener.start();
-
+            processListener.start();
 
         });
 
@@ -166,17 +176,20 @@ public class CardSubscription {
         });
     }
 
+    private void registerProcessListener(MessageListenerContainer mlc) {
+        mlc.setupMessageListener(message -> publishDataIntoSubscription("BUSINESS_CONFIG_CHANGE"));
+    }
+
     /**
-     * <p>Constructs a non durable queue to cardExchange using queue name
-     * [user login]Groups#[client id].</p>
+     * <p>Constructs a non durable queue to exchange using queue name</p>
      * @return
      */
-    private Queue createQueue() {
-        log.debug("CREATE queue for user {}",userLogin);
+    private Queue createQueue(String queueName, FanoutExchange exchange) {
+        log.debug("CREATE queue for user {}", userLogin);
         Queue queue = QueueBuilder.nonDurable(queueName).build();
         amqpAdmin.declareQueue(queue);
 
-        Binding binding = BindingBuilder.bind(queue).to(cardExchange);
+        Binding binding = BindingBuilder.bind(queue).to(exchange);
         amqpAdmin.declareBinding(binding);
 
         return queue;
@@ -186,9 +199,11 @@ public class CardSubscription {
      * Stops associated {@link MessageListenerContainer} and delete queues
      */
     public void clearSubscription() {
-        log.debug("Clear subscription for user {}",userLogin);
+        log.debug("Clear subscription for user {}", userLogin);
         cardListener.stop();
-        amqpAdmin.deleteQueue(queueName);
+        amqpAdmin.deleteQueue(cardsQueueName);
+        processListener.stop();
+        amqpAdmin.deleteQueue(processQueueName);
         cleared = true;
     }
 
@@ -196,7 +211,7 @@ public class CardSubscription {
      *
      * @return true if associated AMQP listeners are still running
      */
-    public boolean checkActive(){
+    public boolean checkActive() {
         return cardListener == null || cardListener.isRunning();
     }
 
@@ -227,7 +242,7 @@ public class CardSubscription {
 
     public void publishDataFluxIntoSubscription(Flux<String> messageFlux) {
 
-        messageFlux.subscribe(next->this.messageSink.next(next));
+        messageFlux.subscribe(next -> this.messageSink.next(next));
     }
 
     public String createDeleteCardMessageForUserNotRecipient(JSONObject cardOperation) {
@@ -294,7 +309,7 @@ public class CardSubscription {
             state = (String) cardObj.get("state");
         }
 
-        if (! checkIfUserMustBeNotifiedForThisProcessState(process, state, currentUserWithPerimeters))
+        if (!checkIfUserMustBeNotifiedForThisProcessState(process, state, currentUserWithPerimeters))
             return false;
 
         String processStateKey = process + "." + state;
