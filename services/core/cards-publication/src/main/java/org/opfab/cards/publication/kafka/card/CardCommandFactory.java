@@ -28,9 +28,9 @@ public class CardCommandFactory {
 
     public CardCommand create(CardPublicationData cardPublicationData) {
         CardCommand cardCommand = new CardCommand();
+        final Object cardData = cardPublicationData.getData();
         Card kafkaCard;
         try {
-            Object cardData = cardPublicationData.getData();
             cardPublicationData.setData(null); // Prevent Jackson errors
 
             kafkaCard = objectMapper.readCardValue(objectMapper.writeValueAsString(cardPublicationData), Card.class);
@@ -41,6 +41,8 @@ public class CardCommandFactory {
             kafkaCard.setData(cardDataString);
         } catch (JsonProcessingException e) {
             log.error("Unable to serialize CardPublicationData {} into CardCommand. Message: {}", cardPublicationData, e.getMessage());
+        } finally {
+            cardPublicationData.setData(cardData);
         }
         return cardCommand;
     }
