@@ -10,9 +10,7 @@
     "**/bower_components/**",
     "**/vendor/**"
   ],
-  {
   "gradle-lite": {
     "fileMatch": ["versions.properties"]
   }
-}
 }
