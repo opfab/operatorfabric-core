@@ -61,19 +61,17 @@ public class UserServiceImp implements UserService {
                 .orElse(UserSettingsData.builder().login(login).build());
     }
 
-    /** Retrieve groups from repository for groups list, throwing an error if a group id is not found
+    /** Retrieve groups from repository for groups list, logging a warning if a group id is not found
      * */
     public List<GroupData> retrieveGroups(List<String> groupIds) {
         List<GroupData> foundGroups = new ArrayList<>();
         for(String id : groupIds){
-            GroupData foundGroup = groupRepository.findById(id).orElseThrow(
-                    () -> new ApiErrorException(
-                            ApiError.builder()
-                                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                    .message(String.format(GROUP_ID_IMPOSSIBLE_TO_FETCH_MSG, id))
-                                    .build()
-                    ));
-            foundGroups.add(foundGroup);
+            Optional<GroupData> foundGroup = groupRepository.findById(id);
+            if (foundGroup.isPresent()) {
+                foundGroups.add(foundGroup.get());
+            } else {
+                log.warn("Group id not found: {}", id);
+            }
         }
         return foundGroups;
     }
