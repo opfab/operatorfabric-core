@@ -24,7 +24,7 @@ import org.opfab.users.model.PerimeterData;
 import org.opfab.users.model.UserData;
 import org.opfab.users.model.UserSettingsData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.bus.PathServiceMatcher;
+import org.springframework.cloud.bus.ServiceMatcher;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,7 +63,7 @@ public class UsersController implements UsersApi {
     /* These are Spring Cloud Bus beans used to fire an event (UpdatedUserEvent) every time a user is modified.
      *  Other services handle this event by clearing their user cache for the given user. See issue #64*/
     @Autowired
-    private PathServiceMatcher busServiceMatcher;
+    private ServiceMatcher busServiceMatcher;
 
     @Autowired
     private ApplicationEventPublisher publisher;

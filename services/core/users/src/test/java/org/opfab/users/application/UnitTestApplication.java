@@ -20,12 +20,13 @@ import org.opfab.users.configuration.json.JacksonConfig;
 import org.opfab.users.configuration.mongo.LocalMongoConfiguration;
 import org.opfab.users.configuration.users.UsersProperties;
 import org.opfab.users.controllers.*;
-import org.opfab.users.controllers.*;
 import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.services.UserServiceImp;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.bus.BusPathMatcher;
+import org.springframework.cloud.bus.PathServiceMatcher;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
@@ -40,7 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 @Import({JacksonConfig.class, LocalMongoConfiguration.class, UsersProperties.class, CustomExceptionHandler.class,
    GroupsController.class, EntitiesController.class, UsersController.class, PerimetersController.class,
    CurrentUserWithPerimetersController.class, DataInitComponent.class, GroupsProperties.class, GroupsUtils.class,
-   JwtProperties.class, UserServiceImp.class})
+   JwtProperties.class, UserServiceImp.class, PathServiceMatcher.class, BusPathMatcher.class})
 @ImportResource("classpath:/security.xml")
 @Slf4j
 public class UnitTestApplication {
