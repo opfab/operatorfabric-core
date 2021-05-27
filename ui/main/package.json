@@ -74,7 +74,7 @@
     "@ngrx/store-devtools": "11.1.1",
     "@types/file-saver": "2.0.2",
     "@types/handlebars": "4.0.40",
-    "@types/jasmine": "3.7.4",
+    "@types/jasmine": "3.7.5",
     "@types/jasminewd2": "2.0.9",
     "@types/lodash": "4.14.170",
     "@types/moment": "2.13.0",
