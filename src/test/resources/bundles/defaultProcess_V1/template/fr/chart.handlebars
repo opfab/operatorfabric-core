@@ -18,7 +18,11 @@ Un graphique
 
 <script>
 var ctx = document.getElementById('myChart').getContext('2d');
-var myChart = new Chart(ctx, {
+if (window.myChart instanceof Chart) {
+    window.myChart.destroy();
+}
+
+window.myChart = new Chart(ctx, {
     type: 'bar',
     data: {
         labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
