@@ -29,6 +29,8 @@ import {TimelineButtonsComponent} from "../../../../share/timeline-buttons/timel
 import {ConfigService} from "@ofServices/config.service";
 import {HttpClient, HttpHandler} from "@angular/common/http";
 import {AppService} from "@ofServices/app.service";
+import {LightCardsServiceMock} from '@tests/mocks/lightcards.service.mock';
+import {LightCardsService} from '@ofServices/lightcards.service';
 
 
 describe('InitChartComponent', () => {
@@ -56,7 +58,8 @@ describe('InitChartComponent', () => {
         {provide: HttpClient, useClass: HttpClient},
         {provide: HttpHandler, useClass: HttpHandler},
         {provide: AppService, useClass: AppService},
-        {provide: GlobalStyleService, useClass: GlobalStyleService}],
+        {provide: GlobalStyleService, useClass: GlobalStyleService},
+        {provide: LightCardsService, useClass: LightCardsServiceMock}],
       schemas: [ NO_ERRORS_SCHEMA ],
     })
     .compileComponents();

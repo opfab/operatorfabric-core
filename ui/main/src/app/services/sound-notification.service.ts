@@ -15,6 +15,7 @@ import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
 import {UpdateTrigger} from "@ofActions/light-card.actions";
+import {LightCardsService} from './lightcards.service';
 
 @Injectable()
 export class SoundNotificationService {
@@ -41,7 +42,7 @@ export class SoundNotificationService {
    * once (and only new cards), sounds will only be played for a given card if the elapsed time since its publishDate
    * is below this threshold. */
 
-  constructor(private store: Store<AppState>, private platformLocation: PlatformLocation) {
+  constructor(private store: Store<AppState>, private platformLocation: PlatformLocation,private lightCardsService: LightCardsService) {
     let baseHref = platformLocation.getBaseHrefFromDOM();
     this.alarmSoundPath = (baseHref?baseHref:'/')+'assets/sounds/alarm.mp3'
     this.alarmSound = new Audio(this.alarmSoundPath);
@@ -59,19 +60,15 @@ export class SoundNotificationService {
 
   }
 
-  handleUpdatedCard(card: LightCard , updateTrigger: UpdateTrigger, currentlyVisibleIds: string[]) {
-    if(this.checkCardIsVisibleInFeed(card,currentlyVisibleIds) && updateTrigger === UpdateTrigger.REMINDER) this.playSoundForCard(card);
+  handleUpdatedCard(card: LightCard , updateTrigger: UpdateTrigger) {
+    if(this.lightCardsService.isCardVisibleInFeed(card) && updateTrigger === UpdateTrigger.REMINDER) this.playSoundForCard(card);
   }
 
-  handleLoadedCard(card: LightCard , currentlyVisibleIds: string[]) {
-    if(this.checkCardIsVisibleInFeed(card,currentlyVisibleIds) && this.checkCardIsRecent(card)) this.playSoundForCard(card);
+  handleLoadedCard(card: LightCard) {
+    if(this.lightCardsService.isCardVisibleInFeed(card) && this.checkCardIsRecent(card)) this.playSoundForCard(card);
   }
 
-  private checkCardIsVisibleInFeed (card: LightCard, currentlyVisibleIds: string[]) : boolean {
-    return currentlyVisibleIds.includes(card.id);
-  }
-
-  private checkCardIsRecent (card: LightCard) : boolean {
+  checkCardIsRecent (card: LightCard) : boolean {
     return ((new Date().getTime() - card.publishDate) <= this.recentThreshold);
   }
 

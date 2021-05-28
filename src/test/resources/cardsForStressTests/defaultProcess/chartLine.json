@@ -1,0 +1,13 @@
+{
+	"publisher" : "publisher_test",
+	"processVersion" : "1",
+	"process"  :"defaultProcess",
+	"processInstanceId" : $random,
+	"state": "chartLineState",
+	"groupRecipients": ["Dispatcher", "Planner"],
+	"severity" : "ALARM",
+	"startDate" : ${current_date_in_milliseconds_from_epoch_plus_1hours},
+	"summary" : {"key" : "message.summary"},
+	"title" : {"key" : "chartLine.title"},
+	"data" : {"values":[10000, 11000, 30000, 45000, 30000, 35000,10000]}
+}

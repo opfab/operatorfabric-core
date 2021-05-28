@@ -49,33 +49,9 @@ export enum Severity {
     ALARM = 'ALARM', ACTION = 'ACTION', COMPLIANT = 'COMPLIANT', INFORMATION = 'INFORMATION'
 }
 
-export function severityOrdinal(severity: Severity) {
-    let result;
-    switch (severity) {
-        case Severity.ALARM:
-            result = 0;
-            break;
-        case Severity.ACTION:
-            result = 1;
-            break;
-        case Severity.COMPLIANT:
-            result = 2;
-            break;
-        case Severity.INFORMATION:
-            result = 3;
-            break;
-    }
-    return result;
-}
-
-export function readOrdinal(flag: boolean) {
-    return flag ? 1 : 0;
-}
-
 export enum Sound {
     INFORMATION, COMPLIANT
 }
-
 
 export enum PublisherType {
     EXTERNAL,
