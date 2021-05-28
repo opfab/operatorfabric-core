@@ -26,15 +26,15 @@ import {
 import {scaleLinear, scaleTime} from 'd3-scale';
 import {BaseChartComponent, calculateViewDimensions, ChartComponent, ViewDimensions} from '@swimlane/ngx-charts';
 import * as moment from 'moment';
-import {select, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {AppState} from '@ofStore/index';
 import {Router} from '@angular/router';
 import {Subject} from 'rxjs';
-import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
-import * as feedSelectors from '@ofSelectors/feed.selectors';
+import {takeUntil} from 'rxjs/operators';
 import {getNextTimeForRepeating} from '@ofServices/reminder/reminderUtils';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
+import {LightCardsService} from '@ofServices/lightcards.service';
 
 
 @Component({
@@ -140,7 +140,13 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   @Output() zoomChange: EventEmitter<string> = new EventEmitter<string>();
   @Output() widthChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor(chartElement: ElementRef, zone: NgZone, cd: ChangeDetectorRef, private store: Store<AppState>, private router: Router, @Inject(PLATFORM_ID) platformId: any) {
+  constructor(chartElement: ElementRef,
+     zone: NgZone,
+     cd: ChangeDetectorRef,
+     private store: Store<AppState>,
+     private router: Router,
+     @Inject(PLATFORM_ID) platformId: any,
+     private lightCardsService: LightCardsService) {
     super(chartElement, zone, cd, platformId);
   }
 
@@ -305,8 +311,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
 
 
   initDataPipe(): void {
-    this.store.pipe(select(feedSelectors.selectFilteredFeed))
-    .pipe(takeUntil(this.ngUnsubscribe$), debounceTime(200), distinctUntilChanged())
+    this.lightCardsService.getFilteredLightCards()
+    .pipe(takeUntil(this.ngUnsubscribe$))
     .subscribe(value => this.getAllCardsToDrawOnTheTimeLine(value));
   }
 

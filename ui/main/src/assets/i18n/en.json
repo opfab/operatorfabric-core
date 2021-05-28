@@ -103,7 +103,8 @@
     "lttdFinished": "Finished",
     "received": "Received on",
     "at": "at",
-    "from" : "from"
+    "from" : "from",
+    "moreCards": "cards more"
   },
   "login": {
     "reset": "Reset",

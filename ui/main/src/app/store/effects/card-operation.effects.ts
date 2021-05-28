@@ -28,9 +28,10 @@ import {FilterType} from '@ofServices/filter.service';
 import {selectCardStateSelectedId} from '@ofSelectors/card.selectors';
 import {LoadCard} from '@ofActions/card.actions';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
-import {selectLightCardsState, selectSortedFilterLightCardIds} from '@ofSelectors/feed.selectors';
+import {selectLightCardsState} from '@ofSelectors/feed.selectors';
 import {LightCard} from '@ofModel/light-card.model';
 import {UserService} from '@ofServices/user.service';
+
 
 @Injectable()
 export class CardOperationEffects {
@@ -99,22 +100,18 @@ export class CardOperationEffects {
      *  It calls different handling functions depending on the action types as the conditions to trigger sounds are
      *  different for new cards and for reminders.
      * */
+    
     triggerSoundNotifications = createEffect(() => this.actions$
         .pipe(
             ofType(LightCardActionTypes.LoadLightParentCard, LightCardActionTypes.UpdateALightCard),
-            /* Since both this effect and the feed state update are triggered by LoadLightParentCard, there could
-             * theoretically be an issue if the feed state update by the reducer hasn't been done before we take the
-             * list of visible cards using withLatestFrom. However, this hasn't cropped up in any of the tests so far so
-             * we'll deal with it if the need arises.*/
-            withLatestFrom(this.store.select(selectSortedFilterLightCardIds)),
-            map(([cardAction, currentlyVisibleIds] : [LoadLightParentCard | UpdateALightCard, string[]]) => {
+            map((cardAction : LoadLightParentCard | UpdateALightCard) => {
                     switch (cardAction.type) {
                         case LightCardActionTypes.LoadLightParentCard: {
-                            this.soundNotificationService.handleLoadedCard(cardAction.payload.lightCard, currentlyVisibleIds);
+                            this.soundNotificationService.handleLoadedCard(cardAction.payload.lightCard);
                             break;
                         }
                         case LightCardActionTypes.UpdateALightCard: {
-                            this.soundNotificationService.handleUpdatedCard(cardAction.payload.lightCard, cardAction.payload.updateTrigger, currentlyVisibleIds,)
+                            this.soundNotificationService.handleUpdatedCard(cardAction.payload.lightCard, cardAction.payload.updateTrigger);
                             break;
                         }
                         default: {

@@ -9,7 +9,7 @@
 
 
 import {Injectable} from '@angular/core';
-import {Observable, Subject} from 'rxjs';
+import {Observable, Subject, timer} from 'rxjs';
 import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
 import {EventSourcePolyfill} from 'ng-event-source';
 import {AuthenticationService} from './authentication/authentication.service';
@@ -23,7 +23,7 @@ import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {CardSubscriptionClosed, CardSubscriptionOpen} from '@ofActions/cards-subscription.actions';
 import {LineOfLoggingResult} from '@ofModel/line-of-logging-result.model';
-import {catchError, map} from 'rxjs/operators';
+import {catchError, concatMap, ignoreElements, map, startWith} from 'rxjs/operators';
 import * as moment from 'moment';
 import {I18n} from '@ofModel/i18n.model';
 import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
@@ -74,7 +74,16 @@ export class CardService {
 
 
     public initCardSubscription() {
-        this.getCardSubscription()
+
+        // The use of concatMap + timer is to avoid having the browser stuck when 
+        // a lot of card is arriving. (It permit the browser to execute 
+        // other js code in the application while the application is retrieving cards) 
+        this.getCardSubscription().pipe( concatMap(value =>
+            timer(1).pipe(
+              ignoreElements(),
+              startWith(value)
+            )
+          ))
             .subscribe(
                 operation => {
                     switch (operation.type) {

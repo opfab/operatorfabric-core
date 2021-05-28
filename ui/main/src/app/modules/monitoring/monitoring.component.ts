@@ -11,8 +11,7 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Observable, of, Subject} from 'rxjs';
 import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
 import {AppState} from '@ofStore/index';
-import {select, Store} from '@ngrx/store';
-import {selectSortedFilteredLightCards} from '@ofSelectors/feed.selectors';
+import {Store} from '@ngrx/store';
 import {catchError, map, takeUntil} from 'rxjs/operators';
 import {LightCard} from '@ofModel/light-card.model';
 import * as moment from 'moment';
@@ -20,6 +19,7 @@ import {I18n} from '@ofModel/i18n.model';
 import {MonitoringFiltersComponent} from './components/monitoring-filters/monitoring-filters.component';
 import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {ProcessesService} from '@ofServices/processes.service';
+import {LightCardsService} from '@ofServices/lightcards.service';
 
 @Component({
     selector: 'of-monitoring',
@@ -38,7 +38,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     processValueForFilter = new Array();
 
     constructor(private store: Store<AppState>
-                , private processesService: ProcessesService
+                , private processesService: ProcessesService, private lightCardsService: LightCardsService
     ) {
          processesService.getAllProcesses().forEach( (process) => {
             const id = process.id;
@@ -55,9 +55,8 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.monitoringResult$ = this.store.pipe(
+        this.monitoringResult$ = this.lightCardsService.getFilteredAndSortedLightCards().pipe(
             takeUntil(this.unsubscribe$),
-            select(selectSortedFilteredLightCards),
             map((cards: LightCard[]) => {
                     if (!!cards && cards.length <= 0) {
                         return null;

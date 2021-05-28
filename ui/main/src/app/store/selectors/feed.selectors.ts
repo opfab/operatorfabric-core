@@ -7,18 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {createSelector} from '@ngrx/store';
-import {compareByPublishDate, compareByReadPublishDate, compareByReadSeverityPublishDate, compareBySeverityPublishDate, LightCardAdapter} from '@ofStates/feed.state';
+import {LightCardAdapter} from '@ofStates/feed.state';
 import {AppState} from '@ofStore/index';
-import {Filter} from '@ofModel/feed-filter.model';
-import {LightCard} from '@ofModel/light-card.model';
 import {FilterType} from '@ofServices/filter.service';
 
 export const selectLightCardsState = (state: AppState) => state.feed;
 
 export const {
-    selectIds: selectFeedCardIds,
     selectAll: selectFeed,
     selectEntities: selectFeedCardEntities
 } = LightCardAdapter.getSelectors(selectLightCardsState);
@@ -26,12 +22,14 @@ export const {
 export const selectLightCardSelection = createSelector(
     selectLightCardsState,
     state => state.selectedCardId);
+
 export const selectLastCardLoaded = createSelector(selectLightCardsState,
     state => state.lastCardLoaded);
 
 export const selectFilter = createSelector(selectLightCardsState,
     state => state.filters);
-const selectActiveFiltersArray = createSelector(selectFilter,
+
+export const selectActiveFiltersArray = createSelector(selectFilter,
     (filters) => {
         const result = [];
         for (const v of filters.values()) {
@@ -41,15 +39,7 @@ const selectActiveFiltersArray = createSelector(selectFilter,
         }
         return result;
     });
-
-export const selectFilteredFeed = createSelector(selectFeed, selectActiveFiltersArray,
-    (feed: LightCard[], filters: Filter[]) => {
-        if (filters && filters.length > 0) {
-            return feed.filter(card => Filter.chainFilter(card, filters));
-        }
-        return feed;
-    });
-
+    
 export function buildFilterSelector(name: FilterType) {
     return createSelector(selectFilter, (filters) => {
         return filters.get(name);
@@ -64,32 +54,22 @@ export const selectSortBySeverity = createSelector(selectLightCardsState,
 export const selectSortByRead = createSelector(selectLightCardsState,
     state => state.sortByRead);
 
-export const selectSortedFilterLightCardIds = createSelector(
-    selectFilteredFeed,
+
+export const selectSortFilter = createSelector(
     selectSortBySeverity,
     selectSortByRead,
-    (entityArray, sortBySeverity, sortByRead) => {
-        function compareFn(needToSortBySeverity: boolean, needToSortByRead: boolean) {
-            if (needToSortByRead) {
-                if (needToSortBySeverity) {
-                    return compareByReadSeverityPublishDate;
-                } else {
-                    return compareByReadPublishDate;
-                }
-            } else if (needToSortBySeverity) {
-                return compareBySeverityPublishDate;
-            }
-            return compareByPublishDate;
-        }
+    (sortBySeverity, sortByRead) => {
+        return {sortBySeverity: sortBySeverity, sortByRead: sortByRead}
+    }
+);
 
-        return entityArray
-            .sort(compareFn(sortBySeverity, sortByRead))
-            .map(entity => entity.id);
-    });
+    
+    
 
-export const selectSortedFilteredLightCards = createSelector(
-    selectFeedCardEntities,
-    selectSortedFilterLightCardIds,
-    (entities, sortedIds) => {
-        return sortedIds.map(id => entities[id]);
-    });
+
+
+    
+
+
+
+    

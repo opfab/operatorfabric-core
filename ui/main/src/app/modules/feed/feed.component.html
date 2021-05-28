@@ -18,7 +18,7 @@
 
     <div id="parentFeedContent" class="row calc-height-main-layout" style="margin-left: 38px;margin-right:20px;display:flex">
         <div style="padding-left: 0px"  [class.opfab-standard-screen]="enoughSpaceForCardDetail()" [class.opfab-small-screen]="!enoughSpaceForCardDetail()">
-            <of-card-list [lightCards]="lightCards$|async" [selection]="selection$"></of-card-list>
+            <of-card-list [lightCards]="lightCards$|async" [selection]="selection$" [totalNumberOfLightsCards]="totalNumberOfLightsCards"></of-card-list>
         </div>
         <div  style="padding-left: 0px;width:calc(100% - 440px)">
             <router-outlet></router-outlet>

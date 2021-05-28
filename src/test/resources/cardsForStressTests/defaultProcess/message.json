@@ -1,0 +1,22 @@
+{
+	"publisher" : "ENTITY1",
+	"publisherType": "ENTITY",
+	"representative": "OPFAB_TEST",
+	"representativeType": "EXTERNAL",
+	"processVersion" : "1",
+	"process"  :"defaultProcess",
+	"processInstanceId" : $random,
+	"state": "messageState",
+	"tags":["tag1"],
+	"groupRecipients": ["Dispatcher"],
+	"severity" : "INFORMATION",
+	"startDate" : ${current_date_in_milliseconds_from_epoch_plus_2hours},
+	"endDate" : ${current_date_in_milliseconds_from_epoch_plus_8hours} ,
+	"summary" : {"key" : "message.summary"},
+	"title" : {"key" : "message.title"},
+	"data" : {"message":" Information card number 1"},
+	"timeSpans" : [
+		{"start" :${current_date_in_milliseconds_from_epoch_plus_2hours}},
+		{"start" : ${current_date_in_milliseconds_from_epoch_plus_8hours}}
+		]
+}
