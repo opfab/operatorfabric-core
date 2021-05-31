@@ -31,3 +31,5 @@ done
  ./addPerimeterToGroup.sh  gridCooperation Dispatcher $1
  ./addPerimeterToGroup.sh  gridCooperation Planner $1
  ./addPerimeterToGroup.sh  gridCooperation Supervisor $1
+ ./addPerimeterToGroup.sh  cypress Dispatcher $1
+ ./addPerimeterToGroup.sh  cypress Planner $1

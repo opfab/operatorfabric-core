@@ -1,0 +1,37 @@
+{
+  "id": "cypress",
+  "name": "process.label",
+  "version": "1",
+  "uiVisibility": {
+    "monitoring": false,
+    "logging": false,
+    "calendar": false
+  },
+  "states": {
+    "messageState": {
+      "name":  "message.title",
+      "description": "messageState.description",
+      "templateName": "template",
+      "acknowledgmentAllowed": "Always",
+      "type" : "INPROGRESS"
+    },
+    "messageStateWithNoAck": {
+      "name":  "messageStateWithNoAck.description",
+      "description": "messageStateWithNoAck.description",
+      "templateName": "template",
+      "acknowledgmentAllowed": "Never",
+      "type" : "INPROGRESS"
+    },
+    "messageStateWithOnlyWhenResponseDisabledForUserAck": {
+      "name":  "messageStateWithOnlyWhenResponseDisabledForUserAck.description",
+      "description": "messageStateWithOnlyWhenResponseDisabledForUserAck.description",
+      "templateName": "template",
+      "acknowledgmentAllowed": "OnlyWhenResponseDisabledForUser",
+      "type" : "INPROGRESS",
+      "response": {
+        "lock": true,
+        "state": "messageStateWithOnlyWhenResponseDisabledForUserAck"  
+        }
+    }
+  }
+}

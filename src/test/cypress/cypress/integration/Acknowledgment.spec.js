@@ -1,0 +1,135 @@
+
+describe('Acknowledgment  tests', function () {
+
+    before('Set up configuration', function () {
+        cy.loadTestConf();
+        // Send a card with ack config set to Always
+        // ack is possible 
+        cy.sendCard('cypress/ack/message1.json');
+
+        // Send a card with ack config set to OnlyWhenResponseDisabledForUser and user cannot respond 
+        // ack is possible 
+        cy.sendCard('cypress/ack/message2.json');
+
+        // Send a card with ack config set to OnlyWhenResponseDisabledForUser and user can respond
+        // ack is not possible 
+        cy.sendCard('cypress/ack/message3.json');
+
+        // Send a card with ack config set to Never 
+        // ack is not possible 
+        cy.sendCard('cypress/ack/message4.json');
+    });
+
+    after('Clean', function () {
+        cy.deleteCard('cypress.message1');
+        cy.deleteCard('cypress.message2');
+        cy.deleteCard('cypress.message3');
+        cy.deleteCard('cypress.message4');
+    });
+
+    it('Check acknowledgment for operator 1', function () {
+
+        cy.loginOpFab('operator1', 'test');
+
+        // Operator1 should see 4 cards in his feed
+        cy.get('of-light-card').should('have.length', 4);
+
+        // Click on card messageNoAck and check is is not acknowledgeable 
+        cy.get('#opfab-feed-light-card-cypress-message4').click();
+        cy.get('#opfab-card-details-btn-ack').should('not.exist');
+
+        // Click on card message3 and check it is not acknowledgeable 
+        cy.get('#opfab-feed-light-card-cypress-message3').click();
+        cy.get('#opfab-card-details-btn-ack').should('not.exist');
+
+        // Click on card message
+        cy.get('#opfab-feed-light-card-cypress-message1').click();
+
+        // Click ack button 
+        cy.get('#opfab-card-details-btn-ack').click();
+
+        // Card is not anymore in the feed 
+        cy.get('#opfab-feed-light-card-cypress-message1').should('not.exist');
+
+        // Detail card it not present anymore 
+        cy.get('of-detail').should('not.exist');
+
+        // Operator1 should see 3 cards in his feed
+        cy.get('of-light-card').should('have.length', 3);
+
+        // Set feed filter to see all card and check message card is present 
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-feed-filter-ack-all').click();
+        cy.get('#opfab-feed-filter-btn-filter').click();
+
+        // Operator1 should see 4 cards in his feed
+        cy.get('of-light-card').should('have.length', 4);
+
+        // Check icon is present
+        cy.get('#opfab-feed-light-card-cypress-message1').find('.fa-check');
+
+        // Click on card message
+        cy.get('#opfab-feed-light-card-cypress-message1').click();
+
+        // Unack the card 
+        cy.get('#opfab-card-details-btn-ack').click();
+
+        // Check icon is not present
+        cy.get('#opfab-feed-light-card-cypress-message1').find('.fa-check').should('not.exist');
+
+        // Click on Ack all cards
+        cy.get('#opfab-feed-ack-all-link').click();
+
+        // Do not confirm (cancel )
+        cy.get('#opfab-ack-all-btn-cancel').click();
+
+        // Check icon is not present
+        cy.get('#opfab-feed-light-card-cypress-message1').find('.fa-check').should('not.exist');
+
+        // Click on Ack all cards
+        cy.get('#opfab-feed-ack-all-link').click();
+
+        // Confirm 
+        cy.get('#opfab-ack-all-btn-confirm').click();
+        cy.waitDefaultTime();
+
+        // Check that all cards except one are acknowledged
+        cy.get('#opfab-feed-light-card-cypress-message1').find('.fa-check');
+        cy.get('#opfab-feed-light-card-cypress-message2').find('.fa-check');
+        cy.get('#opfab-feed-light-card-cypress-message3').find('.fa-check').should('not.exist');
+        cy.get('#opfab-feed-light-card-cypress-message4').find('.fa-check').should('not.exist');
+
+    });
+
+    it('Check acknowledgment for operator 1 after re-logging  ', function () {
+
+        cy.loginOpFab('operator1', 'test');
+
+        // Set feed filter to see all card
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-feed-filter-ack-all').click();
+        cy.get('#opfab-feed-filter-btn-filter').click();
+
+        // Check that all cards except one are acknowledged
+        cy.get('#opfab-feed-light-card-cypress-message1').find('.fa-check');
+        cy.get('#opfab-feed-light-card-cypress-message2').find('.fa-check');
+        cy.get('#opfab-feed-light-card-cypress-message3').find('.fa-check').should('not.exist');
+        cy.get('#opfab-feed-light-card-cypress-message4').find('.fa-check').should('not.exist');
+    });
+
+    it('Check no acknowledgment for operator 2  ', function () {
+
+        cy.loginOpFab('operator2', 'test');
+
+        // Set feed filter to see all card
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-feed-filter-ack-all').click();
+        cy.get('#opfab-feed-filter-btn-filter').click();
+
+        // Check that all cards are not acknowledged
+        cy.get('.fa-check').should('not.exist');
+
+    });
+
+
+})
