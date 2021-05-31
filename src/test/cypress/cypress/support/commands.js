@@ -40,3 +40,7 @@ Cypress.Commands.add('sendCard', (cardFile) => {
 Cypress.Commands.add('deleteTestCards', () => {
     cy.exec('cd .. && ./resources/delete6TestCards.sh '+Cypress.env('host'));
 })
+
+Cypress.Commands.add('deleteCard', (cardId) => {
+    cy.exec('cd ../resources/cards/ && ./deleteCard.sh '+ cardId + ' ' + Cypress.env('host'));
+})
