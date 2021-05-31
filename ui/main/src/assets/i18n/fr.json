@@ -16,7 +16,8 @@
     "about": "À propos",
     "usercard": "Création de cartes",
     "switchToNightMode": "Mode nuit",
-    "switchToDayMode": "Mode jour"
+    "switchToDayMode": "Mode jour",
+    "realTimeUsers": "Utilisateurs temps réel"
   },
   "timeline": {
     "hideTimeline" : "Masquer la timeline",
@@ -397,5 +398,9 @@
     "selectProcessText": "Sélectionner un Processus",
     "selectStateText": "Sélectionner un Etat",
     "selectTagText": "Sélectionner une Etiquette"
+  },
+  "realTimeUsers": {
+    "connected": "Connecté",
+    "disconnected": "Déconnecté"
   }
 }

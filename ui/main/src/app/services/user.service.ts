@@ -25,6 +25,7 @@ import {RightsEnum} from '@ofModel/perimeter.model';
 })
 export class UserService extends CrudService {
   readonly userUrl: string;
+  readonly connectionsUrl: string;
   private _userWithPerimeters: UserWithPerimeters;
   private ngUnsubscribe = new Subject<void>();
   private _userRightsPerProcessAndState: Map<string, RightsEnum>;
@@ -37,6 +38,7 @@ export class UserService extends CrudService {
   constructor(private httpClient: HttpClient) {
     super();
     this.userUrl = `${environment.urls.users}`;
+    this.connectionsUrl = `${environment.urls.cards}/connections`;
     this._userRightsPerProcessAndState = new Map();
     this._receiveRightPerProcess = new Map();
   }
@@ -140,5 +142,9 @@ export class UserService extends CrudService {
 
   public isReceiveRightsForProcess(processId: string): boolean {
     return !! this._receiveRightPerProcess.get(processId);
+  }
+
+  loadConnectedUsers(): Observable<any[]> {
+    return this.httpClient.get<any[]>(`${this.connectionsUrl}`);
   }
 }

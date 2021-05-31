@@ -82,6 +82,7 @@ a|card time display mode in the feed. Values :
 
 |feed.timeline.domains|["TR", "J", "7D", "W", "M", "Y"]|no| List of domains to show on the timeline, possible domains are : "TR", "J", "7D", "W", "M", "Y".
 |feedConfiguration.hidden|false|no|Control if you want to show or hide the notification configuration screen
+|realTimeUsers.hidden|false|no|Control if you want to show or hide the real time users screen
 |playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
 |playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
 |playSoundForCompliant|false|no|If set to true, a sound is played when Compliant cards are added or updated in the feed

@@ -139,6 +139,13 @@
       </a>
     </div>
 
+    <div class="opfab-right-menu-item" *ngIf="(displayRealTimeUsers)">
+      <a id="opfab-navbar-right-menu-realtimeusers" class="opfab-right-menu-link"  routerLink="/realtimeusers" routerLinkActive #rla="routerLinkActive">
+        <div class="opfab-menu-icon opfab-menu-icon-admin"></div>
+        <div translate> menu.realTimeUsers </div>
+      </a>
+    </div>
+
     <div class="opfab-right-menu-item">
       <a id="opfab-navbar-right-menu-settings" class="opfab-right-menu-link" routerLink="/settings"  routerLinkActive #rla="routerLinkActive">
         <div class="opfab-menu-icon opfab-menu-icon-parameters"></div>
