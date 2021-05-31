@@ -53,6 +53,7 @@ export class NavbarComponent implements OnInit {
   limitSize: boolean;
   displayAdmin: boolean;
   displayFeedConfiguration: boolean;
+  displayRealTimeUsers: boolean;
   displayCreateUserCard: boolean;
   displayCalendar: boolean;
   displayEnvironmentName = false;
@@ -118,6 +119,7 @@ export class NavbarComponent implements OnInit {
     this.navigationRoutes = navigationRoutes.filter(route => !hiddenMenus.includes(route.path));
     this.displayAdmin = this.userService.isCurrentUserAdmin() && !this.configService.getConfigValue('admin.hidden');
     this.displayFeedConfiguration = !this.configService.getConfigValue('feedConfiguration.hidden');
+    this.displayRealTimeUsers = this.userService.isCurrentUserAdmin() && !this.configService.getConfigValue('realTimeUsers.hidden');
     this.displayCreateUserCard = ! hiddenMenus.includes("usercard");
     this.displayCalendar = ! hiddenMenus.includes("calendar");
     this.environmentName = this.configService.getConfigValue('environmentName');

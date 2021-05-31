@@ -14,7 +14,7 @@ import {LoginComponent} from './modules/login/login.component';
 import {LoggingComponent} from './modules/logging/logging.component';
 import {MonitoringComponent} from './modules/monitoring/monitoring.component';
 import {CalendarComponent} from './modules/calendar/calendar.component';
-import {ArchivesEntryPointComponent} from './modules/archives/archives-entry-point.component'
+import {ArchivesEntryPointComponent} from './modules/archives/archives-entry-point.component';
 
 const defaultPath = '/feed';
 const archivePath = 'archives';
@@ -57,6 +57,10 @@ const routes: Routes = [
          loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule),
     },
     {
+        path: 'realtimeusers',
+        loadChildren: () => import('./modules/realtimeusers/realtimeusers.module').then(m => m.RealtimeusersModule),
+    },
+    {
         path: 'feedconfiguration',
         loadChildren: () => import('./modules/feedconfiguration/feedconfiguration.module').then(m => m.FeedconfigurationModule),
     },
@@ -65,7 +69,7 @@ const routes: Routes = [
     }
 ];
 const startIndex = 0;
-const numberOfHiddenRoutes = 6 ; // 'Calendar' 'businessconfigparty', 'settings', 'navbar', 'admin', 'feedconfiguration'
+const numberOfHiddenRoutes = 7 ; // 'Calendar', 'businessconfigparty', 'settings', 'navbar', 'admin', 'realtimeusers', 'feedconfiguration'
 const manageIndexesWhichBeginAtZero = 1;
 const numberOfRoutes = routes.length;
 const lastIndexOfVisibleElements = numberOfRoutes - numberOfHiddenRoutes - manageIndexesWhichBeginAtZero;

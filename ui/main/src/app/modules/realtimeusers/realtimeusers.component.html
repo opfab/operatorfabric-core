@@ -1,0 +1,27 @@
+<!-- Copyright (c) 2021, RTE (http://www.rte-france.com)                   -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<div class="opfab-realtimeusers-title" translate>
+    menu.realTimeUsers
+</div>
+
+<div *ngIf="this.realTimeUsersDisconnected.length" class="row opfab-realtimeusers-userslist">
+    <div *ngFor="let disconnectedUser of this.realTimeUsersDisconnected;" style="padding-right: 30px">
+        <p class="font-weight-bold">{{disconnectedUser}}&nbsp;&nbsp;
+            <span class="badge bg-danger" translate>realTimeUsers.disconnected</span>
+        </p>
+    </div>
+</div>
+
+<div *ngIf="this.realTimeUsersConnected.length" class="row opfab-realtimeusers-userslist">
+    <div *ngFor="let connectedUser of this.realTimeUsersConnected;" style="padding-right: 30px">
+        <p class="font-weight-bold">{{connectedUser}}&nbsp;&nbsp;
+            <span class="badge bg-success" translate>realTimeUsers.connected</span>
+        </p>
+    </div>
+</div>

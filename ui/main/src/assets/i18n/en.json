@@ -16,7 +16,8 @@
     "about": "About",
     "usercard": "Card Creation",
     "switchToNightMode": "Night mode",
-    "switchToDayMode": "Day mode"
+    "switchToDayMode": "Day mode",
+    "realTimeUsers": "Real time users"
   },
   "timeline": {
     "hideTimeline" : "Hide Timeline",
@@ -396,5 +397,9 @@
     "selectProcessText": "Select a Process",
     "selectStateText": "Select a State",
     "selectTagText": "Select a Tag"
+  },
+  "realTimeUsers": {
+    "connected": "Connected",
+    "disconnected": "Disconnected"
   }
 }

@@ -12,19 +12,19 @@ operatorfabric.users.default:
       groups: ["ADMIN"]
       entities: ["ENTITY1","ENTITY2"]
     - login: operator3
-      groups: ["RTE","ADMIN","ReadOnly","Dispatcher"]
+      groups: ["RTE","ADMIN","ReadOnly","Dispatcher", "REALTIME_USERS"]
       entities: ["ENTITY1"]
     - login: operator1-admin
       groups: ["Dispatcher","ReadOnly","ADMIN"]
       entities: ["ENTITY1"]
     - login: operator1
-      groups: ["Dispatcher","ReadOnly"]
+      groups: ["Dispatcher","ReadOnly", "REALTIME_USERS"]
       entities: ["ENTITY1"]
     - login: operator2
-      groups: ["Planner", "ReadOnly"]
+      groups: ["Planner", "ReadOnly", "REALTIME_USERS"]
       entities: ["ENTITY2"]
     - login: operator4
-      groups: ["Supervisor"]
+      groups: ["Supervisor", "REALTIME_USERS"]
       entities: ["ENTITY4"]
   groups:
     - id: ADMIN
@@ -48,6 +48,9 @@ operatorfabric.users.default:
     - id: ReadOnly
       name: ReadOnly
       description: ReadOnly Group
+    - id: REALTIME_USERS
+      name: REAL TIME GROUP
+      description: Real Time Group
   entities:
    - id: ENTITY1
      name: Control Room 1
