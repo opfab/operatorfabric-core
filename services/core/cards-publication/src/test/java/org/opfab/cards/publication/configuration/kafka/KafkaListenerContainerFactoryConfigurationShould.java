@@ -21,6 +21,7 @@ import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
+import org.springframework.kafka.listener.ConsumerProperties;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.Duration;
@@ -74,8 +75,9 @@ class KafkaListenerContainerFactoryConfigurationShould {
         assertNotNull(kafkaListenerContainerFactory);
 
         ConcurrentMessageListenerContainer container = kafkaListenerContainerFactory.createContainer("dummyTopic");
+
         assertThat (container.getConcurrency()).isGreaterThan(0);
-        assertThat(container.getContainerProperties().getPollTimeout()).isGreaterThan(0);
+        assertThat(container.getContainerProperties().getPollTimeout()).isEqualTo(ConsumerProperties.DEFAULT_POLL_TIMEOUT);
     }
 
     @Test
