@@ -78,6 +78,7 @@ a|card time display mode in the feed. Values :
 |feed.card.hideSeveritySort|false|no|Control if you want to show or hide the option to sort cards by severity in the feed page
 |feed.card.hideAckAllCardsFeature|true|no|Control if you want to show or hide the option for acknowledging all the visible cards of the feed
 |feed.card.secondsBeforeLttdForClockDisplay|180|no| Number of seconds before lttd when a clock is activated in cards on the feed 
+|feed.card.maxNbOfCardsToDisplay|100|no| Max number of card visible in feed (This limit is used for performance reasons, setting the value too high can have consequences on browser response times) 
 
 |feed.timeline.domains|["TR", "J", "7D", "W", "M", "Y"]|no| List of domains to show on the timeline, possible domains are : "TR", "J", "7D", "W", "M", "Y".
 |feedConfiguration.hidden|false|no|Control if you want to show or hide the notification configuration screen

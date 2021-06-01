@@ -78,9 +78,9 @@ export class LightCardsService {
  // --------------------
  // When an flow of card is coming, for performance reasons , we do not want to update the card list 
  // every time  a card is arriving so we wait for the end of the flow of cards.
- // But if it takes too long, we want to show something so every seconds we make a rendering 
+ // But if it takes too long, we want to show something so every second we make a rendering 
  // even if the flow is still continuing.
- // Do do that we combine a debounce waiting for the end of the flow and an interval to get the card list every seconds 
+ // To do that we combine a debounce waiting for the end of the flow and an interval to get the card list every second 
 
     private getLightCards(): Observable<any> {
         return merge(this.getLightCardsInterval(), this.getLightCardDebounce());

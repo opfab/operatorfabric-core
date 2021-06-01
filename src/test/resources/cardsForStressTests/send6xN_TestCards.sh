@@ -17,6 +17,12 @@ if [[ -z $url ]]
 then
 	url="http://localhost"
 fi
+
+if [ -z $1 ]
+then
+    echo "Usage: send6xN_TestCards.sh N with N being a number, the number of cards send will be 6 x N"
+
+else	
 (
 cd cards
 for i in `seq 1 $1`;
@@ -30,3 +36,4 @@ do
 	./sendCard.sh defaultProcess/contingencies.json $url
 done
 )
+fi

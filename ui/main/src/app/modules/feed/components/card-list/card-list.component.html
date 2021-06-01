@@ -22,8 +22,8 @@
         <of-light-card [lightCard]="currentLightCard" [open]="currentLightCard.id === (selection|async)"></of-light-card>
       </div>
     </div>
-    <div *ngIf="totalNumberOfLightsCards>100" style="text-align:right;font-weight: bold;margin-top:0px;margin-right:10px;">
-       ... {{ totalNumberOfLightsCards }} <span translate> feed.moreCards </span>
+    <div *ngIf="!!lightCards && totalNumberOfLightsCards > lightCards.length" style="text-align:right;font-weight: bold;margin-top:0px;margin-right:10px;">
+       ... {{ totalNumberOfLightsCards - lightCards.length }} <span translate> feed.moreCards </span>
     </div>
   
   </div>
