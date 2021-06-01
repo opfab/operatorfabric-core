@@ -38,6 +38,7 @@ import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {Utilities} from '../../common/utilities';
 import {Entity} from '@ofModel/entity.model';
+import {ConfigService} from '@ofServices/config.service';
 
 declare const templateGateway: any;
 
@@ -103,6 +104,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
     lttdVisible = true;
 
     pageLoading = true;
+    useDescriptionFieldForEntityList = false;
 
     displayForm() {
         return !!this.processOptions && this.processOptions.length > 0;
@@ -120,6 +122,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         private sanitizer: DomSanitizer,
         private element: ElementRef,
         private processesService: ProcessesService,
+        protected configService: ConfigService,
         private route: ActivatedRoute,
         private handlebars: HandlebarsService,
         protected translate: TranslateService,
@@ -128,6 +131,8 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     ngOnInit() {
         this.pageLoading = true;
+
+        this.useDescriptionFieldForEntityList = this.configService.getConfigValue('usercard.useDescriptionFieldForEntityList',false);
 
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         this.processGroups = this.processesService.getProcessGroups();
@@ -206,7 +211,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
     loadAllEntities(): void {
         this.entities = this.entitiesService.getEntities();
         this.entities.forEach(entity =>
-            this.recipientsOptions.push({ id: entity.id, itemName: entity.name }));
+            this.recipientsOptions.push({ id: entity.id, itemName: this.getEntityLabel(entity) }));
 
         this.recipientsOptions.sort(( a, b ) => a.itemName.localeCompare(b.itemName));
     }
@@ -393,14 +398,14 @@ export class UserCardComponent implements OnDestroy, OnInit {
                 r.levels.forEach(l => {
                     this.entitiesService.resolveChildEntitiesByLevel(r.id, l).forEach(entity => {
                         if (!this.recipientsOptions.find(o => o.id === entity.id)) {
-                            this.recipientsOptions.push({ id: entity.id, itemName: entity.name });
+                            this.recipientsOptions.push({ id: entity.id, itemName: this.getEntityLabel(entity) });
                         }
                     })
                 })
             } else {
                 if (!this.recipientsOptions.find(o => o.id === r.id)) {
                     const entity = this.entities.find(e => e.id === r.id);
-                    this.recipientsOptions.push({ id: entity.id, itemName: entity.name });
+                    this.recipientsOptions.push({ id: entity.id, itemName: this.getEntityLabel(entity)});
                 }
             }         
         });
@@ -561,6 +566,10 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     transformToTimestamp(date: NgbDateStruct, time: NgbTimeStruct): string {
         return new DateTimeNgb(date, time).formatDateTime();
+    }
+
+    getEntityLabel(entity: Entity) {
+        return this.useDescriptionFieldForEntityList ? entity.description : entity.name 
     }
 
     getEntityName(id: string): string {
