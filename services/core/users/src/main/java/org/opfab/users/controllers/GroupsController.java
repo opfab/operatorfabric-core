@@ -63,7 +63,7 @@ public class GroupsController implements GroupsApi {
     /* These are Spring Cloud Bus beans used to fire an event (UpdatedUserEvent) every time a user is modified.
     *  Other services handle this event by clearing their user cache for the given user. See issue #64*/
     @Autowired
-    private ServiceMatcher busServiceMatcher;
+    private ServiceMatcher serviceMatcher;
     @Autowired
     private ApplicationEventPublisher publisher;
 
@@ -78,7 +78,7 @@ public class GroupsController implements GroupsApi {
 
         for (UserData userData : foundUsers) {
             userData.addGroup(id);
-            publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
+            publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), userData.getLogin()));
         }
         userRepository.saveAll(foundUsers);
         return null;
@@ -92,7 +92,7 @@ public class GroupsController implements GroupsApi {
         } else {
             List<UserData> users = userRepository.findByGroupSetContaining(group.getId());
             users.forEach(foundUser -> {
-                publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), foundUser.getLogin()));
+                publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), foundUser.getLogin()));
             });
         }
         return groupRepository.save((GroupData)group);
@@ -125,7 +125,7 @@ public class GroupsController implements GroupsApi {
 
         if(foundUser!=null) {
                 foundUser.deleteGroup(id);
-                publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), foundUser.getLogin()));
+                publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), foundUser.getLogin()));
             userRepository.save(foundUser);
         }
         return null;
@@ -181,7 +181,7 @@ public class GroupsController implements GroupsApi {
                             u.deleteGroup(id);
                             newUsersInGroup.remove(u.getLogin());
                             //Fire an UpdatedUserEvent for all users that are updated because they're removed from the group
-                            publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), u.getLogin()));
+                            publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), u.getLogin()));
                         }).collect(Collectors.toList());
 
         userRepository.saveAll(toUpdate);
@@ -264,7 +264,7 @@ public class GroupsController implements GroupsApi {
         if (foundUsers != null) {
             for (UserData userData : foundUsers) {
                 userData.deleteGroup(idGroup);
-                publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
+                publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), userData.getLogin()));
             }
             userRepository.saveAll(foundUsers);
         }

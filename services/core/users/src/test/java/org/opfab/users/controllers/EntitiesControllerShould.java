@@ -13,6 +13,7 @@ package org.opfab.users.controllers;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.opfab.users.application.UnitTestApplication;
 import org.opfab.users.application.configuration.WithMockOpFabUser;
 import org.opfab.users.model.EntityData;
@@ -62,7 +63,7 @@ class EntitiesControllerShould {
     private EntityRepository entityRepository;
 
     @MockBean
-    private ServiceMatcher busServiceMatcher;
+    private ServiceMatcher serviceMatcher;
 
     @MockBean
     private ApplicationEventPublisher publisher;
@@ -117,6 +118,8 @@ class EntitiesControllerShould {
            .build();
         entityRepository.insert(e1);
         entityRepository.insert(e2);
+
+        Mockito.when(serviceMatcher.getBusId()).thenReturn("DUMMY_BUS_ID");
     }
 
     @AfterEach

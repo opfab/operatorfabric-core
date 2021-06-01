@@ -14,6 +14,7 @@ package org.opfab.users.controllers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.opfab.users.application.UnitTestApplication;
 import org.opfab.users.application.configuration.WithMockOpFabUser;
 import org.opfab.users.model.*;
@@ -22,6 +23,7 @@ import org.opfab.users.repositories.PerimeterRepository;
 import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.repositories.UserSettingsRepository;
 import org.opfab.users.model.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -76,7 +78,7 @@ class UsersControllerShould {
     private UserSettingsRepository userSettingsRepository;
 
     @MockBean
-    private ServiceMatcher busServiceMatcher;
+    private ServiceMatcher serviceMatcher;
 
     @MockBean
     private ApplicationEventPublisher publisher;
@@ -177,6 +179,8 @@ class UsersControllerShould {
         perimeterRepository.insert(p1);
         perimeterRepository.insert(p2);
         perimeterRepository.insert(p3);
+
+        Mockito.when(serviceMatcher.getBusId()).thenReturn("DUMMY_BUS_ID");
     }
 
     @AfterEach

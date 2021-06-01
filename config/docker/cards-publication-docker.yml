@@ -27,11 +27,7 @@ opfab:
       registry:
         url: http://localhost:8081
 
-#here we put urls for all feign clients
-users:
-  ribbon:
-    listOfServers: users:8080
-# WARNING - If you are not working on linux, you should replace the host ip address 172.17.0.1 
+# WARNING - If you are not working on linux, you should replace the host ip address 172.17.0.1
 # for mac see https://docs.docker.com/docker-for-mac/networking/#use-cases-and-workarounds
 # for windows see https://docs.docker.com/docker-for-windows/networking/#use-cases-and-workarounds
 externalRecipients-url: "{\

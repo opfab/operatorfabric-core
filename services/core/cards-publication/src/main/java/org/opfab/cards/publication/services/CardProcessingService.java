@@ -11,7 +11,6 @@
 package org.opfab.cards.publication.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.opfab.aop.process.AopTraceType;
 import org.opfab.aop.process.mongo.models.UserActionTraceData;
 import org.opfab.cards.model.CardOperationTypeEnum;
@@ -186,7 +185,7 @@ public class CardProcessingService {
     }
 
     public Optional<CardPublicationData> deleteCard(CardPublicationData card) {
-        if (StringUtils.isEmpty(card.getId())) {
+        if (card.getId()==null||card.getId().isEmpty()) {
             card.prepare(card.getPublishDate());
         }
         return deleteCard0(card);

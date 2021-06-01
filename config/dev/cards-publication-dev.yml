@@ -29,11 +29,6 @@ opfab:
       registry:
         url: http://localhost:8081
 
-#here we put urls for all feign clients
-users:
-  ribbon:
-    listOfServers: http://localhost:2103
-
 externalRecipients-url: "{\
            processAction: \"http://localhost:8090/test\", \
            api_test_externalRecipient1: \"http://localhost:8090/test\", \
