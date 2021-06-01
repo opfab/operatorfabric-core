@@ -17,6 +17,7 @@ import * as feedSelectors from '@ofSelectors/feed.selectors';
 import {delay, map} from 'rxjs/operators';
 import * as moment from 'moment';
 import {LightCardsService} from '@ofServices/lightcards.service';
+import {ConfigService} from '@ofServices/config.service';
 
 @Component({
     selector: 'of-cards',
@@ -28,9 +29,12 @@ export class FeedComponent implements OnInit {
     lightCards$: Observable<LightCard[]>;
     selection$: Observable<string>;
     totalNumberOfLightsCards : number = 0;
+    maxNbOfCardsToDisplay: number = 100;
 
 
-    constructor(private store: Store<AppState>,private lightCardsService: LightCardsService ) {
+    constructor(private store: Store<AppState>,private lightCardsService: LightCardsService,private configService: ConfigService ) {
+
+          this.maxNbOfCardsToDisplay = this.configService.getConfigValue('feed.card.maxNbOfCardsToDisplay',100);
     }
 
     ngOnInit() {
@@ -47,7 +51,7 @@ export class FeedComponent implements OnInit {
             delay(0), // Solve error: 'Expression has changed after it was checked' --> See https://blog.angular-university.io/angular-debugging/
             map(cards => {
                 this.totalNumberOfLightsCards = cards.length;
-                return cards.slice(0, 100)
+                return cards.slice(0, this.maxNbOfCardsToDisplay)
             }
             ));
     }

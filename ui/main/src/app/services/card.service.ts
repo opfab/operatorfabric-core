@@ -76,7 +76,7 @@ export class CardService {
     public initCardSubscription() {
 
         // The use of concatMap + timer is to avoid having the browser stuck when 
-        // a lot of card is arriving. (It permit the browser to execute 
+        // a lot of card is arriving. (It allows the browser to execute 
         // other js code in the application while the application is retrieving cards) 
         this.getCardSubscription().pipe( concatMap(value =>
             timer(1).pipe(
