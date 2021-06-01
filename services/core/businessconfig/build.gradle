@@ -2,9 +2,9 @@ dependencies {
     swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
     swaggerUI generator.swaggerUI
     compile project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
-    compile  cloud.starterBus, cloud.ribbon
+    compile  cloud.starterBus
     compile boot.starterAop
-    compile 'com.google.guava:guava:30.1.1-jre'
+    compile misc.guava
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
 

@@ -30,3 +30,5 @@ operatorfabric:
       login-claim: preferred_username
       expire-claim: exp
   businessLogActivated: true
+  servicesUrls:
+    users: "users:8080"

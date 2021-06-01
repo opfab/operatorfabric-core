@@ -67,6 +67,7 @@ class KafkaListenerContainerFactoryConfigurationShould {
     void kafkaListenerContainerFactoryWithDefaults() {
         KafkaProperties.Listener listenerMock = mock (KafkaProperties.Listener.class);
         when (listenerMock.getConcurrency()).thenReturn(null);
+        when (listenerMock.getPollTimeout()).thenReturn(null);
         when (kafkaProperties.getListener()).thenReturn(listenerMock);
         KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, CardCommand>> kafkaListenerContainerFactory = cut.kafkaListenerContainerFactory();
 

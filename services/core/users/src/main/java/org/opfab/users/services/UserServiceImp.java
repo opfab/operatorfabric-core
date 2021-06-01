@@ -50,7 +50,7 @@ public class UserServiceImp implements UserService {
     /* These are Spring Cloud Bus beans used to fire an event (UpdatedUserEvent) every time a user is modified.
      *  Other services handle this event by clearing their user cache for the given user. See issue #64*/
     @Autowired
-    private ServiceMatcher busServiceMatcher;
+    private ServiceMatcher serviceMatcher;
     @Autowired
     private ApplicationEventPublisher publisher;
 
@@ -115,7 +115,7 @@ public class UserServiceImp implements UserService {
         List<UserData> foundUsers = userRepository.findByGroupSetContaining(groupId);
         if (foundUsers != null) {
             for (UserData userData : foundUsers)
-                publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
+                publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), userData.getLogin()));
         }
     }
 

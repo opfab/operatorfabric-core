@@ -20,7 +20,6 @@ import org.opfab.users.configuration.json.JacksonConfig;
 import org.opfab.users.configuration.mongo.LocalMongoConfiguration;
 import org.opfab.users.configuration.users.UsersProperties;
 import org.opfab.users.controllers.*;
-import org.opfab.users.controllers.*;
 import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.services.UserServiceImp;
 import org.springframework.boot.SpringApplication;

@@ -19,6 +19,7 @@ import org.opfab.users.model.EntityData;
 import org.opfab.users.model.UserData;
 import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.repositories.UserRepository;
+
 import org.opfab.users.utils.EntityCycleDetector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.bus.ServiceMatcher;
@@ -54,7 +55,7 @@ public class EntitiesController implements EntitiesApi {
     /* These are Spring Cloud Bus beans used to fire an event (UpdatedUserEvent) every time a user is modified.
     *  Other services handle this event by clearing their user cache for the given user. See issue #64*/
     @Autowired
-    private ServiceMatcher busServiceMatcher;
+    private ServiceMatcher serviceMatcher;
     @Autowired
     private ApplicationEventPublisher publisher;
 
@@ -69,7 +70,7 @@ public class EntitiesController implements EntitiesApi {
 
         for (UserData userData : foundUsers) {
             userData.addEntity(id);
-            publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
+            publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), userData.getLogin()));
         }
         userRepository.saveAll(foundUsers);
         return null;
@@ -119,7 +120,7 @@ public class EntitiesController implements EntitiesApi {
 
         if(foundUser!=null) {
                 foundUser.deleteEntity(id);
-                publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), foundUser.getLogin()));
+                publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), foundUser.getLogin()));
             userRepository.save(foundUser);
         }
         return null;
@@ -175,7 +176,7 @@ public class EntitiesController implements EntitiesApi {
                             u.deleteEntity(id);
                             newUsersInEntity.remove(u.getLogin());
                             //Fire an UpdatedUserEvent for all users that are updated because they're removed from the entity
-                            publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), u.getLogin()));
+                            publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), u.getLogin()));
                         }).collect(Collectors.toList());
 
         userRepository.saveAll(toUpdate);
@@ -207,7 +208,7 @@ public class EntitiesController implements EntitiesApi {
         if (foundUsers != null) {
             for (UserData userData : foundUsers) {
                 userData.deleteEntity(idEntity);
-                publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
+                publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), userData.getLogin()));
             }
             userRepository.saveAll(foundUsers);
         }
