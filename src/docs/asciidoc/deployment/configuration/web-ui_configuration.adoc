@@ -142,7 +142,7 @@ There will be two new routes with the release of the `[OC-936]`:
 - `monitoring`.
 |checkPerimeterForResponseCard|true|no|If false, OperatorFabric will not check that a user has write rights on a process/state to respond to a card.
 |checkPerimeterForSearchFields|false|no|If true, to see a service, process or state in the archives/logging/monitoring/feedconfiguration screens of OperatorFabric, you must have a "Receive" or "ReceiveAndWrite" right enabled in the corresponding process/state.
-
+|usercard.useDescriptionFieldForEntityList|false|no|If true, show entity `description` field instead of `name` in user card page
 
 |===
 
