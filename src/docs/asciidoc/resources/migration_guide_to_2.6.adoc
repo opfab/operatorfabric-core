@@ -18,9 +18,12 @@ update of the other Spring dependencies).
 Instead, the Feign client now relies on an external property to know where the Users service can be reached, and there
 is no load-balancing for now.
 
-The following property should then be set in the configuration of all business services (except users), or
-in the common configuration.
+This requires a change to service configuration: the `users.ribbon.listOfServers` property should be removed and
+replaced with `operatorfabric.servicesUrls.users`.
 
+It should be set in the configuration of all business services (except users), or in the common configuration.
+
+.Example
 [source,yaml]
 ----
 operatorfabric:
@@ -28,9 +31,13 @@ operatorfabric:
     users: "http://localhost:2103"
 ----
 
-According to the Feign documentation, the property should contain "an absolute URL or resolvable hostname (the protocol is optional)".
+According to the Feign documentation, the property should contain "an absolute URL or resolvable hostname (the protocol
+is optional)".
 
 IMPORTANT: This property is mandatory, if it is absent the application won't start.
+
+IMPORTANT: While the ribbon property could handle an array of several urls, this new property expects a single url as
+there is no load-balancing mechanism for now.
 
 
 

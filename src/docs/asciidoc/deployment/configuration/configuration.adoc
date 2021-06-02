@@ -130,17 +130,6 @@ include::web-ui_configuration.adoc[leveloffset=+1]
 [[opfab_spec_conf]]
 include::security_configuration.adoc[leveloffset=+1]
 
-==== All services except Users
-
-All business services except the Users service need to have this property.
-
-|===
-|name|default|mandatory?|Description
-
-|feignclient.users.url||yes|Indicates where the Users service can we reached (to get information about the current user).
-
-|===
-
 == OperatorFabric Mongo configuration
 
 We only use URI configuration for mongo through the usage of the ```spring.data.mongodb.uris```,
