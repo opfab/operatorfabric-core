@@ -23,3 +23,6 @@ include::migration_guide_to_2.3.adoc[leveloffset=+1]
 include::migration_guide_to_2.4.adoc[leveloffset=+1]
 
 include::migration_guide_to_2.5.adoc[leveloffset=+1]
+
+include::migration_guide_to_2.6.adoc[leveloffset=+1]
+
