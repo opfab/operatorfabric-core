@@ -207,7 +207,7 @@ export class NavbarComponent implements OnInit {
   we could have duplicated element html ids in the html document.
 
   */
-  if (this.currentPath[1]==='feed') this.appService.closeDetails('feed');
+  if (this.currentPath[1]==='feed') this.appService.closeDetails();
 
   const options: NgbModalOptions = {
     size: 'usercard',

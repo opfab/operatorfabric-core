@@ -18,7 +18,7 @@ import {
     LoadLightCard,
     LoadLightChildCard,
     LoadLightParentCard,
-    NoopAction,
+    NoopAction, RemoveLightCard,
     UpdateALightCard
 } from '@ofActions/light-card.actions';
 import {Store} from '@ngrx/store';
@@ -31,6 +31,7 @@ import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {selectLightCardsState} from '@ofSelectors/feed.selectors';
 import {LightCard} from '@ofModel/light-card.model';
 import {UserService} from '@ofServices/user.service';
+import {AppService} from '@ofServices/app.service';
 
 
 @Injectable()
@@ -42,7 +43,8 @@ export class CardOperationEffects {
                 private actions$: Actions,
                 private service: CardService,
                 private soundNotificationService: SoundNotificationService,
-                private userService: UserService) {
+                private userService: UserService,
+                private appService: AppService) {
     }
 
 
@@ -149,5 +151,16 @@ export class CardOperationEffects {
             })
         ), { dispatch: false });
 
+    deleteIfSelectedCard: Observable<any> = createEffect(() => this.actions$
+        .pipe(
+            ofType(LightCardActionTypes.RemoveLightCard),
+            map((a: RemoveLightCard) => a.payload.card),
+            withLatestFrom(this.store.select(selectCardStateSelectedId)), // retrieve currently selected card
+            switchMap(([card, selectedCardId]) =>  {
+                if (card === selectedCardId)
+                    this.appService.closeDetails();
+                return of();
+            })
+        ), { dispatch: false });
 
 }
