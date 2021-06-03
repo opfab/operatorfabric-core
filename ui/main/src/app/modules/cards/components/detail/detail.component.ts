@@ -430,7 +430,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         if (this.parentModalRef)  {
             this.parentModalRef.close();
             this.store.dispatch(new ClearLightCardSelection());
-        } else this._appService.closeDetails(this.currentPath);
+        } else this._appService.closeDetails();
     }
 
     // for certain types of template , we need to reload it to take into account

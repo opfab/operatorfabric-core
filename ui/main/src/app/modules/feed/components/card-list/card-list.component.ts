@@ -104,7 +104,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     confirmAckAllCards() {
         this.modalRef.close();
         this.acknowledgeAllVisibleCardsInTheFeed();
-        this._appService.closeDetails('feed');
+        this._appService.closeDetails();
     }
 
     declineAckAllCards(): void {
