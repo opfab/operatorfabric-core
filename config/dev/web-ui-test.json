@@ -119,8 +119,7 @@
     "nightDayMode": false
   },
   "navbar": {
-    "hidden": [],
-    "businessmenus" : {"type":"IFRAME"}
+    "hidden": []
   },
   "feedConfiguration": {
     "hidden": false

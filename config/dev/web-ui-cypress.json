@@ -131,8 +131,7 @@
     "styleWhenNightDayModeDesactivated" : "NIGHT"
   },
   "navbar": {
-    "hidden": [],
-    "businessmenus" : {"type":"BOTH"}
+    "hidden": []
   },
   "admin": {
     "hidden": false
