@@ -95,7 +95,10 @@ describe ('FeedScreen tests',function () {
         // TODO Test with sort set to unread first
 
 
-
+        // If we delete all the cards, the feed should be empty and the detail view should also be empty
+        cy.deleteTestCards();
+        cy.get('of-light-card').should('have.length',0);
+        cy.get('of-card-details').should('not.exist');
 
     })
 })
