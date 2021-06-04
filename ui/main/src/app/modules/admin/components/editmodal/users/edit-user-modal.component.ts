@@ -54,7 +54,7 @@ export class EditUserModalComponent implements OnInit {
       lastName: new FormControl('', []),
       groups: new FormControl([]),
       entities: new FormControl([]),
-      authorizedIPAddresses: new FormControl([])
+      authorizedIPAddresses: new FormControl('', [])
     });
 
   }
