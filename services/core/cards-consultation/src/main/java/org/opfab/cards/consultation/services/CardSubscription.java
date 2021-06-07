@@ -46,10 +46,12 @@ import java.util.*;
 public class CardSubscription {
     public static final String GROUPS_SUFFIX = "Groups";
     public static final String PROCESS_SUFFIX = "Process";
+    public static final String USER_SUFFIX = "User";
     public static final String DELETE_OPERATION = "DELETE";
     public static final String ERROR_MESSAGE_PARSING = "ERROR during received message parsing";
     private String cardsQueueName;
     private String processQueueName;
+    private String userQueueName;
     private long current = 0;
     @Getter
     private CurrentUserWithPerimeters currentUserWithPerimeters;
@@ -62,9 +64,11 @@ public class CardSubscription {
     private AmqpAdmin amqpAdmin;
     private FanoutExchange cardExchange;
     private FanoutExchange processExchange;
+    private FanoutExchange userExchange;
     private ConnectionFactory connectionFactory;
     private MessageListenerContainer cardListener;
     private MessageListenerContainer processListener;
+    private MessageListenerContainer userListener;
     @Getter
     private Instant startingPublishDate;
     @Getter
@@ -77,16 +81,17 @@ public class CardSubscription {
 
 
 
+
     /**
      * Constructs a card subscription and init access to AMQP exchanges
      */
     @Builder
     public CardSubscription(CurrentUserWithPerimeters currentUserWithPerimeters,
                             String clientId,
-                            Runnable doOnCancel,
                             AmqpAdmin amqpAdmin,
                             FanoutExchange cardExchange,
                             FanoutExchange processExchange,
+                            FanoutExchange userExchange,
                             ConnectionFactory connectionFactory) {
         userLogin = currentUserWithPerimeters.getUserData().getLogin();
         this.id = computeSubscriptionId(userLogin, clientId);
@@ -94,10 +99,12 @@ public class CardSubscription {
         this.amqpAdmin = amqpAdmin;
         this.cardExchange = cardExchange;
         this.processExchange = processExchange;
+        this.userExchange = userExchange;
         this.connectionFactory = connectionFactory;
         this.clientId = clientId;
         this.cardsQueueName = computeSubscriptionId(userLogin + GROUPS_SUFFIX, this.clientId);
         this.processQueueName = computeSubscriptionId(userLogin + PROCESS_SUFFIX, this.clientId);
+        this.userQueueName = computeSubscriptionId(userLogin + USER_SUFFIX, this.clientId);
     }
 
     public String getUserLogin()
@@ -131,13 +138,16 @@ public class CardSubscription {
     public void initSubscription(Runnable doOnCancel) {
         createQueue(cardsQueueName, cardExchange);
         createQueue(processQueueName, processExchange);
+        createQueue(userQueueName, userExchange);
         this.cardListener = createMessageListenerContainer(cardsQueueName);
         this.processListener = createMessageListenerContainer(processQueueName);
+        this.userListener = createMessageListenerContainer(userQueueName);
         this.publisher = Flux.create(emitter -> {
             log.debug("Create message flux for user {}", userLogin);
             this.messageSink = emitter;
             registerListener(cardListener);
             registerProcessListener(processListener);
+            registerUserListener(userListener);
             emitter.onRequest(v -> log.debug("STARTING subscription for user {}", userLogin));
             emitter.onDispose(() -> {
                 log.debug("DISPOSING subscription for user {}", userLogin);
@@ -151,7 +161,7 @@ public class CardSubscription {
                 emitter.next("RESTORE");
             cardListener.start();
             processListener.start();
-
+            userListener.start();
         });
 
     }
@@ -177,7 +187,16 @@ public class CardSubscription {
     }
 
     private void registerProcessListener(MessageListenerContainer mlc) {
-        mlc.setupMessageListener(message -> publishDataIntoSubscription("BUSINESS_CONFIG_CHANGE"));
+        mlc.setupMessageListener(message -> publishDataIntoSubscription(new String(message.getBody())));
+    }
+
+    private void registerUserListener(MessageListenerContainer mlc) {
+        mlc.setupMessageListener(message -> {
+            String modifiedUserLogin = new String(message.getBody());
+
+            if (this.userLogin.equals(modifiedUserLogin)) 
+                publishDataIntoSubscription("USER_CONFIG_CHANGE");
+        });
     }
 
     /**
@@ -204,6 +223,8 @@ public class CardSubscription {
         amqpAdmin.deleteQueue(cardsQueueName);
         processListener.stop();
         amqpAdmin.deleteQueue(processQueueName);
+        userListener.stop();
+        amqpAdmin.deleteQueue(userQueueName);
         cleared = true;
     }
 
@@ -228,6 +249,8 @@ public class CardSubscription {
         mlc.setAcknowledgeMode(AcknowledgeMode.AUTO);
         return mlc;
     }
+
+    
 
     public void updateRange() {
         startingPublishDate = Instant.now();

@@ -61,7 +61,7 @@ public class PerimetersController implements PerimetersApi {
 
         for (GroupData groupData : foundGroups) {
             groupData.addPerimeter(id);
-            userService.publishUpdatedUserEvent(groupData.getId());
+            userService.publishUpdatedGroupMessage(groupData.getId());
         }
         groupRepository.saveAll(foundGroups);
         return null;
@@ -114,7 +114,7 @@ public class PerimetersController implements PerimetersApi {
         if (foundGroup != null) {
             foundGroup.deletePerimeter(idParameter);
 
-            userService.publishUpdatedUserEvent(foundGroup.getId());
+            userService.publishUpdatedGroupMessage(foundGroup.getId());
             groupRepository.save(foundGroup);
         }
         return null;
@@ -165,8 +165,9 @@ public class PerimetersController implements PerimetersApi {
             //Retrieve groups from repository
             List<GroupData> foundGroups = groupRepository.findByPerimetersContaining(id);
             if (foundGroups != null) {
-                for (GroupData groupData : foundGroups)
-                    userService.publishUpdatedUserEvent(groupData.getId());
+                for (GroupData groupData : foundGroups) {
+                    userService.publishUpdatedGroupMessage(groupData.getId());
+                }
             }
             return perimeterRepository.save((PerimeterData)perimeter);
         }
@@ -190,8 +191,8 @@ public class PerimetersController implements PerimetersApi {
                         .peek(g-> {
                             g.deletePerimeter(id);
                             newGroupsInPerimeter.remove(g.getId());
-                            //Fire an UpdatedUserEvent for all users that are updated because they're removed from the group
-                            userService.publishUpdatedUserEvent(g.getId());
+                            //Send a user config change event for all users that are updated because they're removed from the group
+                            userService.publishUpdatedGroupMessage(g.getId());
                         }).collect(Collectors.toList());
 
         groupRepository.saveAll(toUpdate);
@@ -222,7 +223,7 @@ public class PerimetersController implements PerimetersApi {
         if (foundGroups != null) {
             for (GroupData groupData : foundGroups) {
                 groupData.deletePerimeter(idPerimeter);
-                userService.publishUpdatedUserEvent(groupData.getId());
+                userService.publishUpdatedGroupMessage(groupData.getId());
             }
             groupRepository.saveAll(foundGroups);
         }

@@ -11,7 +11,6 @@
 
 package org.opfab.users.controllers;
 
-import org.opfab.springtools.configuration.oauth.UpdatedUserEvent;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.Entity;
@@ -19,11 +18,9 @@ import org.opfab.users.model.EntityData;
 import org.opfab.users.model.UserData;
 import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.repositories.UserRepository;
-
+import org.opfab.users.services.UserService;
 import org.opfab.users.utils.EntityCycleDetector;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.bus.ServiceMatcher;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,13 +48,9 @@ public class EntitiesController implements EntitiesApi {
     private EntityRepository entityRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
-    /* These are Spring Cloud Bus beans used to fire an event (UpdatedUserEvent) every time a user is modified.
-    *  Other services handle this event by clearing their user cache for the given user. See issue #64*/
-    @Autowired
-    private ServiceMatcher serviceMatcher;
-    @Autowired
-    private ApplicationEventPublisher publisher;
 
     @Override
     public Void addEntityUsers(HttpServletRequest request, HttpServletResponse response, String id, List<String> users) throws Exception {
@@ -70,7 +63,7 @@ public class EntitiesController implements EntitiesApi {
 
         for (UserData userData : foundUsers) {
             userData.addEntity(id);
-            publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), userData.getLogin()));
+            userService.publishUpdatedUserMessage(userData.getLogin());
         }
         userRepository.saveAll(foundUsers);
         return null;
@@ -119,8 +112,8 @@ public class EntitiesController implements EntitiesApi {
         ));
 
         if(foundUser!=null) {
-                foundUser.deleteEntity(id);
-                publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), foundUser.getLogin()));
+            foundUser.deleteEntity(id);
+            userService.publishUpdatedUserMessage(foundUser.getLogin());
             userRepository.save(foundUser);
         }
         return null;
@@ -175,8 +168,8 @@ public class EntitiesController implements EntitiesApi {
                         .peek(u-> {
                             u.deleteEntity(id);
                             newUsersInEntity.remove(u.getLogin());
-                            //Fire an UpdatedUserEvent for all users that are updated because they're removed from the entity
-                            publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), u.getLogin()));
+                            //Send a user config change event for all users that are updated because they're removed from the entity
+                            userService.publishUpdatedUserMessage(u.getLogin());
                         }).collect(Collectors.toList());
 
         userRepository.saveAll(toUpdate);
@@ -208,7 +201,7 @@ public class EntitiesController implements EntitiesApi {
         if (foundUsers != null) {
             for (UserData userData : foundUsers) {
                 userData.deleteEntity(idEntity);
-                publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), userData.getLogin()));
+                userService.publishUpdatedUserMessage(userData.getLogin());
             }
             userRepository.saveAll(foundUsers);
         }

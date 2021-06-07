@@ -11,7 +11,6 @@
 
 package org.opfab.users.controllers;
 
-import org.opfab.springtools.configuration.oauth.UpdatedUserEvent;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.*;
@@ -23,8 +22,6 @@ import org.opfab.users.model.GroupData;
 import org.opfab.users.model.PerimeterData;
 import org.opfab.users.model.UserData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.bus.ServiceMatcher;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -60,13 +57,6 @@ public class GroupsController implements GroupsApi {
     @Autowired
     private UserServiceImp userService;
 
-    /* These are Spring Cloud Bus beans used to fire an event (UpdatedUserEvent) every time a user is modified.
-    *  Other services handle this event by clearing their user cache for the given user. See issue #64*/
-    @Autowired
-    private ServiceMatcher serviceMatcher;
-    @Autowired
-    private ApplicationEventPublisher publisher;
-
     @Override
     public Void addGroupUsers(HttpServletRequest request, HttpServletResponse response, String id, List<String> users) throws Exception {
 
@@ -78,7 +68,7 @@ public class GroupsController implements GroupsApi {
 
         for (UserData userData : foundUsers) {
             userData.addGroup(id);
-            publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), userData.getLogin()));
+            userService.publishUpdatedUserMessage(userData.getLogin());
         }
         userRepository.saveAll(foundUsers);
         return null;
@@ -90,10 +80,7 @@ public class GroupsController implements GroupsApi {
             response.addHeader("Location", request.getContextPath() + "/groups/" + group.getId());
             response.setStatus(201);
         } else {
-            List<UserData> users = userRepository.findByGroupSetContaining(group.getId());
-            users.forEach(foundUser -> {
-                publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), foundUser.getLogin()));
-            });
+            userService.publishUpdatedGroupMessage(group.getId());
         }
         return groupRepository.save((GroupData)group);
     }
@@ -124,8 +111,9 @@ public class GroupsController implements GroupsApi {
         ));
 
         if(foundUser!=null) {
-                foundUser.deleteGroup(id);
-                publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), foundUser.getLogin()));
+            foundUser.deleteGroup(id);
+            userService.publishUpdatedUserMessage(foundUser.getLogin());
+
             userRepository.save(foundUser);
         }
         return null;
@@ -180,8 +168,8 @@ public class GroupsController implements GroupsApi {
                         .peek(u-> {
                             u.deleteGroup(id);
                             newUsersInGroup.remove(u.getLogin());
-                            //Fire an UpdatedUserEvent for all users that are updated because they're removed from the group
-                            publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), u.getLogin()));
+                            //Send a user config change event for all users that are updated because they're removed from the group
+                            userService.publishUpdatedUserMessage(u.getLogin());
                         }).collect(Collectors.toList());
 
         userRepository.saveAll(toUpdate);
@@ -211,8 +199,7 @@ public class GroupsController implements GroupsApi {
         retrievePerimeters(perimeters);
 
         group.setPerimeters(perimeters);
-        userService.publishUpdatedUserEvent(id);
-
+        userService.publishUpdatedGroupMessage(id);
         groupRepository.save(group);
         return null;
     }
@@ -229,8 +216,7 @@ public class GroupsController implements GroupsApi {
         for (String perimeter : perimeters)
             group.addPerimeter(perimeter);
 
-        userService.publishUpdatedUserEvent(id);
-
+        userService.publishUpdatedGroupMessage(id);
         groupRepository.save(group);
         return null;
     }
@@ -264,7 +250,7 @@ public class GroupsController implements GroupsApi {
         if (foundUsers != null) {
             for (UserData userData : foundUsers) {
                 userData.deleteGroup(idGroup);
-                publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), userData.getLogin()));
+                userService.publishUpdatedUserMessage(userData.getLogin());
             }
             userRepository.saveAll(foundUsers);
         }

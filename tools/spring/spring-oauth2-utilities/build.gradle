@@ -1,8 +1,9 @@
 dependencies{
     compile boot.starterSecurity
+    compile boot.starterRabbitmq
+    compile boot.starterValidation
     compile spring.securityOauthResource, spring.securityOauthJose
     compile cloud.starterFeign
-    compileOnly cloud.starterBus
     compile misc.feignMock
     compile misc.feignJackson
     compile spring.webflux

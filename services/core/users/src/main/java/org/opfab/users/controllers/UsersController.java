@@ -12,7 +12,6 @@
 package org.opfab.users.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.opfab.springtools.configuration.oauth.UpdatedUserEvent;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.*;
@@ -25,8 +24,6 @@ import org.opfab.users.model.UserData;
 import org.opfab.users.model.UserSettingsData;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.bus.ServiceMatcher;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -61,13 +58,6 @@ public class UsersController implements UsersApi {
     @Autowired
     private UserService userService;
 
-    /* These are Spring Cloud Bus beans used to fire an event (UpdatedUserEvent) every time a user is modified.
-     *  Other services handle this event by clearing their user cache for the given user. See issue #64*/
-    @Autowired
-    private ServiceMatcher serviceMatcher;
-
-    @Autowired
-    private ApplicationEventPublisher publisher;
 
     @Override
     public User createUser(HttpServletRequest request, HttpServletResponse response, User user) throws Exception {
@@ -95,7 +85,7 @@ public class UsersController implements UsersApi {
         userService.createUser(user);
 
         if(!created)
-            publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), login));
+            userService.publishUpdatedUserMessage(login);
         
         return user;
     }
@@ -130,7 +120,8 @@ public class UsersController implements UsersApi {
     public UserSettings patchUserSettings(HttpServletRequest request, HttpServletResponse response, String login, UserSettings userSettings) throws Exception {
         UserSettingsData settings = userSettingsRepository.findById(login)
                 .orElse(UserSettingsData.builder().login(login).build());
-        if (userSettings.getProcessesStatesNotNotified()!=null) publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), login));
+        if (userSettings.getProcessesStatesNotNotified()!=null) 
+            userService.publishUpdatedUserMessage(login);
         return userSettingsRepository.save(settings.patch(userSettings));
     }
 
@@ -195,7 +186,7 @@ public class UsersController implements UsersApi {
         ));
 
         if (foundUser != null) {
-            publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), foundUser.getLogin()));
+            userService.publishUpdatedUserMessage(foundUser.getLogin());
             userRepository.delete(foundUser);
         }
         return null;
