@@ -22,7 +22,7 @@ ext {
             description : 'OperatorFabric is a modular, extensible, industrial-strength platform for use in electricity, water, and other utility operations.',
             version: version = rootProject.file('VERSION').text.trim(),
             revisionDate: revisionDate = new Date().format('dd MMMM yyyy'),
-            url: 'https://opfab.org'
+            url: 'https://www.opfab.org'
     ]
 
     boot = [
@@ -54,10 +54,18 @@ ext {
             dependencies          : "org.springframework.cloud:spring-cloud-dependencies:${versions['spring.cloud']}",
             starterBus            : "org.springframework.cloud:spring-cloud-starter-bus-amqp",
             starterStream         : "org.springframework.cloud:spring-cloud-starter-stream-rabbit",
-            starterFeign          : "org.springframework.cloud:spring-cloud-starter-openfeign"
+            starterFeign          : "org.springframework.cloud:spring-cloud-starter-openfeign",
+            avro                  : "org.apache.avro:avro:${versions['avro']}",
+            gradleAvroPlugin      : "com.commercehub.gradle.plugin:gradle-avro-plugin:${versions['gradle.avro.plugin']}",
+            kafkaAvroSchemaRegistryClient    : "io.confluent:kafka-schema-registry-client:${versions['kavro.schemaRegistryClient']}",
+            kafkaAvroSerializer              : "io.confluent:kafka-avro-serializer:${versions['kavro.avroSerializer']}",
+            springKafka           : "org.springframework.kafka:spring-kafka"
+
+
     ]
 
     testing = [
+            junit5          : "org.junit.jupiter:junit-jupiter:${versions['junit5']}",
             junit5Api       : "org.junit.jupiter:junit-jupiter-api:${versions['junit5']}",
             junit5Engine    : "org.junit.jupiter:junit-jupiter-engine:${versions['junit5']}",
             junit5Plugin    : "org.junit.platform:junit-platform-gradle-plugin:${versions['junit5.platform']}",
@@ -175,7 +183,6 @@ subprojects {
     subprojects {
         apply plugin: 'java'
         apply plugin: 'org.asciidoctor.convert'
-        apply plugin: 'io.spring.dependency-management'
         apply plugin: plugin.bom
 
         sourceCompatibility = 1.8

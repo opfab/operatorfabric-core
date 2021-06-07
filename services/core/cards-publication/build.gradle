@@ -13,9 +13,9 @@ dependencies {
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
 
-    implementation 'org.springframework.kafka:spring-kafka'
-    implementation "io.confluent:kafka-schema-registry-client:${versions['kavro.schemaRegistryClient']}"
-    implementation "io.confluent:kafka-avro-serializer:${versions['kavro.avroSerializer']}"
+    implementation cloud.springKafka
+    implementation cloud.kafkaAvroSchemaRegistryClient
+    implementation cloud.kafkaAvroSerializer
 
     compile boot.starterWeb, boot.starterJetty
     compile project(':client:cards-client-data')

@@ -44,8 +44,8 @@ subprojects {
 
             testAnnotationProcessor misc.lombok
             testCompileOnly misc.lombok
-            testRuntimeOnly "org.junit.jupiter:junit-jupiter:${versions['junit5']}"
-            testImplementation "org.junit.jupiter:junit-jupiter:${versions['junit5']}"
+            testRuntimeOnly testing.junit5
+            testImplementation testing.junit5
 
             testImplementation boot.starterTest, testing.assertJ
             testImplementation project(':tools:generic:test-utilities')
