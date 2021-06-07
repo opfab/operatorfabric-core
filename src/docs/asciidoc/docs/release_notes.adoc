@@ -1,14 +1,48 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
+= Version 2.6.0.RELEASE
 
-= Version SNAPSHOT
+== Features
 
-//The release notes are managed in an outside repository to avoid constantly having conflicts when merging PRs on the
-//develop branch. See https://github.com/opfab/release-notes/.
-//The content from this repository is then pasted back to this file during the release process.
+* Administration :
+- OC-1695 : Add authorized ip address settings in user administration screen
+- OC-1697 & OC-1699 : Add an admin screen to see open subscriptions
+
+* User card :
+- OC-1723 : Check that Lttd is not before start date and not after endDate
+- OC-1740 : Use entity description attribute for recipient list in user card as an option
+
+* Misc :
+- OC-1633 : Add the option to filter notifications that has already been answered by user own entity
+- OC-1672 : Reload the UI configuration when bundles change
+- OC-1741 : Remove detail card view when card is deleted
+
+== Bugs
+
+* OC-1711 : Clicking on a link to a third application from a card in modal shall close the modal
+* OC-1712 : Screen adjustement for archives screen when resolution smaller than 1920*1080
+* OC-1713 : Screen adjustement for logging screen when resolution smaller than 1920*1080
+* OC-1722 : Response to card example IT incident is not confirmed
+* OC-1728 : Acknowledging all cards shouldn't change their read status
+* OC-1716 : Adjustement to view for mobile phone when language is set to French
+* OC-1736 : Correct bug when child card is received before parent card
+* OC-1714 : Invalid group from token shall not prevent to start application
+* OC-1721 : When getting entities from token, it shall take into account groups of entities configured in mongo
+* OC-1738 : Parent card data not available in child card when using Kafka
+
+== Tasks
+
+* OC-1729 : Removing push_card_loop script (use instead scripts provided in ./src/test/resources)
+* OC-1730 : Fixing baseUrls in swagger for documentation
+* OC-1701 : Set indexes in mongoDB
+* OC-1737 : Do not freeze the UI when loading a lot of cards
+* OC-1743 : Add cypress tests for acknowledgment feature
+* OC-1663 : Removing Ribbon and updating Spring Boot to 2.4.6
+
+Please see the  https://opfab.github.io/documentation/current/docs/single_page_doc.html#_migration_guide_from_release_2_5_0_to_release_2_6_0[migration guide] regarding the configuration of a new mandatory deployment property.
 
