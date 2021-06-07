@@ -267,7 +267,7 @@ Setting automated user creation==. Creation user requires a user id. Given name 
 |operatorfabric.security.jwt.family-name-claim|family-name|no| Jwt claim is used to set the user's family name
 |===
 
-==== Automated User creation with NONE flow
+=== Automated User creation with NONE flow
 
 Currently users with not be automatically created when using the `NONE` flow. 
 An administrator can add the users that are allowed to login to Operator Fabric.

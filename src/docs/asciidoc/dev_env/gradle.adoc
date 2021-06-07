@@ -74,6 +74,11 @@ signing.gnupg.keyName=ID_OF_THE_GPG_KEY_TO_USE
 signing.secretKeyRingFile=LOCATION_OF_THE_KEYRING_HOLDING_THE_GPG_KEY
 ----
 
+NOTE: See https://makandracards.com/makandra-orga/notes/37763-gpg-extract-private-key-and-import-on-different-machine[this link]
+about importing a GPG key to your machine and getting its id.
+
+IMPORTANT: The gradle signing plugins uses gpg2 rather than gpg, so you should https://makandracards.com/makandra-orga/37763-gpg-extract-private-key-and-import-on-different-machine#note-section-enigmail--gnupg-v2[import the key to the gpg2 keyring].
+
 For the publication to the staging repository (OSSRH) to work, you need to set the credentials in your gradle.properties file:
 
 ----
