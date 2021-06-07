@@ -41,7 +41,7 @@ import {AppService, PageType} from '@ofServices/app.service';
 import {User} from '@ofModel/user.model';
 import {Map} from '@ofModel/map';
 import {userRight} from '@ofModel/userWithPerimeters.model';
-import {ClearLightCardSelection, UpdateALightCard} from '@ofStore/actions/light-card.actions';
+import {ClearLightCardSelection, UpdateALightCard, UpdateTrigger} from '@ofStore/actions/light-card.actions';
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
@@ -390,11 +390,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     updateAcknowledgementOnLightCard(hasBeenAcknowledged: boolean) {
         this.store.select(fetchLightCard(this.card.id)).pipe(take(1))
             .subscribe((lightCard: LightCard) => {
-                // If the card has been acknowledged, set it as read as well otherwise leave it as is.
-                // This is to prevent firing two updates, one for the ack and one for the read, which messed with sounds
-                const hasBeenRead = hasBeenAcknowledged ? true : lightCard.hasBeenRead;
-                const updatedLightCard = {...lightCard, hasBeenAcknowledged: hasBeenAcknowledged, hasBeenRead: hasBeenRead};
-                this.store.dispatch(new UpdateALightCard({card: updatedLightCard}));
+                const updatedLighCard = {...lightCard, hasBeenAcknowledged: hasBeenAcknowledged};
+                this.store.dispatch(new UpdateALightCard({lightCard: updatedLighCard, updateTrigger: UpdateTrigger.ACKNOWLEDGEMENT}));
             });
     }
 
@@ -422,7 +419,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             this.store.select(fetchLightCard(this.lastCardSetToReadButNotYetOnFeed.id)).pipe(take(1))
                 .subscribe((lightCard: LightCard) => {
                     const updatedLightCard = { ...lightCard, hasBeenRead: true };
-                    this.store.dispatch(new UpdateALightCard({ card: updatedLightCard }));
+                    this.store.dispatch(new UpdateALightCard({ lightCard: updatedLightCard, updateTrigger: UpdateTrigger.READ }));
                 });
             this.lastCardSetToReadButNotYetOnFeed = null;
         }
@@ -433,7 +430,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         if (this.parentModalRef)  {
             this.parentModalRef.close();
             this.store.dispatch(new ClearLightCardSelection());
-        } else this._appService.closeDetails(this.currentPath);
+        } else this._appService.closeDetails();
     }
 
     // for certain types of template , we need to reload it to take into account
@@ -597,6 +594,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private initializeHandlebarsTemplatesProcess() {
+      templateGateway.initTemplateGateway();
       templateGateway.childCards = this.childCards;
       templateGateway.isLocked = this.isLocked;
       templateGateway.userAllowedToRespond = this.isActionEnabled;

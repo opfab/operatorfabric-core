@@ -23,6 +23,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
+import org.springframework.kafka.listener.ConsumerProperties;
 
 import java.time.Duration;
 import java.util.List;
@@ -50,7 +51,7 @@ public class KafkaListenerContainerFactoryConfiguration {
         if (duration != null) {
             return duration.toMillis();
         }
-        return 1000L;
+        return ConsumerProperties.DEFAULT_POLL_TIMEOUT;
     }
 
     @Bean

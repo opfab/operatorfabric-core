@@ -10,12 +10,9 @@
 
 
 import {Component, OnInit} from '@angular/core';
-import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
-import { selectSubscriptionOpen } from '@ofStore/selectors/cards-subscription.selectors';
 import { ConfigService} from "@ofServices/config.service";
-import { ChangeReadSort } from '@ofStore/actions/feed.actions';
 
 @Component({
   selector: 'of-filters',
@@ -25,6 +22,7 @@ import { ChangeReadSort } from '@ofStore/actions/feed.actions';
 export class FiltersComponent implements OnInit {
 
   hideAckFilter: boolean;
+  hideResponseFilter: boolean;
   hideTags: boolean;
   hideTimerTags: boolean;
   hideReadSort: boolean;
@@ -36,6 +34,7 @@ export class FiltersComponent implements OnInit {
     this.hideTags = this.configService.getConfigValue('settings.tags.hide',false);
     this.hideTimerTags = this.configService.getConfigValue('feed.card.hideTimeFilter',false);
     this.hideAckFilter = this.configService.getConfigValue('feed.card.hideAckFilter',false);
+    this.hideResponseFilter = this.configService.getConfigValue('feed.card.hideResponseFilter',false);
     this.hideReadSort = this.configService.getConfigValue('feed.card.hideReadSort',false);
     this.hideSeveritySort = this.configService.getConfigValue('feed.card.hideSeveritySort',false);
   }

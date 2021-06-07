@@ -201,4 +201,9 @@ public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
 
         return converter;
     }
+
+    @Override
+    protected boolean autoIndexCreation() {
+        return true;
+    }
 }

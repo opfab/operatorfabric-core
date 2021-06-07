@@ -18,7 +18,6 @@ import org.opfab.cards.model.SeverityEnum;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -41,7 +40,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@CompoundIndex(name = "process_state", def = "{'process' : 1, 'state' : 1}")
+
 public class CardPublicationData implements Card {
 
     @Builder.Default
@@ -89,25 +88,22 @@ public class CardPublicationData implements Card {
     private List<? extends TimeSpan> timeSpans;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;
-    @Indexed
-    private int shardKey;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @Indexed
     private List<String> userRecipients;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @Indexed
     private List<String> groupRecipients;
     @Singular("entityAllowedToRespond")
-    @Indexed
     private List<String> entitiesAllowedToRespond;
     @Singular("entityRequiredToRespond")
-    @Indexed
     private List<String> entitiesRequiredToRespond;
     @Singular
     @Indexed
     private List<String> entityRecipients;
     @Singular
-    @Indexed
     private List<String> externalRecipients;
     @JsonIgnore
     private List<String> usersAcks;
@@ -133,7 +129,6 @@ public class CardPublicationData implements Card {
         this.id = process + "." + processInstanceId;
         if (null == this.uid)
         	this.uid = UUID.randomUUID().toString();
-        this.setShardKey(Math.toIntExact(this.getStartDate().toEpochMilli() % 24 * 1000));
         this.processStateKey = process + "." + state;
     }
 

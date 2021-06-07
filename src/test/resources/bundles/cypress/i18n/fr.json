@@ -1,0 +1,17 @@
+{
+	"process": {"label": "Process test (cypress)"},
+	"message":{
+		"title":"Message",
+		"summary":"Message reçu"
+	},
+	"messageState": {
+		"description": "Message"
+	},
+	"messageStateWithNoAck": {
+		"description": "Message with no ack"
+	},
+	"messageStateWithOnlyWhenResponseDisabledForUserAck": {
+		"description": "Message with ack only when response disable for user "
+	}
+}
+

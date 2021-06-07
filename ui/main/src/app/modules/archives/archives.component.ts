@@ -212,6 +212,10 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         return this.timeService.formatTime(this.selectedCard.publishDate)
     }
     ngOnDestroy() {
+        
+        if (!!this.modalRef) {
+            this.modalRef.close();
+        }
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }

@@ -7,8 +7,3 @@ spring:
 operatorfabric.businessconfig:
   storage:
     path: "./services/core/businessconfig/build/docker-volume/businessconfig-storage"
-
-#here we put urls for all feign clients
-users:
-  ribbon:
-    listOfServers: http://localhost:2103

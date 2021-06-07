@@ -70,20 +70,15 @@ The `SPA`, on a local machine, is available at the following Url: `http://localh
 To log in you need to use a valid user among the following: `operator1`, `operator3` or `admin`.
 The common password is `test` for them all.
 
-To test the reception of cards, you can use the following script to create dummy cards:
+To test the reception of cards, you can use the following scripts to push basic configuration and example cards:
 
 [source,shell]
 ----
-${OF_HOME}/services/core/cards-publication/src/main/bin/push_cards_loop.sh
+${OF_HOME}/src/test/resources/loadTestConf.sh
+${OF_HOME}/src/test/resources/send6TestCards.sh
 ----
 
-For more realistic card sending use, once Karate env correctly configured, the Karate scripts called :
-
-** `${OF_HOME}/src/test/resources/loadTestConf.sh`
-** `${OF_HOME}/src/test/resources/send6TestCards.sh`
-
-Once logged in, after one of those scripts have been running, you should be able to see some cards displayed in `http://localhost:2002/`.
-
+Once logged in with operator1, after those scripts have been running, you should be able to see some cards displayed in `http://localhost:2002/`.
 
 == Build
 
@@ -120,7 +115,6 @@ on https://jasmine.github.io[Jasmine] using https://karma-runner.github.io[Karma
 . if the RabbitMQ, MongoDB and Keycloak docker containers are not running, launch them;
 . set your environment variables with `source ${OF_HOME}/bin/load_environment_light.sh`;
 . run the micro services using the same command as earlier: `${OF_HOME}/bin/run_all.sh start`;
-. if needed, enable a card-operation test flow using the script `${OF_HOME}/service/core/cards-publication/src/main/bin/push_cards_loop.sh`;
 . launch an angular server with the command: `ng serve`;
 . test your changes in your browser using this url: `http://localhost:4200` which leads to `http://localhost:4200/#/feed`.
 

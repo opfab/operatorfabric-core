@@ -34,6 +34,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -226,19 +227,24 @@ public class CardRepositoryShould {
         persistCard(createSimpleCard("2", now, nowMinusOne, null, LOGIN, null,null));
         persistCard(createSimpleCard("3", now, nowPlusOne, null, LOGIN,null,null));
 
+        HashMap<String,CardOperation> results = new HashMap<String,CardOperation>();
         StepVerifier.create(repository.getCardOperations(null, now,nowPlusTwo, adminUser)
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.getCard()).isNotNull();
-                    assertCard(op,"PROCESS.PROCESS1", "PUBLISHER", "0");
+                    results.put(op.getCard().getProcessInstanceId(), op);
                 })
                 .assertNext(op -> {
                     assertThat(op.getCard()).isNotNull();
-                    assertCard(op,"PROCESS.PROCESS3", "PUBLISHER", "0");
+                    results.put(op.getCard().getProcessInstanceId(), op);
                 })
                 .expectComplete()
                 .verify();
-       
+       CardOperation card1 = (CardOperation) results.get("PROCESS1");
+       CardOperation card2 = (CardOperation) results.get("PROCESS3");
+       assertCard(card1, "PROCESS.PROCESS1", "PUBLISHER", "0");
+       assertCard(card2, "PROCESS.PROCESS3", "PUBLISHER", "0");
+
     }
     
     @Test

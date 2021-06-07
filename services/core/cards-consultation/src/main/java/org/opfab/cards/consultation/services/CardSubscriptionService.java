@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,6 +39,7 @@ public class CardSubscriptionService {
 
     private final ThreadPoolTaskScheduler taskScheduler;
     private final FanoutExchange cardExchange;
+    private final FanoutExchange processExchange;
     private final AmqpAdmin amqpAdmin;
     private final long deletionDelay;
     private final long heartbeatDelay;
@@ -51,6 +53,7 @@ public class CardSubscriptionService {
     @Autowired
     public CardSubscriptionService(ThreadPoolTaskScheduler taskScheduler,
                                    FanoutExchange cardExchange,
+                                   FanoutExchange processExchange,
                                    ConnectionFactory connectionFactory,
                                    AmqpAdmin amqpAdmin,
                                    @Value("${operatorfabric.subscriptiondeletion.delay:10000}")
@@ -58,6 +61,7 @@ public class CardSubscriptionService {
                                    @Value("${operatorfabric.heartbeat.delay:10000}")
                                    long heartbeatDelay) {
         this.cardExchange = cardExchange;
+        this.processExchange = processExchange;
         this.taskScheduler = taskScheduler;
         this.amqpAdmin = amqpAdmin;
         this.connectionFactory = connectionFactory;
@@ -116,6 +120,7 @@ public class CardSubscriptionService {
            .clientId(clientId)
            .amqpAdmin(amqpAdmin)
            .cardExchange(this.cardExchange)
+           .processExchange(this.processExchange)
            .connectionFactory(this.connectionFactory);
         if (cardSubscription == null) {
             cardSubscription = buildSubscription(subId, cardSubscriptionBuilder);
@@ -219,5 +224,10 @@ public class CardSubscriptionService {
         this.cache.forEach((k,v)->v.clearSubscription());
         this.cache.clear();
         this.pendingEvict.clear();
+    }
+
+    public Collection<CardSubscription> getSubscriptions()
+    {
+        return cache.values();
     }
 }

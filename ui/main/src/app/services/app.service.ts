@@ -12,6 +12,7 @@ import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {ClearLightCardSelection} from '@ofStore/actions/light-card.actions';
+import {selectCurrentUrl} from '@ofSelectors/router.selectors';
 
 export enum PageType {
     UNKNOWN, FEED, ARCHIVE, THIRPARTY, SETTING, ABOUT, CALENDAR, MONITORING, USERCARD
@@ -19,6 +20,8 @@ export enum PageType {
 
 @Injectable()
 export class AppService {
+
+    private _currentPath: string;
 
     private pageConf = new Map([
         ['feed', PageType.FEED]
@@ -34,6 +37,14 @@ export class AppService {
 
 
     constructor(private store: Store<AppState>, private _router: Router) {
+        this.store.select(selectCurrentUrl)
+            .subscribe(url => {
+                if (!!url) {
+                    const urlParts = url.split('/');
+                    const CURRENT_PAGE_INDEX = 1;
+                    this._currentPath = urlParts[CURRENT_PAGE_INDEX];
+                }
+            });
     }
 
     get pageType(): PageType {
@@ -44,9 +55,9 @@ export class AppService {
         return (!!currentPageType) ? currentPageType : PageType.UNKNOWN;
     }
 
-    closeDetails(currentPath: string) {
+    closeDetails() {
         this.store.dispatch(new ClearLightCardSelection());
-        this._router.navigate(['/' + currentPath, 'cards']);
+        this._router.navigate(['/' + this._currentPath]);
     }
 
     reopenDetails(currentPath: string, cardId: string) {

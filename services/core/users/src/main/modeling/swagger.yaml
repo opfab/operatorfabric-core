@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
-  description: OperatorFabric User Management API
-  version: 2.5.0.RELEASE
+  description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
+  version: 2.6.0.RELEASE
   title: User Management
   termsOfService: ''
   contact:
@@ -10,8 +10,8 @@ info:
   license:
     name: Mozilla Public License V2.0
     url: 'http://mozilla.org/MPL/2.0/'
-host: localhost
-basePath: /apis
+host: localhost:2002
+basePath: /users
 tags:
   - name: users
     description: Everything concerning users

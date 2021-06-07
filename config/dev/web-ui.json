@@ -32,6 +32,7 @@
         "display": "BUSINESS"
       },
       "hideAckFilter": false,
+      "hideResponseFilter": false,
       "secondsBeforeLttdForClockDisplay": 7500,
       "hideReadSort": false,
       "hideSeveritySort": false,
@@ -139,5 +140,11 @@
   },
   "feedConfiguration": {
     "hidden": false
+  },
+  "realTimeUsers": {
+    "hidden": false
+  },
+  "usercard": {
+    "useDescriptionFieldForEntityList": false
   }
 }

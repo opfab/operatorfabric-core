@@ -45,14 +45,19 @@ public class ArchivedCardPublicationData implements Card {
     private Boolean keepChildCards = false;
     private String publisher;
     private String processVersion;
+
+    @Indexed
     private String process;
     
     private String processInstanceId;
+    
+    @Indexed
     private String state;
     private I18n title;
     private I18n summary;
 
     @CreatedDate
+    @Indexed
     private Instant publishDate;
     private Instant lttd;
 
@@ -62,19 +67,27 @@ public class ArchivedCardPublicationData implements Card {
     @Indexed
     private Instant endDate;
     private SeverityEnum severity;
+    @Indexed
     private List<String> tags;
     private Object data;
+
     @Indexed
-    private int shardKey;
     private List<String> userRecipients;
+    
+    @Indexed
     private List<String> groupRecipients;
+    
     @Transient
     private List<? extends TimeSpan> timeSpans;
+    
     @Indexed
     private List<String> entityRecipients;
+    
     private List<String> externalRecipients;
+    
     @Singular("entityAllowedToRespond")
     private List<String> entitiesAllowedToRespond;
+    
     @Singular("entitiyRequiredToRespond")
     private List<String> entitiesRequiredToRespond;
 
@@ -105,7 +118,6 @@ public class ArchivedCardPublicationData implements Card {
         this.processInstanceId = card.getProcessInstanceId();
         this.state = card.getState();
         this.startDate = card.getStartDate();
-        this.shardKey = card.getShardKey();
         this.endDate = card.getEndDate();
         this.lttd = card.getLttd();
         this.title = card.getTitle();

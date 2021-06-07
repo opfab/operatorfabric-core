@@ -116,7 +116,7 @@ export function reducer(
             };
         }
         case LightCardActionTypes.UpdateALightCard: {
-            return LightCardAdapter.upsertOne(action.payload.card, state);
+            return LightCardAdapter.upsertOne(action.payload.lightCard, state);
         }
 
         case FeedActionTypes.ApplySeveralFilters: {

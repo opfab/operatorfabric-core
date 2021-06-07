@@ -5,8 +5,8 @@ plugins {
     id "org.asciidoctor.convert" version "2.4.0"
     id "maven-publish"
     id "signing"
-    id "org.owasp.dependencycheck" version "6.1.6"
-    id 'org.springframework.boot' version '2.4.0-M1'
+    id "org.owasp.dependencycheck" version "6.2.0"
+    id 'org.springframework.boot' version '2.4.6'
     id 'org.sonarqube' version '3.2.0' apply false
 }
 
@@ -46,7 +46,7 @@ ext {
             securityOauthResource   : "org.springframework.security:spring-security-oauth2-resource-server:${versions['spring.security']}",
             securityOauthJose       : "org.springframework.security:spring-security-oauth2-jose:${versions['spring.security']}",
             securityTest            : "org.springframework.security:spring-security-test:${versions['spring.security']}",
-            webflux                 : "org.springframework:spring-webflux:${versions['spring']}",
+            webflux                 : "org.springframework:spring-webflux:${versions['spring.webflux']}",
             retry                   : "org.springframework.retry:spring-retry:${versions['spring.retry']}"
     ]
 
@@ -54,8 +54,7 @@ ext {
             dependencies          : "org.springframework.cloud:spring-cloud-dependencies:${versions['spring.cloud']}",
             starterBus            : "org.springframework.cloud:spring-cloud-starter-bus-amqp",
             starterStream         : "org.springframework.cloud:spring-cloud-starter-stream-rabbit",
-            starterFeign          : "org.springframework.cloud:spring-cloud-starter-openfeign",
-            ribbon                : "org.springframework.cloud:spring-cloud-starter-netflix-ribbon"
+            starterFeign          : "org.springframework.cloud:spring-cloud-starter-openfeign"
     ]
 
     testing = [
@@ -76,9 +75,11 @@ ext {
             compress       : "org.apache.commons:commons-compress:${versions['apache.commons.compress']}",
             feignMock      : "io.github.openfeign:feign-mock:${versions['feign']}",
             feignJackson   : "io.github.openfeign:feign-jackson:${versions['feign']}",
+            guava          : "com.google.guava:guava:30.1.1-jre",
             jacksonAnnotations   : "com.fasterxml.jackson.core:jackson-annotations:${versions['jacksonAnnotations']}",
             collections4   : "org.apache.commons:commons-collections4:${versions['apache.commons.collections4']}",
-            micrometer     : "io.micrometer:micrometer-registry-prometheus:${versions['micrometer']}"
+            micrometer     : "io.micrometer:micrometer-registry-prometheus:${versions['micrometer']}",
+            jsonSmart      : "net.minidev:json-smart:2.4.7"
     ]
 
     generator = [

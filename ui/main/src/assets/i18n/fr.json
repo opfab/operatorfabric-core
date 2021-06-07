@@ -16,7 +16,8 @@
     "about": "À propos",
     "usercard": "Création de cartes",
     "switchToNightMode": "Mode nuit",
-    "switchToDayMode": "Mode jour"
+    "switchToDayMode": "Mode jour",
+    "realTimeUsers": "Utilisateurs temps réel"
   },
   "timeline": {
     "hideTimeline" : "Masquer la timeline",
@@ -65,6 +66,9 @@
           "label": "Information"
         }
       },
+      "showCardsWithResponse": {
+        "label": "Cartes avec réponse de mon entité"
+      },
       "ack": {
         "title": "Acquittement",
         "acknowledged": {
@@ -99,7 +103,8 @@
     "lttdFinished": "Terminée",
     "received": "Reçu le",
     "at" : "à",
-    "from": "de"
+    "from": "de",
+    "moreCards": "cartes supplémentaires"
   },
   "login": {
     "reset": "RaZ",
@@ -222,7 +227,10 @@
       "notAvailable": "Fonctionnalité non disponible",
       "templateError" : "Erreur technique : template non conforme",
       "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques",
-      "endDateBeforeStartDate": "La date de fin doit être postérieure à la date de début"
+      "endDateBeforeStartDate": "La date de fin doit être postérieure à la date de début",
+      "lttdBeforeStartDate": "La date limite de réponse doit être postérieure à la date de début",
+      "lttdAfterEndDate": "La date limite de réponse doit être antérieure à la date de fin"
+      
     },
     "filters": {
       "severity": "SEVERITE",
@@ -320,6 +328,7 @@
         "firstName": "Prénom",
         "groups": "Groupes",
         "entities": "Entités",
+        "authorizedIPAddresses": "Adresses IP autorisées",
         "confirmDelete": "Voulez-vous vraiment supprimer l'utilisateur",
         "add":"Ajouter un nouvel utilisateur"
       },
@@ -389,5 +398,9 @@
     "selectProcessText": "Sélectionner un Processus",
     "selectStateText": "Sélectionner un Etat",
     "selectTagText": "Sélectionner une Etiquette"
+  },
+  "realTimeUsers": {
+    "connected": "Connecté",
+    "disconnected": "Déconnecté"
   }
 }

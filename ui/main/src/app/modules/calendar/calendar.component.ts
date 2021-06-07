@@ -157,6 +157,9 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
+    if (!!this.modalRef) {
+      this.modalRef.close();
+    }
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }

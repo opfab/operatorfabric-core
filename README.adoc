@@ -85,12 +85,14 @@ cd ./config/docker
 ./docker-compose.sh
 ----
 
-. After a little while, log into the application UI at *localhost:2002/* using admin/test as credentials.
+. After a little while, log into the application UI at *localhost:2002/* using operator1/test as credentials.
 
-. Push cards using the following test script
+. Push basic configuration and cards using the following test scripts
 +
+[source,shell]
 ----
-./services/core/cards-publication/src/main/bin/push_card_loop.sh --publisher TEST --process process
+./src/test/resources/loadTestConf.sh
+./src/test/resources/send6TestCards.sh
 ----
 
 TIP: If you want to experiment in more depth and have more details on how it works (as well as some troubleshooting), check out our

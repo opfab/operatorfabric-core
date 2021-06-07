@@ -117,6 +117,17 @@ export class FilterService {
         );
     }
 
+    private initResponseFilter() {
+        return new Filter(
+            (card: LightCard, status) => {
+                return status ||
+                    (!status && !card.hasChildCardFromCurrentUserEntity);
+            },
+            false,
+            true
+        );
+    }
+
     private initProcessFilter()  {
         return new Filter(
             (card: LightCard, status) => {
@@ -159,6 +170,8 @@ export class FilterService {
         if (filterOnAck)
             filters.set(FilterType.ACKNOWLEDGEMENT_FILTER, this.initAcknowledgementFilter());
 
+        filters.set(FilterType.RESPONSE_FILTER, this.initResponseFilter());
+
         filters.set(FilterType.PROCESS_FILTER, this.initProcessFilter());
         filters.set(FilterType.TYPEOFSTATE_FILTER, this.initTypeOfStateFilter());
         return filters;
@@ -166,6 +179,7 @@ export class FilterService {
 }
 
 // need a process type ?
+
 export enum FilterType {
     TYPE_FILTER,
     RECIPIENT_FILTER,
@@ -175,7 +189,8 @@ export enum FilterType {
     ACKNOWLEDGEMENT_FILTER,
     TEST_FILTER,
     PROCESS_FILTER,
-    TYPEOFSTATE_FILTER
+    TYPEOFSTATE_FILTER,
+    RESPONSE_FILTER
 }
 export const BUSINESS_DATE_FILTER_INITIALISATION = {
     name: FilterType.BUSINESSDATE_FILTER,

@@ -13,7 +13,7 @@ import {AcknowledgmentAllowedEnum, Process} from '@ofModel/processes.model';
 import {Card} from '@ofModel/card.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {LightCard} from '@ofModel/light-card.model';
-import {UpdateALightCard} from '@ofActions/light-card.actions';
+import {UpdateALightCard, UpdateTrigger} from '@ofActions/light-card.actions';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {Observable} from 'rxjs';
@@ -53,11 +53,8 @@ export class AcknowledgeService {
     }
 
     updateAcknowledgementOnLightCard(lightCard: LightCard, hasBeenAcknowledged: boolean) {
-        // If the card has been acknowledged, set it as read as well otherwise leave it as is.
-        // This is to prevent firing two updates, one for the ack and one for the read, which messed with sounds
-        const hasBeenRead = hasBeenAcknowledged ? true : lightCard.hasBeenRead;
-        const updatedLightCard = {...lightCard, hasBeenAcknowledged: hasBeenAcknowledged, hasBeenRead: hasBeenRead};
-        this.store.dispatch(new UpdateALightCard({card: updatedLightCard}));
+        const updatedLightCard = {...lightCard, hasBeenAcknowledged: hasBeenAcknowledged};
+        this.store.dispatch(new UpdateALightCard({lightCard: updatedLightCard, updateTrigger: UpdateTrigger.ACKNOWLEDGEMENT}));
     }
 
     isAcknowledgmentAllowed(user: UserWithPerimeters, card: Card|LightCard, processDefinition: Process): boolean {

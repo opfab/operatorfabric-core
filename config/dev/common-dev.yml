@@ -30,6 +30,8 @@ operatorfabric:
     jwt:
       login-claim: preferred_username
       expire-claim: exp
+  servicesUrls:
+    users: "http://localhost:2103"
 
 ### activate the folLowing if you want the entities of the user to came from the token and not mongoDB   
 ### entitiesIdClaim is the name of the field in the token     

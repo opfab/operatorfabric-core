@@ -106,7 +106,7 @@ export class CardDetailComponent implements OnInit, OnDestroy {
     }
 
     private initializeHandlebarsTemplates() {
-
+        templateGateway.initTemplateGateway();
         this.businessconfigService.queryProcessFromCard(this.card).pipe(
             takeUntil(this.unsubscribe$),
             switchMap(process => {
@@ -119,7 +119,6 @@ export class CardDetailComponent implements OnInit, OnDestroy {
                     this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
                     setTimeout(() => { // wait for DOM rendering
                         this.reinsertScripts();
-                        console.log("SCREENSIZE: " + this.screenSize)
                         templateGateway.setScreenSize(this.screenSize);
                     }, 10);
                 }, () =>  {

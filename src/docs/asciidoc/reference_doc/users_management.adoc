@@ -87,3 +87,15 @@ See
 ifdef::single-page-doc[<<jwt_mode, here>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/deployment/index.adoc#jwt_mode, here>>]
 for more details to use this feature.
+
+== Currently connected users
+
+The endPoint `/cards/connections` gives the list of connected user in real time. It is only accessible by users with administrator privileges.
+
+== Real time users
+
+As an admin (or member of the ADMIN group), OperatorFabric allows you to see which "real-time" users are logged in and not logged in. To be part of the "real-time" users, you must be a member of the REALTIME_USERS group.
+
+This interface is accessible via the user menu (top right of the screen).
+
+

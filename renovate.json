@@ -1,11 +1,16 @@
 {
   "extends": [
-    "config:base"
+    "config:base",
+    ":gitSignOff",
+    ":switchToGradleLite"
   ],
   "branchPrefix": "OC-1590_",
   "ignorePaths": [
     "**/node_modules/**",
     "**/bower_components/**",
     "**/vendor/**"
-  ]
+  ],
+  "gradle-lite": {
+    "fileMatch": ["versions.properties"]
+  }
 }

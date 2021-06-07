@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,13 +8,14 @@
  */
 
 
-
 import {Injectable} from '@angular/core';
 import {PlatformLocation} from "@angular/common";
 import {LightCard, Severity} from "@ofModel/light-card.model";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
+import {UpdateTrigger} from "@ofActions/light-card.actions";
+import {LightCardsService} from './lightcards.service';
 
 @Injectable()
 export class SoundNotificationService {
@@ -41,7 +42,7 @@ export class SoundNotificationService {
    * once (and only new cards), sounds will only be played for a given card if the elapsed time since its publishDate
    * is below this threshold. */
 
-  constructor(private store: Store<AppState>, private platformLocation: PlatformLocation) {
+  constructor(private store: Store<AppState>, private platformLocation: PlatformLocation,private lightCardsService: LightCardsService) {
     let baseHref = platformLocation.getBaseHrefFromDOM();
     this.alarmSoundPath = (baseHref?baseHref:'/')+'assets/sounds/alarm.mp3'
     this.alarmSound = new Audio(this.alarmSoundPath);
@@ -59,11 +60,16 @@ export class SoundNotificationService {
 
   }
 
-  handleCards(card: LightCard, currentlyVisibleIds: string[]) {
-              // Check whether card has just been published and whether it is currently visible in the feed
-          if (((new Date().getTime() - card.publishDate) <= this.recentThreshold) && (currentlyVisibleIds.includes(card.id))) {
-            this.playSoundForCard(card);
-          }
+  handleUpdatedCard(card: LightCard , updateTrigger: UpdateTrigger) {
+    if(this.lightCardsService.isCardVisibleInFeed(card) && updateTrigger === UpdateTrigger.REMINDER) this.playSoundForCard(card);
+  }
+
+  handleLoadedCard(card: LightCard) {
+    if(this.lightCardsService.isCardVisibleInFeed(card) && this.checkCardIsRecent(card)) this.playSoundForCard(card);
+  }
+
+  checkCardIsRecent (card: LightCard) : boolean {
+    return ((new Date().getTime() - card.publishDate) <= this.recentThreshold);
   }
 
   playSoundForCard(card: LightCard) {
@@ -100,7 +106,7 @@ export class SoundNotificationService {
   playSound(sound: HTMLAudioElement) {
     sound.play().catch(error => {
       console.log(new Date().toISOString(),
-              `Notification sound wasn't played because the user hasn't interacted with the app yet (autoplay policy).`);
+          `Notification sound wasn't played because the user hasn't interacted with the app yet (autoplay policy).`);
       /* This is to handle the exception thrown due to the autoplay policy on Chrome. See https://goo.gl/xX8pDD */
     });
   }

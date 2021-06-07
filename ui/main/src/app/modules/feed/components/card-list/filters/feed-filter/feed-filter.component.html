@@ -10,11 +10,8 @@
 
 <ng-template #filterTypeContent>
 
+    <div class="row opfab-filter-type-header"></div>
 
-
-    <div class="row opfab-filter-type-header">
-        <span translate>feed.filters.type.title</span>
-    </div>
     <form [formGroup]="typeFilterForm" id="type-filter-form" style="padding-left: 3px;">
 
         <label class="opfab-checkbox "> <span class="label-sev-alarm" translate> feed.filters.type.alarm.label </span>
@@ -41,6 +38,15 @@
         </label>
 
     </form>
+    <div *ngIf="!(hideResponseFilter)">
+        
+        <form [formGroup]="responseFilterForm" id="response-filter-form"  style="padding-left: 3px; padding-top: 15px;">
+            <label class="opfab-checkbox "> <span translate>feed.filters.showCardsWithResponse.label</span>
+                <input type="checkbox"  id="opfab-feed-filter-response" formControlName="responseControl">
+                <span class="opfab-checkbox-checkmark"></span>
+            </label>
+        </form>
+    </div>
     <div *ngIf="!(hideAckFilter)">
         <div class="row opfab-filter-header">
             <span translate>feed.filters.ack.title</span>

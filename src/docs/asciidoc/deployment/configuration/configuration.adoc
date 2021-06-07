@@ -59,6 +59,7 @@ In this file you will find, among others, the parameters below :
 |name|default|mandatory?|Description
 
 |operatorfabric.businessLogActivated|false|no|Indicates whether or not operatorfabric should record business logs
+|operatorfabric.servicesUrls.users||yes|Indicates where the Users service can we reached (to get information about the current user).
 
 |===
 
@@ -71,14 +72,6 @@ Each business service has a specific yaml configuration file. It should a least 
 spring:
   application:
     name: businessconfig
-----
-
-It can contain references to other services as well, for example :
-[source, yaml]
-----
-users:
-  ribbon:
-    listOfServers: users:8080
 ----
 
 Examples of configuration of each business service can be found either under config/docker or config/dev depending on

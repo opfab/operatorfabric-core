@@ -16,7 +16,8 @@
     "about": "About",
     "usercard": "Card Creation",
     "switchToNightMode": "Night mode",
-    "switchToDayMode": "Day mode"
+    "switchToDayMode": "Day mode",
+    "realTimeUsers": "Real time users"
   },
   "timeline": {
     "hideTimeline" : "Hide Timeline",
@@ -66,6 +67,9 @@
           "label": "Information"
         }
       },
+      "showCardsWithResponse": {
+        "label": "Cards with response from my entity"
+      },
       "ack": {
         "title": "Acknowledgement",
         "acknowledged": {
@@ -100,7 +104,8 @@
     "lttdFinished": "Finished",
     "received": "Received on",
     "at": "at",
-    "from" : "from"
+    "from" : "from",
+    "moreCards": "cards more"
   },
   "login": {
     "reset": "Reset",
@@ -223,7 +228,9 @@
       "notAvailable": "Feature not available",
       "templateError": "Technical error : invalid template",
       "impossibleToSendCard": "Impossible to send card for technical reasons",
-      "endDateBeforeStartDate": "End date must be after start date"
+      "endDateBeforeStartDate": "End date must be after start date",
+      "lttdBeforeStartDate": "Limit date for response must be after start date",
+      "lttdAfterEndDate": "Limit date for response must be before end date"
     },
     "filters": {
       "severity": "SEVERITY",
@@ -321,6 +328,7 @@
         "firstName": "First name",
         "groups": "Groups",
         "entities": "Entities",
+        "authorizedIPAddresses": "Authorized IP addresses",
         "confirmDelete": "Do you really want to delete user",
         "add": "Add new user"
       },
@@ -390,5 +398,9 @@
     "selectProcessText": "Select a Process",
     "selectStateText": "Select a State",
     "selectTagText": "Select a Tag"
+  },
+  "realTimeUsers": {
+    "connected": "Connected",
+    "disconnected": "Disconnected"
   }
 }

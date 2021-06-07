@@ -23,6 +23,7 @@ import org.opfab.users.model.GroupData;
 import org.opfab.users.model.PerimeterData;
 import org.opfab.users.model.UserData;
 import org.opfab.users.model.UserSettingsData;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.bus.ServiceMatcher;
 import org.springframework.context.ApplicationEventPublisher;
@@ -63,7 +64,7 @@ public class UsersController implements UsersApi {
     /* These are Spring Cloud Bus beans used to fire an event (UpdatedUserEvent) every time a user is modified.
      *  Other services handle this event by clearing their user cache for the given user. See issue #64*/
     @Autowired
-    private ServiceMatcher busServiceMatcher;
+    private ServiceMatcher serviceMatcher;
 
     @Autowired
     private ApplicationEventPublisher publisher;
@@ -94,7 +95,7 @@ public class UsersController implements UsersApi {
         userService.createUser(user);
 
         if(!created)
-            publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), login));
+            publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), login));
         
         return user;
     }
@@ -129,7 +130,7 @@ public class UsersController implements UsersApi {
     public UserSettings patchUserSettings(HttpServletRequest request, HttpServletResponse response, String login, UserSettings userSettings) throws Exception {
         UserSettingsData settings = userSettingsRepository.findById(login)
                 .orElse(UserSettingsData.builder().login(login).build());
-        if (userSettings.getProcessesStatesNotNotified()!=null) publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), login));
+        if (userSettings.getProcessesStatesNotNotified()!=null) publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), login));
         return userSettingsRepository.save(settings.patch(userSettings));
     }
 
@@ -194,7 +195,7 @@ public class UsersController implements UsersApi {
         ));
 
         if (foundUser != null) {
-            publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), foundUser.getLogin()));
+            publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), foundUser.getLogin()));
             userRepository.delete(foundUser);
         }
         return null;

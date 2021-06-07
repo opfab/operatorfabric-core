@@ -1,0 +1,18 @@
+{
+	"id": "cypress",
+	"process": "cypress",
+	"stateRights": [
+		{
+			"state": "messageState",
+			"right": "ReceiveAndWrite"
+		},
+		{
+			"state": "messageStateWithNoAck",
+			"right": "ReceiveAndWrite"
+		},
+		{
+			"state": "messageStateWithOnlyWhenResponseDisabledForUserAck",
+			"right": "ReceiveAndWrite"
+		}
+	]
+}

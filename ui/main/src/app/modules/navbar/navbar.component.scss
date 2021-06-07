@@ -22,6 +22,7 @@
         margin-right: 10px;
         letter-spacing: 0.54px;
         line-height: 18px;
+        white-space: nowrap;
   
         &:hover,
         &:focus {
@@ -188,3 +189,25 @@
 .opfab-about-title {
   color:  var(--opfab-text-color-stronger);
 }
+
+@media all and (max-width: 400px)  {
+  .navbar-brand {
+   margin-right:5px;
+  }
+
+  .navbar-toggler {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
+  .opfab-navbar {
+    .navbar-nav {
+      .nav-link {
+        margin-left: 4px;
+        margin-right: 4px;
+      }
+    }
+  }
+
+
+} 

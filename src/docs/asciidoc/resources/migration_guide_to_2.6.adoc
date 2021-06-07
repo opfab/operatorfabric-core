@@ -1,0 +1,47 @@
+// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 2.5.0 to release 2.6.0
+
+== Inter-service communication - Ribbon
+
+Ribbon was used by our Feign client that lets business services get information on the current user from the Users
+service.
+
+Ribbon is no longer maintained, so we chose to remove it from our dependencies (mostly because it was blocking any
+update of the other Spring dependencies).
+
+Instead, the Feign client now relies on an external property to know where the Users service can be reached, and there
+is no load-balancing for now.
+
+This requires a change to service configuration: the `users.ribbon.listOfServers` property should be removed and
+replaced with `operatorfabric.servicesUrls.users`.
+
+It should be set in the configuration of all business services (except users), or in the common configuration.
+
+.Example
+[source,yaml]
+----
+operatorfabric:
+  servicesUrls:
+    users: "http://localhost:2103"
+----
+
+According to the Feign documentation, the property should contain "an absolute URL or resolvable hostname (the protocol
+is optional)".
+
+IMPORTANT: This property is mandatory, if it is absent the application won't start.
+
+IMPORTANT: While the ribbon property could handle an array of several urls, this new property expects a single url as
+there is no load-balancing mechanism for now.
+
+
+
+
+
+
+

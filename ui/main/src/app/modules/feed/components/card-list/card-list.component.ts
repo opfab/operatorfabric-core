@@ -23,7 +23,7 @@ import {AppService} from '@ofServices/app.service';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {UserService} from '@ofServices/user.service';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {EntitiesService} from '@ofServices/entities.service';
+
 
 
 @Component({
@@ -35,6 +35,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     @Input() public lightCards: LightCard[];
     @Input() public selection: Observable<string>;
+    @Input() public totalNumberOfLightsCards: number;
 
     modalRef: NgbModalRef;
     hideAckAllCardsFeature: boolean;
@@ -49,7 +50,6 @@ export class CardListComponent implements AfterViewChecked, OnInit {
                 private processesService: ProcessesService,
                 private acknowledgeService: AcknowledgeService,
                 private userService: UserService,
-                private entitiesService: EntitiesService,
                 private _appService: AppService) {
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
     }
@@ -104,7 +104,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     confirmAckAllCards() {
         this.modalRef.close();
         this.acknowledgeAllVisibleCardsInTheFeed();
-        this._appService.closeDetails('feed');
+        this._appService.closeDetails();
     }
 
     declineAckAllCards(): void {

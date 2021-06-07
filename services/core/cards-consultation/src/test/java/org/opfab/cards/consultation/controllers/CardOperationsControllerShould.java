@@ -38,6 +38,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -200,45 +201,40 @@ public class CardOperationsControllerShould {
                         .rangeEnd(nowPlusThree)
                         .notification(false).build()
         ));
-        StepVerifier.FirstStep<CardOperation> verifier = StepVerifier.create(publisher.map(s -> TestUtilities.readCardOperation(mapper, s)).doOnNext(TestUtilities::logCardOperation));
-        verifier
-                .assertNext(op->{
+        HashMap<String,CardOperation> results = new HashMap<String,CardOperation>();
+        StepVerifier.FirstStep<CardOperation> verifier = StepVerifier
+                        .create(publisher.map(s -> TestUtilities.readCardOperation(mapper, s))
+                                        .doOnNext(TestUtilities::logCardOperation));
+        for (int i = 0; i < 7; i++)
+                verifier.assertNext(op -> {
                         assertThat(op.getCard()).isNotNull();
-                        assertThat(op.getCard().getId()).isEqualTo("PROCESS.PROCESS2");
-                        assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                })
-                .assertNext(op->{
-                        assertThat(op.getCard()).isNotNull();
-                        assertThat(op.getCard().getId()).isEqualTo("PROCESS.PROCESS3");
-                        assertThat(op.getPublishDate()).isEqualTo(nowPlusOne);
-                })
-                .assertNext(op->{
-                        assertThat(op.getCard()).isNotNull();
-                        assertThat(op.getCard().getId()).isEqualTo("PROCESS.PROCESS4");
-                        assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                })
-                .assertNext(op->{
-                        assertThat(op.getCard()).isNotNull();
-                        assertThat(op.getCard().getId()).isEqualTo("PROCESS.PROCESS5");
-                        assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                })
-                .assertNext(op->{
-                        assertThat(op.getCard()).isNotNull();
-                        assertThat(op.getCard().getId()).isEqualTo("PROCESS.PROCESS6");
-                        assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                })
-                .assertNext(op->{
-                        assertThat(op.getCard()).isNotNull();
-                        assertThat(op.getCard().getId()).isEqualTo("PROCESS.PROCESS8");
-                        assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                })
-                .assertNext(op->{
-                        assertThat(op.getCard()).isNotNull();
-                        assertThat(op.getCard().getId()).isEqualTo("PROCESS.PROCESS10");
-                        assertThat(op.getPublishDate()).isEqualTo(nowPlusOne);
-                })
-                .expectComplete()
-                .verify();
+                        results.put(op.getCard().getProcessInstanceId(), op);
+                });
+        verifier.expectComplete().verify();
+
+        CardOperation card2 = (CardOperation) results.get("PROCESS2");
+        CardOperation card3 = (CardOperation) results.get("PROCESS3");
+        CardOperation card4 = (CardOperation) results.get("PROCESS4");
+        CardOperation card5 = (CardOperation) results.get("PROCESS5");
+        CardOperation card6 = (CardOperation) results.get("PROCESS6");
+        CardOperation card8 = (CardOperation) results.get("PROCESS8");
+        CardOperation card10 = (CardOperation) results.get("PROCESS10");
+
+        assertThat(card2.getCard().getId()).isEqualTo("PROCESS.PROCESS2");
+        assertThat(card2.getPublishDate()).isEqualTo(nowMinusThree);
+        assertThat(card3.getCard().getId()).isEqualTo("PROCESS.PROCESS3");
+        assertThat(card3.getPublishDate()).isEqualTo(nowPlusOne);
+        assertThat(card4.getCard().getId()).isEqualTo("PROCESS.PROCESS4");
+        assertThat(card4.getPublishDate()).isEqualTo(nowMinusThree);
+        assertThat(card5.getCard().getId()).isEqualTo("PROCESS.PROCESS5");
+        assertThat(card5.getPublishDate()).isEqualTo(nowMinusThree);
+        assertThat(card6.getCard().getId()).isEqualTo("PROCESS.PROCESS6");
+        assertThat(card6.getPublishDate()).isEqualTo(nowMinusThree);
+        assertThat(card8.getCard().getId()).isEqualTo("PROCESS.PROCESS8");
+        assertThat(card8.getPublishDate()).isEqualTo(nowMinusThree);
+        assertThat(card10.getCard().getId()).isEqualTo("PROCESS.PROCESS10");
+        assertThat(card10.getPublishDate()).isEqualTo(nowPlusOne);
+
     }
 
     @Test

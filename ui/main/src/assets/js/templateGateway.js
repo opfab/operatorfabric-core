@@ -52,31 +52,47 @@ const templateGateway = {
         return this.userMemberOfAnEntityRequiredToRespond;
     },
     
+
     //
     // FUNCTIONS TO OVERRIDE BY TEMPLATES 
     //
-    // Opfab call this function to inform the template that the card is locked 
-    lockAnswer: function() {},
 
-    // Opfab call this function to inform the template that the card is unlocked 
-    unlockAnswer: function() {},
-    
-    // Opfab call this function to inform that the template has to apply child cards (called after template rendering and after change in child cards)
-    applyChildCards: function() {},
+    initTemplateGateway: function () {
 
-    // Opfab call this function when lttd expire with expired set to true 
-    setLttdExpired: function(expired) {},
+        // OpFab calls this function to inform the template that the card is locked
+        this.lockAnswer = function () {
+            // This function should be overridden in the template.
+        };
 
-    // Opfab call this method to inform the template of the size of the screen dedicated to the card 
-    // size = 'md' for standard size 
-    // size = 'lg' for large size , i.e when the card is in full screen mode
-    setScreenSize: function(size) {},
+        // OpFab calls this function to inform the template that the card is unlocked
+        this.unlockAnswer = function () {
+            // This function should be overridden in the template.
+        };
 
-    // Opfab call this method to get the form result when user want to send response 
-    getUserResponse: function() {
-        console.log(new Date().toISOString() , ` Template.js : no getUserResponse method define in template , valid set to true`);
-        return this.isValid = undefined;
-    }
-    
+        // OpFab calls this function to inform that the template has to apply child cards (called after template rendering and after change in child cards)
+        this.applyChildCards =  function () {
+            // This function should be overridden in the template.
+        };
+
+        // OpFab calls this function when lttd expire with expired set to true
+        this.setLttdExpired =  function (expired) {
+            // This function should be overridden in the template.
+        };
+
+        // OpFab calls this method to inform the template of the size of the screen dedicated to the card
+        // size = 'md' for standard size 
+        // size = 'lg' for large size , i.e when the card is in full screen mode
+        this.setScreenSize =  function (size) {
+            // This function should be overridden in the template.
+        };
+
+        // OpFab calls this method to get the form result when the user wants to send a response
+        this.getUserResponse =  function () {
+            console.log(new Date().toISOString(), ` Template.js : no getUserResponse method defined in template , valid set to true`);
+            return this.isValid = undefined;
+        }
+}
+
+
 };
 

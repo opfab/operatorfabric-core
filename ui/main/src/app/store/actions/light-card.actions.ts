@@ -21,7 +21,8 @@ export enum LightCardActionTypes {
     AddLightCardFailure = '[LCard] Add Light Card Fail',
     RemoveLightCard = '[LCard] Remove a card',
     UpdateALightCard = '[LCard] Update a Light Card',
-    LightCardAlreadyUpdated = '[LCard] Light Card already Updated'
+    LightCardAlreadyUpdated = '[LCard] Light Card already Updated',
+    NoopAction = '[LCard] Nothing to do'
 }
 
 
@@ -72,12 +73,18 @@ export class RemoveLightCard implements Action {
 
 export class UpdateALightCard implements Action {
     readonly type = LightCardActionTypes.UpdateALightCard;
-    constructor(public payload: { card: LightCard }) {
+    constructor(public payload: { lightCard: LightCard, updateTrigger: UpdateTrigger}) {
     }
+    //The updateTrigger property is used to indicate what triggered the update of the card, so some effects can be
+    //adapted accordingly (sound notifications for example).
 }
 
 export class LightCardAlreadyUpdated implements Action {
     readonly type = LightCardActionTypes.LightCardAlreadyUpdated;
+}
+
+export class NoopAction implements Action {
+    readonly type = LightCardActionTypes.NoopAction;
 }
 
 export type LightCardActions =
@@ -90,4 +97,11 @@ export type LightCardActions =
     | EmptyLightCards
     | UpdateALightCard
     | LightCardAlreadyUpdated
-    | RemoveLightCard;
+    | RemoveLightCard
+    | NoopAction;
+
+export enum UpdateTrigger {
+    READ = 'READ',
+    ACKNOWLEDGEMENT = 'ACKNOWLEDGEMENT',
+    REMINDER = 'REMINDER'
+}

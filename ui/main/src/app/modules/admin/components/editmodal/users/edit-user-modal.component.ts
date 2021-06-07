@@ -53,7 +53,8 @@ export class EditUserModalComponent implements OnInit {
       firstName: new FormControl('', []),
       lastName: new FormControl('', []),
       groups: new FormControl([]),
-      entities: new FormControl([])
+      entities: new FormControl([]),
+      authorizedIPAddresses: new FormControl('', [])
     });
 
   }
@@ -65,6 +66,9 @@ export class EditUserModalComponent implements OnInit {
       const {login, firstName, lastName} = this.row;
       this.userForm.patchValue({login, firstName, lastName}, { onlySelf: false });
 
+      if (!!this.row.authorizedIPAddresses) {
+        this.userForm.patchValue({'authorizedIPAddresses' : this.row.authorizedIPAddresses.join(',')});
+      }
       // Otherwise, we use the selectedItems property of the of-multiselect component
       this.selectedGroups = this.row.groups;
       this.selectedEntities = this.row.entities;
@@ -98,6 +102,8 @@ export class EditUserModalComponent implements OnInit {
     this.cleanForm();
     this.groups.setValue(this.groups.value.map(group => group.id));
     this.entities.setValue(this.entities.value.map(entity => entity.id));
+    const ipList = this.authorizedIPAddresses.value.trim().length > 0 ? this.authorizedIPAddresses.value.split(',') : [];
+    this.authorizedIPAddresses.setValue(ipList.map(str => str.trim()));
     this.crudService.update(this.userForm.value).subscribe(() => {
       this.activeModal.close('Update button clicked on user modal');
       // We call the activeModal "close" method and not "dismiss" to indicate that the modal was closed because the
@@ -138,6 +144,11 @@ export class EditUserModalComponent implements OnInit {
   get entities() {
     return this.userForm.get('entities') as FormControl;
   }
+
+  get authorizedIPAddresses() {
+    return this.userForm.get('authorizedIPAddresses') as FormControl;
+  }
+
 
   dismissModal(reason: string): void {
     this.activeModal.dismiss(reason);
