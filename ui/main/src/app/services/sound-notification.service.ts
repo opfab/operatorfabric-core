@@ -14,7 +14,6 @@ import {LightCard, Severity} from "@ofModel/light-card.model";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
-import {UpdateTrigger} from "@ofActions/light-card.actions";
 import {LightCardsService} from './lightcards.service';
 
 @Injectable()
@@ -60,8 +59,8 @@ export class SoundNotificationService {
 
   }
 
-  handleUpdatedCard(card: LightCard , updateTrigger: UpdateTrigger) {
-    if(this.lightCardsService.isCardVisibleInFeed(card) && updateTrigger === UpdateTrigger.REMINDER) this.playSoundForCard(card);
+  handleRemindCard(card: LightCard ) {
+    if(this.lightCardsService.isCardVisibleInFeed(card)) this.playSoundForCard(card);
   }
 
   handleLoadedCard(card: LightCard) {

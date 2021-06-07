@@ -13,7 +13,7 @@ import {AcknowledgmentAllowedEnum, Process} from '@ofModel/processes.model';
 import {Card} from '@ofModel/card.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {LightCard} from '@ofModel/light-card.model';
-import {UpdateALightCard, UpdateTrigger} from '@ofActions/light-card.actions';
+import {UpdateLightCardAcknowledgment} from '@ofActions/light-card.actions';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {Observable} from 'rxjs';
@@ -53,8 +53,8 @@ export class AcknowledgeService {
     }
 
     updateAcknowledgementOnLightCard(lightCard: LightCard, hasBeenAcknowledged: boolean) {
-        const updatedLightCard = {...lightCard, hasBeenAcknowledged: hasBeenAcknowledged};
-        this.store.dispatch(new UpdateALightCard({lightCard: updatedLightCard, updateTrigger: UpdateTrigger.ACKNOWLEDGEMENT}));
+        this.store.dispatch(new UpdateLightCardAcknowledgment({cardId: lightCard.id, hasBeenAcknowledged: hasBeenAcknowledged}));
+
     }
 
     isAcknowledgmentAllowed(user: UserWithPerimeters, card: Card|LightCard, processDefinition: Process): boolean {

@@ -20,8 +20,9 @@ export enum LightCardActionTypes {
     ClearLightCardSelection = '[LCard] Clear Light Card Selection',
     AddLightCardFailure = '[LCard] Add Light Card Fail',
     RemoveLightCard = '[LCard] Remove a card',
-    UpdateALightCard = '[LCard] Update a Light Card',
-    LightCardAlreadyUpdated = '[LCard] Light Card already Updated',
+    UpdateLightCardRead = '[Lcard] Light Card Read',
+    UpdateLightCardAcknowledgment = '[Lcard] Light Card Acknowledgment',
+    RemindLightCard = '[LCard] Remind Light Card',
     NoopAction = '[LCard] Nothing to do'
 }
 
@@ -71,17 +72,25 @@ export class RemoveLightCard implements Action {
     }
 }
 
-export class UpdateALightCard implements Action {
-    readonly type = LightCardActionTypes.UpdateALightCard;
-    constructor(public payload: { lightCard: LightCard, updateTrigger: UpdateTrigger}) {
+
+export class UpdateLightCardRead implements Action {
+    readonly type = LightCardActionTypes.UpdateLightCardRead;
+    constructor(public payload: { cardId, hasBeenRead }) {
     }
-    //The updateTrigger property is used to indicate what triggered the update of the card, so some effects can be
-    //adapted accordingly (sound notifications for example).
 }
 
-export class LightCardAlreadyUpdated implements Action {
-    readonly type = LightCardActionTypes.LightCardAlreadyUpdated;
+export class UpdateLightCardAcknowledgment implements Action {
+    readonly type = LightCardActionTypes.UpdateLightCardAcknowledgment;
+    constructor(public payload: { cardId, hasBeenAcknowledged }) {
+    }
 }
+
+export class RemindLightCard implements Action {
+    readonly type = LightCardActionTypes.RemindLightCard;
+    constructor(public payload: {lightCard}) {
+    }
+}
+
 
 export class NoopAction implements Action {
     readonly type = LightCardActionTypes.NoopAction;
@@ -95,13 +104,10 @@ export type LightCardActions =
     | ClearLightCardSelection
     | AddLightCardFailure
     | EmptyLightCards
-    | UpdateALightCard
-    | LightCardAlreadyUpdated
+    | UpdateLightCardRead
+    | UpdateLightCardAcknowledgment
+    | RemindLightCard
     | RemoveLightCard
     | NoopAction;
 
-export enum UpdateTrigger {
-    READ = 'READ',
-    ACKNOWLEDGEMENT = 'ACKNOWLEDGEMENT',
-    REMINDER = 'REMINDER'
-}
+
