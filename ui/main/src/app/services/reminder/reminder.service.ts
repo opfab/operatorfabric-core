@@ -13,7 +13,7 @@ import {select, Store} from '@ngrx/store';
 import {LightCard} from '@ofModel/light-card.model';
 import {CardService} from '@ofServices/card.service';
 import {ProcessesService} from '@ofServices/processes.service';
-import {UpdateALightCard, UpdateTrigger} from '@ofStore/actions/light-card.actions';
+import {RemindLightCard} from '@ofStore/actions/light-card.actions';
 import {AppState} from '@ofStore/index';
 import {fetchLightCard, selectLastCardLoaded} from '@ofStore/selectors/feed.selectors';
 import {take} from 'rxjs/operators';
@@ -73,8 +73,7 @@ export class ReminderService {
                                 'Reminder : the remote acknowledgement endpoint returned an error status(%d)', resp.status);
                     }
                     );
-                    const updatedLightCard = { ...lightCard, hasBeenAcknowledged: false, hasBeenRead: false };
-                    this.store.dispatch(new UpdateALightCard({ lightCard: updatedLightCard, updateTrigger: UpdateTrigger.REMINDER }));
+                    this.store.dispatch(new RemindLightCard({lightCard:lightCard}));
                 } else { // the card has been deleted in this case
                     this.reminderList.removeAReminder(cardId);
                 }

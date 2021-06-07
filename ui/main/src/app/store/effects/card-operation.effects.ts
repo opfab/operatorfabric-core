@@ -18,8 +18,7 @@ import {
     LoadLightCard,
     LoadLightChildCard,
     LoadLightParentCard,
-    NoopAction, RemoveLightCard,
-    UpdateALightCard
+    NoopAction, RemindLightCard, RemoveLightCard
 } from '@ofActions/light-card.actions';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -105,15 +104,18 @@ export class CardOperationEffects {
     
     triggerSoundNotifications = createEffect(() => this.actions$
         .pipe(
-            ofType(LightCardActionTypes.LoadLightParentCard, LightCardActionTypes.UpdateALightCard),
-            map((cardAction : LoadLightParentCard | UpdateALightCard) => {
+            ofType(LightCardActionTypes.LoadLightParentCard, LightCardActionTypes.RemindLightCard),
+            map((cardAction : LoadLightParentCard | RemindLightCard) => {
                     switch (cardAction.type) {
                         case LightCardActionTypes.LoadLightParentCard: {
                             this.soundNotificationService.handleLoadedCard(cardAction.payload.lightCard);
                             break;
                         }
-                        case LightCardActionTypes.UpdateALightCard: {
-                            this.soundNotificationService.handleUpdatedCard(cardAction.payload.lightCard, cardAction.payload.updateTrigger);
+                        case LightCardActionTypes.RemindLightCard: {
+                            // it has not been update yet in reducer  so set read and acknowledged to false 
+                            // to have the good filtering for handleRemindCard; 
+                            const cardToRemind  = {...cardAction.payload.lightCard, hasBeenAcknowledged: false , hasBeenRead: false };
+                            this.soundNotificationService.handleRemindCard(cardToRemind);
                             break;
                         }
                         default: {
