@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -12,11 +12,11 @@
         <td>
         <div class="nopaddingrow opfab-input">
             <!--archive.filters.{{filterPath}}-->
-            <label for="date" translate>{{computeLabelKey()}}</label>
+            <label for="opfab-date" translate>{{computeLabelKey()}}</label>
             <input (change)="onChange($event)" 
                    type="text" ngbDatepicker
                    #nsd="ngbDatepicker"
-                   id="date"
+                   id="opfab-date"
                    formControlName="date"
                    (click)="nsd.toggle()"
             placeholder="YYYY-MM-DD"/>

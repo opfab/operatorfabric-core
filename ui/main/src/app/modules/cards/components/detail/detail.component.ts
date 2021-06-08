@@ -178,7 +178,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     adaptTemplateSize() {
-        const cardTemplate = document.getElementById('div-card-template');
+        const cardTemplate = document.getElementById('opfab-div-card-template');
         if (!!cardTemplate) {
             const diffWindow = cardTemplate.getBoundingClientRect();
             const divBtn = document.getElementById('div-detail-btn');

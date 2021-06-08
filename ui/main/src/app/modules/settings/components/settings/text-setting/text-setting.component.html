@@ -10,7 +10,7 @@
 
 <form [formGroup]="form">
   <div class="form-group">
-    <label for="setting" translate>settings.{{settingPath}}</label>
+    <label for="opfab-setting" translate>settings.{{settingPath}}</label>
     <input id="opfab-setting-{{settingPath}}" *ngIf="(settingPath === 'description') && disabled" type="text" class="form-control"  formControlName="setting" [pattern]="pattern" [attr.required]="requiredField" disabled>
 
     <input id="opfab-setting-{{settingPath}}" *ngIf="!((settingPath === 'description') && disabled)" type="text" class="form-control" formControlName="setting" [pattern]="pattern" [attr.required]="requiredField">

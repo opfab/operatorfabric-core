@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -16,7 +16,7 @@
         </div> 
     </div>
 
-    <div id="parentFeedContent" class="row calc-height-main-layout" style="margin-left: 38px;margin-right:20px;display:flex">
+    <div id="opfab-parentFeedContent" class="row calc-height-main-layout" style="margin-left: 38px;margin-right:20px;display:flex">
         <div style="padding-left: 0px"  [class.opfab-standard-screen]="enoughSpaceForCardDetail()" [class.opfab-small-screen]="!enoughSpaceForCardDetail()">
             <of-card-list [lightCards]="lightCards$|async" [selection]="selection$" [totalNumberOfLightsCards]="totalNumberOfLightsCards"></of-card-list>
         </div>
