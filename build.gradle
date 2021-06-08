@@ -2,7 +2,7 @@ import com.github.jk1.license.render.*
 plugins {
     id "com.github.jk1.dependency-license-report" version "1.16"
     id "com.github.node-gradle.node" version "3.1.0"
-    id "org.asciidoctor.convert" version "1.5.10" //Upgrading to 2.4.0 changed the behaviour of {gradle-rootdir}, breaking all cross-document links
+    id "org.asciidoctor.convert" version "2.4.0" //Upgrading to 2.4.0 changed the behaviour of {gradle-rootdir}, breaking all cross-document links
     id "maven-publish"
     id "signing"
     id "org.owasp.dependencycheck" version "6.2.0"
