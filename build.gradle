@@ -10,11 +10,6 @@ plugins {
     id 'org.sonarqube' version '3.2.0' apply false
 }
 
-ext.versions = new Properties()
-file("versions.properties").withReader { reader ->
-    versions.load(reader)
-}
-
 ext {
     operatorfabric = [
             group: 'org.opfab',
@@ -26,74 +21,74 @@ ext {
     ]
 
     boot = [
-            springBootPlugin        : "org.springframework.boot:spring-boot-gradle-plugin:${versions['spring.boot']}",
-            starterWeb              : "org.springframework.boot:spring-boot-starter-web:${versions['spring.boot']}",
-            starterWebflux          : "org.springframework.boot:spring-boot-starter-webflux:${versions['spring.boot']}",
-            actuator                : "org.springframework.boot:spring-boot-starter-actuator:${versions['spring.boot']}",
-            starterAop              : "org.springframework.boot:spring-boot-starter-aop:${versions['spring.boot']}",
-            starterJetty            : "org.springframework.boot:spring-boot-starter-jetty:${versions['spring.boot']}",
-            starterRabbitmq         : "org.springframework.boot:spring-boot-starter-amqp:${versions['spring.boot']}",
-            starterSecurity         : "org.springframework.boot:spring-boot-starter-security:${versions['spring.boot']}",
-            starterMongo            : "org.springframework.boot:spring-boot-starter-data-mongodb:${versions['spring.boot']}",
-            starterMongoR           : "org.springframework.boot:spring-boot-starter-data-mongodb-reactive:${versions['spring.boot']}",
-            starterTest             : "org.springframework.boot:spring-boot-starter-test:${versions['spring.boot']}",
-            starterValidation       : "org.springframework.boot:spring-boot-starter-validation:${versions['spring.boot']}",
-            annotationConfiguration : "org.springframework.boot:spring-boot-configuration-processor:${versions['spring.boot']}",
-            devTools                : "org.springframework.boot:spring-boot-devtools:${versions['spring.boot']}"
+            springBootPlugin        : "org.springframework.boot:spring-boot-gradle-plugin:$springBoot",
+            starterWeb              : "org.springframework.boot:spring-boot-starter-web:$springBoot",
+            starterWebflux          : "org.springframework.boot:spring-boot-starter-webflux:$springBoot",
+            actuator                : "org.springframework.boot:spring-boot-starter-actuator:$springBoot",
+            starterAop              : "org.springframework.boot:spring-boot-starter-aop:$springBoot",
+            starterJetty            : "org.springframework.boot:spring-boot-starter-jetty:$springBoot",
+            starterRabbitmq         : "org.springframework.boot:spring-boot-starter-amqp:$springBoot",
+            starterSecurity         : "org.springframework.boot:spring-boot-starter-security:$springBoot",
+            starterMongo            : "org.springframework.boot:spring-boot-starter-data-mongodb:$springBoot",
+            starterMongoR           : "org.springframework.boot:spring-boot-starter-data-mongodb-reactive:$springBoot",
+            starterTest             : "org.springframework.boot:spring-boot-starter-test:$springBoot",
+            starterValidation       : "org.springframework.boot:spring-boot-starter-validation:$springBoot",
+            annotationConfiguration : "org.springframework.boot:spring-boot-configuration-processor:$springBoot",
+            devTools                : "org.springframework.boot:spring-boot-devtools:$springBoot"
     ]
 
     spring = [
-            securityOauthResource   : "org.springframework.security:spring-security-oauth2-resource-server:${versions['spring.security']}",
-            securityOauthJose       : "org.springframework.security:spring-security-oauth2-jose:${versions['spring.security']}",
-            securityTest            : "org.springframework.security:spring-security-test:${versions['spring.security']}",
-            webflux                 : "org.springframework:spring-webflux:${versions['spring.webflux']}",
-            retry                   : "org.springframework.retry:spring-retry:${versions['spring.retry']}"
+            securityOauthResource   : "org.springframework.security:spring-security-oauth2-resource-server:$springSecurity",
+            securityOauthJose       : "org.springframework.security:spring-security-oauth2-jose:$springSecurity",
+            securityTest            : "org.springframework.security:spring-security-test:$springSecurity",
+            webflux                 : "org.springframework:spring-webflux:$springWebflux",
+            retry                   : "org.springframework.retry:spring-retry:$springRetry"
     ]
 
     cloud = [
-            dependencies          : "org.springframework.cloud:spring-cloud-dependencies:${versions['spring.cloud']}",
+            dependencies          : "org.springframework.cloud:spring-cloud-dependencies:$springCloud",
             starterBus            : "org.springframework.cloud:spring-cloud-starter-bus-amqp",
             starterStream         : "org.springframework.cloud:spring-cloud-starter-stream-rabbit",
             starterFeign          : "org.springframework.cloud:spring-cloud-starter-openfeign",
-            avro                  : "org.apache.avro:avro:${versions['avro']}",
-            gradleAvroPlugin      : "com.commercehub.gradle.plugin:gradle-avro-plugin:${versions['gradle.avro.plugin']}",
-            kafkaAvroSchemaRegistryClient    : "io.confluent:kafka-schema-registry-client:${versions['kavro.schemaRegistryClient']}",
-            kafkaAvroSerializer              : "io.confluent:kafka-avro-serializer:${versions['kavro.avroSerializer']}",
+            avro                  : "org.apache.avro:avro:$avro",
+            gradleAvro            : "com.commercehub.gradle.plugin:gradle-avro-plugin:$gradleAvroPlugin",
+            kafkaAvroSchemaRegistryClient    : "io.confluent:kafka-schema-registry-client:$kavroSchemaRegistryClient",
+            kafkaAvroSerializer              : "io.confluent:kafka-avro-serializer:$kavroAvroSerializer",
             springKafka           : "org.springframework.kafka:spring-kafka"
 
 
     ]
 
     testing = [
-            junit5          : "org.junit.jupiter:junit-jupiter:${versions['junit5']}",
-            junit5Api       : "org.junit.jupiter:junit-jupiter-api:${versions['junit5']}",
-            junit5Engine    : "org.junit.jupiter:junit-jupiter-engine:${versions['junit5']}",
-            junit5Plugin    : "org.junit.platform:junit-platform-gradle-plugin:${versions['junit5.platform']}",
-            assertJ         : "org.assertj:assertj-core:${versions['assertj']}",
+            junit5          : "org.junit.jupiter:junit-jupiter:$junit5",
+            junit5Api       : "org.junit.jupiter:junit-jupiter-api:$junit5",
+            junit5Engine    : "org.junit.jupiter:junit-jupiter-engine:$junit5",
+            junit5Plugin    : "org.junit.platform:junit-platform-gradle-plugin:$junit5Platform",
+            assertJ         : "org.assertj:assertj-core:$assertj",
             reactor         : "io.projectreactor:reactor-test",
-            awaitility      : "org.awaitility:awaitility-kotlin:${versions['awaitility']}",
-            karate          : "com.intuit.karate:karate-junit5:${versions['karate']}"
+            awaitility      : "org.awaitility:awaitility-kotlin:$awaitility",
+            karate          : "com.intuit.karate:karate-junit5:$karate"
     ]
 
 
     misc = [
-            slf4j          : "org.slf4j:slf4j-api:${versions['log.sl4j']}",
-            lombok         : "org.projectlombok:lombok:${versions['lombok']}",
-            palantir       : "com.palantir.gradle.docker:gradle-docker:${versions['gradle.docker']}",
-            compress       : "org.apache.commons:commons-compress:${versions['apache.commons.compress']}",
-            feignMock      : "io.github.openfeign:feign-mock:${versions['feign']}",
-            feignJackson   : "io.github.openfeign:feign-jackson:${versions['feign']}",
+            slf4j          : "org.slf4j:slf4j-api:$slf4j",
+            lombok         : "org.projectlombok:lombok:$lombok",
+            palantir       : "com.palantir.gradle.docker:gradle-docker:$gradleDocker",
+            compress       : "org.apache.commons:commons-compress:$apacheCommonsCompress",
+            feignMock      : "io.github.openfeign:feign-mock:$feign",
+            feignJackson   : "io.github.openfeign:feign-jackson:$feign",
             guava          : "com.google.guava:guava:30.1.1-jre",
-            jacksonAnnotations   : "com.fasterxml.jackson.core:jackson-annotations:${versions['jacksonAnnotations']}",
-            collections4   : "org.apache.commons:commons-collections4:${versions['apache.commons.collections4']}",
-            micrometer     : "io.micrometer:micrometer-registry-prometheus:${versions['micrometer']}",
+            jacksonAnnotations   : "com.fasterxml.jackson.core:jackson-annotations:$jacksonAnnotations",
+            collections4   : "org.apache.commons:commons-collections4:$apacheCommonsCollections4",
+            micrometer     : "io.micrometer:micrometer-registry-prometheus:$micrometer",
             jsonSmart      : "net.minidev:json-smart:2.4.7"
     ]
 
     generator = [
-            swagger                 : "io.swagger:swagger-codegen-cli:${versions['swagger']}",
-            swaggerGeneratorPlugin  : "gradle.plugin.org.hidetake:gradle-swagger-generator-plugin:${versions['swagger.generator.plugin']}",
-            swaggerUI               : "org.webjars:swagger-ui:${versions['swaggerUI']}",
+            swagger                 : "io.swagger:swagger-codegen-cli:$swagger",
+            swaggerGeneratorPlugin  : "gradle.plugin.org.hidetake:gradle-swagger-generator-plugin:$swaggerGeneratorPlugin",
+            swaggerUI               : "org.webjars:swagger-ui:$swaggerUI",
     ]
 
     plugin = [
