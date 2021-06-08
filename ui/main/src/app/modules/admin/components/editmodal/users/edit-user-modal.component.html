@@ -21,8 +21,8 @@
         <div class="col">
 
           <div *ngIf="!row" class="opfab-input row">
-            <label for="login" translate>admin.input.user.login</label>
-            <input oninput="this.value = this.value.toLowerCase()" formControlName="login" name="login" id="login" type="text">
+            <label for="opfab-login" translate>admin.input.user.login</label>
+            <input oninput="this.value = this.value.toLowerCase()" formControlName="login" name="login" id="opfab-login" type="text">
           </div>
           <div *ngIf="login.invalid" class="row alert alert-danger">
             <div *ngIf="login.errors.required" translate>admin.input.login.required</div>
@@ -31,34 +31,34 @@
           </div>
 
           <div class="opfab-input row">
-            <label for="firstName" translate>admin.input.user.firstName</label>
-            <input formControlName="firstName" name="firstName" id="firstName" type="text">
+            <label for="opfab-firstName" translate>admin.input.user.firstName</label>
+            <input formControlName="firstName" name="firstName" id="opfab-firstName" type="text">
           </div>
           <div *ngIf="firstName.invalid" class="row alert alert-danger">
             <div *ngIf="firstName.errors.required" translate>admin.input.firstName.required</div>
           </div>
           <div class="opfab-input row">
-            <label for="lastName" translate>admin.input.user.lastName</label>
-            <input formControlName="lastName" name="lastName" id="lastName" type="text">
+            <label for="opfab-lastName" translate>admin.input.user.lastName</label>
+            <input formControlName="lastName" name="lastName" id="opfab-lastName" type="text">
           </div>
           <div *ngIf="lastName.invalid" class="row alert alert-danger">
             <div *ngIf="lastName.errors.required" translate>admin.input.lastName.required</div>
           </div>
           <div class="row">
-            <of-multi-filter filterPath="groups" id="groups" [parentForm]="userForm"
+            <of-multi-filter filterPath="groups" id="opfab-groups" [parentForm]="userForm"
                              [values]="groupsDropdownList" [dropdownSettings]="groupsDropdownSettings" [selectedItems]="selectedGroups"
                              i18nRootLabelKey="admin.input.user.">
             </of-multi-filter>
           </div>
           <div class="row">
-            <of-multi-filter filterPath="entities" id="entities" [parentForm]="userForm"
+            <of-multi-filter filterPath="entities" id="opfab-entities" [parentForm]="userForm"
                              [values]="entitiesDropdownList" [dropdownSettings]="entitiesDropdownSettings" [selectedItems]="selectedEntities"
                              i18nRootLabelKey="admin.input.user.">
             </of-multi-filter>
           </div>
           <div class="opfab-input row">
-            <label for="authorizedIPAddresses" translate>admin.input.user.authorizedIPAddresses</label>
-            <input formControlName="authorizedIPAddresses" name="authorizedIPAddresses" id="authorizedIPAddresses" type="text">
+            <label for="opfab-authorizedIPAddresses" translate>admin.input.user.authorizedIPAddresses</label>
+            <input formControlName="authorizedIPAddresses" name="authorizedIPAddresses" id="opfab-authorizedIPAddresses" type="text">
           </div>
         </div>
       </div>

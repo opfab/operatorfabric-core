@@ -38,7 +38,7 @@ export class AdminComponent implements OnInit {
 
   onPageSizeChanged() {
     // Cast to get rid of "Property 'value' does not exist on type 'HTMLElement'."
-    const value = (<HTMLInputElement> document.getElementById('page-size-select')).value;
+    const value = (<HTMLInputElement> document.getElementById('opfab-page-size-select')).value;
     this.dataHandlingService.changePaginationPageSize(Number(value));
   }
 

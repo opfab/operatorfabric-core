@@ -12,7 +12,7 @@
 
     <div class="row opfab-filter-type-header"></div>
 
-    <form [formGroup]="typeFilterForm" id="type-filter-form" style="padding-left: 3px;">
+    <form [formGroup]="typeFilterForm" id="opfab-type-filter-form" style="padding-left: 3px;">
 
         <label class="opfab-checkbox "> <span class="label-sev-alarm" translate> feed.filters.type.alarm.label </span>
             <input id="opfab-feed-filter-severity-alarm" type="checkbox" formControlName="alarm" >
@@ -40,7 +40,7 @@
     </form>
     <div *ngIf="!(hideResponseFilter)">
         
-        <form [formGroup]="responseFilterForm" id="response-filter-form"  style="padding-left: 3px; padding-top: 15px;">
+        <form [formGroup]="responseFilterForm" id="opfab-response-filter-form"  style="padding-left: 3px; padding-top: 15px;">
             <label class="opfab-checkbox "> <span translate>feed.filters.showCardsWithResponse.label</span>
                 <input type="checkbox"  id="opfab-feed-filter-response" formControlName="responseControl">
                 <span class="opfab-checkbox-checkmark"></span>
@@ -51,7 +51,7 @@
         <div class="row opfab-filter-header">
             <span translate>feed.filters.ack.title</span>
         </div>
-        <form [formGroup]="ackFilterForm" id="ack-filter-form"  style="padding-left: 3px;">
+        <form [formGroup]="ackFilterForm" id="opfab-ack-filter-form"  style="padding-left: 3px;">
 
             <label class="opfab-radio-button"> <span  translate>feed.filters.ack.all.label</span>
                 <input type="radio"  id="opfab-feed-filter-ack-all" formControlName="ackControl" value="all">
@@ -77,17 +77,17 @@
             <span translate>feed.filters.time.titleIfFilterBasedOnPublishDate</span>
         </div>
 
-        <form class="opfab-time-filter" [formGroup]="timeFilterForm" id="time-filter-form">
+        <form class="opfab-time-filter" [formGroup]="timeFilterForm" id="opfab-time-filter-form">
 
             <div style="margin-left: 2px; margin-right: 2px;margin-top:-10px;width:200px">
-                <div class="form-group" id="start">
+                <div class="form-group" id="opfab-start">
                     <of-datetime-filter id="opfab-feed-filter-dateTimeFrom"  (change)="onDateTimeChange($event)" filterPath="start.label" formControlName="dateTimeFrom"
                         labelKey="feed.filters.time."></of-datetime-filter>
                 </div>
             </div>
 
             <div style="margin-left: 2px; margin-right: 2px;margin-top:-20px;width:200px">
-                <div class="form-group" id="end">
+                <div class="form-group" id="opfab-end">
                     <of-datetime-filter id="opfab-feed-filter-dateTimeTo" filterPath="end.label" formControlName="dateTimeTo"
                         labelKey="feed.filters.time." (change)="onDateTimeChange($event)"></of-datetime-filter>
                 </div>

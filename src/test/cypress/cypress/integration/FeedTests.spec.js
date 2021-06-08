@@ -18,7 +18,7 @@ describe ('FeedScreen tests',function () {
 
         // Set feed sort to "Date" so the cards don't move down the feed once they're read
         cy.get('#opfab-feed-filter-btn-sort').click();
-        cy.get('#sort-form').find('input[value=date]').parent().click();
+        cy.get('#opfab-sort-form').find('input[value=date]').parent().click();
         cy.get('#opfab-feed-filter-btn-sort').click();
 
         // operator1 should see 6 cards in their feed
