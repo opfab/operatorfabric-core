@@ -24,9 +24,7 @@ import {Store} from '@ngrx/store';
 import {CardSubscriptionClosed, CardSubscriptionOpen} from '@ofActions/cards-subscription.actions';
 import {LineOfLoggingResult} from '@ofModel/line-of-logging-result.model';
 import {catchError, concatMap, ignoreElements, map, startWith} from 'rxjs/operators';
-import * as moment from 'moment';
 import {I18n} from '@ofModel/i18n.model';
-import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
 import {
     AddLightCardFailure,
     LoadLightCard,
@@ -303,7 +301,4 @@ export class CardService {
         return {...initialI18n, key: i18nPrefix + initialI18n.key} as I18n;
     }
 
-    fetchMonitoringResults(filters: Map<string, string[]>): Observable<Page<LineOfMonitoringResult>> {
-        return null;
-    }
 }
