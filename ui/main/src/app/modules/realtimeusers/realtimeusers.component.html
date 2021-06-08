@@ -10,7 +10,7 @@
     menu.realTimeUsers
 </div>
 
-<div *ngIf="this.realTimeUsersDisconnected.length" class="row opfab-realtimeusers-userslist">
+<div *ngIf="this.realTimeUsersDisconnected.length" class="row opfab-realtimeusers-userslist" id="opfab-realtimeusers-disconnected">
     <div *ngFor="let disconnectedUser of this.realTimeUsersDisconnected;" style="padding-right: 30px">
         <p class="font-weight-bold">{{disconnectedUser}}&nbsp;&nbsp;
             <span class="badge bg-danger" translate>realTimeUsers.disconnected</span>
@@ -18,7 +18,7 @@
     </div>
 </div>
 
-<div *ngIf="this.realTimeUsersConnected.length" class="row opfab-realtimeusers-userslist">
+<div *ngIf="this.realTimeUsersConnected.length" class="row opfab-realtimeusers-userslist" id="opfab-realtimeusers-connected">
     <div *ngFor="let connectedUser of this.realTimeUsersConnected;" style="padding-right: 30px">
         <p class="font-weight-bold">{{connectedUser}}&nbsp;&nbsp;
             <span class="badge bg-success" translate>realTimeUsers.connected</span>
