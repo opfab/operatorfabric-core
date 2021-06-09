@@ -6,6 +6,8 @@
     "schedule:nonOfficeHours"
   ],
   "branchPrefix": "OC-1590_",
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 1,
   "ignorePaths": [
     "**/node_modules/**",
     "**/bower_components/**",
