@@ -50,7 +50,13 @@ describe('ReminderList', () => {
     expect(remindList.hasAReminder(testCard.id)).toBeFalsy();
   });
 
-
+  it('should not create a reminder if secondsBeforeTimeSpanForReminder is null  ', () => {
+    const testCard: Card = getOneRandomCard();
+    testCard.timeSpans = [new TimeSpan(new Date().valueOf())];
+    testCard.secondsBeforeTimeSpanForReminder = null;
+    remindList.addAReminder(testCard);
+    expect(remindList.hasAReminder(testCard.id)).toBeFalsy();
+  });
 
   it('should not create a reminder if  timespan current date > startDate + 15 min', () => {
     const testCard: Card = getOneRandomCard();
@@ -76,6 +82,19 @@ describe('ReminderList', () => {
     expect(remindList.hasAReminder(testCard1.id)).toBeFalsy();
     expect(remindList.hasAReminder(testCard2.id)).toBeFalsy();
   });
+
+  it('should remind if timespan start date is now and secondsBeforeTimeSpanForReminder = 0 ', () => {
+    const testCard: Card = getOneRandomCard();
+    testCard.timeSpans = [new TimeSpan(new Date().valueOf())];
+    testCard.secondsBeforeTimeSpanForReminder = 0,
+    remindList.addAReminder(testCard);
+    expect(remindList.hasAReminder(testCard.id)).toBeTruthy();
+    const cardsToRemind: Array<string> = remindList.getCardIdsToRemindNow();
+    expect(cardsToRemind[0]).toEqual(testCard.id);
+    remindList.removeAReminder(testCard.id);
+    expect(remindList.hasAReminder(testCard.id)).toBeFalsy();
+  });
+
 
   it('should remind if timespan start date - 15 min  is > current date ', () => {
     const testCard: Card = getOneRandomCard();
