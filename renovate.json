@@ -2,7 +2,8 @@
   "extends": [
     "config:base",
     ":gitSignOff",
-    ":switchToGradleLite"
+    ":switchToGradleLite",
+    ":schedule:nonOfficeHours"
   ],
   "branchPrefix": "OC-1590_",
   "ignorePaths": [
