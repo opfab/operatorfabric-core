@@ -1,6 +1,7 @@
 os: linux
 dist: xenial
 addons:
+    chrome: stable
     sonarcloud:
         organization: "opfab"
         token:
