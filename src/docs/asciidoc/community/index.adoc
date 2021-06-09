@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -73,7 +73,7 @@ to have to maintain these mentions (since this information is tracked by git any
 
 ==== Angular/TypeScript development caution and guidelines
 
-* Use `!!myVariable` to test if a variable is undefined or null 
+* Use `!!myVariable` to test if a variable is undefined or null except for number where zero will return false ( !!0 is equal to false)
 * Use `foreach` to iterate over an array (instead of `for(let i = ..`) . In some cases, foreach do not work and you can use it this way `Array.prototype.forEach.call(myArray, element => .... )` (see https://stackoverflow.com/questions/43743560/foreach-vs-array-prototype-foreach-call)
 * Do not use ngFor / ngIf  with methods with computing as angular will call these methods very regularly
 (around ten times per seconds), use instead variables and compute them only when necessary.
