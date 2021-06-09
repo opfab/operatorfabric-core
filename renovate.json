@@ -3,7 +3,7 @@
     "config:base",
     ":gitSignOff",
     ":switchToGradleLite",
-    ":schedule:nonOfficeHours"
+    "schedule:nonOfficeHours"
   ],
   "branchPrefix": "OC-1590_",
   "ignorePaths": [
