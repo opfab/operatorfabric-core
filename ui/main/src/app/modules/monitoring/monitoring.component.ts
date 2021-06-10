@@ -37,6 +37,8 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     mapOfProcesses = new Map<string, Process>();
     processValueForFilter = new Array();
 
+    result: LineOfMonitoringResult[];
+
     constructor(private store: Store<AppState>
                 , private processesService: ProcessesService, private lightCardsService: LightCardsService
     ) {
@@ -96,6 +98,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             ),
             catchError(err => of([]))
         );
+        this.monitoringResult$.subscribe(lines => this.result = lines);
     }
 
     ngOnDestroy() {
