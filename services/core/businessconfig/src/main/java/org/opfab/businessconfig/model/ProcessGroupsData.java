@@ -31,7 +31,7 @@ import java.util.List;
 @Slf4j
 public class ProcessGroupsData implements ProcessGroups {
 
-  private List<? extends ProcessGroup>  groups;
+  private List<ProcessGroup>  groups;
   private ProcessGroupsLocale           locale;
 
   public void clear(){

@@ -96,7 +96,7 @@ public class LightCardConsultationData implements LightCard {
     }
 
     @Override
-    public void setTimeSpans(List<? extends TimeSpan> timeSpans) {
+    public void setTimeSpans(List<TimeSpan> timeSpans) {
         if(timeSpans != null)
             this.timeSpansSet = new HashSet<>(timeSpans);
 

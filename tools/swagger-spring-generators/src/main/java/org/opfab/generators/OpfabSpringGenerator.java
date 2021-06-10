@@ -30,12 +30,12 @@ import java.util.Map;
  * <ul>
  *     <li>Adds x-operatorfabric-spring-subPath vendor extension, it contains subpath
  *     to allow affecting a base path to class main mapping and subpath to method mapping</li>
- *     <li>Changes generic parameter from X to ? extends X which allows to define interfaces only in generated code</li>
  * </ul>
  */
 public class OpfabSpringGenerator extends SpringCodegen {
 
     protected final Logger log = LoggerFactory.getLogger(OpfabSpringGenerator.class);
+  
     @Override
     public void addOperationToGroup(String tag, String resourcePath, Operation operation, CodegenOperation co, Map<String, List<CodegenOperation>> operations) {
         try{
@@ -57,58 +57,7 @@ public class OpfabSpringGenerator extends SpringCodegen {
         }catch (Throwable t){
             log.error("Unexpected Error arose", t);
         }
-    }
-
-    @Override
-    public String toInstantiationType(Property p) {
-        if (p instanceof MapProperty) {
-            MapProperty ap = (MapProperty) p;
-            Property additionalProperties2 = ap.getAdditionalProperties();
-            String type = additionalProperties2.getType();
-            if (null == type) {
-                log.error("No Type defined for Additional Property {}\n"
-                   + "\tIn Property: {}", additionalProperties2,p);
-            }
-            String inner = getSwaggerType(additionalProperties2);
-            return instantiationTypes.get("map") + "<String, ? extends " + inner + ">";
-        } else if (p instanceof ArrayProperty) {
-            ArrayProperty ap = (ArrayProperty) p;
-            String inner = getSwaggerType(ap.getItems());
-            return instantiationTypes.get("array") + "<? extends " + inner + ">";
-        } else {
-            return null;
-        }
-    }
-
-  @Override
-  public String getTypeDeclaration(Property p) {
-    if (p instanceof ArrayProperty) {
-      ArrayProperty ap = (ArrayProperty) p;
-      Property inner = ap.getItems();
-      if (inner == null) {
-        log.warn("{} (array property) does not have a proper inner type defined", ap.getName());
-        return null;
-      }
-      log.info("inner property type {} {}", inner.getClass().getName(), getTypeDeclaration(inner));
-      if(inner instanceof RefProperty)
-        return getSwaggerType(p) + "< ? extends " + getTypeDeclaration(inner) + ">";
-      else
-        return getSwaggerType(p) + "<" + getTypeDeclaration(inner) + ">";
-    } else if (p instanceof MapProperty) {
-      MapProperty mp = (MapProperty) p;
-      Property inner = mp.getAdditionalProperties();
-      if (inner == null) {
-        log.warn("{} (map property) does not have a proper inner type defined", mp.getName());
-        return null;
-      }
-      if(inner instanceof RefProperty)
-        return getSwaggerType(p) + "<String, ? extends " + getTypeDeclaration(inner) + ">";
-      else
-        return getSwaggerType(p) + "<String, " + getTypeDeclaration(inner) + ">";
-    }
-    return super.getTypeDeclaration(p);
-  }
-
+    } 
     @Override
     public Map<String, Object> postProcessModels(Map<String, Object> objs) {
         Map<String, Object> result = super.postProcessModels(objs);
@@ -117,7 +66,7 @@ public class OpfabSpringGenerator extends SpringCodegen {
 
         while(listIterator.hasNext()) {
             String _import = (String)((Map)listIterator.next()).get("import");
-            if( _import.contains("ApiModel")||_import.contains("io\\.swagger\\.annotations") ||_import.contains("springfox"))
+            if(_import.contains("io.swagger.annotations") ||_import.contains("springfox"))
                 listIterator.remove();
         }
         return result;
