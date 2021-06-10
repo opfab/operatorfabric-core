@@ -40,14 +40,13 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     constructor(private store: Store<AppState>
                 , private processesService: ProcessesService, private lightCardsService: LightCardsService
     ) {
-         processesService.getAllProcesses().forEach( (process) => {
+         processesService.getAllProcesses().forEach(process => {
             const id = process.id;
-            this.mapOfProcesses.set(id, process);
-            if (!!process.uiVisibility && !!process.uiVisibility.monitoring)  {
+            if (!!process.uiVisibility && !!process.uiVisibility.monitoring) {
+                this.mapOfProcesses.set(id, process);
                 let itemName = process.name;
-                if (!itemName) {
+                if (!itemName)
                     itemName = id;
-                }
                 this.processValueForFilter.push({id: id, itemName: itemName, i18nPrefix: `${process.id}.${process.version}` });
             }
          });
@@ -89,7 +88,6 @@ export class MonitoringComponent implements OnInit, OnDestroy {
                                         typeOfState: typeOfState
                                     } as LineOfMonitoringResult);
                             }
-
                         }
                     ).filter(elem => !!elem);
                 }
