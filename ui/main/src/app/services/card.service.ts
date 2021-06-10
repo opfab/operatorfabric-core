@@ -32,6 +32,7 @@ import {
 } from '@ofActions/light-card.actions';
 import {EntitiesService} from '@ofServices/entities.service';
 import {BusinessConfigChangeAction} from '@ofStore/actions/processes.actions';
+import {ProcessesService} from '@ofServices/processes.service';
 
 @Injectable()
 export class CardService {
@@ -56,7 +57,8 @@ export class CardService {
                 private guidService: GuidService,
                 private store: Store<AppState>,
                 private authService: AuthenticationService,
-                private entitiesService: EntitiesService) {
+                private entitiesService: EntitiesService,
+                private processesService: ProcessesService) {
         const clientId = this.guidService.getCurrentGuidString();
         this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}`;
         this.cardsUrl = `${environment.urls.cards}/cards`;
@@ -256,7 +258,18 @@ export class CardService {
         return this.httpClient.delete<void>(`${this.userCardReadUrl}/${cardUid}`, {observe: 'response'});
     }
 
+    setFiltersWithUIVisibility(filters: Map<string, string[]>) {
+        const listOfProcesses = [];
+        this.processesService.getAllProcesses().forEach(process => {
+            if (!!process.uiVisibility && !!process.uiVisibility.logging)
+                listOfProcesses.push(process.id);
+        });
+        if (listOfProcesses.length && !filters.has('process'))
+            filters.set('process', listOfProcesses);
+    }
+
     fetchLoggingResults(filters: Map<string, string[]>): Observable<Page<LineOfLoggingResult>> {
+        this.setFiltersWithUIVisibility(filters);
         filters.set('childCards', ['true']);
         return this.fetchArchivedCards(filters).pipe(
             map((page: Page<LightCard>) => {

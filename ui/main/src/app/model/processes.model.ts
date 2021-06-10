@@ -40,7 +40,8 @@ export class UiVisibility {
     /* istanbul ignore next */
     constructor(
         readonly monitoring: boolean,
-        readonly logging: boolean
+        readonly logging: boolean,
+        readonly calendar: boolean
     ) {
     }
 }
