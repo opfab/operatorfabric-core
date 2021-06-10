@@ -21,6 +21,7 @@ before_install:
 install:
   # first install needs to remove ~/.sdkman (empty in our case because created by cache step) otherwise SdkMan is not installed
   # then install sdkman
+  - sudo apt-get install unzip
   - if [ -z "$(ls -A ${HOME}/.sdkman)" ]; then
     rm -fr ${HOME}/.sdkman ;
     curl -s "https://get.sdkman.io" | bash ;
