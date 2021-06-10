@@ -18,8 +18,10 @@ before_install:
   - export GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx1024m"
   - export SDKMAN_CONFIG_FILE=${HOME}/.sdkman/etc/config
   - ./CICD/travis/check_version.sh --branch $TRAVIS_BRANCH --version $OF_VERSION
-  - sudo apt-get install unzip
 install:
+  # unzip and zip are needed by sdkman
+  - sudo apt-get install unzip
+  - sudo apt-get install zip
   # first install needs to remove ~/.sdkman (empty in our case because created by cache step) otherwise SdkMan is not installed
   # then install sdkman
   - if [ -z "$(ls -A ${HOME}/.sdkman)" ]; then
