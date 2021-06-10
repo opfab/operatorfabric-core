@@ -6,7 +6,7 @@ plugins {
     id "maven-publish"
     id "signing"
     id "org.owasp.dependencycheck" version "6.2.1"
-    id 'org.springframework.boot' version '2.4.6'
+    id 'org.springframework.boot' version '2.5.1'
     id 'org.sonarqube' version '3.2.0' apply false
 }
 
@@ -52,7 +52,7 @@ ext {
             gradleAvro            : "com.commercehub.gradle.plugin:gradle-avro-plugin:$gradleAvroPlugin",
             kafkaAvroSchemaRegistryClient    : "io.confluent:kafka-schema-registry-client:$kavroSchemaRegistryClient",
             kafkaAvroSerializer              : "io.confluent:kafka-avro-serializer:$kavroAvroSerializer",
-            springKafka           : "org.springframework.kafka:spring-kafka"
+            springKafka           : "org.springframework.kafka:spring-kafka:$kafka"
 
 
     ]
