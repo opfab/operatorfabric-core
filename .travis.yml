@@ -1,4 +1,6 @@
 os: linux
+arch:
+  - arm64
 dist: xenial
 addons:
     chrome: stable
