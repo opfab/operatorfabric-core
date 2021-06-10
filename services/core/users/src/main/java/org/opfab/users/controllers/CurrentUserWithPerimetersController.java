@@ -70,7 +70,7 @@ public class CurrentUserWithPerimetersController implements CurrentUserWithPerim
             List<GroupData> groupsData = userService.retrieveGroups(groups);
 
             if ((groupsData != null) && (!groupsData.isEmpty())) {
-                Set<PerimeterData> perimetersData = new HashSet<>(); //We use a set because we don't want to have a duplicate
+                Set<Perimeter> perimetersData = new HashSet<>(); //We use a set because we don't want to have a duplicate
                 groupsData.forEach(     //For each group, we recover its perimeters
                         groupData -> {
                             List<PerimeterData> list = userService.retrievePerimeters(groupData.getPerimeters());

@@ -41,7 +41,7 @@ public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters 
     public void setUserData(User userData){this.userData = userData;}
 
     @Override
-    public void setComputedPerimeters(List<? extends ComputedPerimeter> computedPerimeters) {
+    public void setComputedPerimeters(List<ComputedPerimeter> computedPerimeters) {
         this.computedPerimeters = new HashSet<>(computedPerimeters);
     }
 
@@ -52,7 +52,7 @@ public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters 
         return new ArrayList<>(computedPerimeters);
     }
 
-    public void computePerimeters(Set<? extends Perimeter> perimeters){
+    public void computePerimeters(Set<Perimeter> perimeters){
         if (perimeters == null)
             return;
 
@@ -61,7 +61,7 @@ public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters 
         //First, we build a MultiKeyMap with key is (process, state) and value is a list of rights
         perimeters.forEach(perimeter -> {
 
-            List<StateRightData> stateRights = (List<StateRightData>) perimeter.getStateRights();
+            List<StateRight> stateRights = (List<StateRight>) perimeter.getStateRights();
 
             stateRights.forEach(stateRight -> {
                 List<RightsEnum> currentList = multimapWithListOfRights.get(perimeter.getProcess(), stateRight.getState());

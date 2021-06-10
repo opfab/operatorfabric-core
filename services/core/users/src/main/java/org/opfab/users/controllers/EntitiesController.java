@@ -88,7 +88,7 @@ public class EntitiesController implements EntitiesApi {
     }
 
     synchronized void checkForCycleInEntityParenthood(Entity current) {
-        List<EntityData> entities = entityRepository.findAll();
+        List<Entity> entities = entityRepository.findAll().stream().map(Entity.class::cast).collect(Collectors.toList());
         EntityCycleDetector cycleChecker = new EntityCycleDetector(current,entities);
         cycleChecker.throwApiExceptionOnCycle();
     }
@@ -127,8 +127,8 @@ public class EntitiesController implements EntitiesApi {
     }
 
     @Override
-    public List<? extends Entity> fetchEntities(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return entityRepository.findAll();
+    public List<Entity> fetchEntities(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return entityRepository.findAll().stream().map(Entity.class::cast).collect(Collectors.toList());
     }
 
     @Override

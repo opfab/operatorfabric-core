@@ -85,7 +85,7 @@ public class CardConsultationData implements Card {
     @Singular
     private List<String> externalRecipients;
     @Singular
-    private List<? extends TimeSpan> timeSpans;
+    private List<TimeSpan> timeSpans;
     @JsonIgnore
     private List<String> usersAcks;
     @JsonIgnore

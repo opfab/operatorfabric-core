@@ -43,5 +43,5 @@ public class UserCardData implements UserCard {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean lttdVisible;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<? extends Recipient> recipientList;
+    private List<Recipient> recipientList;
 }
