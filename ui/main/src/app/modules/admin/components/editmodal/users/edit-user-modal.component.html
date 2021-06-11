@@ -22,7 +22,7 @@
 
           <div *ngIf="!row" class="opfab-input row">
             <label for="opfab-login" translate>admin.input.user.login</label>
-            <input oninput="this.value = this.value.toLowerCase()" formControlName="login" name="login" id="opfab-login" type="text">
+            <input formControlName="login" name="login" id="opfab-login" type="text">
           </div>
           <div *ngIf="login.invalid" class="row alert alert-danger">
             <div *ngIf="login.errors.required" translate>admin.input.login.required</div>
