@@ -33,22 +33,22 @@
         <div class="row justify-content-center" *ngIf="severityVisible">
 
             <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-alarm" translate> userCard.options.severity.ALARM </span>
-                <input type="radio"  id="sev-alarm" name="severity" formControlName="severity" value="ALARM">
+                <input type="radio"  id="opfab-sev-alarm" name="severity" formControlName="severity" value="ALARM">
                 <span class="opfab-radio-button-checkmark"></span>
             </label>
  
             <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-action" translate> userCard.options.severity.ACTION </span>
-                <input type="radio"  id="sev-action" name="severity" formControlName="severity" value="ACTION">
+                <input type="radio"  id="opfab-sev-action" name="severity" formControlName="severity" value="ACTION">
                 <span class="opfab-radio-button-checkmark"></span>
             </label>
 
             <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-compliant" translate> userCard.options.severity.COMPLIANT </span>
-                <input type="radio"  id="sev-compliant" name="severity" formControlName="severity" value="COMPLIANT">
+                <input type="radio"  id="opfab-sev-compliant" name="severity" formControlName="severity" value="COMPLIANT">
                 <span class="opfab-radio-button-checkmark"></span>
             </label>
 
             <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-information" translate> userCard.options.severity.INFORMATION </span>
-                <input type="radio"  id="sev-information" name="severity" formControlName="severity" value="INFORMATION">
+                <input type="radio"  id="opfab-sev-information" name="severity" formControlName="severity" value="INFORMATION">
                 <span class="opfab-radio-button-checkmark"></span>
             </label>
         </div>
@@ -81,7 +81,7 @@
         <div class="row">
             <div class="col-12">
 
-                <of-multi-filter filterPath="recipients" id="recipients" [parentForm]="recipientForm"
+                <of-multi-filter filterPath="recipients" id="opfab-recipients" [parentForm]="recipientForm"
                     [values]="recipientsOptions" [dropdownSettings]="dropdownSettings" i18nRootLabelKey="userCard.filters." [selectedItems]="selectedRecipients" >
                 </of-multi-filter>
             </div>

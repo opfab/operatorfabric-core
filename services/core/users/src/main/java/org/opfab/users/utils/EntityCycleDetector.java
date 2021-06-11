@@ -24,7 +24,7 @@ public class EntityCycleDetector {
     private final String currentEntityId;
     
 
-    public EntityCycleDetector(Entity currentEntity, List<? extends Entity> allEntities) {
+    public EntityCycleDetector(Entity currentEntity, List<Entity> allEntities) {
         this.currentEntityId = currentEntity.getId();
         Set<Entity> allEntitiesPlusNewOne = allEntities.stream()
                 // allow update of an entity by removing its former version from inspected entities

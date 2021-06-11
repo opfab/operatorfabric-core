@@ -50,6 +50,7 @@ subprojects {
             inputFile = file('src/main/modeling/swagger.yaml')
             code {
                 language = 'org.opfab.generators.OpfabSpringGenerator'
+                additionalProperties = [ignoreImportMappings:"false"]
                 configFile = file('src/main/modeling/config.json')
                 outputDir = file("./build/swagger")
                 templateDir = file('../src/main/resources/swagger-templates')

@@ -505,7 +505,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         const title = (!!specificInformation.card.title) ? specificInformation.card.title : 'UNDEFINED';
         const summary = (!!specificInformation.card.summary) ? specificInformation.card.summary : 'UNDEFINED';
         const keepChildCards = (!!specificInformation.card.keepChildCards) ? specificInformation.card.keepChildCards : false;
-        const secondsBeforeTimeSpanForReminder = (!!specificInformation.card.secondsBeforeTimeSpanForReminder) ? specificInformation.card.secondsBeforeTimeSpanForReminder : null;
+        const secondsBeforeTimeSpanForReminder = (specificInformation.card.secondsBeforeTimeSpanForReminder !== undefined) ? specificInformation.card.secondsBeforeTimeSpanForReminder : null;
 
         let severity;
         if (this.severityVisible) {

@@ -121,8 +121,8 @@ public class PerimetersController implements PerimetersApi {
     }
 
     @Override
-    public List<? extends Perimeter> fetchPerimeters(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return perimeterRepository.findAll();
+    public List<Perimeter> fetchPerimeters(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return perimeterRepository.findAll().stream().map(Perimeter.class::cast).collect(Collectors.toList());
     }
 
     @Override

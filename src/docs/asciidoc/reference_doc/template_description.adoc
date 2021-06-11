@@ -24,6 +24,8 @@ for more information)
    ** *firstName*: user first name
    ** *lastName*: user last name
 
+WARNING: Please do not prefix `id` attributes of DOM elements of your templates with "opfab". Indeed, so that there is no confusion between the elements of OperatorFabric and those of your templates, we have prefixed all our `id` attributes with "opfab".
+
 In addition to Handlebars basic syntax and helpers, OperatorFabric defines the
 following helpers :
 

@@ -35,15 +35,15 @@ public class PerimeterData implements Perimeter {
 
     @JsonIgnore
     @Singular
-    private List<? extends StateRight> stateRights;
+    private List<StateRight> stateRights;
 
     @Override
-    public void setStateRights(List<? extends StateRight> stateRights) {
+    public void setStateRights(List<StateRight> stateRights) {
         this.stateRights = new ArrayList<>(stateRights);
     }
 
     @Override
-    public List<? extends StateRight> getStateRights() {
+    public List<StateRight> getStateRights() {
         if(stateRights == null)
             return Collections.emptyList();
         return stateRights;

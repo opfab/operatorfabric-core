@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,7 +33,7 @@ export class ReminderList {
 
     public addAReminder(card: Card, startingDate?: number) {
         if (!!card) {
-            if (!card.secondsBeforeTimeSpanForReminder) return;
+            if ((card.secondsBeforeTimeSpanForReminder===undefined)||(card.secondsBeforeTimeSpanForReminder===null)) return;
             const reminderItem = this.reminderList.get(card.id);
             if (!!reminderItem && (reminderItem.cardUid === card.uid)) return;
             const dateForReminder: number = getNextTimeForRepeating(card, startingDate);
@@ -47,7 +47,6 @@ export class ReminderList {
         }
     }
 
-
     public hasAReminder(cardId) {
         return this.reminderList.has(cardId);
     }
@@ -60,7 +59,7 @@ export class ReminderList {
     public getCardIdsToRemindNow(): string[] {
         const cardsIdToRemind = new Array();
         this.reminderList.forEach((reminderItem, cardId) => {
-            if ((!reminderItem.hasBeenRemind) && reminderItem.timeForReminding < new Date().valueOf()) cardsIdToRemind.push(cardId);
+            if ((!reminderItem.hasBeenRemind) && reminderItem.timeForReminding <= new Date().valueOf()) cardsIdToRemind.push(cardId);
         }
         );
         return cardsIdToRemind;

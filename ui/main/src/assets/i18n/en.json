@@ -341,7 +341,7 @@
       "login": {
         "required": "Login is required.",
         "minLength": "Login should be minimum 2 characters.",
-        "pattern": "Login should only contain the following characters: letters, _, - or digits."
+        "pattern": "Login should only contain the following characters: letters, _, -, . or digits."
       },
       "firstName": {
         "required": "First name is required."

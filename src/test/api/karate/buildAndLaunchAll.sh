@@ -33,7 +33,7 @@ cd config/docker
 echo "Starting in progress..."
 cd ../../bin
 ./waitForOpfabToStart.sh
-cd ../src/test/resources/api/karate
+cd ../src/test/api/karate
 echo "Start karate testing"
 ./launchAll.sh
 google-chrome target/karate-reports/karate-summary.html &

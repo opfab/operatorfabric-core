@@ -24,9 +24,7 @@ import {Store} from '@ngrx/store';
 import {CardSubscriptionClosed, CardSubscriptionOpen} from '@ofActions/cards-subscription.actions';
 import {LineOfLoggingResult} from '@ofModel/line-of-logging-result.model';
 import {catchError, concatMap, ignoreElements, map, startWith} from 'rxjs/operators';
-import * as moment from 'moment';
 import {I18n} from '@ofModel/i18n.model';
-import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
 import {
     AddLightCardFailure,
     LoadLightCard,
@@ -35,6 +33,7 @@ import {
 import {EntitiesService} from '@ofServices/entities.service';
 import {BusinessConfigChangeAction} from '@ofStore/actions/processes.actions';
 import {UserConfigChangeAction} from '@ofStore/actions/user.actions';
+import {ProcessesService} from '@ofServices/processes.service';
 
 @Injectable()
 export class CardService {
@@ -59,7 +58,8 @@ export class CardService {
                 private guidService: GuidService,
                 private store: Store<AppState>,
                 private authService: AuthenticationService,
-                private entitiesService: EntitiesService) {
+                private entitiesService: EntitiesService,
+                private processesService: ProcessesService) {
         const clientId = this.guidService.getCurrentGuidString();
         this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}`;
         this.cardsUrl = `${environment.urls.cards}/cards`;
@@ -263,7 +263,18 @@ export class CardService {
         return this.httpClient.delete<void>(`${this.userCardReadUrl}/${cardUid}`, {observe: 'response'});
     }
 
+    setFiltersWithUIVisibility(filters: Map<string, string[]>) {
+        const listOfProcesses = [];
+        this.processesService.getAllProcesses().forEach(process => {
+            if (!!process.uiVisibility && !!process.uiVisibility.logging)
+                listOfProcesses.push(process.id);
+        });
+        if (listOfProcesses.length && !filters.has('process'))
+            filters.set('process', listOfProcesses);
+    }
+
     fetchLoggingResults(filters: Map<string, string[]>): Observable<Page<LineOfLoggingResult>> {
+        this.setFiltersWithUIVisibility(filters);
         filters.set('childCards', ['true']);
         return this.fetchArchivedCards(filters).pipe(
             map((page: Page<LightCard>) => {
@@ -288,7 +299,7 @@ export class CardService {
                         processVersion: card.processVersion,
                         state: card.state,
                         cardType: card.severity.toLowerCase(),
-                        businessDate: moment(card.publishDate),
+                        businessDate: card.publishDate,
                         i18nKeyForTitle: this.addPrefix(i18nPrefix, card.title),
                         i18nKeyForSummary: this.addPrefix(i18nPrefix, card.summary),
                         sender: sender,
@@ -308,7 +319,4 @@ export class CardService {
         return {...initialI18n, key: i18nPrefix + initialI18n.key} as I18n;
     }
 
-    fetchMonitoringResults(filters: Map<string, string[]>): Observable<Page<LineOfMonitoringResult>> {
-        return null;
-    }
 }

@@ -25,6 +25,7 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {ApplyFilter} from '@ofStore/actions/feed.actions';
 import {FilterType} from '@ofServices/filter.service';
 import {HourAndMinutes} from '@ofModel/card.model';
+import {ProcessesService} from '@ofServices/processes.service';
 
 @Component({
   selector: 'of-calendar',
@@ -32,6 +33,16 @@ import {HourAndMinutes} from '@ofModel/card.model';
   styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  constructor(private store: Store<AppState>,
+              private translate: TranslateService,
+              private modalService: NgbModal,
+              private processesService: ProcessesService) {
+    processesService.getAllProcesses().forEach(process => {
+      if (!!process.uiVisibility && !!process.uiVisibility.calendar)
+        this.mapOfProcesses.set(process.id, 1);
+    });
+  }
 
   @ViewChild('calendar') calendarComponent: FullCalendarComponent; // the #calendar in the template
   @ViewChild('cardDetail') cardDetailTemplate: ElementRef; // the #cardDetail in the template
@@ -65,12 +76,16 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     datesSet: this.datesRangeChange.bind(this),
     eventClick: this.selectCard.bind(this)
   };
+  mapOfProcesses = new Map<string, number>();
 
+  private static formatTwoDigits(time: number) {
+    return time < 10 ? '0' + time : time;
+  }
 
-  constructor(private store: Store<AppState>,
-              private translate: TranslateService,
-              private modalService: NgbModal
-  ) { }
+  private static getEndTime(hourAndMinutes: HourAndMinutes, duration: number) {
+    duration = Math.min(duration, 30);
+    return CalendarComponent.formatTwoDigits(hourAndMinutes.hours + Math.floor(duration / 60)) + ':' + CalendarComponent.formatTwoDigits(hourAndMinutes.minutes + duration % 60);
+  }
 
   ngOnInit() {
     this.initDataPipe();
@@ -97,42 +112,44 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
   private processCards(cards) {
     this.calendarEvents = [];
     for (const card of cards) {
-      this.translate.get(card.process + '.' + card.processVersion + '.' + card.title.key
-          , card.title.parameters).subscribe(title => {
-        if (card.timeSpans) {
-          for (const timespan of card.timeSpans) {
-            if (timespan.end) {
-              const startDate = new Date(timespan.start.valueOf());
-              const endDate = new Date(timespan.end.valueOf());
+      if (!!this.mapOfProcesses && this.mapOfProcesses.has(card.process)) {
+        this.translate.get(card.process + '.' + card.processVersion + '.' + card.title.key
+            , card.title.parameters).subscribe(title => {
+              if (card.timeSpans) {
+                for (const timespan of card.timeSpans) {
+                  if (timespan.end) {
+                    const startDate = new Date(timespan.start.valueOf());
+                    const endDate = new Date(timespan.end.valueOf());
 
-              if (timespan.recurrence) {
-                this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
-                  id: card.id,
-                  title: title,
-                  allDay: false,
-                  startRecur: startDate,
-                  endRecur: endDate,
-                  className: ['opfab-calendar-event', 'opfab-calendar-event-' + card.severity.toLowerCase()],
-                  daysOfWeek: timespan.recurrence ? timespan.recurrence.daysOfWeek.map(d => d % 7) : [],
-                  startTime: timespan.recurrence.hoursAndMinutes ? CalendarComponent.formatTwoDigits(timespan.recurrence.hoursAndMinutes.hours) + ':' + CalendarComponent.formatTwoDigits(timespan.recurrence.hoursAndMinutes.minutes) : null,
-                  endTime: timespan.recurrence.durationInMinutes ? CalendarComponent.getEndTime(timespan.recurrence.hoursAndMinutes, timespan.recurrence.durationInMinutes) : null
-                });
-              } else {
-                this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
-                  id: card.id,
-                  title: title,
-                  start: startDate,
-                  end: endDate,
-                  className: ['opfab-calendar-event', 'opfab-calendar-event-' + card.severity.toLowerCase()],
-                  allDay: false
-                });
+                    if (timespan.recurrence) {
+                      this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
+                        id: card.id,
+                        title: title,
+                        allDay: false,
+                        startRecur: startDate,
+                        endRecur: endDate,
+                        className: ['opfab-calendar-event', 'opfab-calendar-event-' + card.severity.toLowerCase()],
+                        daysOfWeek: timespan.recurrence ? timespan.recurrence.daysOfWeek.map(d => d % 7) : [],
+                        startTime: timespan.recurrence.hoursAndMinutes ? CalendarComponent.formatTwoDigits(timespan.recurrence.hoursAndMinutes.hours) + ':' + CalendarComponent.formatTwoDigits(timespan.recurrence.hoursAndMinutes.minutes) : null,
+                        endTime: timespan.recurrence.durationInMinutes ? CalendarComponent.getEndTime(timespan.recurrence.hoursAndMinutes, timespan.recurrence.durationInMinutes) : null
+                      });
+                    } else {
+                      this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
+                        id: card.id,
+                        title: title,
+                        start: startDate,
+                        end: endDate,
+                        className: ['opfab-calendar-event', 'opfab-calendar-event-' + card.severity.toLowerCase()],
+                        allDay: false
+                      });
+                    }
+
+                  }
+                }
               }
-
             }
-          }
-        }
+        );
       }
-      );
     }
     // It is necessary to reassign the updated events to the corresponding options property to trigger change detection
     // See https://fullcalendar.io/docs/angular §Modifying properties
@@ -162,15 +179,6 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-  }
-
-  private static formatTwoDigits(time: number) {
-    return time < 10 ? '0' + time : time;
-  }
-
-  private static getEndTime(hourAndMinutes: HourAndMinutes, duration: number) {
-    duration = Math.min(duration, 30);
-    return CalendarComponent.formatTwoDigits(hourAndMinutes.hours + Math.floor(duration / 60)) + ':' + CalendarComponent.formatTwoDigits(hourAndMinutes.minutes + duration % 60);
   }
 
 }

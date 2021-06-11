@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * UsersController, documented at {@link UsersApi}
@@ -112,8 +113,8 @@ public class UsersController implements UsersApi {
     }
 
     @Override
-    public List<? extends User> fetchUsers(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return userRepository.findAll();
+    public List<User> fetchUsers(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return userRepository.findAll().stream().map( User.class::cast).collect(Collectors.toList());
     }
 
     @Override
@@ -153,7 +154,7 @@ public class UsersController implements UsersApi {
     }
 
     @Override
-    public List<? extends Perimeter> fetchUserPerimeters(HttpServletRequest request, HttpServletResponse response, String login) throws Exception{
+    public List<Perimeter> fetchUserPerimeters(HttpServletRequest request, HttpServletResponse response, String login) throws Exception{
 
         List<String> groups = findUserOrThrow(login).getGroups(); //First, we recover the groups to which the user belongs
 

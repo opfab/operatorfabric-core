@@ -120,8 +120,8 @@ public class GroupsController implements GroupsApi {
     }
 
     @Override
-    public List<? extends Group> fetchGroups(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return groupRepository.findAll();
+    public List<Group> fetchGroups(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return groupRepository.findAll().stream().map(Group.class::cast).collect(Collectors.toList());
     }
 
     @Override
@@ -178,7 +178,7 @@ public class GroupsController implements GroupsApi {
     }
 
     @Override
-    public List<? extends Perimeter> fetchGroupPerimeters(HttpServletRequest request, HttpServletResponse response, String id) throws Exception{
+    public List<Perimeter> fetchGroupPerimeters(HttpServletRequest request, HttpServletResponse response, String id) throws Exception{
 
         List<String> perimeters = findGroupOrThrow(id).getPerimeters();
 
@@ -286,11 +286,11 @@ public class GroupsController implements GroupsApi {
 
     /** Retrieve perimeters from repository for perimeter list, throwing an error if a perimeter is not found
      * */
-    private List<PerimeterData> retrievePerimeters(List<String> perimeterIds) {
+    private List<Perimeter> retrievePerimeters(List<String> perimeterIds) {
 
-        List<PerimeterData> foundPerimeters = new ArrayList<>();
+        List<Perimeter> foundPerimeters = new ArrayList<>();
         for(String perimeterId : perimeterIds){
-            PerimeterData foundPerimeter = perimeterRepository.findById(perimeterId).orElseThrow(
+            Perimeter foundPerimeter = (Perimeter) perimeterRepository.findById(perimeterId).orElseThrow(
                     () -> new ApiErrorException(
                             ApiError.builder()
                                     .status(HttpStatus.BAD_REQUEST)
