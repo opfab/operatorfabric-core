@@ -348,7 +348,11 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.messageForm.get('state').valueChanges.subscribe((state) => {
             if (!!state) {
                 this.selectedState = state;
+                this.messageForm.get("startDate").setValue('');
+                this.messageForm.get("endDate").setValue('');
+                this.messageForm.get("lttd").setValue('');
                 this.loadTemplate();
+
             }
         });
     }
