@@ -225,7 +225,7 @@
     "title": "CREATE A NEW CARD ",
     "editTitle" : "EDIT A NEW CARD",
     "error": {
-      "notAvailable": "Feature not available",
+      "notAvailable": "You are not allowed to send card",
       "templateError": "Technical error : invalid template",
       "impossibleToSendCard": "Impossible to send card for technical reasons",
       "endDateBeforeStartDate": "End date must be after start date",

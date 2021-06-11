@@ -224,7 +224,7 @@
     "title": "CREATION D'UNE NOUVELLE CARTE",
     "editTitle" : "EDITION D'UNE CARTE",
     "error": {
-      "notAvailable": "Fonctionnalité non disponible",
+      "notAvailable": "Vous n'êtes pas autorisé à envoyer des cartes",
       "templateError" : "Erreur technique : template non conforme",
       "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques",
       "endDateBeforeStartDate": "La date de fin doit être postérieure à la date de début",

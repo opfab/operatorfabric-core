@@ -84,6 +84,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
     userCardTemplate: SafeHtml;
     editCardMode = false;
     cardToEdit: CardData;
+    publisherForCreatingUsercard: string;
 
     @Input() cardIdToEdit = null;
     public card: Card;
@@ -107,7 +108,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
     useDescriptionFieldForEntityList = false;
 
     displayForm() {
-        return !!this.processOptions && this.processOptions.length > 0;
+        return !!this.publisherForCreatingUsercard && !!this.processOptions && this.processOptions.length > 0;
     }
 
     displayProcessGroupFilter() {
@@ -173,12 +174,12 @@ export class UserCardComponent implements OnDestroy, OnInit {
             badgeShowLimit: 30,
             enableSearchFilter: true
         };
-        if (!!this.cardIdToEdit) {
+        if (!!this.cardIdToEdit)
             this.loadCardForEdition();
-        } else {
+        else
             this.pageLoading = false;
-        }
-        
+
+        this.publisherForCreatingUsercard = this.findPublisherForCreatingUsercard();
     }
 
     loadCardForEdition() {
@@ -400,14 +401,14 @@ export class UserCardComponent implements OnDestroy, OnInit {
                         if (!this.recipientsOptions.find(o => o.id === entity.id)) {
                             this.recipientsOptions.push({ id: entity.id, itemName: this.getEntityLabel(entity) });
                         }
-                    })
-                })
+                    });
+                });
             } else {
                 if (!this.recipientsOptions.find(o => o.id === r.id)) {
                     const entity = this.entities.find(e => e.id === r.id);
                     this.recipientsOptions.push({ id: entity.id, itemName: this.getEntityLabel(entity)});
                 }
-            }         
+            }
         });
 
         this.recipientsOptions.sort(( a, b ) => a.itemName.localeCompare(b.itemName));
@@ -429,6 +430,13 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
         this.store.dispatch(new AlertMessage({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}}));
+    }
+
+    findPublisherForCreatingUsercard(): string {
+        return this.currentUserWithPerimeters.userData.entities.find(userEntity => {
+            const entity = this.entities.find(e => e.id === userEntity);
+            return entity.entityAllowedToSendCard;
+        });
     }
 
     prepareCard() {
@@ -462,11 +470,6 @@ export class UserCardComponent implements OnDestroy, OnInit {
         const selectedRecipients = this.recipientForm.value['recipients'];
         const recipients = [];
         selectedRecipients.forEach(entity => recipients.push(entity.id));
-
-        const publisher =  this.currentUserWithPerimeters.userData.entities.find(userEntity => {
-            const entity = this.entities.find(e => e.id === userEntity);
-            return entity.entityAllowedToSendCard;
-        });
 
         const entitiesAllowedToRespond = [];
         if (selectedProcess.states[state].response) {
@@ -527,7 +530,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.card = {
             id: 'dummyId',
             publishDate: null,
-            publisher: publisher,
+            publisher: this.publisherForCreatingUsercard,
             publisherType : 'ENTITY',
             processVersion: processVersion,
             process: selectedProcess.id,
