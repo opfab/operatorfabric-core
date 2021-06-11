@@ -19,7 +19,8 @@ export enum UserActionsTypes {
     CreateUserApplicationOnSuccess =    '[User] Create the User in the application on success',
     CreateUserApplicationOnFailure =    '[User] Create the User in the application on failure',
     QueryAllEntities =                  '[User] Ask to fetch all entities',
-    LoadAllEntities =                   '[User] Load all entities'
+    LoadAllEntities =                   '[User] Load all entities',
+    UserConfigChange =                  '[User] User config changed'
 }
 
 export class UserApplicationRegistered implements Action {
@@ -56,10 +57,15 @@ export class LoadAllEntities implements Action {
     }
 }
 
+export class UserConfigChangeAction implements Action {
+    readonly type = UserActionsTypes.UserConfigChange;
+}
+
 export type UserActions = UserApplicationRegistered
     | CreateUserApplication
     | CreateUserApplicationOnSuccess
     | CreateUserApplicationOnFailure
     | QueryAllEntities
-    | LoadAllEntities;
+    | LoadAllEntities
+    | UserConfigChangeAction;
 

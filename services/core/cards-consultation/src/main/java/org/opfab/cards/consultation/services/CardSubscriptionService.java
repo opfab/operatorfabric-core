@@ -40,6 +40,7 @@ public class CardSubscriptionService {
     private final ThreadPoolTaskScheduler taskScheduler;
     private final FanoutExchange cardExchange;
     private final FanoutExchange processExchange;
+    private final FanoutExchange userExchange;
     private final AmqpAdmin amqpAdmin;
     private final long deletionDelay;
     private final long heartbeatDelay;
@@ -50,10 +51,12 @@ public class CardSubscriptionService {
     @Autowired
     protected UserServiceCache userServiceCache;
 
+
     @Autowired
     public CardSubscriptionService(ThreadPoolTaskScheduler taskScheduler,
                                    FanoutExchange cardExchange,
                                    FanoutExchange processExchange,
+                                   FanoutExchange userExchange,
                                    ConnectionFactory connectionFactory,
                                    AmqpAdmin amqpAdmin,
                                    @Value("${operatorfabric.subscriptiondeletion.delay:10000}")
@@ -62,6 +65,7 @@ public class CardSubscriptionService {
                                    long heartbeatDelay) {
         this.cardExchange = cardExchange;
         this.processExchange = processExchange;
+        this.userExchange = userExchange;
         this.taskScheduler = taskScheduler;
         this.amqpAdmin = amqpAdmin;
         this.connectionFactory = connectionFactory;
@@ -121,6 +125,7 @@ public class CardSubscriptionService {
            .amqpAdmin(amqpAdmin)
            .cardExchange(this.cardExchange)
            .processExchange(this.processExchange)
+           .userExchange(this.userExchange)
            .connectionFactory(this.connectionFactory);
         if (cardSubscription == null) {
             cardSubscription = buildSubscription(subId, cardSubscriptionBuilder);

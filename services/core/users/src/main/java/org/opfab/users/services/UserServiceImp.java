@@ -17,15 +17,13 @@ import org.opfab.users.model.*;
 import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.PerimeterRepository;
 import org.opfab.users.repositories.UserRepository;
-import org.opfab.springtools.configuration.oauth.UpdatedUserEvent;
 import org.opfab.users.repositories.UserSettingsRepository;
 import org.opfab.users.model.GroupData;
 import org.opfab.users.model.PerimeterData;
 import org.opfab.users.model.UserData;
 import org.opfab.users.model.UserSettingsData;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.bus.ServiceMatcher;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -47,12 +45,8 @@ public class UserServiceImp implements UserService {
     @Autowired
     private UserSettingsRepository userSettingsRepository;
 
-    /* These are Spring Cloud Bus beans used to fire an event (UpdatedUserEvent) every time a user is modified.
-     *  Other services handle this event by clearing their user cache for the given user. See issue #64*/
     @Autowired
-    private ServiceMatcher serviceMatcher;
-    @Autowired
-    private ApplicationEventPublisher publisher;
+    private RabbitTemplate rabbitTemplate;
 
     /** Retrieve user_settings from repository for the user **/
     public UserSettingsData retrieveUserSettings(String login) {
@@ -110,13 +104,17 @@ public class UserServiceImp implements UserService {
         return true;
     }
 
-    //Retrieve users from repository for the group and publish an UpdatedUserEvent
-    public void publishUpdatedUserEvent(String groupId){
+    //Retrieve users from repository for the group and publish a message to USER_EXCHANGE
+    public void publishUpdatedGroupMessage(String groupId){
         List<UserData> foundUsers = userRepository.findByGroupSetContaining(groupId);
         if (foundUsers != null) {
             for (UserData userData : foundUsers)
-                publisher.publishEvent(new UpdatedUserEvent(this, serviceMatcher.getBusId(), userData.getLogin()));
+                publishUpdatedUserMessage(userData.getLogin());
         }
+    }
+
+    public void publishUpdatedUserMessage(String userLogin){
+        rabbitTemplate.convertAndSend("USER_EXCHANGE", "", userLogin);
     }
 
     @Override

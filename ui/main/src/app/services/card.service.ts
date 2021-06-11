@@ -32,6 +32,7 @@ import {
 } from '@ofActions/light-card.actions';
 import {EntitiesService} from '@ofServices/entities.service';
 import {BusinessConfigChangeAction} from '@ofStore/actions/processes.actions';
+import {UserConfigChangeAction} from '@ofStore/actions/user.actions';
 import {ProcessesService} from '@ofServices/processes.service';
 
 @Injectable()
@@ -149,6 +150,10 @@ export class CardService {
                             this.store.dispatch(new BusinessConfigChangeAction());
                             console.log(new Date().toISOString(), `CardService - BUSINESS_CONFIG_CHANGE received`);
                             break;
+                        case 'USER_CONFIG_CHANGE':
+                                this.store.dispatch(new UserConfigChangeAction());
+                                console.log(new Date().toISOString(), `CardService - USER_CONFIG_CHANGE received`);
+                                break;
                         default :
                             return observer.next(JSON.parse(message.data, CardOperation.convertTypeIntoEnum));
                     }

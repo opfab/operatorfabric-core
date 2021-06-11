@@ -47,8 +47,6 @@ ext {
 
     cloud = [
             dependencies          : "org.springframework.cloud:spring-cloud-dependencies:$springCloud",
-            starterBus            : "org.springframework.cloud:spring-cloud-starter-bus-amqp",
-            starterStream         : "org.springframework.cloud:spring-cloud-starter-stream-rabbit",
             starterFeign          : "org.springframework.cloud:spring-cloud-starter-openfeign",
             avro                  : "org.apache.avro:avro:$avro",
             gradleAvro            : "com.commercehub.gradle.plugin:gradle-avro-plugin:$gradleAvroPlugin",
