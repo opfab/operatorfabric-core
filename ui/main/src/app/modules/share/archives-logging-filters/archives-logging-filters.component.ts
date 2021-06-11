@@ -51,6 +51,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
 
     @Input() public card: Card | LightCard;
     @Input() parentForm: FormGroup;
+    @Input() visibleProcesses: [];
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -63,6 +64,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     processGroupDropdownList = [];
     processGroupDropdownSettings = {};
     processDropdownList = [];
+    visibleProcessesId: string[] = [];
     processDropdownListWhenSelectedProcessGroup = [];
     processDropdownSettings = {};
     stateDropdownListWhenSelectedProcess = [];
@@ -86,17 +88,10 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
         this.tags = this.configService.getConfigValue('archive.filters.tags.list');
         this.checkPerimeterForSearchFields = this.configService.getConfigValue('checkPerimeterForSearchFields', false);
         this.processesGroups = this.processesService.getProcessGroups();
-
-        this.processesService.getAllProcesses().forEach((process) => {
-            const id = process.id;
-            let itemName = process.name;
-            if (!itemName) {
-                itemName = id;
-            }
-            this.processDropdownList.push({ id: id, itemName: itemName, i18nPrefix: `${process.id}.${process.version}` });
-        });
+        this.processDropdownList = this.visibleProcesses;
         this.processDropdownListWhenSelectedProcessGroup = [];
         this.stateDropdownListWhenSelectedProcess = [];
+        this.visibleProcessesId = this.processDropdownList.map(element => element.id);
 
         if (!!this.tags) {
             this.tags.forEach(tag => this.tagsDropdownList.push({ id: tag.value, itemName: tag.label }));
@@ -139,7 +134,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
 
     public loadProcessGroupDropdownListAndProcessesDropdownList(): void {
 
-        this.processesDropdownListPerProcessGroups = this.processesService.getProcessesPerProcessGroups();
+        this.processesDropdownListPerProcessGroups = this.processesService.getProcessesPerProcessGroups(this.visibleProcessesId);
         this.processesWithoutProcessGroupDropdownList = this.processesService.getProcessesWithoutProcessGroup();
 
         if (this.checkPerimeterForSearchFields)

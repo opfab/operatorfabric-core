@@ -51,6 +51,7 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
     processGroupDropdownList = [];
     processGroupDropdownSettings = {};
     processDropdownList = [];
+    visibleProcessesId: string[] = [];
     processDropdownListWhenSelectedProcessGroup = [];
     processDropdownSettings = {};
     typeOfStateDropdownList = [];
@@ -61,7 +62,7 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
     checkPerimeterForSearchFields: boolean;
 
     @Input()
-    public processData: [];
+    public visibleProcesses: [];
 
     constructor(private store: Store<AppState>,
                 private configService: ConfigService,
@@ -84,7 +85,8 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
                 typeOfState: new FormControl([])
             }
         );
-        this.processDropdownList = this.processData;
+        this.processDropdownList = this.visibleProcesses;
+        this.visibleProcessesId = this.processDropdownList.map(element => element.id);
 
         this.loadProcessGroupDropdownListAndProcessesDropdownList();
 
@@ -219,7 +221,7 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
 
     public loadProcessGroupDropdownListAndProcessesDropdownList(): void {
 
-        this.processesDropdownListPerProcessGroups = this.processesService.getProcessesPerProcessGroups();
+        this.processesDropdownListPerProcessGroups = this.processesService.getProcessesPerProcessGroups(this.visibleProcessesId);
         this.processesWithoutProcessGroupDropdownList = this.processesService.getProcessesWithoutProcessGroup();
 
         if (this.checkPerimeterForSearchFields)

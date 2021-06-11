@@ -16,7 +16,7 @@ import {SendLoggingQuery} from '@ofActions/logging.actions';
 import {ConfigService} from '@ofServices/config.service';
 import {TimeService} from '@ofServices/time.service';
 import {Subject} from 'rxjs';
-import {ArchivesLoggingFiltersComponent} from "../../../share/archives-logging-filters/archives-logging-filters.component";
+import {ArchivesLoggingFiltersComponent} from '../../../share/archives-logging-filters/archives-logging-filters.component';
 
 
 @Component({
@@ -37,7 +37,7 @@ export class LoggingFiltersComponent implements OnInit, OnDestroy {
     public submittedOnce = false;
 
     @Input()
-    public processData: [];
+    public visibleProcesses: [];
 
     constructor(private store: Store<AppState>,
                 private timeService: TimeService,
@@ -70,8 +70,7 @@ export class LoggingFiltersComponent implements OnInit, OnDestroy {
         this.submittedOnce = true;
     }
 
-    resetForm()
-    {
+    resetForm() {
         this.loggingForm.reset();
     }
 
