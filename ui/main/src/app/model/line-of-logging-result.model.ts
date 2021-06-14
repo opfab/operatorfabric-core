@@ -7,8 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-import {Moment} from 'moment-timezone';
 import {I18n} from '@ofModel/i18n.model';
 
 export interface LineOfLoggingResult {
@@ -21,4 +19,6 @@ export interface LineOfLoggingResult {
     i18nKeyForSummary: I18n;
     sender: string;
     representative: string;
+    processName?: string;
+    stateColor?: string;
 }

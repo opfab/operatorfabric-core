@@ -63,7 +63,6 @@
     "contingenciesState": {
       "name": "contingencies.title",
       "description": "contingenciesState.description",
-      "color": "#0070C0",
       "templateName": "contingencies",
       "styles": [
         "contingencies"
@@ -74,7 +73,6 @@
     "questionState": {
       "name": "questionState.title",
       "description": "questionState.description",
-      "color": "#0070C0",
       "response": {
         "lock": true,
         "state": "responseState",

@@ -169,6 +169,7 @@
     "summary": "RESUME",
     "description": "DESCRIPTION",
     "sender": "EMETTEUR",
+    "process" : "PROCESSUS",
     "processGroup": "SERVICE",
     "noResult": "Votre recherche ne correspond à aucun résultat.",
     "ExportTOExcel": "Exporter les données",
