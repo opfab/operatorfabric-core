@@ -170,6 +170,7 @@
     "summary": "SUMMARY",
     "description": "DESCRIPTION",
     "sender": "ACTOR",
+    "process" : "PROCESS",
     "processGroup": "SERVICE",
     "noResult": "Your search did not match any results.",
     "ExportTOExcel": "Export data",
