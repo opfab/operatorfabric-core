@@ -78,7 +78,7 @@ public class ArchivedCardPublicationData implements Card {
     private List<String> groupRecipients;
     
     @Transient
-    private List<? extends TimeSpan> timeSpans;
+    private List<TimeSpan> timeSpans;
     
     @Indexed
     private List<String> entityRecipients;

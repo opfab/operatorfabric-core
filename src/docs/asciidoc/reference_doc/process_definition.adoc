@@ -67,8 +67,9 @@ include::../../../../services/core/businessconfig/src/main/docker/volume/busines
 The server store the previous versions in its file system.
 This field value should match a businessconfig configuration for a correct rendering;
 - `states`: lists the available states which each declares associated actions, associated templates and if cards could be acknowledged by users;
+- `uiVisibility`: in the monitoring, logging and calendar screens, not all the cards are visible, it depends on the business process they are part of. For a card to be visible in these screens, the corresponding parameter must be set to true.
 
-The mandatory field are `id`,'name' and `version`.
+The mandatory field are `id`,`name` and `version`.
 
 See the
 ifdef::single-page-doc[link:../api/businessconfig/index.html[Businessconfig API documentation]]

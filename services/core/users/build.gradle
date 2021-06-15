@@ -2,7 +2,7 @@ dependencies {
     swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
     swaggerUI generator.swaggerUI
     compile project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
-    compile  cloud.starterBus
+    compile boot.starterRabbitmq
     implementation misc.jsonSmart
     compile boot.starterAop
     compile misc.collections4

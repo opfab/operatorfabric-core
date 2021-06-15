@@ -17,6 +17,7 @@ import {map, takeUntil} from 'rxjs/operators';
 import {LoggingFiltersComponent} from './components/logging-filters/logging-filters.component';
 import {ProcessesService} from '@ofServices/processes.service';
 import {Utilities} from '../../common/utilities';
+import * as _ from 'lodash-es';
 
 @Component({
     selector: 'of-logging',
@@ -34,6 +35,8 @@ export class LoggingComponent implements OnInit, OnDestroy {
 
     processValueForFilter = [];
     processStateDescription = new Map();
+    processNames = new Map();
+    stateColors = new Map();
 
     constructor(private store: Store<AppState>, private processesService: ProcessesService) {
         processesService.getAllProcesses().forEach( (process) => {
@@ -44,10 +47,15 @@ export class LoggingComponent implements OnInit, OnDestroy {
                    itemName = id;
                }
                this.processValueForFilter.push({id: id, itemName: itemName, i18nPrefix: `${process.id}.${process.version}` });
+               this.processNames.set(id,`${process.id}.${process.version}.${itemName}`);
            }
 
-            for (const key in process.states) this.processStateDescription.set(process.id + '.' + key,
+            for (const key in process.states) {
+                this.processStateDescription.set(process.id + '.' + key,
                 Utilities.getI18nPrefixFromProcess(process) + process.states[key].description);
+                this.stateColors.set(process.id + '.' + key,process.states[key].color);
+            }
+  
         });
     }
 
@@ -62,10 +70,22 @@ export class LoggingComponent implements OnInit, OnDestroy {
                             this.canDisplayNoResultMessage = (!!this.filters ? this.filters.submittedOnce : false);
                             return null;
                         }
-                        return lines;
+                        return this.resultPostProcessing(lines);
+
                     }
                 ))
         ;
+    }
+
+    resultPostProcessing( result: LineOfLoggingResult[] ) : LineOfLoggingResult[] {
+        const newResult : LineOfLoggingResult[] = new Array();
+        result.forEach ( line =>  {
+            const newline = _.clone(line);
+            newline.processName=  this.processNames.get(line.process);
+            newline.stateColor = this.stateColors.get(newline.process + '.' + newline.state);
+            newResult.push(newline); 
+        } );
+        return newResult;
     }
 
     ngOnDestroy() {

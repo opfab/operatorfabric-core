@@ -12,6 +12,8 @@
 package org.opfab.cards.consultation.application;
 
 import lombok.extern.slf4j.Slf4j;
+
+import org.opfab.cards.consultation.configuration.ThreadPoolTaskSchedulerConfiguration;
 import org.opfab.cards.consultation.configuration.json.JacksonConfig;
 import org.opfab.cards.consultation.configuration.mongo.LocalMongoConfiguration;
 import org.opfab.cards.consultation.repositories.ArchivedCardRepository;
@@ -35,7 +37,7 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 @EnableOperatorFabricMongo
 @EnableReactiveMongoRepositories(basePackageClasses = {CardRepository.class, ArchivedCardRepository.class})
 @ImportResource("classpath:/amqp.xml")
-@Import({JacksonConfig.class, LocalMongoConfiguration.class})
+@Import({JacksonConfig.class, LocalMongoConfiguration.class, ThreadPoolTaskSchedulerConfiguration.class})
 public class IntegrationTestApplication {
 
     public static void main(String[] args) {

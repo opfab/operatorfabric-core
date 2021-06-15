@@ -27,8 +27,6 @@ import org.opfab.users.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.cloud.bus.ServiceMatcher;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -76,12 +74,6 @@ class UsersControllerShould {
 
     @Autowired
     private UserSettingsRepository userSettingsRepository;
-
-    @MockBean
-    private ServiceMatcher serviceMatcher;
-
-    @MockBean
-    private ApplicationEventPublisher publisher;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -179,8 +171,6 @@ class UsersControllerShould {
         perimeterRepository.insert(p1);
         perimeterRepository.insert(p2);
         perimeterRepository.insert(p3);
-
-        Mockito.when(serviceMatcher.getBusId()).thenReturn("DUMMY_BUS_ID");
     }
 
     @AfterEach

@@ -170,6 +170,7 @@
     "summary": "SUMMARY",
     "description": "DESCRIPTION",
     "sender": "ACTOR",
+    "process" : "PROCESS",
     "processGroup": "SERVICE",
     "noResult": "Your search did not match any results.",
     "ExportTOExcel": "Export data",
@@ -225,7 +226,7 @@
     "title": "CREATE A NEW CARD ",
     "editTitle" : "EDIT A NEW CARD",
     "error": {
-      "notAvailable": "Feature not available",
+      "notAvailable": "You are not allowed to send card",
       "templateError": "Technical error : invalid template",
       "impossibleToSendCard": "Impossible to send card for technical reasons",
       "endDateBeforeStartDate": "End date must be after start date",
@@ -341,7 +342,7 @@
       "login": {
         "required": "Login is required.",
         "minLength": "Login should be minimum 2 characters.",
-        "pattern": "Login should only contain the following characters: letters, _, - or digits."
+        "pattern": "Login should only contain the following characters: lowercase letters, _, -, . or digits."
       },
       "firstName": {
         "required": "First name is required."

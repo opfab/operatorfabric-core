@@ -66,7 +66,6 @@ export class MonitoringTableComponent implements OnDestroy {
     initStandardExportMonitoringData(): void {
 
         this.exportMonitoringData = [];
-        let time: string, businessPeriod: string, processName: any, title: any, summary: any, status: any;
 
         const timeColumnName = this.translateColumn('monitoring.time');
         const businessPeriodColumnName = this.translateColumn('monitoring.businessPeriod');

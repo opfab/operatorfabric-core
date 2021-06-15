@@ -300,16 +300,22 @@ export class ProcessesService {
         return '';
     }
 
-    public getProcessesPerProcessGroups(): Map<any, any> {
+    public getProcessesPerProcessGroups(processesFilter?: string[]): Map<any, any> {
         const processesPerProcessGroups = new Map();
 
         this.getAllProcesses().forEach(process => {
 
-            const processGroupId = this.findProcessGroupForProcess(process.id);
-            if (processGroupId !== '') {
-                const processes = (!! processesPerProcessGroups.get(processGroupId) ? processesPerProcessGroups.get(processGroupId) : []);
-                processes.push({id: process.id, itemName: process.name, i18nPrefix: `${process.id}.${process.version}`});
-                processesPerProcessGroups.set(processGroupId, processes);
+            if ((! processesFilter) || processesFilter.includes(process.id)) {
+                const processGroupId = this.findProcessGroupForProcess(process.id);
+                if (processGroupId !== '') {
+                    const processes = (!!processesPerProcessGroups.get(processGroupId) ? processesPerProcessGroups.get(processGroupId) : []);
+                    processes.push({
+                        id: process.id,
+                        itemName: process.name,
+                        i18nPrefix: `${process.id}.${process.version}`
+                    });
+                    processesPerProcessGroups.set(processGroupId, processes);
+                }
             }
         });
         return processesPerProcessGroups;

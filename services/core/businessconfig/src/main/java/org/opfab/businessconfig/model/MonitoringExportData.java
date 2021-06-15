@@ -25,5 +25,5 @@ import java.util.List;
 @Slf4j
 public class MonitoringExportData implements MonitoringExport {   
   
-  private List<? extends MonitoringExportField> fields;  
+  private List<MonitoringExportField> fields;  
 }

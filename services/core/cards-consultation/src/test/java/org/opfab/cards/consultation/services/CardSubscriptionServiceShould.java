@@ -139,7 +139,7 @@ public class CardSubscriptionServiceShould {
     @Test
     public void receiveCards(){
         CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
-        StepVerifier.FirstStep<String> verifier = StepVerifier.create(subscription.getPublisher().filter(m -> !m.equals("HEARTBEAT") && !m.equals("BUSINESS_CONFIG_CHANGE") ));
+        StepVerifier.FirstStep<String> verifier = StepVerifier.create(subscription.getPublisher().filter(m -> !m.equals("HEARTBEAT") && !m.equals("BUSINESS_CONFIG_CHANGE") && !m.equals("USER_CONFIG_CHANGE") ));
         taskScheduler.schedule(createSendMessageTask(),new Date(System.currentTimeMillis() + 1000));
         verifier
             .expectNext("INIT")

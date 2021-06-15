@@ -13,7 +13,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {UserService} from '@ofServices/user.service';
-import {Observable} from 'rxjs';
+import {Observable, timer} from 'rxjs';
 import {
     CreateUserApplication,
     CreateUserApplicationOnFailure,
@@ -24,7 +24,7 @@ import {
     UserApplicationRegistered
 } from '@ofStore/actions/user.actions';
 import {AcceptLogIn, AuthenticationActionTypes} from '@ofStore/actions/authentication.actions';
-import {catchError, map, switchMap} from 'rxjs/operators';
+import {catchError, debounce, map, switchMap} from 'rxjs/operators';
 import {User} from '@ofModel/user.model';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 import {Entity} from '@ofModel/entity.model';
@@ -110,4 +110,17 @@ export class UserEffects {
         switchMap(() => this.userService.queryAllEntities()),
         map((allEntities: Entity[]) => new LoadAllEntities({entities: allEntities}))
     ));
+
+    updateUserConfig: Observable<any> = createEffect(() => this.actions$
+    .pipe(
+        ofType(UserActionsTypes.UserConfigChange),
+        debounce(() => timer(10000)),
+        map(() => {
+            this.userService.loadUserWithPerimetersData().subscribe();
+        }),
+        catchError((error, caught) => {
+            console.error('UserEffects - Error in update user config ', error);
+            return caught;
+        })
+    ), { dispatch: false });
 }

@@ -169,6 +169,7 @@
     "summary": "RESUME",
     "description": "DESCRIPTION",
     "sender": "EMETTEUR",
+    "process" : "PROCESSUS",
     "processGroup": "SERVICE",
     "noResult": "Votre recherche ne correspond à aucun résultat.",
     "ExportTOExcel": "Exporter les données",
@@ -224,7 +225,7 @@
     "title": "CREATION D'UNE NOUVELLE CARTE",
     "editTitle" : "EDITION D'UNE CARTE",
     "error": {
-      "notAvailable": "Fonctionnalité non disponible",
+      "notAvailable": "Vous n'êtes pas autorisé à envoyer des cartes",
       "templateError" : "Erreur technique : template non conforme",
       "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques",
       "endDateBeforeStartDate": "La date de fin doit être postérieure à la date de début",
@@ -341,7 +342,7 @@
       "login": {
         "required": "L'identifiant est obligatoire.",
         "minLength": "L'identifiant doit avoir au moins 2 caractères.",
-        "pattern": "L'identifiant ne peut contenir que les caractères suivants : lettres, _, - ou chiffres."
+        "pattern": "L'identifiant ne peut contenir que les caractères suivants : lettres minuscules, _, -, . ou chiffres."
       },
       "firstName": {
         "required": "Le prénom est obligatoire."
