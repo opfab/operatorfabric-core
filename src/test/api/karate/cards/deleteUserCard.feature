@@ -167,7 +167,7 @@ Feature: deleteUserCards tests
     * def cardForDeleteForbidden1 =
 """
 {
-	"publisher" : "publisherKarate",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"processDeleteUserCard",
 	"processInstanceId" : "processDeleteUserCardForbidden1",
@@ -225,6 +225,7 @@ Feature: deleteUserCards tests
 
 # Push cardForDeleteForbidden1
   Given url opfabPublishCardUrl + 'cards'
+  And header Authorization = 'Bearer ' + authTokenAsTSO
   And request cardForDeleteForbidden1
   When method post
   Then status 201
@@ -302,17 +303,20 @@ Feature: deleteUserCards tests
 
   Scenario: delete cardForDeleteForbidden1
     Given url opfabPublishCardUrl + 'cards/processDeleteUserCard.processDeleteUserCardForbidden1'
+    And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
 
 
   Scenario: delete cardForDeleteForbidden2
     Given url opfabPublishCardUrl + 'cards/processDeleteUserCard.processDeleteUserCardForbidden2'
+    And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
 
 
   Scenario: delete cardForDeleteForbidden3
     Given url opfabPublishCardUrl + 'cards/processDeleteUserCard.processDeleteUserCardForbidden3'
+    And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200

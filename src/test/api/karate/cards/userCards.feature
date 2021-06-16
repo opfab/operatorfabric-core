@@ -117,7 +117,7 @@ Feature: UserCards tests
     * def card =
 """
 {
-	"publisher" : "initial",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"initial",
 	"processInstanceId" : "initialCardProcess",
@@ -135,6 +135,7 @@ Feature: UserCards tests
 
 # Push card
     Given url opfabPublishCardUrl + 'cards'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card
     When method post
     Then status 201
@@ -268,7 +269,7 @@ Feature: UserCards tests
     * def card =
 """
 {
-	"publisher" : "initial",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"initial",
 	"processInstanceId" : "initialCardProcess",
@@ -287,6 +288,7 @@ Feature: UserCards tests
 
 # Push card (we update the parent card, which id is : initial.initialCardProcess)
     Given url opfabPublishCardUrl + 'cards'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card
     When method post
     Then status 201
@@ -312,7 +314,7 @@ Feature: UserCards tests
     * def card =
 """
 {
-	"publisher" : "initial",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"initial",
 	"processInstanceId" : "initialCardProcess",
@@ -330,6 +332,7 @@ Feature: UserCards tests
 
 # Push card (we update the parent card, which id is : initial.initialCardProcess)
     Given url opfabPublishCardUrl + 'cards'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card
     When method post
     Then status 201
@@ -434,6 +437,7 @@ Feature: UserCards tests
 
 # delete parent card
     Given url opfabPublishCardUrl + 'cards/initial.initialCardProcess'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
     When method delete
     Then status 200
 

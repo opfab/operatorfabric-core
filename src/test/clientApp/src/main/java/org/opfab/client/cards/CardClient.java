@@ -30,11 +30,13 @@ public class CardClient {
     @Autowired
     public RestTemplateBuilder builder;
 
-    public String postCard(String url, Card card) {
+    public String postCard(String url, String authToken, Card card) {
         RestTemplate restTemplate = builder.build();
         restTemplate.setInterceptors(List.of(new HttpClientInterceptor()));
 
-        HttpEntity<Card> request = new HttpEntity<>(card);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization","Bearer " + authToken);
+        HttpEntity<Card> request = new HttpEntity<>(card, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
         return response.getBody();
     }

@@ -22,7 +22,7 @@ then
     echo "Usage loadProcessGroups processGroups_name opfab_url"
 else
 	echo "Will load processGroups $1 on $url"
-	source ../getToken.sh $url
+	source ../getToken.sh "admin" $url
 	curl -s -X POST "$url:2100/businessconfig/processgroups" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -H "Authorization:Bearer $token" -F "file=@$1"
 	echo ""
 fi

@@ -22,7 +22,7 @@ then
     echo "Usage loadMonitoringConfig file_name opfab_url"
 else
 	echo "Will load monitoringConfig $1 on $url"
-	source ../getToken.sh $url
+	source ../getToken.sh "admin" $url
 	curl -s -v -X POST "$url:2100/businessconfig/monitoring" -H  "accept: application/json" -H "Authorization:Bearer $token" -H "Content-type:application/json" --data @$1
 	echo ""
 fi

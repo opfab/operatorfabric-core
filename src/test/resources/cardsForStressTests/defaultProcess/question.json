@@ -1,5 +1,5 @@
  {
-		"publisher" : "processAction",
+		"publisher" : "publisher_test",
 		"processVersion" : "1",
 		"process"  :"defaultProcess",
 		"processInstanceId" : $random,

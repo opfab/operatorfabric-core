@@ -14,7 +14,7 @@ Scenario: Post Card only for group Dispatcher
 * def card =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2",
@@ -30,7 +30,7 @@ Scenario: Post Card only for group Dispatcher
 
 # Push card 
 Given url opfabPublishCardUrl + 'cards' 
-
+And header Authorization = 'Bearer ' + authTokenTso1 
 And request card  
 When method post
 Then status 201
@@ -72,7 +72,7 @@ Scenario: Post Card for groups Dispatcher and Planner
 * def card =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2tso",
@@ -88,7 +88,7 @@ Scenario: Post Card for groups Dispatcher and Planner
 
 # Push card 
 Given url opfabPublishCardUrl + 'cards' 
-
+And header Authorization = 'Bearer ' + authTokenTso1 
 And request card  
 When method post
 Then status 201

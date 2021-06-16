@@ -14,6 +14,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.cards.publication.application.UnitTestApplication;
 import org.opfab.cards.publication.repositories.CardRepositoryForTest;
+import org.opfab.springtools.configuration.test.WithMockOpFabUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -36,6 +37,7 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest(classes = UnitTestApplication.class)
 @ActiveProfiles("test")
 @WebAppConfiguration
+@WithMockOpFabUser(login = "api_test", roles = { "AROLE" })
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Slf4j
 class CardControllerShould {
@@ -112,4 +114,18 @@ class CardControllerShould {
         Assertions.assertThat(cardRepository.count()).isEqualTo(1);
     }
 
+    @Test
+    void deleteCardByEndDateForNonAdminUser() throws Exception {
+        mockMvc.perform(delete("/cards?endDateBefore=1592216921")).andExpect(status().isForbidden());
+    }
+
+    @Nested
+    @WithMockOpFabUser(login="adminUser", roles = {"ADMIN"})
+    class AdminDeleteCardsByEndDate {
+        @Test
+        void deleteCardByEndDate() throws Exception {
+            mockMvc.perform(delete("/cards?endDateBefore=1592216921")).andExpect(status().isOk());
+
+        }
+    }
 }

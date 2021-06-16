@@ -12,12 +12,14 @@ package org.opfab.cards.publication.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.aop.process.mongo.models.UserActionTraceData;
+import org.opfab.cards.model.PublisherTypeEnum;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.services.CardProcessingService;
 import org.opfab.cards.publication.services.UserBasedOperationResult;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
@@ -40,11 +42,12 @@ public class CardController {
     @Autowired
     private CardProcessingService cardProcessingService;
 
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public @Valid Void createCardOld(@Valid @RequestBody CardPublicationData card) {
-        cardProcessingService.processCard(card);
+    public @Valid Void createCardOld(@Valid @RequestBody CardPublicationData card, HttpServletResponse response, Principal principal) {
+        OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
+        CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
+        cardProcessingService.processCard(card, Optional.of(user));
         return null;
     }
 
@@ -83,10 +86,14 @@ public class CardController {
     }
 
     @DeleteMapping("/{id}")
-    public Void deleteCards(@PathVariable String id, HttpServletResponse response) {
-        Optional<CardPublicationData> deletedCard = cardProcessingService.deleteCard(id);
+    public Void deleteCards(@PathVariable String id, HttpServletResponse response, Principal principal) {
+        OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
+        CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
+
+        Optional<CardPublicationData> deletedCard = cardProcessingService.deleteCard(id, user);
         if (!deletedCard.isPresent()) response.setStatus(404);
         else response.setStatus(200);
+
         return null;
     }
 

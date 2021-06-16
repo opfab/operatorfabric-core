@@ -18,7 +18,7 @@ if [ -z $1 ]
 then
     echo "Usage sendCard cardFile opfab_url"
 else
-    source ../getToken.sh $url
+    source ../getToken.sh "publisher_test" $url
     export random=$RANDOM$RANDOM$RANDOM
     export current_date_in_milliseconds_from_epoch=$(($(date +%s%N)/1000000))
     export current_date_in_milliseconds_from_epoch_plus_3minutes=$(($(date +%s%N)/1000000 + 3*60*1000))
@@ -30,5 +30,5 @@ else
     export current_date_in_milliseconds_from_epoch_plus_24hours=$(($(date +%s%N)/1000000 + 24*60*60*1000))
     export current_date_in_milliseconds_from_epoch_plus_48hours=$(($(date +%s%N)/1000000 + 48*60*60*1000))
     echo "send card $1 (url: $url)"
-    curl -X POST $url:2102/cards -H "Content-type:application/json" --data "$(envsubst <$1)"
+    curl -X POST $url:2102/cards -H "Authorization: Bearer $token" -H "Content-type:application/json" --data "$(envsubst <$1)"
 fi

@@ -11,7 +11,7 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
     * def card1 =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -28,6 +28,7 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
 
 # Push card with only entitiesAllowedToRespond set
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card1
     When method post
     Then status 201
@@ -35,7 +36,7 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
     * def card2 =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -53,6 +54,7 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
 
 # Push card with entitiesAllowedToRespond set and entitiesRequiredToRespond set to a subset of entitiesAllowedToRespond
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card2
     When method post
     Then status 201
@@ -61,7 +63,7 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
     * def card3 =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -78,6 +80,7 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
 
 # Push card with only entitiesRequiredToRespond set
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card3
     When method post
     Then status 201
@@ -85,7 +88,7 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
     * def card4 =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -103,6 +106,7 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
 
 # Push card with both properties set but with entitiesRequiredToRespond containing entities that are not in entitiesAllowedToRespond
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card4
     When method post
     Then status 201

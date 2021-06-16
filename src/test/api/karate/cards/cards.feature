@@ -13,7 +13,7 @@ Feature: Cards
     * def card =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -29,7 +29,7 @@ Feature: Cards
 
 # Push card
     Given url opfabPublishCardUrl + 'cards'
-
+	And header Authorization = 'Bearer ' + authToken
     And request card
     When method post
     Then status 201
@@ -41,7 +41,7 @@ Feature: Cards
     * def card =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -57,6 +57,7 @@ Feature: Cards
 
 # Push card
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authToken
     And request card
     When method post
     Then status 201
@@ -85,50 +86,23 @@ Feature: Cards
     Then status 200
     And def cardUid = response.uid
 
+# delete card without authentication
+    Given url opfabPublishCardUrl + 'cards/api_test.process1'
+    When method delete
+    Then status 401
+
 # delete card
     Given url opfabPublishCardUrl + 'cards/api_test.process1'
+	And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
 
 # delete card
     Given url opfabPublishCardUrl + 'cards/not_existing_card_id'
+	And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 404
 
-
-  Scenario: Post two cards in one request
-
-    * def card =
-"""
-[
-{
-	"publisher" : "api_test",
-	"processVersion" : "1",
-	"process"  :"api_test",
-	"processInstanceId" : "process2card1",
-	"state": "messageState",
-	"groupRecipients": ["Dispatcher"],
-	"severity" : "COMPLIANT",
-	"startDate" : 1553186770681,
-	"summary" : {"key" : "defaultProcess.summary"},
-	"title" : {"key" : "defaultProcess.title"},
-	"data" : {"message":"new message (card 1)"}
-},
-{
-	"publisher" : "api_test",
-	"processVersion" : "1",
-	"process"  :"api_test",
-	"processInstanceId" : "process2card2",
-	"state": "messageState",
-	"groupRecipients": ["Dispatcher"],
-	"severity" : "COMPLIANT",
-	"startDate" : 1553186770681,
-	"summary" : {"key" : "defaultProcess.summary"},
-	"title" : {"key" : "defaultProcess.title"},
-	"data" : {"message":"new message (card2) "}
-}
-]
-"""
 
 
   Scenario:  Post card with attribute externalRecipients
@@ -136,7 +110,7 @@ Feature: Cards
     * def card =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -153,6 +127,7 @@ Feature: Cards
 
 # Push card
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authToken
     And request card
     When method post
     Then status 201
@@ -170,7 +145,7 @@ Scenario:  Post card with no recipient but entityRecipients
     * def card =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2",
@@ -186,6 +161,7 @@ Scenario:  Post card with no recipient but entityRecipients
 
 # Push card
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authToken
     And request card
     When method post
     Then status 201
@@ -195,7 +171,7 @@ Scenario:  Post card with initialParentCardUid not correct
     * def card =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -212,6 +188,7 @@ Scenario:  Post card with initialParentCardUid not correct
 
 # Push card
         Given url opfabPublishCardUrl + 'cards'
+		And header Authorization = 'Bearer ' + authToken
         And request card
         When method post
         Then status 400
@@ -223,7 +200,7 @@ Scenario:  Post card with parentCardId not correct
     * def card =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -240,6 +217,7 @@ Scenario:  Post card with parentCardId not correct
 
 # Push card
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authToken
     And request card
     When method post
     Then status 400
@@ -258,7 +236,7 @@ Scenario:  Post card with correct parentCardId but initialParentCardUid not corr
     * def card =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -276,6 +254,7 @@ Scenario:  Post card with correct parentCardId but initialParentCardUid not corr
 
 # Push card
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authToken
     And request card
     When method post
     Then status 400
@@ -295,7 +274,7 @@ Scenario:  Post card with correct parentCardId and initialParentCardUid
 	* def card =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -313,6 +292,7 @@ Scenario:  Post card with correct parentCardId and initialParentCardUid
 
 # Push card
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authToken
     And request card
     When method post
     Then status 201
@@ -322,7 +302,7 @@ Scenario: Push card and its two child cards, then get the parent card
     * def parentCard =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -338,6 +318,7 @@ Scenario: Push card and its two child cards, then get the parent card
 
 # Push parent card
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authToken
     And request parentCard
     When method post
     Then status 201
@@ -354,7 +335,7 @@ Scenario: Push card and its two child cards, then get the parent card
     * def childCard1 =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" :"1",
 	"process"  :"api_test",
 	"processInstanceId" : "processChild1",
@@ -373,7 +354,7 @@ Scenario: Push card and its two child cards, then get the parent card
 	* def childCard2 =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "processChild2",
@@ -391,12 +372,14 @@ Scenario: Push card and its two child cards, then get the parent card
 
 # Push the two child cards
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authToken
     And request childCard1
     When method post
     Then status 201
 
 # Push the two child cards
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authToken
     And request childCard2
     When method post
     Then status 201
@@ -415,7 +398,7 @@ Scenario: Push a card for a user with no group and no entity
     * def cardForUserWithNoGroupNoEntity =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "processForUserWithNoGroupNoEntity",
@@ -431,6 +414,7 @@ Scenario: Push a card for a user with no group and no entity
 
 # Push card for user with no group and no entity
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authToken
     And request cardForUserWithNoGroupNoEntity
     When method post
     Then status 201
@@ -456,7 +440,7 @@ Scenario: Push card with null keepChilCards and publisherType
     * def parentCard2 =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "processKeepChildCardsNull",
@@ -474,6 +458,7 @@ Scenario: Push card with null keepChilCards and publisherType
 
 # Push parent card
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authToken
     And request parentCard2
     When method post
     Then status 201

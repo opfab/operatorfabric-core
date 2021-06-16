@@ -13,7 +13,7 @@ Feature: Delete Cards by end date before
     * def card1 =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -30,7 +30,7 @@ Feature: Delete Cards by end date before
     * def card2 =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card1",
@@ -46,7 +46,7 @@ Feature: Delete Cards by end date before
     * def card3 =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card2",
@@ -63,7 +63,7 @@ Feature: Delete Cards by end date before
     * def card4 =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card3",
@@ -79,21 +79,25 @@ Feature: Delete Cards by end date before
 
 # Push 4 card
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card1
     When method post
     Then status 201
 
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card2
     When method post
     Then status 201
 
 	Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card3
     When method post
     Then status 201
 
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card4
     When method post
     Then status 201
@@ -132,12 +136,12 @@ Feature: Delete Cards by end date before
 
 # delete remaing card
 	Given url opfabPublishCardUrl + 'cards/api_test.process2card2'
-	And header Authorization = 'Bearer ' + authToken
+	And header Authorization = 'Bearer ' + authTokenAsTSO
     When method delete
     Then status 200
 
 # delete remaing card
 	Given url opfabPublishCardUrl + 'cards/api_test.process2card3'
-	And header Authorization = 'Bearer ' + authToken
+	And header Authorization = 'Bearer ' + authTokenAsTSO
     When method delete
     Then status 200

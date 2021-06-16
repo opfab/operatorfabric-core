@@ -13,6 +13,7 @@ Scenario: Post a big Card
 
 # Push a big  card 
 Given url opfabPublishCardUrl + 'cards' 
+And header Authorization = 'Bearer ' + authToken 
 And request card  
 When method post
 Then status 201

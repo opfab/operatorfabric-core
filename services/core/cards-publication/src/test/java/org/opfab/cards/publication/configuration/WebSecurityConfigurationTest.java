@@ -11,6 +11,7 @@ package org.opfab.cards.publication.configuration;
 
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.cards.publication.configuration.oauth2.WebSecurityConfiguration;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -27,9 +28,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Slf4j
 public class WebSecurityConfigurationTest extends WebSecurityConfigurerAdapter  {
 
+    @Value("${checkAuthenticationForCardSending:true}")
+    private boolean checkAuthenticationForCardSending;
+    
     @Override
     public void configure(final HttpSecurity http) throws Exception {
-        WebSecurityConfiguration.configureCommon(http);
+        WebSecurityConfiguration.configureCommon(http, checkAuthenticationForCardSending);
         http.csrf().disable();
     }
 
