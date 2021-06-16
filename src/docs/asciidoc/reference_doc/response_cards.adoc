@@ -71,7 +71,6 @@ appropriate configuration in the config.json of the concerned process. Here is a
       "response": {
         "state": "responseState",
         "externalRecipients":["externalRecipient1", "externalRecipient2"],
-        "btnColor": "GREEN",
         "btnText": {
           "key": "question.button.text"
         }
@@ -81,6 +80,9 @@ appropriate configuration in the config.json of the concerned process. Here is a
         "style"
       ],
       "acknowledgmentAllowed": "Never"
+    },
+    "responseState" :{
+      "name" :"response.title"
     }
   }
 }
@@ -92,8 +94,6 @@ and state "questionState", the user will have the possibility to respond if he h
 - The field "state" in the response field is used to define the state to use for the response (the child card).
 - The field "externalRecipients" define the recipients of the response card. These recipients are keys referenced in
 the config file of cards-publication service, in "externalRecipients-url" element. This field is optional.
-- The field "btnColor" define the color of the submit button for the response, it is optional and there are 3
-possibilities : RED , GREEN , YELLOW
 - The field "btnText" is the i18n key of the title of the submit button, it is optional.
 
 NOTE: The state to be used for the response can also be set dynamically based on the contents of the card or the
@@ -127,7 +127,7 @@ include::../../../test/resources/bundles/defaultProcess_V1/template/en/question.
 === Define permissions
 
 To respond to a card a user must have the right privileges, it is done using "perimeters". The user must be in a group
-that is attached to a perimeter with  a right "Write" for the concerned process/state, the state being the response
+that is attached to a perimeter with  a right "ReceiveAndWrite" for the concerned process/state, the state being the response
 state defined in the config.json.
 
 Here is an example of definition of a perimeter : 
@@ -138,7 +138,7 @@ Here is an example of definition of a perimeter :
   "stateRights" : [
     {
       "state" : "responseState",
-      "right" : "Write"
+      "right" : "ReceiveAndWrite"
     }
   ]
 }
