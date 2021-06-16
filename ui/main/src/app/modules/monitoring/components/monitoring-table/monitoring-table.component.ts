@@ -26,6 +26,7 @@ import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {JsonToArray} from 'app/common/jsontoarray/json-to-array';
 import {CardService} from '@ofServices/card.service';
 import {Process} from '@ofModel/processes.model';
+import {EntitiesService} from '@ofServices/entities.service';
 
 @Component({
     selector: 'of-monitoring-table',
@@ -50,6 +51,7 @@ export class MonitoringTableComponent implements OnDestroy {
                 , private modalService: NgbModal
                 , private processesService: ProcessesService
                 , private cardService : CardService
+                , private entitiesService: EntitiesService
     ) {
         this.monitoringConfig = processesService.getMonitoringConfig();
     }
@@ -143,6 +145,8 @@ export class MonitoringTableComponent implements OnDestroy {
 
         card.childCards.forEach(childCard => {
             childCard.publishDate = this.displayTime(childCard.publishDate);
+            if (childCard.publisherType==="ENTITY") childCard.publisherName= this.entitiesService.getEntityName(childCard.publisher);
+            else childCard.publisherName = childCard.publisher;
         });
         return card;
     }
