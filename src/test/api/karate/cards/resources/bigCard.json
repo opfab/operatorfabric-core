@@ -62675,7 +62675,7 @@
         },
         "process": "APOGEESEA",
         "processInstanceId": "SEA0",
-        "publisher": "APOGEESEA",
+        "publisher": "operator1",
         "processVersion": "1",
         "groupRecipients": ["Dispatcher"],
         "severity": "ALARM",

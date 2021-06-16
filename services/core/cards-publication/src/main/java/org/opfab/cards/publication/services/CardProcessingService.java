@@ -26,6 +26,7 @@ import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -60,9 +61,30 @@ public class CardProcessingService {
     @Autowired
     private TraceRepository traceRepository;
 
+    @Value("${checkAuthenticationForCardSending:true}")
+    private boolean checkAuthenticationForCardSending;
 
     public void processCard(CardPublicationData card) {
+        processCard(card, Optional.empty());
+    }
+
+    public void processCard(CardPublicationData card, Optional<CurrentUserWithPerimeters> user) {
         if (card.getPublisherType()==null) card.setPublisherType(PublisherTypeEnum.EXTERNAL);
+
+        if (user.isPresent() && checkAuthenticationForCardSending && !checkPublisher(card, user.get().getUserData().getLogin())) {
+            if (card.getRepresentative() != null) {
+                throw new ApiErrorException(ApiError.builder()
+                        .status(HttpStatus.FORBIDDEN)
+                        .message("Card representative is set to " + card.getRepresentative() + " and account login is " + user.get().getUserData().getLogin() + ", the card cannot be sent")
+                        .build());
+            } else {
+                throw new ApiErrorException(ApiError.builder()
+                        .status(HttpStatus.FORBIDDEN)
+                        .message("Card publisher is set to " + card.getPublisher() + " and account login is " + user.get().getUserData().getLogin() + ", the card cannot be sent")
+                        .build());
+            }
+        }
+        // set empty user otherwise it will be processed as a usercard
         processOneCard(card, Optional.empty());
     }
 
@@ -96,6 +118,10 @@ public class CardProcessingService {
         return null;
     }
 
+    private void deleteCards(List<CardPublicationData> cardPublicationData) {
+        cardPublicationData.forEach(x->deleteCard(x.getId()));
+    }
+    
 
     /**
      * Apply bean validation to card
@@ -170,17 +196,42 @@ public class CardProcessingService {
         return true;
     }
 
+    boolean checkPublisher(CardPublicationData card, String login) {
+        if (card.getRepresentative() != null) {
+            if (card.getRepresentativeType().equals(PublisherTypeEnum.EXTERNAL))
+                return card.getRepresentative().equals(login);
+        } else if (card.getPublisherType().equals(PublisherTypeEnum.EXTERNAL)) {
+            return card.getPublisher().equals(login);
+        }
+        return true;
+    }
+
+    public void deleteCard(String id) {
+        CardPublicationData cardToDelete = cardRepositoryService.findCardById(id);
+        deleteCard0(cardToDelete);
+    }
 
     public void deleteCards(Instant endDateBefore) {
         cardRepositoryService.deleteCardsByEndDateBefore(endDateBefore);
     }
 
-    public void deleteCards(List<CardPublicationData> cardPublicationData) {
-        cardPublicationData.forEach(x->deleteCard(x.getId()));
-    }
-
-    public Optional<CardPublicationData> deleteCard(String id) {
+    public Optional<CardPublicationData> deleteCard(String id, CurrentUserWithPerimeters user) {
+        
         CardPublicationData cardToDelete = cardRepositoryService.findCardById(id);
+        boolean isAdmin = user.getUserData().getGroups() != null && user.getUserData().getGroups().contains("ADMIN");
+        if (cardToDelete != null && !isAdmin && checkAuthenticationForCardSending && !checkPublisher(cardToDelete, user.getUserData().getLogin())) {
+            if (cardToDelete.getRepresentative() != null) {
+                throw new ApiErrorException(ApiError.builder()
+                        .status(HttpStatus.FORBIDDEN)
+                        .message("Card representative is set to " + cardToDelete.getRepresentative() + " and account login is " + user.getUserData().getLogin() + ", the card cannot be deleted")
+                        .build());
+            } else {
+                throw new ApiErrorException(ApiError.builder()
+                        .status(HttpStatus.FORBIDDEN)
+                        .message("Card publisher is set to " + cardToDelete.getPublisher() + " and account login is " + user.getUserData().getLogin() + ", the card cannot be deleted")
+                        .build());
+            }
+        }
         return deleteCard0(cardToDelete);
     }
 

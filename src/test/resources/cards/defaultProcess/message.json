@@ -1,7 +1,7 @@
 {
 	"publisher" : "ENTITY1",
 	"publisherType": "ENTITY",
-	"representative": "OPFAB_TEST",
+	"representative": "publisher_test",
 	"representativeType": "EXTERNAL",
 	"processVersion" : "1",
 	"process"  :"defaultProcess",

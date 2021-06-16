@@ -28,6 +28,7 @@ import org.opfab.cards.publication.model.*;
 import org.opfab.cards.publication.repositories.ArchivedCardRepositoryForTest;
 import org.opfab.cards.publication.repositories.CardRepositoryForTest;
 import org.opfab.cards.publication.repositories.TraceRepositoryForTest;
+import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.*;
 import org.opfab.users.model.RightsEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -204,6 +205,19 @@ class CardProcessServiceShould {
                 .build();
     }
 
+    private CardPublicationData generateOneCard(String publisher) {
+        return CardPublicationData.builder().publisher(publisher).processVersion("O")
+        .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
+        .title(I18nPublicationData.builder().key("title").build())
+        .summary(I18nPublicationData.builder().key("summary").build())
+        .startDate(Instant.now())
+        .timeSpan(TimeSpanPublicationData.builder()
+                .start(Instant.ofEpochMilli(123l)).build())
+        .process("process1")
+        .state("state1")
+        .build();
+    }
+
     @Test
     void createCards() {
         generateCards().forEach(card -> { cardProcessingService.processCard(card); });
@@ -333,6 +347,7 @@ class CardProcessServiceShould {
         Assertions.assertThat(checkCardCount(0)).isTrue();
         Assertions.assertThat(checkArchiveCount(0)).isTrue();
     }
+
 
     @Test
     void preserveData() {
@@ -1109,4 +1124,67 @@ class CardProcessServiceShould {
         Assertions.assertThat(cardRepository.count()).isEqualTo(thereShouldBeOneCardLess);
 
     }
+
+
+
+    @Test
+    void checkUserPublisher() {
+
+        User user = new User();
+        user.setLogin("wrongUser");
+        user.setFirstName("Test");
+        user.setLastName("User");
+        CurrentUserWithPerimeters wrongUser = new CurrentUserWithPerimeters();
+        wrongUser.setUserData(user);
+
+        CardPublicationData card = generateOneCard(currentUserWithPerimeters.getUserData().getLogin());
+        card.setPublisherType(PublisherTypeEnum.EXTERNAL);
+
+        Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card, Optional.of(wrongUser)))
+        .isInstanceOf(ApiErrorException.class).hasMessage("Card publisher is set to dummyUser and account login is wrongUser, the card cannot be sent");
+        Assertions.assertThat(checkCardCount(0)).isTrue();
+
+
+        cardProcessingService.processCard(card, Optional.of(currentUserWithPerimeters));
+        Assertions.assertThat(checkCardCount(1)).isTrue();
+
+        Assertions.assertThatThrownBy(() -> cardProcessingService.deleteCard(card.getId(), wrongUser))
+            .isInstanceOf(ApiErrorException.class).hasMessage("Card publisher is set to dummyUser and account login is wrongUser, the card cannot be deleted");
+        Assertions.assertThat(checkCardCount(1)).isTrue();
+       
+        cardProcessingService.deleteCard(card.getId(), currentUserWithPerimeters);
+        Assertions.assertThat(checkCardCount(0)).isTrue();
+    }
+
+    @Test
+    void checkUserRepresentative() {
+
+        User user = new User();
+        user.setLogin("wrongUser");
+        user.setFirstName("Test");
+        user.setLastName("User");
+        CurrentUserWithPerimeters wrongUser = new CurrentUserWithPerimeters();
+        wrongUser.setUserData(user);
+
+        CardPublicationData card = generateOneCard("IGNORED_PUBLISHER");
+        card.setPublisherType(PublisherTypeEnum.EXTERNAL);
+        card.setRepresentativeType(PublisherTypeEnum.EXTERNAL);
+        card.setRepresentative(currentUserWithPerimeters.getUserData().getLogin());
+
+        Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card, Optional.of(wrongUser)))
+        .isInstanceOf(ApiErrorException.class).hasMessage("Card representative is set to dummyUser and account login is wrongUser, the card cannot be sent");
+        Assertions.assertThat(checkCardCount(0)).isTrue();
+
+
+        cardProcessingService.processCard(card, Optional.of(currentUserWithPerimeters));
+        Assertions.assertThat(checkCardCount(1)).isTrue();
+
+        Assertions.assertThatThrownBy(() -> cardProcessingService.deleteCard(card.getId(), wrongUser))
+            .isInstanceOf(ApiErrorException.class).hasMessage("Card representative is set to dummyUser and account login is wrongUser, the card cannot be deleted");
+        Assertions.assertThat(checkCardCount(1)).isTrue();
+       
+        cardProcessingService.deleteCard(card.getId(), currentUserWithPerimeters);
+        Assertions.assertThat(checkCardCount(0)).isTrue();
+    }
+
 }

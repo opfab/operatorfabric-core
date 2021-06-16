@@ -36,7 +36,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     * def cardForGroup =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "cardForGroup",
@@ -55,7 +55,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     * def cardForEntityWithoutPerimeter =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "cardForEntityWithoutPerimeter",
@@ -74,7 +74,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     * def cardForEntityAndPerimeter =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"process1",
 	"processInstanceId" : "cardForEntityAndPerimeter",
@@ -93,7 +93,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     * def cardForEntityAndGroup =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "cardForEntityAndGroup",
@@ -113,7 +113,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     * def cardForEntityAndOtherGroupAndPerimeter =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"process1",
 	"processInstanceId" : "cardForEntityAndOtherGroupAndPerimeter",
@@ -150,6 +150,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 
   Scenario: Push the card 'cardForGroup'
     Given url opfabPublishCardUrl + 'cards'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
     And request cardForGroup
     When method post
     Then status 201
@@ -157,6 +158,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 
   Scenario: Push the card 'cardForEntityWithoutPerimeter'
     Given url opfabPublishCardUrl + 'cards'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
     And request cardForEntityWithoutPerimeter
     When method post
     Then status 201
@@ -164,6 +166,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 
   Scenario: Push the card 'cardForEntityAndPerimeter'
     Given url opfabPublishCardUrl + 'cards'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
     And request cardForEntityAndPerimeter
     When method post
     Then status 201
@@ -171,6 +174,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 
   Scenario: Push the card 'cardForEntityAndGroup'
     Given url opfabPublishCardUrl + 'cards'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
     And request cardForEntityAndGroup
     When method post
     Then status 201
@@ -178,6 +182,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 
   Scenario: Push the card 'cardForEntityAndOtherGroupAndPerimeter'
     Given url opfabPublishCardUrl + 'cards'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
     And request cardForEntityAndOtherGroupAndPerimeter
     When method post
     Then status 201

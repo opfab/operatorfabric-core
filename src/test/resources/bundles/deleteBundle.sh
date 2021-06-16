@@ -22,7 +22,7 @@ then
     echo "Usage deleteBundle bundle_name opfab_url"
 else
 	echo "Will delete bundle $1 on $url"
-	source ../getToken.sh $url
+	source ../getToken.sh "admin" $url
 	curl -s -X DELETE "$url:2100/businessconfig/processes/$1" -H "Authorization:Bearer $token"
 	echo ""
 fi

@@ -8,17 +8,22 @@
 # SPDX-License-Identifier: MPL-2.0
 # This file is part of the OperatorFabric project.
 
+username=$1 
+if [[ -z $username ]]
+then
+	username="admin"
+fi
 
-url=$1 
+url=$2 
 if [[ -z $url ]]
 then
 	url="http://localhost"
 fi
 
-echo "Get token on $url"
+echo "Get token for user $username on $url"
 
 access_token_pattern='"access_token":"([^"]+)"'
-response=$(curl -s -X POST -d "username=admin&password=test&grant_type=password&client_id=opfab-client" $url:2002/auth/token)
+response=$(curl -s -X POST -d "username="$username"&password=test&grant_type=password&client_id=opfab-client" $url:2002/auth/token)
 if [[ $response =~ $access_token_pattern ]] ; then
 	export token=${BASH_REMATCH[1]}
 fi

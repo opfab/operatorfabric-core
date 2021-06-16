@@ -10,7 +10,7 @@ Feature: Archives
     * def card1 =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card1",
@@ -28,7 +28,7 @@ Feature: Archives
 	* def card2 =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card2",
@@ -45,7 +45,7 @@ Feature: Archives
 	* def card3 =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card3",
@@ -63,7 +63,7 @@ Feature: Archives
 	* def card4 =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card4",
@@ -81,7 +81,7 @@ Feature: Archives
 	* def card5 =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card5",
@@ -99,7 +99,7 @@ Feature: Archives
 	* def card6 =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card6",
@@ -118,7 +118,7 @@ Feature: Archives
 	* def card7 =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card7",
@@ -136,7 +136,7 @@ Feature: Archives
 	* def card8 =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card8",
@@ -154,7 +154,7 @@ Feature: Archives
 	* def card9 =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card9",
@@ -173,7 +173,7 @@ Feature: Archives
 	* def card10 =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"parentCardId" : "api_test.process2card9",
 	"process"  :"api_test",
@@ -192,7 +192,7 @@ Feature: Archives
     * def mycard =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "2",
 	"process"  :"api_test",
 	"processInstanceId" : "process10",
@@ -211,51 +211,61 @@ Feature: Archives
 """
 # Push cards
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card1
     When method post
     Then status 201
 
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card2
     When method post
     Then status 201
 
 	Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card3
     When method post
     Then status 201
 
 	Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card4
     When method post
     Then status 201
 
 	Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card5
     When method post
     Then status 201
 
 	Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card6
     When method post
     Then status 201
 
 	Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card7
     When method post
     Then status 201
 
 	Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card8
     When method post
     Then status 201
 
 	Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card9
     When method post
     Then status 201
 
 	Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card10
     When method post
     Then status 201
@@ -279,14 +289,14 @@ Feature: Archives
 
     Scenario: filter on a given publisher
 
-    Given url opfabUrl + 'cards/archives/' +'?publisher=api_test'
+    Given url opfabUrl + 'cards/archives/' +'?publisher=operator1'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
     And assert response.numberOfElements == 9
 
    Scenario: without authentication
-    Given url opfabUrl + 'cards/archives/' +'?publisher=api_test'
+    Given url opfabUrl + 'cards/archives/' +'?publisher=operator1'
     When method get
     Then status 401
 

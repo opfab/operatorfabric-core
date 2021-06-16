@@ -21,7 +21,7 @@ if [ -z $1 ] || [ -z $2 ]
 then
     echo "Usage : addPerimeterToGroup perimeter_id group_id opfab_url"
 else
-    source ../getToken.sh $url
+    source ../getToken.sh "admin" $url
     echo "Add perimeter $1 to group $2"
     curl -X PATCH $url:2002/users/groups/$2/perimeters -H "Content-type:application/json" -H "Authorization:Bearer $token" --data "[\"$1\"]"
 fi

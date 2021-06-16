@@ -10,13 +10,13 @@ Feature: Client ip control
     * def userServiceUrl = opfabUserUrl + 'users/user_test_api_1'
     * def businessConfigServiceUrl = opfabBusinessConfigUrl + 'businessconfig/processes/'
     * def cardsConsultationServiceUrl = opfabCardsConsultationUrl + 'cardSubscription' + '?notification=false&clientId=abc0123456789def'
-    * def cardsPublicationServiceUrl = opfabCardsPublicationUrl + 'cards/userCard'
+    * def userCardsPublicationServiceUrl = opfabCardsPublicationUrl + 'cards/userCard'
+    * def cardsPublicationServiceUrl = opfabCardsPublicationUrl + 'cards'
 
     * def nginxUserServiceUrl = opfabUrl + 'users/users/user_test_api_1'
     * def nginxBusinessConfigServiceUrl = opfabUrl + 'businessconfig/processes/'
     * def nginxCardsConsultationServiceUrl = opfabUrl + 'cards/cardSubscription' + '?notification=false&clientId=abc0123456789def'
-    * def nginxCardsPublicationServiceUrl = opfabUrl + '/cardspub/cards/userCard'
-
+    * def nginxUserCardsPublicationServiceUrl = opfabUrl + '/cardspub/cards/userCard'
 
     * def userAuthorizedIPAddressesUpdate =
 """
@@ -88,6 +88,24 @@ Feature: Client ip control
 
 """
 
+  * def card1 =
+  """
+  {
+    "publisher" : "user_test_api_1",
+    "processVersion" : "1",
+    "process"  :"process_1",
+    "processInstanceId" : "initialCardProcess1",
+    "state": "state1",
+    "entityRecipients" : ["ENTITY1"],
+    "severity" : "INFORMATION",
+    "startDate" : 1553186770681,
+    "summary" : {"key" : "defaultProcess.summary"},
+    "title" : {"key" : "defaultProcess.title"},
+    "data" : {"message":"a message"}
+  }
+  
+  """
+
   Scenario: create or update user with 2 authorized ip addresses
 
     Given url opfabUrl + 'users/users/user_test_api_1'
@@ -135,15 +153,6 @@ Feature: Client ip control
 
 
 
-
-# Push card
-    Given url opfabPublishCardUrl + 'cards'
-    And request card
-    When method post
-    Then status 201
-
-
-
   Scenario Outline: Check direct calls from unauthorized ip are refused
 
     Given url <url>
@@ -157,7 +166,8 @@ Feature: Client ip control
     | url                          | method | request | expected  |
     | userServiceUrl               | get    | ''      | 403       |
     | businessConfigServiceUrl     | get    | ''      | 403       |
-    | cardsPublicationServiceUrl   | post   | card    | 403       |
+    | userCardsPublicationServiceUrl   | post   | card    | 403       |
+    | cardsPublicationServiceUrl   | post   | card1    | 403       |
     | cardsConsultationServiceUrl  | get    | ''      | 403       |
 
 
@@ -174,7 +184,8 @@ Scenario Outline: Check direct calls from authorized ip are accepted
     | url                          | method | request | expected  |
     | userServiceUrl               | get    | ''      | 200       |
     | businessConfigServiceUrl     | get    | ''      | 200       |
-    | cardsPublicationServiceUrl   | post   | card    | 201       |
+    | userCardsPublicationServiceUrl   | post   | card    | 201       |
+    | cardsPublicationServiceUrl   | post   | card1   | 201       |
     | cardsConsultationServiceUrl  | get    | ''      | 200       |
 
 
@@ -188,11 +199,11 @@ Scenario Outline: Check direct calls from authorized ip are accepted
     Then status <expected>
 
     Examples:
-    | url                          | method | request | expected  |
-    | nginxUserServiceUrl               | get    | ''      | 403       |
-    | nginxBusinessConfigServiceUrl     | get    | ''      | 403       |
-    | nginxCardsPublicationServiceUrl   | post   | card    | 403       |
-    | nginxCardsConsultationServiceUrl  | get    | ''      | 403       |
+    | url                                   | method | request | expected  |
+    | nginxUserServiceUrl                   | get    | ''      | 403       |
+    | nginxBusinessConfigServiceUrl         | get    | ''      | 403       |
+    | nginxUserCardsPublicationServiceUrl   | post   | card    | 403       |
+    | nginxCardsConsultationServiceUrl      | get    | ''      | 403       |
 
 
 
@@ -216,11 +227,12 @@ Scenario Outline: Check direct calls are accepted
     Then status <expected>
 
     Examples:
-    | url                          | method | request | expected  |
-    | userServiceUrl               | get    | ''      | 200       |
-    | businessConfigServiceUrl     | get    | ''      | 200       |
-    | cardsPublicationServiceUrl   | post   | card    | 201       |
-    | cardsConsultationServiceUrl  | get    | ''      | 200       |
+    | url                               | method | request | expected  |
+    | userServiceUrl                    | get    | ''      | 200       |
+    | businessConfigServiceUrl          | get    | ''      | 200       |
+    | userCardsPublicationServiceUrl    | post   | card    | 201       |
+    | cardsPublicationServiceUrl        | post   | card1   | 201       |
+    | cardsConsultationServiceUrl       | get    | ''      | 200       |
 
 
   Scenario Outline: Check calls through nginx are accepted
@@ -232,11 +244,11 @@ Scenario Outline: Check direct calls are accepted
     Then status <expected>
 
     Examples:
-    | url                          | method | request | expected  |
-    | nginxUserServiceUrl               | get    | ''      | 200       |
-    | nginxBusinessConfigServiceUrl     | get    | ''      | 200       |
-    | nginxCardsPublicationServiceUrl   | post   | card    | 201       |
-    | nginxCardsConsultationServiceUrl  | get    | ''      | 200       |
+    | url                                   | method | request | expected  |
+    | nginxUserServiceUrl                   | get    | ''      | 200       |
+    | nginxBusinessConfigServiceUrl         | get    | ''      | 200       |
+    | nginxUserCardsPublicationServiceUrl   | post   | card    | 201       |
+    | nginxCardsConsultationServiceUrl      | get    | ''      | 200       |
 
 
     Scenario: delete user card, expected response 200

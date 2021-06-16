@@ -21,7 +21,7 @@ if [ -z $1 ]
 then
     echo "Usage deletePerimeter perimeter_name opfab_url"
 else
-    source ../getToken.sh $url
+    source ../getToken.sh "admin" $url
     echo "delete perimeter $1 on $url "
     curl -X DELETE $url:2103/perimeters/$1 -H "Authorization:Bearer $token"
     echo ""

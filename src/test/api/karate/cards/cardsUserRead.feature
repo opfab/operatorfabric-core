@@ -13,7 +13,7 @@ Feature: CardsUserRead
     * def card =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -31,7 +31,7 @@ Feature: CardsUserRead
 
 # Push card
     Given url opfabPublishCardUrl + 'cards'
-    #And header Authorization = 'Bearer ' + authToken
+    And header Authorization = 'Bearer ' + authToken
     And request card
     When method post
     Then status 201
@@ -120,5 +120,6 @@ Feature: CardsUserRead
 
     delete card
     Given url opfabPublishCardUrl + 'cards/api_test.process1'
+    And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200

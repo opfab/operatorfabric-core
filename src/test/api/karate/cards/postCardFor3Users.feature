@@ -16,7 +16,7 @@ Scenario: Post Card
       startDate = new Date().valueOf() + 2*60*60*1000;
 
 		var card = {
-				"publisher" : "api_test",
+				"publisher" : "operator1",
 				"processVersion" : "1",
 				"process"  :"api_test",
 				"processInstanceId" : "process3users",
@@ -39,7 +39,7 @@ Scenario: Post Card
 
 # Push card 
 Given url opfabPublishCardUrl + 'cards' 
-
+And header Authorization = 'Bearer ' + authToken 
 And request card  
 And header Content-Type = 'application/json'
 When method post
