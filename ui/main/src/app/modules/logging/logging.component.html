@@ -6,21 +6,104 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div >
-        <of-logging-filters [visibleProcesses]="processValueForFilter"></of-logging-filters>
+
+<div class="logging-page">
+    <form [formGroup]="loggingForm" #currentForm>
+      <div class="opfab-logging">
+        <div style="display: flex;">
+
+          <of-archives-logging-filters [parentForm]="loggingForm" [visibleProcesses]="listOfProcessesForFilter" #filters></of-archives-logging-filters>
+
+          <div class="opfab-vertical-bar"></div>
+          <div class="opfab-publish-date">
+            <div>
+              <of-datetime-filter filterPath="publishDateFrom" formControlName="publishDateFrom"
+                labelKey="logging.filters."></of-datetime-filter>
+            </div>
+            <div>
+              <of-datetime-filter filterPath="publishDateTo" formControlName="publishDateTo"
+                labelKey="logging.filters."></of-datetime-filter>
+            </div>
+          </div>
+
+          <div class="opfab-vertical-bar"></div>
+          <div style="margin-left:40px;width:230px;min-width: 230px;">
+            <div>
+              <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom" labelKey="logging.filters.">
+              </of-datetime-filter>
+            </div>
+            <div>
+              <of-datetime-filter filterPath="activeTo" formControlName="activeTo" labelKey="logging.filters.">
+              </of-datetime-filter>
+            </div>
+          </div>
+          <div  class="opfab-buttons">
+            <button id="opfab-logging-btn-search" class="opfab-btn"  (click)='sendQuery(0)' translate> button.search</button>
+            <button id="opfab-logging-btn-reset" class="opfab-btn-cancel" style="margin-top:50px" (click)='resetForm()' translate> button.reset</button>
+          </div>
+        </div>
+      </div>
+
+    </form>
 </div>
 
-<div style="height:5%">
 
+<div style="height:5%"> </div>
+<div *ngIf=" hasResult" style="margin-left:5%;margin-right:5%">
+  <div class="opfab-table">
+    <table aria-describedby="Archive results table">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col" style="padding-left: 5px" translate>logging.result.timeOfAction</th>
+          <th *ngIf="filtersTemplate.displayProcessGroupFilter()" scope="col" translate>logging.result.processGroup</th>
+          <th scope="col" translate>logging.result.process</th>
+          <th scope="col" translate>logging.result.title</th>
+          <th scope="col" translate>logging.result.summary</th>
+          <th scope="col" translate>logging.result.description</th>
+          <th scope="col" translate>logging.result.sender</th>
+        </tr>
+      </thead>
+
+      <tr *ngFor="let card of results">
+        <td class="opfab-logging-sev opfab-logging-sev-{{card.severity.toLowerCase()}}"></td>
+        <td style="padding-left: 5px"> {{displayTime(card.publishDate)}} </td>
+        <td *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>{{ processesService.findProcessGroupLabelForProcess(card.process) }}</td>
+        <td translate>{{card.processName}}</td>
+        <td translate [translateParams]="card.title.parameters">
+          {{ card.process + '.' + card.processVersion + '.' + card.title.key}}
+        </td>
+        <td translate [translateParams]="card.summary.parameters">
+          {{ card.process + '.' + card.processVersion + '.' + card.summary.key}}
+        </td>
+        <td *ngIf="card.stateColor" translate style="color:{{card.stateColor}}" >{{processStateDescription.get(card.process + '.' + card.state)}}
+        </td>
+        <td *ngIf="!card.stateColor" translate>{{processStateDescription.get(card.process + '.' + card.state)}}
+        </td>
+        <td *ngIf="!card.representative.length; else representativeBlock">{{card.sender}}</td>
+        <ng-template #representativeBlock><td>{{card.sender}} ({{card.representative}})</td></ng-template>
+      </tr>
+    </table>
+    <div class="opfab-logging-pagination">
+      <div style="white-space: nowrap;margin-top:17px">
+        <span translate> logging.resultsNumber </span> : {{resultsNumber}}
+      </div>
+      <div style="width:40%;margin-top:5px">
+        <ngb-pagination *ngIf="resultsNumber > size" [collectionSize]="resultsNumber"
+          [page]="currentPage" [pageSize]="size" (pageChange)="updateResultPage($event)" [maxSize]="3" [rotate]="true">
+        </ngb-pagination>
+      </div>
+      <div style="width:50%;text-align:right;padding-right:8px;">
+        <div id="opfab-logging-btn-exportToExcel" style="float: right;cursor:pointer" (click)="exportToExcel()" fileName="loggingResults" >
+          <span class="opfab-icon-export-data"></span>
+          <span style="font-weight: bold;" translate>logging.exportToExcel</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div  *ngIf="(loggingResult$|async) as line ; else noResult" style="margin-left:5%;margin-right:5%">
-    <of-logging-table [results]="line"
-                      [processStateDescription]="processStateDescription"
-                      [displayProcessGroupColumn]="this.filters.filtersTemplate.displayProcessGroupFilter()">
-    </of-logging-table>
+<div *ngIf="firstQueryHasBeenDone&&!hasResult" style="text-align: center;font-size: 20px;" translate>logging.noResult
 </div>
 
-<ng-template #noResult>
-    <div class="alert alert-info" *ngIf="canDisplayNoResultMessage" translate>logging.noResult</div>
-</ng-template>
+

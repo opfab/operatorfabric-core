@@ -162,17 +162,24 @@
   },
   "logging": {
     "filters": {
-      "process": "PROCESSUS"
+      "publishDateFrom": "PUBLIE A PARTIR DE",
+      "publishDateTo": "PUBLIE JUSQU'A",
+      "activeFrom": "ACTIVE A PARTIR DE",
+      "activeTo": "ACTIVE JUSQU'A"
     },
-    "timeOfAction": "MOMENT DE L'ACTION",
-    "title": "TITRE",
-    "summary": "RESUME",
-    "description": "DESCRIPTION",
-    "sender": "EMETTEUR",
-    "process" : "PROCESSUS",
-    "processGroup": "SERVICE",
+    "result": { 
+      "severity": "SEVERITE",
+      "timeOfAction": "MOMENT DE L'ACTION",
+      "title": "TITRE",
+      "summary": "RESUME",
+      "description": "DESCRIPTION",
+      "sender": "EMETTEUR",
+      "process" : "PROCESSUS",
+      "processGroup": "SERVICE",
+      "representative": "MANDATAIRE"
+    },
     "noResult": "Votre recherche ne correspond à aucun résultat.",
-    "ExportTOExcel": "Exporter les données",
+    "exportToExcel": "Exporter les données",
     "resultsNumber":"Nombre de résultats"
   },
   "monitoring": {

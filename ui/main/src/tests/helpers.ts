@@ -36,8 +36,7 @@ export const emptyAppState4Test: AppState = {
     settings: null,
     user:null,
     cardsSubscription:null,
-    globalStyle: null,
-    logging: null
+    globalStyle: null
 };
 
 export const AuthenticationImportHelperForSpecs = [AuthenticationService,

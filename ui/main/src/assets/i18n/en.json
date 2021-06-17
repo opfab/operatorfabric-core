@@ -163,17 +163,24 @@
   },
   "logging": {
     "filters": {
-      "process": "PROCESS"
+      "publishDateFrom": "PUBLISH FROM",
+      "publishDateTo": "PUBLISH TO",
+      "activeFrom": "ACTIVE FROM",
+      "activeTo": "ACTIVE TO"
     },
-    "timeOfAction": "TIME OF ACTION",
-    "title": "TITLE",
-    "summary": "SUMMARY",
-    "description": "DESCRIPTION",
-    "sender": "ACTOR",
-    "process" : "PROCESS",
-    "processGroup": "SERVICE",
+    "result": {
+      "severity": "SEVERITY",
+      "timeOfAction": "TIME OF ACTION",
+      "title": "TITLE",
+      "summary": "SUMMARY",
+      "description": "DESCRIPTION",
+      "sender": "ACTOR",
+      "process" : "PROCESS",
+      "processGroup": "SERVICE",
+      "representative": "REPRESENTATIVE"
+    },
     "noResult": "Your search did not match any results.",
-    "ExportTOExcel": "Export data",
+    "exportToExcel": "Export data",
     "resultsNumber":"Results number"
   },
   "monitoring": {

@@ -18,7 +18,6 @@ import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {Card} from '@ofModel/card.model';
 import {select, Store} from '@ngrx/store';
-import {selectLinesOfLoggingResult} from '@ofStore/selectors/logging.selectors';
 import {AppState} from '@ofStore/index';
 import {selectLastCardLoaded} from '@ofStore/selectors/feed.selectors';
 import {Utilities} from '../common/utilities';
@@ -45,7 +44,6 @@ export class ProcessesService {
         this.processesUrl = `${environment.urls.processes}`;
         this.processGroupsUrl = `${environment.urls.processGroups}`;
         this.monitoringConfigUrl = `${environment.urls.monitoringConfig}`;
-        this.loadTranslationIfNeededAfterLoadingLoggingCard();
         this.loadTranslationIfNeededAfterLoadingCard();
     }
 
@@ -55,13 +53,6 @@ export class ProcessesService {
             .subscribe(card => { if (!!card) this.loadTranslationsForProcess(card.process, card.processVersion)});
     }
 
-
-    private loadTranslationIfNeededAfterLoadingLoggingCard() {
-        this.store.pipe(
-            select(selectLinesOfLoggingResult))
-            .subscribe(lines => lines.forEach(loggingResult =>
-                this.loadTranslationsForProcess(loggingResult.process, loggingResult.processVersion)));
-    }
 
     public loadTranslationsForProcess(process, version) {
         this.translateService.getLangs().forEach(

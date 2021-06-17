@@ -7,37 +7,37 @@
  * This file is part of the OperatorFabric project.
  */
 
+
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {LoggingComponent} from './logging.component';
 import {CardsModule} from '../cards/cards.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {LoggingTableComponent} from './components/logging-table/logging-table.component';
-import {LoggingComponent} from './logging.component';
-import {LoggingFiltersComponent} from './components/logging-filters/logging-filters.component';
-import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
-import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
+import {DatetimeFilterModule} from '../share/datetime-filter/datetime-filter.module';
+import {MultiFilterModule} from 'app/modules/share/multi-filter/multi-filter.module';
+import {CardDetailModule} from 'app/modules/share/card-detail/card-detail.module';
+import {LoggingEntryPointComponent} from './logging-entry-point.component';
 import {ArchivesLoggingFiltersModule} from "../share/archives-logging-filters/archives-logging-filters.module";
 
-
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        CardsModule,
-        TranslateModule,
-        NgbModule,
-        DatetimeFilterModule,
-        MultiFilterModule,
-        ArchivesLoggingFiltersModule
-    ],
-    declarations: [
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    CardsModule,
+    TranslateModule,
+    NgbModule,
+    DatetimeFilterModule,
+    MultiFilterModule,
+    CardDetailModule,
+    ArchivesLoggingFiltersModule
+
+  ],
+  declarations: [
     LoggingComponent,
-    LoggingTableComponent,
-    LoggingFiltersComponent
-]
+    LoggingEntryPointComponent
+  ]
 })
-export class LoggingModule {
-}
+export class LoggingModule { }
