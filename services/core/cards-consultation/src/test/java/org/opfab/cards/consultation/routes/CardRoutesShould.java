@@ -90,7 +90,7 @@ public class CardRoutesShould {
             Instant now = roundingToMillis(Instant.now());
 
             CardConsultationData simpleCard = instantiateOneCardConsultationData();
-            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
+            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null, "PROCESS", "anyState");
 
             StepVerifier.create(repository.save(simpleCard))
                     .expectNextCount(1)
@@ -112,7 +112,7 @@ public class CardRoutesShould {
         public void findOutCardByUserWithHisOwnAck(){
         	Instant now = Instant.now();
         	CardConsultationData simpleCard = instantiateOneCardConsultationData();
-            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
+            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null, "PROCESS", "anyState");
             simpleCard.setUsersAcks(Arrays.asList("userWithGroup","some-operator"));
             StepVerifier.create(repository.save(simpleCard))
             .expectNextCount(1)
@@ -130,7 +130,7 @@ public class CardRoutesShould {
         public void findOutCardByUserWithoutHisOwnAck(){
         	Instant now = Instant.now();
         	CardConsultationData simpleCard = instantiateOneCardConsultationData();
-            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
+            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null, "PROCESS", "anyState");
             simpleCard.setUsersAcks(Arrays.asList("any-operator","some-operator"));
             StepVerifier.create(repository.save(simpleCard))
             .expectNextCount(1)
@@ -150,7 +150,7 @@ public class CardRoutesShould {
         	CardConsultationData simpleCard = instantiateOneCardConsultationData();
         	simpleCard.setParentCardId(null);
             simpleCard.setInitialParentCardUid(null);
-            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
+            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null, "PROCESS", "anyState");
             StepVerifier.create(repository.save(simpleCard))
             .expectNextCount(1)
             .expectComplete()
@@ -167,7 +167,7 @@ public class CardRoutesShould {
         public void findOutCardByUserWithHisOwnRead(){
         	Instant now = Instant.now();
         	CardConsultationData simpleCard = instantiateOneCardConsultationData();
-            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
+            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null, "PROCESS", "anyState");
             simpleCard.setUsersReads(Arrays.asList("userWithGroup","some-operator"));
             StepVerifier.create(repository.save(simpleCard))
             .expectNextCount(1)
@@ -185,7 +185,7 @@ public class CardRoutesShould {
         public void findOutCardByUserWithoutHisOwnRead(){
         	Instant now = Instant.now();
         	CardConsultationData simpleCard = instantiateOneCardConsultationData();
-            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
+            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null, "PROCESS", "anyState");
             simpleCard.setUsersReads(Arrays.asList("any-operator","some-operator"));
             StepVerifier.create(repository.save(simpleCard))
             .expectNextCount(1)
@@ -205,7 +205,7 @@ public class CardRoutesShould {
         	CardConsultationData simpleCard = instantiateOneCardConsultationData();
         	simpleCard.setParentCardId(null);
             simpleCard.setInitialParentCardUid(null);
-            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
+            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null, "PROCESS", "anyState");
             StepVerifier.create(repository.save(simpleCard))
             .expectNextCount(1)
             .expectComplete()
@@ -248,27 +248,27 @@ public class CardRoutesShould {
 
             CardConsultationData simpleCard1 = instantiateOneCardConsultationData();
             configureRecipientReferencesAndStartDate(simpleCard1, "", now,
-                    new String[]{"OTHER_GROUP", "SOME_GROUP"}, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must receive
+                    new String[]{"OTHER_GROUP", "SOME_GROUP"}, new String[]{"OTHER_ENTITY", "SOME_ENTITY"}, "PROCESS", "anyState");//must receive
 
             CardConsultationData simpleCard2 = instantiateOneCardConsultationData();
             configureRecipientReferencesAndStartDate(simpleCard2, "", now,
-                    new String[]{"OTHER_GROUP", "SOME_GROUP"}, new String[]{"OTHER_ENTITY"});//must not receive
+                    new String[]{"OTHER_GROUP", "SOME_GROUP"}, new String[]{"OTHER_ENTITY"}, "PROCESS", "anyState");//must not receive
 
             CardConsultationData simpleCard3 = instantiateOneCardConsultationData();
             configureRecipientReferencesAndStartDate(simpleCard3, "", now,
-                    new String[]{"OTHER_GROUP"}, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must not receive
+                    new String[]{"OTHER_GROUP"}, new String[]{"OTHER_ENTITY", "SOME_ENTITY"}, "PROCESS", "anyState");//must not receive
 
             CardConsultationData simpleCard4 = instantiateOneCardConsultationData();
             configureRecipientReferencesAndStartDate(simpleCard4, "", now,
-                    new String[]{"OTHER_GROUP", "SOME_GROUP"}, null);//must receive
+                    new String[]{"OTHER_GROUP", "SOME_GROUP"}, null, "PROCESS", "anyState");//must receive
 
             CardConsultationData simpleCard5 = instantiateOneCardConsultationData();
             configureRecipientReferencesAndStartDate(simpleCard5, "", now,
-                    null, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must not receive (because the user doesn't have the right for process/state)
+                    null, new String[]{"OTHER_ENTITY", "SOME_ENTITY"}, null, null);//must not receive (because the user doesn't have the right for process/state)
 
             CardConsultationData simpleCard6 = instantiateOneCardConsultationData();
             configureRecipientReferencesAndStartDate(simpleCard6, "", now,
-                    null, null);//must not receive
+                    null, null, null, null);//must not receive
 
             StepVerifier.create(repository.save(simpleCard1))
                     .expectNextCount(1)
@@ -341,19 +341,19 @@ public class CardRoutesShould {
             CardConsultationData parentCard = instantiateOneCardConsultationData();
             parentCard.setUid("parentUid");
             parentCard.setId(parentCard.getId() + "1");
-            configureRecipientReferencesAndStartDate(parentCard, "userWithGroupAndEntity", now, new String[] {"SOME_GROUP"}, null);
+            configureRecipientReferencesAndStartDate(parentCard, "userWithGroupAndEntity", now, new String[] {"SOME_GROUP"}, null, "PROCESS", "anyState");
 
             CardConsultationData childCard1 = instantiateOneCardConsultationData();
             childCard1.setParentCardId(parentCard.getId());
             childCard1.setInitialParentCardUid("parentUid");
             childCard1.setId(childCard1.getId() + "2");
-            configureRecipientReferencesAndStartDate(childCard1, "userWithGroupAndEntity", now, new String[] {"SOME_GROUP"}, null);
+            configureRecipientReferencesAndStartDate(childCard1, "userWithGroupAndEntity", now, new String[] {"SOME_GROUP"}, null, null, null);
 
             CardConsultationData childCard2 = instantiateOneCardConsultationData();
             childCard2.setParentCardId(parentCard.getId());
             childCard2.setInitialParentCardUid("parentUid");
             childCard2.setId(childCard2.getId() + "3");
-            configureRecipientReferencesAndStartDate(childCard2, "userWithGroupAndEntity", now, new String[] {"SOME_GROUP"}, null);
+            configureRecipientReferencesAndStartDate(childCard2, "userWithGroupAndEntity", now, new String[] {"SOME_GROUP"}, null, null, null);
 
             StepVerifier.create(repository.saveAll(Arrays.asList(parentCard, childCard1, childCard2)))
                     .expectNextCount(3)
@@ -377,7 +377,7 @@ public class CardRoutesShould {
             CardConsultationData parentCard = instantiateOneCardConsultationData();
             parentCard.setUid("parentUid");
             parentCard.setId(parentCard.getId() + "1");
-            configureRecipientReferencesAndStartDate(parentCard, "userWithGroupAndEntity", now, new String[] {"SOME_GROUP"}, null);
+            configureRecipientReferencesAndStartDate(parentCard, "userWithGroupAndEntity", now, new String[] {"SOME_GROUP"}, null, "PROCESS", "anyState");
 
             StepVerifier.create(repository.save(parentCard))
                     .expectNextCount(1)

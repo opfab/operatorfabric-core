@@ -1,0 +1,10 @@
+{
+  "id" : "questionReceiveOnly",
+  "process" : "defaultProcess",
+  "stateRights" : [
+    {
+      "state" : "questionState",
+      "right" : "Receive"
+    }
+  ]
+}

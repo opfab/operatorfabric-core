@@ -5,8 +5,10 @@ Feature: CardsUserAcknowledgement
 
     * def signIn = callonce read('../common/getToken.feature') { username: 'operator1'}
     * def authToken = signIn.authToken
-    * def signIn2 = callonce read('../common/./getToken.feature') { username: 'operator2'}
+    * def signIn2 = callonce read('../common/getToken.feature') { username: 'operator2'}
     * def authToken2 = signIn2.authToken
+    * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
+    * def authTokenAdmin = signInAdmin.authToken
 
     Scenario: CardsUserAcknowledgement
 
@@ -27,7 +29,40 @@ Feature: CardsUserAcknowledgement
 }
 """
 
-    
+        * def perimeter =
+"""
+{
+  "id" : "perimeter",
+  "process" : "api_test",
+  "stateRights" : [
+      {
+        "state" : "messageState",
+        "right" : "Receive"
+      }
+    ]
+}
+"""
+
+        * def perimeterArray =
+"""
+[   "perimeter"
+]
+"""
+
+#Create new perimeter
+    Given url opfabUrl + 'users/perimeters'
+    And header Authorization = 'Bearer ' + authTokenAdmin
+    And request perimeter
+    When method post
+    Then status 201
+
+#Attach perimeter to group
+    Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
+    And header Authorization = 'Bearer ' + authTokenAdmin
+    And request perimeterArray
+    When method patch
+    Then status 200
+
 
 # Push card
     Given url opfabPublishCardUrl + 'cards'
@@ -130,5 +165,11 @@ Feature: CardsUserAcknowledgement
     delete card
     Given url opfabPublishCardUrl + 'cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
+    When method delete
+    Then status 200
+
+  #delete perimeter created previously
+    Given url opfabUrl + 'users/perimeters/perimeter'
+    And header Authorization = 'Bearer ' + authTokenAdmin
     When method delete
     Then status 200

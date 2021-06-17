@@ -5,6 +5,8 @@ Feature: Archives
 
     * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
+    * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
+    * def authTokenAdmin = signInAdmin.authToken
 
   Scenario: Post 10 cards, fill the archive
     * def card1 =
@@ -209,6 +211,40 @@ Feature: Archives
     	]
 }
 """
+
+    * def perimeter =
+"""
+{
+  "id" : "perimeter",
+  "process" : "api_test",
+  "stateRights" : [
+      {
+        "state" : "messageState",
+        "right" : "Receive"
+      }
+    ]
+}
+"""
+    * def perimeterArray =
+"""
+[   "perimeter"
+]
+"""
+
+#Create new perimeter
+    Given url opfabUrl + 'users/perimeters'
+    And header Authorization = 'Bearer ' + authTokenAdmin
+    And request perimeter
+    When method post
+    Then status 201
+
+#Attach perimeter to group
+    Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
+    And header Authorization = 'Bearer ' + authTokenAdmin
+    And request perimeterArray
+    When method patch
+    Then status 200
+
 # Push cards
     Given url opfabPublishCardUrl + 'cards'
 	And header Authorization = 'Bearer ' + authTokenAsTSO
@@ -361,3 +397,9 @@ Feature: Archives
     When method get
     Then status 200
     And assert response.numberOfElements == 9
+
+  #delete perimeter created previously
+    Given url opfabUrl + 'users/perimeters/perimeter'
+    And header Authorization = 'Bearer ' + authTokenAdmin
+    When method delete
+    Then status 200

@@ -14,6 +14,25 @@ Before detailing the content of cards, let's show you what cards look like throu
 
 The OperatorFabric Card specification defines mandatory attributes, but some optional attributes are needed for cards to be useful in OperatorFabric. Let's clarify those point through few examples of minimal cards and what happens when they're used as if.
 
+=== Rules for receiving cards
+Whatever the recipient(s) of the card (user directly, group and/or entity), the user must have the receive right on the process/state of the card to receive it (`Receive` or `ReceiveAndWrite`).
+So the rules for receiving cards are :
+
+1) If the card is sent to user1, the card is received and visible for user1 if he has the receive right for the corresponding process/state
+
+2) If the card is sent to GROUP1 (or ENTITY1), the card is received and visible for user if *all* of the following is true :
+
+* he's a member of GROUP1 (or ENTITY1)
+* he has the receive right for the corresponding process/state
+
+3) If the card is sent to ENTITY1 and GROUP1, the card is received and visible for user if *all* of the following is true :
+
+* he's a member of ENTITY1 (either directly or through one of its children entities)
+* he's a member of GROUP1
+* he has the receive right for the corresponding process/state
+
+In this chapter, when we talk about receive right, it means `Receive` or `ReceiveAndWrite`.
+
 === Send to One User
 The following card contains only the mandatory attributes.
 
@@ -35,7 +54,7 @@ The following card contains only the mandatory attributes.
 
 This an information about the process instance `process-000` of process `process`, sent by `TEST_PUBLISHER`. The title and the summary refer to `i18n` keys
 defined in the associated `i18n` files of the process. This card is displayable since the first january 2019 and
-should only be received by the user using the `operator1` login.
+should only be received by the user using the `operator1` login (provided that this user has receive right on this process/state).
 
 === Send to several users
 
@@ -58,7 +77,7 @@ The following example is nearly the same as the previous one except for the reci
 }
 ....
 
-Here, the recipient is a group, the `Dispatcher`. So all users who are members of this group will receive the card.
+Here, the recipient is a group, the `Dispatcher`. So all users who are members of this group and who have receive right on the process/state of the card will receive it.
 
 
 ==== Simple case (sending to an entity)
@@ -80,7 +99,7 @@ The following example is nearly the same as the previous one except for the reci
 }
 ....
 
-Here, the recipient is an entity, `ENTITY1`, and there is no group recipient anymore. So all users who have a receive right (`Receive` or `ReceiveAndWrite`) for the process/state of the card and who are members of this entity will receive the card. More information on perimeters can be found in
+Here, the recipient is an entity, `ENTITY1`, and there is no group recipient anymore. So all users who are members of this entity and who have a receive right for the process/state of the card will receive it. More information on perimeters can be found in
 ifdef::single-page-doc[<<'users_management,user documentation'>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#users_management, user documentation>>]
 
@@ -150,10 +169,7 @@ The following example is nearly the same as the previous one except for the reci
 }
 ....
 
-Here, the recipients are a group and an entity, the `Dispatcher` group and `ENTITY1` entity. In this case, there are two possibilities to receive the card.
-
-- First possibility : the user is both a member of this entity and a member of this group.
-- Second possibility : the user is a member of this entity and has a receive right (`Receive` or `ReceiveAndWrite`)  for the process/state of the card within his perimeters.
+Here, the recipients are a group and an entity, the `Dispatcher` group and `ENTITY1` entity. To receive the card, the user must be a member of both ENTITY1 and GROUP1 and must have the receive right for the corresponding process/state.
 
 
 ==== Complex case
@@ -237,6 +253,4 @@ At the card level, the attributes in the card telling OperatorFabric which templ
 ....
 
 So here a single custom data is defined and it's `rootProp`. This attribute is used by the template called by the `templateName` attribute.
-
-
 

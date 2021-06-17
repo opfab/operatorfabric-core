@@ -7,7 +7,7 @@ Feature: deleteBundleVersion
     * def authToken = signIn.authToken
    #The "." in the middle of the following file path is just a trick to force 
    #karate to make a second and final call to getToken.feature
-    * def signInAsTSO = callonce read('../common/./getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
 

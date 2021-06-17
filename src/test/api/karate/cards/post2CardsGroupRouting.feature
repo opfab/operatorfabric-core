@@ -7,6 +7,8 @@ Background:
   * def authTokenTso1 = signInTso1.authToken
   * def signInTso2 = callonce read('../common/getToken.feature') { username: 'operator2'}
   * def authTokenTso2 = signInTso2.authToken
+  * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
+  * def authTokenAdmin = signInAdmin.authToken
 
 
 Scenario: Post Card only for group Dispatcher
@@ -27,6 +29,40 @@ Scenario: Post Card only for group Dispatcher
 	"data" : {"message":"a message for group Dispatcher"}
 }
 """
+
+  * def perimeter =
+"""
+{
+  "id" : "perimeter",
+  "process" : "api_test",
+  "stateRights" : [
+      {
+        "state" : "messageState",
+        "right" : "Receive"
+      }
+    ]
+}
+"""
+
+  * def perimeterArray =
+"""
+[   "perimeter"
+]
+"""
+
+#Create new perimeter
+  Given url opfabUrl + 'users/perimeters'
+  And header Authorization = 'Bearer ' + authTokenAdmin
+  And request perimeter
+  When method post
+  Then status 201
+
+#Attach perimeter to group
+  Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
+  And header Authorization = 'Bearer ' + authTokenAdmin
+  And request perimeterArray
+  When method patch
+  Then status 200
 
 # Push card 
 Given url opfabPublishCardUrl + 'cards' 
@@ -125,3 +161,9 @@ And header Authorization = 'Bearer ' + authTokenTso2
 When method get
 Then status 200
 And match response.data.message == 'a message for groups Dispatcher and Planner'
+
+#delete perimeter created previously
+  Given url opfabUrl + 'users/perimeters/perimeter'
+  And header Authorization = 'Bearer ' + authTokenAdmin
+  When method delete
+  Then status 200

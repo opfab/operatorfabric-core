@@ -21,7 +21,9 @@ import org.opfab.cards.consultation.model.*;
 import org.opfab.cards.consultation.model.CardConsultationData;
 import org.opfab.cards.consultation.model.I18nConsultationData;
 import org.opfab.cards.model.SeverityEnum;
+import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -75,6 +77,11 @@ public class CardRepositoryShould {
 
 
     public CardRepositoryShould(){
+        ComputedPerimeter perimeter = new ComputedPerimeter();
+        perimeter.setProcess("PROCESS");
+        perimeter.setState("anyState");
+        perimeter.setRights(RightsEnum.RECEIVEANDWRITE);
+
         User user1 = new User();
         user1.setLogin("operator3");
         user1.setFirstName("Test");
@@ -88,6 +95,7 @@ public class CardRepositoryShould {
         user1.setEntities(entities1);
         rteUserEntity1 = new CurrentUserWithPerimeters();
         rteUserEntity1.setUserData(user1);
+        rteUserEntity1.setComputedPerimeters(Arrays.asList(perimeter));
 
         User user2 = new User();
         user2.setLogin("operator3");
@@ -109,6 +117,7 @@ public class CardRepositoryShould {
         user3.setLastName("User");;
         adminUser = new CurrentUserWithPerimeters();
         adminUser.setUserData(user3);
+        adminUser.setComputedPerimeters(Arrays.asList(perimeter));
     }
 
     @AfterEach
