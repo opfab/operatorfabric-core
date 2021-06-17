@@ -3,8 +3,8 @@
   "name": "userCardExamples3.label",
   "version": "1",
   "uiVisibility": {
-    "monitoring": true,
-    "logging": true,
+    "monitoring": false,
+    "logging": false,
     "calendar": true
   },
   "states": {
