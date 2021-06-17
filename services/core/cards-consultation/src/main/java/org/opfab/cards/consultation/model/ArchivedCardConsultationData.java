@@ -18,6 +18,7 @@ import org.opfab.cards.model.SeverityEnum;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
@@ -96,4 +97,6 @@ public class ArchivedCardConsultationData implements Card {
     private String  representative;
     private PublisherTypeEnum representativeType;
     private Integer  secondsBeforeTimeSpanForReminder;
+
+    private String processStateKey;
 }

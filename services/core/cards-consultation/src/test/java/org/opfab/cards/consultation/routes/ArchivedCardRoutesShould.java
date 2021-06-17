@@ -147,7 +147,7 @@ public class ArchivedCardRoutesShould {
 
             ArchivedCardConsultationData simpleCard5 = createSimpleArchivedCard(1, publisher,now,
                    now,now.plusSeconds(3600), "",
-                    null, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must not receive (because the user doesn't have the right for process/state)
+                    null, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must receive
 
             ArchivedCardConsultationData simpleCard6 = createSimpleArchivedCard(1, publisher,now,
                    now,now.plusSeconds(3600), "",
@@ -205,7 +205,14 @@ public class ArchivedCardRoutesShould {
                     .verify();
             assertThat(archivedCardRoutes).isNotNull();
             webTestClient.get().uri("/archives/{id}", simpleCard5.getId()).exchange()
-                    .expectStatus().isNotFound();
+                    .expectStatus().isOk()
+                    .expectBody(ArchivedCardConsultationData.class).value(card -> {
+                assertThat(card)
+                        .usingRecursiveComparison()
+                        //This is necessary because empty lists are ignored in the returned JSON
+                        .withComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
+                        .isEqualTo(simpleCard5);
+            });
 
             StepVerifier.create(repository.save(simpleCard6))
                     .expectNextCount(1)

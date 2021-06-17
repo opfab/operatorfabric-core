@@ -51,14 +51,14 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 """
 
 
-    #Card must not be received, because the user doesn't have the right for this process/state
-    * def cardForEntityWithoutPerimeter =
+    #Card must be received, because the user has the right for this process/state and is in tne entity
+    * def cardForEntityAndWithPerimeter =
 """
 {
 	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processInstanceId" : "cardForEntityWithoutPerimeter",
+	"processInstanceId" : "cardForEntityAndWithPerimeter",
 	"state": "messageState",
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -89,14 +89,14 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 """
 
 
-     #Card must be received, because the user is in entity and group
-    * def cardForEntityAndGroup =
+     #Card must not be received, because the user is in entity and group but doesn't have receive right for this process/state
+    * def cardForEntityAndGroupButNotRights =
 """
 {
 	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processInstanceId" : "cardForEntityAndGroup",
+	"processInstanceId" : "cardForEntityAndGroupButNotRights",
 	"state": "defaultState",
 	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
@@ -109,7 +109,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 """
 
 
-    #Card must be received, because the user is in entity and have the right for process/state
+    #Card must not be received, because the user is in entity and have the right for process/state but is not in group Planner
     * def cardForEntityAndOtherGroupAndPerimeter =
 """
 {
@@ -128,7 +128,40 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 }
 """
 
+    * def perimeter2 =
+"""
+{
+  "id" : "perimeter",
+  "process" : "api_test",
+  "stateRights" : [
+      {
+        "state" : "messageState",
+        "right" : "Receive"
+      }
+    ]
+}
+"""
+    * def perimeterArray =
+"""
+[   "perimeter"
+]
+"""
+
   Scenario: Create Perimeters
+  #Create new perimeter
+    Given url opfabUrl + 'users/perimeters'
+    And header Authorization = 'Bearer ' + authToken
+    And request perimeter2
+    When method post
+    Then status 201
+
+  #Attach perimeter to group
+    Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
+    And header Authorization = 'Bearer ' + authToken
+    And request perimeterArray
+    When method patch
+    Then status 200
+
   #Create new perimeter (check if the perimeter already exists otherwise it will return 200)
     Given url opfabUrl + 'users/perimeters'
     And header Authorization = 'Bearer ' + authToken
@@ -156,10 +189,10 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     Then status 201
 
 
-  Scenario: Push the card 'cardForEntityWithoutPerimeter'
+  Scenario: Push the card 'cardForEntityAndWithPerimeter'
     Given url opfabPublishCardUrl + 'cards'
     And header Authorization = 'Bearer ' + authTokenAsTSO
-    And request cardForEntityWithoutPerimeter
+    And request cardForEntityAndWithPerimeter
     When method post
     Then status 201
 
@@ -172,10 +205,10 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     Then status 201
 
 
-  Scenario: Push the card 'cardForEntityAndGroup'
+  Scenario: Push the card 'cardForEntityAndGroupButNotRights'
     Given url opfabPublishCardUrl + 'cards'
     And header Authorization = 'Bearer ' + authTokenAsTSO
-    And request cardForEntityAndGroup
+    And request cardForEntityAndGroupButNotRights
     When method post
     Then status 201
 
@@ -196,11 +229,11 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     And match response.card.data.message == 'a message'
 
 
-  Scenario: Get the card 'cardForEntityWithoutPerimeter'
-    Given url opfabUrl + 'cards/cards/api_test.cardForEntityWithoutPerimeter'
+  Scenario: Get the card 'cardForEntityAndWithPerimeter'
+    Given url opfabUrl + 'cards/cards/api_test.cardForEntityAndWithPerimeter'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
-    Then status 404
+    Then status 200
 
 
   Scenario: Get the card 'cardForEntityAndPerimeter'
@@ -211,17 +244,22 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     And match response.card.data.message == 'a message'
 
 
-  Scenario: Get the card 'cardForEntityAndGroup'
-    Given url opfabUrl + 'cards/cards/api_test.cardForEntityAndGroup'
+  Scenario: Get the card 'cardForEntityAndGroupButNotRights'
+    Given url opfabUrl + 'cards/cards/api_test.cardForEntityAndGroupButNotRights'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
-    Then status 200
-    And match response.card.data.message == 'a message'
+    Then status 404
 
 
   Scenario: Get the card 'cardForEntityAndOtherGroupAndPerimeter'
     Given url opfabUrl + 'cards/cards/process1.cardForEntityAndOtherGroupAndPerimeter'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
+    Then status 404
+
+
+  #delete perimeter created previously
+    Given url opfabUrl + 'users/perimeters/perimeter'
+    And header Authorization = 'Bearer ' + authToken
+    When method delete
     Then status 200
-    And match response.card.data.message == 'a message'

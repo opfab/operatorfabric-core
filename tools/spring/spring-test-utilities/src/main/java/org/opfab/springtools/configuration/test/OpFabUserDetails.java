@@ -11,11 +11,14 @@
 
 package org.opfab.springtools.configuration.test;
 
+import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -38,6 +41,11 @@ public class OpFabUserDetails extends CurrentUserWithPerimeters implements UserD
         user.setEntities(entities);
         user.setAuthorizedIPAddresses(authorizedIPAddresses);
         this.setUserData(user);
+        ComputedPerimeter perimeter = new ComputedPerimeter();
+        perimeter.setProcess("PROCESS");
+        perimeter.setState("anyState");
+        perimeter.setRights(RightsEnum.RECEIVEANDWRITE);
+        this.setComputedPerimeters(Arrays.asList(perimeter));
     }
 
     /**

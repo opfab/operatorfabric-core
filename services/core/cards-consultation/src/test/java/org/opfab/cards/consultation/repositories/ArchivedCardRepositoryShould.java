@@ -17,7 +17,9 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.cards.consultation.application.IntegrationTestApplication;
 import org.opfab.cards.consultation.model.ArchivedCardConsultationData;
+import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,6 +32,7 @@ import reactor.util.function.Tuple2;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -93,15 +96,22 @@ public class ArchivedCardRepositoryShould {
 
     @BeforeAll
     public static void initUsers() {
+        ComputedPerimeter perimeter = new ComputedPerimeter();
+        perimeter.setProcess("PROCESS");
+        perimeter.setState("anyState");
+        perimeter.setRights(RightsEnum.RECEIVEANDWRITE);
+
         user1.setLogin(login1);
         user1.addGroupsItem("someGroup");
         user1.addGroupsItem("someOtherGroup");
         currentUser1.setUserData(user1);
+        currentUser1.setComputedPerimeters(Arrays.asList(perimeter));
         //Groups only
 
         user2.setLogin(login2);
         user2.addGroupsItem("rte");
         currentUser2.setUserData(user2);
+        currentUser2.setComputedPerimeters(Arrays.asList(perimeter));
         //Group only
 
         user3.setLogin(login3);

@@ -43,7 +43,7 @@ Feature: UserCards tests
   "stateRights" : [
       {
         "state" : "state1",
-        "right" : "Write"
+        "right" : "ReceiveAndWrite"
       },
       {
         "state" : "state2",
@@ -63,6 +63,45 @@ Feature: UserCards tests
 [   "groupKarate"
 ]
 """
+
+    * def perimeter =
+"""
+{
+  "id" : "perimeter",
+  "process" : "initial",
+  "stateRights" : [
+      {
+        "state" : "state2",
+        "right" : "Receive"
+      },
+      {
+        "state" : "final",
+        "right" : "Receive"
+      }
+    ]
+}
+"""
+
+    * def perimeterArray =
+"""
+[   "perimeter"
+]
+"""
+
+  Scenario: Create perimeter for initial process
+#Create new perimeter
+    Given url opfabUrl + 'users/perimeters'
+    And header Authorization = 'Bearer ' + authToken
+    And request perimeter
+    When method post
+    Then status 201
+
+#Attach perimeter to group
+    Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
+    And header Authorization = 'Bearer ' + authToken
+    And request perimeterArray
+    When method patch
+    Then status 200
 
   Scenario: Create groupKarate
     Given url opfabUrl + 'users/groups'
@@ -309,7 +348,6 @@ Feature: UserCards tests
     And assert response.childCards.length == 1
     And match response.childCards[0].id == "process_2.process_o"
 
-
   Scenario: We update the parent card (which id is : initial.initialCardProcess, without parameter keepChildCards), then we check that child card was deleted
     * def card =
 """
@@ -460,3 +498,10 @@ Feature: UserCards tests
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
+
+#delete perimeter created previously
+    Given url opfabUrl + 'users/perimeters/perimeter'
+    And header Authorization = 'Bearer ' + authToken
+    When method delete
+    Then status 200
+

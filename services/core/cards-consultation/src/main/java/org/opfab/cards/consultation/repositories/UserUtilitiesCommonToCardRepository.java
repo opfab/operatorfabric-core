@@ -12,6 +12,7 @@ package org.opfab.cards.consultation.repositories;
 
 import org.opfab.cards.consultation.model.Card;
 import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.users.model.RightsEnum;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -67,35 +68,40 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
         List<String> entities = currentUserWithPerimeters.getUserData().getEntities();
         List<String> processStateList = new ArrayList<>();
         if (currentUserWithPerimeters.getComputedPerimeters() != null)
-            currentUserWithPerimeters.getComputedPerimeters().forEach(perimeter ->
-                    processStateList.add(perimeter.getProcess() + "." + perimeter.getState()));
+            currentUserWithPerimeters.getComputedPerimeters().forEach(perimeter -> {
+                if ((perimeter.getRights() == RightsEnum.RECEIVE) || (perimeter.getRights() == RightsEnum.RECEIVEANDWRITE))
+                    processStateList.add(perimeter.getProcess() + "." + perimeter.getState());
+            });
 
         return computeCriteriaForUser(login,groups,entities,processStateList);
     }
 
-      /*
-    Rules for receiving cards :
-    1) If the card is sent to entity A and group B, then to receive it,
-       the user must be part of A AND (be part of B OR have the right for the process/state of the card)
-    2) If the card is sent to entity A only, then to receive it, the user must be part of A and have the right for the process/state of the card
-    3) If the card is sent to group B only, then to receive it, the user must be part of B
-    */
+    /** Rules for receiving cards :
+
+    1) If the card is sent to user1, the card is received and visible for user1 if he has the receive right for the
+       corresponding process/state (Receive or ReceiveAndWrite)
+    2) If the card is sent to GROUP1 (or ENTITY1), the card is received and visible for user if all of the following is true :
+         - he's a member of GROUP1 (or ENTITY1)
+         - he has the receive right for the corresponding process/state (Receive or ReceiveAndWrite)
+    3) If the card is sent to ENTITY1 and GROUP1, the card is received and visible for user if all of the following is true :
+         - he's a member of ENTITY1 (either directly or through one of its children entities)
+         - he's a member of GROUP1
+         - he has the receive right for the corresponding process/state (Receive or ReceiveAndWrite)
+    **/
     default Criteria computeCriteriaForUser(String login, List<String> groups, List<String> entities, List<String> processStateList) {
         List<String> groupsList = (groups != null ? groups : new ArrayList<>());
         List<String> entitiesList = (entities != null ? entities : new ArrayList<>());
 
-      return  new Criteria().orOperator(
-                where(USER_RECIPIENTS).in(login),
-                where(GROUP_RECIPIENTS).in(groupsList).andOperator(new Criteria().orOperator(   //card sent to group only
-                        Criteria.where(ENTITY_RECIPIENTS).exists(false), Criteria.where(ENTITY_RECIPIENTS).size(0))),
-                where(ENTITY_RECIPIENTS).in(entitiesList).andOperator(new Criteria().orOperator(    //card sent to entity only
-                        Criteria.where(GROUP_RECIPIENTS).exists(false), Criteria.where(GROUP_RECIPIENTS).size(0)),
-                        Criteria.where(PROCESS_STATE_KEY).in(processStateList)),
-                where(ENTITY_RECIPIENTS).in(entitiesList).and(GROUP_RECIPIENTS).in(groupsList),    //card sent to group and entity
-                where(ENTITY_RECIPIENTS).in(entitiesList).and(PROCESS_STATE_KEY).in(processStateList));  //card sent to group and entity 
-                
+        return  new Criteria().andOperator(where(PROCESS_STATE_KEY).in(processStateList),
+                new Criteria().orOperator(where(USER_RECIPIENTS).in(login),
+                                          where(GROUP_RECIPIENTS).in(groupsList).andOperator
+                                              (new Criteria().orOperator
+                                                  (where(ENTITY_RECIPIENTS).exists(false), where(ENTITY_RECIPIENTS).size(0))),
+                                          where(ENTITY_RECIPIENTS).in(entitiesList).andOperator
+                                              (new Criteria().orOperator
+                                                  (where(GROUP_RECIPIENTS).exists(false), where(GROUP_RECIPIENTS).size(0))),
+                                          where(GROUP_RECIPIENTS).in(groupsList).and(ENTITY_RECIPIENTS).in(entitiesList)));
     }
-
 
 
     Mono<T> findByIdWithUser(String id, CurrentUserWithPerimeters user);

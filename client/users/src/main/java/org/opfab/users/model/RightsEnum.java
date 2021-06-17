@@ -17,10 +17,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Rights for a process/state (process/state/rights then associated to one or more group(s))
  *
  * <dl>
- *     <dt>READ</dt><dd>Only read rights (reading card)</dd>
- *     <dt>READANDWRITE</dt><dd>Read and write rights (reading card and creating new card)</dd>
- *     <dt>READANDRESPOND</dt><dd>Read and respond rights (reading card and responding to card)</dd>
- *     <dt>ALL</dt><dd>Read, write and respond rights (reading card, creating new card and responding to a card)</dd>
+ *     <dt>RECEIVE</dt><dd> The rights for receiving a card </dd>
+ *     <dt>WRITE</dt><dd> The rights for writing a card, that is to say respond to a card or create a new card </dd>
+ *     <dt>RECEIVEANDWRITE</dt><dd> The rights for receiving and writing a card </dd>
  * </dl>
  * Note : This enum is created by hand because Swagger can't handle enums. It should match the corresponding enum definition in the Users API.
  *

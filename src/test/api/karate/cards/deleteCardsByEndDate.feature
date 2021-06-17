@@ -77,6 +77,40 @@ Feature: Delete Cards by end date before
 }
 """
 
+    * def perimeter =
+"""
+{
+  "id" : "perimeter",
+  "process" : "api_test",
+  "stateRights" : [
+      {
+        "state" : "messageState",
+        "right" : "Receive"
+      }
+    ]
+}
+"""
+
+    * def perimeterArray =
+"""
+[   "perimeter"
+]
+"""
+
+#Create new perimeter
+    Given url opfabUrl + 'users/perimeters'
+    And header Authorization = 'Bearer ' + authToken
+    And request perimeter
+    When method post
+    Then status 201
+
+#Attach perimeter to group
+    Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
+    And header Authorization = 'Bearer ' + authToken
+    And request perimeterArray
+    When method patch
+    Then status 200
+
 # Push 4 card
     Given url opfabPublishCardUrl + 'cards'
 	And header Authorization = 'Bearer ' + authTokenAsTSO
@@ -143,5 +177,11 @@ Feature: Delete Cards by end date before
 # delete remaing card
 	Given url opfabPublishCardUrl + 'cards/api_test.process2card3'
 	And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method delete
+    Then status 200
+
+#delete perimeter created previously
+    Given url opfabUrl + 'users/perimeters/perimeter'
+    And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
