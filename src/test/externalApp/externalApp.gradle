@@ -42,9 +42,9 @@ docker {
 		name "lfeoperatorfabric/of-external-app"
 	tags "latest", "${project.version}"
     labels (['project':"${project.group}"])
+	files( "build/libs")
 	dockerfile file('src/main/docker/Dockerfile')
-	copySpec.from(jar).rename(".*","${jar.archiveName}")
-	buildArgs(['JAR_FILE'       : "${jar.archiveName}",
+	buildArgs(['JAR_FILE'       : "externalApp-${project.version.toUpperCase()}.jar",
                        'http_proxy'     : apk.proxy.uri,
                        'https_proxy'    : apk.proxy.uri,
                        'HTTP_PROXY_AUTH': "basic:*:$apk.proxy.user:$apk.proxy.password"])
