@@ -9,6 +9,7 @@
  */
 package org.opfab.cards.publication.configuration.kafka;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.avro.CardCommand;
@@ -19,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,12 +44,17 @@ class ConsumerFactoryAutoConfigurationShould {
     @InjectMocks
     private ConsumerFactoryAutoConfiguration cut;
 
-    private Map<String,Object> props = new HashMap<>();
+    private final Map<String,Object> props = new HashMap<>();
+
+    @BeforeEach
+    private void SetUp() {
+        ReflectionTestUtils.setField(cut, "valueDeserializer", "MyValueDeserializer");
+        when(kafkaProperties.getBootstrapServers()).thenReturn(new ArrayList<>());
+        when(kafkaProperties.buildConsumerProperties()).thenReturn(props);
+    }
 
     @Test
     void testConsumerFactoryWithoutSchemaRegistry() {
-        when(kafkaProperties.getBootstrapServers()).thenReturn(new ArrayList<>());
-        when(kafkaProperties.buildConsumerProperties()).thenReturn(props);
         when(schemaRegistryProperties.getUrl()).thenReturn(null);
 
         ConsumerFactory<String, CardCommand > result = cut.consumerFactory(schemaRegistryProperties);
@@ -57,12 +64,9 @@ class ConsumerFactoryAutoConfigurationShould {
 
     @Test
     void testConsumerFactoryWithSchemaRegistry() {
-        when(kafkaProperties.getBootstrapServers()).thenReturn(new ArrayList<>());
-        when(kafkaProperties.buildConsumerProperties()).thenReturn(props);
         when(schemaRegistryProperties.getUrl()).thenReturn("Url of Registry");
+
         ConsumerFactory<String, CardCommand > result = cut.consumerFactory(schemaRegistryProperties);
-
-
         assertNotNull(result);
         verify(schemaRegistryProperties, times(3)).getUrl();
     }
