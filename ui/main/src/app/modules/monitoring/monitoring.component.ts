@@ -73,22 +73,25 @@ export class MonitoringComponent implements OnInit, OnDestroy {
                                  * and thus currentProcess.extractState(…) throws an error
                                  */
                                 const state = Process.prototype.extractState.call(currentProcess, card);
+
                                 if (!!state && !!state.type) {
                                     typeOfState = state.type;
                                 }
-                                return (
-                                    {
-                                        creationDateTime: moment(card.publishDate),
-                                        beginningOfBusinessPeriod: moment(card.startDate),
-                                        endOfBusinessPeriod: ((!!card.endDate) ? moment(card.endDate) : null),
-                                        title: this.prefixI18nKey(card, 'title'),
-                                        summary: this.prefixI18nKey(card, 'summary'),
-                                        processName: this.prefixForTranslation(card, currentProcess.name),
-                                        cardId: card.id,
-                                        severity: card.severity.toLocaleLowerCase(),
-                                        processId: procId,
-                                        typeOfState: typeOfState
-                                    } as LineOfMonitoringResult);
+                                if (!!state.type) {
+                                    return (
+                                        {
+                                            creationDateTime: moment(card.publishDate),
+                                            beginningOfBusinessPeriod: moment(card.startDate),
+                                            endOfBusinessPeriod: ((!!card.endDate) ? moment(card.endDate) : null),
+                                            title: this.prefixI18nKey(card, 'title'),
+                                            summary: this.prefixI18nKey(card, 'summary'),
+                                            processName: this.prefixForTranslation(card, currentProcess.name),
+                                            cardId: card.id,
+                                            severity: card.severity.toLocaleLowerCase(),
+                                            processId: procId,
+                                            typeOfState: typeOfState
+                                        } as LineOfMonitoringResult);
+                                }
                             }
                         }
                     ).filter(elem => !!elem);

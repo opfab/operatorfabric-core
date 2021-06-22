@@ -31,8 +31,7 @@
       "styles": [
         "style"
       ],
-      "acknowledgmentAllowed": "Always",
-      "type" : "FINISHED"
+      "acknowledgmentAllowed": "Always"
     },
     "chartLineState": {
       "name": "chartLine.title",
