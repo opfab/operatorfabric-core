@@ -361,7 +361,7 @@ describe('Flatten objects with nested arrays', () => {
   });
 
 
-  it('add 2 field  + 2 nested array , only the first nested array is process  if processOnlyIfPreviousArraysAreEmpty is true   ', () => {
+  it('add 2 fields  + 2 nested arrays, only the first nested array is processed if processOnlyIfPreviousArraysAreEmpty is true', () => {
     const rules = [
       { columnName: "column1", jsonField: "field1" },
       { columnName: "column2", jsonField: "field2" },
@@ -397,7 +397,7 @@ describe('Flatten objects with nested arrays', () => {
   });
 
 
-  it('add 2 field  + 2 nested array , the two nested array are process  if processOnlyIfPreviousArraysAreEmpty is false   ', () => {
+  it('add 2 fields  + 2 nested arrays, the two nested arrays are processed if processOnlyIfPreviousArraysAreEmpty is false', () => {
     const rules = [
       { columnName: "column1", jsonField: "field1" },
       { columnName: "column2", jsonField: "field2" },
@@ -435,7 +435,7 @@ describe('Flatten objects with nested arrays', () => {
 
 
 
-  it('add 2 field  + 2 nested array , the two nested array are process  if processOnlyIfPreviousArraysAreEmpty is not set    ', () => {
+  it('add 2 fields + 2 nested arrays, the two nested arrays are processed if processOnlyIfPreviousArraysAreEmpty is not set', () => {
     const rules = [
       { columnName: "column1", jsonField: "field1" },
       { columnName: "column2", jsonField: "field2" },
@@ -472,7 +472,7 @@ describe('Flatten objects with nested arrays', () => {
   });
 
 
-  it('add 2 field + 2 nested array , the second nested array is process as the first is empty in the object to convert a and processOnlyIfPreviousArraysAreEmpty is true', () => {
+  it('add 2 fields + 2 nested arrays, the second nested array is processed as the first is empty in the object to convert and processOnlyIfPreviousArraysAreEmpty is true', () => {
     const rules = [
       { columnName: "column1", jsonField: "field1" },
       { columnName: "column2", jsonField: "field2" },
@@ -507,7 +507,7 @@ describe('Flatten objects with nested arrays', () => {
   });
 
 
-  it('complex case : add 2 field  + 2 nested array with more than one line , the two nested array are process  , processOnlyIfPreviousArraysAreEmpty is not set    ', () => {
+  it('complex case : add 2 fields + 2 nested arrays with more than one line and processOnlyIfPreviousArraysAreEmpty is not set, the two nested arrays are processed', () => {
     const rules = [
       { columnName: "column1", jsonField: "field1" },
       { columnName: "column2", jsonField: "field2" },
