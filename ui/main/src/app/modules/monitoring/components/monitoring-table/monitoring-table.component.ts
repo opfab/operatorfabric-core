@@ -119,7 +119,7 @@ export class MonitoringTableComponent implements OnDestroy {
     }
 
     processMonitoringForExport(lineNumber: number) {
-        if (lineNumber === this.result.length) ExportService.exportArrayToExcelFile(this.jsonToArray.getResultingArray(), 'Monitoring');
+        if (lineNumber === this.result.length) ExportService.exportArrayToExcelFile(this.jsonToArray.getJsonAsArray(), 'Monitoring');
         else {
             this.cardService.loadCard(this.result[lineNumber].cardId).subscribe( card => {
                 this.jsonToArray.add(this.cardPreprocessingBeforeExport(card));
