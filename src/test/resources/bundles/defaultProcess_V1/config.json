@@ -21,7 +21,7 @@
         "style"
       ],
       "acknowledgmentAllowed": "Always",
-      "type" : "INPROGRESS"
+      "type" : "FINISHED"
     },
     "chartState": {
       "name": "chartDetail.title",
