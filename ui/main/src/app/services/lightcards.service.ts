@@ -26,11 +26,13 @@ export class LightCardsService {
 
     private filteredAndSortedLightCards = new Subject();
     private filteredLightCards = new Subject();
+    private loadingInProgress = new Subject();
 
     constructor(private store: Store<AppState>) {
         this.store.pipe(select(feedSelectors.selectActiveFiltersArray)).subscribe(filters => this.filters = filters);
         this.computeFilteredAndSortedLightCards();
         this.computeFilteredLightCards();
+        this.loadingInProgress.next(false);
     }
 
     private computeFilteredAndSortedLightCards() {
@@ -90,7 +92,8 @@ export class LightCardsService {
         return this.store.pipe(
             select(feedSelectors.selectFeed),
             sample(interval(1000)),
-            filter(() => ((new Date().valueOf()) - this.lastDebounce) > 1000) // we only need to get cards if no debounce arise in 1 seconds) 
+            filter(() => ((new Date().valueOf()) - this.lastDebounce) > 1000), // we only need to get cards if no debounce arise in 1 seconds) 
+            tap(()=> this.loadingInProgress.next(true)) 
         );
     }
 
@@ -98,9 +101,15 @@ export class LightCardsService {
         return this.store.pipe(
             select(feedSelectors.selectFeed),
             debounceTime(200),
-            tap(() => this.lastDebounce = (new Date()).valueOf())
+            tap(() => this.lastDebounce = (new Date()).valueOf()),
+            tap(()=> this.loadingInProgress.next(false)) 
         );
     }
+
+    public getLoadingInProgress() {
+        return this.loadingInProgress.asObservable();
+    }
+
 // --------------------
 
     private filterLightCards(lightCards: LightCard[], filters: Filter[]): LightCard[] {

@@ -15,4 +15,14 @@
         <div style="width:100%;margin-top:4px">
             <of-tags-filter *ngIf="!(hideTags)" ></of-tags-filter>
         </div>
+        <div  *ngIf="loadingInProgress" class="opfab-loading-spinner">
+            <ng-template #tipLoadingInProgress>
+                <span translate>feed.tips.loadingInProgress</span>
+            </ng-template>
+            <div [ngbPopover]="tipLoadingInProgress" popoverClass="opfab-popover" container="body"
+            triggers="mouseenter:mouseleave">
+            <em  class="fas fa-spinner fa-spin opfab-slow-spin"  ></em>
+            </div>
+
+         </div>
 </div>

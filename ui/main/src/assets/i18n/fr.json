@@ -91,7 +91,8 @@
     "tips": {
       "acknowledged": "Acquittée",
       "lttd": "Temps restant pour décider",
-      "hasAResponseFromYourEntity" : "Votre entité a déjà répondu"
+      "hasAResponseFromYourEntity" : "Votre entité a déjà répondu",
+      "loadingInProgress": "Chargement de cartes en cours"
     },
     "acknowledgeAllCards": {
       "label": "Acquitter toutes les cartes",
