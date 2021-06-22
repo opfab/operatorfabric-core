@@ -28,6 +28,7 @@ export class MultiFilterComponent implements OnInit, OnChanges, OnDestroy {
     dropdownList: { id: string, itemName: string }[];
     @Input() public i18nRootLabelKey: string;
     @Input() public values: ({ id: string, itemName: (I18n | string), i18nPrefix?: string } | string)[];
+    @Input() public translateValues: boolean;
     @Input() public parentForm: FormGroup;
     @Input() public dropdownSettings = {};
     @Input() public filterPath: string;
@@ -111,14 +112,23 @@ export class MultiFilterComponent implements OnInit, OnChanges, OnDestroy {
         if (typeof entry === 'string') {
             return {id: entry, itemName: entry};
         } else if (typeof entry.itemName === 'string') {
-            const firstI18nPrefix = (entry.i18nPrefix) ? `${entry.i18nPrefix}.` : '';
-            let firstTranslatedItemName = entry.id;
-            this.translateService.get(`${firstI18nPrefix}${entry.itemName}`
-                , null).subscribe(result => firstTranslatedItemName = result);
-            return {
-                id: entry.id,
-                itemName: firstTranslatedItemName
-            };
+            if (this.translateValues) {
+                const firstI18nPrefix = (entry.i18nPrefix) ? `${entry.i18nPrefix}.` : '';
+                let firstTranslatedItemName = entry.id;
+                this.translateService.get(`${firstI18nPrefix}${entry.itemName}`
+                    , null).subscribe(result => firstTranslatedItemName = result);
+                
+                return {
+                    id: entry.id,
+                    itemName: firstTranslatedItemName
+                };
+            } else {
+                return {
+                    id: entry.id,
+                    itemName: entry.itemName
+                };
+            }
+
         } else if (!entry.itemName) {
             return {id: entry.id, itemName: entry.id};
         }

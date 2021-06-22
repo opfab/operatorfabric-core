@@ -18,19 +18,19 @@
         <div style="display: flex;">
             <div *ngIf="displayProcessGroupsFilter()" style="margin-top: 28px;margin-right: 40px;position:relative; min-width:300px;max-width:400px;">
                 <of-multi-filter filterPath="processGroup" id="opfab-processGroup"
-                                 [parentForm]="monitoringForm" [values]="processGroupDropdownList"
+                                 [parentForm]="monitoringForm" [values]="processGroupDropdownList" [translateValues]="true"
                                  [dropdownSettings]="processGroupDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="monitoring.filters.">
                 </of-multi-filter>
             </div>
             <div *ngIf="displayProcessGroupsFilter()" style="margin-top: 28px;margin-right: 40px;position:relative; min-width:300px;max-width:400px;">
                 <of-multi-filter filterPath="process" id="opfab-process"
-                                 [parentForm]="monitoringForm" [values]="processDropdownListWhenSelectedProcessGroup"
+                                 [parentForm]="monitoringForm" [values]="processDropdownListWhenSelectedProcessGroup" [translateValues]="true"
                                  [dropdownSettings]="processDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="monitoring.filters.">
                 </of-multi-filter>
             </div>
             <div *ngIf="! displayProcessGroupsFilter() && isThereProcessGroup()" style="margin-top: 28px;margin-right: 40px;position:relative; min-width:300px;max-width:400px;">
                 <of-multi-filter filterPath="process" id="opfab-process"
-                                 [parentForm]="monitoringForm" [values]="processesDropdownListPerProcessGroups.get(processGroupDropdownList[0].id)"
+                                 [parentForm]="monitoringForm" [values]="processesDropdownListPerProcessGroups.get(processGroupDropdownList[0].id)" [translateValues]="true"
                                  [dropdownSettings]="processDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="monitoring.filters.">
                 </of-multi-filter>
             </div>
@@ -42,7 +42,7 @@
             </div>
             <div style="margin-top: 28px;position:relative; min-width:300px;max-width:400px;">
                 <of-multi-filter filterPath="typeOfState" id="opfab-typeOfState"
-                                 [parentForm]="monitoringForm" [values]="typeOfStateDropdownList"
+                                 [parentForm]="monitoringForm" [values]="typeOfStateDropdownList" [translateValues]="true"
                                  [dropdownSettings]="typeOfStateDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="monitoring.filters.typeOfState.">
                 </of-multi-filter>
             </div>
