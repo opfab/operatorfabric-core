@@ -16,3 +16,16 @@
   width:100%;
 }
 
+.opfab-loading-spinner{
+  font-size: 30px;
+  padding-left: 10px;
+  border: solid 1px var(--opfab-bgcolor);
+  text-align: center;
+  background-color: var(--opfab-bgcolor);
+  color: #aaaaaa;
+}
+
+.opfab-slow-spin {
+  -webkit-animation: fa-spin 2s infinite linear;
+  animation: fa-spin 2s infinite linear;
+} 
