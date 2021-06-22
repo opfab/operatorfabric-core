@@ -410,7 +410,10 @@ export class UserCardComponent implements OnDestroy, OnInit {
             } else {
                 if (!this.recipientsOptions.find(o => o.id === r.id)) {
                     const entity = this.entities.find(e => e.id === r.id);
-                    this.recipientsOptions.push({ id: entity.id, itemName: this.getEntityLabel(entity)});
+                    if (!!entity)
+                        this.recipientsOptions.push({ id: entity.id, itemName: this.getEntityLabel(entity)});
+                    else 
+                        console.log(new Date().toISOString(), 'Recipient entity not found : ', r.id )
                 }
             }
         });
