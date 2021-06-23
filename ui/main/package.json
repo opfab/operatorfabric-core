@@ -9,7 +9,6 @@
     "headless": "ng test --browsers ChromeHeadless --watch=false --code-coverage",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "compodoc": "npx compodoc -p src/tsconfig.app.json",
     "audit": "npm audit --json | $(npm bin)/npm-audit-html --output reports/report.html"
   },
   "private": true,
@@ -68,7 +67,6 @@
     "@angular/compiler-cli": "11.2.12",
     "@angular/language-service": "11.2.12",
     "@babel/compat-data": "7.14.4",
-    "@compodoc/compodoc": "1.1.11",
     "@fortawesome/fontawesome-free": "5.15.3",
     "@ngrx/schematics": "11.1.1",
     "@ngrx/store-devtools": "11.1.1",
