@@ -215,23 +215,28 @@ public class CardProcessingService {
         cardRepositoryService.deleteCardsByEndDateBefore(endDateBefore);
     }
 
-    public Optional<CardPublicationData> deleteCard(String id, CurrentUserWithPerimeters user) {
+    public Optional<CardPublicationData> deleteCard(String id, Optional<CurrentUserWithPerimeters> user) {
         
         CardPublicationData cardToDelete = cardRepositoryService.findCardById(id);
-        boolean isAdmin = user.getUserData().getGroups() != null && user.getUserData().getGroups().contains("ADMIN");
-        if (cardToDelete != null && !isAdmin && checkAuthenticationForCardSending && !checkPublisher(cardToDelete, user.getUserData().getLogin())) {
-            if (cardToDelete.getRepresentative() != null) {
-                throw new ApiErrorException(ApiError.builder()
-                        .status(HttpStatus.FORBIDDEN)
-                        .message("Card representative is set to " + cardToDelete.getRepresentative() + " and account login is " + user.getUserData().getLogin() + ", the card cannot be deleted")
-                        .build());
-            } else {
-                throw new ApiErrorException(ApiError.builder()
-                        .status(HttpStatus.FORBIDDEN)
-                        .message("Card publisher is set to " + cardToDelete.getPublisher() + " and account login is " + user.getUserData().getLogin() + ", the card cannot be deleted")
-                        .build());
+        if (user.isPresent()){  // if user is not present it means we have checkAuthenticationForCardSending = false 
+            boolean isAdmin = user.get().getUserData().getGroups() != null && user.get().getUserData().getGroups().contains("ADMIN");
+            String login = user.get().getUserData().getLogin();
+            if (cardToDelete != null && !isAdmin && checkAuthenticationForCardSending && !checkPublisher(cardToDelete,login)) {
+                if (cardToDelete.getRepresentative() != null) {
+                    throw new ApiErrorException(ApiError.builder()
+                            .status(HttpStatus.FORBIDDEN)
+                            .message("Card representative is set to " + cardToDelete.getRepresentative() + " and account login is " + login + ", the card cannot be deleted")
+                            .build());
+                } else {
+                    throw new ApiErrorException(ApiError.builder()
+                            .status(HttpStatus.FORBIDDEN)
+                            .message("Card publisher is set to " + cardToDelete.getPublisher() + " and account login is " + login + ", the card cannot be deleted")
+                            .build());
+                }
             }
         }
+       
+
         return deleteCard0(cardToDelete);
     }
 

@@ -46,8 +46,9 @@ public class CardController {
     @ResponseStatus(HttpStatus.CREATED)
     public @Valid Void createCardOld(@Valid @RequestBody CardPublicationData card, HttpServletResponse response, Principal principal) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
-        CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
-        cardProcessingService.processCard(card, Optional.of(user));
+        CurrentUserWithPerimeters user = null ;
+        if (jwtPrincipal!=null) user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
+        cardProcessingService.processCard(card, Optional.ofNullable(user));
         return null;
     }
 
@@ -88,9 +89,10 @@ public class CardController {
     @DeleteMapping("/{id}")
     public Void deleteCards(@PathVariable String id, HttpServletResponse response, Principal principal) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
-        CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
+        CurrentUserWithPerimeters user = null ;
+        if (jwtPrincipal!=null) user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
 
-        Optional<CardPublicationData> deletedCard = cardProcessingService.deleteCard(id, user);
+        Optional<CardPublicationData> deletedCard = cardProcessingService.deleteCard(id, Optional.ofNullable(user));
         if (!deletedCard.isPresent()) response.setStatus(404);
         else response.setStatus(200);
 

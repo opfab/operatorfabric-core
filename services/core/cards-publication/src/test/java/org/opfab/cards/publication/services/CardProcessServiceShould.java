@@ -1148,11 +1148,11 @@ class CardProcessServiceShould {
         cardProcessingService.processCard(card, Optional.of(currentUserWithPerimeters));
         Assertions.assertThat(checkCardCount(1)).isTrue();
 
-        Assertions.assertThatThrownBy(() -> cardProcessingService.deleteCard(card.getId(), wrongUser))
+        Assertions.assertThatThrownBy(() -> cardProcessingService.deleteCard(card.getId(), Optional.of(wrongUser)))
             .isInstanceOf(ApiErrorException.class).hasMessage("Card publisher is set to dummyUser and account login is wrongUser, the card cannot be deleted");
         Assertions.assertThat(checkCardCount(1)).isTrue();
        
-        cardProcessingService.deleteCard(card.getId(), currentUserWithPerimeters);
+        cardProcessingService.deleteCard(card.getId(), Optional.of(currentUserWithPerimeters));
         Assertions.assertThat(checkCardCount(0)).isTrue();
     }
 
@@ -1179,11 +1179,11 @@ class CardProcessServiceShould {
         cardProcessingService.processCard(card, Optional.of(currentUserWithPerimeters));
         Assertions.assertThat(checkCardCount(1)).isTrue();
 
-        Assertions.assertThatThrownBy(() -> cardProcessingService.deleteCard(card.getId(), wrongUser))
+        Assertions.assertThatThrownBy(() -> cardProcessingService.deleteCard(card.getId(),Optional.of(wrongUser)))
             .isInstanceOf(ApiErrorException.class).hasMessage("Card representative is set to dummyUser and account login is wrongUser, the card cannot be deleted");
         Assertions.assertThat(checkCardCount(1)).isTrue();
        
-        cardProcessingService.deleteCard(card.getId(), currentUserWithPerimeters);
+        cardProcessingService.deleteCard(card.getId(), Optional.of(currentUserWithPerimeters));
         Assertions.assertThat(checkCardCount(0)).isTrue();
     }
 
