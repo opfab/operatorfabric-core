@@ -92,8 +92,8 @@
     "tips": {
       "acknowledged": "Acknowledged",
       "lttd": "Time remaining to decide",
-      "hasAResponseFromYourEntity" : "Your entity has already respond",
-      "loadingInProgress": "Loading cards in progress"
+      "hasAResponseFromYourEntity" : "Your entity has already responded",
+      "loadingInProgress": "Card loading in progress"
     },
     "acknowledgeAllCards": {
       "label": "Acknowledge all cards",
