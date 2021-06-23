@@ -18,6 +18,14 @@ describe('Acknowledgment  tests', function () {
         // Send a card with ack config set to Never 
         // ack is not possible 
         cy.sendCard('cypress/ack/message4.json');
+
+        // Send a card with ack config set to OnlyWhenResponseDisabledForUser and user can respond and lttd is expired
+        // ack is possible when lttd is expired
+        cy.sendCard('cypress/ack/message5.json');
+
+        // Send a card with ack config set to OnlyWhenResponseDisabledForUser and user can respond and lttd is not expired
+        // ack is not possible before lttd is expired
+        cy.sendCard('cypress/ack/message6.json');
     });
 
     after('Clean', function () {
@@ -25,14 +33,16 @@ describe('Acknowledgment  tests', function () {
         cy.deleteCard('cypress.message2');
         cy.deleteCard('cypress.message3');
         cy.deleteCard('cypress.message4');
+        cy.deleteCard('cypress.message5');
+        cy.deleteCard('cypress.message6');
     });
 
     it('Check acknowledgment for operator 1', function () {
 
         cy.loginOpFab('operator1', 'test');
 
-        // Operator1 should see 4 cards in his feed
-        cy.get('of-light-card').should('have.length', 4);
+        // Operator1 should see 6 cards in his feed
+        cy.get('of-light-card').should('have.length', 6);
 
         // Click on card messageNoAck and check is is not acknowledgeable 
         cy.get('#opfab-feed-light-card-cypress-message4').click();
@@ -40,6 +50,15 @@ describe('Acknowledgment  tests', function () {
 
         // Click on card message3 and check it is not acknowledgeable 
         cy.get('#opfab-feed-light-card-cypress-message3').click();
+        cy.get('#opfab-card-details-btn-ack').should('not.exist');
+
+
+        // Click on card message5 and check it is acknowledgeable 
+        cy.get('#opfab-feed-light-card-cypress-message5').click();
+        cy.get('#opfab-card-details-btn-ack').should('exist');
+
+        // Click on card message6 and check it is not acknowledgeable 
+        cy.get('#opfab-feed-light-card-cypress-message6').click();
         cy.get('#opfab-card-details-btn-ack').should('not.exist');
 
         // Click on card message
@@ -54,16 +73,16 @@ describe('Acknowledgment  tests', function () {
         // Detail card it not present anymore 
         cy.get('of-detail').should('not.exist');
 
-        // Operator1 should see 3 cards in his feed
-        cy.get('of-light-card').should('have.length', 3);
+        // Operator1 should see 5 cards in his feed
+        cy.get('of-light-card').should('have.length', 5);
 
         // Set feed filter to see all card and check message card is present 
         cy.get('#opfab-feed-filter-btn-filter').click();
         cy.get('#opfab-feed-filter-ack-all').click();
         cy.get('#opfab-feed-filter-btn-filter').click();
 
-        // Operator1 should see 4 cards in his feed
-        cy.get('of-light-card').should('have.length', 4);
+        // Operator1 should see 6 cards in his feed
+        cy.get('of-light-card').should('have.length', 6);
 
         // Check icon is present
         cy.get('#opfab-feed-light-card-cypress-message1').find('.fa-check');

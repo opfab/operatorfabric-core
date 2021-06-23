@@ -270,6 +270,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             // Wait one second before sending the information to the template
             // to be synchronized with the countdown in card header and feed 
             setTimeout( () => templateGateway.setLttdExpired(this.lttdExpiredIsTrue),1000);
+            this.setButtonsVisibility();
         }
     }
 
@@ -434,7 +435,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     ngOnChanges(): void {
-        
+
         if (this.cardState.response != null && this.cardState.response !== undefined) {
             this.setEntitiesToRespond();
             this.setIsActionEnabled();
@@ -534,8 +535,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         if (!this.cardState.acknowledgmentAllowed) return true;
 
         return (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS ||
-            (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER && !this.isActionEnabled));
-    }
+            (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER && 
+                (!this.isActionEnabled || (this.isActionEnabled && this.lttdExpiredIsTrue))));    }
 
     /* 1st check : card.publisherType == ENTITY
        2nd check : the card has been sent by an entity of the user connected
