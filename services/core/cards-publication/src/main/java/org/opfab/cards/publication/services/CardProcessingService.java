@@ -95,7 +95,7 @@ public class CardProcessingService {
 
     private void processOneCard(CardPublicationData card, Optional<CurrentUserWithPerimeters> user) {
         validate(card);
-        card.prepare(Instant.ofEpochMilli(Math.round(Instant.now().toEpochMilli() / 1000d) * 1000));
+        card.prepare(Instant.ofEpochMilli(Instant.now().toEpochMilli()));
         if (user.isPresent()) {
             userCardProcessor.processPublisher(card, user.get());
             externalAppClient.sendCardToExternalApplication(card);
