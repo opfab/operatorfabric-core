@@ -119,7 +119,7 @@
       "operatorfabric": {
         "name": "OperatorFabric",
         "rank": 0,
-        "version": "SNAPSHOT"
+        "version": "2.7.0.RELEASE"
       }
     },
     "infos": {

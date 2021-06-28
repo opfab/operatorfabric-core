@@ -99,7 +99,9 @@
     "provider-url": "http://localhost:89"
   },
   "settings": {
-    "tags": {"hide":false},
+    "tags": {
+      "hide": false
+    },
     "about": {
       "firstapplication": {
         "name": "First application",
@@ -118,7 +120,7 @@
       "operatorfabric": {
         "name": "OperatorFabric",
         "rank": 0,
-        "version": "SNAPSHOT"
+        "version": "2.7.0.RELEASE"
       }
     },
     "infos": {
@@ -128,10 +130,12 @@
     "dateTimeFormat": "HH:mm DD/MM/YYYY",
     "dateFormat": "DD/MM/YYYY",
     "nightDayMode": true,
-    "styleWhenNightDayModeDesactivated" : "NIGHT"
+    "styleWhenNightDayModeDesactivated": "NIGHT"
   },
   "navbar": {
-    "hidden": ["logging"]
+    "hidden": [
+      "logging"
+    ]
   },
   "admin": {
     "hidden": false

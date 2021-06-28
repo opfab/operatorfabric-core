@@ -1,14 +1,62 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
+= Version 2.7.0.RELEASE
 
-= Version SNAPSHOT
+== Features
 
-//The release notes are managed in an outside repository to avoid constantly having conflicts when merging PRs on the
-//develop branch. See https://github.com/opfab/release-notes/.
-//The content from this repository is then pasted back to this file during the release process.
+* Monitoring & logging screen : 
+  - OC-1772 : Monitoring and logging screen adjustment
+  - OC-1691 : Add publisherName in child card for custom export in monitoring
+  - OC-1794 : Monitoring export : allow exporting more that one array from json 
+  - OC-1768 : Cards with a process state that doesn't have a 'type' property won't be displayed in monitoring screen
++
+* OC-1734 : Secure endPoint for sending card
++
+IMPORTANT: The API endPoint `cards` will now require authentication by default. 
+It is possible to configure the endpoint to not require authentication by setting the configuration parameter `checkAuthenticationForCardSending` to `false` in cards-publication service configuration file.
++
+* OC-1742 : Add a spinner in feed when opfab is loading cards in background
+* OC-1671 : UI -Automatic reload user perimeter when changed by admin 
+* OC-1762 : When all user entities are not allowed to send card do not show user card form
 
+
+== Bugs
+
+* OC-1750 : Sometimes cards does not show on calendar
+* OC-1717 : Issue with usercard process template
+* OC-1776 : Bug in dev mode when using moment object in ngrx store
+* OC-1775 : Reminder isn't triggered when "Minutes to remind before task" is 0
+* OC-1760 : Monitoring screen : need to click again on search sometimes
+* OC-1759 : Monitoring screen : cards no longer displayed unless you click on search
+* OC-1765 : UI does not take into account uiVisibility configuration
+* OC-1752 : User card: changing process/state does not reset startDate, endDate and lttd
+* OC-1790 : Card not seen when removing sender entity
+* OC-1786 : Bug when using entity with name matching an i18n prefix
+* OC-1791 : Bug when a non existing entity is set in userCard.recipientList
+* OC-1761 : Admin interface - Deal with invalid perimeter
+* OC-1804 : Do not round up publish date to the second
++
+NOTE: In previous versions, when a card was published its publication date was rounded up to the nearest second (that's why all publishDate values ended with 000). It caused issues when several updates of the cards were published in rapid succession (in the same second) as their order was not taken into account.
+
+== Tasks
+
+* OC-1748 : Card detail screen deleted when the card is deleted : Adding a cypress test
+* OC-1739 : Simplify Gradle dependency management
+* OC-1779 : Updating swagger-codegen-cli to 2.4.20
+* OC-1777 : Remove dead code related to old version of monitoring screen
+* OC-1747 : Authorize the use of . for login when creating new user in admin screen
+* OC-1698 : Fix validation conditions for login in admin screen to only allow lowercase
+* OC-1788 : Doc adjustment regarding response card
+* OC-1787 : Refactoring of logging screen
+* OC-1792 : Fixed the failing Kafka Autoconfiguration Unit test by adding a default for the value deserializer.
+* OC-1746 : Update Spring librairies
+** Spring Boot 2.5.1
+** Spring Cloud 2020.0.3
+** Spring Webflux 5.3.8
+** Spring Security 5.5.0
+** Spring Retry 1.3.1
