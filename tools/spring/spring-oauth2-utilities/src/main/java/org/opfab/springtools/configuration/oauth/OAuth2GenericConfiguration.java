@@ -44,9 +44,7 @@ import java.util.List;
 @EnableFeignClients
 @EnableCaching
 @Import({UserServiceCache.class
-        ,BusConfiguration.class
-        ,UpdateUserEventListener.class
-        ,UpdatedUserEvent.class
+        ,UpdateUserListenerConfiguration.class
         , GroupsProperties.class
         , GroupsUtils.class
         , JwtProperties.class})

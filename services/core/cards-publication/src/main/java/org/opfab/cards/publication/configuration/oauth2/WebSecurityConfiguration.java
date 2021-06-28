@@ -16,9 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.opfab.springtools.configuration.oauth.WebSecurityChecks;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -34,7 +36,10 @@ import org.springframework.security.oauth2.jwt.Jwt;
 @Profile(value = {"!test"})
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    public static final String PROMETHEUS_PATH ="/actuator/prometheus**";
+    
     public static final String AUTH_AND_IP_ALLOWED = "isAuthenticated() and @webSecurityChecks.checkUserIpAddress(authentication)";
+    public static final String ADMIN_AND_IP_ALLOWED = "hasRole('ADMIN') and @webSecurityChecks.checkUserIpAddress(authentication)";
 
     @Autowired
     WebSecurityChecks webSecurityChecks;
@@ -43,20 +48,33 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter;
 
 
+    @Value("${checkAuthenticationForCardSending:true}")
+    private boolean checkAuthenticationForCardSending;
+    
     @Override
     public void configure(final HttpSecurity http) throws Exception {
-        configureCommon(http);
+        configureCommon(http, checkAuthenticationForCardSending);
         http.csrf().disable();  
         http
                 .oauth2ResourceServer()
                 .jwt().jwtAuthenticationConverter(opfabJwtConverter);
     }
 
-    public static void configureCommon(final HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .antMatchers("/cards/userCard/**").access(AUTH_AND_IP_ALLOWED)
-                .antMatchers("/**").permitAll();
+    public static void configureCommon(final HttpSecurity http, boolean checkAuthenticationForCardSending) throws Exception {
+        if (checkAuthenticationForCardSending) {
+            http
+            .authorizeRequests()
+            .antMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll() 
+            .antMatchers("/cards/userCard/**").access(AUTH_AND_IP_ALLOWED)
+            .antMatchers(HttpMethod.DELETE, "/cards").access(ADMIN_AND_IP_ALLOWED)
+            .antMatchers("/**").access(AUTH_AND_IP_ALLOWED);
+        } else {
+            http
+            .authorizeRequests()
+            .antMatchers("/cards/userCard/**").access(AUTH_AND_IP_ALLOWED)
+            .antMatchers("/**").permitAll();
+        }
+
                 
     }
 

@@ -23,7 +23,7 @@ describe('set array columns ', () => {
     const wantedResult = [["column1", "column2"]];
 
     const jsonToArray: JsonToArray = new JsonToArray(rules);
-    expect(areArraysEquals(jsonToArray.getResultingArray(), wantedResult)).toEqual(true);
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
 
   });
 
@@ -37,7 +37,7 @@ describe('set array columns ', () => {
     const wantedResult = [["column2"]];
 
     const jsonToArray: JsonToArray = new JsonToArray(rules);
-    expect(areArraysEquals(jsonToArray.getResultingArray(), wantedResult)).toEqual(true);
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
 
   });
 
@@ -52,7 +52,7 @@ describe('set array columns ', () => {
     const wantedResult = [["column1", "column2"]];
 
     const jsonToArray: JsonToArray = new JsonToArray(rules);
-    expect(areArraysEquals(jsonToArray.getResultingArray(), wantedResult)).toEqual(true);
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
 
   });
 
@@ -75,7 +75,7 @@ describe('flatten simple objects ', () => {
     const jsonToArray: JsonToArray = new JsonToArray(rules);
     jsonToArray.add(jsonToConvert);
 
-    expect(areArraysEquals(jsonToArray.getResultingArray(), wantedResult)).toEqual(true);
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
 
   });
 
@@ -93,7 +93,7 @@ describe('flatten simple objects ', () => {
     const jsonToArray: JsonToArray = new JsonToArray(rules);
     jsonToArray.add(jsonToConvert);
 
-    expect(areArraysEquals(jsonToArray.getResultingArray(), wantedResult)).toEqual(true);
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
 
   });
 
@@ -114,7 +114,7 @@ describe('flatten simple objects ', () => {
     jsonToArray.add(jsonToConvert2);
     jsonToArray.add(jsonToConvert3);
 
-    expect(areArraysEquals(jsonToArray.getResultingArray(), wantedResult)).toEqual(true);
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
 
   });
 
@@ -136,7 +136,7 @@ describe('flatten simple objects ', () => {
     jsonToArray.add(jsonToConvert2);
     jsonToArray.add(jsonToConvert3);
 
-    expect(areArraysEquals(jsonToArray.getResultingArray(), wantedResult)).toEqual(true);
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
 
   });
 
@@ -158,7 +158,7 @@ describe('set array columns for nested array rules ', () => {
     ];
     const wantedResult = [["column1", "column2", "column3", "column4"]];
     const jsonToArray: JsonToArray = new JsonToArray(rules);
-    expect(areArraysEquals(jsonToArray.getResultingArray(), wantedResult)).toEqual(true);
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
 
   });
 
@@ -182,7 +182,7 @@ describe('set array columns for nested array rules ', () => {
     ];
     const wantedResult = [["column1", "column2", "column3", "column4", "column5", "column6"]];
     const jsonToArray: JsonToArray = new JsonToArray(rules);
-    expect(areArraysEquals(jsonToArray.getResultingArray(), wantedResult)).toEqual(true);
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
 
   });
 
@@ -206,7 +206,7 @@ describe('set array columns for nested array rules ', () => {
     ];
     const wantedResult = [["column1", "column2", "column3", "column4", "column5"]];
     const jsonToArray: JsonToArray = new JsonToArray(rules);
-    expect(areArraysEquals(jsonToArray.getResultingArray(), wantedResult)).toEqual(true);
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
 
   });
 
@@ -223,7 +223,7 @@ describe('set array columns for nested array rules ', () => {
     ];
     const wantedResult = [["column1", "column2"]];
     const jsonToArray: JsonToArray = new JsonToArray(rules);
-    expect(areArraysEquals(jsonToArray.getResultingArray(), wantedResult)).toEqual(true);
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
 
   });
 });
@@ -249,7 +249,7 @@ describe('Flatten objects with nested arrays', () => {
     const wantedResult = [["column1", "column2", "column3", "column4"], ["f1", "f2", "f3", "f4"]];
     const jsonToArray: JsonToArray = new JsonToArray(rules);
     jsonToArray.add(jsonToConvert);
-    expect(areArraysEquals(jsonToArray.getResultingArray(), wantedResult)).toEqual(true);
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
 
 
   });
@@ -281,7 +281,7 @@ describe('Flatten objects with nested arrays', () => {
     ];
     const jsonToArray: JsonToArray = new JsonToArray(rules);
     jsonToArray.add(jsonToConvert);
-    expect(areArraysEquals(jsonToArray.getResultingArray(), wantedResult)).toEqual(true);
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
 
 
   });
@@ -313,7 +313,7 @@ describe('Flatten objects with nested arrays', () => {
     ];
     const jsonToArray: JsonToArray = new JsonToArray(rules);
     jsonToArray.add(jsonToConvert);
-    expect(areArraysEquals(jsonToArray.getResultingArray(), wantedResult)).toEqual(true);
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
 
   });
 
@@ -355,13 +355,87 @@ describe('Flatten objects with nested arrays', () => {
     const jsonToArray: JsonToArray = new JsonToArray(rules);
     jsonToArray.add(jsonToConvert1);
     jsonToArray.add(jsonToConvert2);
-    expect(areArraysEquals(jsonToArray.getResultingArray(), wantedResult)).toEqual(true);
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
 
 
   });
 
 
-  it('add 2 field  + 2 nested array , only the first nested array is process    ', () => {
+  it('add 2 fields  + 2 nested arrays, only the first nested array is processed if processOnlyIfPreviousArraysAreEmpty is true', () => {
+    const rules = [
+      { columnName: "column1", jsonField: "field1" },
+      { columnName: "column2", jsonField: "field2" },
+      {
+        jsonField: "arrayField", fields: [
+          { columnName: "column3", jsonField: "field3" }
+        ]
+      },
+      {
+        jsonField: "arrayField2", processOnlyIfPreviousArraysAreEmpty: true, fields: [
+          { columnName: "column3", jsonField: "field3" }
+        ]
+      }
+    ];
+
+    const jsonToConvert = {
+      field1: "f1", field2: "f2",
+      arrayField: [
+        { field3: "f3" }
+      ],
+      arrayField2: [
+        { field3: "f3b" }
+      ]
+    };
+    const wantedResult = [
+      ["column1", "column2", "column3"],
+      ["f1", "f2", "f3"]
+    ];
+    const jsonToArray: JsonToArray = new JsonToArray(rules);
+    jsonToArray.add(jsonToConvert);
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
+
+  });
+
+
+  it('add 2 fields  + 2 nested arrays, the two nested arrays are processed if processOnlyIfPreviousArraysAreEmpty is false', () => {
+    const rules = [
+      { columnName: "column1", jsonField: "field1" },
+      { columnName: "column2", jsonField: "field2" },
+      {
+        jsonField: "arrayField", fields: [
+          { columnName: "column3", jsonField: "field3" }
+        ]
+      },
+      {
+        jsonField: "arrayField2", processOnlyIfPreviousArraysAreEmpty: false, fields: [
+          { columnName: "column3", jsonField: "field3" }
+        ]
+      }
+    ];
+
+    const jsonToConvert = {
+      field1: "f1", field2: "f2",
+      arrayField: [
+        { field3: "f3" }
+      ],
+      arrayField2: [
+        { field3: "f3b" }
+      ]
+    };
+    const wantedResult = [
+      ["column1", "column2", "column3"],
+      ["f1", "f2", "f3"],
+      ["f1", "f2", "f3b"]
+    ];
+    const jsonToArray: JsonToArray = new JsonToArray(rules);
+    jsonToArray.add(jsonToConvert);
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
+
+  });
+
+
+
+  it('add 2 fields + 2 nested arrays, the two nested arrays are processed if processOnlyIfPreviousArraysAreEmpty is not set', () => {
     const rules = [
       { columnName: "column1", jsonField: "field1" },
       { columnName: "column2", jsonField: "field2" },
@@ -388,16 +462,17 @@ describe('Flatten objects with nested arrays', () => {
     };
     const wantedResult = [
       ["column1", "column2", "column3"],
-      ["f1", "f2", "f3"]
+      ["f1", "f2", "f3"],
+      ["f1", "f2", "f3b"]
     ];
     const jsonToArray: JsonToArray = new JsonToArray(rules);
     jsonToArray.add(jsonToConvert);
-    expect(areArraysEquals(jsonToArray.getResultingArray(), wantedResult)).toEqual(true);
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
 
   });
 
 
-  it('add 2 field + 2 nested array , the second nested array is process as the first is empty in the object to convert', () => {
+  it('add 2 fields + 2 nested arrays, the second nested array is processed as the first is empty in the object to convert and processOnlyIfPreviousArraysAreEmpty is true', () => {
     const rules = [
       { columnName: "column1", jsonField: "field1" },
       { columnName: "column2", jsonField: "field2" },
@@ -407,7 +482,7 @@ describe('Flatten objects with nested arrays', () => {
         ]
       },
       {
-        jsonField: "arrayField2", fields: [
+        jsonField: "arrayField2", processOnlyIfPreviousArraysAreEmpty: true, fields: [
           { columnName: "column3", jsonField: "field3" }
         ]
       }
@@ -427,9 +502,63 @@ describe('Flatten objects with nested arrays', () => {
     ];
     const jsonToArray: JsonToArray = new JsonToArray(rules);
     jsonToArray.add(jsonToConvert);
-    expect(areArraysEquals(jsonToArray.getResultingArray(), wantedResult)).toEqual(true);
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
 
   });
+
+
+  it('complex case : add 2 fields + 2 nested arrays with more than one line and processOnlyIfPreviousArraysAreEmpty is not set, the two nested arrays are processed', () => {
+    const rules = [
+      { columnName: "column1", jsonField: "field1" },
+      { columnName: "column2", jsonField: "field2" },
+      {
+        jsonField: "arrayField", fields: [
+          { columnName: "column3", jsonField: "field3" }
+        ]
+      },
+      {
+        jsonField: "arrayField2", fields: [
+          { columnName: "column3", jsonField: "field3" },
+          { columnName: "column4", jsonField: "field4" },
+        ]
+      }
+    ];
+
+    const jsonToConvert = {
+      field1: "f1", field2: "f2",
+      arrayField: [
+        { field3: "f3" },
+        { field3: "f3b" }
+      ],
+      arrayField2: [
+        { field3: "f3c",field4 : "f4c" },
+        { field3: "f3d",field4 : "f4d" },
+      ]
+    };
+
+    const jsonToConvert2 = {
+      field1: "f1b", field2: "f2b",
+      arrayField2: [
+        { field3: "f3c2",field4 : "f4c2" },
+        { field3: "f3d2",field4 : "f4d2" },
+      ]
+    };
+    const wantedResult = [
+      ["column1", "column2", "column3","column4"],
+      ["f1", "f2", "f3" ,""],
+      ["f1", "f2", "f3b" ,""],
+      ["f1", "f2", "f3c","f4c"],
+      ["f1", "f2", "f3d","f4d"],
+      ["f1b", "f2b", "f3c2","f4c2"],
+      ["f1b", "f2b", "f3d2","f4d2"]
+    ];
+    const jsonToArray: JsonToArray = new JsonToArray(rules);
+    jsonToArray.add(jsonToConvert);
+    jsonToArray.add(jsonToConvert2);
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
+
+  });
+
 });
 
 describe('Flatten objects with double nested array  ', () => {
@@ -482,7 +611,7 @@ describe('Flatten objects with double nested array  ', () => {
     const jsonToArray: JsonToArray = new JsonToArray(rules);
     jsonToArray.add(jsonToConvert1);
     jsonToArray.add(jsonToConvert2);
-    expect(areArraysEquals(jsonToArray.getResultingArray(), wantedResult)).toEqual(true);
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
 
 
   });

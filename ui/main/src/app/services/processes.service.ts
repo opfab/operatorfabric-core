@@ -18,7 +18,6 @@ import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {Card} from '@ofModel/card.model';
 import {select, Store} from '@ngrx/store';
-import {selectLinesOfLoggingResult} from '@ofStore/selectors/logging.selectors';
 import {AppState} from '@ofStore/index';
 import {selectLastCardLoaded} from '@ofStore/selectors/feed.selectors';
 import {Utilities} from '../common/utilities';
@@ -45,7 +44,6 @@ export class ProcessesService {
         this.processesUrl = `${environment.urls.processes}`;
         this.processGroupsUrl = `${environment.urls.processGroups}`;
         this.monitoringConfigUrl = `${environment.urls.monitoringConfig}`;
-        this.loadTranslationIfNeededAfterLoadingLoggingCard();
         this.loadTranslationIfNeededAfterLoadingCard();
     }
 
@@ -55,13 +53,6 @@ export class ProcessesService {
             .subscribe(card => { if (!!card) this.loadTranslationsForProcess(card.process, card.processVersion)});
     }
 
-
-    private loadTranslationIfNeededAfterLoadingLoggingCard() {
-        this.store.pipe(
-            select(selectLinesOfLoggingResult))
-            .subscribe(lines => lines.forEach(loggingResult =>
-                this.loadTranslationsForProcess(loggingResult.process, loggingResult.processVersion)));
-    }
 
     public loadTranslationsForProcess(process, version) {
         this.translateService.getLangs().forEach(
@@ -300,16 +291,22 @@ export class ProcessesService {
         return '';
     }
 
-    public getProcessesPerProcessGroups(): Map<any, any> {
+    public getProcessesPerProcessGroups(processesFilter?: string[]): Map<any, any> {
         const processesPerProcessGroups = new Map();
 
         this.getAllProcesses().forEach(process => {
 
-            const processGroupId = this.findProcessGroupForProcess(process.id);
-            if (processGroupId !== '') {
-                const processes = (!! processesPerProcessGroups.get(processGroupId) ? processesPerProcessGroups.get(processGroupId) : []);
-                processes.push({id: process.id, itemName: process.name, i18nPrefix: `${process.id}.${process.version}`});
-                processesPerProcessGroups.set(processGroupId, processes);
+            if ((! processesFilter) || processesFilter.includes(process.id)) {
+                const processGroupId = this.findProcessGroupForProcess(process.id);
+                if (processGroupId !== '') {
+                    const processes = (!!processesPerProcessGroups.get(processGroupId) ? processesPerProcessGroups.get(processGroupId) : []);
+                    processes.push({
+                        id: process.id,
+                        itemName: process.name,
+                        i18nPrefix: `${process.id}.${process.version}`
+                    });
+                    processesPerProcessGroups.set(processGroupId, processes);
+                }
             }
         });
         return processesPerProcessGroups;

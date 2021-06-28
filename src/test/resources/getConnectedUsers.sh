@@ -15,6 +15,6 @@ then
 	url="http://localhost"
 fi
 
-source ./getToken.sh $url
+source ./getToken.sh "admin" $url
 curl $url:2002/cards/connections -H "Authorization:Bearer $token"
 echo ""

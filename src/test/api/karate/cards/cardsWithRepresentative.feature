@@ -28,6 +28,7 @@ Feature: Cards with representative
 
 # Push card
     Given url opfabPublishCardUrl + 'cards'
+    And header Authorization = 'Bearer ' + authToken
     And request card
     When method post
     Then status 201
@@ -58,6 +59,7 @@ Feature: Cards with representative
 
  #delete card
     Given url opfabPublishCardUrl + 'cards/api_test.processRepresentative'
+    And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
 

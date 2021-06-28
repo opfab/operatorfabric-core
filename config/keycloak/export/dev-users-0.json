@@ -326,5 +326,39 @@
     },
     "notBefore" : 0,
     "groups" : [ ]
+  },
+  {
+    "id" : "793c4666-1162-44a0-b372-publisher1",
+    "createdTimestamp" : 1557499736343,
+    "username" : "publisher_test",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "firstName" : "",
+    "lastName" : "",
+    "attributes" : {
+      "entitiesId" : [ "ENTITY1;ENTITY3" ],
+      "groups" : ["Dispatcher;ReadOnly;Supervisor"]
+    },
+    "credentials" : [ {
+      "type" : "password",
+      "hashedSaltedValue" : "GMBbWuLbTQCAjzm46uXhvMXzkYsvrEt9zCdOafiR36ECpkHznpCP3T6wiEgfmNHHnuERdRWn5gYmAIS3A1oNWQ==",
+      "salt" : "TnbUjMTW+Iv2JiYwXAzfOw==",
+      "hashIterations" : 27500,
+      "counter" : 0,
+      "algorithm" : "pbkdf2-sha256",
+      "digits" : 0,
+      "period" : 0,
+      "createdDate" : 1557499745015,
+      "config" : { }
+    } ],
+    "disableableCredentialTypes" : [ "password" ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "uma_authorization", "offline_access" ],
+    "clientRoles" : {
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
   }]
 }

@@ -3,14 +3,14 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "com.commercehub.gradle.plugin:gradle-avro-plugin:${versions['gradle.avro.plugin']}"
+        classpath cloud.gradleAvro
     }
 }
 
 apply plugin: "com.commercehub.gradle.plugin.avro"
 
 dependencies {
-    compile "org.apache.avro:avro:${versions['avro']}"
+    compile cloud.avro
 }
 
 jar {

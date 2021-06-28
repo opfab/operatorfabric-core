@@ -16,6 +16,10 @@ import {ProcessesService} from '@ofServices/processes.service';
 import {PerimetersService} from '@ofServices/perimeters.service';
 import {Process} from '@ofModel/processes.model';
 import {Utilities} from '../../../../../common/utilities';
+import {MessageLevel} from '@ofModel/message.model';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {AlertMessage} from '@ofStore/actions/alert.actions';
 
 @Component({
   selector: 'of-edit-user-modal',
@@ -24,7 +28,9 @@ import {Utilities} from '../../../../../common/utilities';
 })
 export class EditPerimeterModalComponent implements OnInit {
 
+
   constructor(
+      private store: Store<AppState>,
       private activeModal: NgbActiveModal,
       private crudService: PerimetersService,
       private processesService: ProcessesService,
@@ -126,9 +132,18 @@ export class EditPerimeterModalComponent implements OnInit {
 
   update() {
     this.cleanForm();
-    this.crudService.update(this.perimeterForm.value).subscribe(() => {
-      this.activeModal.close('Update button clicked on perimeter modal');
-    });
+    this.crudService.update(this.perimeterForm.value).subscribe(res => 
+      this.onSavesuccess(),
+      err => this.onSaveError(err)
+    );
+  }
+
+  onSavesuccess() {
+    this.activeModal.close('Update button clicked on perimeter modal');
+  }
+
+  onSaveError(res) {
+    this.store.dispatch(new AlertMessage({alertMessage: {message: res.originalError.error.message, level: MessageLevel.ERROR}}));
   }
 
   public addStateRightFormGroup() {

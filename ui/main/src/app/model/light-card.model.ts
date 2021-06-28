@@ -16,7 +16,7 @@ export class LightCard {
         readonly uid: string,
         readonly id: string,
         readonly publisher: string,
-        readonly processVersion: string,
+        readonly processVersion: string,    
         readonly publishDate: number,
         readonly startDate: number,
         readonly endDate: number,

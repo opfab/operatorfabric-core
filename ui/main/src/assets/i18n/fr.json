@@ -91,7 +91,8 @@
     "tips": {
       "acknowledged": "Acquittée",
       "lttd": "Temps restant pour décider",
-      "hasAResponseFromYourEntity" : "Votre entité a déjà répondu"
+      "hasAResponseFromYourEntity" : "Votre entité a déjà répondu",
+      "loadingInProgress": "Chargement de cartes en cours"
     },
     "acknowledgeAllCards": {
       "label": "Acquitter toutes les cartes",
@@ -162,16 +163,24 @@
   },
   "logging": {
     "filters": {
-      "process": "PROCESSUS"
+      "publishDateFrom": "PUBLIE A PARTIR DE",
+      "publishDateTo": "PUBLIE JUSQU'A",
+      "activeFrom": "ACTIVE A PARTIR DE",
+      "activeTo": "ACTIVE JUSQU'A"
     },
-    "timeOfAction": "MOMENT DE L'ACTION",
-    "title": "TITRE",
-    "summary": "RESUME",
-    "description": "DESCRIPTION",
-    "sender": "EMETTEUR",
-    "processGroup": "SERVICE",
+    "result": { 
+      "severity": "SEVERITE",
+      "timeOfAction": "MOMENT DE L'ACTION",
+      "title": "TITRE",
+      "summary": "RESUME",
+      "description": "DESCRIPTION",
+      "sender": "EMETTEUR",
+      "process" : "PROCESSUS",
+      "processGroup": "SERVICE",
+      "representative": "MANDATAIRE"
+    },
     "noResult": "Votre recherche ne correspond à aucun résultat.",
-    "ExportTOExcel": "Exporter les données",
+    "exportToExcel": "Exporter les données",
     "resultsNumber":"Nombre de résultats"
   },
   "monitoring": {
@@ -224,7 +233,7 @@
     "title": "CREATION D'UNE NOUVELLE CARTE",
     "editTitle" : "EDITION D'UNE CARTE",
     "error": {
-      "notAvailable": "Fonctionnalité non disponible",
+      "notAvailable": "Vous n'êtes pas autorisé à envoyer des cartes",
       "templateError" : "Erreur technique : template non conforme",
       "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques",
       "endDateBeforeStartDate": "La date de fin doit être postérieure à la date de début",
@@ -341,7 +350,7 @@
       "login": {
         "required": "L'identifiant est obligatoire.",
         "minLength": "L'identifiant doit avoir au moins 2 caractères.",
-        "pattern": "L'identifiant ne peut contenir que les caractères suivants : lettres, _, - ou chiffres."
+        "pattern": "L'identifiant ne peut contenir que les caractères suivants : lettres minuscules, _, -, . ou chiffres."
       },
       "firstName": {
         "required": "Le prénom est obligatoire."

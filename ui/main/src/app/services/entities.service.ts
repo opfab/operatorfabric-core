@@ -111,8 +111,11 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
   }
 
     public getEntityName(idEntity: string): string {
-      const name = this._entities.find(entity => entity.id === idEntity).name;
-      return (name ? name : idEntity);
+      const found = this._entities.find(entity => entity.id === idEntity)
+      if (found && found.name)
+        return found.name
+
+      return idEntity;
     }
 
   private setEntityNamesInTemplateGateway(): void {

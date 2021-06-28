@@ -6,16 +6,16 @@ dependencies {
     swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
     swaggerUI generator.swaggerUI
     compile project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
-    compile  cloud.starterBus
+    compile boot.starterRabbitmq
     implementation misc.jsonSmart
     compile boot.starterAop
 
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
 
-    implementation 'org.springframework.kafka:spring-kafka'
-    implementation "io.confluent:kafka-schema-registry-client:${versions['kavro.schemaRegistryClient']}"
-    implementation "io.confluent:kafka-avro-serializer:${versions['kavro.avroSerializer']}"
+    implementation cloud.springKafka
+    implementation cloud.kafkaAvroSchemaRegistryClient
+    implementation cloud.kafkaAvroSerializer
 
     compile boot.starterWeb, boot.starterJetty
     compile project(':client:cards-client-data')

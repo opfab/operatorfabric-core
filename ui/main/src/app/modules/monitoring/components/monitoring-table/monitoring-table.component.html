@@ -14,7 +14,6 @@
         <tr>
             <th scope="col"></th>
             <th scope="col" style="padding-left: 5px" translate>monitoring.time</th>
-            <th scope="col" translate>monitoring.businessPeriod</th>
             <th scope="col" translate *ngIf="displayProcessGroupColumn">monitoring.filters.processGroup</th>
             <th scope="col" translate>monitoring.filters.process</th>
             <th scope="col" translate>monitoring.title</th>
@@ -26,7 +25,6 @@
         <tr *ngFor="let line of result" (click)="selectCard(line.cardId)" class="opfab-monitoring-table-line" style="cursor: pointer;">
             <td class="opfab-monitoring-sev opfab-monitoring-sev-{{line.severity}}"></td>
             <td style="padding-left: 5px">{{displayTime(line.creationDateTime)}}</td>
-            <td>{{displayTime(line.beginningOfBusinessPeriod)}} - {{displayTime(line.endOfBusinessPeriod)}}</td>
             <td translate *ngIf="displayProcessGroupColumn">{{ processesService.findProcessGroupLabelForProcess(line.processId) }}</td>
             <td translate>{{line.processName}}</td>
             <td translate [translateParams]="line.title.parameters">{{line.title.key}}</td>

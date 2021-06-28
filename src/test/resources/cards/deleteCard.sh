@@ -17,5 +17,6 @@ if [ -z $1 ]
 then
     echo "Usage deleteCard card_id opfab_url"
 else
-    curl -s -X DELETE $url:2102/cards/$1 -H "Content-type:application/json"
+    source ../getToken.sh "admin" $url
+    curl -s -X DELETE $url:2102/cards/$1 -H "Authorization: Bearer $token" -H "Content-type:application/json"
 fi

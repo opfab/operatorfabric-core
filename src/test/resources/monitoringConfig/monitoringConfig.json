@@ -42,7 +42,7 @@
       {
         "jsonField" : "childCards",
         "fields" : [
-          { "columnName": "Response from", "jsonField": "publisher" },
+          { "columnName": "Response from", "jsonField": "publisherName" },
           { "columnName": "Response date","jsonField": "publishDate"},
           { "columnName": "Response ","jsonField": "data.response"}
         ]

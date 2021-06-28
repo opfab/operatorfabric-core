@@ -115,8 +115,41 @@ export function reducer(
                 sortByRead: !state.sortByRead
             };
         }
-        case LightCardActionTypes.UpdateALightCard: {
-            return LightCardAdapter.upsertOne(action.payload.lightCard, state);
+        case LightCardActionTypes.UpdateLightCardRead: {
+            const update: Update<Card> = {
+                id: action.payload.cardId,
+                changes: {
+                    hasBeenRead: action.payload.hasBeenRead
+                }
+            }
+            return {
+                ...LightCardAdapter.updateOne(update, state),
+            }
+        }
+
+        case LightCardActionTypes.UpdateLightCardAcknowledgment: {
+            const update: Update<Card> = {
+                id: action.payload.cardId,
+                changes: {
+                    hasBeenAcknowledged: action.payload.hasBeenAcknowledged
+                }
+            }
+            return {
+                ...LightCardAdapter.updateOne(update, state),
+            }
+        }
+
+        case LightCardActionTypes.RemindLightCard: {
+            const update: Update<Card> = {
+                id: action.payload.lightCard.id,
+                changes: {
+                    hasBeenAcknowledged:false,
+                    hasBeenRead: false
+                }
+            }
+            return {
+                ...LightCardAdapter.updateOne(update, state),
+            }
         }
 
         case FeedActionTypes.ApplySeveralFilters: {

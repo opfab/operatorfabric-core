@@ -37,7 +37,7 @@ public class EntityCycleDetectorShould {
 
     @Test
     void OK__4__AddedEntityWithNoParents__In__AnEmptyEntityCollection() {
-        List<EntityData> noEntities = Collections.emptyList();
+        List<Entity> noEntities = Collections.emptyList();
         Entity withoutAnyParent = EntityData.builder()
                 .id(testedEntity)
                 .description("this entity has no parents")
@@ -50,7 +50,7 @@ public class EntityCycleDetectorShould {
 
     @Test
     void OK__4__AddedEntityWithUnknownParents__In__AnEmptyEntityCollection(){
-        List<EntityData> noEntities = Collections.emptyList();
+        List<Entity> noEntities = Collections.emptyList();
         Entity withoutAnyParent = EntityData.builder()
                 .id(testedEntity)
                 .description("this entity has unknown parents")
@@ -64,7 +64,7 @@ public class EntityCycleDetectorShould {
 
     @Test
     void CYCLE__4__AddedEntityReferring2Itself__In__AnEmptyEntityCollection() {
-        List<EntityData> noEntities = Collections.emptyList();
+        List<Entity> noEntities = Collections.emptyList();
         String entityId = testedEntity;
         Entity entityWithUnknownParents = EntityData.builder()
                 .id(entityId)
@@ -81,7 +81,7 @@ public class EntityCycleDetectorShould {
 
     @Test
     void CYCLE__4__AddedEntityWithUnknownParentsAndReferring2ItSelf__In__AnEmptyEntityCollection() {
-        List<EntityData> noEntities = Collections.emptyList();
+        List<Entity> noEntities = Collections.emptyList();
         String entityId = testedEntity;
 
         Entity withoutAnyParent_And_RefersItself = EntityData.builder()

@@ -17,23 +17,20 @@ import {Card, CardData, CardForPublishing} from '@ofModel/card.model';
 import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {GuidService} from '@ofServices/guid.service';
-import {LightCard, PublisherType} from '@ofModel/light-card.model';
+import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {CardSubscriptionClosed, CardSubscriptionOpen} from '@ofActions/cards-subscription.actions';
-import {LineOfLoggingResult} from '@ofModel/line-of-logging-result.model';
-import {catchError, concatMap, ignoreElements, map, startWith} from 'rxjs/operators';
-import * as moment from 'moment';
-import {I18n} from '@ofModel/i18n.model';
-import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
+import {catchError, concatMap, ignoreElements,startWith} from 'rxjs/operators';
 import {
     AddLightCardFailure,
     LoadLightCard,
     RemoveLightCard
 } from '@ofActions/light-card.actions';
-import {EntitiesService} from '@ofServices/entities.service';
 import {BusinessConfigChangeAction} from '@ofStore/actions/processes.actions';
+import {UserConfigChangeAction} from '@ofStore/actions/user.actions';
+
 
 @Injectable()
 export class CardService {
@@ -55,10 +52,10 @@ export class CardService {
 
 
     constructor(private httpClient: HttpClient,
-                private guidService: GuidService,
-                private store: Store<AppState>,
-                private authService: AuthenticationService,
-                private entitiesService: EntitiesService) {
+        private guidService: GuidService,
+        private store: Store<AppState>,
+        private authService: AuthenticationService) {
+
         const clientId = this.guidService.getCurrentGuidString();
         this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}`;
         this.cardsUrl = `${environment.urls.cards}/cards`;
@@ -149,6 +146,10 @@ export class CardService {
                             this.store.dispatch(new BusinessConfigChangeAction());
                             console.log(new Date().toISOString(), `CardService - BUSINESS_CONFIG_CHANGE received`);
                             break;
+                        case 'USER_CONFIG_CHANGE':
+                                this.store.dispatch(new UserConfigChangeAction());
+                                console.log(new Date().toISOString(), `CardService - USER_CONFIG_CHANGE received`);
+                                break;
                         default :
                             return observer.next(JSON.parse(message.data, CardOperation.convertTypeIntoEnum));
                     }
@@ -258,52 +259,5 @@ export class CardService {
         return this.httpClient.delete<void>(`${this.userCardReadUrl}/${cardUid}`, {observe: 'response'});
     }
 
-    fetchLoggingResults(filters: Map<string, string[]>): Observable<Page<LineOfLoggingResult>> {
-        filters.set('childCards', ['true']);
-        return this.fetchArchivedCards(filters).pipe(
-            map((page: Page<LightCard>) => {
-                const cards = page.content;
-                const lines = cards.map((card: LightCard) => {
-                    const i18nPrefix = `${card.process}.${card.processVersion}.`;
 
-                    const publisherType = card.publisherType;
-                    const enumThirdParty = PublisherType.EXTERNAL;
-                    const isThirdPartyPublisher = enumThirdParty === PublisherType[publisherType];
-                    const sender = (isThirdPartyPublisher) ? card.publisher : this.entitiesService.getEntityName(card.publisher);
-
-                    let representative = '';
-                    if (!!card.representativeType && !!card.representative) {
-                        const representativeType = card.representativeType;
-                        const isThirdPartyRepresentative = enumThirdParty === PublisherType[representativeType];
-                        representative = (isThirdPartyRepresentative) ? card.representative : this.entitiesService.getEntityName(card.representative);
-                    }
-
-                    return ({
-                        process: card.process,
-                        processVersion: card.processVersion,
-                        state: card.state,
-                        cardType: card.severity.toLowerCase(),
-                        businessDate: moment(card.publishDate),
-                        i18nKeyForTitle: this.addPrefix(i18nPrefix, card.title),
-                        i18nKeyForSummary: this.addPrefix(i18nPrefix, card.summary),
-                        sender: sender,
-                        representative: representative
-                    } as LineOfLoggingResult);
-                });
-                return {
-                    totalPages: page.totalPages,
-                    totalElements: page.totalElements,
-                    content: lines
-                } as Page<LineOfLoggingResult>;
-            })
-        );
-    }
-
-    addPrefix(i18nPrefix: string, initialI18n: I18n): I18n {
-        return {...initialI18n, key: i18nPrefix + initialI18n.key} as I18n;
-    }
-
-    fetchMonitoringResults(filters: Map<string, string[]>): Observable<Page<LineOfMonitoringResult>> {
-        return null;
-    }
 }

@@ -11,7 +11,7 @@ Feature: Cards
     * def card =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"processInstanceId" : "process1WithNoProcessField",
 	"state": "messageState",
@@ -26,7 +26,7 @@ Feature: Cards
 
 # Push card
     Given url opfabPublishCardUrl + 'cards'
-
+	And header Authorization = 'Bearer ' + authToken
     And request card
     When method post
     Then status 400

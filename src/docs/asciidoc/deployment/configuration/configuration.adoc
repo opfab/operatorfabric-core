@@ -8,7 +8,7 @@
 
 
 
-:springboot_doc: https://docs.spring.io/spring-boot/docs/2.4.0-M1/reference/htmlsingle/
+:springboot_doc: https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/
 :mongo_doc: https://docs.mongodb.com/manual/reference/
 :spring_kafka_doc: https://docs.spring.io/spring-kafka/reference/html/
 
@@ -112,6 +112,7 @@ The cards-publication service has these specific properties :
 |name|default|mandatory?|Description
 
 |checkPerimeterForResponseCard|true|no|If false, OperatorFabric will not check that a user has write rights on a process/state to respond to a card
+|checkAuthenticationForCardSending|true|no|If false, OperatorFabric will not require user authentication to send or delete a card via endpoint /cards (it does not concerned user cards which always need authentication)
 |spring.kafka.consumer.group-id |null|no| If set, support for receiving cards via Kafka is enabled
 |spring.deserializer.value.delegate.class|io.confluent.kafka.serializers.
 KafkaAvroDeserializer|yes| Deserializer used to convert the received bytes into objects

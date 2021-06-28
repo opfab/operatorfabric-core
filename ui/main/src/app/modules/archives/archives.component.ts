@@ -53,6 +53,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     @ViewChild('filters') filtersTemplate: ArchivesLoggingFiltersComponent;
     selectedCard: Card;
     fromEntityOrRepresentativeSelectedCard = null;
+    listOfProcesses = [];
 
     constructor(private store: Store<AppState>,
                 private processesService: ProcessesService,
@@ -73,6 +74,17 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             publishDateTo: new FormControl(''),
             activeFrom: new FormControl(''),
             activeTo: new FormControl(''),
+        });
+
+        processesService.getAllProcesses().forEach( (process) => {
+            let itemName = process.name;
+            if (!itemName)
+                itemName = process.id;
+            this.listOfProcesses.push({
+                id: process.id,
+                itemName: itemName,
+                i18nPrefix: `${process.id}.${process.version}`
+            });
         });
     }
 

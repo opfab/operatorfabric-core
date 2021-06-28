@@ -26,7 +26,7 @@ Feature: Cards
 
 # Push card
     Given url opfabPublishCardUrl + 'cards'
-
+	And header Authorization = 'Bearer ' + authToken
     And request card
     When method post
     Then status 400

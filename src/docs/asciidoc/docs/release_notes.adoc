@@ -5,44 +5,58 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-= Version 2.6.0.RELEASE
+= Version 2.7.0.RELEASE
 
 == Features
 
-* Administration :
-- OC-1695 : Add authorized ip address settings in user administration screen
-- OC-1697 & OC-1699 : Add an admin screen to see open subscriptions
+* Monitoring & logging screen : 
+  - OC-1772 : Monitoring and logging screen adjustment
+  - OC-1691 : Add publisherName in child card for custom export in monitoring
+  - OC-1794 : Monitoring export : allow exporting more that one array from json 
+  - OC-1768 : Cards with a process state that doesn't have a 'type' property won't be displayed in monitoring screen
++
+* OC-1734 : Secure endPoint for sending card
++
+IMPORTANT: The API endPoint `cards` will now require authentication by default. 
+It is possible to configure the endpoint to not require authentication by setting the configuration parameter `checkAuthenticationForCardSending` to `false` in cards-publication service configuration file.
++
+* OC-1742 : Add a spinner in feed when opfab is loading cards in background
+* OC-1671 : UI -Automatic reload user perimeter when changed by admin 
+* OC-1762 : When all user entities are not allowed to send card do not show user card form
 
-* User card :
-- OC-1723 : Check that Lttd is not before start date and not after endDate
-- OC-1740 : Use entity description attribute for recipient list in user card as an option
-
-* Misc :
-- OC-1633 : Add the option to filter notifications that has already been answered by user own entity
-- OC-1672 : Reload the UI configuration when bundles change
-- OC-1741 : Remove detail card view when card is deleted
 
 == Bugs
 
-* OC-1711 : Clicking on a link to a third application from a card in modal shall close the modal
-* OC-1712 : Screen adjustement for archives screen when resolution smaller than 1920*1080
-* OC-1713 : Screen adjustement for logging screen when resolution smaller than 1920*1080
-* OC-1722 : Response to card example IT incident is not confirmed
-* OC-1728 : Acknowledging all cards shouldn't change their read status
-* OC-1716 : Adjustement to view for mobile phone when language is set to French
-* OC-1736 : Correct bug when child card is received before parent card
-* OC-1714 : Invalid group from token shall not prevent to start application
-* OC-1721 : When getting entities from token, it shall take into account groups of entities configured in mongo
-* OC-1738 : Parent card data not available in child card when using Kafka
+* OC-1750 : Sometimes cards does not show on calendar
+* OC-1717 : Issue with usercard process template
+* OC-1776 : Bug in dev mode when using moment object in ngrx store
+* OC-1775 : Reminder isn't triggered when "Minutes to remind before task" is 0
+* OC-1760 : Monitoring screen : need to click again on search sometimes
+* OC-1759 : Monitoring screen : cards no longer displayed unless you click on search
+* OC-1765 : UI does not take into account uiVisibility configuration
+* OC-1752 : User card: changing process/state does not reset startDate, endDate and lttd
+* OC-1790 : Card not seen when removing sender entity
+* OC-1786 : Bug when using entity with name matching an i18n prefix
+* OC-1791 : Bug when a non existing entity is set in userCard.recipientList
+* OC-1761 : Admin interface - Deal with invalid perimeter
+* OC-1804 : Do not round up publish date to the second
++
+NOTE: In previous versions, when a card was published its publication date was rounded up to the nearest second (that's why all publishDate values ended with 000). It caused issues when several updates of the cards were published in rapid succession (in the same second) as their order was not taken into account.
 
 == Tasks
 
-* OC-1729 : Removing push_card_loop script (use instead scripts provided in ./src/test/resources)
-* OC-1730 : Fixing baseUrls in swagger for documentation
-* OC-1701 : Set indexes in mongoDB
-* OC-1737 : Do not freeze the UI when loading a lot of cards
-* OC-1743 : Add cypress tests for acknowledgment feature
-* OC-1663 : Removing Ribbon and updating Spring Boot to 2.4.6
-
-Please see the  https://opfab.github.io/documentation/current/docs/single_page_doc.html#_migration_guide_from_release_2_5_0_to_release_2_6_0[migration guide] regarding the configuration of a new mandatory deployment property.
-
+* OC-1748 : Card detail screen deleted when the card is deleted : Adding a cypress test
+* OC-1739 : Simplify Gradle dependency management
+* OC-1779 : Updating swagger-codegen-cli to 2.4.20
+* OC-1777 : Remove dead code related to old version of monitoring screen
+* OC-1747 : Authorize the use of . for login when creating new user in admin screen
+* OC-1698 : Fix validation conditions for login in admin screen to only allow lowercase
+* OC-1788 : Doc adjustment regarding response card
+* OC-1787 : Refactoring of logging screen
+* OC-1792 : Fixed the failing Kafka Autoconfiguration Unit test by adding a default for the value deserializer.
+* OC-1746 : Update Spring librairies
+** Spring Boot 2.5.1
+** Spring Cloud 2020.0.3
+** Spring Webflux 5.3.8
+** Spring Security 5.5.0
+** Spring Retry 1.3.1

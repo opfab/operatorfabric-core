@@ -10,7 +10,7 @@ Feature: Cards with timespans
     * def card =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "processTimeSpan",
@@ -45,6 +45,7 @@ Feature: Cards with timespans
 
 # Push card
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authToken
     And request card
     When method post
     Then status 201
@@ -73,6 +74,7 @@ Feature: Cards with timespans
 
  #delete card
     Given url opfabPublishCardUrl + 'cards/api_test.processTimeSpan'
+	And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
 
@@ -82,7 +84,7 @@ Scenario: When post a card with no timeZone in timespan recurrence , it set the 
     * def card =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "processTimeSpan",
@@ -107,6 +109,7 @@ Scenario: When post a card with no timeZone in timespan recurrence , it set the 
 
 # Push card
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authToken
     And request card
     When method post
     Then status 201
@@ -126,6 +129,7 @@ Scenario: When post a card with no timeZone in timespan recurrence , it set the 
 
  #delete card
     Given url opfabPublishCardUrl + 'cards/api_test.processTimeSpan'
+	And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
 
@@ -135,7 +139,7 @@ Scenario: When post a card with no timeZone in timespan recurrence , it set the 
     * def card =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "processTimeSpan",
@@ -160,6 +164,7 @@ Scenario: When post a card with no timeZone in timespan recurrence , it set the 
 
 # Push card
     Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authToken
     And request card
     When method post
     Then response.count == 0

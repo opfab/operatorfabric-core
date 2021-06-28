@@ -11,7 +11,7 @@ Scenario: Post Card
 * def card =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -27,7 +27,7 @@ Scenario: Post Card
 
 # Push card 
 Given url opfabPublishCardUrl + 'cards' 
-
+And header Authorization = 'Bearer ' + authToken 
 And request card  
 When method post
 Then status 201
@@ -53,7 +53,7 @@ Scenario: Post a new version of the Card
 * def card =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -68,7 +68,8 @@ Scenario: Post a new version of the Card
 """
 
 # Push card 
-Given url opfabPublishCardUrl + 'cards' 
+Given url opfabPublishCardUrl + 'cards'
+And header Authorization = 'Bearer ' + authToken  
 And request card  
 When method post
 Then status 201
@@ -102,6 +103,7 @@ And def cardUid = response.card.uid
 
 # delete card
 Given url opfabPublishCardUrl + 'cards/api_test.process1'
+And header Authorization = 'Bearer ' + authToken 
 When method delete
 Then status 200
 

@@ -32,16 +32,16 @@ import {AppState} from '@ofStore/index';
 import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
 import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {UserContext} from '@ofModel/user-context.model';
-import {map, skip, take, takeUntil} from 'rxjs/operators';
-import {fetchLightCard, selectLastCardLoaded} from '@ofStore/selectors/feed.selectors';
+import {map, skip,takeUntil} from 'rxjs/operators';
+import {selectLastCardLoaded} from '@ofStore/selectors/feed.selectors';
 import {CardService} from '@ofServices/card.service';
 import {Subject} from 'rxjs';
-import {LightCard, Severity} from '@ofModel/light-card.model';
+import {Severity} from '@ofModel/light-card.model';
 import {AppService, PageType} from '@ofServices/app.service';
 import {User} from '@ofModel/user.model';
 import {Map} from '@ofModel/map';
 import {userRight} from '@ofModel/userWithPerimeters.model';
-import {ClearLightCardSelection, UpdateALightCard, UpdateTrigger} from '@ofStore/actions/light-card.actions';
+import {ClearLightCardSelection,UpdateLightCardAcknowledgment, UpdateLightCardRead} from '@ofStore/actions/light-card.actions';
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
@@ -178,7 +178,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     adaptTemplateSize() {
-        const cardTemplate = document.getElementById('div-card-template');
+        const cardTemplate = document.getElementById('opfab-div-card-template');
         if (!!cardTemplate) {
             const diffWindow = cardTemplate.getBoundingClientRect();
             const divBtn = document.getElementById('div-detail-btn');
@@ -388,11 +388,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     updateAcknowledgementOnLightCard(hasBeenAcknowledged: boolean) {
-        this.store.select(fetchLightCard(this.card.id)).pipe(take(1))
-            .subscribe((lightCard: LightCard) => {
-                const updatedLighCard = {...lightCard, hasBeenAcknowledged: hasBeenAcknowledged};
-                this.store.dispatch(new UpdateALightCard({lightCard: updatedLighCard, updateTrigger: UpdateTrigger.ACKNOWLEDGEMENT}));
-            });
+        this.store.dispatch(new UpdateLightCardAcknowledgment({cardId: this.card.id, hasBeenAcknowledged: hasBeenAcknowledged}));
     }
 
     markAsReadIfNecessary() {
@@ -416,11 +412,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     updateLastReadCardStatusOnFeedIfNeeded() {
         if (this.lastCardSetToReadButNotYetOnFeed) {
-            this.store.select(fetchLightCard(this.lastCardSetToReadButNotYetOnFeed.id)).pipe(take(1))
-                .subscribe((lightCard: LightCard) => {
-                    const updatedLightCard = { ...lightCard, hasBeenRead: true };
-                    this.store.dispatch(new UpdateALightCard({ lightCard: updatedLightCard, updateTrigger: UpdateTrigger.READ }));
-                });
+            this.store.dispatch(new UpdateLightCardRead({cardId: this.lastCardSetToReadButNotYetOnFeed.id, hasBeenRead: true}));
             this.lastCardSetToReadButNotYetOnFeed = null;
         }
     }

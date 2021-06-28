@@ -7,7 +7,7 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div id="tabs">
+<div id="opfab-tabs">
 
   <ul class="nav nav-pills">
 
@@ -33,14 +33,14 @@
   <br>
   <br>
   <div>
-    <select (change)="onPageSizeChanged()" id="page-size-select">
+    <select (change)="onPageSizeChanged()" id="opfab-page-size-select">
       <option *ngFor="let option of paginationPageSizeOptions"
               [value]="option"
               [attr.selected]="option==paginationDefaultPageSize ? true : null">
         {{option}}
       </option>
     </select>
-    <label for="page-size-select" translate>&nbsp;admin.input.lines</label>
+    <label for="opfab-page-size-select" translate>&nbsp;admin.input.lines</label>
   </div>
 
 </div>

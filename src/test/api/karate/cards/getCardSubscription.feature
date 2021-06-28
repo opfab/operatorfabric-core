@@ -18,7 +18,7 @@ Feature: get card Subscription
         startDate = new Date().valueOf() + 4*60*60*1000;
         endDate = new Date().valueOf() + 8*60*60*1000;
         var card = {
-          "publisher" : "api_test",
+          "publisher" : "operator1",
           "processVersion" : "1",
           "process"  :"api_test",
           "processInstanceId" : "process1",
@@ -81,6 +81,7 @@ Feature: get card Subscription
 
     # delete card
       Given url opfabPublishCardUrl + 'cards/api_test.process1'
+      And header Authorization = 'Bearer ' + authTokenAsTSO
       When method delete
       Then status 200
 

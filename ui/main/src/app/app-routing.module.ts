@@ -11,7 +11,7 @@
 import {NgModule} from '@angular/core';
 import {PreloadAllModules, Router, RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from './modules/login/login.component';
-import {LoggingComponent} from './modules/logging/logging.component';
+import {LoggingEntryPointComponent} from './modules/logging/logging-entry-point.component';
 import {MonitoringComponent} from './modules/monitoring/monitoring.component';
 import {CalendarComponent} from './modules/calendar/calendar.component';
 import {ArchivesEntryPointComponent} from './modules/archives/archives-entry-point.component';
@@ -34,7 +34,7 @@ const routes: Routes = [
     },
     {
         path: 'logging',
-        component: LoggingComponent
+        component: LoggingEntryPointComponent
     },
     {
         path: 'calendar',

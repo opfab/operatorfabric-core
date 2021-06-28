@@ -32,5 +32,5 @@ public class MonitoringExportFieldData implements MonitoringExportField {
   private String jsonField;    
   
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  private List<? extends MonitoringExportField> fields;  
+  private List<MonitoringExportField> fields;  
 }

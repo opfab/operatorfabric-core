@@ -21,8 +21,8 @@
         <div class="col">
 
           <div *ngIf="!row" class="opfab-input row">
-            <label for="id" translate>admin.input.id.label</label>
-            <input formControlName="id" name="id" id="id" type="text">
+            <label for="opfab-id" translate>admin.input.id.label</label>
+            <input formControlName="id" name="id" id="opfab-id" type="text">
           </div>
           <div *ngIf="id.invalid" class="row alert alert-danger">
             <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
@@ -31,21 +31,21 @@
           </div>
 
           <div class="opfab-input row">
-            <label for="name" translate>admin.input.name.label</label>
-            <input formControlName="name" name="name" id="name" type="text">
+            <label for="opfab-name" translate>admin.input.name.label</label>
+            <input formControlName="name" name="name" id="opfab-name" type="text">
           </div>
           <div *ngIf="name.invalid" class=" row alert alert-danger">
             <div *ngIf="name.errors.required" translate>admin.input.name.required</div>
           </div>
 
           <div class="opfab-input row">
-            <label for="description" translate>admin.input.description</label>
-            <input formControlName="description" name="description" id="description" type="text">
+            <label for="opfab-description" translate>admin.input.description</label>
+            <input formControlName="description" name="description" id="opfab-description" type="text">
           </div>
 
           <div class="row">
-            <of-multi-filter filterPath="perimeters" id="perimeters" [parentForm]="groupForm"
-                             [values]="perimetersDropdownList" [dropdownSettings]="perimetersDropdownSettings" [selectedItems]="selectedPerimeters"
+            <of-multi-filter filterPath="perimeters" id="opfab-perimeters" [parentForm]="groupForm"
+                             [values]="perimetersDropdownList" [translateValues]="false" [dropdownSettings]="perimetersDropdownSettings" [selectedItems]="selectedPerimeters"
                              i18nRootLabelKey="admin.input.group.">
             </of-multi-filter>
           </div>

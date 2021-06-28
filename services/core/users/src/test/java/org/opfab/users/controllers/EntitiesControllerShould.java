@@ -13,7 +13,6 @@ package org.opfab.users.controllers;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.opfab.users.application.UnitTestApplication;
 import org.opfab.users.application.configuration.WithMockOpFabUser;
 import org.opfab.users.model.EntityData;
@@ -22,9 +21,6 @@ import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.cloud.bus.ServiceMatcher;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -61,12 +57,6 @@ class EntitiesControllerShould {
 
     @Autowired
     private EntityRepository entityRepository;
-
-    @MockBean
-    private ServiceMatcher serviceMatcher;
-
-    @MockBean
-    private ApplicationEventPublisher publisher;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -119,7 +109,6 @@ class EntitiesControllerShould {
         entityRepository.insert(e1);
         entityRepository.insert(e2);
 
-        Mockito.when(serviceMatcher.getBusId()).thenReturn("DUMMY_BUS_ID");
     }
 
     @AfterEach

@@ -20,10 +20,10 @@
     </ng-template>
   </a>
 
-<div class="navbar-toggler opfab-navbar" style="flex-grow: 1;border: 0; flex-basis: 0" id="navbarCollapsed" >
+<div class="navbar-toggler opfab-navbar" style="flex-grow: 1;border: 0; flex-basis: 0" id="opfab-navbarCollapsed" >
   <ng-container *ngTemplateOutlet="menuCollapsedContent"></ng-container>
   </div>
-  <div class="collapse navbar-collapse " id="navbarContent" [ngbCollapse]="navbarCollapsed">
+  <div class="collapse navbar-collapse " id="opfab-navbarContent" [ngbCollapse]="navbarCollapsed">
     <ul class="navbar-nav mr-auto ">
       <!-- Links to OperatorFabric pages as defined in app-rooting.module.ts (e.g. Card Feed, Archive) -->
       <li class="nav-item" *ngFor="let link of navigationRoutes, let i = index"

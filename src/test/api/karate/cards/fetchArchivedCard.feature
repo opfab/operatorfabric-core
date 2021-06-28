@@ -12,7 +12,7 @@ Feature: fetchArchive
     * def card =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process_archive_1",
@@ -29,6 +29,7 @@ Feature: fetchArchive
 
 # Push card
     Given url opfabPublishCardUrl + 'cards'
+    And header Authorization = 'Bearer ' + authToken
     And request card
     When method post
     Then status 201
@@ -72,7 +73,7 @@ Feature: fetchArchive
         * def card =
 """
 {
-	"publisher" : "api_test123",
+	"publisher" : "operator1",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -89,6 +90,7 @@ Feature: fetchArchive
 
 # Push card
         Given url opfabPublishCardUrl + 'cards'
+        And header Authorization = 'Bearer ' + authToken
         And request card
         When method post
         Then status 201

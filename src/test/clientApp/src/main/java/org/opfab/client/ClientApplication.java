@@ -49,7 +49,7 @@ public class ClientApplication implements CommandLineRunner {
 
 	private void testCard() {
 		Card card = new Card();
-		card.setPublisher("api_test");
+		card.setPublisher("operator1");
 		card.setProcessVersion("1");
 		card.setProcess("api_test");
 		card.setProcessInstanceId("processClient");
@@ -65,18 +65,24 @@ public class ClientApplication implements CommandLineRunner {
 		I18n title = new I18n();
 		title.setKey("message.title");
 		card.setTitle(title);
-
-		String result = cardClient.postCard(OPFAB_PUBLICATION_URL, card);
-		log.info("Card creation result : '" + result + "'");
 		
+		String token = null;
 		try {
-			String token = authClient.getToken(OPFAB_AUTH_URL);
+			token = authClient.getToken(OPFAB_AUTH_URL);
+		} catch (Exception e) {
+			log.error("Error getting token", e);
+		}
+		if (token != null) {
+			String result = cardClient.postCard(OPFAB_PUBLICATION_URL, token, card);
+			log.info("Card creation result : '" + result + "'");
+	
+				
 			String cardId = "api_test.processClient";
 			Card card2 = cardClient.getCard(OPFAB_CONSULTATION_URL, token, cardId);
 			log.info("Got card " + card2);
-		} catch (Exception e) {
-			log.error("Error getting card", e);
 		}
+
+
 
 	}
 }

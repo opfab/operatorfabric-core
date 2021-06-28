@@ -41,11 +41,13 @@ subprojects {
             compile misc.micrometer
             annotationProcessor misc.lombok
             implementation misc.lombok
+            // needed to solve bug with previous version included in spring security 
+            implementation "com.nimbusds:nimbus-jose-jwt:9.10"
 
             testAnnotationProcessor misc.lombok
             testCompileOnly misc.lombok
-            testRuntimeOnly "org.junit.jupiter:junit-jupiter:${versions['junit5']}"
-            testImplementation "org.junit.jupiter:junit-jupiter:${versions['junit5']}"
+            testRuntimeOnly testing.junit5
+            testImplementation testing.junit5
 
             testImplementation boot.starterTest, testing.assertJ
             testImplementation project(':tools:generic:test-utilities')
@@ -104,12 +106,12 @@ subprojects {
                 name "lfeoperatorfabric/of-${project.name.toLowerCase()}"
             tags "latest", "${project.version}"
             labels (['project':"${project.group}"])
-            files( jar.archivePath
+            files( "build/libs"
                     , "../../../config/docker/common-docker.yml"
                     , "../../../config/docker/${project.name.toLowerCase().replaceAll("-business-service","")}-docker.yml"
                     , '../../../src/main/docker/java-config-docker-entrypoint.sh'
                     ,'../../../src/main/docker/add-certificates.sh')
-            buildArgs(['JAR_FILE'       : "${jar.archiveName}",
+            buildArgs(['JAR_FILE'       : "${project.name.toLowerCase()}-${project.version.toUpperCase()}.jar",
                        'http_proxy'     : apk.proxy.uri,
                        'https_proxy'    : apk.proxy.uri,
                        'HTTP_PROXY_AUTH': "basic:*:$apk.proxy.user:$apk.proxy.password"])

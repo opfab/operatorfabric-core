@@ -21,7 +21,7 @@
         "style"
       ],
       "acknowledgmentAllowed": "Always",
-      "type" : "INPROGRESS"
+      "type" : "FINISHED"
     },
     "chartState": {
       "name": "chartDetail.title",
@@ -31,8 +31,7 @@
       "styles": [
         "style"
       ],
-      "acknowledgmentAllowed": "Always",
-      "type" : "FINISHED"
+      "acknowledgmentAllowed": "Always"
     },
     "chartLineState": {
       "name": "chartLine.title",
@@ -63,7 +62,6 @@
     "contingenciesState": {
       "name": "contingencies.title",
       "description": "contingenciesState.description",
-      "color": "#0070C0",
       "templateName": "contingencies",
       "styles": [
         "contingencies"
@@ -74,7 +72,6 @@
     "questionState": {
       "name": "questionState.title",
       "description": "questionState.description",
-      "color": "#0070C0",
       "response": {
         "lock": true,
         "state": "responseState",

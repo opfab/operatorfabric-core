@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 2.6.0.RELEASE
+  version: 2.7.0.RELEASE
   title: BusinessConfig Management
   termsOfService: ''
   contact:
@@ -402,7 +402,7 @@ definitions:
               description: Hide or show header card for question card
             color:
               type: string
-              description: use as a display cue in the UI
+              description: color for the state in the logging screen (optional) 
             userCard:
               description : User card template and visibility options
               $ref: '#/definitions/UserCard'
