@@ -13,6 +13,8 @@ package org.opfab.cards.publication.services;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
+
+import org.opfab.cards.model.CardOperationTypeEnum;
 import org.opfab.cards.publication.model.ArchivedCardPublicationData;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.users.model.User;
@@ -39,6 +41,9 @@ public class CardRepositoryService {
 
     @Autowired
     private MongoTemplate template;
+
+    @Autowired
+    private CardNotificationService cardNotificationService;
 
     public Optional<CardPublicationData> findByUid(String uid) {
         Query query = new Query();
@@ -136,6 +141,8 @@ public class CardRepositoryService {
         Criteria startDateCriteria = new Criteria().andOperator(Criteria.where("endDate").exists(false), Criteria.where("startDate").lt(endDateBefore));
 
         findCardByEndDateBefore.addCriteria(new Criteria().orOperator(endDateCriteria, startDateCriteria));
+        List<CardPublicationData> toDelete = template.find(findCardByEndDateBefore, CardPublicationData.class);
+        toDelete.stream().forEach(cardToDelete -> cardNotificationService.notifyOneCard(cardToDelete, CardOperationTypeEnum.DELETE));
         return template.remove(findCardByEndDateBefore, CardPublicationData.class);
     }
 }
