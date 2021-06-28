@@ -9,7 +9,6 @@
       "response": {
         "lock": true,
         "state": "responseState",
-        "btnColor": "RED",
         "btnText": {
           "key": "action.text"
         }
@@ -22,7 +21,6 @@
       "response": {
         "lock": true,
         "state": "responseState",
-        "btnColor": "RED",
         "btnText": {
           "key": "action.text"
         },
@@ -33,31 +31,7 @@
         "main"
       ]
     },
-    "btnColor_missing": {
-      "response": {
-        "lock": true,
-        "state": "responseState",
-        "btnText": {
-          "key": "action.text"
-        }
-      },
-      "templateName": "template1",
-      "styles": [
-        "main"
-      ]
-    },
     "btnText_missing": {
-      "response": {
-        "lock": true,
-        "state": "responseState",
-        "btnColor": "RED"
-      },
-      "templateName": "template1",
-      "styles": [
-        "main"
-      ]
-    },
-    "btnColor_btnText_missings": {
       "response": {
         "lock": true,
         "state": "responseState"
