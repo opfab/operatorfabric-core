@@ -1,3 +1,10 @@
+// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
 = Cypress Tests ReadMe
 
 NOTE: All paths for cd are given assuming you're starting from `$OF_HOME`.
@@ -20,13 +27,10 @@ The `commands.js` file under `cypress/cypress/support` is used to create custom 
 
 == Launching the OpFab instance to test
 
-The Cypress test rely on a running OpFab instance that is an adaptation from the config/docker docker-compose file.
-For example, as Cypress doesn't allow navigation to different origins within the same test, the OpFab instance needs
-to use the `PASSWORD` authentication mode rather than `CODE`.
+=== Commands
 
-=== Full docker mode
-
-To launch such an instance:
+You can launch the OpFab instance for Cypress tests either in dev or docker mode. The following commands launch the
+instance in docker mode, just substitute `dev` for `docker` to launch it in dev mode.
 
 [source,bash]
 ----
@@ -37,9 +41,6 @@ docker-compose down <1>
 <1> Remove existing config/docker containers to avoid conflicts
 <2> Start "Cypress-flavoured" containers
 
-NOTE: If you need to further adapt the Cypress instance, you can make changes to the `web-ui-cypress.json` and
-`docker-compose.cypress.override.yml` files.
-
 After you're done with your tests, you can stop and destroy containers (as it is better to start with fresh containers to avoid
 side-effects from previous tests) with the following commands:
 
@@ -49,15 +50,31 @@ cd config/docker
 docker-compose down
 ----
 
-=== Dev mode
+=== Explanation
 
-You can also launch operator-fabric in dev mode. To do so, follow the steps described above, substituting
-`config/dev` for `config/docker`. Then run the core services with the following command:
+The Cypress tests rely on a running OpFab instance that is an adaptation from the config/docker docker-compose file
+(environment name, shorter time before lttd clock display, etc.).
 
-[source,bash]
-----
-./bin/run_all.sh start
-----
+The `generateUIConfigForCypress.sh` script performs this adaptation to create this base Cypress configuration.
+
+This will create the following files under `config/cypress/ui-config`:
+
+* ui-menu.json
+* ui-menu-base.json
+* web-ui.json
+* web-ui-base.json
+
+Where `XXX-base.json` and `XXX.json` are created by copying the corresponding `XXX.json` file for standard docker
+configuration (found under `config/docker/ui-config`) and making the necessary adaptations needed for the cypress instance to
+work well for the tests (changing the authentication mode, making all features visible, etc.).
+
+Then, during the course of the cypress tests, the `XXX.json` files will be modified to test specific features
+(for example, hiding a feature, defining a new menu, etc.). They are reset with the content of `XXX-base.json`
+before each test or series of test.
+
+The docker container relies on the `XXX.json` files under `config/cypress/ui-config`.
+
+For convenience, the `generateUIConfigForCypress.sh` is launched as part of the `docker-compose-cypress.sh` scripts.
 
 == Running existing tests
 

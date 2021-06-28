@@ -69,7 +69,7 @@ task copyMonitoringFile(type: Exec){
 }
 
 task createDevData(type: Copy){
-    description 'prepare data in build/test-data for running bootRun task during development'
+    description 'prepare data in build/dev-data for running OpFab in dev mode'
     from 'src/main/docker/volume/businessconfig-storage'
     into 'build/dev-data/businessconfig-storage'
     doFirst{
@@ -87,7 +87,7 @@ task prepareTestDataDir {
 }
 
 task prepareDevDataDir {
-    description 'prepare directory (build/dev-data) for bootRun task'
+    description 'prepare directory (build/dev-data)'
     doFirst {
         logger.info "creating $project.projectDir/build/dev-data/"
         new File("$project.projectDir/build/dev-data/bundles/").mkdirs()

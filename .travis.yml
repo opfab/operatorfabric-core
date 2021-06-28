@@ -30,6 +30,7 @@ install:
   # sets up the required tools for the development environment with the appropriate version
   - source ./bin/load_environment_light.sh
   - sudo apt-get install realpath
+  - sudo apt-get install jq
   # install
   # displays versions of useful tools for visual checks
   - npm -version

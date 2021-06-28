@@ -1,7 +1,19 @@
+/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
 
 describe ('Response card tests',function () {
 
     before('Set up configuration', function () {
+
+        // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
+        cy.resetUIConfigurationFile();
+
         cy.loadTestConf();
         cy.deleteTestCards();
         cy.sendCard('defaultProcess/question.json');
@@ -142,7 +154,7 @@ describe ('Response card tests',function () {
         cy.get('of-light-card').eq(0).click(); 
 
         // Should not have an icon of response
-        cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity').should('not.exist');;
+        cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity').should('not.exist');
 
          // Check the correct rendering of card 
          cy.get('#question-choice2');

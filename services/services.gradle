@@ -129,7 +129,7 @@ subprojects {
 
         /* convenient copy for generating modifiable configuration from template*/
         task copyWorkingDir(type: Copy) {
-            description 'copies [sub-project]/src/main/docker/volume to [sub-project]/build/'
+            description 'copies [sub-project]/src/main/docker/volume to [sub-project]/build/docker-volume'
             from "$project.projectDir/src/main/docker/volume/"
             into "$project.projectDir/build/docker-volume/"
             doFirst {
