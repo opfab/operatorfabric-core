@@ -67,17 +67,31 @@ using a GPG key.
 [[client_lib_pub_conf]]
 === Configuration
 
-For the signing task to work, you need to set the following properties in your gradle.properties file:
+For the signing task to work, you need to : 
+
+==== Import the opfab secret key file
+----
+gpg2 --import OPFAB_KEY_FILE
+----
+
+==== Set the signing configuration in your gradle.properties file
+
+Add to your gradle.properties : 
 
 ----
 signing.gnupg.keyName=ID_OF_THE_GPG_KEY_TO_USE
 signing.secretKeyRingFile=LOCATION_OF_THE_KEYRING_HOLDING_THE_GPG_KEY
 ----
 
-NOTE: See https://makandracards.com/makandra-orga/notes/37763-gpg-extract-private-key-and-import-on-different-machine[this link]
-about importing a GPG key to your machine and getting its id.
+To get the keyName (ID_OF_THE_GPG_KEY_TO_USE) use : 
+----
+gpg2 --list-secret-keys 
+----
 
-IMPORTANT: The gradle signing plugins uses gpg2 rather than gpg, so you should https://makandracards.com/makandra-orga/37763-gpg-extract-private-key-and-import-on-different-machine#note-section-enigmail--gnupg-v2[import the key to the gpg2 keyring].
+LOCATION_OF_THE_KEYRING_HOLDING_THE_GPG_KEY is usually /YOUR_HOME_DIRECTORY/.gnupg/secring.gpg
+
+
+==== Set the credential for the publication
 
 For the publication to the staging repository (OSSRH) to work, you need to set the credentials in your gradle.properties file:
 
@@ -88,6 +102,12 @@ ossrhPassword=SONATYPE_JIRA_PASSWORD
 
 NOTE: The credentials need to belong to an account that has been granted the required privileges on the project (this
 is done by Sonatype on request via the same JIRA).
+
+
+==== More information 
+
+See https://makandracards.com/makandra-orga/notes/37763-gpg-extract-private-key-and-import-on-different-machine[this link]
+for more information about importing a GPG key to your machine and getting its id.
 
 === Relevant tasks
 
