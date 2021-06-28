@@ -9,11 +9,11 @@
 
 
 <form [formGroup]="form">
-  <div class="form-group">
-    <label for="opfab-setting" translate>settings.{{settingPath}}</label>
-    <input id="opfab-setting-{{settingPath}}" *ngIf="(settingPath === 'description') && disabled" type="text" class="form-control"  formControlName="setting" [pattern]="pattern" [attr.required]="requiredField" disabled>
+  <div class="opfab-input">
+    <label for="opfab-setting-{{settingPath}}" translate>settings.{{settingPath}}</label>
+    <input id="opfab-setting-{{settingPath}}" *ngIf="(settingPath === 'description') && disabled" type="text"  formControlName="setting" [pattern]="pattern" [attr.required]="requiredField" disabled>
 
-    <input id="opfab-setting-{{settingPath}}" *ngIf="!((settingPath === 'description') && disabled)" type="text" class="form-control" formControlName="setting" [pattern]="pattern" [attr.required]="requiredField">
+    <input id="opfab-setting-{{settingPath}}" *ngIf="!((settingPath === 'description') && disabled)" type="text"  formControlName="setting" [pattern]="pattern" [attr.required]="requiredField">
 
     <span class="text-danger" *ngIf="!form.valid">Incorrect submission</span>
   </div>
