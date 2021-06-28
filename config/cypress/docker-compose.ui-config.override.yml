@@ -1,0 +1,5 @@
+version: '2.1'
+services:
+  web-ui:
+    volumes:
+      - "../cypress/ui-config:/usr/share/nginx/html/opfab"

@@ -18,6 +18,7 @@ else
   echo CONFIG_PATH="$CONFIG_PATH" >> .env
 fi
 cat .env
-# Using an override file to launch docker-compose while mounting the web-ui-cypress.json file instead of the
-# regular one. In particular, this is needed to use PASSWORD flow as Cypress doesn't allow cross-origin navigation
-docker-compose -f docker-compose.yml -f docker-compose.cypress.override.yml up -d
+../cypress/generateUIConfigForCypress.sh
+
+# Using an override file to launch docker-compose while mounting the cypress-specific ui configuration
+docker-compose -f docker-compose.yml -f ../cypress/docker-compose.ui-config.override.yml -f ../cypress/docker-compose.nginx-cors-permissive.override.yml up -d

@@ -2,6 +2,7 @@
   "environmentName": "CYPRESS TEST ENV",
   "environmentColor": "blue",
   "checkPerimeterForResponseCard": true,
+  "checkPerimeterForSearchFields": false,
   "archive": {
     "filters": {
       "page": {
@@ -31,14 +32,13 @@
       },
       "hideAckFilter": false,
       "hideResponseFilter": false,
-      "secondsBeforeLttdForClockDisplay": 7500,
+      "secondsBeforeLttdForClockDisplay": 3700,
       "hideReadSort": false,
       "hideSeveritySort": false,
       "hideAckAllCardsFeature": false
     },
     "notify": false,
     "timeline": {
-      "hide": false,
       "domains": [
         "TR",
         "J",
@@ -99,7 +99,9 @@
     "provider-url": "http://localhost:89"
   },
   "settings": {
-    "tags": {"hide":false},
+    "tags": {
+      "hide": false
+    },
     "about": {
       "firstapplication": {
         "name": "First application",
@@ -128,7 +130,7 @@
     "dateTimeFormat": "HH:mm DD/MM/YYYY",
     "dateFormat": "DD/MM/YYYY",
     "nightDayMode": true,
-    "styleWhenNightDayModeDesactivated" : "NIGHT"
+    "styleWhenNightDayModeDesactivated": "NIGHT"
   },
   "navbar": {
     "hidden": []
@@ -138,5 +140,11 @@
   },
   "feedConfiguration": {
     "hidden": false
+  },
+  "realTimeUsers": {
+    "hidden": false
+  },
+  "usercard": {
+    "useDescriptionFieldForEntityList": false
   }
 }

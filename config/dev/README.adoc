@@ -1,18 +1,41 @@
-= First run
+// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
 
-=== Requierements
+= README - Running OperatorFabric in DEV mode
 
-The command `docker-compose` available in your `${PATH}`.
+== Requirements
 
-== Instructions
+* `docker-compose` command shoud be available in your `${PATH}`
 
-Run:
+== Explanations regarding DEV mode
+
+The docker-compose.yml file and associated configuration file in this folder allows the following "infrastructure"
+containers to be started:
+
+* RabbitMQ
+* MongoDB
+* Keycloak
+* OperatorFabric Web-UI container
+
+Once these containers are running, the OperatorFabric business services (users, cards-publication, cards-consultation
+and business-config) should be started with the `bin\run_all.sh` to get a working OperatorFabric instance in `dev` mode.
+
+This mode makes development iterations easier, as business services are run as java processes that can be stopped,
+recompiled and restarted individually to take changes into account.
+
+NOTE: It also starts the dummy `external-app` container as it is often useful when developing new features.
+
+== Run instructions
+
 ----
 cd ${OF_HOME}/config/dev
 ./docker-compose.sh
 ----
 
-== Explanations
+The `docker-compose.sh` script creates the various configuration files necessary for the web-ui container
+before launching the containers.
 
-The `docker-compose.yml` has a volume configured for the `nginx.conf` file.
- This file is created by the script `docker-compose.sh`.

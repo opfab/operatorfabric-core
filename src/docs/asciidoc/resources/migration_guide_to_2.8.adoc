@@ -1,0 +1,43 @@
+// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 2.7.0 to release 2.8.0
+
+== UI Configuration Management
+
+The web-ui container has two configuration files: `web-ui.json` and `ui-menu.json`.
+
+To avoid maintaining separate copies of these files for each `run environment` (docker, dev, Cypress), the reference
+configuration will be the one for the `docker` mode, with the others being created by script, changing only the
+properties that should be different between environments (e.g. environmentName).
+Only the docker configuration will be version-controlled. The scripts creating the configuration are launched by
+the `docker-compose.sh` and `docker-compose-cypress.sh`.
+
+IMPORTANT: As a consequence, the web-ui.json and ui-menu.json files have been moved from `config/xxx/` to
+`config/xxx/ui-config`. The volumes in the `docker-compose.yml` files have been updated accordingly.
+
+This new organization will also allow us to run Cypress tests against different versions of the configuration, for
+example to test the behaviour of a property meant to hide a component. See the Cypress tests README
+(src/test/cypress/README.adoc) for more information.
+
+IMPORTANT: All modes (dev, docker, config) now use the `PASSWORD` authentication flow by default. If you want to test
+with another authentication flow, you should use the `setSecurityAuthFlow.sh` script AFTER the containers have been
+started.
+
+.Example to use the CODE flow in dev mode
+[source,bash]
+----
+cd src/test/resources
+.setSecurityAuthFlow.sh dev CODE
+----
+
+
+
+
+
+
+

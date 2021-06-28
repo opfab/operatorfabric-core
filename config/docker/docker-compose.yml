@@ -107,8 +107,7 @@ services:
       - businessconfig
       - cards-consultation
     volumes:
-      - "./web-ui.json:/usr/share/nginx/html/opfab/web-ui.json"
-      - "./ui-menu.json:/usr/share/nginx/html/opfab/ui-menu.json"
+      - "./ui-config:/usr/share/nginx/html/opfab"
       - "./nginx.conf:/etc/nginx/conf.d/default.conf"
   ext-app:
 # External application example, must not be activated in production mode

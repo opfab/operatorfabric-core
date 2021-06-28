@@ -63,19 +63,13 @@ find . -name swagger.yaml | xargs sed -i "s/\(version: *\)$oldVersion/\1$newVers
 # That's why oldVersion is part of the pattern, as it is less likely that another version key would appear with the exact same value.
 # The issue is that if the value has been mistakenly modified and is not $oldVersion, it won't be updated
 
-# TODO Improvement: find and loop over files for docker-compose & web-ui
-
 echo "Using $newVersion for lfeoperatorfabric images in dev and docker environment docker-compose files"
 # String example for regexp: image: "lfeoperatorfabric/of-web-ui:0.13.1.RELEASE"
 sed -i "s/\( *image *: *\"lfeoperatorfabric\/.*:\)\(.*\)\"/\1$newVersion\"/g" ./config/docker/docker-compose.yml;
 sed -i "s/\( *image *: *\"lfeoperatorfabric\/.*:\)\(.*\)\"/\1$newVersion\"/g" ./config/dev/docker-compose.yml;
 
 echo "Using $newVersion for About menu in web-ui.json files"
-jq --arg a "${newVersion}" '.settings.about.operatorfabric.version = $a' ./config/dev/web-ui.json > "tmp" && mv "tmp" ./config/dev/web-ui.json
-jq --arg a "${newVersion}" '.settings.about.operatorfabric.version = $a' ./config/dev/web-ui-cypress.json > "tmp" && mv "tmp" ./config/dev/web-ui-cypress.json
-jq --arg a "${newVersion}" '.settings.about.operatorfabric.version = $a' ./config/dev/web-ui-test.json > "tmp" && mv "tmp" ./config/dev/web-ui-test.json
-jq --arg a "${newVersion}" '.settings.about.operatorfabric.version = $a' ./config/docker/web-ui.json > "tmp" && mv "tmp" ./config/docker/web-ui.json
-jq --arg a "${newVersion}" '.settings.about.operatorfabric.version = $a' ./config/docker/web-ui-cypress.json > "tmp" && mv "tmp" ./config/docker/web-ui-cypress.json
+jq --arg a "${newVersion}" '.settings.about.operatorfabric.version = $a' ./config/docker/ui-config/web-ui.json > "tmp" && mv "tmp" ./config/docker/ui-config/web-ui.json
 
 echo "The following files have been updated: "
 echo | git status --porcelain
