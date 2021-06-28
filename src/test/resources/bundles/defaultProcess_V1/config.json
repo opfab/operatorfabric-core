@@ -75,7 +75,6 @@
       "response": {
         "lock": true,
         "state": "responseState",
-        "btnColor": "GREEN",
         "btnText": {
           "key": "question.button.text"
         }
