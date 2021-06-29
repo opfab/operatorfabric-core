@@ -20,6 +20,8 @@ import {FilterType} from '@ofServices/filter.service';
 
 import {DateTimeNgb, getDateTimeNgbFromMoment} from '@ofModel/datetime-ngb.model';
 import moment from 'moment';
+import {MessageLevel} from '@ofModel/message.model';
+import {AlertMessage} from '@ofStore/actions/alert.actions';
 
 
 @Component({
@@ -40,6 +42,9 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     ackFilterForm: FormGroup;
     timeFilterForm: FormGroup;
     responseFilterForm: FormGroup;
+
+    endMinDate : {year: number, month: number, day: number} = null;
+    startMaxDate : {year: number, month: number, day: number} = null;
 
     private dateFilterType = FilterType.PUBLISHDATE_FILTER;
 
@@ -251,15 +256,24 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         status.start = this.extractTime(this.timeFilterForm.get('dateTimeFrom'));
         status.end = this.extractTime(this.timeFilterForm.get('dateTimeTo'));
 
-        if (status.start == null) {
+        if (status.start != null && !isNaN(status.start) && status.end != null && !isNaN(status.end) && status.start > status.end) {
+            this.displayMessage('feed.filters.time.endDateBeforeStartDate','',MessageLevel.ERROR);
+            return;
+        }
+
+        if (status.start == null || isNaN(status.start)) {
             localStorage.removeItem('opfab.feed.filter.start');
+            this.endMinDate = null;
         } else {
             localStorage.setItem('opfab.feed.filter.start', status.start);
+            this.endMinDate = {year: this.timeFilterForm.value.dateTimeFrom.date.year, month: this.timeFilterForm.value.dateTimeFrom.date.month, day: this.timeFilterForm.value.dateTimeFrom.date.day};
         }
-        if (status.end == null) {
+        if (status.end == null || isNaN(status.end)) {
             localStorage.removeItem('opfab.feed.filter.end');
+            this.startMaxDate = null;
         } else {
             localStorage.setItem('opfab.feed.filter.end', status.end);
+            this.startMaxDate = {year: this.timeFilterForm.value.dateTimeTo.date.year, month: this.timeFilterForm.value.dateTimeTo.date.month, day: this.timeFilterForm.value.dateTimeTo.date.day};
         }
 
         this.store.dispatch(
@@ -323,6 +337,10 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             this.timeFilterForm.get('dateTimeTo').setValue(null);
             this.setNewFilterValue();
         }
+    }
+
+    private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
+        this.store.dispatch(new AlertMessage({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}}));
     }
 
 }

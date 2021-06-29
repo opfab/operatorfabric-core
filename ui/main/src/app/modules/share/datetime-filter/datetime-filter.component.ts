@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -35,6 +35,8 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
     // no "unit of time enforcement", so be careful using offset
     @Input() offset: { amount: number, unit: string }[];
     @Output() change = new EventEmitter();
+    @Input() minDate: {year: number, month: number, day: number};
+    @Input() maxDate: {year: number, month: number, day: number};
 
     disabled = true;
     time = {hour: 0, minute: 0};
