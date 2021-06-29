@@ -19,6 +19,8 @@
                    id="opfab-date"
                    formControlName="date"
                    (click)="nsd.toggle()"
+                   [minDate]="minDate"
+                   [maxDate]="maxDate"
             placeholder="YYYY-MM-DD"/>
         </div>
         </td>

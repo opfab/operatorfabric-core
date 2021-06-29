@@ -49,8 +49,8 @@
         "titleIfFilterBasedOnBusinessDate": "Business period",
         "start.label": "Start",
         "end.label": "End",
-        "active.label": "Active"
-        
+        "active.label": "Active",
+        "endDateBeforeStartDate": "End date must be after start date"
       },
       "type": {
         "title": "Type",
@@ -148,7 +148,9 @@
       "publishDateFrom": "PUBLISH FROM",
       "publishDateTo": "PUBLISH TO",
       "activeFrom": "ACTIVE FROM",
-      "activeTo": "ACTIVE TO"
+      "activeTo": "ACTIVE TO",
+      "publishEndDateBeforeStartDate" : "Publish end date must be after start date",
+      "activeEndDateBeforeStartDate" : "Active end date must be after start date"
     },
     "result": {
       "severity": "SEVERITY",
@@ -161,13 +163,16 @@
     "noResult": "Your search did not match any results.",
     "exportToExcel" : "Export data",
     "resultsNumber":"Results number"
+
   },
   "logging": {
     "filters": {
       "publishDateFrom": "PUBLISH FROM",
       "publishDateTo": "PUBLISH TO",
       "activeFrom": "ACTIVE FROM",
-      "activeTo": "ACTIVE TO"
+      "activeTo": "ACTIVE TO",
+      "publishEndDateBeforeStartDate" : "Publish end date must be after start date",
+      "activeEndDateBeforeStartDate" : "Active end date must be after start date"
     },
     "result": {
       "severity": "SEVERITY",
