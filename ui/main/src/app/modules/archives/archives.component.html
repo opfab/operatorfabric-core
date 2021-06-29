@@ -51,7 +51,7 @@
 <div style="height:5%"> </div>
 <div *ngIf=" hasResult" style="margin-left:5%;margin-right:5%">
   <div class="opfab-table">
-    <table aria-describedby="Archive results table">
+    <table aria-describedby="Archive results table" id="opfab-archives-cards-list">
       <thead>
         <tr>
           <th scope="col"></th>
@@ -77,7 +77,7 @@
       </tr>
     </table>
     <div class="opfab-archive-pagination">
-      <div style="white-space: nowrap;margin-top:17px">
+      <div style="white-space: nowrap;margin-top:17px" id="opfab-archive-results-number">
         <span translate> archive.resultsNumber </span> : {{resultsNumber}}
       </div>
       <div style="width:40%;margin-top:5px">
