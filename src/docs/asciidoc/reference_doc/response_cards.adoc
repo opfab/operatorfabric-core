@@ -79,7 +79,8 @@ appropriate configuration in the config.json of the concerned process. Here is a
       "styles": [
         "style"
       ],
-      "acknowledgmentAllowed": "Never"
+      "acknowledgmentAllowed": "Never",
+      "showDetailCardHeader" : true
     },
     "responseState" :{
       "name" :"response.title"
@@ -95,6 +96,9 @@ and state "questionState", the user will have the possibility to respond if he h
 - The field "externalRecipients" define the recipients of the response card. These recipients are keys referenced in
 the config file of cards-publication service, in "externalRecipients-url" element. This field is optional.
 - The field "btnText" is the i18n key of the title of the submit button, it is optional.
+- The field "showDetailCardHeader" permits to display the card header or not. This header contains the list of entities
+that have already responded or not, and a countdown indicating the time remaining to respond, if necessary.
+
 
 NOTE: The state to be used for the response can also be set dynamically based on the contents of the card or the
 response by returning it in the `templateGateway.getUserResponse` method (see below for details).
