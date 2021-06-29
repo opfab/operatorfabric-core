@@ -82,3 +82,7 @@ Cypress.Commands.add('setPropertyInConf', (property,file,value) => {
             cy.log(`${file} is not a recognized configuration file (valid options: web-ui, ui-menu).`);
     }
 })
+
+Cypress.Commands.add('deleteAllArchivedCards', () => {
+    cy.exec('cd .. && ./resources/deleteAllArchivedCards.sh '+Cypress.env('host'));
+})
