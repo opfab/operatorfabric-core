@@ -293,6 +293,25 @@ class PerimetersControllerShould {
         }
 
         @Test
+        void createWithConversionError() throws Exception {
+            mockMvc.perform(post("/perimeters")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{" +
+                            "\"id\": \"PERIMETER3\"," +
+                            "\"process\": \"process3\"," +
+                            "\"stateRights\": [{" +
+                              "\"state\": \"\"," +
+                              "\"right\": \"\"" +
+                              "}]" +
+                            "}")
+            )
+                    .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
+                    .andExpect(jsonPath("$.message", is("Conversion Error")));
+        }
+
+        @Test
         void update() throws Exception {
             mockMvc.perform(put("/perimeters/PERIMETER1_2")
                     .contentType(MediaType.APPLICATION_JSON)

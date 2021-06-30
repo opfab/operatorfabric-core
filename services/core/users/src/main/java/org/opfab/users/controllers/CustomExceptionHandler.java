@@ -15,6 +15,7 @@ import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -93,5 +94,22 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
     log.error("Uncaught internal server exception",ex);
     return super.handleExceptionInternal(ex, body, headers, status, request);
+  }
+
+    /**
+   * Handles {@link ConversionFailedException} as 400 BAD_REQUEST error
+   * @param exception exception to handle
+   * @return Computed http response for specified exception
+   */
+  @ExceptionHandler(ConversionFailedException.class)
+  public ResponseEntity<Object> handleConversionError(ConversionFailedException exception, final WebRequest
+          request) {
+    log.error(GENERIC_MSG,exception);
+    ApiError error = ApiError.builder()
+            .status(HttpStatus.BAD_REQUEST)
+            .message("Conversion Error")
+            .error(exception.getMessage())
+            .build();
+    return new ResponseEntity<>(error, error.getStatus());
   }
 }
