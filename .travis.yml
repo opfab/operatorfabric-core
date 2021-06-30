@@ -37,6 +37,7 @@ install:
   - node --version
   - sdk version
   - javac -version
+  - docker info
 jobs:
   include:
     - stage: test
@@ -58,19 +59,21 @@ jobs:
         - ./gradlew --build-cache copyWorkingDir dockerTag${OF_VERSION} -x test
         - docker image ls -a|grep lfeoperatorfabric
         - cd $OF_HOME
-        - echo "foo" > foo.txt
+        - mkdir foodir
+        - echo "bar" > ./foodir/bar.txt
       workspaces:
         create:
           name: docker-images
           paths:
-            - /var/lib/docker/**
-            - foo.txt
+            - ./var/lib/docker/**
+            - ./foodir/**
     - stage: karate
       workspaces:
         use: docker-images
       script:
         - cd $OF_HOME
-        - cat foo.txt || true
+        - cat ./foodir/bar.txt || true
+        - docker image ls -a|grep lfeoperatorfabric
         - cd $OF_HOME/config/docker
         - ./docker-compose.sh
         - cd $OF_HOME/bin
