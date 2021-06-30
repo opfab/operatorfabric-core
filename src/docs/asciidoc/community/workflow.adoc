@@ -96,27 +96,30 @@ These feature branches fix bugs in existing releases and give rise to new patche
 Their lifecycle is similar to regular feature branches, except they should be branched off (and merged back to) the
 `X.X.hotfixes` branch corresponding to the release they are fixing.
 
-Example: A feature branch working on bug OC-1234 affecting version 1.8.0.RELEASE should be branched off
+Example: A feature branch working on bug 1234 affecting version 1.8.0.RELEASE should be branched off
 branch `1.8.hotfixes`.
 
 ==== Common conventions
 
-*Naming convention:* Feature branches names should always start with the reference of the JIRA issue they're addressing,
-optionally followed by additional information if several branches are associated with a given JIRA issue.
+*Naming convention:* Feature branches names should always start with "FE-" followed by the reference of the GitHub issue
+they're addressing, optionally followed by additional information if several branches are associated with a given issue.
 
 .Examples of valid feature branch names:
-* OC-123
-* OC-123_Documentation
-* OC-123_1
+* FE-123
+* FE-123_Documentation
+* FE-123_1
 
 .Examples of invalid feature branch names:
 * 123
-* OC123
+* FE123
 * SomeTextDescribingTheBranch
 
-Commit messages should also start with the JIRA issue ID between brackets: `[OC-123] My commit message`
+Commit messages should also start with the GitHub issue reference: `#123 My commit message`
 
-This allows the branch, PR and commits to be directly accessible from the JIRA issue.
+This allows the branch, PR and commits to be directly accessible from the GitHub issue.
+
+NOTE: The deprecated OC-XXX notation (from when we tracked issues in JIRA) is still accepted by the CI/CD pipeline
+but won't be in the future.
 
 === Release branches
 
@@ -162,25 +165,26 @@ Git flow.
 
 === Starting work on a new feature for the next version
 
-Let's say we want to start working on feature OC-Feature1 described in our JIRA.
+Let's say we want to start working on a feature described in GitHub issue #123.
 
 ----
 git checkout develop <1>
 git pull <2>
-git checkout -b OC-Feature1 <3>
+git checkout -b FE-123 <3>
 ----
 <1> Check out the `develop` branch
 <2> Make sure it is up to date with the remote (=GitHub repository)
-<3> Create a `OC-Feature1` off the `develop` branch
+<3> Create a `FE-123` off the `develop` branch
 
 Then, you can start working on the feature and commit your work to the branch.
 
 ----
-git commit -m "[OC-Feature1] Developments for OC-Feature1"
+git commit -m "#123 Short message describing content of commit"
 ----
 
 At any point during your work you can push your feature branch to the GitHub repository, to back your work up, let
-others look at your work or contribute to the feature, and also to trigger a build (see above).
+others look at your work or contribute to the feature.
+
 To do this, just run:
 ----
 git push
@@ -191,28 +195,17 @@ git push
 If it's your first push to this branch, Git will prompt you to define the remote branch to be associated with
 your local branch with the following command:
 ----
-git push --set-upstream origin OC-Feature1
+git push --set-upstream origin FE-123
 ----
 ====
 
-You can re-work, squash your commits and push as many times as you want on a feature branch, but try limiting pushes so
-as to make good use of the build resources provided by Travis.
+You can re-work, squash your commits and push as many times as you want on a feature branch.
 Force pushes are allowed on feature branches.
 
-To see your branch (and the status of the associated builds):
+To see your branch:
 
 . Go to the https://github.com/opfab/operatorfabric-core[operatorfabric-core repository on GitHub]
 . Click the `branches` tab
-
-image::branches_tab.png[]
-
-You can see your OC-Feature1 branch, and the green check mark next to it indicates that the associated build(s) is/are
-passing.
-
-Clicking this check mark displays a pop-up describing the associated build(s), and clicking "Details" redirects you
-to the build report on Travis.
-
-image::build_checkmark_popup.png[]
 
 [NOTE]
 ====
@@ -242,22 +235,16 @@ to assign a reviewer to each of them.
 To do so, go to the `branches` tab of the repository as described above.
 Click the "New Pull Request" button for your branch.
 
-image::feature1_new_PR.png[]
-
 Add a comment containing a short summary of the PR goal and any information that should go into the release notes.
 It's especially important for PRs that have a direct impact on existing OperatorFabric deployments, to alert administrators
 of the impacts of deploying a new version and help them with the migration.
 Whenever possible/relevant, a link to the corresponding documentation is appreciated.
-
-image::PR_comment.png[]
 
 [IMPORTANT]
 ====
 Make sure that the base branch for the PR is `develop`, because feature branches are meant to be merged back into
 `develop`. This should be the default value since `develop` is the default branch on this repository, but if not, select
 it in the base branch dropdown list.
-
-image::develop_base_PR.png[]
 ====
 
 At this point, GitHub will tell you whether your branch could be automatically merged into `develop` or whether
@@ -265,14 +252,10 @@ there are conflicts to be fixed.
 
 ==== Case 1: GitHub is able to automatically merge your branch
 
-image::feature1_PR_autom_merge_OK.png[]
-
 This means that either your branch was up to date with develop or there were no conflicts.
 In this case, just go ahead and fill in the PR title and message, then click "Create pull request".
 
 ==== Case 2: GitHub can't merge your branch automatically
-
-image::feature1_PR_autom_merge_KO.png[]
 
 This means that there are conflicts with the current state of the `develop` branch on GitHub.
 To fix these conflicts, you need to update your local copy of the develop branch and merge it into your feature branch.
@@ -280,12 +263,12 @@ To fix these conflicts, you need to update your local copy of the develop branch
 ----
 git checkout develop <1>
 git pull <2>
-git checkout OC-Feature1 <3>
+git checkout FE-123 <3>
 git merge develop <4>
 ----
 <1> Check out the `develop` branch
 <2> Make sure it is up to date with the remote (=GitHub repository)
-<3> Check out the `OC-Feature1` branch
+<3> Check out the `FR-123` branch
 <4> Merge the new commits from `develop` into the feature branch
 
 Then, handle any conflicts from the merge. For example, let's say there is a conflict on file `dummy1.txt`:
@@ -301,9 +284,9 @@ Open file `dummy1.txt`:
 .dummy1.txt
 ----
  <<<<<<< HEAD
- Some content from feature 1.
+ Some content from FE-123.
  =======
- Some content that has been changed on develop since Feature 1 branched off.
+ Some content that has been changed on develop since FE-123 branched off.
  >>>>>>> develop
 ----
 
@@ -311,7 +294,7 @@ Update the content to reflect the changes that you want to keep:
 
 .dummy1.txt
 ----
-Some content from feature 1 and some content that has been changed on develop since Feature 1 branched off.
+Some content from FE-123 and some content that has been changed on develop since FE-123 branched off.
 ----
 
 ----
@@ -325,8 +308,6 @@ git push <3>
 
 Now, if you go back to GitHub and try to create a pull request again, GitHub should indicate that it is able to merge
 automatically.
-
-image::feature1_PR_autom_merge_OK.png[]
 
 [[working_on_hotfix]]
 === Working on a fix for a previous version
@@ -349,7 +330,7 @@ to be on the release notes.
 pull requests, this branch should be `develop`.
 * Look through changed files to make sure everything is relevant to the PR (no mistakenly added changes,
 no secret information, no malicious changes) and to see if you have remarks on the way things are implemented
-* Check that the commit(s) message(s) is(are) relevant and follow conventions ([OC-XXX] ... )
+* Check that the commit(s) message(s) is(are) relevant and follow conventions (#XXX ... )
 * If there is more than one commit, is it meaningful or do we need to squash ?
 * Meaningful and sufficient unit tests for the backend (we aim for 80% coverage)
 * Meaningful unit tests for the frontend (Angular tests can be complex to implement, we should focus on testing complex
