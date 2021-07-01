@@ -1,0 +1,11 @@
+// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Contributing to OperatorFabric
+
+Read our link:https://opfab.github.io/documentation/current/community/[Community Documentation] for more information on
+how to contribute to the project.
