@@ -307,6 +307,7 @@
     }
   },
   "admin": {
+    "resultsNumber":"Results number",
     "input": {
       "group": {
         "id": "Id",
