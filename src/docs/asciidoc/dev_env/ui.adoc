@@ -118,11 +118,21 @@ on https://jasmine.github.io[Jasmine] using https://karma-runner.github.io[Karma
 . launch an angular server with the command: `ng serve`;
 . test your changes in your browser using this url: `http://localhost:4200` which leads to `http://localhost:4200/#/feed`.
 
-NOTE: If `ng serve` returns the error `Command 'ng' not found`, install the Angular CLI globally with the following
+==== Troubleshooting : 
+
+If `ng serve` returns the error `Command 'ng' not found`, install the Angular CLI globally with the following
 command.
-+
-`npm install -g @angular/cli`
-+
+
+----
+npm install -g @angular/cli
+----
+
 This will install the latest version of the Angular command line, which might not be in line with the one used by the
 project, but it's not an issue as when you run `ng serve` the local version of the Angular CLI
 (as defined in the package.json file) will be used.
+
+If it is still not running , launch in the ui/main directory 
+
+----
+npm link @angular/cli
+----
