@@ -72,7 +72,10 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         // Not this.translateService otherwise "undefined" error
       },
       pagination : true,
-      suppressCellSelection: true
+      suppressCellSelection: true,
+      headerHeight: 70,
+      suppressPaginationPanel: true,
+      suppressHorizontalScroll: true,
     };
     // Defining a custom cellRenderer was necessary (instead of using onCellClicked & an inline cellRenderer) because of
     // the need to call a method from the parent component
@@ -102,6 +105,8 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
   public gridOptions;
   public gridApi;
   public rowData: any;
+
+  public page: number = 1;
 
   protected i18NPrefix = 'admin.input.';
   protected crudService: CrudService;
@@ -235,6 +240,12 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
 
   refreshData() {
     this.rowData = this.crudService.getAll();
+  }
+
+
+  updateResultPage(currentPage): void {
+    this.gridApi.paginationGoToPage(currentPage-1);
+    this.page = currentPage;
   }
 
   ngOnDestroy() {
