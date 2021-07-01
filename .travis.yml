@@ -58,8 +58,8 @@ jobs:
         - echo preparing images for version $OF_VERSION
         - ./gradlew --build-cache copyWorkingDir dockerTag${OF_VERSION} -x test
         - docker image ls -a|grep lfeoperatorfabric
-        - ls ./var/lib/docker/
-        - ls ./var/lib/docker/overlay2
+        - ls /var/lib/docker/
+        - ls /var/lib/docker/overlay2
         - cd $OF_HOME
         - mkdir foodir
         - echo "bar" > ./foodir/bar.txt
@@ -67,7 +67,7 @@ jobs:
         create:
           name: docker-images
           paths:
-            - ./var/lib/docker/**
+            - /var/lib/docker/**
             - ./foodir/**
     - stage: karate
       workspaces:
@@ -76,8 +76,8 @@ jobs:
         - cd $OF_HOME
         - cat ./foodir/bar.txt || true
         - docker image ls -a|grep lfeoperatorfabric
-        - ls ./var/lib/docker/
-        - ls ./var/lib/docker/overlay2
+        - ls /var/lib/docker/
+        - ls /var/lib/docker/overlay2
         - cd $OF_HOME/config/docker
         - ./docker-compose.sh
         - cd $OF_HOME/bin
