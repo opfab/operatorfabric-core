@@ -5,7 +5,7 @@
     ":switchToGradleLite",
     "schedule:nonOfficeHours"
   ],
-  "branchPrefix": "FE_Renovate",
+  "branchPrefix": "FE-Renovate",
   "prConcurrentLimit": 5,
   "prHourlyLimit": 1,
   "ignorePaths": [
