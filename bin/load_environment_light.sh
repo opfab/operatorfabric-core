@@ -16,5 +16,5 @@ sdk use gradle 6.9
 # the java version is externalized because also needed for travis configuration
 sdk install java $(<JAVA_VERSION)-zulu
 sdk use java $(<JAVA_VERSION)-zulu
-nvm install v12.14
-nvm use v12.14
+nvm install v14.15
+nvm use v14.15

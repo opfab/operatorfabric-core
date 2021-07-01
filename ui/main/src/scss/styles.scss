@@ -13,13 +13,22 @@
 @import "variables";
 
 /* import bootstrap*/
-@import '../../../node_modules/bootstrap/scss/bootstrap.scss';
+@import '../../node_modules/bootstrap/scss/bootstrap.scss';
 
-@import "navbar.scss";
 
-@import "../../../node_modules/ag-grid-community/dist/styles/ag-grid.css";
-@import "../../../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
-@import "../../../node_modules/ag-grid-community/dist/styles/ag-theme-alpine/sass/ag-theme-alpine-mixin.scss";
+@import "../../node_modules/ag-grid-community/dist/styles/ag-grid.css";
+@import "../../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
+@import "../../node_modules/ag-grid-community/dist/styles/ag-theme-alpine/sass/ag-theme-alpine-mixin.scss";
+
+
+
+@each $color, $value in $theme-colors {
+  .brand-bg-#{$color} {
+    background-color: $value;
+    padding: 5px;
+    border-radius: 5px;
+  }
+}
 
 
 body {
@@ -115,7 +124,7 @@ body {
   margin-right: 10px;
   margin-top: 10px;
   background: var( --opfab-text-color);
-  mask: url(../images/icons/export-data.svg);
+  mask: url(../assets/images/icons/export-data.svg);
 }
 // END BUTTON STYLE 
 

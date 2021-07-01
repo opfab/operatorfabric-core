@@ -33,7 +33,7 @@
               "node_modules/@fullcalendar/bootstrap/main.css",
               "node_modules/angular2-multiselect-dropdown/themes/default.theme.css",
               "src/assets/styles/style.css",
-              "src/assets/styles/styles.scss"
+              "src/scss/styles.scss"
             ],
             "scripts": [
               "node_modules/svg-pan-zoom/dist/svg-pan-zoom.js",
@@ -117,7 +117,7 @@
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.css",
               "src/assets/styles/style.css",
-              "src/assets/styles/styles.scss"
+              "src/scss/styles.scss"
             ],
             "scripts": [
               "src/assets/js/templateGateway.js"
