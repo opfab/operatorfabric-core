@@ -21,4 +21,5 @@ COPY java-config-docker-entrypoint.sh /docker-entrypoint.sh
 COPY common-docker.yml /config/common-docker.yml
 COPY ${JAR_FILE} app.jar
 COPY cards-consultation-docker.yml /config/application-docker.yml
+RUN mkdir -p /external-config
 ENTRYPOINT ["/docker-entrypoint.sh"]
