@@ -24,7 +24,13 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {scaleLinear, scaleTime} from 'd3-scale';
-import {BaseChartComponent, calculateViewDimensions, ChartComponent, ViewDimensions} from '@swimlane/ngx-charts';
+import {
+  BaseChartComponent,
+  calculateViewDimensions,
+  ChartComponent,
+  ScaleType,
+  ViewDimensions
+} from '@swimlane/ngx-charts';
 import * as moment from 'moment';
 import {Store} from '@ngrx/store';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
@@ -234,7 +240,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       xAxisHeight: this.xAxisHeight,
       yAxisWidth: this.yAxisWidth,
       showLegend: false,
-      legendType: 'time'
+      legendType: ScaleType.Time
     });
     this.xScale =  scaleTime().range([0, this.dims.width]).domain(this.xDomain);
     this.yScale =  scaleLinear().range([this.dims.height, 0]).domain([0, 5]);
