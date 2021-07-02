@@ -6,6 +6,7 @@ dependencies{
     compile cloud.starterFeign
     compile misc.feignMock
     compile misc.feignJackson
+    compile misc.feignCore
     compile spring.webflux
     compile project(":client:users-client-data")
     compile project(":tools:generic:utilities")
