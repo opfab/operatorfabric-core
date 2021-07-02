@@ -138,7 +138,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
 
     onDateTimeChange(event: Event) {
-        this.dateTimeFilterChange.next();
+        this.dateTimeFilterChange.next(null);
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {

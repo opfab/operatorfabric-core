@@ -248,7 +248,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
 
     onDateTimeChange() {
-        this.dateTimeFilterChange.next();
+        this.dateTimeFilterChange.next(null);
     }
 
     private setNewFilterValue(): void {

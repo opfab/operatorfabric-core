@@ -75,14 +75,18 @@ export class ProcessesService {
                         this.processes = processesLoaded;
                         if (this.processes.length === 0) {
                             console.log(new Date().toISOString(), 'WARNING : no processes configured');
-                            this.translationsLoaded.next();
+                            this.translationsLoaded.next(null);
                             } else {
                             this.loadAllTranslations();
                             console.log(new Date().toISOString(), 'List of processes loaded');
                         }
                     }
-                }, (error) => console.error(new Date().toISOString(), 'an error occurred', error)
-                ));
+                }),
+                    catchError(error => {
+                        console.error(new Date().toISOString(), 'An error occurred when loading all processes', error);
+                        return of(error);
+                    })
+                );
     }
 
     public loadProcessGroups(): Observable<any> {
@@ -97,8 +101,12 @@ export class ProcessesService {
 
                             console.log(new Date().toISOString(), 'List of process groups loaded');
                         }
-                    }, (error) => console.error(new Date().toISOString(), 'An error occurred when loading processGroups', error)
-                ));
+                }),
+                    catchError(error => {
+                        console.error(new Date().toISOString(), 'An error occurred when loading processGroups', error);
+                        return of(error);
+                    })
+                );
     }
 
     private loadAllTranslations() {
@@ -114,7 +122,7 @@ export class ProcessesService {
         });
         // Wait for all translation request to complete before setting translations to load
         merge(...requests$).pipe(skip(requests$.length - 1)).subscribe(() =>  {
-            this.translationsLoaded.next();
+            this.translationsLoaded.next(null);
             console.log(new Date().toISOString(), 'Translations for processes loaded');
         });
     }
@@ -130,7 +138,11 @@ export class ProcessesService {
                         }
                         else  console.log(new Date().toISOString(), 'No monitoring config to load');
                         return monitoringConfig;
-                    }, (error) => console.error(new Date().toISOString(), 'An error occurred when loading monitoringConfig', error)
+                    }), 
+                    catchError(error => {
+                        console.error(new Date().toISOString(), 'An error occurred when loading monitoringConfig', error);
+                        return of(error);
+                    }
                 ));
     }
     public areTranslationsLoaded(): Observable<any> {
