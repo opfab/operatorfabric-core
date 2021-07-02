@@ -1,12 +1,9 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
-
-
-
 
 [[custom_certificates]]
 = Adding certification authorities or certificates to the Java keystore
@@ -14,7 +11,25 @@
 If you're using certificates (for example for Keycloak) that are not from a certification authority trusted by the JVM,
 this will cause errors such as this one:
 
-image::certificate_error.png[Missing certificate error message]
+.Missing certificate error message
+----
+Caused by: sun.security.validator. ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to
+requested target
+at sun.security.validator.PKIXValidator.doBuild(PKIXValidator.java:397)
+at sun.security.validator.PKIXValidator.engineValidate(PKIXValidator.java:302)
+at sun.security.validator.Validator.validate(Validator.java:262)
+at sun.security.ssl.X509TrustManager Impl.validate(x509TrustManagerImpl.java:330)
+at sun.security.ssl.X509TrustManagerImpl.checkTrusted(x509TrustManagerImpl.java:237)
+at sun.security.ssl.X509TrustManager Impl.checkServerTrusted(x509TrustManager Impl.java:132)
+at sun.security.ssl.clientHandshaker.serverCertificate(ClientHandshaker.java:1621)
+94 common frames omitted
+Caused by: sun.security.provider.certpath. SunCertPathBuilderException: unable to find valid certification path to requested target
+at sun.security.provider.certpath. SunCertPathBuilder.build(SunCertPathBuilder.java:141)
+at sun.security.provider.certpath.SunCertPathBuilder.engineBuild(SunCertPathBuilder.java:126)
+at java.security.cert.CertPathBuilder.build(CertPathBuilder.java:280)
+at sun.security.validator.PKIXValidator.doBuild(PKIXValidator.java:392)
+... 100 common frames omitted
+----
 
 If that is the case, you can pass the additional authorities or certificates that you use to the containers at runtime.
 
