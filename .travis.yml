@@ -64,12 +64,12 @@ jobs:
           name: docker-images
           paths:
             - local_opfab_images.tar.gz
-    - stage: karate
+    - stage: integration-tests
       workspaces:
         use: docker-images
+      name: karate
       script:
         - docker load < local_opfab_images.tar.gz
-        - docker image ls -a|grep lfeoperatorfabric
         - cd $OF_HOME/config/docker
         - ./docker-compose.sh
         - cd $OF_HOME/bin
@@ -78,10 +78,7 @@ jobs:
         - ./launchAll.sh
         - cd $OF_HOME/config/docker
         - docker-compose down
-    - stage: cypress
-      workspaces:
-        use: docker-images
-      script:
+    - script:
         - docker load < local_opfab_images.tar.gz
         - cd $OF_HOME/config/docker
         - ./docker-compose-cypress.sh
@@ -91,6 +88,7 @@ jobs:
         - ./gradlew runCypressTests
         - cd $OF_HOME/config/docker
         - docker-compose down
+      name: cypress
     - stage: doc
       script:
         - ./gradlew --build-cache generateSwaggerUI asciidoctor
