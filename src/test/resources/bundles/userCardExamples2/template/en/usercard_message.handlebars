@@ -21,7 +21,8 @@
         const card = {
         summary : {key : "message.summary"},
 		title : {key : "message.title"},
-        data : {message: message}
+        data : {message: message},
+        externalRecipients : ["userCardExamples2_externalRecipient1", "userCardExamples2_externalRecipient2"]
         };
         if (message.length<1) return { valid:false , errorMsg:'You must provide a message'}
         return {
