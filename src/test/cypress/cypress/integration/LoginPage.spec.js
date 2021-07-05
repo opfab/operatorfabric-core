@@ -14,7 +14,7 @@ describe ('LoginPage',()=>{
     before('Set up configuration', function () {
 
         // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
-        cy.resetUIConfigurationFile();
+        cy.resetUIConfigurationFiles();
 
     });
 

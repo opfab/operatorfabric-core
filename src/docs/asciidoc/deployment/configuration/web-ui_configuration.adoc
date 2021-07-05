@@ -81,8 +81,6 @@ a|card time display mode in the feed. Values :
 |feed.card.maxNbOfCardsToDisplay|100|no| Max number of card visible in feed (This limit is used for performance reasons, setting the value too high can have consequences on browser response times) 
 
 |feed.timeline.domains|["TR", "J", "7D", "W", "M", "Y"]|no| List of domains to show on the timeline, possible domains are : "TR", "J", "7D", "W", "M", "Y".
-|feedConfiguration.hidden|false|no|Control if you want to show or hide the notification configuration screen
-|realTimeUsers.hidden|false|no|Control if you want to show or hide the real time users screen
 |playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
 |playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
 |playSoundForCompliant|false|no|If set to true, a sound is played when Compliant cards are added or updated in the feed
@@ -94,7 +92,6 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |archive.filters.page.size|10|no|The page size of archive filters
 |archive.filters.tags.list||no|List of tags to choose from in the corresponding filter in archives
 |settings.tags.hide||no|Control if you want to show or hide the tags filter in feed page
-|settings.nightDayMode|false|no|if you want to activate toggle for night or day mode 
 |settings.styleWhenNightDayModeDesactivated||no|style to apply if not using day night mode, possible value are DAY or NIGHT 
 |settings.dateFormat|Value from the browser configuration|no|Format for date rendering (example : DD/MM/YYYY )
 |settings.timeFormat|Value from the browser configuration|no|Format for time rendering (example : HH:mm )
@@ -128,18 +125,6 @@ It should look like:
 |title|OperatorFabric|no|Title of the application, displayed on the browser
 |environmentName||no| Name of the environment to display on the top-right corner (examples: PROD , TEST .. ), if the value not set the environnement name is not shown .
 |environmentColor|blue|no| Color of the background of the environnement name. The format of color is css, for example : `red` , `#4052FF`
-|navbar.hidden|["logging","monitoring"]|no
-a| Lists the application menu to hide in the navbar. +
-The `keys` used are the `route.path` declared in the `${OF_HOME}ui/main/src/app/app-routing.module.ts` file. +
-Currently the `application routes` are:
-
-- `feed`;
-- `archives`.
-
-There will be two new routes with the release of the `[OC-936]`:
-
-- `logging`;
-- `monitoring`.
 |checkPerimeterForResponseCard|true|no|If false, OperatorFabric will not check that a user has write rights on a process/state to respond to a card.
 |checkPerimeterForSearchFields|false|no|If true, to see a service, process or state in the archives/logging/monitoring/feedconfiguration screens of OperatorFabric, you must have a "Receive" or "ReceiveAndWrite" right enabled in the corresponding process/state.
 |usercard.useDescriptionFieldForEntityList|false|no|If true, show entity `description` field instead of `name` in user card page

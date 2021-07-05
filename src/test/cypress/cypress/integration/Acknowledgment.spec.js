@@ -12,7 +12,7 @@ describe('Acknowledgment  tests', function () {
     before('Set up configuration', function () {
 
         // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
-        cy.resetUIConfigurationFile();
+        cy.resetUIConfigurationFiles();
 
         cy.loadTestConf();
         // Send a card with ack config set to Always
