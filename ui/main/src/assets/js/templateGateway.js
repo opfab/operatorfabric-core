@@ -59,6 +59,10 @@ const templateGateway = {
 
     initTemplateGateway: function () {
 
+        this.childCards =  [];
+        this.userAllowedToRespond = false;
+        this.userMemberOfAnEntityRequiredToRespond = false;
+
         // OpFab calls this function to inform the template that the card is locked
         this.lockAnswer = function () {
             // This function should be overridden in the template.
