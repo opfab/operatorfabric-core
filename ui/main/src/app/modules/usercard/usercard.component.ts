@@ -498,17 +498,17 @@ export class UserCardComponent implements OnDestroy, OnInit {
         else endDate = this.createTimestampFromValue(endDate);
 
         if (!!endDate && endDate < startDate) {
-            this.displayMessage('userCard.error.endDateBeforeStartDate','',MessageLevel.ERROR);
+            this.displayMessage('userCard.error.endDateBeforeStartDate', '', MessageLevel.ERROR);
             return;
         }
 
         if (!!lttd && lttd < startDate) {
-            this.displayMessage('userCard.error.lttdBeforeStartDate','',MessageLevel.ERROR);
+            this.displayMessage('userCard.error.lttdBeforeStartDate', '', MessageLevel.ERROR);
             return;
         }
 
         if (!!lttd && !!endDate && lttd > endDate) {
-            this.displayMessage('userCard.error.lttdAfterEndDate','',MessageLevel.ERROR);
+            this.displayMessage('userCard.error.lttdAfterEndDate', '', MessageLevel.ERROR);
             return;
         }
 
@@ -516,6 +516,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         const summary = (!!specificInformation.card.summary) ? specificInformation.card.summary : 'UNDEFINED';
         const keepChildCards = (!!specificInformation.card.keepChildCards) ? specificInformation.card.keepChildCards : false;
         const secondsBeforeTimeSpanForReminder = (specificInformation.card.secondsBeforeTimeSpanForReminder !== undefined) ? specificInformation.card.secondsBeforeTimeSpanForReminder : null;
+        const externalRecipients = (!!specificInformation.card.externalRecipients) ? specificInformation.card.externalRecipients : null;
 
         let severity;
         if (this.severityVisible) {
@@ -552,7 +553,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
             userRecipients : [this.currentUserWithPerimeters.userData.login],
             entityRecipients: recipients,
             entitiesAllowedToRespond: entitiesAllowedToRespond,
-            externalRecipients: null,
+            externalRecipients: externalRecipients,
             title: title,
             summary: summary,
             secondsBeforeTimeSpanForReminder: secondsBeforeTimeSpanForReminder,
