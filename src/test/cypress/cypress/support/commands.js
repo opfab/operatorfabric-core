@@ -28,7 +28,22 @@ Cypress.Commands.add('loginOpFab',(username, password)=>
     cy.get('#opfab-login-btn-submit').should('be.visible')
 
     //Wait for the app to finish initializing
-    cy.get('#opfab-cypress-loaded-check', {timeout: 10000}).should('have.text', 'true');
+    cy.get('#opfab-cypress-loaded-check', {timeout: 15000}).should('have.text', 'true');
+})
+
+Cypress.Commands.add('reload',()=>
+{   //go to login page
+    cy.visit('');
+
+    //Wait for the app to finish initializing
+    cy.get('#opfab-cypress-loaded-check', {timeout: 15000}).should('have.text', 'true');
+})
+
+Cypress.Commands.add('logoutOpFab',()=>
+{
+    cy.get('#opfab-navbar-drop_user_menu').click(); // Click top right dropdown menu
+    cy.get('#opfab-navbar-right-menu-logout').click({force: true}); // Click logout button
+
 })
 
 Cypress.Commands.add('loadTestConf', () => {
@@ -52,7 +67,7 @@ Cypress.Commands.add('deleteCard', (cardId) => {
     cy.exec('cd ../resources/cards/ && ./deleteCard.sh '+ cardId + ' ' + Cypress.env('host'));
 })
 
-Cypress.Commands.add('resetUIConfigurationFile', () => {
+Cypress.Commands.add('resetUIConfigurationFiles', () => {
 
     cy.exec('cp ../../../config/cypress/ui-config/web-ui-base.json ../../../config/cypress/ui-config/web-ui.json');
     cy.exec('cp ../../../config/cypress/ui-config/ui-menu-base.json ../../../config/cypress/ui-config/ui-menu.json');
@@ -81,6 +96,16 @@ Cypress.Commands.add('setPropertyInConf', (property,file,value) => {
         default:
             cy.log(`${file} is not a recognized configuration file (valid options: web-ui, ui-menu).`);
     }
+})
+
+Cypress.Commands.add('updateCoreMenuInConf', (menu, property, value) => {
+    const filePath = `./config/cypress/ui-config/ui-menu.json`;
+    cy.exec(`cd ../../.. && ./src/test/resources/uiConfig/updateCoreMenu.sh ${filePath} ${menu} ${property} ${value}`);
+})
+
+Cypress.Commands.add('deleteCoreMenuFromConf', (menu) => {
+    const filePath = `./config/cypress/ui-config/ui-menu.json`;
+    cy.exec(`cd ../../.. && ./src/test/resources/uiConfig/deleteCoreMenu.sh ${filePath} ${menu}`);
 })
 
 Cypress.Commands.add('deleteAllArchivedCards', () => {

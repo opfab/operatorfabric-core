@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { I18n } from './i18n.model';
+import {I18n} from './i18n.model';
 
 
 export class Menu {
@@ -39,8 +39,6 @@ export enum MenuEntryLinkTypeEnum {
     BOTH = 'BOTH'
 }
 
-
-
 export class Locale {
     constructor(
         readonly language: string,
@@ -49,10 +47,19 @@ export class Locale {
         }
 }
     
-export class MenuConfig {
+export class UIMenuFile {
     constructor(
         readonly menus: Menu[],
-        readonly locales: Locale[]) {
-
+        readonly locales: Locale[],
+        readonly coreMenusConfiguration: CoreMenuConfig[]) {
         }
+}
+
+export class CoreMenuConfig {
+    constructor(
+        readonly id: string,
+        readonly visible?: boolean,
+        readonly showOnlyForGroups?: string[]
+    ) {
+    }
 }

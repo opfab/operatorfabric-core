@@ -62,7 +62,7 @@
         },
         "Europe/London",
         "Europe/Dublin",
-        "Europe/Brussel",
+        "Europe/Brussels",
         "Europe/Berlin",
         "Europe/Rome",
         "Europe/Madrid",
@@ -129,20 +129,7 @@
     "locale": "en",
     "dateTimeFormat": "HH:mm DD/MM/YYYY",
     "dateFormat": "DD/MM/YYYY",
-    "nightDayMode": true,
     "styleWhenNightDayModeDesactivated": "NIGHT"
-  },
-  "navbar": {
-    "hidden": []
-  },
-  "admin": {
-    "hidden": false
-  },
-  "feedConfiguration": {
-    "hidden": false
-  },
-  "realTimeUsers": {
-    "hidden": false
   },
   "usercard": {
     "useDescriptionFieldForEntityList": false

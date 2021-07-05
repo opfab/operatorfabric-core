@@ -79,7 +79,8 @@ export class AppComponent implements OnInit {
 
 
   private loadConfiguration() {
-    this.configService.fetchConfiguration().subscribe(config => {
+
+    this.configService.loadWebUIConfiguration().subscribe(config => {
       console.log(new Date().toISOString(), `Configuration loaded (web-ui.json)`);
       this.store.dispatch(new LoadConfigSuccess({ config: config }));
       this.setTitle();
@@ -90,6 +91,14 @@ export class AppComponent implements OnInit {
       return caught;
     }));
 
+    this.configService.loadCoreMenuConfigurations().subscribe(() => {
+          console.log(new Date().toISOString(), `Configuration for core menus loaded (ui-menu.json)`);
+        },
+        catchError((err, caught) => {
+          console.error('Impossible to load configuration file ui-menu.json', err);
+          return caught;
+        }));
+
   }
 
   private setTitle() {
@@ -98,7 +107,7 @@ export class AppComponent implements OnInit {
   }
 
   private loadTranslationForMenu() {
-    this.configService.loadMenuTranslations().subscribe(locales => locales.forEach(locale =>
+    this.configService.fetchMenuTranslations().subscribe(locales => locales.forEach(locale =>
       this.translateService.setTranslation(locale.language, locale.i18n, true)));
     catchError((err, caught) => {
       console.error('Impossible to load configuration file ui-menu.json', err);

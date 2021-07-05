@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -8,16 +8,97 @@
 
 = UI Customization
 
-
 == UI configuration 
 
 To customize the UI, declare specific parameters in the `web-ui.json` file as link:../deployment/index.html#ui_properties[listed here]
 
-
 [[menu_entries]]
 == Menu Entries
 
-The `ui-menu.json` file declares specific business menus to be displayed in the navigation bar of OperatorFabric.
+The `ui-menu.json` file is used:
+
+* To manage the visibility of core OperatorFabric menus (feed, monitoring, etc.)
+* To declare specific business menus to be displayed in the navigation bar of OperatorFabric
+
+[[core_menu_config]]
+=== Core menus
+
+The `coreMenusConfiguration` property of the `ui-menu.json` files should contain one object with the following properties
+for each core menu:
+
+* `id`: Id of the core menu (string)
+* `visible`: Whether this menu should be visible for this OperatorFabric instance (boolean)
+* `showOnlyForGroups` : List of groups for which this menu should be visible (array, optional)
+
+.Menu visibility summary
+* If a core menu is not present in `coreMenusVisibility`, it won't be visible.
+* If a core menu doesn't have a `visible` property, or it is set to null or false, it won't be visible.
+* For a core menu with `"visible": true`:
+** If `showOnlyForGroups` is not present, null or an empty array : the menu is visible for all users.
+** If `showOnlyForGroups` is present and with a non-empty array as a value: menu is visible only for users from the
+listed groups.
+
+.List of core menus and corresponding ids
+|===
+|Location of menu |Menu |Id
+
+.4+|Navigation bar
+
+|Feed
+|feed
+
+|Archives
+|archives
+
+|Monitoring
+|monitoring
+
+|Logging
+|logging
+
+.2+|Navigation bar (icon)
+
+|User card
+|usercard
+
+|Calendar
+|calendar
+
+.7+|Top-right menu
+
+|Administration
+|admin
+
+|Settings
+|settings
+
+|Notification Reception Configuration
+|feedconfiguration
+
+|Real time users
+|realtimeusers
+
+|Night/Day toggle
+|nightdaymode
+
+|About
+|about
+
+|Logout
+|logout
+
+|===
+
+See `/config/docker/ui-menu.json` for an example containing all core menus.
+
+IMPORTANT: This property only manages menu visibility, not resource access rights. For example, if visibility of the
+Administration menu is granted to groups other than the `ADMIN` group, users will be able to see the administration
+screen but not to perform administration tasks, as they require administrator privileges.
+
+NOTE: If you decide not to make the night/day toggle visible (globally or for certain users), you should consider
+setting the `settings.styleWhenNightDayModeDesactivated` property in `web-ui.json` to specify which mode should be used.
+
+=== Custom business menus
 
 A menu can target directly a link or give access to several sub-menus when clicked.
 Those sub-menus can only target a link.
@@ -29,10 +110,9 @@ The ui-menu.json file contains directly the i18n dictionary for the menus.
 In case of a single menu, the navigation bar displays the l10n of the `label` of the entry menu.
 In this case, the `label` declared at the root level of the menu is useless and can be omitted (see example below).
 
-=== ui-menu.json declaration
-
 A single menu or a menu with sub-menus has at least attributes named `id` and `entries`.
-The `entries` attribute is an array of `menu entry`. It is possible to restrict the visibility of one menu entry the one or more user groups by setting the `showOnlyForGroups` parameter.
+The `entries` attribute is an array of `menu entry`. It is possible to restrict the visibility of one menu entry the one
+or more user groups by setting the `showOnlyForGroups` parameter.
 Note that menus with sub-menus need a `label` declaring an i18n key.
 
 Each `menu entry` declares the attributes listed below:
@@ -47,13 +127,11 @@ Each `menu entry` declares the attributes listed below:
 **
 - `showOnlyForGroups`: Defines the list of user groups entitled to see the menu entry, if not defined or empty it will be visible to every user.
 
-
-=== Examples
-
-In following example, the configuration file declares two additional business menus.
+In the following example, the configuration file declares two additional business menus.
 The first has only one entry, the second has two entries.
 The sample also contains the i18n translations in English and in French.
 
+.Example
 [source, json]
 ----
 {
@@ -133,16 +211,6 @@ The sample also contains the i18n translations in English and in French.
 }
 ----
 
-=== Operator Fabric theme
-
-For iframes opened from menu, the associated request uses an extra parameter containing the current theme information.
-Named `opfab_theme`, this parameter has a value corresponding to the current theme: +
-`DAY` or `NIGHT`
-
-*Example:*
-
-----
- http://mysite.com/index.htm?opfab_theme=NIGHT 
-----
-
-Switching theme will trigger reload of open iframes.
+NOTE: For iframes opened from menu, the associated request uses an extra parameter containing the current theme information.
+Named `opfab_theme`, this parameter has a value corresponding to the current theme: `DAY` or `NIGHT`. For example:
+`http://mysite.com/index.htm?opfab_theme=NIGHT`. Switching theme will trigger reload of open iframes.

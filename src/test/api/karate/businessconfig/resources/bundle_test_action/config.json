@@ -2,8 +2,6 @@
   "id": "processAction",
   "version": "1",
   "defaultLocale": "fr",
-  "menuEntries": [
-  ],
   "states": {
     "longFormat": {
       "response": {
