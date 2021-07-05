@@ -103,10 +103,11 @@ The following card fields can be set via the object `card` in the object returne
 
 * title 
 * summary
-* keepChildCard
+* keepChildCards
 * secondsBeforeTimeSpanForReminder
 * severity (in case it is not visible from the user , when `severityVisible` set to false in `config.json`)
-* data 
+* data
+* externalRecipients
 
 If you want the card to be visible in the agenda feature, you need to set 'viewCardInAgenda' to true in the object returned by the method.
 

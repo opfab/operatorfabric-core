@@ -19,7 +19,8 @@
         const card = {
         summary : {key : "message.summary"},
 		title : {key : "message.title"},
-        data : {message: message}
+        data : {message: message},
+        externalRecipients : ["externalRecipient1", "externalRecipient2"]
         };
          if (message.length<1) return { valid:false , errorMsg:'Vous devez saisir un message'}
         return {
