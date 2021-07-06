@@ -38,6 +38,11 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
     @Override
     public LightCardConsultationData convert(Document source) {
         LightCardConsultationData.LightCardConsultationDataBuilder builder = LightCardConsultationData.builder();
+
+        Document latestUpdateOnly = (Document) source.get("latestUpdateOnly");
+        if (latestUpdateOnly != null)
+            source = latestUpdateOnly;
+
         builder.publisher(source.getString("publisher")).parentCardId(source.getString("parentCardId"))
                 .initialParentCardUid(source.getString("initialParentCardUid"))
                 .processVersion(source.getString("processVersion")).uid(source.getString("uid"))

@@ -18,8 +18,8 @@ import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.util.MultiValueMap;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @Slf4j
@@ -50,10 +51,13 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
     public static final String PARENT_CARD_ID_FIELD = "parentCardId";
     public static final String CHILD_CARDS_PARAM = "childCards";
 
+    public static final String LATEST_UPDATE_ONLY = "latestUpdateOnly";
+
     public static final int DEFAULT_PAGE_SIZE = 10;
 
     private static final List<String> SPECIAL_PARAMETERS = Arrays.asList(
-            PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM, PAGE_PARAM, PAGE_SIZE_PARAM, CHILD_CARDS_PARAM);
+            PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM,
+            PAGE_PARAM, PAGE_SIZE_PARAM, CHILD_CARDS_PARAM, LATEST_UPDATE_ONLY);
 
 
     private static final String ARCHIVED_CARDS_COLLECTION = "archivedCards";
@@ -77,19 +81,20 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
     }
 
     public Mono<Page<LightCard>> findWithUserAndParams(Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params) {
-        Query query = createQueryFromUserAndParams(params);
-        Query countQuery = createQueryFromUserAndParams(params);
-
         //Handle Paging
         Pageable pageableRequest = createPageableFromParams(params.getT2());
+
+        Aggregation agg = createAggregationFromUserAndParams(params, pageableRequest);
+        Aggregation countAgg = createAggregationFromUserAndParams(params,null);
+
         if (pageableRequest.isPaged()) {
-            return template.find(query.with(pageableRequest), LightCardConsultationData.class, ARCHIVED_CARDS_COLLECTION)
+            return template.aggregate(agg, ARCHIVED_CARDS_COLLECTION, LightCardConsultationData.class)
                     .cast(LightCard.class).collectList()
-                    .zipWith(template.count(countQuery, LightCard.class, ARCHIVED_CARDS_COLLECTION))
+                    .zipWith(template.aggregate(countAgg, ARCHIVED_CARDS_COLLECTION, LightCardConsultationData.class).count())
                     .map(tuple -> new PageImpl<>(tuple.getT1(), pageableRequest, tuple.getT2()));
         } else {
-            return template.find(query, LightCardConsultationData.class, ARCHIVED_CARDS_COLLECTION)
-            		.cast(LightCard.class).collectList()
+            return template.aggregate(agg, ARCHIVED_CARDS_COLLECTION, LightCardConsultationData.class)
+                    .cast(LightCard.class).collectList()
                     .map(results -> new PageImpl<>(results));
         }
         //The class used as a parameter for the find & count methods is LightCard (and not LightCardConsultationData) to make use of the existing LightCardReadConverter
@@ -109,16 +114,13 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         }
     }
 
-    private Query createQueryFromUserAndParams(Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params) {
-
-        Query query = new Query();
+    private Aggregation createAggregationFromUserAndParams(Tuple2<CurrentUserWithPerimeters,
+            MultiValueMap<String, String>> params, Pageable pageableRequest) {
 
         List<Criteria> criteria = new ArrayList<>();
 
         CurrentUserWithPerimeters currentUserWithPerimeters = params.getT1();
         MultiValueMap<String, String> queryParams = params.getT2();
-
-        query.with(Sort.by(Sort.Order.desc(PUBLISH_DATE_FIELD)));
 
         /* Handle special parameters */
 
@@ -137,24 +139,32 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         /* Add child cards criteria (by default, child cards are not included) */
         criteria.add(childCardsIncludedOrNotCriteria(queryParams));
 
-        if (!criteria.isEmpty()) {
-            query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));
+        boolean latestUpdateOnly = isLatestUpdateOnlyParamPresent(params.getT2());
+        
+        List<AggregationOperation> operations = new ArrayList<>(Arrays.asList(
+                match(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()]))),
+                sort(Sort.by(Sort.Order.desc(PUBLISH_DATE_FIELD)))));
+
+        if (latestUpdateOnly) {
+            operations.add(group("process", "processInstanceId").first(Aggregation.ROOT).as(LATEST_UPDATE_ONLY));
+            operations.add(project(LATEST_UPDATE_ONLY).andExclude("_id"));
+            operations.add(sort(Sort.by(Sort.Order.desc(LATEST_UPDATE_ONLY + "." + PUBLISH_DATE_FIELD))));
         }
-
-        return query;
+        if ((pageableRequest != null) && (pageableRequest.isPaged())) {
+            operations.add(skip((long) (pageableRequest.getPageNumber() * pageableRequest.getPageSize())));
+            operations.add(limit(pageableRequest.getPageSize()));
+        }
+        return newAggregation(operations);
     }
-
 
     private List<Criteria> regularParametersCriteria(MultiValueMap<String, String> params) {
 
         List<Criteria> criteria = new ArrayList<>();
 
         params.forEach((key, values) -> {
-
             if (!SPECIAL_PARAMETERS.contains(key)) {
                 criteria.add(Criteria.where(key).in(values));
             }
-
         });
 
         return criteria;
@@ -177,6 +187,14 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         }
 
         return criteria;
+    }
+
+    private boolean isLatestUpdateOnlyParamPresent(MultiValueMap<String, String> params) {
+        if (params.containsKey(LATEST_UPDATE_ONLY)) {
+            String latestUpdateOnly = params.getFirst(LATEST_UPDATE_ONLY);
+            return(latestUpdateOnly != null) && (latestUpdateOnly.equals("true"));
+        }
+        return false;
     }
 
     private Criteria childCardsIncludedOrNotCriteria(MultiValueMap<String, String> params) {
