@@ -45,6 +45,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     archiveForm: FormGroup;
 
     results: LightCard[];
+    updatesByCardId: {mostRecent: LightCard, cardHistories: LightCard[], displayHistory: boolean}[];
     currentPage = 0;
     resultsNumber = 0;
     hasResult = false;
@@ -64,6 +65,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     activeMaxDate : {year: number, month: number, day: number} = null;
 
     dateTimeFilterChange = new Subject();
+
+    lastRequestID: number;
 
     constructor(private store: Store<AppState>,
                 private processesService: ProcessesService,
@@ -101,6 +104,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     ngOnInit() {
         this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
         this.results = [];
+        this.updatesByCardId = [];
         this.dateTimeFilterChange.pipe(
             takeUntil(this.unsubscribe$),
             debounceTime(1000),
@@ -133,7 +137,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.publishMaxDate = null;
         this.activeMinDate = null;
         this.activeMaxDate = null;
-
     }
 
 
@@ -166,6 +169,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.filtersTemplate.filtersToMap(value);
         this.filtersTemplate.filters.set('size', [this.size.toString()]);
         this.filtersTemplate.filters.set('page', [page_number]);
+        this.filtersTemplate.filters.set('latestUpdateOnly', ['true']);
         this.cardService.fetchArchivedCards(this.filtersTemplate.filters)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((page: Page<LightCard>) => {
@@ -175,7 +179,46 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 this.hasResult = page.content.length > 0;
                 page.content.forEach(card => this.loadTranslationForCardIfNeeded(card));
                 this.results = page.content;
+
+                let requestID = new Date().valueOf();
+                this.lastRequestID = requestID;
+
+                this.updatesByCardId = [];
+                this.loadUpdatesByCardId(requestID);
             });
+    }
+
+    loadUpdatesByCardId(requestID: number) {
+        this.results.forEach((lightCard, index) => {
+            const filters: Map<string,  string[]> = new Map();
+            filters.set('process', [lightCard.process]);
+            filters.set('processInstanceId', [lightCard.processInstanceId]);
+            this.cardService.fetchArchivedCards(filters)
+                .pipe(takeUntil(this.unsubscribe$))
+                .subscribe((page: Page<LightCard>) => {
+                    page.content.forEach(card => this.loadTranslationForCardIfNeeded(card));
+                    this.removeMostRecentCardFromHistories(lightCard.id, page.content);
+
+                    //since we are in asynchronous mode, we test requestId to avoid that the requests "overlap" and that the results appear in a wrong order
+                    if (requestID === this.lastRequestID)
+                        this.updatesByCardId.splice(index, 0, {mostRecent: lightCard, cardHistories: page.content, displayHistory: false});
+                });
+        });
+    }
+
+    removeMostRecentCardFromHistories(mostRecentId: string, histories: LightCard[]) {
+        histories.forEach((lightCard, index) => {
+            if (lightCard.id === mostRecentId)
+                histories.splice(index, 1);
+        });
+    }
+
+    displayHistoryOfACard(card: {mostRecent: LightCard, cardHistories: LightCard[], displayHistory: boolean}) {
+        card.displayHistory = true;
+    }
+
+    hideHistoryOfACard(card: {mostRecent: LightCard, cardHistories: LightCard[], displayHistory: boolean}) {
+        card.displayHistory = false;
     }
 
     loadTranslationForCardIfNeeded(card: LightCard) {
@@ -216,8 +259,9 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     initExportArchiveData(): void {
         const exportArchiveData = [];
 
-        this.filtersTemplate.filters.set('size', [this.resultsNumber.toString()]);
-        this.filtersTemplate.filters.set('page', [0]);
+        this.filtersTemplate.filters.delete('size');
+        this.filtersTemplate.filters.delete('page');
+        this.filtersTemplate.filters.delete('latestUpdateOnly');
 
         this.cardService.fetchArchivedCards(this.filtersTemplate.filters).pipe(takeUntil(this.unsubscribe$))
             .subscribe((page: Page<LightCard>) => {

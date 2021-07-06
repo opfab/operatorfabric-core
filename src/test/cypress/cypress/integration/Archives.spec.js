@@ -33,11 +33,13 @@ describe ('Archives screen tests',function () {
         cy.get('of-card-detail').should('not.exist');
         cy.get('#opfab-archive-results-number').should('have.text', ' Results number  : 6 ')
 
-        // We send again the test cards and we check that the we have 12 archived cards (10 archived cards displayed for first page)
+        // We send again the test cards and we check that the we have 6 lines of archived cards (6 * 2 instances per card)
+        // and we check we have plus icon for each line
         cy.send6TestCards();
         cy.get('#opfab-archives-btn-search').click();
-        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length',10);
+        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length',6);
+        cy.get('#opfab-archives-cards-list').find('.opfab-archives-icon-plus').should('have.length',6);
         cy.get('of-card-detail').should('not.exist');
-        cy.get('#opfab-archive-results-number').should('have.text', ' Results number  : 12 ')
+        cy.get('#opfab-archive-results-number').should('have.text', ' Results number  : 6 ')
     })
 })
