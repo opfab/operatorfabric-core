@@ -1,0 +1,142 @@
+// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+
+= Appendix B: Publication of the client library jars to Maven Central
+
+This is a summary of the steps that were necessary to initially set up the publication of jars to Maven Central.
+The process to actually publish the jars for each release is detailed in the release process documentation.
+
+.Publication process overview
+. Building and signing the jars
+. Publishing them to a staging repository where there are validations
+(e.g. check that the POM contains the required information, validating the signature against the public key)
+. If the validations pass, release the jar to Maven Central
+
+== Claiming the org.opfab namespace on Maven Central
+
+This is done by logging an https://issues.sonatype.org/browse/OSSRH-67392[issue] on the
+https://issues.sonatype.org/[Sonatype JIRA] (create an account first). The namespace needs to match a domain that you
+own (and this will be verified), which is why we had to rename our packages to `org.opfab.XXX`.
+
+You can then request other users to be granted rights on the namespace as well.
+
+== Creating a GPG key pair
+
+The key pair is generated with GPG2, keeping the default options and using the `opfabtech` technical account email as
+contact. The key is further secured with a passphrase.
+
+[terminal]
+----
+gpg2 --full-generate-key
+
+gpg (GnuPG) 2.2.19; Copyright (C) 2019 Free Software Foundation, Inc.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Please select what kind of key you want:
+   (1) RSA and RSA (default)
+   (2) DSA and Elgamal
+   (3) DSA (sign only)
+   (4) RSA (sign only)
+  (14) Existing key from card
+Your selection? 1
+RSA keys may be between 1024 and 4096 bits long.
+What keysize do you want? (3072) 3072
+Requested keysize is 3072 bits
+Please specify how long the key should be valid.
+         0 = key does not expire
+      <n>  = key expires in n days
+      <n>w = key expires in n weeks
+      <n>m = key expires in n months
+      <n>y = key expires in n years
+Key is valid for? (0) 18m
+Key expires at Tue 11 Oct 2022 12:38:13 CEST
+Is this correct? (y/N) y
+
+You need a user ID to identify your key; the software constructs the user ID
+from the Real Name, Comment and Email Address in this form:
+    "Heinrich Heine (Der Dichter) <heinrichh@duesseldorf.de>"
+
+Real name: opfabtech
+E-mail address: opfabtech@gmail.com
+Comment: technical account for the OperatorFabric project
+You selected this USER-ID:
+    "opfabtech (technical account for the OperatorFabric project) <opfabtech@gmail.com>"
+
+Change (N)ame, (C)omment, (E)-mail or (O)kay/(Q)uit? o
+We need to generate a lot of random bytes. It is a good idea to perform
+some other action (type on the keyboard, move the mouse, utilise the
+disks) during the prime generation; this gives the random number
+generator a better chance to gain enough entropy.
+gpg: key 469E7252B8D25328 marked as ultimately trusted
+gpg: directory '/home/guironnetale/.gnupg/openpgp-revocs.d' created
+gpg: revocation certificate stored as '/home/guironnetale/.gnupg/openpgp-revocs.d/FE0D7AFF9C129CFBBDC18A0B469E7252B8D25328.rev'
+public and secret key created and signed.
+
+pub   rsa3072 2021-04-19 [SC] [expires: 2022-10-11]
+      FE0D7AFF9C129CFBBDC18A0B469E7252B8D25328
+uid                      opfabtech (technical account for the OperatorFabric project) <opfabtech@gmail.com>
+sub   rsa3072 2021-04-19 [E] [expires: 2022-10-11]
+----
+
+NOTE: A standard practice is to have the key expire in 18 months, so I set up a calendar reminder for us to renew it.
+
+== Sharing the signing key
+
+For other developers to be able to sign jars, you need to share both the key pair and the passphrase.
+
+* Export the key pair to a file
+----
+gpg2 --export-secret-keys OPFAB_KEY_ID > key_pair.key
+----
+
+* Send the file to the other developers via a secure channel
+
+* Then, they need to import this file to their keyring (see the
+ifdef::single-page-doc[<<client_lib_pub_conf, documentation for the publishing task>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/dev_env/index.adoc#client_lib_pub_conf, documentation for the publishing task>>]
+for details).
+
+== Publishing the public key
+
+The public key needs to be published to (preferably several) key directories so people wanting to use the signed jars
+can check the signature against the public key. It is also checked as part of the validations performed on the
+staging repository.
+
+Our public key was initially published to `pool.sks-keyservers.net`, which became deprecated (causing the publication to
+fail), so it was then published to the two servers that the sonatype validations seem to rely on.
+
+.OpenPGP (https://keys.openpgp.org/)
+
+For OpenPGP you need to export the public key (and not the key pair) to a file and upload it to their web interface.
+----
+gpg2 --export OPFAB_KEY_ID > my_key.pub
+----
+
+.Ubuntu (http://keyserver.ubuntu.com)
+
+For Ubuntu you need to export the public key as ascii-armored ascii and paste the result to their web interface
+
+----
+gpg2 --export --armor OPFAB_KEY_ID
+----
+
+NOTE: The key can be retrieved from both these servers by searching either for `opfabtech@gmail.com` or for the key ID.
+
+== Setting up the signing and publication in Gradle
+
+IMPORTANT: You can't publish a jar with version "SNAPSHOT" to the Maven staging repositories (you would get a 403
+BAD REQUEST), that's why the Gradle publication task is configured so that if the version ends with "SNAPSHOT", the
+jars should be published to a local directory (`repos/snapshots`) rather than to the Maven Central staging repository.
+
+== Useful links
+
+* https://central.sonatype.org/publish/publish-guide/[General Sonatype Publication Documentation]
+* https://central.sonatype.org/publish/publish-gradle/[Documentation for publishing using Gradle]
+* https://docs.gradle.org/current/userguide/signing_plugin.html[Gradle Signing Plugin]
+* https://docs.gradle.org/current/userguide/publishing_maven.html[Gradle Maven Publish Plugin]
