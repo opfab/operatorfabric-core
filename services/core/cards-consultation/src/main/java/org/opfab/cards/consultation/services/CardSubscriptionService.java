@@ -51,6 +51,12 @@ public class CardSubscriptionService {
     @Autowired
     protected UserServiceCache userServiceCache;
 
+    @Value("${operatorfabric.amqp.connectionRetries:10}")
+    private int retries;
+
+    @Value("${operatorfabric.amqp.connectionRetryInterval:5000}")
+    private long retryInterval;
+
 
     @Autowired
     public CardSubscriptionService(ThreadPoolTaskScheduler taskScheduler,
@@ -143,7 +149,7 @@ public class CardSubscriptionService {
     private CardSubscription buildSubscription(String subId, CardSubscription.CardSubscriptionBuilder cardSubscriptionBuilder) {
         CardSubscription cardSubscription;
         cardSubscription = cardSubscriptionBuilder.build();
-        cardSubscription.initSubscription(() -> scheduleEviction(subId));
+        cardSubscription.initSubscription(retries, retryInterval, () -> scheduleEviction(subId));
         cache.put(subId, cardSubscription);
         log.debug("Subscription created with id {}", cardSubscription.getId());
         cardSubscription.userServiceCache = this.userServiceCache;

@@ -8,13 +8,10 @@
  */
 package org.opfab.springtools.configuration.oauth;
 
+import org.opfab.utilities.AmqpUtils;
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.AmqpAdmin;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.FanoutExchange;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -30,33 +27,17 @@ public class UpdateUserListener {
     private MessageListenerContainer eventListener;
     private UserServiceCache userServiceCache;
 
-    public UpdateUserListener( AmqpAdmin amqpAdmin, FanoutExchange userExchange, ConnectionFactory connectionFactory,      
-    String appName, UserServiceCache userServiceCache) {
+    public UpdateUserListener( AmqpAdmin amqpAdmin, FanoutExchange userExchange,ConnectionFactory connectionFactory,      
+    String appName, UserServiceCache userServiceCache, int retries, long retryInterval) {
         this.amqpAdmin = amqpAdmin;
         this.connectionFactory = connectionFactory;
         this.userServiceCache = userServiceCache;
         this.userQueueName = appName + ".users";
-        createQueue(userQueueName, userExchange);
+        AmqpUtils.createQueue(amqpAdmin, userQueueName, userExchange, retries, retryInterval);
         this.eventListener = createMessageListenerContainer(userQueueName);
         registerUserListener(eventListener);
         eventListener.start();
     }
-
-
-    /**
-     * <p>Constructs a non durable queue to exchange using queue name</p>
-     * @return
-     */
-    private Queue createQueue(String queueName, FanoutExchange exchange) {
-        Queue queue = QueueBuilder.nonDurable(queueName).build();
-        amqpAdmin.declareQueue(queue);
-
-        Binding binding = BindingBuilder.bind(queue).to(exchange);
-        amqpAdmin.declareBinding(binding);
-        return queue;
-    }
-
-
 
     /**
      * Create a {@link MessageListenerContainer} for the specified queue

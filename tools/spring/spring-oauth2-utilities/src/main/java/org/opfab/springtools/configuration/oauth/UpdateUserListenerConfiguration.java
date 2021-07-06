@@ -24,10 +24,16 @@ public class UpdateUserListenerConfiguration {
     @Value("${spring.application.name}")
     private String appName;
 
+    @Value("${operatorfabric.amqp.connectionRetries:10}")
+    private int retries;
+
+    @Value("${operatorfabric.amqp.connectionRetryInterval:5000}")
+    private long retryInterval;
+
     @Autowired
     @Bean(destroyMethod = "clearSubscription")
     public UpdateUserListener initUpdateUserListener(AmqpAdmin amqpAdmin, FanoutExchange userExchange, ConnectionFactory connectionFactory, UserServiceCache userServiceCache) {
-        return new UpdateUserListener(amqpAdmin, userExchange, connectionFactory, appName, userServiceCache);
+        return new UpdateUserListener(amqpAdmin, userExchange, connectionFactory, appName, userServiceCache, retries, retryInterval);
     }
 }
 

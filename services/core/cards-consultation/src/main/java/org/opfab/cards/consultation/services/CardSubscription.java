@@ -22,11 +22,12 @@ import net.minidev.json.parser.ParseException;
 import org.opfab.springtools.configuration.oauth.UserServiceCache;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.RightsEnum;
-import org.springframework.amqp.core.Queue;
+import org.opfab.utilities.AmqpUtils;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 
@@ -136,10 +137,10 @@ public class CardSubscription {
     }
 
 
-    public void initSubscription(Runnable doOnCancel) {
-        createQueue(cardsQueueName, cardExchange);
-        createQueue(processQueueName, processExchange);
-        createQueue(userQueueName, userExchange);
+    public void initSubscription(int retries, long retryInterval, Runnable doOnCancel) {
+        AmqpUtils.createQueue(amqpAdmin, cardsQueueName, cardExchange, retries, retryInterval);
+        AmqpUtils.createQueue(amqpAdmin, processQueueName, processExchange, retries, retryInterval);
+        AmqpUtils.createQueue(amqpAdmin, userQueueName, userExchange, retries, retryInterval);
         this.cardListener = createMessageListenerContainer(cardsQueueName);
         this.processListener = createMessageListenerContainer(processQueueName);
         this.userListener = createMessageListenerContainer(userQueueName);
@@ -198,21 +199,6 @@ public class CardSubscription {
             if (this.userLogin.equals(modifiedUserLogin)) 
                 publishDataIntoSubscription("USER_CONFIG_CHANGE");
         });
-    }
-
-    /**
-     * <p>Constructs a non durable queue to exchange using queue name</p>
-     * @return
-     */
-    private Queue createQueue(String queueName, FanoutExchange exchange) {
-        log.debug("CREATE queue for user {}", userLogin);
-        Queue queue = QueueBuilder.nonDurable(queueName).build();
-        amqpAdmin.declareQueue(queue);
-
-        Binding binding = BindingBuilder.bind(queue).to(exchange);
-        amqpAdmin.declareBinding(binding);
-
-        return queue;
     }
 
     /**
