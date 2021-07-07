@@ -136,7 +136,7 @@ be merged back into `develop`.
 
 Once the `X.X.X.release` branch has been created, a new commit should be made on this branch to change the repository
 version from `SNAPSHOT` to `X.X.X.RELEASE`.
-Then, pushing the branch will trigger a build and a "dry-run" generation of documentation and docker images. The aim
+Then, pushing the branch will trigger a build and a "dry-run" generation of docker images. The aim
 is to detect any issue with this generation before moving to master.
 
 Finally, the `X.X.X.release` can be merged into `master`, triggering

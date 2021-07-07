@@ -34,7 +34,6 @@ repository to update the documentation for this release on the website.
 doc-latest:: Generates the documentation (from asciidoc sources and API documentation) and pushes it to the
 opfab.github.io repository to update the documentation for this release, as well as the "current" documentation on the
 website.
-doc-dry-run:: Generates the documentation without pushing it
 docker-push-version:: Builds Docker images, tags them with the current version (either `SNAPSHOT` or `X.X.X.RELEASE`) and
 pushes them to DockerHub
 docker-push-latest:: Builds Docker images, tags them with `latest` and pushes them to DockerHub
@@ -66,7 +65,6 @@ e|test-sonar          |X|X| | |X|X|X| | | |X| | |internal
 e|test                | | | | | | | | | | | | | |external
 e|doc                 |X| |X| | | | |X| | | | | |
 e|doc-latest          | | | | | |X| | | |X| | | |
-e|doc-dry-run         | | | | |X| | | | | | |X| |
 e|docker-push-version |X| | |X| |X| | |X| | | | |
 e|docker-push-latest  | | | | | |X| | | |X| | | |
 e|docker-tag-version  | | | | |X| | | | | | | |X|
