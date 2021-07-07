@@ -22,7 +22,7 @@ import java.lang.annotation.*;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Import({MongoConfiguration.class, OperatorFabricMongoProperties.class})
+@Import({MongoConfiguration.class})
 @Documented
 public @interface EnableOperatorFabricMongo {
 

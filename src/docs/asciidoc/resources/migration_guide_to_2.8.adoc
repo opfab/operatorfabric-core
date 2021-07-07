@@ -87,6 +87,14 @@ ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/i
 for details and a full example)
 
 
+== Simplification MongoDB Configuration
+
+We are getting rid of our specific MongoDB configuration to let SpringBoot autoconfigure it. As a result, we are
+removing support for the `spring.data.mongodb.uris` property in favour of the standard `spring.data.mongodb.uri`
+property. Please change the application configuration files for the services accordingly.
+
+NOTE: This property can only hold a single URI.
+
 
 
 

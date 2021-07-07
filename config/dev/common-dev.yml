@@ -16,8 +16,7 @@ spring:
   data:
     mongodb:
       database: operator-fabric
-      uris:
-        - mongodb://root:password@localhost:27017/operator-fabric?authSource=admin&authMode=scram-sha1
+      uri: mongodb://root:password@localhost:27017/operator-fabric?authSource=admin&authMode=scram-sha1
 security:
   basic:
     enabled: false

@@ -2,5 +2,4 @@ spring:
   data:
     mongodb:
       database: operator-fabric-test
-      uris:
-        - mongodb://root:password@localhost:27017
+      uri: mongodb://root:password@localhost:27017
