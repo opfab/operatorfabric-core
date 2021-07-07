@@ -225,8 +225,8 @@ export class NavbarComponent implements OnInit {
      Furthermore, having the same template open twice in the application may cause unwanted behavior as
      we could have duplicated element html ids in the html document.
 
-  */
-  if (this.currentPath[1]==='feed') this.appService.closeDetails();
+     */
+    if (this.currentPath[1]==='feed') this.appService.closeDetails();
 
     const options: NgbModalOptions = {
       size: 'usercard',
