@@ -1,8 +1,7 @@
 spring:
   data:
     mongodb:
-      uris:
-        - mongodb://root:password@localhost:27017/?authSource=admin&authMode=scram-sha1
+      uri: mongodb://root:password@localhost:27017/?authSource=admin&authMode=scram-sha1
       database: operator-fabric-test
   rabbitmq:
     host: localhost

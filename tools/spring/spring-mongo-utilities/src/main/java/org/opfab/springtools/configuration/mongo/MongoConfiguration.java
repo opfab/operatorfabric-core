@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Mongo configuration.
- *  extends AbstractReactiveMongoConfiguration and overrides for custums
+ *  extends AbstractReactiveMongoConfiguration and overrides for customization
  * <ul>
  * <li>Standard cluster client configuration</li>
  * <li>Reactive cluster client configuration</li>
@@ -58,45 +58,11 @@ public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
     @Autowired
     private AbstractLocalMongoConfiguration localConfiguration;
 
-
-    /**
-     * @return reactive client
-     */
-    @Bean
-    public  MongoClient reactiveMongoClient() {
-            return MongoClients.create(mongoSettings());
+    @Override
+    protected void configureClientSettings(MongoClientSettings.Builder builder) {
+        builder.applyConnectionString(new ConnectionString(properties.getUri()))
+                .build();
     }
-
-
-    /**
-     * @return standard client
-     */
-    @Bean
-    public com.mongodb.client.MongoClient mongoClientx() {
-
-        List<ServerAddress> addrs = new ArrayList<>();
-        MongoCredential credential = null;
-
-        for (String uriString : properties.getUris()) {
-            URI uri = URI.create(uriString);
-            addrs.add(new ServerAddress(uri.getHost(), uri.getPort()));
-            String[] userInfo = uri.getUserInfo().split(":");
-
-            if (credential == null) {
-                credential = MongoCredential.createCredential(userInfo[0], "admin", userInfo[1].toCharArray());
-            }
-        }
-
-
-        return com.mongodb.client.MongoClients.create(
-                MongoClientSettings.builder().credential(credential).
-                        applyToConnectionPoolSettings(builder -> builder.maxConnectionIdleTime(60000,TimeUnit.SECONDS))
-                        .applyToClusterSettings(builder -> builder.hosts(addrs))
-                        .build());
-
-    }
-
-
 
     /**
      * @return database name from configuration
@@ -104,8 +70,7 @@ public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
     protected String getDatabaseName() {
         return properties.getDatabase();
     }
-
-
+    
     /**
      * Called before entities are persisted to mongo, triggers bean validation
      *
@@ -119,77 +84,10 @@ public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
         return new ValidatingMongoEventListener(localValidatorFactoryBean);
     }
 
-
-    /**
-     * client cluster configuration for reactive client
-     *
-     * @return reactive client configuration
-     */
-    private MongoClientSettings mongoSettings() {
-        List<String> dbUris = properties.getUris();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < dbUris.size(); i++) {
-            sb.append(dbUris.get(i));
-            if (i < dbUris.size() - 1)
-                sb.append(",");
-        }
-        ConnectionString connectionString = new ConnectionString(sb.toString());
-        MongoClientSettings.Builder builder = MongoClientSettings.builder()
-           .applyToConnectionPoolSettings(b ->
-              b.applySettings(ConnectionPoolSettings.builder()
-                 .applyConnectionString(connectionString)
-                 .maxConnectionIdleTime(60, TimeUnit.SECONDS)
-                 .build()))
-           .applyToServerSettings(b ->
-              b.applySettings(
-                 ServerSettings.builder()
-                    .applyConnectionString(connectionString)
-                    .build()
-              )
-           )
-           .applyToSslSettings(b ->
-              b.applySettings(SslSettings.builder()
-                 .applyConnectionString(connectionString)
-                 .build())
-           )
-           .applyToSocketSettings(b ->
-              b.applySettings(SocketSettings.builder()
-                 .applyConnectionString(connectionString)
-                 .build()));
-
-//        if(dbUris.size()>1)
-        builder.applyToClusterSettings(b ->
-           b.applySettings(
-              ClusterSettings.builder()
-                 .applyConnectionString(connectionString)
-                 .mode(ClusterConnectionMode.MULTIPLE)
-                 .build()));
-
-        if (connectionString.getCredential() != null) {
-            builder.credential(connectionString.getCredential());
-        }
-
-        if (connectionString.getReadPreference() != null) {
-            builder.readPreference(connectionString.getReadPreference());
-        }
-        if (connectionString.getReadConcern() != null) {
-            builder.readConcern(connectionString.getReadConcern());
-        }
-        if (connectionString.getWriteConcern() != null) {
-            builder.writeConcern(connectionString.getWriteConcern());
-        }
-        if (connectionString.getApplicationName() != null) {
-            builder.applicationName(connectionString.getApplicationName());
-        }
-        builder.compressorList(connectionString.getCompressorList());
-        return builder.build();
-    }
-
     @Bean
     public MongoCustomConversions customConversions() {
         return new MongoCustomConversions(localConfiguration.converterList());
     }
-
 
     @Bean
     public MappingMongoConverter mappingMongoConverter(ReactiveMongoDatabaseFactory databaseFactory,

@@ -25,6 +25,6 @@ import java.util.List;
 @ConfigurationProperties("spring.data.mongodb")
 @Data
 public class OperatorFabricMongoProperties {
-    private List<String> uris;
     private String database;
+    private String uri;
 }
