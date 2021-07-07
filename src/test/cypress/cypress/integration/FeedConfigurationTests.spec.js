@@ -16,7 +16,7 @@ describe ('Feed configuration tests',function () {
     });
 
     beforeEach('Reset UI configuration file ', function () {
-        cy.resetUIConfigurationFile();
+        cy.resetUIConfigurationFiles();
     })
 
     it('Buttons and filters visibility - Check default behaviour', function () {

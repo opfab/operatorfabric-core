@@ -15,9 +15,6 @@ When a user receives a card, he is notified via a resume of the card on the left
 For each process/state, the user can choose to be notified or not when receiving a card. If he chooses not to be
 notified then the card will not be visible in the feed. However, it will be visible in the archives screen.
 
-The notification configuration screen can be made accessible or not for the OperatorFabric instance via the variable
-feedConfiguration.hidden in the web-ui.json file.
-
 In order to have a better visual organization of the processes in the UI, you can define processes groups.
 You can find more information
 ifdef::single-page-doc[<<_processes_groups, here>>]

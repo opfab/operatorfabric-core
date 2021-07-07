@@ -35,6 +35,58 @@ cd src/test/resources
 .setSecurityAuthFlow.sh dev CODE
 ----
 
+== Management of visible menus
+
+The visibility of some core OperatorFabric menus (monitoring, logging, feed configuration screen,...) was so far
+configurable for a given OperatorFabric instance through various properties in `web-ui.json`.
+
+As of this version, it has been unified with that of custom menus:
+
+* It will now be managed in `ui-menu.json` along with custom menus
+* It is now possible to make these menus visible only for certain groups
+
+.The following properties in `web-ui.json` are no longer supported and should be removed
+* `navbar.hidden` (array of menus to hide)
+* `admin.hidden` (boolean)
+* `feedConfiguration.hidden` (boolean)
+* `realTimeUsers.hidden` (boolean)
+* `settings.nightDayMode` (boolean)
+
+.New property in `ui-menu.json`
+[source,json]
+----
+{
+  "coreMenusConfiguration":
+  [
+    {
+      "id": "coreMenuId1",
+      "visible": true
+    },
+    {
+      "id": "coreMenuId2",
+      "visible": false
+    },
+    {
+      "id": "coreMenuId3",
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN","SOME_OTHER_GROUP"]
+    }
+  ]
+}
+----
+
+All core menus should be listed under this new `coreMenusConfiguration` property in `ui-menu.json`, each with their own
+`visible` and (optionally) `showOnlyForGroups` property.
+
+Necessary actions for the migration:
+
+* Remove the deprecated properties listed above from your `web-ui.json`
+* Add a `coreMenusConfiguration` block to your `ui-menu.json` (see the
+ifdef::single-page-doc[<<core_menu_config, documentation>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#core_menu_config, documentation>>]
+for details and a full example)
+
+
 == Simplification MongoDB Configuration
 
 We are getting rid of our specific MongoDB configuration to let SpringBoot autoconfigure it. As a result, we are

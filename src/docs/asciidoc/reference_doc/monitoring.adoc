@@ -11,9 +11,7 @@
 
 NOTE: This feature is experimental 
 
-The monitoring screen is a realtime view of processes based on current cards received by the user (i.e the last version of cards visible by the user). It can be seen as an another view of the feed. 
-
-The feature can be disabled via configuration in web-ui.json (by adding `"monitoring"` in array `navbar.hidden` )
+The monitoring screen is a realtime view of processes based on current cards received by the user (i.e the last version of cards visible by the user). It can be seen as an another view of the feed.
 
 Not all the cards are visible, it depends on the business process they are part of. For a card to be visible in this screen, the parameter `uiVisibility.monitoring` must be set to `true` in the config.json file of its process.
 

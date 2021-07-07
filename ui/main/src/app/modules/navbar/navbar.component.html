@@ -95,7 +95,7 @@
     <ul class="navbar-nav mr-auto " style="flex-direction: row; float:right;margin-top: 10px; margin-right: 0px !important;">
 
       <li class="nav-item">
-        <a id="opfab-navbar-right-menu-settings" class="opfab-right-menu-link" routerLink="/settings"  routerLinkActive #rla="routerLinkActive">
+        <a id="opfab-navbar-right-menu-settings" *ngIf="(displaySettings)" class="opfab-right-menu-link" routerLink="/settings"  routerLinkActive #rla="routerLinkActive">
           <div class="opfab-menu-icon opfab-menu-icon-parameters"></div>
         </a>
       </li>
@@ -116,7 +116,7 @@
         </a>
       </li>
       
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="(displayLogOut)">
         <form>
           <a id="opfab-navbar-right-menu-logout"  class="opfab-right-menu-link" (click)="logOut()" href="javascript:void(0)">
             <div class="opfab-menu-icon opfab-menu-icon-logout"></div>
@@ -147,7 +147,7 @@
     </div>
 
     <div class="opfab-right-menu-item">
-      <a id="opfab-navbar-right-menu-settings" class="opfab-right-menu-link" routerLink="/settings"  routerLinkActive #rla="routerLinkActive">
+      <a id="opfab-navbar-right-menu-settings" *ngIf="(displaySettings)" class="opfab-right-menu-link" routerLink="/settings"  routerLinkActive #rla="routerLinkActive">
         <div class="opfab-menu-icon opfab-menu-icon-parameters"></div>
         <div translate> menu.settings </div>
       </a>
@@ -162,7 +162,7 @@
     </div>
 
     <div class="opfab-right-menu-item">
-      <a id="opfab-navbar-right-menu-about"  class="opfab-right-menu-link" (click)="showAbout()"  href="javascript:void(0)">
+      <a id="opfab-navbar-right-menu-about" *ngIf="(displayAbout)" class="opfab-right-menu-link" (click)="showAbout()"  href="javascript:void(0)">
         <div class="opfab-menu-icon opfab-menu-icon-about"></div>
         <div translate> menu.about</div>
       
@@ -180,7 +180,7 @@
       </a>
     </div>
     
-    <div class="opfab-right-menu-item" style="padding-top: 20px; padding-bottom: 20px">
+    <div class="opfab-right-menu-item" style="padding-top: 20px; padding-bottom: 20px" *ngIf="(displayLogOut)">
       <form>
         <a id="opfab-navbar-right-menu-logout"  class="opfab-right-menu-link" (click)="logOut()" href="javascript:void(0)">
           <div class="opfab-menu-icon opfab-menu-icon-logout"></div>

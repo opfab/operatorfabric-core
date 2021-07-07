@@ -13,24 +13,25 @@ import {map, mergeMap} from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import {Observable, of, throwError} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import {environment} from '@env/environment';
-import {Locale, Menu, MenuConfig} from '@ofModel/menu.model';
+import {CoreMenuConfig, Locale, Menu, UIMenuFile} from '@ofModel/menu.model';
 
 @Injectable()
 export class ConfigService {
     private configUrl: string;
     private config;
     private customMenus: Menu[] = [];
+    private coreMenuConfigurations: CoreMenuConfig[] = [];
 
-    constructor(private httpClient: HttpClient,
-                private store: Store<AppState>) {
+    // fetchXXX : method performs http get & returned observable emits the actual result of the request
+    // loadXXXX : method performs http get & stores the result in local variable. Returned observable is just success/error of request.
+
+    constructor(private httpClient: HttpClient) {
         this.configUrl = `${environment.urls.config}`;
         this.customMenus = [];
     }
 
-    fetchConfiguration(): Observable<any> {
+    loadWebUIConfiguration(): Observable<any> {
         return this.httpClient.get(`${this.configUrl}`).pipe(
             map(
             config => this.config = config));
@@ -40,14 +41,27 @@ export class ConfigService {
         return _.get(this.config, path, fallback);
     }
 
-    loadMenuTranslations(): Observable<Locale[]> {
-        return this.httpClient.get<MenuConfig>(`${environment.urls.menuConfig}`).pipe(
-            map(config => config.locales)
+    /* Configuration for core menus */
+
+    loadCoreMenuConfigurations(): Observable<CoreMenuConfig[]> {
+        return this.httpClient.get<UIMenuFile>(`${environment.urls.menuConfig}`).pipe(
+            map(config => this.coreMenuConfigurations = config.coreMenusConfiguration)
         );
     }
 
+    getCoreMenuConfiguration(): CoreMenuConfig[] {
+        return this.coreMenuConfigurations;
+    }
+
+    /* Configuration for custom menus */
+
+    fetchMenuTranslations(): Observable<Locale[]> {
+        return this.httpClient.get<UIMenuFile>(`${environment.urls.menuConfig}`).pipe(
+            map(config => config.locales)
+        );
+    }
     computeMenu(): Observable<Menu[]> {
-        return this.httpClient.get<MenuConfig>(`${environment.urls.menuConfig}`).pipe(
+        return this.httpClient.get<UIMenuFile>(`${environment.urls.menuConfig}`).pipe(
             map(config => this.processMenuConfig(config)
             )
         );
@@ -76,7 +90,7 @@ export class ConfigService {
         }
     }
 
-    private processMenuConfig(config: MenuConfig): Menu[]{
+    private processMenuConfig(config: UIMenuFile): Menu[]{
         this.customMenus = [];
         return config.menus.map(menu => new Menu(menu.id, menu.label, menu.entries)).reduce((menus: Menu[], menu: Menu) => {         
             this.customMenus.push(menu);
