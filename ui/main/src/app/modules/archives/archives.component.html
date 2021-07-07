@@ -15,7 +15,7 @@
           <of-archives-logging-filters [parentForm]="archiveForm" [visibleProcesses]="listOfProcesses" #filters></of-archives-logging-filters>
 
           <div class="opfab-vertical-bar"></div>
-          <div class="opfab-publish-date"><div></div>
+          <div class="opfab-publish-date">
             <div>
               <of-datetime-filter filterPath="publishDateFrom" formControlName="publishDateFrom"
                 labelKey="archive.filters." [maxDate]="publishMaxDate" (change)="onDateTimeChange($event)"></of-datetime-filter>
