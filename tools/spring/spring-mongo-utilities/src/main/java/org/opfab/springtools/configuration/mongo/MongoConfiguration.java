@@ -20,6 +20,8 @@ import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.ReactiveMongoDatabaseFactory;
@@ -53,14 +55,19 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
 
+    private MongoProperties mongoProperties;
+
     @Autowired
-    private OperatorFabricMongoProperties properties;
+    public MongoConfiguration(MongoProperties mongoProperties) {
+        this.mongoProperties = mongoProperties;
+    }
+
     @Autowired
     private AbstractLocalMongoConfiguration localConfiguration;
 
     @Override
     protected void configureClientSettings(MongoClientSettings.Builder builder) {
-        builder.applyConnectionString(new ConnectionString(properties.getUri()))
+        builder.applyConnectionString(new ConnectionString(mongoProperties.getUri()))
                 .build();
     }
 
@@ -68,9 +75,9 @@ public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
      * @return database name from configuration
      */
     protected String getDatabaseName() {
-        return properties.getDatabase();
+        return mongoProperties.getDatabase();
     }
-    
+
     /**
      * Called before entities are persisted to mongo, triggers bean validation
      *

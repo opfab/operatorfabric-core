@@ -2,7 +2,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://root:password@localhost:27017/?authSource=admin&authMode=scram-sha1
-      database: operator-fabric-testXXXXXX
+      database: operator-fabric-test
   rabbitmq:
     host: localhost
     port: 5672
