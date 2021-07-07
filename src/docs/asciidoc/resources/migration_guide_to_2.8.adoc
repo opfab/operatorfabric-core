@@ -45,7 +45,7 @@ As of this version, it has been unified with that of custom menus:
 * It will now be managed in `ui-menu.json` along with custom menus
 * It is now possible to make these menus visible only for certain groups
 
-.Deprecated properties in `web-ui.json`
+.The following properties in `web-ui.json` are no longer supported and should be removed
 * `navbar.hidden` (array of menus to hide)
 * `admin.hidden` (boolean)
 * `feedConfiguration.hidden` (boolean)
