@@ -12,10 +12,10 @@
 package org.opfab.cards.consultation.configuration.mongo;
 
 import org.opfab.springtools.configuration.mongo.AbstractLocalMongoConfiguration;
-import org.opfab.utilities.CollectionUtils;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,10 +26,12 @@ import java.util.List;
 public class LocalMongoConfiguration extends AbstractLocalMongoConfiguration {
 
     public List<Converter> converterList() {
-        return CollectionUtils.createArrayList(
-                new I18nReadConverter(),
-                new LightCardReadConverter(),
-                new TimeSpanReadConverter()
-        );
+
+        List<Converter> converterList = new ArrayList<>();
+        converterList.add(new I18nReadConverter());
+        converterList.add(new LightCardReadConverter());
+        converterList.add(new TimeSpanReadConverter());
+
+        return converterList;
     }
 }
