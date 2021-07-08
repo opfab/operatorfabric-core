@@ -1,26 +1,48 @@
-npm_run_build {
-    args = ['--', '--configuration=production', '--baseHref=/ui/', '--deployUrl=/ui/']
+npmInstall {
+    inputs.files(fileTree('node_modules'))
+    inputs.file('package.json')
+    inputs.file('package-lock.json')
+    inputs.file('angular.json')
+    inputs.file('tslint.json')
+
+    outputs.dir('build')
+
 }
 
-task npmBuildDebug(type: NpmTask) {
-    args = ['run', 'build','--', '--configuration=productionDebug', '--baseHref=/ui/', '--deployUrl=/ui/']
+task runBuild(type: NpmTask) {
+    inputs.files(fileTree('src'))
+    inputs.files(fileTree('node_modules'))
+    inputs.file('package.json')
+    inputs.file('package-lock.json')
+    inputs.file('angular.json')
+    inputs.file('tslint.json')
+
+    outputs.dir('build')
+
+    dependsOn npmInstall
+    args = ['run', 'build', '--configuration=production', '--baseHref=/ui/', '--deployUrl=/ui/']
 }
 
-npm_run_test {
-    args = ['--', '--browsers', 'ChromeHeadless', '--watch=false', '--code-coverage']
+task runHeadlessTests(type: NpmTask) {
+    inputs.files(fileTree('src'))
+    inputs.files(fileTree('node_modules'))
+    inputs.file('package.json')
+    inputs.file('package-lock.json')
+    inputs.file('angular.json')
+    inputs.file('tslint.json')
+
+    outputs.dir('reports')
+
+    dependsOn npmInstall
+    args = ['run', 'headless']
 }
 
-npm_run_headless.dependsOn(npm_install)
-test.dependsOn(npm_run_headless)
-if(project.hasProperty('uiDebug'))
-    build.dependsOn(npmBuildDebug)
-else
-    build.dependsOn(npm_run_build)
+test.dependsOn(runHeadlessTests)
 
 task securityReport {
     dependsOn 'npm_run_audit'
 }
 
-build.dependsOn(npm_run_build)
+build.dependsOn(runBuild)
 
-assemble.dependsOn(npm_run_build)
+assemble.dependsOn(runBuild)
