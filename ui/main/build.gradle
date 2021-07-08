@@ -39,10 +39,6 @@ task runHeadlessTests(type: NpmTask) {
 
 test.dependsOn(runHeadlessTests)
 
-task securityReport {
-    dependsOn 'npm_run_audit'
-}
-
 build.dependsOn(runBuild)
 
 assemble.dependsOn(runBuild)
