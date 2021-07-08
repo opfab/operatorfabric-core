@@ -30,6 +30,7 @@ image::ResponseCardScreenshot2.png[,align="center"]
 
 == Steps needed to use a response card
 
+[[define_a_third_party_tool]]
 === Define a third party tool
 
 The response card is to be received by a third party application for business processing. The third-party application
