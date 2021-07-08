@@ -102,7 +102,7 @@ public class OAuth2GenericConfiguration {
 
     public AbstractAuthenticationToken generateOpFabJwtAuthenticationToken(Jwt jwt) {
         
-        String principalId = jwt.getClaimAsString(jwtProperties.getLoginClaim());
+        String principalId = jwt.getClaimAsString(jwtProperties.getLoginClaim()).toLowerCase();
         UserServiceCache.setTokenForUserRequest(principalId,jwt.getTokenValue());
         CurrentUserWithPerimeters currentUserWithPerimeters = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalId);
         User user = currentUserWithPerimeters.getUserData();
