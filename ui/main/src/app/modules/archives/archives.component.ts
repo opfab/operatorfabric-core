@@ -178,6 +178,21 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             });
     }
 
+    sendQueryForHistoryOfACard(card: Card): void {
+        let mapOfFilters = new Map();
+        mapOfFilters.set('process', card.process);
+        mapOfFilters.set('processInstanceId', card.processInstanceId);
+        this.cardService.fetchArchivedCards(mapOfFilters)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((page: Page<LightCard>) => {
+                this.resultsNumber = page.totalElements;
+                this.hasResult = page.content.length > 0;
+                page.content.forEach(card => this.loadTranslationForCardIfNeeded(card));
+                let listOfArchivedCards = page.content;
+                console.log('listOfArchivedCards = ', listOfArchivedCards);
+            });
+    }
+
     loadTranslationForCardIfNeeded(card: LightCard) {
         this.processesService.loadTranslationsForProcess(card.process, card.processVersion);
     }
