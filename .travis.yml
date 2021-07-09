@@ -123,5 +123,7 @@ cache:
     - ${HOME}/.gradle/dependency-check-data/
     # cache ui dependencies
     - ui/main/nodes_modules
+    # cache cypress dependencies and binary
     - src/test/cypress/node_modules
+    - ${HOME}/.cache/Cypress/
     - ${HOME}/.sdkman
