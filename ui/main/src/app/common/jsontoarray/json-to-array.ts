@@ -9,13 +9,15 @@
 
 import * as _ from 'lodash-es';
 
-export class FieldPosition {
+export class FieldDescription {
     public jsonField: string;
-    public columnNumber: string;
+    public columnNumber: number;
+    public type: string;
     public isNested: boolean;
 
-    constructor(jsonField: string, columnNumber: string, isNested: boolean) {
+    constructor(jsonField: string, type: string, columnNumber: number,  isNested: boolean) {
         this.jsonField = jsonField;
+        this.type= type;
         this.columnNumber = columnNumber;
         this.isNested = isNested;
     }
@@ -24,7 +26,7 @@ export class FieldPosition {
 export class JsonToArray {
 
     private jsonAsArray: string[][] = [[]];
-    private fieldPositions: FieldPosition[] = [];
+    private fieldDescriptions: FieldDescription[] = [];
     private columnIndexes = new Map();
     private nestedJsonToArrays = new Map();
     private fieldsProcessOnlyIfPreviousArraysAreEmpty = new Set();
@@ -37,7 +39,7 @@ export class JsonToArray {
     private processRule(rule, innerRule: boolean) {
         if (!rule.jsonField) return;
         if (!!rule.fields) {
-            this.fieldPositions.push(new FieldPosition(rule.jsonField, "", true));
+            this.fieldDescriptions.push(new FieldDescription(rule.jsonField, rule.type ,-1 , true));
             if (rule.processOnlyIfPreviousArraysAreEmpty) this.fieldsProcessOnlyIfPreviousArraysAreEmpty.add(rule.jsonField);
             rule.fields.forEach(field => this.processRule(field, true));
             this.nestedJsonToArrays.set(rule.jsonField, new JsonToArray(rule.fields));
@@ -45,7 +47,7 @@ export class JsonToArray {
         else {
             if (rule.columnName) {
                 this.addColumn(rule.columnName)
-                if (!innerRule) this.fieldPositions.push(new FieldPosition(rule.jsonField, this.columnIndexes.get(rule.columnName), false));
+                if (!innerRule) this.fieldDescriptions.push(new FieldDescription(rule.jsonField, rule.type ,this.columnIndexes.get(rule.columnName), false));
             }
         }
     }
@@ -72,9 +74,12 @@ export class JsonToArray {
     }
 
     private addFieldsToAppend(jsonObject, linesToAppend) {
-        this.fieldPositions.forEach(fieldPosition => {
-            const fieldValue = _.get(jsonObject, fieldPosition.jsonField);
-            if (!!fieldValue) linesToAppend[0][parseInt(fieldPosition.columnNumber)] = fieldValue;
+        this.fieldDescriptions.forEach(fieldDescription => {
+            let fieldValue = _.get(jsonObject, fieldDescription.jsonField);
+            if (!!fieldValue) {
+                if (!!fieldDescription.type && fieldDescription.type==="EPOCHDATE" && !isNaN(fieldValue)) fieldValue= new Date(fieldValue);
+                linesToAppend[0][fieldDescription.columnNumber] = fieldValue;
+            }
         });
     }
 
