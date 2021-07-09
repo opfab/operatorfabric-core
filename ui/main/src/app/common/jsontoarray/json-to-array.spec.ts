@@ -140,6 +140,40 @@ describe('flatten simple objects ', () => {
 
   });
 
+  it('flatten object with EPOCHDATE type and valid value ==> should be converted to date ', () => {
+
+    const rules = [
+      {columnName: "column1", jsonField: "field1", type: "EPOCHDATE"},
+      {columnName: "column2", jsonField: "field2"}
+    ]
+    const jsonToConvert = {field1: 1625838663000, field2: "f2"};
+
+    const wantedResult = [["column1", "column2"], [new Date(1625838663000), "f2"]];
+
+    const jsonToArray: JsonToArray = new JsonToArray(rules);
+    jsonToArray.add(jsonToConvert);
+
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
+
+  });
+
+  it('flatten object with EPOCHDATE type but invalid value ==> should not convert and keep initial value ', () => {
+
+    const rules = [
+      {columnName: "column1", jsonField: "field1", type: "EPOCHDATE"},
+      {columnName: "column2", jsonField: "field2"}
+    ]
+    const jsonToConvert = {field1: "dummy value", field2: "f2"};
+
+    const wantedResult = [["column1", "column2"], ["dummy value", "f2"]];
+
+    const jsonToArray: JsonToArray = new JsonToArray(rules);
+    jsonToArray.add(jsonToConvert);
+
+    expect(areArraysEquals(jsonToArray.getJsonAsArray(), wantedResult)).toEqual(true);
+
+  });
+
 });
 
 describe('set array columns for nested array rules ', () => {
