@@ -49,7 +49,6 @@ ext {
             dependencies          : "org.springframework.cloud:spring-cloud-dependencies:$springCloud",
             starterFeign          : "org.springframework.cloud:spring-cloud-starter-openfeign",
             avro                  : "org.apache.avro:avro:$avro",
-            gradleAvro            : "com.commercehub.gradle.plugin:gradle-avro-plugin:$gradleAvroPlugin",
             kafkaAvroSchemaRegistryClient    : "io.confluent:kafka-schema-registry-client:$kavroSchemaRegistryClient",
             kafkaAvroSerializer              : "io.confluent:kafka-avro-serializer:$kavroAvroSerializer",
             springKafka           : "org.springframework.kafka:spring-kafka"
