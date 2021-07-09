@@ -130,9 +130,6 @@ export class MonitoringTableComponent implements OnDestroy {
 
     cardPreprocessingBeforeExport(card: any): any {
         const prefix =  `${card.card.process}.${card.card.processVersion}`;
-        card.card.publishDate = this.displayTime(card.card.publishDate);
-        card.card.startDate = this.displayTime(card.card.startDate);
-        card.card.endDate = this.displayTime(card.card.endDate);
         card.card.processGroup = this.translateValue(this.processesService.findProcessGroupLabelForProcess(card.card.process));
         const process:Process = this.processesService.getProcess(card.card.process);
         if (!!process) {
@@ -144,7 +141,6 @@ export class MonitoringTableComponent implements OnDestroy {
         card.card.summary =  this.translateValue(`${prefix}.${card.card.summary.key}`, card.card.summary.parameters);
 
         card.childCards.forEach(childCard => {
-            childCard.publishDate = this.displayTime(childCard.publishDate);
             if (childCard.publisherType==="ENTITY") childCard.publisherName= this.entitiesService.getEntityName(childCard.publisher);
             else childCard.publisherName = childCard.publisher;
         });
