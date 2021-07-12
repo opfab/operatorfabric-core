@@ -21,8 +21,7 @@ import {
     ApplyFilter,
     ApplySeveralFilters,
     FeedActionTypes,
-    ResetFilter,
-    ResetFilterForMonitoring
+    ResetFilter
 } from '@ofActions/feed.actions';
 import {LoadSettingsSuccess, SettingsActionTypes} from '@ofActions/settings.actions';
 
@@ -64,10 +63,4 @@ export class FeedFiltersEffects {
             map(() => new ApplySeveralFilters({filterStatuses: this.service.defaultFilters()}))
         ));
 
-    
-    resetFeedFilterForMonitoring: Observable<Action> = createEffect(() => this.actions$
-        .pipe(
-            ofType<ResetFilterForMonitoring>(FeedActionTypes.ResetFilterForMonitoring),
-            map(() => new ApplySeveralFilters({filterStatuses: this.service.defaultFiltersForMonitoring()}))
-        ));
 }
