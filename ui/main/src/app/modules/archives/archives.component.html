@@ -64,9 +64,9 @@
         </tr>
       </thead>
 
-      <tr *ngFor="let card of results" (click)="openCard(card.id)" class="opfab-archives-table-line" style="cursor: pointer;">
+      <!--<tr *ngFor="let card of results" (click)="openCard(card.id)" class="opfab-archives-table-line" style="cursor: pointer;">
         <td class="opfab-archive-sev opfab-archive-sev-{{card.severity.toLowerCase()}}"></td>
-        <td class="opfab-archives-icon-plus"></td>
+        <td class="opfab-archives-icon-plus" (click)="sendQueryForHistoryOfACard(card)"></td>
         <td style="padding-left: 5px"> {{displayTime(card.publishDate)}} </td>
         <td> {{displayTime(card.startDate)}} - {{displayTime(card.endDate)}} </td>
         <td translate [translateParams]="card.title.parameters">
@@ -76,7 +76,24 @@
           {{ card.process + '.' + card.processVersion + '.' + card.summary.key}}
         </td>
         <td *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>{{ processesService.findProcessGroupLabelForProcess(card.process) }}</td>
+      </tr>-->
+      <div *ngFor="let archives of archivesByCardId | keyvalue" (click)="openCard(archives.value[0].id)" class="opfab-archives-table-line" style="cursor: pointer;">
+      <tr >
+        <td class="opfab-archive-sev opfab-archive-sev-{{archives.value[0].severity.toLowerCase()}}"></td>
+        <td *ngIf="archives.value.length > 1;else no_icon_plus" class="opfab-archives-icon-plus"
+            (click)="displayHistoryOfACard(archives.value[0])"></td>
+        <ng-template #no_icon_plus><td></td></ng-template>
+        <td style="padding-left: 5px"> {{displayTime(archives.value[0].publishDate)}} </td>
+        <td> {{displayTime(archives.value[0].startDate)}} - {{displayTime(archives.value[0].endDate)}} </td>
+        <td translate [translateParams]="archives.value[0].title.parameters">
+          {{ archives.value[0].process + '.' + archives.value[0].processVersion + '.' + archives.value[0].title.key}}
+        </td>
+        <td translate [translateParams]="archives.value[0].summary.parameters">
+          {{ archives.value[0].process + '.' + archives.value[0].processVersion + '.' + archives.value[0].summary.key}}
+        </td>
+        <td *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>{{ processesService.findProcessGroupLabelForProcess(archives.value[0].process) }}</td>
       </tr>
+      </div>
     </table>
     <div class="opfab-pagination">
       <div style="white-space: nowrap;margin-top:17px" id="opfab-archive-results-number">

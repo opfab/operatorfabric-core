@@ -45,6 +45,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     archiveForm: FormGroup;
 
     results: LightCard[];
+    archivesByCardId: Map<string, LightCard[]>;
     currentPage = 0;
     resultsNumber = 0;
     hasResult = false;
@@ -101,6 +102,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     ngOnInit() {
         this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
         this.results = [];
+        this.archivesByCardId = new Map();
         this.dateTimeFilterChange.pipe(
             takeUntil(this.unsubscribe$),
             debounceTime(1000),
@@ -175,13 +177,42 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 this.hasResult = page.content.length > 0;
                 page.content.forEach(card => this.loadTranslationForCardIfNeeded(card));
                 this.results = page.content;
+
+                //this.archivedCardsGroupByCardId();
+                this.archivesByCardId = this.loadArchivedCardsGroupByCardId();
             });
     }
 
-    sendQueryForHistoryOfACard(card: Card): void {
+    archivedCardsGroupByCardId(): void {
+        this.results.forEach(lightCard => {
+            const cardId = lightCard.process + '.' + lightCard.processInstanceId;
+            let listOfArchives = this.archivesByCardId.get(cardId);
+            if (!!listOfArchives)
+                listOfArchives.push(lightCard);
+            else
+                listOfArchives = [lightCard];
+            this.archivesByCardId.set(cardId, listOfArchives);
+        });
+    }
+
+    loadArchivedCardsGroupByCardId(): Map<string, LightCard[]> {
+        let map: Map<string, LightCard[]> = new Map;
+        this.results.forEach(lightCard => {
+            const cardId = lightCard.process + '.' + lightCard.processInstanceId;
+            let listOfArchives = map.get(cardId);
+            if (!!listOfArchives)
+                listOfArchives.push(lightCard);
+            else
+                listOfArchives = [lightCard];
+            map.set(cardId, listOfArchives);
+        });
+        return map;
+    }
+
+    sendQueryForHistoryOfACard(card: LightCard): void {
         let mapOfFilters = new Map();
-        mapOfFilters.set('process', card.process);
-        mapOfFilters.set('processInstanceId', card.processInstanceId);
+        mapOfFilters.set('process', [card.process]);
+        mapOfFilters.set('processInstanceId', [card.processInstanceId]);
         this.cardService.fetchArchivedCards(mapOfFilters)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((page: Page<LightCard>) => {
@@ -189,8 +220,12 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 this.hasResult = page.content.length > 0;
                 page.content.forEach(card => this.loadTranslationForCardIfNeeded(card));
                 let listOfArchivedCards = page.content;
-                console.log('listOfArchivedCards = ', listOfArchivedCards);
+                console.log('archivesByCardId = ', this.archivesByCardId);
             });
+    }
+
+    displayHistoryOfACard(card: LightCard) {
+        console.log('history of the card=', this.archivesByCardId.get(card.process + '.' + card.processInstanceId));
     }
 
     loadTranslationForCardIfNeeded(card: LightCard) {
