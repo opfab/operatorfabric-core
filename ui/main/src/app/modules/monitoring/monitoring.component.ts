@@ -8,7 +8,7 @@
  */
 
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Observable, of, Subject} from 'rxjs';
+import {combineLatest, Observable, of, Subject} from 'rxjs';
 import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
@@ -20,6 +20,7 @@ import {MonitoringFiltersComponent} from './components/monitoring-filters/monito
 import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {LightCardsService} from '@ofServices/lightcards.service';
+import {Filter} from '@ofModel/feed-filter.model';
 
 @Component({
     selector: 'of-monitoring',
@@ -30,6 +31,8 @@ export class MonitoringComponent implements OnInit, OnDestroy {
 
     @ViewChild('filters')
     filters: MonitoringFiltersComponent;
+
+    monitoringFilters$ = new Subject<Filter[]>();
 
     monitoringResult$: Observable<LineOfMonitoringResult[]>;
     unsubscribe$: Subject<void> = new Subject<void>();
@@ -56,51 +59,29 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.monitoringResult$ = this.lightCardsService.getFilteredAndSortedLightCards().pipe(
-            takeUntil(this.unsubscribe$),
-            map((cards: LightCard[]) => {
-                    if (!!cards && cards.length <= 0) {
-                        return null;
-                    }
-                    return cards.map(card => {
-                            let typeOfState: TypeOfStateEnum;
-                            const procId = card.process;
-                            if (!!this.mapOfProcesses && this.mapOfProcesses.has(procId) && !card.parentCardId) {
-                                const currentProcess = this.mapOfProcesses.get(procId);
-                                /**
-                                 * work around because Object.setPrototypeOf(currentProcess, Process.prototype);
-                                 * can't be apply to currentProcess, for some reason.
-                                 * and thus currentProcess.extractState(…) throws an error
-                                 */
-                                const state = Process.prototype.extractState.call(currentProcess, card);
-
-                                if (!!state && !!state.type) {
-                                    typeOfState = state.type;
-                                }
-                                if (!!state.type) {
-                                    return (
-                                        {
-                                            creationDateTime: moment(card.publishDate),
-                                            beginningOfBusinessPeriod: moment(card.startDate),
-                                            endOfBusinessPeriod: ((!!card.endDate) ? moment(card.endDate) : null),
-                                            title: this.prefixI18nKey(card, 'title'),
-                                            summary: this.prefixI18nKey(card, 'summary'),
-                                            processName: this.prefixForTranslation(card, currentProcess.name),
-                                            cardId: card.id,
-                                            severity: card.severity.toLocaleLowerCase(),
-                                            processId: procId,
-                                            typeOfState: typeOfState
-                                        } as LineOfMonitoringResult);
-                                }
-                            }
+        this.monitoringResult$ = 
+            combineLatest([
+                this.monitoringFilters$.asObservable(),
+                this.lightCardsService.getLightCards()
+            ]
+            ).pipe(
+                takeUntil(this.unsubscribe$),
+                map(results => {
+                        const cards = this.lightCardsService.filterLightCards(results[1], results[0]);
+                        if (!!cards && cards.length <= 0) {
+                            return null;
                         }
-                    ).filter(elem => !!elem);
-                }
-            ),
-            catchError(err => of([]))
+                        return cards.map(card => {
+                                return this.cardToResult(card)
+                            }
+                        ).filter(elem => !!elem);
+                    }
+                ),
+                catchError(err => of([]))
         );
         this.monitoringResult$.subscribe(lines => this.result = lines);
     }
+
 
     ngOnDestroy() {
         this.unsubscribe$.next();
@@ -114,6 +95,45 @@ export class MonitoringComponent implements OnInit, OnDestroy {
 
     prefixForTranslation(card: LightCard, key: string): string {
         return `${card.process}.${card.processVersion}.${key}`;
+    }
+
+    applyCardsFilters(filters: Filter[]) {
+        this.monitoringFilters$.next(filters);
+    }
+
+
+    private cardToResult(card: LightCard) : LineOfMonitoringResult{
+        let typeOfState: TypeOfStateEnum;
+        const procId = card.process;
+        if (!!this.mapOfProcesses && this.mapOfProcesses.has(procId) && !card.parentCardId) {
+            const currentProcess = this.mapOfProcesses.get(procId);
+            /**
+             * work around because Object.setPrototypeOf(currentProcess, Process.prototype);
+             * can't be apply to currentProcess, for some reason.
+             * and thus currentProcess.extractState(…) throws an error
+             */
+            const state = Process.prototype.extractState.call(currentProcess, card);
+
+            if (!!state && !!state.type) {
+                typeOfState = state.type;
+            }
+            if (!!state.type) {
+                return (
+                    {
+                        creationDateTime: moment(card.publishDate),
+                        beginningOfBusinessPeriod: moment(card.startDate),
+                        endOfBusinessPeriod: ((!!card.endDate) ? moment(card.endDate) : null),
+                        title: this.prefixI18nKey(card, 'title'),
+                        summary: this.prefixI18nKey(card, 'summary'),
+                        processName: this.prefixForTranslation(card, currentProcess.name),
+                        cardId: card.id,
+                        severity: card.severity.toLocaleLowerCase(),
+                        processId: procId,
+                        typeOfState: typeOfState
+                    } as LineOfMonitoringResult);
+            }
+        }
+        return null;
     }
 
 }

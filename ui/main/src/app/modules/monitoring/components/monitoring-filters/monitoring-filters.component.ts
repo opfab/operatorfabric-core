@@ -7,12 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {FilterType} from '@ofServices/filter.service';
-import {ApplyFilter, ResetFilter, ResetFilterForMonitoring} from '@ofActions/feed.actions';
 import {ConfigService} from '@ofServices/config.service';
 import {Observable, Subject} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
@@ -23,6 +21,9 @@ import {ProcessesService} from '@ofServices/processes.service';
 import {TypeOfStateEnum} from '@ofModel/processes.model';
 import {TimelineButtonsComponent} from '../../../share/timeline-buttons/timeline-buttons.component';
 import {UserService} from '@ofServices/user.service';
+import {LightCard} from '@ofModel/light-card.model';
+import {Filter} from '@ofModel/feed-filter.model';
+import {FilterService} from '@ofServices/filter.service';
 
 @Component({
     selector: 'of-monitoring-filters',
@@ -57,20 +58,29 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
     typeOfStateDropdownList = [];
     typeOfStateDropdownSettings = {};
     firstQuery: boolean = true;
+    timeDomainChanged: boolean = false;
 
     processesGroups: {id: string, processes: string[]}[];
     checkPerimeterForSearchFields: boolean;
 
+    processFilter: Filter;
+    typeOfStatesFilter: Filter;
+
     @Input()
     public visibleProcesses: [];
+
+    @Output() 
+    filters:  EventEmitter<Filter[]> = new EventEmitter<Filter[]>();
+
+    timelineFilter: Filter;
 
     constructor(private store: Store<AppState>,
                 private configService: ConfigService,
                 private translate: TranslateService,
                 private time: TimeService,
                 private processesService: ProcessesService,
+                private filterService: FilterService,
                 private userService: UserService) {
-
     }
 
     ngOnInit() {
@@ -121,7 +131,6 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
                      {id: TypeOfStateEnum.CANCELED, itemName: translations['monitoring.filters.typeOfState.CANCELED']}];
               });
             });
-        this.store.dispatch(new ResetFilterForMonitoring());
         this.changeProcessesWhenSelectProcessGroup();
         this.sendQuery();
     }
@@ -180,43 +189,24 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
         if (selectedProcessesId.length)
             processesIdForFilter = selectedProcessesId;
 
-        let procFilter;
-
         if (processesIdForFilter.length > 0) {
-            procFilter = {
-                name: FilterType.PROCESS_FILTER
-                , active: true
-                , status: {processes: processesIdForFilter}
-            };
+            this.processFilter = this.getProcessFilter(true, {processes: processesIdForFilter});
         } else {
-            procFilter = {
-                name: FilterType.PROCESS_FILTER
-                , active: false
-                , status: null
-            };
+            this.processFilter = this.getProcessFilter(false, null);
         }
-        this.store.dispatch(new ApplyFilter(procFilter));
+
     }
 
     filterByTypeOfStates(selectedTypeOfStates: any) {
         const typeOfStates  = selectedTypeOfStates.value ? Array.prototype.map.call(selectedTypeOfStates.value, item => item.id) : [];
-        let typeOfStatesFilter;
 
         if (typeOfStates.length > 0) {
             const typeOfStatesPerProcessAndState = this.processesService.getTypeOfStatesPerProcessAndState();
-            typeOfStatesFilter = {
-                name: FilterType.TYPEOFSTATE_FILTER
-                , active: true
-                , status: {typeOfStates: typeOfStates, mapOfTypeOfStates: typeOfStatesPerProcessAndState}
-            };
+            this.typeOfStatesFilter = this.getTypeOfStateFilter(true, {typeOfStates: typeOfStates, mapOfTypeOfStates: typeOfStatesPerProcessAndState});
+
         } else {
-            typeOfStatesFilter = {
-                name: FilterType.TYPEOFSTATE_FILTER
-                , active: false
-                , status: null
-            };
+            this.typeOfStatesFilter = this.getTypeOfStateFilter(false, null);
         }
-        this.store.dispatch(new ApplyFilter(typeOfStatesFilter));
     }
 
     public loadProcessGroupDropdownListAndProcessesDropdownList(): void {
@@ -247,6 +237,13 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
         });
     }
 
+    domainChanged(domain: number[]) {
+        this.timeDomainChanged = true;
+        this.timelineFilter = this.filterService.getNewBusinessDateFilter(true, domain[0], domain[1]);
+        this.sendQuery();
+        this.timeDomainChanged = false;
+    }
+
     sendQuery() {
 
         this.selectedProcessGroups = this.monitoringForm.get('processGroup');
@@ -256,10 +253,14 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
         if (this.firstQuery || this.hasFormControlValueChanged( this.selectedProcesses)
             || this.hasFormControlValueChanged( this.selectedProcessGroups)
             || this.hasFormControlValueChanged( this.selectedTypeOfStates)
-            || this.hasFormControlValueChanged( this.timelineButtons.startDate) || this.hasFormControlValueChanged( this.timelineButtons.endDate)) {
+            || this.timeDomainChanged
+            ) {
 
             this.filterByProcesses(this.selectedProcessGroups, this.selectedProcesses);
             this.filterByTypeOfStates(this.selectedTypeOfStates);
+
+            this.filters.emit([this.timelineFilter, this.processFilter, this.typeOfStatesFilter]);
+
         }
         this.firstQuery = false;
     }
@@ -280,8 +281,39 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
         this.sendQuery();
     }
 
+    private getProcessFilter(active, selectedStatus)  {
+        return new Filter(
+            (card: LightCard, status) => {
+                const processList = status.processes;
+                if (!! processList) {
+                    return processList.includes(card.process);
+                }
+                // permissive filter
+                return true;
+            },
+            active,
+            selectedStatus
+        );
+    }
+
+    private getTypeOfStateFilter(active, selectedStatus)  {
+        return new Filter(
+            (card: LightCard, status) => {
+                const typeOfStatesList = status.typeOfStates;
+
+                if (!! typeOfStatesList) {
+                    const typeOfStateOfTheCard = status.mapOfTypeOfStates.get(card.process + '.' + card.state);
+                    return typeOfStatesList.includes(typeOfStateOfTheCard);
+                }
+                // permissive filter
+                return true;
+            },
+            active,
+            selectedStatus
+        );
+    }
+
     ngOnDestroy() {
-        this.store.dispatch(new ResetFilter());
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }

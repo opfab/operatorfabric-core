@@ -8,7 +8,7 @@
 
 <div>
         <of-monitoring-filters #filters
-                [visibleProcesses]="processValueForFilter"
+        [visibleProcesses]="processValueForFilter" (filters)="applyCardsFilters($event)"
         ></of-monitoring-filters>
 </div>
 

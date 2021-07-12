@@ -10,7 +10,7 @@
     <!-- Using hidden class rather than ngIf in order to keep selected values when filters are hidden -->
 
     <div class="opfab-filters-summary" style="padding-right: 60px;">
-        <of-timeline-buttons [isMonitoringScreen]="true" #timelineButtons>
+        <of-timeline-buttons [isMonitoringScreen]="true" #timelineButtons (domainChange)="domainChanged($event)">
         </of-timeline-buttons>
     </div>
 

@@ -17,7 +17,6 @@ export enum FeedActionTypes {
     ApplyFilter = '[Feed] Change filter Status',
     ChangeSort = '[Feed] Change sort order',
     ResetFilter = '[Feed] Reset filter Status',
-    ResetFilterForMonitoring = '[Feed] Reset filter Status for monitoring screen',
     ApplySeveralFilters = '[Feed] Change several filters Status at Once',
     ChangeReadSort = '[Feed] Sort by read'
 }
@@ -40,10 +39,6 @@ export class ResetFilter implements  Action {
     readonly type  = FeedActionTypes.ResetFilter;
 }
 
-export class ResetFilterForMonitoring implements  Action {
-    readonly type  = FeedActionTypes.ResetFilterForMonitoring;
-}
-
 export class ApplySeveralFilters implements Action {
     readonly type = FeedActionTypes.ApplySeveralFilters;
     constructor(public payload: {filterStatuses: Map<FilterType, Filter>}) {
@@ -54,5 +49,4 @@ export type FeedActions =
     | ChangeSort
     | ChangeReadSort
     | ResetFilter
-    | ResetFilterForMonitoring
     | ApplySeveralFilters;

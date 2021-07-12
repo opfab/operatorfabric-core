@@ -19,21 +19,14 @@ import * as _ from 'lodash-es';
 export class FilterService {
 
     readonly _defaultFilters = new Map();
-    readonly _defaultFiltersForMonitoring = new Map();
 
     constructor() {
         this._defaultFilters = this.initFilters(true);
-        this._defaultFiltersForMonitoring = this.initFilters(false);
     }
 
     public defaultFilters(): Map<FilterType, Filter> {
         return this._defaultFilters;
     }
-
-    public defaultFiltersForMonitoring(): Map<FilterType, Filter> {
-        return this._defaultFiltersForMonitoring;
-    }
-
 
     private initTypeFilter() {
         const alarm = Severity.ALARM;
@@ -63,6 +56,15 @@ export class FilterService {
             false,
             {tags: []}
         );
+    }
+
+
+    public getNewBusinessDateFilter(active: boolean, start: number, end: number) {
+        const filter = this.initBusinessDateFilter();
+        filter.active = active;
+        filter.status.start = start;
+        filter.status.end = end;
+        return filter;
     }
 
 
@@ -128,38 +130,6 @@ export class FilterService {
         );
     }
 
-    private initProcessFilter()  {
-        return new Filter(
-            (card: LightCard, status) => {
-                const processList = status.processes;
-                if (!! processList) {
-                    return processList.includes(card.process);
-                }
-                // permissive filter
-                return true;
-            },
-            false,
-            {processes: null}
-        );
-    }
-
-    private initTypeOfStateFilter()  {
-        return new Filter(
-            (card: LightCard, status) => {
-                const typeOfStatesList = status.typeOfStates;
-
-                if (!! typeOfStatesList) {
-                    const typeOfStateOfTheCard = status.mapOfTypeOfStates.get(card.process + '.' + card.state);
-                    return typeOfStatesList.includes(typeOfStateOfTheCard);
-                }
-                // permissive filter
-                return true;
-            },
-            false,
-            {typeOfStates: null}
-        );
-    }
-
     private initFilters(filterOnAck: boolean): Map<string, Filter> {
         const filters = new Map();
         filters.set(FilterType.TYPE_FILTER, this.initTypeFilter());
@@ -172,8 +142,6 @@ export class FilterService {
 
         filters.set(FilterType.RESPONSE_FILTER, this.initResponseFilter());
 
-        filters.set(FilterType.PROCESS_FILTER, this.initProcessFilter());
-        filters.set(FilterType.TYPEOFSTATE_FILTER, this.initTypeOfStateFilter());
         return filters;
     }
 }
@@ -188,8 +156,6 @@ export enum FilterType {
     PUBLISHDATE_FILTER,
     ACKNOWLEDGEMENT_FILTER,
     TEST_FILTER,
-    PROCESS_FILTER,
-    TYPEOFSTATE_FILTER,
     RESPONSE_FILTER
 }
 export const BUSINESS_DATE_FILTER_INITIALISATION = {

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AppService} from "@ofServices/app.service";
 import {ConfigService} from "@ofServices/config.service";
 import {UserService} from "@ofServices/user.service";
@@ -46,6 +46,10 @@ export class TimelineButtonsComponent implements OnInit {
 
     @Input()
     public isMonitoringScreen: boolean;
+
+    @Output()
+    public domainChange : EventEmitter<number[]> = new EventEmitter();
+
     public hideTimeLine = false;
 
     constructor(private store: Store<AppState>,
@@ -223,7 +227,8 @@ export class TimelineButtonsComponent implements OnInit {
         this.myDomain = [startDomain, endDomain];
         this.startDate = this.getDateFormatting(startDomain);
         this.endDate = this.getDateFormatting(endDomain);
-
+        
+        this.domainChange.emit(this.myDomain);
         this.store.dispatch(new ApplyFilter({
             name: FilterType.BUSINESSDATE_FILTER, active: true,
             status: {start: startDomain, end: endDomain}
