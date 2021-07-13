@@ -20,6 +20,7 @@ import {MultiFilterModule} from 'app/modules/share/multi-filter/multi-filter.mod
 import {CardDetailModule} from 'app/modules/share/card-detail/card-detail.module';
 import {ArchivesEntryPointComponent} from './archives-entry-point.component';
 import {ArchivesLoggingFiltersModule} from "../share/archives-logging-filters/archives-logging-filters.module";
+import {DataTablesModule} from "angular-datatables";
 
 @NgModule({
   imports: [
@@ -32,7 +33,8 @@ import {ArchivesLoggingFiltersModule} from "../share/archives-logging-filters/ar
     DatetimeFilterModule,
     MultiFilterModule,
     CardDetailModule,
-    ArchivesLoggingFiltersModule
+    ArchivesLoggingFiltersModule,
+    DataTablesModule
 
   ],
   declarations: [

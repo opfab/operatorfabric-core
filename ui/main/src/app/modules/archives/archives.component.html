@@ -54,28 +54,40 @@
     <table aria-describedby="Archive results table" id="opfab-archives-cards-list">
       <thead>
         <tr>
-          <th scope="col"></th>
+         <!-- <th scope="col">a</th>
+          <th scope="col">b</th>
           <th scope="col" style="padding-left: 5px" translate>archive.result.publishDate</th>
           <th scope="col" translate>archive.result.businessPeriod</th>
           <th scope="col" translate>archive.result.title</th>
           <th scope="col" translate>archive.result.summary</th>
-          <th *ngIf="filtersTemplate.displayProcessGroupFilter()" scope="col" translate>archive.result.processGroup</th>
+          <th *ngIf="filtersTemplate.displayProcessGroupFilter()" scope="col" translate>archive.result.processGroup</th>-->
+          <th scope="col">a</th>
+          <th scope="col">b</th>
+          <th scope="col" style="padding-left: 5px">c</th>
+          <th scope="col">d</th>
+          <th scope="col">e</th>
+          <th scope="col">f</th>
+          <th scope="col">g</th>
         </tr>
       </thead>
 
-      <tr *ngFor="let card of results" (click)="openCard(card.id)" class="opfab-archives-table-line" style="cursor: pointer;">
-        <td class="opfab-archive-sev opfab-archive-sev-{{card.severity.toLowerCase()}}"></td>
-        <td style="padding-left: 5px"> {{displayTime(card.publishDate)}} </td>
-        <td> {{displayTime(card.startDate)}} - {{displayTime(card.endDate)}} </td>
-        <td translate [translateParams]="card.title.parameters">
-          {{ card.process + '.' + card.processVersion + '.' + card.title.key}}
-        </td>
-        <td translate [translateParams]="card.summary.parameters">
-          {{ card.process + '.' + card.processVersion + '.' + card.summary.key}}
-        </td>
-        <td *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>{{ processesService.findProcessGroupLabelForProcess(card.process) }}</td>
-      </tr>
+      <tbody>
+        <tr *ngFor="let card of results" (click)="openCard(card.id)" class="opfab-archives-table-line" style="cursor: pointer;">
+          <td class="opfab-archive-sev opfab-archive-sev-{{card.severity.toLowerCase()}}">a</td>
+          <td class="details-control" id="detail-btn" (click)="clickOnPlus($event, card.process, card.processInstanceId)">b</td>
+          <td style="padding-left: 5px"> {{displayTime(card.publishDate)}} </td>
+          <td> {{displayTime(card.startDate)}} - {{displayTime(card.endDate)}} </td>
+          <td translate [translateParams]="card.title.parameters">
+            {{ card.process + '.' + card.processVersion + '.' + card.title.key}}
+          </td>
+          <td translate [translateParams]="card.summary.parameters">
+            {{ card.process + '.' + card.processVersion + '.' + card.summary.key}}
+          </td>
+          <td *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>{{ processesService.findProcessGroupLabelForProcess(card.process) }}</td>
+        </tr>
+      </tbody>
     </table>
+
     <div class="opfab-pagination">
       <div style="white-space: nowrap;margin-top:17px" id="opfab-archive-results-number">
         <span translate> archive.resultsNumber </span> : {{resultsNumber}}

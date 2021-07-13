@@ -605,6 +605,10 @@ type-ahead > .badge-primary {
   {
     background-color: var(--opfab-bgcolor);
   }
+  tr:nth-child(odd)
+  {
+    background-color: var(--opfab-bgcolor-darker);
+  }
 
   th {
     color: var(--opfab-text-color);

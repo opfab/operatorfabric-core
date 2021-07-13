@@ -29,6 +29,7 @@ import { EntitiesService } from '@ofServices/entities.service';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
+import {createElement} from "@fullcalendar/core";
 
 
 @Component({
@@ -64,6 +65,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     activeMaxDate : {year: number, month: number, day: number} = null;
 
     dateTimeFilterChange = new Subject();
+
+    dt: any;
 
     constructor(private store: Store<AppState>,
                 private processesService: ProcessesService,
@@ -105,6 +108,54 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             takeUntil(this.unsubscribe$),
             debounceTime(1000),
         ).subscribe(() => this.setDateFilterBounds());
+
+        const table: any = $('#opfab-archives-cards-list');
+        this.dt = table.DataTable({
+        });
+        console.log('this.dt=', this.dt);
+
+        // Add event listener for opening and closing details
+        /*$('#opfab-archives-cards-list tbody').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = this.table.row( tr );
+
+            if ( row.child.isShown() ) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            }
+            else {
+                // Open this row
+                row.child( this.format(row.data()) ).show();
+                tr.addClass('shown');
+            }
+        } );*/
+    }
+
+    clickOnPlus(event, process: string, processInstanceId: string) {
+        /*const tr = $(event.target).closest('tr');
+        console.log('event.target=', event.target);
+        console.log('tr=', tr);
+        const row = this.table.row(tr);
+        console.log('table=', this.table);
+        console.log('row=', row);*/
+
+        console.log('clickOnPlus(...)');
+        const tr = $('#detail-btn');
+        const row = this.dt.row(tr);
+        console.log('row=', row);
+
+        if (row.child.isShown()) {
+            console.log('dans if');
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        } else {
+            console.log('dans else');
+            // Open this row
+            row.child(this.formatWithTableTag());
+            tr.addClass('shown');
+        }
     }
 
     setDateFilterBounds(): void {
@@ -311,6 +362,50 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         }
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
+    }
+
+    /*format(card) {
+        return '<table> <tr class="opfab-archives-table-line" style="cursor: pointer;">' +
+        '<td class="opfab-archive-sev opfab-archive-sev-' + card.severity.toLowerCase() + '}}"></td>' +
+        '<td style="padding-left: 5px"> ' + this.displayTime(card.publishDate) + ' </td>' +
+        '<td> ' + this.displayTime(card.startDate) + ' - ' + this.displayTime(card.endDate) + ' </td>' +
+        '<td translate [translateParams]="' + card.title.parameters + '">' +
+            card.process + '.' + card.processVersion + '.' + card.title.key +
+        '</td>' +
+        '<td translate [translateParams]="' + card.summary.parameters + '">' +
+            card.process + '.' + card.processVersion + '.' + card.summary.key +
+        '</td>' +
+        '<td *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>' + this.processesService.findProcessGroupLabelForProcess(card.process) + '</td>' +
+        '</tr></table>';
+    }*/
+
+    formatWithoutTableTag() {
+        return '<tr class="opfab-archives-table-line" style="cursor: pointer;">' +
+            '<td class="opfab-archive-sev opfab-archive-sev-' + 'alarm' + '"></td>' +
+            '<td style="padding-left: 5px"> ' + 'toto' + ' </td>' +
+            '<td> ' + 'titi' + ' - ' + 'tata' + ' </td>' +
+            '<td translate [translateParams]="' + 'tutu' + '">' +
+            'processId' + '.' + 'processVersion' + '.' + 'key' +
+            '</td>' +
+            '<td translate [translateParams]="' + 'card.summary.parameters' + '">' +
+            'card.process' + '.' + 'card.processVersion' + '.' + 'card.summary.key' +
+            '</td>' +
+            '<td *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>' + this.processesService.findProcessGroupLabelForProcess('card.process') + '</td>' +
+            '</tr>';
+    }
+    formatWithTableTag() {
+        return '<table><tr class="opfab-archives-table-line" style="cursor: pointer;">' +
+            '<td class="opfab-archive-sev opfab-archive-sev-' + 'alarm' + '"></td>' +
+            '<td style="padding-left: 5px"> ' + 'toto' + ' </td>' +
+            '<td> ' + 'titi' + ' - ' + 'tata' + ' </td>' +
+            '<td translate [translateParams]="' + 'tutu' + '">' +
+            'processId' + '.' + 'processVersion' + '.' + 'key' +
+            '</td>' +
+            '<td translate [translateParams]="' + 'card.summary.parameters' + '">' +
+            'card.process' + '.' + 'card.processVersion' + '.' + 'card.summary.key' +
+            '</td>' +
+            '<td *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>' + this.processesService.findProcessGroupLabelForProcess('card.process') + '</td>' +
+            '</tr></table>';
     }
 
 }

@@ -95,3 +95,36 @@
   .opfab-archives-table-line:hover {
     border: 2px solid #2268FF;
     }
+
+  td.details-control {
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+    margin-top:5px;
+    margin-left: 10px;
+    /*background: url('../../../assets/images/icons/plus.svg') no-repeat center center;*/
+    background: var( --opfab-navbar-color-hover);
+    mask: url(../../../assets/images/icons/plus.svg);
+    cursor: pointer;
+  }
+
+  tr.shown td.details-control {
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+    margin-top:5px;
+    margin-left: 10px;
+    /*background: url('../../../assets/images/icons/minus.svg') no-repeat center center;*/
+    background: var( --opfab-navbar-color-hover);
+    mask: url(../../../assets/images/icons/minus.svg);
+  }
+
+.opfab-archives-icon-plus {
+  display: inline-block;
+  height: 32px;
+  width: 32px;
+  margin-top:5px;
+  margin-left: 10px;
+  background: var( --opfab-navbar-color-hover);
+  mask: url(../../../assets/images/icons/plus.svg);
+}
