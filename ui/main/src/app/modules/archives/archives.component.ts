@@ -46,6 +46,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     results: LightCard[];
     archivesByCardId: Map<string, LightCard[]>;
+    cards: {card: LightCard, cardHistories: LightCard[], displayHistory: boolean} [] = [];
     currentPage = 0;
     resultsNumber = 0;
     hasResult = false;
@@ -180,19 +181,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
                 //this.archivedCardsGroupByCardId();
                 this.archivesByCardId = this.loadArchivedCardsGroupByCardId();
+                this.transformMapIntoArrayOfCards();
             });
-    }
-
-    archivedCardsGroupByCardId(): void {
-        this.results.forEach(lightCard => {
-            const cardId = lightCard.process + '.' + lightCard.processInstanceId;
-            let listOfArchives = this.archivesByCardId.get(cardId);
-            if (!!listOfArchives)
-                listOfArchives.push(lightCard);
-            else
-                listOfArchives = [lightCard];
-            this.archivesByCardId.set(cardId, listOfArchives);
-        });
     }
 
     loadArchivedCardsGroupByCardId(): Map<string, LightCard[]> {
@@ -209,23 +199,18 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         return map;
     }
 
-    sendQueryForHistoryOfACard(card: LightCard): void {
-        let mapOfFilters = new Map();
-        mapOfFilters.set('process', [card.process]);
-        mapOfFilters.set('processInstanceId', [card.processInstanceId]);
-        this.cardService.fetchArchivedCards(mapOfFilters)
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((page: Page<LightCard>) => {
-                this.resultsNumber = page.totalElements;
-                this.hasResult = page.content.length > 0;
-                page.content.forEach(card => this.loadTranslationForCardIfNeeded(card));
-                let listOfArchivedCards = page.content;
-                console.log('archivesByCardId = ', this.archivesByCardId);
-            });
+    displayHistoryOfACard(card: {card: LightCard, cardHistories: LightCard[], displayHistory: boolean}) {
+        card.displayHistory = true;
     }
 
-    displayHistoryOfACard(card: LightCard) {
-        console.log('history of the card=', this.archivesByCardId.get(card.process + '.' + card.processInstanceId));
+    hideHistoryOfACard(card: {card: LightCard, cardHistories: LightCard[], displayHistory: boolean}) {
+        card.displayHistory = false;
+    }
+
+    transformMapIntoArrayOfCards() {
+        this.archivesByCardId.forEach((value: LightCard[], key: string) => {
+            this.cards.push({card: value[0], cardHistories: value.slice(1), displayHistory: false});
+        })
     }
 
     loadTranslationForCardIfNeeded(card: LightCard) {
