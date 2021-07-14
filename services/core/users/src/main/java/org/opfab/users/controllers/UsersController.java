@@ -12,9 +12,16 @@
 package org.opfab.users.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+
+import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
+import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsProperties;
+import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsMode;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.users.configuration.oauth2.UserExtractor;
 import org.opfab.users.model.*;
+import org.opfab.users.repositories.EntityRepository;
+import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.repositories.UserSettingsRepository;
 import org.opfab.users.services.UserService;
@@ -40,7 +47,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/users")
 @Slf4j
-public class UsersController implements UsersApi {
+public class UsersController implements UsersApi, UserExtractor {
 
     public static final String USER_NOT_FOUND_MSG = "User %s not found";
     public static final String USER_SETTINGS_NOT_FOUND_MSG = "User setting for user %s not found";
@@ -59,6 +66,17 @@ public class UsersController implements UsersApi {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private GroupRepository groupRepository;
+
+    @Autowired
+    private EntityRepository entityRepository;
+
+    @Autowired
+    private JwtProperties jwtProperties;
+
+    @Autowired
+    private GroupsProperties groupsProperties;
 
     @Override
     public User createUser(HttpServletRequest request, HttpServletResponse response, User user) throws Exception {
@@ -202,4 +220,33 @@ public class UsersController implements UsersApi {
                                 .build()
                 ));
     }
+
+
+    @Override
+    public User synchronizeWithToken(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        User user = this.extractUserFromJwtToken(request);
+
+        if (groupsProperties.getMode() == GroupsMode.JWT) {
+            List<String> missingGroups = user.getGroups().stream().filter(groupId ->  this.groupRepository.findById(groupId).isEmpty()).collect(Collectors.toList());
+            if (!missingGroups.isEmpty()) {
+                missingGroups.forEach(id -> log.warn("Group id from token not found in db: {}", id));
+                List<String> goodGroups = user.getGroups();
+                goodGroups.removeAll(missingGroups);
+                user.setGroups(goodGroups);
+            }
+        }
+
+        if (jwtProperties.gettingEntitiesFromToken) {
+            List<String> missingEntities = user.getEntities().stream().filter(entityId ->  this.entityRepository.findById(entityId).isEmpty()).collect(Collectors.toList());
+            if (!missingEntities.isEmpty()) {
+                missingEntities.forEach(id -> log.warn("Entity id from token not found in db: {}", id));
+                List<String> goodEntities = user.getEntities();
+                goodEntities.removeAll(missingEntities);
+                user.setEntities(goodEntities);
+            }
+        }
+
+        return createUser(request, response, user);
+    }
+    
 }
