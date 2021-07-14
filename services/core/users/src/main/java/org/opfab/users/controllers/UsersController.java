@@ -12,9 +12,16 @@
 package org.opfab.users.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+
+import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
+import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsProperties;
+import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsMode;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.users.configuration.oauth2.UserExtractor;
 import org.opfab.users.model.*;
+import org.opfab.users.repositories.EntityRepository;
+import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.repositories.UserSettingsRepository;
 import org.opfab.users.services.UserService;
@@ -40,7 +47,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/users")
 @Slf4j
-public class UsersController implements UsersApi {
+public class UsersController implements UsersApi, UserExtractor {
 
     public static final String USER_NOT_FOUND_MSG = "User %s not found";
     public static final String USER_SETTINGS_NOT_FOUND_MSG = "User setting for user %s not found";
@@ -59,20 +66,24 @@ public class UsersController implements UsersApi {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private GroupRepository groupRepository;
+
+    @Autowired
+    private EntityRepository entityRepository;
+
+    @Autowired
+    private JwtProperties jwtProperties;
+
+    @Autowired
+    private GroupsProperties groupsProperties;
 
     @Override
     public User createUser(HttpServletRequest request, HttpServletResponse response, User user) throws Exception {
         boolean created = false;
-        user.setLogin(user.getLogin().toLowerCase());
-        String login = user.getLogin();
+        checkAndsetUserLogin(user);
 
-        if ((login == null) || (login.length() == 0)) {
-            throw new ApiErrorException(
-                    ApiError.builder()
-                            .status(HttpStatus.BAD_REQUEST)
-                            .message(MANDATORY_LOGIN_MISSING)
-                            .build());
-        }
+        String login = user.getLogin();
 
         if (userRepository.findById(login).orElse(null) == null){
             response.addHeader("Location", request.getContextPath() + "/users/" + login);
@@ -193,6 +204,62 @@ public class UsersController implements UsersApi {
         return null;
     }
 
+
+
+    @Override
+    public User synchronizeWithToken(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        User user = this.extractUserFromJwtToken(request);
+
+        checkAndsetUserLogin(user);
+
+        String login = user.getLogin();
+
+        if (groupsProperties.getMode() == GroupsMode.JWT) {
+            List<String> missingGroups = user.getGroups().stream()
+                    .filter(groupId -> this.groupRepository.findById(groupId).isEmpty()).collect(Collectors.toList());
+            if (!missingGroups.isEmpty()) {
+                missingGroups.forEach(id -> log.warn("Group id from token not found in db: {}", id));
+                List<String> goodGroups = user.getGroups();
+                goodGroups.removeAll(missingGroups);
+                user.setGroups(goodGroups);
+            }
+        }
+
+        if (jwtProperties.gettingEntitiesFromToken) {
+            List<String> missingEntities = user.getEntities().stream()
+                    .filter(entityId -> this.entityRepository.findById(entityId).isEmpty())
+                    .collect(Collectors.toList());
+            if (!missingEntities.isEmpty()) {
+                missingEntities.forEach(id -> log.warn("Entity id from token not found in db: {}", id));
+                List<String> goodEntities = user.getEntities();
+                goodEntities.removeAll(missingEntities);
+                user.setEntities(goodEntities);
+            }
+        }
+
+        UserData existingUser = userRepository.findById(login).orElse(null);
+
+        if (existingUser == null) {
+            log.debug(String.format(USER_CREATED, login));
+            userService.createUser(user);
+        } else {
+            boolean updatedFromToken = false;
+            if (groupsProperties.getMode() == GroupsMode.JWT) {
+                updatedFromToken = !existingUser.getGroupSet().equals(new HashSet<String>(user.getGroups()));
+            }
+            if (!updatedFromToken && jwtProperties.gettingEntitiesFromToken) {
+                updatedFromToken = !new HashSet<String>(existingUser.getEntities()).equals(new HashSet<String>(user.getEntities()));
+            }
+            if (updatedFromToken) {
+                log.debug(String.format(USER_UPDATED, login));
+                userService.createUser(user);
+                userService.publishUpdatedUserMessage(login);
+            }
+        }
+
+        return user;
+    }
+
     private UserData findUserOrThrow(String login) {
         return userRepository.findById(login).orElseThrow(
                 ()-> new ApiErrorException(
@@ -202,4 +269,18 @@ public class UsersController implements UsersApi {
                                 .build()
                 ));
     }
+
+    private void checkAndsetUserLogin(User user) {
+        String login = user.getLogin();
+
+        if ((login == null) || (login.length() == 0)) {
+            throw new ApiErrorException(
+                    ApiError.builder()
+                                .status(HttpStatus.BAD_REQUEST)
+                                .message(MANDATORY_LOGIN_MISSING)
+                                .build());
+        }
+        user.setLogin(user.getLogin().toLowerCase());
+    }
+    
 }
