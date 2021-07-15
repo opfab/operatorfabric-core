@@ -55,6 +55,7 @@
       <thead>
         <tr>
           <th scope="col"></th>
+          <th scope="col"></th>
           <th scope="col" style="padding-left: 5px" translate>archive.result.publishDate</th>
           <th scope="col" translate>archive.result.businessPeriod</th>
           <th scope="col" translate>archive.result.title</th>
@@ -63,19 +64,34 @@
         </tr>
       </thead>
 
-      <tr *ngFor="let card of results" (click)="openCard(card.id)" class="opfab-archives-table-line" style="cursor: pointer;">
-        <td class="opfab-archive-sev opfab-archive-sev-{{card.severity.toLowerCase()}}"></td>
-        <td style="padding-left: 5px"> {{displayTime(card.publishDate)}} </td>
-        <td> {{displayTime(card.startDate)}} - {{displayTime(card.endDate)}} </td>
-        <td translate [translateParams]="card.title.parameters">
-          {{ card.process + '.' + card.processVersion + '.' + card.title.key}}
-        </td>
-        <td translate [translateParams]="card.summary.parameters">
-          {{ card.process + '.' + card.processVersion + '.' + card.summary.key}}
-        </td>
-        <td *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>{{ processesService.findProcessGroupLabelForProcess(card.process) }}</td>
-      </tr>
+      <ng-container *ngFor="let card of cards">
+        <tr  (click)="openCard(card.card.id)" class="opfab-archives-table-line" style="cursor: pointer;">
+          <td class="opfab-archive-sev opfab-archive-sev-{{card.card.severity.toLowerCase()}}"></td>
+          <td *ngIf="card.cardHistories.length > 0 && !card.displayHistory" class="opfab-archives-icon-plus" (click)="$event.stopPropagation();displayHistoryOfACard(card)"></td>
+          <td *ngIf="card.cardHistories.length > 0 && card.displayHistory" class="opfab-archives-icon-minus" (click)="$event.stopPropagation();hideHistoryOfACard(card)"></td>
+          <td *ngIf="! card.cardHistories.length"></td>
+          <td style="padding-left: 5px"> {{displayTime(card.card.publishDate)}} </td>
+          <td> {{displayTime(card.card.startDate)}} - {{displayTime(card.card.endDate)}} </td>
+          <td translate [translateParams]="card.card.title.parameters">{{ card.card.process + '.' + card.card.processVersion + '.' + card.card.title.key}}</td>
+          <td translate [translateParams]="card.card.summary.parameters">{{ card.card.process + '.' + card.card.processVersion + '.' + card.card.summary.key}}</td>
+          <td *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>{{ processesService.findProcessGroupLabelForProcess(card.card.process) }}</td>
+        </tr>
+
+        <!--history of the card-->
+        <ng-container *ngIf="card.displayHistory">
+          <tr *ngFor="let historyCard of card.cardHistories" (click)="openCard(historyCard.id)" class="opfab-archives-table-line" style="cursor: pointer;">
+            <td class="opfab-archive-sev opfab-archive-sev-{{historyCard.severity.toLowerCase()}}"></td>
+            <td></td>
+            <td style="padding-left: 30px"> {{displayTime(historyCard.publishDate)}} </td>
+            <td style="padding-left: 30px"> {{displayTime(historyCard.startDate)}} - {{displayTime(historyCard.endDate)}} </td>
+            <td style="padding-left: 30px" translate [translateParams]="historyCard.title.parameters">{{ historyCard.process + '.' + historyCard.processVersion + '.' + historyCard.title.key}}</td>
+            <td style="padding-left: 30px" translate [translateParams]="historyCard.summary.parameters">{{ historyCard.process + '.' + historyCard.processVersion + '.' + historyCard.summary.key}}</td>
+            <td style="padding-left: 30px" *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>{{ processesService.findProcessGroupLabelForProcess(historyCard.process) }}</td>
+          </tr>
+        </ng-container>
+      </ng-container>
     </table>
+
     <div class="opfab-pagination">
       <div style="white-space: nowrap;margin-top:17px" id="opfab-archive-results-number">
         <span translate> archive.resultsNumber </span> : {{resultsNumber}}

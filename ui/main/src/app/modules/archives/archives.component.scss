@@ -94,4 +94,24 @@
 
   .opfab-archives-table-line:hover {
     border: 2px solid #2268FF;
-    }
+  }
+
+  .opfab-archives-icon-plus {
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+    margin-top:5px;
+    margin-left: 10px;
+    background: var( --opfab-navbar-color-hover);
+    mask: url(../../../assets/images/icons/plus.svg);
+  }
+
+.opfab-archives-icon-minus {
+  display: inline-block;
+  height: 32px;
+  width: 32px;
+  margin-top:5px;
+  margin-left: 10px;
+  background: var( --opfab-navbar-color-hover);
+  mask: url(../../../assets/images/icons/minus.svg);
+}

@@ -45,6 +45,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     archiveForm: FormGroup;
 
     results: LightCard[];
+    archivesByCardId: Map<string, LightCard[]>;
+    cards: {card: LightCard, cardHistories: LightCard[], displayHistory: boolean} [] = [];
     currentPage = 0;
     resultsNumber = 0;
     hasResult = false;
@@ -101,6 +103,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     ngOnInit() {
         this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
         this.results = [];
+        this.archivesByCardId = new Map();
         this.dateTimeFilterChange.pipe(
             takeUntil(this.unsubscribe$),
             debounceTime(1000),
@@ -175,7 +178,39 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 this.hasResult = page.content.length > 0;
                 page.content.forEach(card => this.loadTranslationForCardIfNeeded(card));
                 this.results = page.content;
+
+                //this.archivedCardsGroupByCardId();
+                this.archivesByCardId = this.loadArchivedCardsGroupByCardId();
+                this.transformMapIntoArrayOfCards();
             });
+    }
+
+    loadArchivedCardsGroupByCardId(): Map<string, LightCard[]> {
+        let map: Map<string, LightCard[]> = new Map;
+        this.results.forEach(lightCard => {
+            const cardId = lightCard.process + '.' + lightCard.processInstanceId;
+            let listOfArchives = map.get(cardId);
+            if (!!listOfArchives)
+                listOfArchives.push(lightCard);
+            else
+                listOfArchives = [lightCard];
+            map.set(cardId, listOfArchives);
+        });
+        return map;
+    }
+
+    displayHistoryOfACard(card: {card: LightCard, cardHistories: LightCard[], displayHistory: boolean}) {
+        card.displayHistory = true;
+    }
+
+    hideHistoryOfACard(card: {card: LightCard, cardHistories: LightCard[], displayHistory: boolean}) {
+        card.displayHistory = false;
+    }
+
+    transformMapIntoArrayOfCards() {
+        this.archivesByCardId.forEach((value: LightCard[], key: string) => {
+            this.cards.push({card: value[0], cardHistories: value.slice(1), displayHistory: false});
+        })
     }
 
     loadTranslationForCardIfNeeded(card: LightCard) {
