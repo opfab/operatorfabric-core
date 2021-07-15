@@ -2,7 +2,7 @@ version: '2.1'
 services:
   mongodb:
     container_name: mongodb
-    image: mongo:4.4.4-bionic
+    image: mongo:4.4.6-bionic
     ports:
       - "27017:27017"
     environment:
