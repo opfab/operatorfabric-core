@@ -5,15 +5,18 @@
     [
       {
         "columnName": "Creation Date",
-        "jsonField" : "card.publishDate"
+        "jsonField" : "card.publishDate",
+        "type": "epochDate"
       },
       {
         "columnName": "Business Date - start",
-        "jsonField" : "card.startDate"
+        "jsonField" : "card.startDate",
+        "type": "epochDate"
       },
       {
         "columnName": "Business Date - end",
-        "jsonField" : "card.endDate"
+        "jsonField" : "card.endDate",
+        "type": "epochDate"
       },
       {
         "columnName": "Service",
@@ -43,7 +46,7 @@
         "jsonField" : "childCards",
         "fields" : [
           { "columnName": "Response from", "jsonField": "publisherName" },
-          { "columnName": "Response date","jsonField": "publishDate"},
+          { "columnName": "Response date","jsonField": "publishDate","type": "epochDate"},
           { "columnName": "Response ","jsonField": "data.response"}
         ]
       }

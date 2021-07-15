@@ -9,6 +9,7 @@
  */
 import * as XLSX from 'xlsx';
 import {saveAs} from 'file-saver-es';
+import {AOA2SheetOpts, JSON2SheetOpts} from 'xlsx';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -16,11 +17,13 @@ const EXCEL_EXTENSION = '.xlsx';
 export abstract class ExportService {
 
   public static exportJsonToExcelFile(json: any[], excelFileName: string): void {
-    this.exportWorksheet(XLSX.utils.json_to_sheet(json),excelFileName);
+    const opts : JSON2SheetOpts = { dateNF: 'dd/mm/yy hh:mm'};
+    this.exportWorksheet(XLSX.utils.json_to_sheet(json,opts),excelFileName);
   }
 
   public static exportArrayToExcelFile(data: any[][],excelFileName: string): void {
-    this.exportWorksheet(XLSX.utils.aoa_to_sheet(data),excelFileName);
+    const opts : AOA2SheetOpts = { dateNF: 'dd/mm/yy hh:mm'};
+    this.exportWorksheet(XLSX.utils.aoa_to_sheet(data,opts),excelFileName);
   }
 
   private static exportWorksheet(worksheet: XLSX.WorkSheet, excelFileName: string,) {

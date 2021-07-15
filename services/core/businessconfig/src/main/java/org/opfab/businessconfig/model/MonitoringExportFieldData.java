@@ -27,9 +27,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @Slf4j
 public class MonitoringExportFieldData implements MonitoringExportField {
   private String columnName;
+  private String jsonField; 
+  private String type;   
 
-
-  private String jsonField;    
   
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private List<MonitoringExportField> fields;  

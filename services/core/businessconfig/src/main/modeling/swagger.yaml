@@ -596,6 +596,9 @@ definitions:
       jsonField:
         description: Name of the field corresponding to the column name 
         type: string
+      type:
+        description: Type of the field (for now only type epochDate is used) 
+        type: string
       fields:
         description: Nested fields description
         type: array
