@@ -25,7 +25,7 @@ import {Card, CardForPublishing} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../../services/handlebars.service';
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
-import {AcknowledgmentAllowedEnum, State as CardState} from '@ofModel/processes.model';
+import {AcknowledgmentAllowedEnum, State} from '@ofModel/processes.model';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -108,7 +108,7 @@ const maxVisibleEntitiesToRespond = 3;
 })
 export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewChecked, DoCheck {
 
-    @Input() cardState: CardState;
+    @Input() cardState: State;
     @Input() card: Card;
     @Input() childCards: Card[];
     @Input() user: User;
