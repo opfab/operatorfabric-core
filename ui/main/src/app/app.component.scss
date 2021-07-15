@@ -112,4 +112,8 @@
 
 .opfab-alert-close:hover, .opfab-alert-close:focus {
   color: var(--opfab-navbar-color);
-} 
+}
+
+.opfab-typeOfState-INPROGRESS {color: orange;}
+.opfab-typeOfState-FINISHED {color: green;}
+.opfab-typeOfState-CANCELED {color: red;}

@@ -64,10 +64,12 @@
         <div *ngIf='responseDataExists && showDetailCardHeader' class="opfab-card-response-header">
           <div class="flex-container">
             <div style="width:30%;">
+              <span *ngIf="!!cardState.type">
               <span style="padding-left:15px" translate>response.status</span> :
-              <span class="opfab-question-card-state-name" >{{i18nPrefix+this.cardState.name | translate}} &nbsp;</span>
-              <span *ngIf="!!this.card.lttd"> |<of-countdown [lttd]="this.card.lttd"></of-countdown></span>
-             
+              <span class="opfab-typeOfState-{{cardState.type}}" translate>monitoring.filters.typeOfState.{{cardState.type}}&nbsp;&nbsp;</span>
+              </span>
+              <span *ngIf="!!card.lttd && !!cardState.type"> | </span>
+              <span *ngIf="!!card.lttd"><of-countdown [lttd]="card.lttd"></of-countdown></span>
             </div>
 
             <div style="width:70%;text-align: right">
