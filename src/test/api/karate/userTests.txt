@@ -42,5 +42,6 @@
       users/entities/checkEntityGroupManagement.feature      \
       users/entities/transitive-entities-in-currentUser.feature \
       users/ipControl.feature \
+      users/synchronizeWithToken.feature \
 
 

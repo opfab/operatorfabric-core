@@ -508,6 +508,26 @@ paths:
           description: Authenticated users who are not admins can only update their own data
         '404':
           description: User not found
+  '/users/synchronizeWithToken':
+    post:
+      tags:
+      - users
+      summary: synchronize user data
+      description: synchronize user data with JWT token
+      operationId: synchronizeWithToken
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/User'
+        '401':
+          description: Authentication required
   /groups:
     get:
       tags:

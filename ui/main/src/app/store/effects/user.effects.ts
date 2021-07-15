@@ -50,16 +50,14 @@ export class UserEffects {
         .pipe(
             ofType(AuthenticationActionTypes.AcceptLogIn),
             switchMap((action: AcceptLogIn) => {
-                const userPayload = action.payload;
-                return this.userService.askUserApplicationRegistered(userPayload.identifier)
-                    .pipe(
-                        map((user: User) => new UserApplicationRegistered({user})),
-                        catchError((error, caught) => {
-                            const userData: User = new User(userPayload.identifier, userPayload.firstName, userPayload.lastName);
-                            this.store.dispatch(new CreateUserApplication({user: userData}));
-                            return caught;
-                        })
-                    );
+                return this.userService.synchronizeWithToken()
+                .pipe(
+                    map((user: User) => new UserApplicationRegistered({user})),
+                    catchError((error, caught) => {
+                        console.log("Error in synchronizeWithToken");
+                        return caught;
+                    })
+                );
             })
         ));
 

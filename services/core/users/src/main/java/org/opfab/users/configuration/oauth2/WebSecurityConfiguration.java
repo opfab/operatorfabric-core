@@ -36,6 +36,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public static final String USER_PATH = "/users/{login}";
     public static final String USERS_SETTINGS_PATH = "/users/{login}/settings";
     public static final String USERS_PERIMETERS_PATH = "/users/{login}/perimeters";
+    public static final String USER_TOKEN_SYNCHRONIZATION_PATH = "/users/synchronizeWithToken";
     public static final String USERS_PATH = "/users/**";
     public static final String GROUPS_PATH = "/groups/**";
     public static final String ENTITIES_PATH = "/entities/**";
@@ -72,6 +73,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll()
+                .antMatchers(HttpMethod.POST, USER_TOKEN_SYNCHRONIZATION_PATH).access(AUTH_AND_IP_ALLOWED)
                 .antMatchers(HttpMethod.GET, USER_PATH).access(IS_ADMIN_OR_OWNER_AND_IP_ALLOWED)
                 .antMatchers(HttpMethod.PUT, USER_PATH).access(IS_ADMIN_OR_OWNER_AND_IP_ALLOWED)
                 .antMatchers(HttpMethod.DELETE, USER_PATH).access(IS_ADMIN_AND_NOT_OWNER_AND_IP_ALLOWED)
