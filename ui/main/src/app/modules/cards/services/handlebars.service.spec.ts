@@ -611,6 +611,34 @@ describe('Handlebars Services', () => {
                 call.flush('{{keepSpacesAndEndOfLine "test\ntest\n\n\nlast line"}}');
             });
         });
+        it('compile objectContainsKey - the object contains the key -> should return true', (done) => {
+            const templateName = Guid.create().toString();
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
+                .subscribe((result) => {
+                    expect(result).toEqual('true');
+                    done();
+                });
+            let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
+            expect(calls.length).toEqual(1);
+            calls.forEach(call => {
+                expect(call.request.method).toBe('GET');
+                call.flush('{{objectContainsKey card.data.pythons "john"}}');
+            });
+        });
+        it('compile objectContainsKey - the object doesn\'t contains the key -> should return false', (done) => {
+            const templateName = Guid.create().toString();
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
+                .subscribe((result) => {
+                    expect(result).toEqual('false');
+                    done();
+                });
+            let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
+            expect(calls.length).toEqual(1);
+            calls.forEach(call => {
+                expect(call.request.method).toBe('GET');
+                call.flush('{{objectContainsKey card.data.pythons "wrongKey"}}');
+            });
+        });
     });
 
 });

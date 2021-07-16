@@ -125,6 +125,12 @@ selected one, the format is "format" hash parameter
 {{dateFormat card.data.birthday format="MMMM Do YYYY, h:mm:ss a"}}
 ....
 
+_Note_ +
+You can also pass a milliseconds value as a string.
+
+....
+{{dateFormat card.data.birthdayAsString format="MMMM Do YYYY, h:mm:ss a"}}
+....
 
 [[i18n]]
 === i18n
@@ -482,6 +488,14 @@ If the value of the key variable is "TEST", the output will be:
 tests
 ....
 
+[[objectContainsKey]]
+=== objectContainsKey
+
+Verify if a JavaScript object contains the specified key. It returns true if it contains it, false otherwise.
+
+....
+{{objectContainsKey card.data.myObject 'myKey' }}
+....
 
 [[opfab_template_style]]
 == OperatorFabric css styles

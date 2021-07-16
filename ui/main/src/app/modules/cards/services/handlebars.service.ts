@@ -55,6 +55,7 @@ export class HandlebarsService {
         HandlebarsService.registerMergeArrays();
         HandlebarsService.registerConditionalAttribute();
         HandlebarsService.registerReplace();
+        HandlebarsService.registerObjectContainsKey();
         this.store.select(buildSettingsOrConfigSelector('locale')).subscribe(locale => this.changeLocale(locale));
     }
 
@@ -130,6 +131,12 @@ export class HandlebarsService {
     private static registerArrayAtIndex() {
         Handlebars.registerHelper('arrayAtIndex', function (value, index) {
             return value[index];
+        });
+    }
+
+    private static registerObjectContainsKey() {
+        Handlebars.registerHelper('objectContainsKey', function (obj, key) {
+            return (key in obj);
         });
     }
 
@@ -371,6 +378,9 @@ export class HandlebarsService {
 
     private registerDateFormat() {
         Handlebars.registerHelper('dateFormat', (value, options) => {
+            if ( (typeof value) == 'string' ) {
+              value = parseInt(value);
+            }
             const m = moment(new Date(value));
             m.locale(this._locale);
             return m.format(options.hash.format);
