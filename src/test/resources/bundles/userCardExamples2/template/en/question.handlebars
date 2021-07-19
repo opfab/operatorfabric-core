@@ -11,8 +11,11 @@
 
 <br/>
 <br/>
-
 <div id="childs-div"></div>
+<br/>
+ <div id="entities-div"> </div>
+
+
 
 
 <script>
@@ -21,13 +24,12 @@
 
         if (templateGateway.childCards[0]) {
             let childsDiv = document.getElementById("childs-div");
-            let responses = ' <h3>Response received </h3><center> <br/>'
+            let responses = ' <h3>Responses received </h3><center> <br/>'
             responses += ' <table width="100%""> <tr> <th> Entity </th>';
-            responses += ' <th> response </th>';
+            responses += ' <th> Response </th>';
             responses += ' </tr>';
 
             templateGateway.childCards.forEach((c, i) => {
-                console.log("data child = ", c.data);
                 responses += `<tr> <td> ${c.publisher} </td>`
                 responses += `<td> ${c.data.response} </td>`;
                 responses += "</tr>";
@@ -48,6 +50,23 @@
         };
 
     }
+
+    function loadEntitiesList () {
+        let entitiesDiv = document.getElementById("entities-div");
+        let text = "Entities allowed to respond : ";
+        let entities = templateGateway.getEntitiesAllowedToRespond();
+        entities.forEach( 
+            id => {
+                text += "&nbsp; &nbsp; &nbsp;";
+                text +=  templateGateway.getEntityName(id);
+                }
+        );
+        // if it is in card preview (usercard) , the template gateway does not contain the list 
+        // so we show nothing
+        if (entities.length>0) entitiesDiv.innerHTML = text;
+    }
+    loadEntitiesList();
+
 </script>
 
 </p>

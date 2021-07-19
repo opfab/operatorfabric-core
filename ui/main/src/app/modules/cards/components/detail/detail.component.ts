@@ -435,12 +435,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     ngOnChanges(): void {
-
+        templateGateway.initTemplateGateway();
         if (this.cardState.response != null && this.cardState.response !== undefined) {
             this.setEntitiesToRespond();
             this.setIsActionEnabled();
         }
-
         this.initializeHrefsOfCssLink();
         this.checkIfHasAlreadyResponded();
         this.initializeHandlebarsTemplates();
@@ -465,6 +464,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
             const entitiesAllowedToRespond = this.entitiesService.getEntitiesFromIds(entitiesAllowedToRespondAndEntitiesRequiredToRespond);
             const allowed = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond).map(entity => entity.id).filter(x =>  x !== this.card.publisher);
+            templateGateway.entitiesAllowedToRespond = allowed;
             console.log(new Date().toISOString(), ' Detail card - entities allowed to respond = ', allowed);
 
             // This will be overwritten by the block below if entitiesRequiredToRespond is set and not empty/null
@@ -587,7 +587,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private initializeHandlebarsTemplatesProcess() {
-      templateGateway.initTemplateGateway();
       templateGateway.childCards = this.childCards;
       templateGateway.isLocked = this.isLocked;
       templateGateway.userAllowedToRespond = this.isActionEnabled;

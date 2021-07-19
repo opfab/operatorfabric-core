@@ -13,6 +13,7 @@ const templateGateway = {
     childCards: [],
     userAllowedToRespond : false,
     userMemberOfAnEntityRequiredToRespond : false,
+    entitiesAllowedToRespond: [],
 
     setEntityNames: function(entityNames){
         this.opfabEntityNames = entityNames;
@@ -52,6 +53,11 @@ const templateGateway = {
         return this.userMemberOfAnEntityRequiredToRespond;
     },
     
+    // Returns an array containing the ids of the entities allowed to respond
+    getEntitiesAllowedToRespond() {
+        return this.entitiesAllowedToRespond;
+    },
+
 
     //
     // FUNCTIONS TO OVERRIDE BY TEMPLATES 
@@ -62,6 +68,7 @@ const templateGateway = {
         this.childCards =  [];
         this.userAllowedToRespond = false;
         this.userMemberOfAnEntityRequiredToRespond = false;
+        this.entitiesAllowedToRespond = [];
 
         // OpFab calls this function to inform the template that the card is locked
         this.lockAnswer = function () {

@@ -220,9 +220,11 @@ This method will be called by OperatorFabric when loading the card and every tim
 If you want to show the name of an entity that send the response, you need to get the id of the entity via the publisher
 field of the child card and then you  can get the name of the entity by calling _templateGateway.getEntityName(entityId)_
 
+
 === Example 
 
-You can find an example in the file src/test/resources/bundles/defaultProcess_V1/template/en/question.handlebars.
+You can find an example in the file https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/defaultProcess_V1/template/en/question.handlebars[src/test/resources/bundles/defaultProcess_V1/template/en/question.handlebars].
+
 
 == Lock mechanism
 
@@ -242,12 +244,16 @@ Once again, after validating its answer, the information will be sent to the thi
 
 == Response enabled
 The template can know if the current user has the permission to answer by calling the _templateGateway.isUserAllowedToRespond()_ function.
-An example of _templateGateway.isUserAllowedToRespond()_ usage can be found in the file src/test/resources/bundles/defaultProcess_V1/template/en/incidentInProgress.handlebars.
+An example of _templateGateway.isUserAllowedToRespond()_ usage can be found in the file
+https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/userCardExamples/template/en/incidentInProgress.handlebars[src/test/resources/bundles/userCardExamples/template/en/incidentInProgress.handlebars].
 
 == Response required
 The template can know if the current user is member of an Entity required to respond by calling the _templateGateway.isUserMemberOfAnEntityRequiredToRespond()_ function.
-An example of _templateGateway.isUserMemberOfAnEntityRequiredToRespond()_ usage can be found in the file src/test/resources/bundles/defaultProcess_V1/template/en/question.handlebars.
+An example of _templateGateway.isUserMemberOfAnEntityRequiredToRespond()_ usage can be found in the file https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/defaultProcess_V1/template/en/question.handlebars[src/test/resources/bundles/defaultProcess_V1/template/en/question.handlebars].
  
 == Last Time to Decide (`lttd`)
-
 If the card has a last time to decide (lttd) configured, when the time is expired this information will be sent to the third template (by calling the _templateGateway.setLttdExpired(true)_ function).
+An example of _templateGateway.setLttdExpired(true)_ usage can be found in the file https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/defaultProcess_V1/template/en/question.handlebars[src/test/resources/bundles/defaultProcess_V1/template/en/question.handlebars].
+
+== Entities allowed to respond 
+If inside your template, you want to get the ids of the entities allowed to send a response, you can call the method _templateGateway.getEntitiesAllowedToRespond()_ . This method returns an array containing the ids. An example of _templateGateway.getEntitiesAllowedToRespond()_ usage can be found in the file https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/userCardExamples2/template/en/question.handlebars[src/test/resources/bundles/userCardExamples2/template/en/question.handlebars].
