@@ -88,14 +88,14 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ]
-            }
+            },
+            "development": {}
           },
-          "defaultConfiguration": ""
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ui-home:build"
           },
           "configurations": {
             "production": {
@@ -103,8 +103,12 @@
             },
             "productionDebug": {
               "browserTarget": "ui-home:build:productionDebug"
+            },
+            "development": {
+              "browserTarget": "ui-home:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
