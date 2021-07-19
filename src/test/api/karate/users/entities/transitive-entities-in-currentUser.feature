@@ -82,6 +82,26 @@ Feature: Check addition of transitive entities to user
         }
         """
 
+	# Perimeter
+		* def perimeter1 =
+        """
+        {
+            "id" : "perimeter",
+  			"process" : "api_test",
+  			"stateRights" : [
+      			{
+        			"state" : "messageState",
+        			"right" : "Receive"
+      			}
+    		]
+        }
+        """
+
+		* def perimeterArray1 =
+		"""
+			["perimeter"]
+		"""
+
 	# Cards
     	* def cardToSingle =
         """
@@ -182,6 +202,31 @@ Feature: Check addition of transitive entities to user
               |userWithRootEntityOnly            |201     |
               |userWithChildAndGrandChildEntities|201     |
               |userWithoutChildEntity            |201     |
+
+	Scenario Outline: Add perimeter
+
+		Given url opfabUrl + "users/perimeters"
+		And header Authorization = "Bearer " + adminToken
+		And request <perimeter>
+		When method post
+		Then status <expected>
+
+		Examples:
+			|perimeter                              |expected|
+			|perimeter1              				|201     |
+
+	Scenario Outline: Attach perimeter to group Dispatcher
+
+		Given url opfabUrl + "users/groups/Dispatcher/perimeters"
+		And header Authorization = "Bearer " + adminToken
+		And request <perimeterArray>
+		When method patch
+		Then status <expected>
+
+		Examples:
+			|perimeterArray							|expected|
+			|perimeterArray1           				|200     |
+
 # Effective tests
 # Create cards
 	Scenario Outline: Send cards
@@ -282,3 +327,14 @@ Feature: Check addition of transitive entities to user
                 |childEntity.id      |200     |
                 |grandChildEntity.id |200     |
                 |singleEntity.id     |200     |
+
+		Scenario Outline: Delete previously added perimeters
+
+			Given url opfabUrl + "users/perimeters/" + <perimeter>.id
+			And header Authorization = "Bearer " + adminToken
+			When method delete
+			Then status <expected>
+
+			Examples:
+				|perimeter							|expected|
+				|perimeter1			             	|200     |

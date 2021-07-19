@@ -18,22 +18,22 @@
           <div class="opfab-publish-date">
             <div>
               <of-datetime-filter filterPath="publishDateFrom" formControlName="publishDateFrom"
-                labelKey="logging.filters."></of-datetime-filter>
+                labelKey="logging.filters." [maxDate]="publishMaxDate" (change)="onDateTimeChange($event)"></of-datetime-filter>
             </div>
             <div>
               <of-datetime-filter filterPath="publishDateTo" formControlName="publishDateTo"
-                labelKey="logging.filters."></of-datetime-filter>
+                labelKey="logging.filters." [minDate]="publishMinDate" (change)="onDateTimeChange($event)"></of-datetime-filter>
             </div>
           </div>
 
           <div class="opfab-vertical-bar"></div>
           <div style="margin-left:40px;width:230px;min-width: 230px;">
             <div>
-              <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom" labelKey="logging.filters.">
+              <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom" labelKey="logging.filters." [maxDate]="activeMaxDate" (change)="onDateTimeChange($event)">
               </of-datetime-filter>
             </div>
             <div>
-              <of-datetime-filter filterPath="activeTo" formControlName="activeTo" labelKey="logging.filters.">
+              <of-datetime-filter filterPath="activeTo" formControlName="activeTo" labelKey="logging.filters." [minDate]="activeMinDate" (change)="onDateTimeChange($event)">
               </of-datetime-filter>
             </div>
           </div>
@@ -84,7 +84,7 @@
         <ng-template #representativeBlock><td>{{card.sender}} ({{card.representative}})</td></ng-template>
       </tr>
     </table>
-    <div class="opfab-logging-pagination">
+    <div class="opfab-pagination">
       <div style="white-space: nowrap;margin-top:17px">
         <span translate> logging.resultsNumber </span> : {{resultsNumber}}
       </div>

@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -25,6 +25,7 @@ below for details on:
 * Docker Compose with 2.1+ file format support
 * Chrome (needed for UI tests in build)
 * Angular CLI
+* https://stedolan.github.io/jq/[jq]
 
 NOTE: the current Jdk used for the project is Java 11.0.9-zulu.
 

@@ -1,0 +1,100 @@
+// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 2.7.0 to release 2.8.0
+
+== UI Configuration Management
+
+The web-ui container has two configuration files: `web-ui.json` and `ui-menu.json`.
+
+To avoid maintaining separate copies of these files for each `run environment` (docker, dev, Cypress), the reference
+configuration will be the one for the `docker` mode, with the others being created by script, changing only the
+properties that should be different between environments (e.g. environmentName).
+Only the docker configuration will be version-controlled. The scripts creating the configuration are launched by
+the `docker-compose.sh` and `docker-compose-cypress.sh`.
+
+IMPORTANT: As a consequence, the web-ui.json and ui-menu.json files have been moved from `config/xxx/` to
+`config/xxx/ui-config`. The volumes in the `docker-compose.yml` files have been updated accordingly.
+
+This new organization will also allow us to run Cypress tests against different versions of the configuration, for
+example to test the behaviour of a property meant to hide a component. See the Cypress tests README
+(src/test/cypress/README.adoc) for more information.
+
+IMPORTANT: All modes (dev, docker, config) now use the `PASSWORD` authentication flow by default. If you want to test
+with another authentication flow, you should use the `setSecurityAuthFlow.sh` script AFTER the containers have been
+started.
+
+.Example to use the CODE flow in dev mode
+[source,bash]
+----
+cd src/test/resources
+.setSecurityAuthFlow.sh dev CODE
+----
+
+== Management of visible menus
+
+The visibility of some core OperatorFabric menus (monitoring, logging, feed configuration screen,...) was so far
+configurable for a given OperatorFabric instance through various properties in `web-ui.json`.
+
+As of this version, it has been unified with that of custom menus:
+
+* It will now be managed in `ui-menu.json` along with custom menus
+* It is now possible to make these menus visible only for certain groups
+
+.The following properties in `web-ui.json` are no longer supported and should be removed
+* `navbar.hidden` (array of menus to hide)
+* `admin.hidden` (boolean)
+* `feedConfiguration.hidden` (boolean)
+* `realTimeUsers.hidden` (boolean)
+* `settings.nightDayMode` (boolean)
+
+.New property in `ui-menu.json`
+[source,json]
+----
+{
+  "coreMenusConfiguration":
+  [
+    {
+      "id": "coreMenuId1",
+      "visible": true
+    },
+    {
+      "id": "coreMenuId2",
+      "visible": false
+    },
+    {
+      "id": "coreMenuId3",
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN","SOME_OTHER_GROUP"]
+    }
+  ]
+}
+----
+
+All core menus should be listed under this new `coreMenusConfiguration` property in `ui-menu.json`, each with their own
+`visible` and (optionally) `showOnlyForGroups` property.
+
+Necessary actions for the migration:
+
+* Remove the deprecated properties listed above from your `web-ui.json`
+* Add a `coreMenusConfiguration` block to your `ui-menu.json` (see the
+ifdef::single-page-doc[<<core_menu_config, documentation>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#core_menu_config, documentation>>]
+for details and a full example)
+
+
+== Simplification MongoDB Configuration
+
+We are getting rid of our specific MongoDB configuration to let SpringBoot autoconfigure it. As a result, we are
+removing support for the `spring.data.mongodb.uris` property in favour of the standard `spring.data.mongodb.uri`
+property. Please change the application configuration files for the services accordingly.
+
+NOTE: This property can only hold a single URI.
+
+
+
+

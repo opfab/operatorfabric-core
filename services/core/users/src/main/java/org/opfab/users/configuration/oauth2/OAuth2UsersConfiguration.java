@@ -73,7 +73,7 @@ public class OAuth2UsersConfiguration {
 
             @Override
             public AbstractAuthenticationToken convert(Jwt jwt) {
-                String principalId = jwt.getClaimAsString(jwtProperties.getLoginClaim());
+                String principalId = jwt.getClaimAsString(jwtProperties.getLoginClaim()).toLowerCase();
                 log.debug("USER {}  with the token : \n{}", principalId, jwt.getTokenValue());
 
             
@@ -111,7 +111,7 @@ public class OAuth2UsersConfiguration {
              * @return UserData
              */
             private UserData createUserDataVirtualFromJwt(Jwt jwt) {
-                String principalId = extractClaimAsStringOrNull(jwt, jwtProperties.getLoginClaim());
+                String principalId = extractClaimAsStringOrNull(jwt, jwtProperties.getLoginClaim()).toLowerCase();
                 String givenName = extractClaimAsStringOrNull(jwt, jwtProperties.getGivenNameClaim());
                 String familyName = extractClaimAsStringOrNull(jwt, jwtProperties.getFamilyNameClaim());
                 return new UserData(principalId, givenName, familyName, null, null, null);

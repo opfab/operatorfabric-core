@@ -34,7 +34,41 @@ Feature: get card Subscription
         return JSON.stringify(card);
       }
     """
-    * def card = call getCard 
+    * def card = call getCard
+
+    * def perimeter =
+"""
+{
+  "id" : "perimeter",
+  "process" : "api_test",
+  "stateRights" : [
+      {
+        "state" : "messageState",
+        "right" : "Receive"
+      }
+    ]
+}
+"""
+    * def perimeterArray =
+"""
+[   "perimeter"
+]
+"""
+
+  Scenario: Create perimeter and attach it to group ReadOnly
+#Create new perimeter
+    Given url opfabUrl + 'users/perimeters'
+    And header Authorization = 'Bearer ' + authToken
+    And request perimeter
+    When method post
+    Then status 201
+
+#Attach perimeter to group
+    Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
+    And header Authorization = 'Bearer ' + authToken
+    And request perimeterArray
+    When method patch
+    Then status 200
 
 
     Scenario: get card subscription
@@ -92,3 +126,9 @@ Feature: get card Subscription
       When method get
       Then status 200
       And match response == ''
+
+    #delete perimeter created previously
+      Given url opfabUrl + 'users/perimeters/perimeter'
+      And header Authorization = 'Bearer ' + authToken
+      When method delete
+      Then status 200

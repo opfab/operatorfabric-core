@@ -42,7 +42,7 @@ subprojects {
             annotationProcessor misc.lombok
             implementation misc.lombok
             // needed to solve bug with previous version included in spring security 
-            implementation "com.nimbusds:nimbus-jose-jwt:9.10"
+            implementation "com.nimbusds:nimbus-jose-jwt:9.10.1"
 
             testAnnotationProcessor misc.lombok
             testCompileOnly misc.lombok
@@ -129,7 +129,7 @@ subprojects {
 
         /* convenient copy for generating modifiable configuration from template*/
         task copyWorkingDir(type: Copy) {
-            description 'copies [sub-project]/src/main/docker/volume to [sub-project]/build/'
+            description 'copies [sub-project]/src/main/docker/volume to [sub-project]/build/docker-volume'
             from "$project.projectDir/src/main/docker/volume/"
             into "$project.projectDir/build/docker-volume/"
             doFirst {

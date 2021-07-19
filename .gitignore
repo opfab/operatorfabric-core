@@ -122,8 +122,12 @@ ui/main/node_modules
 ui/main/reports
 ui/main/report.html
 
-# Bundles for docker config 
+# Bundles and cypress configuration for docker
 config/docker/businessconfig-storage/**
+
+# Web UI config
+config/cypress/ui-config/**
+config/dev/ui-config/**
 
 # now script generated
 config/dev/nginx.conf

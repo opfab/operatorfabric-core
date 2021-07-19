@@ -125,6 +125,12 @@ selected one, the format is "format" hash parameter
 {{dateFormat card.data.birthday format="MMMM Do YYYY, h:mm:ss a"}}
 ....
 
+_Note_ +
+You can also pass a milliseconds value as a string.
+
+....
+{{dateFormat card.data.birthdayAsString format="MMMM Do YYYY, h:mm:ss a"}}
+....
 
 [[i18n]]
 === i18n
@@ -482,6 +488,14 @@ If the value of the key variable is "TEST", the output will be:
 tests
 ....
 
+[[objectContainsKey]]
+=== objectContainsKey
+
+Verify if a JavaScript object contains the specified key. It returns true if it contains it, false otherwise.
+
+....
+{{objectContainsKey card.data.myObject 'myKey' }}
+....
 
 [[opfab_template_style]]
 == OperatorFabric css styles
@@ -503,7 +517,7 @@ Your can find example using these classes in the OperatorFabric core repository 
 
 == Charts
 
-The library https://www.chartjs.org/[charts.js] is integrated in OperatorFabric, it means it's possible to show charts in cards, you can find a bundle example in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/resources/bundles/defautlProcess_V1[src/test/resources/bundle/defaultProcess_V1]).
+The library https://www.chartjs.org/[charts.js] is integrated in OperatorFabric, it means it's possible to show charts in cards, you can find a bundle example in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/resources/bundles/defaultProcess_V1[src/test/resources/bundle/defaultProcess_V1]).
 
 
 == OperatorFabric specific functions

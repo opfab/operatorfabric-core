@@ -84,7 +84,7 @@ export class LightCardsService {
  // even if the flow is still continuing.
  // To do that we combine a debounce waiting for the end of the flow and an interval to get the card list every second 
 
-    private getLightCards(): Observable<any> {
+    public getLightCards(): Observable<any> {
         return merge(this.getLightCardsInterval(), this.getLightCardDebounce());
     }
 
@@ -112,7 +112,7 @@ export class LightCardsService {
 
 // --------------------
 
-    private filterLightCards(lightCards: LightCard[], filters: Filter[]): LightCard[] {
+    public filterLightCards(lightCards: LightCard[], filters: Filter[]): LightCard[] {
         if (filters && filters.length > 0) {
             return lightCards.filter(card => Filter.chainFilter(card, filters));
         }

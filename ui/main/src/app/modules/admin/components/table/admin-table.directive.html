@@ -5,16 +5,28 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
+<div style="background-color: var(--opfab-bgcolor-darker);">
+    <div style="padding: 10px"><a class="btn btn-primary" (click)="createNewItem()" id ="addItem">
+        <em class="fas fa-plus-circle"></em></a>
+        <span>&nbsp;<label for="addItem" translate> admin.input.{{this.tableType}}.add </label></span>
+    </div>
+    <br>
+    <ag-grid-angular
+            (gridReady)="onGridReady($event)"
+            [gridOptions]="gridOptions"
+            [rowData]="rowData | async"
+            class="opfab-ag-grid-theme"
+    >
+    </ag-grid-angular>
 
-<div style="padding: 10px"><a class="btn btn-primary" (click)="createNewItem()" id ="addItem">
-    <em class="fas fa-plus-circle"></em></a>
-    <span>&nbsp;<label for="addItem" translate> admin.input.{{this.tableType}}.add </label></span>
+    <div *ngIf="gridApi" class="opfab-pagination">
+        <div style="white-space: nowrap;margin-top:17px">
+        <span translate> admin.resultsNumber </span> : {{gridApi.paginationGetRowCount()}}
+        </div>
+        <div style="width:40%;margin-top:5px">
+        <ngb-pagination *ngIf="gridApi.paginationGetRowCount() > 5" [collectionSize]="gridApi.paginationGetRowCount()"
+            [page]="page" [pageSize]="gridApi.paginationGetPageSize()" (pageChange)="updateResultPage($event)" [maxSize]="3" [rotate]="true">
+        </ngb-pagination>
+        </div>
+    </div>
 </div>
-<br>
-<ag-grid-angular
-        (gridReady)="onGridReady($event)"
-        [gridOptions]="gridOptions"
-        [rowData]="rowData | async"
-        class="ag-theme-alpine opfab-ag-grid-theme"
->
-</ag-grid-angular>

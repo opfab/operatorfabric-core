@@ -24,6 +24,7 @@ image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.oper
 image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=code_smells[Code
 Smells,link=https://sonarcloud.io/component_measures?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=Maintainability]
 image:https://bestpractices.coreinfrastructure.org/projects/4806/badge[CII Best Practices,link=https://bestpractices.coreinfrastructure.org/projects/4806]
+image:https://img.shields.io/badge/Join_us_on-Slack-blueviolet[OperatorFabric Slack Channel,link=https://lfenergy.slack.com/archives/C025ZGJPXM4]
 
 See our website link:http://opfab.github.io/[opfab.github.io] for the complete documentation.
 

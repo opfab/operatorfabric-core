@@ -12,8 +12,8 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subject} from 'rxjs';
 
 import {ProcessesService} from '@ofServices/processes.service';
-import {takeUntil} from 'rxjs/operators';
-import {FormControl, FormGroup} from '@angular/forms';
+import {debounceTime, takeUntil} from 'rxjs/operators';
+import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {ConfigService} from '@ofServices/config.service';
 import {TimeService} from '@ofServices/time.service';
 import {CardService} from '@ofServices/card.service';
@@ -24,6 +24,11 @@ import {TranslateService} from '@ngx-translate/core';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 import {EntitiesService } from '@ofServices/entities.service';
 import {Utilities} from 'app/common/utilities';
+import {MessageLevel} from '@ofModel/message.model';
+import {AlertMessage} from '@ofStore/actions/alert.actions';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 
 
 @Component({
@@ -53,7 +58,14 @@ export class LoggingComponent implements OnDestroy, OnInit {
     listOfProcessesForFilter = [];
     listOfProcessesForRequest = []; 
 
-    constructor(
+    publishMinDate : {year: number, month: number, day: number} = null;
+    publishMaxDate : {year: number, month: number, day: number} = null;
+    activeMinDate : {year: number, month: number, day: number} = null;
+    activeMaxDate : {year: number, month: number, day: number} = null;
+
+    dateTimeFilterChange = new Subject();
+
+    constructor(private store: Store<AppState>,
                 private processesService: ProcessesService,
                 private configService: ConfigService,
                 private timeService: TimeService,
@@ -98,6 +110,28 @@ export class LoggingComponent implements OnDestroy, OnInit {
     ngOnInit() {
         this.size = this.configService.getConfigValue('logging.filters.page.size', 10);
         this.results = [];
+        this.dateTimeFilterChange.pipe(
+            takeUntil(this.unsubscribe$),
+            debounceTime(1000),
+        ).subscribe(() => this.setDateFilterBounds());
+    }
+
+
+    setDateFilterBounds(): void {
+
+        if (this.loggingForm.value.publishDateFrom?.date) {
+            this.publishMinDate = {year: this.loggingForm.value.publishDateFrom.date.year, month: this.loggingForm.value.publishDateFrom.date.month, day: this.loggingForm.value.publishDateFrom.date.day};
+        }
+        if (this.loggingForm.value.publishDateTo?.date) {
+            this.publishMaxDate = {year: this.loggingForm.value.publishDateTo.date.year, month: this.loggingForm.value.publishDateTo.date.month, day: this.loggingForm.value.publishDateTo.date.day};
+        }
+
+        if (this.loggingForm.value.activeFrom?.date) {
+            this.activeMinDate = {year: this.loggingForm.value.activeFrom.date.year, month: this.loggingForm.value.activeFrom.date.month, day: this.loggingForm.value.activeFrom.date.day};
+        }
+        if (this.loggingForm.value.activeTo?.date) {
+            this.activeMaxDate = {year: this.loggingForm.value.activeTo.date.year, month: this.loggingForm.value.activeTo.date.month, day: this.loggingForm.value.activeTo.date.day};
+        }
     }
 
     resetForm() {
@@ -105,9 +139,37 @@ export class LoggingComponent implements OnDestroy, OnInit {
         this.firstQueryHasBeenDone = false;
         this.hasResult = false;
         this.resultsNumber = 0;
+        this.publishMinDate = null;
+        this.publishMaxDate = null;
+        this.activeMinDate = null;
+        this.activeMaxDate = null;
     }
 
+    onDateTimeChange(event: Event) {
+        this.dateTimeFilterChange.next(null);
+    }
+
+    private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
+        this.store.dispatch(new AlertMessage({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}}));
+    }
+    
     sendQuery(page_number): void {
+        const publishStart = this.extractTime(this.loggingForm.get('publishDateFrom'));
+        const publishEnd = this.extractTime(this.loggingForm.get('publishDateTo'));
+
+        if (publishStart != null && !isNaN(publishStart) && publishEnd != null && !isNaN(publishEnd) && publishStart > publishEnd) {
+            this.displayMessage('logging.filters.publishEndDateBeforeStartDate','',MessageLevel.ERROR);
+            return;
+        }
+
+        const activeStart = this.extractTime(this.loggingForm.get('activeFrom'));
+        const activeEnd = this.extractTime(this.loggingForm.get('activeTo'));
+
+        if (activeStart != null && !isNaN(activeStart) && activeEnd != null && !isNaN(activeEnd) && activeStart > activeEnd) {
+            this.displayMessage('logging.filters.activeEndDateBeforeStartDate','',MessageLevel.ERROR);
+            return;
+        }
+
         const { value } = this.loggingForm;
         this.filtersTemplate.filtersToMap(value);
         this.filtersTemplate.filters.set('size', [this.size.toString()]);
@@ -127,6 +189,26 @@ export class LoggingComponent implements OnDestroy, OnInit {
                 });
                 this.results = page.content;
             });
+    }
+
+    private extractTime(form: AbstractControl) {
+        const val = form.value;
+        if (!val || val == '')  {
+            return null;
+        }
+
+        if (isNaN(val.time.hour)) {
+            val.time.hour = 0;
+        }
+        if (isNaN(val.time.minute)) {
+            val.time.minute = 0;
+        }
+        if (isNaN(val.time.second)) {
+            val.time.second = 0;
+        }
+
+        const converter = new DateTimeNgb(val.date, val.time);
+        return converter.convertToNumber();
     }
 
     cardPostProcessing(card) {

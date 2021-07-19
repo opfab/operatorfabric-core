@@ -1,0 +1,168 @@
+{
+  "coreMenusConfiguration":
+  [
+    {
+      "id": "feed",
+      "visible": true
+    },
+    {
+      "id": "archives",
+      "visible": true
+    },
+    {
+      "id": "monitoring",
+      "visible": true
+    },
+    {
+      "id": "logging",
+      "visible": true
+    },
+    {
+      "id": "usercard",
+      "visible": true
+    },
+    {
+      "id": "calendar",
+      "visible": true
+    },
+    {
+      "id": "admin",
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
+    },
+    {
+      "id": "settings",
+      "visible": true
+    },
+    {
+      "id": "feedconfiguration",
+      "visible": true
+    },
+    {
+      "id": "realtimeusers",
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
+    },
+    {
+      "id": "nightdaymode",
+      "visible": true
+    },
+    {
+      "id": "about",
+      "visible": true
+    },
+    {
+      "id": "logout",
+      "visible": true
+    }
+  ],
+  "menus": [
+    {
+      "id": "menu1",
+      "label": "title.single",
+      "entries": [
+        {
+          "id": "uid_test_0",
+          "url": "https://en.wikipedia.org/w/index.php",
+          "label": "entry.single",
+          "linkType": "BOTH"
+        }
+      ]
+    },
+    {
+      "id": "menu2",
+      "label": "title.multi",
+      "entries": [
+        {
+          "id": "uid_test_1",
+          "url": "https://opfab.github.io/",
+          "label": "entry.entry1",
+          "linkType": "BOTH",
+          "showOnlyForGroups": ["ReadOnly","Planner"]
+        },
+        {
+          "id": "uid_test_2",
+          "url": "https://www.wikipedia.org/",
+          "label": "entry.entry2",
+          "linkType": "BOTH",
+          "showOnlyForGroups": ["Dispatcher"]
+        }
+      ]
+    },
+    {
+      "id": "adminmenu",
+      "label": "title.admin",
+      "entries": [
+        {
+          "id": "uid_test_3",
+          "url": "https://opfab.github.io/",
+          "label": "entry.admin",
+          "linkType": "BOTH",
+          "showOnlyForGroups": ["ADMIN"]
+        }
+      ]
+    }
+  ],
+  "locales": [
+    {
+      "language": "en",
+      "i18n": {
+        "menu1": {
+          "title": {
+            "single": "First menu"
+          },
+          "entry": {
+            "single": "Single menu entry"
+          }
+        },
+        "menu2": {
+          "title": {
+            "multi": "Second menu"
+          },
+          "entry": {
+            "entry1": "First menu entry",
+            "entry2": "Second menu entry"
+          }
+        },
+        "adminmenu": {
+          "title": {
+            "admin": "Admin menu"
+          },
+          "entry": {
+            "admin": "Admin menu entry"
+          }
+        }
+      }
+    },
+    {
+      "language": "fr",
+      "i18n": {
+        "menu1": {
+          "title": {
+            "single": "Premier menu"
+          },
+          "entry": {
+            "single": "Unique élément"
+          }
+        },
+        "menu2": {
+          "title": {
+            "multi": "Deuxième menu"
+          },
+          "entry": {
+            "entry1": "Premier élément",
+            "entry2": "Deuxième élément"
+          }
+        },
+        "adminmenu": {
+          "title": {
+            "admin": "Admin menu"
+          },
+          "entry": {
+            "admin": "Admin menu entry"
+          }
+        }
+      }
+    }
+  ]
+}

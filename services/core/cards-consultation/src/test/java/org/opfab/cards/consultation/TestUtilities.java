@@ -131,6 +131,7 @@ public class TestUtilities {
         card.setUid(UUID.randomUUID().toString());
         card.setPublishDate(publishDate);
         card.setId(card.getProcess() + "." + card.getProcessInstanceId());
+        card.setProcessStateKey(card.getProcess() + "." + card.getState());
     }
 
 
@@ -179,6 +180,7 @@ public class TestUtilities {
     public static void prepareArchivedCard(ArchivedCardConsultationData archivedCard, Instant publishDate) {
         archivedCard.setId(UUID.randomUUID().toString());
         archivedCard.setPublishDate(publishDate);
+        archivedCard.setProcessStateKey(archivedCard.getProcess() + "." + archivedCard.getState());
     }
 
     public static boolean checkIfCardActiveInRange(LightCard card, Instant rangeStart, Instant rangeEnd) {
@@ -255,11 +257,16 @@ public class TestUtilities {
         return false;
     }
 
-    public static CardConsultationData configureRecipientReferencesAndStartDate(CardConsultationData card, String user, Instant startDate, String[] groups, String[] entities) {
+    public static CardConsultationData configureRecipientReferencesAndStartDate(CardConsultationData card, String user, Instant startDate, String[] groups, String[] entities,
+                                                                                String process, String state) {
         card.setStartDate(startDate);
         card.setGroupRecipients(groups != null ? Arrays.asList(groups) : null);
         card.setEntityRecipients(entities != null ? Arrays.asList(entities) : null);
         card.setUserRecipients(Arrays.asList(user));
+
+        if (process != null) card.setProcess(process);
+        if (state != null) card.setState(state);
+        card.setProcessStateKey(card.getProcess() + "." + card.getState());
         return card;
     }
 

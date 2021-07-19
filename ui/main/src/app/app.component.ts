@@ -56,18 +56,18 @@ export class AppComponent implements OnInit {
    * NB: I18nService is injected to trigger its constructor at application startup
    */
   constructor(private store: Store<AppState>,
-    private titleService: Title
-    , private authenticationService: AuthenticationService
-    , private configService: ConfigService
-    , private translateService: TranslateService
-    , private i18nService: I18nService
-    , private cardService: CardService
-    , private userService: UserService
-    , private entitiesService: EntitiesService
-    , private groupsService: GroupsService
-    , private processesService: ProcessesService
-    , private reminderService: ReminderService
-    , private actions$: Actions) {
+              private titleService: Title
+      , private authenticationService: AuthenticationService
+      , private configService: ConfigService
+      , private translateService: TranslateService
+      , private i18nService: I18nService
+      , private cardService: CardService
+      , private userService: UserService
+      , private entitiesService: EntitiesService
+      , private groupsService: GroupsService
+      , private processesService: ProcessesService
+      , private reminderService: ReminderService
+      , private actions$: Actions) {
   }
 
   ngOnInit() {
@@ -79,16 +79,18 @@ export class AppComponent implements OnInit {
 
 
   private loadConfiguration() {
-    this.configService.fetchConfiguration().subscribe(config => {
-      console.log(new Date().toISOString(), `Configuration loaded (web-ui.json)`);
-      this.store.dispatch(new LoadConfigSuccess({ config: config }));
-      this.setTitle();
-      this.loadTranslationAndLaunchAuthenticationProcess(config);
+
+    this.configService.loadWebUIConfiguration().subscribe({  //This configuration needs to be loaded first as it defines the authentication mode
+      next: config => {
+        console.log(new Date().toISOString(), `Configuration loaded (web-ui.json)`);
+        this.store.dispatch(new LoadConfigSuccess({ config: config }));
+        this.setTitle();
+        this.loadTranslationAndLaunchAuthenticationProcess(config);
       },
-    catchError((err, caught) => {
-      console.error('Impossible to load configuration file web-ui.json', err);
-      return caught;
-    }));
+      error: catchError((err, caught) => {
+        console.error('Impossible to load configuration file web-ui.json', err);
+        return caught;})
+    });
 
   }
 
@@ -98,8 +100,8 @@ export class AppComponent implements OnInit {
   }
 
   private loadTranslationForMenu() {
-    this.configService.loadMenuTranslations().subscribe(locales => locales.forEach(locale =>
-      this.translateService.setTranslation(locale.language, locale.i18n, true)));
+    this.configService.fetchMenuTranslations().subscribe(locales => locales.forEach(locale =>
+        this.translateService.setTranslation(locale.language, locale.i18n, true)));
     catchError((err, caught) => {
       console.error('Impossible to load configuration file ui-menu.json', err);
       return caught;
@@ -128,27 +130,33 @@ export class AppComponent implements OnInit {
 
   private initApplicationWhenUserAuthenticated() {
     this.store
-      .select(selectIdentifier)
-      .subscribe(identifier => {
-        if (identifier) {
-          console.log(new Date().toISOString(), `User ${identifier} logged`);
-          this.isAuthenticated = true;
-          this.cardService.initCardSubscription();
-          merge(
-            this.userService.loadUserWithPerimetersData(),
-            this.entitiesService.loadAllEntitiesData(),
-            this.processesService.loadAllProcesses(),
-            this.processesService.loadProcessGroups(),
-            this.processesService.loadMonitoringConfig(),
-            this.processesService.areTranslationsLoaded(),
-            this.cardService.initSubscription)
-            .pipe(skip(6)) // Need to wait for all initialization to complete before loading main components of the application
-            .subscribe(() => {
-              this.loaded = true;
-              this.reminderService.startService(identifier);
-            });
-        }
-      });
+        .select(selectIdentifier)
+        .subscribe(identifier => {
+          if (identifier) {
+            console.log(new Date().toISOString(), `User ${identifier} logged`);
+            this.isAuthenticated = true;
+            this.cardService.initCardSubscription();
+            merge(
+                this.configService.loadCoreMenuConfigurations(),
+                this.userService.loadUserWithPerimetersData(),
+                this.entitiesService.loadAllEntitiesData(),
+                this.processesService.loadAllProcesses(),
+                this.processesService.loadProcessGroups(),
+                this.processesService.loadMonitoringConfig(),
+                this.processesService.areTranslationsLoaded(),
+                this.cardService.initSubscription)
+                .pipe(skip(7)) // Need to wait for all initialization to complete before loading main components of the application
+                .subscribe({
+                  next: () => {
+                  this.loaded = true;
+                  this.reminderService.startService(identifier);
+                },
+                  error: catchError((err, caught) => {
+                    console.error('Error in application initialization', err);
+                    return caught;})
+                 });
+          }
+        });
   }
 
   private detectConnectionLost() {
@@ -164,9 +172,9 @@ export class AppComponent implements OnInit {
 
   private subscribeToAlerts() {
     this.actions$.pipe(
-      ofType<AlertActions>(AlertActionTypes.AlertMessage)).subscribe( alert => {
-        this.displayAlert(alert.payload.alertMessage);
-      });
+        ofType<AlertActions>(AlertActionTypes.AlertMessage)).subscribe( alert => {
+      this.displayAlert(alert.payload.alertMessage);
+    });
   }
 
   private displayAlert(message: Message) {
@@ -183,14 +191,14 @@ export class AppComponent implements OnInit {
         break;
     }
     this.alertMessage = {
-        alert: message,
-        className: className,
-        display: true
+      alert: message,
+      className: className,
+      display: true
     };
 
     setTimeout(() => {
-        this.alertMessage.display = false;
+      this.alertMessage.display = false;
     }, 5000);
 
-}
+  }
 }

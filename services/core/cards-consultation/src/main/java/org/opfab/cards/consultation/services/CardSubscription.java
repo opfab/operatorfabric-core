@@ -21,11 +21,13 @@ import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 import org.opfab.springtools.configuration.oauth.UserServiceCache;
 import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.springframework.amqp.core.Queue;
+import org.opfab.users.model.RightsEnum;
+import org.opfab.utilities.AmqpUtils;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 
@@ -135,10 +137,10 @@ public class CardSubscription {
     }
 
 
-    public void initSubscription(Runnable doOnCancel) {
-        createQueue(cardsQueueName, cardExchange);
-        createQueue(processQueueName, processExchange);
-        createQueue(userQueueName, userExchange);
+    public void initSubscription(int retries, long retryInterval, Runnable doOnCancel) {
+        AmqpUtils.createQueue(amqpAdmin, cardsQueueName, cardExchange, retries, retryInterval);
+        AmqpUtils.createQueue(amqpAdmin, processQueueName, processExchange, retries, retryInterval);
+        AmqpUtils.createQueue(amqpAdmin, userQueueName, userExchange, retries, retryInterval);
         this.cardListener = createMessageListenerContainer(cardsQueueName);
         this.processListener = createMessageListenerContainer(processQueueName);
         this.userListener = createMessageListenerContainer(userQueueName);
@@ -197,21 +199,6 @@ public class CardSubscription {
             if (this.userLogin.equals(modifiedUserLogin)) 
                 publishDataIntoSubscription("USER_CONFIG_CHANGE");
         });
-    }
-
-    /**
-     * <p>Constructs a non durable queue to exchange using queue name</p>
-     * @return
-     */
-    private Queue createQueue(String queueName, FanoutExchange exchange) {
-        log.debug("CREATE queue for user {}", userLogin);
-        Queue queue = QueueBuilder.nonDurable(queueName).build();
-        amqpAdmin.declareQueue(queue);
-
-        Binding binding = BindingBuilder.bind(queue).to(exchange);
-        amqpAdmin.declareBinding(binding);
-
-        return queue;
     }
 
     /**
@@ -298,23 +285,32 @@ public class CardSubscription {
                   (((List)processesStatesNotNotified.get(process)).contains(state)));
     }
 
-    /**
-     * @param messageBody message body received from rabbitMQ
-     * @return true if the message received must be seen by the connected user.
-     *         Rules for receiving cards :
-     *         1) If the card is sent to the user directly then the user receive it
-     *         2) If the card is sent to entity A and group B, then to receive it,
-     *            the user must be part of A AND (be part of B OR have the right for the process/state of the card)
-     *         3) If  the card is sent to entity A only, then to receive it,
-     *            the user must be part of A and have the right for the process/state of the card
-     *         4) If the card is sent to group B only, then to receive it, the user must be part of B
-     */
-    public boolean checkIfUserMustReceiveTheCard(JSONObject cardOperation, CurrentUserWithPerimeters currentUserWithPerimeters) {
-
-        List<String> processStateList = new ArrayList<>();
+    private Map<String, RightsEnum> loadUserRightsPerProcessAndState() {
+        Map<String, RightsEnum> userRightsPerProcessAndState = new HashMap<>();
         if (currentUserWithPerimeters.getComputedPerimeters() != null)
             currentUserWithPerimeters.getComputedPerimeters()
-                    .forEach(perimeter -> processStateList.add(perimeter.getProcess() + "." + perimeter.getState()));
+                    .forEach(perimeter -> userRightsPerProcessAndState.put(perimeter.getProcess() + "." + perimeter.getState(), perimeter.getRights()));
+        return userRightsPerProcessAndState;
+    }
+
+    private boolean isReceiveRightsForProcessAndState(String processId, String stateId, Map<String, RightsEnum> userRightsPerProcessAndState) {
+        final RightsEnum rights = userRightsPerProcessAndState.get(processId + '.' + stateId);
+        return rights == RightsEnum.RECEIVE || rights == RightsEnum.RECEIVEANDWRITE;
+    }
+
+    /** Rules for receiving cards :
+    1) If the card is sent to user1, the card is received and visible for user1 if he has the receive right for the
+       corresponding process/state (Receive or ReceiveAndWrite)
+    2) If the card is sent to GROUP1 (or ENTITY1), the card is received and visible for user if all of the following is true :
+         - he's a member of GROUP1 (or ENTITY1)
+         - he has the receive right for the corresponding process/state (Receive or ReceiveAndWrite)
+    3) If the card is sent to ENTITY1 and GROUP1, the card is received and visible for user if all of the following is true :
+         - he's a member of ENTITY1 (either directly or through one of its children entities)
+         - he's a member of GROUP1
+         - he has the receive right for the corresponding process/state (Receive or ReceiveAndWrite)
+    **/
+    public boolean checkIfUserMustReceiveTheCard(JSONObject cardOperation, CurrentUserWithPerimeters currentUserWithPerimeters) {
+        Map<String, RightsEnum> userRightsPerProcessAndState = loadUserRightsPerProcessAndState();
 
         JSONArray groupRecipientsIdsArray = (JSONArray) cardOperation.get("groupRecipientsIds");
         JSONArray entityRecipientsIdsArray = (JSONArray) cardOperation.get("entityRecipientsIds");
@@ -327,7 +323,6 @@ public class CardSubscription {
         String state = "";
         if (cardObj != null) {
             idCard = (cardObj.get("id") != null) ? (String) cardObj.get("id") : "";
-
             process = (String) cardObj.get("process");
             state = (String) cardObj.get("state");
         }
@@ -341,86 +336,37 @@ public class CardSubscription {
 
         log.debug("Check if user {} shall receive card {} for processStateKey {}", userLogin, idCard, processStateKey);
 
-        // user only
-        if (checkInCaseOfCardSentToUserDirectly(userRecipientsIdsArray)) {
+        // First, we check if the user has the right for receiving this card (Receive or ReceiveAndWrite)
+        if ((!typeOperation.equals(DELETE_OPERATION)) && (!isReceiveRightsForProcessAndState(process, state, userRightsPerProcessAndState)))
+            return false;
+
+        // Now, we check if the user is member of the group and/or entity (or the recipient himself)
+        if (checkInCaseOfCardSentToUserDirectly(userRecipientsIdsArray)) {  // user only
             log.debug("User {} is in user recipients and shall receive card {}", userLogin, idCard);
             return true;
         }
 
-        if (entityRecipientsIdsArray == null || entityRecipientsIdsArray.isEmpty()) { // card sent to group only
-
-            boolean hasToReceive = checkInCaseOfCardSentToGroupOnly(userGroups, groupRecipientsIdsArray);
-            if (hasToReceive)
-                log.debug("No entity recipient, user {} is member of a group that shall receive card {} ", userLogin,
-                        idCard);
-            else
-                log.debug("No entity recipient, user {} is not member of a group that shall receive card {} ",
-                        userLogin, idCard);
-            return hasToReceive;
+        if (checkInCaseOfCardSentToGroupOrEntityOrBoth(userGroups, groupRecipientsIdsArray, userEntities, entityRecipientsIdsArray)) {
+            log.debug("User {} is member of a group or/and entity that shall receive card {}", userLogin, idCard);
+            return true;
         }
-
-        if (groupRecipientsIdsArray == null || groupRecipientsIdsArray.isEmpty()) { // card sent to entity only
-            boolean hasToReceive = checkInCaseOfCardSentToEntityOnly(userEntities, entityRecipientsIdsArray,
-                    typeOperation, processStateKey, processStateList);
-            if (hasToReceive)
-                log.debug("No group recipient,  user {} has the good perimeter to receive card {} ", userLogin, idCard);
-            else
-                log.debug("No group recipient, user {} has not the good perimeter to receive card {} ", userLogin,
-                        idCard);
-            return hasToReceive;
-
-        }
-
-        // card sent to entity and group
-        boolean hasToReceive = checkInCaseOfCardSentToEntityAndGroup(userEntities, userGroups, entityRecipientsIdsArray,
-                groupRecipientsIdsArray, typeOperation, processStateKey, processStateList);
-
-        if (hasToReceive)
-            log.debug("Entity and group recipients, user {} has the good perimeter to receive card {} ", userLogin,
-                    idCard);
-        else
-            log.debug("Entity and group recipients, user {} has not the good perimeter to receive card {} ", userLogin,
-                    idCard);
-        return hasToReceive;
+        return false;
     }
 
 
-    boolean checkInCaseOfCardSentToUserDirectly(JSONArray userRecipientsIdsArray)
-    {
+    boolean checkInCaseOfCardSentToUserDirectly(JSONArray userRecipientsIdsArray) {
         return  (userRecipientsIdsArray != null && !Collections.disjoint(Arrays.asList(userLogin), userRecipientsIdsArray));
     }
 
-    boolean checkInCaseOfCardSentToGroupOnly(List<String> userGroups, JSONArray groupRecipientsIdsArray) {
-        return (userGroups != null) && (groupRecipientsIdsArray != null)
-                && !Collections.disjoint(userGroups, groupRecipientsIdsArray);
-    }
-
-    boolean checkInCaseOfCardSentToEntityOnly(List<String> userEntities, JSONArray entityRecipientsIdsArray,
-                                             String typeOperation, String processStateKey,
-                                             List<String> processStateList) {
-        if (typeOperation.equals(DELETE_OPERATION))
-            return (userEntities != null) && (!Collections.disjoint(userEntities, entityRecipientsIdsArray));
-
-        return (userEntities != null) && (!Collections.disjoint(userEntities, entityRecipientsIdsArray))
-                && (!Collections.disjoint(Arrays.asList(processStateKey), processStateList));
-    }
-
-    boolean checkInCaseOfCardSentToEntityAndGroup(List<String> userEntities, List<String> userGroups,
-                                                  JSONArray entityRecipientsIdsArray, JSONArray groupRecipientsIdsArray,
-                                                  String typeOperation, String processStateKey, List<String> processStateList) {
-        if (typeOperation.equals(DELETE_OPERATION))
-            return ((userEntities != null) && (userGroups != null)
-                    && !Collections.disjoint(userEntities, entityRecipientsIdsArray)
-                    && !Collections.disjoint(userGroups, groupRecipientsIdsArray))
-                    ||
-                    ((userEntities != null) && !Collections.disjoint(userEntities, entityRecipientsIdsArray));
-
-        return ((userEntities != null) && (userGroups != null)
-                && !Collections.disjoint(userEntities, entityRecipientsIdsArray)
-                && !Collections.disjoint(userGroups, groupRecipientsIdsArray))
-                ||
-                ((userEntities != null)
-                        && !Collections.disjoint(userEntities, entityRecipientsIdsArray)
-                        && !Collections.disjoint(Arrays.asList(processStateKey), processStateList));
+    private boolean checkInCaseOfCardSentToGroupOrEntityOrBoth(List<String> userGroups, JSONArray groupRecipientsIdsArray,
+                                                               List<String> userEntities, JSONArray entityRecipientsIdsArray) {
+        if ((groupRecipientsIdsArray != null) && (!groupRecipientsIdsArray.isEmpty())
+                && (Collections.disjoint(userGroups, groupRecipientsIdsArray)))
+            return false;
+        if ((entityRecipientsIdsArray != null) && (!entityRecipientsIdsArray.isEmpty())
+                && (Collections.disjoint(userEntities, entityRecipientsIdsArray)))
+            return false;
+        return ! ((groupRecipientsIdsArray == null || groupRecipientsIdsArray.isEmpty()) &&
+                  (entityRecipientsIdsArray == null || entityRecipientsIdsArray.isEmpty()));
     }
 }

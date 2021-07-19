@@ -98,6 +98,6 @@ public class CardConsultationData implements Card {
     private String  representative;
     private PublisherTypeEnum representativeType;
     private Integer  secondsBeforeTimeSpanForReminder;
-    
-    
+
+    private String processStateKey;
 }

@@ -22,7 +22,6 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
-            "aot": true,
             "assets": [
               "src/favicon.ico",
               "src/assets",
@@ -33,7 +32,7 @@
               "node_modules/@fullcalendar/bootstrap/main.css",
               "node_modules/angular2-multiselect-dropdown/themes/default.theme.css",
               "src/assets/styles/style.css",
-              "src/assets/styles/styles.scss"
+              "src/scss/styles.scss"
             ],
             "scripts": [
               "node_modules/svg-pan-zoom/dist/svg-pan-zoom.js",
@@ -46,7 +45,13 @@
               "xlsx",
               "file-saver",
               "moment-timezone"
-            ]
+            ],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -83,13 +88,14 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ]
-            }
-          }
+            },
+            "development": {}
+          },
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ui-home:build"
           },
           "configurations": {
             "production": {
@@ -97,8 +103,12 @@
             },
             "productionDebug": {
               "browserTarget": "ui-home:build:productionDebug"
+            },
+            "development": {
+              "browserTarget": "ui-home:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -117,7 +127,7 @@
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.css",
               "src/assets/styles/style.css",
-              "src/assets/styles/styles.scss"
+              "src/scss/styles.scss"
             ],
             "scripts": [
               "src/assets/js/templateGateway.js"

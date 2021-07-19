@@ -1,5 +1,6 @@
 dependencies{
     compile misc.compress
+    compile boot.starterRabbitmq
     testCompile misc.slf4j
     testCompile project(':tools:generic:test-utilities')
 }

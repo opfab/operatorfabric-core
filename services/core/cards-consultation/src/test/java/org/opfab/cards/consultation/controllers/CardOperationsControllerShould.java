@@ -24,7 +24,9 @@ import org.opfab.cards.consultation.model.CardOperation;
 import org.opfab.cards.consultation.repositories.CardRepository;
 import org.opfab.cards.consultation.services.CardSubscriptionService;
 import org.opfab.springtools.configuration.test.UserServiceCacheTestApplication;
+import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -82,6 +84,11 @@ public class CardOperationsControllerShould {
     private CurrentUserWithPerimeters currentUserWithPerimeters, userForUserAckAndReadTest;
 
     public CardOperationsControllerShould(){
+        ComputedPerimeter perimeter = new ComputedPerimeter();
+        perimeter.setProcess("PROCESS");
+        perimeter.setState("anyState");
+        perimeter.setRights(RightsEnum.RECEIVEANDWRITE);
+
         User user = new User();
         user.setLogin("dummyUser");
         user.setFirstName("Test");
@@ -96,6 +103,7 @@ public class CardOperationsControllerShould {
         user.setEntities(entities);
         currentUserWithPerimeters = new CurrentUserWithPerimeters();
         currentUserWithPerimeters.setUserData(user);
+        currentUserWithPerimeters.setComputedPerimeters(Arrays.asList(perimeter));
         
         user = new User();
         user.setLogin("operator3");
@@ -111,6 +119,7 @@ public class CardOperationsControllerShould {
         user.setEntities(entities);
         userForUserAckAndReadTest = new CurrentUserWithPerimeters();
         userForUserAckAndReadTest.setUserData(user);
+        userForUserAckAndReadTest.setComputedPerimeters(Arrays.asList(perimeter));
     }
 
     @AfterEach

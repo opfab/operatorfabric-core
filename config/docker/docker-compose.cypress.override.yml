@@ -1,6 +1,0 @@
-version: '2.1'
-services:
-  web-ui:
-    volumes:
-      - "./web-ui-cypress.json:/usr/share/nginx/html/opfab/web-ui.json"
-      - "./nginx-cors-permissive.conf:/etc/nginx/conf.d/default.conf"

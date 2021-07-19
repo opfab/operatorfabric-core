@@ -36,7 +36,6 @@ public class ResponseData implements Response {
 
     private Boolean lock;
     private String state;
-    private ResponseBtnColorEnum btnColor;
     private I18n btnText;
     private List<String> externalRecipients;
 

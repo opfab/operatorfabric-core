@@ -1,7 +1,6 @@
 apply plugin: 'com.github.node-gradle.node'
 
-
-task runCypressTests(type: NpxTask) {
+tasks.register('runCypressTests', NpxTask)  {
     description 'runs all the Cypress tests for the project'
     dependsOn npmInstall
     command = 'cypress'

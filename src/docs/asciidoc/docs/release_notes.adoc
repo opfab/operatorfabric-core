@@ -5,58 +5,62 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-= Version 2.7.0.RELEASE
+= Version 2.8.0.RELEASE
 
 == Features
 
-* Monitoring & logging screen : 
-  - OC-1772 : Monitoring and logging screen adjustment
-  - OC-1691 : Add publisherName in child card for custom export in monitoring
-  - OC-1794 : Monitoring export : allow exporting more that one array from json 
-  - OC-1768 : Cards with a process state that doesn't have a 'type' property won't be displayed in monitoring screen
+* #1241 : Take into account lttd when ack set to OnlyWhenResponseDisabledForUser
+* #1242 : Always use perimeter when routing cards
 +
-* OC-1734 : Secure endPoint for sending card
+IMPORTANT: From now, whatever the type(s) of recipient(s), the perimeters are always checked. So if you are using users directly or groups as card recipients, you will now need to add receive rights (Receive or ReceiveAndWrite) for the corresponding process/state of the card.
+* #1264 : Date filters : make impossible to enter a start date later than end date
+* #1257 : Manage core menu visibility
 +
-IMPORTANT: The API endPoint `cards` will now require authentication by default. 
-It is possible to configure the endpoint to not require authentication by setting the configuration parameter `checkAuthenticationForCardSending` to `false` in cards-publication service configuration file.
+IMPORTANT: Core menus such as the archives, usercard creation, settings etc. are now managed in the ui-menu.json file, and can be made visible to certain groups only just like custom menus. See the https://opfab.github.io/documentation/archives/2.8.0.RELEASE/docs/single_page_doc.html#_management_of_visible_menus[migration guide] for details as it will require changes to your configuration.
 +
-* OC-1742 : Add a spinner in feed when opfab is loading cards in background
-* OC-1671 : UI -Automatic reload user perimeter when changed by admin 
-* OC-1762 : When all user entities are not allowed to send card do not show user card form
-
+* #1275 : Add the possibility to send a user card to a third party via the use of externalRecipients
 
 == Bugs
 
-* OC-1750 : Sometimes cards does not show on calendar
-* OC-1717 : Issue with usercard process template
-* OC-1776 : Bug in dev mode when using moment object in ngrx store
-* OC-1775 : Reminder isn't triggered when "Minutes to remind before task" is 0
-* OC-1760 : Monitoring screen : need to click again on search sometimes
-* OC-1759 : Monitoring screen : cards no longer displayed unless you click on search
-* OC-1765 : UI does not take into account uiVisibility configuration
-* OC-1752 : User card: changing process/state does not reset startDate, endDate and lttd
-* OC-1790 : Card not seen when removing sender entity
-* OC-1786 : Bug when using entity with name matching an i18n prefix
-* OC-1791 : Bug when a non existing entity is set in userCard.recipientList
-* OC-1761 : Admin interface - Deal with invalid perimeter
-* OC-1804 : Do not round up publish date to the second
-+
-NOTE: In previous versions, when a card was published its publication date was rounded up to the nearest second (that's why all publishDate values ended with 000). It caused issues when several updates of the cards were published in rapid succession (in the same second) as their order was not taken into account.
+* #1245 : Error in style when showing field description in settings tab
+* #1243 : Deleting cards by endDateBefore using api does not remove cards from the feed
+* #1273 : In Archive page the values of service multifilter should not wrap
+* #1272 : Posting a perimeter with blank string state cause 500 internal error
+* #1384 : Clean templateGateway when loading card from archives or usercard
+* #1387 : Card publication service does not start if rabbit goes up too late
+* #1412 : Users with a login claim containing capital letters are not authenticated
+* #1256 : Make sound notifications behaviour more consistent when switching from feed to monitoring
 
 == Tasks
 
-* OC-1748 : Card detail screen deleted when the card is deleted : Adding a cypress test
-* OC-1739 : Simplify Gradle dependency management
-* OC-1779 : Updating swagger-codegen-cli to 2.4.20
-* OC-1777 : Remove dead code related to old version of monitoring screen
-* OC-1747 : Authorize the use of . for login when creating new user in admin screen
-* OC-1698 : Fix validation conditions for login in admin screen to only allow lowercase
-* OC-1788 : Doc adjustment regarding response card
-* OC-1787 : Refactoring of logging screen
-* OC-1792 : Fixed the failing Kafka Autoconfiguration Unit test by adding a default for the value deserializer.
-* OC-1746 : Update Spring librairies
-** Spring Boot 2.5.1
-** Spring Cloud 2020.0.3
-** Spring Webflux 5.3.8
-** Spring Security 5.5.0
-** Spring Retry 1.3.1
+* #1244 : Remove unused btnColor in process.state (businessConfig)
+* #1240 : Manage Web-UI configuration variants
++
+IMPORTANT: See https://opfab.github.io/documentation/archives/2.8.0.RELEASE/docs/single_page_doc.html#_ui_configuration_management[migration guide] for details.
++
+* #1247 : Move documentation for "showDetailCardHeader" config value
+* Dependency updates:
+** #1253 : Update ngrx to v12
+** #1372 : Update Angular to v12.1.1
+** #1282 : Update timeline dependency @swimlane/ngx-charts to v18
+** #1193 : Update spring security to v5.5.1
+** #1271 : Upgrade to rxjs 7.1.0
+** #1285 : Update feign to v11.2
+** #1302 : Update Kafka/AVRO libraries
+* #1236 : Add cypress tests for archives screen
+* #1169 : Add cypress tests for Real time users screen
+* #1303 : Create external-config folder in Dockerfile
+* #1265 : Admin table styling
+* #1396 : Add common library (/tools) analysis in SonarCloud
+* #1392 : Simplified MongoDB configuration
++
+IMPORTANT: This requires a change in your configuration files. See https://opfab.github.io/documentation/archives/2.8.0.RELEASE/docs/single_page_doc.html#_simplification_mongodb_configuration[migration guide] for details.
++
+* #1417 : Remove unused code in tools/generic/utilities
+* #1312 : Caching cypress installation to speed up CI/CD
+* #1413 : Only trigger UI build if inputs or outputs have changed
+* #1359 : Remove dependency reporting plugins from Gradle build
++
+Reports regarding dependency licences and security vulnerabilities are now provided by LFX Security
++
+* #1454 : Handlebars helpers - Fix dateFormat to work with strings + new helper objectContainsKey

@@ -1,0 +1,53 @@
+// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+:imagesdir: src/docs/asciidoc/images
+
+:sectnums:
+:icons: font
+:hide-uri-scheme:
+
+= Project Adopters
+
+The following organizations have started using OperatorFabric, either directly or through
+https://letscoordinate.github.io/[Let's Coordinate], its
+open source implementation for the needs of Transmission System Operators (TSOs) and
+Regional Security Coordinators (RSCs) in charge of the electricity power grid.
+
+If you are using or experimenting with OperatorFabric or Let's Coordinate, please
+https://lfenergy.slack.com/archives/C025ZGJPXM4[get in touch]!
+
+.Adopters list (alphabetical)
+[caption="", cols="2,6", stripes=even]
+|===
+|Organization |More information on usage
+
+.2+|https://www.alliander.com/en/[Alliander]
+|https://www.youtube.com/watch?v=ig8vmbuE-vI
+|https://www.youtube.com/watch?v=LB6NwlTZ6r8
+
+.2+|https://www.entsoe.eu/[ENTSOE]
+|https://www.rte-international.com/rte-international-and-unicorn-have-launched-3-coordination-tools-to-continue-the-integration-of-renewable-energy/?lang=en
+|https://www.linkedin.com/posts/rte-international-digital-solutions_slides-webinar-rte-international-opc-and-activity-6794873695480406017-CPnK/
+
+|https://www.liander.nl/[Liander]
+|See Alliander
+
+.2+|https://www.rte-france.com/en[RTE]
+|https://www.youtube.com/watch?v=QemhzfYQpaw
+|https://www.youtube.com/watch?v=LB6NwlTZ6r8
+
+.2+|https://www.rte-international.com/?lang=en[RTE international]
+|https://www.rte-international.com/rte-international-and-unicorn-have-launched-3-coordination-tools-to-continue-the-integration-of-renewable-energy/?lang=en
+|https://www.linkedin.com/posts/rte-international-digital-solutions_slides-webinar-rte-international-opc-and-activity-6794873695480406017-CPnK/
+
+.2+|http://trinityh2020.eu/[Trinity] (European Commission Project)
+|http://trinityh2020.eu/progress-on-the-trinity-coordination-platform/
+|https://www.rte-international.com/rte-international-developpe-des-outils-de-coordination-dynamiques-pour-leurope-du-sud-est/?lang=en
+|===
+
+
