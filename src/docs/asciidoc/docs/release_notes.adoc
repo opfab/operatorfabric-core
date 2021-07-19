@@ -1,14 +1,66 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
+= Version 2.8.0.RELEASE
 
-= Version SNAPSHOT
+== Features
 
-//The release notes are managed in an outside repository to avoid constantly having conflicts when merging PRs on the
-//develop branch. See https://github.com/opfab/release-notes/.
-//The content from this repository is then pasted back to this file during the release process.
+* #1241 : Take into account lttd when ack set to OnlyWhenResponseDisabledForUser
+* #1242 : Always use perimeter when routing cards
++
+IMPORTANT: From now, whatever the type(s) of recipient(s), the perimeters are always checked. So if you are using users directly or groups as card recipients, you will now need to add receive rights (Receive or ReceiveAndWrite) for the corresponding process/state of the card.
+* #1264 : Date filters : make impossible to enter a start date later than end date
+* #1257 : Manage core menu visibility
++
+IMPORTANT: Core menus such as the archives, usercard creation, settings etc. are now managed in the ui-menu.json file, and can be made visible to certain groups only just like custom menus. See the https://opfab.github.io/documentation/archives/2.8.0.RELEASE/docs/single_page_doc.html#_management_of_visible_menus[migration guide] for details as it will require changes to your configuration.
++
+* #1275 : Add the possibility to send a user card to a third party via the use of externalRecipients
 
+== Bugs
+
+* #1245 : Error in style when showing field description in settings tab
+* #1243 : Deleting cards by endDateBefore using api does not remove cards from the feed
+* #1273 : In Archive page the values of service multifilter should not wrap
+* #1272 : Posting a perimeter with blank string state cause 500 internal error
+* #1384 : Clean templateGateway when loading card from archives or usercard
+* #1387 : Card publication service does not start if rabbit goes up too late
+* #1412 : Users with a login claim containing capital letters are not authenticated
+* #1256 : Make sound notifications behaviour more consistent when switching from feed to monitoring
+
+== Tasks
+
+* #1244 : Remove unused btnColor in process.state (businessConfig)
+* #1240 : Manage Web-UI configuration variants
++
+IMPORTANT: See https://opfab.github.io/documentation/archives/2.8.0.RELEASE/docs/single_page_doc.html#_ui_configuration_management[migration guide] for details.
++
+* #1247 : Move documentation for "showDetailCardHeader" config value
+* Dependency updates:
+** #1253 : Update ngrx to v12
+** #1372 : Update Angular to v12.1.1
+** #1282 : Update timeline dependency @swimlane/ngx-charts to v18
+** #1193 : Update spring security to v5.5.1
+** #1271 : Upgrade to rxjs 7.1.0
+** #1285 : Update feign to v11.2
+** #1302 : Update Kafka/AVRO libraries
+* #1236 : Add cypress tests for archives screen
+* #1169 : Add cypress tests for Real time users screen
+* #1303 : Create external-config folder in Dockerfile
+* #1265 : Admin table styling
+* #1396 : Add common library (/tools) analysis in SonarCloud
+* #1392 : Simplified MongoDB configuration
++
+IMPORTANT: This requires a change in your configuration files. See https://opfab.github.io/documentation/archives/2.8.0.RELEASE/docs/single_page_doc.html#_simplification_mongodb_configuration[migration guide] for details.
++
+* #1417 : Remove unused code in tools/generic/utilities
+* #1312 : Caching cypress installation to speed up CI/CD
+* #1413 : Only trigger UI build if inputs or outputs have changed
+* #1359 : Remove dependency reporting plugins from Gradle build
++
+Reports regarding dependency licences and security vulnerabilities are now provided by LFX Security
++
+* #1454 : Handlebars helpers - Fix dateFormat to work with strings + new helper objectContainsKey
