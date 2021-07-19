@@ -59,7 +59,7 @@ sed -i "s/$oldVersion/$newVersion/g" VERSION;
 
 echo "Replacing $oldVersion with $newVersion in swagger.yaml files"
 find . -name swagger.yaml | xargs sed -i "s/\(version: *\)$oldVersion/\1$newVersion/g";
-# With the current commmand, if the "version" key appears somewhere else in the file it will be affected as well.
+# With the current command, if the "version" key appears somewhere else in the file it will be affected as well.
 # That's why oldVersion is part of the pattern, as it is less likely that another version key would appear with the exact same value.
 # The issue is that if the value has been mistakenly modified and is not $oldVersion, it won't be updated
 

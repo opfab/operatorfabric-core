@@ -5,7 +5,6 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-:jira_release_page: https://opfab.atlassian.net/projects/OC?orderField=RANK&selectedItem=com.atlassian.jira.jira-projects-plugin%3Arelease-page&status=all
 :opfab_core_repo: https://github.com/opfab/operatorfabric-core
 
 [[release_process]]
@@ -35,17 +34,14 @@ Before releasing a version, you need to prepare the release.
 
 === Checking the release notes
 
-. Click the `Next Release` from
-link:{jira_release_page}[JIRA the release list]
-to get the release notes (click "Release notes" under the version name at the top) listing new features, fixed bugs etc...
-+
-image::release_notes.png[Release notes link]
+. On the https://github.com/opfab/operatorfabric-core/projects[`Projects` tab] of the core repository, click on the
+project corresponding to the release that is about to be released.
 . Make sure that the
-link:https://github.com/opfab/release-notes/blob/master/release_notes.adoc[release_notes.adoc]
+link:https://github.com/opfab/release-notes/blob/master/release_notes.md[release_notes.md]
 file lists all the issues, bugs, tags or feature requests that are relevant for OperatorFabric users along with
 explanations if need be.
 
-. Based on the content of this version and the rules listed above, determine the version number for next version.
+. Based on the content of this version and the rules listed above, make sure that the version number is appropriate.
 
 === Creating a release branch and preparing the release
 
@@ -55,16 +51,7 @@ explanations if need be.
 ----
 git checkout -b X.X.X.release
 ----
-
-. Cut the contents from the release_notes.adoc file from the
-link:https://github.com/opfab/release-notes/[release-notes repository] and paste it to the release_notes.adoc file
-found under *src/docs/asciidoc/docs* in the link:{opfab_core_repo}[operatorfabric-core repository].
-
-. In the link:{opfab_core_repo}[operatorfabric-core repository] release-notes.adoc file, replace the `Version SNAPSHOT`
-title by `Version X.X.X.RELEASE`
-
-. In the link:{jira_release_page}[releases page on JIRA], change the name from "Next Version" to "X.X.X.RELEASE"
-
++
 . Use the ./CICD/prepare_release_version.sh script to automatically perform all the necessary changes:
 +
 ----
@@ -97,7 +84,7 @@ This script performs the following changes:
 +
 ----
 git add .
-git commit -m "[RELEASE] X.X.X.RELEASE"
+git commit -s -m "[RELEASE] X.X.X.RELEASE"
 ----
 +
 . Push the commit
@@ -110,10 +97,8 @@ git push --set-upstream origin X.X.X.release
 +
 You can check the status of the build job triggered by the commit on
 link:https://travis-ci.com/opfab/operatorfabric-core/branches[Travis CI].
-The build job should have the following three stages:
-+
-image::release_branch_build.png[Running build for release branch screenshot]
-+
+The build job should have two stages: `test-sonar` and `docker-tag-version`.
+
 Wait for the build to complete (around 20 minutes) and check that all stages have been successful.
 This ensures that the code builds, tests are OK and there is no error preventing documentation or Docker images
 generation.
@@ -155,7 +140,7 @@ The build job should have the following four stages (or three if the images aren
 +
 image::master_branch_build.png[Running build for master branch screenshot]
 +
-Wait for the build to complete (around 20 minutes) and check that all stages have been successful.
+Wait for the build to complete (around 40 minutes) and check that all stages have been successful.
 
 . Check that the `X.X.X.RELEASE` images have been generated and pushed to DockerHub.
 
@@ -168,7 +153,7 @@ Wait for the build to complete (around 20 minutes) and check that all stages hav
 and that the links work.
 
 . Check that the tag was correctly pushed to GitHub and is visible under the
-https://github.com/opfab/operatorfabric-core/releases[releases page] for the repository.
+https://github.com/opfab/operatorfabric-core/tags[tags page] for the repository.
 
 === Checking the docker-compose files
 
@@ -181,6 +166,17 @@ previous steps has completed successfully, and you can see X.X.X.RELEASE images 
 
 People who want to experiment with OperatorFabric are pointed to this docker-compose so it's important to make sure
 that it's working correctly.
+
+=== Publishing the release on GitHub
+
+. On the https://github.com/opfab/operatorfabric-core/releases[`releases` screen] for the core repository, draft a new
+release.
+.. Select the existing X.X.X.RELEASE tag
+.. The title should be X.X.X.RELEASE
+.. In the description field, paste the content from the release_notes.md file from the
+link:https://github.com/opfab/release-notes/[release-notes repository].
+.. Replace any "TODO" comments with the appropriate links to the documentation.
+.. Click "Publish release"
 
 [[publishing_client_lib_release]]
 === Publishing the jars for the client library to Maven Central
@@ -240,31 +236,18 @@ image::confirm_release_to_maven_central.png[Release to Maven Central]
 
 . It can take up to two hours for them to appear on the https://search.maven.org/search?q=opfab[Maven Central Repository Search].
 
-=== In Jira
-
-In the "Releases" screen, release `X.X.X.RELEASE`.
-
 === Advertising the new release on the LFE mailing list
 
-. Send an email to the opfab-announce@lists.lfenergy.org mailing list with a link to the release notes on the website.
+. Send an email to the opfab-announce@lists.lfenergy.org mailing list with a link to the release notes on GitHub.
 
 NOTE: Here is the link to the link:https://lists.lfenergy.org/g/main[administration website for the LFE mailing lists]
 in case there is an issue.
 
 === Preparing the next version
 
-IMPORTANT: You should wait for all the tasks associated with creating the X.X.X.RELEASE
-version to finish and make sure that they've had the expected output before starting the
-preparation of the next version. This is because any committed/pushed changes preparing the
-new version will make rolling back or correcting any mistake on the release more complicated.
-
-==== In Jira
-
-In the "Releases" screen create a new release called `Next Release`.
-
 ==== On the release-notes repository
 
-Remove the items listed in the release_notes.adoc file so it's ready for the next version.
+Remove the items listed in the release_notes.md file so it's ready for the next version.
 
 ==== On the operatorfabric-core repository
 
@@ -277,6 +260,9 @@ git branch -d X.X.X.release <1>
 <1> Delete the branch locally
 
 NOTE: You should also delete the branch on GitHub.
+
+You should also close the project for this version, and create one for the next version if it doesn't already exist
+(use the "Automated Kanban" template).
 
 == Releasing a Patch (Hotfixes) Version
 
@@ -300,9 +286,6 @@ If branch `X.X.hotfixes` already exists, you can just check it out.
 git checkout X.X.hotfixes
 ----
 
-You also need to create the corresponding release on JIRA so it can be defined as "Fix version" once the fixes are 
-completed.
-
 Then, follow the process described
 ifdef::single-page-doc[<<working_on_hotfix, here>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/community/index.adoc#working_on_hotfix, here>>] to
@@ -311,10 +294,8 @@ create feature branches, work on fixes and merge them back into `X.X.hotfixes`.
 Once all the big fixes that need to go into the version X.X.X.RELEASE have been merged into branch `X.X.hotfix`, you
 can release the patch version. To do so:
 
-. Write a release notes detailing the bug fixes in the release_notes.adoc file found under 
+. Write a release notes detailing the bug fixes in the release_notes.md file found under
 *src/docs/asciidoc/docs* in the link:{opfab_core_repo}[operatorfabric-core repository].
-
-. Make sure all the issues that have been fixed have "X.X.X.RELEASE" as their "Fix Version" on JIRA.
 
 . Use the ./CICD/prepare_release_version.sh script to automatically perform all the necessary changes:
 +

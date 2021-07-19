@@ -86,12 +86,11 @@ for prj in "${OF_CLIENT_REL_COMPONENTS[@]}"; do
   cp -r client/$prj/build/docs/api/* $HOME/documentation/documentation/archives/$OF_VERSION/api/$prj/
 done
 
-# Copy asciidoctor documentation (only release notes and single_file_doc)
+# Copy asciidoctor documentation (only single_file_doc)
 mkdir -p $HOME/documentation/documentation/archives/$OF_VERSION/
 mkdir -p $HOME/documentation/documentation/archives/$OF_VERSION/images/
 mkdir -p $HOME/documentation/documentation/archives/$OF_VERSION/pdf/
 mkdir -p $HOME/documentation/documentation/archives/$OF_VERSION/docs/
-cp $OF_HOME/build/asciidoc/html5/docs/release_notes.html $HOME/documentation/documentation/archives/$OF_VERSION/docs/
 cp $OF_HOME/build/asciidoc/html5/docs/single_page_doc.html $HOME/documentation/documentation/archives/$OF_VERSION/docs/
 cp -r $OF_HOME/build/asciidoc/html5/images/* $HOME/documentation/documentation/archives/$OF_VERSION/images/
 cp -r $OF_HOME/build/asciidoc/html5/pdf/* $HOME/documentation/documentation/archives/$OF_VERSION/pdf/
