@@ -63,16 +63,16 @@
 
         <div *ngIf='responseDataExists && showDetailCardHeader' class="opfab-card-response-header">
           <div class="flex-container">
-            <div style="width:30%;">
-              <span *ngIf="!!cardState.type">
-              <span style="padding-left:15px" translate>response.status</span> :
-              <span class="opfab-typeOfState-{{cardState.type}}" translate>monitoring.filters.typeOfState.{{cardState.type}}&nbsp;&nbsp;</span>
+            <div id="opfab-card-response-header-left" style="width:30%;">
+              <span id="opfab-card-response-header-status" *ngIf="!!cardState.type">
+                <span style="padding-left:15px" translate>response.status</span> :
+                <span class="opfab-typeOfState-{{cardState.type}}" translate>monitoring.filters.typeOfState.{{cardState.type}}</span>
               </span>
               <span *ngIf="!!card.lttd && !!cardState.type"> | </span>
               <span *ngIf="!!card.lttd"><of-countdown [lttd]="card.lttd"></of-countdown></span>
             </div>
 
-            <div style="width:70%;text-align: right">
+            <div id="opfab-card-response-header-right" style="width:70%;text-align: right">
               <div id="opfab-answer-help" class="opfab-icon-help" placement="left" [ngbPopover]="helpContent"
                 container="body" triggers="mouseenter:mouseleave" popoverClass="opfab-popover">
               </div>

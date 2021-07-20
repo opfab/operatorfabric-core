@@ -13,6 +13,30 @@
     {
       "state": "messageStateWithOnlyWhenResponseDisabledForUserAck",
       "right": "ReceiveAndWrite"
+    },
+    {
+      "state": "stateOfTypeINPROGRESS",
+      "right": "ReceiveAndWrite"
+    },
+    {
+      "state": "stateOfTypeFINISHED",
+      "right": "ReceiveAndWrite"
+    },
+    {
+      "state": "stateOfTypeCANCELED",
+      "right": "ReceiveAndWrite"
+    },
+    {
+      "state": "stateOfTypeNull",
+      "right": "ReceiveAndWrite"
+    },
+    {
+      "state": "stateWithNoType",
+      "right": "ReceiveAndWrite"
+    },
+    {
+      "state": "dummyResponseState",
+      "right": "ReceiveAndWrite"
     }
   ]
 }

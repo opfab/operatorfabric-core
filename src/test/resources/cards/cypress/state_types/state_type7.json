@@ -1,0 +1,19 @@
+{
+	"publisher" : "publisher_test",
+	"processVersion" : "1",
+	"process"  :"cypress",
+	"processInstanceId" : "state_type7",
+	"state": "stateOfTypeNull",
+	"userRecipients": ["operator1","operator2"],
+	"severity" : "INFORMATION",
+	"startDate" : ${current_date_in_milliseconds_from_epoch},
+	"endDate" : ${current_date_in_milliseconds_from_epoch_plus_8hours} ,
+	"lttd" : ${current_date_in_milliseconds_from_epoch},
+	"summary" : {"key" : "stateOfType.summary"},
+	"title" : {"key" : "stateOfTypeNull.title"},
+	"data" : {"message":" State type tests card number 7"},
+	"timeSpans" : [
+		{"start" :${current_date_in_milliseconds_from_epoch_plus_2hours}},
+		{"start" : ${current_date_in_milliseconds_from_epoch_plus_8hours}}
+		]
+}

@@ -12,6 +12,26 @@
 	} ,
 	"messageStateWithOnlyWhenResponseDisabledForUserAck": {
 		"description": "Message with ack only when response disable for user "
+	},
+	"stateOfType": {
+		"summary": "Shared summary for tests"
+	},
+	"stateOfTypeINPROGRESS": {
+		"title": "Test state of type INPROGRESS"
+	},
+	"stateOfTypeCANCELED": {
+		"title": "Test state of type CANCELED"
+	},
+	"stateOfTypeFINISHED": {
+		"title": "Test state of type FINISHED"
+	},
+	"stateOfTypeNull": {
+		"title": "Test state of type null"
+	},
+	"stateWithNoType": {
+		"title": "Test state with no type"
+	},
+	"dummyResponseState": {
+		"title": "Dummy response state for tests"
 	}
-	
 }
