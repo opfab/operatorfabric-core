@@ -81,8 +81,8 @@ export class CardService {
               startWith(value)
             )
           ))
-            .subscribe(
-                operation => {
+            .subscribe( {
+                next: operation => {
                     switch (operation.type) {
                         case CardOperationType.ADD:
                             console.log(new Date().toISOString(), `CardService - Receive card to add id=`, operation.card.id);
@@ -97,11 +97,12 @@ export class CardService {
                                 {error: new Error(`unhandled action type '${operation.type}'`)})
                             );
                     }
-                }, (error) => {
+                },
+                error: (error) => {
                     console.error('CardService - Error received from  getCardSubscription ', error);
                     this.store.dispatch(new AddLightCardFailure({error: error}));
                 }
-            );
+            });
         catchError((error, caught) => {
             console.error('CardService - Global  error in subscription ', error);
             return caught;
@@ -121,7 +122,7 @@ export class CardService {
                 headers: securityHeader,
                 // if necessary , we cans set here  heartbeatTimeout: xxx (in ms)
             });
-        return Observable.create(observer => {
+        return new Observable(observer => {
             try {
                 eventSource.onmessage = message => {
                     if (!message) {

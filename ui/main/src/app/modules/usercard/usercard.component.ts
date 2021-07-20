@@ -367,16 +367,18 @@ export class UserCardComponent implements OnDestroy, OnInit {
             const templateName = userCard.template;
 
             this.handlebars.queryTemplate(this.selectedProcess.id, this.selectedProcess.version, templateName)
-                .pipe(map(t => t(new DetailContext(card, null, null)))).subscribe((template) => {
-                    this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml(template);
-                    setTimeout(() => { // wait for DOM rendering
-                        this.reinsertScripts();
-                    }, 10);
-                }, (error) =>  {
-                    console.log('WARNING impossible to load template ', templateName , ', error = ' , error);
-                    this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
-                }
-                );
+                .pipe(map(t => t(new DetailContext(card, null, null))))
+                .subscribe({
+                    next: (template) => {
+                        this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml(template);
+                        setTimeout(() => { // wait for DOM rendering
+                            this.reinsertScripts();
+                        }, 10);},
+                    error:(error) =>  {
+                        console.log('WARNING impossible to load template ', templateName , ', error = ' , error);
+                        this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
+                    }
+                });
         } else this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
 
         if (!!userCard) {

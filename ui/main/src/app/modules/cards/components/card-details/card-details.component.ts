@@ -60,31 +60,31 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
                 if (!!card) {
                     this.businessconfigService.queryProcess(card.process, card.processVersion)
                         .pipe(takeUntil(this.unsubscribe$))
-                        .subscribe(businessconfig => {
-                            this.card = card;
-                            this.childCards = childCards;
-                            if (!!businessconfig) {
-                                this.cardState = businessconfig.extractState(card);
-                                if (!this.cardState) {
-                                    console.log(new Date().toISOString(), `WARNING state ${card.state} does not exist for process ${card.process}`);
+                        .subscribe({
+                            next: businessconfig => {
+                                this.card = card;
+                                this.childCards = childCards;
+                                if (!!businessconfig) {
+                                    this.cardState = businessconfig.extractState(card);
+                                    if (!this.cardState) {
+                                        console.log(new Date().toISOString(), `WARNING state ${card.state} does not exist for process ${card.process}`);
+                                        this.cardState = new State();
+                                    }
+                                } else {
+                                    console.log(new Date().toISOString(), `WARNING process `
+                                        + ` ${card.process} with version ${card.processVersion} does not exist.`)
                                     this.cardState = new State();
                                 }
-                            }
-                            else {
-                                console.log(new Date().toISOString(), `WARNING process `
-                                    + ` ${card.process} with version ${card.processVersion} does not exist.`)
-                                this.cardState = new State();
-                            }
 
-                        },
-                            error => {
+                            },
+                            error: error => {
                                 console.log(new Date().toISOString(), `WARNING process `
                                     + ` ${card.process} with version ${card.processVersion} does not exist.`);
                                 this.card = card;
                                 this.childCards = childCards;
                                 this.cardState = new State();
                             }
-                        );
+                        });
                 }
             });
 

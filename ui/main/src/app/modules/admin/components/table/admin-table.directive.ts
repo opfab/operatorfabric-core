@@ -219,7 +219,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
               this.refreshData();
             });
       }
-    }).catch(() => throwError(new AppError(null)));
+    }).catch(() => throwError(() => new AppError(null)));
   }
 
   createNewItem(): void {
