@@ -15,5 +15,14 @@
   ],
   "gradle-lite": {
     "fileMatch": ["versions.properties"]
-  }
+  },
+  "packageRules": [
+    {
+      "groupName": "angular",
+      "matchPackagePrefixes": [
+        "@angular/",
+        "@angular-devkit/"
+      ]
+    }
+  ]
 }
