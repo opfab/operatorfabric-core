@@ -9,18 +9,16 @@
 
 describe ('Response card tests',function () {
 
-    before('Set up configuration', function () {
+    before('Set up configuration and clean cards', function () {
 
         // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
         cy.resetUIConfigurationFiles();
 
         cy.loadTestConf();
-        cy.deleteTestCards();
-        cy.sendCard('defaultProcess/question.json');
-    });
+        // Clean up existing cards
+        cy.deleteAllCards();
 
-    after('Clean', function () {
-        cy.deleteTestCards();
+        cy.sendCard('defaultProcess/question.json');
     });
 
 

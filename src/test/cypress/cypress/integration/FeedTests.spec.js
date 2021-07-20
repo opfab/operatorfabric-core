@@ -15,13 +15,13 @@ describe ('FeedScreen tests',function () {
         cy.resetUIConfigurationFiles();
 
         cy.loadTestConf();
-        cy.deleteTestCards();
-        cy.sendTestCards();
+
+        // Clean up existing cards
+        cy.deleteAllCards();
+
+        cy.send6TestCards();
     });
 
-    after('Clean', function () {
-        cy.deleteTestCards();
-    });
 
 
     it('Check card reception and read behaviour', function () {
@@ -108,7 +108,9 @@ describe ('FeedScreen tests',function () {
 
 
         // If we delete all the cards, the feed should be empty and the detail view should also be empty
-        cy.deleteTestCards();
+        // Note: Here we use the `delete6TestCards` method which relies on API calls to delete cards as we want
+        // the deletion to be reflected in the feed immediately.
+        cy.delete6TestCards();
         cy.get('of-light-card').should('have.length',0);
         cy.get('of-card-details').should('not.exist');
 

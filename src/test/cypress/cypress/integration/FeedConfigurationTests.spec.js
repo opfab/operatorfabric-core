@@ -9,10 +9,10 @@
 
 describe ('Feed configuration tests',function () {
 
-    before('Set up configuration', function () {
+    before('Set up configuration and cards', function () {
         cy.loadTestConf();
-        cy.deleteTestCards();
-        cy.sendTestCards(); // The feed needs to have cards so the "Acknowledge all cards" feature can be shown
+        cy.deleteAllCards();
+        cy.send6TestCards(); // The feed needs to have cards so the "Acknowledge all cards" feature can be shown
     });
 
     beforeEach('Reset UI configuration file ', function () {
