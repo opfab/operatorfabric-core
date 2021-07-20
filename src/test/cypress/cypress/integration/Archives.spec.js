@@ -1,10 +1,10 @@
 
 describe ('Archives screen tests',function () {
 
-    before('Set up configuration', function () {
+    before('Set up configuration and clean archived cards', function () {
         cy.loadTestConf();
         cy.deleteAllArchivedCards();
-        cy.sendTestCards();
+        cy.send6TestCards();
     });
 
 
@@ -27,14 +27,14 @@ describe ('Archives screen tests',function () {
         cy.get('#opfab-archive-results-number').should('have.text', ' Results number  : 6 ')
 
         // We delete the test cards and we check that we still have the corresponding archived cards
-        cy.deleteTestCards();
+        cy.deleteAllCards();
         cy.get('#opfab-archives-btn-search').click();
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length',6);
         cy.get('of-card-detail').should('not.exist');
         cy.get('#opfab-archive-results-number').should('have.text', ' Results number  : 6 ')
 
         // We send again the test cards and we check that the we have 12 archived cards (10 archived cards displayed for first page)
-        cy.sendTestCards();
+        cy.send6TestCards();
         cy.get('#opfab-archives-btn-search').click();
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length',10);
         cy.get('of-card-detail').should('not.exist');
