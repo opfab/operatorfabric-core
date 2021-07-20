@@ -132,10 +132,10 @@ export class EditPerimeterModalComponent implements OnInit {
 
   update() {
     this.cleanForm();
-    this.crudService.update(this.perimeterForm.value).subscribe(res => 
-      this.onSavesuccess(),
-      err => this.onSaveError(err)
-    );
+    this.crudService.update(this.perimeterForm.value).subscribe({
+        next: res => this.onSavesuccess(),
+        error: err => this.onSaveError(err)
+    });
   }
 
   onSavesuccess() {

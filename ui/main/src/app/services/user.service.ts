@@ -95,19 +95,18 @@ export class UserService extends CrudService {
 
   }
 
-
   public loadUserWithPerimetersData(): Observable<any> {
     return this.currentUserWithPerimeters()
       .pipe(takeUntil(this.ngUnsubscribe)
-      , tap(
-        (userWithPerimeters) => {
+      , tap({
+        next: (userWithPerimeters) => {
           if (!!userWithPerimeters) {
             this._userWithPerimeters = userWithPerimeters;
             console.log(new Date().toISOString(), 'User perimeter loaded');
             this.loadUserRightsPerProcessAndState();
           }
-        }, (error) => console.error(new Date().toISOString(), 'An error occurred when loading perimeter', error)
-      ));
+        }, error: (error) => console.error(new Date().toISOString(), 'An error occurred when loading perimeter', error)
+      }));
   }
 
   public getCurrentUserWithPerimeters(): UserWithPerimeters {

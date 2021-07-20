@@ -31,10 +31,9 @@ export class I18nService {
 
     constructor(private httpClient: HttpClient, private translate: TranslateService, private store: Store<AppState>) {
         I18nService.localUrl = `${environment.paths.i18n}`;
-        combineLatest(
+        combineLatest([
             this.store.select(buildSettingsOrConfigSelector('locale')),
-            this.store.select(buildSettingsOrConfigSelector('timeZone')))
-
+            this.store.select(buildSettingsOrConfigSelector('timeZone'))])
             .subscribe(([locale, timeZone]) => this.changeLocale(locale, timeZone));
 
     }
@@ -65,10 +64,10 @@ export class I18nService {
     }
 
     public loadLocale(locale: string): Observable<any> {
-        return this.httpClient.get(`${I18nService.localUrl}${locale}.json`).pipe( tap(translation =>
-                this.translate.setTranslation(locale, translation, true)
-            ,
-            error => console.log(new Date().toISOString(),`Error : impossible to load locale ${I18nService.localUrl}${locale}.json`)));
+        return this.httpClient.get(`${I18nService.localUrl}${locale}.json`).pipe( tap({
+            next: translation => this.translate.setTranslation(locale, translation, true),
+            error: error => console.log(new Date().toISOString(),`Error : impossible to load locale ${I18nService.localUrl}${locale}.json`)
+        }));
     }
 
 

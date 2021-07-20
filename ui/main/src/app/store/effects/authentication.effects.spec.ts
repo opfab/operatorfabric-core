@@ -115,7 +115,7 @@ describe('AuthenticationEffects', () => {
         });
         it('should fail if JWT is not generated from backend', () => {
             const localAction$ = new Actions(hot('-a--', {a: new TryToLogIn({username: 'johndoe', password: 'pwd'})}));
-            authenticationService.askTokenFromPassword.and.returnValue(throwError('Something went wrong'));
+            authenticationService.askTokenFromPassword.and.returnValue(throwError(() => 'Something went wrong'));
             effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, null,translate,configService);
             expect(effects).toBeTruthy();
             effects.TryToLogIn.subscribe((action: AuthenticationActions) => expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn))
@@ -168,8 +168,8 @@ describe('AuthenticationEffects', () => {
         });
         it('should fail if has no valid token and an invalid code', () => {
             const localAction$ = new Actions(hot('-a--', {a: new CheckAuthenticationStatus()}));
-            authenticationService.checkAuthentication.and.returnValue(throwError('no valid token'));
-            authenticationService.askTokenFromCode.and.returnValue(throwError('no valid code'));
+            authenticationService.checkAuthentication.and.returnValue(throwError(() => 'no valid token'));
+            authenticationService.askTokenFromCode.and.returnValue(throwError(() => 'no valid code'));
             mockStore.select.and.returnValue(of('code'));
             effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router,translate,configService);
             expect(effects).toBeTruthy();

@@ -68,14 +68,15 @@ export class PerimetersService extends CachedCrudService implements OnDestroy {
   public loadAllPerimetersData(): Observable<any> {
     return this.getAllPerimeters()
         .pipe(takeUntil(this.ngUnsubscribe$)
-            , tap(
-                (perimeters) => {
+            , tap({
+                next: (perimeters) => {
                   if (!!perimeters) {
                     this._perimeters = perimeters;
                     console.log(new Date().toISOString(), 'List of perimeters loaded');
                   }
-                }, (error) => console.error(new Date().toISOString(), 'an error occurred', error)
-            ));
+                },
+              error: (error) => console.error(new Date().toISOString(), 'an error occurred', error)
+            }));
   }
 
   public getPerimeters(): Perimeter[] {

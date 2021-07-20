@@ -83,10 +83,10 @@ export class ConfigService {
             if (entry.length === 1) {
                 return of(entry[0].url);
             } else {
-                return throwError(new Error('No such menu entry.'));
+                return throwError(() => new Error('No such menu entry.'));
             }
         } else {
-            return throwError(new Error('No such menu entry.'));
+            return throwError(() => new Error('No such menu entry.'));
         }
     }
 

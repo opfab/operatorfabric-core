@@ -68,14 +68,15 @@ export class GroupsService extends CachedCrudService implements OnDestroy {
   public loadAllGroupsData(): Observable<any> {
     return this.getAllGroups()
         .pipe(takeUntil(this.ngUnsubscribe$)
-            , tap(
-                (groups) => {
+            , tap({
+                next: (groups) => {
                   if (!!groups) {
                     this._groups = groups;
                     console.log(new Date().toISOString(), 'List of groups loaded');
                   }
-                }, (error) => console.error(new Date().toISOString(), 'an error occurred', error)
-            ));
+                },
+              error:(error) => console.error(new Date().toISOString(), 'an error occurred', error)
+            }));
   }
 
   public getGroups(): Group[] {

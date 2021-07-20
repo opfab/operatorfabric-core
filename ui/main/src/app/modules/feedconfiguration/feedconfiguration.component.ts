@@ -218,8 +218,8 @@ export class FeedconfigurationComponent implements OnInit {
 
         this.settingsService.patchUserSettings({login: this.currentUserWithPerimeters.userData.login,
             processesStatesNotNotified: Object.fromEntries(processesStatesNotNotifiedUpdate)})
-            .subscribe(
-                resp => {
+            .subscribe({
+                next: resp => {
                     this.messageAfterSavingSettings = '';
                     const msg = resp.message;
                     if (!!msg && msg.includes('unable')) {
@@ -232,13 +232,13 @@ export class FeedconfigurationComponent implements OnInit {
                     }
                     this.modalRef.close();
                 },
-                err => {
+                error: err => {
                     console.error('Error when saving settings :', err);
                     this.modalRef.close();
                     this.messageAfterSavingSettings = 'feedConfiguration.error.impossibleToSaveSettings';
                     this.displaySendResultError = true;
                 }
-            );
+            });
     }
 
     open(content) {

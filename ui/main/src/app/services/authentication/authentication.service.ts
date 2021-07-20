@@ -200,7 +200,7 @@ export class AuthenticationService {
     askTokenFromCode(code: string):
         Observable<PayloadForSuccessfulAuthentication> {
         if (!this.clientId || !this.loginClaim) {
-            return throwError('The authentication service is no correctly initialized');
+            return throwError(() => 'The authentication service is no correctly initialized');
         }
         const params = new URLSearchParams();
         params.append('code', code);
@@ -223,7 +223,7 @@ export class AuthenticationService {
      */
     askTokenFromPassword(login: string, password: string): Observable<any> {
         if (!this.clientId) {
-            return throwError('The authentication service is no correctly initialized');
+            return throwError(() => 'The authentication service is no correctly initialized');
         }
         const params = new URLSearchParams();
         params.append('username', login);
@@ -346,7 +346,7 @@ export class AuthenticationService {
 
     public moveToCodeFlowLoginPage() {
         if (!this.clientId) {
-            return throwError('The authentication service is no correctly initialized');
+            return throwError(() => 'The authentication service is no correctly initialized');
         }
         if (!this.delegateUrl) {
             window.location.href = `${environment.urls.auth}/code/redirect_uri=${this.computeRedirectUri()}`;
