@@ -111,3 +111,7 @@ Cypress.Commands.add('deleteCoreMenuFromConf', (menu) => {
 Cypress.Commands.add('deleteAllArchivedCards', () => {
     cy.exec('cd .. && ./resources/deleteAllArchivedCards.sh '+Cypress.env('host'));
 })
+
+Cypress.Commands.add('deleteAllCards', () => {
+    cy.exec('cd .. && ./resources/deleteAllCards.sh '+Cypress.env('host'));
+})
