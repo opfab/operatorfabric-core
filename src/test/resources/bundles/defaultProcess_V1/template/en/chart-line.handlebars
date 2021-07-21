@@ -1,50 +1,43 @@
-
 <h4 style="text-align:center">
-Daily electrical consumption forecast
+    Daily electrical consumption forecast
 </h4>
-
-
-<table width="100%">
-    <tr> 
-        <td width="25%"></td>
-<td><canvas id="myChart" width='600' height='400' ></canvas> </td>
-<td  width="25%"></td>
-    </tr>
-</table>
+<div style="position: relative; height:80%; width:80%;margin:auto">
+    <canvas id="myChart"></canvas>
+</div>
 
 <script>
-var ctx = document.getElementById('myChart').getContext('2d');
-var opfabColor = getComputedStyle(document.body).getPropertyValue('--opfab-text-color');
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var opfabColor = getComputedStyle(document.body).getPropertyValue('--opfab-text-color');
 
-if (window.myChart instanceof Chart) {
-    window.myChart.destroy();
-}
+    if (window.myChart instanceof Chart) {
+        window.myChart.destroy();
+    }
 
-window.myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: ['0h', '4h', '8h', '12h', '16h', '20h','24h'],
-        datasets: [{
-             label: 'Daily Electrical consumption',
-            data : [{{card.data.values}}],
-            fill : false,
+    window.myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['0h', '4h', '8h', '12h', '16h', '20h', '24h'],
+            datasets: [{
+                label: 'Daily Electrical consumption',
+                data: [{{card.data.values}}],
+            fill: false,
             backgroundColor: 'rgba(54, 162, 235, 0.2)',
             borderColor: 'rgba(54, 162, 235, 1)',
             tension: 0.4
         }]
     },
-    options: {
-
+        options: {
+        maintainAspectRatio: false,
         scales: {
             y: {
                 beginAtZero: true,
-                grid: {color:'rgba(100,100,100,0.2)'},
+                grid: {color: 'rgba(100,100,100,0.2)'},
                 ticks: {
                     color: opfabColor
                 }
             },
             x: {
-                grid: {color:'rgba(100,100,100,0.2)'},
+                grid: {color: 'rgba(100,100,100,0.2)'},
                 ticks: {
                     color: opfabColor
                 }
