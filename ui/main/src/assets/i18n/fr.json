@@ -1,7 +1,12 @@
 {
   "global":{
     "connectionLost":"Connexion perdue",
-    "tryToReconnect":"Tentative de reconnexion ..."
+    "tryToReconnect":"Tentative de reconnexion ...",
+    "typeOfState": {
+      "INPROGRESS": "EN COURS",
+      "FINISHED": "TERMINÉ",
+      "CANCELED": "ANNULÉ"
+    }
   },
   "menu": {
     "feed": "Flux de cartes",

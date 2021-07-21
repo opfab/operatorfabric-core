@@ -22,7 +22,7 @@ describe('State type tests', function () {
         {type: "INPROGRESS", color: orange, en_label: "IN PROGRESS", test_card: "state_type1"},
         {type: "FINISHED", color: green, en_label: "FINISHED", test_card: "state_type2"},
         {type: "CANCELED", color: red, en_label: "CANCELED",test_card: "state_type3"}
-        ];
+    ];
 
     const testDataNoStateNoLttd = [
         {type: null, test_card: "state_type4"},
@@ -55,13 +55,15 @@ describe('State type tests', function () {
 
     });
 
+    describe('Check UI behaviour that depends on state type', function () {
 
-    describe('Check card detail header', function () {
+        it(`Check card detail header`, function () {
 
-        testDataStateNoLttd.forEach((test_data) => {
-            it(`State type ${test_data.type} with no lttd`, function () {
+            cy.loginOpFab('operator1', 'test');
 
-                cy.loginOpFab('operator1', 'test');
+            // ----------------- Tests with state present and no lttd
+            testDataStateNoLttd.forEach((test_data) => {
+                cy.log(`State type ${test_data.type} with no lttd`);
 
                 // Click on the card with the state under test to display its details
                 cy.get(`#opfab-feed-light-card-${process}-${test_data.test_card}`).click();
@@ -76,13 +78,11 @@ describe('State type tests', function () {
                 cy.get('#opfab-card-response-header-left').contains('|').should('not.exist');
                 cy.get('#opfab-card-response-header-left').find('of-countdown').should('not.exist');
 
-            });
-        })
+            })
 
-        testDataNoStateNoLttd.forEach((test_data) => {
-            it(`State type ${test_data.type} with no lttd`, function () {
-
-                cy.loginOpFab('operator1', 'test');
+            // ----------------- Tests with no state (null or absent) and no lttd
+            testDataNoStateNoLttd.forEach((test_data) => {
+                cy.log(`State type ${test_data.type} with no lttd`);
 
                 // Click on the card with the state under test to display its details
                 cy.get(`#opfab-feed-light-card-${process}-${test_data.test_card}`).click();
@@ -90,12 +90,11 @@ describe('State type tests', function () {
                 // Check card details header: it should contain nothing on the left
                 cy.get('#opfab-card-response-header-left').should('be.empty');
 
-            });
-        })
 
-        it(`State (type FINISHED) with lttd`, function () {
+            })
 
-            cy.loginOpFab('operator1', 'test');
+            // ----------------- Test with state and lttd present
+            cy.log(`State (type FINISHED) with lttd`);
 
             // Click on the card with the state under test to display its details
             cy.get(`#opfab-feed-light-card-${process}-state_type6`).click();
@@ -110,18 +109,15 @@ describe('State type tests', function () {
             cy.get('#opfab-card-response-header-left').contains('|');
             cy.get('#opfab-card-response-header-left').find('.lttd-icon, .lttd-timeleft');
 
-        });
-
-        it(`No state (type null) with lttd`, function () {
-
-            cy.loginOpFab('operator1', 'test');
+            // ----------------- Test with no state but lttd present
+            cy.log(`No state (type null) with lttd`);
 
             // Click on the card with the state under test to display its details
             cy.get(`#opfab-feed-light-card-${process}-state_type7`).click();
 
             // Check card details header: it should contain only the time left before lttd and the clock
             cy.get('#opfab-card-response-header-left').contains('|').should('not.exist');
-                        cy.get('#opfab-card-response-header-left').find('.lttd-icon');
+            cy.get('#opfab-card-response-header-left').find('.lttd-icon');
             cy.get('#opfab-card-response-header-left').find('.lttd-text');
 
         });

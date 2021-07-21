@@ -66,7 +66,8 @@
             <div id="opfab-card-response-header-left" style="width:30%;">
               <span id="opfab-card-response-header-status" *ngIf="!!cardState.type">
                 <span style="padding-left:15px" translate>response.status</span> :
-                <span class="opfab-typeOfState-{{cardState.type}}" translate>monitoring.filters.typeOfState.{{cardState.type}}</span>
+                <!--The translate directive should stay there rather than in the element see OC-1603-->
+                <span class="opfab-typeOfState-{{cardState.type}}">{{"global.typeOfState."+cardState.type | translate}}</span>
               </span>
               <span *ngIf="!!card.lttd && !!cardState.type"> | </span>
               <span *ngIf="!!card.lttd"><of-countdown [lttd]="card.lttd"></of-countdown></span>
