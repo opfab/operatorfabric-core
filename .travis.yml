@@ -49,7 +49,7 @@ jobs:
       script:
         - docker login --username ${DOCKER_CLOUD_USER} --password ${DOCKER_CLOUD_PWD}
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
-        - ./gradlew --build-cache copyDependencies test jacocoTestReport dockerTag${OF_VERSION}
+        - ./gradlew --build-cache copyDependencies test jacocoTestReport dockerTag${OF_VERSION} || travis_terminate 1;
         - sonar-scanner
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
         # Launch karate tests
