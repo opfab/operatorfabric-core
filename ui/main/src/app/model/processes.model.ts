@@ -108,38 +108,3 @@ export enum TypeOfStateEnum {
     CANCELED = 'CANCELED'
 }
 
-export enum InputType {
-    TEXT,
-    LIST,
-    LIST_RADIO,
-    SWITCH_LIST,
-    LONGTEXT,
-    BOOLEAN,
-    STATIC
-}
-
-export class Input {
-    /* istanbul ignore next */
-    constructor(
-        readonly type: InputType,
-        readonly name: string,
-        readonly label: I18n,
-        readonly value: string,
-        readonly mandatory: boolean,
-        readonly maxLength: number,
-        readonly rows: number,
-        readonly values: ParameterListItem[],
-        readonly selectedValues: string[],
-        readonly unSelectedValues: string[],
-    ) {
-    }
-}
-
-export class ParameterListItem {
-    /* istanbul ignore next */
-    constructor(
-        readonly label: I18n,
-        readonly value: string,
-    ) {
-    }
-}
