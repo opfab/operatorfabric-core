@@ -3,7 +3,7 @@ plugins {
     id "org.asciidoctor.convert" version "1.6.1" //Upgrading to 2.4.0 changed the behaviour of {gradle-rootdir}, breaking all cross-document links
     id "maven-publish"
     id "signing"
-    id 'org.springframework.boot' version '2.5.1'
+    id 'org.springframework.boot' version '2.5.1' //This version determines the version for all Spring Boot dependencies below
     id 'org.sonarqube' version '3.2.0' apply false
 }
 
@@ -18,20 +18,20 @@ ext {
     ]
 
     boot = [
-            springBootPlugin        : "org.springframework.boot:spring-boot-gradle-plugin:$springBoot",
-            starterWeb              : "org.springframework.boot:spring-boot-starter-web:$springBoot",
-            starterWebflux          : "org.springframework.boot:spring-boot-starter-webflux:$springBoot",
-            actuator                : "org.springframework.boot:spring-boot-starter-actuator:$springBoot",
-            starterAop              : "org.springframework.boot:spring-boot-starter-aop:$springBoot",
-            starterJetty            : "org.springframework.boot:spring-boot-starter-jetty:$springBoot",
-            starterRabbitmq         : "org.springframework.boot:spring-boot-starter-amqp:$springBoot",
-            starterSecurity         : "org.springframework.boot:spring-boot-starter-security:$springBoot",
-            starterMongo            : "org.springframework.boot:spring-boot-starter-data-mongodb:$springBoot",
-            starterMongoR           : "org.springframework.boot:spring-boot-starter-data-mongodb-reactive:$springBoot",
-            starterTest             : "org.springframework.boot:spring-boot-starter-test:$springBoot",
-            starterValidation       : "org.springframework.boot:spring-boot-starter-validation:$springBoot",
-            annotationConfiguration : "org.springframework.boot:spring-boot-configuration-processor:$springBoot",
-            devTools                : "org.springframework.boot:spring-boot-devtools:$springBoot"
+            springBootPlugin        : "org.springframework.boot:spring-boot-gradle-plugin",
+            starterWeb              : "org.springframework.boot:spring-boot-starter-web",
+            starterWebflux          : "org.springframework.boot:spring-boot-starter-webflux",
+            actuator                : "org.springframework.boot:spring-boot-starter-actuator",
+            starterAop              : "org.springframework.boot:spring-boot-starter-aop",
+            starterJetty            : "org.springframework.boot:spring-boot-starter-jetty",
+            starterRabbitmq         : "org.springframework.boot:spring-boot-starter-amqp",
+            starterSecurity         : "org.springframework.boot:spring-boot-starter-security",
+            starterMongo            : "org.springframework.boot:spring-boot-starter-data-mongodb",
+            starterMongoR           : "org.springframework.boot:spring-boot-starter-data-mongodb-reactive",
+            starterTest             : "org.springframework.boot:spring-boot-starter-test",
+            starterValidation       : "org.springframework.boot:spring-boot-starter-validation",
+            annotationConfiguration : "org.springframework.boot:spring-boot-configuration-processor",
+            devTools                : "org.springframework.boot:spring-boot-devtools"
     ]
 
     spring = [
