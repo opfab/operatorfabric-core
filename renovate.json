@@ -6,8 +6,7 @@
     "schedule:nonOfficeHours"
   ],
   "branchPrefix": "FE-Renovate",
-  "prConcurrentLimit": 5,
-  "prHourlyLimit": 1,
+  "prConcurrentLimit": 6,
   "ignorePaths": [
     "**/node_modules/**",
     "**/bower_components/**",
