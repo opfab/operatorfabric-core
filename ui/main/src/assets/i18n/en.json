@@ -1,7 +1,12 @@
 {
   "global":{
     "connectionLost":"Connection lost",
-    "tryToReconnect":"Try to reconnect ..."
+    "tryToReconnect":"Try to reconnect ...",
+    "typeOfState" : {
+      "INPROGRESS" : "IN PROGRESS",
+      "FINISHED": "FINISHED",
+      "CANCELED" : "CANCELED"
+    }
   },
   "menu": {
     "feed": "Card Feed",
