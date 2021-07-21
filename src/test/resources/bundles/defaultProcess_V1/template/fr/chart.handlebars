@@ -3,13 +3,10 @@
 Un graphique 
 </h4>
 
-<table width="100%">
-    <tr> 
-        <td width="25%"></td>
-<td><canvas id="myChart" width='400' height='230' ></canvas> </td>
-<td  width="25%"></td>
-    </tr>
-</table>
+<div style="position: relative; height:80%; width:60%;margin:auto">
+    <canvas id="myChart"></canvas>
+</div>
+
 
 <!-- test for calling business application from a card --> 
 <br/>
@@ -49,6 +46,7 @@ window.myChart = new Chart(ctx, {
         }]
     },
     options: {
+        maintainAspectRatio: false,
         scales: {
             y: {
                 beginAtZero: true
