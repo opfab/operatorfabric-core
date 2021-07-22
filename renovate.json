@@ -2,8 +2,7 @@
   "extends": [
     "config:base",
     ":gitSignOff",
-    ":switchToGradleLite",
-    "schedule:nonOfficeHours"
+    ":switchToGradleLite"
   ],
   "branchPrefix": "FE-Renovate",
   "prConcurrentLimit": 6,
