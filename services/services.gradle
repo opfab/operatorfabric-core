@@ -41,8 +41,6 @@ subprojects {
             compile misc.micrometer
             annotationProcessor misc.lombok
             implementation misc.lombok
-            // needed to solve bug with previous version included in spring security 
-            implementation "com.nimbusds:nimbus-jose-jwt:9.11.1"
 
             testAnnotationProcessor misc.lombok
             testCompileOnly misc.lombok
