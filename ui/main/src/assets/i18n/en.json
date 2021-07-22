@@ -292,7 +292,7 @@
     "sendingCardInProgress": "Sending card in progress ..."
   },
   "response": {
-    "btnTitle": "VALIDATE ANSWER",
+    "btnValidate": "VALIDATE ANSWER",
     "btnUnlock": "MODIFY ANSWER",
     "error": {
       "submit": "The answer could not be sent",

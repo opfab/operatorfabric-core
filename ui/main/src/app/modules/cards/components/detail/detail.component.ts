@@ -39,7 +39,6 @@ import {Subject} from 'rxjs';
 import {Severity} from '@ofModel/light-card.model';
 import {AppService, PageType} from '@ofServices/app.service';
 import {User} from '@ofModel/user.model';
-import {Map} from '@ofModel/map';
 import {userRight} from '@ofModel/userWithPerimeters.model';
 import {ClearLightCardSelection,UpdateLightCardAcknowledgment, UpdateLightCardRead} from '@ofStore/actions/light-card.actions';
 import {UserService} from '@ofServices/user.service';
@@ -78,8 +77,7 @@ class FormResult {
 const enum ResponseI18nKeys {
     FORM_ERROR_MSG = 'response.error.form',
     SUBMIT_ERROR_MSG = 'response.error.submit',
-    SUBMIT_SUCCESS_MSG = 'response.submitSuccess',
-    BUTTON_TITLE = 'response.btnTitle'
+    SUBMIT_SUCCESS_MSG = 'response.submitSuccess'
 }
 
 const enum AckI18nKeys {
@@ -280,14 +278,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     get i18nPrefix() {
         return `${this.card.process}.${this.card.processVersion}.`;
-    }
-
-    get responseDataParameters(): Map<string> {
-        return this.cardState.response.btnText ? this.cardState.response.btnText.parameters : undefined;
-    }
-
-    get btnText(): string {
-      return ResponseI18nKeys.BUTTON_TITLE;
     }
 
     get responseDataExists(): boolean {

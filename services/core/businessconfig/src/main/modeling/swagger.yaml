@@ -468,9 +468,6 @@ definitions:
     description: defines a response to an action on the business process associated with the card
     type: object
     properties:
-      btnText:
-        description: Response i18n button text
-        $ref: '#/definitions/I18n'
       lock:
         description: If true, user can only act once
         type: boolean

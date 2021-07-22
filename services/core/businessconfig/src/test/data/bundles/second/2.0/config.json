@@ -12,9 +12,6 @@
       "response": {
         "lock": true,
         "state": "responseState",
-        "btnText": {
-          "key": "question.button.text"
-        },
         "externalRecipients": ["externalRecipient1", "externalRecipient2"]
       },
       "templateName": "template"
