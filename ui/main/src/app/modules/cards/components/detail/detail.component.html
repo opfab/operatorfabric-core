@@ -108,7 +108,7 @@
             <div *ngIf="showButtons" style="text-align: right;">
               <button id="opfab-card-details-btn-response" class="opfab-btn"
                 *ngIf='showActionButton && isActionEnabled && !isLocked' [disabled]='lttdExpiredIsTrue || !isActionEnabled'
-                (click)='submitResponse()'>{{btnText | translate:responseDataParameters}}</button>
+                (click)='submitResponse()' translate> response.btnValidate </button>
               <button id="opfab-card-details-btn-response" class="opfab-btn"
                 [disabled]='lttdExpiredIsTrue || !isActionEnabled' translate
                 *ngIf='showActionButton && isActionEnabled && isLocked' (click)='unlockAnswer()'>

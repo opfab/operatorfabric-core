@@ -6,10 +6,7 @@
     "longFormat": {
       "response": {
         "lock": true,
-        "state": "responseState",
-        "btnText": {
-          "key": "action.text"
-        }
+        "state": "responseState"
       },
       "templateName": "long-card",
       "styles": [
@@ -19,20 +16,7 @@
       "response": {
         "lock": true,
         "state": "responseState",
-        "btnText": {
-          "key": "action.text"
-        },
         "externalRecipients": ["externalRecipient1", "externalRecipient2"]
-      },
-      "templateName": "template1",
-      "styles": [
-        "main"
-      ]
-    },
-    "btnText_missing": {
-      "response": {
-        "lock": true,
-        "state": "responseState"
       },
       "templateName": "template1",
       "styles": [

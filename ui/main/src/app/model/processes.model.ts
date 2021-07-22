@@ -9,7 +9,6 @@
 
 
 import {Card} from '@ofModel/card.model';
-import {I18n} from '@ofModel/i18n.model';
 import {Map as OfMap} from '@ofModel/map';
 import {LightCard} from '@ofModel/light-card.model';
 
@@ -88,7 +87,6 @@ export class Response {
     constructor(
         readonly lock?: boolean,
         readonly state?: string,
-        readonly btnText?: I18n,
         readonly externalRecipients?: string[]
     ) {
     }
