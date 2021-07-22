@@ -2,10 +2,11 @@
   "extends": [
     "config:base",
     ":gitSignOff",
-    ":switchToGradleLite"
+    ":switchToGradleLite",
+    "schedule:nonOfficeHours"
   ],
   "branchPrefix": "FE-Renovate",
-  "prConcurrentLimit": 6,
+  "prConcurrentLimit": 7,
   "ignorePaths": [
     "**/node_modules/**",
     "**/bower_components/**",
