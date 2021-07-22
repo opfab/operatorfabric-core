@@ -40,11 +40,10 @@ import {Severity} from '@ofModel/light-card.model';
 import {AppService, PageType} from '@ofServices/app.service';
 import {User} from '@ofModel/user.model';
 import {userRight} from '@ofModel/userWithPerimeters.model';
-import {ClearLightCardSelection,UpdateLightCardAcknowledgment, UpdateLightCardRead} from '@ofStore/actions/light-card.actions';
+import {ClearLightCardSelection,UpdateLightCardRead} from '@ofStore/actions/light-card.actions';
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {ConfigService} from '@ofServices/config.service';
 import {TimeService} from '@ofServices/time.service';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {MessageLevel} from '@ofModel/message.model';
@@ -140,6 +139,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public showEditAndDeleteButton = false ;
     public showDetailCardHeader = false;
     public fromEntityOrRepresentative = null;
+    public formattedPublishDate =  "";
+    public formattedPublishTime = "";
+
+
     private lastCardSetToReadButNotYetOnFeed;
 
     modalRef: NgbModalRef;
@@ -160,7 +163,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 private userService: UserService,
                 private entitiesService: EntitiesService,
                 private modalService: NgbModal,
-                private configService: ConfigService,
                 private time: TimeService,
                 private acknowledgeService: AcknowledgeService,
                 private actionService: ActionService) {
@@ -265,15 +267,13 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         const previous = this.lttdExpiredIsTrue;
         this.checkLttdExpired();
         if (previous !== this.lttdExpiredIsTrue) {
-            // Wait one second before sending the information to the template
-            // to be synchronized with the countdown in card header and feed 
-            setTimeout( () => templateGateway.setLttdExpired(this.lttdExpiredIsTrue),1000);
+            templateGateway.setLttdExpired(this.lttdExpiredIsTrue);
             this.setButtonsVisibility();
         }
     }
 
     checkLttdExpired(): void {
-        this.lttdExpiredIsTrue = (this.card.lttd != null && Math.floor((this.card.lttd - new Date().getTime()) / 1000) <= 0);
+        this.lttdExpiredIsTrue = (this.card.lttd != null && (this.card.lttd - new Date().getTime()) <= 0);
     }
 
     get i18nPrefix() {
@@ -286,14 +286,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     get btnAckText(): string {
         return this.card.hasBeenAcknowledged ? AckI18nKeys.BUTTON_TEXT_UNACK : AckI18nKeys.BUTTON_TEXT_ACK;
-    }
-
-    getFormattedPublishDate(): any {
-        return  this.time.formatDate(this.card.publishDate);
-    }
-
-    getFormattedPublishTime(): any {
-        return  this.time.formatTime(this.card.publishDate);
     }
 
     submitResponse() {
@@ -359,7 +351,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             this.acknowledgeService.deleteUserAcknowledgement(this.card.uid).subscribe(resp => {
                 if (resp.status === 200 || resp.status === 204) {
                     this.card = {...this.card, hasBeenAcknowledged: false};
-                    this.updateAcknowledgementOnLightCard(false);
+                    this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id,false);
                 } else {
                     console.error('the remote acknowledgement endpoint returned an error status(%d)', resp.status);
                     this.displayMessage(AckI18nKeys.ERROR_MSG, null, MessageLevel.ERROR);
@@ -368,7 +360,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         } else {
             this.acknowledgeService.postUserAcknowledgement(this.card.uid).subscribe(resp => {
                 if (resp.status === 201 || resp.status === 200) {
-                    this.updateAcknowledgementOnLightCard(true);
+                    this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id,true);
                     this.closeDetails();
                 } else {
                     console.error('the remote acknowledgement endpoint returned an error status(%d)', resp.status);
@@ -378,9 +370,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         }
     }
 
-    updateAcknowledgementOnLightCard(hasBeenAcknowledged: boolean) {
-        this.store.dispatch(new UpdateLightCardAcknowledgment({cardId: this.card.id, hasBeenAcknowledged: hasBeenAcknowledged}));
-    }
 
     markAsReadIfNecessary() {
         if (this.card.hasBeenRead === false) {
@@ -438,6 +427,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.setButtonsVisibility();
         this.setShowDetailCardHeader();
         this.computeFromEntityOrRepresentative();
+        this.formattedPublishDate =  this.time.formatDate(this.card.publishDate);
+        this.formattedPublishTime = this.time.formatTime(this.card.publishDate);
     }
 
     private setEntitiesToRespond() {
@@ -528,25 +519,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER && 
                 (!this.isActionEnabled || (this.isActionEnabled && this.lttdExpiredIsTrue))));    }
 
-    /* 1st check : card.publisherType == ENTITY
-       2nd check : the card has been sent by an entity of the user connected
-       3rd check : the user has the Write access to the process/state of the card */
     private doesTheUserHavePermissionToDeleteOrEditCard(): boolean {
-        let permission = false;
-        const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
-
-        if ((this.card.publisherType === 'ENTITY') && (userWithPerimeters.userData.entities.includes(this.card.publisher))) {
-            userWithPerimeters.computedPerimeters.forEach(perim => {
-                if ((perim.process === this.card.process) &&
-                    (perim.state === this.card.state)
-                    && (DetailComponent.compareRightAction(perim.rights, RightsEnum.Write)
-                        || DetailComponent.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
-                    permission = true;
-                    return true;
-                }
-            });
-        }
-        return permission;
+        return this.actionService.doesTheUserHavePermissionToDeleteOrEditCard(this.userService.getCurrentUserWithPerimeters(),this.card);
     }
 
     get listVisibleEntitiesToRespond() {
