@@ -58,7 +58,7 @@
     "ngx-type-ahead": "2.0.1",
     "rxjs": "7.1.0",
     "svg-pan-zoom": "3.6.1",
-    "tslib": "2.2.0",
+    "tslib": "2.3.0",
     "xlsx": "0.17.0"
   },
   "devDependencies": {
