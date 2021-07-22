@@ -28,7 +28,7 @@ export class ActionService {
   public isUserEnabledToRespond(user: UserWithPerimeters, card: Card, processDefinition: Process): boolean {
 
     if (this.isLttdExpired(card))  return false;
-    
+
     const checkPerimeterForResponseCard = this.configService.getConfigValue('checkPerimeterForResponseCard');
 
     if (checkPerimeterForResponseCard === false)
@@ -84,6 +84,26 @@ export class ActionService {
     });
     return permission;
   }
+
+  /* 1st check : card.publisherType == ENTITY
+     2nd check : the card has been sent by an entity of the user connected
+     3rd check : the user has the Write access to the process/state of the card */
+  public doesTheUserHavePermissionToDeleteOrEditCard(user: UserWithPerimeters, card: Card): boolean {
+    let permission = false;
+    if ((card.publisherType === 'ENTITY') && (user.userData.entities.includes(card.publisher))) {
+      user.computedPerimeters.forEach(perim => {
+        if ((perim.process === card.process) &&
+          (perim.state === card.state)
+          && (this.compareRightAction(perim.rights, RightsEnum.Write)
+            || this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
+          permission = true;
+          return true;
+        }
+      });
+    }
+    return permission;
+  }
+
 
   private compareRightAction(userRights: RightsEnum, rightsAction: RightsEnum): boolean {
     return (userRight(userRights) - userRight(rightsAction)) === 0;
