@@ -26,6 +26,9 @@ export class ActionService {
               private entitiesService: EntitiesService) { }
 
   public isUserEnabledToRespond(user: UserWithPerimeters, card: Card, processDefinition: Process): boolean {
+
+    if (this.isLttdExpired(card))  return false;
+    
     const checkPerimeterForResponseCard = this.configService.getConfigValue('checkPerimeterForResponseCard');
 
     if (checkPerimeterForResponseCard === false)
@@ -33,6 +36,10 @@ export class ActionService {
     else
       return this.isUserInEntityAllowedToRespond(user, card)
           && this.doesTheUserHavePermissionToRespond(user, card, processDefinition);
+  }
+
+  private isLttdExpired(card: Card): boolean {
+      return (card.lttd != null && (card.lttd - new Date().getTime()) <= 0);
   }
 
   private isUserInEntityAllowedToRespond(user: UserWithPerimeters, card: Card): boolean {

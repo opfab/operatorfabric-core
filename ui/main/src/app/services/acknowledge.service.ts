@@ -45,28 +45,27 @@ export class AcknowledgeService {
     acknowledgeCard(lightCard: LightCard) {
         this.postUserAcknowledgement(lightCard.uid).subscribe(resp => {
             if (resp.status === 201 || resp.status === 200) {
-                this.updateAcknowledgementOnLightCard(lightCard, true);
+                this.updateAcknowledgementOnLightCard(lightCard.id, true);
             } else {
                 throw new Error('the remote acknowledgement endpoint returned an error status(' + resp.status + ')');
             }
         });
     }
 
-    updateAcknowledgementOnLightCard(lightCard: LightCard, hasBeenAcknowledged: boolean) {
-        this.store.dispatch(new UpdateLightCardAcknowledgment({cardId: lightCard.id, hasBeenAcknowledged: hasBeenAcknowledged}));
+    updateAcknowledgementOnLightCard(lightCardId: string, hasBeenAcknowledged: boolean) {
+        this.store.dispatch(new UpdateLightCardAcknowledgment({cardId: lightCardId, hasBeenAcknowledged: hasBeenAcknowledged}));
 
     }
 
-    isAcknowledgmentAllowed(user: UserWithPerimeters, card: Card|LightCard, processDefinition: Process): boolean {
+    isAcknowledgmentAllowed(user: UserWithPerimeters, card: Card | LightCard, processDefinition: Process): boolean {
 
         if (!processDefinition) return true;
         const state = Process.prototype.extractState.call(processDefinition, card);
 
-        if (!! state) {
-            if (state.acknowledgmentAllowed === AcknowledgmentAllowedEnum.NEVER)
-                return false;
-            if (state.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS)
-                return true;
+        if (!!state) {
+            if (!!state.acknowledgementAllowed) return true; // default value
+            if (state.acknowledgmentAllowed === AcknowledgmentAllowedEnum.NEVER) return false;
+            if (state.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS) return true;
             return !this.actionService.isUserEnabledToRespond(user, card, processDefinition);
         }
         return true;
