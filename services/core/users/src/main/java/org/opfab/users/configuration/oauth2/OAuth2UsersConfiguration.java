@@ -111,7 +111,8 @@ public class OAuth2UsersConfiguration {
              * @return UserData
              */
             private UserData createUserDataVirtualFromJwt(Jwt jwt) {
-                String principalId = extractClaimAsStringOrNull(jwt, jwtProperties.getLoginClaim()).toLowerCase();
+                String principalId = extractClaimAsStringOrNull(jwt, jwtProperties.getLoginClaim());
+                if(principalId != null) principalId = principalId.toLowerCase();
                 String givenName = extractClaimAsStringOrNull(jwt, jwtProperties.getGivenNameClaim());
                 String familyName = extractClaimAsStringOrNull(jwt, jwtProperties.getFamilyNameClaim());
                 return new UserData(principalId, givenName, familyName, null, null, null);
