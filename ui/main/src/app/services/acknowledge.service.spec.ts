@@ -106,6 +106,18 @@ describe('AcknowledgeService testing ', () => {
         expect(res).toBeTrue();
     });
 
+
+    it('acknowledgmentAllowed of the state is not defined , isAcknowledgmentAllowed() must return true', () => {
+
+        statesList['testState'] = new State(null, null, null, null);
+        const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
+        const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1,
+            [{process: 'testProcess', state: 'testState', rights: RightsEnum.Receive}]);
+
+        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
+        expect(res).toBeTrue();
+    });
+
     it('acknowledgmentAllowed of the state is OnlyWhenResponseDisabledForUser, ' +
         'user cannot respond (user is a member of entity allowed to respond but user rights for the state of the response is Receive), ' +
         'isAcknowledgmentAllowed() must return true', () => {
@@ -224,6 +236,38 @@ describe('AcknowledgeService testing ', () => {
 
         const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, cardForEntityParent, processDefinition);
         expect(res).toBeTrue();
+    });
+
+    it('acknowledgmentAllowed of the state is OnlyWhenResponseDisabledForUser, ' +
+    'user can respond (user is a member of entity allowed to respond and user rights for the state of the response is Write), ' +
+    'lttd is not reached, isAcknowledgmentAllowed() must return false', () => {
+        const lttdInTheFuture = new Date().valueOf() + 100000;
+        const cardWithLttd  = getOneRandomCard({process: 'testProcess', processVersion: '1', state: 'testState', entitiesAllowedToRespond: ['ENTITY1'],lttd: lttdInTheFuture});
+        statesList['testState'] = new State(null, null,
+        new Response(null, 'responseState'),
+        AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER);
+    const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
+    const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1,
+        [{process: 'testProcess', state: 'responseState', rights: RightsEnum.Write}]);
+
+    const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, cardWithLttd, processDefinition);
+    expect(res).toBeFalse();
+    });
+
+    it('acknowledgmentAllowed of the state is OnlyWhenResponseDisabledForUser, ' +
+    'user can respond (user is a member of entity allowed to respond and user rights for the state of the response is Write), ' +
+    'lttd is reached, isAcknowledgmentAllowed() must return true', () => {
+        const lttdInThePast = new Date().valueOf() - 100000;
+        const cardWithLttd  = getOneRandomCard({process: 'testProcess', processVersion: '1', state: 'testState', entitiesAllowedToRespond: ['ENTITY1'],lttd: lttdInThePast});
+        statesList['testState'] = new State(null, null,
+        new Response(null, 'responseState'),
+        AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER);
+    const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
+    const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1,
+        [{process: 'testProcess', state: 'responseState', rights: RightsEnum.Write}]);
+
+    const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, cardWithLttd, processDefinition);
+    expect(res).toBeTrue();
     });
 
 });

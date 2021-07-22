@@ -194,7 +194,7 @@ export function getOneRandomCard(cardTemplate?:any): Card {
         cardTemplate.process ? cardTemplate.process : 'testProcess',
         cardTemplate.processInstanceId ? cardTemplate.processInstanceId : getRandomAlphanumericValue(3, 24),
         cardTemplate.state ? cardTemplate.state : getRandomAlphanumericValue(3, 24),
-        generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
+        cardTemplate.lttd ? cardTemplate.lttd : null,
         getRandomI18nData(),
         getRandomI18nData(),
         cardTemplate.data ? cardTemplate.data : {data: "data"},
