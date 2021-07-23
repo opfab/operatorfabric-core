@@ -55,11 +55,13 @@
         <div class="justify-content-center" style="display:flex;width:100%;align-content:center;flex-wrap: wrap;">
             <div *ngIf="startDateVisible" style="width:280px; margin-right: 30px; margin-left: 30px;">
                 <of-datetime-filter filterPath="startDate" formControlName="startDate" labelKey="userCard.filters."
-                    [offset]="[{amount:1,unit:'minute'}]" ></of-datetime-filter>
+                    [offset]="[{amount:1,unit:'minute'}]" [maxDate]="startDateMax" (change)="onDateTimeChange($event)">
+                </of-datetime-filter>
             </div>
             <div *ngIf="endDateVisible" style="width: 280px; margin-right: 30px; margin-left: 30px;">
                 <of-datetime-filter filterPath="endDate" formControlName="endDate" labelKey="userCard.filters."
-                    [offset]="[{amount:1,unit:'day'}]"></of-datetime-filter>
+                    [offset]="[{amount:1,unit:'day'}]" [minDate]="endDateMin" (change)="onDateTimeChange($event)">
+                </of-datetime-filter>
             </div>
             <div *ngIf="lttdVisible" style="width: 280px; margin-right: 30px; margin-left: 30px;">
                 <of-datetime-filter filterPath="lttd" formControlName="lttd" labelKey="userCard.filters."
