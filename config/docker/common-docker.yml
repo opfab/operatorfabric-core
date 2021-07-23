@@ -22,12 +22,34 @@ spring:
 server:
   forward-headers-strategy: framework
 operatorfabric:
-  security:
-    oauth2:
-      client-id: opfab-client
-    jwt:
-      login-claim: preferred_username
-      expire-claim: exp
   businessLogActivated: true
   servicesUrls:
     users: "users:8080"
+### activate the following if you want to the groups or entities to came from the token and not mongo DB 
+#  security:
+#    jwt:
+
+### activate the folLowing if you want the entities of the user to came from the token and not mongoDB   
+### entitiesIdClaim is the name of the field in the token     
+#      entitiesIdClaim : entitiesId
+#      gettingEntitiesFromToken: true
+###
+
+### activate the following if you want the groups of the user to came from the token and not mongoDB   
+#      groups: 
+#        mode: JWT
+#        rolesClaim:
+#          rolesClaimStandard:
+#            - path: "ATTR1"
+#            - path: "ATTR2"            
+#          rolesClaimStandardArray:  
+#            - path: "resource_access/opfab-client/roles"
+#          rolesClaimStandardList:  
+#            - path: "groups" 
+#              separator: ";"           
+#          rolesClaimCheckExistPath: 
+#            - path: "resource_access/AAA" 
+#              roleValue: "roleAAA"      
+#            - path: "resource_access/BBB"
+#              roleValue: "roleBBB"  
+### 
