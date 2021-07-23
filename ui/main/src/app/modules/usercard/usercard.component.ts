@@ -185,7 +185,6 @@ export class UserCardComponent implements OnDestroy, OnInit {
             this.pageLoading = false;
 
         this.publisherForCreatingUsercard = this.findPublisherForCreatingUsercard();
-
         this.dateTimeFilterChange.pipe(
             takeUntil(this.unsubscribe$),
             debounceTime(1000),
@@ -197,11 +196,20 @@ export class UserCardComponent implements OnDestroy, OnInit {
     }
 
     setDateFilterBounds(): void {
+        
         if (this.messageForm.value.startDate?.date) {
             this.endDateMin = {year: this.messageForm.value.startDate.date.year, month: this.messageForm.value.startDate.date.month, day: this.messageForm.value.startDate.date.day};
         }
+        else {
+            const today = moment();
+            this.endDateMin = {year: today.year() ,month: today.month(), day: today.day() };
+        }
         if (this.messageForm.value.endDate?.date) {
             this.startDateMax = {year: this.messageForm.value.endDate.date.year, month: this.messageForm.value.endDate.date.month, day: this.messageForm.value.endDate.date.day};
+        }
+        else {
+            const tomorrow = moment().add(1,'day');
+            this.startDateMax = {year: tomorrow.year() ,month: tomorrow.month(), day: tomorrow.day() };
         }
     }
 
