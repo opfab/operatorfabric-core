@@ -23,14 +23,12 @@ security:
 
 operatorfabric:
   businessLogActivated: true
-  security:
-    oauth2:
-      client-id: opfab-client
-    jwt:
-      login-claim: preferred_username
-      expire-claim: exp
   servicesUrls:
     users: "http://localhost:2103"
+
+### activate the following if you want to the groups or entities to came from the token and not mongo DB 
+#  security:
+#    jwt:
 
 ### activate the folLowing if you want the entities of the user to came from the token and not mongoDB   
 ### entitiesIdClaim is the name of the field in the token     

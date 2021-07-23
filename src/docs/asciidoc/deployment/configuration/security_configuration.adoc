@@ -70,9 +70,6 @@ where `b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==` is the base64 encoded s
 |===
 |name|default|mandatory?|Description
 
-|operatorfabric.security.oauth2.client-id|null|yes| Oauth2 client id used by OperatorFabric may be specific for each service
-|operatorfabric.security.jwt.login-claim|sub|no| Jwt claim is used as user login or id
-|operatorfabric.security.jwt.expire-claim|exp|no| Jwt claim is used as token expiration timestamp
 |spring.security.provider-url|null|no|The keycloak instance url. 
 |spring.security.provider-realm|null|no|The realm name within the keycloak instance. 
 |spring.security.oauth2.resourceserver.jwt.jwk-set-uri|null|yes|The url providing the certificat used to verify the jwt signature
@@ -84,13 +81,6 @@ where `b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==` is the base64 encoded s
 
 [source,yml]
 ----
-operatorfabric:
-    security:
-        oauth2:
-            client-id: opfab-client
-        jwt:
-            login-claim: preferred_username
-            expire-claim: exp
 spring:
   security:
     provider-url: http://localhost:89
@@ -100,8 +90,8 @@ spring:
         jwt:
           jwk-set-uri: ${spring.security.provider-url}/auth/realms/${spring.security.provider-realm}/protocol/openid-connect/certs
 ----
-where `operatorfabric.security.jwt.expire-claim` could have been omitted because having the same value as the default one 
-and where `jwt-set-uri` reuses `provider-url` and `provider-realm` properties.
+
+where `jwt-set-uri` reuses `provider-url` and `provider-realm` properties.
 ====
 
 === Configuration file web-ui.json
