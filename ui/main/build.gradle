@@ -20,7 +20,7 @@ task runBuild(type: NpmTask) {
     outputs.dir('build')
 
     dependsOn npmInstall
-    args = ['run', 'build', '--configuration=production', '--baseHref=/ui/', '--deployUrl=/ui/']
+    args = ['run', 'build','--baseHref=/ui/', '--deployUrl=/ui/']
 }
 
 task runHeadlessTests(type: NpmTask) {
