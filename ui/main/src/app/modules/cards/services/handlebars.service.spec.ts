@@ -26,6 +26,7 @@ import {I18n} from '@ofModel/i18n.model';
 import * as moment from 'moment';
 import {UserContext} from '@ofModel/user-context.model';
 import {DetailContext} from '@ofModel/detail-context.model';
+import {DateTimeProvider, SystemDateTimeProvider} from 'angular-oauth2-oidc';
 
 function computeTemplateUri(templateName) {
     return `${environment.urls.processes}/testProcess/templates/${templateName}`;
@@ -55,6 +56,7 @@ describe('Handlebars Services', () => {
             ],
             providers: [
                 {provide: 'TimeEventSource', useValue: null},
+                { provide: DateTimeProvider, useClass: SystemDateTimeProvider },
                 {provide: store, useClass: Store},
                 ProcessesService,
                 HandlebarsService,
