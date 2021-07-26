@@ -10,11 +10,10 @@ plugins {
 ext {
     operatorfabric = [
             group: 'org.opfab',
-            name: 'operatorbabric',
             description : 'OperatorFabric is a modular, extensible, industrial-strength platform for use in electricity, water, and other utility operations.',
             version: version = rootProject.file('VERSION').text.trim(),
             revisionDate: revisionDate = new Date().format('dd MMMM yyyy'),
-            url: 'https://www.opfab.org'
+            url: 'www.opfab.org'
     ]
 
     boot = [
@@ -179,6 +178,6 @@ tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
 
- wrapper {
+wrapper {
     gradleVersion = '6.8.3'
 }
