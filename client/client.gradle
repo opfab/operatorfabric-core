@@ -125,9 +125,9 @@ subprojects {
                 artifact javadocJar
 
                 pom {
-                    name="${operatorfabric.name}"
-                    description="${operatorfabric.description}"
-                    version="${project.version}"
+                    name="${longName}"
+                    description="${description}"
+                    version="${operatorfabric.version}"
                     url="${operatorfabric.url}"
                     licenses{
                         license{
