@@ -5,7 +5,7 @@
     ":switchToGradleLite",
     "schedule:nonOfficeHours"
   ],
-  "branchPrefix": "FE-Renovate",
+  "branchPrefix": "FE-Renovate_",
   "prConcurrentLimit": 7,
   "ignorePaths": [
     "**/node_modules/**",
