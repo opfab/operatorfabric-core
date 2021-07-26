@@ -1,8 +1,8 @@
 dependencies{
-    compile misc.compress
-    compile boot.starterRabbitmq
-    testCompile misc.slf4j
-    testCompile project(':tools:generic:test-utilities')
+    implementation misc.compress
+    implementation boot.starterRabbitmq
+    testImplementation misc.slf4j
+    testImplementation project(':tools:generic:test-utilities')
 }
 
 task prepareTestData(type: Copy){

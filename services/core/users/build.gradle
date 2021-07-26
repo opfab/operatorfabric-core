@@ -1,20 +1,26 @@
 dependencies {
     swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
     swaggerUI generator.swaggerUI
-    compile project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
-    compile boot.starterRabbitmq
+    implementation boot.starterRabbitmq
+    implementation boot.starterSecurity
+    implementation spring.securityOauthResource, spring.securityOauthJose
+    implementation boot.starterValidation
+    implementation cloud.starterFeign
+    implementation boot.starterMongo
     implementation misc.jsonSmart
-    compile boot.starterAop
-    compile misc.collections4
+    implementation boot.starterAop
+    implementation misc.collections4
 
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
 
-    compile boot.starterWeb, boot.starterJetty
-    compile project(':tools:spring:spring-mongo-utilities')
-    compile project(':tools:spring:spring-oauth2-utilities')
+    implementation boot.starterWeb, boot.starterJetty
+    implementation project(':tools:spring:spring-utilities')
+    implementation project(':tools:spring:spring-mongo-utilities')
+    implementation project(':tools:spring:spring-oauth2-utilities')
+    implementation project(':tools:generic:utilities')
 
-    testCompile spring.securityTest
+    testImplementation spring.securityTest
 }
 
 bootJar {
