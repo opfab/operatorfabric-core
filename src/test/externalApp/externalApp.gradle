@@ -23,17 +23,17 @@ configurations {
 	}
 }
 
-
-//create a single Jar with all dependencies
-jar {
-	    manifest {
-	        attributes 'Main-Class': 'org.opfab.externalApp.ExternalAppApplication'
-	    }
-	 
-	    from {
-	        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-	    }
+bootJar {
+	manifest {
+		attributes("Created-By"             : "Gradle ${gradle.gradleVersion}",
+				"Specification-Title"    : "OperatorFabric Businessconfig Parties Manager",
+				"Implementation-Title"   : "OperatorFabric Businessconfig Parties Manager",
+				"Implementation-Version" : operatorfabric.version,
+				"Specification-Version"  : operatorfabric.version
+		)
 	}
+}
+
 
 docker {
 	if (project.version.toUpperCase().equals("SNAPSHOT"))

@@ -1,3 +1,3 @@
 dependencies{
-    compile testing.assertJ
+    implementation testing.assertJ
 }

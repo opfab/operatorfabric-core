@@ -30,17 +30,17 @@ subprojects {
     }
 
     dependencies {
-        compile misc.slf4j
+        implementation misc.slf4j
         annotationProcessor misc.lombok
         implementation misc.lombok
         // compileOnly misc.lombok
         testRuntimeOnly testing.junit5Engine
         testImplementation testing.junit5Api
-        testCompile boot.starterTest, testing.assertJ, misc.lombok
+        testImplementation boot.starterTest, testing.assertJ, misc.lombok
     }
 
     configurations {
-        testCompile.exclude module: "junit"
+        testImplementation.exclude module: "junit"
     }
 
     /////// CONFIGURATION

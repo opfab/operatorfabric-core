@@ -37,8 +37,8 @@ subprojects {
         }
 
         dependencies {
-            compile boot.actuator
-            compile misc.micrometer
+            implementation boot.actuator
+            implementation misc.micrometer
             annotationProcessor misc.lombok
             implementation misc.lombok
 
@@ -55,7 +55,7 @@ subprojects {
         }
 
         configurations {
-            compile.exclude module: "spring-boot-starter-tomcat"
+            implementation.exclude module: "spring-boot-starter-tomcat"
             testImplementation.exclude module: "spring-boot-starter-tomcat"
             testImplementation.exclude module: "junit"
         }
@@ -121,7 +121,7 @@ subprojects {
         /*Task that copies all the dependencies under build/libs */
         task copyDependencies(type: Copy) {
             description 'copy dependencies to build/libs'
-            from configurations.compile
+            from configurations.implementation
             into 'build/libs'
         }
 

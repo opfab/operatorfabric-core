@@ -75,6 +75,7 @@ ext {
             guava          : "com.google.guava:guava:30.1.1-jre",
             jacksonAnnotations   : "com.fasterxml.jackson.core:jackson-annotations:$jacksonAnnotations",
             collections4   : "org.apache.commons:commons-collections4:$apacheCommonsCollections4",
+            commonsIO      : "commons-io:commons-io:$commonsIO",
             micrometer     : "io.micrometer:micrometer-registry-prometheus:$micrometer",
             jsonSmart      : "net.minidev:json-smart:2.4.7"
     ]

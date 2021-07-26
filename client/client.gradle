@@ -33,8 +33,8 @@ subprojects {
         implementation misc.lombok
         testRuntimeOnly testing.junit5Engine
         testImplementation testing.junit5Api
-        testCompile boot.starterTest, testing.assertJ, misc.lombok
-        compile misc.jacksonAnnotations
+        testImplementation boot.starterTest, testing.assertJ, misc.lombok
+        implementation misc.jacksonAnnotations
     }
 
     sourceSets {
@@ -70,7 +70,7 @@ subprojects {
 
 
     configurations {
-        testCompile.exclude module: "junit"
+        testImplementation.exclude module: "junit"
     }
 
     /////// CONFIGURATION
@@ -95,7 +95,7 @@ subprojects {
     /*Task that copies all the dependencies under build/libs */
     task copyDependencies(type: Copy) {
         description 'copy dependencies to build/libs'
-        from configurations.compile
+        from configurations.implementation
         into 'build/libs'
     }
 
