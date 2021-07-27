@@ -19,7 +19,7 @@ import {AppState} from '@ofStore/index';
 import {Observable} from 'rxjs';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {environment} from '@env/environment';
-import {ActionService} from '@ofServices/action.service';
+import {UserPermissionsService} from '@ofServices/user-permissions-.service';
 
 @Injectable({
     providedIn: 'root'
@@ -28,7 +28,7 @@ export class AcknowledgeService {
 
     readonly userAckUrl: string;
 
-    constructor(private actionService: ActionService,
+    constructor(private userPermissionsService: UserPermissionsService,
                 private store: Store<AppState>,
                 private httpClient: HttpClient) {
         this.userAckUrl = `${environment.urls.cardspub}/cards/userAcknowledgement`;
@@ -66,7 +66,7 @@ export class AcknowledgeService {
             if (!!state.acknowledgementAllowed) return true; // default value
             if (state.acknowledgmentAllowed === AcknowledgmentAllowedEnum.NEVER) return false;
             if (state.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS) return true;
-            return !this.actionService.isUserEnabledToRespond(user, card, processDefinition);
+            return !this.userPermissionsService.isUserEnabledToRespond(user, card, processDefinition);
         }
         return true;
     }
