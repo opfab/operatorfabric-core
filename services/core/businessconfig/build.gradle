@@ -100,15 +100,6 @@ task prepareDevDataDir {
     }
 }
 
-task copyCompileClasspathDependencies(type: Copy) {
-   // unlike copyDependencies, this one will catch lombok that must be sent to sonarqube
-   description 'copy compile classpath dependencies, catching lombok that must be sent for sonarqube'
-   from configurations.compileClasspath
-   into "$project.buildDir/libs_compile"
-   doFirst{
-       logger.info "copying configurations.compileClasspath to $project.buildDir/libs_compile"
-   }
-}
 
 createDevData.dependsOn prepareDevDataDir
 compressBundle1Data.dependsOn prepareTestDataDir
