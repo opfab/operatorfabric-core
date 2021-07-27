@@ -25,10 +25,6 @@ subprojects {
 
     /////// COMPILATION
 
-
-    dependencies {
-    }
-
     sourceSets {
         main {
             java {
@@ -60,6 +56,12 @@ subprojects {
             }
         }
     }
+
+    // This is to avoid error
+    tasks.named("processResources") {
+        duplicatesStrategy = 'include'
+    }
+
 
     /////// CUSTOM TASKS
 
