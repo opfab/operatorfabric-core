@@ -22,7 +22,7 @@
           </div>
 
           <div class="opfab-right-menu-item" *ngIf='showEditAndDeleteButton'>
-            <a class="opfab-right-menu-link" (click)='open(doYouReallyWantToDeleteCardPopup)'>
+            <a class="opfab-right-menu-link" (click)='openModal(doYouReallyWantToDeleteCardPopup)'>
               <div class="opfab-menu-icon opfab-menu-icon-right opfab-icon-trash"></div>
               <div translate>{{'button.delete'}}</div>
             </a>
@@ -61,7 +61,7 @@
           </div>
         </ng-template>
 
-        <div *ngIf='responseDataExists && showDetailCardHeader' class="opfab-card-response-header">
+        <div *ngIf='isCardAQuestionCard && showDetailCardHeader' class="opfab-card-response-header">
           <div class="flex-container">
             <div id="opfab-card-response-header-left" style="width:30%;">
               <span id="opfab-card-response-header-status" *ngIf="!!cardState.type">
@@ -92,7 +92,7 @@
           </div>
         </div>
 
-        <div id="opfab-div-card-template" class="opfab-card-detail" [innerHtml]="htmlContent"></div>
+        <div id="opfab-div-card-template" class="opfab-card-detail" [innerHtml]="htmlTemplateContent"></div>
 
         <div style="text-align: center;width:100% ; ">
 
@@ -110,16 +110,16 @@
             </span>
             <div *ngIf="showButtons" style="text-align: right;">
               <button id="opfab-card-details-btn-response" class="opfab-btn"
-                *ngIf='showActionButton && isActionEnabled && !isLocked' [disabled]='lttdExpiredIsTrue || !isActionEnabled'
+                *ngIf='showActionButton && isUserEnabledToRespond && !isResponseLocked' [disabled]='lttdExpiredIsTrue || !isUserEnabledToRespond'
                 (click)='submitResponse()' translate> response.btnValidate </button>
               <button id="opfab-card-details-btn-response" class="opfab-btn"
-                [disabled]='lttdExpiredIsTrue || !isActionEnabled' translate
-                *ngIf='showActionButton && isActionEnabled && isLocked' (click)='unlockAnswer()'>
+                [disabled]='lttdExpiredIsTrue || !isUserEnabledToRespond' translate
+                *ngIf='showActionButton && isUserEnabledToRespond && isResponseLocked' (click)='unlockAnswer()'>
                 response.btnUnlock
               </button>
 
               <button id="opfab-card-details-btn-ack" class="opfab-btn" *ngIf='showAckButton'
-                (click)='acknowledge()'>{{btnAckText|translate}}</button>
+                (click)='acknowledgeCard()'>{{btnAckText|translate}}</button>
             </div>
           </div>
 

@@ -9,8 +9,7 @@
 
 
 import {Injectable} from "@angular/core";
-import {Action, Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
+import {Action} from "@ngrx/store";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {Observable} from "rxjs";
 import {ROUTER_NAVIGATION, ROUTER_REQUEST, RouterNavigationAction, RouterRequestAction} from "@ngrx/router-store";
@@ -22,10 +21,7 @@ import {ClearLightCardSelection, SelectLightCard} from "@ofActions/light-card.ac
 @Injectable()
 export class CustomRouterEffects {
 
-    constructor(private store: Store<AppState>,
-                private actions$: Actions
-    ) {}
-
+    constructor(private actions$: Actions) {}
     
     navigateToCard: Observable<Action> = createEffect(() => this.actions$.pipe(
         ofType(ROUTER_NAVIGATION),
@@ -42,7 +38,6 @@ export class CustomRouterEffects {
     ));
 
 
-    
     navigateAwayFromFeed: Observable<Action> = createEffect(() => this.actions$.pipe(
         ofType(ROUTER_REQUEST),
         filter((action: RouterRequestAction, index)=> {

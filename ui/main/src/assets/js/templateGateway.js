@@ -99,8 +99,8 @@ const templateGateway = {
 
         // OpFab calls this method to get the form result when the user wants to send a response
         this.getUserResponse =  function () {
-            console.log(new Date().toISOString(), ` Template.js : no getUserResponse method defined in template , valid set to true`);
-            return this.isValid = undefined;
+            console.log(new Date().toISOString(), ` Template.js : no getUserResponse method defined in template , valid set to false`);
+            return {valid:false,errorMsg:"Impossible to respond due to a technical error in the template"};
         }
 }
 

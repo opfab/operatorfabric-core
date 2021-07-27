@@ -26,7 +26,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
     selector: 'of-card-details',
     template: `
 
-            <div *ngIf="card && cardState">
+            <div *ngIf="card && cardState" style="font-size:13px;">
                 <of-detail   [cardState]="cardState" [card]="card" [childCards]="childCards"
                            [user]="user" [currentPath]="_currentPath" [parentModalRef]="parentModalRef" [screenSize]="screenSize">
                 </of-detail>
@@ -59,7 +59,6 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
             .subscribe(([card, childCards]: [Card, Card[]]) => {
                 if (!!card) {
                     this.businessconfigService.queryProcess(card.process, card.processVersion)
-                        .pipe(takeUntil(this.unsubscribe$))
                         .subscribe({
                             next: businessconfig => {
                                 this.card = card;
