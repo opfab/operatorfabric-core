@@ -21,7 +21,6 @@ to gradle and plugins official documentation.
 * Other:
 ** copyWorkingDir: copies [sub-project]/src/main/docker/volume to
 [sub-project]/build/
-** copyDependencies: copy dependencies to build/libs
 
 === Core
 
@@ -39,9 +38,6 @@ configuration data for tests in build/test-data
 ** prepareDevDataDir: prepare directory (build/dev-data) for bootRun task
 ** createDevData: prepare data in build/test-data for running bootRun task
 during development
-* Other tasks
-** copyCompileClasspathDependencies: copy compile classpath dependencies,
-catching lombok that must be sent for sonarqube
 
 === tools/generic
 

@@ -92,13 +92,6 @@ subprojects {
 
     /////// CUSTOM TASKS
 
-    /*Task that copies all the dependencies under build/libs */
-    task copyDependencies(type: Copy) {
-        description 'copy dependencies to build/libs'
-        from configurations.implementation
-        into 'build/libs'
-    }
-
     tasks.jacocoTestReport.dependsOn test
     tasks.compileJava.dependsOn generateSwaggerCode
     tasks.compileTestJava.dependsOn generateSwaggerCode
