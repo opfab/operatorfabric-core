@@ -118,6 +118,14 @@ subprojects {
 
         /////// CUSTOM TASKS
 
+        /*Task that copies all the dependencies under build/libs so Sonar
+        can make sense of the Lombok annotations for example */
+        task copyDependencies(type: Copy) {
+            description 'copy dependencies to build/libs'
+            from configurations.compileClasspath
+            into 'build/libs'
+        }
+
         /* convenient copy for generating modifiable configuration from template*/
         task copyWorkingDir(type: Copy) {
             description 'copies [sub-project]/src/main/docker/volume to [sub-project]/build/docker-volume'
