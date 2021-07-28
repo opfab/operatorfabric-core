@@ -57,7 +57,7 @@ subprojects {
         }
     }
 
-    // This is to avoid error
+    // This is a temporary fix to avoid false build error, see (#1543)
     tasks.named("processResources") {
         duplicatesStrategy = 'include'
     }
