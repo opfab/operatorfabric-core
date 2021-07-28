@@ -111,6 +111,7 @@ subprojects {
     task sourcesJar(type: Jar){
         archiveClassifier='sources'
         from sourceSets.main.allJava
+        duplicatesStrategy = 'include' // This is a temporary fix to avoid false build error, see (#1543)
     }
 
     task javadocJar(type: Jar){
