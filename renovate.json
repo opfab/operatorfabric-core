@@ -22,6 +22,12 @@
         "@angular/",
         "@angular-devkit/"
       ]
+    },
+    {
+      "groupName": "confluent",
+      "matchPackagePrefixes": [
+        "io.confluent"
+      ]
     }
   ]
 }
