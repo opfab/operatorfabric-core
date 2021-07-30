@@ -71,11 +71,11 @@ jobs:
         - docker-compose down
     - stage: doc
       script:
-        - ./gradlew --build-cache generateSwaggerUI asciidoctor
+        - ./gradlew --build-cache generateSwaggerUI asciidoctor || travis_terminate 1;
         - ./CICD/travis/upload_doc.sh
     - stage: doc-latest
       script:
-        - ./gradlew --build-cache generateSwaggerUI asciidoctor
+        - ./gradlew --build-cache generateSwaggerUI asciidoctor || travis_terminate 1;
         - ./CICD/travis/upload_doc.sh --updateLatest true
     - stage: docker-push-version
       script:
