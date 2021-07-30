@@ -1,10 +1,25 @@
 plugins {
     id "com.github.node-gradle.node" version "3.1.0"
-    id "org.asciidoctor.convert" version "1.6.1" //Upgrading to 2.4.0 changed the behaviour of {gradle-rootdir}, breaking all cross-document links
+    id "org.asciidoctor.jvm.convert" version "3.3.2"
     id "maven-publish"
     id "signing"
     id 'org.springframework.boot' version '2.5.3'
     id 'org.sonarqube' version '3.3' apply false
+}
+
+repositories {
+    jcenter()
+    mavenLocal()
+    mavenCentral()
+    maven { url "https://repo1.maven.org/maven2" }
+    maven { url "https://repo.spring.io/release" }
+    maven { url "https://repo.spring.io/snapshot" }
+    maven { url "https://repo.spring.io/milestone" }
+    maven { url "https://repo.spring.io/libs-snapshot" }
+    maven { url "https://repo.spring.io/libs-milestone" }
+    maven { url "https://maven.eveoh.nl/content/repositories/releases" }
+    maven { url "https://artifacts.elastic.co/maven/"}
+    maven { url "https://plugins.gradle.org/m2/" }
 }
 
 ext {
@@ -107,6 +122,8 @@ ext.apk.proxy.password = hasProperty('apk.proxy.password') && property('apk.prox
 //tag::asciidoctor_gradle_task_config[]
 asciidoctor {
 
+    baseDirFollowsSourceFile()
+
     sources {
         include '*/index.adoc','docs/*'
     }
@@ -155,7 +172,6 @@ subprojects {
     }
     subprojects {
         apply plugin: 'java'
-        apply plugin: 'org.asciidoctor.convert'
         apply plugin: plugin.bom
 
         sourceCompatibility = 1.8
