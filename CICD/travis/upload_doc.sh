@@ -73,7 +73,7 @@ if [[ $OF_VERSION =~ .+RELEASE$ ]]; then
     done
     # Copy asciidoctor documentation (including images)
     mkdir -p $HOME/documentation/documentation/current/
-    cp -r $OF_HOME/build/asciidoc/html5/* $HOME/documentation/documentation/current/
+    cp -r $OF_HOME/build/asciidoc//* $HOME/documentation/documentation/current/
   fi
 
 fi
@@ -91,9 +91,9 @@ mkdir -p $HOME/documentation/documentation/archives/$OF_VERSION/
 mkdir -p $HOME/documentation/documentation/archives/$OF_VERSION/images/
 mkdir -p $HOME/documentation/documentation/archives/$OF_VERSION/pdf/
 mkdir -p $HOME/documentation/documentation/archives/$OF_VERSION/docs/
-cp $OF_HOME/build/asciidoc/html5/docs/single_page_doc.html $HOME/documentation/documentation/archives/$OF_VERSION/docs/
-cp -r $OF_HOME/build/asciidoc/html5/images/* $HOME/documentation/documentation/archives/$OF_VERSION/images/
-cp -r $OF_HOME/build/asciidoc/html5/pdf/* $HOME/documentation/documentation/archives/$OF_VERSION/pdf/
+cp $OF_HOME/build/asciidoc//docs/single_page_doc.html $HOME/documentation/documentation/archives/$OF_VERSION/docs/
+cp -r $OF_HOME/build/asciidoc//images/* $HOME/documentation/documentation/archives/$OF_VERSION/images/
+cp -r $OF_HOME/build/asciidoc//pdf/* $HOME/documentation/documentation/archives/$OF_VERSION/pdf/
 
 cd $HOME/documentation
 
