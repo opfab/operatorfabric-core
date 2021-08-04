@@ -108,6 +108,7 @@
       }
     },
     "lttdFinished": "Finished",
+    "responsesClosed": "Response closed",
     "received": "Received on",
     "at": "at",
     "from" : "from",

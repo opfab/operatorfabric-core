@@ -24,7 +24,7 @@ import {Card, CardForPublishing} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../../services/handlebars.service';
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
-import {AcknowledgmentAllowedEnum, State} from '@ofModel/processes.model';
+import {AcknowledgmentAllowedEnum, State, TypeOfStateEnum} from '@ofModel/processes.model';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -115,6 +115,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public listVisibleEntitiesToRespond = [];
     public listDropdownEntitiesToRespond = [];
     public isCardAQuestionCard = false;
+    public showExpiredIcon: boolean = true;
+    public showExpiredLabel: boolean = true;
+    public expiredLabel: string = 'feed.lttdFinished';
 
     private lastCardSetToReadButNotYetOnFeed;
     private entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = [];
@@ -145,6 +148,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     ngOnInit() {
         this.reloadTemplateWhenGlobalStyleChange();
         if (this._appService.pageType !== PageType.ARCHIVE) this.integrateChildCardsInRealTime();
+        this.computeLttdParams();
 
     }
 
@@ -391,6 +395,19 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     private checkLttdExpired(): void {
         this.lttdExpiredIsTrue = (this.card.lttd != null && (this.card.lttd - new Date().getTime()) <= 0);
+    }
+
+    private computeLttdParams() {
+        this.businessconfigService.queryProcess(this.card.process, this.card.processVersion).subscribe( process => {
+            const state = process.extractState(this.card);
+            if (state.type === TypeOfStateEnum.FINISHED) {
+                this.showExpiredIcon = false;
+                this.showExpiredLabel = false;
+            } else if (this.isCardAQuestionCard) {
+                this.showExpiredIcon = false;
+                this.expiredLabel = 'feed.responsesClosed'
+            }
+        })
     }
 
 
