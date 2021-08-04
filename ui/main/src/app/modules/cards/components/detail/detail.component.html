@@ -69,8 +69,8 @@
                 <!--The translate directive should stay there rather than in the element see OC-1603-->
                 <span class="opfab-typeOfState-{{cardState.type}}">{{"global.typeOfState."+cardState.type | translate}}</span>
               </span>
-              <span *ngIf="!!card.lttd && !!cardState.type"> | </span>
-              <span *ngIf="!!card.lttd"><of-countdown [lttd]="card.lttd"></of-countdown></span>
+              <span *ngIf="!!card.lttd && !!cardState.type && (!lttdExpiredIsTrue || cardState.type !== 'FINISHED')"> | </span>
+              <span *ngIf="!!card.lttd"><of-countdown [lttd]="card.lttd" [showExpiredIcon]="showExpiredIcon" [showExpiredLabel]="showExpiredLabel" [expiredLabel]="expiredLabel"></of-countdown></span>
             </div>
 
             <div id="opfab-card-response-header-right" style="width:70%;text-align: right">

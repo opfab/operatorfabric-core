@@ -13,6 +13,6 @@
 <span *ngIf="this.countDown.isCounting()" class="lttd-timeleft" placement="right" [ngbPopover]="tipLttd" popoverClass="opfab-popover" container="body" triggers="mouseenter:mouseleave">{{this.countDown.getCountDown()}}<em class="far fa-clock lttd-icon lttd-timeleft"></em>
 </span>
 <span *ngIf="this.countDown.isEnded()" placement="right" [ngbPopover]="tipLttd" popoverClass="opfab-popover" container="body" triggers="mouseenter:mouseleave">
-        <span class="lttd-text" translate>feed.lttdFinished </span>  
-        <span><em class="far fa-clock lttd-icon" ></em></span> 
+        <span *ngIf="showExpiredLabel" class="lttd-text">{{translatedExpiredLabel}}</span>  
+        <span *ngIf="showExpiredIcon"><em class="far fa-clock lttd-icon" ></em></span> 
 </span>

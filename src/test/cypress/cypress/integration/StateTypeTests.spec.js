@@ -47,11 +47,17 @@ describe('State type tests', function () {
         cy.sendCard('cypress/state_types/state_type4.json');
         cy.sendCard('cypress/state_types/state_type5.json');
 
-        // Test with state and lttd present
+        // Test with state FINISHED and lttd present
         cy.sendCard('cypress/state_types/state_type6.json');
 
         // Test with no state but lttd present
         cy.sendCard('cypress/state_types/state_type7.json');
+
+        // Test with state IN PROGRESS and lttd present
+         cy.sendCard('cypress/state_types/state_type8.json');
+
+        // Test with state FINISHD and lttd expired
+        cy.sendCard('cypress/state_types/state_type9.json');
 
     });
 
@@ -109,17 +115,48 @@ describe('State type tests', function () {
             cy.get('#opfab-card-response-header-left').contains('|');
             cy.get('#opfab-card-response-header-left').find('.lttd-icon, .lttd-timeleft');
 
-            // ----------------- Test with no state but lttd present
-            cy.log(`No state (type null) with lttd`);
+            // ----------------- Test with no state, lttd present and expired
+            cy.log(`No state (type null) with lttd expired`);
 
             // Click on the card with the state under test to display its details
             cy.get(`#opfab-feed-light-card-${process}-state_type7`).click();
 
-            // Check card details header: it should contain only the time left before lttd and the clock
+            // Check card details header: when lttd is expired it should contain only the text message
             cy.get('#opfab-card-response-header-left').contains('|').should('not.exist');
-            cy.get('#opfab-card-response-header-left').find('.lttd-icon');
-            cy.get('#opfab-card-response-header-left').find('.lttd-text');
+            cy.get('#opfab-card-response-header-left').find('.lttd-icon').should('not.exist');
+            cy.get('#opfab-card-response-header-left').find('.lttd-text').should('have.text',"Response closed");
 
+            // ----------------- Test with state IN PROGRESS and lttd expired
+            cy.log(`State (type INPROGRESS) with lttd expired`);
+
+            // Click on the card with the state under test to display its details
+            cy.get(`#opfab-feed-light-card-${process}-state_type8`).click();
+
+            // Check card details header: it should contain the static text, the correct state type with the
+            // appropriate color, then pipe and text mesage
+            cy.get('#opfab-card-response-header-left').find('#opfab-card-response-header-status')
+                .contains('Process Status')
+            cy.get('#opfab-card-response-header-left').find('[class^="opfab-typeOfState-"]')
+                .should('have.text',"IN PROGRESS")
+                .should('have.css','color',orange);
+            cy.get('#opfab-card-response-header-left').contains('|');
+            cy.get('#opfab-card-response-header-left').find('.lttd-text').should('have.text',"Response closed");
+
+            // ----------------- Test with state FINISHED and lttd expired
+            cy.log(`State (type FINISHED) with lttd expired`);
+
+            // Click on the card with the state under test to display its details
+            cy.get(`#opfab-feed-light-card-${process}-state_type9`).click();
+
+            // Check card details header: it should contain the static text, the correct state type with the
+            // appropriate color, no pipe, no time icon and no text message
+            cy.get('#opfab-card-response-header-left').find('#opfab-card-response-header-status')
+                .contains('Process Status')
+            cy.get('#opfab-card-response-header-left').find('[class^="opfab-typeOfState-"]')
+                .should('have.text',"FINISHED")
+                .should('have.css','color',green);
+            cy.get('#opfab-card-response-header-left').contains('|').should('not.exist');;
+            cy.get('#opfab-card-response-header-left').find('.lttd-icon, .lttd-timeleft', '.lttd-text').should('not.exist');
         });
 
     });

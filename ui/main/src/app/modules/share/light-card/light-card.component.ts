@@ -19,8 +19,9 @@ import { TimeService } from '@ofServices/time.service';
 import { Subject } from 'rxjs';
 import { ConfigService } from '@ofServices/config.service';
 import { AppService, PageType } from '@ofServices/app.service';
-import { TranslateService } from '@ngx-translate/core';
 import { EntitiesService } from '@ofServices/entities.service';
+import {ProcessesService} from '@ofServices/processes.service';
+import {TypeOfStateEnum} from '@ofModel/processes.model';
 
 @Component({
     selector: 'of-light-card',
@@ -37,6 +38,9 @@ export class LightCardComponent implements OnInit, OnDestroy {
     cardTitle: string;
     dateToDisplay: string;
     fromEntity = null;
+    showExpiredIcon: boolean = true;
+    showExpiredLabel: boolean = true;
+    expiredLabel: string = 'feed.lttdFinished';
 
     private ngUnsubscribe: Subject<void> = new Subject<void>();
 
@@ -48,7 +52,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
         private configService: ConfigService,
         private _appService: AppService,
         private entitiesService: EntitiesService,
-        protected translate: TranslateService,
+        private processesService: ProcessesService,
     ) {
      }
 
@@ -65,6 +69,20 @@ export class LightCardComponent implements OnInit, OnDestroy {
             });
         this.computeFromEntity();
         this.computeDisplayedDate();
+        this.computeLttdParams();
+    }
+
+    computeLttdParams() {
+        this.processesService.queryProcess(this.lightCard.process, this.lightCard.processVersion).subscribe( process => {
+            const state = process.extractState(this.lightCard);
+            if (state.type === TypeOfStateEnum.FINISHED) {
+                this.showExpiredIcon = false;
+                this.showExpiredLabel = false;
+            } else if (!!state.response) {
+                this.showExpiredIcon = false;
+                this.expiredLabel = 'feed.responsesClosed';
+            }
+        })
     }
 
     computeFromEntity()
