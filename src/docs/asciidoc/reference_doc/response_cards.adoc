@@ -80,8 +80,9 @@ appropriate configuration in the config.json of the concerned process. Here is a
       "acknowledgmentAllowed": "Never",
       "showDetailCardHeader" : true
     },
-    "responseState" :{
-      "name" :"response.title"
+    "responseState": {
+      "name" : "response.title",
+      "isOnlyAChildState" : true
     }
   }
 }
@@ -95,6 +96,8 @@ and state "questionState", the user will have the possibility to respond if he h
 the config file of cards-publication service, in "externalRecipients-url" element. This field is optional.
 - The field "showDetailCardHeader" permits to display the card header or not. This header contains the list of entities
 that have already responded or not, and a countdown indicating the time remaining to respond, if necessary.
+- The field "isOnlyAChildState" indicates whether the state is only used for child cards or not. If yes, the state
+is displayed neither in the feed notification configuration screen nor in archives screen filters.
 
 
 NOTE: The state to be used for the response can also be set dynamically based on the contents of the card or the

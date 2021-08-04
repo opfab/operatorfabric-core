@@ -139,7 +139,7 @@ export class FeedconfigurationComponent implements OnInit {
                 for (const stateId of Object.keys(process.states)) {
                     const state = process.states[stateId];
 
-                    if ((!this.checkPerimeterForSearchFields) || this.userService.isReceiveRightsForProcessAndState(process.id, stateId)) {
+                    if ((! state.isOnlyAChildState) && ((!this.checkPerimeterForSearchFields) || this.userService.isReceiveRightsForProcessAndState(process.id, stateId))) {
                         let stateLabel = this.computeI18n(process, state.name, stateId);
                         this.translateService.get(stateLabel).subscribe(translate => { stateLabel = translate; });
 
