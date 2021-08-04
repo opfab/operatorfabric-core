@@ -41,5 +41,26 @@ describe ('Archives screen tests',function () {
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-icon-plus').should('have.length',6);
         cy.get('of-card-detail').should('not.exist');
         cy.get('#opfab-archive-results-number').should('have.text', ' Results number  : 6 ')
+
+        // We select all process groups
+        cy.get('#opfab-processGroup').click();
+        cy.get('#opfab-processGroup').contains('Select All').click();
+
+        // We choose the process 'Process example'
+        cy.get('#opfab-process').click();
+        cy.get('#opfab-process').contains('Process example').click();
+        cy.get('#opfab-process').click();
+
+        // We check every state is present except 'Planned outage date response' because 'isOnlyAChildState' attribute is set to true for this state
+        cy.get('#opfab-state').click();
+        cy.get('#opfab-state').contains('Message').should('exist');
+        cy.get('#opfab-state').contains('A Chart').should('exist');
+        cy.get('#opfab-state').contains('Process example').should('exist');
+        cy.get('#opfab-state').contains('Electricity consumption forecast').should('exist');
+        cy.get('#opfab-state').contains('Action required').should('exist');
+        cy.get('#opfab-state').contains('Additional information required').should('exist');
+        cy.get('#opfab-state').contains('Network Contingencies').should('exist');
+        cy.get('#opfab-state').contains('Planned outage date response').should('not.exist');
+
     })
 })

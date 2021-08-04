@@ -74,7 +74,8 @@
     },
     "dummyResponseState": {
       "name":  "dummyResponseState.title",
-      "templateName": "template"
+      "templateName": "template",
+      "isOnlyAChildState": true
     }
   }
 }

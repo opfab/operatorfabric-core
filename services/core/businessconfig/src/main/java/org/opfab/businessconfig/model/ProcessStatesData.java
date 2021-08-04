@@ -30,6 +30,7 @@ public class ProcessStatesData implements ProcessStates {
     @Singular
     private List<String> styles;
     private TypeOfStateEnum type;
+    private Boolean isOnlyAChildState;
 
     @Override
     public Response getResponse() {

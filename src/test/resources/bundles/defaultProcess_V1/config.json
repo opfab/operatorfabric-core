@@ -99,7 +99,8 @@
         "style"
       ],
       "acknowledgmentAllowed": "Always",
-      "type" : "INPROGRESS"
+      "type" : "INPROGRESS",
+      "isOnlyAChildState": true
     }
 
   }
