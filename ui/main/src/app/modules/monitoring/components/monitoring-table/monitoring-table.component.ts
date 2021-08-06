@@ -8,7 +8,7 @@
 * This file is part of the OperatorFabric project.
 */
 
-import {Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild} from '@angular/core';
 import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
 import {TimeService} from '@ofServices/time.service';
 import {Moment} from 'moment-timezone';
@@ -33,17 +33,19 @@ import {EntitiesService} from '@ofServices/entities.service';
     templateUrl: './monitoring-table.component.html',
     styleUrls: ['./monitoring-table.component.scss']
 })
-export class MonitoringTableComponent implements OnDestroy {
+export class MonitoringTableComponent implements OnChanges, OnDestroy {
 
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
     @Input() result: LineOfMonitoringResult[];
     @Input() displayProcessGroupColumn: boolean;
+    @Input() maxNbOfRowsToDisplay: number;
+
     exportMonitoringData: Array<any> = [];
     jsonToArray : JsonToArray;
     monitoringConfig: MonitoringConfig ; 
     unsubscribe$: Subject<void> = new Subject<void>();
     modalRef: NgbModalRef;
-
+    displayedResults : LineOfMonitoringResult[];
 
     constructor(readonly timeService: TimeService
                 , private translate: TranslateService
@@ -56,6 +58,9 @@ export class MonitoringTableComponent implements OnDestroy {
         this.monitoringConfig = processesService.getMonitoringConfig();
     }
 
+    ngOnChanges(): void {
+        this.displayedResults = this.result.length > this.maxNbOfRowsToDisplay ? this.result.slice(0, this.maxNbOfRowsToDisplay) : this.result;
+    }
 
     displayTime(moment: Moment) {
 
