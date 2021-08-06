@@ -197,6 +197,7 @@
     "hideFilters" : "Masquer les filtres",
     "showFilters" : "Afficher les filtres",
     "noSelection" : "NA",
+    "moreRows": "lignes supplémentaires",
     "filters": {
       "processGroup" : "SERVICE",
       "selectProcessGroupText" : "Sélectionner un Service",
