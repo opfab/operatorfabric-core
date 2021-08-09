@@ -37,7 +37,8 @@
             "scripts": [
               "node_modules/svg-pan-zoom/dist/svg-pan-zoom.js",
               "src/assets/js/templateGateway.js",
-              "src/assets/js/chart.min.js"
+              "src/assets/js/chart.min.js",
+              "src/assets/js/chartjs-adapter-date-fns.bundle.min.js"
             ],
             "allowedCommonJsDependencies": [
               "rxjs/internal/Subject",
