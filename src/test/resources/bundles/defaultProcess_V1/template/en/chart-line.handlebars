@@ -12,11 +12,28 @@
     if (window.myChart instanceof Chart) {
         window.myChart.destroy();
     }
+    var day = new Date({{card.startDate}});
+    var dateLabels = [];
+    
+    for (let i=0;i<6;i++) {
+        var labelDate = new Date(day.getTime());
+        labelDate.setHours(4*i);
+        labelDate.setMinutes(0);
+        labelDate.setSeconds(0);
+        dateLabels.push(labelDate);
+    }
+    var nextDay = new Date(day.getTime());
+    nextDay.setDate(day.getDate() + 1)
+    nextDay.setHours(0);
+    nextDay.setMinutes(0);
+    nextDay.setSeconds(0);
+    dateLabels.push(nextDay);
 
+    
     window.myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ['0h', '4h', '8h', '12h', '16h', '20h', '24h'],
+            labels: dateLabels,
             datasets: [{
                 label: 'Daily Electrical consumption',
                 data: [{{card.data.values}}],
@@ -37,6 +54,8 @@
                 }
             },
             x: {
+                type: 'time',
+                time: {stepSize: 4},
                 grid: {color: 'rgba(100,100,100,0.2)'},
                 ticks: {
                     color: opfabColor
