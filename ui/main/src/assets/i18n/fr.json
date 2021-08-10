@@ -354,6 +354,12 @@
         "confirmDelete": "Voulez-vous vraiment supprimer l'utilisateur",
         "add":"Ajouter un nouvel utilisateur"
       },
+      "selectGroupText": "Sélectionner un Groupe",
+      "selectEntityText": "Sélectionner une Entité",
+      "selectPerimeterText": "Sélectionner un Périmètre",
+      "selectProcessText": "Sélectionner un Processus",
+      "selectStateText": "Sélectionner un Etat",
+      "selectRightText": "Sélectionner un Permission",
       "edit": "Editer",
       "delete": "Supprimer",
       "save": "SAUVEGARDER LES CHANGEMENTS",

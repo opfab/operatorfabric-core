@@ -15,6 +15,7 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {UserService} from '@ofServices/user.service';
 import {GroupsService} from '@ofServices/groups.service';
 import {EntitiesService} from '@ofServices/entities.service';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'of-edit-user-modal',
@@ -27,21 +28,18 @@ export class EditUserModalComponent implements OnInit {
 
   entitiesDropdownList = [];
   selectedEntities = [];
-  entitiesDropdownSettings = {
-    badgeShowLimit: 3,
-    enableSearchFilter: true
-  };
+  entitiesDropdownSettings = {};
 
   groupsDropdownList = [];
   selectedGroups = [];
-  groupsDropdownSettings = {
-    badgeShowLimit: 3,
-    enableSearchFilter: true
-  };
+
+  groupsDropdownSettings = {};
+
 
   @Input() row: User;
 
   constructor(
+      private translate: TranslateService,
       private activeModal: NgbActiveModal,
       private crudService: UserService,
       private groupsService: GroupsService,
@@ -76,6 +74,21 @@ export class EditUserModalComponent implements OnInit {
     }
 
 
+      this.translate.get(['admin.input.selectGroupText', 'admin.input.selectEntityText'])
+          .subscribe(translations => {
+              this.groupsDropdownSettings = {
+                  text: translations['admin.input.selectGroupText'],
+                  badgeShowLimit: 3,
+                  enableSearchFilter: true
+              };
+              this.entitiesDropdownSettings = {
+                text: translations['admin.input.selectEntityText'],
+                badgeShowLimit: 3,
+                enableSearchFilter: true
+            };
+      });
+
+    
     // Initialize value lists for Entities and Groups inputs
     this.entitiesService.getEntities().forEach((entity) => {
       const id = entity.id;
