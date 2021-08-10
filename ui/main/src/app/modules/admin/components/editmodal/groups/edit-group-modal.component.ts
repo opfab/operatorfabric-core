@@ -15,6 +15,7 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from '@ofServices/crud-service';
 import {PerimetersService} from '@ofServices/perimeters.service';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'of-edit-group-modal',
@@ -33,10 +34,7 @@ export class EditGroupModalComponent implements OnInit {
 
   perimetersDropdownList = [];
   selectedPerimeters = [];
-  perimetersDropdownSettings = {
-    badgeShowLimit: 3,
-    enableSearchFilter: true
-  };
+  perimetersDropdownSettings = {};
 
   @Input() row: any;
   @Input() type: AdminItemType;
@@ -44,6 +42,7 @@ export class EditGroupModalComponent implements OnInit {
   private crudService: CrudService;
 
   constructor(
+    private translate: TranslateService,
     private activeModal: NgbActiveModal,
     private dataHandlingService: SharingService,
     private perimetersService: PerimetersService
@@ -62,6 +61,16 @@ export class EditGroupModalComponent implements OnInit {
       // Otherwise, we use the selectedItems property of the of-multiselect component
       this.selectedPerimeters = this.row.perimeters;
     }
+
+
+    this.translate.get('admin.input.selectPerimeterText')
+        .subscribe(translation => {
+            this.perimetersDropdownSettings = {
+              text: translation,
+              badgeShowLimit: 3,
+              enableSearchFilter: true
+          };
+    });
 
     this.perimetersService.getPerimeters().forEach((perimeter) => {
       this.perimetersDropdownList.push({ id: perimeter.id });

@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -10,7 +10,8 @@
 
 <div class="opfab-select" [formGroup]="parentForm">
     <label translate>{{computeI18nLabelKey()}}</label>
-    <select [formControlName]="filterPath">
+    <select  [formControlName]="filterPath">
+        <option *ngIf="placeholderKey" value="" selected disabled hidden>{{placeholderText}}</option>
         <option *ngFor="let v of preparedList" value="{{v.value}}"><span *ngIf="prefixWithValue">{{v.value}} - </span><span translate>{{v.label|async}}</span></option>
     </select>
 </div>

@@ -354,6 +354,12 @@
         "confirmDelete": "Do you really want to delete user",
         "add": "Add new user"
       },
+      "selectGroupText": "Select a Group",
+      "selectEntityText": "Select an Entity",
+      "selectPerimeterText": "Select a Perimeter",
+      "selectProcessText": "Select a Process",
+      "selectStateText": "Select a State",
+      "selectRightText": "Select a Right",
       "edit": "Edit",
       "delete": "Delete",
       "save": "SAVE CHANGES",
