@@ -95,7 +95,16 @@ export function reducer(
                 const filters = new Map(state.filters);
                 const filter = changeActivationAndStatusOfFilter(filters, payload);
                 filters.set(payload.name, filter);
-                return {
+                if (payload.name === FilterType.BUSINESSDATE_FILTER) {
+                    return {
+                        ...state,
+                        filters: filters,
+                        domainId: payload.status.domainId,
+                        domainStartDate: payload.status.start,
+                        domainEndDate: payload.status.end
+                    };
+                }
+                 else return {
                     ...state,
                     filters: filters
                 };

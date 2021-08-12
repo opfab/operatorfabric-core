@@ -18,6 +18,8 @@ import * as _ from 'lodash-es';
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {TimeService} from "@ofServices/time.service";
+import {selectLightCardsState} from '@ofStore/selectors/feed.selectors';
+import {take} from 'rxjs/operators';
 
 @Component({
     selector: 'of-timeline-buttons',
@@ -160,7 +162,18 @@ export class TimelineButtonsComponent implements OnInit {
 
         this.selectZoomButton(conf.buttonTitle);
         this.domainId = conf.domainId;
-        this.setDefaultStartAndEndDomain();
+
+        this.store.select(selectLightCardsState).pipe(take(1)).subscribe(feedState => {
+            if (feedState.domainStartDate && feedState.domainEndDate && feedState.domainId && feedState.domainId == this.domainId) {
+                this.myDomain = [feedState.domainStartDate, feedState.domainEndDate];
+                this.startDate = this.getDateFormatting(feedState.domainStartDate);
+                this.endDate = this.getDateFormatting(feedState.domainEndDate);
+                this.domainChange.emit(this.myDomain);
+            } else {
+                this.setDefaultStartAndEndDomain();
+            }
+        });
+ 
         localStorage.setItem('opfab.timeLine.domain', this.domainId);
     }
 
@@ -231,7 +244,7 @@ export class TimelineButtonsComponent implements OnInit {
         this.domainChange.emit(this.myDomain);
         this.store.dispatch(new ApplyFilter({
             name: FilterType.BUSINESSDATE_FILTER, active: true,
-            status: {start: startDomain, end: endDomain}
+            status: {start: startDomain, end: endDomain, domainId: this.domainId}
         }));
     }
 

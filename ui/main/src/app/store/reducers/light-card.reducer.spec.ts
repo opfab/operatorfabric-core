@@ -89,6 +89,36 @@ describe('LightCard Reducer', () => {
 
     });
 
+    describe('apply business date filter action', () => {
+        it('should return state with filter updated', () => {
+            const filter = new Filter(
+                (card, status) => true,
+                false,
+                {domainId: null, domainStartDate: null, domainEndDate: null});
+            const previousState = {...feedInitialState, filters: new Map()};
+            previousState.filters.set(FilterType.BUSINESSDATE_FILTER, filter);
+
+            const starDate = 1628755200000;
+            const endDate = 1628798400000;
+
+            const action = new ApplyFilter({
+                name: FilterType.BUSINESSDATE_FILTER,
+                active: true,
+                status: {domainId: 'D', domainStartDate: starDate, domainEndDate: endDate}
+            });
+
+            const result = reducer(previousState, action);
+
+            expect(result.filters.size).toBe(1);
+            expect(result.filters.get(FilterType.BUSINESSDATE_FILTER)).not.toBeNull();
+            expect(result.filters.get(FilterType.BUSINESSDATE_FILTER).active).toBeTruthy();
+            expect(result.filters.get(FilterType.BUSINESSDATE_FILTER).status.domainId).toBe('D');
+            expect(result.filters.get(FilterType.BUSINESSDATE_FILTER).status.domainStartDate).toBe(starDate);
+            expect(result.filters.get(FilterType.BUSINESSDATE_FILTER).status.domainEndDate).toBe(endDate);
+        });
+
+    });
+
     describe('ClearLightCardSelection', () => {
 
         it('should clear the selected card', () => {
@@ -100,7 +130,10 @@ describe('LightCard Reducer', () => {
                     error: '',
                     filters: new Map(),
                     sortBySeverity: false,
-                    sortByRead: false
+                    sortByRead: false,
+                    domainId: null,
+                    domainStartDate: null,
+                    domainEndDate: null
                 });
 
             const expectedState: CardFeedState = LightCardAdapter.getInitialState(
@@ -110,7 +143,10 @@ describe('LightCard Reducer', () => {
                     error: '',
                     filters: new Map(),
                     sortBySeverity: false,
-                    sortByRead: false
+                    sortByRead: false,
+                    domainId: null,
+                    domainStartDate: null,
+                    domainEndDate: null
                 });
 
             const result = reducer(previousState, action);
@@ -134,7 +170,10 @@ describe('LightCard Reducer', () => {
                     error: '',
                     filters: new Map(),
                     sortBySeverity: initialSort,
-                    sortByRead: false
+                    sortByRead: false,
+                    domainId: null,
+                    domainStartDate: null,
+                    domainEndDate: null
                 });
 
             const expectedState: CardFeedState = LightCardAdapter.getInitialState(
@@ -144,7 +183,10 @@ describe('LightCard Reducer', () => {
                     error: '',
                     filters: new Map(),
                     sortBySeverity: !initialSort,
-                    sortByRead: false
+                    sortByRead: false,
+                    domainId: null,
+                    domainStartDate: null,
+                    domainEndDate: null
                 });
 
             const result = reducer(previousState, action);
@@ -168,7 +210,10 @@ describe('LightCard Reducer', () => {
                     error: '',
                     filters: new Map(),
                     sortBySeverity: false,
-                    sortByRead: initialSort
+                    sortByRead: initialSort,
+                    domainId: null,
+                    domainStartDate: null,
+                    domainEndDate: null
                 });
 
             const expectedState: CardFeedState = LightCardAdapter.getInitialState(
@@ -178,7 +223,10 @@ describe('LightCard Reducer', () => {
                     error: '',
                     filters: new Map(),
                     sortBySeverity: false,
-                    sortByRead: !initialSort
+                    sortByRead: !initialSort,
+                    domainId: null,
+                    domainStartDate: null,
+                    domainEndDate: null
                 });
 
             const result = reducer(previousState, action);
