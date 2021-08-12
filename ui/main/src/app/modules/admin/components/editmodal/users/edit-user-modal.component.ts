@@ -78,12 +78,12 @@ export class EditUserModalComponent implements OnInit {
           .subscribe(translations => {
               this.groupsDropdownSettings = {
                   text: translations['admin.input.selectGroupText'],
-                  badgeShowLimit: 3,
+                  badgeShowLimit: 6,
                   enableSearchFilter: true
               };
               this.entitiesDropdownSettings = {
                 text: translations['admin.input.selectEntityText'],
-                badgeShowLimit: 3,
+                badgeShowLimit: 6,
                 enableSearchFilter: true
             };
       });

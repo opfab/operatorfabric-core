@@ -82,7 +82,8 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
   }
   /** Default options for edition modals. */
   protected static defaultModalOptions: NgbModalOptions = {
-    backdrop: 'static' // Modal shouldn't close even if we click outside it
+    backdrop: 'static', // Modal shouldn't close even if we click outside it
+    size: 'lg'
   };
 
   unsubscribe$: Subject<void> = new Subject<void>();
