@@ -67,7 +67,7 @@ export class EditGroupModalComponent implements OnInit {
         .subscribe(translation => {
             this.perimetersDropdownSettings = {
               text: translation,
-              badgeShowLimit: 3,
+              badgeShowLimit: 6,
               enableSearchFilter: true
           };
     });

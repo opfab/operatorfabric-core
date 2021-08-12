@@ -64,7 +64,7 @@ export class EditEntityModalComponent implements OnInit {
         .subscribe(translation => {
             this.entitiesDropdownSettings = {
               text: translation,
-              badgeShowLimit: 3,
+              badgeShowLimit: 6,
               enableSearchFilter: true
           };
     });
