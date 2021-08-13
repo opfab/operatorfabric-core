@@ -112,7 +112,8 @@
     "received": "Reçu le",
     "at" : "à",
     "from": "de",
-    "moreCards": "cartes supplémentaires"
+    "moreCards": "cartes supplémentaires",
+    "lastResponse": "Dernière réponse reçue le"
   },
   "login": {
     "reset": "RaZ",

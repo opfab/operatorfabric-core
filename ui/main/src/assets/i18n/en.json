@@ -112,7 +112,8 @@
     "received": "Received on",
     "at": "at",
     "from" : "from",
-    "moreCards": "cards more"
+    "moreCards": "cards more",
+    "lastResponse": "Last response received on"
   },
   "login": {
     "reset": "Reset",
