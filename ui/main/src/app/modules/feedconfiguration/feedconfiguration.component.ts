@@ -113,15 +113,13 @@ export class FeedconfigurationComponent implements OnInit {
             this.currentUserWithPerimeters.processesStatesNotNotified :
             null);
 
-        this.processesDefinition.forEach(process => {
-            for (const key in process.states) {
-                const notNotifiedStatesForThisProcess = ((!! processesStatesNotNotified) ? processesStatesNotNotified[process.id] : null);
+        this.preparedListOfProcessesStates.forEach(processState => {
+            const notNotifiedStatesForThisProcess = ((!! processesStatesNotNotified) ? processesStatesNotNotified[processState.processId] : null);
 
-                let isChecked = true;
-                if ((!! notNotifiedStatesForThisProcess) && (notNotifiedStatesForThisProcess.includes(key)))
-                    isChecked = false;
-                this.processesStatesFormArray.push(new FormControl(isChecked));
-            }
+            let isChecked = true;
+            if ((!! notNotifiedStatesForThisProcess) && (notNotifiedStatesForThisProcess.includes(processState.stateId)))
+                isChecked = false;
+            this.processesStatesFormArray.push(new FormControl(isChecked));
         });
     }
 
