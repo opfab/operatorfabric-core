@@ -187,8 +187,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.setButtonsVisibility();
         this.showDetailCardHeader = (this.cardState.showDetailCardHeader === null) || (this.cardState.showDetailCardHeader === true);
         this.computeFromEntityOrRepresentative();
-        this.formattedPublishDate = this.time.formatDate(this.card.publishDate);
-        this.formattedPublishTime = this.time.formatTime(this.card.publishDate);
+        this.formattedPublishDate = this.formatDate(this.card.publishDate);
+        this.formattedPublishTime = this.formatTime(this.card.publishDate);
     }
 
     ngOnDestroy() {
@@ -512,6 +512,14 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.store.dispatch(new AlertMessage({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}}));
     }
 
+    public formatDate(date: number) {
+        return this.time.formatDate(date);
+    }
+
+    public formatTime(date: number) {
+        return this.time.formatTime(date);
+    }
+
     //START - METHODS CALLED ONLY FROM HTML COMPONENT  
 
     get i18nPrefix() {
@@ -521,6 +529,20 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     get btnAckText(): string {
         return this.card.hasBeenAcknowledged ? AckI18nKeys.BUTTON_TEXT_UNACK : AckI18nKeys.BUTTON_TEXT_ACK;
     }
+
+    // This method will be called many time per second. 
+    // In case of performances issues it could be optimized by defining a variable 
+    // and evaluating it every time there is a change in childCards 
+    get lastResponse() : Card {
+        if (!!this.childCards && this.childCards.length > 0) {
+            return [...this.childCards].sort( (a, b) => a.publishDate < b.publishDate ? 1 : -1)[0];
+        }
+        return null;
+    }
+
+    public getResponsePublisher(resp: Card) {
+        return this.entitiesService.getEntityName(resp.publisher)
+    } 
 
     public isSmallscreen() {
         return (window.innerWidth < 1000);

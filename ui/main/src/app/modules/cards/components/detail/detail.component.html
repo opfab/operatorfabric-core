@@ -107,7 +107,19 @@
                 <span translate> feed.from</span>
                 {{fromEntityOrRepresentative}}
               </span>
+
             </span>
+
+            <span *ngIf="lastResponse" class="opfab-card-received-footer">
+              <span translate>feed.lastResponse</span>
+              {{formatDate(lastResponse.publishDate)}} <span translate> feed.at </span> {{formatTime(lastResponse.publishDate)}}
+
+              <span>
+                <span translate> feed.from</span>
+                {{getResponsePublisher(lastResponse)}}
+              </span>
+            </span>
+
             <div *ngIf="showButtons" style="text-align: right;">
               <button id="opfab-card-details-btn-response" class="opfab-btn"
                 *ngIf='showActionButton && isUserEnabledToRespond && !isResponseLocked' [disabled]='lttdExpiredIsTrue || !isUserEnabledToRespond'
