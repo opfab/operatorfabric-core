@@ -58,6 +58,7 @@ export class FeedconfigurationComponent implements OnInit {
     preparedListOfProcessesStates: { processId: string,
                                      stateId: string
                                    } [];
+    isAllStatesSelectedPerProcess: Map<string, boolean>;
 
     modalRef: NgbModalRef;
 
@@ -78,6 +79,7 @@ export class FeedconfigurationComponent implements OnInit {
         this.preparedListOfProcessesStates = [];
         this.processesWithoutGroup = [];
         this.processesDefinition = this.processesService.getAllProcesses();
+        this.isAllStatesSelectedPerProcess = new Map();
         this.initForm();
     }
 
@@ -91,6 +93,37 @@ export class FeedconfigurationComponent implements OnInit {
                 return true;
         }
         return false;
+    }
+
+    private selectAllStates(idProcess: string) {
+        for (let state of this.processesStatesLabels.get(idProcess).states) {
+            if (! this.feedConfigurationForm.value.processesStates[state.stateControlIndex])
+                document.getElementById('' + state.stateControlIndex).click();
+        }
+    }
+
+    private unselectAllStates(idProcess: string) {
+        for (let state of this.processesStatesLabels.get(idProcess).states) {
+            if (this.feedConfigurationForm.value.processesStates[state.stateControlIndex])
+                document.getElementById('' + state.stateControlIndex).click();
+        }
+    }
+
+    private loadIsAllStatesSelected() {
+        for (let idProcess of Array.from(this.processesStatesLabels.keys()))
+            this.updateIsAllStatesSelected(idProcess);
+    }
+
+    private isAllStatesSelected(idProcess) {
+        for (let state of this.processesStatesLabels.get(idProcess).states) {
+            if (! this.feedConfigurationForm.value.processesStates[state.stateControlIndex])
+                return false;
+        }
+        return true;
+    }
+
+    private updateIsAllStatesSelected(idProcess) {
+        this.isAllStatesSelectedPerProcess.set(idProcess, this.isAllStatesSelected(idProcess));
     }
 
     private makeProcessesWithoutGroup() {
@@ -194,6 +227,7 @@ export class FeedconfigurationComponent implements OnInit {
             this.addCheckboxesInFormArray();
             if (this.checkPerimeterForSearchFields)
                 this.removeProcessesWithoutStatesWithReceiveRights();
+            this.loadIsAllStatesSelected();
         });
     }
 
