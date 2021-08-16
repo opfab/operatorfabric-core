@@ -29,8 +29,8 @@ describe ('Feed notification configuration tests',function () {
 
         // We check the number of processes and their titles
         cy.get('.opfab-feedconfiguration-processlist').first().find('p').should('have.length', 2);
-        cy.get('.opfab-feedconfiguration-processlist').first().find('p').first().should('have.text', 'IGCC');
-        cy.get('.opfab-feedconfiguration-processlist').first().find('p').last().should('have.text', 'Process example ');
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').first().should('have.text', 'IGCC ');
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').last().should('have.text', 'Process example  ');
 
         // We check the number of states for each process
         cy.get('.opfab-feedconfiguration-processlist').first().find('.col-md').first().find('.row').should('have.length', 6);
@@ -45,9 +45,9 @@ describe ('Feed notification configuration tests',function () {
 
         // We check the number of processes and their titles
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').should('have.length', 3);
-        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').first().should('have.text', 'Examples for new cards ');
-        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').eq(1).should('have.text', 'Examples for new cards 2');
-        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').last().should('have.text', 'Examples for new cards 3');
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').first().should('have.text', 'Examples for new cards  ');
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').eq(1).should('have.text', 'Examples for new cards 2 ');
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').last().should('have.text', 'Examples for new cards 3 ');
 
         // We check the number of states for each process
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.col-md').first().find('.row').should('have.length', 2);
@@ -58,7 +58,7 @@ describe ('Feed notification configuration tests',function () {
         // Processes without group
         // We check the number of processes and their titles
         cy.get('.opfab-feedconfiguration-processlist').last().find('p').should('have.length', 1);
-        cy.get('.opfab-feedconfiguration-processlist').last().find('p').should('have.text', 'Test process for cypress');
+        cy.get('.opfab-feedconfiguration-processlist').last().find('p').should('have.text', 'Test process for cypress ');
 
         // We check the number of states for each process
         cy.get('.opfab-feedconfiguration-processlist').last().find('.col-md').first().find('.row').should('have.length', 8);
