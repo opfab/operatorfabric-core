@@ -15,6 +15,7 @@ import {ICellRendererParams} from 'ag-grid-community';
 @Component({
   selector: 'of-action-cell-renderer',
   templateUrl: './action-cell-renderer.component.html',
+  styleUrls: ['../table/admin-table.directive.scss']
 })
 export class ActionCellRendererComponent implements ICellRendererAngularComp {
 
