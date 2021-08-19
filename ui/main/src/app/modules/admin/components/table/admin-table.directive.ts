@@ -164,6 +164,12 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
       columnDefs[index] = columnDef;
     });
 
+    const deleteActionCellClassRules = {
+      "action-cell-delete-admin": params =>
+          (params.context.componentParent.tableType === AdminItemType.USER && params.data.login.toLowerCase() === 'admin') ||
+          (params.context.componentParent.tableType === AdminItemType.GROUP && params.data.id.toLowerCase() === 'admin')
+    };
+
     // Add action columns
     columnDefs[fields.length] = {
       headerName: 'edit',
@@ -173,7 +179,8 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     columnDefs[fields.length + 1] = {
       headerName: 'delete',
       colId: 'delete',
-      type: 'actionColumn'
+      type: 'actionColumn',
+      cellClassRules: deleteActionCellClassRules
     };
 
     return columnDefs;
