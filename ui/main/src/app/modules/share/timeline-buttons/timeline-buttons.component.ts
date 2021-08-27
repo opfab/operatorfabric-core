@@ -165,10 +165,7 @@ export class TimelineButtonsComponent implements OnInit {
 
         this.store.select(selectLightCardsState).pipe(take(1)).subscribe(feedState => {
             if (feedState.domainStartDate && feedState.domainEndDate && feedState.domainId && feedState.domainId == this.domainId) {
-                this.myDomain = [feedState.domainStartDate, feedState.domainEndDate];
-                this.startDate = this.getDateFormatting(feedState.domainStartDate);
-                this.endDate = this.getDateFormatting(feedState.domainEndDate);
-                this.domainChange.emit(this.myDomain);
+                this.setStartAndEndDomain(feedState.domainStartDate,feedState.domainEndDate)
             } else {
                 this.setDefaultStartAndEndDomain();
             }
