@@ -19,7 +19,6 @@ import org.opfab.users.repositories.PerimeterRepository;
 import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.services.UserServiceImp;
 import org.opfab.users.model.GroupData;
-import org.opfab.users.model.PerimeterData;
 import org.opfab.users.model.UserData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
