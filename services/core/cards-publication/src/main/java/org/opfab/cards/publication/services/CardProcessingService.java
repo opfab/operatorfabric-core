@@ -108,7 +108,7 @@ public class CardProcessingService {
     }
 
     private Void deleteChildCardsProcess(CardPublicationData card) {
-        if (! card.getKeepChildCards()) {
+        if (Boolean.FALSE.equals(card.getKeepChildCards())) {
             String idCard = card.getProcess() + "." + card.getProcessInstanceId();
             Optional<List<CardPublicationData>> childCard = cardRepositoryService.findChildCard(cardRepositoryService.findCardById(idCard));
             if (childCard.isPresent()) {
