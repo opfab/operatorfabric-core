@@ -41,16 +41,13 @@ public class GroupsUtils {
 	 */
 	public List<GrantedAuthority> createAuthorityList(Jwt jwt) {
 		List<String> listGroupsFromListRolesClaim = createGroupsList(jwt);
-		List<GrantedAuthority> listGrantedAuthority = computeAuthorities(listGroupsFromListRolesClaim);
-		
-		return listGrantedAuthority;
+		return computeAuthorities(listGroupsFromListRolesClaim);
 	}
 	
 	public List<String> createGroupsList(Jwt jwt) {
 		
 		List<RoleClaim> listRoleClaim = groupsProperties.getListRoleClaim();
-		List<String> listGroupsFromListRolesClaim = getGroupsFromListRolesClaim(jwt, listRoleClaim);
-		return listGroupsFromListRolesClaim;
+		return getGroupsFromListRolesClaim(jwt, listRoleClaim);
 	} 
 	
 	/**
