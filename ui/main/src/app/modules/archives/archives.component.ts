@@ -182,13 +182,14 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
                 let requestID = new Date().valueOf();
                 this.lastRequestID = requestID;
-
-                this.updatesByCardId = [];
                 this.loadUpdatesByCardId(requestID);
             });
     }
 
     loadUpdatesByCardId(requestID: number) {
+        this.updatesByCardId = [];
+        this.results.forEach((lightCard, index) => {this.updatesByCardId.splice(index, 0, {mostRecent: lightCard, cardHistories: [], displayHistory: false})});
+
         this.results.forEach((lightCard, index) => {
             const filters: Map<string,  string[]> = new Map();
             filters.set('process', [lightCard.process]);
@@ -201,7 +202,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
                     //since we are in asynchronous mode, we test requestId to avoid that the requests "overlap" and that the results appear in a wrong order
                     if (requestID === this.lastRequestID)
-                        this.updatesByCardId.splice(index, 0, {mostRecent: lightCard, cardHistories: page.content, displayHistory: false});
+                        this.updatesByCardId.splice(index, 1, {mostRecent: lightCard, cardHistories: page.content, displayHistory: false});
                 });
         });
     }
