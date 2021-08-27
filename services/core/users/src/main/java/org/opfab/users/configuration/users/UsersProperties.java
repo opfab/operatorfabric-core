@@ -13,7 +13,6 @@ package org.opfab.users.configuration.users;
 
 import lombok.Data;
 import org.opfab.users.model.*;
-import org.opfab.users.model.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 

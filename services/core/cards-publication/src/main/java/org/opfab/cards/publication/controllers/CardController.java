@@ -12,14 +12,12 @@ package org.opfab.cards.publication.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.aop.process.mongo.models.UserActionTraceData;
-import org.opfab.cards.model.PublisherTypeEnum;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.services.CardProcessingService;
 import org.opfab.cards.publication.services.UserBasedOperationResult;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;

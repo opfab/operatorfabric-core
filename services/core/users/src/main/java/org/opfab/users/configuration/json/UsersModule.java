@@ -13,7 +13,6 @@ package org.opfab.users.configuration.json;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.opfab.users.model.*;
-import org.opfab.users.model.*;
 
 /**
  * Jackson (JSON) Business Module configuration
