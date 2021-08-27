@@ -114,8 +114,10 @@ public class CardController {
  
         if (!result.isCardFound()) response.setStatus(404);
         else  {
-            if (!result.getOperationDone()) response.setStatus(200);
-            else response.setStatus(201);
+            if (Boolean.TRUE.equals(result.getOperationDone()))
+                response.setStatus(201);
+            else
+                response.setStatus(200);
         }
         return null;
     }
@@ -131,8 +133,10 @@ public class CardController {
         UserBasedOperationResult result= cardProcessingService.processUserRead(cardUid, principal.getName());
         if (!result.isCardFound()) response.setStatus(404); 
         else { 
-            if (!result.getOperationDone()) response.setStatus(200);
-            else response.setStatus(201);
+            if (Boolean.TRUE.equals(result.getOperationDone()))
+                response.setStatus(201);
+            else
+                response.setStatus(200);
         }
         return null;
     }
@@ -148,9 +152,11 @@ public class CardController {
         UserBasedOperationResult result = cardProcessingService.deleteUserAcknowledgement(cardUid, principal.getName());
         if (!result.isCardFound()) response.setStatus(404);
         else {
-            if (!result.getOperationDone()) response.setStatus(204);
-            else response.setStatus(200);
-            }
+            if (Boolean.TRUE.equals(result.getOperationDone()))
+                response.setStatus(200);
+            else
+                response.setStatus(204);
+        }
         return null;
     }
 
@@ -165,9 +171,11 @@ public class CardController {
         UserBasedOperationResult result =  cardProcessingService.deleteUserRead(cardUid,principal.getName());
         if (!result.isCardFound()) response.setStatus(404);
         else {
-            if (!result.getOperationDone()) response.setStatus(204);
-            else response.setStatus(200);
-            }
+            if (Boolean.TRUE.equals(result.getOperationDone()))
+                response.setStatus(200);
+            else
+                response.setStatus(204);
+        }
         return null;
     }
 
