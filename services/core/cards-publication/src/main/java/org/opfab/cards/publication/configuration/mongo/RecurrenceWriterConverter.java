@@ -14,7 +14,6 @@ package org.opfab.cards.publication.configuration.mongo;
 import org.bson.Document;
 import org.opfab.cards.publication.model.RecurrencePublicationData;
 import org.opfab.cards.publication.model.HoursAndMinutes;
-import org.opfab.cards.publication.model.HoursAndMinutesPublicationData;
 
 
 import java.util.List;
@@ -32,7 +31,7 @@ public class RecurrenceWriterConverter {
         Document result = new Document();
         HoursAndMinutes  hoursAndMinutes = source.getHoursAndMinutes();
         if (hoursAndMinutes!=null) {
-            result.append("hoursAndMinutes", HoursAndMinutesWriterConverter.convert((HoursAndMinutesPublicationData) hoursAndMinutes));
+            result.append("hoursAndMinutes", HoursAndMinutesWriterConverter.convert(hoursAndMinutes));
         }
 
         List<Integer>  daysOfWeek = source.getDaysOfWeek();

@@ -61,7 +61,7 @@ public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters 
         //First, we build a MultiKeyMap with key is (process, state) and value is a list of rights
         perimeters.forEach(perimeter -> {
 
-            List<StateRight> stateRights = (List<StateRight>) perimeter.getStateRights();
+            List<StateRight> stateRights = perimeter.getStateRights();
 
             stateRights.forEach(stateRight -> {
                 List<RightsEnum> currentList = multimapWithListOfRights.get(perimeter.getProcess(), stateRight.getState());
@@ -87,8 +87,8 @@ public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters 
         if (multimapWithOneRight != null) {
             multimapWithOneRight.forEach((processstate, right) -> {
                 ComputedPerimeterData c = ComputedPerimeterData.builder()
-                                            .process((String)processstate.getKey(0))
-                                            .state((String)processstate.getKey(1))
+                                            .process(processstate.getKey(0))
+                                            .state(processstate.getKey(1))
                                             .rights(right.get(0))
                                             .build();
                 addComputedPerimeters(c);

@@ -290,7 +290,7 @@ public class GroupsController implements GroupsApi {
 
         List<Perimeter> foundPerimeters = new ArrayList<>();
         for(String perimeterId : perimeterIds){
-            Perimeter foundPerimeter = (Perimeter) perimeterRepository.findById(perimeterId).orElseThrow(
+            Perimeter foundPerimeter = perimeterRepository.findById(perimeterId).orElseThrow(
                     () -> new ApiErrorException(
                             ApiError.builder()
                                     .status(HttpStatus.BAD_REQUEST)

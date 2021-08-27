@@ -48,7 +48,7 @@ public class ProcessData implements Process {
 
   @Override
   public void setStates(Map<String,ProcessStates> states){
-    this.states = new HashMap<>((Map<String, ProcessStates>) states);
+    this.states = new HashMap<>(states);
   }
 
   @Override
