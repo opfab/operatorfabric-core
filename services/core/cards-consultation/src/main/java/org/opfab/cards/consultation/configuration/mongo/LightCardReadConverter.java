@@ -14,7 +14,6 @@ import org.bson.Document;
 import org.opfab.cards.consultation.model.LightCard;
 import org.opfab.cards.consultation.model.LightCardConsultationData;
 import org.opfab.cards.consultation.model.PublisherTypeEnum;
-import org.opfab.cards.consultation.model.TimeSpanConsultationData;
 import org.opfab.cards.model.SeverityEnum;
 import org.springframework.core.convert.converter.Converter;
 
@@ -82,7 +81,7 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
         List<Document> timeSpans = (List<Document>) source.get("timeSpans");
         if (timeSpans != null)
             for (Document d : timeSpans) {
-                builder.timeSpan((TimeSpanConsultationData) timeSpanConverter.convert(d));
+                builder.timeSpan(timeSpanConverter.convert(d));
             }
         return builder.build();
     }
