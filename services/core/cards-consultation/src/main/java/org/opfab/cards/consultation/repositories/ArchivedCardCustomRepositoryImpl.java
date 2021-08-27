@@ -95,7 +95,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         } else {
             return template.aggregate(agg, ARCHIVED_CARDS_COLLECTION, LightCardConsultationData.class)
                     .cast(LightCard.class).collectList()
-                    .map(results -> new PageImpl<>(results));
+                    .map(PageImpl::new);
         }
         //The class used as a parameter for the find & count methods is LightCard (and not LightCardConsultationData) to make use of the existing LightCardReadConverter
     }
