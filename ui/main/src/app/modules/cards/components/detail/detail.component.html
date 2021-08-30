@@ -99,26 +99,27 @@
 
           <div id='div-detail-btn'>
 
-            <span class="opfab-card-received-footer">
-              <span translate>feed.received</span>
-              {{formattedPublishDate}} <span translate> feed.at </span> {{formattedPublishTime}}
 
-              <span *ngIf="fromEntityOrRepresentative">
-                <span translate> feed.from</span>
-                {{fromEntityOrRepresentative}}
-              </span>
-
-            </span>
-
-            <span *ngIf="lastResponse" class="opfab-card-received-footer">
-              <span translate>feed.lastResponse</span>
-              {{formatDate(lastResponse.publishDate)}} <span translate> feed.at </span> {{formatTime(lastResponse.publishDate)}}
-
-              <span>
-                <span translate> feed.from</span>
-                {{getResponsePublisher(lastResponse)}}
-              </span>
-            </span>
+              <div class="opfab-card-received-footer">
+                <span translate>feed.received</span>
+                {{formattedPublishDate}} <span translate> feed.at </span> {{formattedPublishTime}}
+              
+                <span *ngIf="fromEntityOrRepresentative">
+                  <span translate> feed.from</span>
+                  {{fromEntityOrRepresentative}}
+                </span>
+                
+                <span *ngIf="lastResponse">
+                  <span > --- </span>
+                  <span translate>feed.lastResponse</span>
+                  {{formatDate(lastResponse.publishDate)}} <span translate> feed.at </span> {{formatTime(lastResponse.publishDate)}}
+              
+                  <span>
+                    <span translate> feed.from</span>
+                    {{getResponsePublisher(lastResponse)}}
+                  </span>
+                </span>
+              </div>
 
             <div *ngIf="showButtons" style="text-align: right;">
               <button id="opfab-card-details-btn-response" class="opfab-btn"
