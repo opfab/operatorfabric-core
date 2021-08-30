@@ -54,7 +54,6 @@
     "moment": "2.29.1",
     "moment-timezone": "0.5.33",
     "ng-event-source": "1.0.14",
-    "ngx-bootstrap": "6.2.0",
     "ngx-type-ahead": "2.0.1",
     "rxjs": "7.3.0",
     "svg-pan-zoom": "3.6.1",
