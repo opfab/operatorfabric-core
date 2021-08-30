@@ -12,7 +12,6 @@ import {ErrorHandler, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AdminComponent} from './admin.component';
-import {PaginationModule} from 'ngx-bootstrap/pagination';
 import {AdminRoutingModule} from './admin-routing.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {AppErrorHandler} from 'app/common/error/app-error-handler';
@@ -62,7 +61,6 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
     FormsModule
     , ReactiveFormsModule
     , AdminRoutingModule
-    , PaginationModule.forRoot()
     , CommonModule
     , MultiFilterModule
     , TranslateModule
