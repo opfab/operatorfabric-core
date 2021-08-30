@@ -21,6 +21,7 @@ import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {UserContext} from '@ofModel/user-context.model';
 import {skip, switchMap, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
+import {UserService} from '@ofServices/user.service';
 
 
 declare const templateGateway: any;
@@ -46,14 +47,19 @@ export class CardDetailComponent implements OnInit, OnDestroy {
 
     constructor(private element: ElementRef, private businessconfigService: ProcessesService,
                 private handlebars: HandlebarsService, private sanitizer: DomSanitizer,
-                private store: Store<AppState>) {
+                private store: Store<AppState>,private userService: UserService) {
 
+        let user ; 
+        const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+        if (!!userWithPerimeters) user = userWithPerimeters.userData;
         this.store.select(selectAuthenticationState).subscribe(authState => {
             this._userContext = new UserContext(
                 authState.identifier,
                 authState.token,
                 authState.firstName,
-                authState.lastName
+                authState.lastName,
+                user.groups,
+                user.entities
             );
         });
         this.reloadTemplateWhenGlobalStyleChange();
@@ -114,18 +120,19 @@ export class CardDetailComponent implements OnInit, OnDestroy {
                     new DetailContext(this.card, this._userContext, null));
             })
         )
-            .subscribe(
-                html => {
+            .subscribe({
+                next: (html) => {
                     this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
                     setTimeout(() => { // wait for DOM rendering
                         this.reinsertScripts();
                         templateGateway.setScreenSize(this.screenSize);
                     }, 10);
-                }, () =>  {
-                    console.log('WARNING impossible to load template ', this.templateName);
+                },
+                error: (error) => {
+                    console.log(new Date().toISOString(), 'WARNING impossible to process template ', this.templateName, ":  ", error);
                     this._htmlContent = this.sanitizer.bypassSecurityTrustHtml('');
                 }
-            );
+            });
     }
 
     get htmlContent() {

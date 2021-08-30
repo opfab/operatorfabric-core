@@ -87,7 +87,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     @Input() cardState: State;
     @Input() card: Card;
     @Input() childCards: Card[];
-    @Input() user: User;
+
     @Input() currentPath: string;
     @Input() parentModalRef: NgbModalRef;
     @Input() screenSize: string;
@@ -126,6 +126,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private userContext: UserContext;
     private unsubscribe$: Subject<void> = new Subject<void>();
     private modalRef: NgbModalRef;
+    private user: User;
 
     constructor(private element: ElementRef,
         private businessconfigService: ProcessesService,
@@ -140,6 +141,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         private time: TimeService,
         private acknowledgeService: AcknowledgeService,
         private userPermissionsService: UserPermissionsService) {
+
+            const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+            if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 
 
@@ -209,7 +213,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private initializeHandlebarsTemplates() {
-
         if (!this.userContext) {
             this.store.select(selectAuthenticationState).subscribe(authState => {
                 this.userContext = new UserContext(
@@ -247,8 +250,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                             }, 10);
                         }, 10);
                     },
-                    error: () => {
-                        console.log(new Date().toISOString(), 'WARNING impossible to load template ', templateName);
+                    error: (error) => {
+                        console.log(new Date().toISOString(), 'WARNING impossible to process template ', templateName , ":  ", error ) ;
                         this.htmlTemplateContent = this.sanitizer.bypassSecurityTrustHtml('');
                     }
                 });

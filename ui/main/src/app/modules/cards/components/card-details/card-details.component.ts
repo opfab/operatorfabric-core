@@ -16,7 +16,6 @@ import {ProcessesService} from '@ofServices/processes.service';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {UserService} from '@ofServices/user.service';
-import {User} from '@ofModel/user.model';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {AppService} from '@ofServices/app.service';
 import {State as CardState, State} from '@ofModel/processes.model';
@@ -28,7 +27,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
             <div *ngIf="card && cardState" style="font-size:13px;">
                 <of-detail   [cardState]="cardState" [card]="card" [childCards]="childCards"
-                           [user]="user" [currentPath]="_currentPath" [parentModalRef]="parentModalRef" [screenSize]="screenSize">
+                           [currentPath]="_currentPath" [parentModalRef]="parentModalRef" [screenSize]="screenSize">
                 </of-detail>
             </div>
         `
@@ -41,7 +40,6 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
 
     card: Card;
     childCards: Card[];
-    user: User;
     cardState: CardState;
     unsubscribe$: Subject<void> = new Subject<void>();
     protected _currentPath: string;
@@ -97,8 +95,7 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
                 }
             });
 
-        const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
-        if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
+
     }
 
     ngOnDestroy() {
