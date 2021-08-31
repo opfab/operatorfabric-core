@@ -33,11 +33,11 @@ describe ('Feed notification configuration tests',function () {
         cy.get('.opfab-feedconfiguration-processlist').first().find('p').last().should('have.text', 'Process example  ');
 
         // We check the number of states for each process
-        cy.get('.opfab-feedconfiguration-processlist').first().find('.col-md').first().find('.row').should('have.length', 6);
-        cy.get('.opfab-feedconfiguration-processlist').first().find('.col-md').last().find('.row').should('have.length', 7);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').first().find('.row').should('have.length', 6);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').last().find('.row').should('have.length', 7);
 
         // We check the following state is absent because property 'isOnlyAChildState' is set to true
-        cy.get('.opfab-feedconfiguration-processlist').first().find('.col-md').last().find('.row').contains('Planned outage date response').should('not.exist');
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').last().find('.row').contains('Planned outage date response').should('not.exist');
 
 
         // Second process group
@@ -50,9 +50,9 @@ describe ('Feed notification configuration tests',function () {
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').last().should('have.text', 'Examples for new cards 3 ');
 
         // We check the number of states for each process
-        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.col-md').first().find('.row').should('have.length', 2);
-        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.col-md').eq(1).find('.row').should('have.length', 2);
-        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.col-md').last().find('.row').should('have.length', 1);
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').first().find('.row').should('have.length', 2);
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').eq(1).find('.row').should('have.length', 2);
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').last().find('.row').should('have.length', 1);
 
 
         // Processes without group
@@ -61,9 +61,9 @@ describe ('Feed notification configuration tests',function () {
         cy.get('.opfab-feedconfiguration-processlist').last().find('p').should('have.text', 'Test process for cypress ');
 
         // We check the number of states for each process
-        cy.get('.opfab-feedconfiguration-processlist').last().find('.col-md').first().find('.row').should('have.length', 8);
+        cy.get('.opfab-feedconfiguration-processlist').last().find('.opfab-feedconfiguration-process').first().find('.row').should('have.length', 8);
 
         // We check the following state is absent because property 'isOnlyAChildState' is set to true
-        cy.get('.opfab-feedconfiguration-processlist').last().find('.col-md').first().find('.row').contains('Dummy response state for tests').should('not.exist');
+        cy.get('.opfab-feedconfiguration-processlist').last().find('.opfab-feedconfiguration-process').first().find('.row').contains('Dummy response state for tests').should('not.exist');
     })
 })

@@ -15,8 +15,8 @@
     <form [formGroup]="feedConfigurationForm">
         <div *ngFor="let processGroup of processGroupsAndLabels; " class="opfab-feedconfiguration-processlist">
             <h5 class="font-weight-bold">{{processGroup.groupLabel}}</h5>
-            <div class="row">
-                <div class="col-md" *ngFor="let processIdAndLabel of processGroup.processes; ">
+            <div class="opfab-feedconfiguration-processgrid">
+                <div  class="opfab-feedconfiguration-process" *ngFor="let processIdAndLabel of processGroup.processes; ">
                     <div *ngIf="processesStatesLabels.get(processIdAndLabel.processId) as processData">
                         <p class="font-weight-bold">
                             <label style="font-weight: bold" class="opfab-checkbox" *ngIf="! isAllStatesSelectedPerProcess.get(processIdAndLabel.processId)">{{processData.processLabel}}
@@ -42,8 +42,8 @@
             <br />
         </div>
         <br />
-        <div class="row opfab-feedconfiguration-processlist" *ngIf="!! processesWithoutGroup && processesWithoutGroup.length">
-            <div class="col-md" *ngFor="let process of processesWithoutGroup; ">
+        <div class="row opfab-feedconfiguration-processlist opfab-feedconfiguration-processgrid" *ngIf="!! processesWithoutGroup && processesWithoutGroup.length">
+            <div class="opfab-feedconfiguration-process" *ngFor="let process of processesWithoutGroup; ">
                 <p class="font-weight-bold">
                     <label style="font-weight: bold" class="opfab-checkbox" *ngIf="! isAllStatesSelectedPerProcess.get(process.idProcess)">{{process.processLabel}}
                         <input type="checkbox" (click)="selectAllStates(process.idProcess)">
