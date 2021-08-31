@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,6 +26,14 @@
   margin-top: 20px;
   padding-top: 10px;
   padding-bottom: 10px;
+}
+
+.opfab-feedconfiguration-processgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(100px,300px));
+}
+.opfab-feedconfiguration-process {
+  margin-right: 20px;
 }
 
 .modal-body{
