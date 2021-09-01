@@ -11,6 +11,7 @@ package org.opfab.client;
 
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.cards.model.Card;
+import org.opfab.cards.model.CardCreationReport;
 import org.opfab.cards.model.I18n;
 import org.opfab.cards.model.SeverityEnum;
 import org.opfab.client.cards.CardClient;
@@ -51,7 +52,7 @@ public class ClientApplication implements CommandLineRunner {
 		Card card = new Card();
 		card.setPublisher("operator1");
 		card.setProcessVersion("1");
-		card.setProcess("api_test");
+		card.setProcess("defaultProcess");
 		card.setProcessInstanceId("processClient");
 		card.setState("messageState");
 		card.setUserRecipients(List.of("operator1"));
@@ -73,11 +74,11 @@ public class ClientApplication implements CommandLineRunner {
 			log.error("Error getting token", e);
 		}
 		if (token != null) {
-			String result = cardClient.postCard(OPFAB_PUBLICATION_URL, token, card);
+			CardCreationReport result = cardClient.postCard(OPFAB_PUBLICATION_URL, token, card);
 			log.info("Card creation result : '" + result + "'");
 	
 				
-			String cardId = "api_test.processClient";
+			String cardId = "defaultProcess.processClient";
 			Card card2 = cardClient.getCard(OPFAB_CONSULTATION_URL, token, cardId);
 			log.info("Got card " + card2);
 		}

@@ -69,6 +69,7 @@ Feature: Cards
     And request card
     When method post
     Then status 201
+    And match response == {"id":'#notnull', uid: '#notnull'}
 
 
 
@@ -97,6 +98,8 @@ Feature: Cards
     And request card
     When method post
     Then status 201
+    And def cardUid = response.uid
+    And def cardId = response.id
 
 #get card with user operator1
     Given url opfabUrl + 'cards/cards/api_test.process1'
@@ -104,8 +107,10 @@ Feature: Cards
     When method get
     Then status 200
     And match response.card.data.message == 'new message'
-    And def cardUid = response.uid
 	And match response.card.publisherType == "EXTERNAL"
+    And match response.card.id == cardId
+    And match response.card.uid == cardUid
+
 
     #get card without  authentication
     Given url opfabUrl + 'cards/cards/api_test.process1'
@@ -120,7 +125,7 @@ Feature: Cards
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And def cardUid = response.uid
+    And def cardUid = response.card.uid
 
 # delete card without authentication
     Given url opfabPublishCardUrl + 'cards/api_test.process1'
@@ -174,7 +179,7 @@ Feature: Cards
     When method get
     Then status 200
     And match response.card.externalRecipients[1] == "api_test165"
-    And def cardUid = response.uid
+    And def cardUid = response.card.uid
 
 Scenario:  Post card with no recipient but entityRecipients
 
