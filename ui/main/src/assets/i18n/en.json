@@ -168,6 +168,7 @@
       "processGroup": "SERVICE"
     },
     "noResult": "Your search did not match any results.",
+    "tooManyRows": "Too many cards , not all cards visible",
     "exportToExcel" : "Export data",
     "resultsNumber":"Results number"
 

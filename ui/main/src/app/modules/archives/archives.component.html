@@ -93,6 +93,11 @@
             <td style="padding-left: 30px" translate [translateParams]="historyCard.summary.parameters">{{ historyCard.process + '.' + historyCard.processVersion + '.' + historyCard.summary.key}}</td>
             <td style="padding-left: 30px" *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>{{ processesService.findProcessGroupLabelForProcess(historyCard.process) }}</td>
           </tr>
+          <tr *ngIf="updates.tooManyRows">
+            <td colspan="3"></td>
+            <td colspan="4" style="padding-left: 30px" translate>archive.tooManyRows</td>
+            <td *ngIf="filtersTemplate.displayProcessGroupFilter()"></td>
+          </tr>
         </ng-container>
       </ng-container>
       </tbody>

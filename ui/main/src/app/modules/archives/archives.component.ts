@@ -42,10 +42,11 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     tags: any[];
     size: number;
+    historySize: number;
     archiveForm: FormGroup;
 
     results: LightCard[];
-    updatesByCardId: {mostRecent: LightCard, cardHistories: LightCard[], displayHistory: boolean}[];
+    updatesByCardId: {mostRecent: LightCard, cardHistories: LightCard[], displayHistory: boolean, tooManyRows: boolean}[];
     currentPage = 0;
     resultsNumber = 0;
     hasResult = false;
@@ -103,6 +104,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     ngOnInit() {
         this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
+        this.historySize = parseInt(this.configService.getConfigValue('archive.history.size', 100));
         this.results = [];
         this.updatesByCardId = [];
         this.dateTimeFilterChange.pipe(
@@ -188,12 +190,14 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     loadUpdatesByCardId(requestID: number) {
         this.updatesByCardId = [];
-        this.results.forEach((lightCard, index) => {this.updatesByCardId.splice(index, 0, {mostRecent: lightCard, cardHistories: [], displayHistory: false})});
+        this.results.forEach((lightCard, index) => {this.updatesByCardId.splice(index, 0, {mostRecent: lightCard, cardHistories: [], displayHistory: false, tooManyRows: false})});
 
         this.results.forEach((lightCard, index) => {
             const filters: Map<string,  string[]> = new Map();
             filters.set('process', [lightCard.process]);
             filters.set('processInstanceId', [lightCard.processInstanceId]);
+            filters.set('size', [(1 + this.historySize).toString() ]);
+            filters.set('page', ['0']);
             this.cardService.fetchArchivedCards(filters)
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe((page: Page<LightCard>) => {
@@ -202,7 +206,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
                     //since we are in asynchronous mode, we test requestId to avoid that the requests "overlap" and that the results appear in a wrong order
                     if (requestID === this.lastRequestID)
-                        this.updatesByCardId.splice(index, 1, {mostRecent: lightCard, cardHistories: page.content, displayHistory: false});
+                        this.updatesByCardId.splice(index, 1, {mostRecent: lightCard, cardHistories: page.content, displayHistory: false, tooManyRows: page.totalPages > 1});
                 });
         });
     }
