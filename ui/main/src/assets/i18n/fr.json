@@ -168,6 +168,7 @@
       "processGroup": "SERVICE"
     },
     "noResult": "Votre recherche ne correspond à aucun résultat.",
+    "tooManyRows": "Trop de cartes, toutes les cartes ne sont pas visibles",
     "exportToExcel" : "Exporter les données",
     "resultsNumber":"Nombre de résultats"
   },
