@@ -65,7 +65,7 @@
     "@angular/cli": "12.1.4",
     "@angular/compiler-cli": "12.1.4",
     "@angular/language-service": "12.1.4",
-    "@babel/compat-data": "7.14.9",
+    "@babel/compat-data": "7.15.0",
     "@fortawesome/fontawesome-free": "5.15.4",
     "@ngrx/schematics": "12.4.0",
     "@ngrx/store-devtools": "12.4.0",
