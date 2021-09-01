@@ -28,8 +28,7 @@ bootJar {
 				"Specification-Title"    : "OperatorFabric Businessconfig Parties Manager",
 				"Implementation-Title"   : "OperatorFabric Businessconfig Parties Manager",
 				"Implementation-Version" : operatorfabric.version,
-				"Specification-Version"  : operatorfabric.version,
-				'Main-Class': 'org.opfab.client.ClientApplication'
+				"Specification-Version"  : operatorfabric.version
 		)
 	}
 }
