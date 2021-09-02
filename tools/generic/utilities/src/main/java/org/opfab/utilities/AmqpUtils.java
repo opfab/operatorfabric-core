@@ -32,7 +32,7 @@ public class AmqpUtils {
      */
     public static Queue createQueue(AmqpAdmin amqpAdmin, String queueName, FanoutExchange exchange, int retries, long retryInterval) {
         log.debug("CREATE queue {}", queueName);
-        Queue queue = QueueBuilder.nonDurable(queueName).build();
+        Queue queue = QueueBuilder.durable(queueName).build();
         boolean created = false;
         int retry = 1;
         while (!created) {
