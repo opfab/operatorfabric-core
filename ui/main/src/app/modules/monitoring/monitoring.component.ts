@@ -81,7 +81,8 @@ export class MonitoringComponent implements OnInit, OnDestroy {
                         return cards.map(card => {
                                 return this.cardToResult(card)
                             }
-                        ).filter(elem => !!elem);
+                        ).filter(elem => !!elem)
+                         .sort(( card1,card2) => (card2.creationDateTime.valueOf() - card1.creationDateTime.valueOf()));
                     }
                 ),
                 catchError(err => of([]))
