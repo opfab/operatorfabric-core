@@ -14,7 +14,6 @@
   "importMappings": {
     "CardOperationTypeEnum": "org.opfab.cards.model.CardOperationTypeEnum",
     "SeverityEnum": "org.opfab.cards.model.SeverityEnum",
-    "InputEnum": "org.opfab.cards.model.InputEnum",
     "EpochDate": "java.time.Instant",
     "PublisherTypeEnum": "org.opfab.cards.model.PublisherTypeEnum"
   }

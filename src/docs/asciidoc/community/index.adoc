@@ -22,6 +22,7 @@ This project is governed by the link:../pdf/technical-charter.pdf[OperatorFabric
 This project applies the LF Energy Code of Conduct. By participating, you are expected to uphold this code.
 Please report unacceptable behavior to mailto:opfab_AT_lists.lfenergy.org[opfab_AT_lists.lfenergy.org].
 
+[[license_and_DCO]]
 == License and Developer Certificate of Origin
 
 OperatorFabric is an open source project licensed under the link:https://www.mozilla.org/en-US/MPL/2.0/[Mozilla Public License 2.0].

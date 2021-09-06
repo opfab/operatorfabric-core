@@ -77,9 +77,8 @@ public abstract class RoleClaim {
         
 		int payloadIndexInJwt = 1;
 		String base64EncodedBody = tokenSplit[payloadIndexInJwt];
-        String payload = new String(Base64.getUrlDecoder().decode(base64EncodedBody));
- 
-		return payload;
+
+		return new String(Base64.getUrlDecoder().decode(base64EncodedBody));
 	}
 	
 	/**

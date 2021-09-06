@@ -1,6 +1,10 @@
 dependencies{
-    compile spring.securityTest
-    compile project(':tools:spring:spring-oauth2-utilities')
-    compile project(":client:users-client-data")
-    compile boot.starterWeb
+    implementation spring.securityTest
+    implementation spring.securityOauthResource, spring.securityOauthJose
+    implementation boot.starterWeb
+    implementation cloud.starterFeign
+    implementation misc.feignMock
+    implementation misc.feignJackson
+    implementation project(':tools:spring:spring-oauth2-utilities')
+    implementation project(":client:users-client-data")
 }

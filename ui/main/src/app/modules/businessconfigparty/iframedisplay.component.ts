@@ -50,11 +50,12 @@ export class IframeDisplayComponent implements OnInit, OnDestroy {
       map((url) => this.addParamToUrl(url)),
       map((url) => this.sanitizer.bypassSecurityTrustResourceUrl(url)),
       takeUntil(this.unsubscribe$)
-    ).subscribe(
-      url => this.iframeURL = url,
-      err => {
+    ).subscribe({
+      next: url => this.iframeURL = url,
+      error: err => {
         console.log('Error in business application redirection = ', err); this.router.navigate(['/feed']);
-      });
+      }
+    });
   }
 
 

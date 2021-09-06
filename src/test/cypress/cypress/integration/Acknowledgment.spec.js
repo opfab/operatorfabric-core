@@ -15,6 +15,10 @@ describe('Acknowledgment  tests', function () {
         cy.resetUIConfigurationFiles();
 
         cy.loadTestConf();
+
+        // Clean up existing cards
+        cy.deleteAllCards();
+
         // Send a card with ack config set to Always
         // ack is possible 
         cy.sendCard('cypress/ack/message1.json');
@@ -38,15 +42,6 @@ describe('Acknowledgment  tests', function () {
         // Send a card with ack config set to OnlyWhenResponseDisabledForUser and user can respond and lttd is not expired
         // ack is not possible before lttd is expired
         cy.sendCard('cypress/ack/message6.json');
-    });
-
-    after('Clean', function () {
-        cy.deleteCard('cypress.message1');
-        cy.deleteCard('cypress.message2');
-        cy.deleteCard('cypress.message3');
-        cy.deleteCard('cypress.message4');
-        cy.deleteCard('cypress.message5');
-        cy.deleteCard('cypress.message6');
     });
 
     it('Check acknowledgment for operator 1', function () {

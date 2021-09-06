@@ -41,15 +41,15 @@ jobs:
   include:
     - stage: test
       script:
-        - docker login --username ${DOCKER_CLOUD_USER} --password ${DOCKER_CLOUD_PWD}
+        - echo ${DOCKER_CLOUD_PWD} | docker login --username ${DOCKER_CLOUD_USER} --password-stdin
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
-        - ./gradlew --build-cache copyDependencies test
+        - ./gradlew --build-cache test
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
     - stage: test-sonar
       script:
-        - docker login --username ${DOCKER_CLOUD_USER} --password ${DOCKER_CLOUD_PWD}
+        - echo ${DOCKER_CLOUD_PWD} | docker login --username ${DOCKER_CLOUD_USER} --password-stdin
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
-        - ./gradlew --build-cache copyDependencies test jacocoTestReport dockerTag${OF_VERSION}
+        - ./gradlew --build-cache copyDependencies test jacocoTestReport dockerTag${OF_VERSION} || travis_terminate 1;
         - sonar-scanner
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
         # Launch karate tests
@@ -71,22 +71,22 @@ jobs:
         - docker-compose down
     - stage: doc
       script:
-        - ./gradlew --build-cache generateSwaggerUI asciidoctor
+        - ./gradlew --build-cache generateSwaggerUI asciidoctor || travis_terminate 1;
         - ./CICD/travis/upload_doc.sh
     - stage: doc-latest
       script:
-        - ./gradlew --build-cache generateSwaggerUI asciidoctor
+        - ./gradlew --build-cache generateSwaggerUI asciidoctor || travis_terminate 1;
         - ./CICD/travis/upload_doc.sh --updateLatest true
     - stage: docker-push-version
       script:
         - echo preparing images for version $OF_VERSION
-        - docker login --username ${DOCKER_CLOUD_USER} --password ${DOCKER_CLOUD_PWD}
+        - echo ${DOCKER_CLOUD_PWD} | docker login --username ${DOCKER_CLOUD_USER} --password-stdin
         - ./gradlew --build-cache copyWorkingDir dockerPush${OF_VERSION} -x test
         - docker image ls -a|grep lfeoperatorfabric
     - stage: docker-push-latest
       script:
         - echo preparing images for version $OF_VERSION
-        - docker login --username ${DOCKER_CLOUD_USER} --password ${DOCKER_CLOUD_PWD}
+        - echo ${DOCKER_CLOUD_PWD} | docker login --username ${DOCKER_CLOUD_USER} --password-stdin
         - ./gradlew --build-cache copyWorkingDir dockerPushLatest -x test
         - docker image ls -a|grep lfeoperatorfabric
     - stage: docker-tag-version

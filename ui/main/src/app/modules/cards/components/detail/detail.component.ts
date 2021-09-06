@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {
     AfterViewChecked,
     Component,
@@ -25,49 +24,37 @@ import {Card, CardForPublishing} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../../services/handlebars.service';
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
-import {AcknowledgmentAllowedEnum, State as CardState} from '@ofModel/processes.model';
+import {AcknowledgmentAllowedEnum, State, TypeOfStateEnum} from '@ofModel/processes.model';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
 import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {UserContext} from '@ofModel/user-context.model';
-import {map, skip,takeUntil} from 'rxjs/operators';
+import {map, skip, takeUntil} from 'rxjs/operators';
 import {selectLastCardLoaded} from '@ofStore/selectors/feed.selectors';
 import {CardService} from '@ofServices/card.service';
 import {Subject} from 'rxjs';
 import {Severity} from '@ofModel/light-card.model';
 import {AppService, PageType} from '@ofServices/app.service';
 import {User} from '@ofModel/user.model';
-import {Map} from '@ofModel/map';
-import {userRight} from '@ofModel/userWithPerimeters.model';
-import {ClearLightCardSelection,UpdateLightCardAcknowledgment, UpdateLightCardRead} from '@ofStore/actions/light-card.actions';
+import {ClearLightCardSelection, UpdateLightCardRead} from '@ofStore/actions/light-card.actions';
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {ConfigService} from '@ofServices/config.service';
 import {TimeService} from '@ofServices/time.service';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {MessageLevel} from '@ofModel/message.model';
-import {RightsEnum} from '@ofModel/perimeter.model';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
-import {ActionService} from '@ofServices/action.service';
-
+import {UserPermissionsService} from '@ofServices/user-permissions-.service';
 
 declare const templateGateway: any;
 
-class Message {
-    text: string;
-    display: boolean;
-    className: ResponseMsgClass;
-}
-
-class EntityMessage {
+class EntityForCardHeader {
     id: string;
     name: string;
-    color: EntityMsgColor;
+    color: string;
 }
-
 class FormResult {
     valid: boolean;
     errorMsg: string;
@@ -78,8 +65,7 @@ class FormResult {
 const enum ResponseI18nKeys {
     FORM_ERROR_MSG = 'response.error.form',
     SUBMIT_ERROR_MSG = 'response.error.submit',
-    SUBMIT_SUCCESS_MSG = 'response.submitSuccess',
-    BUTTON_TITLE = 'response.btnTitle'
+    SUBMIT_SUCCESS_MSG = 'response.submitSuccess'
 }
 
 const enum AckI18nKeys {
@@ -88,17 +74,7 @@ const enum AckI18nKeys {
     ERROR_MSG = 'response.error.ack'
 }
 
-const enum ResponseMsgClass {
-    SUCCESS = 'opfab-alert-success',
-    ERROR = 'opfab-alert-error'
-}
-
-const enum EntityMsgColor {
-    GREEN = 'green',
-    ORANGE = '#ff6600'
-}
-
-const maxVisibleEntitiesToRespond = 3;
+const maxVisibleEntitiesForCardHeader = 3;
 
 @Component({
     selector: 'of-detail',
@@ -108,10 +84,10 @@ const maxVisibleEntitiesToRespond = 3;
 })
 export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewChecked, DoCheck {
 
-    @Input() cardState: CardState;
+    @Input() cardState: State;
     @Input() card: Card;
     @Input() childCards: Card[];
-    @Input() user: User;
+
     @Input() currentPath: string;
     @Input() parentModalRef: NgbModalRef;
     @Input() screenSize: string;
@@ -120,64 +96,289 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     @ViewChild('impossibleToDeleteCardPopup') impossibleToDeleteCardPopupRef: TemplateRef<any>;
     @ViewChild('userCard') userCardTemplate: TemplateRef<any>;
 
-    public isActionEnabled = false;
+    public isUserEnabledToRespond = false;
     public lttdExpiredIsTrue: boolean;
-    public hasAlreadyResponded = false;
-
-    unsubscribe$: Subject<void> = new Subject<void>();
+    public isResponseLocked = false;
     public hrefsOfCssLink = new Array<SafeResourceUrl>();
-    private _listEntitiesRequiredToRespond: string[];
-    private _listEntitiesToRespondForHeader = new Array<EntityMessage>();
-    private _userEntitiesAllowedToRespond: string[];
-    private _htmlContent: SafeHtml;
-    private _userContext: UserContext;
-    message: Message = {display: false, text: undefined, className: undefined};
-
     public fullscreen = false;
     public showButtons = false;
     public showCloseButton = false;
     public showMaxAndReduceButton = false;
     public showAckButton = false;
     public showActionButton = false;
-    public showEditAndDeleteButton = false ;
+    public showEditAndDeleteButton = false;
     public showDetailCardHeader = false;
     public fromEntityOrRepresentative = null;
+    public formattedPublishDate = "";
+    public formattedPublishTime = "";
+    public htmlTemplateContent: SafeHtml;
+    public listVisibleEntitiesToRespond = [];
+    public listDropdownEntitiesToRespond = [];
+    public isCardAQuestionCard = false;
+    public showExpiredIcon: boolean = true;
+    public showExpiredLabel: boolean = true;
+    public expiredLabel: string = 'feed.lttdFinished';
+
     private lastCardSetToReadButNotYetOnFeed;
-
-    modalRef: NgbModalRef;
-
-    public displayDeleteResult = false;
-
-    private static compareRightAction(userRights: RightsEnum, rightsAction: RightsEnum): boolean {
-        return (userRight(userRights) - userRight(rightsAction)) === 0;
-    }
+    private entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = [];
+    private userEntityIdToUseForResponse: string;
+    private userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;
+    private userContext: UserContext;
+    private unsubscribe$: Subject<void> = new Subject<void>();
+    private modalRef: NgbModalRef;
+    private user: User;
 
     constructor(private element: ElementRef,
-                private businessconfigService: ProcessesService,
-                private handlebars: HandlebarsService,
-                private sanitizer: DomSanitizer,
-                private store: Store<AppState>,
-                private cardService: CardService,
-                private _appService: AppService,
-                private userService: UserService,
-                private entitiesService: EntitiesService,
-                private modalService: NgbModal,
-                private configService: ConfigService,
-                private time: TimeService,
-                private acknowledgeService: AcknowledgeService,
-                private actionService: ActionService) {
+        private businessconfigService: ProcessesService,
+        private handlebars: HandlebarsService,
+        private sanitizer: DomSanitizer,
+        private store: Store<AppState>,
+        private cardService: CardService,
+        private _appService: AppService,
+        private userService: UserService,
+        private entitiesService: EntitiesService,
+        private modalService: NgbModal,
+        private time: TimeService,
+        private acknowledgeService: AcknowledgeService,
+        private userPermissionsService: UserPermissionsService) {
+
+            const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+            if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 
-    get isLocked() {
-      return this.hasAlreadyResponded;
+
+    // START - ANGULAR COMPONENT LIFECYCLE 
+
+    ngOnInit() {
+        this.reloadTemplateWhenGlobalStyleChange();
+        if (this._appService.pageType !== PageType.ARCHIVE) this.integrateChildCardsInRealTime();
+        this.computeLttdParams();
+
     }
 
-    open(content) {
-        const modalOptions = {centered: true};
-        this.modalRef = this.modalService.open(content, modalOptions);
+    ngAfterViewChecked() {
+        this.adaptTemplateSize();
     }
 
-    adaptTemplateSize() {
+    ngDoCheck() {
+        const previous = this.lttdExpiredIsTrue;
+        this.checkLttdExpired();
+        if (previous !== this.lttdExpiredIsTrue) {
+            templateGateway.setLttdExpired(this.lttdExpiredIsTrue);
+            this.setButtonsVisibility();
+        }
+    }
+
+    ngOnChanges(): void {
+        templateGateway.initTemplateGateway();
+        if (this.cardState.response != null && this.cardState.response !== undefined) {
+            this.isCardAQuestionCard = true;
+            this.computeEntitiesForResponses();
+            this.isUserEnabledToRespond = this.userPermissionsService.isUserEnabledToRespond(this.userService.getCurrentUserWithPerimeters(),
+                this.card, this.businessconfigService.getProcess(this.card.process));
+        }
+        else this.isCardAQuestionCard = false;
+
+        this.checkIfHasAlreadyResponded();
+
+        // this call is necessary done after computeEntitiesForResponses() and  checkIfHasAlreadyResponded() 
+        // to have the variables for templateGateway set
+        this.setTemplateGatewayVariables();
+
+        this.initializeHrefsOfCssLink();
+        this.initializeHandlebarsTemplates();
+        this.markAsReadIfNecessary();
+        this.setButtonsVisibility();
+        this.showDetailCardHeader = (this.cardState.showDetailCardHeader === null) || (this.cardState.showDetailCardHeader === true);
+        this.computeFromEntityOrRepresentative();
+        this.formattedPublishDate = this.formatDate(this.card.publishDate);
+        this.formattedPublishTime = this.formatTime(this.card.publishDate);
+    }
+
+    ngOnDestroy() {
+        this.updateLastReadCardStatusOnFeedIfNeeded();
+        templateGateway.initTemplateGateway();
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
+    }
+
+    // END  - ANGULAR COMPONENT LIFECYCLE 
+
+    // For certain types of template , we need to reload it to take into account
+    // the new css style (for example with chart done with chart.js)
+    private reloadTemplateWhenGlobalStyleChange() {
+        this.store.select(selectGlobalStyleState)
+            .pipe(takeUntil(this.unsubscribe$), skip(1))
+            .subscribe(() => this.initializeHandlebarsTemplates());
+    }
+
+    private initializeHandlebarsTemplates() {
+        if (!this.userContext) {
+            this.store.select(selectAuthenticationState).subscribe(authState => {
+                this.userContext = new UserContext(
+                    authState.identifier,
+                    authState.token,
+                    authState.firstName,
+                    authState.lastName,
+                    this.user.groups,
+                    this.user.entities
+                );
+                this.initializeHandlebarsTemplatesProcess();
+            });
+        } else {
+            this.initializeHandlebarsTemplatesProcess();
+        }
+    }
+
+    private initializeHandlebarsTemplatesProcess() {
+        const templateName = this.cardState.templateName;
+        if (!!templateName) {
+            this.handlebars.executeTemplate(templateName,
+                new DetailContext(this.card, this.userContext, this.cardState.response))
+                .subscribe({
+                    next: (html) => {
+                        this.htmlTemplateContent = this.sanitizer.bypassSecurityTrustHtml(html);
+                        setTimeout(() => { // wait for DOM rendering
+                            this.reinsertScripts();
+                            setTimeout(() => { // wait for script loading before calling them in template
+                                templateGateway.applyChildCards();
+                                if (this.isResponseLocked) templateGateway.lockAnswer();
+                                if (this.card.lttd && this.lttdExpiredIsTrue) {
+                                    templateGateway.setLttdExpired(true);
+                                }
+                                templateGateway.setScreenSize(this.screenSize);
+                            }, 10);
+                        }, 10);
+                    },
+                    error: (error) => {
+                        console.log(new Date().toISOString(), 'WARNING impossible to process template ', templateName , ":  ", error ) ;
+                        this.htmlTemplateContent = this.sanitizer.bypassSecurityTrustHtml('');
+                    }
+                });
+        } else {
+            this.htmlTemplateContent = " TECHNICAL ERROR - NO TEMPLATE AVAILABLE";
+            console.log(new Date().toISOString(), `WARNING No template for process ${this.card.process} version ${this.card.processVersion} with state ${this.card.state}`);
+        }
+    }
+
+    private reinsertScripts(): void {
+        const scripts = <HTMLScriptElement[]>this.element.nativeElement.getElementsByTagName('script');
+        const scriptsInitialLength = scripts.length;
+        for (let i = 0; i < scriptsInitialLength; i++) {
+            const script = scripts[i];
+            const scriptCopy = document.createElement('script');
+            scriptCopy.type = script.type ? script.type : 'text/javascript';
+            if (script.innerHTML) {
+                scriptCopy.innerHTML = script.innerHTML;
+            }
+            scriptCopy.async = false;
+            script.parentNode.replaceChild(scriptCopy, script);
+        }
+    }
+
+    private integrateChildCardsInRealTime() {
+        this.store.select(selectLastCardLoaded)
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                map(lastCardLoaded => {
+                    if (!!lastCardLoaded) {
+                        if (lastCardLoaded.parentCardId === this.card.id &&
+                            !this.childCards.map(childCard => childCard.uid).includes(lastCardLoaded.uid)) {
+                            this.integrateOneChildCard(lastCardLoaded);
+                        }
+                    }
+                })).subscribe()
+    }
+
+    private integrateOneChildCard(newChildCard: Card) {
+        this.cardService.loadCard(newChildCard.id).subscribe(
+            cardData => {
+                const newChildArray = this.childCards.filter(childCard => childCard.id !== cardData.card.id);
+                newChildArray.push(cardData.card);
+                this.childCards = newChildArray;
+                templateGateway.childCards = this.childCards;
+                this.computeEntitiesForResponses();
+                templateGateway.applyChildCards();
+            }
+        )
+    }
+
+    private computeEntitiesForResponses() {
+
+        let entityIdsRequiredToRespondAndAllowedToSendCards = this.getEntityIdsRequiredToRespondAndAllowedToSendCards();
+        this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = this.getEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards();
+        console.log(new Date().toISOString(), ' Detail card - entities allowed to respond = ', this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards);
+
+        this.setEntitiesToRespondForCardHeader(entityIdsRequiredToRespondAndAllowedToSendCards);
+        this.setUserEntityIdToUseForResponse();
+        const userEntitiesRequiredToRespondAndAllowedToSendCards = entityIdsRequiredToRespondAndAllowedToSendCards.filter(entityId => this.user.entities.includes(entityId));
+        this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = userEntitiesRequiredToRespondAndAllowedToSendCards.length > 0;
+    }
+
+    private getEntityIdsRequiredToRespondAndAllowedToSendCards() {
+        if (!this.card.entitiesRequiredToRespond) return [];
+        const entitiesAllowedToRespond = this.entitiesService.getEntitiesFromIds(this.card.entitiesRequiredToRespond);
+        return this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond).map(entity => entity.id);
+    }
+
+    private getEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards() {
+        let entityIdsAllowedOrRequiredToRespond = [];
+        if (this.card.entitiesAllowedToRespond)
+            entityIdsAllowedOrRequiredToRespond = entityIdsAllowedOrRequiredToRespond.concat(this.card.entitiesAllowedToRespond);
+        if (this.card.entitiesRequiredToRespond)
+            entityIdsAllowedOrRequiredToRespond = entityIdsAllowedOrRequiredToRespond.concat(this.card.entitiesRequiredToRespond);
+
+        const entitiesAllowedOrRequiredToRespond = this.entitiesService.getEntitiesFromIds(entityIdsAllowedOrRequiredToRespond);
+        return this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedOrRequiredToRespond).map(entity => entity.id);
+    }
+
+
+    private setEntitiesToRespondForCardHeader(entityIdsRequiredToRespondAndAllowedToSendCards) {
+        if (this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards) {
+
+            // Entities for card header 
+            let listEntitiesToRespondForHeader;
+            if (entityIdsRequiredToRespondAndAllowedToSendCards.length > 0) listEntitiesToRespondForHeader = this.createEntityHeaderFromList(entityIdsRequiredToRespondAndAllowedToSendCards);
+            else listEntitiesToRespondForHeader = this.createEntityHeaderFromList(this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards);
+
+            this.listVisibleEntitiesToRespond = listEntitiesToRespondForHeader.length > maxVisibleEntitiesForCardHeader ? listEntitiesToRespondForHeader.slice(0, maxVisibleEntitiesForCardHeader) : listEntitiesToRespondForHeader;
+            this.listDropdownEntitiesToRespond = listEntitiesToRespondForHeader.length > maxVisibleEntitiesForCardHeader ? listEntitiesToRespondForHeader.slice(maxVisibleEntitiesForCardHeader) : [];
+        }
+        else {
+            this.listVisibleEntitiesToRespond = [];
+            this.listDropdownEntitiesToRespond = [];
+        }
+    }
+
+    private createEntityHeaderFromList(entities: string[]) {
+        const entityHeader = new Array<EntityForCardHeader>();
+        entities.forEach(entity => {
+            const entityName = this.entitiesService.getEntityName(entity);
+            if (entityName) {
+                entityHeader.push(
+                    {
+                        id: entity,
+                        name: entityName,
+                        color: this.checkEntityAnswered(entity) ? "green" : "#ff6600"
+                    });
+            }
+        });
+        return entityHeader;
+    }
+
+    private setUserEntityIdToUseForResponse() {
+        const userEntityIdsAllowedToRespond = this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards.filter(x => this.user.entities.includes(x));
+        console.log(new Date().toISOString(), ' Detail card - users entities allowed to respond = ', userEntityIdsAllowedToRespond);
+        if (userEntityIdsAllowedToRespond.length > 1)
+            console.log(new Date().toISOString(), 'Warning : user can respond on behalf of more than one entity, so response is disabled');
+        this.userEntityIdToUseForResponse = userEntityIdsAllowedToRespond.length === 1 ? userEntityIdsAllowedToRespond[0] : null;
+    }
+
+    private checkEntityAnswered(entity: string): boolean {
+        return this.childCards.some(childCard => childCard.publisher === entity && childCard.initialParentCardUid === this.card.uid);
+    }
+
+    private adaptTemplateSize() {
         const cardTemplate = document.getElementById('opfab-div-card-template');
         if (!!cardTemplate) {
             const diffWindow = cardTemplate.getBoundingClientRect();
@@ -187,7 +388,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             if (this._appService.pageType !== PageType.FEED) cardTemplateHeight -= 50;
 
             if (divBtn) {
-                cardTemplateHeight -= divBtn.scrollHeight + 15 ;
+                cardTemplateHeight -= divBtn.scrollHeight + 15;
             }
 
             cardTemplate.style.height = `${cardTemplateHeight}px`;
@@ -195,62 +396,23 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         }
     }
 
-    ngAfterViewChecked() {
-        this.adaptTemplateSize();
+    private checkLttdExpired(): void {
+        this.lttdExpiredIsTrue = (this.card.lttd != null && (this.card.lttd - new Date().getTime()) <= 0);
     }
 
-    checkIfHasAlreadyResponded() {
-      this.hasAlreadyResponded = false;
-      for (const e of this.childCards.map(c => c.publisher)) {
-        if (this.user.entities.includes(e)) {
-          this.hasAlreadyResponded = true;
-          break;
-        }
-      }
+    private computeLttdParams() {
+        this.businessconfigService.queryProcess(this.card.process, this.card.processVersion).subscribe( process => {
+            const state = process.extractState(this.card);
+            if (state.type === TypeOfStateEnum.FINISHED) {
+                this.showExpiredIcon = false;
+                this.showExpiredLabel = false;
+            } else if (this.isCardAQuestionCard) {
+                this.showExpiredIcon = false;
+                this.expiredLabel = 'feed.responsesClosed'
+            }
+        })
     }
 
-    unlockAnswer() {
-      this.hasAlreadyResponded = false;
-      templateGateway.unlockAnswer();
-    }
-
-    ngOnInit() {
-        this.reloadTemplateWhenGlobalStyleChange();
-        if (this._appService.pageType !== PageType.ARCHIVE) {
-            this.setEntitiesToRespond();
-            this.integrateChildCardsInRealTime();
-        }
-    }
-
-
-    private integrateChildCardsInRealTime() {
-        this.store.select(selectLastCardLoaded)
-            .pipe(
-                takeUntil(this.unsubscribe$),
-                map(lastCardLoaded => {
-                    if (!!lastCardLoaded) {
-                            if (lastCardLoaded.parentCardId === this.card.id &&
-                            !this.childCards.map(childCard => childCard.uid).includes(lastCardLoaded.uid)) {
-                                this.integrateOneChildCard(lastCardLoaded);                              
-                            }
-                    }
-                })).subscribe()
-    }
-
-    private integrateOneChildCard(newChildCard:Card)
-    {
-        this.cardService.loadCard(newChildCard.id).subscribe (
-            cardData => {
-                const newChildArray = this.childCards.filter(childCard => childCard.id !== cardData.card.id);
-                newChildArray.push(cardData.card);
-                this.childCards = newChildArray;
-                templateGateway.childCards = this.childCards;
-                this.setEntitiesToRespond();
-                templateGateway.applyChildCards();
-            } 
-        )
- 
-    }
 
     private setButtonsVisibility() {
         this.showButtons = this._appService.pageType !== PageType.ARCHIVE;
@@ -260,315 +422,38 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.showCloseButton = true;
         this.showEditAndDeleteButton = this.doesTheUserHavePermissionToDeleteOrEditCard();
         this.showAckButton = this.isAcknowledgmentAllowed() && (this._appService.pageType !== PageType.CALENDAR);
-        this.showActionButton =  (!!this.cardState.response);
+        this.showActionButton = (!!this.cardState.response);
     }
 
-    ngDoCheck() {
-        const previous = this.lttdExpiredIsTrue;
-        this.checkLttdExpired();
-        if (previous !== this.lttdExpiredIsTrue) {
-            // Wait one second before sending the information to the template
-            // to be synchronized with the countdown in card header and feed 
-            setTimeout( () => templateGateway.setLttdExpired(this.lttdExpiredIsTrue),1000);
-            this.setButtonsVisibility();
-        }
-    }
-
-    checkLttdExpired(): void {
-        this.lttdExpiredIsTrue = (this.card.lttd != null && Math.floor((this.card.lttd - new Date().getTime()) / 1000) <= 0);
-    }
-
-    get i18nPrefix() {
-        return `${this.card.process}.${this.card.processVersion}.`;
-    }
-
-    get responseDataParameters(): Map<string> {
-        return this.cardState.response.btnText ? this.cardState.response.btnText.parameters : undefined;
-    }
-
-    get btnText(): string {
-      return ResponseI18nKeys.BUTTON_TITLE;
-    }
-
-    get responseDataExists(): boolean {
-        return this.cardState.response != null && this.cardState.response !== undefined;
-    }
-
-    get btnAckText(): string {
-        return this.card.hasBeenAcknowledged ? AckI18nKeys.BUTTON_TEXT_UNACK : AckI18nKeys.BUTTON_TEXT_ACK;
-    }
-
-    getFormattedPublishDate(): any {
-        return  this.time.formatDate(this.card.publishDate);
-    }
-
-    getFormattedPublishTime(): any {
-        return  this.time.formatTime(this.card.publishDate);
-    }
-
-    submitResponse() {
-
-        const responseData: FormResult = templateGateway.getUserResponse();
-
-        if (responseData.valid) {
-
-            const card: CardForPublishing = {
-                publisher: this.getUserEntityToRespond(),
-                publisherType: 'ENTITY',
-                processVersion: this.card.processVersion,
-                process: this.card.process,
-                processInstanceId: `${this.card.processInstanceId}_${this.getUserEntityToRespond()}`,
-                state: responseData.responseState ? responseData.responseState : this.cardState.response.state,
-                startDate: this.card.startDate,
-                endDate: this.card.endDate,
-                severity: Severity.INFORMATION,
-                entityRecipients: this.card.entityRecipients,
-                userRecipients: this.card.userRecipients,
-                groupRecipients: this.card.groupRecipients,
-                externalRecipients: this.cardState.response.externalRecipients,
-                title: this.card.title,
-                summary: this.card.summary,
-                data: responseData.responseCardData,
-                parentCardId: this.card.id,
-                initialParentCardUid: this.card.uid
-            };
-
-            this.cardService.postCard(card)
-                .pipe(takeUntil(this.unsubscribe$))
-                .subscribe(
-                    rep => {
-                        if (rep.status !== 201) {
-                            this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
-                            console.error(rep);
-                        } else {
-                            this.hasAlreadyResponded = true;
-                            templateGateway.lockAnswer();
-                            this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
-                        }
-                    },
-                    err => {
-                        this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
-                        console.error(err);
-                    }
-                );
-
-        } else {
-            (responseData.errorMsg && responseData.errorMsg !== '') ?
-                this.displayMessage(responseData.errorMsg, null, MessageLevel.ERROR) :
-                this.displayMessage(ResponseI18nKeys.FORM_ERROR_MSG, null, MessageLevel.ERROR);
-        }
-    }
-
-    private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(new AlertMessage({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}}));
-    }
-
-
-    acknowledge() {
-        if (this.card.hasBeenAcknowledged) {
-            this.acknowledgeService.deleteUserAcknowledgement(this.card.uid).subscribe(resp => {
-                if (resp.status === 200 || resp.status === 204) {
-                    this.card = {...this.card, hasBeenAcknowledged: false};
-                    this.updateAcknowledgementOnLightCard(false);
-                } else {
-                    console.error('the remote acknowledgement endpoint returned an error status(%d)', resp.status);
-                    this.displayMessage(AckI18nKeys.ERROR_MSG, null, MessageLevel.ERROR);
-                }
-            });
-        } else {
-            this.acknowledgeService.postUserAcknowledgement(this.card.uid).subscribe(resp => {
-                if (resp.status === 201 || resp.status === 200) {
-                    this.updateAcknowledgementOnLightCard(true);
-                    this.closeDetails();
-                } else {
-                    console.error('the remote acknowledgement endpoint returned an error status(%d)', resp.status);
-                    this.displayMessage(AckI18nKeys.ERROR_MSG, null, MessageLevel.ERROR);
-                }
-            });
-        }
-    }
-
-    updateAcknowledgementOnLightCard(hasBeenAcknowledged: boolean) {
-        this.store.dispatch(new UpdateLightCardAcknowledgment({cardId: this.card.id, hasBeenAcknowledged: hasBeenAcknowledged}));
-    }
-
-    markAsReadIfNecessary() {
-        if (this.card.hasBeenRead === false) {
-            // we do not set now the card as read in the store , as we want to keep
-            // the card as unread in the feed
-            // we will set it read in the feed when
-            //  - we close the card
-            //  - we exit the feed (i.e destroy the card)
-            //  - we change card
-
-            if (this.lastCardSetToReadButNotYetOnFeed) {
-                // if the user has change selected card in feed , set the previous read card as read in the feed
-                if (this.card.id != this.lastCardSetToReadButNotYetOnFeed.id) this.updateLastReadCardStatusOnFeedIfNeeded();
-            }
-            this.lastCardSetToReadButNotYetOnFeed = this.card;
-            this.cardService.postUserCardRead(this.card.uid).subscribe();
-        }
-      else this.updateLastReadCardStatusOnFeedIfNeeded();
-    }
-
-    updateLastReadCardStatusOnFeedIfNeeded() {
-        if (this.lastCardSetToReadButNotYetOnFeed) {
-            this.store.dispatch(new UpdateLightCardRead({cardId: this.lastCardSetToReadButNotYetOnFeed.id, hasBeenRead: true}));
-            this.lastCardSetToReadButNotYetOnFeed = null;
-        }
-    }
-
-    closeDetails() {
-        this.updateLastReadCardStatusOnFeedIfNeeded();
-        if (this.parentModalRef)  {
-            this.parentModalRef.close();
-            this.store.dispatch(new ClearLightCardSelection());
-        } else this._appService.closeDetails();
-    }
-
-    // for certain types of template , we need to reload it to take into account
-    // the new css style (for example with chart done with chart.js)
-    private reloadTemplateWhenGlobalStyleChange() {
-        this.store.select(selectGlobalStyleState)
-            .pipe(takeUntil(this.unsubscribe$), skip(1))
-            .subscribe(() => this.initializeHandlebarsTemplates());
-    }
-
-    ngOnChanges(): void {
-
-        if (this.cardState.response != null && this.cardState.response !== undefined) {
-            this.setEntitiesToRespond();
-            this.setIsActionEnabled();
-        }
-
-        this.initializeHrefsOfCssLink();
-        this.checkIfHasAlreadyResponded();
-        this.initializeHandlebarsTemplates();
-        this.markAsReadIfNecessary();
-        this.message = {display: false, text: undefined, className: undefined};
-        this.setButtonsVisibility();
-        this.setShowDetailCardHeader();
-        this.computeFromEntityOrRepresentative();
-    }
-
-    private setEntitiesToRespond() {
-        this._listEntitiesToRespondForHeader = new Array<EntityMessage>();
-        this._userEntitiesAllowedToRespond = [];
-
-        let entitiesAllowedToRespondAndEntitiesRequiredToRespond = [];
-        if (this.card.entitiesAllowedToRespond)
-            entitiesAllowedToRespondAndEntitiesRequiredToRespond = entitiesAllowedToRespondAndEntitiesRequiredToRespond.concat(this.card.entitiesAllowedToRespond);
-        if (this.card.entitiesRequiredToRespond)
-            entitiesAllowedToRespondAndEntitiesRequiredToRespond = entitiesAllowedToRespondAndEntitiesRequiredToRespond.concat(this.card.entitiesRequiredToRespond);
-
-        if (entitiesAllowedToRespondAndEntitiesRequiredToRespond) {
-
-            const entitiesAllowedToRespond = this.entitiesService.getEntitiesFromIds(entitiesAllowedToRespondAndEntitiesRequiredToRespond);
-            const allowed = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond).map(entity => entity.id).filter(x =>  x !== this.card.publisher);
-            console.log(new Date().toISOString(), ' Detail card - entities allowed to respond = ', allowed);
-
-            // This will be overwritten by the block below if entitiesRequiredToRespond is set and not empty/null
-            // This is to avoid repeating the creation of the allowed list
-            this._listEntitiesToRespondForHeader = this.createEntityHeaderFromList(allowed);
-
-            this._userEntitiesAllowedToRespond = allowed.filter(x => this.user.entities.includes(x));
-            console.log(new Date().toISOString(), ' Detail card - users entities allowed to respond = ', this._userEntitiesAllowedToRespond);
-            if (this._userEntitiesAllowedToRespond.length > 1)
-                console.log(new Date().toISOString(), 'Warning : user can respond on behalf of more than one entity, so response is disabled');
-        }
-
-        if (this.card.entitiesRequiredToRespond && this.card.entitiesRequiredToRespond.length > 0) {
-            const entitiesRequiredToRespond = this.entitiesService.getEntitiesFromIds(this.card.entitiesRequiredToRespond);
-            this._listEntitiesRequiredToRespond = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesRequiredToRespond).map(entity => entity.id);
-            this._listEntitiesToRespondForHeader = this.createEntityHeaderFromList(this._listEntitiesRequiredToRespond);
-        }
-    }
-
-    /** @param entities as list of strings
-     * @return `EntityMessage` array (containing entity name and color based on response status)*/
-    private createEntityHeaderFromList(entities : string[]) {
-        const entityHeader = new Array<EntityMessage>();
-        entities.forEach(entity => {
-            const entityName = this.entitiesService.getEntityName(entity);
-            if (entityName) {
-                entityHeader.push(
-                    {
-                        id: entity,
-                        name: entityName,
-                        color: this.checkEntityAnswered(entity) ? EntityMsgColor.GREEN : EntityMsgColor.ORANGE
-                    });
-            }
-        });
-        return entityHeader;
-    }
-
-    private setIsActionEnabled() {
-        this.isActionEnabled = this.actionService.isUserEnabledToRespond(this.userService.getCurrentUserWithPerimeters(),
-            this.card, this.businessconfigService.getProcess(this.card.process));
-    }
-
-    private computeFromEntityOrRepresentative() {
-        if (this.card.publisherType === 'ENTITY') {
-            this.fromEntityOrRepresentative = this.entitiesService.getEntityName(this.card.publisher);
-
-            if (!!this.card.representativeType && !!this.card.representative) {
-                const representative = this.card.representativeType === 'ENTITY' ?
-                    this.entitiesService.getEntityName(this.card.representative) : this.card.representative;
-
-                this.fromEntityOrRepresentative += ' (' + representative + ')';
-            }
-        } else
-            this.fromEntityOrRepresentative = null;
-    }
-
-    private setShowDetailCardHeader() {
-        this.showDetailCardHeader = (this.cardState.showDetailCardHeader === null) || (this.cardState.showDetailCardHeader === true);
-    }
-
-    private getUserEntityToRespond(): string {
-        return this._userEntitiesAllowedToRespond.length === 1 ? this._userEntitiesAllowedToRespond[0] : null;
+    private doesTheUserHavePermissionToDeleteOrEditCard(): boolean {
+        return this.userPermissionsService.doesTheUserHavePermissionToDeleteOrEditCard(this.userService.getCurrentUserWithPerimeters(), this.card);
     }
 
     private isAcknowledgmentAllowed(): boolean {
-
         // default value is true 
         if (!this.cardState.acknowledgmentAllowed) return true;
 
         return (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS ||
-            (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER && 
-                (!this.isActionEnabled || (this.isActionEnabled && this.lttdExpiredIsTrue))));    }
+            (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER &&
+                (!this.isUserEnabledToRespond || (this.isUserEnabledToRespond && this.lttdExpiredIsTrue))));
+    }
 
-    /* 1st check : card.publisherType == ENTITY
-       2nd check : the card has been sent by an entity of the user connected
-       3rd check : the user has the Write access to the process/state of the card */
-    private doesTheUserHavePermissionToDeleteOrEditCard(): boolean {
-        let permission = false;
-        const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
-
-        if ((this.card.publisherType === 'ENTITY') && (userWithPerimeters.userData.entities.includes(this.card.publisher))) {
-            userWithPerimeters.computedPerimeters.forEach(perim => {
-                if ((perim.process === this.card.process) &&
-                    (perim.state === this.card.state)
-                    && (DetailComponent.compareRightAction(perim.rights, RightsEnum.Write)
-                        || DetailComponent.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
-                    permission = true;
-                    return true;
-                }
-            });
+    private checkIfHasAlreadyResponded() {
+        this.isResponseLocked = false;
+        for (const e of this.childCards.map(c => c.publisher)) {
+            if (this.user.entities.includes(e)) {
+                this.isResponseLocked = true;
+                break;
+            }
         }
-        return permission;
     }
 
-    get listVisibleEntitiesToRespond() {
-        return this._listEntitiesToRespondForHeader.length > maxVisibleEntitiesToRespond ? this._listEntitiesToRespondForHeader.slice(0, maxVisibleEntitiesToRespond) : this._listEntitiesToRespondForHeader;
-    }
-
-    get listDropdownEntitiesToRespond() {
-        return this._listEntitiesToRespondForHeader.length > maxVisibleEntitiesToRespond ? this._listEntitiesToRespondForHeader.slice(maxVisibleEntitiesToRespond) : [];
-    }
-
-    checkEntityAnswered(entity: string): boolean {
-        return this.childCards.some(childCard => childCard.publisher === entity && childCard.initialParentCardUid === this.card.uid);
+    private setTemplateGatewayVariables() {
+        templateGateway.childCards = this.childCards;
+        templateGateway.isLocked = this.isResponseLocked;
+        templateGateway.userAllowedToRespond = this.isUserEnabledToRespond;
+        templateGateway.entitiesAllowedToRespond = this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards;
+        templateGateway.userMemberOfAnEntityRequiredToRespond = this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
     }
 
     private initializeHrefsOfCssLink() {
@@ -586,92 +471,137 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         }
     }
 
-    private initializeHandlebarsTemplatesProcess() {
-      templateGateway.initTemplateGateway();
-      templateGateway.childCards = this.childCards;
-      templateGateway.isLocked = this.isLocked;
-      templateGateway.userAllowedToRespond = this.isActionEnabled;
+    private markAsReadIfNecessary() {
+        if (this.card.hasBeenRead === false) {
+            // we do not set now the card as read in the store , as we want to keep
+            // the card as unread in the feed
+            // we will set it read in the feed when
+            //  - we close the card
+            //  - we exit the feed (i.e destroy the card)
+            //  - we change card
 
-      if (this._listEntitiesRequiredToRespond && this._listEntitiesRequiredToRespond.length > 0) {
-        const userEntitiesRequiredToRespond = this._listEntitiesRequiredToRespond.filter(entityId => this.user.entities.includes(entityId));
-        templateGateway.userMemberOfAnEntityRequiredToRespond = userEntitiesRequiredToRespond.length > 0;
-      } else {
-        templateGateway.userMemberOfAnEntityRequiredToRespond = false;
-      }
-
-      const templateName = this.cardState.templateName;
-        if (!!templateName) {
-            this.handlebars.executeTemplate(templateName,
-                new DetailContext(this.card, this._userContext, this.cardState.response))
-                .subscribe(
-                    html => {
-                        this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
-                        setTimeout(() => { // wait for DOM rendering
-                            this.reinsertScripts();
-                            setTimeout(() => { // wait for script loading before calling them in template
-                                templateGateway.applyChildCards();
-                                if (this.hasAlreadyResponded) templateGateway.lockAnswer();
-                                if (this.card.lttd && this.lttdExpiredIsTrue) {
-                                    templateGateway.setLttdExpired(true);
-                                }
-                                templateGateway.setScreenSize(this.screenSize);
-                            }, 10);
-                        }, 10);
-                    }, () => {
-                        console.log(new Date().toISOString(),'WARNING impossible to load template ', templateName);
-                        this._htmlContent = this.sanitizer.bypassSecurityTrustHtml('');
-                    }
-                );
-        } else {
-            this._htmlContent = " TECHNICAL ERROR - NO TEMPLATE AVAILABLE";
-            console.log(new Date().toISOString(), `WARNING No template for process ${this.card.process} version ${this.card.processVersion} with state ${this.card.state}`);
-        }
-    }
-
-    private initializeHandlebarsTemplates() {
-
-      if (!this._userContext) {
-        this.store.select(selectAuthenticationState).subscribe(authState => {
-          this._userContext = new UserContext(
-              authState.identifier,
-              authState.token,
-              authState.firstName,
-              authState.lastName,
-              this.user.groups,
-              this.user.entities
-          );
-          this.initializeHandlebarsTemplatesProcess();
-      });
-      } else {
-        this.initializeHandlebarsTemplatesProcess();
-      }
-    }
-
-    get htmlContent() {
-        return this._htmlContent;
-    }
-
-    reinsertScripts(): void {
-        const scripts = <HTMLScriptElement[]>this.element.nativeElement.getElementsByTagName('script');
-        const scriptsInitialLength = scripts.length;
-        for (let i = 0; i < scriptsInitialLength; i++) {
-            const script = scripts[i];
-            const scriptCopy = document.createElement('script');
-            scriptCopy.type = script.type ? script.type : 'text/javascript';
-            if (script.innerHTML) {
-                scriptCopy.innerHTML = script.innerHTML;
+            if (this.lastCardSetToReadButNotYetOnFeed) {
+                // if the user has change selected card in feed , set the previous read card as read in the feed
+                if (this.card.id != this.lastCardSetToReadButNotYetOnFeed.id) this.updateLastReadCardStatusOnFeedIfNeeded();
             }
-            scriptCopy.async = false;
-            script.parentNode.replaceChild(scriptCopy, script);
+            this.lastCardSetToReadButNotYetOnFeed = this.card;
+            this.cardService.postUserCardRead(this.card.uid).subscribe();
+        }
+        else this.updateLastReadCardStatusOnFeedIfNeeded();
+    }
+
+    private updateLastReadCardStatusOnFeedIfNeeded() {
+        if (this.lastCardSetToReadButNotYetOnFeed) {
+            this.store.dispatch(new UpdateLightCardRead({cardId: this.lastCardSetToReadButNotYetOnFeed.id, hasBeenRead: true}));
+            this.lastCardSetToReadButNotYetOnFeed = null;
         }
     }
 
-    confirmDeleteCard(): void {
-        this.cardService.deleteCard(this.card)
-            .subscribe(
-                resp => {
-                    const status = resp.status;
+    private computeFromEntityOrRepresentative() {
+        if (this.card.publisherType === 'ENTITY') {
+            this.fromEntityOrRepresentative = this.entitiesService.getEntityName(this.card.publisher);
 
+            if (!!this.card.representativeType && !!this.card.representative) {
+                const representative = this.card.representativeType === 'ENTITY' ?
+                    this.entitiesService.getEntityName(this.card.representative) : this.card.representative;
+
+                this.fromEntityOrRepresentative += ' (' + representative + ')';
+            }
+        } else
+            this.fromEntityOrRepresentative = null;
+    }
+
+    private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
+        this.store.dispatch(new AlertMessage({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}}));
+    }
+
+    public formatDate(date: number) {
+        return this.time.formatDate(date);
+    }
+
+    public formatTime(date: number) {
+        return this.time.formatTime(date);
+    }
+
+    //START - METHODS CALLED ONLY FROM HTML COMPONENT  
+
+    get i18nPrefix() {
+        return `${this.card.process}.${this.card.processVersion}.`;
+    }
+
+    get btnAckText(): string {
+        return this.card.hasBeenAcknowledged ? AckI18nKeys.BUTTON_TEXT_UNACK : AckI18nKeys.BUTTON_TEXT_ACK;
+    }
+
+    // This method will be called many time per second. 
+    // In case of performances issues it could be optimized by defining a variable 
+    // and evaluating it every time there is a change in childCards 
+    get lastResponse() : Card {
+        if (!!this.childCards && this.childCards.length > 0) {
+            return [...this.childCards].sort( (a, b) => a.publishDate < b.publishDate ? 1 : -1)[0];
+        }
+        return null;
+    }
+
+    public getResponsePublisher(resp: Card) {
+        return this.entitiesService.getEntityName(resp.publisher)
+    } 
+
+    public isSmallscreen() {
+        return (window.innerWidth < 1000);
+    }
+
+    public openModal(content) {
+        const modalOptions = {centered: true};
+        this.modalRef = this.modalService.open(content, modalOptions);
+    }
+
+    public setFullScreen(active) {
+        this.fullscreen = active;
+        templateGateway.setScreenSize(active ? 'lg' : 'md');
+    }
+
+    public acknowledgeCard() {
+        if (this.card.hasBeenAcknowledged) {
+            this.acknowledgeService.deleteUserAcknowledgement(this.card.uid).subscribe(resp => {
+                if (resp.status === 200 || resp.status === 204) {
+                    this.card = {...this.card, hasBeenAcknowledged: false};
+                    this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, false);
+                } else {
+                    console.error('the remote acknowledgement endpoint returned an error status(%d)', resp.status);
+                    this.displayMessage(AckI18nKeys.ERROR_MSG, null, MessageLevel.ERROR);
+                }
+            });
+        } else {
+            this.acknowledgeService.postUserAcknowledgement(this.card.uid).subscribe(resp => {
+                if (resp.status === 201 || resp.status === 200) {
+                    this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, true);
+                    this.closeDetails();
+                } else {
+                    console.error('the remote acknowledgement endpoint returned an error status(%d)', resp.status);
+                    this.displayMessage(AckI18nKeys.ERROR_MSG, null, MessageLevel.ERROR);
+                }
+            });
+        }
+    }
+
+    public closeDetails() {
+        this.updateLastReadCardStatusOnFeedIfNeeded();
+        if (this.parentModalRef) {
+            this.parentModalRef.close();
+            this.store.dispatch(new ClearLightCardSelection());
+        } else this._appService.closeDetails();
+    }
+
+    public declineDeleteCard(): void {
+        this.modalRef.dismiss();
+    }
+
+    public confirmDeleteCard(): void {
+        this.cardService.deleteCard(this.card)
+            .subscribe({
+                next: (resp) => {
+                    const status = resp.status;
                     this.modalRef.close();
                     if (status === 200) {
                         this.closeDetails();
@@ -679,28 +609,22 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                     } else {
                         console.log('Impossible to delete card , error status from service : ', status);
                         this.displayMessage("userCard.deleteCard.error.impossibleToDeleteCard ", null, MessageLevel.ERROR);
-
                     }
                 },
-                err => {
+                error: (err) => {
                     console.error('Error when deleting card :', err);
                     this.modalRef.close();
                     this.displayMessage("userCard.deleteCard.error.impossibleToDeleteCard ", null, MessageLevel.ERROR);
                 }
-            );
+            });
     }
 
-    declineDeleteCard(): void {
-        this.modalRef.dismiss();
-    }
-
-    editCard(): void {
+    public editCard(): void {
 
         // We close the card detail in the background to avoid interference when executing the template for the edition preview.
         // Otherwise, this can cause issues with templates functions referencing elements by id as there are two elements with the same id
         // in the document.
         this.closeDetails();
-
         if (!!this.parentModalRef) this.parentModalRef.close();
 
         const options: NgbModalOptions = {
@@ -720,20 +644,63 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     }
 
-    setFullScreen(active) {
-        this.fullscreen = active;
-        templateGateway.setScreenSize(active ? 'lg' : 'md');
+    public unlockAnswer() {
+        this.isResponseLocked = false;
+        templateGateway.unlockAnswer();
     }
 
-    public isSmallscreen() {
-      return (window.innerWidth < 1000);
+    public submitResponse() {
+
+        const responseData: FormResult = templateGateway.getUserResponse();
+
+        if (responseData.valid) {
+
+            const card: CardForPublishing = {
+                publisher: this.userEntityIdToUseForResponse,
+                publisherType: 'ENTITY',
+                processVersion: this.card.processVersion,
+                process: this.card.process,
+                processInstanceId: `${this.card.processInstanceId}_${this.userEntityIdToUseForResponse}`,
+                state: responseData.responseState ? responseData.responseState : this.cardState.response.state,
+                startDate: this.card.startDate,
+                endDate: this.card.endDate,
+                severity: Severity.INFORMATION,
+                entityRecipients: this.card.entityRecipients,
+                userRecipients: this.card.userRecipients,
+                groupRecipients: this.card.groupRecipients,
+                externalRecipients: this.cardState.response.externalRecipients,
+                title: this.card.title,
+                summary: this.card.summary,
+                data: responseData.responseCardData,
+                parentCardId: this.card.id,
+                initialParentCardUid: this.card.uid
+            };
+
+            this.cardService.postCard(card)
+                .subscribe(
+                    rep => {
+                        if (rep.status !== 201) {
+                            this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
+                            console.error(rep);
+                        } else {
+                            this.isResponseLocked = true;
+                            templateGateway.lockAnswer();
+                            this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
+                        }
+                    },
+                    err => {
+                        this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
+                        console.error(err);
+                    }
+                );
+
+        } else {
+            (responseData.errorMsg && responseData.errorMsg !== '') ?
+                this.displayMessage(responseData.errorMsg, null, MessageLevel.ERROR) :
+                this.displayMessage(ResponseI18nKeys.FORM_ERROR_MSG, null, MessageLevel.ERROR);
+        }
     }
 
-    ngOnDestroy() {
-        this.updateLastReadCardStatusOnFeedIfNeeded();
-        templateGateway.childCards = [];
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
-    }
+    // END - METHODS CALLED ONLY FROM HTML COMPONENT  
 
 }

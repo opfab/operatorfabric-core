@@ -77,8 +77,7 @@ public class OAuth2GenericConfiguration {
         return new Converter<Jwt, AbstractAuthenticationToken>(){
             @Override
             public AbstractAuthenticationToken convert(Jwt jwt) throws FeignException {
-            	AbstractAuthenticationToken authenticationToken = generateOpFabJwtAuthenticationToken(jwt);
-                return authenticationToken;
+                return generateOpFabJwtAuthenticationToken(jwt);
             }
         };
     }

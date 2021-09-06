@@ -8,10 +8,28 @@
 		"description": "Message"
 	},
 	"messageStateWithNoAck": {
-		"description": "Message with no ack"
+		"description": "Message sans ack"
 	},
 	"messageStateWithOnlyWhenResponseDisabledForUserAck": {
-		"description": "Message with ack only when response disable for user "
+		"description": "Message avec ack uniquement si la réponse est désactivée"
+	},	
+	"stateOfTypeINPROGRESS": {
+	"title": "Etat de test de type INPROGRESS"
+},
+	"stateOfTypeCANCELED": {
+		"title": "Etat de test de type CANCELED"
+	},
+	"stateOfTypeFINISHED": {
+		"title": "Etat de test de type FINISHED"
+	},
+	"stateOfTypeNull": {
+		"title": "Etat de test de type null"
+	},
+	"stateWithNoType": {
+		"title": "Etat de test sans type"
+	},
+	"dummyResponseState": {
+		"title": "Etat de réponse factice pour tests"
 	}
 }
 

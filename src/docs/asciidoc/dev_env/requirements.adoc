@@ -19,7 +19,7 @@ below for details on:
 
 == Tools and libraries
 
-* Gradle 6 +
+* Gradle 7 +
 * Java 11.0 +
 * Docker
 * Docker Compose with 2.1+ file format support

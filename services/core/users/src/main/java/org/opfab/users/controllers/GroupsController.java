@@ -19,7 +19,6 @@ import org.opfab.users.repositories.PerimeterRepository;
 import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.services.UserServiceImp;
 import org.opfab.users.model.GroupData;
-import org.opfab.users.model.PerimeterData;
 import org.opfab.users.model.UserData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -290,7 +289,7 @@ public class GroupsController implements GroupsApi {
 
         List<Perimeter> foundPerimeters = new ArrayList<>();
         for(String perimeterId : perimeterIds){
-            Perimeter foundPerimeter = (Perimeter) perimeterRepository.findById(perimeterId).orElseThrow(
+            Perimeter foundPerimeter = perimeterRepository.findById(perimeterId).orElseThrow(
                     () -> new ApiErrorException(
                             ApiError.builder()
                                     .status(HttpStatus.BAD_REQUEST)

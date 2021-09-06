@@ -1,7 +1,12 @@
 {
   "global":{
     "connectionLost":"Connexion perdue",
-    "tryToReconnect":"Tentative de reconnexion ..."
+    "tryToReconnect":"Tentative de reconnexion ...",
+    "typeOfState": {
+      "INPROGRESS": "EN COURS",
+      "FINISHED": "TERMINÉ",
+      "CANCELED": "ANNULÉ"
+    }
   },
   "menu": {
     "feed": "Flux de cartes",
@@ -103,10 +108,12 @@
       }
     },
     "lttdFinished": "Terminée",
+    "responsesClosed": "Réponse expirée",
     "received": "Reçu le",
     "at" : "à",
     "from": "de",
-    "moreCards": "cartes supplémentaires"
+    "moreCards": "cartes supplémentaires",
+    "lastResponse": "Dernière réponse reçue le"
   },
   "login": {
     "reset": "RaZ",
@@ -161,6 +168,7 @@
       "processGroup": "SERVICE"
     },
     "noResult": "Votre recherche ne correspond à aucun résultat.",
+    "tooManyRows": "Trop de cartes, toutes les cartes ne sont pas visibles",
     "exportToExcel" : "Exporter les données",
     "resultsNumber":"Nombre de résultats"
   },
@@ -192,6 +200,7 @@
     "hideFilters" : "Masquer les filtres",
     "showFilters" : "Afficher les filtres",
     "noSelection" : "NA",
+    "moreRows": "lignes supplémentaires",
     "filters": {
       "processGroup" : "SERVICE",
       "selectProcessGroupText" : "Sélectionner un Service",
@@ -287,7 +296,7 @@
     "sendingCardInProgress": "Envoi de la carte en cours ..."
   },
   "response": {
-    "btnTitle": "VALIDER REPONSE",
+    "btnValidate": "VALIDER REPONSE",
     "btnUnlock": "MODIFIER REPONSE",
     "error": {
       "submit": "La carte n'a pas pu être envoyée",
@@ -298,7 +307,7 @@
     "answers": "Réponses",
     "answered": "A répondu",
     "unanswered": "Pas encore répondu",
-    "status": "Status"
+    "status": "Statut du processus"
   },
   "cardAcknowledgment": {
     "button": {
@@ -347,6 +356,12 @@
         "confirmDelete": "Voulez-vous vraiment supprimer l'utilisateur",
         "add":"Ajouter un nouvel utilisateur"
       },
+      "selectGroupText": "Sélectionner un Groupe",
+      "selectEntityText": "Sélectionner une Entité",
+      "selectPerimeterText": "Sélectionner un Périmètre",
+      "selectProcessText": "Sélectionner un Processus",
+      "selectStateText": "Sélectionner un Etat",
+      "selectRightText": "Sélectionner un Permission",
       "edit": "Editer",
       "delete": "Supprimer",
       "save": "SAUVEGARDER LES CHANGEMENTS",

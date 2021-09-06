@@ -12,14 +12,12 @@ package org.opfab.cards.publication.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.aop.process.mongo.models.UserActionTraceData;
-import org.opfab.cards.model.PublisherTypeEnum;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.services.CardProcessingService;
 import org.opfab.cards.publication.services.UserBasedOperationResult;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
@@ -114,8 +112,10 @@ public class CardController {
  
         if (!result.isCardFound()) response.setStatus(404);
         else  {
-            if (!result.getOperationDone()) response.setStatus(200);
-            else response.setStatus(201);
+            if (Boolean.TRUE.equals(result.getOperationDone()))
+                response.setStatus(201);
+            else
+                response.setStatus(200);
         }
         return null;
     }
@@ -131,8 +131,10 @@ public class CardController {
         UserBasedOperationResult result= cardProcessingService.processUserRead(cardUid, principal.getName());
         if (!result.isCardFound()) response.setStatus(404); 
         else { 
-            if (!result.getOperationDone()) response.setStatus(200);
-            else response.setStatus(201);
+            if (Boolean.TRUE.equals(result.getOperationDone()))
+                response.setStatus(201);
+            else
+                response.setStatus(200);
         }
         return null;
     }
@@ -148,9 +150,11 @@ public class CardController {
         UserBasedOperationResult result = cardProcessingService.deleteUserAcknowledgement(cardUid, principal.getName());
         if (!result.isCardFound()) response.setStatus(404);
         else {
-            if (!result.getOperationDone()) response.setStatus(204);
-            else response.setStatus(200);
-            }
+            if (Boolean.TRUE.equals(result.getOperationDone()))
+                response.setStatus(200);
+            else
+                response.setStatus(204);
+        }
         return null;
     }
 
@@ -165,9 +169,11 @@ public class CardController {
         UserBasedOperationResult result =  cardProcessingService.deleteUserRead(cardUid,principal.getName());
         if (!result.isCardFound()) response.setStatus(404);
         else {
-            if (!result.getOperationDone()) response.setStatus(204);
-            else response.setStatus(200);
-            }
+            if (Boolean.TRUE.equals(result.getOperationDone()))
+                response.setStatus(200);
+            else
+                response.setStatus(204);
+        }
         return null;
     }
 

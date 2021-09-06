@@ -16,7 +16,6 @@ import {ProcessesService} from '@ofServices/processes.service';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {UserService} from '@ofServices/user.service';
-import {User} from '@ofModel/user.model';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {AppService} from '@ofServices/app.service';
 import {State as CardState, State} from '@ofModel/processes.model';
@@ -26,9 +25,9 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
     selector: 'of-card-details',
     template: `
 
-            <div *ngIf="card && cardState">
+            <div *ngIf="card && cardState" style="font-size:13px;">
                 <of-detail   [cardState]="cardState" [card]="card" [childCards]="childCards"
-                           [user]="user" [currentPath]="_currentPath" [parentModalRef]="parentModalRef" [screenSize]="screenSize">
+                           [currentPath]="_currentPath" [parentModalRef]="parentModalRef" [screenSize]="screenSize">
                 </of-detail>
             </div>
         `
@@ -41,7 +40,6 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
 
     card: Card;
     childCards: Card[];
-    user: User;
     cardState: CardState;
     unsubscribe$: Subject<void> = new Subject<void>();
     protected _currentPath: string;
@@ -59,32 +57,31 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
             .subscribe(([card, childCards]: [Card, Card[]]) => {
                 if (!!card) {
                     this.businessconfigService.queryProcess(card.process, card.processVersion)
-                        .pipe(takeUntil(this.unsubscribe$))
-                        .subscribe(businessconfig => {
-                            this.card = card;
-                            this.childCards = childCards;
-                            if (!!businessconfig) {
-                                this.cardState = businessconfig.extractState(card);
-                                if (!this.cardState) {
-                                    console.log(new Date().toISOString(), `WARNING state ${card.state} does not exist for process ${card.process}`);
+                        .subscribe({
+                            next: businessconfig => {
+                                this.card = card;
+                                this.childCards = childCards;
+                                if (!!businessconfig) {
+                                    this.cardState = businessconfig.extractState(card);
+                                    if (!this.cardState) {
+                                        console.log(new Date().toISOString(), `WARNING state ${card.state} does not exist for process ${card.process}`);
+                                        this.cardState = new State();
+                                    }
+                                } else {
+                                    console.log(new Date().toISOString(), `WARNING process `
+                                        + ` ${card.process} with version ${card.processVersion} does not exist.`)
                                     this.cardState = new State();
                                 }
-                            }
-                            else {
-                                console.log(new Date().toISOString(), `WARNING process `
-                                    + ` ${card.process} with version ${card.processVersion} does not exist.`)
-                                this.cardState = new State();
-                            }
 
-                        },
-                            error => {
+                            },
+                            error: error => {
                                 console.log(new Date().toISOString(), `WARNING process `
                                     + ` ${card.process} with version ${card.processVersion} does not exist.`);
                                 this.card = card;
                                 this.childCards = childCards;
                                 this.cardState = new State();
                             }
-                        );
+                        });
                 }
             });
 
@@ -98,8 +95,7 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
                 }
             });
 
-        const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
-        if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
+
     }
 
     ngOnDestroy() {

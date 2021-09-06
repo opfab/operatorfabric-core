@@ -44,6 +44,10 @@ body {
   scrollbar-color:var(--opfab-scrollbar-bar-bgcolor-firefox)  var(--opfab-scrollbar-bgcolor-firefox) ;
 } 
 
+// Colors for state types
+.opfab-typeOfState-INPROGRESS {color: orange;}
+.opfab-typeOfState-FINISHED {color: green;}
+.opfab-typeOfState-CANCELED {color: red;}
 
 // CUSTOM SCROLLBAR STYLE
 // for chromium based browser 
@@ -841,7 +845,6 @@ html, body { height: 100%; }
           data-color: var(--opfab-text-color),
           header-foreground-color: var(--opfab-text-color),
           secondary-foreground-color: var(--opfab-text-color),
-          border-color: var(--opfab-table-border-color),
           input-disabled-background-color: var(--opfab-button-disable-bgcolor),
           input-disabled-border-color: var(--opfab-button-disable-bgcolor),
           header-column-resize-handle-color: var(--opfab-table-border-color),
@@ -883,6 +886,10 @@ html, body { height: 100%; }
 
   .ag-row-odd:hover{
     background-color: var(--opfab-bgcolor-darker);
+  }
+
+  .action-cell-delete-admin {
+    display: none;
   }
 
 }

@@ -1,0 +1,8 @@
+= Committers (GitHub IDs)
+
+* https://github.com/quinarygio[quinarygio]
+* https://github.com/AlexGuironnetRTE[AlexGuironnetRTE]
+* https://github.com/vlo-rte[vlo-rte]
+* https://github.com/freddidierRTE[freddidierRTE]
+* https://github.com/schehade-rtei[schehade-rtei]
+

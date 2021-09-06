@@ -16,6 +16,7 @@ import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from '@ofServices/crud-service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {Entity} from '@ofModel/entity.model';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'of-edit-entity-modal',
@@ -39,14 +40,12 @@ export class EditEntityModalComponent implements OnInit {
   entities: Entity[];
   entitiesDropdownList = [];
   selectedEntities = [];
-  entitiesDropdownSettings = {
-    badgeShowLimit: 3,
-    enableSearchFilter: true
-  };
+  entitiesDropdownSettings = {};
 
   private crudService: CrudService;
 
   constructor(
+    private translate: TranslateService,
     private activeModal: NgbActiveModal,
     private dataHandlingService: SharingService,
     private entitiesService: EntitiesService
@@ -59,6 +58,16 @@ export class EditEntityModalComponent implements OnInit {
       this.entityForm.patchValue(this.row, { onlySelf: true });
       this.selectedEntities = this.row.parents;
     }
+
+
+    this.translate.get('admin.input.selectEntityText')
+        .subscribe(translation => {
+            this.entitiesDropdownSettings = {
+              text: translation,
+              badgeShowLimit: 6,
+              enableSearchFilter: true
+          };
+    });
 
     // Initialize value lists for Entities 
     this.entities = this.entitiesService.getEntities();

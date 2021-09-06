@@ -34,7 +34,7 @@
 
           <div class="row">
             <of-single-filter i18nRootLabelKey="admin.input.perimeter." [parentForm]="perimeterForm" filterPath="process"
-                              [values]="processOptions" [prefixWithValue]=true style="position:relative"></of-single-filter>
+                              [values]="processOptions" [prefixWithValue]=true style="position:relative" placeholderKey="admin.input.selectProcessText"></of-single-filter>
           </div>
 
         </div>
@@ -45,11 +45,11 @@
                  [formGroupName]="i">
               <div class="col-7">
                 <of-single-filter i18nRootLabelKey="admin.input.perimeter." [parentForm]="stateRight" filterPath="state"
-                                  [values]="stateOptions" [prefixWithValue]=true></of-single-filter>
+                                  [values]="stateOptions" [prefixWithValue]=true placeholderKey="admin.input.selectStateText"></of-single-filter>
               </div>
               <div class="col-3">
                 <of-single-filter i18nRootLabelKey="admin.input.perimeter." [parentForm]="stateRight" filterPath="right"
-                                  [values]="rightOptions"></of-single-filter>
+                                  [values]="rightOptions" placeholderKey="admin.input.selectRightText"></of-single-filter>
               </div>
               <div class="col icons">
                 <em class="far fa-trash-alt" (click)="removeOrClearStateRight(i)"></em>

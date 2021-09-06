@@ -8,6 +8,7 @@
  */
 
 import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
+import {TranslateService} from '@ngx-translate/core';
 import {ConfigService} from "@ofServices/config.service";
 import { CountDown} from './countdown';
 
@@ -19,11 +20,15 @@ import { CountDown} from './countdown';
 export class CountDownComponent implements OnInit, OnDestroy , OnChanges {
 
     @Input() public lttd: number;
+    @Input() public expiredLabel: string;
+    @Input() public showExpiredLabel: boolean = true;
+    @Input() public showExpiredIcon: boolean = true;
 
     public countDown;
+    public translatedExpiredLabel : string;
     secondsBeforeLttdForClockDisplay: number;
 
-    constructor(private configService: ConfigService) {
+    constructor(private configService: ConfigService,  private translate: TranslateService,) {
     }
 
     ngOnInit() {
@@ -33,6 +38,8 @@ export class CountDownComponent implements OnInit, OnDestroy , OnChanges {
 
     ngOnChanges()
     {
+        this.translatedExpiredLabel = this.translate.instant(this.expiredLabel);
+
         if (this.countDown)  {
             this.countDown.stopCountDown();
             this.countDown = new CountDown(this.lttd,this.secondsBeforeLttdForClockDisplay);

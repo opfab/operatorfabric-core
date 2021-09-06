@@ -4,8 +4,8 @@ subprojects {
         testCompileOnly misc.lombok
         testRuntimeOnly testing.junit5Engine
         testImplementation testing.junit5Api
-        testCompile testing.assertJ
-        testCompile project(':tools:generic:test-utilities')
-        testCompile testing.awaitility
+        testImplementation testing.assertJ
+        testImplementation project(':tools:generic:test-utilities')
+        testImplementation testing.awaitility
     }
 }

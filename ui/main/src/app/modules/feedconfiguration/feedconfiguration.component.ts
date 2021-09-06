@@ -58,6 +58,7 @@ export class FeedconfigurationComponent implements OnInit {
     preparedListOfProcessesStates: { processId: string,
                                      stateId: string
                                    } [];
+    isAllStatesSelectedPerProcess: Map<string, boolean>;
 
     modalRef: NgbModalRef;
 
@@ -78,6 +79,7 @@ export class FeedconfigurationComponent implements OnInit {
         this.preparedListOfProcessesStates = [];
         this.processesWithoutGroup = [];
         this.processesDefinition = this.processesService.getAllProcesses();
+        this.isAllStatesSelectedPerProcess = new Map();
         this.initForm();
     }
 
@@ -91,6 +93,37 @@ export class FeedconfigurationComponent implements OnInit {
                 return true;
         }
         return false;
+    }
+
+    private selectAllStates(idProcess: string) {
+        for (let state of this.processesStatesLabels.get(idProcess).states) {
+            if (! this.feedConfigurationForm.value.processesStates[state.stateControlIndex])
+                document.getElementById('' + state.stateControlIndex).click();
+        }
+    }
+
+    private unselectAllStates(idProcess: string) {
+        for (let state of this.processesStatesLabels.get(idProcess).states) {
+            if (this.feedConfigurationForm.value.processesStates[state.stateControlIndex])
+                document.getElementById('' + state.stateControlIndex).click();
+        }
+    }
+
+    private loadIsAllStatesSelected() {
+        for (let idProcess of Array.from(this.processesStatesLabels.keys()))
+            this.updateIsAllStatesSelected(idProcess);
+    }
+
+    private isAllStatesSelected(idProcess) {
+        for (let state of this.processesStatesLabels.get(idProcess).states) {
+            if (! this.feedConfigurationForm.value.processesStates[state.stateControlIndex])
+                return false;
+        }
+        return true;
+    }
+
+    private updateIsAllStatesSelected(idProcess) {
+        this.isAllStatesSelectedPerProcess.set(idProcess, this.isAllStatesSelected(idProcess));
     }
 
     private makeProcessesWithoutGroup() {
@@ -113,15 +146,13 @@ export class FeedconfigurationComponent implements OnInit {
             this.currentUserWithPerimeters.processesStatesNotNotified :
             null);
 
-        this.processesDefinition.forEach(process => {
-            for (const key in process.states) {
-                const notNotifiedStatesForThisProcess = ((!! processesStatesNotNotified) ? processesStatesNotNotified[process.id] : null);
+        this.preparedListOfProcessesStates.forEach(processState => {
+            const notNotifiedStatesForThisProcess = ((!! processesStatesNotNotified) ? processesStatesNotNotified[processState.processId] : null);
 
-                let isChecked = true;
-                if ((!! notNotifiedStatesForThisProcess) && (notNotifiedStatesForThisProcess.includes(key)))
-                    isChecked = false;
-                this.processesStatesFormArray.push(new FormControl(isChecked));
-            }
+            let isChecked = true;
+            if ((!! notNotifiedStatesForThisProcess) && (notNotifiedStatesForThisProcess.includes(processState.stateId)))
+                isChecked = false;
+            this.processesStatesFormArray.push(new FormControl(isChecked));
         });
     }
 
@@ -139,7 +170,7 @@ export class FeedconfigurationComponent implements OnInit {
                 for (const stateId of Object.keys(process.states)) {
                     const state = process.states[stateId];
 
-                    if ((!this.checkPerimeterForSearchFields) || this.userService.isReceiveRightsForProcessAndState(process.id, stateId)) {
+                    if ((! state.isOnlyAChildState) && ((!this.checkPerimeterForSearchFields) || this.userService.isReceiveRightsForProcessAndState(process.id, stateId))) {
                         let stateLabel = this.computeI18n(process, state.name, stateId);
                         this.translateService.get(stateLabel).subscribe(translate => { stateLabel = translate; });
 
@@ -196,6 +227,7 @@ export class FeedconfigurationComponent implements OnInit {
             this.addCheckboxesInFormArray();
             if (this.checkPerimeterForSearchFields)
                 this.removeProcessesWithoutStatesWithReceiveRights();
+            this.loadIsAllStatesSelected();
         });
     }
 
@@ -218,8 +250,8 @@ export class FeedconfigurationComponent implements OnInit {
 
         this.settingsService.patchUserSettings({login: this.currentUserWithPerimeters.userData.login,
             processesStatesNotNotified: Object.fromEntries(processesStatesNotNotifiedUpdate)})
-            .subscribe(
-                resp => {
+            .subscribe({
+                next: resp => {
                     this.messageAfterSavingSettings = '';
                     const msg = resp.message;
                     if (!!msg && msg.includes('unable')) {
@@ -232,13 +264,13 @@ export class FeedconfigurationComponent implements OnInit {
                     }
                     this.modalRef.close();
                 },
-                err => {
+                error: err => {
                     console.error('Error when saving settings :', err);
                     this.modalRef.close();
                     this.messageAfterSavingSettings = 'feedConfiguration.error.impossibleToSaveSettings';
                     this.displaySendResultError = true;
                 }
-            );
+            });
     }
 
     open(content) {

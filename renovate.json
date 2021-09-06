@@ -5,9 +5,8 @@
     ":switchToGradleLite",
     "schedule:nonOfficeHours"
   ],
-  "branchPrefix": "FE-Renovate",
-  "prConcurrentLimit": 5,
-  "prHourlyLimit": 1,
+  "branchPrefix": "FE-Renovate_",
+  "prConcurrentLimit": 7,
   "ignorePaths": [
     "**/node_modules/**",
     "**/bower_components/**",
@@ -15,5 +14,20 @@
   ],
   "gradle-lite": {
     "fileMatch": ["versions.properties"]
-  }
+  },
+  "packageRules": [
+    {
+      "groupName": "angular",
+      "matchPackagePrefixes": [
+        "@angular/",
+        "@angular-devkit/"
+      ]
+    },
+    {
+      "groupName": "confluent",
+      "matchPackagePrefixes": [
+        "io.confluent"
+      ]
+    }
+  ]
 }

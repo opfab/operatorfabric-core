@@ -15,7 +15,7 @@ Feature: getResponseBusinessconfig
       And header Authorization = 'Bearer ' + authToken
       When method get
       Then status 200
-      And match response == {"btnText":{"parameters":null,"key":"action.text"},"lock":true,"state":"responseState","externalRecipients":["externalRecipient1","externalRecipient2"]}
+      And match response == {"lock":true,"state":"responseState","externalRecipients":["externalRecipient1","externalRecipient2"]}
 
 
   Scenario: get businessconfig response without authentication

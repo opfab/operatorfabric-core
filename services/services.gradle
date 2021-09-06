@@ -37,12 +37,10 @@ subprojects {
         }
 
         dependencies {
-            compile boot.actuator
-            compile misc.micrometer
+            implementation boot.actuator
+            implementation misc.micrometer
             annotationProcessor misc.lombok
             implementation misc.lombok
-            // needed to solve bug with previous version included in spring security 
-            implementation "com.nimbusds:nimbus-jose-jwt:9.10.1"
 
             testAnnotationProcessor misc.lombok
             testCompileOnly misc.lombok
@@ -57,7 +55,7 @@ subprojects {
         }
 
         configurations {
-            compile.exclude module: "spring-boot-starter-tomcat"
+            implementation.exclude module: "spring-boot-starter-tomcat"
             testImplementation.exclude module: "spring-boot-starter-tomcat"
             testImplementation.exclude module: "junit"
         }
@@ -120,10 +118,11 @@ subprojects {
 
         /////// CUSTOM TASKS
 
-        /*Task that copies all the dependencies under build/libs */
+        /*Task that copies all the dependencies under build/libs so Sonar
+        can make sense of the Lombok annotations for example */
         task copyDependencies(type: Copy) {
             description 'copy dependencies to build/libs'
-            from configurations.compile
+            from configurations.compileClasspath
             into 'build/libs'
         }
 

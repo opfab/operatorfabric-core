@@ -13,7 +13,6 @@ package org.opfab.cards.publication.configuration.json;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.opfab.cards.publication.model.*;
-import org.opfab.cards.publication.model.*;
 
 /**
  * Jackson (JSON) Business Module configuration

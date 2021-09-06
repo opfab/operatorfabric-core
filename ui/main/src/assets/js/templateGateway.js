@@ -13,6 +13,7 @@ const templateGateway = {
     childCards: [],
     userAllowedToRespond : false,
     userMemberOfAnEntityRequiredToRespond : false,
+    entitiesAllowedToRespond: [],
 
     setEntityNames: function(entityNames){
         this.opfabEntityNames = entityNames;
@@ -52,6 +53,11 @@ const templateGateway = {
         return this.userMemberOfAnEntityRequiredToRespond;
     },
     
+    // Returns an array containing the ids of the entities allowed to respond
+    getEntitiesAllowedToRespond() {
+        return this.entitiesAllowedToRespond;
+    },
+
 
     //
     // FUNCTIONS TO OVERRIDE BY TEMPLATES 
@@ -62,6 +68,7 @@ const templateGateway = {
         this.childCards =  [];
         this.userAllowedToRespond = false;
         this.userMemberOfAnEntityRequiredToRespond = false;
+        this.entitiesAllowedToRespond = [];
 
         // OpFab calls this function to inform the template that the card is locked
         this.lockAnswer = function () {
@@ -92,8 +99,8 @@ const templateGateway = {
 
         // OpFab calls this method to get the form result when the user wants to send a response
         this.getUserResponse =  function () {
-            console.log(new Date().toISOString(), ` Template.js : no getUserResponse method defined in template , valid set to true`);
-            return this.isValid = undefined;
+            console.log(new Date().toISOString(), ` Template.js : no getUserResponse method defined in template , valid set to false`);
+            return {valid:false,errorMsg:"Impossible to respond due to a technical error in the template"};
         }
 }
 

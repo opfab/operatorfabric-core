@@ -52,6 +52,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     @Input() public card: Card | LightCard;
     @Input() parentForm: FormGroup;
     @Input() visibleProcesses: [];
+    @Input() hideChildStates?: boolean;
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -263,7 +264,8 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
             const statesDropdownList = [];
             for (const state in process.states) {
 
-                if ((!this.checkPerimeterForSearchFields) || this.userService.isReceiveRightsForProcessAndState(process.id, state)) {
+                if (!(this.hideChildStates && process.states[state].isOnlyAChildState) &&
+                    ((!this.checkPerimeterForSearchFields) || this.userService.isReceiveRightsForProcessAndState(process.id, state))) {
                     statesDropdownList.push({
                         id: process.id + '.' + state,
                         itemName: process.states[state].name,

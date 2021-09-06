@@ -22,7 +22,7 @@
           </div>
 
           <div class="opfab-right-menu-item" *ngIf='showEditAndDeleteButton'>
-            <a class="opfab-right-menu-link" (click)='open(doYouReallyWantToDeleteCardPopup)'>
+            <a class="opfab-right-menu-link" (click)='openModal(doYouReallyWantToDeleteCardPopup)'>
               <div class="opfab-menu-icon opfab-menu-icon-right opfab-icon-trash"></div>
               <div translate>{{'button.delete'}}</div>
             </a>
@@ -61,16 +61,19 @@
           </div>
         </ng-template>
 
-        <div *ngIf='responseDataExists && showDetailCardHeader' class="opfab-card-response-header">
+        <div *ngIf='isCardAQuestionCard && showDetailCardHeader' class="opfab-card-response-header">
           <div class="flex-container">
-            <div style="width:30%;">
-              <span style="padding-left:15px" translate>response.status</span> :
-              <span class="opfab-question-card-state-name" >{{i18nPrefix+this.cardState.name | translate}} &nbsp;</span>
-              <span *ngIf="!!this.card.lttd"> |<of-countdown [lttd]="this.card.lttd"></of-countdown></span>
-             
+            <div id="opfab-card-response-header-left" style="width:30%;">
+              <span id="opfab-card-response-header-status" *ngIf="!!cardState.type">
+                <span style="padding-left:15px" translate>response.status</span> :
+                <!--The translate directive should stay there rather than in the element see OC-1603-->
+                <span class="opfab-typeOfState-{{cardState.type}}">{{"global.typeOfState."+cardState.type | translate}}</span>
+              </span>
+              <span *ngIf="!!card.lttd && !!cardState.type && (!lttdExpiredIsTrue || cardState.type !== 'FINISHED')"> | </span>
+              <span *ngIf="!!card.lttd"><of-countdown [lttd]="card.lttd" [showExpiredIcon]="showExpiredIcon" [showExpiredLabel]="showExpiredLabel" [expiredLabel]="expiredLabel"></of-countdown></span>
             </div>
 
-            <div style="width:70%;text-align: right">
+            <div id="opfab-card-response-header-right" style="width:70%;text-align: right">
               <div id="opfab-answer-help" class="opfab-icon-help" placement="left" [ngbPopover]="helpContent"
                 container="body" triggers="mouseenter:mouseleave" popoverClass="opfab-popover">
               </div>
@@ -89,34 +92,47 @@
           </div>
         </div>
 
-        <div id="opfab-div-card-template" class="opfab-card-detail" [innerHtml]="htmlContent"></div>
+        <div id="opfab-div-card-template" class="opfab-card-detail" [innerHtml]="htmlTemplateContent"></div>
 
         <div style="text-align: center;width:100% ; ">
 
 
           <div id='div-detail-btn'>
 
-            <span class="opfab-card-received-footer">
-              <span translate>feed.received</span>
-              {{getFormattedPublishDate()}} <span translate> feed.at </span> {{getFormattedPublishTime()}}
 
-              <span *ngIf="fromEntityOrRepresentative">
-                <span translate> feed.from</span>
-                {{fromEntityOrRepresentative}}
-              </span>
-            </span>
+              <div class="opfab-card-received-footer">
+                <span translate>feed.received</span>
+                {{formattedPublishDate}} <span translate> feed.at </span> {{formattedPublishTime}}
+              
+                <span *ngIf="fromEntityOrRepresentative">
+                  <span translate> feed.from</span>
+                  {{fromEntityOrRepresentative}}
+                </span>
+                
+                <span *ngIf="lastResponse">
+                  <span > --- </span>
+                  <span translate>feed.lastResponse</span>
+                  {{formatDate(lastResponse.publishDate)}} <span translate> feed.at </span> {{formatTime(lastResponse.publishDate)}}
+              
+                  <span>
+                    <span translate> feed.from</span>
+                    {{getResponsePublisher(lastResponse)}}
+                  </span>
+                </span>
+              </div>
+
             <div *ngIf="showButtons" style="text-align: right;">
               <button id="opfab-card-details-btn-response" class="opfab-btn"
-                *ngIf='showActionButton && isActionEnabled && !isLocked' [disabled]='lttdExpiredIsTrue || !isActionEnabled'
-                (click)='submitResponse()'>{{btnText | translate:responseDataParameters}}</button>
+                *ngIf='showActionButton && isUserEnabledToRespond && !isResponseLocked' [disabled]='lttdExpiredIsTrue || !isUserEnabledToRespond'
+                (click)='submitResponse()' translate> response.btnValidate </button>
               <button id="opfab-card-details-btn-response" class="opfab-btn"
-                [disabled]='lttdExpiredIsTrue || !isActionEnabled' translate
-                *ngIf='showActionButton && isActionEnabled && isLocked' (click)='unlockAnswer()'>
+                [disabled]='lttdExpiredIsTrue || !isUserEnabledToRespond' translate
+                *ngIf='showActionButton && isUserEnabledToRespond && isResponseLocked' (click)='unlockAnswer()'>
                 response.btnUnlock
               </button>
 
               <button id="opfab-card-details-btn-ack" class="opfab-btn" *ngIf='showAckButton'
-                (click)='acknowledge()'>{{btnAckText|translate}}</button>
+                (click)='acknowledgeCard()'>{{btnAckText|translate}}</button>
             </div>
           </div>
 

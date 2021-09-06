@@ -64,17 +64,17 @@ public class CardNotificationService {
         CardOperationData cardOperation = builderEncapsulator.builder().build();
         List<String> listOfGroupRecipients = new ArrayList<>();
         if (card.getGroupRecipients() != null)
-            card.getGroupRecipients().forEach(group -> listOfGroupRecipients.add(group));
+            card.getGroupRecipients().forEach(listOfGroupRecipients::add);
         cardOperation.setGroupRecipientsIds(listOfGroupRecipients);
 
         List<String> listOfEntityRecipients = new ArrayList<>();
         if (card.getEntityRecipients() != null)
-            card.getEntityRecipients().forEach(entity -> listOfEntityRecipients.add(entity));
+            card.getEntityRecipients().forEach(listOfEntityRecipients::add);
         cardOperation.setEntityRecipientsIds(listOfEntityRecipients);
 
         List<String> listOfUserRecipients = new ArrayList<>();
         if (card.getUserRecipients() != null)
-            card.getUserRecipients().forEach(user -> listOfUserRecipients.add(user));
+            card.getUserRecipients().forEach(listOfUserRecipients::add);
         cardOperation.setUserRecipientsIds(listOfUserRecipients);
 
         pushCardInRabbit(cardOperation);

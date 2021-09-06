@@ -30,7 +30,6 @@ You can then request other users to be granted rights on the namespace as well.
 The key pair is generated with GPG2, keeping the default options and using the `opfabtech` technical account email as
 contact. The key is further secured with a passphrase.
 
-[terminal]
 ----
 gpg2 --full-generate-key
 

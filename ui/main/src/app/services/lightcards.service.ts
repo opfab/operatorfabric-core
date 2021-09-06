@@ -22,18 +22,23 @@ import {LightCard, Severity} from '@ofModel/light-card.model';
 export class LightCardsService {
 
     private filters: Filter[];
-    private lastDebounce: number = 0;
+
+    private timeOfLastDebounce: number = 0;
+    private timeOfLastCardReception: number = 0;
+    private numberOfCardUpdatesInARowNotComingFromDebounce: number=0;
 
     private filteredAndSortedLightCards = new Subject();
     private filteredLightCards = new Subject();
     private loadingInProgress = new Subject();
+   
 
     constructor(private store: Store<AppState>) {
         this.store.pipe(select(feedSelectors.selectActiveFiltersArray)).subscribe(filters => this.filters = filters);
         this.computeFilteredAndSortedLightCards();
         this.computeFilteredLightCards();
-        this.loadingInProgress.next(false);
+        this.checkForLoadingInProgress();
     }
+
 
     private computeFilteredAndSortedLightCards() {
         combineLatest([
@@ -92,22 +97,38 @@ export class LightCardsService {
         return this.store.pipe(
             select(feedSelectors.selectFeed),
             sample(interval(1000)),
-            filter(() => ((new Date().valueOf()) - this.lastDebounce) > 1000), // we only need to get cards if no debounce arise in 1 seconds) 
-            tap(()=> this.loadingInProgress.next(true)) 
+            filter(() => ((new Date().valueOf()) - this.timeOfLastDebounce) > 1000), // we only need to get cards if no debounce arise in 1 seconds) 
         );
     }
 
     private getLightCardDebounce(): Observable<any> {
         return this.store.pipe(
             select(feedSelectors.selectFeed),
+            tap(() => this.timeOfLastCardReception = new Date().valueOf()),
             debounceTime(200),
-            tap(() => this.lastDebounce = (new Date()).valueOf()),
-            tap(()=> this.loadingInProgress.next(false)) 
+            tap(() => this.timeOfLastDebounce = (new Date()).valueOf())
         );
     }
 
     public getLoadingInProgress() {
         return this.loadingInProgress.asObservable();
+    }
+
+    // check every 500ms if we are in a loading card process
+    // we consider we are in a loading card process if 3 updates in a row 
+    // came from the "interval" observable rather than the debounce.   
+    private checkForLoadingInProgress()
+    {
+        if (this.timeOfLastCardReception > this.timeOfLastDebounce) // at least one card list update has been received that came from the "interval" stream not the "debounce", meaning there is a steady flow of card updates.
+                  {
+                    this.numberOfCardUpdatesInARowNotComingFromDebounce++;
+                    if (this.numberOfCardUpdatesInARowNotComingFromDebounce > 2) this.loadingInProgress.next(true);
+                  }
+        else  {
+            this.loadingInProgress.next(false);
+            this.numberOfCardUpdatesInARowNotComingFromDebounce = 0;
+        }
+        setTimeout(() => this.checkForLoadingInProgress(), 500);
     }
 
 // --------------------

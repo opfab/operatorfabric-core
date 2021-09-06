@@ -87,15 +87,16 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
   public loadAllEntitiesData(): Observable<any> {
     return this.getAllEntities()
       .pipe(takeUntil(this.ngUnsubscribe$)
-      , tap(
-        (entities) => {
+      , tap({
+        next: (entities) => {
           if (!!entities) {
             this._entities = entities;
             this.setEntityNamesInTemplateGateway();
             console.log(new Date().toISOString(), 'List of entities loaded');
           }
-        }, (error) => console.error(new Date().toISOString(), 'an error occurred', error)
-      ));
+        },
+          error: (error) => console.error(new Date().toISOString(), 'an error occurred', error)
+  }));
   }
 
   public getEntities(): Entity[] {

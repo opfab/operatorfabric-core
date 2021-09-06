@@ -89,9 +89,9 @@ class BusinessconfigControllerForMonitoringShould implements ResourceLoaderAware
         private String getMonitoring() {
                 return "{ \"export\" : { "
                         +       "\"fields\": [ " 
-                        +               "{ \"columnName\" : \"myField\" , \"jsonField\" :\"card.state\"},"
+                        +               "{ \"columnName\" : \"myField\" , \"jsonField\" :\"card.state\", \"type\":\"STRING\"},"
                         +               "{ \"columnName\" : \"myField\" , \"jsonField\" :\"card.data\", \"fields\": ["
-                        +                       "{ \"columnName\" : \"myField\" , \"jsonField\" :\"card.state\"},"
+                        +                       "{ \"columnName\" : \"myField\" , \"jsonField\" :\"card.state\", \"type\":\"EPOCHDATE\"},"
                         +                       "{ \"columnName\" : \"myField\" , \"jsonField\" :\"card.state\"}"
                         +               "]}"
                         +       "]}"
@@ -142,7 +142,9 @@ class BusinessconfigControllerForMonitoringShould implements ResourceLoaderAware
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                                 .andExpect(jsonPath("$.export.fields[0].columnName", is("myField")))
                                 .andExpect(jsonPath("$.export.fields[0].jsonField", is("card.state")))
-                                .andExpect(jsonPath("$.export.fields[1].fields[0].jsonField", is("card.state")));
+                                .andExpect(jsonPath("$.export.fields[0].type", is("STRING")))
+                                .andExpect(jsonPath("$.export.fields[1].fields[0].jsonField", is("card.state")))
+                                .andExpect(jsonPath("$.export.fields[1].fields[0].type", is("EPOCHDATE")));
 
                 // check new file has been saved on disk 
                 Monitoring monitoringFormFile = getMonitoringFormFile();

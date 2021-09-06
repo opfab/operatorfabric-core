@@ -31,7 +31,7 @@ import {DateTimeNgb, getDateTimeNgbFromMoment} from '@ofModel/datetime-ngb.model
 import * as moment from 'moment-timezone';
 import {HandlebarsService} from '../cards/services/handlebars.service';
 import {DetailContext} from '@ofModel/detail-context.model';
-import {map} from 'rxjs/operators';
+import {debounceTime, map, takeUntil} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
@@ -107,6 +107,11 @@ export class UserCardComponent implements OnDestroy, OnInit {
     pageLoading = true;
     useDescriptionFieldForEntityList = false;
 
+    endDateMin : {year: number, month: number, day: number} = null;
+    startDateMax : {year: number, month: number, day: number} = null;
+
+    dateTimeFilterChange = new Subject();
+
     displayForm() {
         return !!this.publisherForCreatingUsercard && !!this.processOptions && this.processOptions.length > 0;
     }
@@ -180,6 +185,32 @@ export class UserCardComponent implements OnDestroy, OnInit {
             this.pageLoading = false;
 
         this.publisherForCreatingUsercard = this.findPublisherForCreatingUsercard();
+        this.dateTimeFilterChange.pipe(
+            takeUntil(this.unsubscribe$),
+            debounceTime(1000),
+        ).subscribe(() => this.setDateFilterBounds());
+    }
+
+    onDateTimeChange(event: Event) {
+        this.dateTimeFilterChange.next(null);
+    }
+
+    setDateFilterBounds(): void {
+        
+        if (this.messageForm.value.startDate?.date) {
+            this.endDateMin = {year: this.messageForm.value.startDate.date.year, month: this.messageForm.value.startDate.date.month, day: this.messageForm.value.startDate.date.day};
+        }
+        else {
+            const today = moment();
+            this.endDateMin = {year: today.year() ,month: today.month(), day: today.day() };
+        }
+        if (this.messageForm.value.endDate?.date) {
+            this.startDateMax = {year: this.messageForm.value.endDate.date.year, month: this.messageForm.value.endDate.date.month, day: this.messageForm.value.endDate.date.day};
+        }
+        else {
+            const tomorrow = moment().add(1,'day');
+            this.startDateMax = {year: tomorrow.year() ,month: tomorrow.month(), day: tomorrow.day() };
+        }
     }
 
     loadCardForEdition() {
@@ -367,16 +398,18 @@ export class UserCardComponent implements OnDestroy, OnInit {
             const templateName = userCard.template;
 
             this.handlebars.queryTemplate(this.selectedProcess.id, this.selectedProcess.version, templateName)
-                .pipe(map(t => t(new DetailContext(card, null, null)))).subscribe((template) => {
-                    this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml(template);
-                    setTimeout(() => { // wait for DOM rendering
-                        this.reinsertScripts();
-                    }, 10);
-                }, (error) =>  {
-                    console.log('WARNING impossible to load template ', templateName , ', error = ' , error);
-                    this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
-                }
-                );
+                .pipe(map(t => t(new DetailContext(card, null, null))))
+                .subscribe({
+                    next: (template) => {
+                        this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml(template);
+                        setTimeout(() => { // wait for DOM rendering
+                            this.reinsertScripts();
+                        }, 10);},
+                    error:(error) =>  {
+                        console.log('WARNING impossible to load template ', templateName , ', error = ' , error);
+                        this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
+                    }
+                });
         } else this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
 
         if (!!userCard) {

@@ -1,7 +1,12 @@
 {
   "global":{
     "connectionLost":"Connection lost",
-    "tryToReconnect":"Try to reconnect ..."
+    "tryToReconnect":"Try to reconnect ...",
+    "typeOfState" : {
+      "INPROGRESS" : "IN PROGRESS",
+      "FINISHED": "FINISHED",
+      "CANCELED" : "CANCELED"
+    }
   },
   "menu": {
     "feed": "Card Feed",
@@ -103,10 +108,12 @@
       }
     },
     "lttdFinished": "Finished",
+    "responsesClosed": "Response closed",
     "received": "Received on",
     "at": "at",
     "from" : "from",
-    "moreCards": "cards more"
+    "moreCards": "cards more",
+    "lastResponse": "Last response received on"
   },
   "login": {
     "reset": "Reset",
@@ -161,6 +168,7 @@
       "processGroup": "SERVICE"
     },
     "noResult": "Your search did not match any results.",
+    "tooManyRows": "Too many cards , not all cards visible",
     "exportToExcel" : "Export data",
     "resultsNumber":"Results number"
 
@@ -193,6 +201,7 @@
     "hideFilters" : "Hide Filters",
     "showFilters" : "Show Filters",
     "noSelection" : "NA",
+    "moreRows": "rows more",
     "filters": {
       "processGroup" : "SERVICE",
       "selectProcessGroupText" : "Select a Service",
@@ -287,7 +296,7 @@
     "sendingCardInProgress": "Sending card in progress ..."
   },
   "response": {
-    "btnTitle": "VALIDATE ANSWER",
+    "btnValidate": "VALIDATE ANSWER",
     "btnUnlock": "MODIFY ANSWER",
     "error": {
       "submit": "The answer could not be sent",
@@ -298,7 +307,7 @@
     "answers": "Answers",
     "answered": "Answered",
     "unanswered": "Not answered yet",
-    "status": "Status"
+    "status": "Process Status"
   },
   "cardAcknowledgment": {
     "button": {
@@ -347,6 +356,12 @@
         "confirmDelete": "Do you really want to delete user",
         "add": "Add new user"
       },
+      "selectGroupText": "Select a Group",
+      "selectEntityText": "Select an Entity",
+      "selectPerimeterText": "Select a Perimeter",
+      "selectProcessText": "Select a Process",
+      "selectStateText": "Select a State",
+      "selectRightText": "Select a Right",
       "edit": "Edit",
       "delete": "Delete",
       "save": "SAVE CHANGES",

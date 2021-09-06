@@ -1,4 +1,4 @@
 dependencies{
-    compile boot.starterMongo, boot.starterMongoR, boot.starterValidation
-    compile project(':tools:generic:utilities')
+    implementation boot.starterMongo, boot.starterMongoR, boot.starterValidation
+    implementation project(':tools:generic:utilities')
 }

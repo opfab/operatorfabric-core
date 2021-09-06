@@ -21,6 +21,7 @@ import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {LightCardsService} from '@ofServices/lightcards.service';
 import {Filter} from '@ofModel/feed-filter.model';
+import {ConfigService} from '@ofServices/config.service';
 
 @Component({
     selector: 'of-monitoring',
@@ -42,9 +43,15 @@ export class MonitoringComponent implements OnInit, OnDestroy {
 
     result: LineOfMonitoringResult[];
 
+    maxNbOfRowsToDisplay: number;
+
     constructor(private store: Store<AppState>
-                , private processesService: ProcessesService, private lightCardsService: LightCardsService
+                , private processesService: ProcessesService
+                , private lightCardsService: LightCardsService
+                , private configService: ConfigService
     ) {
+        this.maxNbOfRowsToDisplay = this.configService.getConfigValue('monitoring.maxNbOfRowsToDisplay',100);
+
          processesService.getAllProcesses().forEach(process => {
             const id = process.id;
             if (!!process.uiVisibility && !!process.uiVisibility.monitoring) {
@@ -74,7 +81,8 @@ export class MonitoringComponent implements OnInit, OnDestroy {
                         return cards.map(card => {
                                 return this.cardToResult(card)
                             }
-                        ).filter(elem => !!elem);
+                        ).filter(elem => !!elem)
+                         .sort(( card1,card2) => (card2.creationDateTime.valueOf() - card1.creationDateTime.valueOf()));
                     }
                 ),
                 catchError(err => of([]))

@@ -74,10 +74,7 @@
       "description": "questionState.description",
       "response": {
         "lock": true,
-        "state": "responseState",
-        "btnText": {
-          "key": "question.button.text"
-        }
+        "state": "responseState"
       },
       "templateName": "question",
       "styles": [
@@ -102,7 +99,8 @@
         "style"
       ],
       "acknowledgmentAllowed": "Always",
-      "type" : "INPROGRESS"
+      "type" : "INPROGRESS",
+      "isOnlyAChildState": true
     }
 
   }

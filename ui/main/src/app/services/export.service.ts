@@ -16,11 +16,13 @@ const EXCEL_EXTENSION = '.xlsx';
 export abstract class ExportService {
 
   public static exportJsonToExcelFile(json: any[], excelFileName: string): void {
-    this.exportWorksheet(XLSX.utils.json_to_sheet(json),excelFileName);
+    const opts : XLSX.JSON2SheetOpts = { dateNF: 'dd/mm/yy hh:mm'};
+    this.exportWorksheet(XLSX.utils.json_to_sheet(json,opts),excelFileName);
   }
 
   public static exportArrayToExcelFile(data: any[][],excelFileName: string): void {
-    this.exportWorksheet(XLSX.utils.aoa_to_sheet(data),excelFileName);
+    const opts : XLSX.AOA2SheetOpts = { dateNF: 'dd/mm/yy hh:mm'};
+    this.exportWorksheet(XLSX.utils.aoa_to_sheet(data,opts),excelFileName);
   }
 
   private static exportWorksheet(worksheet: XLSX.WorkSheet, excelFileName: string,) {

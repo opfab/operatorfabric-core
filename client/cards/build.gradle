@@ -9,20 +9,21 @@ plugins {
 }
 
 dependencies {
-    compile cloud.avro
+    implementation cloud.avro
 }
 
 jar {
     manifest {
-        attributes( "Created-By"             : "Gradle ${gradle.gradleVersion}",
-                    "Specification-Title"    : "OperatorFabric Card Client Data",
-                    "Implementation-Title"   : "OperatorFabric Card Client Data",
-                    "Implementation-Version" : operatorfabric.version,
-                    "Specification-Version"  : operatorfabric.version
+        attributes("Created-By": "Gradle ${gradle.gradleVersion}",
+                "Specification-Title": "${longName}",
+                "Implementation-Title": "${longName}",
+                "Implementation-Version": operatorfabric.version,
+                "Specification-Version": operatorfabric.version
         )
 
     }
 }
+
 swaggerSources {
 
     model {
@@ -45,4 +46,3 @@ avro {
     fieldVisibility = "PRIVATE"
     stringType = "String"
 }
-

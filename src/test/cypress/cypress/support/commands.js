@@ -51,7 +51,7 @@ Cypress.Commands.add('loadTestConf', () => {
     cy.exec('cd .. && ./resources/loadTestConf.sh '+Cypress.env('host'));
 })
 
-Cypress.Commands.add('sendTestCards', () => {
+Cypress.Commands.add('send6TestCards', () => {
     cy.exec('cd .. && ./resources/send6TestCards.sh '+Cypress.env('host'));
 })
 
@@ -59,7 +59,7 @@ Cypress.Commands.add('sendCard', (cardFile) => {
     cy.exec('cd ../resources/cards/ && ./sendCard.sh '+ cardFile + ' ' + Cypress.env('host'));
 })
 
-Cypress.Commands.add('deleteTestCards', () => {
+Cypress.Commands.add('delete6TestCards', () => {
     cy.exec('cd .. && ./resources/delete6TestCards.sh '+Cypress.env('host'));
 })
 
@@ -110,4 +110,8 @@ Cypress.Commands.add('deleteCoreMenuFromConf', (menu) => {
 
 Cypress.Commands.add('deleteAllArchivedCards', () => {
     cy.exec('cd .. && ./resources/deleteAllArchivedCards.sh '+Cypress.env('host'));
+})
+
+Cypress.Commands.add('deleteAllCards', () => {
+    cy.exec('cd .. && ./resources/deleteAllCards.sh '+Cypress.env('host'));
 })

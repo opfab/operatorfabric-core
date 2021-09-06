@@ -81,6 +81,7 @@ a|card time display mode in the feed. Values :
 |feed.card.maxNbOfCardsToDisplay|100|no| Max number of card visible in feed (This limit is used for performance reasons, setting the value too high can have consequences on browser response times) 
 
 |feed.timeline.domains|["TR", "J", "7D", "W", "M", "Y"]|no| List of domains to show on the timeline, possible domains are : "TR", "J", "7D", "W", "M", "Y".
+|monitoring.maxNbOfRowsToDisplay|100|no| Max number of rows visible in monitoring page (This limit is used for performance reasons, setting the value too high can have consequences on browser response times)
 |playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
 |playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
 |playSoundForCompliant|false|no|If set to true, a sound is played when Compliant cards are added or updated in the feed
@@ -90,6 +91,7 @@ a|card time display mode in the feed. Values :
 Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_database_time_zones[TZ database].
 
 |archive.filters.page.size|10|no|The page size of archive filters
+|archive.history.size|100|no|The maximum size of card history visible
 |archive.filters.tags.list||no|List of tags to choose from in the corresponding filter in archives
 |settings.tags.hide||no|Control if you want to show or hide the tags filter in feed page
 |settings.styleWhenNightDayModeDesactivated||no|style to apply if not using day night mode, possible value are DAY or NIGHT 

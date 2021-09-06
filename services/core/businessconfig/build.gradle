@@ -1,17 +1,23 @@
 dependencies {
     swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
     swaggerUI generator.swaggerUI
-    compile project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
-    compile boot.starterRabbitmq
-    compile boot.starterAop
-    compile misc.guava
+    implementation boot.starterRabbitmq
+    implementation boot.starterAop
+    implementation boot.starterSecurity
+    implementation spring.securityOauthResource, spring.securityOauthJose
+    implementation boot.starterValidation
+    implementation misc.guava
+    implementation misc.commonsIO
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
 
-    compile boot.starterWeb, boot.starterJetty
-    compile project(':client:businessconfig-client-data')
-    compile project(':tools:spring:spring-oauth2-utilities')
-    testCompile project(':tools:spring:spring-test-utilities')
+    implementation boot.starterWeb, boot.starterJetty
+    implementation project(':tools:generic:utilities')
+    implementation project(':tools:spring:spring-oauth2-utilities')
+    implementation project(':tools:spring:spring-utilities')
+    implementation project(':client:businessconfig-client-data')
+    testImplementation project(':tools:spring:spring-test-utilities')
+    testImplementation spring.securityTest
 }
 
 bootJar {
@@ -94,15 +100,6 @@ task prepareDevDataDir {
     }
 }
 
-task copyCompileClasspathDependencies(type: Copy) {
-   // unlike copyDependencies, this one will catch lombok that must be sent to sonarqube
-   description 'copy compile classpath dependencies, catching lombok that must be sent for sonarqube'
-   from configurations.compileClasspath
-   into "$project.buildDir/libs_compile"
-   doFirst{
-       logger.info "copying configurations.compileClasspath to $project.buildDir/libs_compile"
-   }
-}
 
 createDevData.dependsOn prepareDevDataDir
 compressBundle1Data.dependsOn prepareTestDataDir

@@ -26,6 +26,7 @@ import {I18n} from '@ofModel/i18n.model';
 import * as moment from 'moment';
 import {UserContext} from '@ofModel/user-context.model';
 import {DetailContext} from '@ofModel/detail-context.model';
+import {DateTimeProvider, SystemDateTimeProvider} from 'angular-oauth2-oidc';
 
 function computeTemplateUri(templateName) {
     return `${environment.urls.processes}/testProcess/templates/${templateName}`;
@@ -55,6 +56,7 @@ describe('Handlebars Services', () => {
             ],
             providers: [
                 {provide: 'TimeEventSource', useValue: null},
+                { provide: DateTimeProvider, useClass: SystemDateTimeProvider },
                 {provide: store, useClass: Store},
                 ProcessesService,
                 HandlebarsService,
@@ -505,19 +507,54 @@ describe('Handlebars Services', () => {
                 call.flush('{{numberFormat card.data.numbers.[5] style="currency" currency="EUR"}}');
             });
         });
-        it('compile dateFormat now (using en locale fallback)', (done) => {
-            now.locale('en')
+        it('compile  now ', (done) => {
             const templateName = Guid.create().toString();
             handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
-                    expect(result).toEqual(now.format('MMMM Do YYYY'));
+                // As it takes times to execute and the test are asynchronous we could not test the exact value 
+                // so we test the range of the result 
+                // taking into account asynchronous mechansim for test tool
+                // it can take more than 10s to have the execution done 
+                // so we set the range starting form now to now plus one minute
+                    expect(result).toBeGreaterThan(now.valueOf());
+                    expect(result).toBeLessThan(now.valueOf()+60000);
+                    done();
+                });
+            let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
+            expect(calls.length).toEqual(1);
+            calls.forEach(call => { 
+                expect(call.request.method).toBe('GET');
+                call.flush('{{now}}');
+            });
+        });
+        it('compile dateFormat with number for epoch date  (using en locale fallback)', (done) => {
+            now.locale('en');
+            const templateName = Guid.create().toString();
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
+                .subscribe((result) => {
+                    expect(result).toEqual("July 19th 2021");
                     done();
                 });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
             calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
-                call.flush('{{dateFormat (now "") format="MMMM Do YYYY"}}');
+                call.flush('{{dateFormat 1626685587000 format="MMMM Do YYYY"}}');
+            });
+        });
+        it('compile dateFormat with string for epoch date  (using en locale fallback)', (done) => {
+            now.locale('en');
+            const templateName = Guid.create().toString();
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
+                .subscribe((result) => {
+                    expect(result).toEqual("July 19th 2021");
+                    done();
+                });
+            let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
+            expect(calls.length).toEqual(1);
+            calls.forEach(call => {
+                expect(call.request.method).toBe('GET');
+                call.flush('{{dateFormat 1626685587000 format="MMMM Do YYYY"}}');
             });
         });
         it('compile preserveSpace', (done) => {

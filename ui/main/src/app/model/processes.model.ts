@@ -9,7 +9,6 @@
 
 
 import {Card} from '@ofModel/card.model';
-import {I18n} from '@ofModel/i18n.model';
 import {Map as OfMap} from '@ofModel/map';
 import {LightCard} from '@ofModel/light-card.model';
 
@@ -58,7 +57,8 @@ export class State {
         readonly userCard?: UserCard,
         readonly description?: string,
         readonly showDetailCardHeader?: boolean,
-        readonly type?: TypeOfStateEnum
+        readonly type?: TypeOfStateEnum,
+        readonly isOnlyAChildState?: boolean
     ) {
     }
 }
@@ -88,7 +88,6 @@ export class Response {
     constructor(
         readonly lock?: boolean,
         readonly state?: string,
-        readonly btnText?: I18n,
         readonly externalRecipients?: string[]
     ) {
     }
@@ -108,38 +107,3 @@ export enum TypeOfStateEnum {
     CANCELED = 'CANCELED'
 }
 
-export enum InputType {
-    TEXT,
-    LIST,
-    LIST_RADIO,
-    SWITCH_LIST,
-    LONGTEXT,
-    BOOLEAN,
-    STATIC
-}
-
-export class Input {
-    /* istanbul ignore next */
-    constructor(
-        readonly type: InputType,
-        readonly name: string,
-        readonly label: I18n,
-        readonly value: string,
-        readonly mandatory: boolean,
-        readonly maxLength: number,
-        readonly rows: number,
-        readonly values: ParameterListItem[],
-        readonly selectedValues: string[],
-        readonly unSelectedValues: string[],
-    ) {
-    }
-}
-
-export class ParameterListItem {
-    /* istanbul ignore next */
-    constructor(
-        readonly label: I18n,
-        readonly value: string,
-    ) {
-    }
-}

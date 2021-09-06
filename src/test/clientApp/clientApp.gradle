@@ -22,25 +22,23 @@ configurations {
 	}
 }
 
-
-//create a single Jar with all dependencies
-jar {
+bootJar {
 	manifest {
-		attributes 'Main-Class': 'org.opfab.client.ClientApplication'
-	}
-
-	from {
-		configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+		attributes("Created-By"             : "Gradle ${gradle.gradleVersion}",
+				"Specification-Title"    : "OperatorFabric Businessconfig Parties Manager",
+				"Implementation-Title"   : "OperatorFabric Businessconfig Parties Manager",
+				"Implementation-Version" : operatorfabric.version,
+				"Specification-Version"  : operatorfabric.version
+		)
 	}
 }
-
 
 dependencies {
 	implementation boot.starterWeb
 	implementation "org.opfab:cards-client-data:${project.version}"
 
 	annotationProcessor misc.lombok
-	compile project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
+	implementation project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
 	testImplementation boot.starterTest
 }
 

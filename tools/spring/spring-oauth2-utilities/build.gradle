@@ -1,14 +1,14 @@
 dependencies{
-    compile boot.starterSecurity
-    compile boot.starterRabbitmq
-    compile boot.starterValidation
-    compile spring.securityOauthResource, spring.securityOauthJose
-    compile cloud.starterFeign
-    compile misc.feignMock
-    compile misc.feignJackson
-    compile misc.feignCore
-    compile spring.webflux
-    compile project(":client:users-client-data")
-    compile project(":tools:generic:utilities")
-    testCompile project(':tools:spring:spring-test-utilities')
+    implementation boot.starterSecurity
+    implementation boot.starterRabbitmq
+    implementation boot.starterValidation
+    implementation spring.securityOauthResource, spring.securityOauthJose
+    implementation cloud.starterFeign
+    implementation misc.feignMock
+    implementation misc.feignJackson
+    implementation misc.feignCore
+    implementation spring.webflux
+    implementation project(":client:users-client-data")
+    implementation project(":tools:generic:utilities")
+    testImplementation project(':tools:spring:spring-test-utilities')
 }

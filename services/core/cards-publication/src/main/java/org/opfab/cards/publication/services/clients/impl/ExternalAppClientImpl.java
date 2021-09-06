@@ -49,7 +49,7 @@ public class ExternalAppClientImpl implements ExternalAppClient {
                                 .entrySet()
                                 .stream()
                                 .filter(x -> x.getKey().contains(item))
-                                .map(x -> x.getValue())
+                                .map(Map.Entry::getValue)
                                 .findFirst()
                                 .orElseThrow(() -> new ApiErrorException(ApiError.builder()
                                         .status(HttpStatus.BAD_GATEWAY)

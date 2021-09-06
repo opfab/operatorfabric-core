@@ -14,7 +14,6 @@ import org.bson.Document;
 import org.opfab.cards.consultation.model.LightCard;
 import org.opfab.cards.consultation.model.LightCardConsultationData;
 import org.opfab.cards.consultation.model.PublisherTypeEnum;
-import org.opfab.cards.consultation.model.TimeSpanConsultationData;
 import org.opfab.cards.model.SeverityEnum;
 import org.springframework.core.convert.converter.Converter;
 
@@ -38,6 +37,11 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
     @Override
     public LightCardConsultationData convert(Document source) {
         LightCardConsultationData.LightCardConsultationDataBuilder builder = LightCardConsultationData.builder();
+
+        Document latestUpdateOnly = (Document) source.get("latestUpdateOnly");
+        if (latestUpdateOnly != null)
+            source = latestUpdateOnly;
+
         builder.publisher(source.getString("publisher")).parentCardId(source.getString("parentCardId"))
                 .initialParentCardUid(source.getString("initialParentCardUid"))
                 .processVersion(source.getString("processVersion")).uid(source.getString("uid"))
@@ -77,7 +81,7 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
         List<Document> timeSpans = (List<Document>) source.get("timeSpans");
         if (timeSpans != null)
             for (Document d : timeSpans) {
-                builder.timeSpan((TimeSpanConsultationData) timeSpanConverter.convert(d));
+                builder.timeSpan(timeSpanConverter.convert(d));
             }
         return builder.build();
     }

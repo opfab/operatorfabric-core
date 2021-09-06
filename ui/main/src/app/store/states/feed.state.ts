@@ -20,6 +20,9 @@ export interface CardFeedState extends EntityState<LightCard> {
     filters: Map<FilterType, Filter>;
     sortBySeverity: boolean;
     sortByRead: boolean;
+    domainId: string,
+    domainStartDate: number;
+    domainEndDate: number;
 }
 
 
@@ -45,5 +48,8 @@ export const feedInitialState: CardFeedState = LightCardAdapter.getInitialState(
         lastCardLoaded: null,
         filters: getDefaultFilter(),
         sortBySeverity: false,
-        sortByRead: true
+        sortByRead: true,
+        domainId: null,
+        domainStartDate: null,
+        domainEndDate: null
     });

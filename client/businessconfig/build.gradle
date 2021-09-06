@@ -1,10 +1,10 @@
 jar {
     manifest {
-        attributes( "Created-By"             : "Gradle ${gradle.gradleVersion}",
-                    "Specification-Title"    : "OperatorFabric Businessconfig Manager Client Data",
-                    "Implementation-Title"   : "OperatorFabric Businessconfig Manager Client Data",
-                    "Implementation-Version" : operatorfabric.version,
-                    "Specification-Version"  : operatorfabric.version
+        attributes("Created-By": "Gradle ${gradle.gradleVersion}",
+                "Specification-Title": "${longName}",
+                "Implementation-Title": "${longName}",
+                "Implementation-Version": operatorfabric.version,
+                "Specification-Version": operatorfabric.version
         )
 
     }

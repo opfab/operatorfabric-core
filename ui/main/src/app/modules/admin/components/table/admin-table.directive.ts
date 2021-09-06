@@ -82,7 +82,8 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
   }
   /** Default options for edition modals. */
   protected static defaultModalOptions: NgbModalOptions = {
-    backdrop: 'static' // Modal shouldn't close even if we click outside it
+    backdrop: 'static', // Modal shouldn't close even if we click outside it
+    size: 'lg'
   };
 
   unsubscribe$: Subject<void> = new Subject<void>();
@@ -163,6 +164,12 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
       columnDefs[index] = columnDef;
     });
 
+    const deleteActionCellClassRules = {
+      "action-cell-delete-admin": params =>
+          (params.context.componentParent.tableType === AdminItemType.USER && params.data.login.toLowerCase() === 'admin') ||
+          (params.context.componentParent.tableType === AdminItemType.GROUP && params.data.id.toLowerCase() === 'admin')
+    };
+
     // Add action columns
     columnDefs[fields.length] = {
       headerName: 'edit',
@@ -172,7 +179,8 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     columnDefs[fields.length + 1] = {
       headerName: 'delete',
       colId: 'delete',
-      type: 'actionColumn'
+      type: 'actionColumn',
+      cellClassRules: deleteActionCellClassRules
     };
 
     return columnDefs;
@@ -219,7 +227,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
               this.refreshData();
             });
       }
-    }).catch(() => throwError(new AppError(null)));
+    }).catch(() => throwError(() => new AppError(null)));
   }
 
   createNewItem(): void {

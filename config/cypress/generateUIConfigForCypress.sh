@@ -31,6 +31,7 @@ echo "Will generate base ui configuration for Cypress. Source folder: $pathToSou
 pathToTargetWebUIFile="$pathToTargetConfigFolder/web-ui.json"
 
 ../../src/test/resources/uiConfig/updatePropertyInJsonWithString.sh $pathToTargetWebUIFile "environmentName" "CYPRESS TEST ENV"
+../../src/test/resources/uiConfig/updatePropertyInJsonWithString.sh $pathToTargetWebUIFile "environmentColor" "green"
 ../../src/test/resources/uiConfig/updatePropertyInJson.sh $pathToTargetWebUIFile "feed.card.secondsBeforeLttdForClockDisplay" 3700
 
 # ui-menu.json customization

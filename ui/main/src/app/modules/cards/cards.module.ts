@@ -14,7 +14,6 @@ import {CardDetailsComponent} from './components/card-details/card-details.compo
 import {DetailComponent} from './components/detail/detail.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {ProcessesService} from '@ofServices/processes.service';
-import {HandlebarsService} from './services/handlebars.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountDownModule} from '../share/countdown/countdown.module';
 import {UserCardModule} from '../usercard/usercard.module';

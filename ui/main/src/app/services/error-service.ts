@@ -21,12 +21,12 @@ export abstract class ErrorService {
 
   protected handleError(error: Response) {
     if (error.status === 404) {
-      return throwError(new NotFoundError(error));
+      return throwError(() => new NotFoundError(error));
     }
     if (error.status === 403) {
-      return throwError(new NotAllowedError(error));
+      return throwError(() => new NotAllowedError(error));
     }
-    return throwError(new AppError(error));
+    return throwError(() => new AppError(error));
   }
 
 }

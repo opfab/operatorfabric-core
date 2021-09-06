@@ -32,6 +32,50 @@
         "lock": true,
         "state": "messageStateWithOnlyWhenResponseDisabledForUserAck"  
         }
+    },
+    "stateOfTypeINPROGRESS": {
+      "name":  "stateOfTypeINPROGRESS.title",
+      "templateName": "template",
+      "type" : "INPROGRESS",
+      "response": {
+        "state": "dummyResponseState"
+      }
+    },
+    "stateOfTypeFINISHED": {
+      "name":  "stateOfTypeFINISHED.title",
+      "templateName": "template",
+      "type" : "FINISHED",
+      "response": {
+        "state": "dummyResponseState"
+      }
+    },
+    "stateOfTypeCANCELED": {
+      "name":  "stateOfTypeCANCELED.title",
+      "templateName": "template",
+      "type" : "CANCELED",
+      "response": {
+        "state": "dummyResponseState"
+      }
+    },
+    "stateOfTypeNull": {
+      "name":  "stateOfTypeNull.title",
+      "templateName": "template",
+      "type" : null,
+      "response": {
+        "state": "dummyResponseState"
+      }
+    },
+    "stateWithNoType": {
+      "name":  "stateWithNoType.title",
+      "templateName": "template",
+      "response": {
+        "state": "dummyResponseState"
+      }
+    },
+    "dummyResponseState": {
+      "name":  "dummyResponseState.title",
+      "templateName": "template",
+      "isOnlyAChildState": true
     }
   }
 }

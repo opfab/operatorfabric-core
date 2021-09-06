@@ -200,7 +200,7 @@ export class AuthenticationService {
     askTokenFromCode(code: string):
         Observable<PayloadForSuccessfulAuthentication> {
         if (!this.clientId || !this.loginClaim) {
-            return throwError('The authentication service is no correctly initialized');
+            return throwError(() => 'The authentication service is no correctly initialized');
         }
         const params = new URLSearchParams();
         params.append('code', code);
@@ -223,7 +223,7 @@ export class AuthenticationService {
      */
     askTokenFromPassword(login: string, password: string): Observable<any> {
         if (!this.clientId) {
-            return throwError('The authentication service is no correctly initialized');
+            return throwError(() => 'The authentication service is no correctly initialized');
         }
         const params = new URLSearchParams();
         params.append('username', login);
@@ -346,7 +346,7 @@ export class AuthenticationService {
 
     public moveToCodeFlowLoginPage() {
         if (!this.clientId) {
-            return throwError('The authentication service is no correctly initialized');
+            return throwError(() => 'The authentication service is no correctly initialized');
         }
         if (!this.delegateUrl) {
             window.location.href = `${environment.urls.auth}/code/redirect_uri=${this.computeRedirectUri()}`;
@@ -554,19 +554,10 @@ export class NoAuthenticationHandler implements AuthenticationModeHandler {
         const currentUser = this.userService.currentUserWithPerimeters();
         currentUser.subscribe(foundUser => {
             if (foundUser != null) {
-                const existingUser = this.userService.askUserApplicationRegistered(foundUser.userData.login);
-                existingUser.subscribe(registeredUser => {
-                    if (registeredUser != null) {
-                        console.log(new Date().toISOString(), 'Registered User ('+ foundUser.userData.login +') found');
-                        const clientId = this.guidService.getCurrentGuid();
-                        this.store.dispatch(new AcceptLogIn(new PayloadForSuccessfulAuthentication(foundUser.userData.login,clientId,null,null, foundUser.userData.firstName, foundUser.userData.lastName)));
-                        redirectToCurrentLocation(this.router);
-                    }
-                    else {
-                        console.log(new Date().toISOString(), 'Registered User ('+ foundUser.userData.login +') not found');
-                        this.store.dispatch(new RejectLogIn({error: new Message('Unable to authenticate the user', MessageLevel.ERROR, new I18n('login.error.authenticate', null))}));
-                    }
-                });
+                console.log(new Date().toISOString(), 'User ('+ foundUser.userData.login +') found');
+                const clientId = this.guidService.getCurrentGuid();
+                this.store.dispatch(new AcceptLogIn(new PayloadForSuccessfulAuthentication(foundUser.userData.login,clientId,null,null, foundUser.userData.firstName, foundUser.userData.lastName)));
+                redirectToCurrentLocation(this.router);
             } else {
                 this.store.dispatch(new RejectLogIn({error: new Message('Unable to authenticate the user', MessageLevel.ERROR, new I18n('login.error.authenticate', null))}));
             }

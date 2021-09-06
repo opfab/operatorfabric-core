@@ -26,7 +26,7 @@
 
 .opfab-card-response-header {
   background-color: var(--opfab-card-bgcolor);
-  margin-bottom: 5px;
+  margin-bottom: 5px; 
 }
 
 .opfab-card-detail{
@@ -152,10 +152,6 @@
   border-width: 0px;
   background: var( --opfab-navbar-color-hover);
   mask: url(../../../../../assets/images/icons/help.svg);
-}
-
-.opfab-question-card-state-name{
-  color: var(--opfab-light-card-lttd-timeleft);
 }
 
 .label-help {
