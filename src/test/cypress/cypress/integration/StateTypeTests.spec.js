@@ -12,7 +12,7 @@ it might make sense to merge it with other tests.
 * */
 describe('State type tests', function () {
 
-    const orange = 'rgb(255, 165, 0)';
+    const orange = 'rgb(255, 102, 0)';
     const green = 'rgb(0, 128, 0)';
     const red = 'rgb(255, 0, 0)';
 
