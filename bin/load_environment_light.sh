@@ -11,8 +11,8 @@
 
 source ${BASH_SOURCE%/*}/load_variables.sh
 
-sdk install gradle 7.1.1
-sdk use gradle 7.1.1
+sdk install gradle 7.2
+sdk use gradle 7.2
 # the java version is externalized because also needed for travis configuration
 sdk install java $(<JAVA_VERSION)-zulu
 sdk use java $(<JAVA_VERSION)-zulu
