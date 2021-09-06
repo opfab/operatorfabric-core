@@ -500,7 +500,7 @@ Verify if a JavaScript object contains the specified key. It returns true if it 
 [[opfab_template_style]]
 == OperatorFabric css styles
 
-OperatorFabric defines a `css class` that you should use so your templates don't clash with the rest of the OperatorFabric look and feel:
+OperatorFabric defines several css classes that you should use so your templates don't clash with the rest of the OperatorFabric look and feel:
 
 * opfab-input : input field
 * opfab-textarea : text area input field
@@ -509,6 +509,8 @@ OperatorFabric defines a `css class` that you should use so your templates don't
 * opfab-checkbox : checkbox input field
 * opfab-table : a HTML table
 * opfab-border-box : a box with a label
+* styles for text standard colors :  opfab-color-danger , opfab-color-warning and opfab-color-success
+
 
 These styles are especially useful for templates used in user card or card with responses.
 

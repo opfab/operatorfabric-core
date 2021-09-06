@@ -45,7 +45,7 @@ body {
 } 
 
 // Colors for state types
-.opfab-typeOfState-INPROGRESS {color: orange;}
+.opfab-typeOfState-INPROGRESS {color: #ff6600;}
 .opfab-typeOfState-FINISHED {color: green;}
 .opfab-typeOfState-CANCELED {color: red;}
 
@@ -792,6 +792,17 @@ html, body { height: 100%; }
 .opfab-colors {
   background-color: var(--opfab-bgcolor);
   color: var(--opfab-text-color);
+}
+
+.opfab-color-danger {
+  color : red;
+}
+
+.opfab-color-warning {
+  color : #ff6600;
+}
+.opfab-color-success  {
+  color: green;
 }
 
 .opfab-timeline-bgcolor {

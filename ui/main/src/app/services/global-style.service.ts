@@ -110,7 +110,7 @@ export class GlobalStyleService {
                                         --opfab-lightcard-detail-border-color: #222933;
                                         --opfab-lightcard-detail-selected-bgcolor: #0F161F;
                                         --opfab-lightcard-detail-unread-textcolor: white;
-                                        --opfab-light-card-lttd-timeleft: #FD9313;
+                                        --opfab-light-card-lttd-timeleft: #ff6600;
                                         --opfab-card-tab-selected-text-color: #bababa;
                                         --opfab-card-tab-border-color: #bababa;
                                         --opfab-card-bgcolor :  #131D2B;
