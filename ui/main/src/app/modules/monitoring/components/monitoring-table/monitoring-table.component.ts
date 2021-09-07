@@ -27,6 +27,8 @@ import {JsonToArray} from 'app/common/jsontoarray/json-to-array';
 import {CardService} from '@ofServices/card.service';
 import {Process} from '@ofModel/processes.model';
 import {EntitiesService} from '@ofServices/entities.service';
+import {DisplayContext} from '@ofModel/templateGateway.model';
+
 
 @Component({
     selector: 'of-monitoring-table',
@@ -39,6 +41,8 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     @Input() result: LineOfMonitoringResult[];
     @Input() displayProcessGroupColumn: boolean;
     @Input() maxNbOfRowsToDisplay: number;
+
+    displayContext = DisplayContext.REALTIME;
 
     exportMonitoringData: Array<any> = [];
     jsonToArray : JsonToArray;
