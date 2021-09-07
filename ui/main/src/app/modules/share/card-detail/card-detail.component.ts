@@ -35,6 +35,7 @@ export class CardDetailComponent implements OnInit, OnDestroy {
 
     @Input() card: Card;
     @Input() screenSize: string = 'md';
+    @Input() displayContext: any;
 
     public active = false;
     unsubscribe$: Subject<void> = new Subject<void>();
@@ -113,6 +114,9 @@ export class CardDetailComponent implements OnInit, OnDestroy {
 
     private initializeHandlebarsTemplates() {
         templateGateway.initTemplateGateway();
+
+        templateGateway.displayContext =  this.displayContext;
+
         this.businessconfigService.queryProcessFromCard(this.card).pipe(
             takeUntil(this.unsubscribe$),
             switchMap(process => {

@@ -17,7 +17,9 @@
 
 
 <script>
-
+    if (templateGateway.getDisplayContext() != 'realtime' ) {
+       document.getElementById("response").disabled = true;
+    }
     templateGateway.applyChildCards = () => {
 
         if (templateGateway.childCards[0]) {

@@ -20,6 +20,7 @@ import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {AppService} from '@ofServices/app.service';
 import {State as CardState, State} from '@ofModel/processes.model';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import {DisplayContext} from '@ofModel/templateGateway.model';
 
 @Component({
     selector: 'of-card-details',
@@ -27,7 +28,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
             <div *ngIf="card && cardState" style="font-size:13px;">
                 <of-detail   [cardState]="cardState" [card]="card" [childCards]="childCards"
-                           [currentPath]="_currentPath" [parentModalRef]="parentModalRef" [screenSize]="screenSize">
+                           [currentPath]="_currentPath" [parentModalRef]="parentModalRef" [screenSize]="screenSize" [displayContext]="displayContext">
                 </of-detail>
             </div>
         `
@@ -37,6 +38,7 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
 
     @Input() parentModalRef: NgbModalRef;
     @Input() screenSize: string = 'md';
+    @Input() displayContext: any = DisplayContext.REALTIME;
 
     card: Card;
     childCards: Card[];

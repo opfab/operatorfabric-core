@@ -29,7 +29,7 @@ import { EntitiesService } from '@ofServices/entities.service';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
-
+import {DisplayContext} from '@ofModel/templateGateway.model';
 
 @Component({
     selector: 'of-archives',
@@ -68,6 +68,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     dateTimeFilterChange = new Subject();
 
     lastRequestID: number;
+
+    displayContext: any = DisplayContext.ARCHIVE;
 
     constructor(private store: Store<AppState>,
                 private processesService: ProcessesService,

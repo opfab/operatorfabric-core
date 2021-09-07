@@ -47,6 +47,7 @@ import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {MessageLevel} from '@ofModel/message.model';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {UserPermissionsService} from '@ofServices/user-permissions-.service';
+import {DisplayContext} from '@ofModel/templateGateway.model';
 
 declare const templateGateway: any;
 
@@ -91,6 +92,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     @Input() currentPath: string;
     @Input() parentModalRef: NgbModalRef;
     @Input() screenSize: string;
+    @Input() displayContext: any = DisplayContext.REALTIME;
 
     @ViewChild('cardDeletedWithNoErrorPopup') cardDeletedWithNoErrorPopupRef: TemplateRef<any>;
     @ViewChild('impossibleToDeleteCardPopup') impossibleToDeleteCardPopupRef: TemplateRef<any>;
@@ -171,6 +173,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     ngOnChanges(): void {
         templateGateway.initTemplateGateway();
+
+        templateGateway.displayContext = this.displayContext;
         if (this.cardState.response != null && this.cardState.response !== undefined) {
             this.isCardAQuestionCard = true;
             this.computeEntitiesForResponses();
