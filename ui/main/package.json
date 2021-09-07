@@ -39,7 +39,7 @@
     "@ngrx/store": "12.4.0",
     "@ngx-translate/core": "13.0.0",
     "@ngx-translate/http-loader": "6.0.0",
-    "@swimlane/ngx-charts": "18.0.1",
+    "@swimlane/ngx-charts": "19.0.1",
     "@types/jwt-decode": "2.2.1",
     "ag-grid-angular": "25.3.0",
     "ag-grid-community": "25.3.0",
