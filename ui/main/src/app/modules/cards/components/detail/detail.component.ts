@@ -154,7 +154,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     ngOnInit() {
         this.reloadTemplateWhenGlobalStyleChange();
         if (this._appService.pageType !== PageType.ARCHIVE) this.integrateChildCardsInRealTime();
-        this.computeLttdParams();
 
     }
 
@@ -183,6 +182,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         }
         else this.isCardAQuestionCard = false;
 
+        
+
         this.checkIfHasAlreadyResponded();
 
         // this call is necessary done after computeEntitiesForResponses() and  checkIfHasAlreadyResponded() 
@@ -197,6 +198,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.computeFromEntityOrRepresentative();
         this.formattedPublishDate = this.formatDate(this.card.publishDate);
         this.formattedPublishTime = this.formatTime(this.card.publishDate);
+        this.computeLttdParams();
     }
 
     ngOnDestroy() {
@@ -412,7 +414,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 this.showExpiredLabel = false;
             } else if (this.isCardAQuestionCard) {
                 this.showExpiredIcon = false;
+                this.showExpiredLabel = true;
                 this.expiredLabel = 'feed.responsesClosed'
+            } else {
+                this.showExpiredIcon = true;
+                this.showExpiredLabel = true;
             }
         })
     }
