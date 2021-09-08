@@ -28,10 +28,10 @@
             </a>
           </div>
 
-          <div *ngIf="!fullscreen && showMaxAndReduceButton" class="opfab-max-and-reduce-icons">
+          <div id="opfab-card-detail-fullscreen-button" *ngIf="!fullscreen && showMaxAndReduceButton" class="opfab-max-and-reduce-icons">
             <div class="opfab-menu-icon opfab-icon-maximize" (click)='setFullScreen(true)'></div>
           </div>
-          <div *ngIf="fullscreen && showMaxAndReduceButton" class="opfab-max-and-reduce-icons">
+          <div id="opfab-card-detail-fullscreen-button"  *ngIf="fullscreen && showMaxAndReduceButton" class="opfab-max-and-reduce-icons">
             <div class="opfab-menu-icon  opfab-icon-reduce" (click)='setFullScreen(false)'></div>
           </div>
         </div>

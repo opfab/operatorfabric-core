@@ -37,6 +37,10 @@
     {
       "state": "dummyResponseState",
       "right": "ReceiveAndWrite"
+    },
+    {
+      "state": "kitchenSink",
+      "right": "ReceiveAndWrite"
     }
   ]
 }
