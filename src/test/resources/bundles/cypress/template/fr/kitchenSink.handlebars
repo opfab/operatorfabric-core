@@ -1,0 +1,60 @@
+
+<H3> USER CONTEXT VALUES </H3>
+
+<div> userContext.login : <span id="userContext-login" >{{userContext.login}}</span> </div>
+<div> userContext.token : <span id="userContext-token" >{{userContext.token}}</span> </div>
+<div> userContext.firstName : <span id="userContext-firstName" >{{userContext.firstName}}</span> </div>
+<div> userContext.lastName : <span id="userContext-lastName" >{{userContext.lastName}}</span> </div>
+<div> userContext.groups : <span id="userContext-groups" >{{userContext.groups}}</span> </div>
+<div> userContext.entities : <span id="userContext-entities" >{{userContext.entities}}</span> </div>
+
+<br>
+<H3> TEMPLATE GATEWAY CALLS</H3>
+
+<div id="templateGatewayResults"></div>
+
+<div> screenSize : <span id="screenSize"> </span>  </div>
+
+<H3> HANDLEBARS TEMPLATING </H3>
+
+<div> Simple Data  : <span id="handlebars-simpleData" >{{card.data.message}}</span></div>
+<div> If feature :<span id="handlebars-if" >{{#if card.data.message}}ok{{/if}}</span>  </div>
+<div> Each feature : <span id="handlebars-each">{{#each card.data.array}}{{this}}{{/each}}</span> 
+</div>
+
+<script>
+
+
+
+
+loadData();
+
+function loadData() {
+    
+            let templateGatewayResults = document.getElementById("templateGatewayResults");
+            
+            let responses = '<div> getEntityName("ENTITY1") : <span id="templateGateway-getEntityName">';
+            responses += templateGateway.getEntityName('ENTITY1');
+            responses += '</span></div>';
+
+            responses += '<div> getEntityName("unknownEntity") : <span id="templateGateway-getEntityName-unknownEntity">';
+            responses += templateGateway.getEntityName('unknownEntity');
+            responses += '</span></div>';
+
+
+            responses += '<div> isUserAllowedToRespond() : <span id="templateGateway-isUserAllowedToRespond">';
+            responses += templateGateway.isUserAllowedToRespond();
+            responses += '</span></div>';
+
+            responses += '<div> isUserMemberOfAnEntityRequiredToRespond() : <span id="templateGateway-isUserMemberOfAnEntityRequiredToRespond">';
+            responses += templateGateway.isUserMemberOfAnEntityRequiredToRespond();
+            responses += '</span></div>';
+
+            templateGatewayResults.innerHTML = responses;
+}
+
+   templateGateway.setScreenSize =  function (size) {
+            document.getElementById("screenSize").innerHTML = size;
+        };
+
+</script>

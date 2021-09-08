@@ -30,6 +30,9 @@
 	},
 	"dummyResponseState": {
 		"title": "Etat de réponse factice pour tests"
+	},
+	"kitchenSink": {
+		"title": "Etat pour tester les fonctionnalités template"
 	}
 }
 

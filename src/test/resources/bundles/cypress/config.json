@@ -76,6 +76,15 @@
       "name":  "dummyResponseState.title",
       "templateName": "template",
       "isOnlyAChildState": true
+    },
+    "kitchenSink":
+    {
+      "name":"kitchenSink.title",
+      "templateName" : "kitchenSink",
+      "response": {
+        "state": "dummyResponseState"
+      }
+
     }
   }
 }
