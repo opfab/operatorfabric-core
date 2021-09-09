@@ -464,6 +464,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         templateGateway.userAllowedToRespond = this.isUserEnabledToRespond;
         templateGateway.entitiesAllowedToRespond = this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards;
         templateGateway.userMemberOfAnEntityRequiredToRespond = this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
+        templateGateway.entityUsedForUserResponse = this.userEntityIdToUseForResponse;
     }
 
     private initializeHrefsOfCssLink() {
