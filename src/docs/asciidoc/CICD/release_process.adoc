@@ -190,7 +190,7 @@ To do so:
 
 . Set the appropriate properties (credentials and GPG key information) as described in the
 ifdef::single-page-doc[<<client_lib_pub_conf, documentation for the publishing task>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/dev_env/index.adoc#client_lib_pub_conf, documentation for the publishing task>>]
+ifndef::single-page-doc[<</documentation/current/dev_env/index.adoc#client_lib_pub_conf, documentation for the publishing task>>]
 
 . Run the following command from the project root:
 +
@@ -287,9 +287,10 @@ git checkout X.X.hotfixes
 ----
 
 Then, follow the process described
+
 ifdef::single-page-doc[<<working_on_hotfix, here>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/community/index.adoc#working_on_hotfix, here>>] to
-create feature branches, work on fixes and merge them back into `X.X.hotfixes`.
+ifndef::single-page-doc[<</documentation/current/community/index.adoc#working_on_hotfix, here>>]
+to create feature branches, work on fixes and merge them back into `X.X.hotfixes`.
 
 Once all the big fixes that need to go into the version X.X.X.RELEASE have been merged into branch `X.X.hotfix`, you
 can release the patch version. To do so:

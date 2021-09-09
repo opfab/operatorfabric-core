@@ -18,7 +18,7 @@ notified then the card will not be visible in the feed. However, it will be visi
 In order to have a better visual organization of the processes in the UI, you can define processes groups.
 You can find more information
 ifdef::single-page-doc[<<_processes_groups, here>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#_processes_groups, here>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#_processes_groups, here>>]
 
 == Sound notification 
 

@@ -15,7 +15,7 @@ are then filled with data coming from two sources:
 
  * a *card* property (See
 ifdef::single-page-doc[link:../api/cards/index.html[card data model]]
-ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/cards/index.html[card data model]]
+ifndef::single-page-doc[link:/documentation/current/api/cards/index.html[card data model]]
 for more information)
 
  * a *userContext* :

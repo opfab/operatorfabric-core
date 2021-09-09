@@ -156,7 +156,7 @@ HTTP/1.1 200 OK
 As shown by this result, the firstName of the new operator has been misspelled.
 We need
 ifdef::single-page-doc[link:../api/users/index.html#/users/updateUser[to update the existing user]]
-ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/users/index.html#/users/updateUser[to update the existing user]]
+ifndef::single-page-doc[link:/documentation/current/api/users/index.html#/users/updateUser[to update the existing user]]
 with `john-doe-operator` login.
 To correct this mistake, the following commands can be used:
 
@@ -199,7 +199,7 @@ are available for both groups and entities. In order not to overload the documen
 This operator is the first member of a new group operator called the `OPERATORS`, which doesn't exist for the moment in
 the system. As shown when we
 ifdef::single-page-doc[link:../api/users/index.html#/groups/fetchGroups[list the groups]]
-ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/users/index.html#/groups/fetchGroups[list the groups]]
+ifndef::single-page-doc[link:/documentation/current/api/users/index.html#/groups/fetchGroups[list the groups]]
 existing in the server.
 
 Httpie
@@ -259,7 +259,7 @@ HTTP/1.1 200 OK
 
 Firstly, the group called `OPERATORS` has to be
 ifdef::single-page-doc[link:../api/users/index.html#/groups/createGroup[added to the system]]
-ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/users/index.html#/groups/createGroup[added to the system]]
+ifndef::single-page-doc[link:/documentation/current/api/users/index.html#/groups/createGroup[added to the system]]
 using the following command:
 
 using httpie:
@@ -288,7 +288,7 @@ HTTP/1.1 200 OK
 
 The result returned seems strange, to verify if it's the correct answer by
 ifdef::single-page-doc[link:../api/users/index.html#/groups/fetchGroup[displaying the details of the group]]
-ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/users/index.html#/groups/fetchGroup[displaying the details of the group]]
+ifndef::single-page-doc[link:/documentation/current/api/users/index.html#/groups/fetchGroup[displaying the details of the group]]
 called `OPERATORS`, use the following command:
 
 using httpie:
@@ -318,7 +318,7 @@ HTTP/1.1 200 OK
 The description is really null. After verification, in our first command used to create the group,
 the attribute for the description is misspelled. Using the following command
 ifdef::single-page-doc[link:../api/users/index.html#/groups/updateGroup[to update the group]]
-ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/users/index.html#/groups/updateGroup[to update the group]]
+ifndef::single-page-doc[link:/documentation/current/api/users/index.html#/groups/updateGroup[to update the group]]
 with the correct spelling, the new group of operator gets a proper description:
 
 with httpie:
@@ -345,7 +345,7 @@ response
 
 As both new group and new user are correct it's time
 ifdef::single-page-doc[link:../api/users/index.html#/users/addGroupUsers[to make the user a member of the group]]
-ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/users/index.html#/users/addGroupUsers[to make the user a member of the group]]
+ifndef::single-page-doc[link:/documentation/current/api/users/index.html#/users/addGroupUsers[to make the user a member of the group]]
 . To achieve this, use the following command:
 
 with httpie:

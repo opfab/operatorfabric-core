@@ -13,7 +13,7 @@
 This section briefly describes the organization of our CICD pipeline. If you are looking for more detailed information,
 see
 ifdef::single-page-doc[<<mock_pipeline, this document>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/resources/index.adoc#mock_pipeline, this document>>]
+ifndef::single-page-doc[<</documentation/current/resources/index.adoc#mock_pipeline, this document>>]
 describing the steps that were necessary to create our mock pipeline as well as the issues we ran into.
 
 Most of the access and permissions required by our CICD plateform (Travis) are managed by tokens that are created on

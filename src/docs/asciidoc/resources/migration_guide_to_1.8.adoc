@@ -70,5 +70,5 @@ Here is an example of a simple config.json file:
 
 The business menu are not configured anymore in the business definition but in a specific single configuration file called ui-menu.json. You must move your configuration from the config.json to this new file, see 
 ifdef::single-page-doc[<<menu_entries, documentation>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#menu_entries, documentation>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#menu_entries, documentation>>]
 .

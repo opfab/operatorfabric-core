@@ -164,7 +164,7 @@ For example, to link to the "Card Structure" section of the reference document f
 document, one needs to use the following external cross-reference:
 +
 ----
-<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#card_structure, Card Structure>>
+<</documentation/current/reference_doc/index.adoc#card_structure, Card Structure>>
 ----
 +
 In the case of the single-page documentation however, both the architecture content and the reference content are part
@@ -180,7 +180,7 @@ define which link syntax should be used:
 +
 ----
 \ifdef::single-page-doc[<<card_structure, Card Structure>>]
-\ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#card_structure, Card Structure>>]
+\ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#card_structure, Card Structure>>]
 ----
 +
 NOTE: The label ("Card Structure" in this example) is defined with each link because it seems that defining it in the
@@ -190,7 +190,7 @@ In the same way, for relative links to external files (mostly the API documentat
 +
 ----
 \ifdef::single-page-doc[link:../api/cards/index.html#/archives[here]]
-\ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/cards/index.html#/archives[here]]
+\ifndef::single-page-doc[link:/documentation/current/api/cards/index.html#/archives[here]]
 ----
 +
 IMPORTANT: For this to work, the

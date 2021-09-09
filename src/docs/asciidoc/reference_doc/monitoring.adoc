@@ -29,5 +29,5 @@ In opfab git repository, you can find in directory https://github.com/opfab/oper
 
 A description of the structure of the configuration can be found in 
 ifdef::single-page-doc[link:../api/businessconfig/[the businessconfig api documentation]]
-ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/businessconfig/[the businessconfig api documentation]]
+ifndef::single-page-doc[link:/documentation/current/api/businessconfig/[the businessconfig api documentation]]
 

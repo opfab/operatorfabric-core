@@ -21,7 +21,7 @@ the section that best fits your needs.
 
 TIP: If you encounter any issue, see
 ifdef::single-page-doc[<<troubleshooting, Troubleshooting>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/dev_env/index.adoc#troubleshooting, Troubleshooting>>]
+ifndef::single-page-doc[<</documentation/current/dev_env/index.adoc#troubleshooting, Troubleshooting>>]
 below. In particular,
 a command that hangs then fails is often a proxy issue.
 

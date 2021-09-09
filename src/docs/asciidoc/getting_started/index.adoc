@@ -63,7 +63,7 @@ A card is containing information regarding the publisher, the recipients, the pr
 
 More information can be found in the
 ifdef::single-page-doc[<<card_structure, Card Structure>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#card_structure, Card Structure>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#card_structure, Card Structure>>]
 section of the reference documentation.
 
 [source,JSON]

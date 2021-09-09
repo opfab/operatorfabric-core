@@ -83,7 +83,7 @@ Necessary actions for the migration:
 * Remove the deprecated properties listed above from your `web-ui.json`
 * Add a `coreMenusConfiguration` block to your `ui-menu.json` (see the
 ifdef::single-page-doc[<<core_menu_config, documentation>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#core_menu_config, documentation>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#core_menu_config, documentation>>]
 for details and a full example)
 
 

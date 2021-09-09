@@ -23,7 +23,7 @@ link:https://github.com/opfab/operatorfabric-core/tree/master/config/docker[here
 
 To run OperatorFabric in development mode, see
 ifdef::single-page-doc[<<dev_env, the development environment documentation>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/dev_env/index.adoc#dev_env, the development environment documentation>>]
+ifndef::single-page-doc[<</documentation/current/dev_env/index.adoc#dev_env, the development environment documentation>>]
 .
 
 
