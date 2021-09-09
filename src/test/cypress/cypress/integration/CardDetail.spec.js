@@ -49,6 +49,7 @@ describe('Card detail', function () {
             cy.get("#templateGateway-getEntityName-unknownEntity").contains("unknownEntity");
             cy.get("#templateGateway-isUserAllowedToRespond").contains("true");
             cy.get("#templateGateway-isUserMemberOfAnEntityRequiredToRespond").contains("true");
+            cy.get("#templateGateway-getEntityUsedForUserResponse").contains(/^ENTITY1$/);
             cy.get("#templateGateway-getDisplayContext").contains(/^realtime$/);
             
             

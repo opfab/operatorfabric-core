@@ -13,6 +13,7 @@ const templateGateway = {
     userAllowedToRespond : false,
     userMemberOfAnEntityRequiredToRespond : false,
     entitiesAllowedToRespond: [],
+    entityUsedForUserResponse: null,
     displayContext: '',
 
     setEntityNames: function(entityNames){
@@ -58,6 +59,10 @@ const templateGateway = {
         return this.entitiesAllowedToRespond;
     },
 
+    getEntityUsedForUserResponse() {
+        return this.entityUsedForUserResponse;
+    },
+
     getDisplayContext() {
         return this.displayContext;
     },
@@ -72,6 +77,7 @@ const templateGateway = {
         this.userAllowedToRespond = false;
         this.userMemberOfAnEntityRequiredToRespond = false;
         this.entitiesAllowedToRespond = [];
+        this.entityUsedForUserResponse = null;
         this.displayContext = '';
 
         // OpFab calls this function to inform the template that the card is locked

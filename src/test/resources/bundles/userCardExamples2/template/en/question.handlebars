@@ -14,8 +14,8 @@
 <div id="childs-div"></div>
 <br/>
  <div id="entities-div"> </div>
-
-
+<br/>
+ <div id="response-entity-div"> </div>
 
 
 <script>
@@ -68,6 +68,15 @@
         if (entities.length>0) entitiesDiv.innerHTML = text;
     }
     loadEntitiesList();
+
+    function loadEntityUsedForResponse() {
+        let responseEntityDiv = document.getElementById("response-entity-div");
+        let responseEntity = templateGateway.getEntityUsedForUserResponse();
+        let userAllowedToRespond = templateGateway.isUserAllowedToRespond();
+        if (userAllowedToRespond && responseEntity) 
+            responseEntityDiv.innerHTML = "Entity used by user to respond : " + templateGateway.getEntityName(responseEntity);
+    }
+    loadEntityUsedForResponse();
 
 </script>
 
