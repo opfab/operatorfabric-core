@@ -119,7 +119,8 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
                     this.stateDropdownSettings = {
                         text: translations['filters.selectStateText'],
                         badgeShowLimit: 1,
-                        enableSearchFilter: true
+                        enableSearchFilter: true,
+                        groupBy: "itemCategory"
                     };
                     this.tagsDropdownSettings = {
                         text: translations['filters.selectTagText'],
@@ -269,7 +270,8 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
                     statesDropdownList.push({
                         id: process.id + '.' + state,
                         itemName: process.states[state].name,
-                        i18nPrefix: `${process.id}.${process.version}`
+                        i18nPrefix: `${process.id}.${process.version}`,
+                        itemCategory: process.name
                     });
                 }
             }

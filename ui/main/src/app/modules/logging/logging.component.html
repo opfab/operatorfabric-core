@@ -60,6 +60,7 @@
           <th scope="col" translate>logging.result.process</th>
           <th scope="col" translate>logging.result.title</th>
           <th scope="col" translate>logging.result.summary</th>
+          <th scope="col" translate>logging.result.state</th>
           <th scope="col" translate>logging.result.description</th>
           <th scope="col" translate>logging.result.sender</th>
         </tr>
@@ -75,6 +76,10 @@
         </td>
         <td translate [translateParams]="card.summary.parameters">
           {{ card.process + '.' + card.processVersion + '.' + card.summary.key}}
+        </td>
+        <td *ngIf="card.stateColor" translate style="color:{{card.stateColor}}" >{{processStateName.get(card.process + '.' + card.state)}}
+        </td>
+        <td *ngIf="!card.stateColor" translate>{{processStateName.get(card.process + '.' + card.state)}}
         </td>
         <td *ngIf="card.stateColor" translate style="color:{{card.stateColor}}" >{{processStateDescription.get(card.process + '.' + card.state)}}
         </td>
