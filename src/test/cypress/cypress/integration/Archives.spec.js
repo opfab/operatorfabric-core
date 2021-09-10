@@ -62,7 +62,9 @@ describe ('Archives screen tests',function () {
 
         // We check every state is present except 'Planned outage date response' because 'isOnlyAChildState' attribute is set to true for this state
         cy.get('#opfab-state').click();
-        cy.get('#opfab-state').find('li').should('have.length', 7);
+        cy.get('#opfab-state').find('li').should('have.length', 8);
+        // One list item is for the process 
+        cy.get('#opfab-state').contains('Process example').should('exist');
         cy.get('#opfab-state').contains('Message').should('exist');
         cy.get('#opfab-state').contains('A Chart').should('exist');
         cy.get('#opfab-state').contains('Process example').should('exist');

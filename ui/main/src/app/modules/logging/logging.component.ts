@@ -51,6 +51,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
     firstQueryHasBeenDone = false;
 
     processStateDescription = new Map();
+    processStateName = new Map();
     processNames = new Map();
     stateColors = new Map();
 
@@ -94,6 +95,8 @@ export class LoggingComponent implements OnDestroy, OnInit {
                 for (const key in process.states) {
                     this.processStateDescription.set(process.id + '.' + key,
                         Utilities.getI18nPrefixFromProcess(process) + process.states[key].description);
+                    this.processStateName.set(process.id + '.' + key,
+                        Utilities.getI18nPrefixFromProcess(process) + process.states[key].name);
                     this.stateColors.set(process.id + '.' + key, process.states[key].color);
                 }
 
@@ -257,6 +260,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
                 const processColumnName = this.translateColumn('logging.result.process');
                 const titleColumnName = this.translateColumn('logging.result.title');
                 const summaryColumnName = this.translateColumn('logging.result.summary');
+                const stateColumnName = this.translateColumn('logging.result.state');
                 const descriptionColumnName = this.translateColumn('logging.result.description');
                 const senderColumnName = this.translateColumn('logging.result.sender');
                 const representativeColumnName = this.translateColumn('logging.result.representative');
@@ -273,6 +277,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
                                 [processColumnName]:  this.translateColumn(card.processName),
                                 [titleColumnName]: this.translateColumn(card.process + '.' + card.processVersion + '.' + card.title.key, card.title.parameters),
                                 [summaryColumnName]: this.translateColumn(card.process + '.' + card.processVersion + '.' + card.summary.key, card.summary.parameters),
+                                [stateColumnName]:  this.translateColumn(this.processStateName.get(card.process + '.' + card.state)),
                                 [descriptionColumnName]:  this.translateColumn(this.processStateDescription.get(card.process + '.' + card.state)),
                                 [senderColumnName]:  this.translateColumn(card.sender),
                                 [representativeColumnName]:  this.translateColumn(card.representative)
@@ -284,6 +289,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
                                 [processColumnName]: this.translateColumn(card.processName),
                                 [titleColumnName]: this.translateColumn(card.process + '.' + card.processVersion + '.' + card.title.key, card.title.parameters),
                                 [summaryColumnName]: this.translateColumn(card.process + '.' + card.processVersion + '.' + card.summary.key, card.summary.parameters),
+                                [stateColumnName]:  this.translateColumn(this.processStateName.get(card.process + '.' + card.state)),
                                 [descriptionColumnName]:  this.translateColumn(this.processStateDescription.get(card.process + '.' + card.state)),
                                 [senderColumnName]:  this.translateColumn(card.sender),
                                 [representativeColumnName]:  this.translateColumn(card.representative)
