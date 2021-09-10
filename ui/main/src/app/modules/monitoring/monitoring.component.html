@@ -12,7 +12,18 @@
         ></of-monitoring-filters>
 </div>
 
-<div style="height:5%"> </div>
+<div style="height: 50px"> 
+    <div  *ngIf="loadingInProgress" class="opfab-loading-spinner">
+        <ng-template #tipLoadingInProgress>
+            <span translate>feed.tips.loadingInProgress</span>
+        </ng-template>
+        <div [ngbPopover]="tipLoadingInProgress" popoverClass="opfab-popover" container="body"
+        triggers="mouseenter:mouseleave">
+        <em  class="fas fa-spinner fa-spin opfab-slow-spin"  ></em>
+        </div>
+
+     </div>
+</div>
 
 <div *ngIf="result ; else noResult" style="margin-left:5%;margin-right:5%">
     <of-monitoring-table [result]="result"
