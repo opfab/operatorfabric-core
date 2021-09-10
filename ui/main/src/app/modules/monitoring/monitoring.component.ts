@@ -45,6 +45,8 @@ export class MonitoringComponent implements OnInit, OnDestroy {
 
     maxNbOfRowsToDisplay: number;
 
+    loadingInProgress = false;
+
     constructor(private store: Store<AppState>
                 , private processesService: ProcessesService
                 , private lightCardsService: LightCardsService
@@ -88,6 +90,8 @@ export class MonitoringComponent implements OnInit, OnDestroy {
                 catchError(err => of([]))
         );
         this.monitoringResult$.subscribe(lines => this.result = lines);
+        this.lightCardsService.getLoadingInProgress().subscribe( (inProgress: boolean ) => this.loadingInProgress = inProgress)
+
     }
 
 
