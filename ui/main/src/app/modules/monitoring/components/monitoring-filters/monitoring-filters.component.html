@@ -36,7 +36,7 @@
             </div>
             <div *ngIf="! displayProcessGroupsFilter() && ! isThereProcessGroup()" style="margin-top: 28px;margin-right: 40px;position:relative; min-width:300px;max-width:400px;">
                 <of-multi-filter filterPath="process" id="opfab-process"
-                                 [parentForm]="monitoringForm" [values]="processDropdownList"
+                                 [parentForm]="monitoringForm" [values]="processDropdownList" [translateValues]="true"
                                  [dropdownSettings]="processDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="monitoring.filters.">
                 </of-multi-filter>
             </div>
