@@ -60,4 +60,12 @@ subprojects {
     }
 
     tasks.jacocoTestReport.dependsOn test
+
+    /*Task that copies all the dependencies under build/libs so Sonar
+    can make sense of the Lombok annotations for example */
+    task copyDependencies(type: Copy) {
+        description 'copy dependencies to build/support_libs'
+        from configurations.compileClasspath
+        into 'build/support_libs'
+    }
 }
