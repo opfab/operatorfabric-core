@@ -67,7 +67,7 @@ fi
 [[ $branch == 'develop' ]] && { [[ $version == 'SNAPSHOT' ]] && exit 0 || echo "check_version failed: for branch develop version should be SNAPSHOT."; exit 1;}
 [[ $branch == 'master' ]] && { [[ $version =~ [0-9]+\.[0-9]+\.[0-9]+\.RELEASE$ ]] && exit 0 || echo "check_version failed: for branch master version should be X.X.X.RELEASE."; exit 1;}
 [[ $branch =~ [0-9]+\.[0-9]+\.[0-9]+\.release$ ]] && { [[ $version == ${branch^^} ]] && exit 0 || echo "check_version failed: for release branch $branch version should be ${branch^^}."; exit 1;}
-[[ $branch =~ OC-.+$ || $branch =~ FE-.+$ ]] && { [[ $version == 'SNAPSHOT' || $version =~ [0-9]+\.[0-9]+\.[0-9]+\.RELEASE$ ]] && exit 0 || echo "check_version failed: for feature branches version should be SNAPSHOT or X.X.X.RELEASE."; exit 1;}
+[[ $branch =~ FE-.+$ ]] && { [[ $version == 'SNAPSHOT' || $version =~ [0-9]+\.[0-9]+\.[0-9]+\.RELEASE$ ]] && exit 0 || echo "check_version failed: for feature branches version should be SNAPSHOT or X.X.X.RELEASE."; exit 1;}
 
 echo "check_version failed: unhandled branch type"
 exit 1;

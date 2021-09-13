@@ -118,8 +118,7 @@ Commit messages should also start with the GitHub issue reference: `#123 My comm
 
 This allows the branch, PR and commits to be directly accessible from the GitHub issue.
 
-NOTE: The deprecated OC-XXX notation (from when we tracked issues in JIRA) is still accepted by the CI/CD pipeline
-but won't be in the future.
+NOTE: The deprecated OC-XXX notation (from when we tracked issues in JIRA) is no longer accepted by the CI/CD pipeline.
 
 === Release branches
 
