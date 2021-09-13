@@ -50,7 +50,7 @@ jobs:
         - echo ${DOCKER_CLOUD_PWD} | docker login --username ${DOCKER_CLOUD_USER} --password-stdin
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
         - ./gradlew --build-cache copyDependencies test jacocoTestReport dockerTag${OF_VERSION} || travis_terminate 1;
-        - sonar-scanner
+        - sonar-scanner || travis_terminate 1;
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
         # Launch karate tests
         - cd config/docker
