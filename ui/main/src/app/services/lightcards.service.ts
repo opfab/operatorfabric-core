@@ -25,6 +25,7 @@ export class LightCardsService {
 
     private timeOfLastDebounce: number = 0;
     private timeOfLastCardReception: number = 0;
+    private numberOfCardProcessedByPreviousDebounce: number = 0;
     private numberOfCardUpdatesInARowNotComingFromDebounce: number=0;
 
     private filteredAndSortedLightCards = new Subject();
@@ -85,8 +86,12 @@ export class LightCardsService {
  // --------------------
  // When an flow of card is coming, for performance reasons , we do not want to update the card list 
  // every time  a card is arriving so we wait for the end of the flow of cards.
- // But if it takes too long, we want to show something so every second we make a rendering 
- // even if the flow is still continuing.
+ //
+ // But if it takes too long, we want to show something . 
+ // So every second we make a rendering even if the flow is still continuing except  if  there is less than 20 new cards received in between 
+ // In this case it means the browser is slow so we wait 1 s more to avoid adding unnecessary load ot the browser 
+ // This situation can arise for example when the browser is busy rendering the monitoring screen with the previous list of card
+ // 
  // To do that we combine a debounce waiting for the end of the flow and an interval to get the card list every second 
 
     public getLightCards(): Observable<any> {
@@ -97,7 +102,14 @@ export class LightCardsService {
         return this.store.pipe(
             select(feedSelectors.selectFeed),
             sample(interval(1000)),
-            filter(() => ((new Date().valueOf()) - this.timeOfLastDebounce) > 1000), // we only need to get cards if no debounce arise in 1 seconds) 
+            filter((results) => ((
+                (new Date().valueOf()) - this.timeOfLastDebounce) > 1000)   // we only need to get cards if no debounce arise in 1 seconds 
+                && ( results.length - this.numberOfCardProcessedByPreviousDebounce > 20 )  ), //and if there is enough new card 
+                                                                                    
+            tap( (results)=> {
+                console.log(new Date().toISOString(),"Cards flow in progress : " + (results.length - this.numberOfCardProcessedByPreviousDebounce) + " new cards  ");
+                this.numberOfCardProcessedByPreviousDebounce  = results.length; 
+            }),
         );
     }
 
