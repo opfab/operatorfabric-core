@@ -78,6 +78,14 @@ subprojects {
             }
         }
 
+        // This will never actually serve as services rely on bootJars not jars
+        // It's just a temporary workaround so build/libs is not flagged as an implicit dependency of docker
+        sourceSets {
+            main {
+                java.destinationDirectory.set(file('build/unused_plain_jar'))
+            }
+        }
+
         task unitTest(type: Test) {
             description 'runs unit tests'
             filter {
@@ -139,6 +147,7 @@ subprojects {
         tasks.docker.dependsOn copyWorkingDir
         tasks.docker.dependsOn build
         tasks.jacocoTestReport.dependsOn test
+        tasks.dockerPrepare.dependsOn bootJar
 
         Map[] commands = [
                 [command: ["up"], dependsOn: "copyWorkingDir"],
