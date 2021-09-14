@@ -91,7 +91,7 @@ subprojects {
 
     /////// CUSTOM TASKS
 
-    /*Task that copies all the dependencies under build/libs so Sonar
+    /*Task that copies all the dependencies under build/support_libs so Sonar
     can make sense of the Lombok annotations for example */
     task copyDependencies(type: Copy) {
         description 'copy dependencies to build/support_libs'
