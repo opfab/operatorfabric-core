@@ -80,10 +80,8 @@ subprojects {
 
         // This will never actually serve as services rely on bootJars not jars
         // It's just a temporary workaround so build/libs is not flagged as an implicit dependency of docker
-        sourceSets {
-            main {
-                java.destinationDirectory.set(file('build/unused_plain_jar'))
-            }
+        jar {
+            destinationDirectory.set(file("build/unused_plain_jar"))
         }
 
         task unitTest(type: Test) {
