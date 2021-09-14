@@ -172,9 +172,6 @@ subprojects {
         apply plugin: 'java'
         apply plugin: plugin.bom
 
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
-
         test {
             testLogging {
                 events "passed", "skipped", "failed"
