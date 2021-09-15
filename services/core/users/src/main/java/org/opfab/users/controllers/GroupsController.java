@@ -75,6 +75,9 @@ public class GroupsController implements GroupsApi {
 
     @Override
     public Group createGroup(HttpServletRequest request, HttpServletResponse response, Group group) throws Exception {
+        if (group.getPerimeters() != null) {
+            retrievePerimeters(group.getPerimeters());
+        }
         if(groupRepository.findById(group.getId()).orElse(null) == null){
             response.addHeader("Location", request.getContextPath() + "/groups/" + group.getId());
             response.setStatus(201);
