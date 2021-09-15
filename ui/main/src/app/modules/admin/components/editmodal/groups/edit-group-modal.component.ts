@@ -16,6 +16,10 @@ import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from '@ofServices/crud-service';
 import {PerimetersService} from '@ofServices/perimeters.service';
 import {TranslateService} from '@ngx-translate/core';
+import {AlertMessage} from '@ofStore/actions/alert.actions';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {MessageLevel} from '@ofModel/message.model';
 
 @Component({
   selector: 'of-edit-group-modal',
@@ -42,6 +46,7 @@ export class EditGroupModalComponent implements OnInit {
   private crudService: CrudService;
 
   constructor(
+    private store: Store<AppState>,
     private translate: TranslateService,
     private activeModal: NgbActiveModal,
     private dataHandlingService: SharingService,
@@ -84,9 +89,20 @@ export class EditGroupModalComponent implements OnInit {
     // user chose to perform an action (here, update the selected item).
     // This is important as code in the corresponding table components relies on the resolution of the
     // `NgbModalRef.result` promise to trigger a refresh of the data shown on the table.
-    this.crudService.update(this.groupForm.value).subscribe(() => {
-      this.activeModal.close('Update button clicked on ' + this.type + ' modal');
+    this.crudService.update(this.groupForm.value).subscribe({
+      next: () => this.onSavesuccess(),
+      error: (e) => this.onSaveError(e)
     });
+      
+  }
+
+  onSavesuccess() {
+    this.activeModal.close('Update button clicked on ' + this.type + ' modal');
+  }
+
+  onSaveError(res) {
+    this.perimeters.setValue(this.perimeters.value.map(perimeterId => {return {id: perimeterId, itemName: perimeterId}}));
+    this.store.dispatch(new AlertMessage({alertMessage: {message: res.originalError.error.message, level: MessageLevel.ERROR}}));
   }
 
   private cleanForm() {
