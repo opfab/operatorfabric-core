@@ -40,7 +40,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
     @Input() result: LineOfMonitoringResult[];
     @Input() displayProcessGroupColumn: boolean;
-    @Input() maxNbOfRowsToDisplay: number;
+
 
     displayContext = DisplayContext.REALTIME;
 
@@ -53,11 +53,13 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
 
     // ag-grid configuration objects
     gridOptions;
-    private gridApi;
+    public gridApi;
+    public page: number = 1;
     private columnDefs: ColDef[] = [];
     private rowData = [];
     rowData$: Observable<any>;
     private rowDataSubject = new Subject();
+    private firstNgOnChange = true;
 
     private readonly timeColumnName;
     private readonly processGroupColumnName;
@@ -107,19 +109,19 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                 'dataColumn': {
                     sortable: true,
                     filter: true,
-                    wrapText: true,
+                    wrapText: false,
                     autoHeight: true,
-                    flex: 4,
+                    flex: 1,
                 },
                 'severityColumn': {
                     sortable: true,
                     filter: false,
                     wrapText: false,
                     autoHeight: true,
-                    flex: 0.3,
+                    maxWidth: 18
                 }
             },
-            pagination : false,
+            pagination : true,
             suppressCellSelection: true,
             headerHeight: 70,
             suppressPaginationPanel: true,
@@ -131,12 +133,13 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
 
     onGridReady(params) {
         this.gridApi = params.api;
+        this.gridApi.paginationSetPageSize(10);
 
         const severityCellClassRules = {
-            "opfab-monitoring-sev-alarm": field => field.value === 1,
-            "opfab-monitoring-sev-action": field => field.value === 2,
-            "opfab-monitoring-sev-compliant": field => field.value === 3,
-            "opfab-monitoring-sev-information": field => field.value === 4
+            "opfab-sev-alarm": field => field.value === 1,
+            "opfab-sev-action": field => field.value === 2,
+            "opfab-sev-compliant": field => field.value === 3,
+            "opfab-sev-information": field => field.value === 4
         };
         const typeOfStateCellClassRules = {
             "opfab-typeOfState-INPROGRESS": parameters => parameters.data.typeOfState === 'INPROGRESS',
@@ -144,7 +147,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             "opfab-typeOfState-CANCELED": parameters => parameters.data.typeOfState === 'CANCELED'
         };
 
-        this.columnDefs = [{ type: 'severityColumn', headerName: '', field: 'severity', cellClassRules: severityCellClassRules },
+        this.columnDefs = [{ type: 'severityColumn', headerName: '', field: 'severity', headerClass: 'header-with-no-padding' , cellClassRules: severityCellClassRules },
                            { type: 'dataColumn', headerName: this.timeColumnName, field: 'time' }];
 
         if (this.displayProcessGroupColumn)
@@ -160,14 +163,20 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         this.refreshData();
     }
 
+    updateResultPage(currentPage): void {
+        this.gridApi.paginationGoToPage(currentPage-1);
+        this.page = currentPage;
+      }
+    
+
     ngOnChanges(): void {
-        this.refreshData();
+        if (!this.firstNgOnChange) this.refreshData(); //to avoid double refresh at startup of the page , important when there is a lot of card to show 
+        this.firstNgOnChange = false;
     }
 
     refreshData(): void {
 
-        this.displayedResults = this.result.length > this.maxNbOfRowsToDisplay ? this.result.slice(0, this.maxNbOfRowsToDisplay) : this.result;
-
+        this.displayedResults = this.result;
         this.rowData = [];
         this.displayedResults.forEach(line => {
             if (this.displayProcessGroupColumn)

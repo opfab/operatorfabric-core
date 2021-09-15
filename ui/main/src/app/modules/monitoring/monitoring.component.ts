@@ -10,8 +10,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {combineLatest, Observable, of, Subject} from 'rxjs';
 import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
-import {AppState} from '@ofStore/index';
-import {Store} from '@ngrx/store';
 import {catchError, map, takeUntil} from 'rxjs/operators';
 import {LightCard} from '@ofModel/light-card.model';
 import * as moment from 'moment';
@@ -21,7 +19,6 @@ import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {LightCardsService} from '@ofServices/lightcards.service';
 import {Filter} from '@ofModel/feed-filter.model';
-import {ConfigService} from '@ofServices/config.service';
 
 @Component({
     selector: 'of-monitoring',
@@ -43,16 +40,12 @@ export class MonitoringComponent implements OnInit, OnDestroy {
 
     result: LineOfMonitoringResult[];
 
-    maxNbOfRowsToDisplay: number;
 
     loadingInProgress = false;
 
-    constructor(private store: Store<AppState>
-                , private processesService: ProcessesService
+    constructor(private processesService: ProcessesService
                 , private lightCardsService: LightCardsService
-                , private configService: ConfigService
     ) {
-        this.maxNbOfRowsToDisplay = this.configService.getConfigValue('monitoring.maxNbOfRowsToDisplay',100);
 
          processesService.getAllProcesses().forEach(process => {
             const id = process.id;

@@ -884,102 +884,28 @@ html, body { height: 100%; }
   }
 
   .ag-row {
-    border: 2px solid var(--opfab-bgcolor);
+    border: 0px ;
   }
 
   .ag-row:hover{
     border: 2px solid #2268FF;
   }
 
-  .ag-row-odd {
-    border: 2px solid var(--opfab-bgcolor-darker);
+  .header-with-no-padding {
+    padding-left: 0px;
+    padding-right: 0px;
   }
-
-  .ag-row-odd:hover{
-    background-color: var(--opfab-bgcolor-darker);
-  }
-
+  
   .action-cell-delete-admin {
     display: none;
   }
-
+  .opfab-sev-alarm {background-color: $sev-alarm;font-size: 0px;
+    padding-right: 0px;}
+  .opfab-sev-action {background-color: $sev-action;font-size: 0px; 
+    padding-right: 0px;}
+  .opfab-sev-compliant {background-color: $sev-compliant;font-size: 0px; 
+    padding-right: 0px;}
+  .opfab-sev-information {background-color: $sev-information;font-size: 0px;
+    padding-right: 0px; }
 }
 
-.opfab-monitoring-ag-grid-theme {
-  @include ag-theme-alpine((
-          background-color: var(--opfab-bgcolor),
-          header-background-color: var(--opfab-bgcolor-darker),
-          odd-row-background-color: var(--opfab-bgcolor-darker),
-          modal-overlay-background-color: var(--opfab-bgcolor),
-          data-color: var(--opfab-text-color),
-          header-foreground-color: var(--opfab-text-color),
-          secondary-foreground-color: var(--opfab-text-color),
-          input-disabled-background-color: var(--opfab-button-disable-bgcolor),
-          input-disabled-border-color: var(--opfab-button-disable-bgcolor),
-          header-column-resize-handle-color: var(--opfab-table-border-color),
-          borders: false,
-          header-height: 70
-  ));
-
-  color: var(--opfab-text-color);
-
-
-  .ag-root-wrapper {
-    border-bottom: 1px solid var(--opfab-table-border-color);
-    background-color: var(--opfab-bgcolor-darker);
-  }
-
-  .ag-theme-alpine {
-    color: var(--opfab-text-color);
-  }
-
-  .ag-menu {
-    background: var(--opfab-bgcolor-darker);
-  }
-
-  .ag-header-row {
-    border-top: 1px solid var(--opfab-table-border-color);
-    border-bottom: 1px solid var(--opfab-table-border-color);
-  }
-
-  .ag-row {
-    font-size: 13px;
-    color: var(--opfab-text-color-stronger);
-  }
-
-  .ag-row-even {
-    border: 2px solid var(--opfab-bgcolor);
-  }
-
-  .ag-row-odd {
-    border: 2px solid var(--opfab-bgcolor-darker);
-  }
-
-  .ag-row:hover{
-    border: 2px solid #2268FF;
-  }
-
-  .ag-row-even:hover{
-    background-color: var(--opfab-bgcolor);
-  }
-
-  .ag-row-odd:hover{
-    background-color: var(--opfab-bgcolor-darker);
-  }
-
-  .ag-cell {
-    padding-left: 0px;
-    padding-right: 0px;
-  }
-
-  .ag-header-cell {
-    padding-left: 0px;
-    padding-right: 0px;
-  }
-
-  .opfab-monitoring-sev-alarm {background-color: $sev-alarm;font-size: 0px;width: 15px; }
-  .opfab-monitoring-sev-action {background-color: $sev-action;font-size: 0px;width: 15px; }
-  .opfab-monitoring-sev-compliant {background-color: $sev-compliant;font-size: 0px;width: 15px; }
-  .opfab-monitoring-sev-information {background-color: $sev-information;font-size: 0px;width: 15px; }
-
-}

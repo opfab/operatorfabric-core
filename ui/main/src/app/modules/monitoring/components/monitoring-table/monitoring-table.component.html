@@ -8,26 +8,34 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-<div class="opfab-table">
+<div style="background-color: var(--opfab-bgcolor-darker);border: solid 5px var(--opfab-bgcolor-darker)">
     <ag-grid-angular aria-describedby="Monitoring results table"
             (gridReady)="onGridReady($event)"
             [gridOptions]="gridOptions"
             [rowData]="rowData$ | async"
             (rowClicked)="selectCard($event.data.cardId)"
-            class="opfab-monitoring-ag-grid-theme">
+            class="opfab-ag-grid-theme">
     </ag-grid-angular>
 
-    <div *ngIf="!!result && result.length > maxNbOfRowsToDisplay" style="text-align:right;font-weight: bold;margin-top:0px;margin-right:10px;">
-        ... {{result.length - maxNbOfRowsToDisplay}} <span translate> monitoring.moreRows </span>
-    </div>
 
-
-    <div class="opfab-monitoring-export-div">
-        <div id="opfab-monitoring-btn-exportToExcel" class="opfab-monitoring-export-btn" style="cursor:pointer" (click)="export()" fileName="monitoringResults" >
-            <span class="opfab-icon-export-data"></span>
-            <span style="font-weight: bold;" translate> monitoring.ExportTOExcel </span>
+    <div *ngIf="gridApi" class="opfab-pagination">
+        <div style="white-space: nowrap;margin-top:17px">
+        <span translate> admin.resultsNumber </span> : {{gridApi.paginationGetRowCount()}}
+        </div>
+        <div style="width:40%;margin-top:5px">
+        <ngb-pagination *ngIf="gridApi.paginationGetRowCount() > 10" [collectionSize]="gridApi.paginationGetRowCount()"
+            [page]="page" [pageSize]="gridApi.paginationGetPageSize()" (pageChange)="updateResultPage($event)" [maxSize]="3" [rotate]="true">
+        </ngb-pagination>
+        </div>
+        <div class="opfab-monitoring-export-div">
+            <div id="opfab-monitoring-btn-exportToExcel" class="opfab-monitoring-export-btn" style="cursor:pointer" (click)="export()" fileName="monitoringResults" >
+                <span class="opfab-icon-export-data"></span>
+                <span style="font-weight: bold;" translate> monitoring.ExportTOExcel </span>
+            </div>
         </div>
     </div>
+
+
 </div>
 
 
