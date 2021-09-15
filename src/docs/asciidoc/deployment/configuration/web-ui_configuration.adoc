@@ -81,7 +81,6 @@ a|card time display mode in the feed. Values :
 |feed.card.maxNbOfCardsToDisplay|100|no| Max number of card visible in feed (This limit is used for performance reasons, setting the value too high can have consequences on browser response times) 
 
 |feed.timeline.domains|["TR", "J", "7D", "W", "M", "Y"]|no| List of domains to show on the timeline, possible domains are : "TR", "J", "7D", "W", "M", "Y".
-|monitoring.maxNbOfRowsToDisplay|100|no| Max number of rows visible in monitoring page (This limit is used for performance reasons, setting the value too high can have consequences on browser response times)
 |playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
 |playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
 |playSoundForCompliant|false|no|If set to true, a sound is played when Compliant cards are added or updated in the feed
