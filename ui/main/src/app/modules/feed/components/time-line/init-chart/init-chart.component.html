@@ -14,7 +14,7 @@
     </of-timeline-buttons>
   </div>
 
-  <div class="opfab-timeline-grid" *ngIf="!this.timelineButtons.hideTimeLine">
+  <div class="opfab-timeline-grid" [hidden]="this.timelineButtons.hideTimeLine">
     <div class="opfab-move-domain">
       <a id="opfab-timeline-link-move-left" (click)="this.timelineButtons.moveDomain(false)"> &lt;&lt;
       </a>
