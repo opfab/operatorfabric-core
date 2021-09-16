@@ -46,3 +46,14 @@
         </div>
     </div>
 </ng-template>
+
+<ng-template #exportInProgress let-modal>
+    <div class="modal-header">
+        <span translate>monitoring.ExportInProgress</span>
+      </div>
+    <div class="modal-body text-center">
+        <ngb-progressbar type="primary" [value]="exportProgress" [showValue]="true" [max]="result.length"></ngb-progressbar>
+            <button id="opfab-export-btn-cancel" type="button" class="opfab-btn-cancel"
+                (click)="cancelExport()" translate>button.cancel</button>
+    </div>
+</ng-template>

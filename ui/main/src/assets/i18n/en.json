@@ -223,7 +223,8 @@
     "typeOfState": "PROCESS STATUS",
     "severity": "SEVERITY",
     "seeDetails": "SEE DETAILS",
-    "ExportTOExcel": "Export data"
+    "ExportTOExcel": "Export data",
+    "ExportInProgress": "Export in progress"
   },
   "button": {
     "ok": "OK",
