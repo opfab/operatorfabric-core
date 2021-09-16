@@ -38,6 +38,7 @@ import {ColDef, GridOptions} from "ag-grid-community";
 export class MonitoringTableComponent implements OnChanges, OnDestroy {
 
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
+    @ViewChild('exportInProgress') exportInProgressTemplate: ElementRef;
     @Input() result: LineOfMonitoringResult[];
     @Input() displayProcessGroupColumn: boolean;
 
@@ -49,7 +50,11 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     monitoringConfig: MonitoringConfig ; 
     unsubscribe$: Subject<void> = new Subject<void>();
     modalRef: NgbModalRef;
+    exportModalRef: NgbModalRef;
     displayedResults : LineOfMonitoringResult[];
+    exportInProgress: boolean = false;
+    exportCancelled: boolean = false;
+    exportProgress: number;
 
     // ag-grid configuration objects
     gridOptions;
@@ -243,10 +248,20 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     }
 
     export(): void {
+        this.exportCancelled = false;
         // if monitoring has a specific configuration 
         if (this.monitoringConfig && this.monitoringConfig.export && this.monitoringConfig.export.fields ) {
             this.jsonToArray = new JsonToArray(this.monitoringConfig.export.fields);
+            const modalOptions: NgbModalOptions = {
+                centered: true,
+                backdrop: 'static', // Modal shouldn't close even if we click outside it
+                size: 'sm'
+              };
+            
+            this.exportModalRef = this.modalService.open(this.exportInProgressTemplate, modalOptions);
+            this.exportProgress = 0;
             this.processMonitoringForExport(0);
+            
         }
         // generic export 
         else {
@@ -255,14 +270,32 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         }
     }
 
+    cancelExport() {
+        this.exportCancelled = true;
+    }
+
     processMonitoringForExport(lineNumber: number) {
-        if (lineNumber === this.result.length) ExportService.exportArrayToExcelFile(this.jsonToArray.getJsonAsArray(), 'Monitoring');
-        else {
-            this.cardService.loadCard(this.result[lineNumber].cardId).subscribe( card => {
-                this.jsonToArray.add(this.cardPreprocessingBeforeExport(card));
-                this.processMonitoringForExport(++lineNumber);
-            });
+
+        if (!this.exportCancelled) {
+            // round by ten to slow progressbar updates
+            this.exportProgress = 10 * Math.round(lineNumber / 10);
+            
+            if (lineNumber === this.result.length) {
+                ExportService.exportArrayToExcelFile(this.jsonToArray.getJsonAsArray(), 'Monitoring');
+                this.exportInProgress = false;
+            } else {
+                this.exportInProgress = true;
+                this.cardService.loadCard(this.result[lineNumber].cardId).subscribe( card => {
+                    this.jsonToArray.add(this.cardPreprocessingBeforeExport(card));
+                    this.processMonitoringForExport(++lineNumber);
+                });
+            }
+        } else {
+            this.exportInProgress = false;
         }
+        
+        if (!this.exportInProgress) 
+            this.exportModalRef.close();
     }
 
     cardPreprocessingBeforeExport(card: any): any {
@@ -303,6 +336,9 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     ngOnDestroy() {
         if (!!this.modalRef) {
             this.modalRef.close();
+        }
+        if (!!this.exportModalRef) {
+            this.exportModalRef.close();
         }
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
