@@ -28,6 +28,13 @@
       "matchPackagePrefixes": [
         "io.confluent"
       ]
+    },
+    {
+      "groupName": "ag-grid",
+      "matchPackagePrefixes": [
+        "ag-grid-angular",
+        "ag-grid-community"
+      ]
     }
   ]
 }
