@@ -19,3 +19,4 @@
       cards/deleteUserCard.feature                \
       cards/deleteCardsByEndDate.feature          \
       cards/cardsWithRepresentative.feature       \
+      cards/externalRecipentErrors.feature        \

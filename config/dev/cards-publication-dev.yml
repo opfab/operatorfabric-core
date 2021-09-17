@@ -34,7 +34,10 @@ externalRecipients-url: "{\
            api_test_externalRecipient1: \"http://localhost:8090/test\", \
            api_test_externalRecipient2: \"http://localhost:8090/test\", \
            externalRecipient1: \"http://localhost:8090/test\", \
-           externalRecipient2: \"http://localhost:8090/test\" \
+           externalRecipient2: \"http://localhost:8090/test\", \
+           notFoundExternalRecipient: \"http://localhost:8090/wrongpath\", \
+           invalidUrlExternalRecipient: \"notaurl/test\", \
+           connectionRefusedExternalRecipient: \"http://localhost:8091/test\" \
            }"
 
 # WARNING : If you set this parameter to false , all users have the rights to respond to all cards
