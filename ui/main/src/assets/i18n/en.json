@@ -113,7 +113,8 @@
     "at": "at",
     "from" : "from",
     "moreCards": "cards more",
-    "lastResponse": "Last response received on"
+    "lastResponse": "Last response received on",
+    "cardLoadingInProgress":"Loading card  ..."
   },
   "login": {
     "reset": "Reset",

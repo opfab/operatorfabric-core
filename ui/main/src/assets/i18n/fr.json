@@ -113,7 +113,8 @@
     "at" : "à",
     "from": "de",
     "moreCards": "cartes supplémentaires",
-    "lastResponse": "Dernière réponse reçue le"
+    "lastResponse": "Dernière réponse reçue le",
+    "cardLoadingInProgress":"Chargement de la carte ..."
   },
   "login": {
     "reset": "RaZ",
