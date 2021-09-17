@@ -1,3 +1,11 @@
+/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
 package org.opfab.cards.publication.services.clients.impl;
 
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +20,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.Charset;
@@ -22,11 +31,12 @@ import java.util.*;
 @Slf4j
 public class ExternalAppClientImpl implements ExternalAppClient {
 
-    public static final String REMOTE_404_MESSAGE = "Specified external application was not handle by businessconfig party endpoint (not found)";
-    public static final String UNEXPECTED_REMOTE_MESSAGE = "Unexpected behaviour of businessconfig party handler endpoint";
-    public static final String EMPTY_URL_MESSAGE = "Url Specified for external application is empty";
+    public static final String REMOTE_404_MESSAGE = "External application endpoint not found (HTTP 404)";
+    public static final String UNEXPECTED_REMOTE_MESSAGE = "Unexpected behavior of external application endpoint";
+    public static final String INVALID_URL_MESSAGE = "Url specified for external application is invalid";
+    public static final String URL_NOT_FOUND_MESSAGE = "Url for external application not configured";
     public static final String NO_EXTERNALRECIPIENTS_MESSAGE = "No external recipients found in the card";
-    public static final String ERR_CONNECTION_REFUSED = "No external recipients found in the card";
+    public static final String ERR_CONNECTION_REFUSED = "I/O exception accessing external application endpoint";
 
     @Value("#{${externalRecipients-url:} ?: new java.util.HashMap() }")
     private Map<String, String> externalRecipients;
@@ -52,8 +62,8 @@ public class ExternalAppClientImpl implements ExternalAppClient {
                                 .map(Map.Entry::getValue)
                                 .findFirst()
                                 .orElseThrow(() -> new ApiErrorException(ApiError.builder()
-                                        .status(HttpStatus.BAD_GATEWAY)
-                                        .message(EMPTY_URL_MESSAGE)
+                                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                        .message(URL_NOT_FOUND_MESSAGE)
                                         .build()));
                         callExternalApplication(card, externalRecipientUrl);
                     });
@@ -92,7 +102,7 @@ public class ExternalAppClientImpl implements ExternalAppClient {
 
         } catch (HttpClientErrorException.NotFound ex) {
             throw new ApiErrorException(ApiError.builder()
-                    .status(HttpStatus.BAD_GATEWAY)
+                    .status(HttpStatus.NOT_FOUND)
                     .message(REMOTE_404_MESSAGE)
                     .build());
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
@@ -102,8 +112,13 @@ public class ExternalAppClientImpl implements ExternalAppClient {
                     .build());
         } catch (IllegalArgumentException ex) {
             throw new ApiErrorException(ApiError.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .message(INVALID_URL_MESSAGE)
+                    .build());
+        } catch (ResourceAccessException ex) {
+            throw new ApiErrorException(ApiError.builder()
                     .status(HttpStatus.BAD_GATEWAY)
-                    .message(EMPTY_URL_MESSAGE)
+                    .message(ERR_CONNECTION_REFUSED)
                     .build());
         } catch (Exception ex) {
             throw new ApiErrorException(ApiError.builder()
