@@ -1,0 +1,26 @@
+<!-- Copyright (c) 2021, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<div *ngIf="card && cardState" style="font-size:13px;" [hidden] = "cardLoadingInProgress" >
+  <of-detail   [cardState]="cardState" [card]="card" [childCards]="childCards"
+             [currentPath]="_currentPath" [parentModalRef]="parentModalRef" [screenSize]="screenSize" [displayContext]="displayContext">
+  </of-detail>
+</div>
+
+<div *ngIf="cardLoadingInProgress" [class.opfab-card-loading]="!isSmallscreen()"  [class.opfab-card-loading-small-screen]="isSmallscreen()">
+
+  <div class="opfab-card-loading-spinner">
+  <em  class="fas fa-spinner fa-spin opfab-slow-spinner" ></em>
+  </div>
+  <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>
+      feed.cardLoadingInProgress
+  </div>
+
+  <br/>
+  <br/>
+</div>

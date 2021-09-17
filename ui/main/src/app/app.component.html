@@ -14,7 +14,7 @@
     <of-login *ngIf="!isAuthenticated && !useCodeOrImplicitFlow"></of-login>
     <div class="opfab-connecting" *ngIf="!loaded && useCodeOrImplicitFlow">
         <div class="opfab-connecting-spinner">
-            <em  class="fas fa-spinner fa-spin slow-spin" ></em>
+            <em  class="fas fa-spinner fa-spin opfab-slow-spinner" ></em>
             </div>
             <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px">
                  Application is loading ...
@@ -23,7 +23,7 @@
 
     <div class="opfab-reconnecting" *ngIf="connectionLostForMoreThanTenSeconds&& loaded">
         <div class="opfab-connecting-spinner">
-        <em  class="fas fa-spinner fa-spin slow-spin" ></em>
+        <em  class="fas fa-spinner fa-spin opfab-slow-spinner" ></em>
         </div>
         <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>
             global.connectionLost
