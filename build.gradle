@@ -132,17 +132,17 @@ asciidoctor {
         }
     }
     attributes  nofooter            : '',
-                revnumber           : operatorfabric.version,
-                revdate             : operatorfabric.revisionDate,
-                sectnums            : '',
-                sectnumlevels       : '4',
-                sectanchors         : '',
-                toc                 : 'left',
-                toclevels           : '4',
-                icons               : 'font',
-                imagesdir           : '../images',
-                "hide-uri-scheme"   : '',
-                "source-highlighter": 'coderay'
+            revnumber           : operatorfabric.version,
+            revdate             : operatorfabric.revisionDate,
+            sectnums            : '',
+            sectnumlevels       : '4',
+            sectanchors         : '',
+            toc                 : 'left',
+            toclevels           : '4',
+            icons               : 'font',
+            imagesdir           : '../images',
+            "hide-uri-scheme"   : '',
+            "source-highlighter": 'coderay'
 }
 //end::asciidoctor_gradle_task_config[]
 
@@ -150,7 +150,7 @@ subprojects {
 
     group operatorfabric.group
     version operatorfabric.version
-    
+
     if (project.parent.path.startsWith(':services:')){
         apply plugin: 'org.sonarqube'
     }
@@ -168,21 +168,25 @@ subprojects {
         maven { url "https://artifacts.elastic.co/maven/"}
         maven { url "https://plugins.gradle.org/m2/" }
     }
-    subprojects {
-        apply plugin: 'java'
-        apply plugin: plugin.bom
 
-        test {
-            testLogging {
-                events "passed", "skipped", "failed"
-                exceptionFormat "full"
+    if (!project.path.contains('ui')){
+
+        subprojects {
+            apply plugin: 'java'
+            apply plugin: plugin.bom
+
+            test {
+                testLogging {
+                    events "passed", "skipped", "failed"
+                    exceptionFormat "full"
+                }
             }
-        }
 
-        javadoc {
-            options.noTimestamp()
-        }
+            javadoc {
+                options.noTimestamp()
+            }
 
+        }
     }
 }
 

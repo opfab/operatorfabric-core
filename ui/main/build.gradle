@@ -37,8 +37,6 @@ task runHeadlessTests(type: NpmTask) {
     args = ['run', 'headless']
 }
 
-test.dependsOn(runHeadlessTests)
-
 build.dependsOn(runBuild)
 
 assemble.dependsOn(runBuild)

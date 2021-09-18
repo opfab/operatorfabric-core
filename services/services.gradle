@@ -94,8 +94,8 @@ subprojects {
         jacocoTestReport {
             group = "Reporting"
             reports {
-                xml.enabled true
-                csv.enabled false
+                xml.required = true
+                csv.required = false
                 html.destination file("${buildDir}/reports/jacoco/html")
                 xml.destination file("${buildDir}/reports/jacoco/xml/report.xml")
 
