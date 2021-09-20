@@ -92,7 +92,7 @@ describe('Acknowledgment  tests', function () {
         cy.get('of-light-card').should('have.length', 6);
 
         // Check icon is present
-        cy.get('#opfab-feed-light-card-cypress-message1').find('.fa-check');
+        cy.get('#opfab-feed-light-card-cypress-message1 .fa-check');
 
         // Click on card message
         cy.get('#opfab-feed-light-card-cypress-message1').click();
@@ -101,7 +101,7 @@ describe('Acknowledgment  tests', function () {
         cy.get('#opfab-card-details-btn-ack').click();
 
         // Check icon is not present
-        cy.get('#opfab-feed-light-card-cypress-message1').find('.fa-check').should('not.exist');
+        cy.get('#opfab-feed-light-card-cypress-message1 .fa-check').should('not.exist');
 
         // Click on Ack all cards
         cy.get('#opfab-feed-ack-all-link').click();
@@ -110,20 +110,19 @@ describe('Acknowledgment  tests', function () {
         cy.get('#opfab-ack-all-btn-cancel').click();
 
         // Check icon is not present
-        cy.get('#opfab-feed-light-card-cypress-message1').find('.fa-check').should('not.exist');
+        cy.get('#opfab-feed-light-card-cypress-message1 .fa-check').should('not.exist');
 
         // Click on Ack all cards
         cy.get('#opfab-feed-ack-all-link').click();
 
         // Confirm 
         cy.get('#opfab-ack-all-btn-confirm').click();
-        cy.waitDefaultTime();
 
         // Check that all cards except one are acknowledged
-        cy.get('#opfab-feed-light-card-cypress-message1').find('.fa-check');
-        cy.get('#opfab-feed-light-card-cypress-message2').find('.fa-check');
-        cy.get('#opfab-feed-light-card-cypress-message3').find('.fa-check').should('not.exist');
-        cy.get('#opfab-feed-light-card-cypress-message4').find('.fa-check').should('not.exist');
+        cy.get('#opfab-feed-light-card-cypress-message1 .fa-check');
+        cy.get('#opfab-feed-light-card-cypress-message2 .fa-check');
+        cy.get('#opfab-feed-light-card-cypress-message3 .fa-check').should('not.exist');
+        cy.get('#opfab-feed-light-card-cypress-message4 .fa-check').should('not.exist');
 
     });
 
@@ -137,10 +136,10 @@ describe('Acknowledgment  tests', function () {
         cy.get('#opfab-feed-filter-btn-filter').click();
 
         // Check that all cards except one are acknowledged
-        cy.get('#opfab-feed-light-card-cypress-message1').find('.fa-check');
-        cy.get('#opfab-feed-light-card-cypress-message2').find('.fa-check');
-        cy.get('#opfab-feed-light-card-cypress-message3').find('.fa-check').should('not.exist');
-        cy.get('#opfab-feed-light-card-cypress-message4').find('.fa-check').should('not.exist');
+        cy.get('#opfab-feed-light-card-cypress-message1 .fa-check')
+        cy.get('#opfab-feed-light-card-cypress-message2 .fa-check')
+        cy.get('#opfab-feed-light-card-cypress-message3 .fa-check').should('not.exist');
+        cy.get('#opfab-feed-light-card-cypress-message4 .fa-check').should('not.exist');
     });
 
     it('Check no acknowledgment for operator 2  ', function () {
