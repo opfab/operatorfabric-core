@@ -51,6 +51,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     resultsNumber = 0;
     hasResult = false;
     firstQueryHasBeenDone = false;
+    isCollapsibleUpdatesActivated = false;
 
     // View card
     modalRef: NgbModalRef;
@@ -105,6 +106,9 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     ngOnInit() {
+        const isCollapsibleUpdatesActivatedInStorage = localStorage.getItem('opfab.archives.isCollapsibleUpdatesActivated');
+        this.isCollapsibleUpdatesActivated = (isCollapsibleUpdatesActivatedInStorage === 'true');
+
         this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
         this.historySize = parseInt(this.configService.getConfigValue('archive.history.size', 100));
         this.results = [];
@@ -113,6 +117,12 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             takeUntil(this.unsubscribe$),
             debounceTime(1000),
         ).subscribe(() => this.setDateFilterBounds());
+    }
+
+    toggleCollapsibleUpdates() {
+        this.isCollapsibleUpdatesActivated = !this.isCollapsibleUpdatesActivated;
+        localStorage.setItem('opfab.archives.isCollapsibleUpdatesActivated', String(this.isCollapsibleUpdatesActivated));
+        this.sendQuery(0);
     }
 
     setDateFilterBounds(): void {
@@ -173,7 +183,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.filtersTemplate.filtersToMap(value);
         this.filtersTemplate.filters.set('size', [this.size.toString()]);
         this.filtersTemplate.filters.set('page', [page_number]);
-        this.filtersTemplate.filters.set('latestUpdateOnly', ['true']);
+        this.filtersTemplate.filters.set('latestUpdateOnly', [String(this.isCollapsibleUpdatesActivated)]);
         this.cardService.fetchArchivedCards(this.filtersTemplate.filters)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((page: Page<LightCard>) => {
@@ -184,9 +194,17 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 page.content.forEach(card => this.loadTranslationForCardIfNeeded(card));
                 this.results = page.content;
 
-                let requestID = new Date().valueOf();
-                this.lastRequestID = requestID;
-                this.loadUpdatesByCardId(requestID);
+                if (this.isCollapsibleUpdatesActivated) {
+                    let requestID = new Date().valueOf();
+                    this.lastRequestID = requestID;
+                    this.loadUpdatesByCardId(requestID);
+                }
+                else {
+                    this.updatesByCardId = [];
+                    this.results.forEach((lightCard, index) => {
+                        this.updatesByCardId.push({mostRecent: lightCard, cardHistories: [], displayHistory: false, tooManyRows: false});
+                    });
+                }
             });
     }
 

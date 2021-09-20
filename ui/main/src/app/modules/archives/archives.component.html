@@ -49,15 +49,21 @@
 </div>
 
 
-<div style="height:5%"> </div>
-<div *ngIf=" hasResult" style="margin-left:5%;margin-right:5%">
+<div style="height:2%"> </div>
+<div *ngIf=" hasResult" style="margin-left:5%; margin-right:5%">
+  <div style="display:flex; justify-content:flex-start;">
+    <label style="font-weight:bold; margin-left:5px" class="opfab-checkbox" translate>archive.collapsibleUpdates
+      <input type="checkbox" (click)="toggleCollapsibleUpdates()" [checked]="isCollapsibleUpdatesActivated" id="opfab-archives-collapsible-updates">
+      <span class="opfab-checkbox-checkmark"></span>
+    </label>
+  </div>
   <div class="opfab-table">
     <table aria-describedby="Archive results table" id="opfab-archives-cards-list">
       <thead>
         <tr>
           <th scope="col"></th>
           <th scope="col"></th>
-          <th scope="col"></th>
+          <th scope="col" *ngIf="isCollapsibleUpdatesActivated"></th>
           <th scope="col" style="padding-left: 5px" translate>archive.result.publishDate</th>
           <th scope="col" translate>archive.result.businessPeriod</th>
           <th scope="col" translate>archive.result.title</th>
@@ -71,9 +77,9 @@
         <tr  (click)="openCard(updates.mostRecent.id)" class="opfab-archives-table-line" style="cursor: pointer;">
           <td class="opfab-archive-sev opfab-archive-sev-{{updates.mostRecent.severity.toLowerCase()}}"></td>
           <td class="opfab-archive-sev"></td>
-          <td *ngIf="updates.cardHistories.length > 0 && !updates.displayHistory" class="opfab-archives-icon-plus" (click)="$event.stopPropagation();displayHistoryOfACard(updates)"></td>
-          <td *ngIf="updates.cardHistories.length > 0 && updates.displayHistory" class="opfab-archives-icon-minus" (click)="$event.stopPropagation();hideHistoryOfACard(updates)"></td>
-          <td *ngIf="! updates.cardHistories.length"></td>
+          <td *ngIf="isCollapsibleUpdatesActivated && updates.cardHistories.length > 0 && !updates.displayHistory" class="opfab-archives-icon-plus" (click)="$event.stopPropagation();displayHistoryOfACard(updates)"></td>
+          <td *ngIf="isCollapsibleUpdatesActivated && updates.cardHistories.length > 0 && updates.displayHistory" class="opfab-archives-icon-minus" (click)="$event.stopPropagation();hideHistoryOfACard(updates)"></td>
+          <td *ngIf="isCollapsibleUpdatesActivated && ! updates.cardHistories.length"></td>
           <td style="padding-left: 5px"> {{displayTime(updates.mostRecent.publishDate)}} </td>
           <td> {{displayTime(updates.mostRecent.startDate)}} - {{displayTime(updates.mostRecent.endDate)}} </td>
           <td translate [translateParams]="updates.mostRecent.title.parameters">{{ updates.mostRecent.process + '.' + updates.mostRecent.processVersion + '.' + updates.mostRecent.title.key}}</td>
