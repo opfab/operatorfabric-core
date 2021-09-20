@@ -152,7 +152,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             "opfab-typeOfState-CANCELED": parameters => parameters.data.typeOfState === 'CANCELED'
         };
 
-        this.columnDefs = [{ type: 'severityColumn', headerName: '', field: 'severity', headerClass: 'header-with-no-padding' , cellClassRules: severityCellClassRules },
+        this.columnDefs = [{ type: 'severityColumn', headerName: '', field: 'severityNumber', headerClass: 'header-with-no-padding' , cellClassRules: severityCellClassRules },
                            { type: 'dataColumn', headerName: this.timeColumnName, field: 'time' }];
 
         if (this.displayProcessGroupColumn)
@@ -185,7 +185,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         this.rowData = [];
         this.displayedResults.forEach(line => {
             if (this.displayProcessGroupColumn)
-                this.rowData.push({ severity: this.mapSeverity.get(line.severity),
+                this.rowData.push({ severityNumber: this.mapSeverity.get(line.severity),
                                     time: this.displayTime(line.creationDateTime),
                                     service: this.translateValue(this.processesService.findProcessGroupLabelForProcess(line.processId)),
                                     process: this.translateValue(line.processName),
@@ -193,16 +193,22 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                                     summary: this.translateValue(line.summary.key, line.summary.parameters),
                                     processStatus: this.translateValue('monitoring.filters.typeOfState.' + line.typeOfState),
                                     typeOfState: line.typeOfState,
-                                    cardId: line.cardId });
+                                    cardId: line.cardId,
+                                    severity: line.severity,
+                                    beginningOfBusinessPeriod: line.beginningOfBusinessPeriod,
+                                    endOfBusinessPeriod: line.endOfBusinessPeriod });
             else
-                this.rowData.push({ severity: this.mapSeverity.get(line.severity),
+                this.rowData.push({ severityNumber: this.mapSeverity.get(line.severity),
                                     time: this.displayTime(line.creationDateTime),
                                     process: this.translateValue(line.processName),
                                     title: this.translateValue(line.title.key, line.title.parameters),
                                     summary: this.translateValue(line.summary.key, line.summary.parameters),
                                     processStatus: this.translateValue('monitoring.filters.typeOfState.' + line.typeOfState),
                                     typeOfState: line.typeOfState,
-                                    cardId: line.cardId});
+                                    cardId: line.cardId,
+                                    severity: line.severity,
+                                    beginningOfBusinessPeriod: line.beginningOfBusinessPeriod,
+                                    endOfBusinessPeriod: line.endOfBusinessPeriod });
 
         });
         this.rowDataSubject.next(this.rowData);
@@ -220,28 +226,28 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
 
         this.exportMonitoringData = [];
 
-        this.result.forEach((line: LineOfMonitoringResult) => {
+        this.gridApi.rowModel.rowsToDisplay.forEach((line) => {
             if (typeof line !== undefined) {
                 if (this.displayProcessGroupColumn)
                     this.exportMonitoringData.push({
-                        [this.timeColumnName]: this.displayTime(line.creationDateTime),
-                        [this.businessPeriodColumnName]: this.displayTime(line.beginningOfBusinessPeriod).concat(this.displayTime(line.endOfBusinessPeriod)),
-                        [this.processGroupColumnName]: this.translateColumn(this.processesService.findProcessGroupLabelForProcess(line.processId)),
-                        [this.processColumnName]: this.translateColumn(line.processName),
-                        [this.titleColumnName]: this.translateColumn(line.title.key, line.title.parameters),
-                        [this.summaryColumnName]: this.translateColumn(line.summary.key, line.summary.parameters),
-                        [this.typeOfStateColumnName]: this.translateColumn('monitoring.filters.typeOfState.' + line.typeOfState),
-                        [this.severityColumnName]: line.severity
+                        [this.timeColumnName]: line.data.time,
+                        [this.businessPeriodColumnName]: this.displayTime(line.data.beginningOfBusinessPeriod).concat(this.displayTime(line.data.endOfBusinessPeriod)),
+                        [this.processGroupColumnName]: line.data.service,
+                        [this.processColumnName]: line.data.process,
+                        [this.titleColumnName]: line.data.title,
+                        [this.summaryColumnName]: line.data.summary,
+                        [this.typeOfStateColumnName]: line.data.processStatus,
+                        [this.severityColumnName]: line.data.severity
                     });
                 else
                     this.exportMonitoringData.push({
-                        [this.timeColumnName]: this.displayTime(line.creationDateTime),
-                        [this.businessPeriodColumnName]: this.displayTime(line.beginningOfBusinessPeriod).concat(this.displayTime(line.endOfBusinessPeriod)),
-                        [this.processColumnName]: this.translateColumn(line.processName),
-                        [this.titleColumnName]: this.translateColumn(line.title.key, line.title.parameters),
-                        [this.summaryColumnName]: this.translateColumn(line.summary.key, line.summary.parameters),
-                        [this.typeOfStateColumnName]: this.translateColumn('monitoring.filters.typeOfState.' + line.typeOfState),
-                        [this.severityColumnName]: line.severity
+                        [this.timeColumnName]: line.data.time,
+                        [this.businessPeriodColumnName]: this.displayTime(line.data.beginningOfBusinessPeriod).concat(this.displayTime(line.data.endOfBusinessPeriod)),
+                        [this.processColumnName]: line.data.process,
+                        [this.titleColumnName]: line.data.title,
+                        [this.summaryColumnName]: line.data.summary,
+                        [this.typeOfStateColumnName]: line.data.processStatus,
+                        [this.severityColumnName]: line.data.severity
                     });
             }
         });
@@ -249,7 +255,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
 
     export(): void {
         this.exportCancelled = false;
-        // if monitoring has a specific configuration 
+        // if monitoring has a specific configuration
         if (this.monitoringConfig && this.monitoringConfig.export && this.monitoringConfig.export.fields ) {
             this.jsonToArray = new JsonToArray(this.monitoringConfig.export.fields);
             const modalOptions: NgbModalOptions = {
@@ -257,11 +263,11 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                 backdrop: 'static', // Modal shouldn't close even if we click outside it
                 size: 'sm'
               };
-            
+
             this.exportModalRef = this.modalService.open(this.exportInProgressTemplate, modalOptions);
             this.exportProgress = 0;
             this.processMonitoringForExport(0);
-            
+
         }
         // generic export 
         else {
@@ -279,13 +285,13 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         if (!this.exportCancelled) {
             // round by ten to slow progressbar updates
             this.exportProgress = 10 * Math.round(lineNumber / 10);
-            
+
             if (lineNumber === this.result.length) {
                 ExportService.exportArrayToExcelFile(this.jsonToArray.getJsonAsArray(), 'Monitoring');
                 this.exportInProgress = false;
             } else {
                 this.exportInProgress = true;
-                this.cardService.loadCard(this.result[lineNumber].cardId).subscribe( card => {
+                this.cardService.loadCard(this.gridApi.rowModel.rowsToDisplay[lineNumber].data.cardId).subscribe( card => {
                     this.jsonToArray.add(this.cardPreprocessingBeforeExport(card));
                     this.processMonitoringForExport(++lineNumber);
                 });
@@ -293,8 +299,8 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         } else {
             this.exportInProgress = false;
         }
-        
-        if (!this.exportInProgress) 
+
+        if (!this.exportInProgress)
             this.exportModalRef.close();
     }
 
