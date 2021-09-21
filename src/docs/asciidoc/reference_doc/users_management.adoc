@@ -66,8 +66,8 @@ ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#_send_
 The notion of group is loose and can be used to simulate role in `OperatorFabric` (examples : supervisor, dispatcher ... ).
 Groups are used to send cards to several users without a name specifically. The information about membership to a
 group is stored in the user information. A group contains a list of perimeters which define the rights of reception/writing for a couple process/state. The rules used to send cards are described in the
-ifdef::single-page-doc[<<card_recipients, recipients section>>]
-ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#card_recipients, recipients section>>]
+ifdef::single-page-doc[<<reception_rules, recipients section>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#reception_rules, recipients section>>]
 .
 .
 

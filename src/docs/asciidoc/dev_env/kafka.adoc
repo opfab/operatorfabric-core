@@ -79,7 +79,9 @@ opfab:
 
 ----
 
-<<Cards-publication service>> for more settings.
+ifdef::single-page-doc[<<cards-pub-conf, Cards-publication service>>]
+ifndef::single-page-doc[<</documentation/current/deployment/index.adoc#cards-pub-conf, Cards-publication service>>]
+for more settings.
 
 See link:{kafka_schema}[Schema management] for detailed information on using and benefits of a schema registry.
 
@@ -165,10 +167,12 @@ When you dump the card (which is about to be put on a topic) to stdout, you shou
 ----
 
 == Response Cards
-OperatorFabric <<response_cards>> can be sent by REST of put on a Kafka topic. The Kafka response card configuration follows the
+OperatorFabric
+ifdef::single-page-doc[<<response_cards, response cards>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#response_cards, response cards>>]
+can be sent by REST of put on a Kafka topic. The Kafka response card configuration follows the
 convention to configure a REST endpoint. Instead of setting the 'http://host/api' URL, you set it to 'kafka:response-topic' in the `externalRecipients-url:`
 section from the cards-publication.yml file:
-
 [source, yaml]
 ----
 externalRecipients-url: "{\
