@@ -25,10 +25,11 @@ export class MultiFilterComponent implements OnInit, OnChanges, OnDestroy {
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
-    dropdownList: { id: string, itemName: string }[];
+    dropdownList: { id: string, itemName: string, itemCategory?: string }[];
     @Input() public i18nRootLabelKey: string;
     @Input() public values: ({ id: string, itemName: (I18n | string), i18nPrefix?: string , itemCategory?: string} | string)[];
     @Input() public translateValues: boolean;
+    @Input() public sortValues: boolean;
     @Input() public parentForm: FormGroup;
     @Input() public dropdownSettings = {};
     @Input() public filterPath: string;
@@ -82,6 +83,8 @@ export class MultiFilterComponent implements OnInit, OnChanges, OnDestroy {
         this.dropdownList = [];
         if (!!this.values) {
             this.dropdownList = this.values.map(entry => this.computeValueAndLabel(entry));
+            if (this.sortValues)
+                this.sortDropdownList();
         } else {
             // should throws an error ?
             console.error('There are currently no values for ' + this.filterPath);
@@ -96,7 +99,11 @@ export class MultiFilterComponent implements OnInit, OnChanges, OnDestroy {
 
         }
         this.parentForm.get(this.filterPath).setValue(this.selection);
+    }
 
+    private sortDropdownList() {
+        this.dropdownList.sort((a, b) => (a.itemName.localeCompare(b.itemName)));
+        this.dropdownList.sort((a, b) => (a.itemCategory.localeCompare(b.itemCategory)));
     }
 
     protected getLocale(): Observable<string> {
