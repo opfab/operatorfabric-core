@@ -80,6 +80,7 @@ to have to maintain these mentions (since this information is tracked by git any
 (around ten times per seconds), use instead variables and compute them only when necessary.
 * ngInit() :  ngInit is called when component is created, the creation is made by the parent component : be careful to check when initialization is done when calling method inside ngInit. When the context of the parent component change, it can lead to a new initialization or not.
 * Do not store Moment objects in ngrx store (see for example : https://github.com/ngrx/platform/issues/2690)
+* Prefer using `*ngIf` over `hidden` property  to hide elements : https://stackoverflow.com/questions/51317666/when-should-i-use-ngif-over-hidden-property-and-vice-versa/51317774
 
 include::documentation.adoc[leveloffset=+2]
 
