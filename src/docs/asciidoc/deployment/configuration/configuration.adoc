@@ -103,7 +103,7 @@ The user service has these specific properties :
 
 |===
 
-
+[[cards-pub-conf]]
 ==== Cards-publication service
 
 The cards-publication service has these specific properties :

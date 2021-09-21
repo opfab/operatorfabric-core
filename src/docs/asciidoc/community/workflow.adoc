@@ -38,7 +38,7 @@ The repository version on the `develop` branch should always be `SNAPSHOT`.
 The daily CRON Travis job generating the documentation and docker images for the `SNAPSHOT` version are run from
 this branch (see our
 ifdef::single-page-doc[<<CICD, CICD documentation>>]
-ifndef::single-page-doc[<</documentation/current/CICD/index.adoc, CICD documentation>>]
+ifndef::single-page-doc[<</documentation/current/CICD/index.adoc#CICD, CICD documentation>>]
 for details).
 
 === `master` branch
