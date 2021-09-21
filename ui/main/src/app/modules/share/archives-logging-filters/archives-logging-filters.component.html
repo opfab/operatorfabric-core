@@ -13,7 +13,7 @@
     <div  style="min-width:300px;max-width:400px;margin-top: 28px;margin-bottom: 54px;">
         <of-multi-filter *ngIf="displayProcessGroupFilter()" filterPath="processGroup" id="opfab-processGroup" [parentForm]="this.parentForm"
                          [values]="processGroupDropdownList" [translateValues]="true" [dropdownSettings]="processGroupDropdownSettings" [selectedItems]="[]"
-                         i18nRootLabelKey="filters.">
+                         i18nRootLabelKey="filters." [sortValues]="true">
         </of-multi-filter>
         <of-multi-filter *ngIf="! displayProcessGroupFilter() && tags" filterPath="tags" id="opfab-tags" [parentForm]="this.parentForm"
                          [values]="tagsDropdownList" [translateValues]="true" [dropdownSettings]="tagsDropdownSettings" [selectedItems]="[]"
@@ -32,21 +32,21 @@
     <div style="min-width:300px;max-width:400px;margin-top:28px;margin-bottom: 54px;">
         <of-multi-filter *ngIf="! isThereProcessGroup()" filterPath="process" id="opfab-process" [parentForm]="this.parentForm"
                          [values]="processDropdownList" [translateValues]="true" [dropdownSettings]="processDropdownSettings" [selectedItems]="[]"
-                         i18nRootLabelKey="filters.">
+                         i18nRootLabelKey="filters." [sortValues]="true">
         </of-multi-filter>
         <of-multi-filter *ngIf="displayProcessGroupFilter()" filterPath="process" id="opfab-process" [parentForm]="this.parentForm"
                          [values]="processDropdownListWhenSelectedProcessGroup" [translateValues]="true" [dropdownSettings]="processDropdownSettings" [selectedItems]="[]"
-                         i18nRootLabelKey="filters.">
+                         i18nRootLabelKey="filters." [sortValues]="true">
         </of-multi-filter>
         <of-multi-filter *ngIf="!displayProcessGroupFilter() && isThereProcessGroup()" filterPath="process" id="opfab-process" [parentForm]="this.parentForm"
                          [values]="processesDropdownListPerProcessGroups.get(processGroupDropdownList[0].id)" [translateValues]="true"
-                         [dropdownSettings]="processDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="filters.">
+                         [dropdownSettings]="processDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="filters." [sortValues]="true">
         </of-multi-filter>
     </div>
     <div style="min-width:300px;max-width:400px;">
         <of-multi-filter filterPath="state" id="opfab-state" [parentForm]="this.parentForm"
                          [values]="stateDropdownListWhenSelectedProcess" [translateValues]="true" [dropdownSettings]="stateDropdownSettings" [selectedItems]="[]"
-                         i18nRootLabelKey="filters.">
+                         i18nRootLabelKey="filters." [sortValues]="true">
         </of-multi-filter>
     </div>
 </div>
@@ -56,17 +56,17 @@
     <div style="min-width:300px;max-width:400px;margin-top:28px;margin-bottom: 54px;">
         <of-multi-filter *ngIf="! isThereProcessGroup()" filterPath="process" id="opfab-process" [parentForm]="this.parentForm"
                          [values]="processDropdownList" [translateValues]="true" [dropdownSettings]="processDropdownSettings" [selectedItems]="[]"
-                         i18nRootLabelKey="filters.">
+                         i18nRootLabelKey="filters." [sortValues]="true">
         </of-multi-filter>
         <of-multi-filter *ngIf="isThereProcessGroup()" filterPath="process" id="opfab-process" [parentForm]="this.parentForm"
                          [values]="processesDropdownListPerProcessGroups.get(processGroupDropdownList[0].id)" [translateValues]="true"
-                         [dropdownSettings]="processDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="filters.">
+                         [dropdownSettings]="processDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="filters." [sortValues]="true">
         </of-multi-filter>
     </div>
     <div style="min-width:300px;max-width:400px;">
         <of-multi-filter filterPath="state" id="opfab-state" [parentForm]="this.parentForm"
                          [values]="stateDropdownListWhenSelectedProcess" [translateValues]="true" [dropdownSettings]="stateDropdownSettings" [selectedItems]="[]"
-                         i18nRootLabelKey="filters.">
+                         i18nRootLabelKey="filters." [sortValues]="true">
         </of-multi-filter>
     </div>
 </div>
