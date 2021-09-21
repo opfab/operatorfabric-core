@@ -224,10 +224,11 @@ export class FeedconfigurationComponent implements OnInit {
     }
 
     /** cleaning of the two arrays : processGroupsAndLabels and processesWithoutGroup
-     * processGroupsAndLabels : we don't display process which doesn't have any state with Receive right
+     * processGroupsAndLabels : we don't display process which doesn't have any displayed state (a state is not displayed if we have option 'checkPerimeterForSearchFields' set to true
+     *                          and user doesn't have receive right on it, or if the state is 'isOnlyAChildState'
      *                          and we don't display process group which doesn't have any process
      * processesWithoutGroup : we don't display process which doesn't have any state with Receive or ReceiveAndWrite right*/
-    private removeProcessesWithoutStatesWithReceiveRights() {
+    private removeProcessesWithoutDisplayedStates() {
         this.processGroupsAndLabels.forEach((processGroupData, index) => {
             processGroupData.processes = processGroupData.processes.filter(processData => !! this.processesStatesLabels.get(processData.processId));
             if (processGroupData.processes.length === 0)
@@ -257,8 +258,7 @@ export class FeedconfigurationComponent implements OnInit {
             this.computePreparedListOfProcessesStatesAndProcessesStatesLabels();
             this.makeProcessesWithoutGroup();
             this.addCheckboxesInFormArray();
-            if (this.checkPerimeterForSearchFields)
-                this.removeProcessesWithoutStatesWithReceiveRights();
+            this.removeProcessesWithoutDisplayedStates();
             this.loadIsAllStatesSelected();
             this.makeProcessIdsByProcessGroup();
             this.loadIsAllProcessesSelected();
