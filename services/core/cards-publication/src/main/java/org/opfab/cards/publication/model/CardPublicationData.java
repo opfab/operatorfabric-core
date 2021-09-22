@@ -124,6 +124,8 @@ public class CardPublicationData implements Card {
 
     private Integer  secondsBeforeTimeSpanForReminder;
 
+    private Boolean toNotify;
+
     public void prepare(Instant publishDate) {
         this.publishDate = publishDate;
         this.id = process + "." + processInstanceId;

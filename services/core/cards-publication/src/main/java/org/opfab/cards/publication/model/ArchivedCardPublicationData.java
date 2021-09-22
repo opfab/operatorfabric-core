@@ -106,6 +106,8 @@ public class ArchivedCardPublicationData implements Card {
 
     private Integer  secondsBeforeTimeSpanForReminder;
 
+    private Boolean toNotify;
+
     public ArchivedCardPublicationData(CardPublicationData card){
         this.id = card.getUid();
         this.parentCardId = card.getParentCardId();
@@ -136,6 +138,7 @@ public class ArchivedCardPublicationData implements Card {
         this.representative = card.getRepresentative();
         this.representativeType = card.getRepresentativeType();
         this.secondsBeforeTimeSpanForReminder = card.getSecondsBeforeTimeSpanForReminder();
+        this.toNotify = card.getToNotify();
     }
 
 }

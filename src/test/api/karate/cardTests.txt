@@ -9,6 +9,7 @@
       cards/userAcknowledgmentUpdateCheck.feature \
       cards/postCardWithNoProcess.feature         \
       cards/postCardWithNoState.feature           \
+      cards/postCardWithToNotify.feature          \
       cards/postCardFor3Users.feature             \
       cards/postCardsEntitiesToRespond.feature \
       cards/deleteCardFor3Users.feature           \

@@ -101,9 +101,15 @@ public class CardProcessingService {
             externalAppClient.sendCardToExternalApplication(card);
         }
         deleteChildCardsProcess(card);
-        cardRepositoryService.saveCard(card);
+
+        if ((card.getToNotify() == null) || card.getToNotify())
+            cardRepositoryService.saveCard(card);
+
         cardRepositoryService.saveCardToArchive(new ArchivedCardPublicationData(card));
-        cardNotificationService.notifyOneCard(card, CardOperationTypeEnum.ADD);
+
+        if ((card.getToNotify() == null) || card.getToNotify())
+            cardNotificationService.notifyOneCard(card, CardOperationTypeEnum.ADD);
+
         log.debug("Card persisted (process = {} , processInstanceId= {} , state = {} ", card.getProcess(),card.getProcessInstanceId(),card.getState());
     }
 
