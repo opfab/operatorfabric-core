@@ -6,6 +6,7 @@
     "schedule:nonOfficeHours"
   ],
   "branchPrefix": "FE-Renovate_",
+  "baseBranches": ["develop_3"],
   "prConcurrentLimit": 7,
   "ignorePaths": [
     "**/node_modules/**",
