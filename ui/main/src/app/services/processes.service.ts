@@ -76,7 +76,8 @@ export class ProcessesService {
                         if (this.processes.length === 0) {
                             console.log(new Date().toISOString(), 'WARNING : no processes configured');
                             this.translationsLoaded.next(null);
-                            } else {
+                        } else {
+                            this.loadAllProcessesInCache();
                             this.loadAllTranslations();
                             console.log(new Date().toISOString(), 'List of processes loaded');
                         }
@@ -107,6 +108,12 @@ export class ProcessesService {
                         return of(error);
                     })
                 );
+    }
+
+    private loadAllProcessesInCache() {
+        this.processes.forEach(process => {
+            this.processCache.set(`${process.id}.${process.version}` , Object.setPrototypeOf(process, Process.prototype)); 
+        });
     }
 
     private loadAllTranslations() {
