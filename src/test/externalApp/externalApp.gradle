@@ -35,8 +35,8 @@ bootJar {
 
 
 docker {
-	if (project.version.toUpperCase().equals("SNAPSHOT"))
-		name "lfeoperatorfabric/of-external-app:SNAPSHOT" /* more information : https://vsupalov.com/docker-latest-tag/ */
+	if (project.version.toUpperCase().equals("SNAPSHOT")||project.version.toUpperCase().equals("SNAPSHOT_3"))
+		name "lfeoperatorfabric/of-external-app:${project.version.toUpperCase()}" /* more information : https://vsupalov.com/docker-latest-tag/ */
 	else
 		name "lfeoperatorfabric/of-external-app"
 	tags "latest", "${project.version}"

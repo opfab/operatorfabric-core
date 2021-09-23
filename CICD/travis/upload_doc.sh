@@ -57,6 +57,12 @@ if [[ $OF_VERSION = SNAPSHOT ]]; then
   rm -r $HOME/documentation/documentation/archives/SNAPSHOT
 fi
 
+# If the current version is SNAPSHOT_3
+if [[ $OF_VERSION = SNAPSHOT ]]; then
+  # Clear SNAPSHOT_3 folder from archives
+  rm -r $HOME/documentation/documentation/archives/SNAPSHOT_3
+fi
+
 # If the current version is a release version
 if [[ $OF_VERSION =~ .+RELEASE$ ]]; then
   # Clear existing documentation in archive for current version
