@@ -168,7 +168,7 @@ subprojects {
 
                 // The Sonatype staging repo doesn't accept snapshot versions so when executing the publishing task on
                 // a snapshot version the produced artifacts will appear in the build directory (see path above).
-                if (project.version.endsWith("SNAPSHOT")) {
+                if (project.version.toUpperCase().equals("SNAPSHOT")||project.version.toUpperCase().equals("SNAPSHOT_3")) {
                     url snapshotsRepoUrl
                 } else {
                     url releasesRepoUrl
