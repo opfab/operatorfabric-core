@@ -347,8 +347,15 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             if (entityIdsRequiredToRespondAndAllowedToSendCards.length > 0) listEntitiesToRespondForHeader = this.createEntityHeaderFromList(entityIdsRequiredToRespondAndAllowedToSendCards);
             else listEntitiesToRespondForHeader = this.createEntityHeaderFromList(this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards);
 
-            this.listVisibleEntitiesToRespond = listEntitiesToRespondForHeader.length > maxVisibleEntitiesForCardHeader ? listEntitiesToRespondForHeader.slice(0, maxVisibleEntitiesForCardHeader) : listEntitiesToRespondForHeader;
-            this.listDropdownEntitiesToRespond = listEntitiesToRespondForHeader.length > maxVisibleEntitiesForCardHeader ? listEntitiesToRespondForHeader.slice(maxVisibleEntitiesForCardHeader) : [];
+            listEntitiesToRespondForHeader.sort((a, b) => a.name?.localeCompare(b.name));
+
+            this.listVisibleEntitiesToRespond = listEntitiesToRespondForHeader.length > maxVisibleEntitiesForCardHeader ?
+                                                    listEntitiesToRespondForHeader.slice(0, maxVisibleEntitiesForCardHeader) :
+                                                    listEntitiesToRespondForHeader;
+
+            this.listDropdownEntitiesToRespond = listEntitiesToRespondForHeader.length > maxVisibleEntitiesForCardHeader ?
+                                                    listEntitiesToRespondForHeader.slice(maxVisibleEntitiesForCardHeader) :
+                                                    [];
         }
         else {
             this.listVisibleEntitiesToRespond = [];
