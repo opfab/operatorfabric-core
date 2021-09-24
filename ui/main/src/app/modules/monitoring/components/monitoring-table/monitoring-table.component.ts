@@ -115,14 +115,14 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                     sortable: true,
                     filter: true,
                     wrapText: false,
-                    autoHeight: true,
+                    autoHeight: false,
                     flex: 1,
                 },
                 'severityColumn': {
                     sortable: true,
                     filter: false,
                     wrapText: false,
-                    autoHeight: true,
+                    autoHeight: false,
                     maxWidth: 18
                 }
             },
@@ -131,7 +131,8 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             headerHeight: 70,
             suppressPaginationPanel: true,
             suppressHorizontalScroll: true,
-            columnDefs: this.columnDefs
+            columnDefs: this.columnDefs,
+            rowHeight: 45  
         };
         this.rowData$ = this.rowDataSubject.asObservable();
     }
