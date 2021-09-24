@@ -103,7 +103,7 @@ export class MultiFilterComponent implements OnInit, OnChanges, OnDestroy {
 
     private sortDropdownList() {
         this.dropdownList.sort((a, b) => (a.itemName.localeCompare(b.itemName)));
-        this.dropdownList.sort((a, b) => (a.itemCategory.localeCompare(b.itemCategory)));
+        this.dropdownList.sort((a, b) => (a.itemCategory?.localeCompare(b.itemCategory)));
     }
 
     protected getLocale(): Observable<string> {
