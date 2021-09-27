@@ -86,7 +86,7 @@ ext {
             feignMock      : "io.github.openfeign:feign-mock:$feign",
             feignJackson   : "io.github.openfeign:feign-jackson:$feign",
             feignCore      : "io.github.openfeign:feign-core:$feign",
-            guava          : "com.google.guava:guava:30.1.1-jre",
+            guava          : "com.google.guava:guava:31.0.1-jre",
             jacksonAnnotations   : "com.fasterxml.jackson.core:jackson-annotations:$jacksonAnnotations",
             collections4   : "org.apache.commons:commons-collections4:$apacheCommonsCollections4",
             commonsIO      : "commons-io:commons-io:$commonsIO",
