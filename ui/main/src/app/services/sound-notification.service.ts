@@ -167,3 +167,4 @@ export class SoundConfig {
 export enum SignalType {
     NOTIFICATION, CLEAR
 }
+
