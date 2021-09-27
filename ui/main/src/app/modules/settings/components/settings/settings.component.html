@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -10,25 +10,30 @@
 
 
 <div class="opfab-settings ">
-  <div class="row" >
-    <div style="margin-top: 30px;" class="col-md-6" *ngIf="!displayInfo?.description">
+
+  <div class="opfab-border-box opfab-settings-item" style="margin-bottom:0px;" *ngIf="!displayInfo?.sounds">
+    <label translate>settings.playSoundLabel</label>
+    <of-checkbox-setting settingPath="playSoundForAlarm" labelClass="label-sev-alarm"></of-checkbox-setting>
+    <of-checkbox-setting settingPath="playSoundForAction" labelClass="label-sev-action"></of-checkbox-setting>
+    <of-checkbox-setting settingPath="playSoundForCompliant" labelClass="label-sev-compliant"></of-checkbox-setting>
+    <of-checkbox-setting settingPath="playSoundForInformation" labelClass="label-sev-information"></of-checkbox-setting>
+  </div>
+  <div class="opfab-settings-sounds opfab-settings-item" *ngIf="!displayInfo?.sounds" >
+    <div class="opfab-replay-sound-label"><of-checkbox-setting settingPath="replayEnabled" labelClass="label-replay"></of-checkbox-setting> </div>
+    <of-text-setting settingPath="replayInterval"></of-text-setting>
+  </div>
+    <div class="opfab-settings-item" *ngIf="!displayInfo?.description">
       <of-text-setting settingPath="description" [disabled]="(disableInfos)"></of-text-setting>
     </div>
-    <div style="margin-top: 30px;" class="col-md-6" *ngIf="!displayInfo?.language">
+    <div class="opfab-settings-item" *ngIf="!displayInfo?.language">
       <of-list-setting settingPath="locale" [values]="locales" ></of-list-setting>
     </div>
-    <div style="margin-top: 30px; "class="col-md-6" *ngIf="!displayInfo?.timezone">
+    <div class="opfab-settings-item" *ngIf="!displayInfo?.timezone">
       <of-list-setting settingPath="timeZone" [values]="timeZones" ></of-list-setting>
     </div>
-    <div style="margin-top: 30px;" class="col-md-6" *ngIf="!displayInfo?.tags">
+    <div class="opfab-settings-item" *ngIf="!displayInfo?.tags">
       <of-type-ahead-settings settingPath="defaultTags"></of-type-ahead-settings>
     </div>
-    <div  style="margin-top: 20px;" class="col-md-6" *ngIf="!displayInfo?.sounds">
-      <div><label translate>settings.playSoundLabel</label></div>
-      <of-checkbox-setting settingPath="playSoundForAlarm" labelClass="label-sev-alarm"></of-checkbox-setting>
-      <of-checkbox-setting settingPath="playSoundForAction" labelClass="label-sev-action"></of-checkbox-setting>
-      <of-checkbox-setting settingPath="playSoundForCompliant" labelClass="label-sev-compliant"></of-checkbox-setting>
-      <of-checkbox-setting settingPath="playSoundForInformation" labelClass="label-sev-information"></of-checkbox-setting>
-    </div>
-  </div>
+
+
 </div>

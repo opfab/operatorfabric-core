@@ -36,6 +36,8 @@ public class UserSettingsData implements UserSettings {
     private Boolean playSoundForAction;
     private Boolean playSoundForCompliant;
     private Boolean playSoundForInformation;
+    private Boolean replayEnabled;
+    private Integer replayInterval;
 
     @Singular("processStatesNotNotified")
     private Map<String, List<String>> processesStatesNotNotified;
@@ -54,6 +56,8 @@ public class UserSettingsData implements UserSettings {
         this.playSoundForAction = settings.getPlaySoundForAction();
         this.playSoundForCompliant = settings.getPlaySoundForCompliant();
         this.playSoundForInformation = settings.getPlaySoundForInformation();
+        this.replayEnabled = settings.getReplayEnabled();
+        this.replayInterval = settings.getReplayInterval();
 
         if (settings.getProcessesStatesNotNotified() != null)
             this.processesStatesNotNotified = new HashMap<>(settings.getProcessesStatesNotNotified());
@@ -118,6 +122,8 @@ public class UserSettingsData implements UserSettings {
         result.playSoundForAction = other.getPlaySoundForAction() != null ? other.getPlaySoundForAction() : this.getPlaySoundForAction();
         result.playSoundForCompliant = other.getPlaySoundForCompliant() != null ? other.getPlaySoundForCompliant() : this.getPlaySoundForCompliant();
         result.playSoundForInformation = other.getPlaySoundForInformation() != null ? other.getPlaySoundForInformation() : this.getPlaySoundForInformation();
+        result.replayEnabled = other.getReplayEnabled() != null ? other.getReplayEnabled() : this.getReplayEnabled();
+        result.replayInterval = other.getReplayInterval() != null ? other.getReplayInterval() : this.getReplayInterval();
 
         if (other.getProcessesStatesNotNotified() != null)
             result.processesStatesNotNotified = new HashMap<>(other.getProcessesStatesNotNotified());
