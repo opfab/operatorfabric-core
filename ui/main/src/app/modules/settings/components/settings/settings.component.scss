@@ -1,4 +1,13 @@
 
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
 .opfab-settings-title {
     margin-left: 15px;
     margin-right: 15px;
@@ -10,6 +19,8 @@
 }
 
 .opfab-settings {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     background-color: var(--opfab-bgcolor-darker);
     margin-left: 15px;
     margin-right: 15px;
@@ -18,3 +29,41 @@
     margin-top: 40px;
     padding-bottom: 20px;
 }
+
+// if screen too small use only one column
+@media all and (max-width: 1400px)  {
+    .opfab-settings {
+        grid-template-columns: 1fr
+
+    }
+} 
+
+.opfab-settings-item {
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.opfab-settings-sounds {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 22px;
+}
+
+.opfab-replay-sound-label
+{
+    margin-top: 10px;
+}
+// if screen too small use only one column
+@media all and (max-width: 700px)  {
+    .opfab-settings-sounds {
+        grid-template-columns: 1fr;
+
+    }
+
+    .opfab-replay-sound-label
+    {
+        margin-top: 0px;
+        margin-bottom: 20px;
+    }
+} 

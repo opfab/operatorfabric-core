@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -9,7 +9,7 @@
 
 
 <form [formGroup]="form">
-  <div class="opfab-select">
+  <div class="opfab-select" style="position: relative;">
     <label for="opfab-setting" translate>settings.{{settingPath}}</label>
     <select id="opfab-setting-{{settingPath}}" formControlName="setting" [attr.required]="requiredField">
       <option *ngFor="let v of preparedList" value="{{v.value}}">{{v.label|async}}</option>

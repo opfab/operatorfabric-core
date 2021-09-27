@@ -81,10 +81,6 @@ a|card time display mode in the feed. Values :
 |feed.card.maxNbOfCardsToDisplay|100|no| Max number of card visible in feed (This limit is used for performance reasons, setting the value too high can have consequences on browser response times) 
 
 |feed.timeline.domains|["TR", "J", "7D", "W", "M", "Y"]|no| List of domains to show on the timeline, possible domains are : "TR", "J", "7D", "W", "M", "Y".
-|playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
-|playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
-|playSoundForCompliant|false|no|If set to true, a sound is played when Compliant cards are added or updated in the feed
-|playSoundForInformation|false|no|If set to true, a sound is played when Information cards are added or updated in the feed
 |i18n.supported.locales||no|List of supported locales (Only fr and en so far)
 |i10n.supported.time-zones||no|List of supported time zones, for instance 'Europe/Paris'.
 Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_database_time_zones[TZ database].
@@ -102,6 +98,12 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |settings.infos.timezone|false|no|Control if we want to hide(true) or display(false or not specified) the timezone in the settings page
 |settings.infos.tags|false|no|Control if we want to hide(true) or display(false or not specified) the tags in the settings page
 |settings.infos.sounds|false|no|Control if we want to hide(true) or display(false or not specified) the checkboxes for sound notifications in the settings page
+|settings.playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
+|settings.playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
+|settings.playSoundForCompliant|false|no|If set to true, a sound is played when Compliant cards are added or updated in the feed
+|settings.playSoundForInformation|false|no|If set to true, a sound is played when Information cards are added or updated in the feed
+|settings.replayEnabled|false|no|If set to true, sounds are replayed every `settings.replayInterval` seconds until the user interacts with the application
+|settings.replayInterval|5|no|Interval between sound replays (see `settings.replayEnabled`)
 |settings.about
 a|none
 a|no
