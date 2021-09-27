@@ -1500,8 +1500,108 @@
 				  }
 			  ],
 			  "networkRemedials": []
-		  }
+		  },
 		  
+		  {
+			"detail": null, "name": ".AVELL71MASTA",
+			"networkLimitViolations": [
+				{
+					"detail":{"acceptableDuration":"1200","cDisplayExists":"true","constraintDisplayLabel":"Surcharge20'","limitType":"CURRENT"},
+					"name": ".AVELL72AVELI",
+					"networkContexts": [
+						{"date":1580167800000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580171400000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580175000000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580178600000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580182200000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580185800000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580189400000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}}
+					],
+					"values": [
+						{},{},{"detail":{"acceptableDurationValue":"1200","cDisplayExistsValue":"true","displayLabelValue":"Surcharge20'","limit":"2652.0","preValue":"1875.450439453125","preValueMw":"1312.4620361328125","sideValue":"TWO","value":"2745.7265625","valueMw":"1912.616455078125"},"value":"104%"},
+						{"detail":{"acceptableDurationValue":"1200","cDisplayExistsValue":"true","displayLabelValue":"Surcharge20'","limit":"2652.0","preValue":"2165.0419921875","preValueMw":"1512.98095703125","sideValue":"TWO","value":"3160.505859375","valueMw":"2191.774658203125"},"value":"119%"},
+						{"detail":{"acceptableDurationValue":"1200","cDisplayExistsValue":"true","displayLabelValue":"Surcharge20'","limit":"2652.0","preValue":"1993.36279296875","preValueMw":"1394.3531494140625","sideValue":"TWO","value":"2898.87744140625","valueMw":"2016.7802734375"},"value":"109%"},
+						{},{}
+					]
+				}
+			],
+			"networkRemedials": []
+		},
+		{
+			"detail": null, "name": ".AVELL71MASTA",
+			"networkLimitViolations": [
+				{
+					"detail":{"acceptableDuration":"1200","cDisplayExists":"true","constraintDisplayLabel":"Surcharge20'","limitType":"CURRENT"},
+					"name": ".AVELL72AVELI",
+					"networkContexts": [
+						{"date":1580167800000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580171400000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580175000000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580178600000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580182200000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580185800000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580189400000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}}
+					],
+					"values": [
+						{},{},{"detail":{"acceptableDurationValue":"1200","cDisplayExistsValue":"true","displayLabelValue":"Surcharge20'","limit":"2652.0","preValue":"1875.450439453125","preValueMw":"1312.4620361328125","sideValue":"TWO","value":"2745.7265625","valueMw":"1912.616455078125"},"value":"104%"},
+						{"detail":{"acceptableDurationValue":"1200","cDisplayExistsValue":"true","displayLabelValue":"Surcharge20'","limit":"2652.0","preValue":"2165.0419921875","preValueMw":"1512.98095703125","sideValue":"TWO","value":"3160.505859375","valueMw":"2191.774658203125"},"value":"119%"},
+						{"detail":{"acceptableDurationValue":"1200","cDisplayExistsValue":"true","displayLabelValue":"Surcharge20'","limit":"2652.0","preValue":"1993.36279296875","preValueMw":"1394.3531494140625","sideValue":"TWO","value":"2898.87744140625","valueMw":"2016.7802734375"},"value":"109%"},
+						{},{}
+					]
+				}
+			],
+			"networkRemedials": []
+		},
+		{
+			"detail": null, "name": ".AVELL71MASTA",
+			"networkLimitViolations": [
+				{
+					"detail":{"acceptableDuration":"1200","cDisplayExists":"true","constraintDisplayLabel":"Surcharge20'","limitType":"CURRENT"},
+					"name": ".AVELL72AVELI",
+					"networkContexts": [
+						{"date":1580167800000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580171400000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580175000000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580178600000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580182200000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580185800000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580189400000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}}
+					],
+					"values": [
+						{},{},{"detail":{"acceptableDurationValue":"1200","cDisplayExistsValue":"true","displayLabelValue":"Surcharge20'","limit":"2652.0","preValue":"1875.450439453125","preValueMw":"1312.4620361328125","sideValue":"TWO","value":"2745.7265625","valueMw":"1912.616455078125"},"value":"104%"},
+						{"detail":{"acceptableDurationValue":"1200","cDisplayExistsValue":"true","displayLabelValue":"Surcharge20'","limit":"2652.0","preValue":"2165.0419921875","preValueMw":"1512.98095703125","sideValue":"TWO","value":"3160.505859375","valueMw":"2191.774658203125"},"value":"119%"},
+						{"detail":{"acceptableDurationValue":"1200","cDisplayExistsValue":"true","displayLabelValue":"Surcharge20'","limit":"2652.0","preValue":"1993.36279296875","preValueMw":"1394.3531494140625","sideValue":"TWO","value":"2898.87744140625","valueMw":"2016.7802734375"},"value":"109%"},
+						{},{}
+					]
+				}
+			],
+			"networkRemedials": []
+		},
+		{
+			"detail": null, "name": ".AVELL71MASTA",
+			"networkLimitViolations": [
+				{
+					"detail":{"acceptableDuration":"1200","cDisplayExists":"true","constraintDisplayLabel":"Surcharge20'","limitType":"CURRENT"},
+					"name": ".AVELL72AVELI",
+					"networkContexts": [
+						{"date":1580167800000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580171400000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580175000000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580178600000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580182200000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580185800000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+						{"date":1580189400000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}}
+					],
+					"values": [
+						{},{},{"detail":{"acceptableDurationValue":"1200","cDisplayExistsValue":"true","displayLabelValue":"Surcharge20'","limit":"2652.0","preValue":"1875.450439453125","preValueMw":"1312.4620361328125","sideValue":"TWO","value":"2745.7265625","valueMw":"1912.616455078125"},"value":"104%"},
+						{"detail":{"acceptableDurationValue":"1200","cDisplayExistsValue":"true","displayLabelValue":"Surcharge20'","limit":"2652.0","preValue":"2165.0419921875","preValueMw":"1512.98095703125","sideValue":"TWO","value":"3160.505859375","valueMw":"2191.774658203125"},"value":"119%"},
+						{"detail":{"acceptableDurationValue":"1200","cDisplayExistsValue":"true","displayLabelValue":"Surcharge20'","limit":"2652.0","preValue":"1993.36279296875","preValueMw":"1394.3531494140625","sideValue":"TWO","value":"2898.87744140625","valueMw":"2016.7802734375"},"value":"109%"},
+						{},{}
+					]
+				}
+			],
+			"networkRemedials": []
+		}
 		  
 		  ]
 	  }

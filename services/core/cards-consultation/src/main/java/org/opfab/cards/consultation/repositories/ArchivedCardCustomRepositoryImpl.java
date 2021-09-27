@@ -143,6 +143,27 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         
         List<AggregationOperation> operations = new ArrayList<>(Arrays.asList(
                 match(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()]))),
+
+            // We select only wanted values 
+            // especially because we need to exclude the "data" field which can be big
+            // and cause OutOfMemory problems or exceed mongoDB limits
+            // with the  group operation (see code lines after)
+                project("uid",
+                        "publisher",
+                        "processVersion",
+                        "process",
+                        "processInstanceId",
+                        "state",
+                        "title",
+                        "summary",
+                        PUBLISH_DATE_FIELD,
+                        START_DATE_FIELD,
+                        END_DATE_FIELD,
+                        "severity",
+                        "publisherType",
+                        "representative",
+                        "representativeType"),
+
                 sort(Sort.by(Sort.Order.desc(PUBLISH_DATE_FIELD)))));
 
         if (latestUpdateOnly) {
