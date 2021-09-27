@@ -176,6 +176,10 @@ it's better to target the element by id or data attribute using a `cy.get()` com
 assertion with `should()`.
 This way, you will get an expected/actual error message if the assertion fails, you will avoid false positives (text is
 found in another sibling element) and hard to debug behaviour with retries.
+* Be careful with `find()` (see #1751 for an example of issue that it can cause). See the Cypress documentation for
+https://docs.cypress.io/guides/core-concepts/retry-ability#Only-the-last-command-is-retried[an
+explanation] and https://docs.cypress.io/guides/core-concepts/retry-ability#Merging-queries[a less flaky alternative].
+
 
 == Configuration
 

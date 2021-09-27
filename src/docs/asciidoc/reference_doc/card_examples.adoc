@@ -14,6 +14,7 @@ Before detailing the content of cards, let's show you what cards look like throu
 
 The OperatorFabric Card specification defines mandatory attributes, but some optional attributes are needed for cards to be useful in OperatorFabric. Let's clarify those point through few examples of minimal cards and what happens when they're used as if.
 
+[[reception_rules]]
 === Rules for receiving cards
 Whatever the recipient(s) of the card (user directly, group and/or entity), the user must have the receive right on the process/state of the card to receive it (`Receive` or `ReceiveAndWrite`).
 So the rules for receiving cards are :
@@ -101,7 +102,7 @@ The following example is nearly the same as the previous one except for the reci
 
 Here, the recipient is an entity, `ENTITY1`, and there is no group recipient anymore. So all users who are members of this entity and who have a receive right for the process/state of the card will receive it. More information on perimeters can be found in
 ifdef::single-page-doc[<<'users_management,user documentation'>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#users_management, user documentation>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#users_management, user documentation>>]
 
 Example :
 Given this perimeter :
@@ -229,7 +230,7 @@ there is no rendering configuration.
 When a card is selected in the feed (of the GUI), the data is displayed in the detail panel.
 The way details are formatted depends on the template contained in the bundle associated with the process as
 ifdef::single-page-doc[<<template_description, described here>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#template_description, described here>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#template_description, described here>>]
 . To have an effective example without to many actions to performed, the following example will use an already existing
 configuration.The one presents in the development version of OperatorFabric, for test purpose(`TEST` bundle).
 

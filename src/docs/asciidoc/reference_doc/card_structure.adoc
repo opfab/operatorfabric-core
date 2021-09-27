@@ -10,7 +10,7 @@
 
 Cards are represented as `Json` objects. The technical design of cards is described in
 ifdef::single-page-doc[link:../api/cards/[the cards api documentation]]
-ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/cards/[the cards api documentation]]
+ifndef::single-page-doc[link:/documentation/current/api/cards/[the cards api documentation]]
 . A card correspond to the state of a Process in OperatorFabric.
 
 == Technical Information of the card
@@ -110,7 +110,12 @@ Fixes the moment until when a `response` is possible for the card. After this mo
 
 Fixes the time for remind before the event define by the card see  
 ifdef::single-page-doc[<<card_reminder, Card reminder>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#card_reminder, Card reminder>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#card_reminder, Card reminder>>]
+
+==== ToNotify (`toNotify`)
+
+Boolean attribute. If the card must not be displayed in the feed and in monitoring screen, this field must be set to false.
+In that case, it means the card is stored only in archivedCards collection and not in cards collection.
 
 ==== Publisher type (`publisherType`)
 
@@ -154,14 +159,14 @@ There are two kind of User destined information in a card. Some are restricted t
 
 See
 ifdef::single-page-doc[<<card_title, Title>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#card_title, Title>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#card_title, Title>>]
 .
 
 ==== Summary (`summary`)
 
 See
 ifdef::single-page-doc[<<card_summary, Summary>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#card_summary, Summary>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#card_summary, Summary>>]
 .
 
 === Custom part

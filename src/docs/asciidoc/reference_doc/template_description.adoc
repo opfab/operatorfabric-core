@@ -15,7 +15,7 @@ are then filled with data coming from two sources:
 
  * a *card* property (See
 ifdef::single-page-doc[link:../api/cards/index.html[card data model]]
-ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/cards/index.html[card data model]]
+ifndef::single-page-doc[link:/documentation/current/api/cards/index.html[card data model]]
 for more information)
 
  * a *userContext* :
@@ -500,7 +500,7 @@ Verify if a JavaScript object contains the specified key. It returns true if it 
 [[opfab_template_style]]
 == OperatorFabric css styles
 
-OperatorFabric defines a `css class` that you should use so your templates don't clash with the rest of the OperatorFabric look and feel:
+OperatorFabric defines several css classes that you should use so your templates don't clash with the rest of the OperatorFabric look and feel:
 
 * opfab-input : input field
 * opfab-textarea : text area input field
@@ -509,6 +509,8 @@ OperatorFabric defines a `css class` that you should use so your templates don't
 * opfab-checkbox : checkbox input field
 * opfab-table : a HTML table
 * opfab-border-box : a box with a label
+* styles for text standard colors :  opfab-color-danger , opfab-color-warning and opfab-color-success
+
 
 These styles are especially useful for templates used in user card or card with responses.
 
@@ -528,6 +530,18 @@ To adapt the template content on screen size it is possible to receive from Oper
 
 - 'md' : medium size window
 - 'lg' : large size window
+
+=== Get display context
+
+To adapt the template content to the display context it is possible to get from OperatorFabric the page context where the template will be rendered by calling the javascript function _templateGateway.getDisplayContext()_. 
+The function returns a string with one of the following values :
+
+- 'realtime' : realtime page context (feed, monitoring)
+- 'archive' : archive page context 
+- 'preview': preview context (user card)
+
+An example of usage can be found in operator fabric git: (https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/userCardExamples2/template/en/question.handlebars[src/test/resources/bundles/userCardExamples2/template/en/question.handlebars]).
+
 
 === Redirect to business application from a card
 

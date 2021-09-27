@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.node-gradle.node" version "3.1.0"
+    id "com.github.node-gradle.node" version "3.1.1"
     id "org.asciidoctor.jvm.convert" version "3.3.2"
     id "maven-publish"
     id "signing"
@@ -8,7 +8,6 @@ plugins {
 }
 
 repositories {
-    jcenter()
     mavenLocal()
     mavenCentral()
     maven { url "https://repo1.maven.org/maven2" }
@@ -133,17 +132,17 @@ asciidoctor {
         }
     }
     attributes  nofooter            : '',
-                revnumber           : operatorfabric.version,
-                revdate             : operatorfabric.revisionDate,
-                sectnums            : '',
-                sectnumlevels       : '4',
-                sectanchors         : '',
-                toc                 : 'left',
-                toclevels           : '4',
-                icons               : 'font',
-                imagesdir           : '../images',
-                "hide-uri-scheme"   : '',
-                "source-highlighter": 'coderay'
+            revnumber           : operatorfabric.version,
+            revdate             : operatorfabric.revisionDate,
+            sectnums            : '',
+            sectnumlevels       : '4',
+            sectanchors         : '',
+            toc                 : 'left',
+            toclevels           : '4',
+            icons               : 'font',
+            imagesdir           : '../images',
+            "hide-uri-scheme"   : '',
+            "source-highlighter": 'coderay'
 }
 //end::asciidoctor_gradle_task_config[]
 
@@ -151,13 +150,12 @@ subprojects {
 
     group operatorfabric.group
     version operatorfabric.version
-    
+
     if (project.parent.path.startsWith(':services:')){
         apply plugin: 'org.sonarqube'
     }
 
     repositories {
-        jcenter()
         mavenLocal()
         mavenCentral()
         maven { url "https://repo1.maven.org/maven2" }
@@ -170,24 +168,25 @@ subprojects {
         maven { url "https://artifacts.elastic.co/maven/"}
         maven { url "https://plugins.gradle.org/m2/" }
     }
-    subprojects {
-        apply plugin: 'java'
-        apply plugin: plugin.bom
 
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
+    if (!project.path.contains('ui')){
 
-        test {
-            testLogging {
-                events "passed", "skipped", "failed"
-                exceptionFormat "full"
+        subprojects {
+            apply plugin: 'java'
+            apply plugin: plugin.bom
+
+            test {
+                testLogging {
+                    events "passed", "skipped", "failed"
+                    exceptionFormat "full"
+                }
             }
-        }
 
-        javadoc {
-            options.noTimestamp()
-        }
+            javadoc {
+                options.noTimestamp()
+            }
 
+        }
     }
 }
 

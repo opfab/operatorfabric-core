@@ -11,27 +11,11 @@
 
 
 .opfab-monitoring-export-div {
-  padding-top: 1px;
-  padding-left: 10px;
-  max-width: 100%;
-  height: 60px;
-  clear: left;
+  width:50%;
+  text-align:right;
+  padding-right:8px;
 }
 .opfab-monitoring-export-btn {
   float: right;
   margin-right: 10px;
-}
-
-.opfab-monitoring-sev {
-  width: 15px;
-}
-
-
-.opfab-monitoring-sev-alarm {background-color: $sev-alarm;}
-.opfab-monitoring-sev-action {background-color: $sev-action;}
-.opfab-monitoring-sev-compliant {background-color: $sev-compliant;}
-.opfab-monitoring-sev-information {background-color: $sev-information;}
-
-.opfab-monitoring-table-line:hover {
-border: 2px solid #2268FF;
 }

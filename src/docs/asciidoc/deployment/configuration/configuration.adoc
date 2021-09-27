@@ -18,7 +18,7 @@ OperatorFabric has multiple services to configure.
 
 See the
 ifdef::single-page-doc[<<architecture, architecture documentation>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/architecture/index.adoc#architecture, architecture documentation>>]
+ifndef::single-page-doc[<</documentation/current/architecture/index.adoc#architecture, architecture documentation>>]
 for more information on the different services.
 
 All services are SpringBoot applications and use jetty as an embedded servlet container. As such, they share some common
@@ -103,7 +103,7 @@ The user service has these specific properties :
 
 |===
 
-
+[[cards-pub-conf]]
 ==== Cards-publication service
 
 The cards-publication service has these specific properties :

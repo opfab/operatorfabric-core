@@ -19,5 +19,5 @@ repositories {
 
 task karateDebug(type: JavaExec) {
     classpath = sourceSets.test.runtimeClasspath
-    main = 'com.intuit.karate.cli.Main'
+    mainClass = 'com.intuit.karate.cli.Main'
 }

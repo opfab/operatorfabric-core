@@ -26,6 +26,7 @@ import {ApplyFilter} from '@ofStore/actions/feed.actions';
 import {FilterType} from '@ofServices/filter.service';
 import {HourAndMinutes} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
+import {DisplayContext} from '@ofModel/templateGateway.model';
 
 @Component({
   selector: 'of-calendar',
@@ -47,6 +48,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('calendar') calendarComponent: FullCalendarComponent; // the #calendar in the template
   @ViewChild('cardDetail') cardDetailTemplate: ElementRef; // the #cardDetail in the template
 
+  displayContext = DisplayContext.REALTIME;
   private unsubscribe$ = new Subject<void>();
   calendarVisible = true;
   locales = allLocales;

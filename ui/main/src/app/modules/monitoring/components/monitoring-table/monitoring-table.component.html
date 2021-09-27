@@ -8,49 +8,52 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-<div class="opfab-table">
-<table aria-describedby="Monitoring results table">
-    <thead>
-        <tr>
-            <th scope="col"></th>
-            <th scope="col" style="padding-left: 5px" translate>monitoring.time</th>
-            <th scope="col" translate *ngIf="displayProcessGroupColumn">monitoring.filters.processGroup</th>
-            <th scope="col" translate>monitoring.filters.process</th>
-            <th scope="col" translate>monitoring.title</th>
-            <th scope="col" translate>monitoring.summary</th>
-            <th scope="col" translate>monitoring.typeOfState</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let line of displayedResults" (click)="selectCard(line.cardId)" class="opfab-monitoring-table-line" style="cursor: pointer;">
-            <td class="opfab-monitoring-sev opfab-monitoring-sev-{{line.severity}}"></td>
-            <td style="padding-left: 5px">{{displayTime(line.creationDateTime)}}</td>
-            <td translate *ngIf="displayProcessGroupColumn">{{ processesService.findProcessGroupLabelForProcess(line.processId) }}</td>
-            <td translate>{{line.processName}}</td>
-            <td translate [translateParams]="line.title.parameters">{{line.title.key}}</td>
-            <td translate [translateParams]="line.summary.parameters">{{line.summary.key}}</td>
-            <td class="opfab-typeOfState-{{line.typeOfState}}" translate>monitoring.filters.typeOfState.{{line.typeOfState}} </td>
-        </tr>
-        <tr *ngIf="!!result && result.length > maxNbOfRowsToDisplay"  style="text-align:right;font-weight: bold;margin-top:0px;margin-right:10px;">
-            <td colspan="7">... {{result.length - maxNbOfRowsToDisplay}} <span translate> monitoring.moreRows </span></td>
-        </tr>
-    </tbody>
-</table>
+<div style="background-color: var(--opfab-bgcolor-darker);border: solid 5px var(--opfab-bgcolor-darker)">
+    <ag-grid-angular aria-describedby="Monitoring results table"
+            (gridReady)="onGridReady($event)"
+            [gridOptions]="gridOptions"
+            [rowData]="rowData$ | async"
+            (rowClicked)="selectCard($event.data.cardId)"
+            class="opfab-ag-grid-theme">
+    </ag-grid-angular>
 
-<div class="opfab-monitoring-export-div">
-    <div id="opfab-monitoring-btn-exportToExcel" class="opfab-monitoring-export-btn" style="cursor:pointer" (click)="export()" fileName="monitoringResults" >
-        <span class="opfab-icon-export-data"></span>
-        <span style="font-weight: bold;" translate> monitoring.ExportTOExcel </span>
+
+    <div *ngIf="gridApi" class="opfab-pagination">
+        <div style="white-space: nowrap;margin-top:17px">
+        <span translate> admin.resultsNumber </span> : {{gridApi.paginationGetRowCount()}}
+        </div>
+        <div style="width:40%;margin-top:5px">
+        <ngb-pagination *ngIf="gridApi.paginationGetRowCount() > 10" [collectionSize]="gridApi.paginationGetRowCount()"
+            [page]="page" [pageSize]="gridApi.paginationGetPageSize()" (pageChange)="updateResultPage($event)" [maxSize]="3" [rotate]="true">
+        </ngb-pagination>
+        </div>
+        <div class="opfab-monitoring-export-div">
+            <div id="opfab-monitoring-btn-exportToExcel" class="opfab-monitoring-export-btn" style="cursor:pointer" (click)="export()" fileName="monitoringResults" >
+                <span class="opfab-icon-export-data"></span>
+                <span style="font-weight: bold;" translate> monitoring.ExportTOExcel </span>
+            </div>
+        </div>
     </div>
-</div>
 
 
 </div>
+
 
 <ng-template #cardDetail let-modal>
     <div class="modal-body">
         <div>
-            <of-card-details [parentModalRef] = "modalRef" [screenSize]="'lg'"> </of-card-details>
+            <of-card-details [parentModalRef] = "modalRef" [screenSize]="'lg'" [displayContext]="displayContext"> </of-card-details>
         </div>
+    </div>
+</ng-template>
+
+<ng-template #exportInProgress let-modal>
+    <div class="modal-header">
+        <span translate>monitoring.ExportInProgress</span>
+      </div>
+    <div class="modal-body text-center">
+        <ngb-progressbar type="primary" [value]="exportProgress" [showValue]="true" [max]="result.length"></ngb-progressbar>
+            <button id="opfab-export-btn-cancel" type="button" class="opfab-btn-cancel"
+                (click)="cancelExport()" translate>button.cancel</button>
     </div>
 </ng-template>

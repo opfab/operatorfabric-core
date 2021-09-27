@@ -46,7 +46,17 @@ All examples assume you connect to the server from `localhost` (otherwise change
  
 === Example 1: Send and update a basic card
 
-Go in directory `client/example1` and send a card, using the provided script :
+Go in directory `client/example1`.
+
+To receive the test cards it is necessary to configure a perimeter as you will see in details in Example 5.
+
+Configure the required perimeter by executing the provided script:
+
+----
+./setupPerimeter.sh perimeter.json
+----
+
+Send a card, using the provided script :
 
 ----
 ./sendCard.sh card.json 
@@ -63,7 +73,7 @@ A card is containing information regarding the publisher, the recipients, the pr
 
 More information can be found in the
 ifdef::single-page-doc[<<card_structure, Card Structure>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#card_structure, Card Structure>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#card_structure, Card Structure>>]
 section of the reference documentation.
 
 [source,JSON]
@@ -209,7 +219,7 @@ A file name bundle.tar.gz will be created.
 To send the bundle you need to be authenticated. To get a token you can *source* the provided script:
 
 ----
-source ./getToken.sh
+source ../getToken.sh
 ----
 
 This will run the following command:
@@ -352,6 +362,12 @@ The title is a key which refer to an i18n found in the corresponding i18n reposi
 
 The templates can be found in the template directory.
 
+Before sending cards it is necessary to configure the required perimeter by executing the provided script:
+
+----
+./setupPerimeter.sh perimeter.json
+----
+
 We can now send cards and simulate the process, first we send a card at the beginning of the critical situation:
 
 [source,JSON]
@@ -434,7 +450,9 @@ link:https://en.wikipedia.org/wiki/Epoch_(computing)[epoch] (ms) in the json. Fo
 point in the timeline. In our example, the first point represent the beginning of the maintenance operation, and the
 second the end of the maintenance operation.
 
-To get the dates in Epoch, you can use the following commands:
+For example cards the dates are calculated automatically in the provided `sendCard.sh` script.
+
+It is possible to change dates values by editing the card json file. To get the dates in Epoch, you can use the following commands:
 
 For the first date: 
 ---- 
@@ -446,13 +464,20 @@ And for the second
 date -d "+ 120 minutes" +%s%N | cut -b1-13
 ----
 
+
+Before sending cards it is necessary to configure the required perimeter by executing the provided script:
+
+----
+./setupPerimeter.sh perimeter.json
+----
+
 To send the card use the provided script in example4 directory 
 
 ----
 ./sendCard.sh card.json
 ----
 
-A second card (card2.json) is provided as example, you need again to set times values in the json file and then send it 
+A second card (card2.json) is provided as example, as before you can eventually change times values in the json file and then send it 
 
 ----
 ./sendCard.sh card2.json
@@ -464,7 +489,7 @@ image::example4.png[example 4 screenshot]
 === Example 5: Card routing mechanism
 
 ==== Card sent to a group
-As we saw previously, if a card is sent to a group, then you only need to be a member of the group to receive it.
+As we saw previously, if a card is sent to a group, then you need to be a member of the group and have the process / state of the card within the group's perimeter to receive it.
 
 ==== Card sent to an entity
 If a card is sent to an entity, then you must be a member of this entity and have the process / state of the card within the user's perimeter. As the perimeters are attached to groups, the user must therefore be a member of a group attached to this perimeter.
@@ -478,7 +503,7 @@ Let's send this card :
     "entityRecipients" : ["ENTITY1"],
     "process" :"defaultProcess",
     "processInstanceId" : "cardExample5",
-    "state" : "messageState",
+    "state" : "messageState1",
     "severity" : "INFORMATION",
     "startDate" : 1553186770681,
     "summary" : {"key" : "defaultProcess.summary"},
@@ -496,6 +521,13 @@ The result should be a 201 Http status.
 
 See the result in the UI, you should not see the card.
 
+To receive the card you need to create a perimeter and to do it you need to be authenticated. To get a token you can *source* the provided script:
+
+----
+source ../getToken.sh
+----
+
+
 Now let's create this perimeter :
 [source,JSON]
 ----
@@ -504,7 +536,7 @@ Now let's create this perimeter :
   "process" : "defaultProcess",
   "stateRights" : [
     {
-      "state" : "messageState",
+      "state" : "messageState1",
       "right" : "Receive"
     }
   ]
@@ -543,12 +575,9 @@ The result should be a 200 Http status.
 Now, if you refresh the UI or send again the card, you should see the card.
 
 ==== Card sent to a group and an entity
-If a card is sent to a group and an entity, then there are 2 possibilities to receive this card :
+If a card is sent to a group and an entity, then to receive the card the user must both a member of this entity and a member of this group and have the process / state of the card within the group's perimeter.
 
-- First possibility :
-the user is both a member of this entity and a member of this group.
-
-Let's send this card (for ENTITY1 and Dispatcher group) :
+Let's send this card (for ENTITY1 and Dispatcher group with process/state not in user's perimeter) :
 [source,JSON]
 ----
 {
@@ -574,13 +603,11 @@ Use the provided script :
 
 The result should be a 201 Http status.
 
-See the result in the UI, you should see the card.
+See the result in the UI, you should not see the card.
 
 
-- Second possibility :
-the user is a member of this entity and have the process/state of the card within its perimeter. As the perimeters are attached to groups, the user must therefore be a member of a group attached to this perimeter.
 
-Let's send this card (for ENTITY1 and Planner group) :
+Now let's send this card (for ENTITY1 and Dispatcher group with process/state in user's perimeter) :
 [source,JSON]
 ----
 {
@@ -590,7 +617,7 @@ Let's send this card (for ENTITY1 and Planner group) :
 	"process"  :"defaultProcess",
 	"processInstanceId" : "cardExample5_2",
 	"state": "messageState",
-	"groupRecipients": ["Planner"],
+	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},

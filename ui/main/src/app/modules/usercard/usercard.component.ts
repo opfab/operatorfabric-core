@@ -39,9 +39,9 @@ import {RightsEnum} from '@ofModel/perimeter.model';
 import {Utilities} from '../../common/utilities';
 import {Entity} from '@ofModel/entity.model';
 import {ConfigService} from '@ofServices/config.service';
+import {DisplayContext} from '@ofModel/templateGateway.model';
 
 declare const templateGateway: any;
-
 
 @Component({
     selector: 'of-usercard',
@@ -51,6 +51,8 @@ declare const templateGateway: any;
 export class UserCardComponent implements OnDestroy, OnInit {
 
     @Input() modal;
+
+    displayContext = DisplayContext.PREVIEW;
 
     messageForm: FormGroup;
     recipientForm: FormGroup;

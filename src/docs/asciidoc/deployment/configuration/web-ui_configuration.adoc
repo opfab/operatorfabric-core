@@ -81,7 +81,6 @@ a|card time display mode in the feed. Values :
 |feed.card.maxNbOfCardsToDisplay|100|no| Max number of card visible in feed (This limit is used for performance reasons, setting the value too high can have consequences on browser response times) 
 
 |feed.timeline.domains|["TR", "J", "7D", "W", "M", "Y"]|no| List of domains to show on the timeline, possible domains are : "TR", "J", "7D", "W", "M", "Y".
-|monitoring.maxNbOfRowsToDisplay|100|no| Max number of rows visible in monitoring page (This limit is used for performance reasons, setting the value too high can have consequences on browser response times)
 |playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
 |playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
 |playSoundForCompliant|false|no|If set to true, a sound is played when Compliant cards are added or updated in the feed
@@ -127,6 +126,7 @@ It should look like:
 |title|OperatorFabric|no|Title of the application, displayed on the browser
 |environmentName||no| Name of the environment to display on the top-right corner (examples: PROD , TEST .. ), if the value not set the environnement name is not shown .
 |environmentColor|blue|no| Color of the background of the environnement name. The format of color is css, for example : `red` , `#4052FF`
+|showUserEntitiesOnTopRightOfTheScreen|false|no| if set to true the users entities will be displayed under the login on top right of the screen
 |checkPerimeterForResponseCard|true|no|If false, OperatorFabric will not check that a user has write rights on a process/state to respond to a card.
 |checkPerimeterForSearchFields|false|no|If true, to see a service, process or state in the archives/logging/monitoring/feedconfiguration screens of OperatorFabric, you must have a "Receive" or "ReceiveAndWrite" right enabled in the corresponding process/state.
 |usercard.useDescriptionFieldForEntityList|false|no|If true, show entity `description` field instead of `name` in user card page

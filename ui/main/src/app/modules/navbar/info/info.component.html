@@ -13,6 +13,6 @@
 
 <div class="text-center navbar-info-block" style="margin-left: 5px;">
     <div class="user-name" style="font-size:15px;text-align:right;">{{_userName$|async}}</div>
-    <div *ngIf="description"  class="user-description" style="padding-top:10px;margin-left:5px;text-align:center;">{{description}}</div>
-    <div *ngIf="!description" class="user-description" style="padding-top:5px;"> &nbsp;</div>
+    <div *ngIf="userEntitiesToDisplay"  class="user-entities" style="padding-top:10px;margin-left:5px;text-align:center;">{{userEntitiesToDisplay}}</div>
+    <div *ngIf="!userEntitiesToDisplay" class="user-entities" style="padding-top:5px;"> &nbsp;</div>
 </div>

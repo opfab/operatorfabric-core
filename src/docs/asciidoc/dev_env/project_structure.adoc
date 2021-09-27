@@ -141,7 +141,7 @@ definition must declare two files:
 
 Services project all have docker image generated in their build cycle. See
 ifdef::single-page-doc[<<gradle_tasks, Gradle Tasks>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/dev_env/index.adoc#gradle_tasks, Gradle Tasks>>]
+ifndef::single-page-doc[<</documentation/current/dev_env/index.adoc#gradle_tasks, Gradle Tasks>>]
 for details.
 
 Per project configuration :

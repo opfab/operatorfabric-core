@@ -15,9 +15,6 @@ import {Entity} from '@ofModel/entity.model';
 export enum UserActionsTypes {
 
     UserApplicationRegistered =         '[User] User application registered',
-    CreateUserApplication =             '[User] Create the User in the application',
-    CreateUserApplicationOnSuccess =    '[User] Create the User in the application on success',
-    CreateUserApplicationOnFailure =    '[User] Create the User in the application on failure',
     QueryAllEntities =                  '[User] Ask to fetch all entities',
     LoadAllEntities =                   '[User] Load all entities',
     UserConfigChange =                  '[User] User config changed'
@@ -26,24 +23,6 @@ export enum UserActionsTypes {
 export class UserApplicationRegistered implements Action {
     readonly type = UserActionsTypes.UserApplicationRegistered;
     constructor(public payload: { user: User }) {
-    }
-}
-
-export class CreateUserApplication implements Action {
-    readonly type = UserActionsTypes.CreateUserApplication;
-    constructor(public payload: { user: User }) {
-    }
-}
-
-export class CreateUserApplicationOnSuccess implements Action {
-    readonly type = UserActionsTypes.CreateUserApplicationOnSuccess;
-    constructor(public payload: { user: User }) {
-    }
-}
-
-export class CreateUserApplicationOnFailure implements Action {
-    readonly type = UserActionsTypes.CreateUserApplicationOnFailure;
-    constructor(public payload: { error: Error }) {
     }
 }
 
@@ -62,9 +41,6 @@ export class UserConfigChangeAction implements Action {
 }
 
 export type UserActions = UserApplicationRegistered
-    | CreateUserApplication
-    | CreateUserApplicationOnSuccess
-    | CreateUserApplicationOnFailure
     | QueryAllEntities
     | LoadAllEntities
     | UserConfigChangeAction;

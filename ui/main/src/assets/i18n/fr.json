@@ -113,7 +113,8 @@
     "at" : "à",
     "from": "de",
     "moreCards": "cartes supplémentaires",
-    "lastResponse": "Dernière réponse reçue le"
+    "lastResponse": "Dernière réponse reçue le",
+    "cardLoadingInProgress":"Chargement de la carte ..."
   },
   "login": {
     "reset": "RaZ",
@@ -170,7 +171,8 @@
     "noResult": "Votre recherche ne correspond à aucun résultat.",
     "tooManyRows": "Trop de cartes, toutes les cartes ne sont pas visibles",
     "exportToExcel" : "Exporter les données",
-    "resultsNumber":"Nombre de résultats"
+    "resultsNumber":"Nombre de résultats",
+    "collapsibleUpdates": "Mises à jour dépliables"
   },
   "logging": {
     "filters": {
@@ -186,7 +188,8 @@
       "timeOfAction": "MOMENT DE L'ACTION",
       "title": "TITRE",
       "summary": "RESUME",
-      "description": "DESCRIPTION",
+      "state": "ÉTAT",
+      "description": "DESCRIPTION DE L'ÉTAT",
       "sender": "EMETTEUR",
       "process" : "PROCESSUS",
       "processGroup": "SERVICE",
@@ -221,7 +224,8 @@
     "typeOfState": "ÉTAT DU PROCESSUS",
     "severity": "SEVERITE",
     "seeDetails": "VOIR LES DETAILS",
-    "ExportTOExcel": "Exporter les données"
+    "ExportTOExcel": "Exporter les données",
+    "ExportInProgress": "Export en cours"
   },
   "button": {
     "ok": "OK",

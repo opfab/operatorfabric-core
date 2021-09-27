@@ -256,3 +256,7 @@ An example of _templateGateway.setLttdExpired(true)_ usage can be found in the f
 
 == Entities allowed to respond 
 If inside your template, you want to get the ids of the entities allowed to send a response, you can call the method _templateGateway.getEntitiesAllowedToRespond()_ . This method returns an array containing the ids. An example of _templateGateway.getEntitiesAllowedToRespond()_ usage can be found in the file https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/userCardExamples2/template/en/question.handlebars[src/test/resources/bundles/userCardExamples2/template/en/question.handlebars].
+
+== Entity used for user to respond 
+If inside your template, you want to get the id of the entity used by the user to send a response, you can call the method _templateGateway.getEntityUsedForUserResponse()_ . 
+An example of usage can be found in the file https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/userCardExamples2/template/en/question.handlebars[src/test/resources/bundles/userCardExamples2/template/en/question.handlebars].

@@ -113,7 +113,7 @@
                     <span>&nbsp; {{getEntityName(entityId)}} &nbsp; </span>
                 </div>
                 <div *ngIf="! card.entityRecipients.length">
-                    <span style="color:red" translate>userCard.youAreTheOnlyRecipient</span>
+                    <span class="opfab-color-danger" translate>userCard.youAreTheOnlyRecipient</span>
                 </div>
             </div>
         </div>
@@ -127,7 +127,7 @@
             </div>
             <div class="opfab-section-header"><span translate>userCard.contentPreview</span></div>
             <div>
-             <of-card-detail [card]="card" [screenSize]="'md'"> </of-card-detail>
+             <of-card-detail [card]="card" [screenSize]="'md'" [displayContext]="displayContext"> </of-card-detail>
              </div>
 
         </div>
@@ -140,7 +140,7 @@
 </div>
 
 <div *ngIf="displaySendingCardInProgress" style="text-align: center;margin-top: 20px;font-size: 20px">
-    <em  class="fas fa-spinner fa-spin slow-spin"></em>
+    <em  class="fas fa-spinner fa-spin opfab-slow-spinner"></em>
     <div style="font-weight: bold;margin-top: 10px;margin-bottom: 20px" translate>
         userCard.sendingCardInProgress
     </div>

@@ -30,7 +30,16 @@ Feature: CreateGroups
   "description" : "Karate is driving me crazy",
 }
 """
-
+  * def wrongPerimeterGroup =
+  """
+  {
+  
+    "id" : "groupKaratePerimeter1",
+    "name" : "groupKarate with perimeter name",
+    "description" : "I Love Karate",
+    "perimeters" : ['wrongPerimter']
+  }
+  """
 
   Scenario: Create Groups
 
@@ -73,10 +82,18 @@ Feature: CreateGroups
 
   Scenario: error 400
 
-#Create new group (check if the group already exists otherwise it will return 200)
+#Create bad group 
     Given url opfabUrl + 'users/groups'
     And header Authorization = 'Bearer ' + authToken
     And request wrongGroup
     When method post
     Then status 400
 
+  Scenario: Create with wrong perimeter error 
+    
+#create group with wrong perimeter
+    Given url opfabUrl + 'users/groups'
+    And header Authorization = 'Bearer ' + authToken
+    And request wrongPerimeterGroup
+    When method post
+    Then status 400

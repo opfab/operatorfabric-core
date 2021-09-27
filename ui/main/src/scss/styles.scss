@@ -45,7 +45,7 @@ body {
 } 
 
 // Colors for state types
-.opfab-typeOfState-INPROGRESS {color: orange;}
+.opfab-typeOfState-INPROGRESS {color: #ff6600;}
 .opfab-typeOfState-FINISHED {color: green;}
 .opfab-typeOfState-CANCELED {color: red;}
 
@@ -77,6 +77,11 @@ body {
 
 // END CUSTOM SCROLLBAR STYLE
 
+
+.opfab-slow-spinner {
+  -webkit-animation: fa-spin 2s infinite linear;
+  animation: fa-spin 2s infinite linear;
+} 
 
 
 // BUTTON STYLE 
@@ -794,6 +799,17 @@ html, body { height: 100%; }
   color: var(--opfab-text-color);
 }
 
+.opfab-color-danger {
+  color : red;
+}
+
+.opfab-color-warning {
+  color : #ff6600;
+}
+.opfab-color-success  {
+  color: green;
+}
+
 .opfab-timeline-bgcolor {
   background-color: var(--opfab-timeline-bgcolor);
 }
@@ -873,23 +889,28 @@ html, body { height: 100%; }
   }
 
   .ag-row {
-    border: 2px solid var(--opfab-bgcolor);
+    border: 0px ;
   }
 
   .ag-row:hover{
     border: 2px solid #2268FF;
   }
 
-  .ag-row-odd {
-    border: 2px solid var(--opfab-bgcolor-darker);
+  .header-with-no-padding {
+    padding-left: 0px;
+    padding-right: 0px;
   }
-
-  .ag-row-odd:hover{
-    background-color: var(--opfab-bgcolor-darker);
-  }
-
+  
   .action-cell-delete-admin {
     display: none;
   }
-
+  .opfab-sev-alarm {background-color: $sev-alarm;font-size: 0px;
+    padding-right: 0px;}
+  .opfab-sev-action {background-color: $sev-action;font-size: 0px; 
+    padding-right: 0px;}
+  .opfab-sev-compliant {background-color: $sev-compliant;font-size: 0px; 
+    padding-right: 0px;}
+  .opfab-sev-information {background-color: $sev-information;font-size: 0px;
+    padding-right: 0px; }
 }
+

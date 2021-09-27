@@ -20,6 +20,7 @@ import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime
 import {AppRoutingModule} from '../../app-routing.module';
 import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
 import {TimelineButtonsModule} from "../share/timeline-buttons/timeline-buttons.module";
+import {AgGridModule} from "ag-grid-angular";
 
 
 
@@ -38,7 +39,7 @@ import {TimelineButtonsModule} from "../share/timeline-buttons/timeline-buttons.
         , NgbModule
         , DatetimeFilterModule
         , AppRoutingModule
-        , MultiFilterModule, TimelineButtonsModule
+        , MultiFilterModule, TimelineButtonsModule, AgGridModule
     ]
 })
 export class MonitoringModule { }

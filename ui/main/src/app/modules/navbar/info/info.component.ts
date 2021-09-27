@@ -14,9 +14,11 @@ import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {selectUserNameOrIdentifier} from '@ofSelectors/authentication.selectors';
 import {Observable} from 'rxjs';
-import {buildSettingsSelector} from '@ofSelectors/settings.selectors';
 import {TimeService} from '@ofServices/time.service';
 import * as moment from 'moment';
+import {UserService} from '@ofServices/user.service';
+import {EntitiesService} from '@ofServices/entities.service';
+import {ConfigService} from '@ofServices/config.service';
 
 
 @Component({
@@ -26,18 +28,21 @@ import * as moment from 'moment';
 })
 export class InfoComponent implements OnInit {
      _userName$: Observable<string>;
-     description: string;
+     userEntitiesToDisplay: string;
      timeToDisplay: string;
 
-    constructor(private store: Store<AppState>, private timeService: TimeService) {
+
+    constructor(private store: Store<AppState>, 
+      private timeService: TimeService,
+      private userService: UserService,
+      private entitiesService: EntitiesService,
+      private configService: ConfigService) {
     }
 
     ngOnInit() {
         this.updateTime();
         this._userName$ = this.store.select(selectUserNameOrIdentifier);
-        this.store.select(buildSettingsSelector('description')).subscribe( desc => 
-          this.description = desc
-        );
+        if (this.configService.getConfigValue('showUserEntitiesOnTopRightOfTheScreen',false)) this.setUserEntitiesToDisplay();
     }
 
 
@@ -47,4 +52,27 @@ export class InfoComponent implements OnInit {
       this.updateTime();
     }, 1000);
   }
+
+  setUserEntitiesToDisplay()
+  {
+    let user_entities = this.userService.getCurrentUserWithPerimeters().userData.entities;
+    if (!!user_entities) {
+        this.userEntitiesToDisplay = "";
+        let entities = this.entitiesService.getEntitiesFromIds(user_entities);
+        entities.forEach( (entity) => {
+          if (entity.entityAllowedToSendCard) { // this avoid to display entities use only for grouping 
+            if (this.userEntitiesToDisplay.length>0) this.userEntitiesToDisplay+= ', ' 
+            this.userEntitiesToDisplay += entity.name; 
+          }
+        });
+        this.trimTooLongEntitiesList();
+        
+      }
+    }
+
+  trimTooLongEntitiesList()
+  {
+    if (this.userEntitiesToDisplay.length>20) this.userEntitiesToDisplay = this.userEntitiesToDisplay.slice(0,17) + '...';
+  }
+
 }

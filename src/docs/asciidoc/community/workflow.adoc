@@ -38,7 +38,7 @@ The repository version on the `develop` branch should always be `SNAPSHOT`.
 The daily CRON Travis job generating the documentation and docker images for the `SNAPSHOT` version are run from
 this branch (see our
 ifdef::single-page-doc[<<CICD, CICD documentation>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/CICD/index.adoc, CICD documentation>>]
+ifndef::single-page-doc[<</documentation/current/CICD/index.adoc#CICD, CICD documentation>>]
 for details).
 
 === `master` branch
@@ -118,8 +118,7 @@ Commit messages should also start with the GitHub issue reference: `#123 My comm
 
 This allows the branch, PR and commits to be directly accessible from the GitHub issue.
 
-NOTE: The deprecated OC-XXX notation (from when we tracked issues in JIRA) is still accepted by the CI/CD pipeline
-but won't be in the future.
+NOTE: The deprecated OC-XXX notation (from when we tracked issues in JIRA) is no longer accepted by the CI/CD pipeline.
 
 === Release branches
 
@@ -185,7 +184,7 @@ git commit -s -m "Short message describing content of commit (#123)"
 
 NOTE: The -s flag is to automatically add a sign-off to your commit message, which is our way to implement the
 ifdef::single-page-doc[<<license_and_DCO, Developer Certificate of Origin>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/community/index.adoc#license_and_DCO, Developer Certificate of Origin>>]
+ifndef::single-page-doc[<</documentation/current/community/index.adoc#license_and_DCO, Developer Certificate of Origin>>]
 .
 
 At any point during your work you can push your feature branch to the GitHub repository, to back your work up, let
@@ -232,7 +231,7 @@ and review.
 
 You should also take a look at the
 ifdef::single-page-doc[<<review_checklist, review checklist>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/community/index.adoc#review_checklist, review checklist>>]
+ifndef::single-page-doc[<</documentation/current/community/index.adoc#review_checklist, review checklist>>]
 below to make sure your branch meets its criteria.
 
 Once you feel your branch is ready, submit a pull request. Open pull requests are then reviewed by the core maintainers
@@ -403,5 +402,5 @@ the information provided in the PR comments.
 
 See the
 ifdef::single-page-doc[<<release_process, release process>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/CICD/index.adoc#release_process, release process>>]
+ifndef::single-page-doc[<</documentation/current/CICD/index.adoc#release_process, release process>>]
 described in our CICD documentation for details.

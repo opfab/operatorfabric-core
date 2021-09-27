@@ -5,12 +5,12 @@
       <h4>Indisponibilité de 2 heures à prévoir pour la ligne HVDC France-Angleterre</h4>
       <br/>
        Merci de confirmer les créneaux qui vous conviennent:  <br/><br/>
-       <label class="opfab-checkbox" style="margin-left:40px"> Le 10/08/2020 entre 8h and 10h <input  type="checkbox" id="choice1" name="choice1" >  <span id="question-choice1" class="opfab-checkbox-checkmark"> </span> </label>
-       <label class="opfab-checkbox" style="margin-left:40px"> Le 10/08/2020 entre 10h and 12h <input  type="checkbox" id="choice2" name="choice2" >  <span id="question-choice2" class="opfab-checkbox-checkmark"> </span> </label>
-       <label class="opfab-checkbox" style="margin-left:40px"> Le 11/08/2020 entre 8h and 10h  <input  type="checkbox" id="choice3" name="choice3" >  <span id="question-choice3" class="opfab-checkbox-checkmark"> </span> </label>
+       <label class="opfab-checkbox" style="margin-left:40px"> Le 10/08/2020 entre 8h et 10h <input  type="checkbox" id="choice1" name="choice1" >  <span id="question-choice1" class="opfab-checkbox-checkmark"> </span> </label>
+       <label class="opfab-checkbox" style="margin-left:40px"> Le 10/08/2020 entre 10h et 12h <input  type="checkbox" id="choice2" name="choice2" >  <span id="question-choice2" class="opfab-checkbox-checkmark"> </span> </label>
+       <label class="opfab-checkbox" style="margin-left:40px"> Le 11/08/2020 entre 8h et 10h  <input  type="checkbox" id="choice3" name="choice3" >  <span id="question-choice3" class="opfab-checkbox-checkmark"> </span> </label>
     </div>
     <div id="responseRequired"></div>
-    <div id="responseDisabled" style="color: red"></div>
+    <div id="responseDisabled" class="opfab-color-danger"></div>
 </form> 
 
 <br/>
@@ -25,7 +25,7 @@
     if (templateGateway.childCards[0])
     {
     let childsDiv = document.getElementById("childs-div");
-    let responses  = '<center> <h4>Responses reçues </h4> <br/>';
+    let responses  = '<center> <h4>Réponses reçues </h4> <br/>';
     responses += ' <table width="100%""> <tr> <th> Entity </th>';
     responses += ' <th> 10/08/2020 8h-10h </th>';
     responses += ' <th> 10/08/2020 10h-12h </th>';

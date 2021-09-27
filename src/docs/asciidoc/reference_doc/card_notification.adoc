@@ -18,7 +18,7 @@ notified then the card will not be visible in the feed. However, it will be visi
 In order to have a better visual organization of the processes in the UI, you can define processes groups.
 You can find more information
 ifdef::single-page-doc[<<_processes_groups, here>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#_processes_groups, here>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#_processes_groups, here>>]
 
 == Sound notification 
 
@@ -34,9 +34,9 @@ The user can set a card as "acknowledged" so he will not see it anymore by defau
 
 To offer the possibility for the user to acknowledged card, it has to be configured in process definition. The configuration is done on a state by setting the acknowledgmentAllowed field. Allowed values are:
 
-- "Never": acknowledgement not allowed (default value)
+- "Never": acknowledgement not allowed
 
-- "Always": acknowledgement allowed
+- "Always": acknowledgement allowed (default value)
 
 - "OnlyWhenResponseDisabledForUser": acknowledgement allowed only when 
 the response is disabled for the user

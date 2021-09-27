@@ -15,9 +15,6 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {UserService} from '@ofServices/user.service';
 import {Observable, timer} from 'rxjs';
 import {
-    CreateUserApplication,
-    CreateUserApplicationOnFailure,
-    CreateUserApplicationOnSuccess,
     LoadAllEntities,
     UserActions,
     UserActionsTypes,
@@ -42,62 +39,24 @@ export class UserEffects {
 
     /**
      * after that the user is authenticated through the token,
-     * detect if the user is already registered in the application and raise the UserApplicationRegistered action
-     * if not, set the creation user workflow
+     * synchronize user data from the token with the backend 
+     * (if the user does not exists in the database it will be created) 
+     * and raise the UserApplicationRegistered action.
      */
     
     checkUserApplication: Observable<UserActions> = createEffect(() => this.actions$
         .pipe(
             ofType(AuthenticationActionTypes.AcceptLogIn),
             switchMap((action: AcceptLogIn) => {
-                const userPayload = action.payload;
-                return this.userService.askUserApplicationRegistered(userPayload.identifier)
-                    .pipe(
-                        map((user: User) => new UserApplicationRegistered({user})),
-                        catchError((error, caught) => {
-                            const userData: User = new User(userPayload.identifier, userPayload.firstName, userPayload.lastName);
-                            this.store.dispatch(new CreateUserApplication({user: userData}));
-                            return caught;
-                        })
-                    );
-            })
-        ));
-
-
-    /**
-     * create the user application (first time in the application)
-     * raise an CreateUserApplicationOnSuccess action or CreateUserApplicationOnFailure action.
-     */
-    
-    CreateUserApplication: Observable<UserActions> = createEffect(() => this.actions$
-        .pipe(
-            ofType(UserActionsTypes.CreateUserApplication),
-            switchMap((action: CreateUserApplication) => {
-                const user = action.payload.user;
-                return this.userService.askCreateUser(user)
-                    .pipe(
-                        map(currentUser => {
-                            return new CreateUserApplicationOnSuccess({user: currentUser});
-                        }),
-                        catchError((error, caught) => {
-                            this.authService.clearAuthenticationInformation();
-                            this.store.dispatch(new CreateUserApplicationOnFailure({error: error}));
-                            return caught;
-                        })
-                    );
-            }),
-        ));
-
-    /**
-     * transition to the userApplicationRegistered action after an CreateUserApplicationOnSuccess action
-     */
-    
-    transition2UserApplicationRegistered: Observable<UserActions> = createEffect(() => this.actions$
-        .pipe(
-            ofType(UserActionsTypes.CreateUserApplicationOnSuccess),
-            map((action: CreateUserApplicationOnSuccess) => {
-                const userDataPayload = action.payload.user;
-                return new UserApplicationRegistered({user: userDataPayload});
+                return this.userService.synchronizeWithToken()
+                .pipe(
+                    map((user: User) => new UserApplicationRegistered({user})),
+                    catchError((error, caught) => {
+                        console.log("Error in synchronizeWithToken");
+                        this.authService.clearAuthenticationInformation();
+                        return caught;
+                    })
+                );
             })
         ));
 

@@ -98,7 +98,7 @@ gpg2 --export-secret-keys OPFAB_KEY_ID > key_pair.key
 
 * Then, they need to import this file to their keyring (see the
 ifdef::single-page-doc[<<client_lib_pub_conf, documentation for the publishing task>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/dev_env/index.adoc#client_lib_pub_conf, documentation for the publishing task>>]
+ifndef::single-page-doc[<</documentation/current/dev_env/index.adoc#client_lib_pub_conf, documentation for the publishing task>>]
 for details).
 
 == Publishing the public key

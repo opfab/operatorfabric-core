@@ -3,6 +3,7 @@
   "environmentColor": "blue",
   "checkPerimeterForResponseCard": true,
   "checkPerimeterForSearchFields": false,
+  "showUserEntitiesOnTopRightOfTheScreen": true,
   "archive": {
     "filters": {
       "page": {
@@ -120,7 +121,7 @@
       "operatorfabric": {
         "name": "OperatorFabric",
         "rank": 0,
-        "version": "2.9.0.RELEASE"
+        "version": "2.10.0.RELEASE"
       }
     },
     "infos": {

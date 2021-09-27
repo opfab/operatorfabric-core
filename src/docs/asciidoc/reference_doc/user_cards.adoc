@@ -82,7 +82,7 @@ by default. It is possible to hide certain generic fields, by setting their visi
 Please note that you should use an OpFab css class so the "business-specific" part of the form has the same look and
 feel (See
 ifdef::single-page-doc[<<opfab_template_style, OperatorFabric Style >>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#opfab_template_style, OperatorFabric Style>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#opfab_template_style, OperatorFabric Style>>]
 for more information)
 
 Once the card has been sent, users with the appropriate rights can edit it. If they choose to do so, they're presented
@@ -109,7 +109,7 @@ The following card fields can be set via the object `card` in the object returne
 * data
 * externalRecipients (use to send cards to third party , see 
 ifdef::single-page-doc[<<define_a_third_party_tool, Define a third party tool >>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#define_a_third_party_tool, Define a third party tool>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#define_a_third_party_tool, Define a third party tool>>]
 for more information)
 
 If you want the card to be visible in the agenda feature, you need to set 'viewCardInAgenda' to true in the object returned by the method.

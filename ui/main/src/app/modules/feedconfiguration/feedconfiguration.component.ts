@@ -44,6 +44,7 @@ export class FeedconfigurationComponent implements OnInit {
                                       processLabel: string
                                   } []
                             } [];
+    processIdsByProcessGroup: Map<string, string[]>;
     processesWithoutGroup: { idProcess: string,
                              processLabel: string
                            } [];
@@ -59,6 +60,7 @@ export class FeedconfigurationComponent implements OnInit {
                                      stateId: string
                                    } [];
     isAllStatesSelectedPerProcess: Map<string, boolean>;
+    isAllProcessesSelectedPerProcessGroup: Map<string, boolean>;
 
     modalRef: NgbModalRef;
 
@@ -76,10 +78,12 @@ export class FeedconfigurationComponent implements OnInit {
                 private configService: ConfigService
     ) {
         this.processesStatesLabels = new Map();
+        this.processIdsByProcessGroup = new Map();
         this.preparedListOfProcessesStates = [];
         this.processesWithoutGroup = [];
         this.processesDefinition = this.processesService.getAllProcesses();
         this.isAllStatesSelectedPerProcess = new Map();
+        this.isAllProcessesSelectedPerProcessGroup = new Map();
         this.initForm();
     }
 
@@ -95,23 +99,40 @@ export class FeedconfigurationComponent implements OnInit {
         return false;
     }
 
-    private selectAllStates(idProcess: string) {
-        for (let state of this.processesStatesLabels.get(idProcess).states) {
-            if (! this.feedConfigurationForm.value.processesStates[state.stateControlIndex])
-                document.getElementById('' + state.stateControlIndex).click();
+    private toggleSelectAllStates(idProcess: string) {
+        if (this.isAllStatesSelectedPerProcess.get(idProcess)) {
+            for (let state of this.processesStatesLabels.get(idProcess).states)
+                if (this.feedConfigurationForm.value.processesStates[state.stateControlIndex])
+                    document.getElementById('' + state.stateControlIndex).click();
+        }
+        else {
+            for (let state of this.processesStatesLabels.get(idProcess).states)
+                if (! this.feedConfigurationForm.value.processesStates[state.stateControlIndex])
+                    document.getElementById('' + state.stateControlIndex).click();
         }
     }
 
-    private unselectAllStates(idProcess: string) {
-        for (let state of this.processesStatesLabels.get(idProcess).states) {
-            if (this.feedConfigurationForm.value.processesStates[state.stateControlIndex])
-                document.getElementById('' + state.stateControlIndex).click();
+    private toggleSelectAllProcesses(idProcessGroup: string) {
+        if (this.isAllProcessesSelectedPerProcessGroup.get(idProcessGroup)) {
+            for (let processId of this.processIdsByProcessGroup.get(idProcessGroup))
+                if (this.isAllStatesSelectedPerProcess.get(processId))
+                    this.toggleSelectAllStates(processId);
+        }
+        else {
+            for (let processId of this.processIdsByProcessGroup.get(idProcessGroup))
+                if (! this.isAllStatesSelectedPerProcess.get(processId))
+                    this.toggleSelectAllStates(processId);
         }
     }
 
     private loadIsAllStatesSelected() {
         for (let idProcess of Array.from(this.processesStatesLabels.keys()))
-            this.updateIsAllStatesSelected(idProcess);
+            this.updateIsAllStatesSelected(idProcess, '');
+    }
+
+    private loadIsAllProcessesSelected() {
+        for (let idProcessGroup of this.processIdsByProcessGroup.keys())
+            this.isAllProcessesSelectedPerProcessGroup.set(idProcessGroup, this.isAllProcessesSelected(idProcessGroup));
     }
 
     private isAllStatesSelected(idProcess) {
@@ -122,8 +143,19 @@ export class FeedconfigurationComponent implements OnInit {
         return true;
     }
 
-    private updateIsAllStatesSelected(idProcess) {
+    private isAllProcessesSelected(idProcessGroup) {
+        for (let processId of this.processIdsByProcessGroup.get(idProcessGroup)) {
+            if (! this.isAllStatesSelectedPerProcess.get(processId))
+                return false;
+        }
+        return true;
+    }
+
+    private updateIsAllStatesSelected(idProcess, idProcessGroup) {
         this.isAllStatesSelectedPerProcess.set(idProcess, this.isAllStatesSelected(idProcess));
+
+        if (idProcessGroup !== '' )
+            this.isAllProcessesSelectedPerProcessGroup.set(idProcessGroup, this.isAllProcessesSelected(idProcessGroup));
     }
 
     private makeProcessesWithoutGroup() {
@@ -192,10 +224,11 @@ export class FeedconfigurationComponent implements OnInit {
     }
 
     /** cleaning of the two arrays : processGroupsAndLabels and processesWithoutGroup
-     * processGroupsAndLabels : we don't display process which doesn't have any state with Receive right
+     * processGroupsAndLabels : we don't display process which doesn't have any displayed state (a state is not displayed if we have option 'checkPerimeterForSearchFields' set to true
+     *                          and user doesn't have receive right on it, or if the state is 'isOnlyAChildState'
      *                          and we don't display process group which doesn't have any process
      * processesWithoutGroup : we don't display process which doesn't have any state with Receive or ReceiveAndWrite right*/
-    private removeProcessesWithoutStatesWithReceiveRights() {
+    private removeProcessesWithoutDisplayedStates() {
         this.processGroupsAndLabels.forEach((processGroupData, index) => {
             processGroupData.processes = processGroupData.processes.filter(processData => !! this.processesStatesLabels.get(processData.processId));
             if (processGroupData.processes.length === 0)
@@ -225,9 +258,18 @@ export class FeedconfigurationComponent implements OnInit {
             this.computePreparedListOfProcessesStatesAndProcessesStatesLabels();
             this.makeProcessesWithoutGroup();
             this.addCheckboxesInFormArray();
-            if (this.checkPerimeterForSearchFields)
-                this.removeProcessesWithoutStatesWithReceiveRights();
+            this.removeProcessesWithoutDisplayedStates();
             this.loadIsAllStatesSelected();
+            this.makeProcessIdsByProcessGroup();
+            this.loadIsAllProcessesSelected();
+        });
+    }
+
+    makeProcessIdsByProcessGroup() {
+        this.processGroupsAndLabels.forEach(element => {
+            let processIds = [];
+            element.processes.forEach(process => processIds.push(process.processId));
+            this.processIdsByProcessGroup.set(element.groupId, processIds);
         });
     }
 

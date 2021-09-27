@@ -7,13 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 const templateGateway = {
     opfabEntityNames : null, 
     childCards: [],
     userAllowedToRespond : false,
     userMemberOfAnEntityRequiredToRespond : false,
     entitiesAllowedToRespond: [],
+    entityUsedForUserResponse: null,
+    displayContext: '',
 
     setEntityNames: function(entityNames){
         this.opfabEntityNames = entityNames;
@@ -58,6 +59,13 @@ const templateGateway = {
         return this.entitiesAllowedToRespond;
     },
 
+    getEntityUsedForUserResponse() {
+        return this.entityUsedForUserResponse;
+    },
+
+    getDisplayContext() {
+        return this.displayContext;
+    },
 
     //
     // FUNCTIONS TO OVERRIDE BY TEMPLATES 
@@ -69,6 +77,8 @@ const templateGateway = {
         this.userAllowedToRespond = false;
         this.userMemberOfAnEntityRequiredToRespond = false;
         this.entitiesAllowedToRespond = [];
+        this.entityUsedForUserResponse = null;
+        this.displayContext = '';
 
         // OpFab calls this function to inform the template that the card is locked
         this.lockAnswer = function () {

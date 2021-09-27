@@ -19,25 +19,25 @@
             <div *ngIf="displayProcessGroupsFilter()" style="margin-top: 28px;margin-right: 40px;position:relative; min-width:300px;max-width:400px;">
                 <of-multi-filter filterPath="processGroup" id="opfab-processGroup"
                                  [parentForm]="monitoringForm" [values]="processGroupDropdownList" [translateValues]="true"
-                                 [dropdownSettings]="processGroupDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="monitoring.filters.">
+                                 [dropdownSettings]="processGroupDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="monitoring.filters." [sortValues]="true">
                 </of-multi-filter>
             </div>
             <div *ngIf="displayProcessGroupsFilter()" style="margin-top: 28px;margin-right: 40px;position:relative; min-width:300px;max-width:400px;">
                 <of-multi-filter filterPath="process" id="opfab-process"
                                  [parentForm]="monitoringForm" [values]="processDropdownListWhenSelectedProcessGroup" [translateValues]="true"
-                                 [dropdownSettings]="processDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="monitoring.filters.">
+                                 [dropdownSettings]="processDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="monitoring.filters." [sortValues]="true">
                 </of-multi-filter>
             </div>
             <div *ngIf="! displayProcessGroupsFilter() && isThereProcessGroup()" style="margin-top: 28px;margin-right: 40px;position:relative; min-width:300px;max-width:400px;">
                 <of-multi-filter filterPath="process" id="opfab-process"
                                  [parentForm]="monitoringForm" [values]="processesDropdownListPerProcessGroups.get(processGroupDropdownList[0].id)" [translateValues]="true"
-                                 [dropdownSettings]="processDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="monitoring.filters.">
+                                 [dropdownSettings]="processDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="monitoring.filters." [sortValues]="true">
                 </of-multi-filter>
             </div>
             <div *ngIf="! displayProcessGroupsFilter() && ! isThereProcessGroup()" style="margin-top: 28px;margin-right: 40px;position:relative; min-width:300px;max-width:400px;">
                 <of-multi-filter filterPath="process" id="opfab-process"
-                                 [parentForm]="monitoringForm" [values]="processDropdownList"
-                                 [dropdownSettings]="processDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="monitoring.filters.">
+                                 [parentForm]="monitoringForm" [values]="processDropdownList" [translateValues]="true"
+                                 [dropdownSettings]="processDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="monitoring.filters." [sortValues]="true">
                 </of-multi-filter>
             </div>
             <div style="margin-top: 28px;position:relative; min-width:300px;max-width:400px;">

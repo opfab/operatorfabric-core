@@ -73,7 +73,7 @@ The mandatory field are `id`,`name` and `version`.
 
 See the
 ifdef::single-page-doc[link:../api/businessconfig/index.html[Businessconfig API documentation]]
-ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/businessconfig/index.html[Businessconfig API documentation]]
+ifndef::single-page-doc[link:/documentation/current/api/businessconfig/index.html[Businessconfig API documentation]]
 for details.
 
 == i18n
@@ -123,7 +123,7 @@ include::../../../../services/core/businessconfig/src/main/docker/volume/busines
 To check the i18n, after the upload of the bundle, use a `GET` request against the `businessconfig` service.
 The simpler is to ask for the i18n file, as described
 ifdef::single-page-doc[link:../api/businessconfig/index.html#/businessconfig/getI18n[here]]
-ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/businessconfig/index.html#/businessconfig/getI18n[here]]
+ifndef::single-page-doc[link:/documentation/current/api/businessconfig/index.html#/businessconfig/getI18n[here]]
 .
 
 Set the `locale` language, the `version` of the bundle and the `technical name` of the businessconfig party to get json in the response.
@@ -265,7 +265,7 @@ image::expected-result.png[Formatted root property]
 
 To upload a bundle to the OperatorFabric server use a `POST` http request as described in the
 ifdef::single-page-doc[<<../api/businessconfig/#/businessconfig/uploadBundle, Businessconfig Service API documentation>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/api/businessconfig/#/businessconfig/uploadBundle, Businessconfig Service API documentation>>]
+ifndef::single-page-doc[<</documentation/current/api/businessconfig/#/businessconfig/uploadBundle, Businessconfig Service API documentation>>]
 .
 
 *Example*
@@ -306,7 +306,7 @@ These command line should return a `200 http status` response with the details o
 
 For further help check the
 ifdef::single-page-doc[<<troubleshooting_bundle, Troubleshooting>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/getting_started/index.adoc#troubleshooting_bundle, Troubleshooting>>]
+ifndef::single-page-doc[<</documentation/current/getting_started/index.adoc#troubleshooting_bundle, Troubleshooting>>]
 section which resumes how to resolve common problems.
 
 == Processes groups
@@ -319,7 +319,7 @@ IMPORTANT: A process can only belong to one process group.
 To define processes groups, you have to upload a file via a `POST` http request as described in the
 
 ifdef::single-page-doc[link:../api/businessconfig/index.html#/businessconfig/uploadProcessgroups[Businessconfig Service API documentation]]
-ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/businessconfig/index.html#/default/uploadProcessgroups[Businessconfig Service API documentation]]
+ifndef::single-page-doc[link:/documentation/current/api/businessconfig/index.html#/default/uploadProcessgroups[Businessconfig Service API documentation]]
 .
 
 *Example*

@@ -12,36 +12,34 @@ import {Card} from '@ofModel/card.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import * as cardSelectors from '@ofStore/selectors/card.selectors';
+import * as feedSelectors from '@ofStore/selectors/feed.selectors';
 import {ProcessesService} from '@ofServices/processes.service';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {UserService} from '@ofServices/user.service';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {AppService} from '@ofServices/app.service';
-import {State as CardState, State} from '@ofModel/processes.model';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import {State} from '@ofModel/processes.model';
+import {NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import {DisplayContext} from '@ofModel/templateGateway.model';
 
 @Component({
     selector: 'of-card-details',
-    template: `
-
-            <div *ngIf="card && cardState" style="font-size:13px;">
-                <of-detail   [cardState]="cardState" [card]="card" [childCards]="childCards"
-                           [currentPath]="_currentPath" [parentModalRef]="parentModalRef" [screenSize]="screenSize">
-                </of-detail>
-            </div>
-        `
+    templateUrl: './card-details.component.html',
+    styleUrls: ['./card-details.component.scss']
 })
 export class CardDetailsComponent implements OnInit, OnDestroy {
 
-
     @Input() parentModalRef: NgbModalRef;
     @Input() screenSize: string = 'md';
+    @Input() displayContext: any = DisplayContext.REALTIME;
 
     card: Card;
     childCards: Card[];
-    cardState: CardState;
+    cardState: State;
     unsubscribe$: Subject<void> = new Subject<void>();
+    cardLoadingInProgress = false;
+    currentSelectedCardId: string;
     protected _currentPath: string;
 
     constructor(protected store: Store<AppState>
@@ -61,6 +59,7 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
                             next: businessconfig => {
                                 this.card = card;
                                 this.childCards = childCards;
+                                this.cardLoadingInProgress = false;
                                 if (!!businessconfig) {
                                     this.cardState = businessconfig.extractState(card);
                                     if (!this.cardState) {
@@ -74,11 +73,12 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
                                 }
 
                             },
-                            error: error => {
+                            error: () => {
                                 console.log(new Date().toISOString(), `WARNING process `
                                     + ` ${card.process} with version ${card.processVersion} does not exist.`);
                                 this.card = card;
                                 this.childCards = childCards;
+                                this.cardLoadingInProgress = false;
                                 this.cardState = new State();
                             }
                         });
@@ -94,8 +94,30 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
                     this._currentPath = urlParts[CURRENT_PAGE_INDEX];
                 }
             });
+        this.checkForCardLoadingInProgressForMoreThanOneSecond();
+
+    }
+
+    // we show a spinner on screen if card loading take more than 1 second
+    checkForCardLoadingInProgressForMoreThanOneSecond() {
+        this.store.select(feedSelectors.selectLightCardSelection) 
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((cardId) => {   // a new card has been selected and will be downloaded 
+                this.currentSelectedCardId = cardId;
+                setTimeout(() => {
+                    if (this.currentSelectedCardId == cardId) // the selected card has not changed in between 
+                    {
+                        if (!this.card) this.cardLoadingInProgress = !!this.currentSelectedCardId;
+                        else this.cardLoadingInProgress = (this.card.id != this.currentSelectedCardId);
+                    }
+                }, 1000);
+            })
+
+    }
 
 
+    public isSmallscreen() {
+        return (window.innerWidth < 1000);
     }
 
     ngOnDestroy() {

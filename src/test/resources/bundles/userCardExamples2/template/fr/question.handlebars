@@ -14,10 +14,14 @@
 <div id="childs-div"></div>
 <br/>
  <div id="entities-div"> </div>
+<br/>
+ <div id="response-entity-div"> </div>
 
 
 <script>
-
+    if (templateGateway.getDisplayContext() != 'realtime' ) {
+       document.getElementById("response").disabled = true;
+    }
     templateGateway.applyChildCards = () => {
 
         if (templateGateway.childCards[0]) {
@@ -66,6 +70,14 @@
     }
     loadEntitiesList();
 
+    function loadEntityUsedForResponse() {
+        let responseEntityDiv = document.getElementById("response-entity-div");
+        let responseEntity = templateGateway.getEntityUsedForUserResponse();
+        let userAllowedToRespond = templateGateway.isUserAllowedToRespond();
+        if (userAllowedToRespond && responseEntity) 
+            responseEntityDiv.innerHTML = "Entité utilisée par l'utilisateur pour répondre : " +  templateGateway.getEntityName(responseEntity);;
+    }
+    loadEntityUsedForResponse();
 </script>
 
 </p>

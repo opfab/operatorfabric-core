@@ -25,10 +25,11 @@ export class MultiFilterComponent implements OnInit, OnChanges, OnDestroy {
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
-    dropdownList: { id: string, itemName: string }[];
+    dropdownList: { id: string, itemName: string, itemCategory?: string }[];
     @Input() public i18nRootLabelKey: string;
-    @Input() public values: ({ id: string, itemName: (I18n | string), i18nPrefix?: string } | string)[];
+    @Input() public values: ({ id: string, itemName: (I18n | string), i18nPrefix?: string , itemCategory?: string} | string)[];
     @Input() public translateValues: boolean;
+    @Input() public sortValues: boolean;
     @Input() public parentForm: FormGroup;
     @Input() public dropdownSettings = {};
     @Input() public filterPath: string;
@@ -82,6 +83,8 @@ export class MultiFilterComponent implements OnInit, OnChanges, OnDestroy {
         this.dropdownList = [];
         if (!!this.values) {
             this.dropdownList = this.values.map(entry => this.computeValueAndLabel(entry));
+            if (this.sortValues)
+                this.sortDropdownList();
         } else {
             // should throws an error ?
             console.error('There are currently no values for ' + this.filterPath);
@@ -96,7 +99,11 @@ export class MultiFilterComponent implements OnInit, OnChanges, OnDestroy {
 
         }
         this.parentForm.get(this.filterPath).setValue(this.selection);
+    }
 
+    private sortDropdownList() {
+        this.dropdownList.sort((a, b) => (a.itemName.localeCompare(b.itemName)));
+        this.dropdownList.sort((a, b) => (a.itemCategory?.localeCompare(b.itemCategory)));
     }
 
     protected getLocale(): Observable<string> {
@@ -107,40 +114,34 @@ export class MultiFilterComponent implements OnInit, OnChanges, OnDestroy {
         return this.i18nRootLabelKey + this.filterPath;
     }
 
-    computeValueAndLabel(entry: ({ id: string, itemName: (I18n | string), i18nPrefix?: string } | string)):
-        { id: string, itemName: string } {
+    computeValueAndLabel(entry: ({ id: string, itemName: (I18n | string), i18nPrefix?: string, itemCategory?: (I18n | string) } | string)):
+        { id: string, itemName: string , itemCategory?: string} {
         if (typeof entry === 'string') {
             return {id: entry, itemName: entry};
-        } else if (typeof entry.itemName === 'string') {
-            if (this.translateValues) {
-                const firstI18nPrefix = (entry.i18nPrefix) ? `${entry.i18nPrefix}.` : '';
-                let firstTranslatedItemName = entry.id;
-                this.translateService.get(`${firstI18nPrefix}${entry.itemName}`
-                    , null).subscribe(result => firstTranslatedItemName = result);
-                
-                return {
-                    id: entry.id,
-                    itemName: firstTranslatedItemName
-                };
-            } else {
-                return {
-                    id: entry.id,
-                    itemName: entry.itemName
-                };
-            }
-
-        } else if (!entry.itemName) {
-            return {id: entry.id, itemName: entry.id};
+        }  else {
+            const i18nPrefix = (entry.i18nPrefix) ? `${entry.i18nPrefix}.` : '';
+            return {
+                id: entry.id,
+                itemName: this.computeValue(entry.itemName, entry.id, i18nPrefix),
+                itemCategory: this.computeValue(entry.itemCategory, null, i18nPrefix)
+            };
         }
-        // mind the trailing dot! mandatory for translation if I18n prefix exists
-        const i18nPrefix = (entry.i18nPrefix) ? `${entry.i18nPrefix}.` : '';
-        let translatedItemName = entry.id;
-        this.translateService.get(`${i18nPrefix}${entry.itemName.key}`
-            , entry.itemName.parameters).subscribe(result => translatedItemName = result);
-        return {
-            id: entry.id,
-            itemName: translatedItemName
-        };
+    }
+
+    private computeValue(item : string | I18n, defaultValue: string, i18nPrefix?: string) : string {
+        
+        if (!!item) {
+            const value = (typeof item === 'string') ? item : item.key;
+            return (this.translateValues) ? this.traslateItem(value, defaultValue, i18nPrefix) : value;
+        }
+        return defaultValue;
+    }
+
+    private traslateItem(item : string, defaultValue: string, i18nPrefix?: string) : string {
+        let translated = defaultValue;
+        this.translateService.get(`${i18nPrefix}${item}`
+            , null).subscribe(result => translated = result);
+        return translated;
     }
 
     ngOnDestroy() {

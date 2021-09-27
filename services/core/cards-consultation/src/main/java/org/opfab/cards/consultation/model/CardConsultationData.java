@@ -100,4 +100,6 @@ public class CardConsultationData implements Card {
     private Integer  secondsBeforeTimeSpanForReminder;
 
     private String processStateKey;
+
+    private Boolean toNotify;
 }

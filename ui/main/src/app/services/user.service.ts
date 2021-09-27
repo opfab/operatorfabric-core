@@ -54,11 +54,8 @@ export class UserService extends CrudService {
     return this.httpClient.get<User>(`${this.userUrl}/users/${user}`);
   }
 
-  askCreateUser(userData: User): Observable<User> {
-    return this.httpClient.put<User>(
-      `${this.userUrl}/users/${userData.login}`,
-      userData
-    );
+  synchronizeWithToken(): Observable<User> {
+    return this.httpClient.post<User>(`${this.userUrl}/users/synchronizeWithToken`, null);
   }
 
   currentUserWithPerimeters(): Observable<UserWithPerimeters> {

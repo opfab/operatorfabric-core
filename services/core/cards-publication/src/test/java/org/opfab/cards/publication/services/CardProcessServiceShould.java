@@ -504,6 +504,7 @@ class CardProcessServiceShould {
                 .collect(Collectors.toList());
 
         // endDate must be after startDate
+        // toNotify must be true
         if (cardsList != null) {
             for (CardPublicationData cardPublicationData : cardsList) {
                 if (cardPublicationData != null) {
@@ -512,6 +513,8 @@ class CardProcessServiceShould {
                             .compareTo(cardPublicationData.getEndDate()) >= 0) {
                         cardPublicationData.setEndDate(startDateInstant.plusSeconds(86400));
                     }
+
+                    cardPublicationData.setToNotify(true);
                 }
             }
         }

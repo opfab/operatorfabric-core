@@ -21,6 +21,8 @@ describe ('Archives screen tests',function () {
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length',6);
         // No plus icon is displayed
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-icon-plus').should('not.exist');
+        // No minus icon is displayed
+        cy.get('#opfab-archives-cards-list').find('.opfab-archives-icon-minus').should('not.exist');
 
         // No card detail is displayed
         cy.get('of-card-detail').should('not.exist');
@@ -35,14 +37,28 @@ describe ('Archives screen tests',function () {
         cy.get('of-card-detail').should('not.exist');
         cy.get('#opfab-archive-results-number').should('have.text', ' Results number  : 6 ')
 
-        // We send again the test cards and we check that the we have 6 lines of archived cards (6 * 2 instances per card)
-        // and we check we have plus icon for each line
+        // We send again the test cards and we check that the we have 10 lines of archived cards
+        // and we check there is no plus or minus icon (because 'collapsible updates' mode is not activated)
         cy.send6TestCards();
         cy.get('#opfab-archives-btn-search').click();
+        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length',10);
+        cy.get('#opfab-archives-cards-list').find('.opfab-archives-icon-plus').should('not.exist');
+        cy.get('#opfab-archives-cards-list').find('.opfab-archives-icon-minus').should('not.exist');
+        cy.get('of-card-detail').should('not.exist');
+        cy.get('#opfab-archive-results-number').should('have.text', ' Results number  : 12 ');
+
+        // We click collapsible updates
+        cy.get('#opfab-archives-collapsible-updates').click({force: true});
+
+        // We check that the we have 6 lines of archived cards (6 * 2 instances per card)
+        // and we check we have plus icon for each line
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length',6);
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-icon-plus').should('have.length',6);
         cy.get('of-card-detail').should('not.exist');
         cy.get('#opfab-archive-results-number').should('have.text', ' Results number  : 6 ');
+
+        // We click collapsible updates
+        cy.get('#opfab-archives-collapsible-updates').click({force: true});
     })
 
     it('Check behaviour of "isOnlyAChildState" attribute (in file config.json of bundles)', function () {
@@ -62,7 +78,9 @@ describe ('Archives screen tests',function () {
 
         // We check every state is present except 'Planned outage date response' because 'isOnlyAChildState' attribute is set to true for this state
         cy.get('#opfab-state').click();
-        cy.get('#opfab-state').find('li').should('have.length', 7);
+        cy.get('#opfab-state').find('li').should('have.length', 8);
+        // One list item is for the process 
+        cy.get('#opfab-state').contains('Process example').should('exist');
         cy.get('#opfab-state').contains('Message').should('exist');
         cy.get('#opfab-state').contains('A Chart').should('exist');
         cy.get('#opfab-state').contains('Process example').should('exist');
@@ -81,10 +99,14 @@ describe ('Archives screen tests',function () {
         // We move to archives screen
         cy.get('#opfab-navbar-menu-archives').click();
 
-        // We send again the test cards and we check that the we have 6 lines of archived cards (6 * 2 instances per card)
-        // and we check we have plus icon for each line
+        // We send again the test cards, we activate the 'collapsible updates' mode and we check that the we have 6 lines of
+        // archived cards (6 * 2 instances per card) and we check we have plus icon for each line
         cy.send6TestCards();
         cy.get('#opfab-archives-btn-search').click();
+
+        // We click collapsible updates
+        cy.get('#opfab-archives-collapsible-updates').click({force: true});
+
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length',6);
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-icon-plus').should('have.length',6);
         cy.get('of-card-detail').should('not.exist');
@@ -109,5 +131,8 @@ describe ('Archives screen tests',function () {
         // We check there is a plus icon in place of the minus icon
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').first().find('.opfab-archives-icon-plus').should('have.length', 1);
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').first().find('.opfab-archives-icon-minus').should('not.exist');
+
+        // We click collapsible updates
+        cy.get('#opfab-archives-collapsible-updates').click({force: true});
     })
 })

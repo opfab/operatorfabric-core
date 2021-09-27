@@ -33,5 +33,8 @@
 	},
 	"dummyResponseState": {
 		"title": "Dummy response state for tests"
+	},
+	"kitchenSink": {
+		"title": "State to test template rendering features"
 	}
 }

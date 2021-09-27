@@ -1,7 +1,6 @@
 
 buildscript {
 	repositories {
-		jcenter()
 		mavenLocal()
 		mavenCentral()
 		maven { url "https://plugins.gradle.org/m2/" }
@@ -62,4 +61,12 @@ dependencies {
 test {
 	useJUnitPlatform()
 }
+
+// This will never actually serve as services rely on bootJars not jars
+// It's just a temporary workaround so build/libs is not flagged as an implicit dependency of docker
+jar {
+	destinationDirectory.set(file("build/unused_plain_jar"))
+}
+
 tasks.docker.dependsOn build
+tasks.dockerPrepare.dependsOn bootJar

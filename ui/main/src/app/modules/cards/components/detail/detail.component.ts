@@ -47,6 +47,7 @@ import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {MessageLevel} from '@ofModel/message.model';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {UserPermissionsService} from '@ofServices/user-permissions-.service';
+import {DisplayContext} from '@ofModel/templateGateway.model';
 
 declare const templateGateway: any;
 
@@ -91,6 +92,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     @Input() currentPath: string;
     @Input() parentModalRef: NgbModalRef;
     @Input() screenSize: string;
+    @Input() displayContext: any = DisplayContext.REALTIME;
 
     @ViewChild('cardDeletedWithNoErrorPopup') cardDeletedWithNoErrorPopupRef: TemplateRef<any>;
     @ViewChild('impossibleToDeleteCardPopup') impossibleToDeleteCardPopupRef: TemplateRef<any>;
@@ -152,7 +154,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     ngOnInit() {
         this.reloadTemplateWhenGlobalStyleChange();
         if (this._appService.pageType !== PageType.ARCHIVE) this.integrateChildCardsInRealTime();
-        this.computeLttdParams();
 
     }
 
@@ -171,6 +172,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     ngOnChanges(): void {
         templateGateway.initTemplateGateway();
+
+        templateGateway.displayContext = this.displayContext;
         if (this.cardState.response != null && this.cardState.response !== undefined) {
             this.isCardAQuestionCard = true;
             this.computeEntitiesForResponses();
@@ -178,6 +181,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 this.card, this.businessconfigService.getProcess(this.card.process));
         }
         else this.isCardAQuestionCard = false;
+
+        
 
         this.checkIfHasAlreadyResponded();
 
@@ -193,6 +198,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.computeFromEntityOrRepresentative();
         this.formattedPublishDate = this.formatDate(this.card.publishDate);
         this.formattedPublishTime = this.formatTime(this.card.publishDate);
+        this.computeLttdParams();
     }
 
     ngOnDestroy() {
@@ -341,8 +347,15 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             if (entityIdsRequiredToRespondAndAllowedToSendCards.length > 0) listEntitiesToRespondForHeader = this.createEntityHeaderFromList(entityIdsRequiredToRespondAndAllowedToSendCards);
             else listEntitiesToRespondForHeader = this.createEntityHeaderFromList(this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards);
 
-            this.listVisibleEntitiesToRespond = listEntitiesToRespondForHeader.length > maxVisibleEntitiesForCardHeader ? listEntitiesToRespondForHeader.slice(0, maxVisibleEntitiesForCardHeader) : listEntitiesToRespondForHeader;
-            this.listDropdownEntitiesToRespond = listEntitiesToRespondForHeader.length > maxVisibleEntitiesForCardHeader ? listEntitiesToRespondForHeader.slice(maxVisibleEntitiesForCardHeader) : [];
+            listEntitiesToRespondForHeader.sort((a, b) => a.name?.localeCompare(b.name));
+
+            this.listVisibleEntitiesToRespond = listEntitiesToRespondForHeader.length > maxVisibleEntitiesForCardHeader ?
+                                                    listEntitiesToRespondForHeader.slice(0, maxVisibleEntitiesForCardHeader) :
+                                                    listEntitiesToRespondForHeader;
+
+            this.listDropdownEntitiesToRespond = listEntitiesToRespondForHeader.length > maxVisibleEntitiesForCardHeader ?
+                                                    listEntitiesToRespondForHeader.slice(maxVisibleEntitiesForCardHeader) :
+                                                    [];
         }
         else {
             this.listVisibleEntitiesToRespond = [];
@@ -408,7 +421,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 this.showExpiredLabel = false;
             } else if (this.isCardAQuestionCard) {
                 this.showExpiredIcon = false;
+                this.showExpiredLabel = true;
                 this.expiredLabel = 'feed.responsesClosed'
+            } else {
+                this.showExpiredIcon = true;
+                this.showExpiredLabel = true;
             }
         })
     }
@@ -454,6 +471,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         templateGateway.userAllowedToRespond = this.isUserEnabledToRespond;
         templateGateway.entitiesAllowedToRespond = this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards;
         templateGateway.userMemberOfAnEntityRequiredToRespond = this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
+        templateGateway.entityUsedForUserResponse = this.userEntityIdToUseForResponse;
     }
 
     private initializeHrefsOfCssLink() {

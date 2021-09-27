@@ -1,6 +1,5 @@
 buildscript {
     repositories {
-        jcenter()
         mavenLocal()
         mavenCentral()
         maven { url "https://repo.spring.io/release" }
@@ -69,7 +68,7 @@ subprojects {
        description 'generate swagger code from /src/main/modeling/config.json to build/swagger-analyse'
         standardOutput = new ByteArrayOutputStream()
        classpath = configurations.swaggerCodegen
-       main = 'io.swagger.codegen.SwaggerCodegen'
+       mainClass = 'io.swagger.codegen.SwaggerCodegen'
        debug true
        systemProperty 'debugOperations', 'true'
        args ("generate",
@@ -89,7 +88,7 @@ subprojects {
     task swaggerHelp(type: JavaExec) {
         description 'display help regarding swagger configuration options for java'
         classpath = configurations.swaggerCodegen
-        main = 'io.swagger.codegen.SwaggerCodegen'
+        mainClass = 'io.swagger.codegen.SwaggerCodegen'
         systemProperty 'debugOperations', 'true'
         args ("config-help","-l", "java")
     }

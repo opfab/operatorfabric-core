@@ -13,7 +13,7 @@
 This section briefly describes the organization of our CICD pipeline. If you are looking for more detailed information,
 see
 ifdef::single-page-doc[<<mock_pipeline, this document>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/resources/index.adoc#mock_pipeline, this document>>]
+ifndef::single-page-doc[<</documentation/current/resources/index.adoc#mock_pipeline, this document>>]
 describing the steps that were necessary to create our mock pipeline as well as the issues we ran into.
 
 Most of the access and permissions required by our CICD plateform (Travis) are managed by tokens that are created on
@@ -25,7 +25,15 @@ to the account of any member of the team.
 
 === Travis CI
 
-We use Travis CI to manage our pipeline. As of today, it is composed of 7 stages:
+We use Travis CI to manage our pipeline. Pushes (of commits or tags) and pull request creations are sent by GitHub to
+Travis CI (these calls are visible on
+the https://app.travis-ci.com/github/opfab/operatorfabric-core/requests[Requests page] on Travis CI).
+Then, a build is started except for tag pushes (to avoid duplicate builds with the corresponding commit push) or
+for commit pushes on feature branches (to avoid duplicate builds with the corresponding PR if it exists).
+
+IMPORTANT: If you want to force a build to be triggered on a feature branch push, add `ci_build` to the commit message.
+
+As of today, the build is composed of 7 stages:
 [horizontal]
 test-sonar:: Builds the commit, runs tests and sonar analysis
 test:: Similar to `test-sonar` but without sonar analysis
@@ -55,15 +63,16 @@ In the table below:
 doc hook:: stands for adding the keyword `ci_documentation` to the commit message
 docker hook:: stands for adding the keyword `ci_docker` to the commit message
 latest hook:: stands for adding the keyword `ci_latest` to the commit message
+force build hook:: stands for adding the keyword `ci_build` to the commit message
 
 .Summary of stage triggers depending on branch
 [caption="", cols="3,^1,^1,^1,^1,^1,^1,^1,^1,^1,^1,^1,^1,^1,^1", stripes=even]
 |==========================
-h|      4+h|develop h|release h|master 4+h|hotfixes 3+h|feature h| pull request
+h|      4+h|develop h|release h|master 4+h|hotfixes 3+h|force build hook h| pull request
 h|Stage              h|CRON h|push h|doc hook h|docker hook h|push h|push h|push h|doc hook h|docker hook h|latest hook h|push h|doc hook h|docker hook h|push
 e|test-sonar          |X|X| | |X|X|X| | | |X| | |internal
 e|test                | | | | | | | | | | | | | |external
-e|doc                 |X| |X| | | | |X| | | | | |
+e|doc                 |X| |X| | | | |X| | | |X| |
 e|doc-latest          | | | | | |X| | | |X| | | |
 e|docker-push-version |X| | |X| |X| | |X| | | | |
 e|docker-push-latest  | | | | | |X| | | |X| | | |

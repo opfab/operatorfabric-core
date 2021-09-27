@@ -1,6 +1,5 @@
 buildscript {
     repositories {
-        jcenter()
         mavenLocal()
         mavenCentral()
         maven { url "https://repo.spring.io/release" }
@@ -84,20 +83,20 @@ subprojects {
     jacocoTestReport {
         group = "Reporting"
         reports {
-            xml.enabled true
-            csv.enabled false
+            xml.required = true
+            csv.required = false
             html.destination file("${buildDir}/reports/coverage")
         }
     }
 
     /////// CUSTOM TASKS
 
-    /*Task that copies all the dependencies under build/libs so Sonar
+    /*Task that copies all the dependencies under build/support_libs so Sonar
     can make sense of the Lombok annotations for example */
     task copyDependencies(type: Copy) {
-        description 'copy dependencies to build/libs'
+        description 'copy dependencies to build/support_libs'
         from configurations.compileClasspath
-        into 'build/libs'
+        into 'build/support_libs'
     }
 
     tasks.jacocoTestReport.dependsOn test

@@ -17,6 +17,8 @@ operatorfabric.users.default:
       groups: ["Dispatcher","ReadOnly","ADMIN"]
       entities: ["ENTITY1"]
     - login: operator1
+      firstname : John
+      lastname : Doe
       groups: ["Dispatcher","ReadOnly", "REALTIME_USERS"]
       entities: ["ENTITY1"]
     - login: operator2

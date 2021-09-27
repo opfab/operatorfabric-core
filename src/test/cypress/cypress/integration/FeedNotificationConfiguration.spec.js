@@ -61,9 +61,49 @@ describe ('Feed notification configuration tests',function () {
         cy.get('.opfab-feedconfiguration-processlist').last().find('p').should('have.text', 'Test process for cypress ');
 
         // We check the number of states for each process
-        cy.get('.opfab-feedconfiguration-processlist').last().find('.opfab-feedconfiguration-process').first().find('.row').should('have.length', 8);
+        cy.get('.opfab-feedconfiguration-processlist').last().find('.opfab-feedconfiguration-process').first().find('.row').should('have.length', 9);
 
         // We check the following state is absent because property 'isOnlyAChildState' is set to true
         cy.get('.opfab-feedconfiguration-processlist').last().find('.opfab-feedconfiguration-process').first().find('.row').contains('Dummy response state for tests').should('not.exist');
+    })
+
+
+    it('Check feature select/unselect all states for a process', function () {
+        cy.loginOpFab('operator1', 'test');
+
+        // We move to feed notification configuration screen
+        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-menu-icon-notification').click();
+
+        // First process group (we check all processes are checked)
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').as('firstGroupProcesses');
+        cy.get('@firstGroupProcesses').first().find('input').should('be.checked');//IGCC
+        cy.get('@firstGroupProcesses').last().find('input').should('be.checked'); //Process example
+
+        // Second process group (we check all processes are checked)
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').as('secondGroupProcesses');
+        cy.get('@secondGroupProcesses').first().find('input').should('be.checked');  //Examples for new cards
+        cy.get('@secondGroupProcesses').eq(1).find('input').should('be.checked');//Examples for new cards 2
+        cy.get('@secondGroupProcesses').last().find('input').should('be.checked');   //Examples for new cards 3
+
+        // Processes without group (we check the process is checked)
+        cy.get('.opfab-feedconfiguration-processlist').last().find('p').find('input').should('be.checked'); //Test process for cypress
+
+        // We unselect 'Examples for new cards 2' process
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').eq(1).find('input').uncheck({force: true});
+
+        // We check 'Examples for new cards 2' process and all of its states are unchecked
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').eq(1).find('input').should('not.be.checked');
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').eq(1).find('.row').as('ExamplesForNewCards2States');
+        cy.get('@ExamplesForNewCards2States').contains('Message').find('input').should('not.be.checked');
+        cy.get('@ExamplesForNewCards2States').contains('Question').find('input').should('not.be.checked');
+
+        // We select 'Examples for new cards 2' process
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').eq(1).find('input').check({force: true});
+
+        // We check 'Examples for new cards 2' process and all of its states are checked
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').eq(1).find('input').should('be.checked');
+        cy.get('@ExamplesForNewCards2States').contains('Message').find('input').should('be.checked');
+        cy.get('@ExamplesForNewCards2States').contains('Question').find('input').should('be.checked');
     })
 })
