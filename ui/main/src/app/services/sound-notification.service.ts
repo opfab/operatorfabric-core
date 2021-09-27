@@ -156,7 +156,6 @@ export class SoundNotificationService implements OnDestroy{
 
 
 }
-
 export class SoundConfig {
 
     soundFileName: string;
@@ -167,3 +166,5 @@ export class SoundConfig {
 export enum SignalType {
     NOTIFICATION, CLEAR
 }
+
+
