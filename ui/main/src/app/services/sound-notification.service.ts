@@ -19,95 +19,80 @@ import {LightCardsService} from './lightcards.service';
 @Injectable()
 export class SoundNotificationService {
 
-  alarmSoundPath:string;
-  alarmSound:HTMLAudioElement;
-  actionSoundPath:string;
-  actionSound:HTMLAudioElement;
-  compliantSoundPath:string;
-  compliantSound:HTMLAudioElement;
-  informationSoundPath:string;
-  informationSound:HTMLAudioElement;
+    soundConfigBySeverity: Map<Severity,SoundConfig>;
 
-  playSoundForAlarm:boolean;
-  playSoundForAction:boolean;
-  playSoundForCompliant:boolean;
-  playSoundForInformation:boolean;
+    soundEnabled: Map<Severity,boolean>;
 
-  recentThreshold: number = 2000;
-  /* The subscription used by the front end to get cards to display in the feed from the backend doesn't distinguish
-   * between old cards loaded from the database and new cards arriving through the notification broker.
-   * In addition, the getCardOperation observable on which this sound notification is hooked will also emit events
-   * every time the subscription changes (= every time the feed time filters are changed). So to only notify cards
-   * once (and only new cards), sounds will only be played for a given card if the elapsed time since its publishDate
-   * is below this threshold. */
+    recentThreshold: number = 2000;
+    /* The subscription used by the front end to get cards to display in the feed from the backend doesn't distinguish
+     * between old cards loaded from the database and new cards arriving through the notification broker.
+     * In addition, the getCardOperation observable on which this sound notification is hooked will also emit events
+     * every time the subscription changes (= every time the feed time filters are changed). So to only notify cards
+     * once (and only new cards), sounds will only be played for a given card if the elapsed time since its publishDate
+     * is below this threshold. */
 
-  constructor(private store: Store<AppState>, private platformLocation: PlatformLocation,private lightCardsService: LightCardsService) {
-    let baseHref = platformLocation.getBaseHrefFromDOM();
-    this.alarmSoundPath = (baseHref?baseHref:'/')+'assets/sounds/alarm.mp3'
-    this.alarmSound = new Audio(this.alarmSoundPath);
-    this.actionSoundPath = (baseHref?baseHref:'/')+'assets/sounds/action.mp3'
-    this.actionSound = new Audio(this.actionSoundPath);
-    this.compliantSoundPath = (baseHref?baseHref:'/')+'assets/sounds/compliant.mp3'
-    this.compliantSound = new Audio(this.compliantSoundPath);
-    this.informationSoundPath = (baseHref?baseHref:'/')+'assets/sounds/information.mp3'
-    this.informationSound = new Audio(this.informationSoundPath);
+    soundFileBasePath: string;
 
-    store.select(buildSettingsOrConfigSelector('playSoundForAlarm')).subscribe(x => { this.playSoundForAlarm = x;});
-    store.select(buildSettingsOrConfigSelector('playSoundForAction')).subscribe(x => { this.playSoundForAction = x;});
-    store.select(buildSettingsOrConfigSelector('playSoundForCompliant')).subscribe(x => { this.playSoundForCompliant = x;});
-    store.select(buildSettingsOrConfigSelector('playSoundForInformation')).subscribe(x => { this.playSoundForInformation = x;});
+    constructor(private store: Store<AppState>, private platformLocation: PlatformLocation,private lightCardsService: LightCardsService) {
 
-  }
+        this.soundConfigBySeverity = new Map<Severity, SoundConfig>();
+        this.soundConfigBySeverity.set(Severity.ALARM, {soundFileName: 'alarm.mp3', soundEnabledSetting: 'playSoundForAlarm'});
+        this.soundConfigBySeverity.set(Severity.ACTION, {soundFileName: 'action.mp3', soundEnabledSetting: 'playSoundForAction'});
+        this.soundConfigBySeverity.set(Severity.COMPLIANT, {soundFileName: 'compliant.mp3', soundEnabledSetting: 'playSoundForCompliant'});
+        this.soundConfigBySeverity.set(Severity.INFORMATION, {soundFileName: 'information.mp3', soundEnabledSetting: 'playSoundForInformation'});
 
-  handleRemindCard(card: LightCard ) {
-    if(this.lightCardsService.isCardVisibleInFeed(card)) this.playSoundForCard(card);
-  }
+        let baseHref = platformLocation.getBaseHrefFromDOM();
+        this.soundFileBasePath = (baseHref?baseHref:'/')+'assets/sounds/'
 
-  handleLoadedCard(card: LightCard) {
-    if(this.lightCardsService.isCardVisibleInFeed(card) && this.checkCardIsRecent(card)) this.playSoundForCard(card);
-  }
+        this.soundEnabled = new Map<Severity, boolean>();
+        this.soundConfigBySeverity.forEach((soundConfig,severity) => {
+            store.select(buildSettingsOrConfigSelector(soundConfig.soundEnabledSetting)).subscribe(x => { this.soundEnabled.set(severity,x)});
+        })
 
-  checkCardIsRecent (card: LightCard) : boolean {
-    return ((new Date().getTime() - card.publishDate) <= this.recentThreshold);
-  }
-
-  playSoundForCard(card: LightCard) {
-
-    switch (card.severity) {
-      case Severity.ALARM:
-        if(this.playSoundForAlarm) {
-          this.playSound(this.alarmSound);
-        }
-        break;
-      case Severity.ACTION:
-        if(this.playSoundForAction) {
-          this.playSound(this.actionSound);
-        }
-        break;
-      case Severity.COMPLIANT:
-        if(this.playSoundForCompliant) {
-          this.playSound(this.compliantSound);
-        }
-        break;
-      case Severity.INFORMATION:
-        if(this.playSoundForInformation) {
-          this.playSound(this.informationSound);
-        }
-        break;
     }
 
-  }
+    handleRemindCard(card: LightCard ) {
+        if(this.lightCardsService.isCardVisibleInFeed(card)) this.playSoundForCard(card);
+    }
 
-  /* There is no need to limit the frequency of calls to playXXXX methods because if a given sound XXXX is already
-  * playing when XXXX.play() is called, nothing happens.
-  * */
+    handleLoadedCard(card: LightCard) {
+        if(this.lightCardsService.isCardVisibleInFeed(card) && this.checkCardIsRecent(card)) this.playSoundForCard(card);
+    }
 
-  playSound(sound: HTMLAudioElement) {
-    sound.play().catch(error => {
-      console.log(new Date().toISOString(),
-          `Notification sound wasn't played because the user hasn't interacted with the app yet (autoplay policy).`);
-      /* This is to handle the exception thrown due to the autoplay policy on Chrome. See https://goo.gl/xX8pDD */
-    });
-  }
+    checkCardIsRecent (card: LightCard) : boolean {
+        return ((new Date().getTime() - card.publishDate) <= this.recentThreshold);
+    }
+
+    private getSoundForSeverity(severity: Severity) : HTMLAudioElement {
+        return new Audio(this.soundFileBasePath+this.soundConfigBySeverity.get(severity).soundFileName);
+    }
+
+    playSoundForCard(card: LightCard) {
+
+        if(this.soundEnabled.get(card.severity)) {
+            this.playSound(this.getSoundForSeverity(card.severity));
+        } else {
+            console.debug("No sound was played for "+card.id+" as sound is disabled for this severity");
+        }
+    }
+
+    /* There is no need to limit the frequency of calls to playXXXX methods because if a given sound XXXX is already
+    * playing when XXXX.play() is called, nothing happens.
+    * */
+
+    playSound(sound: HTMLAudioElement) {
+        sound.play().catch(error => {
+            console.log(new Date().toISOString(),
+                `Notification sound wasn't played because the user hasn't interacted with the app yet (autoplay policy).`);
+            /* This is to handle the exception thrown due to the autoplay policy on Chrome. See https://goo.gl/xX8pDD */
+        });
+    }
+
+}
+
+export class SoundConfig {
+
+    soundFileName: string;
+    soundEnabledSetting:string;
 
 }
