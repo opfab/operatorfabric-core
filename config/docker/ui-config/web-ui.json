@@ -3,6 +3,7 @@
   "environmentColor": "blue",
   "checkPerimeterForResponseCard": true,
   "checkPerimeterForSearchFields": false,
+  "showUserEntitiesOnTopRightOfTheScreen": true,
   "archive": {
     "filters": {
       "page": {
