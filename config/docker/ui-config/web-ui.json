@@ -4,6 +4,8 @@
   "checkPerimeterForResponseCard": true,
   "checkPerimeterForSearchFields": false,
   "showUserEntitiesOnTopRightOfTheScreen": true,
+  "settings.replayInterval": 10,
+  "settings.replayEnabled": true,
   "archive": {
     "filters": {
       "page": {

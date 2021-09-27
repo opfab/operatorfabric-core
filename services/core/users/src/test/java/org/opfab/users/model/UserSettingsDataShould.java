@@ -46,6 +46,8 @@ public class UserSettingsDataShould {
                 .playSoundForAlarm(true)
                 .playSoundForAction(false)
                 //Not setting Compliant and Information to test patch on empty
+                .replayEnabled(true)
+                .replayInterval(123)
                 .processStatesNotNotified("processA", Arrays.asList("state1", "state2"))
                 .processStatesNotNotified("processB", Arrays.asList("state3", "state4"))
                 .build();
@@ -82,6 +84,14 @@ public class UserSettingsDataShould {
         patched = userData.patch(UserSettingsData.builder().playSoundForInformation(true).build().clearTags().clearProcessesStatesNotNotified());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"playSoundForInformation");
         assertThat(patched.getPlaySoundForInformation()).isEqualTo(true);
+
+        patched = userData.patch(UserSettingsData.builder().replayEnabled(false).build().clearTags().clearProcessesStatesNotNotified());
+        assertThat(patched).isEqualToIgnoringGivenFields(userData,"replayEnabled");
+        assertThat(patched.getReplayEnabled()).isEqualTo(false);
+
+        patched = userData.patch(UserSettingsData.builder().replayInterval(456).build().clearTags().clearProcessesStatesNotNotified());
+        assertThat(patched).isEqualToIgnoringGivenFields(userData,"replayInterval");
+        assertThat(patched.getReplayInterval()).isEqualTo(456);
 
         Map<String, List<String>> newProcessesStatesNotNotified = new HashMap<String, List<String>>();
         newProcessesStatesNotNotified.put("processC", Arrays.asList("state5", "state6"));
