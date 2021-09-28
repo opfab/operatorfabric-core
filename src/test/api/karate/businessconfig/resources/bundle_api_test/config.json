@@ -9,12 +9,12 @@
 	"states": {
 		"messageState" : {
 			"templateName" : "template",
-			"description": "messageState.description",
+			"description": "Message",
 			"styles" : [ "style" ]
 		},
 		"questionState": {
 		  "name": "question.title",
-		  "description": "questionState.description",
+		  "description": "Question",
 		  "color": "#8bcdcd",
 		  "userCard" : {
 					"template" : "usercard_question",
@@ -32,7 +32,7 @@
 		},  
 		"incidentInProgressState": {
 		  "name": "incidentInProgress.name",
-		  "description": "incidentInProgressState.description",
+		  "description": "Incident",
 		  "userCard" : {
 					"template" : "usercard_incidentInProgress",
 					"severityVisible" : true,

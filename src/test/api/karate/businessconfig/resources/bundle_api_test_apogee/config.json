@@ -9,7 +9,7 @@
   "i18nLabelKey": "businessconfig.label",
   "states": {
       "APOGEESEA": {
-          "description": "apogeeseaState.description" 
+          "description": "apogeesea"
        }
   }
 }

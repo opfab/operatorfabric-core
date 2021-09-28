@@ -70,20 +70,20 @@
         <td class="opfab-logging-sev opfab-logging-sev-{{card.severity.toLowerCase()}}"></td>
         <td style="padding-left: 5px"> {{displayTime(card.publishDate)}} </td>
         <td *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>{{ processesService.findProcessGroupLabelForProcess(card.process) }}</td>
-        <td translate>{{card.processName}}</td>
+        <td>{{card.processName}}</td>
         <td translate [translateParams]="card.title.parameters">
           {{ card.process + '.' + card.processVersion + '.' + card.title.key}}
         </td>
         <td translate [translateParams]="card.summary.parameters">
           {{ card.process + '.' + card.processVersion + '.' + card.summary.key}}
         </td>
-        <td *ngIf="card.stateColor" translate style="color:{{card.stateColor}}" >{{processStateName.get(card.process + '.' + card.state)}}
+        <td *ngIf="card.stateColor" style="color:{{card.stateColor}}" >{{processStateName.get(card.process + '.' + card.state)}}
         </td>
-        <td *ngIf="!card.stateColor" translate>{{processStateName.get(card.process + '.' + card.state)}}
+        <td *ngIf="!card.stateColor" >{{processStateName.get(card.process + '.' + card.state)}}
         </td>
-        <td *ngIf="card.stateColor" translate style="color:{{card.stateColor}}" >{{processStateDescription.get(card.process + '.' + card.state)}}
+        <td *ngIf="card.stateColor" style="color:{{card.stateColor}}" >{{processStateDescription.get(card.process + '.' + card.state)}}
         </td>
-        <td *ngIf="!card.stateColor" translate>{{processStateDescription.get(card.process + '.' + card.state)}}
+        <td *ngIf="!card.stateColor" >{{processStateDescription.get(card.process + '.' + card.state)}}
         </td>
         <td *ngIf="!card.representative.length; else representativeBlock">{{card.sender}}</td>
         <ng-template #representativeBlock><td>{{card.sender}} ({{card.representative}})</td></ng-template>

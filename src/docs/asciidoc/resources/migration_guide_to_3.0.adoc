@@ -1,0 +1,25 @@
+// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 2.10.0 to release 3.0.0
+
+== Process bundles
+
+In order to remove unnecessary complexity for third-party, we have decided to remove translation for
+some of business data.
+For process bundles, in the `config.json` file, here are the affected fields :
+
+* Process name
+* State name
+* State description
+
+These fields must not contain i18n data anymore, they must only contain string data. These data will be
+simply displayed on the screen.
+
+
+
+

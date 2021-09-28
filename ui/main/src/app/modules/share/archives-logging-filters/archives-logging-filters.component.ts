@@ -270,7 +270,6 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
                     statesDropdownList.push({
                         id: process.id + '.' + state,
                         itemName: process.states[state].name,
-                        i18nPrefix: `${process.id}.${process.version}`,
                         itemCategory: process.name
                     });
                 }
