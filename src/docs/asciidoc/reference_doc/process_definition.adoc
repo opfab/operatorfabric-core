@@ -26,7 +26,7 @@ To display the card date, some `css files`, `i18n files` and `handlebars templat
 For didactic purposes, in this section, the businessconfig bundle name is `BUNDLE_TEST` (to match the parameters used by the script).
 The l10n (localization) configurations are English, referred as `en` and French, referred as `fr`.
 
-As detailed in the `Businessconfig core service README` the bundle contains at least a metadata file called `config.json`, a `css` folder, an `i18n` folder and a `template` folder.
+As detailed in the `Businessconfig core service README` the bundle contains at least a metadata file called `config.json`, a file `i18n.json`, a `css` folder, an `i18n` folder and a `template` folder.
 
 Except for the `config.json file`, all elements are optional.
 
@@ -35,6 +35,7 @@ The file organization within a bundle:
 ----
 bundle
 ├── config.json
+├── i18n.json
 ├── css
 │   └── bundleTest.css
 ├── i18n
@@ -75,6 +76,10 @@ See the
 ifdef::single-page-doc[link:../api/businessconfig/index.html[Businessconfig API documentation]]
 ifndef::single-page-doc[link:/documentation/current/api/businessconfig/index.html[Businessconfig API documentation]]
 for details.
+
+== The i18n.json file
+This file contains internationalization information, in particular the translation for title and summary fields
+
 
 == i18n
 
