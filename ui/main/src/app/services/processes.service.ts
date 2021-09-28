@@ -17,8 +17,8 @@ import {catchError, map, skip, tap} from 'rxjs/operators';
 import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {Card} from '@ofModel/card.model';
-import {Utilities} from '../common/utilities';
 import {LightCardsStoreService} from './lightcards-store.service';
+
 
 
 @Injectable()
@@ -52,7 +52,6 @@ export class ProcessesService {
         this.lightCardsStoreService.getNewLightCards()
             .subscribe(card => { if (!!card) this.loadTranslationsForProcess(card.process, card.processVersion)});
     }
-
 
     public loadTranslationsForProcess(process, version) {
         this.translateService.getLangs().forEach(
@@ -193,15 +192,9 @@ export class ProcessesService {
             group.processes.forEach(processId => {
                 const processDefinition = this.getProcess(processId);
 
-                if (processDefinition) {
-                    const processLabel = (!!processDefinition.name) ?
-                        Utilities.getI18nPrefixFromProcess(processDefinition) + processDefinition.name :
-                        Utilities.getI18nPrefixFromProcess(processDefinition) + processDefinition.id;
-
-                    this.translateService.get(processLabel).subscribe(translate => {
-                        processIdAndLabels.push({ processId: processId, processLabel: translate });
-                    });
-                } else
+                if (processDefinition)
+                    processIdAndLabels.push({processId: processId, processLabel: ((!!processDefinition.name) ? processDefinition.name : processDefinition.id)});
+                else
                     processIdAndLabels.push({processId: processId, processLabel: ''});
             });
 
@@ -321,8 +314,7 @@ export class ProcessesService {
                     const processes = (!!processesPerProcessGroups.get(processGroupId) ? processesPerProcessGroups.get(processGroupId) : []);
                     processes.push({
                         id: process.id,
-                        itemName: process.name,
-                        i18nPrefix: `${process.id}.${process.version}`
+                        itemName: process.name
                     });
                     processesPerProcessGroups.set(processGroupId, processes);
                 }
@@ -337,7 +329,7 @@ export class ProcessesService {
         this.getAllProcesses().forEach(process => {
             const processGroupId = this.findProcessGroupForProcess(process.id);
             if (processGroupId === '')
-                processesWithoutProcessGroup.push({ id: process.id, itemName: process.name, i18nPrefix: `${process.id}.${process.version}` });
+                processesWithoutProcessGroup.push({ id: process.id, itemName: process.name });
         });
         return processesWithoutProcessGroup;
     }

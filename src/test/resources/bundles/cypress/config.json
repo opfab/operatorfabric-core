@@ -1,6 +1,6 @@
 {
   "id": "cypress",
-  "name": "process.label",
+  "name": "Test process for cypress",
   "version": "1",
   "uiVisibility": {
     "monitoring": false,
@@ -9,22 +9,22 @@
   },
   "states": {
     "messageState": {
-      "name":  "message.title",
-      "description": "messageState.description",
+      "name":  "Message",
+      "description": "Message state",
       "templateName": "template",
       "acknowledgmentAllowed": "Always",
       "type" : "INPROGRESS"
     },
     "messageStateWithNoAck": {
-      "name":  "messageStateWithNoAck.description",
-      "description": "messageStateWithNoAck.description",
+      "name":  "Message with no ack",
+      "description": "Message with no ack",
       "templateName": "template",
       "acknowledgmentAllowed": "Never",
       "type" : "INPROGRESS"
     },
     "messageStateWithOnlyWhenResponseDisabledForUserAck": {
-      "name":  "messageStateWithOnlyWhenResponseDisabledForUserAck.description",
-      "description": "messageStateWithOnlyWhenResponseDisabledForUserAck.description",
+      "name":  "Message with ack only when response disable for user ",
+      "description": "Message with ack only when response disable for user ",
       "templateName": "template",
       "acknowledgmentAllowed": "OnlyWhenResponseDisabledForUser",
       "type" : "INPROGRESS",
@@ -34,7 +34,7 @@
         }
     },
     "stateOfTypeINPROGRESS": {
-      "name":  "stateOfTypeINPROGRESS.title",
+      "name":  "Test state of type INPROGRESS",
       "templateName": "template",
       "type" : "INPROGRESS",
       "response": {
@@ -42,7 +42,7 @@
       }
     },
     "stateOfTypeFINISHED": {
-      "name":  "stateOfTypeFINISHED.title",
+      "name":  "Test state of type FINISHED",
       "templateName": "template",
       "type" : "FINISHED",
       "response": {
@@ -50,7 +50,7 @@
       }
     },
     "stateOfTypeCANCELED": {
-      "name":  "stateOfTypeCANCELED.title",
+      "name":  "Test state of type CANCELED",
       "templateName": "template",
       "type" : "CANCELED",
       "response": {
@@ -58,7 +58,7 @@
       }
     },
     "stateOfTypeNull": {
-      "name":  "stateOfTypeNull.title",
+      "name":  "Test state of type null",
       "templateName": "template",
       "type" : null,
       "response": {
@@ -66,20 +66,20 @@
       }
     },
     "stateWithNoType": {
-      "name":  "stateWithNoType.title",
+      "name":  "Test state with no type",
       "templateName": "template",
       "response": {
         "state": "dummyResponseState"
       }
     },
     "dummyResponseState": {
-      "name":  "dummyResponseState.title",
+      "name":  "Dummy response state for tests",
       "templateName": "template",
       "isOnlyAChildState": true
     },
     "kitchenSink":
     {
-      "name":"kitchenSink.title",
+      "name":"State to test template rendering features",
       "templateName" : "kitchenSink",
       "response": {
         "state": "dummyResponseState"
