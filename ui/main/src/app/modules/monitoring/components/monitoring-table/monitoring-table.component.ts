@@ -189,7 +189,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                 this.rowData.push({ severityNumber: this.mapSeverity.get(line.severity),
                                     time: this.displayTime(line.creationDateTime),
                                     service: this.translateValue(this.processesService.findProcessGroupLabelForProcess(line.processId)),
-                                    process: this.translateValue(line.processName),
+                                    process: line.processName,
                                     title: this.translateValue(line.title.key, line.title.parameters),
                                     summary: this.translateValue(line.summary.key, line.summary.parameters),
                                     processStatus: this.translateValue('monitoring.filters.typeOfState.' + line.typeOfState),
@@ -201,7 +201,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             else
                 this.rowData.push({ severityNumber: this.mapSeverity.get(line.severity),
                                     time: this.displayTime(line.creationDateTime),
-                                    process: this.translateValue(line.processName),
+                                    process: line.processName,
                                     title: this.translateValue(line.title.key, line.title.parameters),
                                     summary: this.translateValue(line.summary.key, line.summary.parameters),
                                     processStatus: this.translateValue('monitoring.filters.typeOfState.' + line.typeOfState),
@@ -310,7 +310,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         card.card.processGroup = this.translateValue(this.processesService.findProcessGroupLabelForProcess(card.card.process));
         const process:Process = this.processesService.getProcess(card.card.process);
         if (!!process) {
-                card.card.processName = this.translateValue(`${prefix}.${process.name}`);
+                card.card.processName = process.name;
                 const state = process.states[card.card.state];
                 if (!!state) card.card.typeOfState = this.translateValue('monitoring.filters.typeOfState.' + state.type);
         }

@@ -36,7 +36,6 @@ import {TranslateService} from '@ngx-translate/core';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {Utilities} from '../../common/utilities';
 import {Entity} from '@ofModel/entity.model';
 import {ConfigService} from '@ofServices/config.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
@@ -260,8 +259,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
         this.processesDefinition.forEach(process => {
                     if (processesInPerimeter.has(process.id)) {
-                        const _i18nPrefix = process.id + '.' + process.version + '.';
-                        const label = process.name ? (_i18nPrefix + process.name) : process.id;
+                        const label = process.name ? process.name : process.id;
                         const processToShow = { value: process.id, label: label };
                         
                         this.loadStatesForProcess(process);
@@ -333,8 +331,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         const stateFromProcessDefinition = process.states[stateId];
         if (!!stateFromProcessDefinition) {
             if (!!stateFromProcessDefinition.userCard) {
-                const label = !!stateFromProcessDefinition.name ? (new I18n(Utilities.getI18nPrefixFromProcess(process)
-                    + stateFromProcessDefinition.name)) : stateId;
+                const label = !!stateFromProcessDefinition.name ? stateFromProcessDefinition.name : stateId;
                 return { value: stateId, label: label };
             }
         } else console.log('WARNING : state', stateId, 'is present in perimeter for process'

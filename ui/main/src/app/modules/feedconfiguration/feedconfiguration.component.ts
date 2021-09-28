@@ -11,7 +11,7 @@ import {Component, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {UserService} from '@ofServices/user.service';
-import {Process} from '@ofModel/processes.model';
+import {Process, State} from '@ofModel/processes.model';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
@@ -21,7 +21,6 @@ import {SettingsService} from '@ofServices/settings.service';
 import {CardService} from '@ofServices/card.service';
 import {EmptyLightCards} from '@ofActions/light-card.actions';
 import {TranslateService} from '@ngx-translate/core';
-import {Utilities} from '../../common/utilities';
 import {ConfigService} from '@ofServices/config.service';
 
 
@@ -161,8 +160,7 @@ export class FeedconfigurationComponent implements OnInit {
     private makeProcessesWithoutGroup() {
         this.processesDefinition.forEach(process => {
             if (! this.findInProcessGroups(process.id)) {
-                let processLabel = (!!process.name) ? Utilities.getI18nPrefixFromProcess(process) + process.name :
-                    Utilities.getI18nPrefixFromProcess(process) + process.id;
+                let processLabel = (!!process.name) ? process.name : process.id;
 
                 this.translateService.get(processLabel).subscribe(translate => { processLabel = translate; });
                 this.processesWithoutGroup.push({idProcess: process.id,
@@ -189,38 +187,33 @@ export class FeedconfigurationComponent implements OnInit {
     }
 
     private computePreparedListOfProcessesStatesAndProcessesStatesLabels() {
-        if (this.processesDefinition) {
-            let stateControlIndex = 0;
+        let stateControlIndex = 0;
 
-            for (const process of this.processesDefinition) {
+        for (const process of this.processesDefinition) {
+            const states: { stateId: string, stateLabel: string, stateControlIndex: number }[] = [];
 
-                const states: { stateId: string, stateLabel: string, stateControlIndex: number }[] = [];
+            let processLabel = ((!! process.name) ? process.name : process.id);
 
-                let processLabel = this.computeI18n(process, process.name, process.id);
-                this.translateService.get(processLabel).subscribe(translate => { processLabel = translate; });
+            for (const stateId of Object.keys(process.states)) {
+                const state = process.states[stateId];
 
-                for (const stateId of Object.keys(process.states)) {
-                    const state = process.states[stateId];
+                if (this.checkIfStateMustBeDisplayed(state, process, stateId)) {
+                    let stateLabel = ((!! state.name) ? state.name : stateId);
 
-                    if ((! state.isOnlyAChildState) && ((!this.checkPerimeterForSearchFields) || this.userService.isReceiveRightsForProcessAndState(process.id, stateId))) {
-                        let stateLabel = this.computeI18n(process, state.name, stateId);
-                        this.translateService.get(stateLabel).subscribe(translate => { stateLabel = translate; });
-
-                        states.push({stateId, stateLabel, stateControlIndex});
-                        this.preparedListOfProcessesStates.push({processId: process.id, stateId});
-                        stateControlIndex++;
-                    }
+                    states.push({stateId, stateLabel, stateControlIndex});
+                    this.preparedListOfProcessesStates.push({processId: process.id, stateId});
+                    stateControlIndex++;
                 }
-                if (states.length) {
-                    states.sort((obj1, obj2) => this.compareObj(obj1.stateLabel, obj2.stateLabel));
-                    this.processesStatesLabels.set(process.id, {processLabel, states});
-                }
+            }
+            if (states.length) {
+                states.sort((obj1, obj2) => this.compareObj(obj1.stateLabel, obj2.stateLabel));
+                this.processesStatesLabels.set(process.id, {processLabel, states});
             }
         }
     }
 
-    computeI18n(process: Process, dataToFind: string, defaultValue: string): string {
-        return Utilities.getI18nPrefixFromProcess(process) + ((!! dataToFind) ? dataToFind : defaultValue);
+    private checkIfStateMustBeDisplayed(state: State, process: Process, stateId: string): boolean {
+        return ((!state.isOnlyAChildState) && ((!this.checkPerimeterForSearchFields) || this.userService.isReceiveRightsForProcessAndState(process.id, stateId)));
     }
 
     /** cleaning of the two arrays : processGroupsAndLabels and processesWithoutGroup
@@ -255,7 +248,7 @@ export class FeedconfigurationComponent implements OnInit {
 
             this.processGroupsAndLabels.sort((obj1, obj2) => this.compareObj(obj1.groupLabel, obj2.groupLabel));
 
-            this.computePreparedListOfProcessesStatesAndProcessesStatesLabels();
+            if (this.processesDefinition) this.computePreparedListOfProcessesStatesAndProcessesStatesLabels();
             this.makeProcessesWithoutGroup();
             this.addCheckboxesInFormArray();
             this.removeProcessesWithoutDisplayedStates();
