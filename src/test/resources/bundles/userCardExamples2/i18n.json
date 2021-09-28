@@ -1,0 +1,11 @@
+{
+	"userCardExamples2": {"label": "Examples for new cards 2"},
+	"message":{
+		"title":"Message",
+		"summary":"Message received"
+	},
+	"question":{
+		"title":"Question ",
+		"summary":"There is a question for you"
+	}
+}
