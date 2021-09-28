@@ -7,6 +7,10 @@
 
 = Migration Guide from release 2.10.0 to release 3.0.0
 
+== New bundle structure
+
+The bundle contains a new i18n.json file in the root directory. The i18n.json file contains internationalization information for title and summary fields.
+
 == Process bundles
 
 In order to remove unnecessary complexity for third-party, we have decided to remove translation for
@@ -19,7 +23,6 @@ For process bundles, in the `config.json` file, here are the affected fields :
 
 These fields must not contain i18n data anymore, they must only contain string data. These data will be
 simply displayed on the screen.
-
 
 
 

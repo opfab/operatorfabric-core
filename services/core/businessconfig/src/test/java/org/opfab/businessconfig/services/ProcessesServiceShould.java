@@ -163,6 +163,22 @@ class ProcessesServiceShould {
     }
 
     @Test
+    void fetchTranslation() throws IOException {
+        File i18nFile = service.fetchResource("first", TRANSLATION,null,null, "i18n").getFile();
+        assertThat(i18nFile)
+                .exists()
+                .isFile()
+                .hasName("i18n.json")
+                .hasContent("card.title=\"Title $1\"");
+        i18nFile = service.fetchResource("first", TRANSLATION, "0.1", null, "i18n").getFile();
+        assertThat(i18nFile)
+                .exists()
+                .isFile()
+                .hasName("i18n.json")
+                .hasContent("card.title=\"Title $1 0.1\"");
+    }
+
+    @Test
     void fetchResourceError() {
         assertException(FileNotFoundException.class).isThrownBy(() ->
                 service.fetchResource("what",
