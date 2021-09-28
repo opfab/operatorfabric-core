@@ -4,7 +4,7 @@
   "version": "0.1",
   "states": {
     "messageState": {
-      "name":  "defaultProcess.title",
+      "name":  "Message (V0.1)",
       "color": "#CC9900",
       "templateName": "template",
       "styles": [

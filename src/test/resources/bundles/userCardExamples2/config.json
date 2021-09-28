@@ -1,6 +1,6 @@
 {
   "id": "userCardExamples2",
-  "name": "userCardExamples2.label",
+  "name": "Examples for new cards 2",
   "version": "1",
   "uiVisibility": {
     "monitoring": true,
@@ -9,8 +9,8 @@
   },
   "states": {
     "messageState": {
-      "name": "message.title",
-      "description": "message.title",
+      "name": "Message",
+      "description": "Message",
       "color": "#CC9900",
       "userCard" : {
         "template" : "usercard_message",
@@ -22,8 +22,8 @@
       "type" : "INPROGRESS"
     },
     "questionState": {
-      "name": "question.title",
-      "description": "question.title",
+      "name": "Question ",
+      "description": "Question ",
       "showDetailCardHeader": false,
       "color": "#0070C0",
       "userCard" : {

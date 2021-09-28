@@ -141,7 +141,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
                         endOfBusinessPeriod: ((!!card.endDate) ? moment(card.endDate) : null),
                         title: this.prefixI18nKey(card, 'title'),
                         summary: this.prefixI18nKey(card, 'summary'),
-                        processName: this.prefixForTranslation(card, currentProcess.name),
+                        processName: currentProcess.name,
                         cardId: card.id,
                         severity: card.severity.toLocaleLowerCase(),
                         processId: procId,
