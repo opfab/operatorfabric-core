@@ -16,7 +16,6 @@ import {AppState} from "@ofStore/index";
 import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
 import {LightCardsService} from './lightcards.service';
 import {EMPTY, iif, merge, of, Subject, timer} from "rxjs"; import {filter, map, switchMap, takeUntil} from "rxjs/operators";
-import {ConfigService} from "@ofServices/config.service";
 
 @Injectable()
 export class SoundNotificationService implements OnDestroy{
