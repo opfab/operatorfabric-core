@@ -1,0 +1,27 @@
+{
+	"process.name" : "IGCC",
+	"action-FrEs-IGCC-export-0":{
+		"title":"🔧 Set IGCC export = 0",
+		"summary":"Lower Lower restoration reserve cooperation (IGCC) export to 0 MW"
+	},
+	"action-FrEs-IGCC-export-300":{
+		"title":"🔧 Set IGCC export limit to 300",
+		"summary":"Lower restoration reserve cooperation (IGCC) export to 300 MW"
+	},
+	"action-FrEs-IGCC-import-0":{
+		"title":"🔧 Set IGCC import = 0",
+		"summary":"Lower restoration reserve cooperation (IGCC) import to 0 MW"
+	},
+	"action-FrEs-IGCC-import-300":{
+		"title":"🔧 Set IGCC import limit to 300",
+		"summary":"Lower restoration reserve cooperation (IGCC) import to 300 MW"
+	},
+	"compliant-FrEs-IGCC":{
+		"title":"✅ Remove IGCC limitations",
+		"summary":"Remove restoration reserve cooperation (IGCC) limitations"
+	},
+	"timeout-FrEs-IGCC":{
+		"title":"⏰ Set IGCC to 0",
+		"summary":"Snapshot too old, set restoration reserve cooperation (IGCC) to 0 MW"
+	}
+}

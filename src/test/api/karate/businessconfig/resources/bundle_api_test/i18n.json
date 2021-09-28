@@ -1,0 +1,18 @@
+{
+	"detail":{
+		"title":"Message"
+	},
+	"defaultProcess": {
+		"title" : "card Title",
+		"title2" : "card Title II"
+	},
+	"messageState": {
+		"description": "Message"
+	},
+	"questionState": {
+		"description": "Question"
+	},
+	"incidentInProgressState": {
+		"description": "Incident"
+	}
+}
