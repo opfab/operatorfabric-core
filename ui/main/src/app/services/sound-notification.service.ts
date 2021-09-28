@@ -8,25 +8,20 @@
  */
 
 
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {PlatformLocation} from "@angular/common";
 import {LightCard, Severity} from "@ofModel/light-card.model";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
 import {LightCardsService} from './lightcards.service';
-import {EMPTY, merge, Subject, timer} from "rxjs"; import {filter, map, switchMap, takeUntil} from "rxjs/operators";
+import {EMPTY, iif, merge, of, Subject, timer} from "rxjs"; import {filter, map, switchMap, takeUntil} from "rxjs/operators";
+import {ConfigService} from "@ofServices/config.service";
 
 @Injectable()
-export class SoundNotificationService {
+export class SoundNotificationService implements OnDestroy{
 
-    private ngUnsubscribe$ = new Subject<void>();
-
-    private soundConfigBySeverity: Map<Severity,SoundConfig>;
-
-    private soundEnabled: Map<Severity,boolean>;
-
-    private recentThreshold: number = 2000;
+    private static RECENT_THRESHOLD: number = 2000; // in milliseconds
     /* The subscription used by the front end to get cards to display in the feed from the backend doesn't distinguish
      * between old cards loaded from the database and new cards arriving through the notification broker.
      * In addition, the getCardOperation observable on which this sound notification is hooked will also emit events
@@ -34,15 +29,23 @@ export class SoundNotificationService {
      * once (and only new cards), sounds will only be played for a given card if the elapsed time since its publishDate
      * is below this threshold. */
 
-    private soundReplayInterval: number = 20000;
+    private static DEFAULT_REPLAY_INTERVAL: number = 5; // in seconds
+    private static SECONDS_TO_MILLISECONDS: number = 1000;
+    private replayInterval: number;
+
+    private soundConfigBySeverity: Map<Severity,SoundConfig>;
+    private soundEnabled: Map<Severity,boolean>;
+    private replayEnabled: boolean;
 
     private readonly soundFileBasePath: string;
 
     private incomingCardOrReminder = new Subject();
-
     private clearSignal = new Subject();
+    private ngUnsubscribe$ = new Subject<void>();
 
-    constructor(private store: Store<AppState>, private platformLocation: PlatformLocation,private lightCardsService: LightCardsService) {
+    constructor(private store: Store<AppState>,
+                private platformLocation: PlatformLocation,
+                private lightCardsService: LightCardsService) {
 
         this.soundConfigBySeverity = new Map<Severity, SoundConfig>();
         this.soundConfigBySeverity.set(Severity.ALARM, {soundFileName: 'alarm.mp3', soundEnabledSetting: 'playSoundForAlarm'});
@@ -55,8 +58,11 @@ export class SoundNotificationService {
 
         this.soundEnabled = new Map<Severity, boolean>();
         this.soundConfigBySeverity.forEach((soundConfig,severity) => {
-            store.select(buildSettingsOrConfigSelector(soundConfig.soundEnabledSetting)).subscribe(x => { this.soundEnabled.set(severity,x)});
+            store.select(buildSettingsOrConfigSelector(soundConfig.soundEnabledSetting,false)).subscribe(x => { this.soundEnabled.set(severity,x)});
         })
+
+        store.select(buildSettingsOrConfigSelector('replayEnabled',false)).subscribe(x => { this.replayEnabled = x;})
+        store.select(buildSettingsOrConfigSelector('replayInterval',SoundNotificationService.DEFAULT_REPLAY_INTERVAL)).subscribe(x => { this.replayInterval = x;})
 
         for(let severity of Object.values(Severity)) {
             this.initSoundPlayingForSeverity(severity);
@@ -69,7 +75,7 @@ export class SoundNotificationService {
         this.ngUnsubscribe$.complete();
     }
 
-    public clearOutStandingNotifications() {
+    public clearOutstandingNotifications() {
         this.clearSignal.next(null);
     }
 
@@ -82,7 +88,7 @@ export class SoundNotificationService {
     }
 
     private checkCardIsRecent (card: LightCard) : boolean {
-        return ((new Date().getTime() - card.publishDate) <= this.recentThreshold);
+        return ((new Date().getTime() - card.publishDate) <= SoundNotificationService.RECENT_THRESHOLD);
     }
 
     private getSoundForSeverity(severity: Severity) : HTMLAudioElement {
@@ -115,11 +121,14 @@ export class SoundNotificationService {
             if(x === SignalType.CLEAR) {
                 return EMPTY;
             } else {
-                return timer(0,this.soundReplayInterval);
+                return iif(() => this.replayEnabled,
+                    timer(0,this.replayInterval * SoundNotificationService.SECONDS_TO_MILLISECONDS),
+                    of(null)
+                );
             }
         }),
         takeUntil(this.ngUnsubscribe$))
-        .subscribe((x : SignalType) => {
+        .subscribe((x ) => {
             this.playSoundForSeverity(severity);
         })
     }

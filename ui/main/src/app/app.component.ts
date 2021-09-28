@@ -81,7 +81,7 @@ export class AppComponent implements OnInit {
 
   @HostListener('document:click', ['$event.target'])
     public onPageClick() {
-        this.soundNotificationService.clearOutStandingNotifications();
+        this.soundNotificationService.clearOutstandingNotifications();
   }
 
 

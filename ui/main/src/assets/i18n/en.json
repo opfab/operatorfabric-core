@@ -149,7 +149,9 @@
     "playSoundForAlarm": "Alarm",
     "playSoundForAction": "Action",
     "playSoundForCompliant": "Compliant",
-    "playSoundForInformation": "Information"
+    "playSoundForInformation": "Information",
+    "replayEnabled": "Sound replay enabled",
+    "replayInterval": "Interval between sound replays (in seconds)"
   },
   "archive": {
     "filters": {
