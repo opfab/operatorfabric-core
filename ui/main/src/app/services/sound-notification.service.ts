@@ -15,6 +15,7 @@ import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
 import {LightCardsService} from './lightcards.service';
+import {Subject} from "rxjs";
 
 @Injectable()
 export class SoundNotificationService {
@@ -33,6 +34,8 @@ export class SoundNotificationService {
 
     soundFileBasePath: string;
 
+    incomingCardOrReminder = new Subject();
+
     constructor(private store: Store<AppState>, private platformLocation: PlatformLocation,private lightCardsService: LightCardsService) {
 
         this.soundConfigBySeverity = new Map<Severity, SoundConfig>();
@@ -49,14 +52,19 @@ export class SoundNotificationService {
             store.select(buildSettingsOrConfigSelector(soundConfig.soundEnabledSetting)).subscribe(x => { this.soundEnabled.set(severity,x)});
         })
 
+        this.incomingCardOrReminder.subscribe((card : LightCard) => {
+            this.playSoundForCard(card);
+        })
+
     }
 
+    //TODO Unsubscribe on destroy
     handleRemindCard(card: LightCard ) {
-        if(this.lightCardsService.isCardVisibleInFeed(card)) this.playSoundForCard(card);
+        if(this.lightCardsService.isCardVisibleInFeed(card)) this.incomingCardOrReminder.next(card);
     }
 
     handleLoadedCard(card: LightCard) {
-        if(this.lightCardsService.isCardVisibleInFeed(card) && this.checkCardIsRecent(card)) this.playSoundForCard(card);
+        if(this.lightCardsService.isCardVisibleInFeed(card) && this.checkCardIsRecent(card)) this.incomingCardOrReminder.next(card);
     }
 
     checkCardIsRecent (card: LightCard) : boolean {
