@@ -23,7 +23,6 @@ import {ExportService} from '@ofServices/export.service';
 import {TranslateService} from '@ngx-translate/core';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 import {EntitiesService } from '@ofServices/entities.service';
-import {Utilities} from 'app/common/utilities';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {Store} from '@ngrx/store';
@@ -88,15 +87,11 @@ export class LoggingComponent implements OnDestroy, OnInit {
 
         processesService.getAllProcesses().forEach((process) => {
             if (!!process.uiVisibility && !!process.uiVisibility.logging) {
-                let itemName = process.name;
-                if (!itemName)
-                    itemName = process.id;
-                this.processNames.set(process.id, `${process.id}.${process.version}.${itemName}`);
+                let itemName = ((!!process.name) ? process.name : process.id);
+                this.processNames.set(process.id, itemName);
                 for (const key in process.states) {
-                    this.processStateDescription.set(process.id + '.' + key,
-                        Utilities.getI18nPrefixFromProcess(process) + process.states[key].description);
-                    this.processStateName.set(process.id + '.' + key,
-                        Utilities.getI18nPrefixFromProcess(process) + process.states[key].name);
+                    this.processStateDescription.set(process.id + '.' + key, process.states[key].description);
+                    this.processStateName.set(process.id + '.' + key, process.states[key].name);
                     this.stateColors.set(process.id + '.' + key, process.states[key].color);
                 }
 
@@ -275,11 +270,11 @@ export class LoggingComponent implements OnDestroy, OnInit {
                                 [severityColumnName]: card.severity,
                                 [timeOfActionColumnName]: this.timeService.formatDateTime(card.publishDate),
                                 [processGroupColumnName]: this.translateColumn(this.processesService.findProcessGroupLabelForProcess(card.process)),
-                                [processColumnName]:  this.translateColumn(card.processName),
+                                [processColumnName]:  card.processName,
                                 [titleColumnName]: this.translateColumn(card.process + '.' + card.processVersion + '.' + card.title.key, card.title.parameters),
                                 [summaryColumnName]: this.translateColumn(card.process + '.' + card.processVersion + '.' + card.summary.key, card.summary.parameters),
-                                [stateColumnName]:  this.translateColumn(this.processStateName.get(card.process + '.' + card.state)),
-                                [descriptionColumnName]:  this.translateColumn(this.processStateDescription.get(card.process + '.' + card.state)),
+                                [stateColumnName]:  this.processStateName.get(card.process + '.' + card.state),
+                                [descriptionColumnName]:  this.processStateDescription.get(card.process + '.' + card.state),
                                 [senderColumnName]:  this.translateColumn(card.sender),
                                 [representativeColumnName]:  this.translateColumn(card.representative)
                             });
@@ -287,11 +282,11 @@ export class LoggingComponent implements OnDestroy, OnInit {
                             exportArchiveData.push({
                                 [severityColumnName]: card.severity,
                                 [timeOfActionColumnName]: this.timeService.formatDateTime(card.publishDate),
-                                [processColumnName]: this.translateColumn(card.processName),
+                                [processColumnName]: card.processName,
                                 [titleColumnName]: this.translateColumn(card.process + '.' + card.processVersion + '.' + card.title.key, card.title.parameters),
                                 [summaryColumnName]: this.translateColumn(card.process + '.' + card.processVersion + '.' + card.summary.key, card.summary.parameters),
-                                [stateColumnName]:  this.translateColumn(this.processStateName.get(card.process + '.' + card.state)),
-                                [descriptionColumnName]:  this.translateColumn(this.processStateDescription.get(card.process + '.' + card.state)),
+                                [stateColumnName]:  this.processStateName.get(card.process + '.' + card.state),
+                                [descriptionColumnName]:  this.processStateDescription.get(card.process + '.' + card.state),
                                 [senderColumnName]:  this.translateColumn(card.sender),
                                 [representativeColumnName]:  this.translateColumn(card.representative)
                             });
