@@ -8,7 +8,7 @@
  */
 
 
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -30,6 +30,7 @@ import {Actions, ofType} from '@ngrx/effects';
 import {AlertActions, AlertActionTypes} from '@ofStore/actions/alert.actions';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {GroupsService} from '@ofServices/groups.service';
+import {SoundNotificationService} from "@ofServices/sound-notification.service";
 
 class Alert {
   alert: Message;
@@ -67,6 +68,7 @@ export class AppComponent implements OnInit {
       , private groupsService: GroupsService
       , private processesService: ProcessesService
       , private reminderService: ReminderService
+      , private soundNotificationService: SoundNotificationService
       , private actions$: Actions) {
   }
 
@@ -75,6 +77,11 @@ export class AppComponent implements OnInit {
     this.initApplicationWhenUserAuthenticated();
     this.detectConnectionLost();
     this.subscribeToAlerts();
+  }
+
+  @HostListener('document:click', ['$event.target'])
+    public onPageClick() {
+        this.soundNotificationService.clearOutStandingNotifications();
   }
 
 

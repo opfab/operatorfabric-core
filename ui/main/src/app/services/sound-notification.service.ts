@@ -15,16 +15,18 @@ import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
 import {LightCardsService} from './lightcards.service';
-import {Subject} from "rxjs";
+import {EMPTY, merge, Subject, timer} from "rxjs"; import {filter, map, switchMap, takeUntil} from "rxjs/operators";
 
 @Injectable()
 export class SoundNotificationService {
 
-    soundConfigBySeverity: Map<Severity,SoundConfig>;
+    private ngUnsubscribe$ = new Subject<void>();
 
-    soundEnabled: Map<Severity,boolean>;
+    private soundConfigBySeverity: Map<Severity,SoundConfig>;
 
-    recentThreshold: number = 2000;
+    private soundEnabled: Map<Severity,boolean>;
+
+    private recentThreshold: number = 2000;
     /* The subscription used by the front end to get cards to display in the feed from the backend doesn't distinguish
      * between old cards loaded from the database and new cards arriving through the notification broker.
      * In addition, the getCardOperation observable on which this sound notification is hooked will also emit events
@@ -32,9 +34,13 @@ export class SoundNotificationService {
      * once (and only new cards), sounds will only be played for a given card if the elapsed time since its publishDate
      * is below this threshold. */
 
-    soundFileBasePath: string;
+    private soundReplayInterval: number = 20000;
 
-    incomingCardOrReminder = new Subject();
+    private readonly soundFileBasePath: string;
+
+    private incomingCardOrReminder = new Subject();
+
+    private clearSignal = new Subject();
 
     constructor(private store: Store<AppState>, private platformLocation: PlatformLocation,private lightCardsService: LightCardsService) {
 
@@ -52,22 +58,30 @@ export class SoundNotificationService {
             store.select(buildSettingsOrConfigSelector(soundConfig.soundEnabledSetting)).subscribe(x => { this.soundEnabled.set(severity,x)});
         })
 
-        this.incomingCardOrReminder.subscribe((card : LightCard) => {
-            this.playSoundForCard(card);
-        })
+        for(let severity of Object.values(Severity)) {
+            this.initSoundPlayingForSeverity(severity);
+        }
 
     }
 
-    //TODO Unsubscribe on destroy
-    handleRemindCard(card: LightCard ) {
+    ngOnDestroy() {
+        this.ngUnsubscribe$.next();
+        this.ngUnsubscribe$.complete();
+    }
+
+    public clearOutStandingNotifications() {
+        this.clearSignal.next(null);
+    }
+
+    public handleRemindCard(card: LightCard ) {
         if(this.lightCardsService.isCardVisibleInFeed(card)) this.incomingCardOrReminder.next(card);
     }
 
-    handleLoadedCard(card: LightCard) {
+    public handleLoadedCard(card: LightCard) {
         if(this.lightCardsService.isCardVisibleInFeed(card) && this.checkCardIsRecent(card)) this.incomingCardOrReminder.next(card);
     }
 
-    checkCardIsRecent (card: LightCard) : boolean {
+    private checkCardIsRecent (card: LightCard) : boolean {
         return ((new Date().getTime() - card.publishDate) <= this.recentThreshold);
     }
 
@@ -75,26 +89,53 @@ export class SoundNotificationService {
         return new Audio(this.soundFileBasePath+this.soundConfigBySeverity.get(severity).soundFileName);
     }
 
-    playSoundForCard(card: LightCard) {
+    private playSoundForSeverity(severity : Severity) {
 
-        if(this.soundEnabled.get(card.severity)) {
-            this.playSound(this.getSoundForSeverity(card.severity));
+        if(this.soundEnabled.get(severity)) {
+            this.playSound(this.getSoundForSeverity(severity));
         } else {
-            console.debug("No sound was played for "+card.id+" as sound is disabled for this severity");
+            console.debug("No sound was played for "+severity+" as sound is disabled for this severity");
         }
     }
 
-    /* There is no need to limit the frequency of calls to playXXXX methods because if a given sound XXXX is already
+    private initSoundPlayingForSeverity(severity: Severity) {
+        merge(
+            this.incomingCardOrReminder.pipe(
+                filter((card: LightCard) => card.severity === severity),
+                map(x => SignalType.NOTIFICATION)),
+            this.clearSignal.pipe(map(x => SignalType.CLEAR))
+        )
+        // Outputs an observable that emits a SignalType.NOTIFICATION element for every new card or reminder for the
+        // given severity, and a SignalType.CLEAR element every time the user clicks anywhere on the screen
+        // For each new SignalType.NOTIFICATION value, the next stage creates an observable that emits immediately then
+        // at the specified interval. In the case of SignalType.CLEAR, it creates an observable that completes immediately.
+        // Because of the switchMap, any new observable cancels the previous one, so that a click or a new card/reminder
+        // resets the replay timer.
+        .pipe(switchMap((x : SignalType) => {
+            if(x === SignalType.CLEAR) {
+                return EMPTY;
+            } else {
+                return timer(0,this.soundReplayInterval);
+            }
+        }),
+        takeUntil(this.ngUnsubscribe$))
+        .subscribe((x : SignalType) => {
+            this.playSoundForSeverity(severity);
+        })
+    }
+
+
+    /* There is no need to limit the frequency of calls to playSound because if a given sound XXXX is already
     * playing when XXXX.play() is called, nothing happens.
     * */
-
-    playSound(sound: HTMLAudioElement) {
+    private playSound(sound: HTMLAudioElement) {
         sound.play().catch(error => {
             console.log(new Date().toISOString(),
                 `Notification sound wasn't played because the user hasn't interacted with the app yet (autoplay policy).`);
             /* This is to handle the exception thrown due to the autoplay policy on Chrome. See https://goo.gl/xX8pDD */
         });
     }
+
 
 }
 
@@ -103,4 +144,8 @@ export class SoundConfig {
     soundFileName: string;
     soundEnabledSetting:string;
 
+}
+
+export enum SignalType {
+    NOTIFICATION, CLEAR
 }
