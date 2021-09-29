@@ -97,7 +97,7 @@ public class ProcessesService implements ResourceLoaderAware {
      */
     public void loadProcessGroupsCache() {
 
-        this.processGroupsCache = new ProcessGroupsData(new ArrayList<>(), new ProcessGroupsLocaleData());
+        this.processGroupsCache = new ProcessGroupsData(new ArrayList<>());
         try {
             Path rootPath = Paths
                     .get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath())

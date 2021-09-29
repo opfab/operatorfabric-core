@@ -285,11 +285,9 @@ class GivenAdminUserBusinessconfigControllerShould {
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.groups", hasSize(2)))
                     .andExpect(jsonPath("$.groups[0].id", is("processgroup1")))
+                    .andExpect(jsonPath("$.groups[0].name", is("Process Group 1")))
                     .andExpect(jsonPath("$.groups[1].id", is("processgroup2")))
-                    .andExpect(jsonPath("$.locale.en.processgroup1", is("Process Group 1")))
-                    .andExpect(jsonPath("$.locale.en.processgroup2", is("Process Group 2")))
-                    .andExpect(jsonPath("$.locale.fr.processgroup1", is("Groupe de process 1")))
-                    .andExpect(jsonPath("$.locale.fr.processgroup2", is("Groupe de process 2")));
+                    .andExpect(jsonPath("$.groups[1].name", is("Process Group 2")));
         }
 
         @Test

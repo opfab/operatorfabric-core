@@ -74,7 +74,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     tagsDropdownSettings = {};
 
     statesDropdownListPerProcesses = new Map();
-    processesGroups: {id: string, processes: string[]}[];
+    processesGroups: Map<string, {name: string, processes: string[]}>;
     checkPerimeterForSearchFields: boolean;
 
     constructor(private store: Store<AppState>,
@@ -144,8 +144,9 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
         if (this.processesWithoutProcessGroupDropdownList.length > 0)
             this.processGroupDropdownList.push({ id: '--', itemName: 'processGroup.defaultLabel' });
 
-        const processGroups = Array.from(this.processesDropdownListPerProcessGroups.keys());
-        processGroups.forEach(processGroup => this.processGroupDropdownList.push({ id: processGroup, itemName: processGroup }));
+        const processGroupIds = Array.from(this.processesDropdownListPerProcessGroups.keys());
+        processGroupIds.forEach(processGroupId =>
+            this.processGroupDropdownList.push({ id: processGroupId, itemName: this.processesGroups.get(processGroupId).name }));
     }
 
     private filterProcessesWithStatesWithReceiveRights(): void {
@@ -283,7 +284,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     }
 
     isThereProcessGroup(): boolean {
-        return !!this.processesGroups && this.processesGroups.length > 0;
+        return !!this.processesGroups && this.processesGroups.size > 0;
     }
 
     protected getLocale(): Observable<string> {

@@ -30,7 +30,7 @@ export class ProcessesService {
     private processCache = new Map();
     private translationsAlreadyLoaded = new Set<string>();
     private processes: Process[];
-    private processGroups: {id: string, processes: string[]}[];
+    private processGroups = new Map<string, {name: string, processes: string[]}>();
     private translationsLoaded = new Subject();
     private monitoringConfig: MonitoringConfig;
 
@@ -94,11 +94,11 @@ export class ProcessesService {
             .pipe(
                 map(processGroupsFile => {
                         if (!!processGroupsFile) {
-                            this.processGroups = processGroupsFile.groups;
-
-                            for (const language in processGroupsFile.locale)
-                                 this.translateService.setTranslation(language, processGroupsFile.locale[language], true);
-
+                            const processGroupsList = processGroupsFile.groups;
+                            if (!! processGroupsList)
+                                processGroupsList.forEach(processGroup => {
+                                    this.processGroups.set(processGroup.id, {name: processGroup.name, processes: processGroup.processes});
+                                });
                             console.log(new Date().toISOString(), 'List of process groups loaded');
                         }
                 }),
@@ -159,7 +159,7 @@ export class ProcessesService {
         return this.processes;
     }
 
-    public getProcessGroups(): {id: string, processes: string[]}[] {
+    public getProcessGroups(): Map<string, {name: string, processes: string[]}> {
         return this.processGroups;
     }
 
@@ -183,11 +183,8 @@ export class ProcessesService {
 
         const processGroupsAndLabels = [];
 
-        this.getProcessGroups().forEach(group => {
-            let groupLabel = '';
+        this.getProcessGroups().forEach((group, groupId) => {
             const processIdAndLabels = [];
-
-            this.translateService.get(group.id).subscribe(translate => { groupLabel = translate; });
 
             group.processes.forEach(processId => {
                 const processDefinition = this.getProcess(processId);
@@ -198,8 +195,8 @@ export class ProcessesService {
                     processIdAndLabels.push({processId: processId, processLabel: ''});
             });
 
-            processGroupsAndLabels.push({ groupId: group.id,
-                                          groupLabel: groupLabel,
+            processGroupsAndLabels.push({ groupId: groupId,
+                                          groupLabel: !! group.name ? group.name : groupId,
                                           processes: processIdAndLabels
                                         });
         });
@@ -295,12 +292,12 @@ export class ProcessesService {
         };
     }
 
-    public findProcessGroupForProcess(processId: string): string {
-        for (const group of this.processGroups) {
+    public findProcessGroupForProcess(processId: string) {
+        for (let [groupId, group] of this.processGroups) {
             if (group.processes.find(process => process === processId))
-                return group.id;
+                return {id: groupId, name: group.name, processes: group.processes};
         }
-        return '';
+        return null;
     }
 
     public getProcessesPerProcessGroups(processesFilter?: string[]): Map<any, any> {
@@ -309,14 +306,14 @@ export class ProcessesService {
         this.getAllProcesses().forEach(process => {
 
             if ((! processesFilter) || processesFilter.includes(process.id)) {
-                const processGroupId = this.findProcessGroupForProcess(process.id);
-                if (processGroupId !== '') {
-                    const processes = (!!processesPerProcessGroups.get(processGroupId) ? processesPerProcessGroups.get(processGroupId) : []);
+                const processGroup = this.findProcessGroupForProcess(process.id);
+                if (!! processGroup) {
+                    const processes = (!!processesPerProcessGroups.get(processGroup.id) ? processesPerProcessGroups.get(processGroup.id) : []);
                     processes.push({
                         id: process.id,
                         itemName: process.name
                     });
-                    processesPerProcessGroups.set(processGroupId, processes);
+                    processesPerProcessGroups.set(processGroup.id, processes);
                 }
             }
         });
@@ -327,16 +324,16 @@ export class ProcessesService {
         const processesWithoutProcessGroup = [];
 
         this.getAllProcesses().forEach(process => {
-            const processGroupId = this.findProcessGroupForProcess(process.id);
-            if (processGroupId === '')
+            const processGroup = this.findProcessGroupForProcess(process.id);
+            if (! processGroup)
                 processesWithoutProcessGroup.push({ id: process.id, itemName: process.name });
         });
         return processesWithoutProcessGroup;
     }
 
     public findProcessGroupLabelForProcess(processId: string): string {
-        const processGroupId = this.findProcessGroupForProcess(processId);
-        return (!! processGroupId && processGroupId !== '') ? processGroupId : 'processGroup.defaultLabel';
+        const processGroup = this.findProcessGroupForProcess(processId);
+        return (!! processGroup) ? processGroup.name : 'processGroup.defaultLabel';
     }
 
     private loadTypeOfStatesPerProcessAndState() {
