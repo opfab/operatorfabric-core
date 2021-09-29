@@ -32,10 +32,8 @@ import java.util.List;
 public class ProcessGroupsData implements ProcessGroups {
 
   private List<ProcessGroup>  groups;
-  private ProcessGroupsLocale           locale;
 
   public void clear(){
       this.groups.clear();
-      this.locale = new ProcessGroupsLocaleData();
   }
 }

@@ -56,12 +56,10 @@ Feature: uploadProcessGroups
     Then status 200
     And assert response.groups.length == 2
     Then match response.groups[0].id == 'processgroupKarate3'
+    Then match response.groups[0].name == 'Process Group Karate 3'
     Then match response.groups[0].processes[0] == 'id_process5'
     Then match response.groups[0].processes[1] == 'id_process6'
     Then match response.groups[1].id == 'processgroupKarate4'
+    Then match response.groups[1].name == 'Process Group Karate 4'
     Then match response.groups[1].processes[0] == 'id_process7'
     Then match response.groups[1].processes[1] == 'id_process8'
-    Then match response.locale.en.processgroupKarate3 == 'Process Group Karate 3'
-    Then match response.locale.en.processgroupKarate4 == 'Process Group Karate 4'
-    Then match response.locale.fr.processgroupKarate3 == 'Groupe de process Karate 3'
-    Then match response.locale.fr.processgroupKarate4 == 'Groupe de process Karate 4'

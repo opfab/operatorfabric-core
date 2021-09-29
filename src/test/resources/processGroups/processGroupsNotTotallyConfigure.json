@@ -2,6 +2,7 @@
   "groups": [
     {
       "id": "service1",
+      "name": "Service number 1",
       "processes": [
         "defaultProcess",
         "userCardExamples"
@@ -9,19 +10,10 @@
     },
     {
       "id": "service2",
+      "name": "Service number 2",
       "processes": [
         "userCardExamples2"
       ]
     }
-  ],
-  "locale": {
-    "en": {
-      "service1": "Service number 1",
-      "service2": "Service number 2"
-    },
-    "fr": {
-      "service1": "Service numéro 1",
-      "service2": "Service numéro 2"
-    }
-  }
+  ]
 }
