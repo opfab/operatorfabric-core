@@ -58,7 +58,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     processesDefinition: Process[];
     currentUserWithPerimeters: UserWithPerimeters;
-    processGroups: {id: string, processes: string[]}[];
+    processGroups: Map<string, {name: string, processes: string[]}>;
 
     severityOptions = Object.keys(Severity).map(severity => {
         return {
@@ -269,14 +269,14 @@ export class UserCardComponent implements OnDestroy, OnInit {
                 });
     }
 
-    isProcessInProcessesGroup(idProcess: string, processesGroup: {id: string, processes: string[]}): boolean {
+    isProcessInProcessesGroup(idProcess: string, processesGroup: {name: string, processes: string[]}): boolean {
         return !!processesGroup.processes.find(process => process === idProcess);
     }
 
     loadAllProcessGroupsRelatingToUserPerimeter(): void {
         let numberOfProcessesAttachedToAProcessGroup = 0;
 
-        this.processGroups.forEach(group => {
+        this.processGroups.forEach((group, groupId) => {
 
             const processOptions = [];
             this.processOptions.forEach(processOption => {
@@ -284,12 +284,12 @@ export class UserCardComponent implements OnDestroy, OnInit {
                     processOptions.push(processOption);
                     numberOfProcessesAttachedToAProcessGroup++;
 
-                    this.processGroupPerProcesses.set(processOption.value, group.id);
+                    this.processGroupPerProcesses.set(processOption.value, groupId);
                 }
             });
 
             if (processOptions.length > 0)
-                this.processesPerProcessGroups.set(group.id, processOptions);
+                this.processesPerProcessGroups.set(groupId, processOptions);
         });
 
         if (this.processOptions.length > numberOfProcessesAttachedToAProcessGroup) {
@@ -297,7 +297,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
             this.processGroupOptions.push({value: '--', label: 'processGroup.defaultLabel'});
         }
         for (const processGroupId of this.processesPerProcessGroups.keys())
-            this.processGroupOptions.push({value: processGroupId, label: processGroupId});
+            this.processGroupOptions.push({value: processGroupId, label: this.processGroups.get(processGroupId).name});
         
         if (!this.cardIdToEdit && this.processGroupOptions.length > 0) {
             this.messageForm.get('processGroup').setValue(this.processGroupOptions[0].value);

@@ -347,6 +347,7 @@ Example of content for uploaded file :
   "groups": [
     {
       "id": "processgroup1",
+      "name": "Process Group 1",
       "processes": [
         "process1",
         "process2"
@@ -354,22 +355,13 @@ Example of content for uploaded file :
     },
     {
       "id": "processgroup2",
+      "name": "Process Group 2",
       "processes": [
         "process3",
         "process4"
       ]
     }
-  ],
-  "locale": {
-    "en": {
-      "processgroup1": "Process Group 1",
-      "processgroup2": "Process Group 2"
-    },
-    "fr": {
-      "processgroup1": "Groupe de process 1",
-      "processgroup2": "Groupe de process 2"
-    }
-  }
+  ]
 }
 
 ----
