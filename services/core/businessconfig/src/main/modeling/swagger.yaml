@@ -541,6 +541,9 @@ definitions:
       id:
         description: Id of the group
         type: string
+      name:
+        description: Name of the group
+        type: string
       processes:
         description: List of processes included in the group
         type: array
@@ -560,17 +563,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/ProcessGroup'
-      locale:
-        type: object
-        properties:
-          en:
-            type: object
-            additionalProperties:
-              type: string
-          fr:
-            type: object
-            additionalProperties:
-              type: string
   UserCard:
     properties:
       template:

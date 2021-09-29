@@ -24,5 +24,34 @@ For process bundles, in the `config.json` file, here are the affected fields :
 These fields must not contain i18n data anymore, they must only contain string data. These data will be
 simply displayed on the screen.
 
+== Processes groups
+
+We have also decided to remove locale mechanism in processes groups.
+So there is no possibility anymore to have translation for the process group name. You can just define
+the name of the group in the uploaded file. Here is an example of this file :
+[source,json]
+----
+{
+  "groups": [
+    {
+      "id": "processgroup1",
+      "name": "Process Group 1",
+      "processes": [
+        "process1",
+        "process2"
+      ]
+    },
+    {
+      "id": "processgroup2",
+      "name": "Process Group 2",
+      "processes": [
+        "process3",
+        "process4"
+      ]
+    }
+  ]
+}
+
+----
 
 
