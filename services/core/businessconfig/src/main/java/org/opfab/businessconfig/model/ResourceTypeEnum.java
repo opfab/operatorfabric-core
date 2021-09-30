@@ -29,7 +29,7 @@ import org.opfab.businessconfig.services.ProcessesService;
 @AllArgsConstructor
 public enum ResourceTypeEnum {
   CSS("css", ".css", false),
-  TEMPLATE("template", ".handlebars", true),
+  TEMPLATE("template", ".handlebars", false),
   I18N("i18n", ".json", true),
   TRANSLATION(".", ".json", false);
 

@@ -274,13 +274,12 @@ export class HandlebarsService {
     }
 
     public  queryTemplate(process: string, version: string, name: string): Observable<Function> {
-        const locale = this._locale;
-        const key = `${process}.${version}.${name}.${locale}`;
+        const key = `${process}.${version}.${name}`;
         const template = this.templateCache[key];
         if (template) {
            return of(template);
         }
-        return this.businessconfig.fetchHbsTemplate(process, version, name, locale).pipe(
+        return this.businessconfig.fetchHbsTemplate(process, version, name).pipe(
             map(s => Handlebars.compile(s)),
             tap(t => this.templateCache[key] = t)
         );
