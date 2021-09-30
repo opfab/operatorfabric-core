@@ -85,10 +85,10 @@ public class BusinessconfigController implements BusinessconfigApi {
     }
 
     @Override
-    public byte[] getTemplate(HttpServletRequest request, HttpServletResponse response, String processId, String templateName, String locale, String version) throws
+    public byte[] getTemplate(HttpServletRequest request, HttpServletResponse response, String processId, String templateName, String version) throws
             IOException {
         Resource resource;
-        resource = processService.fetchResource(processId, ResourceTypeEnum.TEMPLATE, version, locale, templateName);
+        resource = processService.fetchResource(processId, ResourceTypeEnum.TEMPLATE, version, templateName);
         return loadResource(resource);
     }
 

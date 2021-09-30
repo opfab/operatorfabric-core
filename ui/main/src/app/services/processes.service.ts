@@ -243,9 +243,8 @@ export class ProcessesService {
         });
     }
 
-    fetchHbsTemplate(process: string, version: string, name: string, locale: string): Observable<string> {
+    fetchHbsTemplate(process: string, version: string, name: string): Observable<string> {
         const params = new HttpParams()
-            .set('locale', locale)
             .set('version', version);
         return this.httpClient.get(`${this.processesUrl}/${process}/templates/${name}`, {
             params,

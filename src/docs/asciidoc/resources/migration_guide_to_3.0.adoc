@@ -11,6 +11,14 @@
 
 The bundle contains a new i18n.json file in the root directory. The i18n.json file contains internationalization information for title and summary fields.
 
+=== Template directory
+
+The `template` directory does not contain language repository anymore. There is one template per process/state
+ and the templates are located directly in this directory.
+
+Therefore, the enpoint to get a template has been modified. Till now, you could set 2 query parameters,
+`version` and `locale`, now you can set only `version` parameter.
+
 == Process bundles
 
 In order to remove unnecessary complexity for third-party, we have decided to remove translation for

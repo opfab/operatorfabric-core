@@ -119,25 +119,25 @@ class ProcessesServiceShould {
 
     @Test
     void fetchTemplate() throws IOException {
-        File templateFile = service.fetchResource("first", TEMPLATE, null,"fr","template1").getFile();
-        assertThat(templateFile.getParentFile()).isDirectory().hasName("fr");
+        File templateFile = service.fetchResource("first", TEMPLATE, null,null,"template1").getFile();
+        assertThat(templateFile.getParentFile()).isDirectory().hasName("template");
         assertThat(templateFile)
                 .exists()
                 .isFile()
                 .hasName("template1.handlebars")
-                .hasContent("{{service}} fr");
-        templateFile = service.fetchResource("first", TEMPLATE, "0.1", "fr", "template").getFile();
+                .hasContent("{{service}}");
+        templateFile = service.fetchResource("first", TEMPLATE, "0.1", null, "template").getFile();
         assertThat(templateFile)
                 .exists()
                 .isFile()
                 .hasName("template.handlebars")
-                .hasContent("{{service}} fr 0.1");
-        templateFile = service.fetchResource("first", TEMPLATE, "0.1", "en", "template").getFile();
+                .hasContent("{{service}} 0.1");
+        templateFile = service.fetchResource("first", TEMPLATE, "0.1", null, "template").getFile();
         assertThat(templateFile)
                 .exists()
                 .isFile()
                 .hasName("template.handlebars")
-                .hasContent("{{service}} en 0.1");
+                .hasContent("{{service}} 0.1");
     }
 
     @Test
@@ -204,15 +204,6 @@ class ProcessesServiceShould {
                         "0.1",
                         null,
                         "template1")
-                        .getInputStream()
-        );
-
-        assertException(FileNotFoundException.class).isThrownBy(() ->
-                service.fetchResource("first",
-                        TEMPLATE,
-                        "0.1",
-                        "de",
-                        "template")
                         .getInputStream()
         );
     }
