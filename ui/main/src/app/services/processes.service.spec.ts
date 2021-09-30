@@ -71,26 +71,6 @@ describe('Processes Services', () => {
     });
 
 
-    describe('#fetchHbsTemplate', () => {
-            const templates = {
-                en: 'English template {{card.data.name}}',
-                fr: 'Template Français {{card.data.name}}'
-            };
-        it('should return different files for each language', () => {
-            processesService.fetchHbsTemplate('testPublisher', '0', 'testTemplate', 'en')
-                .subscribe((result) => expect(result).toEqual('English template {{card.data.name}}'));
-            processesService.fetchHbsTemplate('testPublisher', '0', 'testTemplate', 'fr')
-                .subscribe((result) => expect(result).toEqual('Template Français {{card.data.name}}'));
-            const calls = httpMock.match(req => req.url === `${environment.urls.processes}/testPublisher/templates/testTemplate`);
-            expect(calls.length).toEqual(2);
-            calls.forEach(call => {
-                expect(call.request.method).toBe('GET');
-                call.flush(templates[call.request.params.get('locale')]);
-            });
-        });
-    });
-
-
     it('should compute url with encoding special characters', () => {
         const urlFromPublishWithSpaces = processesService.computeBusinessconfigCssUrl('publisher with spaces'
             , getRandomAlphanumericValue(3, 12)

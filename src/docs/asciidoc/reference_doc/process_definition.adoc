@@ -42,12 +42,8 @@ bundle
 │   ├── en.json
 │   └── fr.json
 └── template
-    ├── en
-    │   ├── template1.handlebars
-    │   └── template2.handlebars
-    └── fr
-        ├── template1.handlebars
-        └── template2.handlebars
+    ├── template1.handlebars
+    └── template2.handlebars
 ----
 
 == The config.json file
@@ -83,8 +79,8 @@ This file contains internationalization information, in particular the translati
 
 == i18n
 
-There are two ways of internationalization (i18n) for businessconfig service.
-First one by using l10n files located in the `i18n` folder, the second one throughout l10n name folder nested in the `template` folder.
+There is a possibility of internationalization (i18n) for businessconfig service.
+You can do it by using l10n files located in the `i18n` folder.
 
 The `i18n` folder contains one json file per l10n.
 
@@ -92,8 +88,7 @@ The integration of the businessconfig service into OperatorFabric need this loca
 
 ===  Template folder
 
-The `template` folder must contain l10n folder for the i18n of the card details.
-This is why in our example, as the bundle contains an `en` and a `fr` l10n, the `template` folder contains an `en` and a `fr` folder.
+The `template` folder contains one template file for each process/state. They will be used for the card details rendering.
 
 ==== i18n file
 
@@ -171,10 +166,10 @@ As the card used in this example are created above, the bundle template folder n
 
 *Examples of template (i18n versions)*
 
-The following templates display a l10n title and a line containing the value of the scope property `card.level1.level1Prop`.
-In english, the translation of this key is '_This is a root property_'.
+The following template displays a title and a line containing the value of the scope property `card.level1.level1Prop`.
+The value of this key is '_This is a root property_'.
 
-`/template/en/template1.handlebars`
+`/template/template1.handlebars`
 
 [source,html]
 ----
@@ -182,33 +177,13 @@ In english, the translation of this key is '_This is a root property_'.
 <div class="bundle-test">'{{card.data.level1.level1Prop}}'</div>
 ----
 
-`/template/fr/template1.handlebars`
+The following template example displays also a title and a list of numeric values from 1 to 3.
 
-[source,html]
-----
-<h2>Patron numéro Un</h2>
-<div class="bundle-test">'{{card.data.level1.level1Prop}}'</div>
-----
-
-The two following template examples display also a l10n title and a list of numeric values from 1 to 3.
-
-`/template/en/template2.handlebars`
+`/template/template2.handlebars`
 
 [source,html]
 ----
 <h2>Second Template</h2>
-<ul class="bundle-test-list">
-	{{#each card.data.level1.level1Array}}
-		<li class="bunle-test-list-item">{{this.level1ArrayProp}}</li>
-	{{/each}}
-</ul>
-----
-
-`/template/fr/template2.handlebars`
-
-[source,html]
-----
-<h2>Second patron</h2>
 <ul class="bundle-test-list">
 	{{#each card.data.level1.level1Array}}
 		<li class="bunle-test-list-item">{{this.level1ArrayProp}}</li>
@@ -241,7 +216,7 @@ As above, all parts of files irrelevant for our example are symbolised by a `…
 }
 ----
 
-*CSS Class used in `./template/en/template1.handlebars`*
+*CSS Class used in `./template/template1.handlebars`*
 
 [source,html]
 ----

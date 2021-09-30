@@ -144,32 +144,24 @@ class GivenAdminUserBusinessconfigControllerShould {
     @Test
     void fetchTemplateResource() throws Exception {
         ResultActions result = mockMvc.perform(
-                get("/businessconfig/processes/first/templates/template1?locale=fr")
+                get("/businessconfig/processes/first/templates/template1")
                         .accept("application/handlebars")
         );
         result
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/handlebars"))
-                .andExpect(content().string(is("{{service}} fr")))
+                .andExpect(content().string(is("{{service}}")))
         ;
         result = mockMvc.perform(
-                get("/businessconfig/processes/first/templates/template?version=0.1&locale=fr")
+                get("/businessconfig/processes/first/templates/template?version=0.1")
                         .accept("application/handlebars"));
         result
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/handlebars"))
-                .andExpect(content().string(is("{{service}} fr 0.1")))
+                .andExpect(content().string(is("{{service}} 0.1")))
         ;
         result = mockMvc.perform(
-                get("/businessconfig/processes/first/templates/template?locale=en&version=0.1")
-                        .accept("application/handlebars"));
-        result
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/handlebars"))
-                .andExpect(content().string(is("{{service}} en 0.1")))
-        ;
-        result = mockMvc.perform(
-                get("/businessconfig/processes/first/templates/templateIO?locale=fr&version=0.1")
+                get("/businessconfig/processes/first/templates/templateIO?version=0.1")
                         .accept("application/json", "application/handlebars"));
         result
                 .andExpect(status().is4xxClientError())

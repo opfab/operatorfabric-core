@@ -8,19 +8,18 @@ Feature: Security
     * def templateName = 'template'
     * def wrongTemplateName = '..%2Ftemplate'
     * def templateVersion = 2
-    * def templateLanguage = 'en'
 
 
 Scenario: Check template name with forbidden characters
 
     # Check template
-Given url opfabUrl + '/businessconfig/processes/'+ process +'/templates/' + templateName + '?locale=' + templateLanguage + '&version='+ templateVersion
+Given url opfabUrl + '/businessconfig/processes/'+ process +'/templates/' + templateName + '?version='+ templateVersion
 And header Authorization = 'Bearer ' + authTokenAsTSO
 When method GET
 Then status 200
 
     # Check template
-Given url opfabUrl + '/businessconfig/processes/'+ process +'/templates/' + wrongTemplateName + '?locale=' + templateLanguage + '&version='+ templateVersion
+Given url opfabUrl + '/businessconfig/processes/'+ process +'/templates/' + wrongTemplateName + '?version='+ templateVersion
 And header Authorization = 'Bearer ' + authTokenAsTSO
 When method GET
 Then status 401
