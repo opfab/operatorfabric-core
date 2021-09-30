@@ -93,7 +93,7 @@ export class EditPerimeterModalComponent implements OnInit {
 
     // The dropdown will prefix values with the process Ids because there is no certainty that i18n values are unique across bundles.
     this.processesDefinition.forEach((process: Process) => {
-      const label = process.name ? (Utilities.getI18nPrefixFromProcess(process) + process.name) : process.id;
+      const label = process.name ? process.name : process.id;
       const processToShow = { value: process.id, label: label };
       this.processOptions.push(processToShow);
     });
@@ -108,7 +108,7 @@ export class EditPerimeterModalComponent implements OnInit {
             .flatMap((processDef: Process) => {
               const statesToShow = [];
               for (const [stateId, value] of Object.entries(processDef.states)) {
-                statesToShow.push({value: stateId, label: Utilities.getI18nPrefixFromProcess(processDef) + value.name});
+                statesToShow.push({value: stateId, label: value.name});
               }
               return statesToShow;
             });
