@@ -29,7 +29,7 @@ export class SettingsComponent implements OnInit {
   ngOnInit() {
     this.locales = this.configService.getConfigValue('i18n.supported.locales');
     this.timeZones = this.configService.getConfigValue('i10n.supported.time-zones');
-    this.displayInfo = this.configService.getConfigValue('settings.infos');
+    this.displayInfo = this.configService.getConfigValue('settings.infos.hide');
   }
 
 }
