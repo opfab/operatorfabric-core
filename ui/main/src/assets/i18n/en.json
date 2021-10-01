@@ -151,7 +151,7 @@
     "playSoundForCompliant": "Compliant",
     "playSoundForInformation": "Information",
     "replayEnabled": "Sound replay enabled",
-    "replayInterval": "Interval between sound replays (in seconds)"
+    "replayInterval": "Interval between sound replays (seconds)"
   },
   "archive": {
     "filters": {
