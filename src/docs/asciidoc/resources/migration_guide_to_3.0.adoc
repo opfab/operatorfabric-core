@@ -54,4 +54,17 @@ the name of the group in the uploaded file. Here is an example of this file :
 
 ----
 
+== Configuration file `web-ui.json`
+
+Some attributes have been renamed to be more consistent with their meaning.
+Here are these attributes :
+
+* `settings.infos.description` renamed `settings.infos.hide.description`
+* `settings.infos.language` renamed `settings.infos.hide.language`
+* `settings.infos.timezone` renamed `settings.infos.hide.timezone`
+* `settings.infos.tags` renamed `settings.infos.hide.tags`
+* `settings.infos.sounds` renamed `settings.infos.hide.sounds`
+
+So if you use these fields in `web-ui.json` file, you have to rename them.
+
 
