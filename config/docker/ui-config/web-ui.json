@@ -127,7 +127,9 @@
       }
     },
     "infos": {
-      "description": true
+      "hide": {
+        "description": true
+      }
     },
     "locale": "en",
     "dateTimeFormat": "HH:mm DD/MM/YYYY",
