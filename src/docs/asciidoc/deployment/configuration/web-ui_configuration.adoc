@@ -94,17 +94,18 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |settings.dateFormat|Value from the browser configuration|no|Format for date rendering (example : DD/MM/YYYY )
 |settings.timeFormat|Value from the browser configuration|no|Format for time rendering (example : HH:mm )
 |settings.dateTimeFormat|Value from the browser configuration|no|Format for date and time rendering (example : HH:mm DD/MM/YYYY )
-|settings.infos.description|false|no|Control if we want to hide(true) or display(false or not specified) the user description in the settings page
-|settings.infos.language|false|no|Control if we want to hide(true) or display(false or not specified) the language in the settings page
-|settings.infos.timezone|false|no|Control if we want to hide(true) or display(false or not specified) the timezone in the settings page
-|settings.infos.tags|false|no|Control if we want to hide(true) or display(false or not specified) the tags in the settings page
-|settings.infos.sounds|false|no|Control if we want to hide(true) or display(false or not specified) the checkboxes for sound notifications in the settings page
+|settings.infos.hide.description|false|no|Control if we want to hide(true) or display(false or not specified) the user description in the settings page
+|settings.infos.hide.language|false|no|Control if we want to hide(true) or display(false or not specified) the language in the settings page
+|settings.infos.hide.timezone|false|no|Control if we want to hide(true) or display(false or not specified) the timezone in the settings page
+|settings.infos.hide.tags|false|no|Control if we want to hide(true) or display(false or not specified) the tags in the settings page
+|settings.infos.hide.sounds|false|no|Control if we want to hide(true) or display(false or not specified) the checkboxes for sound notifications in the settings page
 |settings.playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
 |settings.playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
 |settings.playSoundForCompliant|false|no|If set to true, a sound is played when Compliant cards are added or updated in the feed
 |settings.playSoundForInformation|false|no|If set to true, a sound is played when Information cards are added or updated in the feed
 |settings.replayEnabled|false|no|If set to true, sounds are replayed every `settings.replayInterval` seconds until the user interacts with the application
 |settings.replayInterval|5|no|Interval between sound replays (see `settings.replayEnabled`)
+
 |settings.about
 a|none
 a|no
