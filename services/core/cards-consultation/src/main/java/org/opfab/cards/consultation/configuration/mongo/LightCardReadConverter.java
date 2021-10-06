@@ -52,6 +52,8 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
                 .endDate(source.getDate("endDate") == null ? null : source.getDate("endDate").toInstant())
                 .publishDate(source.getDate("publishDate") == null ? null : source.getDate("publishDate").toInstant())
                 .severity(SeverityEnum.valueOf(source.getString("severity")))
+                .titleTranslated(source.getString("titleTranslated"))
+                .summaryTranslated(source.getString("summaryTranslated"))
                 .usersAcks(source.getList("usersAcks", String.class))
                 .publisherType(PublisherTypeEnum.valueOf(source.getString("publisherType")))
                 .representative(source.getString("representative") == null ? null : source.getString("representative"))
