@@ -136,6 +136,10 @@ config/dev/nginx.conf
 **/.DS_Store
 
 # Cypress
+
 src/test/cypress/node_modules
 src/test/cypress/cypress/screenshots
 src/test/cypress/cypress/videos
+
+# migration-opfab3
+src/tooling/migration-opfab3/node_modules
