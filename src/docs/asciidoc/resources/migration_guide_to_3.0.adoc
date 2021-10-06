@@ -75,4 +75,15 @@ Here are these attributes :
 
 So if you use these fields in `web-ui.json` file, you have to rename them.
 
+== Script to migrate an existing database
+
+Opfab 3.0 needs two new fields in database : `titleTranslated` and `summaryTranslated`.
+In order to add these two new fields to an existing database, you have to pull the image `migration-opfab3`,
+go to the directory `OF_HOME/src/tooling/migration-opfab3` and execute the script `docker-compose.sh`, this way :
+
+`./docker-compose.sh <containerNameMongoDB> <portMongoDB> <loginMongoDB> <passwordMongoDB> <pathToBundlesDirectory>`
+
+WARNING: The bundles directory is the directory where you store all the "untar" bundles in the new
+format with the `i18n.json` file. It is not the directory where the opfab instance stores the bundles.
+
 

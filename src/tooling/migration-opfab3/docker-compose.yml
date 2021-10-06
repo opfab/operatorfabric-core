@@ -1,0 +1,11 @@
+version: '2.1'
+services:
+  migration-opfab3:
+    container_name: migration-opfab3
+    image: "migration-opfab3:latest"
+    volumes:
+      - ${BUNDLES_PATH}:/bundles
+networks:
+  default:
+    external: true
+    name: migration-opfab3-network
