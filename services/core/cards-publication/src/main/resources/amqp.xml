@@ -13,4 +13,6 @@
     </rabbit:fanout-exchange>
     <rabbit:fanout-exchange id="userExchange" name="USER_EXCHANGE" auto-delete="false" durable="true">
     </rabbit:fanout-exchange>
+    <rabbit:fanout-exchange id="processExchange" name="PROCESS_EXCHANGE" auto-delete="false" durable="true">
+    </rabbit:fanout-exchange>
 </beans>

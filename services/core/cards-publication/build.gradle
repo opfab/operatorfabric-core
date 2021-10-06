@@ -12,6 +12,7 @@ dependencies {
 
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
+    
 
     implementation cloud.springKafka
     implementation cloud.kafkaAvroSchemaRegistryClient
@@ -22,6 +23,7 @@ dependencies {
     implementation boot.starterSecurity
     implementation boot.starterValidation
     implementation boot.starterMongo
+    implementation cloud.starterFeign
     testImplementation spring.securityTest
     implementation project(':client:cards-client-data')
     implementation project(':client:users-client-data')

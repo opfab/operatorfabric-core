@@ -12,7 +12,6 @@
 package org.opfab.springtools.configuration.oauth;
 
 import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 /**
  * Feign proxy for User service
  */
-@FeignClient(url="${operatorfabric.servicesUrls.users}", name = "users")
+@FeignClient(url="${operatorfabric.servicesUrls.users}", name = "users", configuration=FeignConfiguration.class)
 public interface UserServiceProxy {
 
     @GetMapping(value = "/internal/CurrentUserWithPerimeters",
