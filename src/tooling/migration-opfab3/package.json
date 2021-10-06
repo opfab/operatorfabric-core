@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "i18next": "^21.2.6",
+    "mongodb": "^4.1.2"
+  }
+}
