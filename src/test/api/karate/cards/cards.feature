@@ -110,6 +110,8 @@ Feature: Cards
 	And match response.card.publisherType == "EXTERNAL"
     And match response.card.id == cardId
     And match response.card.uid == cardUid
+    And match response.card.titleTranslated == 'card Title'
+    And match response.card.summaryTranslated == 'card summary'
 
 
     #get card without  authentication

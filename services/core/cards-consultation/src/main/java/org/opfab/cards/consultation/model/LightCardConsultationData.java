@@ -56,6 +56,9 @@ public class LightCardConsultationData implements LightCard {
     private List<String> tags;
     private I18n title;
     private I18n summary;
+
+    private String titleTranslated;
+    private String summaryTranslated;
     
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
@@ -120,6 +123,8 @@ public class LightCardConsultationData implements LightCard {
                 .severity(other.getSeverity())
                 .title(I18nConsultationData.copy(other.getTitle()))
                 .summary(I18nConsultationData.copy(other.getSummary()))
+                .titleTranslated(other.getTitleTranslated())
+                .summaryTranslated(other.getSummaryTranslated())
                 .hasBeenAcknowledged(other.getHasBeenAcknowledged())
                 .hasBeenRead(other.getHasBeenRead())
                 .entitiesAllowedToRespond(other.getEntitiesAllowedToRespond())

@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
-import org.jeasy.random.FieldPredicates;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,7 +60,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = UnitTestApplication.class)
+@SpringBootTest(classes = {UnitTestApplication.class})
 @ActiveProfiles(profiles = {"native", "test"})
 @Import({RestTemplate.class})
 @Slf4j
@@ -348,7 +347,6 @@ class CardProcessServiceShould {
         Assertions.assertThat(checkArchiveCount(0)).isTrue();
     }
 
-
     @Test
     void preserveData() {
         // as date are stored in millis in mongo , we should not used nanos otherwise 
@@ -376,7 +374,7 @@ class CardProcessServiceShould {
         RecurrencePublicationData recurrence = new RecurrencePublicationData("timezone",daysOfWeek,hoursAndMinutes, duration);
 
         CardPublicationData newCard = CardPublicationData.builder().publisher("publisher(")
-                .processVersion("0.0.1").processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
+                .processVersion("1").processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                 .startDate(start).title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").parameter("arg1", "value1")
                         .build())
@@ -394,11 +392,16 @@ class CardProcessServiceShould {
         cardProcessingService.processCard(newCard);
         CardPublicationData persistedCard = cardRepository.findById(newCard.getId()).get();
         assertThat(persistedCard).isEqualToIgnoringGivenFields(newCard);
+        assertThat(persistedCard.getTitleTranslated()).isEqualTo("Title translated");
+        assertThat(persistedCard.getSummaryTranslated()).isEqualTo("Summary translated value1");
 
         ArchivedCardPublicationData archivedPersistedCard = archiveRepository.findById(newCard.getUid()).get();
         assertThat(archivedPersistedCard).isEqualToIgnoringGivenFields(newCard, "uid", "id",
                 "actions", "timeSpans");
         assertThat(archivedPersistedCard.getId()).isEqualTo(newCard.getUid());
+        assertThat(archivedPersistedCard.getTitleTranslated()).isEqualTo("Title translated");
+        assertThat(archivedPersistedCard.getSummaryTranslated()).isEqualTo("Summary translated value1");
+
         assertThat(testCardReceiver.getCardQueue().size()).isEqualTo(1);
     }
 
