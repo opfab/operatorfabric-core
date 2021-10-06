@@ -4,7 +4,8 @@
 	},
 	"defaultProcess": {
 		"title" : "card Title",
-		"title2" : "card Title II"
+		"title2" : "card Title II",
+		"summary": "card summary"
 	},
 	"messageState": {
 		"description": "Message"

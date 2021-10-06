@@ -37,6 +37,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String THIRDS_PATH = "/businessconfig/**";
     private static final String STYLE_URL_PATTERN = "/businessconfig/processes/*/css/*";
+    private static final String I18N_URL_PATTERN = "/businessconfig/processes/*/translation*";
 
     public static final String AUTH_AND_IP_ALLOWED = "isAuthenticated() and @webSecurityChecks.checkUserIpAddress(authentication)";
     public static final String ADMIN_AND_IP_ALLOWED = "hasRole('ADMIN') and @webSecurityChecks.checkUserIpAddress(authentication)";
@@ -61,6 +62,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll() 
                 .antMatchers(STYLE_URL_PATTERN).permitAll() // Style is called via <style> , so no token is provided  (Static ressource)
+                .antMatchers(I18N_URL_PATTERN).permitAll() // To let it be called by CardPubblication when checkAuthenticationForCardSending if set to false
                 .antMatchers(HttpMethod.POST, THIRDS_PATH).access(ADMIN_AND_IP_ALLOWED)
                 .antMatchers(HttpMethod.PUT, THIRDS_PATH).access(ADMIN_AND_IP_ALLOWED)
                 .antMatchers(HttpMethod.DELETE, THIRDS_PATH).access(ADMIN_AND_IP_ALLOWED)

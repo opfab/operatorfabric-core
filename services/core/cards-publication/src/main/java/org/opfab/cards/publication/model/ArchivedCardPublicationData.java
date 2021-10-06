@@ -56,6 +56,9 @@ public class ArchivedCardPublicationData implements Card {
     private I18n title;
     private I18n summary;
 
+    private String titleTranslated;
+    private String summaryTranslated;
+
     @CreatedDate
     @Indexed
     private Instant publishDate;
@@ -124,6 +127,8 @@ public class ArchivedCardPublicationData implements Card {
         this.lttd = card.getLttd();
         this.title = card.getTitle();
         this.summary = card.getSummary();
+        this.titleTranslated = card.getTitleTranslated();
+        this.summaryTranslated = card.getSummaryTranslated();
         this.tags = card.getTags() == null ? null : new ArrayList<>(card.getTags());
         this.severity = card.getSeverity();
         this.data = card.getData();
