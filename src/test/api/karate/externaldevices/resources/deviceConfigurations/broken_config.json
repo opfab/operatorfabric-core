@@ -1,0 +1,5 @@
+{
+	"host" : "this_config_is_no_good_because_it_doesnt_have_an_id",
+	"port" : 8080,
+	"signalMappingId": "some_mapping"
+}
