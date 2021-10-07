@@ -1,0 +1,91 @@
+plugins {
+    id "org.hidetake.swagger.generator"
+}
+
+dependencies {
+
+    swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
+    implementation project(':tools:spring:spring-mongo-utilities')
+    implementation project(':tools:spring:spring-utilities')
+    implementation project(':tools:spring:spring-oauth2-utilities')
+    implementation project(':client:users-client-data')
+    swaggerUI generator.swaggerUI
+    implementation boot.starterSecurity
+    implementation spring.securityOauthResource, spring.securityOauthJose
+    implementation boot.starterValidation
+    implementation boot.starterMongo
+    compileOnly boot.annotationConfiguration
+    annotationProcessor boot.annotationConfiguration
+    implementation boot.starterWeb, boot.starterJetty
+    implementation misc.jlibmodbus
+}
+
+bootJar {
+    manifest {
+        attributes("Created-By"             : "Gradle ${gradle.gradleVersion}",
+                   "Specification-Title"    : "OperatorFabric External Devices Manager",
+                   "Implementation-Title"   : "OperatorFabric External Devices Manager",
+                   "Implementation-Version" : operatorfabric.version,
+                   "Specification-Version"  : operatorfabric.version
+        )
+    }
+}
+
+/////// CONFIGURATION
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+            srcDir 'build/swagger/src/main/java'
+        }
+        resources{
+            srcDir 'src/main/resources'
+            srcDir 'build/src/generated/resources'
+        }
+    }
+}
+
+swaggerSources {
+    endpoints {
+        inputFile = file('src/main/modeling/swagger.yaml')
+        code {
+            language = 'org.opfab.generators.OpfabSpringGenerator'
+            additionalProperties = [ignoreImportMappings:"false"]
+            configFile = file('src/main/modeling/config.json')
+            outputDir = file("./build/swagger")
+            templateDir = file('../src/main/resources/swagger-templates')
+        }
+        ui {
+            outputDir = file("./build/docs/api")
+        }
+    }
+}
+
+// This is a temporary fix to avoid false build error, see (#1543)
+tasks.named("processResources") {
+    duplicatesStrategy = 'include'
+}
+
+docker {
+    if (project.version.toUpperCase().equals("SNAPSHOT"))
+        name "lfeoperatorfabric/of-${project.name.toLowerCase()}:SNAPSHOT" /* more information : https://vsupalov.com/docker-latest-tag/ */
+    else
+        name "lfeoperatorfabric/of-${project.name.toLowerCase()}"
+    tags "latest", "${project.version}"
+    labels (['project':"${project.group}"])
+    files( "build/libs"
+            , "../../config/docker/common-docker.yml"
+            , "../../config/docker/${project.name.toLowerCase().replaceAll("-service","")}-docker.yml"
+            , '../../src/main/docker/java-config-docker-entrypoint.sh'
+            ,'../../src/main/docker/add-certificates.sh')
+    buildArgs(['JAR_FILE'       : "${project.name.toLowerCase()}-${project.version.toUpperCase()}.jar",
+               'http_proxy'     : apk.proxy.uri,
+               'https_proxy'    : apk.proxy.uri,
+               'HTTP_PROXY_AUTH': "basic:*:$apk.proxy.user:$apk.proxy.password"])
+    dockerfile file("src/main/docker/Dockerfile")
+}
+
+tasks.compileJava.dependsOn generateSwaggerCode
+tasks.compileTestJava.dependsOn generateSwaggerCode
+tasks.generateSwaggerCodeEndpoints.dependsOn ':tools:swagger-spring-generators:assemble'

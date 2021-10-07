@@ -12,6 +12,19 @@ dependencyResolutionManagement {
         maven { url "https://packages.confluent.io/maven/" }
         maven { url "https://artifacts.elastic.co/maven/"}
         maven { url "https://plugins.gradle.org/m2/" }
+
+        exclusiveContent {// Temporary workaround for jlibmodbus
+            forRepository {
+                flatDir {
+                    dirs "$rootDir/libs"
+                }
+            }
+            filter {
+                // this repository *only* contains artifacts with group "com.intelligt.modbus"
+                includeGroup "com.intelligt.modbus"
+            }
+
+        }
     }
 }
 
@@ -34,12 +47,14 @@ include 'services:core:businessconfig'
 include 'services:core:cards-publication'
 include 'services:core:cards-consultation'
 include 'services:core:users'
+include 'services:external-devices'
 include 'web-ui'
 include 'ui:main'
 include 'externalApp'
 include 'clientApp'
 include 'karateTests'
 include 'cypressTests'
+include 'dummyModbusDevice'
 
 project(':client:businessconfig').name = 'businessconfig-client-data'
 project(':client:cards').name = 'cards-client-data'
@@ -48,12 +63,14 @@ project(':services:core:businessconfig').name = 'businessconfig-business-service
 project(':services:core:users').name = 'users-business-service'
 project(':services:core:cards-publication').name = 'cards-publication-business-service'
 project(':services:core:cards-consultation').name = 'cards-consultation-business-service'
+project(':services:external-devices').name = 'external-devices-service'
 project(':web-ui').name = 'web-ui'
 project(':ui:main').name = 'main-user-interface'
 project(':externalApp').projectDir = file('src/test/externalApp')
 project(':clientApp').projectDir = file('src/test/clientApp')
 project(':karateTests').projectDir = file('src/test/api/karate')
 project(':cypressTests').projectDir = file('src/test/cypress')
+project(':dummyModbusDevice').projectDir = file('src/test/dummyModbusDevice')
 
 //we check if the modules have gradle configuration files
 rootProject.children.each { project ->

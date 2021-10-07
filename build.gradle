@@ -4,6 +4,7 @@ plugins {
     id "maven-publish"
     id "signing"
     id "org.springframework.boot" version "$springBoot" apply false
+    id "io.spring.dependency-management" version "1.0.11.RELEASE" apply false
     id 'org.sonarqube' version '3.3' apply false
     id "com.github.davidmc24.gradle.plugin.avro" version "1.2.1" apply false
     id "com.palantir.docker" version "0.30.0" apply false
@@ -80,6 +81,7 @@ ext {
             jsonSmart      : "net.minidev:json-smart:2.4.7",
             handlebars     : "com.github.jknack:handlebars:4.3.0",
             jacksonDatabind   : "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabind",
+            jlibmodbus     : "com.intelligt.modbus:jlibmodbus:WORKAROUND"
     ]
 
     generator = [

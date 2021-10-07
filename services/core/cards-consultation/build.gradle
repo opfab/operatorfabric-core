@@ -40,7 +40,7 @@ swaggerSources {
             language = 'org.opfab.generators.OpfabSpringGenerator'
             configFile = file('src/main/modeling/config.json')
             outputDir = file("./build/swagger")
-            templateDir = file('../src/main/resources/swagger-templates')
+            templateDir = file('../../src/main/resources/swagger-templates')
             components = ['models']
         }
         ui {

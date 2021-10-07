@@ -1,0 +1,26 @@
+version: '2.1'
+services:
+  # Service managing external devices
+  external-devices:
+    container_name: external-devices
+    image: "lfeoperatorfabric/of-external-devices-service:SNAPSHOT"
+    depends_on:
+      - rabbitmq
+    user: ${USER_ID}:${USER_GID}
+    ports:
+      - "2105:8080"
+    #    Debug port closed for security reasons, be careful if you open it
+    #     - "4105:5005"
+    environment:
+      - SPRING_PROFILES_ACTIVE
+    volumes:
+      - "../certificates:/certificates_to_add"
+      - "./common-docker.yml:/config/common-docker.yml"
+      - "./external-devices-docker.yml:/config/application-docker.yml"
+      - ${CONFIG_PATH}:/external-config
+  web-ui:
+    volumes:
+# Normal mode //TODO Check if it works
+#     - "./nginx-external-devices.conf:/etc/nginx/conf.d/external-devices.conf"
+# CORS-Permissive mode
+      - "./nginx-external-devices-cors-permissive.conf:/etc/nginx/conf.d/default.conf"

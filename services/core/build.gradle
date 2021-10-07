@@ -29,7 +29,7 @@ subprojects {
                 additionalProperties = [ignoreImportMappings:"false"]
                 configFile = file('src/main/modeling/config.json')
                 outputDir = file("./build/swagger")
-                templateDir = file('../src/main/resources/swagger-templates')
+                templateDir = file('../../src/main/resources/swagger-templates')
             }
             ui {
                 outputDir = file("./build/docs/api")

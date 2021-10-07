@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: dummyModbusDevice
+  main:
+    web-application-type: NONE
+modbus_client:
+  port: 4030
+
