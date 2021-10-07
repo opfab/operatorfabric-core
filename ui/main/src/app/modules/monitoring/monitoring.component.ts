@@ -10,15 +10,16 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {combineLatest, Observable, of, Subject} from 'rxjs';
 import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
-import {catchError, map, takeUntil} from 'rxjs/operators';
+import {catchError, filter, map, takeUntil} from 'rxjs/operators';
 import {LightCard} from '@ofModel/light-card.model';
 import * as moment from 'moment';
 import {I18n} from '@ofModel/i18n.model';
 import {MonitoringFiltersComponent} from './components/monitoring-filters/monitoring-filters.component';
 import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {ProcessesService} from '@ofServices/processes.service';
-import {LightCardsService} from '@ofServices/lightcards.service';
+import {LightCardsFeedFilterService} from '@ofServices/lightcards-feed-filter.service';
 import {Filter} from '@ofModel/feed-filter.model';
+import {LightCardsStoreService} from '@ofServices/lightcards-store.service';
 
 @Component({
     selector: 'of-monitoring',
@@ -44,7 +45,8 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     loadingInProgress = false;
 
     constructor(private processesService: ProcessesService
-                , private lightCardsService: LightCardsService
+                , private lightCardsService: LightCardsFeedFilterService
+                , private lightCardsStoreService: LightCardsStoreService
     ) {
 
          processesService.getAllProcesses().forEach(process => {
@@ -63,11 +65,14 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.monitoringResult$ = 
             combineLatest([
-                this.monitoringFilters$.asObservable(),
-                this.lightCardsService.getLightCards()
+                this.monitoringFilters$.asObservable(), 
+                this.lightCardsStoreService.getLightCards()
             ]
             ).pipe(
                 takeUntil(this.unsubscribe$),
+                // the filters are set   by the monitoring filter and by the time line 
+                // so it generates two events , we need to wait until every filter is set 
+                filter( results => this.areFiltersCorrectlySet(results[0])),  
                 map(results => {
                         const cards = this.lightCardsService.filterLightCards(results[1], results[0]);
                         if (!!cards && cards.length <= 0) {
@@ -83,10 +88,16 @@ export class MonitoringComponent implements OnInit, OnDestroy {
                 catchError(err => of([]))
         );
         this.monitoringResult$.subscribe(lines => this.result = lines);
-        this.lightCardsService.getLoadingInProgress().subscribe( (inProgress: boolean ) => this.loadingInProgress = inProgress)
-
+        this.lightCardsStoreService.getLoadingInProgress().pipe(
+            takeUntil(this.unsubscribe$)).subscribe( (inProgress: boolean ) => this.loadingInProgress = inProgress);
     }
 
+    private areFiltersCorrectlySet(filters:Array<any>): boolean
+    {
+        let correctlySet:boolean = true;
+        filters.forEach( filter => {if (!filter) correctlySet =false;});
+        return correctlySet;
+    }
 
     ngOnDestroy() {
         this.unsubscribe$.next();

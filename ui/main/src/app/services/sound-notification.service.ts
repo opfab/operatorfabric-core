@@ -14,7 +14,8 @@ import {LightCard, Severity} from "@ofModel/light-card.model";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
-import {LightCardsService} from './lightcards.service';
+import {LightCardsFeedFilterService} from './lightcards-feed-filter.service';
+import {LightCardsStoreService} from './lightcards-store.service';
 
 @Injectable()
 export class SoundNotificationService {
@@ -41,7 +42,10 @@ export class SoundNotificationService {
    * once (and only new cards), sounds will only be played for a given card if the elapsed time since its publishDate
    * is below this threshold. */
 
-  constructor(private store: Store<AppState>, private platformLocation: PlatformLocation,private lightCardsService: LightCardsService) {
+  constructor(private store: Store<AppState>, 
+    private platformLocation: PlatformLocation,
+    private lightCardsService: LightCardsFeedFilterService,
+    private lightCardsStoreService: LightCardsStoreService) {
     let baseHref = platformLocation.getBaseHrefFromDOM();
     this.alarmSoundPath = (baseHref?baseHref:'/')+'assets/sounds/alarm.mp3'
     this.alarmSound = new Audio(this.alarmSoundPath);
@@ -56,7 +60,14 @@ export class SoundNotificationService {
     store.select(buildSettingsOrConfigSelector('playSoundForAction')).subscribe(x => { this.playSoundForAction = x;});
     store.select(buildSettingsOrConfigSelector('playSoundForCompliant')).subscribe(x => { this.playSoundForCompliant = x;});
     store.select(buildSettingsOrConfigSelector('playSoundForInformation')).subscribe(x => { this.playSoundForInformation = x;});
+    this.listenForCardUpdate();
 
+  }
+
+  listenForCardUpdate(){
+    this.lightCardsStoreService.getNewLightCards().subscribe(
+      (card) => this.handleLoadedCard(card)
+    );
   }
 
   handleRemindCard(card: LightCard ) {

@@ -13,13 +13,11 @@ import {AcknowledgmentAllowedEnum, Process} from '@ofModel/processes.model';
 import {Card} from '@ofModel/card.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {LightCard} from '@ofModel/light-card.model';
-import {UpdateLightCardAcknowledgment} from '@ofActions/light-card.actions';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import {Observable} from 'rxjs';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {UserPermissionsService} from '@ofServices/user-permissions-.service';
+import {LightCardsStoreService} from './lightcards-store.service';
 
 @Injectable({
     providedIn: 'root'
@@ -29,8 +27,8 @@ export class AcknowledgeService {
     readonly userAckUrl: string;
 
     constructor(private userPermissionsService: UserPermissionsService,
-                private store: Store<AppState>,
-                private httpClient: HttpClient) {
+                private httpClient: HttpClient,
+                private lightCardsStoreService : LightCardsStoreService) {
         this.userAckUrl = `${environment.urls.cardspub}/cards/userAcknowledgement`;
     }
 
@@ -53,8 +51,7 @@ export class AcknowledgeService {
     }
 
     updateAcknowledgementOnLightCard(lightCardId: string, hasBeenAcknowledged: boolean) {
-        this.store.dispatch(new UpdateLightCardAcknowledgment({cardId: lightCardId, hasBeenAcknowledged: hasBeenAcknowledged}));
-
+       this.lightCardsStoreService.setLightCardAcknowledgment(lightCardId,hasBeenAcknowledged);
     }
 
     isAcknowledgmentAllowed(user: UserWithPerimeters, card: Card | LightCard, processDefinition: Process): boolean {

@@ -9,12 +9,11 @@
 
 
 import {LightCardActions, LightCardActionTypes} from '@ofActions/light-card.actions';
-import {CardFeedState, feedInitialState, LightCardAdapter} from '@ofStates/feed.state';
+import {CardFeedState, feedInitialState} from '@ofStates/feed.state';
 import {FeedActions, FeedActionTypes} from '@ofActions/feed.actions';
 import {FilterType} from '@ofServices/filter.service';
 import {Filter} from '@ofModel/feed-filter.model';
-import {Card} from '@ofModel/card.model';
-import {Update} from '@ngrx/entity';
+
 
 export function changeActivationAndStatusOfFilter(filters: Map<FilterType, Filter>
     , payload: { name: FilterType; active: boolean; status: any }) {
@@ -32,43 +31,6 @@ export function reducer(
 
     switch (action.type) {
 
-        case LightCardActionTypes.LoadLightParentCard: {
-            return {
-                ...LightCardAdapter.upsertOne(action.payload.lightCard, state),
-                lastCardLoaded: action.payload.lightCard
-            };
-        }
-
-        case LightCardActionTypes.LoadLightChildCard: {
-            if (action.payload.isFromCurrentUserEntity) {
-                const updateIsFromUserEntity: Update<Card> = {
-                    id: action.payload.lightCard.parentCardId,
-                    changes: {
-                        hasChildCardFromCurrentUserEntity: true
-                    }
-                }
-                return {
-                    ...LightCardAdapter.updateOne(updateIsFromUserEntity, state),
-                    lastCardLoaded: action.payload.lightCard
-                }
-            }
-            return {
-                ...state,
-                lastCardLoaded: action.payload.lightCard
-            }
-
-        }
-        case LightCardActionTypes.EmptyLightCards: {
-            return {
-                ...LightCardAdapter.removeAll(state),
-                selectedCardId: null
-            };
-        }
-        case LightCardActionTypes.RemoveLightCard: {
-            return {
-                ...LightCardAdapter.removeOne(action.payload.card, state)
-            };
-        }
         case LightCardActionTypes.SelectLightCard: {
             return {
                 ...state,
@@ -80,12 +42,6 @@ export function reducer(
             return {
                 ...state,
                 selectedCardId: null
-            };
-        }
-
-        case LightCardActionTypes.AddLightCardFailure: {
-            return {
-                ...state
             };
         }
 
@@ -123,42 +79,6 @@ export function reducer(
                 ...state,
                 sortByRead: !state.sortByRead
             };
-        }
-        case LightCardActionTypes.UpdateLightCardRead: {
-            const update: Update<Card> = {
-                id: action.payload.cardId,
-                changes: {
-                    hasBeenRead: action.payload.hasBeenRead
-                }
-            }
-            return {
-                ...LightCardAdapter.updateOne(update, state),
-            }
-        }
-
-        case LightCardActionTypes.UpdateLightCardAcknowledgment: {
-            const update: Update<Card> = {
-                id: action.payload.cardId,
-                changes: {
-                    hasBeenAcknowledged: action.payload.hasBeenAcknowledged
-                }
-            }
-            return {
-                ...LightCardAdapter.updateOne(update, state),
-            }
-        }
-
-        case LightCardActionTypes.RemindLightCard: {
-            const update: Update<Card> = {
-                id: action.payload.lightCard.id,
-                changes: {
-                    hasBeenAcknowledged:false,
-                    hasBeenRead: false
-                }
-            }
-            return {
-                ...LightCardAdapter.updateOne(update, state),
-            }
         }
 
         case FeedActionTypes.ApplySeveralFilters: {

@@ -9,37 +9,29 @@
 
 
 import {Injectable} from '@angular/core';
-import {debounceTime, filter, map, sample, tap} from 'rxjs/operators';
-import {combineLatest, interval, merge, Observable, Subject, } from 'rxjs';
+import { map} from 'rxjs/operators';
+import {combineLatest,Observable,Subject, } from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
 import {Filter} from '@ofModel/feed-filter.model';
 import {LightCard, Severity} from '@ofModel/light-card.model';
+import {LightCardsStoreService} from './lightcards-store.service';
 
 
 @Injectable()
-export class LightCardsService {
+export class LightCardsFeedFilterService {
 
     private filters: Filter[];
-
-    private timeOfLastDebounce: number = 0;
-    private timeOfLastCardReception: number = 0;
-    private numberOfCardProcessedByPreviousDebounce: number = 0;
-    private numberOfCardUpdatesInARowNotComingFromDebounce: number=0;
-
     private filteredAndSortedLightCards = new Subject();
     private filteredLightCards = new Subject();
-    private loadingInProgress = new Subject();
-   
 
-    constructor(private store: Store<AppState>) {
+
+    constructor(private store: Store<AppState>, private lightCardsStoreService: LightCardsStoreService ) {
         this.store.pipe(select(feedSelectors.selectActiveFiltersArray)).subscribe(filters => this.filters = filters);
         this.computeFilteredAndSortedLightCards();
         this.computeFilteredLightCards();
-        this.checkForLoadingInProgress();
     }
-
 
     private computeFilteredAndSortedLightCards() {
         combineLatest([
@@ -66,6 +58,8 @@ export class LightCardsService {
             )
         ).subscribe((lightCards) => this.filteredAndSortedLightCards.next(lightCards));
     }
+
+
     public getFilteredLightCards(): Observable<any> {
         return this.filteredLightCards.asObservable();
     }
@@ -73,7 +67,7 @@ export class LightCardsService {
     private computeFilteredLightCards() {
         combineLatest([
             this.store.pipe(select(feedSelectors.selectActiveFiltersArray)),
-            this.getLightCards()
+            this.lightCardsStoreService.getLightCards()
         ]
         ).pipe(
             map(results => {
@@ -83,67 +77,6 @@ export class LightCardsService {
         ).subscribe((lightCards) => this.filteredLightCards.next(lightCards));
     }
 
- // --------------------
- // When an flow of card is coming, for performance reasons , we do not want to update the card list 
- // every time  a card is arriving so we wait for the end of the flow of cards.
- //
- // But if it takes too long, we want to show something . 
- // So every second we make a rendering even if the flow is still continuing except  if  there is less than 20 new cards received in between 
- // In this case it means the browser is slow so we wait 1 s more to avoid adding unnecessary load ot the browser 
- // This situation can arise for example when the browser is busy rendering the monitoring screen with the previous list of card
- // 
- // To do that we combine a debounce waiting for the end of the flow and an interval to get the card list every second 
-
-    public getLightCards(): Observable<any> {
-        return merge(this.getLightCardsInterval(), this.getLightCardDebounce());
-    }
-
-    private getLightCardsInterval(): Observable<any> {
-        return this.store.pipe(
-            select(feedSelectors.selectFeed),
-            sample(interval(1000)),
-            filter((results) => ((
-                (new Date().valueOf()) - this.timeOfLastDebounce) > 1000)   // we only need to get cards if no debounce arise in 1 seconds 
-                && ( results.length - this.numberOfCardProcessedByPreviousDebounce > 20 )  ), //and if there is enough new card 
-                                                                                    
-            tap( (results)=> {
-                console.log(new Date().toISOString(),"Cards flow in progress : " + (results.length - this.numberOfCardProcessedByPreviousDebounce) + " new cards  ");
-                this.numberOfCardProcessedByPreviousDebounce  = results.length; 
-            }),
-        );
-    }
-
-    private getLightCardDebounce(): Observable<any> {
-        return this.store.pipe(
-            select(feedSelectors.selectFeed),
-            tap(() => this.timeOfLastCardReception = new Date().valueOf()),
-            debounceTime(200),
-            tap(() => this.timeOfLastDebounce = (new Date()).valueOf())
-        );
-    }
-
-    public getLoadingInProgress() {
-        return this.loadingInProgress.asObservable();
-    }
-
-    // check every 500ms if we are in a loading card process
-    // we consider we are in a loading card process if 3 updates in a row 
-    // came from the "interval" observable rather than the debounce.   
-    private checkForLoadingInProgress()
-    {
-        if (this.timeOfLastCardReception > this.timeOfLastDebounce) // at least one card list update has been received that came from the "interval" stream not the "debounce", meaning there is a steady flow of card updates.
-                  {
-                    this.numberOfCardUpdatesInARowNotComingFromDebounce++;
-                    if (this.numberOfCardUpdatesInARowNotComingFromDebounce > 2) this.loadingInProgress.next(true);
-                  }
-        else  {
-            this.loadingInProgress.next(false);
-            this.numberOfCardUpdatesInARowNotComingFromDebounce = 0;
-        }
-        setTimeout(() => this.checkForLoadingInProgress(), 500);
-    }
-
-// --------------------
 
     public filterLightCards(lightCards: LightCard[], filters: Filter[]): LightCard[] {
         if (filters && filters.length > 0) {

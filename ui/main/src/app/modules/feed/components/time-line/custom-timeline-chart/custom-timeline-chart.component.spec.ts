@@ -25,7 +25,7 @@ import {appReducer, storeConfig} from '@ofStore/index';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {LightCardsService} from '@ofServices/lightcards.service';
+import {LightCardsFeedFilterService} from '@ofServices/lightcards-feed-filter.service';
 import {LightCardsServiceMock} from '@tests/mocks/lightcards.service.mock';
 
 describe('CustomTimelineChartComponent', () => {
@@ -52,7 +52,7 @@ describe('CustomTimelineChartComponent', () => {
         {provide: Store, useClass: Store},
         {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
         {provide: TimeService, useClass: TimeService},
-        {provide: LightCardsService, useClass: LightCardsServiceMock}],
+        {provide: LightCardsFeedFilterService, useClass: LightCardsServiceMock}],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();

@@ -23,6 +23,7 @@ import {appReducer} from '@ofStore/index';
 import {ConfigService} from '@ofServices/config.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {EntitiesServiceMock} from '@tests/mocks/entities.service.mock';
+import {LightCardsStoreService} from './lightcards-store.service';
 
 
 describe('AcknowledgeService testing ', () => {
@@ -37,7 +38,7 @@ describe('AcknowledgeService testing ', () => {
         statesList = new OfMap();
 
         TestBed.configureTestingModule({
-            providers: [ConfigService, {provide: EntitiesService, useClass: EntitiesServiceMock}],
+            providers: [ConfigService,LightCardsStoreService, {provide: EntitiesService, useClass: EntitiesServiceMock}],
             imports: [StoreModule.forRoot(appReducer),
                       HttpClientTestingModule]
         });

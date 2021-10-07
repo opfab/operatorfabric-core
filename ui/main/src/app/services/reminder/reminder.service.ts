@@ -9,26 +9,22 @@
 
 
 import {Injectable} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {LightCard} from '@ofModel/light-card.model';
 import {CardService} from '@ofServices/card.service';
-import {ProcessesService} from '@ofServices/processes.service';
-import {RemindLightCard} from '@ofStore/actions/light-card.actions';
-import {AppState} from '@ofStore/index';
-import {fetchLightCard, selectLastCardLoaded} from '@ofStore/selectors/feed.selectors';
-import {take} from 'rxjs/operators';
 import {ReminderList} from './reminderList';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
+import {LightCardsStoreService} from '@ofServices/lightcards-store.service';
+import {SoundNotificationService} from '@ofServices/sound-notification.service';
 
 @Injectable()
 export class ReminderService {
 
     private reminderList: ReminderList;
 
-    constructor(private store: Store<AppState>,
-                private processService: ProcessesService,
+    constructor(
                 private cardService: CardService,
-                private acknowledgeService: AcknowledgeService) {
+                private acknowledgeService: AcknowledgeService,
+                private lightCardsStoreService: LightCardsStoreService,
+                private soundNotificationService : SoundNotificationService ) {
     }
 
 
@@ -48,36 +44,34 @@ export class ReminderService {
 
 
     private listenForCardsToAddInReminder() {
-        this.store.pipe(
-            select(selectLastCardLoaded))
-            .subscribe(card => {if (!!card) this.reminderList.addAReminder(card)});
+        this.lightCardsStoreService.getNewLightCards().subscribe(card => {if (!!card) this.reminderList.addAReminder(card)});
     }
 
 
     private remindCard(cardId) {
         console.log(new Date().toISOString(), ' Reminder : will remind card = ', cardId);
-        this.store.select(fetchLightCard(cardId)).pipe(take(1))
-            .subscribe((lightCard: LightCard) => {
-                if (!!lightCard) {
+        const lightCard = this.lightCardsStoreService.getLightCard(cardId);
 
-                    this.reminderList.setCardHasBeenRemind(lightCard);
-                    this.acknowledgeService.deleteUserAcknowledgement(lightCard.uid).subscribe(resp => {
-                        if (!(resp.status === 200 || resp.status === 204))
-                            console.error(new Date().toISOString(),
-                                'Reminder : the remote acknowledgement endpoint returned an error status(%d)', resp.status);
-                    }
-                    );
-                    this.cardService.deleteUserCardRead(lightCard.uid).subscribe(resp => {
-                        if (!(resp.status === 200 || resp.status === 204))
-                            console.error(new Date().toISOString(),
-                                'Reminder : the remote acknowledgement endpoint returned an error status(%d)', resp.status);
-                    }
-                    );
-                    this.store.dispatch(new RemindLightCard({lightCard:lightCard}));
-                } else { // the card has been deleted in this case
-                    this.reminderList.removeAReminder(cardId);
-                }
-            });
+        if (!!lightCard) {
+            this.reminderList.setCardHasBeenRemind(lightCard);
+            this.acknowledgeService.deleteUserAcknowledgement(lightCard.uid).subscribe(resp => {
+                if (!(resp.status === 200 || resp.status === 204))
+                    console.error(new Date().toISOString(),
+                        'Reminder : the remote acknowledgement endpoint returned an error status(%d)', resp.status);
+            }
+            );
+            this.cardService.deleteUserCardRead(lightCard.uid).subscribe(resp => {
+                if (!(resp.status === 200 || resp.status === 204))
+                    console.error(new Date().toISOString(),
+                        'Reminder : the remote acknowledgement endpoint returned an error status(%d)', resp.status);
+            }
+            );
+            this.lightCardsStoreService.setLightCardAcknowledgment(cardId,false);
+            this.lightCardsStoreService.setLightCardRead(cardId,false);
+            this.soundNotificationService.handleRemindCard(lightCard);
+        } else { // the card has been deleted in this case
+            this.reminderList.removeAReminder(cardId);
+        }
     }
 
 
