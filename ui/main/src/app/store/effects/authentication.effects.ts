@@ -31,8 +31,6 @@ import {Message, MessageLevel} from '@ofModel/message.model';
 import {I18n} from '@ofModel/i18n.model';
 import {Map} from '@ofModel/map';
 import {CardService} from '@ofServices/card.service';
-import {EmptyLightCards} from '@ofActions/light-card.actions';
-import {ClearCard} from '@ofActions/card.actions';
 import {ConfigService} from "@ofServices/config.service";
 import {redirectToCurrentLocation} from "../../app-routing.module";
 import {TranslateService} from "@ngx-translate/core";
@@ -114,7 +112,7 @@ export class AuthenticationEffects {
             ofType(AuthenticationActionTypes.TryToLogOut),
             switchMap(() => {
                 this.resetState();
-                return of(new EmptyLightCards(), new ClearCard(), new AcceptLogOut());
+                return of(new AcceptLogOut());
             })
         ));
 

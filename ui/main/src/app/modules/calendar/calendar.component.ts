@@ -9,11 +9,10 @@
 
 
 import {AppState} from '@ofStore/index';
-import {select, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import * as feedSelectors from '@ofSelectors/feed.selectors';
-import {AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef,OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FullCalendarComponent} from '@fullcalendar/angular';
 import {EventInput} from '@fullcalendar/core';
 import allLocales from '@fullcalendar/core/locales-all';
@@ -27,6 +26,7 @@ import {FilterType} from '@ofServices/filter.service';
 import {HourAndMinutes} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
+import {LightCardsStoreService} from '@ofServices/lightcards-store.service';
 
 @Component({
   selector: 'of-calendar',
@@ -38,7 +38,8 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(private store: Store<AppState>,
               private translate: TranslateService,
               private modalService: NgbModal,
-              private processesService: ProcessesService) {
+              private processesService: ProcessesService,
+              private lightCardsStoreService: LightCardsStoreService) {
     processesService.getAllProcesses().forEach(process => {
       if (!!process.uiVisibility && !!process.uiVisibility.calendar)
         this.mapOfProcesses.set(process.id, 1);
@@ -106,7 +107,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private initDataPipe(): void {
-    this.store.pipe(select((feedSelectors.selectFeed)))
+    this.lightCardsStoreService.getLightCards()
       .pipe(takeUntil(this.unsubscribe$), debounceTime(200), distinctUntilChanged())
       .subscribe(cards => this.processCards(cards));
   }

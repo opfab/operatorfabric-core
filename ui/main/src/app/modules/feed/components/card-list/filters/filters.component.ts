@@ -13,7 +13,7 @@ import {Component, OnInit} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
 import { ConfigService} from "@ofServices/config.service";
-import {LightCardsService} from '@ofServices/lightcards.service';
+import {LightCardsStoreService} from '@ofServices/lightcards-store.service';
 
 @Component({
   selector: 'of-filters',
@@ -31,7 +31,7 @@ export class FiltersComponent implements OnInit {
   
   loadingInProgress = false;
 
-  constructor(private store: Store<AppState>, private configService: ConfigService, private lightCardsService: LightCardsService) { }
+  constructor(private store: Store<AppState>, private configService: ConfigService, private lightCardsStoreService: LightCardsStoreService) { }
 
   ngOnInit() {
     this.hideTags = this.configService.getConfigValue('settings.tags.hide',false);
@@ -40,7 +40,7 @@ export class FiltersComponent implements OnInit {
     this.hideResponseFilter = this.configService.getConfigValue('feed.card.hideResponseFilter',false);
     this.hideReadSort = this.configService.getConfigValue('feed.card.hideReadSort',false);
     this.hideSeveritySort = this.configService.getConfigValue('feed.card.hideSeveritySort',false);
-    this.lightCardsService.getLoadingInProgress().subscribe( (inProgress: boolean ) => this.loadingInProgress = inProgress)
+    this.lightCardsStoreService.getLoadingInProgress().subscribe( (inProgress: boolean ) => this .loadingInProgress = inProgress)
   }
 
 

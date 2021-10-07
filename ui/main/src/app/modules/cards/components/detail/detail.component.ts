@@ -32,13 +32,12 @@ import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
 import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {UserContext} from '@ofModel/user-context.model';
 import {map, skip, takeUntil} from 'rxjs/operators';
-import {selectLastCardLoaded} from '@ofStore/selectors/feed.selectors';
 import {CardService} from '@ofServices/card.service';
 import {Subject} from 'rxjs';
 import {Severity} from '@ofModel/light-card.model';
 import {AppService, PageType} from '@ofServices/app.service';
 import {User} from '@ofModel/user.model';
-import {ClearLightCardSelection, UpdateLightCardRead} from '@ofStore/actions/light-card.actions';
+import {ClearLightCardSelection} from '@ofStore/actions/light-card.actions';
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
@@ -48,6 +47,7 @@ import {MessageLevel} from '@ofModel/message.model';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {UserPermissionsService} from '@ofServices/user-permissions-.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
+import {LightCardsStoreService} from '@ofServices/lightcards-store.service';
 
 declare const templateGateway: any;
 
@@ -142,7 +142,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         private modalService: NgbModal,
         private time: TimeService,
         private acknowledgeService: AcknowledgeService,
-        private userPermissionsService: UserPermissionsService) {
+        private userPermissionsService: UserPermissionsService,
+        private lightCardsStoreService: LightCardsStoreService) {
 
             const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
             if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
@@ -283,7 +284,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private integrateChildCardsInRealTime() {
-        this.store.select(selectLastCardLoaded)
+       this.lightCardsStoreService.getNewLightChildCards()
             .pipe(
                 takeUntil(this.unsubscribe$),
                 map(lastCardLoaded => {
@@ -510,7 +511,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     private updateLastReadCardStatusOnFeedIfNeeded() {
         if (this.lastCardSetToReadButNotYetOnFeed) {
-            this.store.dispatch(new UpdateLightCardRead({cardId: this.lastCardSetToReadButNotYetOnFeed.id, hasBeenRead: true}));
+            this.lightCardsStoreService.setLightCardRead(this.lastCardSetToReadButNotYetOnFeed.id,true);
             this.lastCardSetToReadButNotYetOnFeed = null;
         }
     }

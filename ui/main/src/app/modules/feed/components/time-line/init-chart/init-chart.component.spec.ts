@@ -30,7 +30,7 @@ import {ConfigService} from "@ofServices/config.service";
 import {HttpClient, HttpHandler} from "@angular/common/http";
 import {AppService} from "@ofServices/app.service";
 import {LightCardsServiceMock} from '@tests/mocks/lightcards.service.mock';
-import {LightCardsService} from '@ofServices/lightcards.service';
+import {LightCardsFeedFilterService} from '@ofServices/lightcards-feed-filter.service';
 
 
 describe('InitChartComponent', () => {
@@ -59,7 +59,7 @@ describe('InitChartComponent', () => {
         {provide: HttpHandler, useClass: HttpHandler},
         {provide: AppService, useClass: AppService},
         {provide: GlobalStyleService, useClass: GlobalStyleService},
-        {provide: LightCardsService, useClass: LightCardsServiceMock}],
+        {provide: LightCardsFeedFilterService, useClass: LightCardsServiceMock}],
       schemas: [ NO_ERRORS_SCHEMA ],
     })
     .compileComponents();

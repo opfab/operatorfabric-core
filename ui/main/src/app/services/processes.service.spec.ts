@@ -24,6 +24,7 @@ import {ConfigService} from '@ofServices/config.service';
 import {Process} from '@ofModel/processes.model';
 import {EffectsModule} from '@ngrx/effects';
 import {MenuEffects} from '@ofEffects/menu.effects';
+import {LightCardsStoreService} from './lightcards-store.service';
 
 
 describe('Processes Services', () => {
@@ -51,7 +52,8 @@ describe('Processes Services', () => {
                 ProcessesService,
                 AuthenticationService,
                 GuidService,
-                ConfigService
+                ConfigService,
+                LightCardsStoreService
             ]
         });
         injector = getTestBed();

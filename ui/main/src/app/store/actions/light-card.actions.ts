@@ -9,61 +9,21 @@
 
 
 import {Action} from '@ngrx/store';
-import {LightCard} from '@ofModel/light-card.model';
 
 export enum LightCardActionTypes {
-    EmptyLightCards = '[LCard] Empty',
-    LoadLightCard = '[LCard] Load Light Card from subscription',
-    LoadLightChildCard = '[LCard] Load Light Child Card', 
-    LoadLightParentCard = '[LCard] Load Light Parent Card', 
     SelectLightCard = '[LCard] Select One',
     ClearLightCardSelection = '[LCard] Clear Light Card Selection',
-    AddLightCardFailure = '[LCard] Add Light Card Fail',
-    RemoveLightCard = '[LCard] Remove a card',
-    UpdateLightCardRead = '[Lcard] Light Card Read',
-    UpdateLightCardAcknowledgment = '[Lcard] Light Card Acknowledgment',
-    RemindLightCard = '[LCard] Remind Light Card',
-    NoopAction = '[LCard] Nothing to do'
-}
-
-
-export class EmptyLightCards implements Action {
-    readonly type = LightCardActionTypes.EmptyLightCards;
-}
-
-export class LoadLightCard implements Action {
-    readonly type = LightCardActionTypes.LoadLightCard;
-    constructor(public payload: {lightCard: LightCard} ) {
-    }
-}
-
-export class LoadLightChildCard implements Action {
-    readonly type = LightCardActionTypes.LoadLightChildCard;
-    constructor(public payload: {lightCard: LightCard,isFromCurrentUserEntity: boolean} ) {
-    }
-}
-
-export class LoadLightParentCard implements Action {
-    readonly type = LightCardActionTypes.LoadLightParentCard;
-    constructor(public payload: {lightCard: LightCard} ) {
-    }
+    RemoveLightCard = '[LCard] Remove a card'
 }
 
 export class SelectLightCard implements Action {
     readonly type = LightCardActionTypes.SelectLightCard;
     constructor(public payload: { selectedCardId: string }) {
     }
-
 }
 
 export class ClearLightCardSelection implements Action {
     readonly type = LightCardActionTypes.ClearLightCardSelection;
-}
-
-export class AddLightCardFailure implements Action {
-    readonly type = LightCardActionTypes.AddLightCardFailure;
-    constructor(public payload: { error: Error }) {
-    }
 }
 
 export class RemoveLightCard implements Action {
@@ -72,42 +32,9 @@ export class RemoveLightCard implements Action {
     }
 }
 
-
-export class UpdateLightCardRead implements Action {
-    readonly type = LightCardActionTypes.UpdateLightCardRead;
-    constructor(public payload: { cardId, hasBeenRead }) {
-    }
-}
-
-export class UpdateLightCardAcknowledgment implements Action {
-    readonly type = LightCardActionTypes.UpdateLightCardAcknowledgment;
-    constructor(public payload: { cardId, hasBeenAcknowledged }) {
-    }
-}
-
-export class RemindLightCard implements Action {
-    readonly type = LightCardActionTypes.RemindLightCard;
-    constructor(public payload: {lightCard}) {
-    }
-}
-
-
-export class NoopAction implements Action {
-    readonly type = LightCardActionTypes.NoopAction;
-}
-
 export type LightCardActions =
-    LoadLightCard
-    | LoadLightChildCard
-    | LoadLightParentCard
-    | SelectLightCard
+    SelectLightCard
     | ClearLightCardSelection
-    | AddLightCardFailure
-    | EmptyLightCards
-    | UpdateLightCardRead
-    | UpdateLightCardAcknowledgment
-    | RemindLightCard
-    | RemoveLightCard
-    | NoopAction;
+    | RemoveLightCard;
 
 

@@ -9,7 +9,7 @@
 
 
 import {Injectable} from '@angular/core';
-import {Observable, Subject, timer} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
 import {EventSourcePolyfill} from 'ng-event-source';
 import {AuthenticationService} from './authentication/authentication.service';
@@ -22,14 +22,12 @@ import {Page} from '@ofModel/page.model';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {CardSubscriptionClosed, CardSubscriptionOpen} from '@ofActions/cards-subscription.actions';
-import {catchError, concatMap, ignoreElements,startWith} from 'rxjs/operators';
-import {
-    AddLightCardFailure,
-    LoadLightCard,
-    RemoveLightCard
-} from '@ofActions/light-card.actions';
+import {catchError} from 'rxjs/operators';
+import {RemoveLightCard} from '@ofActions/light-card.actions';
 import {BusinessConfigChangeAction} from '@ofStore/actions/processes.actions';
 import {UserConfigChangeAction} from '@ofStore/actions/user.actions';
+import {LightCardsStoreService} from './lightcards-store.service';
+import {LoadCard} from '@ofStore/actions/card.actions';
 
 
 @Injectable()
@@ -50,12 +48,14 @@ export class CardService {
     private startOfAlreadyLoadedPeriod: number;
     private endOfAlreadyLoadedPeriod: number;
 
+    private selectedCardId : string = null;
+
 
     constructor(private httpClient: HttpClient,
         private guidService: GuidService,
         private store: Store<AppState>,
-        private authService: AuthenticationService) {
-
+        private authService: AuthenticationService,
+        private lightCardsStoreService: LightCardsStoreService) {
         const clientId = this.guidService.getCurrentGuidString();
         this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}`;
         this.cardsUrl = `${environment.urls.cards}/cards`;
@@ -69,38 +69,34 @@ export class CardService {
         return this.httpClient.get<CardData>(`${this.cardsUrl}/${id}`);
     }
 
+    public setSelectedCard(cardId) {
+        this.selectedCardId = cardId;
+    }
+
 
     public initCardSubscription() {
 
-        // The use of concatMap + timer is to avoid having the browser stuck when 
-        // a lot of card is arriving. (It allows the browser to execute 
-        // other js code in the application while the application is retrieving cards) 
-        this.getCardSubscription().pipe( concatMap(value =>
-            timer(1).pipe(
-              ignoreElements(),
-              startWith(value)
-            )
-          ))
+        this.getCardSubscription()
             .subscribe( {
                 next: operation => {
                     switch (operation.type) {
                         case CardOperationType.ADD:
+
                             console.log(new Date().toISOString(), `CardService - Receive card to add id=`, operation.card.id);
-                            this.store.dispatch(new LoadLightCard({lightCard: operation.card}));
+                            this.lightCardsStoreService.addOrUpdateLightCard(operation.card);
+                            if (operation.card.id == this.selectedCardId) this.store.dispatch(new LoadCard({id: operation.card.id}));
                             break;
                         case CardOperationType.DELETE:
                             console.log(new Date().toISOString(), `CardService - Receive card to delete id=`, operation.cardId);
-                            this.store.dispatch(new RemoveLightCard({card: operation.cardId}));
+                            this.lightCardsStoreService.removeLightCard(operation.cardId)
+                            if (operation.cardId == this.selectedCardId) this.store.dispatch(new RemoveLightCard({card: operation.cardId}));
                             break;
                         default:
-                            this.store.dispatch(new AddLightCardFailure(
-                                {error: new Error(`unhandled action type '${operation.type}'`)})
-                            );
+                            console.log(new Date().toISOString(), `CardService - Unknown operation`,operation.type , ` for card id=`, operation.cardId);
                     }
                 },
                 error: (error) => {
                     console.error('CardService - Error received from  getCardSubscription ', error);
-                    this.store.dispatch(new AddLightCardFailure({error: error}));
                 }
             });
         catchError((error, caught) => {
@@ -108,6 +104,7 @@ export class CardService {
             return caught;
         });
     }
+
 
 
     private getCardSubscription(): Observable<CardOperation> {
@@ -190,8 +187,9 @@ export class CardService {
 
     }
 
-    public resetStartOfAlreadyLoadedPeriod() {
+    public removeAllLightCardFromMemory() {
         this.startOfAlreadyLoadedPeriod = null;
+        this.lightCardsStoreService.removeAllLightCards();
     }
 
     public setSubscriptionDates(start: number, end: number) {

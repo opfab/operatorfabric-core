@@ -17,10 +17,8 @@ import {catchError, map, skip, tap} from 'rxjs/operators';
 import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {Card} from '@ofModel/card.model';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {selectLastCardLoaded} from '@ofStore/selectors/feed.selectors';
 import {Utilities} from '../common/utilities';
+import {LightCardsStoreService} from './lightcards-store.service';
 
 
 @Injectable()
@@ -38,7 +36,10 @@ export class ProcessesService {
 
     private typeOfStatesPerProcessAndState: Map<string, TypeOfStateEnum>;
 
-    constructor(private httpClient: HttpClient, private translateService: TranslateService, private store: Store<AppState>
+    constructor(
+        private httpClient: HttpClient, 
+        private translateService: TranslateService, 
+        private lightCardsStoreService: LightCardsStoreService
     ) {
         this.urlCleaner = new HttpUrlEncodingCodec();
         this.processesUrl = `${environment.urls.processes}`;
@@ -48,8 +49,7 @@ export class ProcessesService {
     }
 
     private loadTranslationIfNeededAfterLoadingCard() {
-        this.store.pipe(
-            select(selectLastCardLoaded))
+        this.lightCardsStoreService.getNewLightCards()
             .subscribe(card => { if (!!card) this.loadTranslationsForProcess(card.process, card.processVersion)});
     }
 
