@@ -13,14 +13,8 @@ package org.opfab.springtools.configuration.mongo;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
-import com.mongodb.connection.*;
-import com.mongodb.reactivestreams.client.MongoClient;
-import com.mongodb.reactivestreams.client.MongoClients;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,11 +26,6 @@ import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventListener;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -61,9 +50,6 @@ public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
     public MongoConfiguration(MongoProperties mongoProperties) {
         this.mongoProperties = mongoProperties;
     }
-
-    @Autowired
-    private AbstractLocalMongoConfiguration localConfiguration;
 
     @Override
     protected void configureClientSettings(MongoClientSettings.Builder builder) {
@@ -92,11 +78,11 @@ public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
     }
 
     @Bean
-    public MongoCustomConversions customConversions() {
+    public MongoCustomConversions customConversions(@Autowired AbstractLocalMongoConfiguration localConfiguration) {
         return new MongoCustomConversions(localConfiguration.converterList());
     }
 
-    @Bean
+    @Override
     public MappingMongoConverter mappingMongoConverter(ReactiveMongoDatabaseFactory databaseFactory,
                                                        MongoCustomConversions customConversions, MongoMappingContext mappingContext) {
 
