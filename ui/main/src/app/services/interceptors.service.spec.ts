@@ -67,3 +67,30 @@ describe('Interceptor', () => {
                 // expect(AuthenticationService.getSecurityHeader).toHaveBeenCalled();
             }));
 });
+
+describe('Interceptor with Auth-flow NONE', () => {
+
+    let authenticationService: SpyObj<AuthenticationService>;
+
+    beforeEach(() => {
+        const authenticationServiceSpy = createSpyObj(['getSecurityHeader', 'isAuthModeNone']);
+        TestBed.configureTestingModule({
+            providers: [TokenInjector,
+                {provide: AuthenticationService, useValue: authenticationServiceSpy},
+            ]
+        });
+        authenticationService = injectedSpy(AuthenticationService);
+        authenticationServiceSpy.getSecurityHeader.and.returnValue({'Authorization': `Bearer dummyToken`});
+        authenticationServiceSpy.isAuthModeNone.and.returnValue(true);
+    });
+
+    it('should leave headers untouched for all/random end-point'
+        , inject([TokenInjector]
+            , (service: TokenInjector) => {
+                const request = new HttpRequest<any>('GET',
+                    'http://www.test.com/' + getRandomAlphanumericValue(13));
+                expect(request).toBeTruthy();
+                const nuRequest = service.addAuthHeadersIfNecessary(request);
+                expect(nuRequest.headers.get('Authorization')).toBeNull();
+            }));
+});
