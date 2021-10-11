@@ -32,3 +32,5 @@ include::migration_guide_to_2.7.adoc[leveloffset=+1]
 
 include::migration_guide_to_2.8.adoc[leveloffset=+1]
 
+include::migration_guide_to_2.11.adoc[leveloffset=+1]
+

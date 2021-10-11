@@ -1,0 +1,37 @@
+// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 2.10.0 to release 2.11.0
+
+== Logging screen : Filter with tags list
+
+As for archives screen, now you have to specify the list of tags you want to see in the filter of logging screen.
+You have to set this list in the `web-ui.json` file, with the parameter `logging.filters.tags.list`. For example :
+
+[source,json]
+----
+"logging": {
+  "filters": {
+    "tags": {
+      "list": [
+        {
+          "label": "Label for tag 1",
+          "value": "tag1"
+        }
+      ]
+    }
+  }
+}
+----
+
+
+
+
+
+
+
+
