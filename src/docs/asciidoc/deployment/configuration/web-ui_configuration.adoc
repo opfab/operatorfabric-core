@@ -91,7 +91,8 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 
 |archive.filters.page.size|10|no|The page size of archive filters
 |archive.history.size|100|no|The maximum size of card history visible
-|archive.filters.tags.list||no|List of tags to choose from in the corresponding filter in archives
+|archive.filters.tags.list||no|List of tags to choose from in the corresponding filter in archives page
+|logging.filters.tags.list||no|List of tags to choose from in the corresponding filter in logging page
 |settings.tags.hide||no|Control if you want to show or hide the tags filter in feed page
 |settings.styleWhenNightDayModeDesactivated||no|style to apply if not using day night mode, possible value are DAY or NIGHT 
 |settings.dateFormat|Value from the browser configuration|no|Format for date rendering (example : DD/MM/YYYY )

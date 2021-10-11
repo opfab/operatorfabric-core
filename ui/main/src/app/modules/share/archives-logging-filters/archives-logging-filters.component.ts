@@ -23,6 +23,7 @@ import {TimeService} from '@ofServices/time.service';
 import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import {UserService} from '@ofServices/user.service';
+import {ArchivesComponent} from "../../archives/archives.component";
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -53,10 +54,10 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     @Input() parentForm: FormGroup;
     @Input() visibleProcesses: [];
     @Input() hideChildStates?: boolean;
+    @Input() tags: any[];
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
-    tags: any[];
     filters;
 
     // Filter values
@@ -86,7 +87,6 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.tags = this.configService.getConfigValue('archive.filters.tags.list');
         this.checkPerimeterForSearchFields = this.configService.getConfigValue('checkPerimeterForSearchFields', false);
         this.processesGroups = this.processesService.getProcessGroups();
         this.processDropdownList = this.visibleProcesses;
