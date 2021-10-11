@@ -27,6 +27,18 @@
       }
     }
   },
+  "logging": {
+    "filters": {
+      "tags": {
+        "list": [
+          {
+            "label": "Label for tag 1",
+            "value": "tag1"
+          }
+        ]
+      }
+    }
+  },
   "feed": {
     "card": {
       "hideTimeFilter": false,
