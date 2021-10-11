@@ -308,8 +308,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                                 [severityColumnName]: card.severity,
                                 [publishDateColumnName]: this.timeService.formatDateTime(card.publishDate),
                                 [businessDateColumnName]: this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
-                                [titleColumnName]: this.translateColumn(card.process + '.' + card.processVersion + '.' + card.title.key, card.title.parameters),
-                                [summaryColumnName]: this.translateColumn(card.process + '.' + card.processVersion + '.' + card.summary.key, card.summary.parameters),
+                                [titleColumnName]: card.titleTranslated,
+                                [summaryColumnName]: card.summaryTranslated,
                                 [processGroupColumnName]: this.translateColumn(this.processesService.findProcessGroupLabelForProcess(card.process))
                             });
                         else
@@ -317,8 +317,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                                 [severityColumnName]: card.severity,
                                 [publishDateColumnName]: this.timeService.formatDateTime(card.publishDate),
                                 [businessDateColumnName]: this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
-                                [titleColumnName]: this.translateColumn(card.process + '.' + card.processVersion + '.' + card.title.key, card.title.parameters),
-                                [summaryColumnName]: this.translateColumn(card.process + '.' + card.processVersion + '.' + card.summary.key, card.summary.parameters)
+                                [titleColumnName]: card.titleTranslated,
+                                [summaryColumnName]: card.summaryTranslated
                             });
                     }
                 });

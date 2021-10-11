@@ -20,8 +20,7 @@
         <div class="p-1" style="width: 100%">
             <div style="display: flex;">
                 <p class="card-title ">
-                    <span class="text-uppercase" translate [translateParams]="lightCard.title.parameters">{{i18nPrefix +
-                        lightCard.title.key}} </span>
+                    <span class="text-uppercase">{{lightCard.titleTranslated}} </span>
                 </p>
                 <div class="ml-auto align-self-center pr-2" style="margin-right:-5px; margin-top: -10px;">
                     <div class="d-flex align-items-end flex-row">
@@ -62,8 +61,7 @@
         <div class="badge-border  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}}"></div>
         <div class="p-1">
             <span *ngIf="open">
-                <span id="opfab-selected-card-summary" translate [translateParams]="lightCard.summary.parameters">{{i18nPrefix +
-                    lightCard.summary.key}}</span>
+                <span id="opfab-selected-card-summary">{{lightCard.summaryTranslated}}</span>
                 <span id="opfab-form-entity" *ngIf="fromEntity">
                     
                     <span translate> feed.from</span>
