@@ -32,6 +32,8 @@ export class Card {
         readonly lttd?: number,
         readonly title?: I18n,
         readonly summary?: I18n,
+        readonly titleTranslated?: string,
+        readonly summaryTranslated?: string,
         readonly data?: any,
         readonly userRecipients?: string[],
         readonly groupRecipients?: string[],
@@ -120,7 +122,7 @@ export class HourAndMinutes {
 export function fromCardToLightCard(card: Card): LightCard {
     return new LightCard(card.uid, card.id, card.publisher, card.processVersion, card.publishDate, card.startDate
         , card.endDate, card.severity, card.hasBeenAcknowledged, card.hasBeenRead, card.hasChildCardFromCurrentUserEntity, card.processInstanceId
-        , card.lttd, card.title, card.summary, null, [], card.process, card.state, card.parentCardId,
+        , card.lttd, card.title, card.summary, card.titleTranslated, card.summaryTranslated, null, [], card.process, card.state, card.parentCardId,
         card.initialParentCardUid, card.keepChildCards,card.representative, card.representativeType);
 }
 
