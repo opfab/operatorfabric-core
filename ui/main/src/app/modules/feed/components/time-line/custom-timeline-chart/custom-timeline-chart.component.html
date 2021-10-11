@@ -144,8 +144,7 @@
                 <button id="opfab-timeline-bubble-btn" class="btn btn-cardlink btn-sm" (click)="showCard(title.cardId)">
                     <div style="text-align:left">
                         {{title.summaryDate}}
-                        <span translate [translateParams]="title.parameters"
-                            style="text-align:left;">{{title.i18nPrefix + title.key}}</span>
+                        <span style="text-align:left;">{{title.titleTranslated}}</span>
                     </div>
                 </button>
             </div>
