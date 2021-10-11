@@ -72,12 +72,8 @@
         <td style="padding-left: 5px"> {{displayTime(card.publishDate)}} </td>
         <td *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>{{ processesService.findProcessGroupLabelForProcess(card.process) }}</td>
         <td>{{card.processName}}</td>
-        <td translate [translateParams]="card.title.parameters">
-          {{ card.process + '.' + card.processVersion + '.' + card.title.key}}
-        </td>
-        <td translate [translateParams]="card.summary.parameters">
-          {{ card.process + '.' + card.processVersion + '.' + card.summary.key}}
-        </td>
+        <td>{{card.titleTranslated}}</td>
+        <td>{{card.summaryTranslated}}</td>
         <td *ngIf="card.stateColor" style="color:{{card.stateColor}}" >{{processStateName.get(card.process + '.' + card.state)}}
         </td>
         <td *ngIf="!card.stateColor" >{{processStateName.get(card.process + '.' + card.state)}}

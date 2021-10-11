@@ -337,7 +337,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
                   date: dateForReminder,
                   id: card.id,
                   severity: card.severity, process: card.process,
-                  processVersion: card.processVersion, summary: card.title
+                  processVersion: card.processVersion, 
+                  titleTranslated: card.titleTranslated
                 };
                 myCardsTimeline.push(myCardTimeline);
                 const nextDate = moment(dateForReminder).add(1, 'minute');
@@ -350,7 +351,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
                   date: timeSpan.start,
                   id: card.id,
                   severity: card.severity, process: card.process,
-                  processVersion: card.processVersion, summary: card.title
+                  processVersion: card.processVersion, 
+                  titleTranslated: card.titleTranslated
                 };
                 myCardsTimeline.push(myCardTimeline);
               }
@@ -361,7 +363,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
             date: card.startDate,
             id: card.id,
             severity: card.severity, process: card.process,
-            processVersion: card.processVersion, summary: card.title
+            processVersion: card.processVersion, 
+            titleTranslated: card.titleTranslated
           };
           myCardsTimeline.push(myCardTimeline);
         }
@@ -428,8 +431,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
               circle.end = cards[cardIndex].date;
               circle.summary.push({
                 cardId : cards[cardIndex].id,
-                parameters: cards[cardIndex].summary.parameters,
-                key: cards[cardIndex].summary.key,
+                titleTranslated: cards[cardIndex].titleTranslated,
                 summaryDate: moment(cards[cardIndex].date).format('DD/MM - HH:mm :'),
                 i18nPrefix: cards[cardIndex].process + '.' + cards[cardIndex].processVersion + '.'
               });

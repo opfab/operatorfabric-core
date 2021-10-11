@@ -116,42 +116,38 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     this.calendarEvents = [];
     for (const card of cards) {
       if (!!this.mapOfProcesses && this.mapOfProcesses.has(card.process)) {
-        this.translate.get(card.process + '.' + card.processVersion + '.' + card.title.key
-            , card.title.parameters).subscribe(title => {
-              if (card.timeSpans) {
-                for (const timespan of card.timeSpans) {
-                  if (timespan.end) {
-                    const startDate = new Date(timespan.start.valueOf());
-                    const endDate = new Date(timespan.end.valueOf());
 
-                    if (timespan.recurrence) {
-                      this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
-                        id: card.id,
-                        title: title,
-                        allDay: false,
-                        startRecur: startDate,
-                        endRecur: endDate,
-                        className: ['opfab-calendar-event', 'opfab-calendar-event-' + card.severity.toLowerCase()],
-                        daysOfWeek: timespan.recurrence ? timespan.recurrence.daysOfWeek.map(d => d % 7) : [],
-                        startTime: timespan.recurrence.hoursAndMinutes ? CalendarComponent.formatTwoDigits(timespan.recurrence.hoursAndMinutes.hours) + ':' + CalendarComponent.formatTwoDigits(timespan.recurrence.hoursAndMinutes.minutes) : null,
-                        endTime: timespan.recurrence.durationInMinutes ? CalendarComponent.getEndTime(timespan.recurrence.hoursAndMinutes, timespan.recurrence.durationInMinutes) : null
-                      });
-                    } else {
-                      this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
-                        id: card.id,
-                        title: title,
-                        start: startDate,
-                        end: endDate,
-                        className: ['opfab-calendar-event', 'opfab-calendar-event-' + card.severity.toLowerCase()],
-                        allDay: false
-                      });
-                    }
+        if (card.timeSpans) {
+          for (const timespan of card.timeSpans) {
+            if (timespan.end) {
+              const startDate = new Date(timespan.start.valueOf());
+              const endDate = new Date(timespan.end.valueOf());
 
-                  }
-                }
+              if (timespan.recurrence) {
+                this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
+                  id: card.id,
+                  title: card.titleTranslated,
+                  allDay: false,
+                  startRecur: startDate,
+                  endRecur: endDate,
+                  className: ['opfab-calendar-event', 'opfab-calendar-event-' + card.severity.toLowerCase()],
+                  daysOfWeek: timespan.recurrence ? timespan.recurrence.daysOfWeek.map(d => d % 7) : [],
+                  startTime: timespan.recurrence.hoursAndMinutes ? CalendarComponent.formatTwoDigits(timespan.recurrence.hoursAndMinutes.hours) + ':' + CalendarComponent.formatTwoDigits(timespan.recurrence.hoursAndMinutes.minutes) : null,
+                  endTime: timespan.recurrence.durationInMinutes ? CalendarComponent.getEndTime(timespan.recurrence.hoursAndMinutes, timespan.recurrence.durationInMinutes) : null
+                });
+              } else {
+                this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
+                  id: card.id,
+                  title: card.titleTranslated,
+                  start: startDate,
+                  end: endDate,
+                  className: ['opfab-calendar-event', 'opfab-calendar-event-' + card.severity.toLowerCase()],
+                  allDay: false
+                });
               }
             }
-        );
+          }
+        }
       }
     }
     // It is necessary to reassign the updated events to the corresponding options property to trigger change detection
