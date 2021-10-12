@@ -12,6 +12,6 @@
     <label translate>{{computeI18nLabelKey()}}</label>
     <select  [formControlName]="filterPath">
         <option *ngIf="placeholderKey" value="" selected disabled hidden>{{placeholderText}}</option>
-        <option *ngFor="let v of preparedList" value="{{v.value}}"><span *ngIf="prefixWithValue">{{v.value}} - </span><span translate>{{v.label|async}}</span></option>
+        <option *ngFor="let v of preparedList" value="{{v.value}}"><span *ngIf="prefixWithValue">{{v.value}} - </span>{{v.label}}</option>
     </select>
 </div>

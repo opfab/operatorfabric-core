@@ -9,7 +9,7 @@
 
 
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {I18n} from '@ofModel/i18n.model';
 import {FormControl, FormGroup} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
@@ -21,7 +21,7 @@ import {map} from 'rxjs/operators';
 })
 export class SingleFilterComponent implements OnInit, OnChanges {
 
-  preparedList: { value: string, label: Observable<string> }[];
+  preparedList: { value: string, label: string }[];
   @Input() public i18nRootLabelKey: string;
   @Input() public values: ({ value: string, label: (I18n | string) } | string)[];
   @Input() public parentForm: FormGroup;
@@ -29,6 +29,8 @@ export class SingleFilterComponent implements OnInit, OnChanges {
   @Input() public valuesInObservable: Observable<any>;
   @Input() public prefixWithValue: boolean;
   @Input() public placeholderKey: string;
+  @Input() public sortValues: boolean;
+  @Input() public defaultValueSelected?: boolean;
   placeholderText: Observable<any>;
 
   constructor(private translateService: TranslateService) {
@@ -57,6 +59,11 @@ export class SingleFilterComponent implements OnInit, OnChanges {
             .subscribe();
       }
     }
+    if (this.sortValues)
+      this.sortPeparedList();
+
+    if (this.defaultValueSelected && this.preparedList.length)
+      this.parentForm.get(this.filterPath).setValue(this.preparedList[0].value);
   }
 
 
@@ -66,6 +73,11 @@ export class SingleFilterComponent implements OnInit, OnChanges {
       for (const v of this.values) {
         this.preparedList.push(this.computeValueAndLabel(v));
       }
+      if (this.sortValues)
+        this.sortPeparedList();
+
+      if (this.defaultValueSelected && this.preparedList.length)
+        this.parentForm.get(this.filterPath).setValue(this.preparedList[0].value);
 
     }
     if (!!this.placeholderKey) 
@@ -76,20 +88,30 @@ export class SingleFilterComponent implements OnInit, OnChanges {
     return this.i18nRootLabelKey + this.filterPath;
   }
 
-  computeValueAndLabel(entry: ({ value: string, label: (I18n | string) } | string)): { value: string, label: Observable<string> } {
+  computeValueAndLabel(entry: ({ value: string, label: (I18n | string) } | string)): { value: string, label: string } {
     if (typeof entry === 'string') {
-      return {value: entry, label: of(entry)};
+      return {value: entry, label: this.translateItem(entry)};
     } else if (typeof entry.label === 'string') {
-      return {value: entry.value, label: of(entry.label)};
+      return {value: entry.value, label: this.translateItem(entry.label)};
     } else if (!entry.label) {
-      return {value: entry.value, label: of(entry.value)};
+      return {value: entry.value, label: this.translateItem(entry.value)};
     }
     return {
       value: entry.value,
-      label: this.translateService.get(entry.label.key, entry.label.parameters)
+      label: this.translateItem(entry.label.key, entry.label.parameters)
     };
-
   }
 
+  private translateItem(item : string, parameters?) : string {
+    let translated = item;
+    if (!! parameters)
+      this.translateService.get(item, parameters).subscribe(result => translated = result);
+    else
+      this.translateService.get(item, null).subscribe(result => translated = result);
+    return translated;
+  }
 
+  private sortPeparedList() {
+    this.preparedList.sort((a, b) => (a.label.localeCompare(b.label)));
+  }
 }
