@@ -92,7 +92,7 @@ ext {
             commonsIO      : "commons-io:commons-io:$commonsIO",
             micrometer     : "io.micrometer:micrometer-registry-prometheus:$micrometer",
             jsonSmart      : "net.minidev:json-smart:2.4.7",
-            handlebars     : "com.github.jknack:handlebars:4.2.1",
+            handlebars     : "com.github.jknack:handlebars:4.3.0",
             jacksonDatabind   : "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabind",
     ]
 
