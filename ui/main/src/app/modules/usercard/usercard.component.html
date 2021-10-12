@@ -26,7 +26,7 @@
 
             <div class="col" *ngIf="!! stateOptions && stateOptions.length > 1">
                 <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="state"
-                    [values]="stateOptions"></of-single-filter>
+                    [values]="stateOptions" [sortValues]="true" [defaultValueSelected]=!cardIdToEdit></of-single-filter>
 
             </div>
         </div>
