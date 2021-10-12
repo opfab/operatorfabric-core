@@ -226,8 +226,6 @@ public class ProcessesService implements ResourceLoaderAware {
         if (type.isLocalized() && locale == null)
             throw new FileNotFoundException("Unable to determine resource for undefined locale");
 
-        String finalName = (type == ResourceTypeEnum.I18N) ? locale : name;
-
         String resourcePath = PATH_PREFIX +
                 storagePath +
                 File.separator +
@@ -237,8 +235,8 @@ public class ProcessesService implements ResourceLoaderAware {
                 File.separator +
                 type.getFolder() +
                 File.separator +
-                (type.isLocalized() && !type.equals(ResourceTypeEnum.I18N) ? (locale + File.separator) : "") +
-                finalName + type.getSuffix();
+                (type.isLocalized() ? (locale + File.separator) : "") +
+                name + type.getSuffix();
 
         log.info("loading resource: {}", resourcePath);
         Resource resource = this.resourceLoader.getResource(resourcePath);

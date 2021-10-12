@@ -5,8 +5,5 @@
   "cardFeed": {
     "title": "{{title}}",
     "summary": "{{summary}}"
-  },
-  "action": {
-    "text": "ACTION EN"
   }
 }

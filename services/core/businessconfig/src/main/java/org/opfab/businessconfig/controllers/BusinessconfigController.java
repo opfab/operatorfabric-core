@@ -73,12 +73,6 @@ public class BusinessconfigController implements BusinessconfigApi {
     }
 
     @Override
-    public byte[] getI18n(HttpServletRequest request, HttpServletResponse response, String processId, String locale, String version) throws IOException {
-        Resource resource = processService.fetchResource(processId, ResourceTypeEnum.I18N, version, locale, null);
-        return loadResource(resource);
-    }
-
-    @Override
     public byte[] getTranslation(HttpServletRequest request, HttpServletResponse response, String processId, String version) throws IOException {
         Resource resource = processService.fetchResource(processId, ResourceTypeEnum.TRANSLATION, version, "i18n");
         return loadResource(resource);

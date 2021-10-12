@@ -141,28 +141,6 @@ class ProcessesServiceShould {
     }
 
     @Test
-    void fetchI18n() throws IOException {
-        File i18nFile = service.fetchResource("first", I18N,null,"fr", null).getFile();
-        assertThat(i18nFile)
-                .exists()
-                .isFile()
-                .hasName("fr.json")
-                .hasContent("card.title=\"Titre $1\"");
-        i18nFile = service.fetchResource("first", I18N, "0.1", "fr", null).getFile();
-        assertThat(i18nFile)
-                .exists()
-                .isFile()
-                .hasName("fr.json")
-                .hasContent("card.title=\"Titre $1 0.1\"");
-        i18nFile = service.fetchResource("first", I18N, "0.1", "en", null).getFile();
-        assertThat(i18nFile)
-                .exists()
-                .isFile()
-                .hasName("en.json")
-                .hasContent("card.title=\"Title $1 0.1\"");
-    }
-
-    @Test
     void fetchTranslation() throws IOException {
         File i18nFile = service.fetchResource("first", TRANSLATION,null,null, "i18n").getFile();
         assertThat(i18nFile)

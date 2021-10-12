@@ -1,9 +1,0 @@
-{
-  "process": {
-    "label": "Menu test"
-  },
-  "menu": {
-    "first": "Menu test"
-  },
-  "firstState" : {"label" : "Status test" }
-}

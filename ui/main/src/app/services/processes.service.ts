@@ -11,15 +11,13 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams, HttpUrlEncodingCodec} from '@angular/common/http';
 import {environment} from '@env/environment';
-import {merge, Observable, of, Subject} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
-import {catchError, map, skip, tap} from 'rxjs/operators';
+import {catchError, map, tap} from 'rxjs/operators';
 import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {Card} from '@ofModel/card.model';
 import {LightCardsStoreService} from './lightcards-store.service';
-
-
 
 @Injectable()
 export class ProcessesService {
@@ -28,10 +26,8 @@ export class ProcessesService {
     readonly monitoringConfigUrl: string;
     private urlCleaner: HttpUrlEncodingCodec;
     private processCache = new Map();
-    private translationsAlreadyLoaded = new Set<string>();
     private processes: Process[];
     private processGroups = new Map<string, {name: string, processes: string[]}>();
-    private translationsLoaded = new Subject();
     private monitoringConfig: MonitoringConfig;
 
     private typeOfStatesPerProcessAndState: Map<string, TypeOfStateEnum>;
@@ -45,26 +41,8 @@ export class ProcessesService {
         this.processesUrl = `${environment.urls.processes}`;
         this.processGroupsUrl = `${environment.urls.processGroups}`;
         this.monitoringConfigUrl = `${environment.urls.monitoringConfig}`;
-        this.loadTranslationIfNeededAfterLoadingCard();
     }
 
-    private loadTranslationIfNeededAfterLoadingCard() {
-        this.lightCardsStoreService.getNewLightCards()
-            .subscribe(card => { if (!!card) this.loadTranslationsForProcess(card.process, card.processVersion)});
-    }
-
-    public loadTranslationsForProcess(process, version) {
-        this.translateService.getLangs().forEach(
-            local => this.addTranslationIfNeeded(local, process, version ));
-    }
-
-    public addTranslationIfNeeded(locale: string, process: string, version: string) {
-        if (!this.translationsAlreadyLoaded.has(locale + '/' + process + '/' + version)) {
-            this.translationsAlreadyLoaded.add(locale + '/' + process + '/' + version);
-            this.askForI18nJson(process, locale, version)
-                .pipe(map(i18n => this.translateService.setTranslation(locale, i18n, true))).subscribe();
-        }
-    }
 
     public loadAllProcesses(): Observable<any> {
         return this.queryAllProcesses()
@@ -74,10 +52,8 @@ export class ProcessesService {
                         this.processes = processesLoaded;
                         if (this.processes.length === 0) {
                             console.log(new Date().toISOString(), 'WARNING : no processes configured');
-                            this.translationsLoaded.next(null);
                         } else {
                             this.loadAllProcessesInCache();
-                            this.loadAllTranslations();
                             console.log(new Date().toISOString(), 'List of processes loaded');
                         }
                     }
@@ -115,25 +91,6 @@ export class ProcessesService {
         });
     }
 
-    private loadAllTranslations() {
-        const requests$ = [];
-        this.processes.forEach(process => {
-            this.translateService.getLangs().forEach(
-                local => {
-                    this.translationsAlreadyLoaded.add(local + '/' + process.id + '/' + process.version);
-                    requests$.push(this.askForI18nJson(process.id, local, process.version)
-                        .pipe(map(i18n => this.translateService.setTranslation(local, i18n, true))));
-                }
-            );
-        });
-        // Wait for all translation request to complete before setting translations to load
-        merge(...requests$).pipe(skip(requests$.length - 1)).subscribe(() =>  {
-            this.translationsLoaded.next(null);
-            console.log(new Date().toISOString(), 'Translations for processes loaded');
-        });
-    }
-
-
     public loadMonitoringConfig(): Observable<MonitoringConfig> {
         return this.httpClient.get<MonitoringConfig>(this.monitoringConfigUrl)
             .pipe(
@@ -151,9 +108,7 @@ export class ProcessesService {
                     }
                 ));
     }
-    public areTranslationsLoaded(): Observable<any> {
-        return this.translationsLoaded;
-    }
+
 
     public getAllProcesses(): Process[] {
         return this.processes;

@@ -21,12 +21,12 @@ The following instructions describe tests to perform on OperatorFabric to unders
 A bundle contains all the configuration regarding a given business process, describing for example the various steps of the process but also how the associated cards and card details should be displayed.
 
 Bundle are technically `tar.gz` archives containing at least a descriptor file named `config.json`.
-To display the card date, some `css files`, `i18n files` and `handlebars templates` must be added.
+To display the card date, some `css files`, `i18n file` and `handlebars templates` must be added.
 
 For didactic purposes, in this section, the businessconfig bundle name is `BUNDLE_TEST` (to match the parameters used by the script).
-The l10n (localization) configurations are English, referred as `en` and French, referred as `fr`.
+The l10n (localization) configurations is English.
 
-As detailed in the `Businessconfig core service README` the bundle contains at least a metadata file called `config.json`, a file `i18n.json`, a `css` folder, an `i18n` folder and a `template` folder.
+As detailed in the `Businessconfig core service README` the bundle contains at least a metadata file called `config.json`, a file `i18n.json`, a `css` folder and a `template` folder.
 
 Except for the `config.json file`, all elements are optional.
 
@@ -38,9 +38,6 @@ bundle
 ├── i18n.json
 ├── css
 │   └── bundleTest.css
-├── i18n
-│   ├── en.json
-│   └── fr.json
 └── template
     ├── template1.handlebars
     └── template2.handlebars
@@ -59,7 +56,7 @@ include::../../../../services/core/businessconfig/src/main/docker/volume/busines
 ----
 
 - `id`: id of the process;
-- `name`: process name (i18n key);
+- `name`: process name;
 - `version`: enables the correct display of the card data, even for the old ones.
 The server store the previous versions in its file system.
 This field value should match a businessconfig configuration for a correct rendering;
@@ -75,49 +72,29 @@ for details.
 
 == The i18n.json file
 This file contains internationalization information, in particular the translation for title and summary fields
-
-
-== i18n
-
-There is a possibility of internationalization (i18n) for businessconfig service.
-You can do it by using l10n files located in the `i18n` folder.
-
-The `i18n` folder contains one json file per l10n.
-
-The integration of the businessconfig service into OperatorFabric need this localisation, i.e. the label displayed for the process, the state, the label displayed for the details of the card...
-
-===  Template folder
-
-The `template` folder contains one template file for each process/state. They will be used for the card details rendering.
-
-==== i18n file
-
 If there is no i18n file or key is missing, OperatorFabric displays i18n key, such as `BUNDLE_TEST.1.missing-i18n-key`.
 In the case where the bundle declares no i18n key corresponds to `missing-i18n-key`.
 
 The choice of i18n keys is up to the maintainer of the Businessconfig process.
 
+===  Template folder
+
+The `template` folder contains one template file for each process/state. They will be used for the card details rendering.
+
 
 *Example*
 
 For this example, the name of the process is  `Bundle Test` and its technical name is `BUNDLE_TEST`.
-The bundle provides an english and a french l10n.
+The bundle provides an english l10n.
 
 Title and summary have to be localized.
 
 
-Here is the content of `en.json`
+Here is the content of `i18n.json`
 
 [source,JSON]
 ----
-include::../../../../services/core/businessconfig/src/main/docker/volume/businessconfig-storage/TEST/1/i18n/en.json[]
-----
-
-Here the content of `fr.json`
-
-[source,JSON]
-----
-include::../../../../services/core/businessconfig/src/main/docker/volume/businessconfig-storage/TEST/1/i18n/fr.json[]
+include::../../../../services/core/businessconfig/src/main/docker/volume/businessconfig-storage/TEST/1/i18n.json[]
 ----
 
 To check the i18n, after the upload of the bundle, use a `GET` request against the `businessconfig` service.
@@ -126,12 +103,12 @@ ifdef::single-page-doc[link:../api/businessconfig/index.html#/businessconfig/get
 ifndef::single-page-doc[link:/documentation/current/api/businessconfig/index.html#/businessconfig/getI18n[here]]
 .
 
-Set the `locale` language, the `version` of the bundle and the `technical name` of the businessconfig party to get json in the response.
+Set the `version` of the bundle and the `technical name` of the businessconfig party to get json in the response.
 
 For example, to check if the french l10n data of the version 1 of the `BUNDLE_TEST` businessconfig party use the following command line:
 
 ----
-curl "http://localhost:2100/businessconfig/processes/BUNDLE_TEST/i18n?locale=fr&version=1" \
+curl "http://localhost:2100/businessconfig/processes/BUNDLE_TEST/i18n?version=1" \
 -H  "Authorization: Bearer ${token}"
 ----
 
@@ -141,7 +118,7 @@ The `businessconfig` service should answer with a 200 status associated with the
 
 [source,JSON]
 ----
-include::../../../../services/core/businessconfig/src/main/docker/volume/businessconfig-storage/TEST/1/i18n/en.json[]
+include::../../../../services/core/businessconfig/src/main/docker/volume/businessconfig-storage/TEST/1/i18n.json[]
 
 ----
 

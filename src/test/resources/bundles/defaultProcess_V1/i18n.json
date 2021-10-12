@@ -1,44 +1,13 @@
 {
-	"process": {"label": "Process example "},
 	"message":{
 		"title":"Message",
 		"summary":"Message received"
 	},
 	"chartDetail" : { "title":"A Chart"},
 	"chartLine" : { "title":"Electricity consumption forecast"},
-	"question" : {"title": "⚡ Planned Outage","button" : {"text" :"Send your response"}},
+	"question" : {"title": "⚡ Planned Outage"},
 	"contingencies": {"title" : "⚠️ Network Contingencies ⚠️","summary":"Contingencies report for French network"},
-	"response" : { "title":"Planned outage date response"},
-	"menu": {
-		"label": "Test Process Menu",
-		"first":"OperatorFabric Documentation",
-		"second":"LF Energy"
-	},
-	"messageState": {
-		"description": "Message state"
-	},
-	"chartState": {
-		"description": "Chart state"
-	},
-	"chartLineState": {
-		"description": "Chart line state"
-	},
 	"processState": {
-		"title":"Process state ({{status}})",
-		"description": "Process state"
-	},
-	"contingenciesState": {
-		"description": "Contingencies state"
-	},
-	"questionState": {
-		"title": "Action required",
-		"description": "Question state"
-	},
-	"multipleOptionsResponseState": {
-		"title": "Additional information required",
-		"description": "Follow-up Question state"
-	},
-	"responseState": {
-		"description": "Response state"
+		"title":"Process state ({{status}})"
 	}
 }

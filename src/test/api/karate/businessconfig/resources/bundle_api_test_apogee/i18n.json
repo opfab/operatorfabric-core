@@ -1,75 +1,13 @@
 {
   "process": {
     "title": "Test: Process",
-    "summary": "This sums up the content of the card",
-    "detail": {
-      "tab": {
-        "first": "First Tab",
-        "second": "Second Tab"
-      }
-    },
-    "action": {
-      "first": "First action"
-    }
-  },
-  "businessconfig": {
-    "label": "Test 3rd"
-  },
-  "menu": {
-    "first": "First Entry",
-    "second": "Second Entry"
-  },
-  "opfab": {
-    "card": {
-      "template": {
-        "template1": {
-          "name": "Contingencies"
-        },
-        "tab1": {
-          "name": "template-tab1"
-        },
-        "tab2": {
-          "name": "template-tab2"
-        },
-        "tab3": {
-          "name": "template-tab3"
-        },
-        "tab4": {
-          "name": "template-tab4"
-        },
-        "tab5": {
-          "name": "template-tab5"
-        },
-        "tab6": {
-          "name": "template-tab6"
-        }
-      }
-    }
+    "summary": "This sums up the content of the card"
   },
   "apogeesea": {
     "card": {
       "summary": "{{contingenciesSize}} contingencies",
-      "contingencies": {
-        "0":"0 contingency",
-        "1": "1 contingency"
-      },
-      "title": "{{content}}",
-      "details": {
-        "generic": "Contingencies",
-        "pf": {
-          "1": "PF-5’",
-          "2": "PF-10’",
-          "3": "PF-15’",
-          "4": "PF-20’",
-          "5": "PF-25’",
-          "6": "PF-30’"
-        }
-      }
+      "title": "{{content}}"
     }
-  },
-  "apogeeseaState" : {
-    "description": "apogeesea"
   }
-
 }
 

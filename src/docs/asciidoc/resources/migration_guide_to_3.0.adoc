@@ -10,6 +10,8 @@
 == New bundle structure
 
 The bundle contains a new i18n.json file in the root directory. The i18n.json file contains internationalization information for title and summary fields.
+The folder `i18n` and contained files (`en.json`, `fr.json`) has been removed from bundle structure.
+
 
 === Template directory
 

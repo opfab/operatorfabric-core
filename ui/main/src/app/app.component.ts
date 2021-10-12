@@ -150,9 +150,8 @@ export class AppComponent implements OnInit {
                 this.processesService.loadAllProcesses(),
                 this.processesService.loadProcessGroups(),
                 this.processesService.loadMonitoringConfig(),
-                this.processesService.areTranslationsLoaded(),
                 this.cardService.initSubscription)
-                .pipe(skip(7)) // Need to wait for all initialization to complete before loading main components of the application
+                .pipe(skip(6)) // Need to wait for all initialization to complete before loading main components of the application
                 .subscribe({
                   next: () => {
                   this.loaded = true;

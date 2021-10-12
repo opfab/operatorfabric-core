@@ -20,7 +20,6 @@ import org.opfab.businessconfig.services.ProcessesService;
  * <dl>
  *     <dt>CSS</dt><dd>cascading style sheet resource type</dd>
  *     <dt>TEMPLATE</dt><dd>Card template resource type</dd>
- *     <dt>I18N</dt><dd>i18n file resource type</dd>
  *     <dt>TRANSLATION</dt><dd>i18n file resource type</dd>
  * </dl>
  *
@@ -30,7 +29,6 @@ import org.opfab.businessconfig.services.ProcessesService;
 public enum ResourceTypeEnum {
   CSS("css", ".css", false),
   TEMPLATE("template", ".handlebars", false),
-  I18N("i18n", ".json", true),
   TRANSLATION(".", ".json", false);
 
   /**
