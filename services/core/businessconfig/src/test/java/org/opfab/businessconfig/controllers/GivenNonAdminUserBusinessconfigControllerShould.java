@@ -173,43 +173,6 @@ class GivenNonAdminUserBusinessconfigControllerShould {
     }
 
     @Test
-    void fetchI18nResource() throws Exception {
-        ResultActions result = mockMvc.perform(
-                get("/businessconfig/processes/first/i18n?locale=fr")
-                        .accept("text/plain")
-        );
-        result
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("text/plain"))
-                .andExpect(content().string(is("card.title=\"Titre $1\"")))
-        ;
-        result = mockMvc.perform(
-                get("/businessconfig/processes/first/i18n?locale=en")
-                        .accept("text/plain")
-        );
-        result
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("text/plain"))
-                .andExpect(content().string(is("card.title=\"Title $1\"")))
-        ;
-        result = mockMvc.perform(
-                get("/businessconfig/processes/first/i18n?locale=en&version=0.1")
-                        .accept("text/plain")
-        );
-        result
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("text/plain"))
-                .andExpect(content().string(is("card.title=\"Title $1 0.1\"")))
-        ;
-
-        assertException(FileNotFoundException.class).isThrownBy(() ->
-                mockMvc.perform(
-                        get("/businessconfig/processes/first/i18n?locale=de&version=0.1")
-                                .accept("text/plain")
-                ));
-    }
-
-    @Test
     void fetchTranslationResource() throws Exception {
         ResultActions result = mockMvc.perform(
                 get("/businessconfig/processes/first/translation")
