@@ -54,7 +54,7 @@ The following card contains only the mandatory attributes.
 ....
 
 This an information about the process instance `process-000` of process `process`, sent by `TEST_PUBLISHER`. The title and the summary refer to `i18n` keys
-defined in the associated `i18n` files of the process. This card is displayable since the first january 2019 and
+defined in the associated `i18n` file of the process. This card is displayable since the first january 2019 and
 should only be received by the user using the `operator1` login (provided that this user has receive right on this process/state).
 
 === Send to several users
