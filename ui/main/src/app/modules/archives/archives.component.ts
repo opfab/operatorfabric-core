@@ -191,7 +191,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 this.currentPage = page_number + 1; // page on ngb-pagination component start at 1 , and page on backend start at 0
                 this.firstQueryHasBeenDone = true;
                 this.hasResult = page.content.length > 0;
-                page.content.forEach(card => this.loadTranslationForCardIfNeeded(card));
                 this.results = page.content;
 
                 if (this.isCollapsibleUpdatesActivated) {
@@ -221,7 +220,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             this.cardService.fetchArchivedCards(filters)
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe((page: Page<LightCard>) => {
-                    page.content.forEach(card => this.loadTranslationForCardIfNeeded(card));
                     this.removeMostRecentCardFromHistories(lightCard.id, page.content);
 
                     //since we are in asynchronous mode, we test requestId to avoid that the requests "overlap" and that the results appear in a wrong order
@@ -244,10 +242,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     hideHistoryOfACard(card: {mostRecent: LightCard, cardHistories: LightCard[], displayHistory: boolean}) {
         card.displayHistory = false;
-    }
-
-    loadTranslationForCardIfNeeded(card: LightCard) {
-        this.processesService.loadTranslationsForProcess(card.process, card.processVersion);
     }
 
     updateResultPage(currentPage): void {

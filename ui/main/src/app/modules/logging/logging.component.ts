@@ -210,7 +210,6 @@ export class LoggingComponent implements OnDestroy, OnInit {
     }
 
     cardPostProcessing(card) {
-        this.loadTranslationForCardIfNeeded(card);
         const isThirdPartyPublisher = card.publisherType === 'EXTERNAL';
         const sender = (isThirdPartyPublisher) ? card.publisher : this.entitiesService.getEntityName(card.publisher);
 
@@ -226,9 +225,6 @@ export class LoggingComponent implements OnDestroy, OnInit {
         card.stateColor = this.stateColors.get(card.process + '.' + card.state);
     }
 
-    loadTranslationForCardIfNeeded(card: LightCard) {
-        this.processesService.loadTranslationsForProcess(card.process, card.processVersion);
-    }
 
     updateResultPage(currentPage): void {
         // page on ngb-pagination component start at 1 , and page on backend start at 0
