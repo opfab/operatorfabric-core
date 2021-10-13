@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-@ActiveProfiles(profiles = {"native", "test"})
+@ActiveProfiles(profiles = "test")
 class KafkaAvroWithoutRegistrySerializerShould {
 
     @InjectMocks

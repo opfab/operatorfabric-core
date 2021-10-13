@@ -61,7 +61,8 @@ ext {
             avro                  : "org.apache.avro:avro:$avro",
             kafkaAvroSchemaRegistryClient    : "io.confluent:kafka-schema-registry-client:$kavroSchemaRegistryClient",
             kafkaAvroSerializer              : "io.confluent:kafka-avro-serializer:$kavroAvroSerializer",
-            springKafka           : "org.springframework.kafka:spring-kafka"
+            springKafka           : "org.springframework.kafka:spring-kafka",
+            springKafkaTest       : "org.springframework.kafka:spring-kafka-test"
 
 
     ]
