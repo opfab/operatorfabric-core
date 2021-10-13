@@ -8,16 +8,14 @@
  * This file is part of the OperatorFabric project.
  */package org.opfab.cards.publication.kafka.consumer;
 
-import org.apache.avro.io.BinaryDecoder;
 import org.apache.avro.io.DatumReader;
-import org.apache.avro.io.DecoderFactory;
 import org.apache.kafka.common.errors.SerializationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.opfab.avro.CardCommand;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.opfab.avro.CardCommand;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -25,35 +23,18 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles(profiles = "test")
 class KafkaAvroWithoutRegistryDeserializerShould {
 
-    private DecoderFactory decoderFactory;
-
-    private DatumReader datumReader;
-
     private KafkaAvroWithoutRegistryDeserializer cut;
-
-    private BinaryDecoder binaryDecoder;
-
-    private CardCommand cardCommand;
 
     @BeforeEach
     void setUp() {
-        decoderFactory = mock(DecoderFactory.class);
-        datumReader = mock(DatumReader.class);
-        binaryDecoder = mock(BinaryDecoder.class);
-        cardCommand = mock(CardCommand.class);
-        cut = new KafkaAvroWithoutRegistryDeserializer();
-        ReflectionTestUtils.setField(cut, "decoderFactory", decoderFactory);
-        ReflectionTestUtils.setField(cut, "datumReader", datumReader);
+        cut =  new KafkaAvroWithoutRegistryDeserializer();
     }
 
     @Test
@@ -63,19 +44,16 @@ class KafkaAvroWithoutRegistryDeserializerShould {
 
     @Test
     void deserializeWithPayload() throws IOException {
-        when(decoderFactory.binaryDecoder(any(), anyInt(), anyInt(), eq(null))).thenReturn(binaryDecoder);
-        when(datumReader.read(null, binaryDecoder)).thenReturn(cardCommand);
-        byte[] emptyBytes = new byte[] {0,0,0,0,0};
-        byte[] payload = "something".getBytes();
-        byte[] payloadWithEmptyBytes = new byte[5 + payload.length];
-        System.arraycopy(emptyBytes, 0, payloadWithEmptyBytes, 0, 5);
-        System.arraycopy(payload, 0, payloadWithEmptyBytes, 5, payload.length);
-        cut.deserialize("something", payloadWithEmptyBytes);
+        DatumReader<CardCommand> datumReader = mock(DatumReader.class);
+        ReflectionTestUtils.setField(cut, "datumReader", datumReader);
+
+        byte[] payload = {0,1,2,3};
+        cut.deserialize("something", payload);
         verify (datumReader).read(any(), any());
     }
 
     @Test
-    void deserializeException() throws IOException {
+    void deserializeInvalidPayload() {
         byte[] bytes = "something".getBytes();
         Assertions.assertThrows(SerializationException.class, () ->
                 cut.deserialize("something", bytes));
