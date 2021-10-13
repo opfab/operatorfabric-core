@@ -13,6 +13,7 @@ jeandemanded
 JeroenGommans
 JulienBapt
 lucian-balea
+olivierPigeon-RTE
 quinarygio
 rlg-pro
 rte-amal
