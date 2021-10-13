@@ -34,7 +34,7 @@ public class I18nTranslation {
         }
 
         if (node == null) {
-            return null;
+            return key;
         }
         
         String nodeText = node.asText();
