@@ -69,6 +69,8 @@ public class CardTranslationService {
             card.setSummaryTranslated(translation.translate(card.getSummary().getKey(), card.getSummary().getParameters()));
         } catch(FeignException | IOException ex) {
             log.error("Error getting card translation", ex);
+            card.setTitleTranslated(card.getTitle().getKey());
+            card.setSummaryTranslated(card.getSummary().getKey());
         }
     }
 
