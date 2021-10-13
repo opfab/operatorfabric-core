@@ -52,4 +52,17 @@ public class I18nTranslationShould {
         assertThat(summaryTranslated2).isEqualTo("12 contingencies on France network");
     }
 
+    @Test
+    public void translationNotFound() throws Exception {
+        String json = "  {\"process\": {\"card\": {  \"title\": \"Card title\"}}}";
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode obj = mapper.readTree(json);
+
+        I18nTranslation trans = new I18nTranslation(obj);
+
+        // If i18n key is missing should return the key itself
+        String summaryTranslated = trans.translate("process.card.summary", null);
+        assertThat(summaryTranslated).isEqualTo("process.card.summary");
+    }
 }
