@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@ActiveProfiles(profiles = {"native", "test"})
+@ActiveProfiles(profiles = "test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UpdateCardCommandHandlerShould {
     private CardProcessingService cardProcessingService;
