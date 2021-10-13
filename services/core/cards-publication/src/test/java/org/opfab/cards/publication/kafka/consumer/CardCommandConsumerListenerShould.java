@@ -26,7 +26,7 @@ import java.util.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@ActiveProfiles(profiles = {"native", "test"})
+@ActiveProfiles(profiles = "test")
 class CardCommandConsumerListenerShould {
 
     @Test

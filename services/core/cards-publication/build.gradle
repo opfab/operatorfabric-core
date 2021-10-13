@@ -17,6 +17,8 @@ dependencies {
     implementation cloud.springKafka
     implementation cloud.kafkaAvroSchemaRegistryClient
     implementation cloud.kafkaAvroSerializer
+    testImplementation cloud.springKafkaTest
+
 
     implementation boot.starterWeb, boot.starterJetty
     implementation spring.securityOauthResource, spring.securityOauthJose
