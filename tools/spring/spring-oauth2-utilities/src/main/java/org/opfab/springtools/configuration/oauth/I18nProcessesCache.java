@@ -39,7 +39,7 @@ public class I18nProcessesCache {
      */
     @Cacheable(value = "i18n")
     public JsonNode fetchProcessI18nFromCacheOrProxy(String process, String version) throws FeignException {
-        return client.getTranslation(process, version);
+        return client.getI18n(process, version);
     }
 
     /** Clear all cached  data

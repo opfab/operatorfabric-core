@@ -37,7 +37,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String THIRDS_PATH = "/businessconfig/**";
     private static final String STYLE_URL_PATTERN = "/businessconfig/processes/*/css/*";
-    private static final String I18N_URL_PATTERN = "/businessconfig/processes/*/translation*";
+    private static final String I18N_URL_PATTERN = "/businessconfig/processes/*/i18n*";
 
     public static final String AUTH_AND_IP_ALLOWED = "isAuthenticated() and @webSecurityChecks.checkUserIpAddress(authentication)";
     public static final String ADMIN_AND_IP_ALLOWED = "hasRole('ADMIN') and @webSecurityChecks.checkUserIpAddress(authentication)";

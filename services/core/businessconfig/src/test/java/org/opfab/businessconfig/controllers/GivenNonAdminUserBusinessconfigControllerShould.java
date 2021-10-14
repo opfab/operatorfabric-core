@@ -175,7 +175,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
     @Test
     void fetchTranslationResource() throws Exception {
         ResultActions result = mockMvc.perform(
-                get("/businessconfig/processes/first/translation")
+                get("/businessconfig/processes/first/i18n")
                         .accept("text/plain")
         );
         result
@@ -184,7 +184,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
                 .andExpect(content().string(is("card.title=\"Title $1\"")))
         ;
         result = mockMvc.perform(
-                get("/businessconfig/processes/first/translation?version=0.1")
+                get("/businessconfig/processes/first/i18n?version=0.1")
                         .accept("text/plain")
         );
         result
@@ -195,7 +195,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
 
         assertException(FileNotFoundException.class).isThrownBy(() ->
                 mockMvc.perform(
-                        get("/businessconfig/processes/first/translation?version=2.1")
+                        get("/businessconfig/processes/first/i18n?version=2.1")
                                 .accept("text/plain")
                 ));
     }

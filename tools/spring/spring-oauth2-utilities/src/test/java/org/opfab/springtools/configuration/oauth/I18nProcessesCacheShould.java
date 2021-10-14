@@ -30,8 +30,8 @@ public class I18nProcessesCacheShould {
     @Autowired
     MockClient mockI18nClient;
 
-    private final String TEST_URL = "/businessconfig/processes/process1/translation?version=1";
-    private final String TEST_URL_2 = "/businessconfig/processes/process2/translation?version=1";
+    private final String TEST_URL = "/businessconfig/processes/process1/i18n?version=1";
+    private final String TEST_URL_2 = "/businessconfig/processes/process2/i18n?version=1";
 
     private final String TEST_PROCESS = "process1";
     private final String TEST_PROCESS_2 = "process2";

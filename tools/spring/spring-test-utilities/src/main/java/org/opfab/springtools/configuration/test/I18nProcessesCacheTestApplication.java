@@ -43,9 +43,9 @@ public class I18nProcessesCacheTestApplication {
         String stringTestI18n = "{ \"summary\": \"Summary translated {{arg1}}\",\"title\": \"Title translated\"}";
 
         MockClient mockClient = new MockClient();   
-        mockClient = mockClient.add(HttpMethod.GET, "/businessconfig/processes/process2/translation?version=1",
+        mockClient = mockClient.add(HttpMethod.GET, "/businessconfig/processes/process2/i18n?version=1",
                 200, stringTestI18n);
-        mockClient = mockClient.add(HttpMethod.GET, "/businessconfig/processes/process1/translation?version=1",
+        mockClient = mockClient.add(HttpMethod.GET, "/businessconfig/processes/process1/i18n?version=1",
                 200, stringTestI18n);
         return mockClient;
     }
