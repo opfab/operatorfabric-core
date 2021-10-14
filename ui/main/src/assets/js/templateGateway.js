@@ -15,6 +15,7 @@ const templateGateway = {
     entitiesAllowedToRespond: [],
     entityUsedForUserResponse: null,
     displayContext: '',
+    isLocked: false,
 
     setEntityNames: function(entityNames){
         this.opfabEntityNames = entityNames;
@@ -79,6 +80,7 @@ const templateGateway = {
         this.entitiesAllowedToRespond = [];
         this.entityUsedForUserResponse = null;
         this.displayContext = '';
+        this.isLocked = false;
 
         // OpFab calls this function to inform the template that the card is locked
         this.lockAnswer = function () {
