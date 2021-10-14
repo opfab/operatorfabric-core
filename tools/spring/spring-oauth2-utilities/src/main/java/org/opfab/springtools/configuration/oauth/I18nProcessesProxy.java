@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 @FeignClient(url="${operatorfabric.servicesUrls.businessconfig}", name = "translation", configuration=FeignConfiguration.class)
 public interface I18nProcessesProxy {
 
-    @GetMapping(value = "/businessconfig/processes/{process}/translation",
+    @GetMapping(value = "/businessconfig/processes/{process}/i18n",
             produces = { "application/json" })
-            JsonNode getTranslation(@PathVariable(value="process") String process, @RequestParam("version") String version) ;
+            JsonNode getI18n(@PathVariable(value="process") String process, @RequestParam("version") String version) ;
 }
