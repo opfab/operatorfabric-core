@@ -28,7 +28,8 @@ import {AppService} from './app.service';
 import {GroupsService} from './groups.service';
 import {EntitiesService} from './entities.service';
 import {ReminderService} from '@ofServices/reminder/reminder.service';
-import {LightCardsService} from '@ofServices/lightcards.service'
+import {LightCardsFeedFilterService} from '@ofServices/lightcards-feed-filter.service'
+import {LightCardsStoreService} from './lightcards-store.service';
 
 @NgModule({
     imports: [
@@ -56,7 +57,8 @@ import {LightCardsService} from '@ofServices/lightcards.service'
         GlobalStyleService,
         AppService,
         ReminderService,
-        LightCardsService
+        LightCardsFeedFilterService,
+        LightCardsStoreService
     ]
 })
 export class ServicesModule {

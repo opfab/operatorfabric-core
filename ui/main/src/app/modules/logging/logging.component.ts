@@ -112,6 +112,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
 
     ngOnInit() {
         this.size = this.configService.getConfigValue('logging.filters.page.size', 10);
+        this.tags = this.configService.getConfigValue('logging.filters.tags.list');
         this.results = [];
         this.dateTimeFilterChange.pipe(
             takeUntil(this.unsubscribe$),

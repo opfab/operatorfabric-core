@@ -17,7 +17,7 @@ import {
     compareByReadSeverityPublishDate,
     compareBySeverity, compareBySeverityPublishDate,
     compareByStartDate
-} from "@ofServices/lightcards.service";
+} from "@ofServices/lightcards-feed-filter.service";
 
 describe('FeedState', () => {
     const card1 = getOneRandomLightCard({startDate:5000, severity:Severity.INFORMATION, lttd:10000, publishDate:5000, hasBeenRead: true });

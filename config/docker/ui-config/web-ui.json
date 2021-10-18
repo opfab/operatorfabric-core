@@ -4,6 +4,8 @@
   "checkPerimeterForResponseCard": true,
   "checkPerimeterForSearchFields": false,
   "showUserEntitiesOnTopRightOfTheScreen": true,
+  "settings.replayInterval": 10,
+  "settings.replayEnabled": true,
   "archive": {
     "filters": {
       "page": {
@@ -20,6 +22,18 @@
           {
             "label": "Label for tag 2",
             "value": "tag2"
+          }
+        ]
+      }
+    }
+  },
+  "logging": {
+    "filters": {
+      "tags": {
+        "list": [
+          {
+            "label": "Label for tag 1",
+            "value": "tag1"
           }
         ]
       }
@@ -121,7 +135,7 @@
       "operatorfabric": {
         "name": "OperatorFabric",
         "rank": 0,
-        "version": "2.10.0.RELEASE"
+        "version": "2.11.0.RELEASE"
       }
     },
     "infos": {

@@ -111,6 +111,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
         this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
         this.historySize = parseInt(this.configService.getConfigValue('archive.history.size', 100));
+        this.tags = this.configService.getConfigValue('archive.filters.tags.list');
         this.results = [];
         this.updatesByCardId = [];
         this.dateTimeFilterChange.pipe(

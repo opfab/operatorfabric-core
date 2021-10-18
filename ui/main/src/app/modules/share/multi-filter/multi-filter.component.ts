@@ -132,12 +132,12 @@ export class MultiFilterComponent implements OnInit, OnChanges, OnDestroy {
         
         if (!!item) {
             const value = (typeof item === 'string') ? item : item.key;
-            return (this.translateValues) ? this.traslateItem(value, defaultValue, i18nPrefix) : value;
+            return (this.translateValues) ? this.translateItem(value, defaultValue, i18nPrefix) : value;
         }
         return defaultValue;
     }
 
-    private traslateItem(item : string, defaultValue: string, i18nPrefix?: string) : string {
+    private translateItem(item : string, defaultValue: string, i18nPrefix?: string) : string {
         let translated = defaultValue;
         this.translateService.get(`${i18nPrefix}${item}`
             , null).subscribe(result => translated = result);

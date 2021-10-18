@@ -8,23 +8,16 @@
  */
 
 import {createSelector} from '@ngrx/store';
-import {LightCardAdapter} from '@ofStates/feed.state';
 import {AppState} from '@ofStore/index';
 import {FilterType} from '@ofServices/filter.service';
 
 export const selectLightCardsState = (state: AppState) => state.feed;
 
-export const {
-    selectAll: selectFeed,
-    selectEntities: selectFeedCardEntities
-} = LightCardAdapter.getSelectors(selectLightCardsState);
 
 export const selectLightCardSelection = createSelector(
     selectLightCardsState,
     state => state.selectedCardId);
 
-export const selectLastCardLoaded = createSelector(selectLightCardsState,
-    state => state.lastCardLoaded);
 
 export const selectFilter = createSelector(selectLightCardsState,
     state => state.filters);
@@ -46,7 +39,6 @@ export function buildFilterSelector(name: FilterType) {
     });
 }
 
-export const fetchLightCard = lightCardId => (state: AppState) => selectFeedCardEntities(state)[lightCardId];
 
 export const selectSortBySeverity = createSelector(selectLightCardsState,
     state => state.sortBySeverity);

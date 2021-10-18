@@ -8,8 +8,6 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import {UserService} from '@ofServices/user.service';
 import {Process} from '@ofModel/processes.model';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -19,7 +17,6 @@ import {ProcessesService} from '@ofServices/processes.service';
 import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {SettingsService} from '@ofServices/settings.service';
 import {CardService} from '@ofServices/card.service';
-import {EmptyLightCards} from '@ofActions/light-card.actions';
 import {TranslateService} from '@ngx-translate/core';
 import {Utilities} from '../../common/utilities';
 import {ConfigService} from '@ofServices/config.service';
@@ -68,7 +65,6 @@ export class FeedconfigurationComponent implements OnInit {
     messageAfterSavingSettings: string;
 
     constructor(private formBuilder: FormBuilder,
-                private store: Store<AppState>,
                 private userService: UserService,
                 private processesService: ProcessesService,
                 private modalService: NgbModal,
@@ -301,8 +297,7 @@ export class FeedconfigurationComponent implements OnInit {
                         this.messageAfterSavingSettings = 'feedConfiguration.error.impossibleToSaveSettings';
                         this.displaySendResultError = true;
                     } else {
-                        this.cardService.resetStartOfAlreadyLoadedPeriod();
-                        this.store.dispatch(new EmptyLightCards());
+                        this.cardService.removeAllLightCardFromMemory();
                     }
                     this.modalRef.close();
                 },

@@ -16,7 +16,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
 import {delay, map} from 'rxjs/operators';
 import * as moment from 'moment';
-import {LightCardsService} from '@ofServices/lightcards.service';
+import {LightCardsFeedFilterService} from '@ofServices/lightcards-feed-filter.service';
 import {ConfigService} from '@ofServices/config.service';
 
 @Component({
@@ -32,7 +32,7 @@ export class FeedComponent implements OnInit {
     maxNbOfCardsToDisplay: number = 100;
 
 
-    constructor(private store: Store<AppState>,private lightCardsService: LightCardsService,private configService: ConfigService ) {
+    constructor(private store: Store<AppState>,private lightCardsFeedFilterService: LightCardsFeedFilterService,private configService: ConfigService ) {
 
           this.maxNbOfCardsToDisplay = this.configService.getConfigValue('feed.card.maxNbOfCardsToDisplay',100);
     }
@@ -47,7 +47,7 @@ export class FeedComponent implements OnInit {
         }});
 
         
-        this.lightCards$ = this.lightCardsService.getFilteredAndSortedLightCards().pipe(
+        this.lightCards$ = this.lightCardsFeedFilterService.getFilteredAndSortedLightCards().pipe(
             delay(0), // Solve error: 'Expression has changed after it was checked' --> See https://blog.angular-university.io/angular-debugging/
             map(cards => {
                 this.totalNumberOfLightsCards = cards.length;

@@ -53,10 +53,10 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     @Input() parentForm: FormGroup;
     @Input() visibleProcesses: [];
     @Input() hideChildStates?: boolean;
+    @Input() tags: any[];
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
-    tags: any[];
     filters;
 
     // Filter values
@@ -86,7 +86,6 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.tags = this.configService.getConfigValue('archive.filters.tags.list');
         this.checkPerimeterForSearchFields = this.configService.getConfigValue('checkPerimeterForSearchFields', false);
         this.processesGroups = this.processesService.getProcessGroups();
         this.processDropdownList = this.visibleProcesses;

@@ -8,15 +8,12 @@
  */
 
 
-import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
-import {LightCard} from '@ofModel/light-card.model';
 import {Filter} from '@ofModel/feed-filter.model';
 import {FilterService, FilterType} from '@ofServices/filter.service';
 
 
-export interface CardFeedState extends EntityState<LightCard> {
+export interface CardFeedState {
     selectedCardId: string;
-    lastCardLoaded: LightCard;
     filters: Map<FilterType, Filter>;
     sortBySeverity: boolean;
     sortByRead: boolean;
@@ -25,13 +22,6 @@ export interface CardFeedState extends EntityState<LightCard> {
     domainEndDate: number;
 }
 
-
-export const LightCardAdapter: EntityAdapter<LightCard> = createEntityAdapter<LightCard>({
-    /* The sortComparer property can only be defined statically for performance optimization reasons.
-    * See https://github.com/ngrx/platform/issues/898
-    * So to implement a sort criteria chosen by the user, I switched to an unsorted EntityAdapter and did the sorting
-    * outside (see lightcards.service.ts) */
-});
 
 /**
  * Hack to solve OC-604
@@ -42,14 +32,13 @@ function getDefaultFilter() {
     return filterService.defaultFilters();
 }
 
-export const feedInitialState: CardFeedState = LightCardAdapter.getInitialState(
+export const feedInitialState: CardFeedState = 
     {
         selectedCardId: null,
-        lastCardLoaded: null,
         filters: getDefaultFilter(),
         sortBySeverity: false,
         sortByRead: true,
         domainId: null,
         domainStartDate: null,
         domainEndDate: null
-    });
+    };

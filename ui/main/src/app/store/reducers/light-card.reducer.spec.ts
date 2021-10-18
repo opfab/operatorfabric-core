@@ -9,18 +9,13 @@
 
 
 import {reducer} from './light-card.reducer';
-import {CardFeedState, feedInitialState, LightCardAdapter} from '@ofStates/feed.state';
-import {createEntityAdapter} from '@ngrx/entity';
-import {LightCard} from '@ofModel/light-card.model';
+import {CardFeedState, feedInitialState} from '@ofStates/feed.state';
 import {
-    getOneRandomLightCard,
     getRandomAlphanumericValue,
     getRandomBoolean,
-    getSeveralRandomLightCards
 } from '@tests/helpers';
 import {
-    ClearLightCardSelection,
-    EmptyLightCards,
+    ClearLightCardSelection
 } from '@ofActions/light-card.actions';
 import {ApplyFilter, ChangeReadSort, ChangeSort} from '@ofActions/feed.actions';
 import {Filter} from '@ofModel/feed-filter.model';
@@ -28,7 +23,6 @@ import {FilterType} from '@ofServices/filter.service';
 
 describe('LightCard Reducer', () => {
 
-    const lightCardEntityAdapter = createEntityAdapter<LightCard>();
 
 
     describe('unknown action', () => {
@@ -43,23 +37,13 @@ describe('LightCard Reducer', () => {
         it('should return the previous state on living state', () => {
             const action = {} as any;
 
-            const previousState = lightCardEntityAdapter.addOne(getOneRandomLightCard(), feedInitialState);
+            const previousState =  feedInitialState;
             const result = reducer(previousState, action);
             expect(result).toBe(previousState);
         });
 
     });
 
-    describe('EmptyLightCards', () => {
-        it('should empty entities', () => {
-            const severalRandomLightCards = getSeveralRandomLightCards(5);
-            const previousState = lightCardEntityAdapter.setAll(severalRandomLightCards, feedInitialState);
-            const actualState = reducer(previousState, new EmptyLightCards());
-            expect(actualState).toBeTruthy();
-            expect(lightCardEntityAdapter.getSelectors().selectTotal(actualState)).toEqual(0);
-            expect(actualState.lastCardLoaded).toEqual(null);
-        });
-    });
 
     describe('apply filter action', () => {
         it('should return state with filter updated', () => {
@@ -123,31 +107,27 @@ describe('LightCard Reducer', () => {
 
         it('should clear the selected card', () => {
             const action = new ClearLightCardSelection();
-            const previousState: CardFeedState = LightCardAdapter.getInitialState(
+            const previousState: CardFeedState = 
                 {
                     selectedCardId: getRandomAlphanumericValue(5, 10),
-                    lastCardLoaded: null,
-                    error: '',
                     filters: new Map(),
                     sortBySeverity: false,
                     sortByRead: false,
                     domainId: null,
                     domainStartDate: null,
                     domainEndDate: null
-                });
+                };
 
-            const expectedState: CardFeedState = LightCardAdapter.getInitialState(
+            const expectedState: CardFeedState = 
                 {
                     selectedCardId: null,
-                    lastCardLoaded: null,
-                    error: '',
                     filters: new Map(),
                     sortBySeverity: false,
                     sortByRead: false,
                     domainId: null,
                     domainStartDate: null,
                     domainEndDate: null
-                });
+                };
 
             const result = reducer(previousState, action);
 
@@ -163,31 +143,27 @@ describe('LightCard Reducer', () => {
             const action = new ChangeSort();
             const initialSort = getRandomBoolean();
             const initialSelectedCardId = getRandomAlphanumericValue(5, 10);
-            const previousState: CardFeedState = LightCardAdapter.getInitialState(
+            const previousState: CardFeedState = 
                 {
                     selectedCardId: initialSelectedCardId,
-                    lastCardLoaded: null,
-                    error: '',
                     filters: new Map(),
                     sortBySeverity: initialSort,
                     sortByRead: false,
                     domainId: null,
                     domainStartDate: null,
                     domainEndDate: null
-                });
+                };
 
-            const expectedState: CardFeedState = LightCardAdapter.getInitialState(
+            const expectedState: CardFeedState = 
                 {
                     selectedCardId: initialSelectedCardId,
-                    lastCardLoaded: null,
-                    error: '',
                     filters: new Map(),
                     sortBySeverity: !initialSort,
                     sortByRead: false,
                     domainId: null,
                     domainStartDate: null,
                     domainEndDate: null
-                });
+                };
 
             const result = reducer(previousState, action);
 
@@ -203,31 +179,27 @@ describe('LightCard Reducer', () => {
             const action = new ChangeReadSort();
             const initialSort = getRandomBoolean();
             const initialSelectedCardId = getRandomAlphanumericValue(5, 10);
-            const previousState: CardFeedState = LightCardAdapter.getInitialState(
+            const previousState: CardFeedState = 
                 {
                     selectedCardId: initialSelectedCardId,
-                    lastCardLoaded: null,
-                    error: '',
                     filters: new Map(),
                     sortBySeverity: false,
                     sortByRead: initialSort,
                     domainId: null,
                     domainStartDate: null,
                     domainEndDate: null
-                });
+                };
 
-            const expectedState: CardFeedState = LightCardAdapter.getInitialState(
+            const expectedState: CardFeedState = 
                 {
                     selectedCardId: initialSelectedCardId,
-                    lastCardLoaded: null,
-                    error: '',
                     filters: new Map(),
                     sortBySeverity: false,
                     sortByRead: !initialSort,
                     domainId: null,
                     domainStartDate: null,
                     domainEndDate: null
-                });
+                };
 
             const result = reducer(previousState, action);
 
