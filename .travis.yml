@@ -101,15 +101,15 @@ stages:
   - name: test-sonar
     if: NOT (type = pull_request AND head_repo != opfab/operatorfabric-core)
   - name: doc
-    if: ((((type = cron OR commit_message =~ ci_documentation) AND (branch = develop OR branch = develop_3)) OR (commit_message =~ ci_documentation AND NOT commit_message =~ ci_latest AND branch =~ .+hotfixes$)) AND NOT type = pull_request)
+    if: ((((type = cron OR commit_message =~ ci_documentation) AND (branch = develop)) OR (commit_message =~ ci_documentation AND NOT commit_message =~ ci_latest AND branch =~ .+hotfixes$)) AND NOT type = pull_request)
   - name: doc-latest
     if: (branch = master OR (branch =~ .+hotfixes$ AND commit_message =~ ci_latest)) AND NOT type = pull_request
   - name: docker-push-version
-    if: (((type = cron OR commit_message =~ ci_docker) AND (branch = develop OR branch = develop_3 OR branch =~ .+hotfixes$)) OR branch = master) AND NOT type = pull_request
+    if: (((type = cron OR commit_message =~ ci_docker) AND (branch = develop OR branch =~ .+hotfixes$)) OR branch = master) AND NOT type = pull_request
   - name: docker-push-latest
     if: branch = master OR (branch =~ .+hotfixes$ AND commit_message =~ ci_latest) AND NOT type = pull_request
   - name: docker-tag-version
-    if: (branch =~ .+release$) OR (NOT (branch IN (master,develop,develop_3)) AND commit_message =~ ci_docker)
+    if: (branch =~ .+release$) OR (NOT (branch IN (master,develop)) AND commit_message =~ ci_docker)
 before_cache:
   # cleanup gradle caches
   - rm -f  ${HOME}/.gradle/caches/modules-2/modules-2.lock
