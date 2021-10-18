@@ -225,6 +225,7 @@
     "summary": "SUMMARY",
     "typeOfState": "PROCESS STATUS",
     "severity": "SEVERITY",
+    "answer": "ANSWER",
     "seeDetails": "SEE DETAILS",
     "ExportTOExcel": "Export data",
     "ExportInProgress": "Export in progress"

@@ -29,6 +29,7 @@ import {Process} from '@ofModel/processes.model';
 import {EntitiesService} from '@ofServices/entities.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {ColDef, GridOptions} from "ag-grid-community";
+import {AnswerCellRendererComponent} from '../cell-renderers/answer-cell-renderer.component';
 
 @Component({
     selector: 'of-monitoring-table',
@@ -74,6 +75,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     private readonly typeOfStateColumnName;
     private readonly businessPeriodColumnName;
     private readonly severityColumnName;
+    private readonly answerColumnName;
 
     private mapSeverity = new Map([
         ["alarm", 1],
@@ -100,12 +102,15 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         this.typeOfStateColumnName = this.translateColumn('monitoring.typeOfState');
         this.businessPeriodColumnName = this.translateColumn('monitoring.businessPeriod');
         this.severityColumnName = this.translateColumn('monitoring.severity');
+        this.answerColumnName = this.translateColumn('monitoring.answer');
 
         this.gridOptions = <GridOptions>{
             context: {
                 componentParent: this
             },
-            frameworkComponents : {},
+            frameworkComponents : {
+                answerCellRenderer: AnswerCellRendererComponent
+            },
             domLayout: 'autoHeight',
             defaultColDef : {
                 editable: false
@@ -124,6 +129,13 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                     wrapText: false,
                     autoHeight: false,
                     maxWidth: 18
+                },
+                'answerColumn': {
+                    sortable: false,
+                    filter: false,
+                    wrapText: false,
+                    autoHeight: false,
+                    maxWidth: 50,
                 }
             },
             pagination : true,
@@ -154,7 +166,8 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         };
 
         this.columnDefs = [{ type: 'severityColumn', headerName: '', field: 'severityNumber', headerClass: 'header-with-no-padding' , cellClassRules: severityCellClassRules },
-                           { type: 'dataColumn', headerName: this.timeColumnName, field: 'time' }];
+                           { type: 'dataColumn', headerName: this.timeColumnName, field: 'time' },
+                           { type: 'answerColumn', headerName: '', field: 'answer',cellRenderer: 'answerCellRenderer' }];
 
         if (this.displayProcessGroupColumn)
             this.columnDefs.push({ type: 'dataColumn', headerName: this.processGroupColumnName, field: 'service' });
@@ -163,7 +176,8 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                              { type: 'dataColumn', headerName: this.titleColumnName, field: 'title' },
                              { type: 'dataColumn', headerName: this.summaryColumnName, field: 'summary' },
                              { type: 'dataColumn', headerName: this.typeOfStateColumnName, field: 'processStatus',
-                                 cellClassRules: typeOfStateCellClassRules });
+                                 cellClassRules: typeOfStateCellClassRules },
+                             );
 
         this.gridApi.setColumnDefs(this.columnDefs);
         this.refreshData();
@@ -196,6 +210,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                                     typeOfState: line.typeOfState,
                                     cardId: line.cardId,
                                     severity: line.severity,
+                                    answer: line.answer,
                                     beginningOfBusinessPeriod: line.beginningOfBusinessPeriod,
                                     endOfBusinessPeriod: line.endOfBusinessPeriod });
             else
@@ -208,6 +223,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                                     typeOfState: line.typeOfState,
                                     cardId: line.cardId,
                                     severity: line.severity,
+                                    answer: line.answer,
                                     beginningOfBusinessPeriod: line.beginningOfBusinessPeriod,
                                     endOfBusinessPeriod: line.endOfBusinessPeriod });
 
@@ -232,6 +248,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                 if (this.displayProcessGroupColumn)
                     this.exportMonitoringData.push({
                         [this.timeColumnName]: line.data.time,
+                        [this.answerColumnName]: line.data.answer,
                         [this.businessPeriodColumnName]: this.displayTime(line.data.beginningOfBusinessPeriod).concat(this.displayTime(line.data.endOfBusinessPeriod)),
                         [this.processGroupColumnName]: line.data.service,
                         [this.processColumnName]: line.data.process,
@@ -243,6 +260,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                 else
                     this.exportMonitoringData.push({
                         [this.timeColumnName]: line.data.time,
+                        [this.answerColumnName]: line.data.answer,
                         [this.businessPeriodColumnName]: this.displayTime(line.data.beginningOfBusinessPeriod).concat(this.displayTime(line.data.endOfBusinessPeriod)),
                         [this.processColumnName]: line.data.process,
                         [this.titleColumnName]: line.data.title,

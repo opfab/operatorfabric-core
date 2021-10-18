@@ -32,7 +32,10 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     filters: MonitoringFiltersComponent;
 
     monitoringFilters$ = new Subject<Filter[]>();
-
+    
+    responseFilter$ = new Subject<Filter>();
+    responseFilterValue = true;
+    
     monitoringResult$: Observable<LineOfMonitoringResult[]>;
     unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -65,7 +68,8 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.monitoringResult$ = 
             combineLatest([
-                this.monitoringFilters$.asObservable(), 
+                this.monitoringFilters$.asObservable(),
+                this.responseFilter$.asObservable(),
                 this.lightCardsStoreService.getLightCards()
             ]
             ).pipe(
@@ -74,7 +78,8 @@ export class MonitoringComponent implements OnInit, OnDestroy {
                 // so it generates two events , we need to wait until every filter is set 
                 filter( results => this.areFiltersCorrectlySet(results[0])),  
                 map(results => {
-                        const cards = this.lightCardsService.filterLightCards(results[1], results[0]);
+                        const activeFilters = results[0].concat(results[1]);
+                        const cards = this.lightCardsService.filterLightCards(results[2], activeFilters);
                         if (!!cards && cards.length <= 0) {
                             return null;
                         }
@@ -88,6 +93,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
                 catchError(err => of([]))
         );
         this.monitoringResult$.subscribe(lines => this.result = lines);
+        this.applyResponseFilter();
         this.lightCardsStoreService.getLoadingInProgress().pipe(
             takeUntil(this.unsubscribe$)).subscribe( (inProgress: boolean ) => this.loadingInProgress = inProgress);
     }
@@ -145,11 +151,25 @@ export class MonitoringComponent implements OnInit, OnDestroy {
                         cardId: card.id,
                         severity: card.severity.toLocaleLowerCase(),
                         processId: procId,
-                        typeOfState: typeOfState
+                        typeOfState: typeOfState,
+                        answer: card.hasChildCardFromCurrentUserEntity
                     } as LineOfMonitoringResult);
             }
         }
         return null;
     }
 
+    switchResponseFilter() {
+        this.responseFilterValue = !this.responseFilterValue;
+        this.applyResponseFilter();
+    }
+
+    private applyResponseFilter() {
+        this.responseFilter$.next(
+            new Filter(
+                (card: LightCard) => !card.hasChildCardFromCurrentUserEntity,
+                !this.responseFilterValue,
+                null
+            ));
+    }
 }

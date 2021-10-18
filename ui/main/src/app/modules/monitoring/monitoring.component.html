@@ -23,6 +23,12 @@
         </div>
 
      </div>
+     <div  class="opfab-response-checkbox">
+        <label style="font-weight:bold; margin-left:5px" class="opfab-checkbox" translate>feed.filters.showCardsWithResponse.label
+            <input type="checkbox" (click)="switchResponseFilter()" [checked]="responseFilterValue" id="opfab-archives-collapsible-updates">
+            <span class="opfab-checkbox-checkmark"></span>
+          </label>
+        </div>
 </div>
 
 <div *ngIf="result ; else noResult" style="margin-left:5%;margin-right:5%">
