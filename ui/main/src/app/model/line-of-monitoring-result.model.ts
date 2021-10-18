@@ -24,4 +24,5 @@ export interface LineOfMonitoringResult {
     severity: string;
     processId: string;
     typeOfState: TypeOfStateEnum;
+    answer: boolean;
 }
