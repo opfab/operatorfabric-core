@@ -17,6 +17,7 @@ import {debounce, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/oper
 import {ApplyFilter} from '@ofActions/feed.actions';
 import * as _ from 'lodash-es';
 import {FilterType} from '@ofServices/filter.service';
+import {UserPreferencesService} from '@ofServices/user-preference.service';
 
 import {DateTimeNgb, getDateTimeNgbFromMoment} from '@ofModel/datetime-ngb.model';
 import moment from 'moment';
@@ -48,7 +49,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     private dateFilterType = FilterType.PUBLISHDATE_FILTER;
 
-    constructor(private store: Store<AppState>) {
+    constructor(private store: Store<AppState>, private userPreferences: UserPreferencesService) {
         this.typeFilterForm = this.createFormGroup();
         this.ackFilterForm = this.createAckFormGroup();
         this.timeFilterForm = this.createDateTimeForm();
@@ -108,10 +109,10 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     private initTypeFilter() {
 
-       const savedAlarm = localStorage.getItem('opfab.feed.filter.type.alarm');
-       const savedAction = localStorage.getItem('opfab.feed.filter.type.action');
-       const savedACompliant = localStorage.getItem('opfab.feed.filter.type.compliant');
-       const savedInformation = localStorage.getItem('opfab.feed.filter.type.information');
+       const savedAlarm = this.userPreferences.getPreference('opfab.feed.filter.type.alarm');
+       const savedAction = this.userPreferences.getPreference('opfab.feed.filter.type.action');
+       const savedACompliant = this.userPreferences.getPreference('opfab.feed.filter.type.compliant');
+       const savedInformation = this.userPreferences.getPreference('opfab.feed.filter.type.information');
 
        const alarmUnset = savedAlarm && savedAlarm != 'true';
        const actionUnset = savedAction && savedAction != 'true';
@@ -141,10 +142,10 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
                     }),
                     debounce(() => timer(500)))
                 .subscribe(form => {
-                    localStorage.setItem('opfab.feed.filter.type.alarm', form.alarm);
-                    localStorage.setItem('opfab.feed.filter.type.action', form.action);
-                    localStorage.setItem('opfab.feed.filter.type.compliant', form.compliant);
-                    localStorage.setItem('opfab.feed.filter.type.information', form.information);
+                    this.userPreferences.setPreference('opfab.feed.filter.type.alarm', form.alarm);
+                    this.userPreferences.setPreference('opfab.feed.filter.type.action', form.action);
+                    this.userPreferences.setPreference('opfab.feed.filter.type.compliant', form.compliant);
+                    this.userPreferences.setPreference('opfab.feed.filter.type.information', form.information);
                     return this.store.dispatch(
                     new ApplyFilter({
                         name: FilterType.TYPE_FILTER,
@@ -156,7 +157,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     private initResponseFilter() {
 
-        const responseValue = localStorage.getItem('opfab.feed.filter.response');
+        const responseValue = this.userPreferences.getPreference('opfab.feed.filter.response');
         const responseUnset = responseValue && responseValue != 'true';
 
         this.responseFilterForm.get('responseControl').setValue(!responseUnset, {emitEvent: false});
@@ -177,7 +178,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
                 takeUntil(this.ngUnsubscribe$))
             .subscribe(form => {
 
-                localStorage.setItem('opfab.feed.filter.response', form.responseControl);
+                this.userPreferences.setPreference('opfab.feed.filter.response', form.responseControl);
 
                 return this.store.dispatch(
                     new ApplyFilter({
@@ -190,7 +191,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     private initAckFilter() {
 
-        const ackValue = localStorage.getItem('opfab.feed.filter.ack');
+        const ackValue = this.userPreferences.getPreference('opfab.feed.filter.ack');
         if (!!ackValue) {
             this.ackFilterForm.get('ackControl').setValue(ackValue, {emitEvent: false});
             const active = ackValue !== 'all';
@@ -213,7 +214,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             .subscribe(form => {
                 const active = form.ackControl !== 'all';
                 const ack = active && form.ackControl === 'ack';
-                localStorage.setItem('opfab.feed.filter.ack', form.ackControl);
+                this.userPreferences.setPreference('opfab.feed.filter.ack', form.ackControl);
 
                 return this.store.dispatch(
                     new ApplyFilter({
@@ -228,8 +229,8 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
         this.dateFilterType = FilterType.PUBLISHDATE_FILTER;
 
-        const savedStart = localStorage.getItem('opfab.feed.filter.start');
-        const savedEnd = localStorage.getItem('opfab.feed.filter.end');
+        const savedStart = this.userPreferences.getPreference('opfab.feed.filter.start');
+        const savedEnd = this.userPreferences.getPreference('opfab.feed.filter.end');
 
         if (!!savedStart) {
             this.timeFilterForm.get('dateTimeFrom').setValue(getDateTimeNgbFromMoment(moment(+savedStart)));
@@ -262,17 +263,17 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         }
 
         if (status.start == null || isNaN(status.start)) {
-            localStorage.removeItem('opfab.feed.filter.start');
+            this.userPreferences.removePreference('opfab.feed.filter.start');
             this.endMinDate = null;
         } else {
-            localStorage.setItem('opfab.feed.filter.start', status.start);
+            this.userPreferences.setPreference('opfab.feed.filter.start', status.start);
             this.endMinDate = {year: this.timeFilterForm.value.dateTimeFrom.date.year, month: this.timeFilterForm.value.dateTimeFrom.date.month, day: this.timeFilterForm.value.dateTimeFrom.date.day};
         }
         if (status.end == null || isNaN(status.end)) {
-            localStorage.removeItem('opfab.feed.filter.end');
+            this.userPreferences.removePreference('opfab.feed.filter.end');
             this.startMaxDate = null;
         } else {
-            localStorage.setItem('opfab.feed.filter.end', status.end);
+            this.userPreferences.setPreference('opfab.feed.filter.end', status.end);
             this.startMaxDate = {year: this.timeFilterForm.value.dateTimeTo.date.year, month: this.timeFilterForm.value.dateTimeTo.date.month, day: this.timeFilterForm.value.dateTimeTo.date.day};
         }
 

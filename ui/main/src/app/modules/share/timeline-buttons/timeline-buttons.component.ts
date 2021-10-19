@@ -17,6 +17,7 @@ import {FilterType} from "@ofServices/filter.service";
 import * as _ from 'lodash-es';
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
+import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {TimeService} from "@ofServices/time.service";
 import {selectLightCardsState} from '@ofStore/selectors/feed.selectors';
 import {take} from 'rxjs/operators';
@@ -56,6 +57,7 @@ export class TimelineButtonsComponent implements OnInit {
 
     constructor(private store: Store<AppState>,
                 private time: TimeService,
+                private userPreferences : UserPreferencesService,
                 private configService: ConfigService,
                 private userService: UserService,
                 private _appService: AppService) {
@@ -65,7 +67,7 @@ export class TimelineButtonsComponent implements OnInit {
         this.loadConfiguration();
         this.loadDomainsListFromConfiguration();
 
-        const hideTimeLineInStorage = localStorage.getItem('opfab.hideTimeLine');
+        const hideTimeLineInStorage = this.userPreferences.getPreference('opfab.hideTimeLine');
         this.hideTimeLine = (hideTimeLineInStorage === 'true');
         this.initDomains();
     }
@@ -129,7 +131,7 @@ export class TimelineButtonsComponent implements OnInit {
         // Set the zoom activated
         let initialGraphConf = this.buttonList.length > 0 ? this.buttonList[0] : null;
 
-        const savedDomain = localStorage.getItem('opfab.timeLine.domain');
+        const savedDomain = this.userPreferences.getPreference('opfab.timeLine.domain');
 
         if (!!savedDomain) {
             const savedConf = this.buttonList.find(b => b.domainId === savedDomain);
@@ -170,8 +172,8 @@ export class TimelineButtonsComponent implements OnInit {
                 this.setDefaultStartAndEndDomain();
             }
         });
- 
-        localStorage.setItem('opfab.timeLine.domain', this.domainId);
+
+        this.userPreferences.setPreference('opfab.timeLine.domain', this.domainId);
     }
 
     selectZoomButton(buttonTitle) {
@@ -237,7 +239,7 @@ export class TimelineButtonsComponent implements OnInit {
         this.myDomain = [startDomain, endDomain];
         this.startDate = this.getDateFormatting(startDomain);
         this.endDate = this.getDateFormatting(endDomain);
-        
+
         this.domainChange.emit(this.myDomain);
         this.store.dispatch(new ApplyFilter({
             name: FilterType.BUSINESSDATE_FILTER, active: true,
@@ -327,7 +329,7 @@ export class TimelineButtonsComponent implements OnInit {
 
     showOrHideTimeline() {
         this.hideTimeLine = !this.hideTimeLine;
-        localStorage.setItem('opfab.hideTimeLine', this.hideTimeLine.toString());
+        this.userPreferences.setPreference('opfab.hideTimeLine', this.hideTimeLine.toString());
     }
 
     /**

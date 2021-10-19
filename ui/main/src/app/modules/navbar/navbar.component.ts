@@ -23,6 +23,7 @@ import * as _ from 'lodash-es';
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {Route} from '@angular/router';
 import {ConfigService} from '@ofServices/config.service';
+import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {QueryAllEntities} from '@ofActions/user.actions';
 import {UserService} from '@ofServices/user.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
@@ -65,7 +66,7 @@ export class NavbarComponent implements OnInit {
   nightDayMode = false;
 
   constructor(private store: Store<AppState>, private globalStyleService: GlobalStyleService, private configService: ConfigService
-      , private userService: UserService, private modalService: NgbModal, private appService: AppService) {
+      , private userService: UserService, private modalService: NgbModal, private appService: AppService, private userPreferences: UserPreferencesService) {
 
     this.currentPath = ['']; // Initializing currentPath to avoid 'undefined' errors when it is used to determine 'active' look in template
   }
@@ -126,7 +127,7 @@ export class NavbarComponent implements OnInit {
         this.globalStyleService.setStyle(settings.styleWhenNightDayModeDesactivated);
       }
     } else {
-      this.loadNightModeFromLocalStorage();
+      this.loadNightModeFromUserPreferences();
     }
 
   }
@@ -175,9 +176,9 @@ export class NavbarComponent implements OnInit {
   }
 
 
-  private loadNightModeFromLocalStorage() {
+  private loadNightModeFromUserPreferences() {
     NavbarComponent.nightMode = new BehaviorSubject<boolean>(true);
-    const nightMode = localStorage.getItem('opfab.nightMode');
+    const nightMode = this.userPreferences.getPreference('opfab.nightMode');
     if ((nightMode !== null) && (nightMode === 'false')) {
       NavbarComponent.nightMode.next(false);
       this.globalStyleService.setStyle('DAY');
@@ -190,13 +191,13 @@ export class NavbarComponent implements OnInit {
   switchToNightMode() {
     this.globalStyleService.setStyle('NIGHT');
     NavbarComponent.nightMode.next(true);
-    localStorage.setItem('opfab.nightMode', 'true');
+    this.userPreferences.setPreference('opfab.nightMode', 'true');
   }
 
   switchToDayMode() {
     this.globalStyleService.setStyle('DAY');
     NavbarComponent.nightMode.next(false);
-    localStorage.setItem('opfab.nightMode', 'false');
+    this.userPreferences.setPreference('opfab.nightMode', 'false');
 
   }
 
@@ -239,6 +240,3 @@ export class NavbarComponent implements OnInit {
     this.modalService.open(this.aboutTemplate, {centered: true});
   }
 }
-
-
-
