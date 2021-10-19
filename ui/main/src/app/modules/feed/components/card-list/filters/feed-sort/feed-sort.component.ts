@@ -16,6 +16,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { selectSortByRead, selectSortBySeverity } from '@ofStore/selectors/feed.selectors';
+import {UserPreferencesService} from '@ofServices/user-preference.service';
 
 @Component({
   selector: 'of-feed-sort',
@@ -33,8 +34,8 @@ import { selectSortByRead, selectSortBySeverity } from '@ofStore/selectors/feed.
   readSorted: boolean = true;
   severitySorted : boolean = false;
 
-  constructor(private store: Store<AppState>) { 
-   
+  constructor(private store: Store<AppState>, private userPrefrences: UserPreferencesService) {
+
   }
 
   ngOnInit() {
@@ -71,7 +72,7 @@ import { selectSortByRead, selectSortBySeverity } from '@ofStore/selectors/feed.
         this.store.dispatch(new ChangeSort());
     }
 
-    const sorted = localStorage.getItem("opfab.feed.sort.type");
+    const sorted = this.userPrefrences.getPreference("opfab.feed.sort.type");
     if (!!sorted) {
       if (!(sorted === "unread" && this.hideReadSort) && !(sorted === "severity" && this.hideSeveritySort)) {
         this.sortForm.get("sortControl").setValue(sorted);
@@ -84,7 +85,7 @@ import { selectSortByRead, selectSortBySeverity } from '@ofStore/selectors/feed.
     .pipe(
         takeUntil(this.ngUnsubscribe$))
     .subscribe(form => {
-        localStorage.setItem("opfab.feed.sort.type", form.sortControl);
+        this.userPrefrences.setPreference("opfab.feed.sort.type", form.sortControl);
 
         this.setSortBy(form.sortControl);
     });

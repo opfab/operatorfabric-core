@@ -23,6 +23,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 import {ExportService} from '@ofServices/export.service';
 import {TranslateService} from '@ngx-translate/core';
+import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {Card} from '@ofModel/card.model';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 import { EntitiesService } from '@ofServices/entities.service';
@@ -78,6 +79,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 private timeService: TimeService,
                 private cardService: CardService,
                 private translate: TranslateService,
+                private userPreferences: UserPreferencesService,
                 private modalService: NgbModal,
                 private entitiesService: EntitiesService
     ) {
@@ -106,7 +108,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     ngOnInit() {
-        const isCollapsibleUpdatesActivatedInStorage = localStorage.getItem('opfab.archives.isCollapsibleUpdatesActivated');
+        const isCollapsibleUpdatesActivatedInStorage = this.userPreferences.getPreference('opfab.archives.isCollapsibleUpdatesActivated');
         this.isCollapsibleUpdatesActivated = (isCollapsibleUpdatesActivatedInStorage === 'true');
 
         this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
@@ -122,7 +124,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     toggleCollapsibleUpdates() {
         this.isCollapsibleUpdatesActivated = !this.isCollapsibleUpdatesActivated;
-        localStorage.setItem('opfab.archives.isCollapsibleUpdatesActivated', String(this.isCollapsibleUpdatesActivated));
+        this.userPreferences.setPreference('opfab.archives.isCollapsibleUpdatesActivated', String(this.isCollapsibleUpdatesActivated));
         this.sendQuery(0);
     }
 
@@ -369,7 +371,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         return this.timeService.formatTime(this.selectedCard.publishDate)
     }
     ngOnDestroy() {
-        
+
         if (!!this.modalRef) {
             this.modalRef.close();
         }
