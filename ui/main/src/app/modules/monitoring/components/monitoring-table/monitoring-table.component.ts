@@ -306,7 +306,6 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     }
 
     cardPreprocessingBeforeExport(card: any): any {
-        const prefix =  `${card.card.process}.${card.card.processVersion}`;
         card.card.processGroup = this.translateValue(this.processesService.findProcessGroupLabelForProcess(card.card.process));
         const process:Process = this.processesService.getProcess(card.card.process);
         if (!!process) {
@@ -314,8 +313,8 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                 const state = process.states[card.card.state];
                 if (!!state) card.card.typeOfState = this.translateValue('monitoring.filters.typeOfState.' + state.type);
         }
-        card.card.title = this.translateValue(`${prefix}.${card.card.title.key}`, card.card.title.parameters);
-        card.card.summary =  this.translateValue(`${prefix}.${card.card.summary.key}`, card.card.summary.parameters);
+        card.card.title = card.card.titleTranslated;
+        card.card.summary =  card.card.summaryTranslated;
 
         card.childCards.forEach(childCard => {
             if (childCard.publisherType==="ENTITY") childCard.publisherName= this.entitiesService.getEntityName(childCard.publisher);
