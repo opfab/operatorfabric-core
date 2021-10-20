@@ -4,6 +4,7 @@
       businessconfig/getABusinessconfig.feature           \
       businessconfig/getCss.feature                       \
       businessconfig/getI18n.feature                      \
+      businessconfig/postTranslateCardField.feature       \
       businessconfig/getBusinessconfig.feature            \
       businessconfig/getBusinessconfigTemplate.feature    \
       businessconfig/getProcessGroups.feature             \

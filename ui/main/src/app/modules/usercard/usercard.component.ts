@@ -567,34 +567,39 @@ export class UserCardComponent implements OnDestroy, OnInit {
         if (this.editCardMode) processInstanceId = this.cardToEdit.card.processInstanceId;
         else processInstanceId  = Guid.create().toString();
 
-        this.card = {
-            id: 'dummyId',
-            publishDate: null,
-            publisher: this.publisherForCreatingUsercard,
-            publisherType : 'ENTITY',
-            processVersion: processVersion,
-            process: selectedProcess.id,
-            processInstanceId: processInstanceId,
-            state: state,
-            startDate: startDate,
-            endDate: endDate,
-            lttd: lttd,
-            severity: severity,
-            hasBeenAcknowledged: false,
-            hasBeenRead: false,
-            userRecipients : [this.currentUserWithPerimeters.userData.login],
-            entityRecipients: recipients,
-            entitiesAllowedToRespond: entitiesAllowedToRespond,
-            externalRecipients: externalRecipients,
-            title: title,
-            summary: summary,
-            secondsBeforeTimeSpanForReminder: secondsBeforeTimeSpanForReminder,
-            timeSpans : timeSpans,
-            keepChildCards: keepChildCards,
-            data: specificInformation.card.data,
-        } as Card;
+        this.cardService.postTranslateCardField(selectedProcess.id, processVersion, title)
+            .subscribe(response => {
+                const titleTranslated = response.body.translatedField;
+                this.card = {
+                    id: 'dummyId',
+                    publishDate: null,
+                    publisher: this.publisherForCreatingUsercard,
+                    publisherType : 'ENTITY',
+                    processVersion: processVersion,
+                    process: selectedProcess.id,
+                    processInstanceId: processInstanceId,
+                    state: state,
+                    startDate: startDate,
+                    endDate: endDate,
+                    lttd: lttd,
+                    severity: severity,
+                    hasBeenAcknowledged: false,
+                    hasBeenRead: false,
+                    userRecipients : [this.currentUserWithPerimeters.userData.login],
+                    entityRecipients: recipients,
+                    entitiesAllowedToRespond: entitiesAllowedToRespond,
+                    externalRecipients: externalRecipients,
+                    title: title,
+                    titleTranslated: titleTranslated,
+                    summary: summary,
+                    secondsBeforeTimeSpanForReminder: secondsBeforeTimeSpanForReminder,
+                    timeSpans : timeSpans,
+                    keepChildCards: keepChildCards,
+                    data: specificInformation.card.data,
+                } as Card;
 
-        this.displayPreview = true;
+                this.displayPreview = true;
+            });
     }
 
 

@@ -28,6 +28,7 @@ import {BusinessConfigChangeAction} from '@ofStore/actions/processes.actions';
 import {UserConfigChangeAction} from '@ofStore/actions/user.actions';
 import {LightCardsStoreService} from './lightcards-store.service';
 import {LoadCard} from '@ofStore/actions/card.actions';
+import {I18n} from "@ofModel/i18n.model";
 
 
 @Injectable()
@@ -258,5 +259,9 @@ export class CardService {
         return this.httpClient.delete<void>(`${this.userCardReadUrl}/${cardUid}`, {observe: 'response'});
     }
 
+    postTranslateCardField(processId: string, processVersion: string, i18nValue: I18n): any {
+        const fieldToTranslate = {process: processId, processVersion: processVersion, i18nValue: i18nValue};
+        return this.httpClient.post<any>(`${this.cardsPubUrl}/translateCardField`, fieldToTranslate, {observe: 'response'});
+    }
 
 }
