@@ -17,6 +17,7 @@ import javax.annotation.PreDestroy;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import org.opfab.cards.publication.model.CardPublicationData;
+import org.opfab.cards.publication.model.I18n;
 import org.opfab.springtools.configuration.oauth.I18nProcessesCache;
 import org.opfab.utilities.AmqpUtils;
 import org.opfab.utilities.I18nTranslation;
@@ -72,6 +73,19 @@ public class CardTranslationService {
             card.setTitleTranslated(card.getTitle().getKey());
             card.setSummaryTranslated(card.getSummary().getKey());
         }
+    }
+
+    public String translateCardField(String process, String processVersion, I18n i18nValue) {
+
+        String translatedField = i18nValue.getKey();
+        try {
+            JsonNode i18n = i18nProcessesCache.fetchProcessI18nFromCacheOrProxy(process, processVersion);
+            I18nTranslation translation = new I18nTranslation(i18n);
+            translatedField = translation.translate(i18nValue.getKey(), i18nValue.getParameters());
+        } catch (FeignException | IOException ex) {
+            log.error("Error getting field translation", ex);
+        }
+        return translatedField;
     }
 
     /**

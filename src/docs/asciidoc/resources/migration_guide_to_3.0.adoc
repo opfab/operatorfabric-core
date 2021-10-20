@@ -88,4 +88,9 @@ go to the directory `OF_HOME/src/tooling/migration-opfab3` and execute the scrip
 WARNING: The bundles directory is the directory where you store all the "untar" bundles in the new
 format with the `i18n.json` file. It is not the directory where the opfab instance stores the bundles.
 
+== Nginx.conf.template file
+
+In order to have a better organized file, we have modify `nginx.conf.template` file, more precisely the information
+for location `/cardspub/cards`. Please report this modification to your local config.
+
 

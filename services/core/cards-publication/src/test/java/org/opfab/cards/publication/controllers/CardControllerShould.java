@@ -25,6 +25,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -127,5 +129,35 @@ class CardControllerShould {
             mockMvc.perform(delete("/cards?endDateBefore=1592216921")).andExpect(status().isOk());
 
         }
+    }
+
+    private String getFieldToTranslate() {
+        return "{" +
+                    "\"process\" : \"api_test\"," +
+                    "\"processVersion\" : \"1\"," +
+                    "\"i18nValue\" : {" +
+                       "\"key\" : \"detail.title\"" +
+                    "}" +
+               "}";
+    }
+
+    private String getFieldToTranslateWithI18nNull() {
+        return "{" +
+                "\"process\" : \"api_test\"," +
+                "\"processVersion\" : \"1\"" +
+                "}";
+    }
+
+    @Test
+    void translateCardField() throws Exception {
+        mockMvc.perform(post("/cards/translateCardField").contentType(MediaType.APPLICATION_JSON).content(getFieldToTranslate()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.translatedField", is("detail.title")));
+    }
+
+    @Test
+    void translateCardFieldIncorrectRequest() throws Exception {
+        mockMvc.perform(post("/cards/translateCardField").contentType(MediaType.APPLICATION_JSON).content(getFieldToTranslateWithI18nNull()))
+                .andExpect(status().isBadRequest());
     }
 }
