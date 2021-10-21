@@ -11,14 +11,16 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {PlatformLocation} from "@angular/common";
 import {LightCard, Severity} from "@ofModel/light-card.model";
+import {Notification} from "@ofModel/external-devices.model";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
 import {LightCardsFeedFilterService} from './lightcards-feed-filter.service';
 import {LightCardsStoreService} from './lightcards-store.service';
 import {EMPTY, iif, merge, of, Subject, timer} from "rxjs"; import {filter, map, switchMap, takeUntil} from "rxjs/operators";
+import {ExternalDevicesService} from "@ofServices/external-devices.service";
 
-  
+
 @Injectable()
 export class SoundNotificationService implements OnDestroy{
 
@@ -36,6 +38,7 @@ export class SoundNotificationService implements OnDestroy{
 
     private soundConfigBySeverity: Map<Severity,SoundConfig>;
     private soundEnabled: Map<Severity,boolean>;
+        private externalDevicesEnabled: boolean;
     private replayEnabled: boolean;
 
     private readonly soundFileBasePath: string;
@@ -48,7 +51,8 @@ export class SoundNotificationService implements OnDestroy{
   constructor(private store: Store<AppState>,
     private platformLocation: PlatformLocation,
     private lightCardsFeedFilterService: LightCardsFeedFilterService,
-    private lightCardsStoreService: LightCardsStoreService) {
+    private lightCardsStoreService: LightCardsStoreService,
+    private externalDevicesService: ExternalDevicesService) {
 
     this.soundConfigBySeverity = new Map<Severity, SoundConfig>();
     this.soundConfigBySeverity.set(Severity.ALARM, {soundFileName: 'alarm.mp3', soundEnabledSetting: 'playSoundForAlarm'});
@@ -64,8 +68,9 @@ export class SoundNotificationService implements OnDestroy{
       store.select(buildSettingsOrConfigSelector(soundConfig.soundEnabledSetting, false)).subscribe(x => {this.soundEnabled.set(severity, x)});
     })
 
-    store.select(buildSettingsOrConfigSelector('replayEnabled', false)).subscribe(x => {this.replayEnabled = x;})
-    store.select(buildSettingsOrConfigSelector('replayInterval', SoundNotificationService.DEFAULT_REPLAY_INTERVAL)).subscribe(x => {this.replayInterval = x;})
+        store.select(buildSettingsOrConfigSelector('externalDevicesEnabled',false)).subscribe(x => { this.externalDevicesEnabled = x;})
+        store.select(buildSettingsOrConfigSelector('replayEnabled',false)).subscribe(x => { this.replayEnabled = x;})
+        store.select(buildSettingsOrConfigSelector('replayInterval',SoundNotificationService.DEFAULT_REPLAY_INTERVAL)).subscribe(x => { this.replayInterval = x;})
 
     for (let severity of Object.values(Severity)) this.initSoundPlayingForSeverity(severity);
 
@@ -78,7 +83,7 @@ export class SoundNotificationService implements OnDestroy{
         (card) => this.handleLoadedCard(card)
       );
     }
-  
+
 
     ngOnDestroy() {
         this.ngUnsubscribe$.next();
@@ -112,7 +117,13 @@ export class SoundNotificationService implements OnDestroy{
     private playSoundForSeverity(severity : Severity) {
 
         if(this.soundEnabled.get(severity)) {
-            this.playSound(this.getSoundForSeverity(severity));
+            if(this.externalDevicesEnabled) {
+                console.debug("External devices enabled. Sending notification for "+severity+".");
+                let notification = new Notification(severity.toString());
+                this.externalDevicesService.sendNotification(notification).subscribe(); //TODO Handle response/error?
+            } else {
+                this.playSound(this.getSoundForSeverity(severity));
+            }
         } else {
             console.debug("No sound was played for "+severity+" as sound is disabled for this severity");
         }

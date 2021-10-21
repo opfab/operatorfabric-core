@@ -19,7 +19,9 @@
     <of-checkbox-setting settingPath="playSoundForInformation" labelClass="label-sev-information"></of-checkbox-setting>
   </div>
   <div class="opfab-settings-sounds opfab-settings-item" *ngIf="!displayInfo?.sounds" >
-    <div class="opfab-replay-sound-label"><of-checkbox-setting settingPath="replayEnabled" labelClass="label-replay"></of-checkbox-setting> </div>
+    <div class="opfab-sound-checkbox-label">
+      <of-checkbox-setting settingPath="replayEnabled" labelClass="label-replay"></of-checkbox-setting>
+      <of-checkbox-setting settingPath="externalDevicesEnabled" labelClass="label-external-devices"></of-checkbox-setting></div>
     <of-text-setting settingPath="replayInterval"></of-text-setting>
   </div>
     <div class="opfab-settings-item" *ngIf="!displayInfo?.description">
