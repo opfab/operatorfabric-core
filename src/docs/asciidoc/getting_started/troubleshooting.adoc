@@ -62,7 +62,7 @@ tar: Error is not recoverable: exiting now
 === Solution
 
 Use `tar.gz` format for the archive compression. Shell command is `tar -czvf 
-MyBundleToTest.tar.gz config.json template/ css/` for a bundle containing 
+MyBundleToTest.tar.gz config.json i18n.json template/ css/` for a bundle containing 
 templates and css files.
 
 == My bundle is rejected due to internal structure
@@ -82,32 +82,6 @@ folders need to be at the first level.
 
 Add or organize the files and folders of the bundle to fit the Businessconfig bundle 
 requirements.
-
-== No template display 
-
-The server send 404 for requested template with a response like
-`+{"status":"NOT_FOUND","message":"The specified resource does not 
-exist","errors":["$OPERATOR_FABRIC_INSTANCE_PATH/businessconfig-storage/BUNDLE_TEST/1/te
-mplate/fr/template1.handlebars (Aucun fichier ou dossier de ce type)"]}+`
-
-=== Verification 
-
-The previous server response is return for a request like: 
-`+http://localhost:2002/businessconfig/BUNDLE_TEST/templates/template1?locale=fr&version
-=1+`
-
-The bundle is lacking localized folder and doesn't contain the requested 
-localization.
-
-If you have access to the `businessconfig` micro service source code you
-should list the content of 
-`$THIRDS_PROJECT/build/docker-volume/businessconfig-storage`
-
-=== Solution
-
-Either request another l10n or add the requested one to the bundle and 
-re-upload it.
-
 
 == My template is not used.
 
