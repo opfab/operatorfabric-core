@@ -133,7 +133,7 @@
 
 <ng-template #cardDetail let-modal>
   <div class="modal-header">
-      <div class="text-uppercase" translate [translateParams]="selectedCard.title.parameters"> {{ selectedCard.process + '.' + selectedCard.processVersion + '.' + selectedCard.title.key}} </div>
+      <div class="text-uppercase">{{selectedCard.titleTranslated}}</div>
       <div id="opfab-archives-card-detail-close"  class="opfab-close-modal-icon" aria-label="Close" (click)="modal.dismiss('Cross click')">
         <span aria-hidden="true" >&times;</span>
     </div>
