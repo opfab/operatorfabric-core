@@ -26,7 +26,7 @@ If the option is activated in the general configuration file web-ui.json, the us
 
 == Card read 
 
-When the user receives a new card, he see it in the feed with an eye icon on the right of the card resume. When he opens the cards, the icon disappears. 
+When the user receives a new card, they can see it in the feed with a bold  white title and card resume. Once the card is opened, the texts unbolds and  becomes grey.
 
 == Card acknowledgment 
 
