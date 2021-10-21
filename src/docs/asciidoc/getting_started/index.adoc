@@ -151,11 +151,9 @@ The bundle structure is the following:
 
 ----
 ├── css : stylesheets files
-├── i18n :   internalization files
-└── template : 
-    ├── en : handlebar templates for detail card rendering
-    ├── ....
+└── template : handlebar templates for detail card rendering
 config.json : process description and global configuration 
+i18n.json : internalization file
 ----
 
 The bundle is provided in the bundle directory of example2. It contains a new version of the bundle used in example1.
@@ -171,7 +169,7 @@ You received the following message
 The message 
 ----
 
-If you look at the template file (template/en/template.handlebars):
+If you look at the template file (template/template.handlebars):
 [source,handlebars]
 ----
 <h2> You received the following message </h2>
@@ -288,11 +286,6 @@ To send the card:
 ----
 You should see in the UI the detail card with the new template.
 
-==== Internationalization
-If you switch language to French in the UI (Settings menu on the top right of the screen), you should see the
-cards in french.
-
-OperatorFabric will use templates define in repository "template/fr" and keys define in "i18n/fr.json".
 
 === Example 3: Process with state
 
@@ -309,7 +302,7 @@ of the bundle:
 ----
 {
 	"id":"criticalSituation",
-	"name": "process.name",
+	"name": "Critical situation process",
 	"version":"1",
 	"states":{
 		"criticalSituation-begin" : {
@@ -336,14 +329,11 @@ You can see in the JSON we define a process name "criticalSituation" with 3 stat
 criticalSituation-update and criticalSituation-end. For each state we define a title for the card, and the template
 a stylesheets to use.
 
-The title is a key which refer to an i18n found in the corresponding i18n repository:
+The title is a key which refer to i18n.json file:
 
 [source,JSON]
 ----
 {
-    "process": {
-      "name": "Critical situation process"
-    },
 	"criticalSituation-begin":{
 		"title":"CRITICAL SITUATION",
 		"summary":" CRITICAL SITUATION ON THE GRID , SEE DETAIL FOR INSTRUCTION"
