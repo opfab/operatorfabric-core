@@ -99,8 +99,8 @@ describe('Card detail', function () {
 
             // in archives is isUserAllowedToRespond always return false 
             cy.get("#templateGateway-isUserAllowedToRespond").contains("false");
-            // in archives is isUserMemberOfAnEntityRequiredToRespond always return false 
-            cy.get("#templateGateway-isUserMemberOfAnEntityRequiredToRespond").contains("false");
+           
+            cy.get("#templateGateway-isUserMemberOfAnEntityRequiredToRespond").contains("true");
             cy.get("#templateGateway-getDisplayContext").contains(/^archive$/);
             cy.get("#screenSize").contains("lg");
 
