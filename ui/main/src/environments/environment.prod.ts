@@ -25,7 +25,8 @@ export const environment = {
         processGroups: '/businessconfig/processgroups',
         monitoringConfig: '/businessconfig/monitoring',
         config: '/config/web-ui.json',
-        menuConfig: '/config/ui-menu.json'
+        menuConfig: '/config/ui-menu.json',
+        externalDevices: '/externaldevices'
 
     },
     paths: {
