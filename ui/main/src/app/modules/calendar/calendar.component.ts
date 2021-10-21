@@ -86,7 +86,6 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private static getEndTime(hourAndMinutes: HourAndMinutes, duration: number) {
-    duration = Math.min(duration, 30);
     return CalendarComponent.formatTwoDigits(hourAndMinutes.hours + Math.floor(duration / 60)) + ':' + CalendarComponent.formatTwoDigits(hourAndMinutes.minutes + duration % 60);
   }
 
