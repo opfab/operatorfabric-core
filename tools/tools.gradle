@@ -37,10 +37,6 @@ subprojects {
         testImplementation boot.starterTest, testing.assertJ, misc.lombok
     }
 
-    configurations {
-        testImplementation.exclude module: "junit"
-    }
-
     /////// CONFIGURATION
     test {
         useJUnitPlatform()

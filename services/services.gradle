@@ -55,7 +55,6 @@ subprojects {
         configurations {
             implementation.exclude module: "spring-boot-starter-tomcat"
             testImplementation.exclude module: "spring-boot-starter-tomcat"
-            testImplementation.exclude module: "junit"
         }
 
         /////// CONFIGURATION
