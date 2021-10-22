@@ -28,6 +28,7 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.time.Instant;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Synchronous controller
@@ -43,7 +44,9 @@ public class CardController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public @Valid CardCreationReportData createCardOld(@Valid @RequestBody CardPublicationData card, HttpServletResponse response, Principal principal) {
+    public @Valid CardCreationReportData createCard(@Valid @RequestBody CardPublicationData card, HttpServletResponse response, Principal principal) {
+        //Overwrite eventual uid sent by client 
+        card.setUid(UUID.randomUUID().toString());
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = null ;
         if (jwtPrincipal!=null) user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
