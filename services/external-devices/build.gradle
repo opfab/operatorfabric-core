@@ -16,9 +16,17 @@ dependencies {
     implementation boot.starterMongo
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
+
     implementation boot.starterWeb, boot.starterJetty
+
+    testImplementation spring.securityTest
+    testImplementation project(':tools:generic:test-utilities')
+    testImplementation project(':tools:spring:spring-test-utilities')
+    testImplementation testing.awaitility
+
     implementation misc.jlibmodbus
 }
+
 
 bootJar {
     manifest {
@@ -85,6 +93,7 @@ docker {
                'HTTP_PROXY_AUTH': "basic:*:$apk.proxy.user:$apk.proxy.password"])
     dockerfile file("src/main/docker/Dockerfile")
 }
+
 
 tasks.compileJava.dependsOn generateSwaggerCode
 tasks.compileTestJava.dependsOn generateSwaggerCode
