@@ -42,8 +42,6 @@ import javax.validation.ConstraintViolationException;
 @Slf4j
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
-  //TODO Would it make sense to share it with other services? If so add issue
-
   public static final String GENERIC_MSG = "Caught exception at API level";
 
   /**

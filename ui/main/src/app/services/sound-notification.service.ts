@@ -120,7 +120,7 @@ export class SoundNotificationService implements OnDestroy{
             if(this.externalDevicesEnabled) {
                 console.debug("External devices enabled. Sending notification for "+severity+".");
                 let notification = new Notification(severity.toString());
-                this.externalDevicesService.sendNotification(notification).subscribe(); //TODO Handle response/error?
+                this.externalDevicesService.sendNotification(notification).subscribe();
             } else {
                 this.playSound(this.getSoundForSeverity(severity));
             }

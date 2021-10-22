@@ -41,8 +41,6 @@ public class ConfigurationsController implements ConfigurationsApi {
     @Override
     public Void createDeviceConfiguration(HttpServletRequest request, HttpServletResponse response, DeviceConfiguration deviceConfiguration) {
 
-        //TODO Distinguish between creation and update
-        //TODO Make path constant
         String id = deviceConfiguration.getId();
 
         devicesService.insertDeviceConfiguration(deviceConfiguration);
@@ -58,11 +56,10 @@ public class ConfigurationsController implements ConfigurationsApi {
     @Override
     public Void deleteDeviceConfiguration(HttpServletRequest request, HttpServletResponse response, String deviceId) {
 
-        //TODO Check if there are users with this device, if so, error can't be deleted
-        //TODO Check if found if not 404
-        //TODO disconnect and remove any corresponding driver from pool
+        /* Check if there are users with this device, if so, error can't be deleted
+        Check if found if not 404
+        Check and remove any corresponding driver from pool */
 
-        //TODO Implement
         response.setStatus(200);
         return null;
 
@@ -71,16 +68,12 @@ public class ConfigurationsController implements ConfigurationsApi {
     @Override
     public Void createSignalMapping(HttpServletRequest request, HttpServletResponse response, SignalMapping signalMapping) throws Exception {
 
-        String id = signalMapping.getId();
-        //TODO Bad request if duplicate
-
         return null;
     }
 
     @Override
     public Void createUserConfiguration(HttpServletRequest request, HttpServletResponse response, UserConfiguration userConfiguration) throws Exception {
 
-        //TODO
         return null;
     }
 

@@ -27,8 +27,11 @@ import java.net.UnknownHostException;
 import java.util.*;
 
 /**
- * //TODO
- *
+ * {@link DevicesService}
+ * * Acts a an interface between the APIs and the repositories
+ * * Queries the repositories to resolve configuration and create external devices drivers
+ * * Maintains a pool of drivers and acts on their connection status
+ * * Translates each notification received through the API into a signal to send to the appropriate driver
  */
 @Service
 @Slf4j
@@ -45,8 +48,6 @@ public class DevicesService {
     private final SignalMappingRepository signalMappingRepository;
 
     private final Map<String,ExternalDeviceDriver> deviceDriversPool;
-
-    //TODO Create issue about caching configuration?
 
     @Autowired
     public DevicesService(UserConfigurationRepository userConfigurationRepository,
@@ -130,8 +131,6 @@ public class DevicesService {
             }
         }
     }
-
-    //TODO Always attempt to Disconnect before a driver is removed from the pool. Is there a way to add it to some kind of onDestroy hook?
 
     private DeviceConfiguration retrieveDeviceConfiguration(String deviceId) throws ExternalDeviceConfigurationException {
 

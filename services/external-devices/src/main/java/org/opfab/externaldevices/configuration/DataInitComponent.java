@@ -15,6 +15,9 @@ import org.opfab.externaldevices.configuration.externaldevices.ExternalDevicesPr
 import org.opfab.externaldevices.model.DeviceConfigurationData;
 import org.opfab.externaldevices.model.SignalMappingData;
 import org.opfab.externaldevices.model.UserConfigurationData;
+import org.opfab.externaldevices.model.DeviceConfiguration;
+import org.opfab.externaldevices.model.SignalMapping;
+import org.opfab.externaldevices.model.UserConfiguration;
 import org.opfab.externaldevices.repositories.DeviceConfigurationRepository;
 import org.opfab.externaldevices.repositories.SignalMappingRepository;
 import org.opfab.externaldevices.repositories.UserConfigurationRepository;
@@ -23,6 +26,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 /**
  * This component reads external devices configuration from a properties file and updates/creates them as appropriate.
@@ -32,6 +36,8 @@ import javax.annotation.PostConstruct;
 public class DataInitComponent {
 
     private static final String FAILED_INIT_MSG = "Unable to insert ";
+    private static final String NUMBER_OF_ITEMS_DEBUG = "Found {} {} in properties file.";
+    private static final String NO_PROPERTIES_DEBUG = "No {} in properties file.";
 
     @Autowired
     private ExternalDevicesProperties externalDevicesProperties;
@@ -40,7 +46,7 @@ public class DataInitComponent {
     private DeviceConfigurationRepository deviceConfigurationRepository;
 
     @Autowired
-    private SignalMappingRepository signalMappingRepository; //TODO rename signal mapping to signal conf ?
+    private SignalMappingRepository signalMappingRepository;
 
     @Autowired
     private UserConfigurationRepository userConfigurationRepository;
@@ -48,29 +54,58 @@ public class DataInitComponent {
     @PostConstruct
     public void init() {
 
-        //TODO Handle no config found (to avoid null pointer)
+        if(externalDevicesProperties == null) {
+            log.info(NO_PROPERTIES_DEBUG,"external devices properties");
+        } else {
 
-        log.info("Found {} signal mappings in properties file",externalDevicesProperties.getSignalMappings().size());
+            initSignalMappings(externalDevicesProperties.getSignalMappings());
+            initDeviceConfigurations(externalDevicesProperties.getDeviceConfigurations());
+            initUserConfigurations(externalDevicesProperties.getUserConfigurations());
 
-        log.info("Found {} device configurations in properties file",externalDevicesProperties.getDeviceConfigurations().size());
-
-        log.info("Found {} user configurations in properties file",externalDevicesProperties.getUserConfigurations().size());
-
-
-        //TODO Before accepting a DeviceConfig, check if signalMappingId exists? It should be done for properties loading and through the API. See if/what is done for users/groups
-
-        for(SignalMappingData signalMappingData : externalDevicesProperties.getSignalMappings()) {
-            safeInsertDeviceSignalMapping(signalMappingData);
         }
 
-        for(DeviceConfigurationData deviceConfigurationData : externalDevicesProperties.getDeviceConfigurations()) {
-            safeInsertDeviceConfiguration(deviceConfigurationData);
-        }
+    }
 
-        for(UserConfigurationData userConfigurationData : externalDevicesProperties.getUserConfigurations()) {
-            safeInsertUserConfiguration(userConfigurationData);
+    /**
+     * Initialize signal mappings using provided collection (if null, log debug message).
+     */
+    private void initSignalMappings(List<SignalMappingData> signalMappings) {
+        if(signalMappings != null) {
+            log.debug(NUMBER_OF_ITEMS_DEBUG,signalMappings.size(),"signal mappings");
+            for(SignalMappingData signalMappingData : signalMappings) {
+                safeInsertDeviceSignalMapping(signalMappingData);
+            }
+        } else {
+            log.debug(NO_PROPERTIES_DEBUG,"signal mapping");
         }
+    }
 
+    /**
+     * Initialize device configurations using provided collection (if null, log debug message).
+     */
+    private void initDeviceConfigurations(List<DeviceConfigurationData> deviceConfigurations) {
+        if(deviceConfigurations != null) {
+            log.debug(NUMBER_OF_ITEMS_DEBUG,deviceConfigurations.size(),"device configurations");
+            for(DeviceConfigurationData deviceConfigurationData : deviceConfigurations) {
+                safeInsertDeviceConfiguration(deviceConfigurationData);
+            }
+        } else {
+            log.debug(NO_PROPERTIES_DEBUG,"device configurations");
+        }
+    }
+
+    /**
+     * Initialize user configurations using provided collection (if null, log debug message).
+     */
+    private void initUserConfigurations(List<UserConfigurationData> userConfigurations) {
+        if(userConfigurations != null) {
+            log.debug(NUMBER_OF_ITEMS_DEBUG,userConfigurations.size(),"user configurations");
+            for(UserConfigurationData userConfigurationData : userConfigurations) {
+                safeInsertUserConfiguration(userConfigurationData);
+            }
+        } else {
+            log.debug(NO_PROPERTIES_DEBUG,"user configurations");
+        }
     }
 
     /**
