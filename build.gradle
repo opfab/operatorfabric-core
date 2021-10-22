@@ -57,12 +57,12 @@ ext {
 
     cloud = [
             dependencies          : "org.springframework.cloud:spring-cloud-dependencies:$springCloud",
-            starterFeign          : "org.springframework.cloud:spring-cloud-starter-openfeign",
+            starterFeign          : "org.springframework.cloud:spring-cloud-starter-openfeign:$springOpenFeign",
             avro                  : "org.apache.avro:avro:$avro",
             kafkaAvroSchemaRegistryClient    : "io.confluent:kafka-schema-registry-client:$kavroSchemaRegistryClient",
             kafkaAvroSerializer              : "io.confluent:kafka-avro-serializer:$kavroAvroSerializer",
-            springKafka           : "org.springframework.kafka:spring-kafka",
-            springKafkaTest       : "org.springframework.kafka:spring-kafka-test"
+            springKafka           : "org.springframework.kafka:spring-kafka:$springKafka",
+            springKafkaTest       : "org.springframework.kafka:spring-kafka-test:$springKafka"
 
 
     ]
@@ -73,7 +73,7 @@ ext {
             junit5Engine    : "org.junit.jupiter:junit-jupiter-engine:$junit5",
             junit5Plugin    : "org.junit.platform:junit-platform-gradle-plugin:$junit5Platform",
             assertJ         : "org.assertj:assertj-core:$assertj",
-            reactor         : "io.projectreactor:reactor-test",
+            reactor         : "io.projectreactor:reactor-test:$reactor",
             awaitility      : "org.awaitility:awaitility-kotlin:$awaitility",
             karate          : "com.intuit.karate:karate-junit5:$karate"
     ]
