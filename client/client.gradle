@@ -67,11 +67,6 @@ subprojects {
         }
     }
 
-
-    configurations {
-        testImplementation.exclude module: "junit"
-    }
-
     /////// CONFIGURATION
     test {
         useJUnitPlatform()
