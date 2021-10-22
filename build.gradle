@@ -68,7 +68,6 @@ ext {
     ]
 
     testing = [
-            junit5          : "org.junit.jupiter:junit-jupiter:$junit5",
             junit5Api       : "org.junit.jupiter:junit-jupiter-api:$junit5",
             junit5Engine    : "org.junit.jupiter:junit-jupiter-engine:$junit5",
             assertJ         : "org.assertj:assertj-core:$assertj",

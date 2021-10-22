@@ -42,8 +42,6 @@ subprojects {
 
             testAnnotationProcessor misc.lombok
             testCompileOnly misc.lombok
-            testRuntimeOnly testing.junit5
-            testImplementation testing.junit5
 
             testImplementation boot.starterTest, testing.assertJ
             testImplementation project(':tools:generic:test-utilities')
