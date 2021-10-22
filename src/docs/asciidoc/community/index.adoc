@@ -71,6 +71,8 @@ include::workflow.adoc[leveloffset=+2]
 * We don't mention specific authors by name in each file (in Javadoc or in the documentation for example), so as not
 to have to maintain these mentions (since this information is tracked by git anyway).
 * For ui code, you must use a linter with rules provided in ui/main/tslint.json
+* When adding a dependency, define a precise version of the dependency
+
 
 ==== Angular/TypeScript development caution and guidelines
 
