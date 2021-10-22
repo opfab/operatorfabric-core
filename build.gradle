@@ -71,7 +71,6 @@ ext {
             junit5          : "org.junit.jupiter:junit-jupiter:$junit5",
             junit5Api       : "org.junit.jupiter:junit-jupiter-api:$junit5",
             junit5Engine    : "org.junit.jupiter:junit-jupiter-engine:$junit5",
-            junit5Plugin    : "org.junit.platform:junit-platform-gradle-plugin:$junit5Platform",
             assertJ         : "org.assertj:assertj-core:$assertj",
             reactor         : "io.projectreactor:reactor-test",
             awaitility      : "org.awaitility:awaitility-kotlin:$awaitility",
