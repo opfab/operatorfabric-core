@@ -64,8 +64,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, DEVICE_CONFIGURATIONS_PATH).access(ADMIN_AND_IP_ALLOWED)
                 .antMatchers(HttpMethod.GET, DEVICES_ROOT_PATH).access(ADMIN_AND_IP_ALLOWED)
                 .antMatchers(HttpMethod.POST, DEVICES_ROOT_PATH).access(ADMIN_AND_IP_ALLOWED)
-                .anyRequest().access(AUTH_AND_IP_ALLOWED); //TODO Wouldn't options be enough? Otherwise any new endpoint is open by default
-        ;
+                .anyRequest().access(AUTH_AND_IP_ALLOWED);
                 
     }
 

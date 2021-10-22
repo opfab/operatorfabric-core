@@ -33,8 +33,8 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 public class NotificationsController implements NotificationsApi, UserExtractor {
 
-    private final String RECEIVED_NOTIFICATION = "Notification {} for user {} was received to be passed on to an external device.";
-    private final String UNHANDLED_NOTIFICATION = "Notification %1$s for user %2$s couldn't be handled.";
+    private static final String RECEIVED_NOTIFICATION = "Notification {} for user {} was received to be passed on to an external device.";
+    private static final String UNHANDLED_NOTIFICATION = "Notification %1$s for user %2$s couldn't be handled.";
 
 
     private final DevicesService devicesService;

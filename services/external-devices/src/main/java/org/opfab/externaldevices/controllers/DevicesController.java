@@ -59,7 +59,7 @@ public class DevicesController implements DevicesApi {
                     .build(), e);
         }        catch (ExternalDeviceDriverException e) {
             throw new ApiErrorException(ApiError.builder()
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR) //TODO If the driver is failing to connect, should it really be an internal server error?
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .message(String.format(CONNECT_FAILED,deviceId))
                     .build(), e);
 
@@ -70,19 +70,19 @@ public class DevicesController implements DevicesApi {
 
     @Override
     public Void disconnectDevice(HttpServletRequest request, HttpServletResponse response, String deviceId) {
-        //TODO
+
         return null;
     }
 
     @Override
     public Device getDevice(HttpServletRequest request, HttpServletResponse response, String deviceId) {
-        //TODO
+
         return null;
     }
 
     @Override
     public List<Device> getDevices(HttpServletRequest request, HttpServletResponse response) {
-        //TODO
+
         return null;
     }
 }

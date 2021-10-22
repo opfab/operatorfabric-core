@@ -12,7 +12,7 @@ import {HttpClient} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {Notification} from "@ofModel/external-devices.model";
-import {Injectable, OnDestroy} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {ErrorService} from "@ofServices/error-service";
 
 @Injectable({

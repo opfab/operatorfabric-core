@@ -57,9 +57,8 @@ public class ModbusDriver implements ExternalDeviceDriver {
             log.debug("Creating ModbusMaster with host {} and port {}",tcpParameters.getHost(),tcpParameters.getPort());
             modbusMaster = ModbusMasterFactory.createModbusMasterTCP(tcpParameters);
             modbusMaster.setResponseTimeout(RESPONSE_TIMEOUT);
-            Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG); //TODO Make it configurable
+            Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
             Modbus.setAutoIncrementTransactionId(true);
-
 
     }
 
