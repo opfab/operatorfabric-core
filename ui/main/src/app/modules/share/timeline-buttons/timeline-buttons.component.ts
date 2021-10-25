@@ -236,6 +236,17 @@ export class TimelineButtonsComponent implements OnInit {
      */
     setStartAndEndDomain(startDomain: number, endDomain: number): void {
 
+        if (this.domainId == 'W') {
+            /*
+            * In case of 'week' domain reset start and end date to take into account different locale setting for first day of week
+            * To compute start day of week add 2 days to startDate to avoid changing week passing from locale with saturday as first day of week
+            * to a locale with monday as first day of week
+            */
+            let startOfWeek = moment(startDomain).add(2,'day').startOf('week').minutes(0).second(0).millisecond(0);
+            let endOfWeek = moment(startDomain).add(2,'day').startOf('week').minutes(0).second(0).millisecond(0).add(1, 'week');
+            startDomain = startOfWeek.valueOf();
+            endDomain = endOfWeek.valueOf();
+        }
         this.myDomain = [startDomain, endDomain];
         this.startDate = this.getDateFormatting(startDomain);
         this.endDate = this.getDateFormatting(endDomain);
