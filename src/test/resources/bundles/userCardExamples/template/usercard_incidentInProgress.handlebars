@@ -52,6 +52,8 @@
         const SF = document.getElementById('SF').checked;
         const OTHERS = document.getElementById('OTHERS').value;
 
+        const lttd = new Date().valueOf() + 1800000; // 30 min after current time
+
         const card = {
             summary: { key: "incidentInProgress.summary" },
             title: { key: "incidentInProgress.title" },
@@ -68,7 +70,9 @@
                          SF: SF,
                          OTHERS: OTHERS
                     }
-            }
+            },
+            lttd : lttd
+
         };
         return {
             valid: true,
