@@ -522,7 +522,13 @@ export class UserCardComponent implements OnDestroy, OnInit {
         else startDate = this.createTimestampFromValue(startDate);
 
         let lttd = this.messageForm.get('lttd').value;
-        if (!lttd)  lttd = this.lttdVisible ? this.defaultLttdDate : null;
+        if (!lttd) {
+            if (specificInformation.card.lttd) {
+                lttd = specificInformation.card.lttd;
+            } else {
+                lttd = this.lttdVisible ? this.defaultLttdDate : null;
+            }
+        }
         else lttd = this.createTimestampFromValue(lttd);
 
         let endDate = this.messageForm.get('endDate').value;
