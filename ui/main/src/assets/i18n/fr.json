@@ -434,7 +434,8 @@
     "selectProcessGroupText": "Sélectionner un Service",
     "selectProcessText": "Sélectionner un Processus",
     "selectStateText": "Sélectionner un Etat",
-    "selectTagText": "Sélectionner une Etiquette"
+    "selectTagText": "Sélectionner une Etiquette",
+    "noProcessStateAvailable": "Aucun processus/état disponible"
   },
   "realTimeUsers": {
     "connected": "Connecté",

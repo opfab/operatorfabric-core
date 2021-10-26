@@ -18,6 +18,7 @@ import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {Card} from '@ofModel/card.model';
 import {LightCardsStoreService} from './lightcards-store.service';
+import {UserService} from "@ofServices/user.service";
 
 @Injectable()
 export class ProcessesService {
@@ -35,7 +36,8 @@ export class ProcessesService {
     constructor(
         private httpClient: HttpClient, 
         private translateService: TranslateService, 
-        private lightCardsStoreService: LightCardsStoreService
+        private lightCardsStoreService: LightCardsStoreService,
+        private userService: UserService
     ) {
         this.urlCleaner = new HttpUrlEncodingCodec();
         this.processesUrl = `${environment.urls.processes}`;
@@ -305,5 +307,25 @@ export class ProcessesService {
         if (! this.typeOfStatesPerProcessAndState)
             this.loadTypeOfStatesPerProcessAndState();
         return this.typeOfStatesPerProcessAndState;
+    }
+
+    public getStatesListPerProcess(hideChildStates: boolean): Map<string, any[]> {
+        const statesListPerProcess = new Map();
+
+        this.getAllProcesses().forEach(process => {
+            const statesDropdownList = [];
+            for (const state in process.states) {
+
+                if (!(hideChildStates && process.states[state].isOnlyAChildState) &&
+                    this.userService.isReceiveRightsForProcessAndState(process.id, state)) {
+                    statesDropdownList.push({
+                        id: process.id + '.' + state,
+                    });
+                }
+            }
+            if (statesDropdownList.length)
+                statesListPerProcess.set(process.id, statesDropdownList);
+        });
+        return statesListPerProcess;
     }
 }

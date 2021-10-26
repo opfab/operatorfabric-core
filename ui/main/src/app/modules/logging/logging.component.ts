@@ -65,6 +65,8 @@ export class LoggingComponent implements OnDestroy, OnInit {
 
     dateTimeFilterChange = new Subject();
 
+    isThereProcessStateToDisplay: boolean;
+
     constructor(private store: Store<AppState>,
                 private processesService: ProcessesService,
                 private configService: ConfigService,
@@ -113,6 +115,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
             takeUntil(this.unsubscribe$),
             debounceTime(1000),
         ).subscribe(() => this.setDateFilterBounds());
+        this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(false).size > 0;
     }
 
 

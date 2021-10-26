@@ -73,6 +73,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     displayContext: any = DisplayContext.ARCHIVE;
 
+    isThereProcessStateToDisplay: boolean;
+
     constructor(private store: Store<AppState>,
                 private processesService: ProcessesService,
                 private configService: ConfigService,
@@ -120,6 +122,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             takeUntil(this.unsubscribe$),
             debounceTime(1000),
         ).subscribe(() => this.setDateFilterBounds());
+        this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(true).size > 0;
     }
 
     toggleCollapsibleUpdates() {
@@ -378,5 +381,4 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }
-
 }

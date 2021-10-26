@@ -44,8 +44,9 @@ export class MonitoringComponent implements OnInit, OnDestroy {
 
     result: LineOfMonitoringResult[];
 
-
     loadingInProgress = false;
+
+    isThereProcessStateToDisplay: boolean;
 
     constructor(private processesService: ProcessesService
                 , private lightCardsService: LightCardsFeedFilterService
@@ -96,6 +97,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
         this.applyResponseFilter();
         this.lightCardsStoreService.getLoadingInProgress().pipe(
             takeUntil(this.unsubscribe$)).subscribe( (inProgress: boolean ) => this.loadingInProgress = inProgress);
+        this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(false).size > 0;
     }
 
     private areFiltersCorrectlySet(filters:Array<any>): boolean
