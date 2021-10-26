@@ -31,7 +31,6 @@ export class FeedconfigurationComponent implements OnInit {
     feedConfigurationForm: FormGroup;
 
     processesDefinition: Process[];
-    checkPerimeterForSearchFields: boolean;
     processGroupsAndLabels: { groupId: string,
                               groupLabel: string,
                               processes:
@@ -210,12 +209,12 @@ export class FeedconfigurationComponent implements OnInit {
     }
 
     private checkIfStateMustBeDisplayed(state: State, process: Process, stateId: string): boolean {
-        return ((!state.isOnlyAChildState) && ((!this.checkPerimeterForSearchFields) || this.userService.isReceiveRightsForProcessAndState(process.id, stateId)));
+        return ((!state.isOnlyAChildState) && this.userService.isReceiveRightsForProcessAndState(process.id, stateId));
     }
 
     /** cleaning of the two arrays : processGroupsAndLabels and processesWithoutGroup
-     * processGroupsAndLabels : we don't display process which doesn't have any displayed state (a state is not displayed if we have option 'checkPerimeterForSearchFields' set to true
-     *                          and user doesn't have receive right on it, or if the state is 'isOnlyAChildState'
+     * processGroupsAndLabels : we don't display process which doesn't have any displayed state (a state is not displayed
+     *                          if user doesn't have receive right on it, or if the state is 'isOnlyAChildState'
      *                          and we don't display process group which doesn't have any process
      * processesWithoutGroup : we don't display process which doesn't have any state with Receive or ReceiveAndWrite right*/
     private removeProcessesWithoutDisplayedStates() {
@@ -234,7 +233,6 @@ export class FeedconfigurationComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.checkPerimeterForSearchFields = this.configService.getConfigValue('checkPerimeterForSearchFields', false);
         this.userService.currentUserWithPerimeters().subscribe(result => {
             this.currentUserWithPerimeters = result;
 

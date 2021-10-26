@@ -20,10 +20,10 @@ import {TimeService} from '@ofServices/time.service';
 import {ProcessesService} from '@ofServices/processes.service';
 import {TypeOfStateEnum} from '@ofModel/processes.model';
 import {TimelineButtonsComponent} from '../../../share/timeline-buttons/timeline-buttons.component';
-import {UserService} from '@ofServices/user.service';
 import {LightCard} from '@ofModel/light-card.model';
 import {Filter} from '@ofModel/feed-filter.model';
 import {FilterService} from '@ofServices/filter.service';
+import {ProcessStatesDropdownListService} from "@ofServices/process-states-dropdown-list.service";
 
 @Component({
     selector: 'of-monitoring-filters',
@@ -61,7 +61,6 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
     timeDomainChanged: boolean = false;
 
     processesGroups: Map<string, {name: string, processes: string[]}>;
-    checkPerimeterForSearchFields: boolean;
 
     processFilter: Filter;
     typeOfStatesFilter: Filter;
@@ -80,12 +79,11 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
                 private time: TimeService,
                 private processesService: ProcessesService,
                 private filterService: FilterService,
-                private userService: UserService) {
+                private processStatesDropdownListService: ProcessStatesDropdownListService) {
     }
 
     ngOnInit() {
         this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
-        this.checkPerimeterForSearchFields = this.configService.getConfigValue('checkPerimeterForSearchFields', false);
         this.processesGroups = this.processesService.getProcessGroups();
 
         this.monitoringForm = new FormGroup(
@@ -98,7 +96,7 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
         this.processDropdownList = this.visibleProcesses;
         this.visibleProcessesId = this.processDropdownList.map(element => element.id);
 
-        this.loadProcessGroupDropdownListAndProcessesDropdownList();
+        this.loadValuesForFilters();
 
         this.getLocale().pipe(takeUntil(this.unsubscribe$)).subscribe(locale => {
             this.translate.use(locale);
@@ -133,6 +131,10 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
             });
         this.changeProcessesWhenSelectProcessGroup();
         this.sendQuery();
+    }
+
+    isThereProcessStateToDisplay(): boolean {
+        return !!this.processDropdownList && this.processDropdownList.length > 0;
     }
 
     protected getLocale(): Observable<string> {
@@ -209,33 +211,11 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
         }
     }
 
-    public loadProcessGroupDropdownListAndProcessesDropdownList(): void {
-
-        this.processesDropdownListPerProcessGroups = this.processesService.getProcessesPerProcessGroups(this.visibleProcessesId);
-        this.processesWithoutProcessGroupDropdownList = this.processesService.getProcessesWithoutProcessGroup(this.visibleProcessesId);
-
-        if (this.checkPerimeterForSearchFields)
-            this.filterProcessesWithStatesWithReceiveRights();
-
-        if (this.processesWithoutProcessGroupDropdownList.length > 0)
-            this.processGroupDropdownList.push({ id: '--', itemName: 'processGroup.defaultLabel' });
-
-        const processGroupIds = Array.from(this.processesDropdownListPerProcessGroups.keys());
-        processGroupIds.forEach(processGroupId =>
-            this.processGroupDropdownList.push({ id: processGroupId, itemName: this.processesGroups.get(processGroupId).name }));
-    }
-
-    private filterProcessesWithStatesWithReceiveRights(): void {
-        this.processesWithoutProcessGroupDropdownList = this.processesWithoutProcessGroupDropdownList.filter(processData =>
-            this.userService.isReceiveRightsForProcess(processData.id));
-
-        this.processesDropdownListPerProcessGroups.forEach((processList, processGroupId) => {
-            processList = processList.filter(processData => this.userService.isReceiveRightsForProcess(processData.id));
-            if (! processList.length)
-                this.processesDropdownListPerProcessGroups.delete(processGroupId);
-            else
-                this.processesDropdownListPerProcessGroups.set(processGroupId, processList);
-        });
+    loadValuesForFilters() {
+        this.processesWithoutProcessGroupDropdownList = this.processStatesDropdownListService.computeProcessesWithoutProcessGroupDropdownList(this.visibleProcessesId);
+        this.processesDropdownListPerProcessGroups = this.processStatesDropdownListService.computeProcessesDropdownListPerProcessGroup(this.visibleProcessesId);
+        this.processGroupDropdownList = this.processStatesDropdownListService.computeProcessGroupsDropdownList(this.processesWithoutProcessGroupDropdownList,
+                                                                                                   this.processesDropdownListPerProcessGroups);
     }
 
     domainChanged(domain: number[]) {

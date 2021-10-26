@@ -434,7 +434,8 @@
     "selectProcessGroupText": "Select a Service",
     "selectProcessText": "Select a Process",
     "selectStateText": "Select a State",
-    "selectTagText": "Select a Tag"
+    "selectTagText": "Select a Tag",
+    "noProcessStateAvailable": "No process/state available"
   },
   "realTimeUsers": {
     "connected": "Connected",
