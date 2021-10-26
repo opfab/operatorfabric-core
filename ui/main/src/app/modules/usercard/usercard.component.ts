@@ -39,6 +39,7 @@ import {RightsEnum} from '@ofModel/perimeter.model';
 import {Entity} from '@ofModel/entity.model';
 import {ConfigService} from '@ofServices/config.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
+import {SoundNotificationService} from '@ofServices/sound-notification.service';
 
 declare const templateGateway: any;
 
@@ -133,6 +134,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         private route: ActivatedRoute,
         private handlebars: HandlebarsService,
         protected translate: TranslateService,
+        protected soundNotificationService: SoundNotificationService,
     ) {
     }
 
@@ -639,6 +641,10 @@ export class UserCardComponent implements OnDestroy, OnInit {
     confirm(): void {
         this.displayPreview = false;
         this.displaySendingCardInProgress = true;
+
+        // Exclude card from sound notifications before publishing to avoid synchronization problems
+        this.soundNotificationService.lastSentCard(this.card.process + '.' + this.card.processInstanceId);
+
         this.cardService.postCard(fromCardToCardForPublishing(this.card))
             .subscribe(
                 resp => {
