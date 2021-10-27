@@ -17,7 +17,7 @@ describe ('Feed notification configuration tests',function () {
     before('Set up configuration', function () {
         cy.loadTestConf();
     });
-
+/**
     it('Check feed notification configuration screen', function () {
         cy.loginOpFab('operator1', 'test');
 
@@ -112,7 +112,7 @@ describe ('Feed notification configuration tests',function () {
         cy.get('@ExamplesForNewCards2States').contains('Question').find('input').should('be.checked');
     })
 
-
+*/
     it('Test remove some notifications after cards are sent', function () {
         // Clean up existing cards
         cy.deleteAllCards();
@@ -149,9 +149,11 @@ describe ('Feed notification configuration tests',function () {
 
 
         // Check feed
-        cy.get('#opfab-navbar-menu-feed').click({force: true}); // Open feed
+        cy.get('#opfab-navbar-menu-feed').click({force:true}); // Open feed
 
-
+        // Try  to wait for light card to avoid false positive when test machine is slow 
+        cy.wait(5000);
+        cy.get('of-light-card');
 
 
         // Cards should not be visible anymore in the card feed
@@ -160,13 +162,7 @@ describe ('Feed notification configuration tests',function () {
         })
 
         // All cards minus the cards to check should be visible
-      
-        // Remove temporarily to solve error when building with travis , machine is probably too slow
-       //  cy.get('of-light-card').should('have.length',totalCards - cardsToTest.length);
-        // Try  to wait for light card to avoid false positive when test machine is slow 
-        //   cy.wait(2000);
-        //   cy.get('of-light-card').should('exist');
-       
+         cy.get('of-light-card').should('have.length',totalCards - cardsToTest.length);       
 
 
         // Cards should not exist on the monitoring page
@@ -178,7 +174,6 @@ describe ('Feed notification configuration tests',function () {
         // Pagination should display ' Results number  : <5 - cardsToTest> '
         cy.get('.opfab-pagination').should('contain.text', ' Results number  : '+parseInt(5 - cardsToTest.length));
     });
-
 
     it('When sending new cards, check only monitored cards are shown', function () {
         cy.deleteAllCards();
