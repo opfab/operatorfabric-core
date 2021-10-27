@@ -136,7 +136,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     public loadProcessGroupDropdownListAndProcessesDropdownList(): void {
 
         this.processesDropdownListPerProcessGroups = this.processesService.getProcessesPerProcessGroups(this.visibleProcessesId);
-        this.processesWithoutProcessGroupDropdownList = this.processesService.getProcessesWithoutProcessGroup();
+        this.processesWithoutProcessGroupDropdownList = this.processesService.getProcessesWithoutProcessGroup(this.visibleProcessesId);
 
         if (this.checkPerimeterForSearchFields)
             this.filterProcessesWithStatesWithReceiveRights();

@@ -274,13 +274,15 @@ export class ProcessesService {
         return processesPerProcessGroups;
     }
 
-    public getProcessesWithoutProcessGroup(): any[] {
+    public getProcessesWithoutProcessGroup(processesFilter?: string[]): any[] {
         const processesWithoutProcessGroup = [];
 
         this.getAllProcesses().forEach(process => {
-            const processGroup = this.findProcessGroupForProcess(process.id);
-            if (! processGroup)
-                processesWithoutProcessGroup.push({ id: process.id, itemName: process.name });
+            if ((! processesFilter) || processesFilter.includes(process.id)) {
+                const processGroup = this.findProcessGroupForProcess(process.id);
+                if (!processGroup)
+                    processesWithoutProcessGroup.push({id: process.id, itemName: process.name});
+            }
         });
         return processesWithoutProcessGroup;
     }
