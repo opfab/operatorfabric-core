@@ -1,4 +1,4 @@
-FROM node:12-alpine3.14
+FROM node:17-alpine3.14
 COPY package.json /
 RUN npm install
 COPY migration-opfab3.js /
