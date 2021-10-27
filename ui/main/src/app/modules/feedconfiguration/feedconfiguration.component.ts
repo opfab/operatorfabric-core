@@ -59,6 +59,7 @@ export class FeedconfigurationComponent implements OnInit {
     isAllProcessesSelectedPerProcessGroup: Map<string, boolean>;
 
     modalRef: NgbModalRef;
+    private saveSettingsInProgress: boolean = false; 
 
     public displaySendResultError = false;
     messageAfterSavingSettings: string;
@@ -263,8 +264,9 @@ export class FeedconfigurationComponent implements OnInit {
     }
 
     confirmSaveSettings() {
-        this.modalRef.close();
 
+        if (this.saveSettingsInProgress) return; // avoid multiple clicks      
+        this.saveSettingsInProgress = true;
         const processesStatesNotNotifiedUpdate = new Map<string, string[]>();
         this.feedConfigurationForm.value.processesStates.map((checked, i) => {
             if (! checked) {
@@ -283,6 +285,7 @@ export class FeedconfigurationComponent implements OnInit {
             processesStatesNotNotified: Object.fromEntries(processesStatesNotNotifiedUpdate)})
             .subscribe({
                 next: resp => {
+                    this.saveSettingsInProgress = false;
                     this.messageAfterSavingSettings = '';
                     const msg = resp.message;
                     if (!!msg && msg.includes('unable')) {
@@ -303,8 +306,17 @@ export class FeedconfigurationComponent implements OnInit {
             });
     }
 
-    open(content) {
-        this.modalRef = this.modalService.open(content, {centered: true});
+    doNotConfirmSaveSettings() {
+        // The modal must not be closed until the settings has been saved in the back  
+        // If not , with  slow network, when user go to the feed before the end of the request
+        // it end up with nothing in the feed 
+        // This happens because method this.cardService.removeAllLightCardFromMemory() 
+        // is call too late (in method confirmSaveSettings)
+        if (!this.saveSettingsInProgress) this.modalRef.close();
+    }
+
+    openConfirmSaveSettingsModal(content) {
+        this.modalRef = this.modalService.open(content, {centered: true,backdrop: 'static'});
     }
 
     compareObj(obj1, obj2) {

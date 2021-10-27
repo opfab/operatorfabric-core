@@ -149,25 +149,17 @@ describe ('Feed notification configuration tests',function () {
 
 
         // Check feed
-        cy.get('#opfab-navbar-menu-feed').click({force: true}); // Open feed
+        cy.get('#opfab-navbar-menu-feed').click({force:true}); // Open feed
 
 
+        // All cards minus the cards to check should be visible
+        cy.get('of-light-card').should('have.length',totalCards - cardsToTest.length);       
 
 
         // Cards should not be visible anymore in the card feed
         cardsToTest.forEach((c) => {
             cy.get('#opfab-card-list').contains(c).should('not.exist');
         })
-
-        // All cards minus the cards to check should be visible
-      
-        // Remove temporarily to solve error when building with travis , machine is probably too slow
-       //  cy.get('of-light-card').should('have.length',totalCards - cardsToTest.length);
-        // Try  to wait for light card to avoid false positive when test machine is slow 
-        //   cy.wait(2000);
-        //   cy.get('of-light-card').should('exist');
-       
-
 
         // Cards should not exist on the monitoring page
         cy.get('#opfab-navbarContent #opfab-navbar-menu-monitoring').click();  // Monitoring results table
@@ -178,7 +170,6 @@ describe ('Feed notification configuration tests',function () {
         // Pagination should display ' Results number  : <5 - cardsToTest> '
         cy.get('.opfab-pagination').should('contain.text', ' Results number  : '+parseInt(5 - cardsToTest.length));
     });
-
 
     it('When sending new cards, check only monitored cards are shown', function () {
         cy.deleteAllCards();
