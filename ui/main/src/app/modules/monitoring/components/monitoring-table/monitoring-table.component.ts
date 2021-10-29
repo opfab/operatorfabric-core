@@ -73,6 +73,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     private readonly businessPeriodColumnName;
     private readonly severityColumnName;
     private readonly answerColumnName;
+    private readonly emitterColumnName;
 
     private mapSeverity = new Map([
         ["alarm", 1],
@@ -98,6 +99,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         this.businessPeriodColumnName = this.translateColumn('monitoring.businessPeriod');
         this.severityColumnName = this.translateColumn('monitoring.severity');
         this.answerColumnName = this.translateColumn('monitoring.answer');
+        this.emitterColumnName = this.translateColumn('monitoring.emitter');
 
         this.gridOptions = <GridOptions>{
             context: {
@@ -116,7 +118,14 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                     filter: true,
                     wrapText: false,
                     autoHeight: false,
-                    maxWidth: 200,
+                    maxWidth: 180,
+                },
+                'variableColumn': {
+                    sortable: true,
+                    filter: true,
+                    wrapText: false,
+                    autoHeight: false,
+                    flex: 1
                 },
                 'dataColumn': {
                     sortable: true,
@@ -124,7 +133,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                     wrapText: false,
                     autoHeight: false,
                     flex: 1,
-                    minWidth: 500
+                    minWidth: 450
                 },
                 'severityColumn': {
                     sortable: true,
@@ -178,6 +187,8 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                              { type: 'dataColumn', headerName: this.summaryColumnName, field: 'summary' },
                              { type: 'fixedColumn', headerName: this.typeOfStateColumnName, field: 'processStatus',
                                  cellClassRules: typeOfStateCellClassRules },
+                             {type: 'variableColumn', headerName: this.emitterColumnName, field: 'emitter' },
+
                              );
 
         this.gridApi.setColumnDefs(this.columnDefs);
@@ -210,6 +221,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                                     cardId: line.cardId,
                                     severity: line.severity,
                                     answer: line.answer,
+                                    emitter: line.emitter,
                                     beginningOfBusinessPeriod: line.beginningOfBusinessPeriod,
                                     endOfBusinessPeriod: line.endOfBusinessPeriod });
 
@@ -239,7 +251,8 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                         [this.titleColumnName]: line.data.title,
                         [this.summaryColumnName]: line.data.summary,
                         [this.typeOfStateColumnName]: line.data.processStatus,
-                        [this.severityColumnName]: line.data.severity
+                        [this.severityColumnName]: line.data.severity,
+                        [this.emitterColumnName]: line.data.emitter
                     });
             }
         });

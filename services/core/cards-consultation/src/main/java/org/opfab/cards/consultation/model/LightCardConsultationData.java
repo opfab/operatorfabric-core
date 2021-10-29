@@ -129,6 +129,8 @@ public class LightCardConsultationData implements LightCard {
                 .hasBeenRead(other.getHasBeenRead())
                 .entitiesAllowedToRespond(other.getEntitiesAllowedToRespond())
                 .publisherType(other.getPublisherType())
+                .representative(other.getRepresentative())
+                .representativeType(other.getRepresentativeType())
                 .secondsBeforeTimeSpanForReminder(other.getSecondsBeforeTimeSpanForReminder());    
 
         if(other.getTags()!=null && ! other.getTags().isEmpty())

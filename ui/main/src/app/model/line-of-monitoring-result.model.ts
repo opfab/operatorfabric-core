@@ -25,4 +25,5 @@ export interface LineOfMonitoringResult {
     processId: string;
     typeOfState: TypeOfStateEnum;
     answer: boolean;
+    emitter: string;
 }

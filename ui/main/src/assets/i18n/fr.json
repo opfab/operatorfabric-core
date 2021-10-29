@@ -226,6 +226,7 @@
     "typeOfState": "ÉTAT DU PROCESSUS",
     "severity": "SEVERITE",
     "answer": "REPONSE",
+    "emitter": "EMETTEUR",
     "seeDetails": "VOIR LES DETAILS",
     "ExportTOExcel": "Exporter les données",
     "ExportInProgress": "Export en cours"
