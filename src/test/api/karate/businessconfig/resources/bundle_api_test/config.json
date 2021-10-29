@@ -24,7 +24,8 @@
 					"lttdVisible" : true
 				},
 		  "response": {
-			"state": "questionState"
+			"state": "questionState",
+			"emittingEntityAllowedToRespond": true
 		  },
 		  "templateName": "question",
 		  "styles": [],

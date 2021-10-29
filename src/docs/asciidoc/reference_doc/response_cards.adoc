@@ -94,10 +94,12 @@ and state "questionState", the user will have the possibility to respond if he h
 - The field "state" in the response field is used to define the state to use for the response (the child card).
 - The field "externalRecipients" define the recipients of the response card. These recipients are keys referenced in
 the config file of cards-publication service, in "externalRecipients-url" element. This field is optional.
+- The field "emittingEntityAllowedToRespond" in the response field is used to allow the emitting entity to respond to a card. To be able to respond, however, the emitting entity has to be one of the recipients of the card.
 - The field "showDetailCardHeader" permits to display the card header or not. This header contains the list of entities
 that have already responded or not, and a countdown indicating the time remaining to respond, if necessary.
 - The field "isOnlyAChildState" indicates whether the state is only used for child cards or not. If yes, the state
 is displayed neither in the feed notification configuration screen nor in archives screen filters.
+
 
 
 NOTE: The state to be used for the response can also be set dynamically based on the contents of the card or the

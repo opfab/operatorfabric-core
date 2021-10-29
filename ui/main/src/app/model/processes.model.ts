@@ -88,7 +88,8 @@ export class Response {
     constructor(
         readonly lock?: boolean,
         readonly state?: string,
-        readonly externalRecipients?: string[]
+        readonly externalRecipients?: string[],
+        readonly emittingEntityAllowedToRespond?: boolean
     ) {
     }
 }

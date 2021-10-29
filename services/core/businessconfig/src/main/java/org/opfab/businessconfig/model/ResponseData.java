@@ -37,6 +37,8 @@ public class ResponseData implements Response {
     private Boolean lock;
     private String state;
     private List<String> externalRecipients;
+    @Builder.Default
+    private Boolean emittingEntityAllowedToRespond = false;
 
     @Override
     public void setExternalRecipients(List<String> externalRecipients) {
