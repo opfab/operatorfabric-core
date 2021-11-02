@@ -32,6 +32,8 @@ include::scripts.adoc[leveloffset=+2]
 
 include::gradle.adoc[leveloffset=+2]
 
+include::cypress.adoc[leveloffset=+2]
+
 include::misc.adoc[leveloffset=+1]
 
 include::troubleshooting.adoc[leveloffset=+1]
