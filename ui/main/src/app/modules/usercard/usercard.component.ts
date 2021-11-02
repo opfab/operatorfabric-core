@@ -146,6 +146,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         this.processGroups = this.processesService.getProcessGroups();
         this.loadAllEntities();
+        this.loadRecipentsOptions();
         this.loadAllProcessAndStateInUserPerimeter();
 
         this.messageForm = new FormGroup({
@@ -245,12 +246,15 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     loadAllEntities(): void {
         this.entities = this.entitiesService.getEntities();
+    }
+
+    loadRecipentsOptions() {
+        this.recipientsOptions = [];
         this.entities.forEach(entity =>
             this.recipientsOptions.push({ id: entity.id, itemName: this.getEntityLabel(entity) }));
 
         this.recipientsOptions.sort(( a, b ) => a.itemName.localeCompare(b.itemName));
     }
-
 
     loadAllProcessAndStateInUserPerimeter(): void {
         this.processesDefinition = this.processesService.getAllProcesses();
@@ -384,6 +388,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
                 this.messageForm.get("startDate").setValue('');
                 this.messageForm.get("endDate").setValue('');
                 this.messageForm.get("lttd").setValue('');
+                this.loadRecipentsOptions();
                 this.loadTemplate();
 
             }
