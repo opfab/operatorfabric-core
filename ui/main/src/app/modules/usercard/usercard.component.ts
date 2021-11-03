@@ -181,7 +181,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.dropdownSettings = {
             text: '',
             badgeShowLimit: 30,
-            enableSearchFilter: true
+            enableSearchFilter: true,
+            position: 'bottom',
+            autoPosition: false
         };
         if (!!this.cardIdToEdit)
             this.loadCardForEdition();
