@@ -44,6 +44,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         stateRightsCellRenderer: StateRightsCellRendererComponent
       },
       domLayout: 'autoHeight',
+      rowHeight: 50,
       defaultColDef : {
         editable: false,
         headerValueGetter: this.localizeHeader.bind(this)
