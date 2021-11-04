@@ -54,6 +54,16 @@
     margin-top: auto; 
   }
 
+  .opfab-card-loading-spinner {
+    font-size: 68px;
+    width: 150px;
+    height: 150px;
+    margin: auto;
+    text-align: center;
+    background-color: var(--opfab-bgcolor);
+    color:var(--opfab-text-color);
+  }
+
  // ADAPT MARGINS TO SCREEN SIZE 
 
   @media all and (max-width: 1700px)  {

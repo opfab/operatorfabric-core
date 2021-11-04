@@ -52,6 +52,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     resultsNumber = 0;
     hasResult = false;
     firstQueryHasBeenDone = false;
+    loadingInProgress: boolean = false;
+    loadingIsTakingMoreThanOneSecond: boolean = false;
     isCollapsibleUpdatesActivated = false;
 
     // View card
@@ -185,6 +187,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             return;
         }
 
+        this.loadingInProgress = true;
+        this.checkForArchiveLoadingInProgressForMoreThanOneSecond();
         const { value } = this.archiveForm;
         this.filtersTemplate.filtersToMap(value);
         this.filtersTemplate.filters.set('size', [this.size.toString()]);
@@ -196,8 +200,12 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 this.resultsNumber = page.totalElements;
                 this.currentPage = page_number + 1; // page on ngb-pagination component start at 1 , and page on backend start at 0
                 this.firstQueryHasBeenDone = true;
+                this.loadingInProgress = false;
+                this.loadingIsTakingMoreThanOneSecond = false;
                 this.hasResult = page.content.length > 0;
                 this.results = page.content;
+
+               
 
                 if (this.isCollapsibleUpdatesActivated) {
                     let requestID = new Date().valueOf();
@@ -212,6 +220,14 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 }
             });
     }
+
+    
+        // we show a spinner on screen if archives loading takes more than 1 second
+        private checkForArchiveLoadingInProgressForMoreThanOneSecond() {
+            setTimeout(() => {
+                this.loadingIsTakingMoreThanOneSecond = this.loadingInProgress;
+            }, 1000);
+        }
 
     loadUpdatesByCardId(requestID: number) {
         this.updatesByCardId = [];
