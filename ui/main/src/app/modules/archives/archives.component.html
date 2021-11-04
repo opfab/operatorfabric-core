@@ -134,6 +134,19 @@
 <div *ngIf="firstQueryHasBeenDone&&!hasResult" style="text-align: center;font-size: 20px;" translate>archive.noResult
 </div>
 
+<div *ngIf="loadingIsTakingMoreThanOneSecond">
+
+  <div class="opfab-card-loading-spinner redContour">
+  <em  class="fas fa-spinner fa-spin opfab-slow-spinner" ></em>
+  </div>
+  <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>
+      archive.loadingInProgress
+  </div>
+
+  <br/>
+  <br/>
+</div>
+
 <ng-template #cardDetail let-modal>
   <div class="modal-header">
       <div class="text-uppercase">{{selectedCard.titleTranslated}}</div>
