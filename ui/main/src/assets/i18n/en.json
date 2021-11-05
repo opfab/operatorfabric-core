@@ -250,7 +250,8 @@
     },
     "error": {
       "impossibleToSaveSettings": "Impossible to save settings for technical reasons"
-    }
+    },
+    "noProcessStateAvailable": "No process/state available"
   },
   "userCard": {
     "title": "CREATE A NEW CARD ",

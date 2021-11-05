@@ -62,6 +62,7 @@ export class FeedconfigurationComponent implements OnInit {
 
     public displaySendResultError = false;
     messageAfterSavingSettings: string;
+    isThereProcessStateToDisplay: boolean;
 
     constructor(private formBuilder: FormBuilder,
                 private userService: UserService,
@@ -251,6 +252,7 @@ export class FeedconfigurationComponent implements OnInit {
             this.makeProcessIdsByProcessGroup();
             this.loadIsAllProcessesSelected();
         });
+        this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(true).size > 0;
     }
 
     makeProcessIdsByProcessGroup() {
