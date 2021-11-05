@@ -250,7 +250,8 @@
     },
     "error": {
       "impossibleToSaveSettings": "Impossible d'enregistrer les paramètres pour des raisons techniques"
-    }
+    },
+    "noProcessStateAvailable": "Aucun processus/état disponible"
   },
   "userCard": {
     "title": "CREATION D'UNE NOUVELLE CARTE",
