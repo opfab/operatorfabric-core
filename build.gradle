@@ -3,8 +3,11 @@ plugins {
     id "org.asciidoctor.jvm.convert" version "3.3.2"
     id "maven-publish"
     id "signing"
-    id 'org.springframework.boot' version '2.5.6'
+    id "org.springframework.boot" version "$springBoot" apply false
     id 'org.sonarqube' version '3.3' apply false
+    id "com.github.davidmc24.gradle.plugin.avro" version "1.2.0" apply false
+    id "com.palantir.docker" version "0.30.0" apply false
+    id "org.hidetake.swagger.generator" version "2.18.2" apply false
 }
 
 repositories {
@@ -30,7 +33,6 @@ ext {
     ]
 
     boot = [
-            springBootPlugin        : "org.springframework.boot:spring-boot-gradle-plugin:$springBoot",
             starterWeb              : "org.springframework.boot:spring-boot-starter-web:$springBoot",
             starterWebflux          : "org.springframework.boot:spring-boot-starter-webflux:$springBoot",
             actuator                : "org.springframework.boot:spring-boot-starter-actuator:$springBoot",
@@ -79,7 +81,6 @@ ext {
     misc = [
             slf4j          : "org.slf4j:slf4j-api:$slf4j",
             lombok         : "org.projectlombok:lombok:$lombok",
-            palantir       : "com.palantir.gradle.docker:gradle-docker:$gradleDocker",
             compress       : "org.apache.commons:commons-compress:$apacheCommonsCompress",
             feignMock      : "io.github.openfeign:feign-mock:$feign",
             feignJackson   : "io.github.openfeign:feign-jackson:$feign",
@@ -96,7 +97,6 @@ ext {
 
     generator = [
             swagger                 : "io.swagger:swagger-codegen-cli:$swagger",
-            swaggerGeneratorPlugin  : "gradle.plugin.org.hidetake:gradle-swagger-generator-plugin:$swaggerGeneratorPlugin",
             swaggerUI               : "org.webjars:swagger-ui:$swaggerUI",
     ]
 
@@ -104,7 +104,6 @@ ext {
             base        : "base",
             boot        : "org.springframework.boot",
             bom         : "io.spring.dependency-management",
-            swagger     : "org.hidetake.swagger.generator",
             dockerBuild : "com.palantir.docker",
             dockerRun   : "com.palantir.docker-run",
 

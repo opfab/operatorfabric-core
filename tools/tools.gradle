@@ -9,16 +9,16 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" }
     }
 
-    dependencies {
-        classpath boot.springBootPlugin
-    }
+}
+
+plugins {
+    id "org.springframework.boot"
 }
 
 subprojects {
     apply plugin: 'java'
     apply plugin: 'jacoco'
     apply plugin: plugin.bom
-//    apply plugin: plugin.boot
 
     dependencyManagement {
         imports {
