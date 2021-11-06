@@ -1,7 +1,3 @@
-repositories {
-    maven { url "https://packages.confluent.io/maven/" }
-}
-
 dependencies {
     swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
     swaggerUI generator.swaggerUI

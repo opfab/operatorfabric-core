@@ -13,10 +13,6 @@ test {
     outputs.upToDateWhen { false }
 }
 
-repositories {
-    mavenCentral()
-}
-
 task karateDebug(type: JavaExec) {
     classpath = sourceSets.test.runtimeClasspath
     mainClass = 'com.intuit.karate.cli.Main'
