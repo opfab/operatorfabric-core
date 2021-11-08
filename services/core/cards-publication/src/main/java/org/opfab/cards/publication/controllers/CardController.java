@@ -11,15 +11,22 @@
 package org.opfab.cards.publication.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jetty.util.ajax.JSON;
 import org.opfab.aop.process.mongo.models.UserActionTraceData;
 import org.opfab.cards.publication.model.CardCreationReportData;
 import org.opfab.cards.publication.model.CardPublicationData;
+import org.opfab.cards.publication.model.FieldToTranslateData;
 import org.opfab.cards.publication.services.CardProcessingService;
+import org.opfab.cards.publication.services.CardTranslationService;
 import org.opfab.cards.publication.services.UserBasedOperationResult;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
+import org.opfab.springtools.error.model.ApiError;
+import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +35,7 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.time.Instant;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Synchronous controller
@@ -40,10 +48,14 @@ public class CardController {
 
     @Autowired
     private CardProcessingService cardProcessingService;
+    @Autowired
+    private CardTranslationService cardTranslationService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public @Valid CardCreationReportData createCardOld(@Valid @RequestBody CardPublicationData card, HttpServletResponse response, Principal principal) {
+    public @Valid CardCreationReportData createCard(@Valid @RequestBody CardPublicationData card, HttpServletResponse response, Principal principal) {
+        //Overwrite eventual uid sent by client 
+        card.setUid(UUID.randomUUID().toString());
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = null ;
         if (jwtPrincipal!=null) user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
@@ -189,5 +201,22 @@ public class CardController {
      * */
     private static Instant parseAsInstant(String instantAsEpochMillString) {
         return instantAsEpochMillString==null?null:Instant.ofEpochMilli(Long.parseLong(instantAsEpochMillString));
+    }
+
+    @PostMapping("/translateCardField")
+    public String translateCardField(HttpServletRequest request, HttpServletResponse response,
+                                     @Valid @RequestBody FieldToTranslateData fieldToTranslate) {
+
+        if (fieldToTranslate == null || fieldToTranslate.getProcess().isEmpty() || fieldToTranslate.getProcessVersion().isEmpty()
+                || fieldToTranslate.getI18nValue() == null || fieldToTranslate.getI18nValue().getKey().isEmpty()) {
+            response.setStatus(400);
+            return null;
+        }
+        else {
+            String translatedField = cardTranslationService.translateCardField(fieldToTranslate.getProcess(),
+                    fieldToTranslate.getProcessVersion(),
+                    fieldToTranslate.getI18nValue());
+            return "{\"translatedField\": \"" + translatedField + "\"}";
+        }
     }
 }

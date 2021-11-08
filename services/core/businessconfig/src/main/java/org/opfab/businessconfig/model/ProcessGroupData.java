@@ -32,5 +32,6 @@ import java.util.List;
 public class ProcessGroupData implements ProcessGroup {
 
   private String       id;
+  private String       name;
   private List<String> processes;
 }

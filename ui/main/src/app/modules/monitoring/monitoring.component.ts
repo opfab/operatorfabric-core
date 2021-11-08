@@ -20,6 +20,7 @@ import {ProcessesService} from '@ofServices/processes.service';
 import {LightCardsFeedFilterService} from '@ofServices/lightcards-feed-filter.service';
 import {Filter} from '@ofModel/feed-filter.model';
 import {LightCardsStoreService} from '@ofServices/lightcards-store.service';
+import {EntitiesService} from '@ofServices/entities.service';
 
 @Component({
     selector: 'of-monitoring',
@@ -32,7 +33,10 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     filters: MonitoringFiltersComponent;
 
     monitoringFilters$ = new Subject<Filter[]>();
-
+    
+    responseFilter$ = new Subject<Filter>();
+    responseFilterValue = true;
+    
     monitoringResult$: Observable<LineOfMonitoringResult[]>;
     unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -41,12 +45,14 @@ export class MonitoringComponent implements OnInit, OnDestroy {
 
     result: LineOfMonitoringResult[];
 
-
     loadingInProgress = false;
+
+    isThereProcessStateToDisplay: boolean;
 
     constructor(private processesService: ProcessesService
                 , private lightCardsService: LightCardsFeedFilterService
                 , private lightCardsStoreService: LightCardsStoreService
+                , private entitiesService: EntitiesService
     ) {
 
          processesService.getAllProcesses().forEach(process => {
@@ -65,7 +71,8 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.monitoringResult$ = 
             combineLatest([
-                this.monitoringFilters$.asObservable(), 
+                this.monitoringFilters$.asObservable(),
+                this.responseFilter$.asObservable(),
                 this.lightCardsStoreService.getLightCards()
             ]
             ).pipe(
@@ -74,7 +81,8 @@ export class MonitoringComponent implements OnInit, OnDestroy {
                 // so it generates two events , we need to wait until every filter is set 
                 filter( results => this.areFiltersCorrectlySet(results[0])),  
                 map(results => {
-                        const cards = this.lightCardsService.filterLightCards(results[1], results[0]);
+                        const activeFilters = results[0].concat(results[1]);
+                        const cards = this.lightCardsService.filterLightCards(results[2], activeFilters);
                         if (!!cards && cards.length <= 0) {
                             return null;
                         }
@@ -88,8 +96,10 @@ export class MonitoringComponent implements OnInit, OnDestroy {
                 catchError(err => of([]))
         );
         this.monitoringResult$.subscribe(lines => this.result = lines);
+        this.applyResponseFilter();
         this.lightCardsStoreService.getLoadingInProgress().pipe(
             takeUntil(this.unsubscribe$)).subscribe( (inProgress: boolean ) => this.loadingInProgress = inProgress);
+        this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(false).size > 0;
     }
 
     private areFiltersCorrectlySet(filters:Array<any>): boolean
@@ -117,10 +127,23 @@ export class MonitoringComponent implements OnInit, OnDestroy {
         this.monitoringFilters$.next(filters);
     }
 
+    private getEmitter(card: LightCard) : string {
+        const isThirdPartyPublisher = card.publisherType === 'EXTERNAL';
+        const sender = (isThirdPartyPublisher) ? card.publisher : this.entitiesService.getEntityName(card.publisher);
+
+        let representative = '';
+
+        if (!!card.representativeType && !!card.representative) {
+            const isThirdPartyRepresentative = card.representativeType === 'EXTERNAL';
+            representative = (isThirdPartyRepresentative) ? card.representative : this.entitiesService.getEntityName(card.representative);
+        }
+        return !representative.length ? sender : (sender + ' (' + representative + ')');
+    }
 
     private cardToResult(card: LightCard) : LineOfMonitoringResult{
         let typeOfState: TypeOfStateEnum;
         const procId = card.process;
+        
         if (!!this.mapOfProcesses && this.mapOfProcesses.has(procId) && !card.parentCardId) {
             const currentProcess = this.mapOfProcesses.get(procId);
             /**
@@ -139,17 +162,32 @@ export class MonitoringComponent implements OnInit, OnDestroy {
                         creationDateTime: moment(card.publishDate),
                         beginningOfBusinessPeriod: moment(card.startDate),
                         endOfBusinessPeriod: ((!!card.endDate) ? moment(card.endDate) : null),
-                        title: this.prefixI18nKey(card, 'title'),
-                        summary: this.prefixI18nKey(card, 'summary'),
-                        processName: this.prefixForTranslation(card, currentProcess.name),
+                        titleTranslated: card.titleTranslated,
+                        summaryTranslated: card.summaryTranslated,
+                        processName: currentProcess.name,
                         cardId: card.id,
                         severity: card.severity.toLocaleLowerCase(),
                         processId: procId,
-                        typeOfState: typeOfState
+                        typeOfState: typeOfState,
+                        answer: card.hasChildCardFromCurrentUserEntity,
+                        emitter: this.getEmitter(card)
                     } as LineOfMonitoringResult);
             }
         }
         return null;
     }
 
+    switchResponseFilter() {
+        this.responseFilterValue = !this.responseFilterValue;
+        this.applyResponseFilter();
+    }
+
+    private applyResponseFilter() {
+        this.responseFilter$.next(
+            new Filter(
+                (card: LightCard) => !card.hasChildCardFromCurrentUserEntity,
+                !this.responseFilterValue,
+                null
+            ));
+    }
 }

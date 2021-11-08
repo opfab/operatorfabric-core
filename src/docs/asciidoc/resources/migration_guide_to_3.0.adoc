@@ -1,0 +1,113 @@
+// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 2.11.0 to release 3.0.0
+
+
+== Changes in configuration due to business translation mechanism removal 
+
+In order to remove unnecessary complexity for third-party, we have decided to remove translation for
+some of business data, this implies the following migration tasks : 
+
+=== Template directory
+
+The `template` directory does not contain language repository anymore. There is one template per process/state
+ and the templates are located directly in this directory. So you have to move your template for your language directly to the template directory
+
+
+=== Changes in config.json 
+
+In config.json, the fields `process.name`, `state.name` and `state.description` must not contain i18n data anymore, they must only contain string data. These data will be simply displayed on the screen.
+
+
+=== New file i18n.json
+
+The bundle shall contain a new i18n.json file in the root directory. The i18n.json file contains internationalization information for title and summary fields. We keep an i18n mechanism for these two fields in order to have the possibility to adapt the title or summary of the card without having to modify the code of the third party tool sending the card (using only one "language" for translation)
+
+Here is an example file :
+
+----
+{
+	"message":{
+		"title":"Message",
+		"summary":"Message received"
+	},
+	"chartDetail" : { "title":"A Chart"},
+	"chartLine" : { "title":"Electricity consumption forecast"},
+	"question" : {"title": "⚡ Planned Outage"},
+	"contingencies": {"title" : "⚠️ Network Contingencies ⚠️","summary":"Contingencies report for French network"},
+	"processState": {
+		"title":"Process state ({{status}})"
+	}
+}
+----
+
+=== i18n folder
+
+The folder `i18n` and contained files has to be removed from bundle structure.
+
+=== Processes groups
+
+There is no possibility anymore to have translation for the process group name. You can just define
+the name of the group in the uploaded file. Here is an example of this file :
+[source,json]
+----
+{
+  "groups": [
+    {
+      "id": "processgroup1",
+      "name": "Process Group 1",
+      "processes": [
+        "process1",
+        "process2"
+      ]
+    },
+    {
+      "id": "processgroup2",
+      "name": "Process Group 2",
+      "processes": [
+        "process3",
+        "process4"
+      ]
+    }
+  ]
+}
+
+----
+
+=== Script to migrate an existing database
+
+Opfab 3.0 needs two new fields in database : `titleTranslated` and `summaryTranslated`.
+In order to add these two new fields to an existing database, you have to pull the image `migration-opfab3`,
+go to the directory `OF_HOME/src/tooling/migration-opfab3` and execute the script `docker-compose.sh`, this way :
+
+`./docker-compose.sh <containerNameMongoDB> <portMongoDB> <loginMongoDB> <passwordMongoDB> <pathToBundlesDirectory>`
+
+WARNING: The bundles directory is the directory where you store all the "untar" bundles in the new
+format with the `i18n.json` file. It is not the directory where the opfab instance stores the bundles.
+
+
+== Configuration file `web-ui.json`
+
+Some attributes have been renamed to be more consistent with their meaning.
+Here are these attributes :
+
+* `settings.infos.description` renamed `settings.infos.hide.description`
+* `settings.infos.language` renamed `settings.infos.hide.language`
+* `settings.infos.timezone` renamed `settings.infos.hide.timezone`
+* `settings.infos.tags` renamed `settings.infos.hide.tags`
+* `settings.infos.sounds` renamed `settings.infos.hide.sounds`
+
+So if you use these fields in `web-ui.json` file, you have to rename them.
+
+
+== Nginx.conf.template file
+
+In order to have a better organized file, we have modified `nginx.conf.template` file, more precisely the information
+for location `/cardspub/cards`. Please report this modification to your local config.
+
+

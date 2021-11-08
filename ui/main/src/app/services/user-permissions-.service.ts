@@ -32,9 +32,9 @@ export class UserPermissionsService {
     const checkPerimeterForResponseCard = this.configService.getConfigValue('checkPerimeterForResponseCard');
 
     if (checkPerimeterForResponseCard === false)
-      return this.isUserInEntityAllowedToRespond(user, card);
+      return this.isUserInEntityAllowedToRespond(user, card, processDefinition);
     else
-      return this.isUserInEntityAllowedToRespond(user, card)
+      return this.isUserInEntityAllowedToRespond(user, card, processDefinition)
         && this.doesTheUserHaveThePerimeterToRespond(user, card, processDefinition);
   }
 
@@ -63,7 +63,7 @@ export class UserPermissionsService {
     return (card.lttd != null && (card.lttd - new Date().getTime()) <= 0);
   }
 
-  private isUserInEntityAllowedToRespond(user: UserWithPerimeters, card: Card): boolean {
+  private isUserInEntityAllowedToRespond(user: UserWithPerimeters, card: Card, processDefinition: Process): boolean {
     let userEntitiesAllowedToRespond = [];
     let entitiesAllowedToRespondAndEntitiesRequiredToRespond = [];
 
@@ -79,8 +79,10 @@ export class UserPermissionsService {
       const entitiesAllowedToRespond = this.entitiesService.getEntities().filter(entity =>
         entitiesAllowedToRespondAndEntitiesRequiredToRespond.includes(entity.id));
 
+      const emittingEntityAllowedToRespond = processDefinition.extractState(card).response.emittingEntityAllowedToRespond;
+
       const allowed = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond)
-        .map(entity => entity.id).filter(x => x !== card.publisher);
+        .map(entity => entity.id).filter(x => x !== card.publisher || emittingEntityAllowedToRespond);
 
       console.log(new Date().toISOString(), ' Detail card - entities allowed to respond = ', allowed);
 

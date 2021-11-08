@@ -1,0 +1,10 @@
+{
+	"message":{
+		"title":"Message",
+		"summary":"Message received"
+	},
+	"question":{
+		"title":"Question ",
+		"summary":"There is a question for you"
+	}
+}

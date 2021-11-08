@@ -93,7 +93,7 @@ export class EditPerimeterModalComponent implements OnInit {
 
     // The dropdown will prefix values with the process Ids because there is no certainty that i18n values are unique across bundles.
     this.processesDefinition.forEach((process: Process) => {
-      const label = process.name ? (Utilities.getI18nPrefixFromProcess(process) + process.name) : process.id;
+      const label = process.name ? process.name : process.id;
       const processToShow = { value: process.id, label: label };
       this.processOptions.push(processToShow);
     });
@@ -108,7 +108,7 @@ export class EditPerimeterModalComponent implements OnInit {
             .flatMap((processDef: Process) => {
               const statesToShow = [];
               for (const [stateId, value] of Object.entries(processDef.states)) {
-                statesToShow.push({value: stateId, label: Utilities.getI18nPrefixFromProcess(processDef) + value.name});
+                statesToShow.push({value: stateId, label: value.name});
               }
               return statesToShow;
             });
@@ -121,12 +121,9 @@ export class EditPerimeterModalComponent implements OnInit {
 
   create() {
     this.cleanForm();
-    this.crudService.create(this.perimeterForm.value).subscribe(() => {
-      this.activeModal.close('Update button clicked on perimeter modal');
-      // We call the activeModal "close" method and not "dismiss" to indicate that the modal was closed because the
-      // user chose to perform an action (here, update the selected item).
-      // This is important as code in the corresponding table components relies on the resolution of the
-      // `NgbMobalRef.result` promise to trigger a refresh of the data shown on the table.
+    this.crudService.create(this.perimeterForm.value).subscribe({
+      next: () => this.onSavesuccess(),
+      error: (e) => this.onSaveError(e)
     });
   }
 
@@ -140,7 +137,12 @@ export class EditPerimeterModalComponent implements OnInit {
 
   onSavesuccess() {
     this.activeModal.close('Update button clicked on perimeter modal');
+    // We call the activeModal "close" method and not "dismiss" to indicate that the modal was closed because the
+    // user chose to perform an action (here, update the selected item).
+    // This is important as code in the corresponding table components relies on the resolution of the
+    // `NgbMobalRef.result` promise to trigger a refresh of the data shown on the table.
   }
+  
 
   onSaveError(res) {
     this.store.dispatch(new AlertMessage({alertMessage: {message: res.originalError.error.message, level: MessageLevel.ERROR}}));

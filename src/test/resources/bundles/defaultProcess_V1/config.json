@@ -1,6 +1,6 @@
 {
   "id": "defaultProcess",
-  "name": "process.label",
+  "name": "Process example ",
   "version": "1",
   "uiVisibility": {
     "monitoring": true,
@@ -9,8 +9,8 @@
   },
   "states": {
     "messageState": {
-      "name":  "message.title",
-      "description": "messageState.description",
+      "name":  "Message",
+      "description": "Message state",
       "color": "#CC9900",
       "userCard" : {
         "template" : "usercard_message",
@@ -24,8 +24,8 @@
       "type" : "FINISHED"
     },
     "chartState": {
-      "name": "chartDetail.title",
-      "description": "chartState.description",
+      "name": "A Chart",
+      "description": "Chart state",
       "color": "#DA00DA",
       "templateName": "chart",
       "styles": [
@@ -34,8 +34,8 @@
       "acknowledgmentAllowed": "Always"
     },
     "chartLineState": {
-      "name": "chartLine.title",
-      "description": "chartLineState.description",
+      "name": "Electricity consumption forecast",
+      "description": "Chart line state",
       "color": "#6666FF",
       "templateName": "chart-line",
       "styles": [
@@ -45,8 +45,8 @@
       "type" : "CANCELED"
     },
     "processState": {
-      "name": "process.label",
-      "description": "processState.description",
+      "name": "Process example ",
+      "description": "Process state",
       "color": "#0070C0",
       "userCard" : {
         "template" : "usercard_process",
@@ -60,8 +60,8 @@
       "type" : "INPROGRESS"
     },
     "contingenciesState": {
-      "name": "contingencies.title",
-      "description": "contingenciesState.description",
+      "name": "⚠️ Network Contingencies ⚠️",
+      "description": "Contingencies state",
       "templateName": "contingencies",
       "styles": [
         "contingencies"
@@ -70,8 +70,8 @@
       "type" : "INPROGRESS"
     },
     "questionState": {
-      "name": "questionState.title",
-      "description": "questionState.description",
+      "name": "Action required",
+      "description": "Question state",
       "response": {
         "lock": true,
         "state": "responseState"
@@ -84,15 +84,15 @@
       "type" : "INPROGRESS"
     },
     "multipleOptionsResponseState": {
-      "name": "multipleOptionsResponseState.title",
-      "description": "multipleOptionsResponseState.description",
+      "name": "Additional information required",
+      "description": "Follow-up Question state",
       "color": "#0070C0",
       "acknowledgmentAllowed": "Always",
       "templateName": "multipleOptionsResponseState"
     },
     "responseState": {
-      "name": "response.title",
-      "description": "responseState.description",
+      "name": "Planned outage date response",
+      "description": "Response state",
       "color": "#0070C0",
       "templateName": "response",
       "styles": [

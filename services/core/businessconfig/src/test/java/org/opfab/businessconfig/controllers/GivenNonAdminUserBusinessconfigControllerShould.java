@@ -147,32 +147,24 @@ class GivenNonAdminUserBusinessconfigControllerShould {
     @Test
     void fetchTemplateResource() throws Exception {
         ResultActions result = mockMvc.perform(
-                get("/businessconfig/processes/first/templates/template1?locale=fr")
+                get("/businessconfig/processes/first/templates/template1")
                         .accept("application/handlebars")
         );
         result
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/handlebars"))
-                .andExpect(content().string(is("{{service}} fr")))
+                .andExpect(content().string(is("{{service}}")))
         ;
         result = mockMvc.perform(
-                get("/businessconfig/processes/first/templates/template?version=0.1&locale=fr")
+                get("/businessconfig/processes/first/templates/template?version=0.1")
                         .accept("application/handlebars"));
         result
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/handlebars"))
-                .andExpect(content().string(is("{{service}} fr 0.1")))
+                .andExpect(content().string(is("{{service}} 0.1")))
         ;
         result = mockMvc.perform(
-                get("/businessconfig/processes/first/templates/template?locale=en&version=0.1")
-                        .accept("application/handlebars"));
-        result
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/handlebars"))
-                .andExpect(content().string(is("{{service}} en 0.1")))
-        ;
-        result = mockMvc.perform(
-                get("/businessconfig/processes/first/templates/templateIO?locale=fr&version=0.1")
+                get("/businessconfig/processes/first/templates/templateIO?version=0.1")
                         .accept("application/json", "application/handlebars"));
         result
                 .andExpect(status().is4xxClientError())
@@ -181,18 +173,9 @@ class GivenNonAdminUserBusinessconfigControllerShould {
     }
 
     @Test
-    void fetchI18nResource() throws Exception {
+    void fetchTranslationResource() throws Exception {
         ResultActions result = mockMvc.perform(
-                get("/businessconfig/processes/first/i18n?locale=fr")
-                        .accept("text/plain")
-        );
-        result
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("text/plain"))
-                .andExpect(content().string(is("card.title=\"Titre $1\"")))
-        ;
-        result = mockMvc.perform(
-                get("/businessconfig/processes/first/i18n?locale=en")
+                get("/businessconfig/processes/first/i18n")
                         .accept("text/plain")
         );
         result
@@ -201,7 +184,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
                 .andExpect(content().string(is("card.title=\"Title $1\"")))
         ;
         result = mockMvc.perform(
-                get("/businessconfig/processes/first/i18n?locale=en&version=0.1")
+                get("/businessconfig/processes/first/i18n?version=0.1")
                         .accept("text/plain")
         );
         result
@@ -212,7 +195,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
 
         assertException(FileNotFoundException.class).isThrownBy(() ->
                 mockMvc.perform(
-                        get("/businessconfig/processes/first/i18n?locale=de&version=0.1")
+                        get("/businessconfig/processes/first/i18n?version=2.1")
                                 .accept("text/plain")
                 ));
     }

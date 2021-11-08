@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 2.11.0.RELEASE
+  version: 3.0.0.RELEASE
   title: BusinessConfig Management
   termsOfService: ''
   contact:
@@ -131,11 +131,6 @@ paths:
           description: Id of the process to retrieve
           required: true
           type: string
-        - name: locale
-          in: query
-          description: Locale iso code
-          required: false
-          type: string
         - name: templateName
           in: path
           description: Name of template to retrieve (w.o. extension)
@@ -192,7 +187,7 @@ paths:
           description: No such template
   '/businessconfig/processes/{processId}/i18n':
     get:
-      summary: Get i18n file
+      summary: Get i18n translation file
       description: >-
         Get i18n file, if file exists return file
         (text/plain) otherwise return error message (application/json)
@@ -204,11 +199,6 @@ paths:
         - name: processId
           in: path
           description: Id of the process to retrieve
-          required: true
-          type: string
-        - name: locale
-          in: query
-          description: Locale iso code
           required: true
           type: string
         - name: version
@@ -373,10 +363,7 @@ definitions:
         description: Identifier referencing this process. It should be unique across the OperatorFabric instance.
       name:
         type: string
-        description: >-
-          i18n key for the label of this process
-          The value attached to this key should be defined in each XX.json file in the i18n folder of the bundle (where
-          XX stands for the locale iso code, for example 'EN')
+        description: Name of the process
       version:
         type: string
         description: Process configuration version
@@ -393,10 +380,10 @@ definitions:
               default: Never
             name:
               type: string
-              description: i18n key for UI
+              description: Name of the state
             description:
               type: string
-              description: i18n key for UI
+              description: Description of the state
             showDetailCardHeader:
               type: boolean
               description: Hide or show header card for question card
@@ -482,6 +469,9 @@ definitions:
         type: array
         items:
           type: string
+      emittingEntityAllowedToRespond:
+        description: If true, entity emitting a card is allowed to respond
+        type: boolean
 
   AcknowledgmentAllowedEnum:
     type: string
@@ -513,6 +503,9 @@ definitions:
       id:
         description: Id of the group
         type: string
+      name:
+        description: Name of the group
+        type: string
       processes:
         description: List of processes included in the group
         type: array
@@ -532,17 +525,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/ProcessGroup'
-      locale:
-        type: object
-        properties:
-          en:
-            type: object
-            additionalProperties:
-              type: string
-          fr:
-            type: object
-            additionalProperties:
-              type: string
   UserCard:
     properties:
       template:

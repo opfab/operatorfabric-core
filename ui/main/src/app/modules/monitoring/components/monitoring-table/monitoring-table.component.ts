@@ -29,6 +29,7 @@ import {Process} from '@ofModel/processes.model';
 import {EntitiesService} from '@ofServices/entities.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {ColDef, GridOptions} from "ag-grid-community";
+import {AnswerCellRendererComponent} from '../cell-renderers/answer-cell-renderer.component';
 
 @Component({
     selector: 'of-monitoring-table',
@@ -40,7 +41,6 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
     @ViewChild('exportInProgress') exportInProgressTemplate: ElementRef;
     @Input() result: LineOfMonitoringResult[];
-    @Input() displayProcessGroupColumn: boolean;
 
 
     displayContext = DisplayContext.REALTIME;
@@ -67,13 +67,13 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     private firstNgOnChange = true;
 
     private readonly timeColumnName;
-    private readonly processGroupColumnName;
-    private readonly processColumnName;
     private readonly titleColumnName;
     private readonly summaryColumnName;
     private readonly typeOfStateColumnName;
     private readonly businessPeriodColumnName;
     private readonly severityColumnName;
+    private readonly answerColumnName;
+    private readonly emitterColumnName;
 
     private mapSeverity = new Map([
         ["alarm", 1],
@@ -93,30 +93,47 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         this.monitoringConfig = processesService.getMonitoringConfig();
 
         this.timeColumnName = this.translateColumn('monitoring.time');
-        this.processGroupColumnName = this.translateColumn('monitoring.filters.processGroup');
-        this.processColumnName = this.translateColumn('monitoring.filters.process');
         this.titleColumnName = this.translateColumn('monitoring.title');
         this.summaryColumnName = this.translateColumn('monitoring.summary');
         this.typeOfStateColumnName = this.translateColumn('monitoring.typeOfState');
         this.businessPeriodColumnName = this.translateColumn('monitoring.businessPeriod');
         this.severityColumnName = this.translateColumn('monitoring.severity');
+        this.answerColumnName = this.translateColumn('monitoring.answer');
+        this.emitterColumnName = this.translateColumn('monitoring.emitter');
 
         this.gridOptions = <GridOptions>{
             context: {
                 componentParent: this
             },
-            frameworkComponents : {},
+            frameworkComponents : {
+                answerCellRenderer: AnswerCellRendererComponent
+            },
             domLayout: 'autoHeight',
             defaultColDef : {
                 editable: false
             },
             columnTypes: {
+                'fixedColumn': {
+                    sortable: true,
+                    filter: true,
+                    wrapText: false,
+                    autoHeight: false,
+                    maxWidth: 180,
+                },
+                'variableColumn': {
+                    sortable: true,
+                    filter: true,
+                    wrapText: false,
+                    autoHeight: false,
+                    flex: 1
+                },
                 'dataColumn': {
                     sortable: true,
                     filter: true,
                     wrapText: false,
                     autoHeight: false,
                     flex: 1,
+                    minWidth: 450
                 },
                 'severityColumn': {
                     sortable: true,
@@ -124,6 +141,13 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                     wrapText: false,
                     autoHeight: false,
                     maxWidth: 18
+                },
+                'answerColumn': {
+                    sortable: false,
+                    filter: false,
+                    wrapText: false,
+                    autoHeight: false,
+                    maxWidth: 50,
                 }
             },
             pagination : true,
@@ -154,16 +178,18 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         };
 
         this.columnDefs = [{ type: 'severityColumn', headerName: '', field: 'severityNumber', headerClass: 'header-with-no-padding' , cellClassRules: severityCellClassRules },
-                           { type: 'dataColumn', headerName: this.timeColumnName, field: 'time' }];
+                           { type: 'fixedColumn', headerName: this.timeColumnName, field: 'time' },
+                           { type: 'answerColumn', headerName: '', field: 'answer',cellRenderer: 'answerCellRenderer' }];
 
-        if (this.displayProcessGroupColumn)
-            this.columnDefs.push({ type: 'dataColumn', headerName: this.processGroupColumnName, field: 'service' });
+        
 
-        this.columnDefs.push({ type: 'dataColumn', headerName: this.processColumnName, field: 'process' },
-                             { type: 'dataColumn', headerName: this.titleColumnName, field: 'title' },
+        this.columnDefs.push({ type: 'dataColumn', headerName: this.titleColumnName, field: 'title' },
                              { type: 'dataColumn', headerName: this.summaryColumnName, field: 'summary' },
-                             { type: 'dataColumn', headerName: this.typeOfStateColumnName, field: 'processStatus',
-                                 cellClassRules: typeOfStateCellClassRules });
+                             { type: 'fixedColumn', headerName: this.typeOfStateColumnName, field: 'processStatus',
+                                 cellClassRules: typeOfStateCellClassRules },
+                             {type: 'variableColumn', headerName: this.emitterColumnName, field: 'emitter' },
+
+                             );
 
         this.gridApi.setColumnDefs(this.columnDefs);
         this.refreshData();
@@ -185,29 +211,17 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         this.displayedResults = this.result;
         this.rowData = [];
         this.displayedResults.forEach(line => {
-            if (this.displayProcessGroupColumn)
+
                 this.rowData.push({ severityNumber: this.mapSeverity.get(line.severity),
                                     time: this.displayTime(line.creationDateTime),
-                                    service: this.translateValue(this.processesService.findProcessGroupLabelForProcess(line.processId)),
-                                    process: this.translateValue(line.processName),
-                                    title: this.translateValue(line.title.key, line.title.parameters),
-                                    summary: this.translateValue(line.summary.key, line.summary.parameters),
+                                    title: line.titleTranslated,
+                                    summary: line.summaryTranslated,
                                     processStatus: this.translateValue('monitoring.filters.typeOfState.' + line.typeOfState),
                                     typeOfState: line.typeOfState,
                                     cardId: line.cardId,
                                     severity: line.severity,
-                                    beginningOfBusinessPeriod: line.beginningOfBusinessPeriod,
-                                    endOfBusinessPeriod: line.endOfBusinessPeriod });
-            else
-                this.rowData.push({ severityNumber: this.mapSeverity.get(line.severity),
-                                    time: this.displayTime(line.creationDateTime),
-                                    process: this.translateValue(line.processName),
-                                    title: this.translateValue(line.title.key, line.title.parameters),
-                                    summary: this.translateValue(line.summary.key, line.summary.parameters),
-                                    processStatus: this.translateValue('monitoring.filters.typeOfState.' + line.typeOfState),
-                                    typeOfState: line.typeOfState,
-                                    cardId: line.cardId,
-                                    severity: line.severity,
+                                    answer: line.answer,
+                                    emitter: line.emitter,
                                     beginningOfBusinessPeriod: line.beginningOfBusinessPeriod,
                                     endOfBusinessPeriod: line.endOfBusinessPeriod });
 
@@ -229,26 +243,16 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
 
         this.gridApi.rowModel.rowsToDisplay.forEach((line) => {
             if (typeof line !== undefined) {
-                if (this.displayProcessGroupColumn)
+
                     this.exportMonitoringData.push({
                         [this.timeColumnName]: line.data.time,
+                        [this.answerColumnName]: line.data.answer,
                         [this.businessPeriodColumnName]: this.displayTime(line.data.beginningOfBusinessPeriod).concat(this.displayTime(line.data.endOfBusinessPeriod)),
-                        [this.processGroupColumnName]: line.data.service,
-                        [this.processColumnName]: line.data.process,
                         [this.titleColumnName]: line.data.title,
                         [this.summaryColumnName]: line.data.summary,
                         [this.typeOfStateColumnName]: line.data.processStatus,
-                        [this.severityColumnName]: line.data.severity
-                    });
-                else
-                    this.exportMonitoringData.push({
-                        [this.timeColumnName]: line.data.time,
-                        [this.businessPeriodColumnName]: this.displayTime(line.data.beginningOfBusinessPeriod).concat(this.displayTime(line.data.endOfBusinessPeriod)),
-                        [this.processColumnName]: line.data.process,
-                        [this.titleColumnName]: line.data.title,
-                        [this.summaryColumnName]: line.data.summary,
-                        [this.typeOfStateColumnName]: line.data.processStatus,
-                        [this.severityColumnName]: line.data.severity
+                        [this.severityColumnName]: line.data.severity,
+                        [this.emitterColumnName]: line.data.emitter
                     });
             }
         });
@@ -306,16 +310,15 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     }
 
     cardPreprocessingBeforeExport(card: any): any {
-        const prefix =  `${card.card.process}.${card.card.processVersion}`;
         card.card.processGroup = this.translateValue(this.processesService.findProcessGroupLabelForProcess(card.card.process));
         const process:Process = this.processesService.getProcess(card.card.process);
         if (!!process) {
-                card.card.processName = this.translateValue(`${prefix}.${process.name}`);
+                card.card.processName = process.name;
                 const state = process.states[card.card.state];
                 if (!!state) card.card.typeOfState = this.translateValue('monitoring.filters.typeOfState.' + state.type);
         }
-        card.card.title = this.translateValue(`${prefix}.${card.card.title.key}`, card.card.title.parameters);
-        card.card.summary =  this.translateValue(`${prefix}.${card.card.summary.key}`, card.card.summary.parameters);
+        card.card.title = card.card.titleTranslated;
+        card.card.summary =  card.card.summaryTranslated;
 
         card.childCards.forEach(childCard => {
             if (childCard.publisherType==="ENTITY") childCard.publisherName= this.entitiesService.getEntityName(childCard.publisher);

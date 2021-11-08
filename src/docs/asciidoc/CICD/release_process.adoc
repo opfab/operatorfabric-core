@@ -6,6 +6,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 :opfab_core_repo: https://github.com/opfab/operatorfabric-core
+:opfab_website_repo: https://github.com/opfab/opfab.github.io
 
 [[release_process]]
 = Release process
@@ -102,6 +103,42 @@ The build job should have two stages: `test-sonar` and `docker-tag-version`.
 Wait for the build to complete (around 20 minutes) and check that all stages have been successful.
 This ensures that the code builds, tests are OK and there is no error preventing documentation or Docker images
 generation.
+
+=== Updating the version list on the website
+
+On the link:{opfab_website_repo}[website repository],
+edit the link:{opfab_website_repo}/blob/master/_data/versions.yml[_/data/versions.yml] file to:
+
+. Add the version being released to the list with the `current` badge
+. Remove the `current` badge from the previous version
+
+For example:
+
+.Before
+[source,yaml]
+----
+- id: SNAPSHOT
+  type: SNAPSHOT
+- id: D.E.F.RELEASE
+  badge: current
+- id: A.B.C.RELEASE
+  #... end of file omitted
+----
+
+.After
+[source,yaml]
+----
+- id: SNAPSHOT
+  type: SNAPSHOT
+- id: X.X.X.RELEASE
+  badge: current
+- id: D.E.F.RELEASE
+- id: A.B.C.RELEASE
+  #... end of file omitted
+----
+
+This file determines which versions (and in which order) are displayed on the
+link:https://opfab.github.io/pages/releases.html[release page] of the website.
 
 === Merging the release branch into `master`
 

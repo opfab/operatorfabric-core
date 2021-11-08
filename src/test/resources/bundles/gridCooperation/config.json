@@ -1,5 +1,5 @@
 {
-	"name": "process.name",
+	"name": "IGCC",
 	"version": "3",
 	"id": "gridCooperation",
 	"uiVisibility": {
@@ -8,43 +8,43 @@
 	  },
 	"states": {
 		"timeout-FrEs-IGCC": {
-			"name":  "timeout-FrEs-IGCC.title",
-			"description":  "timeout-FrEs-IGCC.title",
+			"name":  "⏰ Set IGCC to 0",
+			"description":  "⏰ Set IGCC to 0",
 			"acknowledgmentAllowed": "Always",
 			"color": "red",
 			"templateName": "timeout-FrEs-IGCC"
 		},
 		"action-FrEs-IGCC-export-0": {
-			"name":  "action-FrEs-IGCC-export-0.title",
-			"description":  "action-FrEs-IGCC-export-0.title",
+			"name":  "🔧 Set IGCC export = 0",
+			"description":  "🔧 Set IGCC export = 0",
 			"acknowledgmentAllowed": "Always",
 			"color": "red",
 			"templateName": "action-FrEs-IGCC-export-0"
 		},
 		"action-FrEs-IGCC-export-300": {
-			"name":  "action-FrEs-IGCC-export-300.title",
-			"description":  "action-FrEs-IGCC-export-300.title",
+			"name":  "🔧 Set IGCC export limit to 300",
+			"description":  "🔧 Set IGCC export limit to 300",
 			"acknowledgmentAllowed": "Always",
 			"color": "orange",
 			"templateName": "action-FrEs-IGCC-export-300"
 		},
 		"action-FrEs-IGCC-import-0": {
-			"name":  "action-FrEs-IGCC-import-0.title",
-			"description":  "action-FrEs-IGCC-import-0.title",
+			"name":  "🔧 Set IGCC import = 0",
+			"description":  "🔧 Set IGCC import = 0",
 			"acknowledgmentAllowed": "Always",
 			"color": "red",
 			"templateName": "action-FrEs-IGCC-import-0"
 		},
 		"action-FrEs-IGCC-import-300": {
-			"name":  "action-FrEs-IGCC-import-300.title",
-			"description":  "action-FrEs-IGCC-import-300.title",
+			"name":  "🔧 Set IGCC import limit to 300",
+			"description":  "🔧 Set IGCC import limit to 300",
 			"acknowledgmentAllowed": "Always",
 			"color": "orange",
 			"templateName": "action-FrEs-IGCC-import-300"
 		},
 		"compliant-FrEs-IGCC": {
-			"name":  "compliant-FrEs-IGCC.title",
-			"description":  "compliant-FrEs-IGCC.title",
+			"name":  "✅ Remove IGCC limitations",
+			"description":  "✅ Remove IGCC limitations",
 			"acknowledgmentAllowed": "Always",
 			"color": "green",
 			"templateName": "compliant-FrEs-IGCC"

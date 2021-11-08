@@ -1,0 +1,196 @@
+// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Cypress Tests
+
+Automatic UI testing 
+
+
+NOTE: All paths for cd are given assuming you're starting from `$OF_HOME`.
+
+== Installation
+
+Before running Cypress tests for the first time you need to install it using NPM.
+
+[source,bash]
+----
+cd src/test/cypress
+npm install
+----
+
+== Cypress file structure
+
+By default, all test files are located in `cypress/cypress/integration` but it is possible to put it on another directory
+
+The `commands.js` file under `cypress/cypress/support` is used to create custom commands and overwrite existing commands.
+
+== Launching the OpFab instance to test
+
+=== Commands
+
+You can launch the OpFab instance for Cypress tests either in dev or docker mode. The following commands launch the
+instance in docker mode, just substitute `dev` for `docker` to launch it in dev mode.
+
+[source,bash]
+----
+cd config/docker
+docker-compose down <1>
+./docker-compose-cypress.sh <2>
+----
+<1> Remove existing config/docker containers to avoid conflicts
+<2> Start "Cypress-flavoured" containers
+
+After you're done with your tests, you can stop and destroy containers (as it is better to start with fresh containers to avoid
+side-effects from previous tests) with the following commands:
+
+[source,bash]
+----
+cd config/docker
+docker-compose down
+----
+
+=== Explanation
+
+The Cypress tests rely on a running OpFab instance that is an adaptation from the config/docker docker-compose file
+(environment name, shorter time before lttd clock display, etc.).
+
+The `generateUIConfigForCypress.sh` script performs this adaptation to create this base Cypress configuration.
+
+This will create the following files under `config/cypress/ui-config`:
+
+* ui-menu.json
+* ui-menu-base.json
+* web-ui.json
+* web-ui-base.json
+
+Where `XXX-base.json` and `XXX.json` are created by copying the corresponding `XXX.json` file for standard docker
+configuration (found under `config/docker/ui-config`) and making the necessary adaptations needed for the cypress instance to
+work well for the tests (changing the authentication mode, making all features visible, etc.).
+
+Then, during the course of the cypress tests, the `XXX.json` files will be modified to test specific features
+(for example, hiding a feature, defining a new menu, etc.). They are reset with the content of `XXX-base.json`
+before each test or series of test.
+
+The docker container relies on the `XXX.json` files under `config/cypress/ui-config`.
+
+For convenience, the `generateUIConfigForCypress.sh` is launched as part of the `docker-compose-cypress.sh` scripts.
+
+== Running existing tests
+
+To launch the Cypress test runner:
+
+[source,bash]
+----
+cd src/test/cypress
+./node_modules/.bin/cypress open
+----
+
+This will open the Cypress test runner. Either click on the test you want to run or `run all X tests` on the right to
+run all existing tests.
+
+NOTE: You can select the browser (and version) that you want to use from a dropdown list on the right. The list will
+display the browsers that are currently installed on your computer (and supported by Cypress).
+
+== Running tests on 4200 (ng serve)
+
+Follow the steps described above in "Dev mode" to start a Cypress-flavoured OpFab instance in development mode, then
+run ng serve to start a dynamically generated ui on port 4200:
+
+[source,bash]
+----
+cd ui/main
+ng serve
+----
+
+Then launch the Cypress test runner as follows:
+
+To launch the Cypress test runner:
+
+[source,bash]
+----
+cd src/test/cypress
+./node_modules/.bin/cypress open --config baseUrl=http://localhost:4200
+----
+
+== Running tests with Gradle
+
+The tests can also be run in command line mode using a Gradle task :
+
+[source,bash]
+----
+./gradlew runCypressTests
+----
+
+== Clearing MongoDB
+
+If you want to start with a clean database (from the cards and archived cards point of view), you can purge the
+associated collections through the MongoDB shell with the following commands:
+
+[source,bash]
+----
+docker exec -it docker_mongodb_1 bash
+mongo "mongodb://root:password@localhost:27017/?authSource=admin&authMode=scram-sha1"
+use operator-fabric
+db.cards.remove({})
+db.archivedCards.remove({})
+----
+
+== Current status of tests
+
+All tests should be passing when run alone (i.e. not with run all specs) against empty card/archived cards collections.
+However, tests in the "Flaky" folder can sometimes fail because they involve dates (round up errors for example).
+
+== Creating new tests
+
+Create a new XXXX.spec.js file under `cypress/cypress/integration`
+
+NOTE: We will need to define a convention for naming and organizing tests.
+
+=== Useful documentation
+
+==== Cypress Documentation
+* https://docs.cypress.io/guides/references/assertions#Common-Assertions[Most Common Assertions]
+* https://docs.cypress.io/guides/references/assertions[Assertions Reference]
+* https://docs.cypress.io/faq/questions/using-cypress-faq[FAQ]
+
+==== Other links
+* https://medium.com/slido-dev-blog/cypress-tips-4-testing-lists-of-items-dccd4b688816[Testing lists of items]
+* https://developer.mozilla.org/en/docs/Learn/HTML/Howto/Use_data_attributes[Use data attributes]
+* https://codelikethis.com/lessons/javascript/cypress#anchor/nothing_happens_immediately[Nothing happens immediately]
+
+=== Guidelines and tips
+
+* Use the https://docs.cypress.io/api/commands/get#Get-in-within[find or within commands] rather than complex CSS
+selectors to target descendants elements.
+* If you want to access aliases using the `this` keyword, make sure you are using anonymous functions rather than fat
+arrow functions, otherwise use cy.get('@myAlias') to access it asynchronously
+(https://docs.cypress.io/guides/core-concepts/variables-and-aliases#Avoiding-the-use-of-this[the documentation]
+has recently been updated on this topic).
+* When running tests, make sure that you are not connected to OpFab as it can cause unexpected behaviour with read
+cards for example.
+* When chaining a `should` assertion to a `cy.get` command that returns several elements, it will pass if it is true for
+ANY of these elements. Use each + callback to check that an assertion is true on every element.
+* `cy.contains` is a command, not an assertion. If you want to test the attribute, classes, content etc. of an element,
+it's better to target the element by id or data attribute using a `cy.get()` command for example and then chain an
+assertion with `should()`.
+This way, you will get an expected/actual error message if the assertion fails, you will avoid false positives (text is
+found in another sibling element) and hard to debug behaviour with retries.
+* Be careful with `find()` (see #1751 for an example of issue that it can cause). See the Cypress documentation for
+https://docs.cypress.io/guides/core-concepts/retry-ability#Only-the-last-command-is-retried[an
+explanation] and https://docs.cypress.io/guides/core-concepts/retry-ability#Merging-queries[a less flaky alternative].
+
+
+== Configuration
+
+In `cypress.json`:
+
+* `baseUrl`: The base url of the OperatorFabric instance you're testing against. It will be appended in front of any
+    `visit` call.
+* `env.host`: The host corresponding to the OperatorFabric instance you're testing against. It will be used for API
+calls.
+* `env.defaultWaitTime`: Using the custom-defined command cy.waitDefaultTime() instead of cy.wait(XXX) allows the wait
+time to be changed globally for all steps to the value defined by this property.

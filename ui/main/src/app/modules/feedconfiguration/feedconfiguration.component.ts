@@ -9,7 +9,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {UserService} from '@ofServices/user.service';
-import {Process} from '@ofModel/processes.model';
+import {Process, State} from '@ofModel/processes.model';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
@@ -18,7 +18,6 @@ import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {SettingsService} from '@ofServices/settings.service';
 import {CardService} from '@ofServices/card.service';
 import {TranslateService} from '@ngx-translate/core';
-import {Utilities} from '../../common/utilities';
 import {ConfigService} from '@ofServices/config.service';
 
 
@@ -32,7 +31,6 @@ export class FeedconfigurationComponent implements OnInit {
     feedConfigurationForm: FormGroup;
 
     processesDefinition: Process[];
-    checkPerimeterForSearchFields: boolean;
     processGroupsAndLabels: { groupId: string,
                               groupLabel: string,
                               processes:
@@ -60,9 +58,11 @@ export class FeedconfigurationComponent implements OnInit {
     isAllProcessesSelectedPerProcessGroup: Map<string, boolean>;
 
     modalRef: NgbModalRef;
+    private saveSettingsInProgress: boolean = false; 
 
     public displaySendResultError = false;
     messageAfterSavingSettings: string;
+    isThereProcessStateToDisplay: boolean;
 
     constructor(private formBuilder: FormBuilder,
                 private userService: UserService,
@@ -157,8 +157,7 @@ export class FeedconfigurationComponent implements OnInit {
     private makeProcessesWithoutGroup() {
         this.processesDefinition.forEach(process => {
             if (! this.findInProcessGroups(process.id)) {
-                let processLabel = (!!process.name) ? Utilities.getI18nPrefixFromProcess(process) + process.name :
-                    Utilities.getI18nPrefixFromProcess(process) + process.id;
+                let processLabel = (!!process.name) ? process.name : process.id;
 
                 this.translateService.get(processLabel).subscribe(translate => { processLabel = translate; });
                 this.processesWithoutGroup.push({idProcess: process.id,
@@ -185,43 +184,38 @@ export class FeedconfigurationComponent implements OnInit {
     }
 
     private computePreparedListOfProcessesStatesAndProcessesStatesLabels() {
-        if (this.processesDefinition) {
-            let stateControlIndex = 0;
+        let stateControlIndex = 0;
 
-            for (const process of this.processesDefinition) {
+        for (const process of this.processesDefinition) {
+            const states: { stateId: string, stateLabel: string, stateControlIndex: number }[] = [];
 
-                const states: { stateId: string, stateLabel: string, stateControlIndex: number }[] = [];
+            let processLabel = ((!! process.name) ? process.name : process.id);
 
-                let processLabel = this.computeI18n(process, process.name, process.id);
-                this.translateService.get(processLabel).subscribe(translate => { processLabel = translate; });
+            for (const stateId of Object.keys(process.states)) {
+                const state = process.states[stateId];
 
-                for (const stateId of Object.keys(process.states)) {
-                    const state = process.states[stateId];
+                if (this.checkIfStateMustBeDisplayed(state, process, stateId)) {
+                    let stateLabel = ((!! state.name) ? state.name : stateId);
 
-                    if ((! state.isOnlyAChildState) && ((!this.checkPerimeterForSearchFields) || this.userService.isReceiveRightsForProcessAndState(process.id, stateId))) {
-                        let stateLabel = this.computeI18n(process, state.name, stateId);
-                        this.translateService.get(stateLabel).subscribe(translate => { stateLabel = translate; });
-
-                        states.push({stateId, stateLabel, stateControlIndex});
-                        this.preparedListOfProcessesStates.push({processId: process.id, stateId});
-                        stateControlIndex++;
-                    }
+                    states.push({stateId, stateLabel, stateControlIndex});
+                    this.preparedListOfProcessesStates.push({processId: process.id, stateId});
+                    stateControlIndex++;
                 }
-                if (states.length) {
-                    states.sort((obj1, obj2) => this.compareObj(obj1.stateLabel, obj2.stateLabel));
-                    this.processesStatesLabels.set(process.id, {processLabel, states});
-                }
+            }
+            if (states.length) {
+                states.sort((obj1, obj2) => this.compareObj(obj1.stateLabel, obj2.stateLabel));
+                this.processesStatesLabels.set(process.id, {processLabel, states});
             }
         }
     }
 
-    computeI18n(process: Process, dataToFind: string, defaultValue: string): string {
-        return Utilities.getI18nPrefixFromProcess(process) + ((!! dataToFind) ? dataToFind : defaultValue);
+    private checkIfStateMustBeDisplayed(state: State, process: Process, stateId: string): boolean {
+        return ((!state.isOnlyAChildState) && this.userService.isReceiveRightsForProcessAndState(process.id, stateId));
     }
 
     /** cleaning of the two arrays : processGroupsAndLabels and processesWithoutGroup
-     * processGroupsAndLabels : we don't display process which doesn't have any displayed state (a state is not displayed if we have option 'checkPerimeterForSearchFields' set to true
-     *                          and user doesn't have receive right on it, or if the state is 'isOnlyAChildState'
+     * processGroupsAndLabels : we don't display process which doesn't have any displayed state (a state is not displayed
+     *                          if user doesn't have receive right on it, or if the state is 'isOnlyAChildState'
      *                          and we don't display process group which doesn't have any process
      * processesWithoutGroup : we don't display process which doesn't have any state with Receive or ReceiveAndWrite right*/
     private removeProcessesWithoutDisplayedStates() {
@@ -240,7 +234,6 @@ export class FeedconfigurationComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.checkPerimeterForSearchFields = this.configService.getConfigValue('checkPerimeterForSearchFields', false);
         this.userService.currentUserWithPerimeters().subscribe(result => {
             this.currentUserWithPerimeters = result;
 
@@ -251,7 +244,7 @@ export class FeedconfigurationComponent implements OnInit {
 
             this.processGroupsAndLabels.sort((obj1, obj2) => this.compareObj(obj1.groupLabel, obj2.groupLabel));
 
-            this.computePreparedListOfProcessesStatesAndProcessesStatesLabels();
+            if (this.processesDefinition) this.computePreparedListOfProcessesStatesAndProcessesStatesLabels();
             this.makeProcessesWithoutGroup();
             this.addCheckboxesInFormArray();
             this.removeProcessesWithoutDisplayedStates();
@@ -259,6 +252,7 @@ export class FeedconfigurationComponent implements OnInit {
             this.makeProcessIdsByProcessGroup();
             this.loadIsAllProcessesSelected();
         });
+        this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(true).size > 0;
     }
 
     makeProcessIdsByProcessGroup() {
@@ -270,8 +264,9 @@ export class FeedconfigurationComponent implements OnInit {
     }
 
     confirmSaveSettings() {
-        this.modalRef.close();
 
+        if (this.saveSettingsInProgress) return; // avoid multiple clicks      
+        this.saveSettingsInProgress = true;
         const processesStatesNotNotifiedUpdate = new Map<string, string[]>();
         this.feedConfigurationForm.value.processesStates.map((checked, i) => {
             if (! checked) {
@@ -290,6 +285,7 @@ export class FeedconfigurationComponent implements OnInit {
             processesStatesNotNotified: Object.fromEntries(processesStatesNotNotifiedUpdate)})
             .subscribe({
                 next: resp => {
+                    this.saveSettingsInProgress = false;
                     this.messageAfterSavingSettings = '';
                     const msg = resp.message;
                     if (!!msg && msg.includes('unable')) {
@@ -310,8 +306,17 @@ export class FeedconfigurationComponent implements OnInit {
             });
     }
 
-    open(content) {
-        this.modalRef = this.modalService.open(content, {centered: true});
+    doNotConfirmSaveSettings() {
+        // The modal must not be closed until the settings has been saved in the back  
+        // If not , with  slow network, when user go to the feed before the end of the request
+        // it end up with nothing in the feed 
+        // This happens because method this.cardService.removeAllLightCardFromMemory() 
+        // is call too late (in method confirmSaveSettings)
+        if (!this.saveSettingsInProgress) this.modalRef.close();
+    }
+
+    openConfirmSaveSettingsModal(content) {
+        this.modalRef = this.modalService.open(content, {centered: true,backdrop: 'static'});
     }
 
     compareObj(obj1, obj2) {

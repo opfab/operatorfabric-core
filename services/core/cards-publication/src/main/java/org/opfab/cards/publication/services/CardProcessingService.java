@@ -25,6 +25,7 @@ import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.User;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -61,8 +63,12 @@ public class CardProcessingService {
     @Autowired
     private TraceRepository traceRepository;
 
-    @Value("${checkAuthenticationForCardSending:true}")
-    private boolean checkAuthenticationForCardSending;
+    @Autowired
+    private CardTranslationService cardTranslationService;
+
+    @Value("${checkAuthenticationForCardSending:true}") boolean checkAuthenticationForCardSending;
+
+   
 
     public void processCard(CardPublicationData card) {
         processCard(card, Optional.empty());
@@ -96,6 +102,8 @@ public class CardProcessingService {
     private void processOneCard(CardPublicationData card, Optional<CurrentUserWithPerimeters> user) {
         validate(card);
         card.prepare(Instant.ofEpochMilli(Instant.now().toEpochMilli()));
+        cardTranslationService.translate(card);
+
         if (user.isPresent()) {
             userCardProcessor.processPublisher(card, user.get());
             externalAppClient.sendCardToExternalApplication(card);
@@ -322,5 +330,4 @@ public class CardProcessingService {
         return traceRepository.findByCardUidAndActionAndUserName(cardUid, AopTraceType.ACK.getAction(),name);
     }
 
-    
 }

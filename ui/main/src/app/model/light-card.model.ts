@@ -28,6 +28,8 @@ export class LightCard {
         readonly lttd?: number,
         readonly title?: I18n,
         readonly summary?: I18n,
+        readonly titleTranslated?: string,
+        readonly summaryTranslated?: string,
         readonly tags?: string[],
         readonly timeSpans?: TimeSpan[],
         readonly process?: string,

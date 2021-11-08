@@ -22,6 +22,8 @@ import {UserContext} from '@ofModel/user-context.model';
 import {skip, switchMap, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {UserService} from '@ofServices/user.service';
+import {User} from '@ofModel/user.model';
+import {EntitiesService} from '@ofServices/entities.service';
 
 
 declare const templateGateway: any;
@@ -44,30 +46,45 @@ export class CardDetailComponent implements OnInit, OnDestroy {
     private _userContext: UserContext;
     private styles: string[];
     private templateName: string;
+    private user: User;
+    private userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;
 
 
     constructor(private element: ElementRef, private businessconfigService: ProcessesService,
                 private handlebars: HandlebarsService, private sanitizer: DomSanitizer,
-                private store: Store<AppState>,private userService: UserService) {
+                private store: Store<AppState>,private userService: UserService, private entitiesService: EntitiesService) {
 
-        let user ; 
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
-        if (!!userWithPerimeters) user = userWithPerimeters.userData;
+        if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
         this.store.select(selectAuthenticationState).subscribe(authState => {
             this._userContext = new UserContext(
                 authState.identifier,
                 authState.token,
                 authState.firstName,
                 authState.lastName,
-                user.groups,
-                user.entities
+                this.user.groups,
+                this.user.entities
             );
         });
         this.reloadTemplateWhenGlobalStyleChange();
     }
 
     ngOnInit() {
+        this.computeEntitiesForResponses();
         this.getTemplateAndStyle();
+    }
+
+    private computeEntitiesForResponses() {
+
+        let entityIdsRequiredToRespondAndAllowedToSendCards = this.getEntityIdsRequiredToRespondAndAllowedToSendCards();
+        const userEntitiesRequiredToRespondAndAllowedToSendCards = entityIdsRequiredToRespondAndAllowedToSendCards.filter(entityId => this.user.entities.includes(entityId));
+        this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = userEntitiesRequiredToRespondAndAllowedToSendCards.length > 0;
+    }
+
+    private getEntityIdsRequiredToRespondAndAllowedToSendCards() {
+        if (!this.card.entitiesRequiredToRespond) return [];
+        const entitiesAllowedToRespond = this.entitiesService.getEntitiesFromIds(this.card.entitiesRequiredToRespond);
+        return this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond).map(entity => entity.id);
     }
 
     private getTemplateAndStyle() {
@@ -112,10 +129,13 @@ export class CardDetailComponent implements OnInit, OnDestroy {
         }
     }
 
+
     private initializeHandlebarsTemplates() {
         templateGateway.initTemplateGateway();
 
         templateGateway.displayContext =  this.displayContext;
+        templateGateway.userMemberOfAnEntityRequiredToRespond = this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
+
 
         this.businessconfigService.queryProcessFromCard(this.card).pipe(
             takeUntil(this.unsubscribe$),

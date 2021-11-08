@@ -171,6 +171,7 @@
       "processGroup": "SERVICE"
     },
     "noResult": "Your search did not match any results.",
+    "loadingInProgress": "Loading archived cards",
     "tooManyRows": "Too many cards , not all cards visible",
     "exportToExcel" : "Export data",
     "resultsNumber":"Results number",
@@ -225,6 +226,8 @@
     "summary": "SUMMARY",
     "typeOfState": "PROCESS STATUS",
     "severity": "SEVERITY",
+    "answer": "ANSWER",
+    "emitter": "EMITTER",
     "seeDetails": "SEE DETAILS",
     "ExportTOExcel": "Export data",
     "ExportInProgress": "Export in progress"
@@ -247,7 +250,8 @@
     },
     "error": {
       "impossibleToSaveSettings": "Impossible to save settings for technical reasons"
-    }
+    },
+    "noProcessStateAvailable": "No process/state available"
   },
   "userCard": {
     "title": "CREATE A NEW CARD ",
@@ -432,7 +436,8 @@
     "selectProcessGroupText": "Select a Service",
     "selectProcessText": "Select a Process",
     "selectStateText": "Select a State",
-    "selectTagText": "Select a Tag"
+    "selectTagText": "Select a Tag",
+    "noProcessStateAvailable": "No process/state available"
   },
   "realTimeUsers": {
     "connected": "Connected",

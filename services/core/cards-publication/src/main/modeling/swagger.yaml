@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 2.11.0.RELEASE
+  version: 3.0.0.RELEASE
   title: Card Management API
   termsOfService: ''
   contact:
@@ -232,6 +232,12 @@ definitions:
       summary:
         description: Card i18n summary
         $ref: '#/definitions/I18n'
+      titleTranslated:
+        description: Card title translated
+        type: string
+      summaryTranslated:
+        description: Card summary translated
+        type: string
       userRecipients:
         description: List of user recipients
         type: array
@@ -441,6 +447,12 @@ definitions:
       summary:
         description: Card i18n summary
         $ref: '#/definitions/I18n'
+      titleTranslated:
+        description: Card title translated
+        type: string
+      summaryTranslated:
+        description: Card summary translated
+        type: string
       timeSpans:
         type: array
         description: List of business time span associated to card
@@ -495,6 +507,8 @@ definitions:
         parameters:
           EN: Summary of card content
           FR: Resume du contenu de la carte
+      titleTranslated: My process name
+      summaryTranslated: Summary of card content
   LightCardPage:
     type: object
     description: >-
@@ -545,6 +559,18 @@ definitions:
       - EXTERNAL
       - ENTITY
     example: EXTERNAL
+  FieldToTranslate:
+    description: Card field to translate with i18n value
+    properties:
+      i18nValue:
+        description: i18n value to translate
+        $ref: '#/definitions/I18n'
+      process:
+        description: Id of the process
+        type: string
+      processVersion:
+        description: Version of the process
+        type: string
 paths:
   /cardSubscription:
     get:
@@ -926,3 +952,26 @@ paths:
           description: No action done, the item already exists
         '404':
           description: Try to remove item from unexisting card
+  '/cards/translateCardField':
+    post:
+      summary: Get translated field
+      description: Get translated field for a given i18n value
+      operationId: translateCardField
+      consumes:
+        - application/json
+      parameters:
+        - name: fieldToTranslate
+          in: body
+          schema:
+            $ref: '#/definitions/FieldToTranslate'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '400':
+          description: Bad request
+        '401':
+          description: Authentication required

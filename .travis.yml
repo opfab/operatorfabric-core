@@ -101,7 +101,7 @@ stages:
   - name: test-sonar
     if: NOT (type = pull_request AND head_repo != opfab/operatorfabric-core)
   - name: doc
-    if: ((((type = cron OR commit_message =~ ci_documentation) AND branch = develop) OR (commit_message =~ ci_documentation AND NOT commit_message =~ ci_latest AND branch =~ .+hotfixes$)) AND NOT type = pull_request)
+    if: ((((type = cron OR commit_message =~ ci_documentation) AND (branch = develop)) OR (commit_message =~ ci_documentation AND NOT commit_message =~ ci_latest AND branch =~ .+hotfixes$)) AND NOT type = pull_request)
   - name: doc-latest
     if: (branch = master OR (branch =~ .+hotfixes$ AND commit_message =~ ci_latest)) AND NOT type = pull_request
   - name: docker-push-version

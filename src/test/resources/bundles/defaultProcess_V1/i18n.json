@@ -1,0 +1,13 @@
+{
+	"message":{
+		"title":"Message",
+		"summary":"Message received"
+	},
+	"chartDetail" : { "title":"A Chart"},
+	"chartLine" : { "title":"Electricity consumption forecast"},
+	"question" : {"title": "⚡ Planned Outage"},
+	"contingencies": {"title" : "⚠️ Network Contingencies ⚠️","summary":"Contingencies report for French network"},
+	"processState": {
+		"title":"Process state ({{status}})"
+	}
+}

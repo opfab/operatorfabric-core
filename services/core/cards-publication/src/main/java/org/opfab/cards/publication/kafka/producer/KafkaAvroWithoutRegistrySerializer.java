@@ -21,7 +21,6 @@ import org.apache.kafka.common.serialization.Serializer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 public class KafkaAvroWithoutRegistrySerializer<T extends SpecificRecord> implements Serializer<T> {
 
@@ -36,7 +35,6 @@ public class KafkaAvroWithoutRegistrySerializer<T extends SpecificRecord> implem
                 Schema schema = record.getSchema();
 
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
-                out.write(ByteBuffer.allocate(5).putInt(0).array());    // write first five bytes with 0 value
                 BinaryEncoder encoder = this.encoderFactory.directBinaryEncoder(out, null);
                 DatumWriter<T> writer = new SpecificDatumWriter<>(schema);
                 writer.write(record, encoder);

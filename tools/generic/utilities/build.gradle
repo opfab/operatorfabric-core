@@ -1,5 +1,7 @@
 dependencies{
     implementation misc.compress
+    implementation misc.handlebars
+    implementation misc.jacksonDatabind
     implementation boot.starterRabbitmq
     testImplementation misc.slf4j
     testImplementation project(':tools:generic:test-utilities')

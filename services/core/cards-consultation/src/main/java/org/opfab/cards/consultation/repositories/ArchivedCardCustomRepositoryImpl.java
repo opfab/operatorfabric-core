@@ -156,6 +156,8 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
                         "state",
                         "title",
                         "summary",
+                        "titleTranslated",
+                        "summaryTranslated",
                         PUBLISH_DATE_FIELD,
                         START_DATE_FIELD,
                         END_DATE_FIELD,

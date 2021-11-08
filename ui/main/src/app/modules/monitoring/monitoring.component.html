@@ -6,13 +6,17 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
+<ng-template #noProcessStateToDisplay>
+    <div style="text-align: center; font-size: 20px; padding-top: 100px" translate>filters.noProcessStateAvailable</div>
+</ng-template>
+<div *ngIf="isThereProcessStateToDisplay; else noProcessStateToDisplay">
 <div>
         <of-monitoring-filters #filters
         [visibleProcesses]="processValueForFilter" (filters)="applyCardsFilters($event)"
         ></of-monitoring-filters>
 </div>
 
-<div style="height: 50px"> 
+<div style="height: 50px" *ngIf="isThereProcessStateToDisplay">
     <div  *ngIf="loadingInProgress" class="opfab-loading-spinner">
         <ng-template #tipLoadingInProgress>
             <span translate>feed.tips.loadingInProgress</span>
@@ -23,14 +27,20 @@
         </div>
 
      </div>
+     <div  class="opfab-response-checkbox">
+        <label style="font-weight:bold; margin-left:5px" class="opfab-checkbox" translate>feed.filters.showCardsWithResponse.label
+            <input type="checkbox" (click)="switchResponseFilter()" [checked]="responseFilterValue" id="opfab-archives-collapsible-updates">
+            <span class="opfab-checkbox-checkmark"></span>
+          </label>
+        </div>
 </div>
 
 <div *ngIf="result ; else noResult" style="margin-left:5%;margin-right:5%">
-    <of-monitoring-table [result]="result"
-                         [displayProcessGroupColumn]="this.filters.displayProcessGroupsFilter()" >
+    <of-monitoring-table [result]="result">
     </of-monitoring-table>
 </div>
 
 <ng-template #noResult>
     <div class="alert alert-info"  translate>archive.noResult</div>
 </ng-template>
+</div>

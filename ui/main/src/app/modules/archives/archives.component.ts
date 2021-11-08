@@ -23,6 +23,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 import {ExportService} from '@ofServices/export.service';
 import {TranslateService} from '@ngx-translate/core';
+import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {Card} from '@ofModel/card.model';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 import { EntitiesService } from '@ofServices/entities.service';
@@ -51,6 +52,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     resultsNumber = 0;
     hasResult = false;
     firstQueryHasBeenDone = false;
+    loadingInProgress: boolean = false;
+    loadingIsTakingMoreThanOneSecond: boolean = false;
     isCollapsibleUpdatesActivated = false;
 
     // View card
@@ -72,12 +75,15 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     displayContext: any = DisplayContext.ARCHIVE;
 
+    isThereProcessStateToDisplay: boolean;
+
     constructor(private store: Store<AppState>,
                 private processesService: ProcessesService,
                 private configService: ConfigService,
                 private timeService: TimeService,
                 private cardService: CardService,
                 private translate: TranslateService,
+                private userPreferences: UserPreferencesService,
                 private modalService: NgbModal,
                 private entitiesService: EntitiesService
     ) {
@@ -106,7 +112,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     ngOnInit() {
-        const isCollapsibleUpdatesActivatedInStorage = localStorage.getItem('opfab.archives.isCollapsibleUpdatesActivated');
+        const isCollapsibleUpdatesActivatedInStorage = this.userPreferences.getPreference('opfab.archives.isCollapsibleUpdatesActivated');
         this.isCollapsibleUpdatesActivated = (isCollapsibleUpdatesActivatedInStorage === 'true');
 
         this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
@@ -118,11 +124,12 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             takeUntil(this.unsubscribe$),
             debounceTime(1000),
         ).subscribe(() => this.setDateFilterBounds());
+        this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(true).size > 0;
     }
 
     toggleCollapsibleUpdates() {
         this.isCollapsibleUpdatesActivated = !this.isCollapsibleUpdatesActivated;
-        localStorage.setItem('opfab.archives.isCollapsibleUpdatesActivated', String(this.isCollapsibleUpdatesActivated));
+        this.userPreferences.setPreference('opfab.archives.isCollapsibleUpdatesActivated', String(this.isCollapsibleUpdatesActivated));
         this.sendQuery(0);
     }
 
@@ -180,6 +187,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             return;
         }
 
+        this.loadingInProgress = true;
+        this.checkForArchiveLoadingInProgressForMoreThanOneSecond();
         const { value } = this.archiveForm;
         this.filtersTemplate.filtersToMap(value);
         this.filtersTemplate.filters.set('size', [this.size.toString()]);
@@ -191,9 +200,12 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 this.resultsNumber = page.totalElements;
                 this.currentPage = page_number + 1; // page on ngb-pagination component start at 1 , and page on backend start at 0
                 this.firstQueryHasBeenDone = true;
+                this.loadingInProgress = false;
+                this.loadingIsTakingMoreThanOneSecond = false;
                 this.hasResult = page.content.length > 0;
-                page.content.forEach(card => this.loadTranslationForCardIfNeeded(card));
                 this.results = page.content;
+
+               
 
                 if (this.isCollapsibleUpdatesActivated) {
                     let requestID = new Date().valueOf();
@@ -209,6 +221,14 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             });
     }
 
+    
+        // we show a spinner on screen if archives loading takes more than 1 second
+        private checkForArchiveLoadingInProgressForMoreThanOneSecond() {
+            setTimeout(() => {
+                this.loadingIsTakingMoreThanOneSecond = this.loadingInProgress;
+            }, 1000);
+        }
+
     loadUpdatesByCardId(requestID: number) {
         this.updatesByCardId = [];
         this.results.forEach((lightCard, index) => {this.updatesByCardId.splice(index, 0, {mostRecent: lightCard, cardHistories: [], displayHistory: false, tooManyRows: false})});
@@ -222,7 +242,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             this.cardService.fetchArchivedCards(filters)
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe((page: Page<LightCard>) => {
-                    page.content.forEach(card => this.loadTranslationForCardIfNeeded(card));
                     this.removeMostRecentCardFromHistories(lightCard.id, page.content);
 
                     //since we are in asynchronous mode, we test requestId to avoid that the requests "overlap" and that the results appear in a wrong order
@@ -245,10 +264,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     hideHistoryOfACard(card: {mostRecent: LightCard, cardHistories: LightCard[], displayHistory: boolean}) {
         card.displayHistory = false;
-    }
-
-    loadTranslationForCardIfNeeded(card: LightCard) {
-        this.processesService.loadTranslationsForProcess(card.process, card.processVersion);
     }
 
     updateResultPage(currentPage): void {
@@ -308,8 +323,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                                 [severityColumnName]: card.severity,
                                 [publishDateColumnName]: this.timeService.formatDateTime(card.publishDate),
                                 [businessDateColumnName]: this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
-                                [titleColumnName]: this.translateColumn(card.process + '.' + card.processVersion + '.' + card.title.key, card.title.parameters),
-                                [summaryColumnName]: this.translateColumn(card.process + '.' + card.processVersion + '.' + card.summary.key, card.summary.parameters),
+                                [titleColumnName]: card.titleTranslated,
+                                [summaryColumnName]: card.summaryTranslated,
                                 [processGroupColumnName]: this.translateColumn(this.processesService.findProcessGroupLabelForProcess(card.process))
                             });
                         else
@@ -317,8 +332,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                                 [severityColumnName]: card.severity,
                                 [publishDateColumnName]: this.timeService.formatDateTime(card.publishDate),
                                 [businessDateColumnName]: this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
-                                [titleColumnName]: this.translateColumn(card.process + '.' + card.processVersion + '.' + card.title.key, card.title.parameters),
-                                [summaryColumnName]: this.translateColumn(card.process + '.' + card.processVersion + '.' + card.summary.key, card.summary.parameters)
+                                [titleColumnName]: card.titleTranslated,
+                                [summaryColumnName]: card.summaryTranslated
                             });
                     }
                 });
@@ -375,12 +390,11 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         return this.timeService.formatTime(this.selectedCard.publishDate)
     }
     ngOnDestroy() {
-        
+
         if (!!this.modalRef) {
             this.modalRef.close();
         }
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }
-
 }

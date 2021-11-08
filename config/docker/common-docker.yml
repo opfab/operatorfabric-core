@@ -25,6 +25,7 @@ operatorfabric:
   businessLogActivated: true
   servicesUrls:
     users: "users:8080"
+    businessconfig: "businessconfig:8080"
 ### activate the following if you want to the groups or entities to come from the token and not mongo DB
 #  security:
 #    jwt:

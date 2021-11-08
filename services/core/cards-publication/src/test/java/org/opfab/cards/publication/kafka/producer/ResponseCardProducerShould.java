@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@ActiveProfiles(profiles = {"native", "test"})
+@ActiveProfiles(profiles = "test")
 class ResponseCardProducerShould {
 
     @Mock

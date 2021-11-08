@@ -10,11 +10,8 @@
 
 package org.opfab.springtools.configuration.oauth;
 
-import feign.*;
-import feign.codec.Decoder;
-import feign.codec.Encoder;
-import feign.jackson.JacksonDecoder;
-import feign.jackson.JacksonEncoder;
+
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
 import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsMode;
@@ -44,6 +41,7 @@ import java.util.List;
 @EnableFeignClients
 @EnableCaching
 @Import({UserServiceCache.class
+        ,I18nProcessesCache.class
         ,UpdateUserListenerConfiguration.class
         , GroupsProperties.class
         , GroupsUtils.class
@@ -82,16 +80,6 @@ public class OAuth2GenericConfiguration {
         };
     }
 
-
-    @Bean
-    public Encoder jacksonEncoder() {
-        return new JacksonEncoder();
-    }
-
-    @Bean
-    public Decoder jacksonDecoder() {
-        return new JacksonDecoder();
-    }
 
     @Bean
     public WebSecurityChecks webSecurityChecks() {

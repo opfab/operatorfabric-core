@@ -66,12 +66,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             .antMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll() 
             .antMatchers("/cards/userCard/**").access(AUTH_AND_IP_ALLOWED)
+            .antMatchers("/cards/translateCardField").access(AUTH_AND_IP_ALLOWED)
             .antMatchers(HttpMethod.DELETE, "/cards").access(ADMIN_AND_IP_ALLOWED)
             .antMatchers("/**").access(AUTH_AND_IP_ALLOWED);
         } else {
             http
             .authorizeRequests()
             .antMatchers("/cards/userCard/**").access(AUTH_AND_IP_ALLOWED)
+            .antMatchers("/cards/translateCardField").access(AUTH_AND_IP_ALLOWED)
             .antMatchers("/**").permitAll();
         }
 

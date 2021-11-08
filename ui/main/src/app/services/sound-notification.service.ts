@@ -43,6 +43,7 @@ export class SoundNotificationService implements OnDestroy{
     private incomingCardOrReminder = new Subject();
     private clearSignal = new Subject();
     private ngUnsubscribe$ = new Subject<void>();
+    private lastSentCardId: string;
 
   constructor(private store: Store<AppState>,
     private platformLocation: PlatformLocation,
@@ -93,7 +94,11 @@ export class SoundNotificationService implements OnDestroy{
     }
 
     public handleLoadedCard(card: LightCard) {
-        if(this.lightCardsFeedFilterService.isCardVisibleInFeed(card) && this.checkCardIsRecent(card)) this.incomingCardOrReminder.next(card);
+        if (card.id != this.lastSentCardId && this.lightCardsFeedFilterService.isCardVisibleInFeed(card) && this.checkCardIsRecent(card)) this.incomingCardOrReminder.next(card);
+    }
+
+    public lastSentCard(cardId: string) {
+        this.lastSentCardId = cardId;
     }
 
     private checkCardIsRecent (card: LightCard) : boolean {
@@ -167,3 +172,4 @@ export class SoundConfig {
 export enum SignalType {
     NOTIFICATION, CLEAR
 }
+

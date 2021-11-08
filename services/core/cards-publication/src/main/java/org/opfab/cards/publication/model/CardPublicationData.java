@@ -69,6 +69,10 @@ public class CardPublicationData implements Card {
     
     private I18n summary;
 
+    private String titleTranslated;
+
+    private String summaryTranslated;
+
     @CreatedDate
     private Instant publishDate;
     private Instant lttd;
@@ -155,6 +159,8 @@ public class CardPublicationData implements Card {
                 .entitiesAllowedToRespond(this.getEntitiesAllowedToRespond())
                 .title(((I18nPublicationData) this.getTitle()).copy())
                 .summary(((I18nPublicationData) this.getSummary()).copy())
+                .titleTranslated(this.getTitleTranslated())
+                .summaryTranslated(this.getSummaryTranslated())
                 .publisherType(this.getPublisherType())
                 .representative(this.getRepresentative())
                 .representativeType(this.getRepresentativeType())

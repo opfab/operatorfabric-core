@@ -30,7 +30,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@ActiveProfiles(profiles = {"native", "test"})
+@ActiveProfiles(profiles = "test")
 class ProducerFactoryAutoConfigurationShould {
     @Mock
     private KafkaProperties kafkaProperties;

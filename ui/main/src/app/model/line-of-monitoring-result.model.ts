@@ -17,9 +17,13 @@ export interface LineOfMonitoringResult {
     endOfBusinessPeriod: Moment;
     title: I18n;
     summary: I18n;
+    titleTranslated: string;
+    summaryTranslated: string;
     processName: string;
     cardId: string;
     severity: string;
     processId: string;
     typeOfState: TypeOfStateEnum;
+    answer: boolean;
+    emitter: string;
 }

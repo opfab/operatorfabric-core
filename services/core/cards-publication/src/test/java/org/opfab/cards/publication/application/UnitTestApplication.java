@@ -24,7 +24,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.opfab.springtools.configuration.mongo.EnableOperatorFabricMongo;
-
+import org.opfab.springtools.configuration.oauth.I18nProcessesCache;
+import org.opfab.springtools.configuration.test.I18nProcessesCacheTestApplication;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.opfab.aop.annotations.EnableAopTraceProcessing;
@@ -32,6 +33,7 @@ import org.opfab.cards.publication.configuration.mongo.LocalMongoConfiguration;
 import org.opfab.cards.publication.services.CardNotificationService;
 import org.opfab.cards.publication.services.CardProcessingService;
 import org.opfab.cards.publication.services.CardRepositoryService;
+import org.opfab.cards.publication.services.CardTranslationService;
 import org.opfab.cards.publication.services.processors.impl.UserCardProcessorImpl;
 import org.opfab.cards.publication.services.TraceRepository;
 import org.opfab.cards.publication.configuration.json.JacksonConfig;
@@ -45,10 +47,10 @@ import org.springframework.context.annotation.ImportResource;
 @EnableOperatorFabricMongo
 @EnableMongoRepositories(basePackageClasses = {CardRepositoryForTest.class , TraceRepository.class,  ArchivedCardRepositoryForTest.class})
 @EnableAopTraceProcessing
-@Import({LocalMongoConfiguration.class, CardProcessingService.class, CardNotificationService.class,
+@Import({LocalMongoConfiguration.class, CardProcessingService.class, CardTranslationService.class, CardNotificationService.class,
     CardRepositoryService.class, UserCardProcessorImpl.class, ExternalAppClientImpl.class , ResponseCardProducer.class
 , CardCommandFactory.class, CardObjectMapper.class, TestCardReceiver.class , TestConsumerConfig.class, JacksonConfig.class
-, Common.class , CardController.class, WebSecurityConfigurationTest.class })
+, Common.class , CardController.class, WebSecurityConfigurationTest.class, I18nProcessesCache.class, I18nProcessesCacheTestApplication.class})
 @ImportResource({"classpath:/amqp.xml", "classpath:/security.xml"})
 
 public class UnitTestApplication {

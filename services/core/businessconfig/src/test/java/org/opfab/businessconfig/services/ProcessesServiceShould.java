@@ -119,46 +119,40 @@ class ProcessesServiceShould {
 
     @Test
     void fetchTemplate() throws IOException {
-        File templateFile = service.fetchResource("first", TEMPLATE, null,"fr","template1").getFile();
-        assertThat(templateFile.getParentFile()).isDirectory().hasName("fr");
+        File templateFile = service.fetchResource("first", TEMPLATE, null,null,"template1").getFile();
+        assertThat(templateFile.getParentFile()).isDirectory().hasName("template");
         assertThat(templateFile)
                 .exists()
                 .isFile()
                 .hasName("template1.handlebars")
-                .hasContent("{{service}} fr");
-        templateFile = service.fetchResource("first", TEMPLATE, "0.1", "fr", "template").getFile();
+                .hasContent("{{service}}");
+        templateFile = service.fetchResource("first", TEMPLATE, "0.1", null, "template").getFile();
         assertThat(templateFile)
                 .exists()
                 .isFile()
                 .hasName("template.handlebars")
-                .hasContent("{{service}} fr 0.1");
-        templateFile = service.fetchResource("first", TEMPLATE, "0.1", "en", "template").getFile();
+                .hasContent("{{service}} 0.1");
+        templateFile = service.fetchResource("first", TEMPLATE, "0.1", null, "template").getFile();
         assertThat(templateFile)
                 .exists()
                 .isFile()
                 .hasName("template.handlebars")
-                .hasContent("{{service}} en 0.1");
+                .hasContent("{{service}} 0.1");
     }
 
     @Test
-    void fetchI18n() throws IOException {
-        File i18nFile = service.fetchResource("first", I18N,null,"fr", null).getFile();
+    void fetchTranslation() throws IOException {
+        File i18nFile = service.fetchResource("first", I18N,null,null, "i18n").getFile();
         assertThat(i18nFile)
                 .exists()
                 .isFile()
-                .hasName("fr.json")
-                .hasContent("card.title=\"Titre $1\"");
-        i18nFile = service.fetchResource("first", I18N, "0.1", "fr", null).getFile();
+                .hasName("i18n.json")
+                .hasContent("card.title=\"Title $1\"");
+        i18nFile = service.fetchResource("first", I18N, "0.1", null, "i18n").getFile();
         assertThat(i18nFile)
                 .exists()
                 .isFile()
-                .hasName("fr.json")
-                .hasContent("card.title=\"Titre $1 0.1\"");
-        i18nFile = service.fetchResource("first", I18N, "0.1", "en", null).getFile();
-        assertThat(i18nFile)
-                .exists()
-                .isFile()
-                .hasName("en.json")
+                .hasName("i18n.json")
                 .hasContent("card.title=\"Title $1 0.1\"");
     }
 
@@ -188,15 +182,6 @@ class ProcessesServiceShould {
                         "0.1",
                         null,
                         "template1")
-                        .getInputStream()
-        );
-
-        assertException(FileNotFoundException.class).isThrownBy(() ->
-                service.fetchResource("first",
-                        TEMPLATE,
-                        "0.1",
-                        "de",
-                        "template")
                         .getInputStream()
         );
     }

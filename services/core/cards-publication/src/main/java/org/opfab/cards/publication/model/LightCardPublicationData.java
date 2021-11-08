@@ -55,6 +55,9 @@ public class LightCardPublicationData implements LightCard {
     private I18n title;
     private I18n summary;
     
+    private String titleTranslated;
+    private String summaryTranslated;
+    
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)    
     @Singular("timeSpan")

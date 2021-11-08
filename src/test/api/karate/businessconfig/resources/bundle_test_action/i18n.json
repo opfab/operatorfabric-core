@@ -1,0 +1,9 @@
+{
+  "cardDetails":{
+    "title":"Card details"
+  },
+  "cardFeed": {
+    "title": "{{title}}",
+    "summary": "{{summary}}"
+  }
+}

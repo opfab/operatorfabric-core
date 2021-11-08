@@ -1,12 +1,9 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
-
-
-
 
 = Useful recipes
 
@@ -50,3 +47,31 @@ Alternatively, you may configure the following environment variables :
 * APK_PROXY_HTTPS_URI
 * APK_PROXY_USER
 * APK_PROXY_PASSWORD
+
+== Generating documentation (from AsciiDoc sources)
+
+The sources for the documentation are located under `src/docs/asciidoc`. To generate HTML pages from these sources,
+use the `asciidoctor` gradle task from the project root:
+
+[source,bash]
+----
+cd $OF_HOME
+./gradlew asciidoctor
+----
+
+The task output can be found under `$OF_HOME/build/docs/asciidoc`
+
+== Generating API documentation
+
+The documentation for the API is generated from the `swagger.yaml` definitions using SwaggerUI. To generate the
+API documentation, use the `generateSwaggerUI` gradle task, either from the project root or from one of the services:
+
+[source,bash]
+----
+cd $OF_HOME
+./gradlew generateSwaggerUI
+----
+
+The task output can be found for each service under `[service-path]/build/docs/api`
+(for example `services/core/businessconfig/build/docs/api`). Open the `index.html` file in a browser to have a look at
+the generated SwaggerUI.

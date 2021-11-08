@@ -9,11 +9,14 @@
 
 <div class="archives-page">
     <form [formGroup]="archiveForm" #currentForm>
-      <div class="opfab-archives">
+      <ng-template #noProcessStateToDisplay>
+        <div style="text-align: center; font-size: 20px; padding-top: 100px" translate>filters.noProcessStateAvailable</div>
+      </ng-template>
+      <div *ngIf="isThereProcessStateToDisplay; else noProcessStateToDisplay" class="opfab-archives">
         <div style="display: flex;">
 
           <of-archives-logging-filters [parentForm]="archiveForm" [visibleProcesses]="listOfProcesses"
-                                       [hideChildStates]=true [tags]="tags" #filters></of-archives-logging-filters>
+                                       [hideChildStates]="true" [tags]="tags" #filters></of-archives-logging-filters>
 
           <div class="opfab-vertical-bar"></div>
           <div class="opfab-publish-date">
@@ -82,8 +85,8 @@
           <td *ngIf="isCollapsibleUpdatesActivated && ! updates.cardHistories.length"></td>
           <td style="padding-left: 5px"> {{displayTime(updates.mostRecent.publishDate)}} </td>
           <td> {{displayTime(updates.mostRecent.startDate)}} - {{displayTime(updates.mostRecent.endDate)}} </td>
-          <td translate [translateParams]="updates.mostRecent.title.parameters">{{ updates.mostRecent.process + '.' + updates.mostRecent.processVersion + '.' + updates.mostRecent.title.key}}</td>
-          <td translate [translateParams]="updates.mostRecent.summary.parameters">{{ updates.mostRecent.process + '.' + updates.mostRecent.processVersion + '.' + updates.mostRecent.summary.key}}</td>
+          <td>{{updates.mostRecent.titleTranslated}}</td>
+          <td>{{updates.mostRecent.summaryTranslated}}</td>
           <td *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>{{ processesService.findProcessGroupLabelForProcess(updates.mostRecent.process) }}</td>
         </tr>
 
@@ -95,8 +98,8 @@
             <td></td>
             <td style="padding-left: 30px"> {{displayTime(historyCard.publishDate)}} </td>
             <td style="padding-left: 30px"> {{displayTime(historyCard.startDate)}} - {{displayTime(historyCard.endDate)}} </td>
-            <td style="padding-left: 30px" translate [translateParams]="historyCard.title.parameters">{{ historyCard.process + '.' + historyCard.processVersion + '.' + historyCard.title.key}}</td>
-            <td style="padding-left: 30px" translate [translateParams]="historyCard.summary.parameters">{{ historyCard.process + '.' + historyCard.processVersion + '.' + historyCard.summary.key}}</td>
+            <td>{{historyCard.titleTranslated}}</td>
+            <td>{{ historyCard.summaryTranslated}}</td>
             <td style="padding-left: 30px" *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>{{ processesService.findProcessGroupLabelForProcess(historyCard.process) }}</td>
           </tr>
           <tr *ngIf="updates.tooManyRows">
@@ -131,9 +134,22 @@
 <div *ngIf="firstQueryHasBeenDone&&!hasResult" style="text-align: center;font-size: 20px;" translate>archive.noResult
 </div>
 
+<div *ngIf="loadingIsTakingMoreThanOneSecond">
+
+  <div class="opfab-card-loading-spinner redContour">
+  <em  class="fas fa-spinner fa-spin opfab-slow-spinner" ></em>
+  </div>
+  <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>
+      archive.loadingInProgress
+  </div>
+
+  <br/>
+  <br/>
+</div>
+
 <ng-template #cardDetail let-modal>
   <div class="modal-header">
-      <div class="text-uppercase" translate [translateParams]="selectedCard.title.parameters"> {{ selectedCard.process + '.' + selectedCard.processVersion + '.' + selectedCard.title.key}} </div>
+      <div class="text-uppercase">{{selectedCard.titleTranslated}}</div>
       <div id="opfab-archives-card-detail-close"  class="opfab-close-modal-icon" aria-label="Close" (click)="modal.dismiss('Cross click')">
         <span aria-hidden="true" >&times;</span>
     </div>

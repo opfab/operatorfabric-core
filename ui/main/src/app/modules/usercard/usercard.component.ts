@@ -36,10 +36,10 @@ import {TranslateService} from '@ngx-translate/core';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {Utilities} from '../../common/utilities';
 import {Entity} from '@ofModel/entity.model';
 import {ConfigService} from '@ofServices/config.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
+import {SoundNotificationService} from '@ofServices/sound-notification.service';
 
 declare const templateGateway: any;
 
@@ -59,7 +59,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     processesDefinition: Process[];
     currentUserWithPerimeters: UserWithPerimeters;
-    processGroups: {id: string, processes: string[]}[];
+    processGroups: Map<string, {name: string, processes: string[]}>;
 
     severityOptions = Object.keys(Severity).map(severity => {
         return {
@@ -134,6 +134,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         private route: ActivatedRoute,
         private handlebars: HandlebarsService,
         protected translate: TranslateService,
+        protected soundNotificationService: SoundNotificationService,
     ) {
     }
 
@@ -145,6 +146,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         this.processGroups = this.processesService.getProcessGroups();
         this.loadAllEntities();
+        this.loadRecipentsOptions();
         this.loadAllProcessAndStateInUserPerimeter();
 
         this.messageForm = new FormGroup({
@@ -179,7 +181,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.dropdownSettings = {
             text: '',
             badgeShowLimit: 30,
-            enableSearchFilter: true
+            enableSearchFilter: true,
+            position: 'bottom',
+            autoPosition: false
         };
         if (!!this.cardIdToEdit)
             this.loadCardForEdition();
@@ -244,12 +248,15 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     loadAllEntities(): void {
         this.entities = this.entitiesService.getEntities();
+    }
+
+    loadRecipentsOptions() {
+        this.recipientsOptions = [];
         this.entities.forEach(entity =>
             this.recipientsOptions.push({ id: entity.id, itemName: this.getEntityLabel(entity) }));
 
         this.recipientsOptions.sort(( a, b ) => a.itemName.localeCompare(b.itemName));
     }
-
 
     loadAllProcessAndStateInUserPerimeter(): void {
         this.processesDefinition = this.processesService.getAllProcesses();
@@ -260,8 +267,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
         this.processesDefinition.forEach(process => {
                     if (processesInPerimeter.has(process.id)) {
-                        const _i18nPrefix = process.id + '.' + process.version + '.';
-                        const label = process.name ? (_i18nPrefix + process.name) : process.id;
+                        const label = process.name ? process.name : process.id;
                         const processToShow = { value: process.id, label: label };
                         
                         this.loadStatesForProcess(process);
@@ -271,14 +277,14 @@ export class UserCardComponent implements OnDestroy, OnInit {
                 });
     }
 
-    isProcessInProcessesGroup(idProcess: string, processesGroup: {id: string, processes: string[]}): boolean {
+    isProcessInProcessesGroup(idProcess: string, processesGroup: {name: string, processes: string[]}): boolean {
         return !!processesGroup.processes.find(process => process === idProcess);
     }
 
     loadAllProcessGroupsRelatingToUserPerimeter(): void {
         let numberOfProcessesAttachedToAProcessGroup = 0;
 
-        this.processGroups.forEach(group => {
+        this.processGroups.forEach((group, groupId) => {
 
             const processOptions = [];
             this.processOptions.forEach(processOption => {
@@ -286,12 +292,12 @@ export class UserCardComponent implements OnDestroy, OnInit {
                     processOptions.push(processOption);
                     numberOfProcessesAttachedToAProcessGroup++;
 
-                    this.processGroupPerProcesses.set(processOption.value, group.id);
+                    this.processGroupPerProcesses.set(processOption.value, groupId);
                 }
             });
 
             if (processOptions.length > 0)
-                this.processesPerProcessGroups.set(group.id, processOptions);
+                this.processesPerProcessGroups.set(groupId, processOptions);
         });
 
         if (this.processOptions.length > numberOfProcessesAttachedToAProcessGroup) {
@@ -299,7 +305,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
             this.processGroupOptions.push({value: '--', label: 'processGroup.defaultLabel'});
         }
         for (const processGroupId of this.processesPerProcessGroups.keys())
-            this.processGroupOptions.push({value: processGroupId, label: processGroupId});
+            this.processGroupOptions.push({value: processGroupId, label: this.processGroups.get(processGroupId).name});
         
         if (!this.cardIdToEdit && this.processGroupOptions.length > 0) {
             this.messageForm.get('processGroup').setValue(this.processGroupOptions[0].value);
@@ -333,8 +339,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         const stateFromProcessDefinition = process.states[stateId];
         if (!!stateFromProcessDefinition) {
             if (!!stateFromProcessDefinition.userCard) {
-                const label = !!stateFromProcessDefinition.name ? (new I18n(Utilities.getI18nPrefixFromProcess(process)
-                    + stateFromProcessDefinition.name)) : stateId;
+                const label = !!stateFromProcessDefinition.name ? stateFromProcessDefinition.name : stateId;
                 return { value: stateId, label: label };
             }
         } else console.log('WARNING : state', stateId, 'is present in perimeter for process'
@@ -385,6 +390,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
                 this.messageForm.get("startDate").setValue('');
                 this.messageForm.get("endDate").setValue('');
                 this.messageForm.get("lttd").setValue('');
+                this.loadRecipentsOptions();
                 this.loadTemplate();
 
             }
@@ -525,7 +531,13 @@ export class UserCardComponent implements OnDestroy, OnInit {
         else startDate = this.createTimestampFromValue(startDate);
 
         let lttd = this.messageForm.get('lttd').value;
-        if (!lttd)  lttd = this.lttdVisible ? this.defaultLttdDate : null;
+        if (!lttd) {
+            if (specificInformation.card.lttd) {
+                lttd = specificInformation.card.lttd;
+            } else {
+                lttd = this.lttdVisible ? this.defaultLttdDate : null;
+            }
+        }
         else lttd = this.createTimestampFromValue(lttd);
 
         let endDate = this.messageForm.get('endDate').value;
@@ -570,34 +582,39 @@ export class UserCardComponent implements OnDestroy, OnInit {
         if (this.editCardMode) processInstanceId = this.cardToEdit.card.processInstanceId;
         else processInstanceId  = Guid.create().toString();
 
-        this.card = {
-            id: 'dummyId',
-            publishDate: null,
-            publisher: this.publisherForCreatingUsercard,
-            publisherType : 'ENTITY',
-            processVersion: processVersion,
-            process: selectedProcess.id,
-            processInstanceId: processInstanceId,
-            state: state,
-            startDate: startDate,
-            endDate: endDate,
-            lttd: lttd,
-            severity: severity,
-            hasBeenAcknowledged: false,
-            hasBeenRead: false,
-            userRecipients : [this.currentUserWithPerimeters.userData.login],
-            entityRecipients: recipients,
-            entitiesAllowedToRespond: entitiesAllowedToRespond,
-            externalRecipients: externalRecipients,
-            title: title,
-            summary: summary,
-            secondsBeforeTimeSpanForReminder: secondsBeforeTimeSpanForReminder,
-            timeSpans : timeSpans,
-            keepChildCards: keepChildCards,
-            data: specificInformation.card.data,
-        } as Card;
+        this.cardService.postTranslateCardField(selectedProcess.id, processVersion, title)
+            .subscribe(response => {
+                const titleTranslated = response.body.translatedField;
+                this.card = {
+                    id: 'dummyId',
+                    publishDate: null,
+                    publisher: this.publisherForCreatingUsercard,
+                    publisherType : 'ENTITY',
+                    processVersion: processVersion,
+                    process: selectedProcess.id,
+                    processInstanceId: processInstanceId,
+                    state: state,
+                    startDate: startDate,
+                    endDate: endDate,
+                    lttd: lttd,
+                    severity: severity,
+                    hasBeenAcknowledged: false,
+                    hasBeenRead: false,
+                    userRecipients : [this.currentUserWithPerimeters.userData.login],
+                    entityRecipients: recipients,
+                    entitiesAllowedToRespond: entitiesAllowedToRespond,
+                    externalRecipients: externalRecipients,
+                    title: title,
+                    titleTranslated: titleTranslated,
+                    summary: summary,
+                    secondsBeforeTimeSpanForReminder: secondsBeforeTimeSpanForReminder,
+                    timeSpans : timeSpans,
+                    keepChildCards: keepChildCards,
+                    data: specificInformation.card.data,
+                } as Card;
 
-        this.displayPreview = true;
+                this.displayPreview = true;
+            });
     }
 
 
@@ -631,6 +648,10 @@ export class UserCardComponent implements OnDestroy, OnInit {
     confirm(): void {
         this.displayPreview = false;
         this.displaySendingCardInProgress = true;
+
+        // Exclude card from sound notifications before publishing to avoid synchronization problems
+        this.soundNotificationService.lastSentCard(this.card.process + '.' + this.card.processInstanceId);
+
         this.cardService.postCard(fromCardToCardForPublishing(this.card))
             .subscribe(
                 resp => {

@@ -21,6 +21,7 @@ import {AppRoutingModule} from '../../app-routing.module';
 import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
 import {TimelineButtonsModule} from "../share/timeline-buttons/timeline-buttons.module";
 import {AgGridModule} from "ag-grid-angular";
+import {AnswerCellRendererComponent} from './components/cell-renderers/answer-cell-renderer.component';
 
 
 
@@ -28,7 +29,8 @@ import {AgGridModule} from "ag-grid-angular";
   declarations: [
       MonitoringComponent,
       MonitoringFiltersComponent,
-      MonitoringTableComponent
+      MonitoringTableComponent,
+      AnswerCellRendererComponent
   ],
     imports: [
         CommonModule

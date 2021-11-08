@@ -2,6 +2,7 @@
   "groups": [
     {
       "id": "service1",
+      "name": "Base Examples",
       "processes": [
         "defaultProcess",
         "gridCooperation"
@@ -9,21 +10,12 @@
     },
     {
       "id": "service2",
+      "name": "User card examples",
       "processes": [
         "userCardExamples",
         "userCardExamples2",
         "userCardExamples3"
       ]
     }
-  ],
-  "locale": {
-    "en": {
-      "service1": "Base Examples",
-      "service2": "User card examples"
-    },
-    "fr": {
-      "service1": "Exemples de base",
-      "service2": "Exemples de cartes utilisateurs "
-    }
-  }
+  ]
 }

@@ -1,6 +1,6 @@
 {
   "id": "userCardExamples3",
-  "name": "userCardExamples3.label",
+  "name": "Examples for new cards 3",
   "version": "1",
   "uiVisibility": {
     "monitoring": false,
@@ -9,8 +9,8 @@
   },
   "states": {
     "taskState": {
-      "name": "task.title",
-      "description": "task.title",
+      "name": "Task ",
+      "description": "Task ",
       "color": "#0070C0",
       "userCard" : {
         "template" : "usercard_task",

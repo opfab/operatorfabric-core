@@ -144,32 +144,24 @@ class GivenAdminUserBusinessconfigControllerShould {
     @Test
     void fetchTemplateResource() throws Exception {
         ResultActions result = mockMvc.perform(
-                get("/businessconfig/processes/first/templates/template1?locale=fr")
+                get("/businessconfig/processes/first/templates/template1")
                         .accept("application/handlebars")
         );
         result
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/handlebars"))
-                .andExpect(content().string(is("{{service}} fr")))
+                .andExpect(content().string(is("{{service}}")))
         ;
         result = mockMvc.perform(
-                get("/businessconfig/processes/first/templates/template?version=0.1&locale=fr")
+                get("/businessconfig/processes/first/templates/template?version=0.1")
                         .accept("application/handlebars"));
         result
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/handlebars"))
-                .andExpect(content().string(is("{{service}} fr 0.1")))
+                .andExpect(content().string(is("{{service}} 0.1")))
         ;
         result = mockMvc.perform(
-                get("/businessconfig/processes/first/templates/template?locale=en&version=0.1")
-                        .accept("application/handlebars"));
-        result
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/handlebars"))
-                .andExpect(content().string(is("{{service}} en 0.1")))
-        ;
-        result = mockMvc.perform(
-                get("/businessconfig/processes/first/templates/templateIO?locale=fr&version=0.1")
+                get("/businessconfig/processes/first/templates/templateIO?version=0.1")
                         .accept("application/json", "application/handlebars"));
         result
                 .andExpect(status().is4xxClientError())
@@ -178,18 +170,9 @@ class GivenAdminUserBusinessconfigControllerShould {
     }
 
     @Test
-    void fetchI18nResource() throws Exception {
+    void fetchI18n() throws Exception {
         ResultActions result = mockMvc.perform(
-                get("/businessconfig/processes/first/i18n?locale=fr")
-                        .accept("text/plain")
-        );
-        result
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("text/plain"))
-                .andExpect(content().string(is("card.title=\"Titre $1\"")))
-        ;
-        result = mockMvc.perform(
-                get("/businessconfig/processes/first/i18n?locale=en")
+                get("/businessconfig/processes/first/i18n")
                         .accept("text/plain")
         );
         result
@@ -198,7 +181,7 @@ class GivenAdminUserBusinessconfigControllerShould {
                 .andExpect(content().string(is("card.title=\"Title $1\"")))
         ;
         result = mockMvc.perform(
-                get("/businessconfig/processes/first/i18n?locale=en&version=0.1")
+                get("/businessconfig/processes/first/i18n?version=0.1")
                         .accept("text/plain")
         );
         result
@@ -209,7 +192,7 @@ class GivenAdminUserBusinessconfigControllerShould {
 
         assertException(FileNotFoundException.class).isThrownBy(() ->
                 mockMvc.perform(
-                        get("/businessconfig/processes/first/i18n?locale=de&version=0.1")
+                        get("/businessconfig/processes/first/i18n?version=2.1")
                                 .accept("text/plain")
                 ));
     }
@@ -257,11 +240,9 @@ class GivenAdminUserBusinessconfigControllerShould {
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.groups", hasSize(2)))
                     .andExpect(jsonPath("$.groups[0].id", is("processgroup1")))
+                    .andExpect(jsonPath("$.groups[0].name", is("Process Group 1")))
                     .andExpect(jsonPath("$.groups[1].id", is("processgroup2")))
-                    .andExpect(jsonPath("$.locale.en.processgroup1", is("Process Group 1")))
-                    .andExpect(jsonPath("$.locale.en.processgroup2", is("Process Group 2")))
-                    .andExpect(jsonPath("$.locale.fr.processgroup1", is("Groupe de process 1")))
-                    .andExpect(jsonPath("$.locale.fr.processgroup2", is("Groupe de process 2")));
+                    .andExpect(jsonPath("$.groups[1].name", is("Process Group 2")));
         }
 
         @Test

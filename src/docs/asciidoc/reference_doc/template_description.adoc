@@ -540,7 +540,7 @@ The function returns a string with one of the following values :
 - 'archive' : archive page context 
 - 'preview': preview context (user card)
 
-An example of usage can be found in operator fabric git: (https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/userCardExamples2/template/en/question.handlebars[src/test/resources/bundles/userCardExamples2/template/en/question.handlebars]).
+An example of usage can be found in operator fabric git: (https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/userCardExamples2/template/question.handlebars[src/test/resources/bundles/userCardExamples2/template/question.handlebars]).
 
 
 === Redirect to business application from a card
@@ -564,10 +564,10 @@ templateGateway.redirectToBusinessMenu('myMenu','myEntry','param1=aParam&param2=
 
 For example:
 
-.src/test/resources/bundles/defaultProcess_V1/template/en/chart.handlebars
+.src/test/resources/bundles/defaultProcess_V1/template/chart.handlebars
 [source,html]
 ----
-include::../../../test/resources/bundles/defaultProcess_V1/template/en/chart.handlebars[tag=templateGateway.redirectToBusinessMenu_example]
+include::../../../test/resources/bundles/defaultProcess_V1/template/chart.handlebars[tag=templateGateway.redirectToBusinessMenu_example]
 ----
 
 This can be useful to pass context from the card to the business application.
