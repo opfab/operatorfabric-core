@@ -46,7 +46,7 @@ public class UserSettingsDataShould {
                 .playSoundForAlarm(true)
                 .playSoundForAction(false)
                 //Not setting Compliant and Information to test patch on empty
-                .externalDevicesEnabled(true)
+                .playSoundOnExternalDevice(true)
                 .replayEnabled(true)
                 .replayInterval(123)
                 .processStatesNotNotified("processA", Arrays.asList("state1", "state2"))
@@ -86,9 +86,9 @@ public class UserSettingsDataShould {
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"playSoundForInformation");
         assertThat(patched.getPlaySoundForInformation()).isEqualTo(true);
 
-        patched = userData.patch(UserSettingsData.builder().externalDevicesEnabled(false).build().clearTags().clearProcessesStatesNotNotified());
-        assertThat(patched).isEqualToIgnoringGivenFields(userData,"externalDevicesEnabled");
-        assertThat(patched.getExternalDevicesEnabled()).isEqualTo(false);
+        patched = userData.patch(UserSettingsData.builder().playSoundOnExternalDevice(false).build().clearTags().clearProcessesStatesNotNotified());
+        assertThat(patched).isEqualToIgnoringGivenFields(userData,"playSoundOnExternalDevice");
+        assertThat(patched.getPlaySoundOnExternalDevice()).isEqualTo(false);
 
         patched = userData.patch(UserSettingsData.builder().replayEnabled(false).build().clearTags().clearProcessesStatesNotNotified());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"replayEnabled");

@@ -19,6 +19,7 @@ import {LightCardsFeedFilterService} from './lightcards-feed-filter.service';
 import {LightCardsStoreService} from './lightcards-store.service';
 import {EMPTY, iif, merge, of, Subject, timer} from "rxjs"; import {filter, map, switchMap, takeUntil} from "rxjs/operators";
 import {ExternalDevicesService} from "@ofServices/external-devices.service";
+import {ConfigService} from "@ofServices/config.service";
 
 
 @Injectable()
@@ -38,7 +39,7 @@ export class SoundNotificationService implements OnDestroy{
 
     private soundConfigBySeverity: Map<Severity,SoundConfig>;
     private soundEnabled: Map<Severity,boolean>;
-        private externalDevicesEnabled: boolean;
+    private playSoundOnExternalDevice: boolean;
     private replayEnabled: boolean;
 
     private readonly soundFileBasePath: string;
@@ -48,40 +49,41 @@ export class SoundNotificationService implements OnDestroy{
     private ngUnsubscribe$ = new Subject<void>();
     private lastSentCardId: string;
 
-  constructor(private store: Store<AppState>,
-    private platformLocation: PlatformLocation,
-    private lightCardsFeedFilterService: LightCardsFeedFilterService,
-    private lightCardsStoreService: LightCardsStoreService,
-    private externalDevicesService: ExternalDevicesService) {
+    constructor(private store: Store<AppState>,
+                private platformLocation: PlatformLocation,
+                private lightCardsFeedFilterService: LightCardsFeedFilterService,
+                private lightCardsStoreService: LightCardsStoreService,
+                private externalDevicesService: ExternalDevicesService,
+                private configService: ConfigService) {
 
-    this.soundConfigBySeverity = new Map<Severity, SoundConfig>();
-    this.soundConfigBySeverity.set(Severity.ALARM, {soundFileName: 'alarm.mp3', soundEnabledSetting: 'playSoundForAlarm'});
-    this.soundConfigBySeverity.set(Severity.ACTION, {soundFileName: 'action.mp3', soundEnabledSetting: 'playSoundForAction'});
-    this.soundConfigBySeverity.set(Severity.COMPLIANT, {soundFileName: 'compliant.mp3', soundEnabledSetting: 'playSoundForCompliant'});
-    this.soundConfigBySeverity.set(Severity.INFORMATION, {soundFileName: 'information.mp3', soundEnabledSetting: 'playSoundForInformation'});
+        this.soundConfigBySeverity = new Map<Severity, SoundConfig>();
+        this.soundConfigBySeverity.set(Severity.ALARM, {soundFileName: 'alarm.mp3', soundEnabledSetting: 'playSoundForAlarm'});
+        this.soundConfigBySeverity.set(Severity.ACTION, {soundFileName: 'action.mp3', soundEnabledSetting: 'playSoundForAction'});
+        this.soundConfigBySeverity.set(Severity.COMPLIANT, {soundFileName: 'compliant.mp3', soundEnabledSetting: 'playSoundForCompliant'});
+        this.soundConfigBySeverity.set(Severity.INFORMATION, {soundFileName: 'information.mp3', soundEnabledSetting: 'playSoundForInformation'});
 
-    let baseHref = platformLocation.getBaseHrefFromDOM();
-    this.soundFileBasePath = (baseHref ? baseHref : '/') + 'assets/sounds/'
+        let baseHref = platformLocation.getBaseHrefFromDOM();
+        this.soundFileBasePath = (baseHref ? baseHref : '/') + 'assets/sounds/'
 
-    this.soundEnabled = new Map<Severity, boolean>();
-    this.soundConfigBySeverity.forEach((soundConfig, severity) => {
-      store.select(buildSettingsOrConfigSelector(soundConfig.soundEnabledSetting, false)).subscribe(x => {this.soundEnabled.set(severity, x)});
-    })
+        this.soundEnabled = new Map<Severity, boolean>();
+        this.soundConfigBySeverity.forEach((soundConfig, severity) => {
+            store.select(buildSettingsOrConfigSelector(soundConfig.soundEnabledSetting, false)).subscribe(x => {this.soundEnabled.set(severity, x)});
+        })
 
-        store.select(buildSettingsOrConfigSelector('externalDevicesEnabled',false)).subscribe(x => { this.externalDevicesEnabled = x;})
+        store.select(buildSettingsOrConfigSelector('playSoundOnExternalDevice',false)).subscribe(x => { this.playSoundOnExternalDevice = x;})
         store.select(buildSettingsOrConfigSelector('replayEnabled',false)).subscribe(x => { this.replayEnabled = x;})
         store.select(buildSettingsOrConfigSelector('replayInterval',SoundNotificationService.DEFAULT_REPLAY_INTERVAL)).subscribe(x => { this.replayInterval = x;})
 
-    for (let severity of Object.values(Severity)) this.initSoundPlayingForSeverity(severity);
+        for (let severity of Object.values(Severity)) this.initSoundPlayingForSeverity(severity);
 
-    this.listenForCardUpdate();
+        this.listenForCardUpdate();
 
-  }
+    }
 
     private listenForCardUpdate(){
-      this.lightCardsStoreService.getNewLightCards().subscribe(
-        (card) => this.handleLoadedCard(card)
-      );
+        this.lightCardsStoreService.getNewLightCards().subscribe(
+            (card) => this.handleLoadedCard(card)
+        );
     }
 
 
@@ -117,7 +119,7 @@ export class SoundNotificationService implements OnDestroy{
     private playSoundForSeverity(severity : Severity) {
 
         if(this.soundEnabled.get(severity)) {
-            if(this.externalDevicesEnabled) {
+            if(this.configService.getConfigValue('externalDevicesEnabled') && this.playSoundOnExternalDevice) {
                 console.debug("External devices enabled. Sending notification for "+severity+".");
                 let notification = new Notification(severity.toString());
                 this.externalDevicesService.sendNotification(notification).subscribe();
@@ -136,26 +138,26 @@ export class SoundNotificationService implements OnDestroy{
                 map(x => SignalType.NOTIFICATION)),
             this.clearSignal.pipe(map(x => SignalType.CLEAR))
         )
-        // Outputs an observable that emits a SignalType.NOTIFICATION element for every new card or reminder for the
-        // given severity, and a SignalType.CLEAR element every time the user clicks anywhere on the screen
-        // For each new SignalType.NOTIFICATION value, the next stage creates an observable that emits immediately then
-        // at the specified interval. In the case of SignalType.CLEAR, it creates an observable that completes immediately.
-        // Because of the switchMap, any new observable cancels the previous one, so that a click or a new card/reminder
-        // resets the replay timer.
-        .pipe(switchMap((x : SignalType) => {
-            if(x === SignalType.CLEAR) {
-                return EMPTY;
-            } else {
-                return iif(() => this.replayEnabled,
-                    timer(0,this.replayInterval * SoundNotificationService.SECONDS_TO_MILLISECONDS),
-                    of(null)
-                );
-            }
-        }),
-        takeUntil(this.ngUnsubscribe$))
-        .subscribe((x ) => {
-            this.playSoundForSeverity(severity);
-        })
+            // Outputs an observable that emits a SignalType.NOTIFICATION element for every new card or reminder for the
+            // given severity, and a SignalType.CLEAR element every time the user clicks anywhere on the screen
+            // For each new SignalType.NOTIFICATION value, the next stage creates an observable that emits immediately then
+            // at the specified interval. In the case of SignalType.CLEAR, it creates an observable that completes immediately.
+            // Because of the switchMap, any new observable cancels the previous one, so that a click or a new card/reminder
+            // resets the replay timer.
+            .pipe(switchMap((x : SignalType) => {
+                    if(x === SignalType.CLEAR) {
+                        return EMPTY;
+                    } else {
+                        return iif(() => this.replayEnabled,
+                            timer(0,this.replayInterval * SoundNotificationService.SECONDS_TO_MILLISECONDS),
+                            of(null)
+                        );
+                    }
+                }),
+                takeUntil(this.ngUnsubscribe$))
+            .subscribe((x ) => {
+                this.playSoundForSeverity(severity);
+            })
     }
 
 

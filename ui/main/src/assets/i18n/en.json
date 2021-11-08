@@ -151,7 +151,7 @@
     "playSoundForCompliant": "Compliant",
     "playSoundForInformation": "Information",
     "replayEnabled": "Sound replay enabled",
-    "externalDevicesEnabled": "Play sound on external device",
+    "playSoundOnExternalDevice": "Play sound on external device",
     "replayInterval": "Interval between sound replays (seconds)"
   },
   "archive": {
