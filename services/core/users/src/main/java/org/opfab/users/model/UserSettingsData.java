@@ -36,7 +36,7 @@ public class UserSettingsData implements UserSettings {
     private Boolean playSoundForAction;
     private Boolean playSoundForCompliant;
     private Boolean playSoundForInformation;
-    private Boolean externalDevicesEnabled;
+    private Boolean playSoundOnExternalDevice;
     private Boolean replayEnabled;
     private Integer replayInterval;
 
@@ -57,7 +57,7 @@ public class UserSettingsData implements UserSettings {
         this.playSoundForAction = settings.getPlaySoundForAction();
         this.playSoundForCompliant = settings.getPlaySoundForCompliant();
         this.playSoundForInformation = settings.getPlaySoundForInformation();
-        this.externalDevicesEnabled = settings.getExternalDevicesEnabled();
+        this.playSoundOnExternalDevice = settings.getPlaySoundOnExternalDevice();
         this.replayEnabled = settings.getReplayEnabled();
         this.replayInterval = settings.getReplayInterval();
 
@@ -124,7 +124,7 @@ public class UserSettingsData implements UserSettings {
         result.playSoundForAction = other.getPlaySoundForAction() != null ? other.getPlaySoundForAction() : this.getPlaySoundForAction();
         result.playSoundForCompliant = other.getPlaySoundForCompliant() != null ? other.getPlaySoundForCompliant() : this.getPlaySoundForCompliant();
         result.playSoundForInformation = other.getPlaySoundForInformation() != null ? other.getPlaySoundForInformation() : this.getPlaySoundForInformation();
-        result.externalDevicesEnabled = other.getExternalDevicesEnabled() != null ? other.getExternalDevicesEnabled() : this.getExternalDevicesEnabled();
+        result.playSoundOnExternalDevice = other.getPlaySoundOnExternalDevice() != null ? other.getPlaySoundOnExternalDevice() : this.getPlaySoundOnExternalDevice();
         result.replayEnabled = other.getReplayEnabled() != null ? other.getReplayEnabled() : this.getReplayEnabled();
         result.replayInterval = other.getReplayInterval() != null ? other.getReplayInterval() : this.getReplayInterval();
 

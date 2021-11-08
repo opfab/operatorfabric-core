@@ -23,6 +23,7 @@ export class SettingsComponent implements OnInit {
   locales: string[];
   timeZones: string[];
   displayInfo: SettingsInputs;
+  externalDevicesEnabled: boolean;
 
   constructor(private store: Store<AppState>,private  configService: ConfigService) { }
 
@@ -30,6 +31,7 @@ export class SettingsComponent implements OnInit {
     this.locales = this.configService.getConfigValue('i18n.supported.locales');
     this.timeZones = this.configService.getConfigValue('i10n.supported.time-zones');
     this.displayInfo = this.configService.getConfigValue('settings.infos.hide');
+    this.externalDevicesEnabled = this.configService.getConfigValue('externalDevicesEnabled');
   }
 
 }
