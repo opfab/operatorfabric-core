@@ -44,6 +44,8 @@ explanations if need be.
 
 . Based on the content of this version and the rules listed above, make sure that the version number is appropriate.
 
+. Check if there is a migration guide for this version, if so include a link to it at the top of the release notes.
+
 === Creating a release branch and preparing the release
 
 . On the link:{opfab_core_repo}[operatorfabric-core repository], create a branch off the `develop` branch named
