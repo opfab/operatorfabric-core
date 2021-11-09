@@ -34,11 +34,11 @@
                              [values]="processDropdownList" [dropdownSettings]="processDropdownSettings" [selectedItems]="[]"
                              i18nRootLabelKey="filters." [sortValues]="true">
             </of-multi-filter>
-            <of-multi-filter *ngIf="displayProcessGroupFilter()" filterPath="process" id="opfab-process" [parentForm]="this.parentForm"
+            <of-multi-filter *ngIf="isThereProcessGroup() && displayProcessGroupFilter()" filterPath="process" id="opfab-process" [parentForm]="this.parentForm"
                              [values]="processDropdownListWhenSelectedProcessGroup" [dropdownSettings]="processDropdownSettings" [selectedItems]="[]"
                              i18nRootLabelKey="filters." [sortValues]="true">
             </of-multi-filter>
-            <of-multi-filter *ngIf="!displayProcessGroupFilter() && isThereOnlyOneProcessGroupInDropdownList()" filterPath="process" id="opfab-process" [parentForm]="this.parentForm"
+            <of-multi-filter *ngIf="isThereProcessGroup() && !displayProcessGroupFilter() && isThereOnlyOneProcessGroupInDropdownList()" filterPath="process" id="opfab-process" [parentForm]="this.parentForm"
                              [values]="processesDropdownListPerProcessGroups.get(processGroupDropdownList[0].id)"
                              [dropdownSettings]="processDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="filters." [sortValues]="true">
             </of-multi-filter>
