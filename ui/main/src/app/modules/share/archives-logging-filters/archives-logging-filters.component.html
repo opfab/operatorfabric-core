@@ -54,11 +54,11 @@
     <!--Only one column in this case-->
     <div *ngIf="! displayProcessGroupFilter() && ! tags" style="margin-right:40px">
         <div style="min-width:300px;max-width:400px;margin-top:28px;margin-bottom: 54px;">
-            <of-multi-filter *ngIf="! isThereProcessGroup()" filterPath="process" id="opfab-process" [parentForm]="this.parentForm"
+            <of-multi-filter *ngIf="!isThereProcessGroup()" filterPath="process" id="opfab-process" [parentForm]="this.parentForm"
                              [values]="processDropdownList" [dropdownSettings]="processDropdownSettings" [selectedItems]="[]"
                              i18nRootLabelKey="filters." [sortValues]="true">
             </of-multi-filter>
-            <of-multi-filter *ngIf="isThereOnlyOneProcessGroupInDropdownList()" filterPath="process" id="opfab-process" [parentForm]="this.parentForm"
+            <of-multi-filter *ngIf="isThereProcessGroup()&&isThereOnlyOneProcessGroupInDropdownList()" filterPath="process" id="opfab-process" [parentForm]="this.parentForm"
                              [values]="processesDropdownListPerProcessGroups.get(processGroupDropdownList[0].id)"
                              [dropdownSettings]="processDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="filters." [sortValues]="true">
             </of-multi-filter>
