@@ -31,7 +31,7 @@ import {DateTimeNgb, getDateTimeNgbFromMoment} from '@ofModel/datetime-ngb.model
 import * as moment from 'moment-timezone';
 import {HandlebarsService} from '../cards/services/handlebars.service';
 import {DetailContext} from '@ofModel/detail-context.model';
-import {debounceTime, map, takeUntil} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, map, takeUntil} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
@@ -380,7 +380,12 @@ export class UserCardComponent implements OnDestroy, OnInit {
     }
 
     loadTemplateWhenStateChange(): void {
-        this.messageForm.get('state').valueChanges.subscribe((state) => {
+        this.messageForm.get('state').valueChanges
+        .pipe(
+            takeUntil(this.unsubscribe$),
+            distinctUntilChanged()
+        )
+        .subscribe((state) => {
             if (!!state) {
                 this.selectedState = state;
                 this.messageForm.get("startDate").setValue('');
