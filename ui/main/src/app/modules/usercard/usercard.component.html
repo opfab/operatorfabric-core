@@ -25,7 +25,7 @@
             </div>
 
             <div class="col" *ngIf="!! stateOptions && stateOptions.length > 1">
-                <of-single-filter i18nRootLabelKey="shared.filters." [parentForm]="messageForm" filterPath="state"
+                <of-single-filter id="opfab-state-filter" i18nRootLabelKey="shared.filters." [parentForm]="messageForm" filterPath="state"
                     [values]="stateOptions" [sortValues]="true" [defaultValueSelected]=!cardIdToEdit></of-single-filter>
 
             </div>

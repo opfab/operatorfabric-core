@@ -15,14 +15,14 @@
       <li *ngIf="showButtons" class="nav-item opfab-menu-item-right">
         <div *ngIf="!isSmallscreen()" style="display:flex">
           <div class="opfab-right-menu-item" *ngIf='showEditAndDeleteButton'>
-            <a class="opfab-right-menu-link" (click)='editCard()'>
+            <a id="opfab-card-edit" class="opfab-right-menu-link" (click)='editCard()'>
               <div class="opfab-menu-icon opfab-menu-icon-right opfab-icon-edit"></div>
               <div translate>{{'button.edit'}}</div>
             </a>
           </div>
 
           <div class="opfab-right-menu-item" *ngIf='showEditAndDeleteButton'>
-            <a class="opfab-right-menu-link" (click)='openModal(doYouReallyWantToDeleteCardPopup)'>
+            <a id="opfab-card-delete" class="opfab-right-menu-link" (click)='openModal(doYouReallyWantToDeleteCardPopup)'>
               <div class="opfab-menu-icon opfab-menu-icon-right opfab-icon-trash"></div>
               <div translate>{{'button.delete'}}</div>
             </a>
