@@ -106,10 +106,10 @@ So if you use these fields in `web-ui.json` file, you have to rename them.
 
 == Configuration file common-docker.yml 
 
-A new parameter named `operatorfabric.servicesUrls.businessconfig`  has to be add to you  configuration file `common-docker.yml` (or equivalent)
+A new parameter named `operatorfabric.servicesUrls.businessconfig`  has to be added to your configuration file `common-docker.yml` (or equivalent)
 
 
-For example the following configuration :
+For example the following configuration:
 
 ```
 operatorfabric:
@@ -118,7 +118,7 @@ operatorfabric:
     users: "users:8080"
 ```
 
-became :  
+becomes:  
 
 ```
 operatorfabric:
