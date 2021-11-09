@@ -58,7 +58,7 @@
     "rxjs": "7.4.0",
     "svg-pan-zoom": "3.6.1",
     "tslib": "2.3.1",
-    "xlsx": "0.17.2"
+    "xlsx": "0.17.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "12.2.10",
@@ -71,7 +71,7 @@
     "@ngrx/store-devtools": "12.5.1",
     "@types/file-saver": "2.0.3",
     "@types/handlebars": "4.0.40",
-    "@types/jasmine": "3.10.1",
+    "@types/jasmine": "3.10.2",
     "@types/jasminewd2": "2.0.10",
     "@types/lodash": "4.14.176",
     "@types/moment": "2.13.0",
