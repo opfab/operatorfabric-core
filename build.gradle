@@ -5,7 +5,7 @@ plugins {
     id "signing"
     id "org.springframework.boot" version "$springBoot" apply false
     id 'org.sonarqube' version '3.3' apply false
-    id "com.github.davidmc24.gradle.plugin.avro" version "1.2.0" apply false
+    id "com.github.davidmc24.gradle.plugin.avro" version "1.2.1" apply false
     id "com.palantir.docker" version "0.30.0" apply false
     id "org.hidetake.swagger.generator" version "2.18.2" apply false
 }

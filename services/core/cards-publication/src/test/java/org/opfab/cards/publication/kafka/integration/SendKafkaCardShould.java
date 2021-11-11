@@ -38,6 +38,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -112,7 +113,7 @@ public class SendKafkaCardShould {
     public void sendKafkaCardCommand() throws InterruptedException {
         String publisher = "myPublisher";
         String processVersion = "myVersion";
-        long startDate = TimeUnit.MICROSECONDS.toMillis(Instant.now().getEpochSecond());
+        Instant startDate = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         SeverityType severityType = SeverityType.INFORMATION;
         String title = "MyTitle";
         String summary = "MySummary";
