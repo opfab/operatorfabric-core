@@ -5,17 +5,21 @@
   "fields": [
     {
       "name": "start",
-      "type": "long",
-      "logicalType": "timestamp-millis"
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      }
     },
     {
-      "name" : "end",
+      "name": "end",
       "type": [
         "null",
-        "long"
+        {
+          "type": "long",
+          "logicalType": "timestamp-millis"
+        }
       ],
-      "logicalType": "timestamp-millis",
-      "default" : null
+      "default": null
     }
   ]
 }

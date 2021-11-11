@@ -5,21 +5,24 @@
   "fields": [
     {
       "name": "parentCardId",
-      "type": ["null", "string"],
+      "type": [
+        "null",
+        "string"
+      ],
       "default": null
     },
     {
       "name": "initialParentCardUid",
-      "type": ["null", "string"],
+      "type": [
+        "null",
+        "string"
+      ],
       "default": null
     },
     {
-      "name": "process",
-      "type": "string"
-    },
-    {
-      "name": "processInstanceId",
-      "type": "string"
+      "name": "keepChildCards",
+      "type": "boolean",
+      "default": false
     },
     {
       "name": "publisher",
@@ -30,31 +33,83 @@
       "type": "string"
     },
     {
+      "name": "process",
+      "type": "string"
+    },
+    {
+      "name": "processInstanceId",
+      "type": "string"
+    },
+    {
       "name": "state",
-      "type": ["null","string"],
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null
+    },
+    {
+      "name": "title",
+      "type": "I18n"
+    },
+    {
+      "name": "summary",
+      "type": "I18n"
+    },
+    {
+      "name": "titleTranslated",
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null
+    },
+    {
+      "name": "summaryTranslated",
+      "type": [
+        "null",
+        "string"
+      ],
       "default": null
     },
     {
       "name": "publishDate",
-      "type": ["null","long"],
-      "logicalType": "timestamp-millis",
+      "type": [
+        "null",
+        {
+          "type": "long",
+          "logicalType": "timestamp-millis"
+        }
+      ],
       "default": null
     },
     {
       "name": "lttd",
-      "type": ["null","long"],
-      "logicalType": "timestamp-millis",
+      "type": [
+        "null",
+        {
+          "type": "long",
+          "logicalType": "timestamp-millis"
+        }
+      ],
       "default": null
     },
     {
       "name": "startDate",
-      "type": "long",
-      "logicalType": "timestamp-millis"
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      }
     },
     {
       "name": "endDate",
-      "type": ["null","long"],
-      "logicalType": "timestamp-millis",
+      "type": [
+        "null",
+        {
+          "type": "long",
+          "logicalType": "timestamp-millis"
+        }
+      ],
       "default": null
     },
     {
@@ -62,7 +117,12 @@
       "type": {
         "name": "SeverityType",
         "type": "enum",
-        "symbols" : ["ALARM", "ACTION", "INFORMATION", "COMPLIANT"]
+        "symbols": [
+          "ALARM",
+          "ACTION",
+          "INFORMATION",
+          "COMPLIANT"
+        ]
       }
     },
     {
@@ -91,12 +151,12 @@
       "default": null
     },
     {
-      "name": "title",
-      "type": "I18n"
-    },
-    {
-      "name": "summary",
-      "type":  "I18n"
+      "name": "data",
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null
     },
     {
       "name": "userRecipients",
@@ -121,7 +181,7 @@
       "default": null
     },
     {
-      "name": "externalRecipients",
+      "name": "entitiesAllowedToRespond",
       "type": [
         "null",
         {
@@ -132,7 +192,7 @@
       "default": null
     },
     {
-      "name": "entitiesAllowedToRespond",
+      "name": "entitiesRequiredToRespond",
       "type": [
         "null",
         {
@@ -154,12 +214,70 @@
       "default": null
     },
     {
-      "name": "data",
+      "name": "externalRecipients",
+      "type": [
+        "null",
+        {
+          "type": "array",
+          "items": "string"
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "hasBeenAcknowledged",
+      "type": [
+        "null",
+        "boolean"
+      ],
+      "default": null
+    },
+    {
+      "name": "hasBeenRead",
+      "type": [
+        "null",
+        "boolean"
+      ],
+      "default": null
+    },
+    {
+      "name": "representative",
       "type": [
         "null",
         "string"
       ],
-      "default":  null
+      "default": null
+    },
+    {
+      "name": "representativeType",
+      "type": [
+        "null",
+        {
+          "name": "PublisherTypeEnum",
+          "type": "enum",
+          "symbols": [
+            "EXTERNAL",
+            "ENTITY"
+          ]
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "secondsBeforeTimeSpanForReminder",
+      "type": [
+        "null",
+        "int"
+      ],
+      "default": null
+    },
+    {
+      "name": "toNotify",
+      "type": [
+        "null",
+        "boolean"
+      ],
+      "default": null
     }
   ]
 }

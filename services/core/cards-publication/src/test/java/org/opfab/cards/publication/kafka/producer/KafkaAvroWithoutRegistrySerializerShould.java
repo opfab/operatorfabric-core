@@ -18,6 +18,10 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -55,15 +59,22 @@ class KafkaAvroWithoutRegistrySerializerShould {
     }
 
     private Card createCard() {
+        Instant startDate = Instant.now().truncatedTo(ChronoUnit.SECONDS);
+
         return Card.newBuilder()
                 .setProcess("Process")
                 .setProcessInstanceId("InstanceId")
                 .setPublisher("Publisher")
                 .setProcessVersion("ProcessVersion")
-                .setStartDate(12345L)
+                .setStartDate(startDate)
+                .setEndDate(startDate.plus(1, ChronoUnit.HOURS))
                 .setSeverity(SeverityType.ALARM)
                 .setTitle(new I18n("Title", null))
                 .setSummary(new I18n("Summary", null))
+                .setTimeSpans(List.of(Timespan.newBuilder()
+                                .setStart(startDate.plus(10, ChronoUnit.MINUTES))
+                                .setEnd(startDate.plus(50, ChronoUnit.MINUTES))
+                        .build()))
                 .build();
     }
 
