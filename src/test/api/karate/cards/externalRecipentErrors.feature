@@ -107,8 +107,8 @@ Feature: External recipient application errors
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card
     When method post
-    Then status 500
-    And match response.message  ==  'Url for external application not configured'
+    Then status 400
+    And match response.message  ==  'Url specified for external application is invalid'
 
 
   Scenario: Push user card with external recipient URL not found

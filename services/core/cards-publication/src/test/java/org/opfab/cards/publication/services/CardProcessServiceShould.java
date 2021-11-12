@@ -23,13 +23,22 @@ import org.opfab.aop.process.mongo.models.UserActionTraceData;
 import org.opfab.cards.model.SeverityEnum;
 import org.opfab.cards.publication.application.UnitTestApplication;
 import org.opfab.cards.publication.configuration.TestCardReceiver;
-import org.opfab.cards.publication.model.*;
+import org.opfab.cards.publication.model.ArchivedCardPublicationData;
+import org.opfab.cards.publication.model.CardPublicationData;
+import org.opfab.cards.publication.model.HoursAndMinutes;
+import org.opfab.cards.publication.model.HoursAndMinutesPublicationData;
+import org.opfab.cards.publication.model.I18nPublicationData;
+import org.opfab.cards.publication.model.PublisherTypeEnum;
+import org.opfab.cards.publication.model.RecurrencePublicationData;
+import org.opfab.cards.publication.model.TimeSpanPublicationData;
 import org.opfab.cards.publication.repositories.ArchivedCardRepositoryForTest;
 import org.opfab.cards.publication.repositories.CardRepositoryForTest;
 import org.opfab.cards.publication.repositories.TraceRepositoryForTest;
 import org.opfab.springtools.error.model.ApiErrorException;
-import org.opfab.users.model.*;
+import org.opfab.users.model.ComputedPerimeter;
+import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.RightsEnum;
+import org.opfab.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
@@ -48,7 +57,13 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -65,6 +80,8 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 @Import({RestTemplate.class})
 @Slf4j
 class CardProcessServiceShould {
+
+    private static final String API_TEST_EXTERNAL_RECIPIENT_1 = "api_test_externalRecipient1";
 
     @Autowired
     private CardProcessingService cardProcessingService;
@@ -139,7 +156,7 @@ class CardProcessServiceShould {
         c3.setProcess("PROCESS_CARD_USER") ;
         c3.setState("STATE3");
         c3.setRights(RightsEnum.WRITE);
-        List list=new ArrayList<ComputedPerimeter>();
+        List<ComputedPerimeter> list=new ArrayList<>();
         list.add(c1);
         list.add(c2);
         list.add(c3);
@@ -147,7 +164,7 @@ class CardProcessServiceShould {
     }
 
     private List<CardPublicationData> generateCards() {
-        ArrayList cards = new ArrayList();
+        ArrayList<CardPublicationData> cards = new ArrayList<>();
         cards.add(
                 CardPublicationData.builder().publisher("PUBLISHER_1").processVersion("O")
                         .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
@@ -211,7 +228,7 @@ class CardProcessServiceShould {
         .summary(I18nPublicationData.builder().key("summary").build())
         .startDate(Instant.now())
         .timeSpan(TimeSpanPublicationData.builder()
-                .start(Instant.ofEpochMilli(123l)).build())
+                .start(Instant.ofEpochMilli(123L)).build())
         .process("process1")
         .state("state1")
         .build();
@@ -229,7 +246,7 @@ class CardProcessServiceShould {
     @Test
     void createUserCards() throws URISyntaxException {
         ArrayList<String> externalRecipients = new ArrayList<>();
-        externalRecipients.add("api_test_externalRecipient1");
+        externalRecipients.add(API_TEST_EXTERNAL_RECIPIENT_1);
 
         CardPublicationData card = CardPublicationData.builder().publisher("newPublisherId").processVersion("O")
                 .processInstanceId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
@@ -257,7 +274,7 @@ class CardProcessServiceShould {
     @Test
     void createUserCardsWithWrongPublisher() throws URISyntaxException {
         ArrayList<String> externalRecipients = new ArrayList<>();
-        externalRecipients.add("api_test_externalRecipient1");
+        externalRecipients.add(API_TEST_EXTERNAL_RECIPIENT_1);
 
         CardPublicationData card = CardPublicationData.builder().publisher("PUBLISHER_X").processVersion("O")
                 .processInstanceId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
@@ -279,13 +296,8 @@ class CardProcessServiceShould {
 
     @Test
     void childCards() throws URISyntaxException {
-        EasyRandom easyRandom = instantiateRandomCardGenerator();
         int numberOfCards = 1;
-        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
-        cards.forEach(c -> {
-            c.setParentCardId(null);
-            c.setInitialParentCardUid(null);
-        });
+        List<CardPublicationData> cards = createRandomCards(numberOfCards);
 
         cards.forEach(card -> cardProcessingService.processCard(card));
 
@@ -298,7 +310,7 @@ class CardProcessServiceShould {
         String id = firstCard.getId();
 
         ArrayList<String> externalRecipients = new ArrayList<>();
-        externalRecipients.add("api_test_externalRecipient1");
+        externalRecipients.add(API_TEST_EXTERNAL_RECIPIENT_1);
 
         CardPublicationData card = CardPublicationData.builder().publisher("newPublisherId").processVersion("O")
                 .processInstanceId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
@@ -319,11 +331,15 @@ class CardProcessServiceShould {
                 .andRespond(withStatus(HttpStatus.ACCEPTED)
                 );
 
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI(EXTERNALAPP_URL + "/" + cards.get(0).getId())))
+                .andExpect(method(HttpMethod.DELETE))
+                .andRespond(withStatus(HttpStatus.ACCEPTED)
+                );
+
         Assertions.assertThatCode(() -> cardProcessingService.processUserCard(card, currentUserWithPerimeters))
                 .doesNotThrowAnyException();
         Assertions.assertThat(checkCardPublisherId(card)).isTrue();
-
-
 
         Assertions.assertThat(cardRepository.count())
                 .withFailMessage("The number of registered cards should be '%d' but is '%d' ",
@@ -367,9 +383,9 @@ class CardProcessServiceShould {
         entityRecipients.add("Planner");
 
         List<Integer> daysOfWeek = new ArrayList<>();
-        daysOfWeek.add(new Integer(2));
-        daysOfWeek.add(new Integer(3));
-        Integer duration = new Integer(15);
+        daysOfWeek.add(2);
+        daysOfWeek.add(3);
+        Integer duration = 15;
         HoursAndMinutes hoursAndMinutes = new HoursAndMinutesPublicationData(2,10);
         RecurrencePublicationData recurrence = new RecurrencePublicationData("timezone",daysOfWeek,hoursAndMinutes, duration);
 
@@ -437,13 +453,8 @@ class CardProcessServiceShould {
     @Test
     void deleteOneCard_with_it_s_Id() {
 
-        EasyRandom easyRandom = instantiateRandomCardGenerator();
         int numberOfCards = 13;
-        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
-        cards.forEach(c -> {
-            c.setParentCardId(null);
-            c.setInitialParentCardUid(null);
-        });
+        List<CardPublicationData> cards = createRandomCards(numberOfCards);
 
         cards.forEach(card-> cardProcessingService.processCard(card));
 
@@ -460,18 +471,13 @@ class CardProcessServiceShould {
     @Test
     void deleteOneCard_with_card_no_id() {
 
-        EasyRandom easyRandom = instantiateRandomCardGenerator();
         int numberOfCards = 13;
-        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
-        cards.forEach(c -> {
-            c.setParentCardId(null);
-            c.setInitialParentCardUid(null);
-        });
+        List<CardPublicationData> cards = createRandomCards(numberOfCards);
 
         cards.forEach(card-> cardProcessingService.processCard(card));
         CardPublicationData firstCard = cards.get(0);
         firstCard.setId(null);
-        cardProcessingService.deleteCard(firstCard);
+        cardProcessingService.prepareAndDeleteCard(firstCard);
 
         /* one card should be deleted(the first one) */
         int thereShouldBeOneCardLess = numberOfCards - 1;
@@ -482,23 +488,80 @@ class CardProcessServiceShould {
     @Test
     void deleteOneCard_with_card_with_id() {
 
-        EasyRandom easyRandom = instantiateRandomCardGenerator();
         int numberOfCards = 13;
-        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
-        cards.forEach(c -> {
-            c.setParentCardId(null);
-            c.setInitialParentCardUid(null);
-        });
+        List<CardPublicationData> cards = createRandomCards(numberOfCards);
 
         cards.forEach(card-> cardProcessingService.processCard(card));
 
         CardPublicationData firstCard = cards.get(0);
-        cardProcessingService.deleteCard(firstCard);
+        cardProcessingService.prepareAndDeleteCard(firstCard);
 
         /* one card should be deleted(the first one) */
         int thereShouldBeOneCardLess = numberOfCards - 1;
 
         assertThat(cardRepository.count()).isEqualTo(thereShouldBeOneCardLess);
+    }
+
+    @Test
+    void deleteOneCard_with_externalRecipient() throws URISyntaxException {
+
+        int numberOfCards = 5;
+        List<CardPublicationData> cards = createRandomCards(numberOfCards);
+        cards.forEach(card-> cardProcessingService.processCard(card));
+
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI(EXTERNALAPP_URL )))
+                .andExpect(method(HttpMethod.DELETE))
+                .andRespond(withStatus(HttpStatus.ACCEPTED)
+                );
+
+        CardPublicationData firstCard = cards.get(0);
+        List<String> externalRecipients = new ArrayList<>();
+        externalRecipients.add(API_TEST_EXTERNAL_RECIPIENT_1);
+        firstCard.setExternalRecipients(externalRecipients);
+        cardProcessingService.prepareAndDeleteCard(firstCard);
+
+        /* one card should be deleted(the first one) */
+        int thereShouldBeOneCardLess = numberOfCards - 1;
+
+        assertThat(cardRepository.count()).isEqualTo(thereShouldBeOneCardLess);
+    }
+
+    @Test
+    void deleteOneCard_with_invalid_externalRecipient() throws URISyntaxException {
+
+        int numberOfCards = 3;
+        List<CardPublicationData> cards = createRandomCards(numberOfCards);
+
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI(EXTERNALAPP_URL)))
+                .andExpect(method(HttpMethod.DELETE))
+                .andRespond(withStatus(HttpStatus.ACCEPTED)
+                );
+
+        cards.forEach(card-> cardProcessingService.processCard(card));
+
+        CardPublicationData firstCard = cards.get(0);
+        List<String> externalRecipients = new ArrayList<>();
+        externalRecipients.add("thisIsAnInvalidExternalRecipient");
+        firstCard.setExternalRecipients(externalRecipients);
+        cardProcessingService.prepareAndDeleteCard(firstCard);
+
+        /* one card should be deleted(the first one) */
+        int thereShouldBeOneCardLess = numberOfCards - 1;
+
+        assertThat(cardRepository.count()).isEqualTo(thereShouldBeOneCardLess);
+    }
+
+    @NotNull
+    private List<CardPublicationData> createRandomCards(int numberOfCards) {
+        EasyRandom easyRandom = instantiateRandomCardGenerator();
+        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
+        cards.forEach(c -> {
+            c.setParentCardId(null);
+            c.setInitialParentCardUid(null);
+        });
+        return cards;
     }
 
     private List<CardPublicationData> instantiateSeveralRandomCards(EasyRandom randomGenerator, int cardNumber) {
@@ -546,13 +609,8 @@ class CardProcessServiceShould {
 
     @Test
     void deleteCards_Non_existentId() {
-        EasyRandom easyRandom = instantiateRandomCardGenerator();
         int numberOfCards = 13;
-        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
-        cards.forEach(c -> {
-            c.setParentCardId(null);
-            c.setInitialParentCardUid(null);
-        });
+        List<CardPublicationData> cards = createRandomCards(numberOfCards);
 
         cards.forEach(card-> cardProcessingService.processCard(card));
 

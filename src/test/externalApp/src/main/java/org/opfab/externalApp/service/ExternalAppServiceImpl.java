@@ -20,8 +20,13 @@ import java.util.Optional;
 public class ExternalAppServiceImpl implements ExternalAppService {
 
 	@Override
-	public void displayMessage(Optional<JsonNode> requestBody) {
+	public void receiveCard(Optional<JsonNode> requestBody) {
 		log.info("card reception from Card Publication Service {} : \n\n", requestBody);
+	}
+
+	@Override
+	public void deleteCard(Optional<JsonNode> requestBody) {
+		log.info("Card suppression from Card Publication Service {} : \n\n", requestBody);
 	}
 
 	public String WelcomeMessage() {
