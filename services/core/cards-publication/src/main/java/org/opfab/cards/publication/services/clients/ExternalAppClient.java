@@ -4,4 +4,5 @@ import org.opfab.cards.publication.model.CardPublicationData;
 
 public interface ExternalAppClient {
     void sendCardToExternalApplication(CardPublicationData card) ;
+    void notifyExternalApplicationThatCardIsDeleted(CardPublicationData card) ;
 }

@@ -39,7 +39,7 @@ public class DeleteCardCommandHandler extends BaseCommandHandler implements Comm
 
         CardPublicationData card = buildCardPublicationData(cardCommand);
         if (card != null) {
-            cardProcessingService.deleteCard(card);
+            cardProcessingService.prepareAndDeleteCard(card);
         }
     }
 }
