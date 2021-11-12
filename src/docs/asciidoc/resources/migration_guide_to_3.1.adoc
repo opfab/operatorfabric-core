@@ -1,0 +1,28 @@
+// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 3.0.0 to release 3.1.0
+
+== Kafka date format
+
+The signature for sending card dates via Kafka have been changed to better reflect the REST API. Instead
+of sending the date in seconds since epoch, you can now use the Java Instant object. The following methods are affected:
+
+* `startDate`
+* `endDate`
+* `lttd`
+* `publishDate`
+* `TimeSpan.setStart`
+* `TimeSpan.setEnd`
+
+For example the following code:
+
+`Card card = Card.newBuilder().setStartDate(12345L).build();`
+
+becomes:
+
+`Card card = Card.newBuilder().setStartDate(Instant.now()).build();`
