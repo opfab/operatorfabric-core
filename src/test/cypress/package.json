@@ -10,6 +10,6 @@
   "license": "MPL-2.0",
   "devDependencies": {
     "cypress": "8.7.0",
-    "cypress-terminal-report": "3.3.4"
+    "cypress-terminal-report": "3.4.0"
   }
 }
