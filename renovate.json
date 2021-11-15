@@ -11,7 +11,8 @@
   "ignorePaths": [
     "**/node_modules/**",
     "**/bower_components/**",
-    "**/vendor/**"
+    "**/vendor/**",
+    "src/tooling/**"
   ],
   "gradle-lite": {
     "fileMatch": ["versions.properties"]
