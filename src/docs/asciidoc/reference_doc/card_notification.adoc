@@ -22,7 +22,11 @@ ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#_proce
 
 == Sound notification 
 
-If the option is activated in the general configuration file web-ui.json, the user can choose to have a sound when a card is arriving. The configuration is to be set by the user with the settings menu.
+If the option is activated in the general configuration file web-ui.json, the user can choose to have a sound played
+when they receive a card (either by the browser or by an external device if configured).
+This can be managed by the user in the settings screen.
+
+NOTE: To customize the sounds played by the browser, see `config/docker/custom-sounds/README.adoc`.
 
 == Card read 
 
