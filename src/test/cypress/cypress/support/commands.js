@@ -31,7 +31,7 @@ Cypress.Commands.add('loginOpFab',(username, password)=>
     cy.get('#opfab-cypress-loaded-check', {timeout: 15000}).should('have.text', 'true');
 })
 
-Cypress.Commands.add('reload',()=>
+Cypress.Commands.overwrite('reload',()=>
 {   //go to login page
     cy.visit('');
 
