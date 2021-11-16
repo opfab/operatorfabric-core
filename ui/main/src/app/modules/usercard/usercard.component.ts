@@ -176,14 +176,11 @@ export class UserCardComponent implements OnDestroy, OnInit {
         });
 
 
-
-
+        
         this.dropdownSettings = {
             text: '',
             badgeShowLimit: 30,
-            enableSearchFilter: true,
-            position: 'bottom',
-            autoPosition: false
+            enableSearchFilter: true
         };
         if (!!this.cardIdToEdit)
             this.loadCardForEdition();
