@@ -18,6 +18,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 
 @SpringBootApplication
@@ -26,6 +27,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableOperatorFabricMongo
 @EnableMongoRepositories
 @EnableConfigurationProperties
+@EnableScheduling
 @ImportResource("classpath:/amqp.xml")
 public class ExternalDevicesApplication {
 
