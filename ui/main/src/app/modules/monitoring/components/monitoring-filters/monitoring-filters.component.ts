@@ -100,19 +100,19 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
 
         this.getLocale().pipe(takeUntil(this.unsubscribe$)).subscribe(locale => {
             this.translate.use(locale);
-            this.translate.get(['monitoring.filters.selectProcessGroupText', 'monitoring.filters.selectProcessText',
+            this.translate.get(['shared.filters.selectProcessGroupText', 'shared.filters.selectProcessText',
                                     'monitoring.filters.typeOfState.selectTypeOfStateText',
-                                    'monitoring.filters.typeOfState.INPROGRESS', 'monitoring.filters.typeOfState.FINISHED',
-                                    'monitoring.filters.typeOfState.CANCELED'])
+                                    'shared.typeOfState.INPROGRESS', 'shared.typeOfState.FINISHED',
+                                    'shared.typeOfState.CANCELED'])
               .subscribe(translations => {
                 this.processGroupDropdownSettings = {
-                    text: translations['monitoring.filters.selectProcessGroupText'],
+                    text: translations['shared.filters.selectProcessGroupText'],
                     enableSearchFilter: true,
                     badgeShowLimit: 4,
                     classes: 'custom-class-example'
                 };
                 this.processDropdownSettings = {
-                    text: translations['monitoring.filters.selectProcessText'],
+                    text: translations['shared.filters.selectProcessText'],
                     enableSearchFilter: true,
                     badgeShowLimit: 4,
                     classes: 'custom-class-example'
@@ -124,9 +124,9 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
                     classes: 'custom-class-example'
                 };
                 this.typeOfStateDropdownList =
-                    [{id: TypeOfStateEnum.INPROGRESS, itemName: translations['monitoring.filters.typeOfState.INPROGRESS']},
-                     {id: TypeOfStateEnum.FINISHED, itemName: translations['monitoring.filters.typeOfState.FINISHED']},
-                     {id: TypeOfStateEnum.CANCELED, itemName: translations['monitoring.filters.typeOfState.CANCELED']}];
+                    [{id: TypeOfStateEnum.INPROGRESS, itemName: translations['shared.typeOfState.INPROGRESS']},
+                     {id: TypeOfStateEnum.FINISHED, itemName: translations['shared.typeOfState.FINISHED']},
+                     {id: TypeOfStateEnum.CANCELED, itemName: translations['shared.typeOfState.CANCELED']}];
               });
             });
         this.changeProcessesWhenSelectProcessGroup();

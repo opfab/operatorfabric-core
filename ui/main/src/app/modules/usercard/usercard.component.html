@@ -11,43 +11,43 @@
         <div class="row">
 
             <div class="col" *ngIf="displayProcessGroupFilter()">
-                <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="processGroup"
+                <of-single-filter i18nRootLabelKey="shared.filters." [parentForm]="messageForm" filterPath="processGroup"
                     [values]="processGroupOptions"></of-single-filter>
             </div>
 
             <div class="col" *ngIf="! displayProcessGroupFilter() && !! processOptions && processOptions.length > 1">
-                <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
+                <of-single-filter i18nRootLabelKey="shared.filters." [parentForm]="messageForm" filterPath="process"
                                   [values]="processOptions"></of-single-filter>
             </div>
             <div class="col" *ngIf="displayProcessGroupFilter() && !! processOptionsWhenSelectedProcessGroup && processOptionsWhenSelectedProcessGroup.length > 1">
-                <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="process"
+                <of-single-filter i18nRootLabelKey="shared.filters." [parentForm]="messageForm" filterPath="process"
                                   [values]="processOptionsWhenSelectedProcessGroup"></of-single-filter>
             </div>
 
             <div class="col" *ngIf="!! stateOptions && stateOptions.length > 1">
-                <of-single-filter i18nRootLabelKey="userCard.filters." [parentForm]="messageForm" filterPath="state"
+                <of-single-filter i18nRootLabelKey="shared.filters." [parentForm]="messageForm" filterPath="state"
                     [values]="stateOptions" [sortValues]="true" [defaultValueSelected]=!cardIdToEdit></of-single-filter>
 
             </div>
         </div>
         <div class="row justify-content-center" *ngIf="severityVisible">
 
-            <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-alarm" translate> userCard.options.severity.ALARM </span>
+            <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-alarm" translate> shared.severity.alarm </span>
                 <input type="radio"  id="opfab-sev-alarm" name="severity" formControlName="severity" value="ALARM">
                 <span class="opfab-radio-button-checkmark"></span>
             </label>
  
-            <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-action" translate> userCard.options.severity.ACTION </span>
+            <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-action" translate> shared.severity.action </span>
                 <input type="radio"  id="opfab-sev-action" name="severity" formControlName="severity" value="ACTION">
                 <span class="opfab-radio-button-checkmark"></span>
             </label>
 
-            <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-compliant" translate> userCard.options.severity.COMPLIANT </span>
+            <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-compliant" translate> shared.severity.compliant </span>
                 <input type="radio"  id="opfab-sev-compliant" name="severity" formControlName="severity" value="COMPLIANT">
                 <span class="opfab-radio-button-checkmark"></span>
             </label>
 
-            <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-information" translate> userCard.options.severity.INFORMATION </span>
+            <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-information" translate> shared.severity.information </span>
                 <input type="radio"  id="opfab-sev-information" name="severity" formControlName="severity" value="INFORMATION">
                 <span class="opfab-radio-button-checkmark"></span>
             </label>

@@ -99,27 +99,27 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
 
         this.getLocale().pipe(takeUntil(this.unsubscribe$)).subscribe(locale => {
             this.translate.use(locale);
-            this.translate.get(['filters.selectProcessGroupText', 'filters.selectProcessText', 'filters.selectStateText',
-                'filters.selectTagText'])
+            this.translate.get(['shared.filters.selectProcessGroupText', 'shared.filters.selectProcessText', 'shared.filters.selectStateText',
+                'shared.filters.selectTagText'])
                 .subscribe(translations => {
                     this.processGroupDropdownSettings = {
-                        text: translations['filters.selectProcessGroupText'],
+                        text: translations['shared.filters.selectProcessGroupText'],
                         badgeShowLimit: 1,
                         enableSearchFilter: true
                     };
                     this.processDropdownSettings = {
-                        text: translations['filters.selectProcessText'],
+                        text: translations['shared.filters.selectProcessText'],
                         badgeShowLimit: 1,
                         enableSearchFilter: true
                     };
                     this.stateDropdownSettings = {
-                        text: translations['filters.selectStateText'],
+                        text: translations['shared.filters.selectStateText'],
                         badgeShowLimit: 1,
                         enableSearchFilter: true,
                         groupBy: "itemCategory"
                     };
                     this.tagsDropdownSettings = {
-                        text: translations['filters.selectTagText'],
+                        text: translations['shared.filters.selectTagText'],
                         badgeShowLimit: 1,
                         enableSearchFilter: true
                     };

@@ -1,12 +1,59 @@
 {
+  "shared": {
+    "severity": {
+      "alarm": "Alarm",
+      "action": "Action",
+      "compliant": "Compliant",
+      "information": "Information"
+    },
+    "typeOfState": {
+      "typeOfState" : "PROCESS STATUS",
+      "FINISHED": "FINISHED",
+      "INPROGRESS": "IN PROGRESS",
+      "CANCELED": "CANCELED"
+    },
+    "filters": {
+      "processGroup": "SERVICE",
+      "process": "PROCESS",
+      "state": "STATE",
+      "tags": "TAGS",
+      "selectProcessGroupText": "Select a Service",
+      "selectProcessText": "Select a Process",
+      "selectStateText": "Select a State",
+      "selectTagText": "Select a Tag",
+      "publishDateFrom": "PUBLISH FROM",
+      "publishDateTo": "PUBLISH TO",
+      "activeFrom": "ACTIVE FROM",
+      "activeTo": "ACTIVE TO",
+      "publishEndDateBeforeStartDate" : "Publish end date must be after start date",
+      "activeEndDateBeforeStartDate" : "Active end date must be after start date"
+    },
+    "result": {
+      "severity": "SEVERITY",
+      "timeOfAction": "TIME OF ACTION",
+      "title": "TITLE",
+      "summary": "SUMMARY",
+      "state": "STATE",
+      "description": "STATE DESCRIPTION",
+      "sender": "ACTOR",
+      "process" : "PROCESS",
+      "processGroup": "SERVICE",
+      "representative": "REPRESENTATIVE",
+      "publishDate" : "PUBLICATION DATE",
+      "businessPeriod" : "BUSINESS PERIOD",
+      "time": "TIME",
+      "answer": "ANSWER",
+      "emitter": "EMITTER"
+    },
+    "noResult": "Your search did not match any results.",
+    "exportToExcel": "Export data",
+    "resultsNumber":"Results number",
+    "noProcessStateAvailable": "No process/state available",
+    "endDateBeforeStartDate": "End date must be after start date"
+  },
   "global":{
     "connectionLost":"Connection lost",
-    "tryToReconnect":"Try to reconnect ...",
-    "typeOfState" : {
-      "INPROGRESS" : "IN PROGRESS",
-      "FINISHED": "FINISHED",
-      "CANCELED" : "CANCELED"
-    }
+    "tryToReconnect":"Try to reconnect ..."
   },
   "menu": {
     "feed": "Card Feed",
@@ -54,23 +101,10 @@
         "titleIfFilterBasedOnBusinessDate": "Business period",
         "start.label": "Start",
         "end.label": "End",
-        "active.label": "Active",
-        "endDateBeforeStartDate": "End date must be after start date"
+        "active.label": "Active"
       },
       "type": {
-        "title": "Type",
-        "alarm": {
-          "label": "Alarm"
-        },
-        "action": {
-          "label": "Action"
-        },
-        "compliant": {
-          "label": "Compliant"
-        },
-        "information": {
-          "label": "Information"
-        }
+        "title": "Type"
       },
       "showCardsWithResponse": {
         "label": "Cards with response from my entity"
@@ -155,53 +189,9 @@
     "replayInterval": "Interval between sound replays (seconds)"
   },
   "archive": {
-    "filters": {
-      "publishDateFrom": "PUBLISH FROM",
-      "publishDateTo": "PUBLISH TO",
-      "activeFrom": "ACTIVE FROM",
-      "activeTo": "ACTIVE TO",
-      "publishEndDateBeforeStartDate" : "Publish end date must be after start date",
-      "activeEndDateBeforeStartDate" : "Active end date must be after start date"
-    },
-    "result": {
-      "severity": "SEVERITY",
-      "publishDate" : "PUBLICATION DATE",
-      "businessPeriod" : "BUSINESS PERIOD",
-      "title" : "TITLE",
-      "summary": "SUMMARY",
-      "processGroup": "SERVICE"
-    },
-    "noResult": "Your search did not match any results.",
     "loadingInProgress": "Loading archived cards",
     "tooManyRows": "Too many cards , not all cards visible",
-    "exportToExcel" : "Export data",
-    "resultsNumber":"Results number",
     "collapsibleUpdates": "Collapsible updates"
-  },
-  "logging": {
-    "filters": {
-      "publishDateFrom": "PUBLISH FROM",
-      "publishDateTo": "PUBLISH TO",
-      "activeFrom": "ACTIVE FROM",
-      "activeTo": "ACTIVE TO",
-      "publishEndDateBeforeStartDate" : "Publish end date must be after start date",
-      "activeEndDateBeforeStartDate" : "Active end date must be after start date"
-    },
-    "result": {
-      "severity": "SEVERITY",
-      "timeOfAction": "TIME OF ACTION",
-      "title": "TITLE",
-      "summary": "SUMMARY",
-      "state": "STATE",
-      "description": "STATE DESCRIPTION",
-      "sender": "ACTOR",
-      "process" : "PROCESS",
-      "processGroup": "SERVICE",
-      "representative": "REPRESENTATIVE"
-    },
-    "noResult": "Your search did not match any results.",
-    "exportToExcel": "Export data",
-    "resultsNumber":"Results number"
   },
   "monitoring": {
     "hideFilters" : "Hide Filters",
@@ -209,28 +199,11 @@
     "noSelection" : "NA",
     "moreRows": "rows more",
     "filters": {
-      "processGroup" : "SERVICE",
-      "selectProcessGroupText" : "Select a Service",
-      "process" : "PROCESS",
-      "selectProcessText" : "Select a Process",
       "typeOfState" : {
-        "typeOfState" : "PROCESS STATUS",
-        "selectTypeOfStateText" : "Select a Process status",
-        "INPROGRESS" : "IN PROGRESS",
-        "FINISHED": "FINISHED",
-        "CANCELED" : "CANCELED"
+        "selectTypeOfStateText" : "Select a Process status"
       }
     },
-    "time": "TIME",
-    "businessPeriod": "BUSINESS PERIOD",
-    "title": "TITLE",
-    "summary": "SUMMARY",
-    "typeOfState": "PROCESS STATUS",
-    "severity": "SEVERITY",
-    "answer": "ANSWER",
-    "emitter": "EMITTER",
     "seeDetails": "SEE DETAILS",
-    "ExportTOExcel": "Export data",
     "ExportInProgress": "Export in progress"
   },
   "button": {
@@ -251,8 +224,7 @@
     },
     "error": {
       "impossibleToSaveSettings": "Impossible to save settings for technical reasons"
-    },
-    "noProcessStateAvailable": "No process/state available"
+    }
   },
   "userCard": {
     "title": "CREATE A NEW CARD ",
@@ -261,27 +233,15 @@
       "notAvailable": "You are not allowed to send card",
       "templateError": "Technical error : invalid template",
       "impossibleToSendCard": "Impossible to send card for technical reasons",
-      "endDateBeforeStartDate": "End date must be after start date",
       "lttdBeforeStartDate": "Limit date for response must be after start date",
       "lttdAfterEndDate": "Limit date for response must be before end date"
     },
     "filters": {
       "severity": "SEVERITY",
-      "processGroup": "SERVICE",
-      "process": "PROCESS",
-      "state": "STATE",
       "startDate":  "START DATE",
       "endDate":  "END DATE",
       "lttd": "LIMIT DATE FOR RESPONSE",
       "recipients": "RECIPIENTS"
-    },
-    "options": {
-      "severity": {
-        "ALARM": "Alarm",
-        "ACTION": "Action",
-        "COMPLIANT": "Compliant",
-        "INFORMATION": "Information"
-      }
     },
     "prepareCard": "SEE BEFORE SENDING",
     "confirmSending": "Send the following card?",
@@ -326,7 +286,6 @@
     }
   },
   "admin": {
-    "resultsNumber":"Results number",
     "input": {
       "group": {
         "id": "Id",
@@ -428,17 +387,6 @@
     "to": "to",
     "of": "of",
     "page": "Page"
-  },
-  "filters": {
-    "processGroup": "SERVICE",
-    "process": "PROCESS",
-    "state": "STATE",
-    "tags": "TAGS",
-    "selectProcessGroupText": "Select a Service",
-    "selectProcessText": "Select a Process",
-    "selectStateText": "Select a State",
-    "selectTagText": "Select a Tag",
-    "noProcessStateAvailable": "No process/state available"
   },
   "realTimeUsers": {
     "connected": "Connected",

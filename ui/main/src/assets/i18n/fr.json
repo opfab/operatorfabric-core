@@ -1,12 +1,59 @@
 {
+  "shared": {
+    "severity": {
+      "alarm": "Alarme",
+      "action": "Action",
+      "compliant": "Conforme",
+      "information": "Information"
+    },
+    "typeOfState": {
+      "typeOfState" : "ÉTAT DU PROCESSUS",
+      "FINISHED": "TERMINÉ",
+      "INPROGRESS": "EN COURS",
+      "CANCELED": "ANNULÉ"
+    },
+    "filters": {
+      "processGroup": "SERVICE",
+      "process": "PROCESSUS",
+      "state": "ETAT",
+      "tags": "ETIQUETTES",
+      "selectProcessGroupText": "Sélectionner un Service",
+      "selectProcessText": "Sélectionner un Processus",
+      "selectStateText": "Sélectionner un Etat",
+      "selectTagText": "Sélectionner une Etiquette",
+      "publishDateFrom": "PUBLIE A PARTIR DE",
+      "publishDateTo": "PUBLIE JUSQU'A",
+      "activeFrom": "ACTIVE A PARTIR DE",
+      "activeTo": "ACTIVE JUSQU'A",
+      "publishEndDateBeforeStartDate" : "La date de fin doit être postérieure à la date de début",
+      "activeEndDateBeforeStartDate" : "La date de fin doit être postérieure à la date de début"
+    },
+    "result": {
+      "severity": "SEVERITE",
+      "timeOfAction": "MOMENT DE L'ACTION",
+      "title": "TITRE",
+      "summary": "RESUME",
+      "state": "ÉTAT",
+      "description": "DESCRIPTION DE L'ÉTAT",
+      "sender": "EMETTEUR",
+      "process" : "PROCESSUS",
+      "processGroup": "SERVICE",
+      "representative": "MANDATAIRE",
+      "publishDate" : "DATE DE PUBLICATION",
+      "businessPeriod" : "PERIODE METIER",
+      "time": "DATE",
+      "answer": "REPONSE",
+      "emitter": "EMETTEUR"
+    },
+    "noResult": "Votre recherche ne correspond à aucun résultat.",
+    "exportToExcel": "Exporter les données",
+    "resultsNumber":"Nombre de résultats",
+    "noProcessStateAvailable": "Aucun processus/état disponible",
+    "endDateBeforeStartDate": "La date de fin doit être postérieure à la date de début"
+  },
   "global":{
     "connectionLost":"Connexion perdue",
-    "tryToReconnect":"Tentative de reconnexion ...",
-    "typeOfState": {
-      "INPROGRESS": "EN COURS",
-      "FINISHED": "TERMINÉ",
-      "CANCELED": "ANNULÉ"
-    }
+    "tryToReconnect":"Tentative de reconnexion ..."
   },
   "menu": {
     "feed": "Flux de cartes",
@@ -54,23 +101,10 @@
         "titleIfFilterBasedOnBusinessDate": "Période métier",
         "start.label": "Début",
         "end.label": "Fin",
-        "active.label": "Actif",
-        "endDateBeforeStartDate": "La date de fin doit être postérieure à la date de début"
+        "active.label": "Actif"
       },
       "type": {
-        "title": "Type",
-        "alarm": {
-          "label": "Alarme"
-        },
-        "action": {
-          "label": "Action"
-        },
-        "compliant": {
-          "label": "Conforme"
-        },
-        "information": {
-          "label": "Information"
-        }
+        "title": "Type"
       },
       "showCardsWithResponse": {
         "label": "Cartes avec réponse de mon entité"
@@ -155,53 +189,9 @@
     "replayInterval": "Délai entre les répétitions (en secondes)"
   },
   "archive": {
-    "filters": {
-      "publishDateFrom": "PUBLIE A PARTIR DE",
-      "publishDateTo": "PUBLIE JUSQU'A",
-      "activeFrom": "ACTIVE A PARTIR DE",
-      "activeTo": "ACTIVE JUSQU'A",
-      "publishEndDateBeforeStartDate" : "La date de fin doit être postérieure à la date de début",
-      "activeEndDateBeforeStartDate" : "La date de fin doit être postérieure à la date de début"
-    },
-    "result": {
-      "severity": "SEVERITE",
-      "publishDate" : "DATE DE PUBLICATION",
-      "businessPeriod" : "PERIODE METIER",
-      "title" : "TITRE",
-      "summary": "RESUME",
-      "processGroup": "SERVICE"
-    },
-    "noResult": "Votre recherche ne correspond à aucun résultat.",
     "loadingInProgress": "Chargement des cartes archivées",
     "tooManyRows": "Trop de cartes, toutes les cartes ne sont pas visibles",
-    "exportToExcel" : "Exporter les données",
-    "resultsNumber":"Nombre de résultats",
     "collapsibleUpdates": "Mises à jour dépliables"
-  },
-  "logging": {
-    "filters": {
-      "publishDateFrom": "PUBLIE A PARTIR DE",
-      "publishDateTo": "PUBLIE JUSQU'A",
-      "activeFrom": "ACTIVE A PARTIR DE",
-      "activeTo": "ACTIVE JUSQU'A",
-      "publishEndDateBeforeStartDate" : "La date de fin doit être postérieure à la date de début",
-      "activeEndDateBeforeStartDate" : "La date de fin doit être postérieure à la date de début"
-    },
-    "result": { 
-      "severity": "SEVERITE",
-      "timeOfAction": "MOMENT DE L'ACTION",
-      "title": "TITRE",
-      "summary": "RESUME",
-      "state": "ÉTAT",
-      "description": "DESCRIPTION DE L'ÉTAT",
-      "sender": "EMETTEUR",
-      "process" : "PROCESSUS",
-      "processGroup": "SERVICE",
-      "representative": "MANDATAIRE"
-    },
-    "noResult": "Votre recherche ne correspond à aucun résultat.",
-    "exportToExcel": "Exporter les données",
-    "resultsNumber":"Nombre de résultats"
   },
   "monitoring": {
     "hideFilters" : "Masquer les filtres",
@@ -209,28 +199,11 @@
     "noSelection" : "NA",
     "moreRows": "lignes supplémentaires",
     "filters": {
-      "processGroup" : "SERVICE",
-      "selectProcessGroupText" : "Sélectionner un Service",
-      "process": "PROCESSUS",
-      "selectProcessText": "Sélectionner un Processus",
       "typeOfState": {
-        "typeOfState": "ÉTAT DU PROCESSUS",
-        "selectTypeOfStateText": "Sélectionner un État de processus",
-        "INPROGRESS": "EN COURS",
-        "FINISHED": "TERMINÉ",
-        "CANCELED": "ANNULÉ"
+        "selectTypeOfStateText": "Sélectionner un État de processus"
       }
     },
-    "time": "DATE",
-    "businessPeriod": "PERIODE METIER",
-    "title": "TITRE",
-    "summary": "RESUME",
-    "typeOfState": "ÉTAT DU PROCESSUS",
-    "severity": "SEVERITE",
-    "answer": "REPONSE",
-    "emitter": "EMETTEUR",
     "seeDetails": "VOIR LES DETAILS",
-    "ExportTOExcel": "Exporter les données",
     "ExportInProgress": "Export en cours"
   },
   "button": {
@@ -251,8 +224,7 @@
     },
     "error": {
       "impossibleToSaveSettings": "Impossible d'enregistrer les paramètres pour des raisons techniques"
-    },
-    "noProcessStateAvailable": "Aucun processus/état disponible"
+    }
   },
   "userCard": {
     "title": "CREATION D'UNE NOUVELLE CARTE",
@@ -261,28 +233,15 @@
       "notAvailable": "Vous n'êtes pas autorisé à envoyer des cartes",
       "templateError" : "Erreur technique : template non conforme",
       "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques",
-      "endDateBeforeStartDate": "La date de fin doit être postérieure à la date de début",
       "lttdBeforeStartDate": "La date limite de réponse doit être postérieure à la date de début",
       "lttdAfterEndDate": "La date limite de réponse doit être antérieure à la date de fin"
-      
     },
     "filters": {
       "severity": "SEVERITE",
-      "processGroup": "SERVICE",
-      "process": "PROCESSUS",
-      "state": "ETAT",
       "startDate": "DATE DE DEBUT ",
       "endDate": "DATE DE FIN ",
       "lttd": "DATE LIMITE DE RÉPONSE",
       "recipients": "DESTINATAIRES"
-    },
-    "options": {
-      "severity": {
-        "ALARM": "Alarme",
-        "ACTION": "Action",
-        "COMPLIANT": "Conforme",
-        "INFORMATION": "Information"
-      }
     },
     "prepareCard": "VISUALISATION AVANT ENVOI",
     "confirmSending": "Envoyer la carte suivante ?",
@@ -327,7 +286,6 @@
     }
   },
   "admin": {
-    "resultsNumber":"Nombre de résultats",
     "input": {
       "group": {
         "id": "Id",
@@ -429,17 +387,6 @@
     "to": "à",
     "of": "de",
     "page": "Page"
-  },
-  "filters": {
-    "ProcessGroup": "SERVICE",
-    "process": "PROCESSUS",
-    "state": "ETAT",
-    "tags": "ETIQUETTES",
-    "selectProcessGroupText": "Sélectionner un Service",
-    "selectProcessText": "Sélectionner un Processus",
-    "selectStateText": "Sélectionner un Etat",
-    "selectTagText": "Sélectionner une Etiquette",
-    "noProcessStateAvailable": "Aucun processus/état disponible"
   },
   "realTimeUsers": {
     "connected": "Connecté",
