@@ -92,14 +92,14 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     ) {
         this.monitoringConfig = processesService.getMonitoringConfig();
 
-        this.timeColumnName = this.translateColumn('monitoring.time');
-        this.titleColumnName = this.translateColumn('monitoring.title');
-        this.summaryColumnName = this.translateColumn('monitoring.summary');
-        this.typeOfStateColumnName = this.translateColumn('monitoring.typeOfState');
-        this.businessPeriodColumnName = this.translateColumn('monitoring.businessPeriod');
-        this.severityColumnName = this.translateColumn('monitoring.severity');
-        this.answerColumnName = this.translateColumn('monitoring.answer');
-        this.emitterColumnName = this.translateColumn('monitoring.emitter');
+        this.timeColumnName = this.translateColumn('shared.result.time');
+        this.titleColumnName = this.translateColumn('shared.result.title');
+        this.summaryColumnName = this.translateColumn('shared.result.summary');
+        this.typeOfStateColumnName = this.translateColumn('shared.typeOfState.typeOfState');
+        this.businessPeriodColumnName = this.translateColumn('shared.result.businessPeriod');
+        this.severityColumnName = this.translateColumn('shared.result.severity');
+        this.answerColumnName = this.translateColumn('shared.result.answer');
+        this.emitterColumnName = this.translateColumn('shared.result.emitter');
 
         this.gridOptions = <GridOptions>{
             context: {
@@ -216,7 +216,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                                     time: this.displayTime(line.creationDateTime),
                                     title: line.titleTranslated,
                                     summary: line.summaryTranslated,
-                                    processStatus: this.translateValue('monitoring.filters.typeOfState.' + line.typeOfState),
+                                    processStatus: this.translateValue('shared.typeOfState.' + line.typeOfState),
                                     typeOfState: line.typeOfState,
                                     cardId: line.cardId,
                                     severity: line.severity,
@@ -315,7 +315,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         if (!!process) {
                 card.card.processName = process.name;
                 const state = process.states[card.card.state];
-                if (!!state) card.card.typeOfState = this.translateValue('monitoring.filters.typeOfState.' + state.type);
+                if (!!state) card.card.typeOfState = this.translateValue('shared.typeOfState.' + state.type);
         }
         card.card.title = card.card.titleTranslated;
         card.card.summary =  card.card.summaryTranslated;

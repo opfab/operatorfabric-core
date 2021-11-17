@@ -67,7 +67,7 @@
               <span id="opfab-card-response-header-status" *ngIf="!!cardState.type">
                 <span style="padding-left:15px" translate>response.status</span> :
                 <!--The translate directive should stay there rather than in the element see OC-1603-->
-                <span class="opfab-typeOfState-{{cardState.type}}">{{"global.typeOfState."+cardState.type | translate}}</span>
+                <span class="opfab-typeOfState-{{cardState.type}}">{{"shared.typeOfState."+cardState.type | translate}}</span>
               </span>
               <span *ngIf="!!card.lttd && !!cardState.type && (!lttdExpiredIsTrue || cardState.type !== 'FINISHED')"> | </span>
               <span *ngIf="!!card.lttd"><of-countdown [lttd]="card.lttd" [showExpiredIcon]="showExpiredIcon" [showExpiredLabel]="showExpiredLabel" [expiredLabel]="expiredLabel"></of-countdown></span>

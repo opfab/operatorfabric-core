@@ -64,7 +64,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
     severityOptions = Object.keys(Severity).map(severity => {
         return {
             value: severity,
-            label: new I18n('userCard.options.severity.' + severity)
+            label: new I18n('shared.severity.' + severity)
         };
     });
 
@@ -545,7 +545,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         else endDate = this.createTimestampFromValue(endDate);
 
         if (!!endDate && endDate < startDate) {
-            this.displayMessage('userCard.error.endDateBeforeStartDate', '', MessageLevel.ERROR);
+            this.displayMessage('shared.endDateBeforeStartDate', '', MessageLevel.ERROR);
             return;
         }
 

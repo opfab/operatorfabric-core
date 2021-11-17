@@ -160,7 +160,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
         const publishEnd = this.extractTime(this.loggingForm.get('publishDateTo'));
 
         if (publishStart != null && !isNaN(publishStart) && publishEnd != null && !isNaN(publishEnd) && publishStart > publishEnd) {
-            this.displayMessage('logging.filters.publishEndDateBeforeStartDate','',MessageLevel.ERROR);
+            this.displayMessage('shared.filters.publishEndDateBeforeStartDate','',MessageLevel.ERROR);
             return;
         }
 
@@ -168,7 +168,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
         const activeEnd = this.extractTime(this.loggingForm.get('activeTo'));
 
         if (activeStart != null && !isNaN(activeStart) && activeEnd != null && !isNaN(activeEnd) && activeStart > activeEnd) {
-            this.displayMessage('logging.filters.activeEndDateBeforeStartDate','',MessageLevel.ERROR);
+            this.displayMessage('shared.filters.activeEndDateBeforeStartDate','',MessageLevel.ERROR);
             return;
         }
 
@@ -249,16 +249,16 @@ export class LoggingComponent implements OnDestroy, OnInit {
             .subscribe((page: Page<LightCard>) => {
                 const lines = page.content;
 
-                const severityColumnName = this.translateColumn('logging.result.severity');
-                const timeOfActionColumnName = this.translateColumn('logging.result.timeOfAction');
-                const processGroupColumnName = this.translateColumn('logging.result.processGroup');
-                const processColumnName = this.translateColumn('logging.result.process');
-                const titleColumnName = this.translateColumn('logging.result.title');
-                const summaryColumnName = this.translateColumn('logging.result.summary');
-                const stateColumnName = this.translateColumn('logging.result.state');
-                const descriptionColumnName = this.translateColumn('logging.result.description');
-                const senderColumnName = this.translateColumn('logging.result.sender');
-                const representativeColumnName = this.translateColumn('logging.result.representative');
+                const severityColumnName = this.translateColumn('shared.result.severity');
+                const timeOfActionColumnName = this.translateColumn('shared.result.timeOfAction');
+                const processGroupColumnName = this.translateColumn('shared.result.processGroup');
+                const processColumnName = this.translateColumn('shared.result.process');
+                const titleColumnName = this.translateColumn('shared.result.title');
+                const summaryColumnName = this.translateColumn('shared.result.summary');
+                const stateColumnName = this.translateColumn('shared.result.state');
+                const descriptionColumnName = this.translateColumn('shared.result.description');
+                const senderColumnName = this.translateColumn('shared.result.sender');
+                const representativeColumnName = this.translateColumn('shared.result.representative');
                
 
                 lines.forEach((card:any) => {
