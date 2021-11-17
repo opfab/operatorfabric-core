@@ -20,6 +20,8 @@ import org.opfab.externaldevices.repositories.DeviceConfigurationRepository;
 import org.opfab.externaldevices.repositories.SignalMappingRepository;
 import org.opfab.externaldevices.repositories.UserConfigurationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
@@ -43,11 +45,27 @@ public class DevicesService {
     public static final String OUTDATED_DRIVER = "Driver exists in pool for {}: {}, but configuration has changed. Replacing it with new driver.";
     public static final String UNSUPPORTED_SIGNAL ="Signal %1$s is not supported by device %2$s";
 
+    public static final int WATCHDOG_REGISTER = 0;
+
     private final UserConfigurationRepository userConfigurationRepository;
     private final DeviceConfigurationRepository deviceConfigurationRepository;
     private final SignalMappingRepository signalMappingRepository;
 
     private final Map<String,ExternalDeviceDriver> deviceDriversPool;
+
+    @Scheduled(cron = "${operatorfabric.externaldevices.watchdogCron:*/5 * * * * *}", zone = "UTC")
+    public void sendWatchdog() {
+        this.deviceDriversPool.forEach((deviceId, externalDeviceDriver) -> {
+            if(externalDeviceDriver.isConnected()) { // To avoid reconnecting drivers automatically
+                try {
+                    log.debug("Sending watchdog signal for device {}",deviceId);
+                    externalDeviceDriver.send(WATCHDOG_REGISTER);
+                } catch (ExternalDeviceDriverException e) {
+                    log.error("Watchdog signal couldn't be sent to device {} (driver: {})",deviceId,externalDeviceDriver.toString());
+                }
+            }
+        });
+    }
 
     @Autowired
     public DevicesService(UserConfigurationRepository userConfigurationRepository,
