@@ -22,7 +22,7 @@ dependencies {
     testImplementation spring.securityTest
     testImplementation project(':tools:generic:test-utilities')
     testImplementation project(':tools:spring:spring-test-utilities')
-    testImplementation testing.awaitility
+    testImplementation testing_deps.awaitility
 
     implementation misc.jlibmodbus
 }

@@ -13,9 +13,9 @@ subprojects {
         swaggerUI generator.swaggerUI
         annotationProcessor misc.lombok
         implementation misc.lombok
-        testRuntimeOnly testing.junit5Engine
-        testImplementation testing.junit5Api
-        testImplementation boot.starterTest, testing.assertJ, misc.lombok
+        testRuntimeOnly testing_deps.junit5Engine
+        testImplementation testing_deps.junit5Api
+        testImplementation boot.starterTest, testing_deps.assertJ, misc.lombok
         implementation misc.jacksonAnnotations
     }
 

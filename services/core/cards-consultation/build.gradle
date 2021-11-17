@@ -18,7 +18,7 @@ dependencies {
     implementation project(':client:users-client-data')
     implementation project(':tools:spring:spring-mongo-utilities')
     implementation project(':tools:spring:spring-oauth2-utilities')
-    testImplementation testing.reactor
+    testImplementation testing_deps.reactor
     testImplementation project(':tools:spring:spring-test-utilities')
 }
 
