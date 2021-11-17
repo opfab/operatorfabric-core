@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    testImplementation testing.karate
+    testImplementation testing_deps.karate
 }
 
 test {

@@ -1,3 +1,3 @@
 dependencies{
-    implementation testing.assertJ
+    implementation testing_deps.assertJ
 }
