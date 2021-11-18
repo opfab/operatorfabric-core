@@ -43,7 +43,9 @@
       "businessPeriod" : "PERIODE METIER",
       "time": "DATE",
       "answer": "REPONSE",
-      "emitter": "EMETTEUR"
+      "emitter": "EMETTEUR",
+      "entitiesResponses": "REPONSES",
+      "requiredResponses": "REPONSES REQUISES"
     },
     "noResult": "Votre recherche ne correspond à aucun résultat.",
     "exportToExcel": "Exporter les données",

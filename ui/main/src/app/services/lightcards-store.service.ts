@@ -33,6 +33,7 @@ import {UserService} from './user.service';
 export class LightCardsStoreService {
 
     private lightCards = new Map();
+    private childCards = new Map();
     private lightCardsEvents = new Subject<Map<any, any>>();
     private lightCardsEventsWithLimitedUpdateRate = new ReplaySubject<Array<any>>();
     private newLightCards = new Subject<LightCard>();
@@ -138,12 +139,22 @@ export class LightCardsStoreService {
         return this.lightCardsEventsWithLimitedUpdateRate.asObservable();
     }
 
+    public getChildCards(parentCardId: string) {
+        return this.childCards.get(parentCardId);
+    }
+
     public getLoadingInProgress() {
         return this.loadingInProgress.asObservable();
     }
 
     public removeLightCard(cardId) {
-        this.lightCards.delete(cardId);
+        const card = this.lightCards.get(cardId);
+        if (!card) { //is a child card
+            this.removeChildCard(cardId);
+        } else {
+            this.childCards.delete(cardId)
+            this.lightCards.delete(cardId);
+        }
         this.lightCardsEvents.next(this.lightCards);
     }
 
@@ -171,6 +182,7 @@ export class LightCardsStoreService {
     public addOrUpdateLightCard(card) {
         this.nbCardLoadedInHalfSecondInterval++;
         if (!!card.parentCardId) {
+            this.addChildCard(card);
             const isFromCurrentUser = this.isLightChildCardFromCurrentUserEntity(card);
             if (isFromCurrentUser) {
                 const parentCard = this.lightCards.get(card.parentCardId)
@@ -195,6 +207,31 @@ export class LightCardsStoreService {
         }
     }
 
+    private addChildCard(card: LightCard) {
+        if (!!card.parentCardId) {
+            const children = this.childCards.get(card.parentCardId);
+            if (children) {
+                children.push(card);
+            } else {
+                this.childCards.set(card.parentCardId, [card]);
+            }
+        }
+    }
+
+    private removeChildCard(cardId) {
+        this.childCards.forEach( (childs, parentCardId) => {
+
+            const childIdx = childs.findIndex(c => c.id === cardId);
+            if (childIdx >= 0){
+                const removed = childs.splice(childIdx, 1);
+
+                if (childs.length == 0 && this.isLightChildCardFromCurrentUserEntity(removed[0])) {
+                    const parentCard = this.lightCards.get(parentCardId);
+                    parentCard.hasChildCardFromCurrentUserEntity = false;
+                }
+            }
+        })
+    }
 
     private isLightChildCardFromCurrentUserEntity(childCard): boolean {
         return this.userService.getCurrentUserWithPerimeters().userData.entities.some((entity) => entity === childCard.publisher);

@@ -43,7 +43,9 @@
       "businessPeriod" : "BUSINESS PERIOD",
       "time": "TIME",
       "answer": "ANSWER",
-      "emitter": "EMITTER"
+      "emitter": "EMITTER",
+      "entitiesResponses": "ANSWERS",
+      "requiredResponses": "REQUIRED ANSWERS"
     },
     "noResult": "Your search did not match any results.",
     "exportToExcel": "Export data",

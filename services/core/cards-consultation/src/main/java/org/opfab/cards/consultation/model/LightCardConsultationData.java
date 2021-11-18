@@ -127,7 +127,6 @@ public class LightCardConsultationData implements LightCard {
                 .summaryTranslated(other.getSummaryTranslated())
                 .hasBeenAcknowledged(other.getHasBeenAcknowledged())
                 .hasBeenRead(other.getHasBeenRead())
-                .entitiesAllowedToRespond(other.getEntitiesAllowedToRespond())
                 .publisherType(other.getPublisherType())
                 .representative(other.getRepresentative())
                 .representativeType(other.getRepresentativeType())
@@ -138,7 +137,9 @@ public class LightCardConsultationData implements LightCard {
         if(other.getTimeSpans()!=null && !other.getTimeSpans().isEmpty())
             builder.timeSpansSet(new HashSet<>(other.getTimeSpans()));
         if(other.getEntitiesAllowedToRespond()!=null && ! other.getEntitiesAllowedToRespond().isEmpty())
-            builder.tags(other.getEntitiesAllowedToRespond());
+            builder.entitiesAllowedToRespond(other.getEntitiesAllowedToRespond());
+        if(other.getEntitiesRequiredToRespond()!=null && ! other.getEntitiesRequiredToRespond().isEmpty())
+            builder.entitiesRequiredToRespond(other.getEntitiesRequiredToRespond());
         return builder.build();
 
     }

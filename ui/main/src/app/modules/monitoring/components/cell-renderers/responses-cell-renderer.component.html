@@ -1,0 +1,25 @@
+<!-- Copyright (c) 2021, RTE (http://www.rte-france.com)                   -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
+ <span *ngFor="let entity of listVisibleEntities; let isLast = last"
+ [ngStyle]="{'color': entity.color,'text-align': 'center'}">
+ &nbsp; {{entity.name}} &nbsp;
+</span>
+<ng-template #entitiesDropdown>
+    <div *ngFor="let entity of listDropdownEntities;"
+      [ngStyle]="{'color': entity.color,'text-align': 'left'}">
+      &nbsp; {{entity.name}} &nbsp;
+    </div>
+  </ng-template>
+<span *ngIf="listDropdownEntities && listDropdownEntities.length > 0"
+    id="opfab-entities-dropdown" class="opfab-responses-dropdown" placement="bottom-right"
+    [ngbPopover]="entitiesDropdown" container="body" [autoClose]="'true'"  triggers="mouseenter:mouseleave"
+    popoverClass="opfab-popover-no-arrow">
+    &nbsp;..&nbsp;
+  </span>
