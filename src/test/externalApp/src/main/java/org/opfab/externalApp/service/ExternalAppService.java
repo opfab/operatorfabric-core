@@ -18,6 +18,6 @@ import java.util.Optional;
 @Service
 public interface ExternalAppService {
 	void receiveCard(Optional<JsonNode> requestBody);
-	void deleteCard(Optional<JsonNode> requestBody);
+	void deleteCard(String id);
 	String WelcomeMessage();
 }

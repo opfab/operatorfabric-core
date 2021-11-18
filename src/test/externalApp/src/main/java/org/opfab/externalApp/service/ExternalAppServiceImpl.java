@@ -25,8 +25,8 @@ public class ExternalAppServiceImpl implements ExternalAppService {
 	}
 
 	@Override
-	public void deleteCard(Optional<JsonNode> requestBody) {
-		log.info("Card suppression from Card Publication Service {} : \n\n", requestBody);
+	public void deleteCard(String id) {
+		log.info("Card suppression from Card Publication Service cardId = {} : \n\n", id);
 	}
 
 	public String WelcomeMessage() {

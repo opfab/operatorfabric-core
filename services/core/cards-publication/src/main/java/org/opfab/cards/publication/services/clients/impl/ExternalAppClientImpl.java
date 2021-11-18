@@ -95,13 +95,13 @@ public class ExternalAppClientImpl implements ExternalAppClient {
     }
 
     private String extractExternalUrl(String item) {
-        Set<Map.Entry<String, String>> set = externalRecipients.entrySet();
-        Stream<Map.Entry<String, String>> stream = set.stream();
-        Stream<Map.Entry<String, String>> filteredStream = stream.filter(x -> x.getKey().contains(item));
-        Stream<String> map = filteredStream.map(Map.Entry::getValue);
-        Optional<String> externalRecipientUrl = map.findFirst();
-
-        return externalRecipientUrl.orElse(StringUtils.EMPTY);
+        return externalRecipients
+        .entrySet()
+        .stream()
+        .filter(x -> x.getKey().contains(item))
+        .map(Map.Entry::getValue)
+        .findFirst()
+        .orElse(StringUtils.EMPTY);
     }
 
     private void callExternalApplication(CardPublicationData card, String externalRecipientUrl) {
@@ -148,12 +148,9 @@ public class ExternalAppClientImpl implements ExternalAppClient {
 
     private void notifyExternalHttpApplication(CardPublicationData card, String externalRecipientUrl) {
         try {
-            Map<String, String> params = new HashMap<>();
-            params.put("id", card.getId());
-
             HttpHeaders headers = createRequestHeader();
-            HttpEntity<CardPublicationData> requestBody = new HttpEntity<>(card, headers);
-            restTemplate.exchange(externalRecipientUrl, HttpMethod.DELETE, requestBody, String.class);
+            HttpEntity<String> requestBody = new HttpEntity<>("", headers);
+            restTemplate.exchange(externalRecipientUrl + "/" + card.getId(), HttpMethod.DELETE, requestBody, String.class);
 
         } catch (Exception ex) {
             throwException(ex);
