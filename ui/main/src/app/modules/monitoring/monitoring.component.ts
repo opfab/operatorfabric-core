@@ -140,6 +140,24 @@ export class MonitoringComponent implements OnInit, OnDestroy {
         return !representative.length ? sender : (sender + ' (' + representative + ')');
     }
 
+    private getEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards(card: LightCard) {
+        let entityIdsAllowedOrRequiredToRespond = [];
+        if (card.entitiesAllowedToRespond)
+            entityIdsAllowedOrRequiredToRespond = entityIdsAllowedOrRequiredToRespond.concat(card.entitiesAllowedToRespond);
+        if (card.entitiesRequiredToRespond)
+            entityIdsAllowedOrRequiredToRespond = entityIdsAllowedOrRequiredToRespond.concat(card.entitiesRequiredToRespond);
+
+        const entitiesAllowedOrRequiredToRespond = this.entitiesService.getEntitiesFromIds(entityIdsAllowedOrRequiredToRespond);
+ 
+        return this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedOrRequiredToRespond).map(entity => entity.id);
+    }
+
+    private getEntityIdsRequiredToRespondAndAllowedToSendCards(card: LightCard) {
+        if (!card.entitiesRequiredToRespond) return [];
+        const entitiesAllowedToRespond = this.entitiesService.getEntitiesFromIds(card.entitiesRequiredToRespond);
+        return this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond).map(entity => entity.id);
+    }
+
     private cardToResult(card: LightCard) : LineOfMonitoringResult{
         let typeOfState: TypeOfStateEnum;
         const procId = card.process;
@@ -166,11 +184,14 @@ export class MonitoringComponent implements OnInit, OnDestroy {
                         summaryTranslated: card.summaryTranslated,
                         processName: currentProcess.name,
                         cardId: card.id,
+                        cardUid: card.uid,
                         severity: card.severity.toLocaleLowerCase(),
                         processId: procId,
                         typeOfState: typeOfState,
                         answer: card.hasChildCardFromCurrentUserEntity,
-                        emitter: this.getEmitter(card)
+                        emitter: this.getEmitter(card),
+                        requiredResponses: this.getEntityIdsRequiredToRespondAndAllowedToSendCards(card),
+                        entitiesResponses: this.getEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards(card)
                     } as LineOfMonitoringResult);
             }
         }

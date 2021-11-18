@@ -157,6 +157,7 @@ public class CardPublicationData implements Card {
                 .severity(this.getSeverity())
                 .tags(this.getTags())
                 .entitiesAllowedToRespond(this.getEntitiesAllowedToRespond())
+                .entitiesRequiredToRespond(this.getEntitiesRequiredToRespond())
                 .title(((I18nPublicationData) this.getTitle()).copy())
                 .summary(((I18nPublicationData) this.getSummary()).copy())
                 .titleTranslated(this.getTitleTranslated())
