@@ -184,7 +184,7 @@ Feature: Cards
     And def cardUid = response.card.uid
 
 # Make sure externalRecipients are notified of card suppression
-    Given url opfabUrl + 'cards/cards/api_test.process1'
+    Given url opfabPublishCardUrl + 'cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200

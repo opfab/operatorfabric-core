@@ -332,7 +332,7 @@ class CardProcessServiceShould {
                 );
 
         mockServer.expect(ExpectedCount.once(),
-                requestTo(new URI(EXTERNALAPP_URL + "/" + cards.get(0).getId())))
+                requestTo(new URI(EXTERNALAPP_URL + "/PROCESS_CARD_USER.PROCESS_CARD_USER")))
                 .andExpect(method(HttpMethod.DELETE))
                 .andRespond(withStatus(HttpStatus.ACCEPTED)
                 );
@@ -510,7 +510,7 @@ class CardProcessServiceShould {
         cards.forEach(card-> cardProcessingService.processCard(card));
 
         mockServer.expect(ExpectedCount.once(),
-                requestTo(new URI(EXTERNALAPP_URL )))
+                requestTo(new URI(EXTERNALAPP_URL + "/" + cards.get(0).getId())))
                 .andExpect(method(HttpMethod.DELETE))
                 .andRespond(withStatus(HttpStatus.ACCEPTED)
                 );
