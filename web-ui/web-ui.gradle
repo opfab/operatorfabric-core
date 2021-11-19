@@ -1,9 +1,7 @@
 plugins {
+	id "base"
 	id "com.palantir.docker"
 }
-
-apply plugin: plugin.base
-apply plugin: plugin.dockerBuild
 
 docker {
 

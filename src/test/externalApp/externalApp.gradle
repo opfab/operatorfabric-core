@@ -3,11 +3,10 @@
 plugins {
 	id "com.palantir.docker"
 	id "org.springframework.boot"
+	id "io.spring.dependency-management"
 }
 
-apply plugin: plugin.bom
 apply plugin: 'java'
-apply plugin: plugin.dockerBuild
 
 
 configurations {
