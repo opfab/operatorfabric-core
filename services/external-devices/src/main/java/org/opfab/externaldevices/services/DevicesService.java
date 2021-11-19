@@ -11,22 +11,19 @@ package org.opfab.externaldevices.services;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
-import org.opfab.externaldevices.drivers.ExternalDeviceDriver;
-import org.opfab.externaldevices.drivers.ExternalDeviceDriverException;
-import org.opfab.externaldevices.drivers.ModbusDriver;
+import org.opfab.externaldevices.drivers.*;
 import org.opfab.externaldevices.model.*;
 import org.opfab.externaldevices.repositories.DeviceConfigurationRepository;
 import org.opfab.externaldevices.repositories.SignalMappingRepository;
 import org.opfab.externaldevices.repositories.UserConfigurationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * {@link DevicesService}
@@ -50,6 +47,7 @@ public class DevicesService {
     private final UserConfigurationRepository userConfigurationRepository;
     private final DeviceConfigurationRepository deviceConfigurationRepository;
     private final SignalMappingRepository signalMappingRepository;
+    private final ExternalDeviceDriverFactory externalDeviceDriverFactory;
 
     private final Map<String,ExternalDeviceDriver> deviceDriversPool;
 
@@ -67,13 +65,14 @@ public class DevicesService {
         });
     }
 
-    @Autowired
     public DevicesService(UserConfigurationRepository userConfigurationRepository,
                           DeviceConfigurationRepository deviceConfigurationRepository,
-                          SignalMappingRepository signalMappingRepository) {
+                          SignalMappingRepository signalMappingRepository,
+                          ExternalDeviceDriverFactory externalDeviceDriverFactory) {
         this.userConfigurationRepository = userConfigurationRepository;
         this.deviceConfigurationRepository = deviceConfigurationRepository;
         this.signalMappingRepository = signalMappingRepository;
+        this.externalDeviceDriverFactory = externalDeviceDriverFactory;
         this.deviceDriversPool = new HashMap<>();
     }
 
@@ -117,6 +116,21 @@ public class DevicesService {
         deviceConfigurationRepository.insert(new DeviceConfigurationData(deviceConfiguration));
     }
 
+    public List<Device> getDevices() {
+
+        return deviceConfigurationRepository.findAll().stream()
+                .map(this::createDeviceDataFromConfiguration)
+                .collect(Collectors.toList());
+
+    }
+
+    public Optional<Device> getDevice(String deviceId) {
+
+        return deviceConfigurationRepository.findById(deviceId)
+                .map(this::createDeviceDataFromConfiguration);
+
+    }
+
     private ExternalDeviceDriver getDriverForDevice(String deviceId) throws ExternalDeviceDriverException, ExternalDeviceConfigurationException {
         DeviceConfiguration deviceConfiguration = retrieveDeviceConfiguration(deviceId);
         synchronized (deviceDriversPool) {
@@ -139,7 +153,7 @@ public class DevicesService {
 
                 }
 
-                ExternalDeviceDriver newDriver = new ModbusDriver(deviceConfiguration.getHost(), deviceConfiguration.getPort());
+                ExternalDeviceDriver newDriver = externalDeviceDriverFactory.create(deviceConfiguration.getHost(), deviceConfiguration.getPort());
                 deviceDriversPool.put(deviceId, newDriver);
                 return newDriver;
 
@@ -187,6 +201,14 @@ public class DevicesService {
             throw new ExternalDeviceConfigurationException(String.format(CONFIGURATION_NOT_FOUND, "signal", signalMappingId));
         }
 
+    }
+
+    private DeviceData createDeviceDataFromConfiguration(DeviceConfiguration deviceConfiguration) {
+        DeviceData device = new DeviceData(deviceConfiguration);
+        if (deviceDriversPool.containsKey(device.getId())) {
+            device.setIsConnected(deviceDriversPool.get(device.getId()).isConnected());
+        }
+        return device;
     }
 
 }
