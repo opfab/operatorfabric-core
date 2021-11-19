@@ -34,15 +34,10 @@ public class ModbusDriver implements ExternalDeviceDriver {
 
     private ModbusMaster modbusMaster;
 
-    public ModbusDriver(String host, int port) throws ExternalDeviceDriverException {
+    protected ModbusDriver(InetAddress resolvedHost, int port) throws ExternalDeviceDriverException {
 
-        try {
-            this.resolvedHost = InetAddress.getByName(host);
-        } catch (UnknownHostException e) {
-            throw new ExternalDeviceDriverException("Unable to initialize ModbusDriver with host "+host, e);
-        }
+        this.resolvedHost = resolvedHost;
         this.port = port;
-
         this.initModbusMaster();
 
     }

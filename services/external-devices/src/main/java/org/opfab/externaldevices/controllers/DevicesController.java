@@ -38,6 +38,8 @@ public class DevicesController implements DevicesApi {
 
     private static final String CONNECT_FAILED_DUE_TO_CONFIG = "Could not connect to device %1$s due to a configuration issue.";
     private static final String CONNECT_FAILED = "Connection to device %1$s failed.";
+    private static final String DISCONNECT_FAILED = "Disconnection from device %1$s failed.";
+    private static final String DEVICE_NOT_FOUND_MSG = "Device %s not found";
 
     private final DevicesService devicesService;
 
@@ -66,23 +68,44 @@ public class DevicesController implements DevicesApi {
         }
         response.setStatus(200);
         return null;
+
     }
 
     @Override
     public Void disconnectDevice(HttpServletRequest request, HttpServletResponse response, String deviceId) {
 
+        try {
+            this.devicesService.disconnectDevice(deviceId);
+        } catch (ExternalDeviceDriverException e) {
+            throw new ApiErrorException(ApiError.builder()
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .message(String.format(DISCONNECT_FAILED,deviceId))
+                    .build(), e);
+        }
+        response.setStatus(200);
         return null;
+
     }
 
     @Override
     public Device getDevice(HttpServletRequest request, HttpServletResponse response, String deviceId) {
 
-        return null;
+        response.setStatus(200);
+        return this.devicesService.getDevice(deviceId).orElseThrow(
+                ()-> new ApiErrorException(
+                        ApiError.builder()
+                                .status(HttpStatus.NOT_FOUND)
+                                .message(String.format(DEVICE_NOT_FOUND_MSG,deviceId))
+                                .build()
+                )
+        );
     }
 
     @Override
     public List<Device> getDevices(HttpServletRequest request, HttpServletResponse response) {
 
-        return null;
+        response.setStatus(200);
+        return this.devicesService.getDevices();
+
     }
 }

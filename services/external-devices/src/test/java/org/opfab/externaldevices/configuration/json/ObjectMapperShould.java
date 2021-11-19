@@ -7,14 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.externaldevices.configuration;
+package org.opfab.externaldevices.configuration.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.externaldevices.application.UnitTestApplication;
-import org.opfab.externaldevices.configuration.json.JacksonConfig;
 import org.opfab.externaldevices.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
