@@ -9,9 +9,9 @@ subprojects {
     if (!project.name.equals("core")) {
         apply plugin: 'java'
         apply plugin: 'jacoco'
-        apply plugin: plugin.bom
-        apply plugin: plugin.boot
-        apply plugin: plugin.dockerBuild
+        apply plugin: 'io.spring.dependency-management'
+        apply plugin: 'org.springframework.boot'
+        apply plugin: "com.palantir.docker"
 
         /////// DEPENDENCIES
 

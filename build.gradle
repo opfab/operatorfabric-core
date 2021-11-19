@@ -87,14 +87,6 @@ ext {
             swaggerUI               : "org.webjars:swagger-ui:$swaggerUI",
     ]
 
-    plugin = [
-            base        : "base",
-            boot        : "org.springframework.boot",
-            bom         : "io.spring.dependency-management",
-            dockerBuild : "com.palantir.docker",
-            dockerRun   : "com.palantir.docker-run",
-
-    ]
     apk = [
             proxy : [uri:"",httpsuri:"",user:"",password:""]
     ]
@@ -145,7 +137,7 @@ subprojects {
 
         subprojects {
             apply plugin: 'java'
-            apply plugin: plugin.bom
+            apply plugin: 'io.spring.dependency-management'
 
             test {
                 testLogging {
