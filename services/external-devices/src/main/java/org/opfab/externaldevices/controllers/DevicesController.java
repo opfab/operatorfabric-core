@@ -9,14 +9,10 @@
 
 package org.opfab.externaldevices.controllers;
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
 import org.opfab.externaldevices.drivers.ExternalDeviceDriverException;
 import org.opfab.externaldevices.model.Device;
-import org.opfab.externaldevices.model.DeviceConfiguration;
-import org.opfab.externaldevices.model.SignalMapping;
-import org.opfab.externaldevices.model.UserConfiguration;
 import org.opfab.externaldevices.services.DevicesService;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;

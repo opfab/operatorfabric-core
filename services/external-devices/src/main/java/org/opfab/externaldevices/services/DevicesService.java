@@ -11,18 +11,24 @@ package org.opfab.externaldevices.services;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.opfab.externaldevices.drivers.*;
+import org.opfab.externaldevices.configuration.externaldevices.ExternalDevicesWatchdogProperties;
+import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
+import org.opfab.externaldevices.drivers.ExternalDeviceDriver;
+import org.opfab.externaldevices.drivers.ExternalDeviceDriverException;
+import org.opfab.externaldevices.drivers.ExternalDeviceDriverFactory;
 import org.opfab.externaldevices.model.*;
 import org.opfab.externaldevices.repositories.DeviceConfigurationRepository;
 import org.opfab.externaldevices.repositories.SignalMappingRepository;
 import org.opfab.externaldevices.repositories.UserConfigurationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -42,37 +48,42 @@ public class DevicesService {
     public static final String OUTDATED_DRIVER = "Driver exists in pool for {}: {}, but configuration has changed. Replacing it with new driver.";
     public static final String UNSUPPORTED_SIGNAL ="Signal %1$s is not supported by device %2$s";
 
-    public static final int WATCHDOG_REGISTER = 0;
-
     private final UserConfigurationRepository userConfigurationRepository;
     private final DeviceConfigurationRepository deviceConfigurationRepository;
     private final SignalMappingRepository signalMappingRepository;
     private final ExternalDeviceDriverFactory externalDeviceDriverFactory;
+    private final ExternalDevicesWatchdogProperties externalDevicesWatchdogProperties;
 
     private final Map<String,ExternalDeviceDriver> deviceDriversPool;
 
-    @Scheduled(cron = "${operatorfabric.externaldevices.watchdogCron:*/5 * * * * *}", zone = "UTC")
+    @Scheduled(cron = "${operatorfabric.externaldevices.watchdog.cron:*/5 * * * * *}", zone = "UTC")
     public void sendWatchdog() {
-        this.deviceDriversPool.forEach((deviceId, externalDeviceDriver) -> {
-            if(externalDeviceDriver.isConnected()) { // To avoid reconnecting drivers automatically
-                try {
-                    log.debug("Sending watchdog signal for device {}",deviceId);
-                    externalDeviceDriver.send(WATCHDOG_REGISTER);
-                } catch (ExternalDeviceDriverException e) {
-                    log.error("Watchdog signal couldn't be sent to device {} (driver: {})",deviceId,externalDeviceDriver.toString());
+        if(externalDevicesWatchdogProperties.getEnabled()) {
+            this.deviceDriversPool.forEach((deviceId, externalDeviceDriver) -> {
+                if(externalDeviceDriver.isConnected()) { // To avoid reconnecting drivers automatically
+                    try {
+                        log.debug("Sending watchdog signal for device {}",deviceId);
+                        externalDeviceDriver.send(externalDevicesWatchdogProperties.getSignalId());
+                    } catch (ExternalDeviceDriverException e) {
+                        log.error("Watchdog signal couldn't be sent to device {} (driver: {})",deviceId,externalDeviceDriver.toString());
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            log.debug("Watchdog signal disabled.");
+        }
     }
 
     public DevicesService(UserConfigurationRepository userConfigurationRepository,
                           DeviceConfigurationRepository deviceConfigurationRepository,
                           SignalMappingRepository signalMappingRepository,
-                          ExternalDeviceDriverFactory externalDeviceDriverFactory) {
+                          ExternalDeviceDriverFactory externalDeviceDriverFactory,
+                          ExternalDevicesWatchdogProperties externalDevicesWatchdogProperties) {
         this.userConfigurationRepository = userConfigurationRepository;
         this.deviceConfigurationRepository = deviceConfigurationRepository;
         this.signalMappingRepository = signalMappingRepository;
         this.externalDeviceDriverFactory = externalDeviceDriverFactory;
+        this.externalDevicesWatchdogProperties = externalDevicesWatchdogProperties;
         this.deviceDriversPool = new HashMap<>();
     }
 

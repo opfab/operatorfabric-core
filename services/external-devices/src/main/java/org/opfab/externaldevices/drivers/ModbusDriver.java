@@ -19,7 +19,6 @@ import com.intelligt.modbus.jlibmodbus.tcp.TcpParameters;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 /** This class transforms requests to trigger sound notifications into calls to the external device
  * */

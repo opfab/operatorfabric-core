@@ -9,8 +9,6 @@
 
 package org.opfab.externaldevices.drivers;
 
-import org.springframework.stereotype.Component;
-
 public interface ExternalDeviceDriverFactory {
 
     ExternalDeviceDriver create(String host, int port) throws ExternalDeviceDriverException;
