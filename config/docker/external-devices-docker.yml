@@ -3,6 +3,8 @@ spring:
     name: external-devices
 operatorfabric:
   externaldevices:
+    watchdog:
+      enabled: true
     default:
       deviceConfigurations:
         - id: CDS_1

@@ -15,9 +15,6 @@ import org.opfab.externaldevices.configuration.externaldevices.ExternalDevicesPr
 import org.opfab.externaldevices.model.DeviceConfigurationData;
 import org.opfab.externaldevices.model.SignalMappingData;
 import org.opfab.externaldevices.model.UserConfigurationData;
-import org.opfab.externaldevices.model.DeviceConfiguration;
-import org.opfab.externaldevices.model.SignalMapping;
-import org.opfab.externaldevices.model.UserConfiguration;
 import org.opfab.externaldevices.repositories.DeviceConfigurationRepository;
 import org.opfab.externaldevices.repositories.SignalMappingRepository;
 import org.opfab.externaldevices.repositories.UserConfigurationRepository;

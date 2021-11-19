@@ -134,7 +134,9 @@ The external devices service can be configured with the following properties:
 |===
 |name|default|mandatory?|Description
 
-|operatorfabric.externaldevices.watchdogCron|`*/5 * * * * *`|no|CRON expression determining when watchdog signals should be sent to external devices.
+|operatorfabric.externaldevices.watchdog.enabled|false|no|If true, watchdog signals will be sent to external devices to show that the OperatorFabric is running and connected.
+|operatorfabric.externaldevices.watchdog.cron|`*/5 * * * * *`|no|CRON expression determining when watchdog signals should be sent to external devices.
+|operatorfabric.externaldevices.watchdog.signalId|0|no|Id the signal the external devices are expecting as watchdog
 |===
 
 

@@ -10,6 +10,7 @@
 package org.opfab.externaldevices.drivers;
 
 import lombok.extern.slf4j.Slf4j;
+
 import java.net.InetAddress;
 
 @Slf4j
