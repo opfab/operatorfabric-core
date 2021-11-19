@@ -234,9 +234,8 @@ export class UserCardComponent implements OnDestroy, OnInit {
                         this.messageForm.get('process').disable();
                         this.messageForm.get('state').setValue(this.cardToEdit.card.state);
                         this.messageForm.get('startDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.startDate)));
-                        if (this.cardToEdit.card.endDate || this.endDateVisible)
-                            this.messageForm.get('endDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.endDate)));
-                        if (!!this.cardToEdit.card.lttd) this.messageForm.get('lttd').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.lttd)));
+                        if (!!this.cardToEdit.card.endDate && this.endDateVisible) this.messageForm.get('endDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.endDate)));
+                        if (!!this.cardToEdit.card.lttd && this.lttdVisible) this.messageForm.get('lttd').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.lttd)));
                         this.selectedRecipients = this.cardToEdit.card.entityRecipients;
                         this.pageLoading = false;
             });
