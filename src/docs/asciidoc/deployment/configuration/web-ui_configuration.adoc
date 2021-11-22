@@ -50,6 +50,7 @@ a|The keycloak logout URL. Is a composition of:
  - Your keycloak instance and the _auth_ keyword (ex: https://www.keycloakurl.com/auth), but we also support domains without _auth_ (ex: https://www.keycloakurl.com/customPath)
  - The realm name (Ex: dev)
  - The redirect URL (_redirect_uri_): The redirect URL after success authentification
+|security.changePasswordUrl||no|URL to change the user password (if the top-right menu item "Change password" is visible)
 |security.oauth2.flow.mode|PASSWORD|no
 a|authentication mode, awailable options:
 

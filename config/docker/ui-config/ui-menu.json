@@ -52,6 +52,10 @@
       "visible": true
     },
     {
+      "id": "changepassword",
+      "visible": true
+    },
+    {
       "id": "logout",
       "visible": true
     }

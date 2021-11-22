@@ -64,12 +64,16 @@ const routes: Routes = [
         path: 'feedconfiguration',
         loadChildren: () => import('./modules/feedconfiguration/feedconfiguration.module').then(m => m.FeedconfigurationModule),
     },
+    {
+        path: 'changepassword',
+        loadChildren: () => import('./modules/changepassword/changepassword.module').then(m => m.ChangepasswordModule),
+    },
     {   path: '**',
         redirectTo: defaultPath
     }
 ];
 const startIndex = 0;
-const numberOfHiddenRoutes = 7 ; // 'Calendar', 'businessconfigparty', 'settings', 'navbar', 'admin', 'realtimeusers', 'feedconfiguration'
+const numberOfHiddenRoutes = 8 ; // 'Calendar', 'businessconfigparty', 'settings', 'navbar', 'admin', 'realtimeusers', 'feedconfiguration'
 const manageIndexesWhichBeginAtZero = 1;
 const numberOfRoutes = routes.length;
 const lastIndexOfVisibleElements = numberOfRoutes - numberOfHiddenRoutes - manageIndexesWhichBeginAtZero;

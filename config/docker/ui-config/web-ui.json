@@ -111,7 +111,8 @@
       }
     },
     "provider-realm": "dev",
-    "provider-url": "http://localhost:89"
+    "provider-url": "http://localhost:89",
+    "changePasswordUrl": "http://localhost:89/auth/realms/dev/account/#/security/signingin"
   },
   "settings": {
     "tags": {

@@ -63,6 +63,7 @@
     "admin": "Administration",
     "monitoring": "Monitoring",
     "logout": "Déconnexion",
+    "changePassword": "Modifier votre mot de passe",
     "settings": "Paramètres",
     "feedConfiguration": "Configuration des notifications",
     "about": "À propos",
