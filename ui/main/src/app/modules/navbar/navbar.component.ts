@@ -60,6 +60,7 @@ export class NavbarComponent implements OnInit {
   displaySettings: boolean;
   displayAbout: boolean;
   displayLogOut: boolean;
+  displayChangePassword: boolean;
   displayEnvironmentName = false;
   environmentName : string;
   environmentColor : string;
@@ -116,6 +117,7 @@ export class NavbarComponent implements OnInit {
     this.displaySettings = visibleCoreMenus.includes('settings');
     this.displayAbout = visibleCoreMenus.includes('about');
     this.displayLogOut = visibleCoreMenus.includes('logout');
+    this.displayChangePassword = visibleCoreMenus.includes('changepassword');
     this.nightDayMode = visibleCoreMenus.includes('nightdaymode');
 
     this.environmentName = this.configService.getConfigValue('environmentName');
@@ -129,7 +131,6 @@ export class NavbarComponent implements OnInit {
     } else {
       this.loadNightModeFromUserPreferences();
     }
-
   }
 
   private getCurrentUserCustomMenus(menus: Menu[]): Menu[] {

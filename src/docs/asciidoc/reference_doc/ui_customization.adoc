@@ -64,7 +64,7 @@ listed groups.
 |Calendar
 |calendar
 
-.7+|Top-right menu
+.8+|Top-right menu
 
 |Administration
 |admin
@@ -83,6 +83,9 @@ listed groups.
 
 |About
 |about
+
+|Change password
+|changepassword
 
 |Logout
 |logout

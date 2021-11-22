@@ -16,6 +16,7 @@
     "admin": "Administration",
     "monitoring": "Monitoring",
     "logout": "Logout",
+    "changePassword": "Change password",
     "settings": "Settings",
     "feedConfiguration": "Notification reception configuration",
     "about": "About",
