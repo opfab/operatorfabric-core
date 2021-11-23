@@ -51,6 +51,11 @@ Cypress.Commands.add('loadTestConf', () => {
     cy.exec('cd .. && ./resources/loadTestConf.sh '+Cypress.env('host'));
 })
 
+Cypress.Commands.add('loadEmptyProcessGroups', () => {
+    // This load a process groups file without any process group
+    cy.exec('cd ../resources/processGroups && ./loadProcessGroups.sh emptyProcessGroups.json '+Cypress.env('host'));
+})
+
 Cypress.Commands.add('send6TestCards', () => {
     cy.exec('cd .. && ./resources/send6TestCards.sh '+Cypress.env('host'));
 })

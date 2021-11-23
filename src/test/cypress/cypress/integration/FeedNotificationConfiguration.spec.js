@@ -18,7 +18,7 @@ describe ('Feed notification configuration tests',function () {
         cy.loadTestConf();
     });
 
-    it('Check feed notification configuration screen', function () {
+    it('Check feed notification configuration screen for operator1', function () {
         cy.loginOpFab('operator1', 'test');
 
         // We move to feed notification configuration screen
@@ -72,6 +72,100 @@ describe ('Feed notification configuration tests',function () {
         cy.get('.opfab-feedconfiguration-processlist').last().find('.opfab-feedconfiguration-process').first().find('.row').contains('Dummy response state for tests').should('not.exist');
     })
 
+    it('Check feed notification configuration screen for operator4', function () {
+        cy.loginOpFab('operator4', 'test');
+
+        // We move to feed notification configuration screen
+        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-menu-icon-notification').click();
+
+        cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION RECEPTION CONFIGURATION\n');
+        cy.get('.opfab-feedconfiguration-processlist').should('have.length', 2);
+
+
+        // First process group
+        cy.get('.opfab-feedconfiguration-processlist').first().find('h5').should('have.text', 'Base Examples');
+
+        // We check the number of processes and their titles
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').should('have.length', 2);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').first().should('have.text', 'IGCC ');
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').last().should('have.text', 'Process example  ');
+
+        // We check the number of states for each process
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').first().find('.row').should('have.length', 6);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').last().find('.row').should('have.length', 1);
+
+        // We check the following state is absent because property 'isOnlyAChildState' is set to true
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').last().find('.row').contains('Action required').should('exist');
+
+
+        // Second process group
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('h5').should('have.text', 'User card examples');
+
+        // We check the number of processes and their titles
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').should('have.length', 3);
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').first().should('have.text', 'Examples for new cards  ');
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').eq(1).should('have.text', 'Examples for new cards 2 ');
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').last().should('have.text', 'Examples for new cards 3 ');
+
+        // We check the number of states for each process
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').first().find('.row').should('have.length', 2);
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').eq(1).find('.row').should('have.length', 2);
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').last().find('.row').should('have.length', 1);
+    })
+
+    it('Check feed notification configuration screen for admin', function () {
+        cy.loginOpFab('admin', 'test');
+
+        // We move to feed notification configuration screen
+        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-menu-icon-notification').click();
+
+        cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION RECEPTION CONFIGURATION\n');
+        cy.get('.opfab-feedconfiguration-processlist').should('have.length', 0);
+
+        cy.get('#opfab-feedconfiguration-no-process-state-available').should('exist');
+        cy.get('#opfab-feedconfiguration-no-process-state-available').contains('No process/state available').should('exist');
+    })
+
+    it('Check feed notification configuration screen for operator1, with a config without process group', function () {
+        cy.loginOpFab('operator1', 'test');
+
+        cy.loadEmptyProcessGroups();
+        cy.reload();
+
+        // We move to feed notification configuration screen
+        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-menu-icon-notification').click();
+
+        cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION RECEPTION CONFIGURATION\n');
+        cy.get('.opfab-feedconfiguration-processlist').should('have.length', 1);
+
+        // We check we have 6 processes
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').should('have.length', 6);
+
+        // We check the title of each process
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(0).should('have.text', 'Examples for new cards  ');
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(1).should('have.text', 'Examples for new cards 2 ');
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(2).should('have.text', 'Examples for new cards 3 ');
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(3).should('have.text', 'IGCC ');
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(4).should('have.text', 'Process example  ');
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(5).should('have.text', 'Test process for cypress ');
+
+        // We check the number of states for each process
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(0).find('.row').should('have.length', 2);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(1).find('.row').should('have.length', 2);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(2).find('.row').should('have.length', 1);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(3).find('.row').should('have.length', 6);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(4).find('.row').should('have.length', 7);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(5).find('.row').should('have.length', 9);
+
+        // We check state 'Planned outage date response' from 'Process example' is absent because property 'isOnlyAChildState' is set to true
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(4).find('.row').contains('Planned outage date response', {matchCase: false}).should('not.exist');
+
+        cy.loadTestConf();
+        cy.reload();
+    })
 
     it('Check feature select/unselect all states for a process', function () {
         cy.loginOpFab('operator1', 'test');
