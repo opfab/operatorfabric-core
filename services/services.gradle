@@ -67,13 +67,6 @@ subprojects {
             destinationDirectory.set(file("build/unused_plain_jar"))
         }
 
-        task unitTest(type: Test) {
-            description 'runs unit tests'
-            filter {
-                includeTestsMatching "*Should"
-            }
-        }
-
         jacocoTestReport {
             group = "Reporting"
             reports {

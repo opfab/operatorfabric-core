@@ -109,7 +109,6 @@ copyProcessGroupsFile2.dependsOn prepareTestDataDir
 copyProcessGroupsFile3.dependsOn prepareTestDataDir
 copyMonitoringFile.dependsOn prepareTestDataDir
 test.dependsOn prepareTestDataDir,compressBundle1Data,compressBundle2Data,copyProcessGroupsFile,copyProcessGroupsFile2,copyProcessGroupsFile3,copyMonitoringFile
-unitTest.dependsOn prepareTestDataDir,compressBundle1Data,compressBundle2Data,copyProcessGroupsFile,copyProcessGroupsFile2,copyProcessGroupsFile3,copyMonitoringFile
 bootRun.dependsOn createDevData
 
 // <<<<< Test data tasks
