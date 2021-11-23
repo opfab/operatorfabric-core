@@ -26,16 +26,13 @@ describe('User Card ', function () {
           cy.get('of-light-card').should('have.length',0);
     
           cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
-          cy.waitDefaultTime();
           cy.get("of-usercard").should('exist'); 
           cy.get('#message').type('Hello')
           cy.get('#opfab-recipients').click();
           cy.get('#opfab-recipients').find('li').eq(2).click();
           cy.get('#opfab-recipients').click();
           cy.get('#opfab-usercard-btn-prepareCard').click();
-          cy.waitDefaultTime();
           cy.get('#opfab-usercard-btn-accept').click();
-          cy.waitDefaultTime();
           cy.get('of-light-card').should('have.length',1);
           cy.get('of-light-card').eq(0).click()
           .find('[id^=opfab-feed-light-card]')
