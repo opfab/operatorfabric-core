@@ -17,6 +17,18 @@
   "gradle-lite": {
     "fileMatch": ["versions.properties"]
   },
+  "major": {
+    "packageRules": [
+      {
+        "matchPackagePrefixes": [
+          "@angular/",
+          "@angular-devkit/",
+          "azul/zulu-openjdk-alpine"
+        ],
+        "enabled": false
+      }
+    ]
+  },
   "packageRules": [
     {
       "groupName": "angular",
