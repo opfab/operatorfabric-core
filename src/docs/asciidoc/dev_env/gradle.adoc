@@ -17,7 +17,6 @@ to gradle and plugins official documentation.
 === Common tasks for all sub-projects
 
 * Test tasks
-** unitTest: runs unit tests
 * Other:
 ** copyWorkingDir: copies [sub-project]/src/main/docker/volume to
 [sub-project]/build/
