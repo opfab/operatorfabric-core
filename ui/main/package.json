@@ -37,7 +37,7 @@
     "@ngrx/entity": "12.5.1",
     "@ngrx/router-store": "12.5.1",
     "@ngrx/store": "12.5.1",
-    "@ngx-translate/core": "13.0.0",
+    "@ngx-translate/core": "14.0.0",
     "@ngx-translate/http-loader": "7.0.0",
     "@swimlane/ngx-charts": "19.1.0",
     "@types/jwt-decode": "2.2.1",
