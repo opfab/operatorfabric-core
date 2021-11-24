@@ -81,7 +81,7 @@ public class SendKafkaCardShould {
     private String commandTopic;
 
     private static CountDownLatch latch ;
-    private static boolean receiveCardCommandResultIsOK;
+    private static volatile boolean receiveCardCommandResultIsOK;
     private KafkaMessageListenerContainer<String, String> container;
 
     @AfterEach
@@ -91,7 +91,7 @@ public class SendKafkaCardShould {
     }
 
     // Configure a dummy topic and listener so we know Kafka is ready when this method finishes
-    @BeforeEach
+    @BeforeAll
     void setUp() {
         String TOPIC="DummyTopic";
         Map<String, Object> configs = new HashMap<>(KafkaTestUtils.consumerProps("consumerGroup", "true", embeddedKafkaBroker));
@@ -104,7 +104,7 @@ public class SendKafkaCardShould {
         ContainerTestUtils.waitForAssignment(container, embeddedKafkaBroker.getPartitionsPerTopic());
     }
 
-    @AfterEach
+    @AfterAll
     void tearDown() {
         container.stop();
     }
@@ -139,7 +139,7 @@ public class SendKafkaCardShould {
         kafkaTemplate.send(commandTopic,cardCommand);
 
         CardPublicationData card = cardRepository.findByProcessInstanceId(processInstanceId);
-        for (int retries = 5; retries >0 && card == null; retries--){
+        for (int retries = 10; retries >0 && card == null; retries--){
             Thread.sleep(250);  // Give the database some time to persist the card
             card = cardRepository.findByProcessInstanceId(processInstanceId);
         }
@@ -147,7 +147,8 @@ public class SendKafkaCardShould {
         assertThat( card, is(notNullValue()));
     }
 
-    @KafkaListener(topics = "${opfab.kafka.topics.response-card.topicname}")
+    @KafkaListener(topics = "${opfab.kafka.topics.response-card.topicname}",
+            properties = {"auto.offset.reset = earliest"})
     public void consumer(ConsumerRecord<String, CardCommand> consumerRecord) {
         CardCommand cardCommand = consumerRecord.value();
         Card card = cardCommand.getCard();
