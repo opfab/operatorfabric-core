@@ -127,31 +127,31 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                     filter: true,
                     wrapText: false,
                     autoHeight: false,
-                    maxWidth: 160,
+                    width: 150,
                 },
-                'fixedColumn': {
+                'emitterColumn': {
                     sortable: true,
                     filter: true,
                     wrapText: false,
                     autoHeight: false,
-                    minWidth: 100,
-                    resizable: true
-                },
-                'variableColumn': {
-                    sortable: true,
-                    filter: true,
-                    wrapText: false,
-                    autoHeight: false,
-                    flex: 1,
-                    resizable: true
+                    flex:0.75,
+                    resizable: false
                 },
                 'dataColumn': {
                     sortable: true,
                     filter: true,
                     wrapText: false,
                     autoHeight: false,
-                    minWidth: 300,
-                    resizable: true
+                    flex: 1,
+                    resizable: false
+                },
+                'processColumn': {
+                    sortable: true,
+                    filter: true,
+                    wrapText: false,
+                    autoHeight: false,
+                    minWidth: 180,
+                    resizable: false
                 },
                 'severityColumn': {
                     sortable: true,
@@ -165,7 +165,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                     filter: false,
                     wrapText: false,
                     autoHeight: false,
-                    maxWidth: 50,
+                    width: 30,
                 }
             },
             pagination : true,
@@ -195,20 +195,16 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             "opfab-typeOfState-CANCELED": parameters => parameters.data.typeOfState === 'CANCELED'
         };
 
-        this.columnDefs = [{ type: 'severityColumn', headerName: '', field: 'severityNumber', headerClass: 'header-with-no-padding' , cellClassRules: severityCellClassRules },
-                           { type: 'timeColumn', headerName: this.timeColumnName, field: 'time' },
-                           { type: 'answerColumn', headerName: '', field: 'answer',cellRenderer: 'answerCellRenderer' }];
-
-        
-
-        this.columnDefs.push({ type: 'dataColumn', headerName: this.titleColumnName, field: 'title' },
-                             { type: 'dataColumn', headerName: this.summaryColumnName, field: 'summary' },
-                             { type: 'fixedColumn', headerName: this.typeOfStateColumnName, field: 'processStatus',
-                                 cellClassRules: typeOfStateCellClassRules },
-                             {type: 'fixedColumn', headerName: this.emitterColumnName, field: 'emitter' },
-                             {type: 'variableColumn', headerName: this.entitiesResponsesColumnName, field: 'entitiesResponses', cellRenderer: 'responsesCellRenderer' },
-                             
-                             );
+        this.columnDefs = [
+            {type: 'severityColumn', headerName: '', field: 'severityNumber',  cellClassRules: severityCellClassRules},
+            {type: 'timeColumn', headerName: this.timeColumnName, field: 'time'},
+            {type: 'answerColumn', headerName: '', field: 'answer', cellRenderer: 'answerCellRenderer'},
+            {type: 'dataColumn', headerName: this.titleColumnName, field: 'title'},
+            {type: 'dataColumn', headerName: this.summaryColumnName, field: 'summary'},
+            {type: 'processColumn', headerName: this.typeOfStateColumnName, field: 'processStatus',cellClassRules: typeOfStateCellClassRules},
+            {type: 'emitterColumn', headerName: this.emitterColumnName, field: 'emitter'},
+            {type: 'dataColumn', headerName: this.entitiesResponsesColumnName, field: 'entitiesResponses', cellRenderer: 'responsesCellRenderer'},
+        ];
 
         this.gridApi.setColumnDefs(this.columnDefs);
         this.refreshData();
