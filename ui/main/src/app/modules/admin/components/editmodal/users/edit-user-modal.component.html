@@ -45,15 +45,15 @@
             <div *ngIf="lastName.errors.required" translate>admin.input.lastName.required</div>
           </div>
           <div class="row">
-            <of-multi-filter filterPath="groups" id="opfab-groups" [parentForm]="userForm"
-                             [values]="groupsDropdownList" [translateValues]="false" [dropdownSettings]="groupsDropdownSettings" [selectedItems]="selectedGroups"
-                             i18nRootLabelKey="admin.input.user.">
+            <of-multi-filter filterPath="groups" id="opfab-groups" [parentForm]="userForm" [values]="groupsDropdownList"
+                             [translateValues]="false" [dropdownSettings]="groupsDropdownSettings" [selectedItems]="selectedGroups"
+                             sortValues=true i18nRootLabelKey="admin.input.user.">
             </of-multi-filter>
           </div>
           <div class="row">
-            <of-multi-filter filterPath="entities" id="opfab-entities" [parentForm]="userForm"
-                             [values]="entitiesDropdownList" [translateValues]="false" [dropdownSettings]="entitiesDropdownSettings" [selectedItems]="selectedEntities"
-                             i18nRootLabelKey="admin.input.user.">
+            <of-multi-filter filterPath="entities" id="opfab-entities" [parentForm]="userForm" [values]="entitiesDropdownList"
+                             [translateValues]="false" [dropdownSettings]="entitiesDropdownSettings" [selectedItems]="selectedEntities"
+                             sortValues=true i18nRootLabelKey="admin.input.user.">
             </of-multi-filter>
           </div>
           <div class="opfab-input row">
