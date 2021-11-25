@@ -1,3 +1,8 @@
+plugins {
+    id "base"
+    id 'com.github.node-gradle.node'
+}
+
 npmInstall {
     inputs.files(fileTree('node_modules'))
     inputs.file('package.json')
@@ -33,10 +38,11 @@ task runHeadlessTests(type: NpmTask) {
 
     outputs.dir('reports')
 
-    dependsOn npmInstall
+    dependsOn runBuild
     args = ['run', 'headless']
 }
 
+build.dependsOn(runHeadlessTests)
 build.dependsOn(runBuild)
 
 assemble.dependsOn(runBuild)
