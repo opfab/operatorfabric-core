@@ -389,7 +389,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private checkEntityAnswered(entity: string): boolean {
-        return this.childCards.some(childCard => childCard.publisher === entity && childCard.initialParentCardUid === this.card.uid);
+        return this.childCards.some(childCard => childCard.publisher === entity );
     }
 
     private adaptTemplateSize() {

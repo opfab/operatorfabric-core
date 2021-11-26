@@ -93,7 +93,7 @@ export class ResponsesCellRendererComponent implements ICellRendererAngularComp,
 
   private checkEntityAnswered(entity: string): boolean {
     if (this.childCards)
-      return this.childCards.some(childCard => childCard.publisher === entity && childCard.initialParentCardUid === this.cardUid);
+      return this.childCards.some(childCard => childCard.publisher === entity);
     else
       return false;
   }
