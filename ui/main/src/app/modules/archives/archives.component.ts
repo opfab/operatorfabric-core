@@ -175,7 +175,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         const publishEnd = this.extractTime(this.archiveForm.get('publishDateTo'));
 
         if (publishStart != null && !isNaN(publishStart) && publishEnd != null && !isNaN(publishEnd) && publishStart > publishEnd) {
-            this.displayMessage('archive.filters.publishEndDateBeforeStartDate','',MessageLevel.ERROR);
+            this.displayMessage('shared.filters.publishEndDateBeforeStartDate','',MessageLevel.ERROR);
             return;
         }
 
@@ -183,7 +183,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         const activeEnd = this.extractTime(this.archiveForm.get('activeTo'));
 
         if (activeStart != null && !isNaN(activeStart) && activeEnd != null && !isNaN(activeEnd) && activeStart > activeEnd) {
-            this.displayMessage('archive.filters.activeEndDateBeforeStartDate','',MessageLevel.ERROR);
+            this.displayMessage('shared.filters.activeEndDateBeforeStartDate','',MessageLevel.ERROR);
             return;
         }
 
@@ -308,12 +308,12 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             .subscribe((page: Page<LightCard>) => {
                 const lines = page.content;
 
-                const severityColumnName = this.translateColumn('archive.result.severity');
-                const publishDateColumnName = this.translateColumn('archive.result.publishDate');
-                const businessDateColumnName = this.translateColumn('archive.result.businessPeriod');
-                const titleColumnName = this.translateColumn('archive.result.title');
-                const summaryColumnName = this.translateColumn('archive.result.summary');
-                const processGroupColumnName = this.translateColumn('archive.result.processGroup');
+                const severityColumnName = this.translateColumn('shared.result.severity');
+                const publishDateColumnName = this.translateColumn('shared.result.publishDate');
+                const businessDateColumnName = this.translateColumn('shared.result.businessPeriod');
+                const titleColumnName = this.translateColumn('shared.result.title');
+                const summaryColumnName = this.translateColumn('shared.result.summary');
+                const processGroupColumnName = this.translateColumn('shared.result.processGroup');
 
                 lines.forEach((card: LightCard) => {
                     if (typeof card !== undefined) {

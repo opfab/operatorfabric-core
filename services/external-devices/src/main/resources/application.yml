@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: external-devices
+  data:
+    mongodb:
+      database: operator-fabric
+

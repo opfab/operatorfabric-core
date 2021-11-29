@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 3.0.2.RELEASE
+  version: 3.1.0.RELEASE
   title: User Management
   termsOfService: ''
   contact:
@@ -24,20 +24,6 @@ tags:
 schemes:
   - http
 definitions:
-  SimpleUser:
-    type: object
-    description: User (basic properties)
-    properties:
-      login:
-        type: string
-      firstName:
-        type: string
-      lastName:
-        type: string
-    example:
-      login: jlcurtis
-      firstName: Jamie Lee
-      lastName: Curtis
   User:
     type: object
     description: User
@@ -194,6 +180,11 @@ definitions:
       playSoundForInformation:
         type: boolean
         description: If this is set to true, a sound will be played for incoming cards with INFORMATION severity.
+      playSoundOnExternalDevice:
+        type: boolean
+        description: |-
+          If set to true and the user has an external device configured, sounds will be played on this device rather
+          than in the browser
       replayEnabled:
         type: boolean
         description: |-

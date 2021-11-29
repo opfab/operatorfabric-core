@@ -22,6 +22,7 @@ import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
 import {TimelineButtonsModule} from "../share/timeline-buttons/timeline-buttons.module";
 import {AgGridModule} from "ag-grid-angular";
 import {AnswerCellRendererComponent} from './components/cell-renderers/answer-cell-renderer.component';
+import {ResponsesCellRendererComponent} from './components/cell-renderers/responses-cell-renderer.component';
 
 
 
@@ -30,7 +31,8 @@ import {AnswerCellRendererComponent} from './components/cell-renderers/answer-ce
       MonitoringComponent,
       MonitoringFiltersComponent,
       MonitoringTableComponent,
-      AnswerCellRendererComponent
+      AnswerCellRendererComponent,
+      ResponsesCellRendererComponent
   ],
     imports: [
         CommonModule

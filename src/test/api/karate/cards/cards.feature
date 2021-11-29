@@ -159,7 +159,7 @@ Feature: Cards
 	"processInstanceId" : "process1",
 	"state": "messageState",
 	"groupRecipients": ["Dispatcher"],
-	"externalRecipients" : ["api_test2","api_test165"],
+	"externalRecipients" : ["api_test_externalRecipient1","api_test165"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -182,6 +182,14 @@ Feature: Cards
     Then status 200
     And match response.card.externalRecipients[1] == "api_test165"
     And def cardUid = response.card.uid
+
+# Make sure externalRecipients are notified of card suppression
+    Given url opfabPublishCardUrl + 'cards/api_test.process1'
+    And header Authorization = 'Bearer ' + authToken
+    When method delete
+    Then status 200
+
+
 
 Scenario:  Post card with no recipient but entityRecipients
 
@@ -268,6 +276,31 @@ Scenario:  Post card with parentCardId not correct
     And match response.errors[0] contains "The parentCardId 1 is not the id of any card"
 
 Scenario:  Post card with correct parentCardId but initialParentCardUid not correct
+
+
+    * def card =
+"""
+{
+	"publisher" : "operator1",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process1",
+	"state": "messageState",
+	"groupRecipients": ["Dispatcher"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title2"},
+	"data" : {"message":"test externalRecipients"}
+}
+"""
+
+    # Push card
+    Given url opfabPublishCardUrl + 'cards'
+	And header Authorization = 'Bearer ' + authToken
+    And request card
+    When method post
+    Then status 201
 
     #get parent card id
     Given url opfabUrl + 'cards/cards/api_test.process1'

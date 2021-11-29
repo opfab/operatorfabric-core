@@ -10,7 +10,7 @@
 <div class="archives-page">
     <form [formGroup]="archiveForm" #currentForm>
       <ng-template #noProcessStateToDisplay>
-        <div style="text-align: center; font-size: 20px; padding-top: 100px" translate>filters.noProcessStateAvailable</div>
+        <div id="opfab-archives-no-process-state-available" style="text-align: center; font-size: 20px; padding-top: 100px" translate>shared.noProcessStateAvailable</div>
       </ng-template>
       <div *ngIf="isThereProcessStateToDisplay; else noProcessStateToDisplay" class="opfab-archives">
         <div style="display: flex;">
@@ -22,22 +22,22 @@
           <div class="opfab-publish-date">
             <div>
               <of-datetime-filter filterPath="publishDateFrom" formControlName="publishDateFrom"
-                labelKey="archive.filters." [maxDate]="publishMaxDate" (change)="onDateTimeChange($event)"></of-datetime-filter>
+                labelKey="shared.filters." [maxDate]="publishMaxDate" (change)="onDateTimeChange($event)"></of-datetime-filter>
             </div>
             <div>
               <of-datetime-filter filterPath="publishDateTo" formControlName="publishDateTo"
-                labelKey="archive.filters." [minDate]="publishMinDate" (change)="onDateTimeChange($event)"></of-datetime-filter>
+                labelKey="shared.filters." [minDate]="publishMinDate" (change)="onDateTimeChange($event)"></of-datetime-filter>
             </div>
           </div>
 
           <div class="opfab-vertical-bar"></div>
           <div style="margin-left:40px;width:230px;min-width: 230px;">
             <div>
-              <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom" labelKey="archive.filters." [maxDate]="activeMaxDate" (change)="onDateTimeChange($event)">
+              <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom" labelKey="shared.filters." [maxDate]="activeMaxDate" (change)="onDateTimeChange($event)">
               </of-datetime-filter>
             </div>
             <div>
-              <of-datetime-filter filterPath="activeTo" formControlName="activeTo" labelKey="archive.filters." [minDate]="activeMinDate" (change)="onDateTimeChange($event)">
+              <of-datetime-filter filterPath="activeTo" formControlName="activeTo" labelKey="shared.filters." [minDate]="activeMinDate" (change)="onDateTimeChange($event)">
               </of-datetime-filter>
             </div>
           </div>
@@ -67,11 +67,11 @@
           <th scope="col"></th>
           <th scope="col"></th>
           <th scope="col" *ngIf="isCollapsibleUpdatesActivated"></th>
-          <th scope="col" style="padding-left: 5px" translate>archive.result.publishDate</th>
-          <th scope="col" translate>archive.result.businessPeriod</th>
-          <th scope="col" translate>archive.result.title</th>
-          <th scope="col" translate>archive.result.summary</th>
-          <th *ngIf="filtersTemplate.displayProcessGroupFilter()" scope="col" translate>archive.result.processGroup</th>
+          <th scope="col" style="padding-left: 5px" translate>shared.result.publishDate</th>
+          <th scope="col" translate>shared.result.businessPeriod</th>
+          <th scope="col" translate>shared.result.title</th>
+          <th scope="col" translate>shared.result.summary</th>
+          <th *ngIf="filtersTemplate.displayProcessGroupFilter()" scope="col" translate>shared.result.processGroup</th>
         </tr>
       </thead>
 
@@ -114,7 +114,7 @@
 
     <div class="opfab-pagination">
       <div style="white-space: nowrap;margin-top:17px" id="opfab-archive-results-number">
-        <span translate> archive.resultsNumber </span> : {{resultsNumber}}
+        <span translate> shared.resultsNumber </span> : {{resultsNumber}}
       </div>
       <div style="width:40%;margin-top:5px">
         <ngb-pagination *ngIf="resultsNumber > size" [collectionSize]="resultsNumber"
@@ -124,14 +124,14 @@
       <div style="width:50%;text-align:right;padding-right:8px;">
         <div id="opfab-archives-btn-exportToExcel" style="float: right;cursor:pointer" (click)="export()" fileName="archiveResults" >
           <span class="opfab-icon-export-data"></span>
-          <span style="font-weight: bold;" translate>archive.exportToExcel</span>
+          <span style="font-weight: bold;" translate>shared.exportToExcel</span>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div *ngIf="firstQueryHasBeenDone&&!hasResult" style="text-align: center;font-size: 20px;" translate>archive.noResult
+<div *ngIf="firstQueryHasBeenDone&&!hasResult" style="text-align: center;font-size: 20px;" translate>shared.noResult
 </div>
 
 <div *ngIf="loadingIsTakingMoreThanOneSecond">

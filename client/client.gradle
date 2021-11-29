@@ -1,27 +1,10 @@
-buildscript {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        maven { url "https://repo.spring.io/release" }
-        maven { url "https://repo.spring.io/snapshot" }
-        maven { url "https://repo.spring.io/libs-snapshot" }
-        maven { url "https://repo.spring.io/milestone" }
-        maven { url "https://repo.spring.io/libs-milestone" }
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-
-    dependencies {
-        classpath generator.swaggerGeneratorPlugin
-    }
-}
-
 subprojects {
 
     apply plugin: 'java'
     apply plugin: 'jacoco'
-    apply plugin: plugin.swagger
     apply plugin: 'maven-publish'
     apply plugin: 'signing'
+    apply plugin: 'org.hidetake.swagger.generator'
 
     /////// COMPILATION
 
@@ -30,9 +13,9 @@ subprojects {
         swaggerUI generator.swaggerUI
         annotationProcessor misc.lombok
         implementation misc.lombok
-        testRuntimeOnly testing.junit5Engine
-        testImplementation testing.junit5Api
-        testImplementation boot.starterTest, testing.assertJ, misc.lombok
+        testRuntimeOnly testing_deps.junit5Engine
+        testImplementation testing_deps.junit5Api
+        testImplementation boot.starterTest, testing_deps.assertJ, misc.lombok
         implementation misc.jacksonAnnotations
     }
 

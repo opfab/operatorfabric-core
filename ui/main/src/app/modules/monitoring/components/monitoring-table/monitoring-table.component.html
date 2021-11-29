@@ -20,7 +20,7 @@
 
     <div *ngIf="gridApi" class="opfab-pagination">
         <div style="white-space: nowrap;margin-top:17px">
-        <span translate> admin.resultsNumber </span> : {{gridApi.paginationGetRowCount()}}
+        <span translate> shared.resultsNumber </span> : {{gridApi.paginationGetRowCount()}}
         </div>
         <div style="width:40%;margin-top:5px">
         <ngb-pagination *ngIf="gridApi.paginationGetRowCount() > 10" [collectionSize]="gridApi.paginationGetRowCount()"
@@ -30,7 +30,7 @@
         <div class="opfab-monitoring-export-div">
             <div id="opfab-monitoring-btn-exportToExcel" class="opfab-monitoring-export-btn" style="cursor:pointer" (click)="export()" fileName="monitoringResults" >
                 <span class="opfab-icon-export-data"></span>
-                <span style="font-weight: bold;" translate> monitoring.ExportTOExcel </span>
+                <span style="font-weight: bold;" translate> shared.exportToExcel </span>
             </div>
         </div>
     </div>

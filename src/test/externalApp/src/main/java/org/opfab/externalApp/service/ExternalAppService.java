@@ -17,6 +17,7 @@ import java.util.Optional;
 
 @Service
 public interface ExternalAppService {
-	void displayMessage(Optional<JsonNode> requestBody);
+	void receiveCard(Optional<JsonNode> requestBody);
+	void deleteCard(String id);
 	String WelcomeMessage();
 }

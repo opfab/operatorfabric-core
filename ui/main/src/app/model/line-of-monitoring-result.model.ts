@@ -21,9 +21,12 @@ export interface LineOfMonitoringResult {
     summaryTranslated: string;
     processName: string;
     cardId: string;
+    cardUid: string;
     severity: string;
     processId: string;
     typeOfState: TypeOfStateEnum;
     answer: boolean;
     emitter: string;
+    requiredResponses: string[];
+    entitiesResponses: string[];
 }

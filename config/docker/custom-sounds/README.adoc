@@ -1,0 +1,17 @@
+= Customizing browser notification sounds
+
+The sounds used by default by the browser to signal a card of a given severity
+can be found under `ui/main/src/assets/sounds` in the core repository and are packaged in the `web-ui` docker image.
+
+To customize these sounds, you can put the files in the current directory and mount that directory as a volume for
+the web-ui container:
+
+.Under web-ui.volumes, add:
+[source,yaml]
+```
+- "./custom-sounds:/usr/share/nginx/html/assets/sounds"
+```
+
+NOTE: When testing, if the sounds seem not to be taken into account try clearing your browser's cache.
+
+IMPORTANT: The name of the file needs to match the existing file (for example `alarm.mp3`).

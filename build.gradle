@@ -3,22 +3,12 @@ plugins {
     id "org.asciidoctor.jvm.convert" version "3.3.2"
     id "maven-publish"
     id "signing"
-    id 'org.springframework.boot' version '2.5.6'
+    id "org.springframework.boot" version "$springBoot" apply false
+    id "io.spring.dependency-management" version "1.0.11.RELEASE" apply false
     id 'org.sonarqube' version '3.3' apply false
-}
-
-repositories {
-    mavenLocal()
-    mavenCentral()
-    maven { url "https://repo1.maven.org/maven2" }
-    maven { url "https://repo.spring.io/release" }
-    maven { url "https://repo.spring.io/snapshot" }
-    maven { url "https://repo.spring.io/milestone" }
-    maven { url "https://repo.spring.io/libs-snapshot" }
-    maven { url "https://repo.spring.io/libs-milestone" }
-    maven { url "https://maven.eveoh.nl/content/repositories/releases" }
-    maven { url "https://artifacts.elastic.co/maven/"}
-    maven { url "https://plugins.gradle.org/m2/" }
+    id "com.github.davidmc24.gradle.plugin.avro" version "1.3.0" apply false
+    id "com.palantir.docker" version "0.31.0" apply false
+    id "org.hidetake.swagger.generator" version "2.18.2" apply false
 }
 
 ext {
@@ -31,7 +21,6 @@ ext {
     ]
 
     boot = [
-            springBootPlugin        : "org.springframework.boot:spring-boot-gradle-plugin:$springBoot",
             starterWeb              : "org.springframework.boot:spring-boot-starter-web:$springBoot",
             starterWebflux          : "org.springframework.boot:spring-boot-starter-webflux:$springBoot",
             actuator                : "org.springframework.boot:spring-boot-starter-actuator:$springBoot",
@@ -63,11 +52,9 @@ ext {
             kafkaAvroSerializer              : "io.confluent:kafka-avro-serializer:$kavroAvroSerializer",
             springKafka           : "org.springframework.kafka:spring-kafka:$springKafka",
             springKafkaTest       : "org.springframework.kafka:spring-kafka-test:$springKafka"
-
-
     ]
 
-    testing = [
+    testing_deps = [
             junit5Api       : "org.junit.jupiter:junit-jupiter-api:$junit5",
             junit5Engine    : "org.junit.jupiter:junit-jupiter-engine:$junit5",
             assertJ         : "org.assertj:assertj-core:$assertj",
@@ -80,7 +67,6 @@ ext {
     misc = [
             slf4j          : "org.slf4j:slf4j-api:$slf4j",
             lombok         : "org.projectlombok:lombok:$lombok",
-            palantir       : "com.palantir.gradle.docker:gradle-docker:$gradleDocker",
             compress       : "org.apache.commons:commons-compress:$apacheCommonsCompress",
             feignMock      : "io.github.openfeign:feign-mock:$feign",
             feignJackson   : "io.github.openfeign:feign-jackson:$feign",
@@ -93,23 +79,14 @@ ext {
             jsonSmart      : "net.minidev:json-smart:2.4.7",
             handlebars     : "com.github.jknack:handlebars:4.3.0",
             jacksonDatabind   : "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabind",
+            jlibmodbus     : "com.intelligt.modbus:jlibmodbus:WORKAROUND"
     ]
 
     generator = [
             swagger                 : "io.swagger:swagger-codegen-cli:$swagger",
-            swaggerGeneratorPlugin  : "gradle.plugin.org.hidetake:gradle-swagger-generator-plugin:$swaggerGeneratorPlugin",
             swaggerUI               : "org.webjars:swagger-ui:$swaggerUI",
     ]
 
-    plugin = [
-            base        : "base",
-            boot        : "org.springframework.boot",
-            bom         : "io.spring.dependency-management",
-            swagger     : "org.hidetake.swagger.generator",
-            dockerBuild : "com.palantir.docker",
-            dockerRun   : "com.palantir.docker-run",
-
-    ]
     apk = [
             proxy : [uri:"",httpsuri:"",user:"",password:""]
     ]
@@ -156,25 +133,11 @@ subprojects {
         apply plugin: 'org.sonarqube'
     }
 
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        maven { url "https://repo1.maven.org/maven2" }
-        maven { url "https://repo.spring.io/release" }
-        maven { url "https://repo.spring.io/snapshot" }
-        maven { url "https://repo.spring.io/milestone" }
-        maven { url "https://repo.spring.io/libs-snapshot" }
-        maven { url "https://repo.spring.io/libs-milestone" }
-        maven { url "https://maven.eveoh.nl/content/repositories/releases" }
-        maven { url "https://artifacts.elastic.co/maven/"}
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-
     if (!project.path.contains('ui')){
 
         subprojects {
             apply plugin: 'java'
-            apply plugin: plugin.bom
+            apply plugin: 'io.spring.dependency-management'
 
             test {
                 testLogging {

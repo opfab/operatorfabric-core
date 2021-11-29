@@ -1,25 +1,11 @@
-buildscript {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        maven { url "https://repo.spring.io/release" }
-        maven { url "https://repo.spring.io/snapshot" }
-        maven { url "https://repo.spring.io/libs-snapshot" }
-        maven { url "https://repo.spring.io/milestone" }
-        maven { url "https://repo.spring.io/libs-milestone" }
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-
-    dependencies {
-        classpath boot.springBootPlugin
-    }
+plugins {
+    id "org.springframework.boot"
 }
 
 subprojects {
     apply plugin: 'java'
     apply plugin: 'jacoco'
-    apply plugin: plugin.bom
-//    apply plugin: plugin.boot
+    apply plugin: "io.spring.dependency-management"
 
     dependencyManagement {
         imports {
@@ -32,9 +18,9 @@ subprojects {
         annotationProcessor misc.lombok
         implementation misc.lombok
         // compileOnly misc.lombok
-        testRuntimeOnly testing.junit5Engine
-        testImplementation testing.junit5Api
-        testImplementation boot.starterTest, testing.assertJ, misc.lombok
+        testRuntimeOnly testing_deps.junit5Engine
+        testImplementation testing_deps.junit5Api
+        testImplementation boot.starterTest, testing_deps.assertJ, misc.lombok
     }
 
     /////// CONFIGURATION

@@ -29,7 +29,8 @@ export const environment = {
         processGroups: 'http://localhost:2002/businessconfig/processgroups',
         monitoringConfig: 'http://localhost:2002/businessconfig/monitoring',
         config: 'http://localhost:2002/config/web-ui.json',
-        menuConfig: 'http://localhost:2002/config/ui-menu.json'
+        menuConfig: 'http://localhost:2002/config/ui-menu.json',
+        externalDevices: 'http://localhost:2002/externaldevices'
     },
     paths: {
         i18n: '/assets/i18n/'

@@ -8,7 +8,7 @@
  */
 
 
-import {Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
 import {Card} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../../cards/services/handlebars.service';
@@ -24,6 +24,7 @@ import {Subject} from 'rxjs';
 import {UserService} from '@ofServices/user.service';
 import {User} from '@ofModel/user.model';
 import {EntitiesService} from '@ofServices/entities.service';
+import {AppService, PageType} from "@ofServices/app.service";
 
 
 declare const templateGateway: any;
@@ -33,7 +34,7 @@ declare const templateGateway: any;
     templateUrl: './card-detail.component.html',
     styleUrls: ['./card-detail.component.scss']
 })
-export class CardDetailComponent implements OnInit, OnDestroy {
+export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     @Input() card: Card;
     @Input() screenSize: string = 'md';
@@ -52,7 +53,8 @@ export class CardDetailComponent implements OnInit, OnDestroy {
 
     constructor(private element: ElementRef, private businessconfigService: ProcessesService,
                 private handlebars: HandlebarsService, private sanitizer: DomSanitizer,
-                private store: Store<AppState>,private userService: UserService, private entitiesService: EntitiesService) {
+                private store: Store<AppState>,private userService: UserService, private entitiesService: EntitiesService,
+                private _appService: AppService) {
 
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
@@ -177,5 +179,27 @@ export class CardDetailComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
+    }
+
+    ngAfterViewChecked() {
+        this.adaptTemplateSize();
+    }
+
+    private adaptTemplateSize() {
+        const cardTemplate = document.getElementById('opfab-card-template-detail');
+        if (!!cardTemplate) {
+            const diffWindow = cardTemplate.getBoundingClientRect();
+            const divBtn = document.getElementById('div-detail-btn');
+
+            let cardTemplateHeight = window.innerHeight - diffWindow.top;
+            if (this._appService.pageType !== PageType.FEED) cardTemplateHeight -= 50;
+
+            if (divBtn) {
+                cardTemplateHeight -= divBtn.scrollHeight + 15;
+            }
+
+            cardTemplate.style.maxHeight = `${cardTemplateHeight}px`;
+            cardTemplate.style.overflowX = 'hidden';
+        }
     }
 }

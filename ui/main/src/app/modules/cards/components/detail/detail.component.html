@@ -15,14 +15,14 @@
       <li *ngIf="showButtons" class="nav-item opfab-menu-item-right">
         <div *ngIf="!isSmallscreen()" style="display:flex">
           <div class="opfab-right-menu-item" *ngIf='showEditAndDeleteButton'>
-            <a class="opfab-right-menu-link" (click)='editCard()'>
+            <a id="opfab-card-edit" class="opfab-right-menu-link" (click)='editCard()'>
               <div class="opfab-menu-icon opfab-menu-icon-right opfab-icon-edit"></div>
               <div translate>{{'button.edit'}}</div>
             </a>
           </div>
 
           <div class="opfab-right-menu-item" *ngIf='showEditAndDeleteButton'>
-            <a class="opfab-right-menu-link" (click)='openModal(doYouReallyWantToDeleteCardPopup)'>
+            <a id="opfab-card-delete" class="opfab-right-menu-link" (click)='openModal(doYouReallyWantToDeleteCardPopup)'>
               <div class="opfab-menu-icon opfab-menu-icon-right opfab-icon-trash"></div>
               <div translate>{{'button.delete'}}</div>
             </a>
@@ -67,7 +67,7 @@
               <span id="opfab-card-response-header-status" *ngIf="!!cardState.type">
                 <span style="padding-left:15px" translate>response.status</span> :
                 <!--The translate directive should stay there rather than in the element see OC-1603-->
-                <span class="opfab-typeOfState-{{cardState.type}}">{{"global.typeOfState."+cardState.type | translate}}</span>
+                <span class="opfab-typeOfState-{{cardState.type}}">{{"shared.typeOfState."+cardState.type | translate}}</span>
               </span>
               <span *ngIf="!!card.lttd && !!cardState.type && (!lttdExpiredIsTrue || cardState.type !== 'FINISHED')"> | </span>
               <span *ngIf="!!card.lttd"><of-countdown [lttd]="card.lttd" [showExpiredIcon]="showExpiredIcon" [showExpiredLabel]="showExpiredLabel" [expiredLabel]="expiredLabel"></of-countdown></span>

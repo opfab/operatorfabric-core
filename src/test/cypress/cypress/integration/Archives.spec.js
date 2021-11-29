@@ -1,7 +1,7 @@
 
 describe ('Archives screen tests',function () {
 
-    before('Set up configuration and clean archived cards', function () {
+    before('Set up configuration', function () {
         cy.loadTestConf();
     });
 
@@ -61,6 +61,131 @@ describe ('Archives screen tests',function () {
         cy.get('#opfab-archives-collapsible-updates').click({force: true});
     })
 
+    it('Check composition of multi-filters for process groups/processes/states for operator1', function () {
+        cy.loginOpFab('operator1', 'test');
+
+        // We move to archives screen
+        cy.get('#opfab-navbar-menu-archives').click();
+
+        // We check we have 3 items in process groups multi-filter
+        cy.get('#opfab-processGroup').click();
+        cy.get('#opfab-processGroup').find('li').should('have.length', 3);
+        cy.get('#opfab-processGroup').contains('--').should('exist');
+        cy.get('#opfab-processGroup').contains('Base Examples').should('exist');
+        cy.get('#opfab-processGroup').contains('User card examples').should('exist');
+        // We select all process groups
+        cy.get('#opfab-processGroup').contains('Select All').click();
+
+        // We check we have 6 items in process multi-filter
+        cy.get('#opfab-process').click();
+        cy.get('#opfab-process').find('li').should('have.length', 6);
+        cy.get('#opfab-process').contains('Examples for new cards').should('exist');
+        cy.get('#opfab-process').contains('Examples for new cards 2').should('exist');
+        cy.get('#opfab-process').contains('Examples for new cards 3').should('exist');
+        cy.get('#opfab-process').contains('IGCC').should('exist');
+        cy.get('#opfab-process').contains('Process example').should('exist');
+        cy.get('#opfab-process').contains('Test process for cypress').should('exist');
+        // We select all processes
+        cy.get('#opfab-process').contains('Select All').click();
+        cy.get('#opfab-process').click();
+
+        // We check we have 27 states (and 6 items for their process)
+        cy.get('#opfab-state').click();
+        cy.get('#opfab-state').find('li').should('have.length', 33);
+        // We check this state is not present because it is only a child state
+        cy.get('#opfab-state').contains('Planned outage date response', {matchCase: false}).should('not.exist');
+    })
+
+    it('Check composition of multi-filters for process groups/processes/states for operator4', function () {
+        cy.loginOpFab('operator4', 'test');
+
+        // We move to archives screen
+        cy.get('#opfab-navbar-menu-archives').click();
+
+        // We check we have 2 items in process groups multi-filter
+        cy.get('#opfab-processGroup').click();
+        cy.get('#opfab-processGroup').find('li').should('have.length', 2);
+        cy.get('#opfab-processGroup').contains('Base Examples').should('exist');
+        cy.get('#opfab-processGroup').contains('User card examples').should('exist');
+        // We select all process groups
+        cy.get('#opfab-processGroup').contains('Select All').click();
+
+        // We check we have 5 items in process multi-filter
+        cy.get('#opfab-process').click();
+        cy.get('#opfab-process').find('li').should('have.length', 5);
+        cy.get('#opfab-process').contains('Examples for new cards').should('exist');
+        cy.get('#opfab-process').contains('Examples for new cards 2').should('exist');
+        cy.get('#opfab-process').contains('Examples for new cards 3').should('exist');
+        cy.get('#opfab-process').contains('IGCC').should('exist');
+        cy.get('#opfab-process').contains('Process example').should('exist');
+        // We select all processes
+        cy.get('#opfab-process').contains('Select All').click();
+        cy.get('#opfab-process').click();
+
+        // We check we have 12 states (and 5 items for their process)
+        cy.get('#opfab-state').click();
+        cy.get('#opfab-state').find('li').should('have.length', 17);
+
+        // We unselect all processes then we select 'Process example' process and we check there is only 1 state for this process
+        cy.get('#opfab-process').click();
+        cy.get('#opfab-process').contains('UnSelect All').click();
+        cy.get('#opfab-process').contains('Process example').click();
+        cy.get('#opfab-process').click();
+        cy.get('#opfab-state').click();
+        cy.get('#opfab-state').find('li').should('have.length', 2);
+        cy.get('#opfab-state').contains('Action Required', {matchCase: false}).should('exist');
+    })
+
+    it('Check composition of multi-filters for process groups/processes/states for admin', function () {
+        cy.loginOpFab('admin', 'test');
+
+        // We move to archives screen
+        cy.get('#opfab-navbar-menu-archives').click();
+
+        // We check the 3 multi-filters for service/process/state do not exist
+        cy.get('#opfab-processGroup').should('not.exist');
+        cy.get('#opfab-process').should('not.exist');
+        cy.get('#opfab-state').should('not.exist');
+
+        cy.get('#opfab-archives-no-process-state-available').should('exist');
+        cy.get('#opfab-archives-no-process-state-available').contains('No process/state available').should('exist');
+    })
+
+    it('Check composition of multi-filters for process groups/processes/states for operator1, with a config without process group', function () {
+        cy.loginOpFab('operator1', 'test');
+
+        cy.loadEmptyProcessGroups();
+        cy.reload();
+
+        // We move to archives screen
+        cy.get('#opfab-navbar-menu-archives').click();
+
+        // We check process groups multi-filter do not exist
+        cy.get('#opfab-processGroup').should('not.exist');
+
+        // We check we have 6 items in process multi-filter
+        cy.get('#opfab-process').click();
+        cy.get('#opfab-process').find('li').should('have.length', 6);
+        cy.get('#opfab-process').contains('Examples for new cards').should('exist');
+        cy.get('#opfab-process').contains('Examples for new cards 2').should('exist');
+        cy.get('#opfab-process').contains('Examples for new cards 3').should('exist');
+        cy.get('#opfab-process').contains('IGCC').should('exist');
+        cy.get('#opfab-process').contains('Process example').should('exist');
+        cy.get('#opfab-process').contains('Test process for cypress').should('exist');
+        // We select all processes
+        cy.get('#opfab-process').contains('Select All').click();
+        cy.get('#opfab-process').click();
+
+        // We check we have 27 states (and 6 items for their process)
+        cy.get('#opfab-state').click();
+        cy.get('#opfab-state').find('li').should('have.length', 33);
+        // We check this state is not present because it is only a child state
+        cy.get('#opfab-state').contains('Planned outage date response', {matchCase: false}).should('not.exist');
+
+        cy.loadTestConf();
+        cy.reload();
+    })
+
     it('Check behaviour of "isOnlyAChildState" attribute (in file config.json of bundles)', function () {
         cy.loginOpFab('operator1', 'test');
 
@@ -88,7 +213,7 @@ describe ('Archives screen tests',function () {
         cy.get('#opfab-state').contains('Action required').should('exist');
         cy.get('#opfab-state').contains('Additional information required').should('exist');
         cy.get('#opfab-state').contains('Network Contingencies').should('exist');
-        cy.get('#opfab-state').contains('Planned outage date response').should('not.exist');
+        cy.get('#opfab-state').contains('Planned outage date response', {matchCase: false}).should('not.exist');
     })
 
     it('Check behaviour of plus/minus icons', function () {

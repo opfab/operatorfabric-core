@@ -258,7 +258,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         status.end = this.extractTime(this.timeFilterForm.get('dateTimeTo'));
 
         if (status.start != null && !isNaN(status.start) && status.end != null && !isNaN(status.end) && status.start > status.end) {
-            this.displayMessage('feed.filters.time.endDateBeforeStartDate','',MessageLevel.ERROR);
+            this.displayMessage('shared.endDateBeforeStartDate','',MessageLevel.ERROR);
             return;
         }
 

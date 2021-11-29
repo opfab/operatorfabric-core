@@ -222,7 +222,7 @@ public class CardProcessingService {
 
     public void deleteCard(String id) {
         CardPublicationData cardToDelete = cardRepositoryService.findCardById(id);
-        deleteCard0(cardToDelete);
+        deleteCard(cardToDelete);
     }
 
     public void deleteCards(Instant endDateBefore) {
@@ -251,14 +251,14 @@ public class CardProcessingService {
         }
        
 
-        return deleteCard0(cardToDelete);
+        return deleteCard(cardToDelete);
     }
 
-    public Optional<CardPublicationData> deleteCard(CardPublicationData card) {
+    public Optional<CardPublicationData> prepareAndDeleteCard(CardPublicationData card) {
         if (card.getId()==null||card.getId().isEmpty()) {
             card.prepare(card.getPublishDate());
         }
-        return deleteCard0(card);
+        return deleteCard(card);
     }
 
     public Optional<CardPublicationData> deleteUserCard(String id, CurrentUserWithPerimeters user) {
@@ -266,7 +266,7 @@ public class CardProcessingService {
         if (cardToDelete == null)
             return Optional.empty();
         if (isUserAllowedToDeleteThisCard(cardToDelete, user)){
-            return deleteCard0(cardToDelete);
+            return deleteCard(cardToDelete);
         }
         else {
             throw new ApiErrorException(ApiError.builder()
@@ -276,11 +276,12 @@ public class CardProcessingService {
         }
     }
 
-    public Optional<CardPublicationData> deleteCard0(CardPublicationData cardToDelete) {
+    private Optional<CardPublicationData> deleteCard(CardPublicationData cardToDelete) {
         Optional<CardPublicationData> deletedCard = Optional.ofNullable(cardToDelete);
         if (null != cardToDelete) {
             cardNotificationService.notifyOneCard(cardToDelete, CardOperationTypeEnum.DELETE);
             cardRepositoryService.deleteCard(cardToDelete);
+            externalAppClient.notifyExternalApplicationThatCardIsDeleted(cardToDelete);
             Optional<List<CardPublicationData>> childCard=cardRepositoryService.findChildCard(cardToDelete);
             if(childCard.isPresent()){
                 childCard.get().forEach(x->deleteCard(x.getId()));

@@ -46,6 +46,12 @@ server {
     proxy_set_header Authorization $BasicValue ;
     proxy_pass $KeycloakOpenIdConnect/auth?response_type=code&client_id=opfab-client&$args;
   }
+  location /auth {
+    proxy_set_header X-Forwarded-For $proxy_protocol_addr;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Host $host;
+    proxy_pass http://keycloak:8080/auth;
+  }
   # for angular hot reload in `ng serve` mode
   location ^~ /sockjs-node/ {
     proxy_pass http://127.0.0.1:4200;
@@ -134,7 +140,7 @@ server {
   location ~ "^/users/internal/(.*)" {
     return 404;
   }
- 
+
   location ~ "^/users/(.*)" {
     # enables `ng serve` mode
     if ($request_method = 'OPTIONS') {
@@ -209,6 +215,42 @@ server {
   location = /50x.html {
     root /usr/share/nginx/html;
   }
+  location /externaldevices {
+      # enables `ng serve` mode
+      if ($request_method = 'OPTIONS') {
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Credentials' 'true';
+        add_header 'Access-Control-Allow-Methods' '*';
+        add_header 'Access-Control-Allow-Headers' '*';
+        add_header 'Content-Length' 0;
+        add_header 'Vary' 'Origin';
+        add_header 'Vary' 'Access-Control-Request-Method' ;
+        add_header 'Vary' 'Access-Control-Request-Headers';
+        return 204;
+      }
+      proxy_set_header Host $http_host;
+      proxy_pass http://${MY_DOCKER_HOST}:2105;
+      proxy_set_header X-Forwarded-For $remote_addr;
+    }
+
+    location ~ "^/externaldevices/(.*)" {
+      # enables `ng serve` mode
+      if ($request_method = 'OPTIONS') {
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Credentials' 'true';
+        add_header 'Access-Control-Allow-Methods' '*';
+        add_header 'Access-Control-Allow-Headers' '*';
+        add_header 'Content-Length' 0;
+        add_header 'Vary' 'Origin';
+        add_header 'Vary' 'Access-Control-Request-Method' ;
+        add_header 'Vary' 'Access-Control-Request-Headers';
+        return 204;
+      }
+      proxy_set_header Host $http_host;
+      proxy_pass http://${MY_DOCKER_HOST}:2105/$1;
+      proxy_set_header X-Forwarded-For $remote_addr;
+    }
+
   # TEST configuration
   location  /logging/ {
       # enables `ng serve` mode

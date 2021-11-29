@@ -5,12 +5,14 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-= Attribution for Sound Assets
+= Attributions
+
+== Sound Assets
 
 The sound assets from this directory are licensed under the Creative Commons CC0 1.0 Universal license
 (see link:CC0_LICENSE.txt[CC0_LICENSE.txt]).
 
-== alarm.mp3
+=== alarm.mp3
 
 Source: https://freesound.org/people/Ozzie321/sounds/238075/
 
@@ -20,7 +22,7 @@ Author: link:https://freesound.org/people/Ozzie321/[Ozzie321]
 
 The original sound was shortened.
 
-== action.mp3
+=== action.mp3
 
 Source: https://freesound.org/people/rj10328/sounds/139025/
 
@@ -28,7 +30,7 @@ Original file name: +131659__bertrof__game-sound-intro-to-game_&_80921__justinbw
 
 Author: link:https://freesound.org/people/rj10328/[rj10328]
 
-== compliant.mp3
+=== compliant.mp3
 
 Source: https://freesound.org/people/LittleRainySeasons/sounds/335908/
 
@@ -36,10 +38,20 @@ Original file name: Correct.mp3
 
 Author: link:https://freesound.org/people/LittleRainySeasons/[LittleRainySeasons]
 
-== information.mp3
+=== information.mp3
 
 Source: https://freesound.org/people/breebles/sounds/487029/
 
 Original file name: Music Box.mp3
 
 Author: link:https://freesound.org/people/breebles/[breebles]
+
+== Icons
+
+=== change-password.svg
+
+Source: https://uxwing.com/wp-content/themes/uxwing/download/07-web-app-development/change-password.svg
+
+Original file name: change-password.svg
+
+Author: link:https://uxwing.com[uxwing]

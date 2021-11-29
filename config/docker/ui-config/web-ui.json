@@ -3,6 +3,7 @@
   "environmentColor": "blue",
   "checkPerimeterForResponseCard": true,
   "showUserEntitiesOnTopRightOfTheScreen": true,
+  "externalDevicesEnabled": true,
   "settings.replayInterval": 10,
   "settings.replayEnabled": true,
   "archive": {
@@ -110,7 +111,8 @@
       }
     },
     "provider-realm": "dev",
-    "provider-url": "http://localhost:89"
+    "provider-url": "http://localhost:89",
+    "changePasswordUrl": "http://localhost:89/auth/realms/dev/account/#/security/signingin"
   },
   "settings": {
     "tags": {
@@ -134,7 +136,7 @@
       "operatorfabric": {
         "name": "OperatorFabric",
         "rank": 0,
-        "version": "3.0.2.RELEASE"
+        "version": "3.1.0.RELEASE"
       }
     },
     "infos": {

@@ -66,7 +66,6 @@ export class UserPermissionsService {
   private isUserInEntityAllowedToRespond(user: UserWithPerimeters, card: Card, processDefinition: Process): boolean {
     let userEntitiesAllowedToRespond = [];
     let entitiesAllowedToRespondAndEntitiesRequiredToRespond = [];
-
     if (card.entitiesAllowedToRespond)
       entitiesAllowedToRespondAndEntitiesRequiredToRespond = entitiesAllowedToRespondAndEntitiesRequiredToRespond
         .concat(card.entitiesAllowedToRespond);
@@ -79,7 +78,9 @@ export class UserPermissionsService {
       const entitiesAllowedToRespond = this.entitiesService.getEntities().filter(entity =>
         entitiesAllowedToRespondAndEntitiesRequiredToRespond.includes(entity.id));
 
-      const emittingEntityAllowedToRespond = processDefinition.extractState(card).response.emittingEntityAllowedToRespond;
+      
+      let emittingEntityAllowedToRespond = false;  
+      if (!!processDefinition.extractState(card).response)  emittingEntityAllowedToRespond = !!processDefinition.extractState(card).response.emittingEntityAllowedToRespond;
 
       const allowed = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond)
         .map(entity => entity.id).filter(x => x !== card.publisher || emittingEntityAllowedToRespond);

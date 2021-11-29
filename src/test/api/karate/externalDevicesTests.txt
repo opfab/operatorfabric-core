@@ -1,0 +1,2 @@
+      externaldevices/manageDeviceConfig.feature                    \
+      externaldevices/sendNotification.feature                      \

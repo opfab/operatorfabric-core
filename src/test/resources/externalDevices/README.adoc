@@ -1,0 +1,37 @@
+= External devices README
+
+This file gives a few pointers and command to test the external devices service in conjunction with the dummy modbus
+device. It's intended as a first draft of the documentation.
+
+== Running in docker mode
+
+----
+cd $OF_HOME/config/docker
+./docker-compose-external-devices.sh
+----
+
+IMPORTANT: Currently this docker-compose script launches services in cors-permissive mode. If that's not required,
+replace `nginx-external-devices-cors-permissive.conf` by `nginx-external-devices.conf`
+in `docker-compose.external-devices.override.yml`.
+Issue https://github.com/opfab/operatorfabric-core/issues/1806[#1806] is aimed at generally making nginx configuration
+more straightforward.
+
+== Running in dev mode
+
+----
+cd $OF_HOME/config/dev
+./docker-compose.sh
+cd $OF_HOME
+./run_all.sh --services users,cards-consultation,cards-publication,businessconfig,external-devices start
+cd $OF_HOME/src/test/dummyModbusDevice/src/main/bin
+./startDummy.sh
+----
+
+== Test
+
+----
+cd $OF_HOME/src/test/resources/externalDevices
+./testExternalDevices.sh
+----
+
+Look at logs to see evidence of communication.

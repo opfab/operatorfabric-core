@@ -31,7 +31,7 @@ Cypress.Commands.add('loginOpFab',(username, password)=>
     cy.get('#opfab-cypress-loaded-check', {timeout: 15000}).should('have.text', 'true');
 })
 
-Cypress.Commands.add('reload',()=>
+Cypress.Commands.overwrite('reload',()=>
 {   //go to login page
     cy.visit('');
 
@@ -49,6 +49,11 @@ Cypress.Commands.add('logoutOpFab',()=>
 Cypress.Commands.add('loadTestConf', () => {
     // This clears existing processGroups, bundles and perimeters and load the test configuration
     cy.exec('cd .. && ./resources/loadTestConf.sh '+Cypress.env('host'));
+})
+
+Cypress.Commands.add('loadEmptyProcessGroups', () => {
+    // This load a process groups file without any process group
+    cy.exec('cd ../resources/processGroups && ./loadProcessGroups.sh emptyProcessGroups.json '+Cypress.env('host'));
 })
 
 Cypress.Commands.add('send6TestCards', () => {

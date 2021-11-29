@@ -1,16 +1,7 @@
-buildscript {
-	repositories {
-		mavenLocal()
-		mavenCentral()
-		maven { url "https://plugins.gradle.org/m2/" }
-	}
-	dependencies {
-		classpath misc.palantir
-	}
+plugins {
+	id "base"
+	id "com.palantir.docker"
 }
-
-apply plugin: plugin.base
-apply plugin: plugin.dockerBuild
 
 docker {
 

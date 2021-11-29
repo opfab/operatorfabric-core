@@ -50,6 +50,7 @@ a|The keycloak logout URL. Is a composition of:
  - Your keycloak instance and the _auth_ keyword (ex: https://www.keycloakurl.com/auth), but we also support domains without _auth_ (ex: https://www.keycloakurl.com/customPath)
  - The realm name (Ex: dev)
  - The redirect URL (_redirect_uri_): The redirect URL after success authentification
+|security.changePasswordUrl||no|URL to change the user password (if the top-right menu item "Change password" is visible)
 |security.oauth2.flow.mode|PASSWORD|no
 a|authentication mode, awailable options:
 
@@ -103,6 +104,7 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |settings.playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
 |settings.playSoundForCompliant|false|no|If set to true, a sound is played when Compliant cards are added or updated in the feed
 |settings.playSoundForInformation|false|no|If set to true, a sound is played when Information cards are added or updated in the feed
+|settings.playSoundOnExternalDevice|false|no|If set to true (and `externalDevicesEnabled` is set to true as well) and the user has an external device configured, sounds will be played on this device rather than in the browser
 |settings.replayEnabled|false|no|If set to true, sounds are replayed every `settings.replayInterval` seconds until the user interacts with the application
 |settings.replayInterval|5|no|Interval between sound replays (see `settings.replayEnabled`)
 
@@ -133,6 +135,8 @@ It should look like:
 |showUserEntitiesOnTopRightOfTheScreen|false|no| if set to true the users entities will be displayed under the login on top right of the screen
 |checkPerimeterForResponseCard|true|no|If false, OperatorFabric will not check that a user has write rights on a process/state to respond to a card.
 |usercard.useDescriptionFieldForEntityList|false|no|If true, show entity `description` field instead of `name` in user card page
+|externalDevicesEnabled|false|no|If true, users have the opportunity to play sounds on external devices rather than in the browser. See `settings.playSoundOnExternalDevice`
+
 
 |===
 

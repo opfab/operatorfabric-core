@@ -9,7 +9,8 @@
   "author": "",
   "license": "MPL-2.0",
   "devDependencies": {
-    "cypress": "8.7.0",
-    "cypress-terminal-report": "3.3.4"
+    "cypress": "9.1.0",
+    "cypress-terminal-report": "3.4.0",
+    "har-validator": "5.1.5"
   }
 }

@@ -34,7 +34,13 @@ public class ExternalAppController {
     public void ExternalAppReponse(@RequestBody Optional<JsonNode> requestBody)  {
         requestBody.orElseThrow(() -> new IllegalArgumentException("No Request Body"));
 
-        externalAppServiceImpl.displayMessage(requestBody);
+        externalAppServiceImpl.receiveCard(requestBody);
+    }
+
+    @DeleteMapping("/test/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void onCardSuppression(@PathVariable String id)  {
+        externalAppServiceImpl.deleteCard(id);
     }
 
     @GetMapping("/")

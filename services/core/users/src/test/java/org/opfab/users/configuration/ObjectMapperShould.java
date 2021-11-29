@@ -20,7 +20,6 @@ import org.opfab.users.configuration.json.JacksonConfig;
 import org.opfab.users.model.*;
 import org.opfab.users.model.EntityData;
 import org.opfab.users.model.GroupData;
-import org.opfab.users.model.SimpleUserData;
 import org.opfab.users.model.UserData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -62,21 +61,6 @@ public class ObjectMapperShould {
         assertThat(user.getLastName()).isEqualTo("doe");
         assertThat(user.getGroups()).containsExactlyInAnyOrder("user","admin");
         assertThat(user.getEntities()).containsExactlyInAnyOrder("entity1","entity2");
-    }
-
-    @Test
-    public void readSimpleUser() throws IOException {
-        String stringUser = "{" +
-           "\"login\": \"jdoe\"," +
-           "\"firstName\": \"john\"," +
-           "\"lastName\": \"doe\"" +
-           "}";
-        SimpleUser user = mapper.readValue(stringUser, SimpleUser.class);
-        assertThat(user).isNotNull();
-        assertThat(user).isInstanceOf(SimpleUserData.class);
-        assertThat(user.getLogin()).isEqualTo("jdoe");
-        assertThat(user.getFirstName()).isEqualTo("john");
-        assertThat(user.getLastName()).isEqualTo("doe");
     }
 
     @Test

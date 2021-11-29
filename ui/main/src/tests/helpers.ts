@@ -157,6 +157,8 @@ export function getOneRandomLightCard(lightCardTemplate?: any): LightCard {
         lightCardTemplate.lttd ? lightCardTemplate.lttd : generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
         getRandomI18nData(),
         getRandomI18nData(),
+        getRandomAlphanumericValue(3, 24),
+        getRandomAlphanumericValue(3, 24),
         lightCardTemplate.tags?lightCardTemplate.tags:null,
         lightCardTemplate.timeSpans?lightCardTemplate.timeSpans:null,
         lightCardTemplate.process?lightCardTemplate.process:'testProcess'
@@ -197,6 +199,8 @@ export function getOneRandomCard(cardTemplate?:any): Card {
         cardTemplate.lttd ? cardTemplate.lttd : null,
         getRandomI18nData(),
         getRandomI18nData(),
+        getRandomAlphanumericValue(3, 24),
+        getRandomAlphanumericValue(3, 24),
         cardTemplate.data ? cardTemplate.data : {data: "data"},
         undefined,
         undefined,

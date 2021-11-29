@@ -54,13 +54,13 @@ jobs:
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
         # Launch karate tests
         - cd config/docker
-        - ./docker-compose.sh
+        - ./docker-compose-external-devices.sh
         - cd ../../bin
         - ./waitForOpfabToStart.sh
         - cd ../src/test/api/karate
         - ./launchAll.sh
         - cd ../../../../config/docker
-        - docker-compose down
+        - docker-compose down --remove-orphans
         # Launch cypress tests
         - ./docker-compose-cypress.sh
         - cd ../../bin

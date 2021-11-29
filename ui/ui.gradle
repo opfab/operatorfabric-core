@@ -1,4 +1,1 @@
-subprojects {
-    apply plugin: 'base'
-    apply plugin: 'com.github.node-gradle.node'
-}
+
