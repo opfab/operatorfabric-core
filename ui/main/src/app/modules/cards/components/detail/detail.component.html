@@ -79,7 +79,7 @@
               </div>
               <span translate>response.answers</span> :
               <span *ngFor="let entity of listVisibleEntitiesToRespond; let isLast = last"
-                [ngStyle]="{'color': entity.color,'text-align': 'center'}">
+                [ngStyle]="{'color': entity.color,'text-align': 'center'}" [id]="'opfab-card-header-entity-'+entity.id">
                 &nbsp; {{entity.name}} &nbsp;
               </span>
               <span *ngIf="listDropdownEntitiesToRespond && listDropdownEntitiesToRespond.length > 0"
