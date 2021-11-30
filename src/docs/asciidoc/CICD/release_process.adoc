@@ -121,8 +121,10 @@ For example:
 ----
 - id: SNAPSHOT
   type: SNAPSHOT
+  external_devices_api: true
 - id: D.E.F.RELEASE
   badge: current
+  external_devices_api: true
 - id: A.B.C.RELEASE
   #... end of file omitted
 ----
@@ -132,15 +134,21 @@ For example:
 ----
 - id: SNAPSHOT
   type: SNAPSHOT
+  external_devices_api: true
 - id: X.X.X.RELEASE
   badge: current
+  external_devices_api: true
 - id: D.E.F.RELEASE
+  external_devices_api: true
 - id: A.B.C.RELEASE
   #... end of file omitted
 ----
 
 This file determines which versions (and in which order) are displayed on the
 link:https://opfab.github.io/pages/releases.html[release page] of the website.
+
+NOTE: The `external_devices_api` property should be set to true for all new versions, so the API documentation for
+the External Devices API is displayed on the website.
 
 === Merging the release branch into `master`
 
