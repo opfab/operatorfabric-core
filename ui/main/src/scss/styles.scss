@@ -78,10 +78,25 @@ body {
 // END CUSTOM SCROLLBAR STYLE
 
 
+// CUSTOM SPINNER
+
 .opfab-slow-spinner {
   -webkit-animation: fa-spin 2s infinite linear;
   animation: fa-spin 2s infinite linear;
 } 
+
+
+.opfab-loading-spinner {
+  font-size: 68px;
+  width: 150px;
+  height: 150px;
+  margin: auto;
+  text-align: center;
+  background-color: var(--opfab-bgcolor);
+  color:var(--opfab-text-color);
+}
+
+// END OF CUSTOM SPINNER
 
 
 // BUTTON STYLE 

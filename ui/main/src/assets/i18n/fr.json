@@ -47,6 +47,7 @@
       "entitiesResponses": "REPONSES",
       "requiredResponses": "REPONSES REQUISES"
     },
+    "loadingInProgress": "Chargement en cours",
     "noResult": "Votre recherche ne correspond à aucun résultat.",
     "exportToExcel": "Exporter les données",
     "resultsNumber":"Nombre de résultats",
