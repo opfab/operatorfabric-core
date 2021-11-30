@@ -34,8 +34,11 @@ subprojects {
 
     swaggerSources {
         model {
-            inputFile = file("../../services/core/$project.projectDir.name/src/main/modeling/swagger.yaml")
-            
+            if (!project.projectDir.name.equals('external-devices')) {
+                inputFile = file("../../services/core/$project.projectDir.name/src/main/modeling/swagger.yaml")
+            } else {
+                inputFile = file("../../services/$project.projectDir.name/src/main/modeling/swagger.yaml")
+            }
             code {
                 additionalProperties = [ignoreImportMappings:"false"]
                 language = 'org.opfab.generators.OpfabClientGenerator'
