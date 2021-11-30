@@ -106,7 +106,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
   // ag-grid configuration objects
   public gridOptions;
   public gridApi;
-  public rowData: any;
+  public rowData: any[];
 
   public page: number = 1;
 
@@ -248,9 +248,16 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
   }
 
   refreshData() {
-    this.rowData = this.crudService.getAll();
-  }
+    this.crudService.getAll().subscribe(result => {
+      this.rowData = result;
 
+      // if the total number of pages is lower than the index of the current page, it means that we have returned to the
+      // previous page
+      if (this.gridApi.paginationGetTotalPages() < this.page)
+        this.page--;
+      this.gridApi.paginationGoToPage(this.page-1);
+    });
+  }
 
   updateResultPage(currentPage): void {
     this.gridApi.paginationGoToPage(currentPage-1);
