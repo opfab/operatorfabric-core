@@ -22,6 +22,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 export class CheckboxSettingComponent extends BaseSettingDirective implements OnInit, OnDestroy {
 
   @Input() public labelClass: string;
+  @Input() public name : string;
 
   constructor(protected store: Store<AppState>) {
     super(store);

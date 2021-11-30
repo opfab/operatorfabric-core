@@ -56,6 +56,10 @@ export class SoundNotificationService implements OnDestroy{
                 private externalDevicesService: ExternalDevicesService,
                 private configService: ConfigService) {
 
+
+        // use to have access from cypress to the current object for stubbing method playSound
+        if (window['Cypress'])  window['soundNotificationService'] = this;
+
         this.soundConfigBySeverity = new Map<Severity, SoundConfig>();
         this.soundConfigBySeverity.set(Severity.ALARM, {soundFileName: 'alarm.mp3', soundEnabledSetting: 'playSoundForAlarm'});
         this.soundConfigBySeverity.set(Severity.ACTION, {soundFileName: 'action.mp3', soundEnabledSetting: 'playSoundForAction'});
@@ -67,7 +71,9 @@ export class SoundNotificationService implements OnDestroy{
 
         this.soundEnabled = new Map<Severity, boolean>();
         this.soundConfigBySeverity.forEach((soundConfig, severity) => {
-            store.select(buildSettingsOrConfigSelector(soundConfig.soundEnabledSetting, false)).subscribe(x => {this.soundEnabled.set(severity, x)});
+            store.select(buildSettingsOrConfigSelector(soundConfig.soundEnabledSetting, false)).subscribe(x => {
+                this.soundEnabled.set(severity, x);
+            });
         })
 
         store.select(buildSettingsOrConfigSelector('playSoundOnExternalDevice',false)).subscribe(x => { this.playSoundOnExternalDevice = x;})
