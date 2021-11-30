@@ -383,7 +383,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.messageForm.get('state').valueChanges
         .pipe(
             takeUntil(this.unsubscribe$),
-            debounceTime(10),
+            debounceTime(10), //See #1891 Cypress usercard test was flaky without this debounce
             distinctUntilChanged()
         )
         .subscribe((state) => {
