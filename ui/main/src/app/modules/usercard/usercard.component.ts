@@ -383,6 +383,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.messageForm.get('state').valueChanges
         .pipe(
             takeUntil(this.unsubscribe$),
+            debounceTime(10),
             distinctUntilChanged()
         )
         .subscribe((state) => {
