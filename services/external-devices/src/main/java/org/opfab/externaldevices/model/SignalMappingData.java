@@ -1,8 +1,6 @@
 package org.opfab.externaldevices.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Map;
@@ -11,9 +9,17 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class SignalMappingData implements SignalMapping {
 
     private String id;
+    @Singular
     private Map<String, Integer> supportedSignals;
 
+    public SignalMappingData(SignalMapping signalMapping) {
+
+        this.id = signalMapping.getId();
+        this.supportedSignals = signalMapping.getSupportedSignals();
+
+    }
 }

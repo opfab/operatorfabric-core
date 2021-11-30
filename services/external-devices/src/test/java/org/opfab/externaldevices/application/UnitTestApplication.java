@@ -11,10 +11,12 @@
 package org.opfab.externaldevices.application;
 
 import org.opfab.externaldevices.configuration.externaldevices.ExternalDevicesWatchdogProperties;
-import org.opfab.externaldevices.drivers.ModbusDriverMockFactory;
+import org.opfab.externaldevices.drivers.ExternalDeviceDriverFactory;
+import org.opfab.externaldevices.drivers.ModbusDriverFactory;
 import org.opfab.externaldevices.repositories.DeviceConfigurationRepository;
 import org.opfab.externaldevices.repositories.SignalMappingRepository;
 import org.opfab.externaldevices.repositories.UserConfigurationRepository;
+import org.opfab.externaldevices.services.ConfigService;
 import org.opfab.externaldevices.services.DevicesService;
 import org.opfab.springtools.configuration.mongo.EnableOperatorFabricMongo;
 import org.springframework.boot.SpringApplication;
@@ -28,7 +30,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableOperatorFabricMongo
 @EnableConfigurationProperties
 @EnableMongoRepositories(basePackageClasses = {DeviceConfigurationRepository.class, UserConfigurationRepository.class, SignalMappingRepository.class})
-@Import({DevicesService.class, ModbusDriverMockFactory.class, ExternalDevicesWatchdogProperties.class})
+@Import({DevicesService.class, ConfigService.class, ModbusDriverFactory.class, ExternalDevicesWatchdogProperties.class})
 public class UnitTestApplication {
 
     public static void main(String[] args) {

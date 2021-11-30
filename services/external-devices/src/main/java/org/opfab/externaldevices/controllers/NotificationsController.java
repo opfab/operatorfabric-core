@@ -52,7 +52,6 @@ public class NotificationsController implements NotificationsApi, UserExtractor 
         try {
             devicesService.sendSignalForUser(notification.getSignalId(), user.getLogin());
         } catch (ExternalDeviceConfigurationException | ExternalDeviceDriverException e) {
-            e.printStackTrace();
             throw new ApiErrorException(ApiError.builder()
                     .status(HttpStatus.BAD_REQUEST)
                     .message(String.format(UNHANDLED_NOTIFICATION,notification.getSignalId(),user.getLogin()))
