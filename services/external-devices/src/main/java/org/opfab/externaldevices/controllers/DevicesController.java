@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
 import org.opfab.externaldevices.drivers.ExternalDeviceDriverException;
 import org.opfab.externaldevices.model.Device;
+import org.opfab.externaldevices.services.ConfigService;
 import org.opfab.externaldevices.services.DevicesService;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * DevicesController, documented at {@link DevicesApi}
@@ -38,10 +40,12 @@ public class DevicesController implements DevicesApi {
     private static final String DEVICE_NOT_FOUND_MSG = "Device %s not found";
 
     private final DevicesService devicesService;
+    private final ConfigService configService;
 
     @Autowired
-    public DevicesController(DevicesService devicesService) {
+    public DevicesController(DevicesService devicesService, ConfigService configService) {
         this.devicesService = devicesService;
+        this.configService = configService;
     }
 
 
@@ -85,9 +89,10 @@ public class DevicesController implements DevicesApi {
 
     @Override
     public Device getDevice(HttpServletRequest request, HttpServletResponse response, String deviceId) {
-
         response.setStatus(200);
-        return this.devicesService.getDevice(deviceId).orElseThrow(
+        return this.configService.getDeviceConfiguration(deviceId)
+                .map(devicesService::createDeviceDataFromConfiguration)
+                .orElseThrow(
                 ()-> new ApiErrorException(
                         ApiError.builder()
                                 .status(HttpStatus.NOT_FOUND)
@@ -99,9 +104,8 @@ public class DevicesController implements DevicesApi {
 
     @Override
     public List<Device> getDevices(HttpServletRequest request, HttpServletResponse response) {
-
         response.setStatus(200);
-        return this.devicesService.getDevices();
-
+        return this.configService.getDeviceConfigurations().stream()
+                .map(devicesService::createDeviceDataFromConfiguration).collect(Collectors.toList());
     }
 }

@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.opfab.externaldevices.model.DeviceConfiguration;
 import org.opfab.externaldevices.model.SignalMapping;
 import org.opfab.externaldevices.model.UserConfiguration;
-import org.opfab.externaldevices.services.DevicesService;
+import org.opfab.externaldevices.services.ConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,11 +31,11 @@ public class ConfigurationsController implements ConfigurationsApi {
 
     public static final String DEVICE_CONFIGURATION_CREATED = "Device configuration %s is created";
 
-    private final DevicesService devicesService;
+    private final ConfigService configService;
 
     @Autowired
-    public ConfigurationsController(DevicesService devicesService) {
-        this.devicesService = devicesService;
+    public ConfigurationsController(ConfigService configService) {
+        this.configService = configService;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ConfigurationsController implements ConfigurationsApi {
 
         String id = deviceConfiguration.getId();
 
-        devicesService.insertDeviceConfiguration(deviceConfiguration);
+        configService.insertDeviceConfiguration(deviceConfiguration);
 
         response.addHeader("Location", request.getContextPath() + "/configurations/devices/" + id);
         response.setStatus(201);
