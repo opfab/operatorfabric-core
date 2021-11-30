@@ -63,7 +63,7 @@ describe('User Card ', function () {
       })
 
 
-    /*describe('Edit user card', function () {
+    describe('Edit user card', function () {
 
       it('Edit User card from operator1', ()=>{
   
@@ -101,7 +101,7 @@ describe('User Card ', function () {
             cy.get('#opfab-div-card-template').find('div').eq(0).contains('Hello World');
         });
       })
-    })*/
+    })
 
 
     describe('Delete user card', function () {
