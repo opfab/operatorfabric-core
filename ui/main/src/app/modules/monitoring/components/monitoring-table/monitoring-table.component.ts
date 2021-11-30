@@ -203,7 +203,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             {type: 'dataColumn', headerName: this.summaryColumnName, field: 'summary'},
             {type: 'processColumn', headerName: this.typeOfStateColumnName, field: 'processStatus',cellClassRules: typeOfStateCellClassRules},
             {type: 'emitterColumn', headerName: this.emitterColumnName, field: 'emitter'},
-            {type: 'dataColumn', headerName: this.entitiesResponsesColumnName, field: 'entitiesResponses', cellRenderer: 'responsesCellRenderer'},
+            {type: 'dataColumn', headerName: this.entitiesResponsesColumnName, field: 'entitiesNamesResponses', cellRenderer: 'responsesCellRenderer'},
         ];
 
         this.gridApi.setColumnDefs(this.columnDefs);
@@ -227,21 +227,26 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         this.rowData = [];
         this.displayedResults.forEach(line => {
 
-                this.rowData.push({ severityNumber: this.mapSeverity.get(line.severity),
-                                    time: this.displayTime(line.creationDateTime),
-                                    title: line.titleTranslated,
-                                    summary: line.summaryTranslated,
-                                    processStatus: this.translateValue('shared.typeOfState.' + line.typeOfState),
-                                    typeOfState: line.typeOfState,
-                                    cardId: line.cardId,
-                                    cardUid: line.cardUid,
-                                    severity: line.severity,
-                                    answer: line.answer,
-                                    emitter: line.emitter,
-                                    requiredResponses: line.requiredResponses,
-                                    entitiesResponses: line.entitiesResponses,
-                                    beginningOfBusinessPeriod: line.beginningOfBusinessPeriod,
-                                    endOfBusinessPeriod: line.endOfBusinessPeriod });
+            const entitiesNamesResponses = [];
+            line.entitiesResponses.forEach(entityId => {
+                entitiesNamesResponses.push(this.entitiesService.getEntityName(entityId));
+            });
+            this.rowData.push({ severityNumber: this.mapSeverity.get(line.severity),
+                                time: this.displayTime(line.creationDateTime),
+                                title: line.titleTranslated,
+                                summary: line.summaryTranslated,
+                                processStatus: this.translateValue('shared.typeOfState.' + line.typeOfState),
+                                typeOfState: line.typeOfState,
+                                cardId: line.cardId,
+                                cardUid: line.cardUid,
+                                severity: line.severity,
+                                answer: line.answer,
+                                emitter: line.emitter,
+                                requiredResponses: line.requiredResponses,
+                                entitiesResponses: line.entitiesResponses,
+                                entitiesNamesResponses: entitiesNamesResponses,
+                                beginningOfBusinessPeriod: line.beginningOfBusinessPeriod,
+                                endOfBusinessPeriod: line.endOfBusinessPeriod });
 
         });
         this.rowDataSubject.next(this.rowData);

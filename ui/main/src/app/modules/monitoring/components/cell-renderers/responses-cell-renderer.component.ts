@@ -63,8 +63,7 @@ export class ResponsesCellRendererComponent implements ICellRendererAngularComp,
 
 
   checkEntitiesResponses() {
-   
-    const responses = this.createEntityResponsesList(this.params.value);
+    const responses = this.createEntityResponsesList(this.params.data.entitiesResponses);
     responses.sort((a, b) => a.name?.localeCompare(b.name));
     this.listVisibleEntities = responses.length > maxVisibleEntities ?
                                     responses.slice(0, maxVisibleEntities) :
