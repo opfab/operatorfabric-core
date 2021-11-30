@@ -19,7 +19,7 @@ export OF_HOME=$(realpath $DIR/..)
 
 export OF_VERSION=$(cat "$OF_HOME/VERSION")
 
-export OF_CLIENT_REL_COMPONENTS=( "cards" "users" "businessconfig")
+export OF_CLIENT_REL_COMPONENTS=( "cards" "users" "businessconfig" "external-devices")
 
 echo "OPERATORFABRIC ENVIRONMENT VARIABLES"
 echo
