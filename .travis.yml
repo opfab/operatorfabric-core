@@ -54,7 +54,7 @@ jobs:
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
         # Launch karate tests
         - cd config/docker
-        - ./docker-compose-external-devices.sh
+        - ./docker-compose.sh
         - cd ../../bin
         - ./waitForOpfabToStart.sh
         - cd ../src/test/api/karate
