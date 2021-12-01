@@ -32,7 +32,10 @@ describe('User Card ', function () {
           cy.get('#opfab-recipients').find('li').eq(2).click();
           cy.get('#opfab-recipients').click();
           cy.get('#opfab-usercard-btn-prepareCard').click();
+          // Validate sending of the card
           cy.get('#opfab-usercard-btn-accept').click();
+          // Check that the message indicating successful sending appears
+          cy.get('.opfab-info-message').should('have.class','opfab-alert-info').contains("Your card is published");
           cy.get('of-light-card').should('have.length',1);
           cy.get('of-light-card').eq(0).click()
           .find('[id^=opfab-feed-light-card]')
@@ -80,8 +83,10 @@ describe('User Card ', function () {
               cy.get("of-usercard").should('exist');
               cy.get('#message').should('be.visible').type(' World')
               cy.get('#opfab-usercard-btn-prepareCard').click();
-              cy.get('#opfab-usercard-btn-accept').click()
-              .get('#opfab-div-card-template').find('div').eq(0).contains('Hello World');
+              cy.get('#opfab-usercard-btn-accept').click();
+              // Check that the message indicating successful sending appears
+              cy.get('.opfab-info-message').should('have.class','opfab-alert-info').contains("Your card is published");
+              cy.get('#opfab-div-card-template').find('div').eq(0).contains('Hello World');
 
         });
       })
