@@ -51,6 +51,7 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
 import javax.validation.ConstraintViolationException;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
@@ -1251,4 +1252,46 @@ class CardProcessServiceShould {
         Assertions.assertThat(checkCardCount(0)).isTrue();
     }
 
+
+
+    @Test
+    void checkEntitiesAllowedToEdit() {
+
+        CardPublicationData card = CardPublicationData.builder().publisher("entity2").processVersion("O")
+        .processInstanceId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
+        .process("PROCESS_CARD_USER")
+        .parentCardId(null)
+        .initialParentCardUid(null)
+        .state("STATE1")
+        .title(I18nPublicationData.builder().key("title").build())
+        .summary(I18nPublicationData.builder().key("summary").build())
+        .startDate(Instant.now())
+        .state("state1")
+        .build();
+
+
+        List<String> entitiesAllowedToEdit = new ArrayList();
+        entitiesAllowedToEdit.add("entityallowed");
+
+        card.setEntitiesAllowedToEdit(entitiesAllowedToEdit);
+
+        cardProcessingService.processUserCard(card, currentUserWithPerimeters);
+        Assertions.assertThat(checkCardCount(1)).isTrue();
+
+
+        card.setUid(null);
+        card.setPublisher("entityallowed");
+        currentUserWithPerimeters.getUserData().setEntities(Arrays.asList("entityallowed"));
+
+        Assertions.assertThatCode(() -> cardProcessingService.processUserCard(card, currentUserWithPerimeters))
+        .doesNotThrowAnyException();
+
+        card.setUid(null);
+        card.setPublisher("notallowed");
+        currentUserWithPerimeters.getUserData().setEntities(Arrays.asList("notallowed"));
+
+        Assertions.assertThatThrownBy(() -> cardProcessingService.processUserCard(card, currentUserWithPerimeters))
+            .isInstanceOf(ApiErrorException.class).hasMessage("User is not part of entities allowed to edit card. Card is rejected");
+
+    }
 }

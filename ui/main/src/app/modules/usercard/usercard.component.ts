@@ -582,6 +582,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         const keepChildCards = (!!specificInformation.card.keepChildCards) ? specificInformation.card.keepChildCards : false;
         const secondsBeforeTimeSpanForReminder = (specificInformation.card.secondsBeforeTimeSpanForReminder !== undefined) ? specificInformation.card.secondsBeforeTimeSpanForReminder : null;
         const externalRecipients = (!!specificInformation.card.externalRecipients) ? specificInformation.card.externalRecipients : null;
+        const entitiesAllowedToEdit = (!!specificInformation.card.entitiesAllowedToEdit) ? specificInformation.card.entitiesAllowedToEdit : null;
 
         let severity;
         if (this.severityVisible) {
@@ -621,6 +622,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
                     userRecipients : [this.currentUserWithPerimeters.userData.login],
                     entityRecipients: recipients,
                     entitiesAllowedToRespond: entitiesAllowedToRespond,
+                    entitiesAllowedToEdit: entitiesAllowedToEdit,
                     externalRecipients: externalRecipients,
                     title: title,
                     titleTranslated: titleTranslated,

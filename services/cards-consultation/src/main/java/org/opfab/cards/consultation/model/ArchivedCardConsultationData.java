@@ -85,6 +85,8 @@ public class ArchivedCardConsultationData implements Card {
     private List<String> entitiesAllowedToRespond;
     @Singular("entityRequiredToRespond")
     private List<String> entitiesRequiredToRespond;
+    @Singular("entitiesAllowedToEdit")
+    private List<String> entitiesAllowedToEdit;
     @Singular
     private List<String> externalRecipients;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)

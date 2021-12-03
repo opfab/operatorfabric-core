@@ -45,7 +45,7 @@ import {TimeService} from '@ofServices/time.service';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {MessageLevel} from '@ofModel/message.model';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
-import {UserPermissionsService} from '@ofServices/user-permissions-.service';
+import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 
@@ -108,7 +108,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public showMaxAndReduceButton = false;
     public showAckButton = false;
     public showActionButton = false;
-    public showEditAndDeleteButton = false;
+    public showEditButton = false;
+    public showDeleteButton = false;
     public showDetailCardHeader = false;
     public fromEntityOrRepresentative = null;
     public formattedPublishDate = "";
@@ -438,13 +439,18 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             this.showMaxAndReduceButton = true;
         }
         this.showCloseButton = true;
-        this.showEditAndDeleteButton = this.doesTheUserHavePermissionToDeleteOrEditCard();
+        this.showEditButton = this.doesTheUserHavePermissionToEditCard();
+        this.showDeleteButton = this.doesTheUserHavePermissionToDeleteCard();
         this.showAckButton = this.isAcknowledgmentAllowed() && (this._appService.pageType !== PageType.CALENDAR);
         this.showActionButton = (!!this.cardState.response);
     }
 
-    private doesTheUserHavePermissionToDeleteOrEditCard(): boolean {
-        return this.userPermissionsService.doesTheUserHavePermissionToDeleteOrEditCard(this.userService.getCurrentUserWithPerimeters(), this.card);
+    private doesTheUserHavePermissionToEditCard(): boolean {
+        return this.userPermissionsService.doesTheUserHavePermissionToEditCard(this.userService.getCurrentUserWithPerimeters(), this.card);
+    }
+
+    private doesTheUserHavePermissionToDeleteCard(): boolean {
+        return this.userPermissionsService.doesTheUserHavePermissionToDeleteCard(this.userService.getCurrentUserWithPerimeters(), this.card);
     }
 
     private isAcknowledgmentAllowed(): boolean {
