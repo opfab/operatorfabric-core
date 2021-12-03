@@ -12,37 +12,44 @@ import {Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 import {StateRight} from '@ofModel/perimeter.model';
+import {Process} from "@ofModel/processes.model";
+import {ProcessesService} from "@ofServices/processes.service";
 
 @Component({
-  selector: 'of-state-rights-cell-renderer',
-  templateUrl: './state-rights-cell-renderer.component.html',
-  styleUrls: ['./state-rights-cell-renderer.component.scss']
+    selector: 'of-state-rights-cell-renderer',
+    templateUrl: './state-rights-cell-renderer.component.html',
+    styleUrls: ['./state-rights-cell-renderer.component.scss']
 })
 export class StateRightsCellRendererComponent implements ICellRendererAngularComp {
 
-  constructor() {
-  }
+    // For explanations regarding ag-grid CellRenderers see
+    // https://www.ag-grid.com/documentation/angular/component-cell-renderer/#example-rendering-using-angular-components
+    _stateRightsValues: {stateName: string, stateRight: StateRight}[] = [];
+    processesDefinition: Process[];
 
-  // For explanations regarding ag-grid CellRenderers see
-  // https://www.ag-grid.com/documentation/angular/component-cell-renderer/#example-rendering-using-angular-components
-  private _stateRightsValues: StateRight[];
+    constructor(private processesService: ProcessesService,) {
+        this.processesDefinition = this.processesService.getAllProcesses();
+    }
 
+    agInit(params: any): void {
+        const stateRightsValues = params.getValue();
 
-  agInit(params: any): void {
+        const currentProcessDef = this.processesDefinition.filter(processDef => processDef.id === params.data.process)[0];
 
-          this._stateRightsValues = params.getValue();
-
-  }
+        stateRightsValues.forEach(stateRight => {
+            this._stateRightsValues.push({stateName: currentProcessDef.states[stateRight.state].name, stateRight: stateRight});
+        });
+    }
 
     /** This method returns true to signal to the grid that this renderer doesn't need to be recreated if the underlying data changes
-   *  See https://www.ag-grid.com/documentation/angular/component-cell-renderer/#handling-refresh
-   * */
-  refresh(params: ICellRendererParams): boolean {
-    return true;
-  }
+     *  See https://www.ag-grid.com/documentation/angular/component-cell-renderer/#handling-refresh
+     * */
+    refresh(params: ICellRendererParams): boolean {
+        return true;
+    }
 
-  get stateRightsValues(): StateRight[] {
-    return this._stateRightsValues;
-  }
+    get stateRightsValues(): {stateName: string, stateRight: StateRight}[] {
+        return this._stateRightsValues;
+    }
 
 }
