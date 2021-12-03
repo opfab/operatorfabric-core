@@ -42,22 +42,44 @@ export class UserPermissionsService {
   /* 1st check : card.publisherType == ENTITY
    2nd check : the card has been sent by an entity of the user connected
    3rd check : the user has the Write access to the process/state of the card */
-  public doesTheUserHavePermissionToDeleteOrEditCard(user: UserWithPerimeters, card: Card): boolean {
+  public doesTheUserHavePermissionToDeleteCard(user: UserWithPerimeters, card: Card): boolean {
     let permission = false;
     if ((card.publisherType === 'ENTITY') && (user.userData.entities.includes(card.publisher))) {
-      user.computedPerimeters.forEach(perim => {
-        if ((perim.process === card.process) &&
-          (perim.state === card.state)
-          && (this.compareRightAction(perim.rights, RightsEnum.Write)
-            || this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
-          permission = true;
-          return true;
-        }
-      });
+      permission = this.checkUserWritePerimeter(user, card);
     }
     return permission;
   }
 
+
+  public doesTheUserHavePermissionToEditCard(user: UserWithPerimeters, card: Card): boolean {
+    let permission = false;
+    if ((card.publisherType === 'ENTITY') && (user.userData.entities.includes(card.publisher) 
+      || (!!card.entitiesAllowedToEdit && this.isUserInEntityAllowedToEditCard(user, card)))) {
+        permission = this.checkUserWritePerimeter(user, card);
+    }
+    return permission;
+  }
+
+  private checkUserWritePerimeter(user: UserWithPerimeters, card: Card) : boolean {
+    let permission = false;
+    user.computedPerimeters.forEach(perim => {
+      if ((perim.process === card.process) &&
+        (perim.state === card.state)
+        && (this.compareRightAction(perim.rights, RightsEnum.Write)
+          || this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
+        permission = true;
+        return true;
+      }
+    });
+    return permission;
+  }
+
+  private isUserInEntityAllowedToEditCard(user: UserWithPerimeters, card: Card) {
+    const userEntitiesAllowed = user.userData.entities.filter(entity => 
+      card.entitiesAllowedToEdit.includes(entity)
+    )
+    return userEntitiesAllowed.length > 0;
+  }
 
   private isLttdExpired(card: Card): boolean {
     return (card.lttd != null && (card.lttd - new Date().getTime()) <= 0);

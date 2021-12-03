@@ -104,6 +104,8 @@ public class CardPublicationData implements Card {
     private List<String> entitiesAllowedToRespond;
     @Singular("entityRequiredToRespond")
     private List<String> entitiesRequiredToRespond;
+    @Singular("entitiesAllowedToEdit")
+    private List<String> entitiesAllowedToEdit;
     @Singular
     @Indexed
     private List<String> entityRecipients;

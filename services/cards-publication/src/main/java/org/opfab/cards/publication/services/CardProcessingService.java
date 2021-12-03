@@ -11,6 +11,7 @@
 package org.opfab.cards.publication.services;
 
 import lombok.extern.slf4j.Slf4j;
+
 import org.opfab.aop.process.AopTraceType;
 import org.opfab.aop.process.mongo.models.UserActionTraceData;
 import org.opfab.cards.model.CardOperationTypeEnum;
@@ -39,6 +40,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -105,6 +107,13 @@ public class CardProcessingService {
         cardTranslationService.translate(card);
 
         if (user.isPresent()) {
+            CardPublicationData oldCard = getExistingCard(card.getId());
+            if (oldCard != null && !oldCard.getPublisher().equals(card.getPublisher()) && !isUserInEntityAllowedToEditCard(oldCard, user.get())) {
+                throw new ApiErrorException(ApiError.builder()
+                .status(HttpStatus.FORBIDDEN)
+                .message("User is not part of entities allowed to edit card. Card is rejected")
+                .build());
+            }
             userCardProcessor.processPublisher(card, user.get());
             externalAppClient.sendCardToExternalApplication(card);
         }
@@ -171,10 +180,25 @@ public class CardProcessingService {
             throw new ConstraintViolationException("constraint violation : character '.' is forbidden in process and state", null);
     }
 
-    boolean checkIsParentCardIdExisting(CardPublicationData c){
-        String parentCardId = c.getParentCardId();
+    private boolean isUserInEntityAllowedToEditCard(CardPublicationData card, CurrentUserWithPerimeters user) {
+        List<String> entitiesAllowed = card.getEntitiesAllowedToEdit();
+        if (entitiesAllowed != null) {
+            List<String> userEntitiesAllowed = user.getUserData().getEntities().stream().filter(entitiesAllowed::contains).collect(Collectors.toList());
+            return !userEntitiesAllowed.isEmpty();
+        }
+        return false;
+    }
 
-        return ! ((Optional.ofNullable(parentCardId).isPresent()) && (cardRepositoryService.findCardById(parentCardId) == null));
+    private CardPublicationData getExistingCard(String cardId){
+        return cardRepositoryService.findCardById(cardId);
+    }
+
+    boolean checkIsCardIdExisting(String cardId){
+        return ! ((Optional.ofNullable(cardId).isPresent()) && (cardRepositoryService.findCardById(cardId) == null));
+    }
+
+    boolean checkIsParentCardIdExisting(CardPublicationData c){
+        return checkIsCardIdExisting(c.getParentCardId());
     }
 
     //The check of existence of uid is done in archivedCards collection

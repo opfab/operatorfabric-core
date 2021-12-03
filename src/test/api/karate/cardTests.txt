@@ -12,6 +12,7 @@
       cards/postCardWithToNotify.feature          \
       cards/postCardFor3Users.feature             \
       cards/postCardsEntitiesToRespond.feature \
+      cards/postCardsEntitiesToEdit.feature       \
       cards/deleteCardFor3Users.feature           \
       cards/post1CardThenUpdateThenDelete.feature \
       cards/getArchive.feature                    \

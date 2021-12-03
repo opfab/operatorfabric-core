@@ -41,6 +41,7 @@ export class LightCard {
         readonly representativeType?: PublisherType | string,
         readonly entitiesAllowedToRespond?: string[],
         readonly entitiesRequiredToRespond?: string[],
+        readonly entitiesAllowedToEdit?: string[],
         readonly publisherType?: PublisherType | string,
         readonly secondsBeforeTimeSpanForReminder?: number
     ) {

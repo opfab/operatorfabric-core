@@ -94,6 +94,8 @@ public class ArchivedCardPublicationData implements Card {
     @Singular("entitiyRequiredToRespond")
     private List<String> entitiesRequiredToRespond;
 
+    @Singular("entitiesAllowedToEdit")
+    private List<String> entitiesAllowedToEdit;
 
     @Transient
     private Boolean hasBeenAcknowledged;
@@ -138,6 +140,7 @@ public class ArchivedCardPublicationData implements Card {
         this.externalRecipients = card.getExternalRecipients() == null ? null : new ArrayList<>(card.getExternalRecipients());
         this.entitiesAllowedToRespond = card.getEntitiesAllowedToRespond() == null ? null : new ArrayList<>(card.getEntitiesAllowedToRespond());
         this.entitiesRequiredToRespond = card.getEntitiesRequiredToRespond() == null ? null : new ArrayList<>(card.getEntitiesRequiredToRespond());
+        this.entitiesAllowedToEdit = card.getEntitiesAllowedToEdit() == null ? null : new ArrayList<>(card.getEntitiesAllowedToEdit());
         this.processStateKey = process + "." + state;
         this.publisherType = card.getPublisherType();
         this.representative = card.getRepresentative();

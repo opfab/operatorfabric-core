@@ -78,7 +78,7 @@ public class LightCardConsultationData implements LightCard {
 
     private List<String> entitiesAllowedToRespond;
     private List<String> entitiesRequiredToRespond;
-
+    private List<String> entitiesAllowedToEdit;
     private PublisherTypeEnum publisherType;
 
     private String representative;
