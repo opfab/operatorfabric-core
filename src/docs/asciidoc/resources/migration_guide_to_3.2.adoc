@@ -1,0 +1,21 @@
+// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 3.1.0 to release 3.2.0
+
+== Cache configuration for i18n files 
+
+Add the following lines in your nginx.conf to avoid keeping in cache old translation files when migrating opfab
+
+```
+  location /ui/assets/i18n/ {
+    add_header Cache-Control "no-cache";
+    alias /usr/share/nginx/html/assets/i18n/;
+  }
+```
+
+see the reference nginx configuration file : https://github.com/opfab/operatorfabric-core/blob/master/config/docker/nginx.conf 
