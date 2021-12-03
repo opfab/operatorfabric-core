@@ -77,6 +77,7 @@ describe('Sound notification test', function () {
 
       // set severity action to be notified by sound
       cy.get('#opfab-checkbox-setting-form-action').click();
+      
 
       // Open the archives screen  , even if user is in archives screen sound are activated 
       cy.get('#opfab-navbar-menu-archives').click({force: true});
@@ -115,6 +116,7 @@ describe('Sound notification test', function () {
 
       // Open the archives and send a card
       cy.get('#opfab-navbar-menu-archives').click({force: true});
+      cy.waitDefaultTime();
 
       // Use cypress time simulation 
       cy.clock(new Date());
@@ -146,9 +148,11 @@ describe('Sound notification test', function () {
       // Set repeating interval to 20 seconds
       openSettings();
       cy.get('#opfab-setting-replayInterval').type('20');
+      cy.waitDefaultTime();
 
       // Open the archives and send a card
       cy.get('#opfab-navbar-menu-archives').click({force: true});
+      cy.waitDefaultTime();
 
       cy.clock(new Date());
 
