@@ -134,7 +134,6 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         .subscribe(pageSize => {
           this.gridApi.paginationSetPageSize(pageSize);
         });
-
   }
 
   /** This function generates the ag-grid `ColumnDefs` for the grid from a list of fields

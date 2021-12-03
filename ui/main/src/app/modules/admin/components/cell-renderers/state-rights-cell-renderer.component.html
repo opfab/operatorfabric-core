@@ -6,11 +6,11 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<span *ngFor="let stateRight of stateRightsValues">
-    <span class="badge opfab-bg-right-{{stateRight.right.toString()|lowercase}}"
+<span *ngFor="let element of _stateRightsValues">
+    <span class="badge opfab-bg-right-{{element.stateRight.right.toString()|lowercase}}"
           style="font-size: 14px; margin: 3px; color: black"
-          [ngbPopover]="stateRight.right.toString()" [openDelay]="300" placement="top" triggers="mouseenter:mouseleave" popoverClass="opfab-popover" container="body"
-    >{{stateRight.state}}</span>
+          [ngbPopover]="element.stateRight.right.toString()" [openDelay]="300" placement="top" triggers="mouseenter:mouseleave"
+          popoverClass="opfab-popover" container="body">{{element.stateName}}</span>
 </span>
 
 
