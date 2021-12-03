@@ -42,6 +42,8 @@ describe('Sound notification test', function () {
       // set severity alarm to be notified by sound
       cy.get('#opfab-checkbox-setting-form-alarm').click();
 
+      cy.waitDefaultTime();
+
       // Open the feed
       cy.get('#opfab-navbar-menu-feed').click({force: true});
 
@@ -102,13 +104,14 @@ describe('Sound notification test', function () {
       cy.get('@playSound').its('callCount').should('eq', 4);
     });
 
-    it('Repeating sound when receiving card   ', () => {
+    it('Repeating sound when receiving card with default repeating interval   ', () => {
       cy.loginOpFab(user, 'test');
       stubPlaySound();
 
       // Activate repeating sound 
       openSettings();
       cy.get('#opfab-checkbox-setting-form-replay').click();
+      cy.waitDefaultTime();
 
       // Open the archives and send a card
       cy.get('#opfab-navbar-menu-archives').click({force: true});
@@ -133,6 +136,12 @@ describe('Sound notification test', function () {
       // Wait 30 seconds more , no new sound 
       cy.tick(30000);
       cy.get('@playSound').its('callCount').should('eq', 3);
+    
+    })
+
+    it('Repeating sound when receiving card  with  custom repeating interval ', () => {
+      cy.loginOpFab(user, 'test');
+      stubPlaySound();
 
       // Set repeating interval to 20 seconds
       openSettings();
@@ -141,8 +150,6 @@ describe('Sound notification test', function () {
       // Open the archives and send a card
       cy.get('#opfab-navbar-menu-archives').click({force: true});
 
-      // re-init the clock
-      cy.clock().invoke('restore');
       cy.clock(new Date());
 
       cy.sendCard('defaultProcess/message.json');
@@ -150,7 +157,7 @@ describe('Sound notification test', function () {
       cy.tick(50000);
 
       // Two new sound , the first one + 2 repetition
-      cy.get('@playSound').its('callCount').should('eq', 6);
+      cy.get('@playSound').its('callCount').should('eq', 3);
 
 
       // Click somewhere to stop repeating sound 
@@ -158,8 +165,7 @@ describe('Sound notification test', function () {
 
       // Wait 30 seconds more , no new sound 
       cy.tick(30000);
-      cy.get('@playSound').its('callCount').should('eq', 6);
-
+      cy.get('@playSound').its('callCount').should('eq', 3);
 
     })
 
