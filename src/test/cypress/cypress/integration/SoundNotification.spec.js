@@ -106,6 +106,7 @@ describe('Sound notification test', function () {
     });
 
     it('Repeating sound when receiving card with default repeating interval   ', () => {
+      cy.delete6TestCards();
       cy.loginOpFab(user, 'test');
       stubPlaySound();
 
@@ -114,13 +115,18 @@ describe('Sound notification test', function () {
       cy.get('#opfab-checkbox-setting-form-replay').click();
       cy.waitDefaultTime();
 
-      // Open the archives and send a card
-      cy.get('#opfab-navbar-menu-archives').click({force: true});
+      // Open the feed and send card 
+      cy.get('#opfab-navbar-menu-feed').click({force: true});
       cy.waitDefaultTime();
 
       // Use cypress time simulation 
       cy.clock(new Date());
       cy.sendCard('defaultProcess/message.json');
+      cy.waitDefaultTime();
+
+       // wait for light card to appears 
+      cy.tick(1000);
+      cy.get('of-light-card');
 
       // Shift 15 seconds in the future
       cy.tick(15000);
@@ -142,6 +148,7 @@ describe('Sound notification test', function () {
     })
 
     it('Repeating sound when receiving card  with  custom repeating interval ', () => {
+      cy.delete6TestCards();
       cy.loginOpFab(user, 'test');
       stubPlaySound();
 
@@ -150,13 +157,17 @@ describe('Sound notification test', function () {
       cy.get('#opfab-setting-replayInterval').type('20');
       cy.waitDefaultTime();
 
-      // Open the archives and send a card
-      cy.get('#opfab-navbar-menu-archives').click({force: true});
+      // Open the feed and send card 
+      cy.get('#opfab-navbar-menu-feed').click({force: true});
       cy.waitDefaultTime();
 
       cy.clock(new Date());
-
       cy.sendCard('defaultProcess/message.json');
+      cy.waitDefaultTime();
+
+       // wait for light card to appears 
+       cy.tick(1000);
+       cy.get('of-light-card');
 
       cy.tick(50000);
 
