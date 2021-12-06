@@ -14,15 +14,17 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {debounce, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
-import {ApplyFilter} from '@ofActions/feed.actions';
 import * as _ from 'lodash-es';
-import {FilterType} from '@ofServices/filter.service';
+import {FilterType} from '@ofModel/feed-filter.model';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 
 import {DateTimeNgb, getDateTimeNgbFromMoment} from '@ofModel/datetime-ngb.model';
 import moment from 'moment';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
+import {FilterService} from '@ofServices/lightcards/filter.service';
+import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
+
 
 
 @Component({
@@ -35,6 +37,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     @Input() hideTimerTags: boolean;
     @Input() hideAckFilter: boolean;
     @Input() hideResponseFilter: boolean;
+    @Input() hideApplyFiltersToTimeLineChoice: boolean;
 
     dateTimeFilterChange = new Subject();
 
@@ -43,17 +46,19 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     ackFilterForm: FormGroup;
     timeFilterForm: FormGroup;
     responseFilterForm: FormGroup;
+    timeLineFilterForm: FormGroup;
 
     endMinDate : {year: number, month: number, day: number} = null;
     startMaxDate : {year: number, month: number, day: number} = null;
 
     private dateFilterType = FilterType.PUBLISHDATE_FILTER;
 
-    constructor(private store: Store<AppState>, private userPreferences: UserPreferencesService) {
+    constructor(private store: Store<AppState>, private userPreferences: UserPreferencesService,private filterService:FilterService , private lightCardsFeedFilterService:LightCardsFeedFilterService) {
         this.typeFilterForm = this.createFormGroup();
         this.ackFilterForm = this.createAckFormGroup();
         this.timeFilterForm = this.createDateTimeForm();
         this.responseFilterForm = this.createResponseFormGroup();
+        this.timeLineFilterForm = this.createTimeLineFormGroup();
     }
 
     private createFormGroup() {
@@ -68,6 +73,12 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     private createResponseFormGroup() {
         return new FormGroup({
             responseControl: new FormControl(true),
+        }, {updateOn: 'change'});
+    }
+
+    private createTimeLineFormGroup() {
+        return new FormGroup({
+            timeLineControl: new FormControl(true),
         }, {updateOn: 'change'});
     }
 
@@ -105,6 +116,11 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         if (!this.hideTimerTags) {
             this.initDateTimeFilter();
         }
+        if (!this.hideApplyFiltersToTimeLineChoice) {
+            this.initTimeLineFilter();
+        }
+
+        
     }
 
     private initTypeFilter() {
@@ -125,12 +141,11 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
        this.typeFilterForm.get('compliant').setValue(!compliantUnset, {emitEvent: false});
        this.typeFilterForm.get('information').setValue(!informationUnset, {emitEvent: false});
 
-       this.store.dispatch(
-        new ApplyFilter({
-            name: FilterType.TYPE_FILTER,
-            active: (alarmUnset || actionUnset || compliantUnset || informationUnset),
-            status: {'alarm' : !alarmUnset, 'action': !actionUnset, 'compliant' : !compliantUnset, 'information' : !informationUnset}
-        }));
+       this.filterService.updateFilter(
+            FilterType.TYPE_FILTER,
+            alarmUnset || actionUnset || compliantUnset || informationUnset,
+             {'alarm' : !alarmUnset, 'action': !actionUnset, 'compliant' : !compliantUnset, 'information' : !informationUnset}
+       );
 
 
         this.typeFilterForm
@@ -146,12 +161,11 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
                     this.userPreferences.setPreference('opfab.feed.filter.type.action', form.action);
                     this.userPreferences.setPreference('opfab.feed.filter.type.compliant', form.compliant);
                     this.userPreferences.setPreference('opfab.feed.filter.type.information', form.information);
-                    return this.store.dispatch(
-                    new ApplyFilter({
-                        name: FilterType.TYPE_FILTER,
-                        active: !(form.alarm && form.action && form.compliant && form.information),
-                        status: form
-                    }));
+                    return this.filterService.updateFilter(
+                        FilterType.TYPE_FILTER,
+                        !(form.alarm && form.action && form.compliant && form.information),
+                        form
+                    );
                 });
     }
 
@@ -164,12 +178,11 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
         if (!!responseValue) {
 
-            this.store.dispatch(
-                new ApplyFilter({
-                    name: FilterType.RESPONSE_FILTER,
-                    active: responseUnset,
-                    status: !responseUnset
-                }));
+            this.filterService.updateFilter(
+                    FilterType.RESPONSE_FILTER,
+                    responseUnset,
+                    !responseUnset
+                );
         }
 
         this.responseFilterForm
@@ -180,12 +193,32 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
                 this.userPreferences.setPreference('opfab.feed.filter.response', form.responseControl);
 
-                return this.store.dispatch(
-                    new ApplyFilter({
-                        name: FilterType.RESPONSE_FILTER,
-                        active: !form.responseControl,
-                        status: form.responseControl
-                    }));
+                return this.filterService.updateFilter(
+                        FilterType.RESPONSE_FILTER,
+                        !form.responseControl,
+                        form.responseControl
+                    );
+            });
+    }
+
+    private initTimeLineFilter() {
+        const timeLineValue = this.userPreferences.getPreference('opfab.feed.filter.applyToTimeLine');
+
+        let timeLineFiltered = true;
+        if (timeLineValue && timeLineValue !='true') timeLineFiltered = false;
+
+        this.timeLineFilterForm.get('timeLineControl').setValue(timeLineFiltered, {emitEvent: false});
+        this.lightCardsFeedFilterService.setOnlyBusinessFilterForTimeLine(!timeLineFiltered);
+
+        this.timeLineFilterForm
+            .valueChanges
+            .pipe(
+                takeUntil(this.ngUnsubscribe$))
+            .subscribe(form => {
+
+                this.userPreferences.setPreference('opfab.feed.filter.applyToTimeLine', form.timeLineControl);
+                this.lightCardsFeedFilterService.setOnlyBusinessFilterForTimeLine(!form.timeLineControl);
+
             });
     }
 
@@ -196,12 +229,11 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             this.ackFilterForm.get('ackControl').setValue(ackValue, {emitEvent: false});
             const active = ackValue !== 'all';
             const ack = active && ackValue === 'ack';
-            this.store.dispatch(
-                new ApplyFilter({
-                    name: FilterType.ACKNOWLEDGEMENT_FILTER,
-                    active: active,
-                    status: ack
-                }));
+            this.filterService.updateFilter(
+                    FilterType.ACKNOWLEDGEMENT_FILTER,
+                    active,
+                    ack
+                );
 
         } else {
             this.ackFilterForm.get('ackControl').setValue('notack', {emitEvent: false});
@@ -216,12 +248,11 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
                 const ack = active && form.ackControl === 'ack';
                 this.userPreferences.setPreference('opfab.feed.filter.ack', form.ackControl);
 
-                return this.store.dispatch(
-                    new ApplyFilter({
-                        name: FilterType.ACKNOWLEDGEMENT_FILTER,
-                        active: active,
-                        status: ack
-                    }));
+                return this.filterService.updateFilter(
+                        FilterType.ACKNOWLEDGEMENT_FILTER,
+                        active,
+                        ack
+                );
             });
     }
 
@@ -277,12 +308,11 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             this.startMaxDate = {year: this.timeFilterForm.value.dateTimeTo.date.year, month: this.timeFilterForm.value.dateTimeTo.date.month, day: this.timeFilterForm.value.dateTimeTo.date.day};
         }
 
-        this.store.dispatch(
-            new ApplyFilter({
-                name: this.dateFilterType,
-                active: true,
-                status: status
-            }));
+        this.filterService.updateFilter(
+                this.dateFilterType,
+                true,
+                status
+            );
     }
 
     private extractTime(form: AbstractControl) {
@@ -318,6 +348,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             || !this.typeFilterForm.get('compliant').value || !this.typeFilterForm.get('information').value
             || !this.responseFilterForm.get('responseControl').value
             || this.ackFilterForm.get('ackControl').value != 'notack'
+            || !this.timeLineFilterForm.get('timeLineControl').value
             || !!this.extractTime(this.timeFilterForm.get('dateTimeFrom')) || !!this.extractTime(this.timeFilterForm.get('dateTimeTo'));
     }
 
@@ -337,6 +368,9 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             this.timeFilterForm.get('dateTimeFrom').setValue(null);
             this.timeFilterForm.get('dateTimeTo').setValue(null);
             this.setNewFilterValue();
+        }
+        if (!this.hideApplyFiltersToTimeLineChoice) {
+            this.timeLineFilterForm.get('timeLineControl').setValue(true, {emitEvent: true});
         }
     }
 

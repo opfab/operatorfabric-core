@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,12 +13,10 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {Observable, Subject, timer} from 'rxjs';
-import {buildFilterSelector} from '@ofSelectors/feed.selectors';
-import {FilterType} from '@ofServices/filter.service';
+import {FilterType} from '@ofModel/feed-filter.model';
 import {debounce, distinctUntilChanged, first, takeUntil} from 'rxjs/operators';
-import {Filter} from '@ofModel/feed-filter.model';
 import * as _ from 'lodash-es';
-import {ApplyFilter} from '@ofActions/feed.actions';
+import {FilterService} from '@ofServices/lightcards/filter.service';
 
 @Component({
     selector: 'of-tags-filter',
@@ -29,17 +27,18 @@ export class TagsFilterComponent implements OnInit, OnDestroy {
 
     tagFilterForm: FormGroup;
     private ngUnsubscribe$ = new Subject<void>();
-    private _filter$: Observable<Filter>;
+    private _filter$: Observable<any>;
 
-    constructor(private formBuilder: FormBuilder, private store: Store<AppState>) {
+    constructor(private formBuilder: FormBuilder, private store: Store<AppState>,private filterService:FilterService) {
         this.tagFilterForm = this.createFormGroup();
     }
 
     ngOnInit() {
-        this._filter$ = this.store.select(buildFilterSelector(FilterType.TAG_FILTER));
-        this._filter$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((next: Filter) => {
-            if (next) {
-                this.tagFilterForm.get('tags').setValue(next.active ? next.status.tags : [], {emitEvent: false});
+        this._filter$ = this.filterService.getFiltersChanges();
+        this._filter$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(() => {
+            const tagsFilter = this.filterService.getFilters()[FilterType.TAG_FILTER];
+            if (tagsFilter) {
+                this.tagFilterForm.get('tags').setValue(tagsFilter.active ? tagsFilter.status.tags : [], {emitEvent: false});
             } else {
                 this.tagFilterForm.get('tags').setValue([], {emitEvent: false});
             }
@@ -54,12 +53,11 @@ export class TagsFilterComponent implements OnInit, OnDestroy {
                     }),
                     debounce(() => timer(500)))
                 .subscribe(form => {
-                    this.store.dispatch(
-                        new ApplyFilter({
-                            name: FilterType.TAG_FILTER,
-                            active: form.tags.length > 0,
-                            status: form
-                        }));
+                    this.filterService.updateFilter(
+                            FilterType.TAG_FILTER,
+                            form.tags.length > 0,
+                            form
+                        );
                 });
         });
     }

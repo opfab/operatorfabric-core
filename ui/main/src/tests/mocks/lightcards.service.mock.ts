@@ -14,7 +14,7 @@ import {Injectable} from '@angular/core';
 @Injectable()
 export class LightCardsServiceMock{
 
-    public getFilteredLightCards(): Observable<any> {
+    public getFilteredLightCardsForTimeLine(): Observable<any> {
         return of([]);
     }
 

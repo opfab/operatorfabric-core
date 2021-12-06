@@ -24,7 +24,7 @@ import {ConfigService} from '@ofServices/config.service';
 import {Process} from '@ofModel/processes.model';
 import {EffectsModule} from '@ngrx/effects';
 import {MenuEffects} from '@ofEffects/menu.effects';
-import {LightCardsStoreService} from './lightcards-store.service';
+import {LightCardsStoreService} from './lightcards/lightcards-store.service';
 
 
 describe('Processes Services', () => {

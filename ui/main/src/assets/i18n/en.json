@@ -124,6 +124,9 @@
         "all": {
           "label": "All"
         }
+      },
+      "applyFiltersToTimeLine" : {
+        "label" : "Apply filters to timeline"
       }
     },
     "sort": {

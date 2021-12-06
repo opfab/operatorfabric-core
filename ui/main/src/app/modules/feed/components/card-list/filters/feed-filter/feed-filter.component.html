@@ -71,7 +71,7 @@
         </form>
     </div>
     
-    <div *ngIf="!(hideTimerTags)" style="width:300px">
+    <div *ngIf="!(hideTimerTags)" style="width:300px;margin-top:-5px">
 
         <div class="row opfab-filter-header">
             <span translate>feed.filters.time.titleIfFilterBasedOnPublishDate</span>
@@ -86,7 +86,7 @@
                 </div>
             </div>
 
-            <div style="margin-left: 2px; margin-right: 2px;margin-top:-20px;width:200px">
+            <div style="margin-left: 2px; margin-right: 2px;margin-top:-20px;width:200px;margin-bottom:-15px">
                 <div class="form-group" id="opfab-end">
                     <of-datetime-filter id="opfab-feed-filter-dateTimeTo" filterPath="end.label" formControlName="dateTimeTo"
                     [minDate]="endMinDate"  labelKey="feed.filters.time." (change)="onDateTimeChange($event)"></of-datetime-filter>
@@ -96,6 +96,16 @@
         </form>
         
     </div>
+    <div *ngIf="!(hideApplyFiltersToTimeLineChoice)">
+        
+        <form [formGroup]="timeLineFilterForm" id="opfab-timeline-filter-form"  style="padding-left: 3px; padding-top: 0px;margin-top:20px">
+            <label class="opfab-checkbox "> <span translate>feed.filters.applyFiltersToTimeLine.label</span>
+                <input type="checkbox"  id="opfab-feed-filter-timeline" formControlName="timeLineControl">
+                <span class="opfab-checkbox-checkmark"></span>
+            </label>
+        </form>
+    </div>
+
     <div *ngIf="isFilterChanged()"><a class="opfab-link" (click)="reset()"><span translate>feed.filters.reset</span></a></div>
 </ng-template>
 

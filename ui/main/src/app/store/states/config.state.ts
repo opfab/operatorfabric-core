@@ -8,9 +8,9 @@
  */
 
 export interface ConfigState{
-    config:any
+    config: any;
 }
 
 export const configInitialState: ConfigState = {
-    config:{}
-}
+    config: {}
+};
