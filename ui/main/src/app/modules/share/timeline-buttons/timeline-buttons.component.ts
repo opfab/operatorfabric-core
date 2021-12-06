@@ -12,15 +12,13 @@ import {AppService} from "@ofServices/app.service";
 import {ConfigService} from "@ofServices/config.service";
 import {UserService} from "@ofServices/user.service";
 import moment from "moment";
-import {ApplyFilter} from "@ofActions/feed.actions";
-import {FilterType} from "@ofServices/filter.service";
+import {FilterType} from '@ofModel/feed-filter.model';
 import * as _ from 'lodash-es';
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {TimeService} from "@ofServices/time.service";
-import {selectLightCardsState} from '@ofStore/selectors/feed.selectors';
-import {take} from 'rxjs/operators';
+import {FilterService} from '@ofServices/lightcards/filter.service';
 
 @Component({
     selector: 'of-timeline-buttons',
@@ -51,7 +49,7 @@ export class TimelineButtonsComponent implements OnInit {
     public isMonitoringScreen: boolean;
 
     @Output()
-    public domainChange : EventEmitter<number[]> = new EventEmitter();
+    public domainChange : EventEmitter<any> = new EventEmitter();
 
     public hideTimeLine = false;
 
@@ -60,7 +58,8 @@ export class TimelineButtonsComponent implements OnInit {
                 private userPreferences : UserPreferencesService,
                 private configService: ConfigService,
                 private userService: UserService,
-                private _appService: AppService) {
+                private _appService: AppService,
+                private filterService: FilterService) {
     }
 
     ngOnInit() {
@@ -165,14 +164,7 @@ export class TimelineButtonsComponent implements OnInit {
         this.selectZoomButton(conf.buttonTitle);
         this.domainId = conf.domainId;
 
-        this.store.select(selectLightCardsState).pipe(take(1)).subscribe(feedState => {
-            if (feedState.domainStartDate && feedState.domainEndDate && feedState.domainId && feedState.domainId == this.domainId) {
-                this.setStartAndEndDomain(feedState.domainStartDate,feedState.domainEndDate)
-            } else {
-                this.setDefaultStartAndEndDomain();
-            }
-        });
-
+        this.setDefaultStartAndEndDomain();
         this.userPreferences.setPreference('opfab.timeLine.domain', this.domainId);
     }
 
@@ -251,11 +243,12 @@ export class TimelineButtonsComponent implements OnInit {
         this.startDate = this.getDateFormatting(startDomain);
         this.endDate = this.getDateFormatting(endDomain);
 
-        this.domainChange.emit(this.myDomain);
-        this.store.dispatch(new ApplyFilter({
-            name: FilterType.BUSINESSDATE_FILTER, active: true,
-            status: {start: startDomain, end: endDomain, domainId: this.domainId}
-        }));
+        this.filterService.updateFilter(
+            FilterType.BUSINESSDATE_FILTER,
+            true,
+            {start: startDomain, end: endDomain, domainId: this.domainId}
+        );
+        this.domainChange.emit(true);
     }
 
     getDateFormatting(value): string {

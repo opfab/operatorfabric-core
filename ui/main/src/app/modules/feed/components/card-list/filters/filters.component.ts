@@ -13,7 +13,7 @@ import {Component, OnInit} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
 import { ConfigService} from "@ofServices/config.service";
-import {LightCardsStoreService} from '@ofServices/lightcards-store.service';
+import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 
 @Component({
   selector: 'of-filters',
@@ -28,6 +28,7 @@ export class FiltersComponent implements OnInit {
   hideTimerTags: boolean;
   hideReadSort: boolean;
   hideSeveritySort: boolean;
+  hideApplyFiltersToTimeLineChoice: boolean;
   
   loadingInProgress = false;
 
@@ -40,6 +41,7 @@ export class FiltersComponent implements OnInit {
     this.hideResponseFilter = this.configService.getConfigValue('feed.card.hideResponseFilter',false);
     this.hideReadSort = this.configService.getConfigValue('feed.card.hideReadSort',false);
     this.hideSeveritySort = this.configService.getConfigValue('feed.card.hideSeveritySort',false);
+    this.hideApplyFiltersToTimeLineChoice= this.configService.getConfigValue('feed.card.hideApplyFiltersToTimeLineChoice',false);
     this.lightCardsStoreService.getLoadingInProgress().subscribe( (inProgress: boolean ) => this .loadingInProgress = inProgress)
   }
 

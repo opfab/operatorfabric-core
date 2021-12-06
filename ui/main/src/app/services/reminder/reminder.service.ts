@@ -12,7 +12,7 @@ import {Injectable} from '@angular/core';
 import {CardService} from '@ofServices/card.service';
 import {ReminderList} from './reminderList';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
-import {LightCardsStoreService} from '@ofServices/lightcards-store.service';
+import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 
 @Injectable()

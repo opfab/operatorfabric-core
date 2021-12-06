@@ -11,7 +11,7 @@
 import {Injectable} from '@angular/core';
 import {LightCard} from '@ofModel/light-card.model';
 import {debounceTime, filter, interval, map, merge, Observable, ReplaySubject, sample, Subject, tap} from 'rxjs';
-import {UserService} from './user.service';
+import {UserService} from '../user.service';
 
 /**
  * 

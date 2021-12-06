@@ -17,7 +17,6 @@ import {CardService} from './card.service';
 import {GuidService} from '@ofServices/guid.service';
 import {TimeService} from '@ofServices/time.service';
 import {ProcessesService} from '@ofServices/processes.service';
-import {FilterService} from '@ofServices/filter.service';
 import {ConfigService} from '@ofServices/config.service';
 import {I18nService} from '@ofServices/i18n.service';
 import {SettingsService} from '@ofServices/settings.service';
@@ -28,8 +27,9 @@ import {AppService} from './app.service';
 import {GroupsService} from './groups.service';
 import {EntitiesService} from './entities.service';
 import {ReminderService} from '@ofServices/reminder/reminder.service';
-import {LightCardsFeedFilterService} from '@ofServices/lightcards-feed-filter.service'
-import {LightCardsStoreService} from './lightcards-store.service';
+import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
+import {LightCardsStoreService} from './lightcards/lightcards-store.service';
+import {SortService} from './lightcards/sort.service';
 
 @NgModule({
     imports: [
@@ -48,7 +48,6 @@ import {LightCardsStoreService} from './lightcards-store.service';
             multi: true
         }   ,
         GuidService,
-        FilterService,
         I18nService,
         UserService,
         GroupsService,
@@ -58,7 +57,8 @@ import {LightCardsStoreService} from './lightcards-store.service';
         AppService,
         ReminderService,
         LightCardsFeedFilterService,
-        LightCardsStoreService
+        LightCardsStoreService,
+        SortService
     ]
 })
 export class ServicesModule {

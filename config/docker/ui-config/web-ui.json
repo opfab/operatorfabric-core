@@ -47,6 +47,7 @@
       },
       "hideAckFilter": false,
       "hideResponseFilter": false,
+      "hideApplyFiltersToTimeLineChoice":false,
       "secondsBeforeLttdForClockDisplay": 3700,
       "hideReadSort": false,
       "hideSeveritySort": false,

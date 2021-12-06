@@ -17,7 +17,7 @@ import {catchError, map, tap} from 'rxjs/operators';
 import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {Card} from '@ofModel/card.model';
-import {LightCardsStoreService} from './lightcards-store.service';
+import {LightCardsStoreService} from './lightcards/lightcards-store.service';
 import {UserService} from "@ofServices/user.service";
 
 @Injectable()

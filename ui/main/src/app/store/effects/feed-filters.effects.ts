@@ -10,35 +10,23 @@
 
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Observable} from 'rxjs';
+import {EMPTY, Observable} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
 import {ConfigService} from '@ofServices/config.service';
-
-import {Action, Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {FilterService, FilterType} from '@ofServices/filter.service';
-import {
-    ApplyFilter,
-    ApplySeveralFilters,
-    FeedActionTypes,
-    ResetFilter
-} from '@ofActions/feed.actions';
+import {FilterType} from '@ofModel/feed-filter.model';
 import {LoadSettingsSuccess, SettingsActionTypes} from '@ofActions/settings.actions';
+import {FilterService} from '@ofServices/lightcards/filter.service';
 
 @Injectable()
 export class FeedFiltersEffects {
 
-
-    /* istanbul ignore next */
-    constructor(private store: Store<AppState>,
+    constructor(
                 private actions$: Actions,
                 private configService: ConfigService,
-                private service: FilterService) {
-
+                private filterService: FilterService) {
     }
 
-    
-    initTagFilterOnLoadedSettings: Observable<Action> = createEffect(() => this.actions$
+    initTagFilterOnLoadedSettings: Observable<any> = createEffect(() => this.actions$
         .pipe(
             ofType<LoadSettingsSuccess>(SettingsActionTypes.LoadSettingsSuccess),
             map(action => {
@@ -52,15 +40,10 @@ export class FeedFiltersEffects {
             }),
             filter(v => !!v),
             map(v => {
-                return new ApplyFilter({name: FilterType.TAG_FILTER, active: true, status: {tags: v}});
+                this.filterService.updateFilter( FilterType.TAG_FILTER,true, {tags: v});
+                return EMPTY;
             })
-        ));
+        ), { dispatch: false });
 
-    
-    resetFeedFilter: Observable<Action> = createEffect(() => this.actions$
-        .pipe(
-            ofType<ResetFilter>(FeedActionTypes.ResetFilter),
-            map(() => new ApplySeveralFilters({filterStatuses: this.service.defaultFilters()}))
-        ));
 
 }

@@ -8,21 +8,20 @@
  */
 
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import {Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
-import {ChangeReadSort, ChangeSort} from "@ofActions/feed.actions";
-import { FormControl, FormGroup } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { selectSortByRead, selectSortBySeverity } from '@ofStore/selectors/feed.selectors';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {FormControl, FormGroup} from '@angular/forms';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
+import {SortService} from '@ofServices/lightcards/sort.service';
 
 @Component({
   selector: 'of-feed-sort',
   templateUrl: './feed-sort.component.html',
   styleUrls: ['./feed-sort.component.scss']
-})export class FeedSortComponent implements OnInit, OnDestroy {
+}) export class FeedSortComponent implements OnInit, OnDestroy {
 
   @Input() hideSeveritySort: boolean;
   @Input() hideReadSort: boolean;
@@ -31,10 +30,7 @@ import {UserPreferencesService} from '@ofServices/user-preference.service';
   private ngUnsubscribe$ = new Subject<void>();
   sortForm: FormGroup;
 
-  readSorted: boolean = true;
-  severitySorted : boolean = false;
-
-  constructor(private store: Store<AppState>, private userPrefrences: UserPreferencesService) {
+  constructor(private store: Store<AppState>, private userPreferences: UserPreferencesService, private sortService: SortService) {
 
   }
 
@@ -43,77 +39,41 @@ import {UserPreferencesService} from '@ofServices/user-preference.service';
     this.initSort();
   }
 
-  private createFormGroup(): FormGroup{
-    const initialValue = !this.hideReadSort ? "unread" : "date";
+  private createFormGroup(): FormGroup {
+    const initialValue = !this.hideReadSort ? 'unread' : 'date';
     return new FormGroup({
-      sortControl: new FormControl(initialValue)    
-    },{updateOn: 'change'});
-
+      sortControl: new FormControl(initialValue)
+    }, {updateOn: 'change'});
   }
 
   initSort() {
 
-    this.store.select(selectSortBySeverity)
-    .pipe(takeUntil(this.ngUnsubscribe$))
-    .subscribe(bySev => {
-      this.severitySorted = bySev;
-    })
-    this.store.select(selectSortByRead)
-    .pipe(takeUntil(this.ngUnsubscribe$))
-    .subscribe(byRead => {
-      this.readSorted = byRead;
-    })
-
-    if (this.hideReadSort && this.readSorted) {
-      this.store.dispatch(new ChangeReadSort());
-    }
-
-    if (this.hideSeveritySort && this.severitySorted) {
-        this.store.dispatch(new ChangeSort());
-    }
-
-    const sorted = this.userPrefrences.getPreference("opfab.feed.sort.type");
-    if (!!sorted) {
-      if (!(sorted === "unread" && this.hideReadSort) && !(sorted === "severity" && this.hideSeveritySort)) {
-        this.sortForm.get("sortControl").setValue(sorted);
-        this.setSortBy(sorted);
-      }
-    }
+    const sortChoice = this.getInitialSort(); 
+    this.sortForm.get('sortControl').setValue(sortChoice);
+    this.sortService.setSortBy(sortChoice);
 
     this.sortForm
-    .valueChanges
-    .pipe(
+      .valueChanges
+      .pipe(
         takeUntil(this.ngUnsubscribe$))
-    .subscribe(form => {
-        this.userPrefrences.setPreference("opfab.feed.sort.type", form.sortControl);
-
-        this.setSortBy(form.sortControl);
-    });
+      .subscribe(form => {
+        this.userPreferences.setPreference('opfab.feed.sort.type', form.sortControl);
+        this.sortService.setSortBy(form.sortControl);
+      });
   }
 
-  setSortBy(sortBy: string) {
-    if (sortBy === "unread") {
-      if (this.severitySorted) {
-        this.store.dispatch(new ChangeSort());
+
+  private getInitialSort():string {
+    let sortedChoice = 'date';
+    const sortedPreference = this.userPreferences.getPreference('opfab.feed.sort.type');
+    if (!!sortedPreference) {
+      if (!(sortedPreference === 'unread' && this.hideReadSort) && !(sortedPreference === 'severity' && this.hideSeveritySort)) {
+        sortedChoice = sortedPreference;
       }
-      if (!this.readSorted) {
-        return this.store.dispatch(new ChangeReadSort());
-      }
-      return;
-    }
-
-    if (this.readSorted) {
-      this.store.dispatch(new ChangeReadSort());
-    }
-
-    if (sortBy === "date" && this.severitySorted) {
-      return this.store.dispatch(new ChangeSort());
-    }
-
-    if (sortBy === "severity" && !this.severitySorted) {
-      return this.store.dispatch(new ChangeSort());
-    }
+    } else if (!this.hideReadSort) sortedChoice = 'unread';
+    return sortedChoice;
   }
+
 
   ngOnDestroy() {
     this.ngUnsubscribe$.next();

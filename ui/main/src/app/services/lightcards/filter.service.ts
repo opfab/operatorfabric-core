@@ -9,26 +9,85 @@
 
 
 import {Injectable} from '@angular/core';
-import {Filter} from '@ofModel/feed-filter.model';
+import {Filter, FilterType} from '@ofModel/feed-filter.model';
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import * as _ from 'lodash-es';
+import {Observable, Subject,ReplaySubject} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class FilterService {
 
-    readonly _defaultFilters = new Map();
+    private static TWO_HOURS_IN_MILLIS = 2 * 60 * 60 * 1000;
+    private static TWO_DAYS_IN_MILLIS = 48 * 60 * 60 * 1000;
+
+    private readonly filters = new Array();
+    private businessDateFilter: Filter;
+    private newBusinessDateFilter = new Subject();
+    private filterChanges = new ReplaySubject(1);
 
     constructor() {
-        this._defaultFilters = this.initFilters(true);
+        this.initFilter();
     }
 
-    public defaultFilters(): Map<FilterType, Filter> {
-        return this._defaultFilters;
+    public initFilter() {
+        this.filters[FilterType.TYPE_FILTER] = this.initTypeFilter();
+        this.filters[FilterType.PUBLISHDATE_FILTER] = this.initPublishDateFilter();
+        this.filters[FilterType.TAG_FILTER] = this.initTagFilter();
+        this.filters[FilterType.ACKNOWLEDGEMENT_FILTER] = this.initAcknowledgementFilter();
+        this.filters[FilterType.RESPONSE_FILTER] = this.initResponseFilter();
+        this.businessDateFilter = this.initBusinessDateFilter();
     }
 
-    private initTypeFilter() {
+
+    public updateFilter(filterType: FilterType, active: boolean, status: any) {
+
+        if (filterType === FilterType.BUSINESSDATE_FILTER) {
+            this.businessDateFilter.active = active;
+            this.businessDateFilter.status = status;
+            this.newBusinessDateFilter.next(this.businessDateFilter);
+        }
+        else {
+            const filterToUpdate = this.filters[filterType];
+            if (!!filterToUpdate) {
+                filterToUpdate.active = active;
+                filterToUpdate.status = status;
+            }
+        }
+        this.filterChanges.next(true);
+    }
+
+    public filterLightCards(cards: LightCard[]) {
+        return cards.filter(card => Filter.chainFilter(card, [this.businessDateFilter, ...this.filters]));
+    }
+
+    public filterLightCardsOnlyByBusinessDate(cards: LightCard[]) {
+        return cards.filter(card => Filter.chainFilter(card, [this.businessDateFilter]));
+    }
+
+    public filterLightCardsWithoutBusinessDate(cards: LightCard[]) {
+        return cards.filter(card => Filter.chainFilter(card, this.filters));
+    }
+
+    public getFilters(): Array<any> {
+        return this.filters;
+    }
+
+    public getFiltersChanges() {
+        return this.filterChanges.asObservable();
+    }
+
+    public getBusinessDateFilter(): Filter {
+        return this.businessDateFilter;
+    }
+
+    public getBusinessDateFilterChanges(): Observable<any> {
+        return this.newBusinessDateFilter.asObservable();
+    }
+
+
+    private initTypeFilter(): Filter {
         const alarm = Severity.ALARM;
         const action = Severity.ACTION;
         const compliant = Severity.COMPLIANT;
@@ -50,21 +109,12 @@ export class FilterService {
         );
     }
 
-    private initTagFilter() {
+    private initTagFilter(): Filter {
         return new Filter(
             (card, status) => _.intersection(card.tags, status.tags).length > 0,
             false,
             {tags: []}
         );
-    }
-
-
-    public getNewBusinessDateFilter(active: boolean, start: number, end: number) {
-        const filter = this.initBusinessDateFilter();
-        filter.active = active;
-        filter.status.start = start;
-        filter.status.end = end;
-        return filter;
     }
 
 
@@ -87,11 +137,14 @@ export class FilterService {
                 return false;
             },
             false,
-            {start: new Date().valueOf() - 2 * 60 * 60 * 1000, end: new Date().valueOf() + 48 * 60 * 60 * 1000});
+            {
+                start: new Date().valueOf() - FilterService.TWO_HOURS_IN_MILLIS,
+                end: new Date().valueOf() + FilterService.TWO_DAYS_IN_MILLIS
+            });
     }
 
 
-    private initPublishDateFilter() {
+    private initPublishDateFilter(): Filter {
         return new Filter(
             (card: LightCard, status) => {
                 if (!!status.start && !!status.end) {
@@ -108,7 +161,7 @@ export class FilterService {
             {start: null, end: null});
     }
 
-    private initAcknowledgementFilter() {
+    private initAcknowledgementFilter(): Filter {
         return new Filter(
             (card: LightCard, status) => {
                 return status && card.hasBeenAcknowledged ||
@@ -119,7 +172,7 @@ export class FilterService {
         );
     }
 
-    private initResponseFilter() {
+    private initResponseFilter(): Filter {
         return new Filter(
             (card: LightCard, status) => {
                 return status ||
@@ -130,39 +183,5 @@ export class FilterService {
         );
     }
 
-    private initFilters(filterOnAck: boolean): Map<string, Filter> {
-        const filters = new Map();
-        filters.set(FilterType.TYPE_FILTER, this.initTypeFilter());
-        filters.set(FilterType.BUSINESSDATE_FILTER, this.initBusinessDateFilter());
-        filters.set(FilterType.PUBLISHDATE_FILTER, this.initPublishDateFilter());
-        filters.set(FilterType.TAG_FILTER, this.initTagFilter());
-
-        if (filterOnAck)
-            filters.set(FilterType.ACKNOWLEDGEMENT_FILTER, this.initAcknowledgementFilter());
-
-        filters.set(FilterType.RESPONSE_FILTER, this.initResponseFilter());
-
-        return filters;
-    }
 }
 
-// need a process type ?
-
-export enum FilterType {
-    TYPE_FILTER,
-    RECIPIENT_FILTER,
-    TAG_FILTER,
-    BUSINESSDATE_FILTER,
-    PUBLISHDATE_FILTER,
-    ACKNOWLEDGEMENT_FILTER,
-    TEST_FILTER,
-    RESPONSE_FILTER
-}
-export const BUSINESS_DATE_FILTER_INITIALISATION = {
-    name: FilterType.BUSINESSDATE_FILTER,
-    active: true,
-    status: {
-        start: new Date().valueOf() - 2 * 60 * 60 * 1000,
-        end: new Date().valueOf() + 48 * 60 * 60 * 1000
-    }
-}

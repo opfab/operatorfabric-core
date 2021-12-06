@@ -26,9 +26,10 @@ import {catchError} from 'rxjs/operators';
 import {RemoveLightCard} from '@ofActions/light-card.actions';
 import {BusinessConfigChangeAction} from '@ofStore/actions/processes.actions';
 import {UserConfigChangeAction} from '@ofStore/actions/user.actions';
-import {LightCardsStoreService} from './lightcards-store.service';
+import {LightCardsStoreService} from './lightcards/lightcards-store.service';
 import {LoadCard} from '@ofStore/actions/card.actions';
-import {I18n} from "@ofModel/i18n.model";
+import {I18n} from '@ofModel/i18n.model';
+import {FilterService} from '@ofServices/lightcards/filter.service';
 
 
 @Injectable()
@@ -49,14 +50,15 @@ export class CardService {
     private startOfAlreadyLoadedPeriod: number;
     private endOfAlreadyLoadedPeriod: number;
 
-    private selectedCardId : string = null;
+    private selectedCardId: string = null;
 
 
     constructor(private httpClient: HttpClient,
         private guidService: GuidService,
         private store: Store<AppState>,
         private authService: AuthenticationService,
-        private lightCardsStoreService: LightCardsStoreService) {
+        private lightCardsStoreService: LightCardsStoreService,
+        private filterService: FilterService) {
         const clientId = this.guidService.getCurrentGuidString();
         this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}`;
         this.cardsUrl = `${environment.urls.cards}/cards`;
@@ -89,11 +91,11 @@ export class CardService {
                             break;
                         case CardOperationType.DELETE:
                             console.log(new Date().toISOString(), `CardService - Receive card to delete id=`, operation.cardId);
-                            this.lightCardsStoreService.removeLightCard(operation.cardId)
+                            this.lightCardsStoreService.removeLightCard(operation.cardId);
                             if (operation.cardId == this.selectedCardId) this.store.dispatch(new RemoveLightCard({card: operation.cardId}));
                             break;
                         default:
-                            console.log(new Date().toISOString(), `CardService - Unknown operation`,operation.type , ` for card id=`, operation.cardId);
+                            console.log(new Date().toISOString(), `CardService - Unknown operation`, operation.type , ` for card id=`, operation.cardId);
                     }
                 },
                 error: (error) => {
@@ -103,6 +105,13 @@ export class CardService {
         catchError((error, caught) => {
             console.error('CardService - Global  error in subscription ', error);
             return caught;
+        });
+        this.listenForFilterChange();
+    }
+
+    private listenForFilterChange() {
+        this.filterService.getBusinessDateFilterChanges().subscribe((filter) => {
+            this.setSubscriptionDates(filter.status.start, filter.status.end);
         });
     }
 
@@ -193,7 +202,7 @@ export class CardService {
         this.lightCardsStoreService.removeAllLightCards();
     }
 
-    public setSubscriptionDates(start: number, end: number) {
+    private setSubscriptionDates(start: number, end: number) {
         console.log(new Date().toISOString(), 'CardService - Set subscription date', new Date(start), ' -', new Date(end));
         if (!this.startOfAlreadyLoadedPeriod) { // First loading , no card loaded yet
             this.askCardsForPeriod(start, end);
