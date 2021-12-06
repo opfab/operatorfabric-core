@@ -88,6 +88,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
     cardToEdit: CardData;
     publisherForCreatingUsercard: string;
 
+    isStartDateValueSet = false;
+    isEndDateValueSet = false;
+
     @Input() cardIdToEdit = null;
     public card: Card;
 
@@ -233,9 +236,22 @@ export class UserCardComponent implements OnDestroy, OnInit {
                         this.messageForm.get('process').setValue(this.cardToEdit.card.process);
                         this.messageForm.get('process').disable();
                         this.messageForm.get('state').setValue(this.cardToEdit.card.state);
+
                         this.messageForm.get('startDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.startDate)));
-                        if (!!this.cardToEdit.card.endDate && this.endDateVisible) this.messageForm.get('endDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.endDate)));
-                        if (!!this.cardToEdit.card.lttd && this.lttdVisible) this.messageForm.get('lttd').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.lttd)));
+                        if (!!this.cardToEdit.card.startDate && this.startDateVisible) {
+                            this.isStartDateValueSet = true;
+                            this.dateTimeFilterChange.next(null);
+                        }
+
+                        if (!!this.cardToEdit.card.endDate && this.endDateVisible) {
+                            this.messageForm.get('endDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.endDate)));
+                            this.isEndDateValueSet = true;
+                            this.dateTimeFilterChange.next(null);
+                        }
+
+                        if (!!this.cardToEdit.card.lttd && this.lttdVisible) {
+                            this.messageForm.get('lttd').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.lttd)));
+                        }
                         this.selectedRecipients = this.cardToEdit.card.entityRecipients;
                         this.pageLoading = false;
             });
