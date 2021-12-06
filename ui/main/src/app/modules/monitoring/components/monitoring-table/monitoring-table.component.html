@@ -8,8 +8,8 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-<div style="background-color: var(--opfab-bgcolor-darker);border: solid 5px var(--opfab-bgcolor-darker)">
-    <ag-grid-angular aria-describedby="Monitoring results table"
+<div id="opfab-monitoring-table" style="background-color: var(--opfab-bgcolor-darker);border: solid 5px var(--opfab-bgcolor-darker)">
+    <ag-grid-angular id="opfab-monitoring-table-grid" aria-describedby="Monitoring results table"
             (gridReady)="onGridReady($event)"
             [gridOptions]="gridOptions"
             [rowData]="rowData$ | async"
