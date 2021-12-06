@@ -168,6 +168,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                     width: 30,
                 }
             },
+            ensureDomOrder : true, // rearrange row-index of rows when sorting cards (used for cypress)
             pagination : true,
             suppressCellSelection: true,
             headerHeight: 70,
