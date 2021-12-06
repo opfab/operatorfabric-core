@@ -85,8 +85,10 @@ body {
   animation: fa-spin 2s infinite linear;
 } 
 
+// Spinner when loading cards or table of cards 
+// the spinner is in the center of the screen 
 
-.opfab-loading-spinner {
+.opfab-card-loading-spinner {
   font-size: 68px;
   width: 150px;
   height: 150px;
