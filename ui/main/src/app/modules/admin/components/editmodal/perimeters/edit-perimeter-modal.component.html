@@ -7,7 +7,7 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div class="modal-content">
+<div class="modal-content perimeterModal">
   <div class="modal-header">
     <span class="modal-title" *ngIf="row">{{row.id}}</span>
     <span class="modal-title" *ngIf="!row" translate>admin.input.perimeter.add</span>
@@ -16,7 +16,7 @@
       <span aria-hidden="true">&times;</span>
     </div>
   </div>
-  <div class="modal-body">
+  <div class="modal-body scrollable">
     <form [formGroup]="perimeterForm" class="opfab-form-lighter">
       <div class="container">
         <div class="col">

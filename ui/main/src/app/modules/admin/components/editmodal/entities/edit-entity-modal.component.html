@@ -7,7 +7,7 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div class="modal-content">
+<div class="modal-content entityModal">
   <div class="modal-header">
     <span class="modal-title" *ngIf="row">{{row.id}}</span>
     <span class="modal-title" *ngIf="!row" translate>admin.input.{{type}}.add</span>
@@ -15,7 +15,7 @@
       <span aria-hidden="true">&times;</span>
     </div>
   </div>
-  <div class="modal-body">
+  <div class="modal-body scrollable">
     <form [formGroup]="entityForm" class="opfab-form-lighter">
       <div class="container">
         <div class="col">
