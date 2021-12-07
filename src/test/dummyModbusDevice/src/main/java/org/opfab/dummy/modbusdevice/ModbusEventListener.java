@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.dummyModbusDevice;
+package org.opfab.dummy.modbusdevice;
 
 public interface ModbusEventListener {
     void onWriteToSingleCoil(int address, boolean value);

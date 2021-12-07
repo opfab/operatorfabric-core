@@ -16,14 +16,20 @@ import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
 import org.opfab.externaldevices.drivers.ExternalDeviceDriver;
 import org.opfab.externaldevices.drivers.ExternalDeviceDriverException;
 import org.opfab.externaldevices.drivers.ExternalDeviceDriverFactory;
-import org.opfab.externaldevices.model.*;
+import org.opfab.externaldevices.model.Device;
+import org.opfab.externaldevices.model.DeviceConfiguration;
+import org.opfab.externaldevices.model.DeviceData;
+import org.opfab.externaldevices.model.ResolvedConfiguration;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * {@link DevicesService}
@@ -94,12 +100,26 @@ public class DevicesService {
                         log.debug("Sending watchdog signal for device {}",deviceId);
                         externalDeviceDriver.send(externalDevicesWatchdogProperties.getSignalId());
                     } catch (ExternalDeviceDriverException e) {
-                        log.error("Watchdog signal couldn't be sent to device {} (driver: {})",deviceId,externalDeviceDriver.toString());
+                        log.error("Watchdog signal couldn't be sent to device {} (driver: {}): {}",deviceId,externalDeviceDriver.toString(),e.getMessage());
                     }
                 }
             });
         } else {
             log.debug("Watchdog signal disabled.");
+        }
+    }
+
+    public Optional<Device> getDevice(String deviceId) {
+        synchronized (deviceDriversPool) {
+            return Optional.ofNullable(deviceDriversPool.get(deviceId)).map(driver -> createDeviceFromDriver(deviceId,driver));
+        }
+    }
+
+    public List<Device> getDevices() {
+        synchronized (deviceDriversPool) {
+            return deviceDriversPool.entrySet().stream()
+                    .map(entry -> createDeviceFromDriver(entry.getKey(),entry.getValue()))
+                    .collect(Collectors.toList());
         }
     }
 
@@ -136,12 +156,13 @@ public class DevicesService {
         }
     }
 
-    public DeviceData createDeviceDataFromConfiguration(DeviceConfiguration deviceConfiguration) {
-        DeviceData device = new DeviceData(deviceConfiguration);
-        if (deviceDriversPool.containsKey(device.getId())) {
-            device.setIsConnected(deviceDriversPool.get(device.getId()).isConnected());
-        }
-        return device;
+    private Device createDeviceFromDriver(String id, ExternalDeviceDriver externalDeviceDriver) {
+        return DeviceData.builder()
+                .id(id)
+                .resolvedAddress(externalDeviceDriver.getResolvedHost().toString())
+                .port(externalDeviceDriver.getPort())
+                .isConnected(externalDeviceDriver.isConnected())
+                .build();
     }
 
 }

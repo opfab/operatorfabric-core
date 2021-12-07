@@ -21,8 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetAddress;
 
-/** This class transforms requests to trigger sound notifications into calls to the external device
- * */
 @Slf4j
 @Getter
 @ToString
@@ -30,12 +28,10 @@ public class ModbusDriver implements ExternalDeviceDriver {
 
     private InetAddress resolvedHost;
     private int port;
-    private ModbusMaster modbusMaster;
+    @ToString.Exclude private ModbusMaster modbusMaster;
 
-    static final int RESPONSE_TIMEOUT = 10000;
     static final int TRIGGER_VALUE = 1;
-    static final String SENDING_REQUEST = "Sending write request for register {} on {}:{} (transactionId {})";
-    static final String SENT_REQUEST = "Write request was sent for register {} on {}:{} (transactionId {})";
+    static final String SENDING_REQUEST = "Sending write request for register {}, value {} on {}";
 
     protected ModbusDriver(InetAddress resolvedHost, int port, ModbusMaster modbusMaster) {
 
@@ -59,7 +55,7 @@ public class ModbusDriver implements ExternalDeviceDriver {
         try {
             modbusMaster.disconnect();
         } catch (ModbusIOException e) {
-            throw new ExternalDeviceDriverException("Error during ModbusDriver disconnection from "+this.resolvedHost +":"+this.port , e);
+            throw new ExternalDeviceDriverException("Error during ModbusDriver disconnection from "+this.resolvedHost +":"+this.port, e);
         }
     }
 
@@ -69,22 +65,22 @@ public class ModbusDriver implements ExternalDeviceDriver {
         int value = TRIGGER_VALUE;
 
         try {
-
             WriteSingleRegisterRequest request = new WriteSingleRegisterRequest();
             request.setServerAddress(Modbus.BROADCAST_ID);
             request.setStartAddress(registerAddress);
             request.setValue(value);
-            //Ideally, the debug logs below would have gotten their transactionId from the request and response objects
-            //so they could be matched. Unfortunately, the getTransactionId method doesn't really work on these objects
-            //in BROADCAST mode, and always return 0.
-            //Calling it on the modbusMaster however, correctly returns the current transactionId (i.e. the id of the
-            //last transaction it handled). So using transactionId+1 before the request is sent, and transactionId after,
-            //should allow to match the two lines as the send method is synchronized.
-            log.debug(SENDING_REQUEST,registerAddress,getResolvedHost().getHostAddress(),getPort(),modbusMaster.getTransactionId()+1);
+            log.debug(SENDING_REQUEST,registerAddress,value,getResolvedHost().getHostAddress(),getPort());
             modbusMaster.processRequest(request);
-            log.debug(SENT_REQUEST,registerAddress,getResolvedHost().getHostAddress(),getPort(),modbusMaster.getTransactionId());
-        } catch (ModbusProtocolException | ModbusNumberException | ModbusIOException e) {
-            throw new ExternalDeviceDriverException("Unable to write value on register "+registerAddress , e);
+            // In broadcast mode, the Modbus device doesn't send a response (because in the case where there are
+            // really several devices receiving the broadcast, the master would be flooded with responses for a single
+            // request). However, it means that if there is a problem on the device while processing the request (for
+            // example, attempting to write outside of the allowed registers), no exception will be thrown.
+        } catch (ModbusIOException e) {
+            // If something is wrong with the connection, an ModbusIOException will be thrown
+            throw new ExternalDeviceDriverException("Unable to write value on register "+registerAddress ,e);
+        } catch (ModbusProtocolException | ModbusNumberException e) {
+            // Judging by the code for the processRequest method, these exceptions will never be thrown in broadcast mode
+            throw new ExternalDeviceDriverException("Unexpected in broadcast mode - Unable to write value on register "+registerAddress ,e);
         }
     }
 

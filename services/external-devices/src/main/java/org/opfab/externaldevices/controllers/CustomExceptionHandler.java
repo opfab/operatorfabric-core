@@ -42,7 +42,7 @@ import javax.validation.ConstraintViolationException;
 @Slf4j
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
-  public static final String GENERIC_MSG = "Caught exception at API level";
+  public static final String GENERIC_MSG = "Caught exception at API level for request {}";
 
   /**
    * Handles {@link ApiErrorException}
@@ -53,7 +53,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler(ApiErrorException.class)
   public ResponseEntity<Object> handleApiError(ApiErrorException exception, final WebRequest
           request) {
-    log.info(GENERIC_MSG + " : " + exception.getError().getMessage());
+    log.info(GENERIC_MSG,request,exception);
     return new ResponseEntity<>(exception.getError(), exception.getError().getStatus());
   }
 
@@ -65,7 +65,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler(DuplicateKeyException.class)
   public ResponseEntity<Object> handleDuplicateKey(DuplicateKeyException exception, final WebRequest
           request) {
-    log.error(GENERIC_MSG,exception);
+    log.error(GENERIC_MSG,request,exception);
     ApiError error = ApiError.builder()
             .status(HttpStatus.BAD_REQUEST)
             .message("Resource creation failed because a resource with the same key already exists.")
@@ -82,7 +82,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler(ConversionFailedException.class)
   public ResponseEntity<Object> handleConversionError(ConversionFailedException exception, final WebRequest
           request) {
-    log.error(GENERIC_MSG,exception);
+    log.error(GENERIC_MSG,request,exception);
     ApiError error = ApiError.builder()
             .status(HttpStatus.BAD_REQUEST)
             .message("Conversion Error")
@@ -100,7 +100,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler(ConstraintViolationException.class)
   public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException exception, final WebRequest
           request) {
-    log.info(GENERIC_MSG, exception);
+    log.info(GENERIC_MSG,request, exception);
     ApiError error = ApiError.builder()
             .status(HttpStatus.BAD_REQUEST)
             .message("Constraint violation in the request")

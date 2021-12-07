@@ -68,10 +68,10 @@ public class ObjectMapperShould {
 
     @Test
     void readNotification() throws IOException {
-        String notificationString = "{ \"signalId\": \"ALARM\" }";
+        String notificationString = "{ \"opfabSignalId\": \"ALARM\" }";
         Notification notification = mapper.readValue(notificationString, Notification.class);
         assertThat(notification).isNotNull();
         assertThat(notification).isInstanceOf(NotificationData.class);
-        assertThat(notification.getSignalId()).isEqualTo("ALARM");
+        assertThat(notification.getOpfabSignalId()).isEqualTo("ALARM");
     }
 }

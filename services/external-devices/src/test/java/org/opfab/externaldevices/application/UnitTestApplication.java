@@ -11,7 +11,6 @@
 package org.opfab.externaldevices.application;
 
 import org.opfab.externaldevices.configuration.externaldevices.ExternalDevicesWatchdogProperties;
-import org.opfab.externaldevices.drivers.ExternalDeviceDriverFactory;
 import org.opfab.externaldevices.drivers.ModbusDriverFactory;
 import org.opfab.externaldevices.repositories.DeviceConfigurationRepository;
 import org.opfab.externaldevices.repositories.SignalMappingRepository;

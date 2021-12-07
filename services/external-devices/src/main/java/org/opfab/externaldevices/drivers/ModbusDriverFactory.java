@@ -19,11 +19,13 @@ import org.springframework.stereotype.Component;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import static org.opfab.externaldevices.drivers.ModbusDriver.RESPONSE_TIMEOUT;
+
 
 @Component
 @Slf4j
 public class ModbusDriverFactory implements ExternalDeviceDriverFactory {
+
+    static final int RESPONSE_TIMEOUT = 10000;
 
     @Override
     public ExternalDeviceDriver create(String host, int port) throws ExternalDeviceDriverException {

@@ -20,10 +20,10 @@ public class ExternalDevicesModule extends SimpleModule {
 
     public ExternalDevicesModule() {
 
-        addAbstractTypeMapping(Device.class, DeviceData.class);
         addAbstractTypeMapping(DeviceConfiguration.class, DeviceConfigurationData.class);
-        addAbstractTypeMapping(SignalMapping.class, SignalMappingData.class);
+        addAbstractTypeMapping(Device.class, DeviceData.class);
         addAbstractTypeMapping(Notification.class, NotificationData.class);
+        addAbstractTypeMapping(SignalMapping.class, SignalMappingData.class);
         addAbstractTypeMapping(UserConfiguration.class, UserConfigurationData.class);
 
     }

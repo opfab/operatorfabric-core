@@ -9,43 +9,20 @@
 
 package org.opfab.externaldevices.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class DeviceData implements Device {
 
     @Id
     private String id;
-    private String host;
+    private String resolvedAddress;
     private Integer port;
-    private String signalMappingId;
 
     @Builder.Default
     private Boolean isConnected = false;
 
-    public DeviceData(DeviceConfiguration deviceConfiguration) {
-        this();
-        this.id = deviceConfiguration.getId();
-        this.host = deviceConfiguration.getHost();
-        this.port = deviceConfiguration.getPort();
-        this.signalMappingId = deviceConfiguration.getSignalMappingId();
-    }
-
-    @Override
-    public String toString() {
-        return "DeviceData{" +
-                "id='" + id + '\'' +
-                ", host='" + host + '\'' +
-                ", port=" + port +
-                ", signalMappingId='" + signalMappingId + '\'' +
-                ", isConnected=" + isConnected +
-                '}';
-    }
 }

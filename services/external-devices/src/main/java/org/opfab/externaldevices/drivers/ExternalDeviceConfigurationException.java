@@ -9,11 +9,11 @@
 
 package org.opfab.externaldevices.drivers;
 
+/** This exception is thrown whenever there is an issue with the resolution of the configuration for a given incoming
+ * signal: userConfiguration/deviceConfiguration/signalMapping not found, or signal key that is not supported in the
+ * signalMapping.
+ * */
 public class ExternalDeviceConfigurationException extends Exception {
-
-    public ExternalDeviceConfigurationException(String message, Throwable cause) {
-        super(message, cause);
-    }
 
     public ExternalDeviceConfigurationException(String message) {
         super(message);

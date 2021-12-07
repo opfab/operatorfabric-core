@@ -7,10 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.dummyModbusDevice;
+package org.opfab.dummy.modbusdevice;
 
 import com.intelligt.modbus.jlibmodbus.data.DataHolder;
-import com.intelligt.modbus.jlibmodbus.data.ModbusHoldingRegisters;
 import com.intelligt.modbus.jlibmodbus.exception.IllegalDataAddressException;
 import com.intelligt.modbus.jlibmodbus.exception.IllegalDataValueException;
 
@@ -22,12 +21,7 @@ public class OwnDataHolder extends DataHolder {
     final List<ModbusEventListener> modbusEventListenerList = new ArrayList<>();
 
     public OwnDataHolder() {
-
         super();
-
-        ModbusHoldingRegisters holdingRegisters = new ModbusHoldingRegisters(120); //TODO How many to replicate real CDS?
-        setHoldingRegisters(holdingRegisters);
-
     }
 
     public void addEventListener(ModbusEventListener listener) {
