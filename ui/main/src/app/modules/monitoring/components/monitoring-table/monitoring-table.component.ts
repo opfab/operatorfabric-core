@@ -197,7 +197,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         };
 
         this.columnDefs = [
-            {type: 'severityColumn', headerName: '', field: 'severityNumber',  cellClassRules: severityCellClassRules},
+            {type: 'severityColumn', headerName: '', field: 'severityNumber',   headerClass: 'opfab-ag-header-with-no-padding',cellClassRules: severityCellClassRules},
             {type: 'timeColumn', headerName: this.timeColumnName, field: 'time'},
             {type: 'answerColumn', headerName: '', field: 'answer', cellRenderer: 'answerCellRenderer'},
             {type: 'dataColumn', headerName: this.titleColumnName, field: 'title'},

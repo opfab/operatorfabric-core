@@ -914,6 +914,11 @@ html, body { height: 100%; }
   }
 
 
+  .opfab-ag-header-with-no-padding {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
   .action-cell-delete-admin {
     display: none;
   }
