@@ -16,10 +16,14 @@ import org.opfab.externaldevices.model.UserConfigurationData;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Mongo {@link DeviceConfigurationData} repository
  */
 @Repository
 public interface UserConfigurationRepository extends MongoRepository<UserConfigurationData,String> {
+
+    List<UserConfigurationData> findByExternalDeviceId(String externalDeviceId);
 
 }

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.dummyModbusDevice;
+package org.opfab.dummy.modbusdevice;
 
 import com.intelligt.modbus.jlibmodbus.Modbus;
 import com.intelligt.modbus.jlibmodbus.data.ModbusHoldingRegisters;
@@ -17,14 +17,15 @@ import com.intelligt.modbus.jlibmodbus.slave.ModbusSlaveFactory;
 import com.intelligt.modbus.jlibmodbus.tcp.TcpParameters;
 import lombok.extern.slf4j.Slf4j;
 
-//TODO Will need to implement a generic ModbusDevice or even more generic ExternalDevice interface (in client?)
+import java.util.concurrent.locks.ReentrantLock;
 
 @Slf4j
 public class DummyModbusDevice {
 
     private final ModbusSlave modbusSlave;
+    private final ReentrantLock lock = new ReentrantLock(true);
 
-    public DummyModbusDevice(int port, int readTimeout) {
+    public DummyModbusDevice(int port, int readTimeout, int holdingRegistersSize) {
 
         log.info("Attempting to initialize Modbus client");
 
@@ -36,12 +37,12 @@ public class DummyModbusDevice {
         Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
 
         OwnDataHolder dataHolder = new OwnDataHolder();
-        dataHolder.addEventListener(new LoggingListener());
+        dataHolder.addEventListener(new LoggingListener(modbusSlave));
         modbusSlave.setDataHolder(dataHolder);
 
-        ModbusHoldingRegisters holdingRegisters = new ModbusHoldingRegisters(10); //TODO How many to replicate real CDS?
+        ModbusHoldingRegisters holdingRegisters = new ModbusHoldingRegisters(holdingRegistersSize);
         modbusSlave.getDataHolder().setHoldingRegisters(holdingRegisters);
-        modbusSlave.setBroadcastEnabled(true); //TODO What is it for ?
+        modbusSlave.setBroadcastEnabled(true);
 
         log.info("Initialization of modbus client was successful");
     }
@@ -49,26 +50,21 @@ public class DummyModbusDevice {
     public void startListening() {
         try {
             modbusSlave.listen();
+        } catch (ModbusIOException e) {
+            log.error("Dummy modbus device stopped due to an exception",e);
+        }
 
-            if (modbusSlave.isListening()) {
-                Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+        if (modbusSlave.isListening()) {
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                lock.lock();
+                try {
                     synchronized (modbusSlave) {
                         modbusSlave.notifyAll();
                     }
-                }));
-
-                synchronized (modbusSlave) {
-                    modbusSlave.wait();
+                } finally {
+                    lock.unlock();
                 }
-
-                /*
-                 * using master-branch it should be #slave.close();
-                 */
-                modbusSlave.shutdown();
-            }
-        } catch (ModbusIOException | InterruptedException e) {
-            e.printStackTrace();
+            }));
         }
     }
-
 }

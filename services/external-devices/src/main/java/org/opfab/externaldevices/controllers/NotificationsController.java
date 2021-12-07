@@ -50,11 +50,11 @@ public class NotificationsController implements NotificationsApi, UserExtractor 
         log.debug(RECEIVED_NOTIFICATION, notification.toString(), user.getLogin());
 
         try {
-            devicesService.sendSignalForUser(notification.getSignalId(), user.getLogin());
+            devicesService.sendSignalForUser(notification.getOpfabSignalId(), user.getLogin());
         } catch (ExternalDeviceConfigurationException | ExternalDeviceDriverException e) {
             throw new ApiErrorException(ApiError.builder()
                     .status(HttpStatus.BAD_REQUEST)
-                    .message(String.format(UNHANDLED_NOTIFICATION,notification.getSignalId(),user.getLogin()))
+                    .message(String.format(UNHANDLED_NOTIFICATION,notification.getOpfabSignalId(),user.getLogin()))
                     .build(), e);
         }
         response.setStatus(200);

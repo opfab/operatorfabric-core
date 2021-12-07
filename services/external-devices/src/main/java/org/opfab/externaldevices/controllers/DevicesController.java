@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
 import org.opfab.externaldevices.drivers.ExternalDeviceDriverException;
 import org.opfab.externaldevices.model.Device;
-import org.opfab.externaldevices.services.ConfigService;
 import org.opfab.externaldevices.services.DevicesService;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * DevicesController, documented at {@link DevicesApi}
@@ -40,12 +38,10 @@ public class DevicesController implements DevicesApi {
     private static final String DEVICE_NOT_FOUND_MSG = "Device %s not found";
 
     private final DevicesService devicesService;
-    private final ConfigService configService;
 
     @Autowired
-    public DevicesController(DevicesService devicesService, ConfigService configService) {
+    public DevicesController(DevicesService devicesService) {
         this.devicesService = devicesService;
-        this.configService = configService;
     }
 
 
@@ -59,7 +55,7 @@ public class DevicesController implements DevicesApi {
                     .status(HttpStatus.BAD_REQUEST)
                     .message(String.format(CONNECT_FAILED_DUE_TO_CONFIG,deviceId))
                     .build(), e);
-        }        catch (ExternalDeviceDriverException e) {
+        } catch (ExternalDeviceDriverException e) {
             throw new ApiErrorException(ApiError.builder()
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .message(String.format(CONNECT_FAILED,deviceId))
@@ -90,8 +86,7 @@ public class DevicesController implements DevicesApi {
     @Override
     public Device getDevice(HttpServletRequest request, HttpServletResponse response, String deviceId) {
         response.setStatus(200);
-        return this.configService.getDeviceConfiguration(deviceId)
-                .map(devicesService::createDeviceDataFromConfiguration)
+        return this.devicesService.getDevice(deviceId)
                 .orElseThrow(
                 ()-> new ApiErrorException(
                         ApiError.builder()
@@ -105,7 +100,6 @@ public class DevicesController implements DevicesApi {
     @Override
     public List<Device> getDevices(HttpServletRequest request, HttpServletResponse response) {
         response.setStatus(200);
-        return this.configService.getDeviceConfigurations().stream()
-                .map(devicesService::createDeviceDataFromConfiguration).collect(Collectors.toList());
+        return this.devicesService.getDevices();
     }
 }

@@ -7,16 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 package org.opfab.externaldevices.drivers;
 
+/** This exception should be thrown to pass on any issue raised by the driver: connection issue, exception returned
+ * by the send request if supported, etc.*/
 public class ExternalDeviceDriverException extends Exception {
 
     public ExternalDeviceDriverException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public ExternalDeviceDriverException(String message) {
-        super(message);
-    }
 }

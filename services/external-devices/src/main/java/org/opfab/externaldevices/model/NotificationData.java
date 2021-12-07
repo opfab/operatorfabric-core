@@ -19,6 +19,6 @@ import lombok.NoArgsConstructor;
 @Data
 public class NotificationData implements Notification {
 
-    private String signalId;
+    private String opfabSignalId;
 
 }

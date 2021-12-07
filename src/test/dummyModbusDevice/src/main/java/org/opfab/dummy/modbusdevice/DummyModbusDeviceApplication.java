@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.dummyModbusDevice;
+package org.opfab.dummy.modbusdevice;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,8 +16,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-
-import java.util.Arrays;
 
 @Slf4j
 @SpringBootApplication
@@ -29,6 +27,9 @@ public class DummyModbusDeviceApplication {
     @Value("${modbus_client.readTimeout:10000}")
     private int readTimeout;
 
+    @Value("${modbus_client.holdingRegistersSize:5}")
+    private int holdingRegistersSize;
+
 
     public static void main(String[] args) {
         SpringApplication.run(DummyModbusDeviceApplication.class, args);
@@ -38,7 +39,7 @@ public class DummyModbusDeviceApplication {
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
 
-            DummyModbusDevice dummyModbusDevice = new DummyModbusDevice(port,readTimeout);
+            DummyModbusDevice dummyModbusDevice = new DummyModbusDevice(port,readTimeout,holdingRegistersSize);
             dummyModbusDevice.startListening();
 
         };
