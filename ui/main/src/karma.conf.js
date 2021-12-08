@@ -27,7 +27,9 @@ module.exports = function (config) {
             outputFile: 'junit.xml', // if included, results will be saved as $outputDir/$browserName/$outputFile
             useBrowserName: false // add browser name to report and classes names
         },
-        reporters: ['mocha', 'kjhtml', 'junit'],
+        // add converage-istanbul for migration to angular 13  , see  
+        // https://stackoverflow.com/questions/70045859/after-upgrading-to-angular-13-the-tests-with-code-coverage-is-failing/70046050
+        reporters: ['mocha', 'kjhtml', 'junit','coverage-istanbul'],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,

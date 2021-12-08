@@ -121,6 +121,7 @@ src/test/**/*.tar.gz
 ui/main/node_modules
 ui/main/reports
 ui/main/report.html
+ui/main/.angular
 
 # Bundles and cypress configuration for docker
 config/docker/businessconfig-storage/**
