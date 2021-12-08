@@ -91,7 +91,6 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |archive.history.size|100|no|The maximum size of card history visible
 |archive.filters.tags.list||no|List of tags to choose from in the corresponding filter in archives page
 |logging.filters.tags.list||no|List of tags to choose from in the corresponding filter in logging page
-|settings.tags.hide||no|Control if you want to show or hide the tags filter in feed page
 |settings.styleWhenNightDayModeDesactivated||no|style to apply if not using day night mode, possible value are DAY or NIGHT 
 |settings.dateFormat|Value from the browser configuration|no|Format for date rendering (example : DD/MM/YYYY )
 |settings.timeFormat|Value from the browser configuration|no|Format for time rendering (example : HH:mm )
@@ -99,7 +98,6 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |settings.infos.hide.description|false|no|Control if we want to hide(true) or display(false or not specified) the user description in the settings page
 |settings.infos.hide.language|false|no|Control if we want to hide(true) or display(false or not specified) the language in the settings page
 |settings.infos.hide.timezone|false|no|Control if we want to hide(true) or display(false or not specified) the timezone in the settings page
-|settings.infos.hide.tags|false|no|Control if we want to hide(true) or display(false or not specified) the tags in the settings page
 |settings.infos.hide.sounds|false|no|Control if we want to hide(true) or display(false or not specified) the checkboxes for sound notifications in the settings page
 |settings.playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
 |settings.playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
@@ -147,7 +145,6 @@ It should look like:
 |name|default|mandatory?|Description
 |settings.timeZone||no|Default user time zone for users 
 |settings.locale|en|no|Default user locale (use en if not set)
-|settings.default-tags||no|Default user list of filtered in tags
 
 |===
 

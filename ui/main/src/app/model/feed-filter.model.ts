@@ -81,7 +81,6 @@ export class FilterStatus {
 
 export enum FilterType {
     TYPE_FILTER,
-    TAG_FILTER,
     PUBLISHDATE_FILTER,
     ACKNOWLEDGEMENT_FILTER,
     RESPONSE_FILTER,

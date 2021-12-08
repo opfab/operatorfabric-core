@@ -185,7 +185,6 @@
     "description": "DESCRIPTION",
     "locale": "LANGUAGE",
     "timeZone": "TIME ZONE",
-    "defaultTags": "DEFAULT TAGS ",
     "playSoundLabel": "Play sounds for cards with severity",
     "playSoundForAlarm": "Alarm",
     "playSoundForAction": "Action",

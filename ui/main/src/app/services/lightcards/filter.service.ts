@@ -11,7 +11,6 @@
 import {Injectable} from '@angular/core';
 import {Filter, FilterType} from '@ofModel/feed-filter.model';
 import {LightCard, Severity} from '@ofModel/light-card.model';
-import * as _ from 'lodash-es';
 import {Observable, Subject,ReplaySubject} from 'rxjs';
 
 @Injectable({
@@ -34,7 +33,6 @@ export class FilterService {
     public initFilter() {
         this.filters[FilterType.TYPE_FILTER] = this.initTypeFilter();
         this.filters[FilterType.PUBLISHDATE_FILTER] = this.initPublishDateFilter();
-        this.filters[FilterType.TAG_FILTER] = this.initTagFilter();
         this.filters[FilterType.ACKNOWLEDGEMENT_FILTER] = this.initAcknowledgementFilter();
         this.filters[FilterType.RESPONSE_FILTER] = this.initResponseFilter();
         this.businessDateFilter = this.initBusinessDateFilter();
@@ -108,15 +106,6 @@ export class FilterService {
             }
         );
     }
-
-    private initTagFilter(): Filter {
-        return new Filter(
-            (card, status) => _.intersection(card.tags, status.tags).length > 0,
-            false,
-            {tags: []}
-        );
-    }
-
 
     private initBusinessDateFilter() {
         return new Filter(

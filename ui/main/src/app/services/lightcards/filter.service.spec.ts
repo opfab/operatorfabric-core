@@ -132,30 +132,6 @@ describe('NewFilterService ', () => {
 
     });
 
-    describe('tag  filter', () => {
-
-        it('filter on tag "tag2" => shall return the second card   ', () => {
-            const cards  = getFourCard();
-            service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
-            service.updateFilter(FilterType.TAG_FILTER, true, {tags: ['tag2']});
-            const filteredCards = service.filterLightCards(cards);
-            expect(filteredCards.length).toBe(1);
-            expect(filteredCards).toContain(cards[1]);
-        });
-
-
-        it('filter on tag "tag1" and "tag2" => shall return the first 2 cards ', () => {
-            const cards  = getFourCard();
-            service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
-            service.updateFilter(FilterType.TAG_FILTER, true, {tags: ['tag1', 'tag2']});
-            const filteredCards = service.filterLightCards(cards);
-            expect(filteredCards.length).toBe(2);
-            expect(filteredCards).toContain(cards[0]);
-            expect(filteredCards).toContain(cards[1]);
-        });
-
-    });
-
     describe('business  date  filter', () => {
 
         it('Filter with start date after card 1 startDate => shoud return 3 cards   ', () => {
