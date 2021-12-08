@@ -185,7 +185,6 @@
     "description": "DESCRIPTION",
     "locale": "LANGUE",
     "timeZone": "ZONE HORAIRE",
-    "defaultTags": "TAGS PAR DEFAUT",
     "playSoundLabel": "Jouer des sons pour les cartes de type",
     "playSoundForAlarm": "Alarme",
     "playSoundForAction": "Action",

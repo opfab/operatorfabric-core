@@ -29,9 +29,6 @@ public class UserSettingsData implements UserSettings {
     private String description;
     private String timeZone;
     private String locale;
-    @JsonIgnore
-    @Singular("defaultTag")
-    private Set<String> defaultTagsSet;
     private Boolean playSoundForAlarm;
     private Boolean playSoundForAction;
     private Boolean playSoundForCompliant;
@@ -48,11 +45,6 @@ public class UserSettingsData implements UserSettings {
         this.description = settings.getDescription();
         this.timeZone = settings.getTimeZone();
         this.locale = settings.getLocale();
-
-        if (settings.getDefaultTags() != null)
-            this.defaultTagsSet = new HashSet<>(settings.getDefaultTags());
-        else
-            this.defaultTagsSet = null;
         this.playSoundForAlarm = settings.getPlaySoundForAlarm();
         this.playSoundForAction = settings.getPlaySoundForAction();
         this.playSoundForCompliant = settings.getPlaySoundForCompliant();
@@ -67,31 +59,6 @@ public class UserSettingsData implements UserSettings {
             this.processesStatesNotNotified = null;
     }
 
-    public Set<String> getDefaultTagsSet() {
-        if (this.defaultTagsSet == null)
-            return Collections.emptySet();
-        return defaultTagsSet;
-    }
-
-    @Override
-    public List<String> getDefaultTags() {
-        if (defaultTagsSet == null)
-            return null;
-        return new ArrayList<>(defaultTagsSet);
-    }
-
-    @Override
-    public void setDefaultTags(List<String> defaultTags) {
-        if (defaultTags != null)
-            defaultTagsSet = new HashSet<>(defaultTags);
-        else
-            defaultTagsSet = null;
-    }
-
-    public UserSettingsData clearTags(){
-        setDefaultTags(null);
-        return this;
-    }
 
     public UserSettingsData clearProcessesStatesNotNotified(){
         setProcessesStatesNotNotified(null);
@@ -102,8 +69,7 @@ public class UserSettingsData implements UserSettings {
      * Create a new patched settings using this as reference and overriding fields from other parameter when field is not
      * null.
      * <br>
-     * NB: resulting field defaultTags is the addition of collections from both sides
-     * NB2: login cannot be changed
+     * NB: login cannot be changed
      *
      * @param other
      * @return
@@ -114,12 +80,6 @@ public class UserSettingsData implements UserSettings {
         result.description = other.getDescription() != null ? other.getDescription() : this.getDescription();
         result.timeZone = other.getTimeZone() != null ? other.getTimeZone() : this.getTimeZone();
         result.locale = other.getLocale() != null ? other.getLocale() : this.getLocale();
-        if (other.getDefaultTags() != null)
-            result.defaultTagsSet = new HashSet<>(other.getDefaultTags());
-        else if (this.getDefaultTags() != null)
-            result.defaultTagsSet = new HashSet<>(this.getDefaultTags());
-        else
-            result.defaultTagsSet = null;
         result.playSoundForAlarm = other.getPlaySoundForAlarm() != null ? other.getPlaySoundForAlarm() : this.getPlaySoundForAlarm();
         result.playSoundForAction = other.getPlaySoundForAction() != null ? other.getPlaySoundForAction() : this.getPlaySoundForAction();
         result.playSoundForCompliant = other.getPlaySoundForCompliant() != null ? other.getPlaySoundForCompliant() : this.getPlaySoundForCompliant();

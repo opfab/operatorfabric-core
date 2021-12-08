@@ -40,6 +40,5 @@ interface SettingsInputs {
   description: boolean;
   language: boolean;
   timezone: boolean;
-  tags: boolean;
   sounds: boolean;
 }

@@ -24,7 +24,6 @@ export class FiltersComponent implements OnInit {
 
   hideAckFilter: boolean;
   hideResponseFilter: boolean;
-  hideTags: boolean;
   hideTimerTags: boolean;
   hideReadSort: boolean;
   hideSeveritySort: boolean;
@@ -35,7 +34,6 @@ export class FiltersComponent implements OnInit {
   constructor(private store: Store<AppState>, private configService: ConfigService, private lightCardsStoreService: LightCardsStoreService) { }
 
   ngOnInit() {
-    this.hideTags = this.configService.getConfigValue('settings.tags.hide',false);
     this.hideTimerTags = this.configService.getConfigValue('feed.card.hideTimeFilter',false);
     this.hideAckFilter = this.configService.getConfigValue('feed.card.hideAckFilter',false);
     this.hideResponseFilter = this.configService.getConfigValue('feed.card.hideResponseFilter',false);

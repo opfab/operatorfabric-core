@@ -25,8 +25,6 @@ import {ChartCommonModule, NgxChartsModule} from '@swimlane/ngx-charts';
 import {CustomTimelineChartComponent} from './components/time-line/custom-timeline-chart/custom-timeline-chart.component';
 import {MouseWheelDirective} from './components/time-line/directives/mouse-wheel.directive';
 import {InitChartComponent} from './components/time-line/init-chart/init-chart.component';
-import {TagsFilterComponent} from './components/card-list/filters/tags-filter/tags-filter.component';
-import {TypeaheadModule} from 'ngx-type-ahead';
 import {TimeService} from '@ofServices/time.service';
 import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
 import { FeedSortComponent } from './components/card-list/filters/feed-sort/feed-sort.component';
@@ -35,7 +33,6 @@ import {TimelineButtonsModule} from "../share/timeline-buttons/timeline-buttons.
 
 @NgModule({
     imports: [
-        TypeaheadModule,
         CommonModule,
         FormsModule,
         NgxChartsModule,
@@ -57,7 +54,6 @@ import {TimelineButtonsModule} from "../share/timeline-buttons/timeline-buttons.
         InitChartComponent,
         CustomTimelineChartComponent,
         MouseWheelDirective,
-        TagsFilterComponent,
         FeedSortComponent],
     exports: [FeedComponent],
     providers: [ {provide: TimeService, useClass: TimeService}]

@@ -17,7 +17,6 @@ Feature: patch user settings
   "description" : "my dummy user",
   "timeZone" : "Europe/Dublin",
   "locale" : "en",
-  "defaultTags" : [ "tag 1", "tag 2" ],
   "processesStatesNotNotified": {"processA": ["state1", "state2"], "processB": ["state3", "state4"]}
 }
 """
@@ -29,7 +28,6 @@ Feature: patch user settings
   "description" : "my dummy operator1 user",
   "timeZone" : "Australia/Melbourne",
   "locale" : "en",
-  "defaultTags" : [ "tag 3", "tag 4" ],
   "processesStatesNotNotified": {"processC": ["state5", "state6"], "processD": ["state7", "state8"]}
 }
 """
@@ -41,7 +39,6 @@ Feature: patch user settings
   "description" : "my dummy nonexistentUser user",
   "timeZone" : "France/Paris",
   "locale" : "fr",
-  "defaultTags" : [ "tag 5", "tag 6" ],
   "processesStatesNotNotified": {"processE": ["state9", "state10"], "processF": ["state11", "state12"]}
 }
 """
@@ -76,7 +73,6 @@ Feature: patch user settings
     And match response.description == userSettings.description
     And match response.timeZone == userSettings.timeZone
     And match response.locale == userSettings.locale
-    And match response.defaultTags == userSettings.defaultTags
     And match response.processesStatesNotNotified == userSettings.processesStatesNotNotified
 
 
@@ -91,7 +87,6 @@ Feature: patch user settings
     And match response.description == userSettingsDispatcher.description
     And match response.timeZone == userSettingsDispatcher.timeZone
     And match response.locale == userSettingsDispatcher.locale
-    And match response.defaultTags == userSettingsDispatcher.defaultTags
     And match response.processesStatesNotNotified == userSettingsDispatcher.processesStatesNotNotified
 
 

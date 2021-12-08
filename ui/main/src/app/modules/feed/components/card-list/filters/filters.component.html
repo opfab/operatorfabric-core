@@ -12,8 +12,7 @@
             <of-feed-filter [hideTimerTags]="hideTimerTags" [hideAckFilter]="hideAckFilter" [hideResponseFilter]="hideResponseFilter" [hideApplyFiltersToTimeLineChoice]="hideApplyFiltersToTimeLineChoice"></of-feed-filter>
             <of-feed-sort [hideSeveritySort]="hideSeveritySort" [hideReadSort]="hideReadSort"></of-feed-sort>
         </div>
-        <div style="width:100%;margin-top:4px">
-            <of-tags-filter *ngIf="!(hideTags)" ></of-tags-filter>
+        <div style="width:100%">
         </div>
         <div  *ngIf="loadingInProgress" class="opfab-loading-spinner">
             <ng-template #tipLoadingInProgress>

@@ -17,8 +17,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {ListSettingComponent} from './components/settings/list-setting/list-setting.component';
 import {MultiSettingsComponent} from './components/settings/multi-settings/multi-settings.component';
-import {TypeAheadSettingsComponent} from './components/settings/type-ahead-settings/type-ahead-settings.component';
-import {TypeaheadModule} from 'ngx-type-ahead';
 import {CheckboxSettingComponent} from './components/settings/checkbox-setting/checkbox-setting.component';
 
 @NgModule({
@@ -26,13 +24,11 @@ import {CheckboxSettingComponent} from './components/settings/checkbox-setting/c
         , TextSettingComponent
         , ListSettingComponent
         , MultiSettingsComponent
-        , TypeAheadSettingsComponent
         , CheckboxSettingComponent],
     imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        TypeaheadModule,
         SettingsRoutingModule,
         TranslateModule,
     ]

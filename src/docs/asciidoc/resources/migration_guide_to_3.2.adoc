@@ -19,3 +19,10 @@ Add the following lines in your nginx.conf to avoid keeping in cache old transla
 ```
 
 see the reference nginx configuration file : https://github.com/opfab/operatorfabric-core/blob/master/config/docker/nginx.conf 
+
+== Tag feed filter removal 
+
+The feature to filter tags in the feed has been removed. In consequence, you can remove the following parameters in your web-ui.json configuration file: 
+
+ * settings.tags.hide
+ * settings.infos.hide.tags

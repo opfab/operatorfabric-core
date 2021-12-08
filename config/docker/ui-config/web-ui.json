@@ -115,9 +115,6 @@
     "changePasswordUrl": "http://localhost:89/auth/realms/dev/account/#/security/signingin"
   },
   "settings": {
-    "tags": {
-      "hide": false
-    },
     "about": {
       "firstapplication": {
         "name": "First application",
