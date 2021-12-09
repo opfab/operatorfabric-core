@@ -43,13 +43,13 @@ jobs:
       script:
         - echo ${DOCKER_CLOUD_PWD} | docker login --username ${DOCKER_CLOUD_USER} --password-stdin
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
-        - ./gradlew --build-cache test
+        - ./gradlew  test
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
     - stage: test-sonar
       script:
         - echo ${DOCKER_CLOUD_PWD} | docker login --username ${DOCKER_CLOUD_USER} --password-stdin
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
-        - ./gradlew --build-cache copyDependencies test jacocoTestReport dockerTag${OF_VERSION} || travis_terminate 1;
+        - ./gradlew  copyDependencies test jacocoTestReport dockerTag${OF_VERSION} || travis_terminate 1;
         - sonar-scanner || travis_terminate 1;
         - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
         # Launch karate tests
@@ -110,19 +110,4 @@ stages:
     if: branch = master OR (branch =~ .+hotfixes$ AND commit_message =~ ci_latest) AND NOT type = pull_request
   - name: docker-tag-version
     if: (branch =~ .+release$) OR (NOT (branch IN (master,develop)) AND commit_message =~ ci_docker)
-before_cache:
-  # cleanup gradle caches
-  - rm -f  ${HOME}/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr ${HOME}/.gradle/caches/*/plugin-resolution/
-cache:
-  bundler: true
-  directories:
-    # caches gradle caches
-    - ${HOME}/.gradle/caches/
-    - ${HOME}/.gradle/wrapper/
-    # cache ui dependencies
-    - ui/main/nodes_modules
-    # cache cypress dependencies and binary
-    - src/test/cypress/node_modules
-    - ${HOME}/.cache/Cypress/
-    - ${HOME}/.sdkman
+
