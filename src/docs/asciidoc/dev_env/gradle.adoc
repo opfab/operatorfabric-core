@@ -22,13 +22,6 @@ to gradle and plugins official documentation.
 [sub-project]/build/
 ** copyDependencies: copy dependencies to build/support_libs (for Sonar)
 
-=== Core
-
-* Swagger Generator tasks
-** debugSwaggerOperations: generate swagger code from
-/src/main/modeling/config.json to build/swagger-analyse
-** swaggerHelp: display help regarding swagger configuration options for java
-
 === Businessconfig Service
 
 * Test tasks
