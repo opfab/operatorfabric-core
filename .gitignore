@@ -77,7 +77,7 @@ classes
 #*/**/bin
 services/*/*/bin
 tools/spring/spring-oauth2-utilities/bin
-services/core/bin
+services/bin
 */**/*.class
 
 ### Gradle ###

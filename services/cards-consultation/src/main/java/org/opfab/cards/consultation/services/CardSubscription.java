@@ -38,7 +38,7 @@ import java.util.*;
  * <p>This object manages subscription to AMQP exchange</p>
  *
  * <p>Two exchanges are used, {@link #cardExchange} and {@link #userExchange}.
- * See amqp.xml resource file ([project]/services/core/cards-publication/src/main/resources/amqp.xml)
+ * See amqp.xml resource file ([project]/services/cards-publication/src/main/resources/amqp.xml)
  * for their exact configuration</p>
  *
  *

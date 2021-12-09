@@ -52,7 +52,7 @@ It lists the content of the bundle.
 
 [source,JSON]
 ----
-include::../../../../services/core/businessconfig/src/main/docker/volume/businessconfig-storage/TEST/config.json[]
+include::../../../../services/businessconfig/src/main/docker/volume/businessconfig-storage/TEST/config.json[]
 ----
 
 - `id`: id of the process;
@@ -94,7 +94,7 @@ Here is the content of `i18n.json`
 
 [source,JSON]
 ----
-include::../../../../services/core/businessconfig/src/main/docker/volume/businessconfig-storage/TEST/1/i18n.json[]
+include::../../../../services/businessconfig/src/main/docker/volume/businessconfig-storage/TEST/1/i18n.json[]
 ----
 
 To check the i18n, after the upload of the bundle, use a `GET` request against the `businessconfig` service.
@@ -118,7 +118,7 @@ The `businessconfig` service should answer with a 200 status associated with the
 
 [source,JSON]
 ----
-include::../../../../services/core/businessconfig/src/main/docker/volume/businessconfig-storage/TEST/1/i18n.json[]
+include::../../../../services/businessconfig/src/main/docker/volume/businessconfig-storage/TEST/1/i18n.json[]
 
 ----
 

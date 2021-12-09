@@ -95,9 +95,9 @@ echo -e "Licence header content: \n$licenceContent"
 echo -e "\n"
 
 #Exclude bundles demo/test files
-findCommand+="! -path \"$OF_HOME/services/core/businessconfig/src/test/data/bundles/*\" "
-findCommand+="-and ! -path \"$OF_HOME/services/core/businessconfig/src/main/docker/volume/businessconfig-storage/*\" "
-findCommand+="-and ! -path \"$OF_HOME/services/core/businessconfig/src/test/docker/volume/businessconfig-storage/*\" "
+findCommand+="! -path \"$OF_HOME/services/businessconfig/src/test/data/bundles/*\" "
+findCommand+="-and ! -path \"$OF_HOME/services/businessconfig/src/main/docker/volume/businessconfig-storage/*\" "
+findCommand+="-and ! -path \"$OF_HOME/services/businessconfig/src/test/docker/volume/businessconfig-storage/*\" "
 findCommand+="-and ! -path \"$OF_HOME/src/test/resources/*\" "
 
 #Exclude generated folders from ui

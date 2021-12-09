@@ -30,7 +30,7 @@ import java.util.*;
  * entities through bindings to these exchanges.
  * </p>
  * <p>One exchange is used, carsExchange 
- * See amqp.xml resource file ([project]/services/core/cards-publication/src/main/resources/amqp.xml)
+ * See amqp.xml resource file ([project]/services/cards-publication/src/main/resources/amqp.xml)
  * for the exact configuration</p>
  */
 @Service

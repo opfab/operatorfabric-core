@@ -73,5 +73,5 @@ cd $OF_HOME
 ----
 
 The task output can be found for each service under `[service-path]/build/docs/api`
-(for example `services/core/businessconfig/build/docs/api`). Open the `index.html` file in a browser to have a look at
+(for example `services/businessconfig/build/docs/api`). Open the `index.html` file in a browser to have a look at
 the generated SwaggerUI.
