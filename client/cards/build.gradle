@@ -21,7 +21,7 @@ jar {
 swaggerSources {
 
     model {
-        inputFile = file("../../services/core/cards-publication/src/main/modeling/swagger.yaml")
+        inputFile = file("../../services/cards-publication/src/main/modeling/swagger.yaml")
         code {
             language = 'org.opfab.generators.OpfabClientGenerator'
             configFile = file('src/main/modeling/config.json')

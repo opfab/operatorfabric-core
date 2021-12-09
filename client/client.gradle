@@ -35,7 +35,7 @@ subprojects {
     swaggerSources {
         model {
             if (!project.projectDir.name.equals('external-devices')) {
-                inputFile = file("../../services/core/$project.projectDir.name/src/main/modeling/swagger.yaml")
+                inputFile = file("../../services/$project.projectDir.name/src/main/modeling/swagger.yaml")
             } else {
                 inputFile = file("../../services/$project.projectDir.name/src/main/modeling/swagger.yaml")
             }
