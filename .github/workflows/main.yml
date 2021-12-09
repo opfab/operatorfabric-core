@@ -1,0 +1,75 @@
+
+name: CI
+
+on:
+  # Triggers the workflow on push 
+  push:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('gradle.properties','**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+     
+      # Install all required tools 
+      - name: Install 
+        run: |
+          curl -s "https://get.sdkman.io" | bash ;
+          echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config ;
+          echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config ;
+          source $HOME/.sdkman/bin/sdkman-init.sh;
+          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+          source ./bin/load_environment_light.sh;
+          sudo apt-get install jq
+          npm -version
+          node --version
+          sdk version
+          javac -version
+
+      - name: Build
+        run: | 
+          export OF_VERSION=$(<VERSION)
+          docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
+          ./gradlew --build-cache copyDependencies test jacocoTestReport sonarqube dockerTag${OF_VERSION}
+          docker-compose -f src/main/docker/test-environment/docker-compose.yml down
+        env:
+          # Needed to get some information about the pull request, if any
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # SonarCloud access token should be generated from https://sonarcloud.io/account/security/
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          
+      - name: Karate tests
+        run: |
+          cd config/docker
+          ./docker-compose.sh
+          cd ../../bin
+          ./waitForOpfabToStart.sh
+          cd ../src/test/api/karate
+          ./launchAll.sh
+          cd ../../../../config/docker
+          docker-compose down --remove-orphans
+
+      - name: Cypress tests 
+        run: |
+          cd config/docker
+          ./docker-compose-cypress.sh
+          cd ../../bin
+          ./waitForOpfabToStart.sh
+          cd ../
+          ./gradlew runCypressTests
+          cd config/docker
+          docker-compose down
