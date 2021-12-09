@@ -73,9 +73,9 @@ The following files have been updated:
  M VERSION
  M config/dev/docker-compose.yml
  M config/docker/docker-compose.yml
- M services/core/cards-publication/src/main/modeling/swagger.yaml
- M services/core/businessconfig/src/main/modeling/swagger.yaml
- M services/core/users/src/main/modeling/swagger.yaml
+ M services/cards-publication/src/main/modeling/swagger.yaml
+ M services/businessconfig/src/main/modeling/swagger.yaml
+ M services/users/src/main/modeling/swagger.yaml
 ----
 +
 This script performs the following changes:
