@@ -123,33 +123,6 @@ subprojects {
         tasks.jacocoTestReport.dependsOn test
         tasks.dockerPrepare.dependsOn bootJar
 
-        Map[] commands = [
-                [command: ["up"], dependsOn: "copyWorkingDir"],
-                [command: ["down"]],
-                [command: ["logs", "-f"]],
-                [command: ["start"], dependsOn: "copyWorkingDir"],
-                [command: ["stop"]]
-        ]
-        for (Map c : commands) {
-            createComposeTasks(c, project)
-        }
     }
 }
 
-void createComposeTasks(Map taskDef, Project prj){
-    def cmdName = taskDef.command[0].capitalize()
-    def baseargs = ["-f", "$prj.projectDir/src/main/docker/docker-compose.yml"]
-    def bashargs = ((baseargs as List) << (taskDef.command as List)).flatten()
-//    println "generating compose$cmdName task with $bashargs"
-    def task = prj.task([type: Exec],"compose$cmdName", {
-        executable "docker-compose"
-        args bashargs
-//      dependsOn prj.tasks.copyWorkingDir
-    })
-
-    if(taskDef.dependsOn){
-        task.dependsOn prj.tasks[taskDef.dependsOn]
-    }
-
-
-}
