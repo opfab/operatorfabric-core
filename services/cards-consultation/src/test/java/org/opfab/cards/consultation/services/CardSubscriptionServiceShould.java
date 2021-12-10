@@ -97,7 +97,7 @@ public class CardSubscriptionServiceShould {
     }
 
     @Test
-    public void createAndDeleteSubscription(){
+    void createAndDeleteSubscription(){
         CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
         subscription.getPublisher().subscribe(log::info);
         Assertions.assertThat(subscription.checkActive()).isTrue();
@@ -108,7 +108,7 @@ public class CardSubscriptionServiceShould {
     }
 
     @Test
-    public void deleteSubscriptionWithDelay(){
+    void deleteSubscriptionWithDelay(){
         CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
         subscription.getPublisher().subscribe(log::info);
         Assertions.assertThat(subscription.checkActive()).isTrue();
@@ -119,7 +119,7 @@ public class CardSubscriptionServiceShould {
     }
 
     @Test
-    public void reviveSubscription(){
+    void reviveSubscription(){
         CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
         subscription.getPublisher().subscribe(log::info);
         Assertions.assertThat(subscription.checkActive()).isTrue();
@@ -145,7 +145,7 @@ public class CardSubscriptionServiceShould {
     }
 
     @Test
-    public void receiveCards(){
+    void receiveCards(){
         CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
         StepVerifier.FirstStep<String> verifier = StepVerifier.create(subscription.getPublisher().filter(m -> !m.equals("HEARTBEAT") && !m.equals("BUSINESS_CONFIG_CHANGE") && !m.equals("USER_CONFIG_CHANGE") ));
         taskScheduler.schedule(createSendMessageTask(),new Date(System.currentTimeMillis() + 1000));
@@ -175,7 +175,7 @@ public class CardSubscriptionServiceShould {
     }
 
     @Test
-    public void testCheckIfUserMustReceiveTheCard() {
+    void testCheckIfUserMustReceiveTheCard() {
         CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
 
         //groups only
@@ -232,7 +232,7 @@ public class CardSubscriptionServiceShould {
 
 
     @Test
-    public void testCreateDeleteCardMessageForUserNotRecipient(){
+    void testCreateDeleteCardMessageForUserNotRecipient(){
         CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
 
         String messageBodyAdd = "{\"cards\":[{\"severity\":\"ALARM\",\"summary\":{\"parameters\":{},\"key\":\"defaultProcess.summary\"},\"process\":\"defaultProcess\",\"publishDate\":1592389043000,\"title\":{\"parameters\":{},\"key\":\"defaultProcess.title\"},\"uid\":\"db914230-a5aa-42f2-aa29-f5348700fa55\",\"publisherVersion\":\"1\",\"processInstanceId\":\"process5b\",\"publisher\":\"api_test\",\"id\":\"api_test_process5b\",\"state\":\"messageState\",\"startDate\":1592396243446}],\"publishDate\":1592389043000,\"groupRecipientsIds\":[\"Dispatcher\"],\"type\":\"ADD\"}";

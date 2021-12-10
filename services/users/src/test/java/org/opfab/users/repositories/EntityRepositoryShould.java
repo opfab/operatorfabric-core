@@ -61,7 +61,7 @@ public class EntityRepositoryShould {
     }
     
     @Test
-    public void findByParent() {
+    void findByParent() {
         List<EntityData> childs =entityRepository.findByParentsContaining("PARENT1");
         assertThat(childs.size()).isEqualTo(1);
 

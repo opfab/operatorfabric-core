@@ -72,7 +72,7 @@ public class ConfigServiceShould {
     }
 
     @Test
-    public void insertDeviceConfigurationSuccessfullyIfUnique() {
+    void insertDeviceConfigurationSuccessfullyIfUnique() {
 
         DeviceConfigurationData deviceConfiguration4 = DeviceConfigurationData.builder()
                 .id("ESS4")
@@ -90,7 +90,7 @@ public class ConfigServiceShould {
     }
 
     @Test
-    public void abortAndThrowExceptionWhenInsertingDuplicateDeviceConfiguration() {
+    void abortAndThrowExceptionWhenInsertingDuplicateDeviceConfiguration() {
 
         DeviceConfigurationData deviceConfiguration_1_duplicate = DeviceConfigurationData.builder()
                 .id("ESS1")
@@ -112,7 +112,7 @@ public class ConfigServiceShould {
     }
 
     @Test
-    public void retrieveExistingDeviceConfiguration() {
+    void retrieveExistingDeviceConfiguration() {
 
         Optional<DeviceConfigurationData> retrievedConfiguration = configService.getDeviceConfiguration("ESS1");
         Assertions.assertThat(retrievedConfiguration).isPresent();
@@ -121,13 +121,13 @@ public class ConfigServiceShould {
     }
 
     @Test
-    public void getDeviceConfigurations() {
+    void getDeviceConfigurations() {
         List<DeviceConfigurationData> deviceConfigurationDataList = configService.getDeviceConfigurations();
         Assertions.assertThat(deviceConfigurationDataList.size()).isEqualTo(INITIAL_NUMBER_OF_DEVICE_CONFIGS);
     }
 
     @Test
-    public void insertSignalMappingIfUnique() {
+    void insertSignalMappingIfUnique() {
 
         SignalMappingData signalMapping3 = SignalMappingData.builder()
                 .id("signalMapping3")
@@ -148,13 +148,13 @@ public class ConfigServiceShould {
 
     @ParameterizedTest
     @MethodSource("getResolvedConfigurationOKParams")
-    public void getResolvedConfigurationSuccessfully(String userLogin, String opFabSignalKey, ResolvedConfiguration expected) throws ExternalDeviceConfigurationException {
+    void getResolvedConfigurationSuccessfully(String userLogin, String opFabSignalKey, ResolvedConfiguration expected) throws ExternalDeviceConfigurationException {
         Assertions.assertThat(configService.getResolvedConfiguration(opFabSignalKey, userLogin)).isEqualTo(expected);
     }
 
     @ParameterizedTest
     @MethodSource("getResolvedConfigurationErrorParams")
-    public void throwErrorIfConfigurationCantBeResolved(String userLogin, String opFabSignalKey) {
+    void throwErrorIfConfigurationCantBeResolved(String userLogin, String opFabSignalKey) {
         assertThrows(ExternalDeviceConfigurationException.class,
                 () -> configService.getResolvedConfiguration(opFabSignalKey, userLogin));
     }

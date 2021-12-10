@@ -79,7 +79,7 @@ public class UserRepositoryShould {
     }
 
     @Test
-    public void persistUser(){
+    void persistUser(){
         UserData user = UserData.builder()
            .login("mpalin")
            .firstName("Michael")
@@ -99,7 +99,7 @@ public class UserRepositoryShould {
     }
 
     @Test
-    public void findByGroup(){
+    void findByGroup(){
         List<UserData> results = repository.findByGroupSetContaining("Wanda");
         assertThat(results).hasSize(2);
         results = repository.findByGroupSetContaining("Monty Pythons");
@@ -109,7 +109,7 @@ public class UserRepositoryShould {
     }
 
     @Test
-    public void findByEntity(){
+    void findByEntity(){
         List<UserData> results = repository.findByEntitiesContaining("ENTITY2");
         assertThat(results).hasSize(2);
         results = repository.findByEntitiesContaining("ENTITY1");

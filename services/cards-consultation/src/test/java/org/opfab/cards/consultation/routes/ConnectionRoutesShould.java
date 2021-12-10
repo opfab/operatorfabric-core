@@ -82,13 +82,13 @@ public class ConnectionRoutesShould {
         @WithMockOpFabUserReactive(login = "userWithGroup", roles = { "ADMIN" })
         public class ConnectionRoutesForAdminShould {
                 @Test
-                public void respondOk() {
+                void respondOk() {
                         assertThat(connectionRoutes).isNotNull();
                         webTestClient.get().uri("/connections").exchange().expectStatus().isOk();
                 }
 
                 @Test
-                public void respondWithNoUSerConnectedIsEmpty() {
+                void respondWithNoUSerConnectedIsEmpty() {
                         assertThat(connectionRoutes).isNotNull();
                         webTestClient.get().uri("/connections").exchange().expectStatus().isOk()
                                         .expectBody()
@@ -97,7 +97,7 @@ public class ConnectionRoutesShould {
 
 
                 @Test
-                public void respondWithOneUserConnected() {
+                void respondWithOneUserConnected() {
                         CardSubscription subscription = service.subscribe(currentUserWithPerimeters, "test");
                         subscription.getPublisher().subscribe(log::info);
                         Assertions.assertThat(subscription.checkActive()).isTrue();
@@ -107,7 +107,7 @@ public class ConnectionRoutesShould {
                 } 
 
                 @Test
-                public void respondWithThreeUserConnected() {
+                void respondWithThreeUserConnected() {
                         service.subscribe(currentUserWithPerimeters, "test").getPublisher().subscribe(log::info);
                         service.subscribe(currentUserWithPerimeters, "test2").getPublisher().subscribe(log::info);
                         service.subscribe(currentUserWithPerimeters, "test3").getPublisher().subscribe(log::info);
@@ -124,7 +124,7 @@ public class ConnectionRoutesShould {
         @WithMockOpFabUserReactive(login = "userWithGroup", roles = { "TEST" })
         public class ConnectionRoutesForNonAdminShould {
                 @Test
-                public void accessIsForbidden() {
+                void accessIsForbidden() {
                         assertThat(connectionRoutes).isNotNull();
                         webTestClient.get().uri("/connections").exchange().expectStatus().isForbidden();
                 }

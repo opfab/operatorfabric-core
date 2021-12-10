@@ -41,14 +41,14 @@ public class PathUtilsShould {
   }
 
   @Test
-  public void copy() throws IOException {
+  void copy() throws IOException {
     PathUtils.copy(basePath.resolve("dir"), basePath.resolve("target-copy-dir"));
     assertThat(basePath.resolve("target-copy-dir")).exists();
     assertThat(basePath.resolve("target-copy-dir").resolve("empty.file")).exists();
   }
 
   @Test
-  public void move() throws IOException {
+  void move() throws IOException {
     PathUtils.moveDir(basePath.resolve("moveable-dir"), basePath.resolve("target-move-dir"));
     assertThat(basePath.resolve("target-move-dir")).exists();
     assertThat(basePath.resolve("target-move-dir").resolve("empty.file")).exists();
@@ -56,32 +56,32 @@ public class PathUtilsShould {
   }
 
   @Test
-  public void delete() throws IOException {
+  void delete() throws IOException {
     PathUtils.silentDelete(basePath.resolve("deleteable-dir"));
     assertThat(basePath.resolve("deleteable-dir")).doesNotExist();
   }
 
   @Test
-  public void copyFile() throws IOException {
+  void copyFile() throws IOException {
     PathUtils.copy(basePath.resolve("empty.file"), basePath.resolve("copied.file"));
     assertThat(basePath.resolve("copied.file")).exists();
   }
 
   @Test
-  public void deleteFile() throws IOException {
+  void deleteFile() throws IOException {
     PathUtils.delete(basePath.resolve("deleteable.file"));
     assertThat(basePath.resolve("deleteable.file")).doesNotExist();
   }
 
   @Test
-  public void getPath(){
+  void getPath(){
     File f = basePath.toFile();
     Path result = PathUtils.getPath(f);
     assertThat(result.normalize().toAbsolutePath().toString()).isEqualTo(f.getAbsolutePath());
   }
 
   @Test
-  public void untar() throws IOException {
+  void untar() throws IOException {
 
     PathUtils.unTarGz(
        Files.newInputStream(basePath.resolve("archive.tar.gz")),
@@ -97,7 +97,7 @@ public class PathUtilsShould {
   }
 
   @Test
-  public void handleErrorOnCopy(){
+  void handleErrorOnCopy(){
     assertException(IOException.class).isThrownBy(()->{
       PathUtils.copy(
          basePath.resolve("dir").resolve("empty.file"),
@@ -109,7 +109,7 @@ public class PathUtilsShould {
   }
 
   @Test
-  public void handleErrorOnDelete(){
+  void handleErrorOnDelete(){
     assertException(IOException.class).isThrownBy(()->{
       PathUtils.delete(
          basePath.resolve("dir2").resolve("empty.file"));

@@ -24,7 +24,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class KafkaSerializeDeserializeShould {
 
     @Test
-    public void SerializeDeserialize() {
+    void SerializeDeserialize() {
         CardCommandFactory cardCommandFactory = new CardCommandFactory(new CardObjectMapper());
         CardCommand cardCommand = cardCommandFactory.create(createCardPublicationData());
 

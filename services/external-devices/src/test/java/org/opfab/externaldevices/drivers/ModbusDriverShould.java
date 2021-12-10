@@ -49,7 +49,7 @@ public class ModbusDriverShould {
     }
 
     @Test
-    public void modbusDriverShouldConnect() throws ExternalDeviceDriverException, ModbusIOException {
+    void modbusDriverShouldConnect() throws ExternalDeviceDriverException, ModbusIOException {
 
         modbusDriver.connect();
         verify(modbusMaster,times(1)).connect();
@@ -57,7 +57,7 @@ public class ModbusDriverShould {
     }
 
     @Test
-    public void modbusDriverShouldDisconnect() throws ExternalDeviceDriverException, ModbusIOException {
+    void modbusDriverShouldDisconnect() throws ExternalDeviceDriverException, ModbusIOException {
 
         modbusDriver.disconnect();
         verify(modbusMaster,times(1)).disconnect();
@@ -65,7 +65,7 @@ public class ModbusDriverShould {
     }
 
     @Test
-    public void modbusDriverShouldBeConnectedIfModbusMasterIsConnected() {
+    void modbusDriverShouldBeConnectedIfModbusMasterIsConnected() {
 
         when(modbusMaster.isConnected()).thenReturn(true);
         Assertions.assertThat(modbusDriver.isConnected()).isTrue();
@@ -74,7 +74,7 @@ public class ModbusDriverShould {
     }
 
     @Test
-    public void modbusDriverShouldBeDisconnectedIfModbusMasterIsDisconnected() {
+    void modbusDriverShouldBeDisconnectedIfModbusMasterIsDisconnected() {
 
         when(modbusMaster.isConnected()).thenReturn(false);
         Assertions.assertThat(modbusDriver.isConnected()).isFalse();
@@ -83,7 +83,7 @@ public class ModbusDriverShould {
     }
 
     @Test
-    public void modbusDriverShouldSendSignal() throws ModbusProtocolException, ModbusIOException, ExternalDeviceDriverException {
+    void modbusDriverShouldSendSignal() throws ModbusProtocolException, ModbusIOException, ExternalDeviceDriverException {
 
         int signalId = 3;
         ArgumentCaptor<WriteSingleRegisterRequest> requestCaptor = ArgumentCaptor.forClass(WriteSingleRegisterRequest.class);
@@ -98,7 +98,7 @@ public class ModbusDriverShould {
     }
 
     @Test
-    public void modbusDriverShouldThrowIfModbusMasterCantSend() throws ModbusProtocolException, ModbusIOException {
+    void modbusDriverShouldThrowIfModbusMasterCantSend() throws ModbusProtocolException, ModbusIOException {
 
         int signalId = 3;
 

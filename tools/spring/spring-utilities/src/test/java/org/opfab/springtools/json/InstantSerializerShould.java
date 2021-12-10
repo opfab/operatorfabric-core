@@ -43,7 +43,7 @@ public class InstantSerializerShould {
     }
 
     @Test
-    public void shouldSerializeInstantAsMillisFromEpoch () {
+    void shouldSerializeInstantAsMillisFromEpoch () {
 
         long milliFromEpoch = 123456789L;
         Instant instant = Instant.ofEpochMilli(milliFromEpoch);
@@ -61,7 +61,7 @@ public class InstantSerializerShould {
     }
 
     @Test
-    public void shouldSerializeNullAsMillisFromEpoch () {
+    void shouldSerializeNullAsMillisFromEpoch () {
 
         Instant instant = null;
 

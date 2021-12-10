@@ -56,7 +56,7 @@ public class DevicesServiceShould {
     }
 
     @Test
-    public void createDeviceDataFromConfiguration() {
+    void createDeviceDataFromConfiguration() {
         DeviceConfigurationData deviceConfigurationData = DeviceConfigurationData.builder()
                 .id("deviceId")
                 .host("123.45.67.1")
@@ -76,7 +76,7 @@ public class DevicesServiceShould {
     }
 
     @Test
-    public void connectDeviceIfCorrectConfig() throws ExternalDeviceConfigurationException, UnknownHostException, ExternalDeviceDriverException {
+    void connectDeviceIfCorrectConfig() throws ExternalDeviceConfigurationException, UnknownHostException, ExternalDeviceDriverException {
 
         DeviceConfigurationData deviceConfigurationData = DeviceConfigurationData.builder()
                 .id("testDeviceId")
@@ -106,7 +106,7 @@ public class DevicesServiceShould {
     }
 
     @Test
-    public void connectDeviceWhenConfigIsUpdated() throws ExternalDeviceConfigurationException, UnknownHostException, ExternalDeviceDriverException {
+    void connectDeviceWhenConfigIsUpdated() throws ExternalDeviceConfigurationException, UnknownHostException, ExternalDeviceDriverException {
 
         DeviceConfigurationData initialDeviceConfigurationData = DeviceConfigurationData.builder()
                 .id("testDeviceId")
@@ -147,7 +147,7 @@ public class DevicesServiceShould {
     }
 
     @Test
-    public void connectAndDisconnectDriverAssociatedWithDevice() throws ExternalDeviceConfigurationException, UnknownHostException, ExternalDeviceDriverException {
+    void connectAndDisconnectDriverAssociatedWithDevice() throws ExternalDeviceConfigurationException, UnknownHostException, ExternalDeviceDriverException {
 
         DeviceConfigurationData deviceConfigurationData = DeviceConfigurationData.builder()
                 .id("testDeviceId")
@@ -174,7 +174,7 @@ public class DevicesServiceShould {
     }
 
     @Test
-    public void sendAppropriateSignalIfCorrectConfiguration() throws ExternalDeviceConfigurationException, ExternalDeviceDriverException {
+    void sendAppropriateSignalIfCorrectConfiguration() throws ExternalDeviceConfigurationException, ExternalDeviceDriverException {
 
         DeviceConfigurationData deviceConfigurationData = DeviceConfigurationData.builder()
                 .id("testDeviceId")
@@ -198,7 +198,7 @@ public class DevicesServiceShould {
     }
 
     @Test
-    public void sendWatchdogToConnectedDevicesSignalIfEnabled() throws ExternalDeviceConfigurationException, ExternalDeviceDriverException {
+    void sendWatchdogToConnectedDevicesSignalIfEnabled() throws ExternalDeviceConfigurationException, ExternalDeviceDriverException {
 
         final int CUSTOM_SIGNAL_ID = 4;
 
@@ -233,7 +233,7 @@ public class DevicesServiceShould {
     }
 
     @Test
-    public void notSendWatchdogSignalToDevicesIfDisabled() throws ExternalDeviceConfigurationException, ExternalDeviceDriverException {
+    void notSendWatchdogSignalToDevicesIfDisabled() throws ExternalDeviceConfigurationException, ExternalDeviceDriverException {
 
         DeviceConfigurationData deviceConfigurationData = DeviceConfigurationData.builder()
                 .id("testDeviceId")

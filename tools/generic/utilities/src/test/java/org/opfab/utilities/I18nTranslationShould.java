@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class I18nTranslationShould {
 
     @Test
-    public void translate() throws Exception {
+    void translate() throws Exception {
         String json = "  {\"process\": {\"card\": {  \"summary\": \"{{contingenciesSize}} contingencies\",\"title\": \"Card title\"}}}";
 
         ObjectMapper mapper = new ObjectMapper();
@@ -53,7 +53,7 @@ public class I18nTranslationShould {
     }
 
     @Test
-    public void translationNotFound() throws Exception {
+    void translationNotFound() throws Exception {
         String json = "  {\"process\": {\"card\": {  \"title\": \"Card title\"}}}";
 
         ObjectMapper mapper = new ObjectMapper();

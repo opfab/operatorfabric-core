@@ -200,7 +200,7 @@ public class CardOperationsControllerShould {
     }
 
     @Test
-    public void receiveOlderCards() {
+    void receiveOlderCards() {
         Flux<String> publisher = controller.registerSubscriptionAndPublish(Mono.just(
                 CardOperationsGetParameters.builder()
                         .currentUserWithPerimeters(currentUserWithPerimeters)
@@ -266,7 +266,7 @@ public class CardOperationsControllerShould {
 
 
     @Test
-    public void receiveCardsCheckUserAcks() {
+    void receiveCardsCheckUserAcks() {
         Flux<String> publisher = controller.registerSubscriptionAndPublish(Mono.just(
                 CardOperationsGetParameters.builder()
                         .currentUserWithPerimeters(userForUserAckAndReadTest)
@@ -290,7 +290,7 @@ public class CardOperationsControllerShould {
     }
     
     @Test
-    public void receiveCardsCheckUserReads() {
+    void receiveCardsCheckUserReads() {
         Flux<String> publisher = controller.registerSubscriptionAndPublish(Mono.just(
                 CardOperationsGetParameters.builder()
                         .currentUserWithPerimeters(userForUserAckAndReadTest)

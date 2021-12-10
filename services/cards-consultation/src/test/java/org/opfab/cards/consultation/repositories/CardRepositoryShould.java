@@ -141,7 +141,7 @@ public class CardRepositoryShould {
    
 
     @Test
-    public void persistCard() {
+    void persistCard() {
         CardConsultationData card =
                 CardConsultationData.builder()
                         .processInstanceId("PROCESS_ID")
@@ -168,7 +168,7 @@ public class CardRepositoryShould {
     }
 
     @Test
-    public void getZeroCardInRange()
+    void getZeroCardInRange()
     {
         persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
         persistCard(createSimpleCard("2", now, now, nowPlusTwo, LOGIN, null,null));
@@ -182,7 +182,7 @@ public class CardRepositoryShould {
 
 
     @Test
-    public void getTwoCardsInRange()
+    void getTwoCardsInRange()
     {
         persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
         persistCard(createSimpleCard("2", now, now, nowPlusTwo, LOGIN, null,null));
@@ -204,7 +204,7 @@ public class CardRepositoryShould {
     }
 
     @Test
-    public void getThreeCardsInRange()
+    void getThreeCardsInRange()
     {
         persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
         persistCard(createSimpleCard("2", now, now, nowPlusTwo, LOGIN, null,null));
@@ -230,7 +230,7 @@ public class CardRepositoryShould {
     }
 
     @Test
-    public void getTwoCardsInRangeWitnNoEnd()
+    void getTwoCardsInRangeWitnNoEnd()
     {
         persistCard(createSimpleCard("1", now, nowMinusOne, nowPlusThree, LOGIN,null, null));
         persistCard(createSimpleCard("2", now, nowMinusOne, null, LOGIN, null,null));
@@ -257,7 +257,7 @@ public class CardRepositoryShould {
     }
     
     @Test
-    public void getZeroCardAfterPublishDate()
+    void getZeroCardAfterPublishDate()
     {
         persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
         persistCard(createSimpleCard("2", nowPlusTwo, now, nowPlusTwo, LOGIN, null,null));
@@ -270,7 +270,7 @@ public class CardRepositoryShould {
             }
 
     @Test
-    public void getTwoCardsAfterPublishDate()
+    void getTwoCardsAfterPublishDate()
     {
         persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
         persistCard(createSimpleCard("2", nowPlusTwo, now, nowPlusTwo, LOGIN, null,null));
@@ -292,7 +292,7 @@ public class CardRepositoryShould {
         }
 
         @Test
-        public void getOneCardInRangeAndAfterPublishDate ()
+        void getOneCardInRangeAndAfterPublishDate ()
         {
             persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
             persistCard(createSimpleCard("2", nowPlusTwo, now, nowPlusOne, LOGIN, null,null));
@@ -311,7 +311,7 @@ public class CardRepositoryShould {
 
 
         @Test
-        public void getNoCardAsRteUserEntity1IsNotAdminUser() {
+        void getNoCardAsRteUserEntity1IsNotAdminUser() {
             persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN, null, null));
             persistCard(createSimpleCard("2", now, now, nowPlusTwo, LOGIN, null, null));
 
@@ -323,7 +323,7 @@ public class CardRepositoryShould {
 
 
         @Test
-        public void getNoCardAsAdminUserIsNotInGroupRteOrInGroupOperator() {
+        void getNoCardAsAdminUserIsNotInGroupRteOrInGroupOperator() {
             persistCard(createSimpleCard("1", now, now, nowPlusOne, null, new String[]{"rte","operator"}, null));
             persistCard(createSimpleCard("2", now, now, nowPlusTwo, null, new String[]{"rte","operator"}, null));
 
@@ -335,7 +335,7 @@ public class CardRepositoryShould {
 
 
         @Test
-        public void getTwoCardAsRteUserEntity1IsInGroupRte() {
+        void getTwoCardAsRteUserEntity1IsInGroupRte() {
             persistCard(createSimpleCard("1", now, now, nowPlusOne, null, new String[]{"rte","operator"}, null));
             persistCard(createSimpleCard("2", now, now, nowPlusTwo, null, new String[]{"rte","operator"}, null));
 
@@ -355,7 +355,7 @@ public class CardRepositoryShould {
 
 
         @Test
-        public void getNoCardAsRteUserEntity1IsInGroupRteButNotInEntity2() {
+        void getNoCardAsRteUserEntity1IsInGroupRteButNotInEntity2() {
             persistCard(createSimpleCard("1", now, now, nowPlusOne, null, new String[]{"rte","operator"}, new String[]{"entity2"}));
             persistCard(createSimpleCard("2", now, now, nowPlusTwo, null, new String[]{"rte","operator"}, new String[]{"entity2"}));
 
@@ -366,7 +366,7 @@ public class CardRepositoryShould {
         }
 
         @Test
-        public void getTwoCardAsRteUserEntity1IsInGroupRteAndInEntity1() {
+        void getTwoCardAsRteUserEntity1IsInGroupRteAndInEntity1() {
             persistCard(createSimpleCard("1", now, now, nowPlusOne, null, new String[]{"rte","operator"}, new String[]{"entity1"}));
             persistCard(createSimpleCard("2", now, now, nowPlusTwo, null, new String[]{"rte","operator"}, new String[]{"entity1"}));
 
@@ -387,7 +387,7 @@ public class CardRepositoryShould {
 
 
         @Test
-        public void getTwoCardsWithOneAcknowledge()
+        void getTwoCardsWithOneAcknowledge()
         {
             persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
             persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,new String[] {"admin"},null));
@@ -410,7 +410,7 @@ public class CardRepositoryShould {
         }
 
         @Test
-        public void getTwoCardsWithNoneAcknowledgeAsCardsHasNotBeenAcknowledgeByCurrentUser()
+        void getTwoCardsWithNoneAcknowledgeAsCardsHasNotBeenAcknowledgeByCurrentUser()
         {
             persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null,new String[] {"user1","user2"},null));
             persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,new String[] {"dummyuser"},null));
@@ -433,7 +433,7 @@ public class CardRepositoryShould {
         }
     
         @Test
-        public void getTwoCardsWithOneRead()
+        void getTwoCardsWithOneRead()
         {
             persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
             persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,null,new String[] {"admin"}));
@@ -456,7 +456,7 @@ public class CardRepositoryShould {
         }
 
         @Test
-        public void getTwoCardsWithNoneReadAsCardsHasNotBeenReadByCurrentUser()
+        void getTwoCardsWithNoneReadAsCardsHasNotBeenReadByCurrentUser()
         {
             persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null,null,new String[] {"user1","user2"}));
             persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,null,new String[] {"dummyuser"}));

@@ -38,7 +38,7 @@ public class ObjectMapperShould {
     private ObjectMapper mapper;
 
     @Test
-    public void readCard() throws IOException {
+    void readCard() throws IOException {
         String stringCard = "{" +
                 "\"publishDate\": 123,"+
                 "\"data\": {"+

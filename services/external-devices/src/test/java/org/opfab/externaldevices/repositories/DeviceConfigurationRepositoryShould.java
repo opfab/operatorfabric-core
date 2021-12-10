@@ -62,7 +62,7 @@ public class DeviceConfigurationRepositoryShould {
     }
 
     @Test
-    public void findAll() {
+    void findAll() {
         List<DeviceConfigurationData> deviceConfigurationDataList = deviceConfigurationRepository.findAll();
         assertThat(deviceConfigurationDataList.size()).isEqualTo(2);
     }

@@ -110,7 +110,7 @@ public class SendKafkaCardShould {
     }
 
     @Test
-    public void sendKafkaCardCommand() throws InterruptedException {
+    void sendKafkaCardCommand() throws InterruptedException {
         String publisher = "myPublisher";
         String processVersion = "myVersion";
         Instant startDate = Instant.now().truncatedTo(ChronoUnit.SECONDS);
@@ -159,7 +159,7 @@ public class SendKafkaCardShould {
     }
 
     @Test
-    public void receiveCardCommand() throws InterruptedException {
+    void receiveCardCommand() throws InterruptedException {
        // Setup
         receiveCardCommandResultIsOK = false;
         latch = new CountDownLatch(1);

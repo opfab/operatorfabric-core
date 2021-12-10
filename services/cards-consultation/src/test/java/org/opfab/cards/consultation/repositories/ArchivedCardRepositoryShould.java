@@ -183,7 +183,7 @@ public class ArchivedCardRepositoryShould {
     }
 
     @Test
-    public void persistCard() {
+    void persistCard() {
         repository.deleteAll().subscribe();
 
         ArchivedCardConsultationData card =
@@ -243,7 +243,7 @@ public class ArchivedCardRepositoryShould {
     }
 
     @Test
-    public void fetchArchivedCardsWithRegularParams() {
+    void fetchArchivedCardsWithRegularParams() {
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 
@@ -270,7 +270,7 @@ public class ArchivedCardRepositoryShould {
     }
 
     @Test
-    public void fetchArchivedCardsWithRegularParamsEmptyResultSet() {
+    void fetchArchivedCardsWithRegularParamsEmptyResultSet() {
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 
@@ -289,7 +289,7 @@ public class ArchivedCardRepositoryShould {
     }
 
     @Test
-    public void fetchArchivedCardsWithPublishDateBetween() {
+    void fetchArchivedCardsWithPublishDateBetween() {
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 
@@ -318,7 +318,7 @@ public class ArchivedCardRepositoryShould {
     }
 
     @Test
-    public void fetchArchivedCardsWithPublishDateAfter() {
+    void fetchArchivedCardsWithPublishDateAfter() {
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 
@@ -345,7 +345,7 @@ public class ArchivedCardRepositoryShould {
     }
 
     @Test
-    public void fetchArchivedCardsWithPublishDateBefore() {
+    void fetchArchivedCardsWithPublishDateBefore() {
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 
@@ -372,7 +372,7 @@ public class ArchivedCardRepositoryShould {
     }
 
     @Test
-    public void fetchArchivedCardsActiveBetween() {
+    void fetchArchivedCardsActiveBetween() {
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 
@@ -401,7 +401,7 @@ public class ArchivedCardRepositoryShould {
     }
 
     @Test
-    public void fetchArchivedCardsActiveFrom() {
+    void fetchArchivedCardsActiveFrom() {
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 
@@ -430,7 +430,7 @@ public class ArchivedCardRepositoryShould {
 
 
     @Test
-    public void fetchArchivedCardsActiveFromWithPaging() {
+    void fetchArchivedCardsActiveFromWithPaging() {
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 
@@ -508,7 +508,7 @@ public class ArchivedCardRepositoryShould {
     }
 
     @Test
-    public void fetchArchivedCardsActiveTo() {
+    void fetchArchivedCardsActiveTo() {
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 
@@ -535,7 +535,7 @@ public class ArchivedCardRepositoryShould {
     }
 
     @Test
-    public void fetchArchivedCardsMixParams() {
+    void fetchArchivedCardsMixParams() {
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 
@@ -574,7 +574,7 @@ public class ArchivedCardRepositoryShould {
     }
 
     @Test
-    public void fetchArchivedCardsUserRecipientIsAllowedToSee() {
+    void fetchArchivedCardsUserRecipientIsAllowedToSee() {
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 
@@ -594,7 +594,7 @@ public class ArchivedCardRepositoryShould {
     }
 
     @Test
-    public void fetchArchivedCardsGroupRecipientIsAllowedToSee() {
+    void fetchArchivedCardsGroupRecipientIsAllowedToSee() {
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 
@@ -614,7 +614,7 @@ public class ArchivedCardRepositoryShould {
     }
 
     @Test
-    public void fetchArchivedCardsUserRecipientWithNoGroupIsAllowedToSee() {
+    void fetchArchivedCardsUserRecipientWithNoGroupIsAllowedToSee() {
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 
@@ -629,7 +629,7 @@ public class ArchivedCardRepositoryShould {
     }
 
     @Test
-    public void fetchArchivedCardsEntityRecipientIsAllowedToSee() {
+    void fetchArchivedCardsEntityRecipientIsAllowedToSee() {
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 
@@ -644,7 +644,7 @@ public class ArchivedCardRepositoryShould {
     }
 
     @Test
-    public void fetchArchivedCardsGroupAndEntityRecipientAreAllowedToSee() {
+    void fetchArchivedCardsGroupAndEntityRecipientAreAllowedToSee() {
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 

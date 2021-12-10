@@ -44,21 +44,21 @@ class CustomExceptionHandlerShould {
   private CustomExceptionHandler handler;
 
   @Test
-  public void handleIOException(){
+  void handleIOException(){
     IOException ioe = new IOException("ioexception test");
     ResponseEntity<Object> result = handler.handleIOException(ioe, null);
     assertThat(((ApiError)result.getBody()).getErrors()).contains("ioexception test");
   }
 
   @Test
-  public void handleFileNotFoundException(){
+  void handleFileNotFoundException(){
     FileNotFoundException fnfe = new FileNotFoundException("fileNotFound test");
     ResponseEntity<Object> result = handler.handleFileNotFoundException(fnfe, null);
     assertThat(((ApiError)result.getBody()).getErrors()).contains("fileNotFound test");
   }
 
   @Test
-  public void handleApiErrorException(){
+  void handleApiErrorException(){
     ApiErrorException aee = new ApiErrorException(
        ApiError.builder().status(INTERNAL_SERVER_ERROR).error("api error message").build(),
        "api error test",
