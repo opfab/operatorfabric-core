@@ -52,7 +52,9 @@ public class CardClient {
        
         ResponseEntity<CardData> response = restTemplate.exchange(url + "/" + cardId, HttpMethod.GET,
                 request, CardData.class, params);
-        return response.getBody().card;
+        CardData cardData = response.getBody();
+        if (cardData!=null)  return cardData.card;
+        else return null;
     }
 
 
