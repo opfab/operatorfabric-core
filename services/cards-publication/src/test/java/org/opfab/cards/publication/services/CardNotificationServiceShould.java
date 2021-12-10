@@ -56,7 +56,7 @@ class CardNotificationServiceShould {
     }
 
     @Test
-    public void transmitCards(){
+    void transmitCards(){
         Instant start = Instant.now().plusSeconds(3600);
         CardPublicationData newCard = CardPublicationData.builder()
            .publisher("PUBLISHER_1")

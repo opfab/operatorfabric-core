@@ -41,18 +41,18 @@ public class UserServiceCacheShould {
     }
 
     @Test
-    public void objectsUnderTestAreNotNull(){
+    void objectsUnderTestAreNotNull(){
         assertThat(userServiceCache).isNotNull();
         assertThat(mockClient).isNotNull();
     }
 
     @Test
-    public void mockClientRequestsAreResetBeforeEachTest(){
+    void mockClientRequestsAreResetBeforeEachTest(){
         assertThat(mockClient.verifyTimes(HttpMethod.GET, "/internal/CurrentUserWithPerimeters",0)).isEmpty();
     }
 
     @Test
-    public void shouldReturnCorrectUserData(){
+    void shouldReturnCorrectUserData(){
         String principalID ="testuser";
         CurrentUserWithPerimeters user = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalID);
         assertThat(user).isNotNull();
@@ -64,7 +64,7 @@ public class UserServiceCacheShould {
     }
 
     @Test 
-    public void shouldInsertToken() {
+    void shouldInsertToken() {
         String user1 ="testuser";
         String user2 ="testuser2";
         UserServiceCache.setTokenForUserRequest(user1, "testtoken");
@@ -82,7 +82,7 @@ public class UserServiceCacheShould {
     }
 
     @Test
-    public void shouldNotHitCacheForFirstCall(){
+    void shouldNotHitCacheForFirstCall(){
         String principalID ="testuser";
         //First call
         userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalID);
@@ -90,7 +90,7 @@ public class UserServiceCacheShould {
     }
 
     @Test
-    public void shouldReturnSameDataForSecondCall(){
+    void shouldReturnSameDataForSecondCall(){
         String principalID ="testuser";
 
         //First call
@@ -105,7 +105,7 @@ public class UserServiceCacheShould {
 
 
     @Test
-    public void shouldHitCacheForSecondCall(){
+    void shouldHitCacheForSecondCall(){
         String principalID ="jmcclane";
 
         //First call
@@ -119,7 +119,7 @@ public class UserServiceCacheShould {
 
 
     @Test
-    public void shouldClearSelectedCache(){
+    void shouldClearSelectedCache(){
         String principalID1 = "jmcclane";
         String principalID2 = "hgruber";
 

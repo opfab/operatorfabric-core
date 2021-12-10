@@ -44,25 +44,25 @@ public class I18nProcessesCacheShould {
     }
 
     @Test
-    public void objectsUnderTestAreNotNull() {
+    void objectsUnderTestAreNotNull() {
         assertThat(i18nProcessesCache).isNotNull();
         assertThat(mockI18nClient).isNotNull();
     }
 
     @Test
-    public void mockClientRequestsAreResetBeforeEachTest() {
+    void mockClientRequestsAreResetBeforeEachTest() {
         assertThat(mockI18nClient.verifyTimes(HttpMethod.GET, TEST_URL, 0)).isEmpty();
     }
 
     @Test
-    public void shouldNotHitCacheForFirstCall() {
+    void shouldNotHitCacheForFirstCall() {
         // First call
         i18nProcessesCache.fetchProcessI18nFromCacheOrProxy(TEST_PROCESS, TEST_VERSION);
         mockI18nClient.verifyTimes(HttpMethod.GET, TEST_URL, 1);
     }
 
     @Test
-    public void shouldReturnSameDataForSecondCall() {
+    void shouldReturnSameDataForSecondCall() {
 
         // First call
         JsonNode trx1 = i18nProcessesCache.fetchProcessI18nFromCacheOrProxy(TEST_PROCESS, TEST_VERSION);
@@ -75,7 +75,7 @@ public class I18nProcessesCacheShould {
     }
 
     @Test
-    public void shouldHitCacheForSecondCall() {
+    void shouldHitCacheForSecondCall() {
 
         // First call
         i18nProcessesCache.fetchProcessI18nFromCacheOrProxy(TEST_PROCESS, TEST_VERSION);
@@ -87,7 +87,7 @@ public class I18nProcessesCacheShould {
     }
 
     @Test
-    public void shouldClearSelectedCache() {
+    void shouldClearSelectedCache() {
 
         // First call
         i18nProcessesCache.fetchProcessI18nFromCacheOrProxy(TEST_PROCESS, TEST_VERSION);

@@ -46,7 +46,7 @@ public class InstantDeserializerShould {
     }
 
     @Test
-    public void shouldDeserializeMillisFromEpochAsInstant () {
+    void shouldDeserializeMillisFromEpochAsInstant () {
 
         String jsonString = "123456789";
 
@@ -63,7 +63,7 @@ public class InstantDeserializerShould {
     }
 
     @Test
-    public void shouldThrowErrorOnIncorrectJson () {
+    void shouldThrowErrorOnIncorrectJson () {
 
         String jsonString = "123456789AZ";
 
@@ -78,7 +78,7 @@ public class InstantDeserializerShould {
 
 
     @Test
-    public void shouldDeserializeNullAsNull () {
+    void shouldDeserializeNullAsNull () {
 
         String jsonString= "null";
 

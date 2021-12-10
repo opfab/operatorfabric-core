@@ -58,7 +58,7 @@ class ApplicationShould {
     }
 
     @Test
-    public void createInitialData(){
+    void createInitialData(){
         List<UserData> defaultUsers = userRepository.findAll();
         assertThat(defaultUsers).hasSize(1);
 

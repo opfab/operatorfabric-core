@@ -34,7 +34,7 @@ class CardTranslationServiceShould {
     CardTranslationService cardTranslationService;
 
     @Test
-    public void translateCardField(){
+    void translateCardField(){
         I18nPublicationData i18nValue = I18nPublicationData.builder()
                 .key("title")
                 .build();
@@ -44,7 +44,7 @@ class CardTranslationServiceShould {
     }
 
     @Test
-    public void translateCardFieldWithParameter(){
+    void translateCardFieldWithParameter(){
         I18nPublicationData i18nValue = I18nPublicationData.builder()
                 .key("summary")
                 .parameter("arg1", "with parameter")
@@ -55,7 +55,7 @@ class CardTranslationServiceShould {
     }
 
     @Test
-    public void translateCardFieldForNonExistingKey(){
+    void translateCardFieldForNonExistingKey(){
         I18nPublicationData i18nValue = I18nPublicationData.builder()
                 .key("notExistingKey")
                 .build();

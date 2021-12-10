@@ -25,7 +25,7 @@ public class UserSettingsDataShould {
 
 
     @Test
-    public void patch(){
+    void patch(){
         UserSettingsData userData = UserSettingsData.builder()
                 .login("test-login")
                 .description("test-description")

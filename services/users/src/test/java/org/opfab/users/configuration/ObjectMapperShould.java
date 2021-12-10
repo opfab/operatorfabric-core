@@ -45,7 +45,7 @@ public class ObjectMapperShould {
     private ObjectMapper mapper;
 
     @Test
-    public void readUser() throws IOException {
+    void readUser() throws IOException {
         String stringUser = "{" +
             "\"login\": \"jdoe\"," +
             "\"firstName\": \"john\"," +
@@ -64,7 +64,7 @@ public class ObjectMapperShould {
     }
 
     @Test
-    public void readGroup() throws IOException {
+    void readGroup() throws IOException {
         String stringGroup = "{" +
            "\"name\": \"testGroup\"," +
            "\"description\": \"A group used for tests\"" +
@@ -77,7 +77,7 @@ public class ObjectMapperShould {
     }
 
     @Test
-    public void readEntity() throws IOException {
+    void readEntity() throws IOException {
         String stringEntity = "{" +
                 "\"id\": \"TESTENTITY\"," +
                 "\"name\": \"Test Entity\"," +

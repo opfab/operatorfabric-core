@@ -17,7 +17,7 @@ import java.util.*;
 public class CurrentUserWithPerimetersDataShould {
 
     @Test
-    public void testComputePerimeters(){
+    void testComputePerimeters(){
 
         Perimeter p1 = PerimeterData.builder().
                 id("perimeterKarate10_1_RR").
@@ -44,7 +44,7 @@ public class CurrentUserWithPerimetersDataShould {
     }
 
     @Test
-    public void testMergeRights() {
+    void testMergeRights() {
 
         List<RightsEnum>    list0 = null;
         List<RightsEnum>    list00 = new ArrayList<>();

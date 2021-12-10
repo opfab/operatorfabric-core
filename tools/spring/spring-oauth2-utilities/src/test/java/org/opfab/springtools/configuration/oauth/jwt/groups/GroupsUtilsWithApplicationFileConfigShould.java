@@ -97,7 +97,7 @@ public class GroupsUtilsWithApplicationFileConfigShould {
 	}
 	
 	@Test
-    public void createAuthorityListFromListRolesClaim(){
+    void createAuthorityListFromListRolesClaim(){
 		
 		// Given
 		String tokenValue = tokenEncoded;

@@ -26,7 +26,7 @@ import static org.opfab.test.AssertUtils.assertException;
 public class TestUtilsShould {
 
   @Test
-  public void testException(){
+  void testException(){
     assertException(IOException.class).isThrownBy(()->{
       throw new IOException();
     });

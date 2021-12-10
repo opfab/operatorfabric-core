@@ -72,21 +72,21 @@ public class CardRoutesShould {
     public class GivenUserWithGroupCardRoutesShould {
 
         @Test
-        public void respondOkIfOptions() {
+        void respondOkIfOptions() {
             assertThat(cardRoutes).isNotNull();
             webTestClient.options().uri("/cards/id").exchange()
                     .expectStatus().isOk();
         }
 
         @Test
-        public void respondNotFound() {
+        void respondNotFound() {
             assertThat(cardRoutes).isNotNull();
             webTestClient.get().uri("/cards/id").exchange()
                     .expectStatus().isNotFound();
         }
 
         @Test
-        public void findOutCard() {
+        void findOutCard() {
             Instant now = roundingToMillis(Instant.now());
 
             CardConsultationData simpleCard = instantiateOneCardConsultationData();
@@ -109,7 +109,7 @@ public class CardRoutesShould {
         }
         
         @Test
-        public void findOutCardByUserWithHisOwnAck(){
+        void findOutCardByUserWithHisOwnAck(){
         	Instant now = Instant.now();
         	CardConsultationData simpleCard = instantiateOneCardConsultationData();
             configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null, "PROCESS", "anyState");
@@ -127,7 +127,7 @@ public class CardRoutesShould {
         }
         
         @Test
-        public void findOutCardByUserWithoutHisOwnAck(){
+        void findOutCardByUserWithoutHisOwnAck(){
         	Instant now = Instant.now();
         	CardConsultationData simpleCard = instantiateOneCardConsultationData();
             configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null, "PROCESS", "anyState");
@@ -145,7 +145,7 @@ public class CardRoutesShould {
         }
         
         @Test
-        public void findOutCardWithoutAcks(){
+        void findOutCardWithoutAcks(){
         	Instant now = Instant.now();
         	CardConsultationData simpleCard = instantiateOneCardConsultationData();
         	simpleCard.setParentCardId(null);
@@ -164,7 +164,7 @@ public class CardRoutesShould {
         }
         
         @Test
-        public void findOutCardByUserWithHisOwnRead(){
+        void findOutCardByUserWithHisOwnRead(){
         	Instant now = Instant.now();
         	CardConsultationData simpleCard = instantiateOneCardConsultationData();
             configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null, "PROCESS", "anyState");
@@ -182,7 +182,7 @@ public class CardRoutesShould {
         }
         
         @Test
-        public void findOutCardByUserWithoutHisOwnRead(){
+        void findOutCardByUserWithoutHisOwnRead(){
         	Instant now = Instant.now();
         	CardConsultationData simpleCard = instantiateOneCardConsultationData();
             configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null, "PROCESS", "anyState");
@@ -200,7 +200,7 @@ public class CardRoutesShould {
         }
         
         @Test
-        public void findOutCardWithoutReads(){
+        void findOutCardWithoutReads(){
         	Instant now = Instant.now();
         	CardConsultationData simpleCard = instantiateOneCardConsultationData();
         	simpleCard.setParentCardId(null);
@@ -224,7 +224,7 @@ public class CardRoutesShould {
     public class GivenUserWithNoGroupCardRoutesShould {
 
         @Test
-        public void findOutCard(){
+        void findOutCard(){
             CardConsultationData simpleCard = createSimpleCard(1, Instant.now(), Instant.now(), Instant.now().plusSeconds(3600));
             StepVerifier.create(repository.save(simpleCard))
                     .expectNextCount(1)
@@ -243,7 +243,7 @@ public class CardRoutesShould {
     public class GivenUserWithGroupAndEntityCardRoutesShould {
 
         @Test
-        public void findOutCard(){
+        void findOutCard(){
             Instant now = roundingToMillis(Instant.now());
 
             CardConsultationData simpleCard1 = instantiateOneCardConsultationData();
@@ -334,7 +334,7 @@ public class CardRoutesShould {
         }
 
         @Test
-        public void findOutCardWithTwoChildCards() {
+        void findOutCardWithTwoChildCards() {
 
             Instant now = Instant.now();
 
@@ -370,7 +370,7 @@ public class CardRoutesShould {
         }
 
         @Test
-        public void findOutCardWithNoChildCard() {
+        void findOutCardWithNoChildCard() {
 
             Instant now = Instant.now();
 

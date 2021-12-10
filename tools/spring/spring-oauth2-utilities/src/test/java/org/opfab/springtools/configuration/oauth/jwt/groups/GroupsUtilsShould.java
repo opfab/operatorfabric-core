@@ -90,7 +90,7 @@ public class GroupsUtilsShould {
 	}
 	
 	@Test 
-	public void createAuthorityListFromRoleStandardClaims() {
+	void createAuthorityListFromRoleStandardClaims() {
 		String jwtHeader = "{\"alg\":\"HS256\",\"typ\":\"JWT\",\"kid\":\"RmqNU3K7LxrNRFkHU2qq6Yq12kTCismFL9ScpnCOx0c\"}";
 		String jwtBody = "{ \n" + 
 				"    \"jti\": \"ebf36450-e18c-490b-9a68-feef8dfab1c1\",\n" + 
@@ -134,7 +134,7 @@ public class GroupsUtilsShould {
 	}
 	
 	@Test 
-	public void createAuthorityListFromRoleStandardList() {
+	void createAuthorityListFromRoleStandardList() {
 		String jwtHeader = "{\"alg\":\"HS256\",\"typ\":\"JWT\",\"kid\":\"RmqNU3K7LxrNRFkHU2qq6Yq12kTCismFL9ScpnCOx0c\"}";
 		String jwtBody = "{ \n" + 
 				"    \"jti\": \"ebf36450-e18c-490b-9a68-feef8dfab1c1\",\n" + 
@@ -185,7 +185,7 @@ public class GroupsUtilsShould {
 	}
 	
 	@Test
-	public void createAuthorityListFromRoleStandardArray() {
+	void createAuthorityListFromRoleStandardArray() {
 		String jwtHeader = "{\"alg\":\"HS256\",\"typ\":\"JWT\",\"kid\":\"RmqNU3K7LxrNRFkHU2qq6Yq12kTCismFL9ScpnCOx0c\"}";
 		String jwtBody = "{ \n" + 
 				"    \"jti\": \"ebf36450-e18c-490b-9a68-feef8dfab1c1\",\n" + 
@@ -234,7 +234,7 @@ public class GroupsUtilsShould {
 	}
 	
 	@Test 
-	public void createAuthorityListFromRoleCheckExistPath() {
+	void createAuthorityListFromRoleCheckExistPath() {
 		String jwtHeader = "{\"alg\":\"HS256\",\"typ\":\"JWT\",\"kid\":\"RmqNU3K7LxrNRFkHU2qq6Yq12kTCismFL9ScpnCOx0c\"}";
 		String jwtBody = "{ \n" + 
 				"    \"jti\": \"ebf36450-e18c-490b-9a68-feef8dfab1c1\",\n" + 
@@ -282,7 +282,7 @@ public class GroupsUtilsShould {
 	}
 
 	@Test
-    public void createAuthorityListFromListRolesClaim(){
+    void createAuthorityListFromListRolesClaim(){
 		String jwtHeader = "{\"alg\":\"HS256\",\"typ\":\"JWT\",\"kid\":\"RmqNU3K7LxrNRFkHU2qq6Yq12kTCismFL9ScpnCOx0c\"}";
 		String jwtBody = "{ \n" + 
 				"    \"jti\": \"ebf36450-e18c-490b-9a68-feef8dfab1c1\",\n" + 

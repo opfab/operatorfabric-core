@@ -187,7 +187,7 @@ class ProcessesServiceShould {
     }
 
     @Test
-    public void testCheckNoDuplicateProcessInUploadedFile() {
+    void testCheckNoDuplicateProcessInUploadedFile() {
 
         ProcessGroupData gp1 = ProcessGroupData.builder().id("gp1").processes(Arrays.asList("process1", "process2")).build();
         ProcessGroupData gp2 = ProcessGroupData.builder().id("gp2").processes(Arrays.asList("process3", "process4")).build();

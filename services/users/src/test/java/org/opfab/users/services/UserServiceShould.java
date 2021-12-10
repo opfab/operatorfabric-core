@@ -37,7 +37,7 @@ public class UserServiceShould {
     UserServiceImp userService;
 
     @Test
-    public void testIsEachStateUniqueInPerimeter() {
+    void testIsEachStateUniqueInPerimeter() {
         PerimeterData p1, p2, p3, p4;
         p1 = PerimeterData.builder().id("PERIMETER1_1").process("process1")
                 .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVE)))).build();

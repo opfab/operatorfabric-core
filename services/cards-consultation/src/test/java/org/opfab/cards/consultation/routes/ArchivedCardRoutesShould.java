@@ -68,21 +68,21 @@ public class ArchivedCardRoutesShould {
     public class GivenUserWithGroupArchivedCardRoutesShould {
 
         @Test
-        public void respondOkIfOptions() {
+        void respondOkIfOptions() {
             assertThat(archivedCardRoutes).isNotNull();
             webTestClient.options().uri("/archives/id").exchange()
                     .expectStatus().isOk();
         }
 
         @Test
-        public void respondNotFound() {
+        void respondNotFound() {
             assertThat(archivedCardRoutes).isNotNull();
             webTestClient.get().uri("/archives/id").exchange()
                     .expectStatus().isNotFound();
         }
 
         @Test
-        public void findArchivedCardById() {
+        void findArchivedCardById() {
             Instant now = roundingToMillis(Instant.now());
             ArchivedCardConsultationData simpleCard = createSimpleArchivedCard(1, publisher,now,now,now.plusSeconds(3600),"userWithGroup",null,null);
             StepVerifier.create(repository.save(simpleCard))
@@ -107,7 +107,7 @@ public class ArchivedCardRoutesShould {
     public class GivenUserWithNoGroupArchivedCardRoutesShould {
 
         @Test
-        public void findOutCard(){
+        void findOutCard(){
             ArchivedCardConsultationData simpleCard = createSimpleArchivedCard(1, publisher, Instant.now(), Instant.now(), Instant.now().plusSeconds(3600));
             StepVerifier.create(repository.save(simpleCard))
                     .expectNextCount(1)
@@ -126,7 +126,7 @@ public class ArchivedCardRoutesShould {
     public class GivenUserWithGroupAndEntityArchivedCardRoutesShould {
 
         @Test
-        public void findArchivedCardById() {
+        void findArchivedCardById() {
         Instant now = roundingToMillis(Instant.now());
 
             ArchivedCardConsultationData simpleCard1 = createSimpleArchivedCard(1, publisher,now,
