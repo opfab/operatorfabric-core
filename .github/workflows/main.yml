@@ -6,6 +6,8 @@ on:
   push:
     branches:
       -develop
+      -master
+      -'**release'
   pull_request:
   schedule:
     # launch a build every day on develop
@@ -13,13 +15,43 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
+    inputs:
+      build:
+        description: 'Build'
+        required: false 
+        default: 'true'
+      karate:
+        description: 'Karate tests'
+        required: false
+        default: 'true'
+      cypress:
+        description: 'Cypress Tests'
+        required: false
+        default: 'true'
+      doc:
+        description: 'Build and publish documentation '     
+        required: false
+        default: 'false'
+      dockerPush:
+        description: 'Docker push'     
+        required: false
+        default: 'false'       
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
+      
+      - name: Job  status
+        run: | 
+          export OF_VERSION=$(<VERSION)
+          echo "----------------------------"
+          echo "Trigger by  : ${{ github.event_name }}"
+          echo "On branch : ${{ github.ref_name }} "
+          echo "PR source branch : ${{ github.head_ref }} " 
+          echo "PR target branch : ${{ github.base_ref }} " 
+          echo "Opfab Version : ${OF_VERSION}"
+          echo "---------------------------"
       - name: Cache Gradle packages
         uses: actions/cache@v2
         with:
@@ -42,24 +74,27 @@ jobs:
           [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
           source ./bin/load_environment_light.sh;
           sudo apt-get install jq
-          npm -version
-          node --version
+          echo "npm version $(npm -version)"
+          echo "node version $(node --version)"
           sdk version
           javac -version
 
+
       - name: Build
+        if: ${{ github.event.inputs.build  == 'true' || github.event_name == 'cron' || github.event_name == 'pull_request' }}
         run: | 
           export OF_VERSION=$(<VERSION)
+          echo ${{ secrets.DOCKER_TOKEN }} | docker login --username opfabtravis --password-stdin
           docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
           ./gradlew --build-cache copyDependencies test jacocoTestReport sonarqube dockerTag${OF_VERSION}
           docker-compose -f src/main/docker/test-environment/docker-compose.yml down
         env:
-          # Needed to get some information about the pull request, if any
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # SonarCloud access token should be generated from https://sonarcloud.io/account/security/
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          
+  
+
       - name: Karate tests
+        if: ${{ github.event.inputs.karate  == 'true' || github.event_name == 'cron' || github.event_name == 'pull_request'  }}
         run: |
           cd config/docker
           ./docker-compose.sh
@@ -71,6 +106,7 @@ jobs:
           docker-compose down --remove-orphans
 
       - name: Cypress tests 
+        if: ${{ github.event.inputs.cypress  == 'true' || github.event_name == 'cron' || github.event_name == 'pull_request'  }}
         run: |
           cd config/docker
           ./docker-compose-cypress.sh
@@ -80,3 +116,38 @@ jobs:
           ./gradlew runCypressTests
           cd config/docker
           docker-compose down
+
+      - name : Publish Documentation
+        if : ${{ github.event.inputs.doc  == 'true' || github.event_name == 'cron'}}
+        run: |
+          ./gradlew --build-cache generateSwaggerUI asciidoctor;
+          ./CICD/github/upload_doc.sh
+        env:
+          GH_DOC_TOKEN: ${{ secrets.GH_DOC_TOKEN}}
+
+      - name : Publish Documentation (latest)
+        if : ${{ github.ref_name == 'master'}}
+        run: |
+          ./gradlew --build-cache generateSwaggerUI asciidoctor;
+          ./CICD/github/upload_doc.sh --updateLatest true
+
+      - name : Push images to dockerhub 
+        if: ${{ github.event.inputs.dockerPush  == 'true' || github.event_name == 'cron' || github.ref_name == 'master' }}
+        run: |
+          echo ${{ secrets.DOCKER_TOKEN }} | docker login --username opfabtravis --password-stdin
+          docker images --format "{{.Repository}}:{{.Tag}}" | grep lfe | while read image; do 
+          echo push ${image}
+          docker push ${image}
+          done
+
+      - name : Push images latest to dockerhub 
+        if: ${{ github.ref_name == 'master'  }}
+        run: |
+          echo ${{ secrets.DOCKER_TOKEN }} | docker login --username opfabtravis --password-stdin
+          docker images --format "{{.Repository}}:{{.Tag}}" | grep lfe | while read image; do 
+          export repository=$(echo ${image} | cut -d ":" -f 1)
+          echo "create tag latest for ${repository}"
+          docker tag ${image}  ${repository}:latest
+          docker push ${repository}:latest
+          done
+
