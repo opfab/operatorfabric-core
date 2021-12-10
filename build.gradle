@@ -118,6 +118,20 @@ ext.apk.proxy.httpsuri = hasProperty('apk.proxy.httpsuri') && property('apk.prox
 ext.apk.proxy.user = hasProperty('apk.proxy.user') && property('apk.proxy.user') != null && property('apk.proxy.user') != "" ? property('apk.proxy.user') : System.env.APK_PROXY_USER != null ? "$System.env.APK_PROXY_USER" : ""
 ext.apk.proxy.password = hasProperty('apk.proxy.password') && property('apk.proxy.password') != null && property('apk.proxy.password') != "" ? property('apk.proxy.password') : System.env.APK_PROXY_PASSWORD != null ? "$System.env.APK_PROXY_PASSWORD" : ""
 
+sonarqube {
+    properties {
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.organization" , "opfab"
+        property "sonar.projectKey" , "org.lfenergy.operatorfabric:operatorfabric-core"
+        property 'sonar.sources', 'ui/main'
+        property 'sonar.junit.reportPaths','build/test-results/test'
+        property 'sonar.coverage.jacoco.xmlReportPaths','build/reports/jacoco/xml/report.xml'
+        property 'sonar.coverage.exclusions','**/config*/**/*,ui/**/*,**/controllers/**,**/src/tooling/**'
+        property 'sonar.exclusions','**/generated/**/*,**/src/test/**,**/src/docs/**,**/*Application.java,**/node_modules/**/*'
+        property 'sonar.cpd.exclusions','**/model/**/*'
+    }
+}
+
 //tag::asciidoctor_gradle_task_config[]
 asciidoctor {
 
@@ -151,9 +165,7 @@ subprojects {
     group operatorfabric.group
     version operatorfabric.version
 
-    if (project.parent.path.startsWith(':services:')){
-        apply plugin: 'org.sonarqube'
-    }
+
 
     repositories {
         mavenLocal()
