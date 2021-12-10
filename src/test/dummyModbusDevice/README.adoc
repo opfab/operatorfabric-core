@@ -1,0 +1,27 @@
+= Dummy Modbus Device
+
+This module contains very simple application acting as a slave using the Modbus protocol. It uses
+the https://github.com/kochedykov/jlibmodbus[jlibmodbus library] as well and is based on an
+https://github.com/kochedykov/jlibmodbus/blob/master/examples/com/intelligt/modbus/examples/SimpleSlaveTCP.java[example]
+from its repository.
+
+== Configuration
+
+The following properties can be configured in the properties file of the application:
+
+|===
+|name|default|mandatory?|Description
+
+|modbus_client.port||yes|Port on which the device should be listening
+|modbus_client.readTimeout|10000|no|Connexion timeout
+|modbus_client.holdingRegistersSize|5|no|Number of registers on which the device accepts write orders. For example,
+if the value is 5, the device will allow writing on registers 0 to 4.
+|===
+
+NOTE: The holdingRegisterSize aims to emulate the fact that on real Modbus devices, only some registers will be
+configured, so the modbus device should return an exception if we attempt to write on a register to which no sound is
+associated. However, currently we are using the BROADCAST mode, so you will see the exception in the dummy device logs,
+but it won't be returned to the caller (OperatorFabric).
+
+== Usage
+

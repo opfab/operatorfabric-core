@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -127,6 +127,7 @@ KafkaAvroSerializer|yes|Serializer used to convert cards to bytes
 
 include::web-ui_configuration.adoc[leveloffset=+1]
 
+[[external-devices-conf]]
 ==== External Devices Service
 
 The external devices service can be configured with the following properties:
