@@ -16,8 +16,8 @@
 
 image:https://img.shields.io/badge/license-MPL_2.0-blue.svg[MPL-2.0
 License,link=https://www.mozilla.org/en-US/MPL/2.0/]
-image:https://travis-ci.com/opfab/operatorfabric-core.svg?branch=develop[Build
-Status,link=https://travis-ci.com/opfab/operatorfabric-core]
+image:https://img.shields.io/github/workflow/status/opfab/operatorfabric-core/CI/develop[Build
+Status,link=https://github.com/opfab/operatorfabric-core/actions]
 image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=alert_status[Quality
 Gate,link=https://sonarcloud.io/dashboard?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core]
 image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=coverage[Coverage,link=https://sonarcloud.io/component_measures?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=Coverage]
