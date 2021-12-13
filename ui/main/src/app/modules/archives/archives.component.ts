@@ -24,6 +24,7 @@ import {Page} from '@ofModel/page.model';
 import {ExportService} from '@ofServices/export.service';
 import {TranslateService} from '@ngx-translate/core';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
+import { Utilities } from 'app/common/utilities';
 import {Card} from '@ofModel/card.model';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 import { EntitiesService } from '@ofServices/entities.service';
@@ -320,7 +321,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                         // TO DO translation for old process should be done  , but loading local arrive to late , solution to find
                         if (this.filtersTemplate.displayProcessGroupFilter())
                             exportArchiveData.push({
-                                [severityColumnName]: card.severity,
+                                [severityColumnName]: Utilities.translateSeverity(this.translate, card.severity),
                                 [publishDateColumnName]: this.timeService.formatDateTime(card.publishDate),
                                 [businessDateColumnName]: this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
                                 [titleColumnName]: card.titleTranslated,
@@ -329,7 +330,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                             });
                         else
                             exportArchiveData.push({
-                                [severityColumnName]: card.severity,
+                                [severityColumnName]: Utilities.translateSeverity(this.translate, card.severity),
                                 [publishDateColumnName]: this.timeService.formatDateTime(card.publishDate),
                                 [businessDateColumnName]: this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
                                 [titleColumnName]: card.titleTranslated,
@@ -354,7 +355,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
         return translatedColumn;
     }
-
 
     openCard(cardId) {
         this.cardService.loadArchivedCard(cardId).subscribe((card: Card) => {

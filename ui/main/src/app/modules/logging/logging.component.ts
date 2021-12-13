@@ -28,6 +28,7 @@ import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
+import { Utilities } from 'app/common/utilities';
 
 
 @Component({
@@ -280,7 +281,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
                         // TO DO translation for old process should be done  , but loading local arrive to late , solution to find
                         if (this.filtersTemplate.displayProcessGroupFilter())
                             exportArchiveData.push({
-                                [severityColumnName]: card.severity,
+                                [severityColumnName]: Utilities.translateSeverity(this.translate, card.severity),
                                 [timeOfActionColumnName]: this.timeService.formatDateTime(card.publishDate),
                                 [processGroupColumnName]: this.translateColumn(this.processesService.findProcessGroupLabelForProcess(card.process)),
                                 [processColumnName]:  card.processName,

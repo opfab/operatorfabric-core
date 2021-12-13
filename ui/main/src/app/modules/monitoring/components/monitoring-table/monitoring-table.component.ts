@@ -22,6 +22,7 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {ProcessesService} from "@ofServices/processes.service";
+import { Utilities } from 'app/common/utilities';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {JsonToArray} from 'app/common/jsontoarray/json-to-array';
 import {CardService} from '@ofServices/card.service';
@@ -295,7 +296,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                         [this.titleColumnName]: line.data.title,
                         [this.summaryColumnName]: line.data.summary,
                         [this.typeOfStateColumnName]: line.data.processStatus,
-                        [this.severityColumnName]: line.data.severity,
+                        [this.severityColumnName]: Utilities.translateSeverity(this.translate, line.data.severity),
                         [this.emitterColumnName]: line.data.emitter,
                         [this.requiredResponsesColumnName]: line.data.requiredResponses ? this.getEntitiesNames(line.data.requiredResponses).join() : '',
                         [this.entitiesResponsesColumnName]: responses ? responses.join() : ''
@@ -367,6 +368,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         }
         card.card.title = card.card.titleTranslated;
         card.card.summary =  card.card.summaryTranslated;
+        card.card.severity = Utilities.translateSeverity(this.translate, card.severity);
 
         card.childCards.forEach(childCard => {
             if (childCard.publisherType==="ENTITY") childCard.publisherName= this.entitiesService.getEntityName(childCard.publisher);
