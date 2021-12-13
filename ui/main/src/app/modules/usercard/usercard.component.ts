@@ -96,7 +96,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     readonly defaultStartDate = new Date().valueOf() + 60000;
     readonly defaultEndDate = new Date().valueOf() + 60000 * 60 * 24;
-    readonly defaultLttdDate = new Date().valueOf() + 60000 * 60 * 24;
+    readonly defaultLttdDate = this.defaultEndDate - 60000;
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -187,8 +187,10 @@ export class UserCardComponent implements OnDestroy, OnInit {
         };
         if (!!this.cardIdToEdit)
             this.loadCardForEdition();
-        else
+        else {
             this.pageLoading = false;
+            this.messageForm.get('lttd').setValue(getDateTimeNgbFromMoment(moment(this.defaultLttdDate)));
+        }
 
         this.publisherForCreatingUsercard = this.findPublisherForCreatingUsercard();
         this.dateTimeFilterChange.pipe(
@@ -395,6 +397,8 @@ export class UserCardComponent implements OnDestroy, OnInit {
         });
     }
 
+    // Be careful, the code in the subscribe is executed even if we are editing an existing card
+    // Indeed, in order to display the state of the edited usercard, the state value of the control is changed
     loadTemplateWhenStateChange(): void {
         this.messageForm.get('state').valueChanges
         .pipe(
@@ -405,12 +409,15 @@ export class UserCardComponent implements OnDestroy, OnInit {
         .subscribe((state) => {
             if (!!state) {
                 this.selectedState = state;
-                this.messageForm.get("startDate").setValue('');
-                this.messageForm.get("endDate").setValue('');
-                this.messageForm.get("lttd").setValue('');
+
+                // We reset these values only if we are not editing an existing usercard
+                if (!this.cardIdToEdit) {
+                    this.messageForm.get("startDate").setValue('');
+                    this.messageForm.get("endDate").setValue('');
+                    this.messageForm.get("lttd").setValue(getDateTimeNgbFromMoment(moment(this.defaultLttdDate)));
+                }
                 this.loadRecipentsOptions();
                 this.loadTemplate();
-
             }
         });
     }

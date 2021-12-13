@@ -74,8 +74,8 @@
             </div>
 
             <div *ngIf="lttdVisible" style="width: 280px; margin-right: 30px; margin-left: 30px;">
-                <of-datetime-filter filterPath="lttd" formControlName="lttd" labelKey="userCard.filters."
-                    [offset]="[{amount:1,unit:'day'}]"></of-datetime-filter>
+                <of-datetime-filter filterPath="lttd" formControlName="lttd" labelKey="userCard.filters.">
+                </of-datetime-filter>
             </div>
         </div>
 
