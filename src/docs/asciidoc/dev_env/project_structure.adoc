@@ -7,56 +7,6 @@
 
 = Project Structure
 
-== Tree View
-
-[source]
-----
-project
-├──bin
-├──CICD
-│   └─ travis
-├──client
-│   ├──cards (cards-client-data)
-│   ├──src
-│   └──users (users-client-data)
-├──config
-│   ├──dev
-│   ├──docker
-│   └──keycloak
-├──services
-│   ├──core
-│   │   ├──cards-consultation (cards-consultation-business-service)
-│   │   ├──cards-publication (cards-publication-business-service)
-│   │   ├──src
-│   │   ├──businessconfig (businessconfig-business-service)
-│   │   └──users (users-business-service)
-├──web-ui
-├──src
-|   ├──docs
-|   │   └──asciidoc
-|   |──main
-|   |    ├──docker
-|   |    └──headers
-|   |──test
-|   |    ├──api
-|   |    ├──cypress
-|   |    └──utils
-├──tools
-│   ├──generic
-│   │   ├──test-utilities
-│   │   └──utilities
-│   ├── spring
-│   │   ├──spring-mongo-utilities
-│   │   ├──spring-oauth2-utilities
-│   │   ├──spring-test-utilities
-│   │   └──spring-utilities
-│   └──swagger-spring-generators
-└─ui
-----
-
-
-== Content Details
-
 * link:https://github.com/opfab/operatorfabric-core/tree/master/bin[bin]: contains useful scripts for dev purposes
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/CICD/travis[travis]: scripts used by Travis for the
 build process
@@ -69,16 +19,16 @@ code generation
 * link:https://github.com/opfab/operatorfabric-core/tree/master/config[config]: contains external configurations for all services , keycloak and docker-compose files to help with tests and demonstrations
 * link:https://github.com/opfab/operatorfabric-core/tree/master/services[services]: contains the microservices that make up
 OperatorFabric
-** link:https://github.com/opfab/operatorfabric-core/tree/master/services[core]: contains core business microservices
-*** link:https://github.com/opfab/operatorfabric-core/tree/master/services/cards-consultation[cards-consultation
+** link:https://github.com/opfab/operatorfabric-core/tree/master/services/cards-consultation[cards-consultation
 (cards-consultation-business-service)]: Card consultation service
-*** link:https://github.com/opfab/operatorfabric-core/tree/master/services/cards-publication[cards-publication
+** link:https://github.com/opfab/operatorfabric-core/tree/master/services/cards-publication[cards-publication
 (cards-publication-business-service)]: Card publication service
-*** link:https://github.com/opfab/operatorfabric-core/tree/master/services/src[src]: contains swagger templates for core business
-microservices
-*** link:https://github.com/opfab/operatorfabric-core/tree/master/services/businessconfig[businessconfig (businessconfig-business-service)]:
+** link:https://github.com/opfab/operatorfabric-core/tree/master/services/external-devices[external-devices
+(external-devices-service)]: External Devices service
+** link:https://github.com/opfab/operatorfabric-core/tree/master/services/src[src]: contains swagger templates for services
+** link:https://github.com/opfab/operatorfabric-core/tree/master/services/businessconfig[businessconfig (businessconfig-business-service)]:
 Businessconfig-party information management service
-*** link:https://github.com/opfab/operatorfabric-core/tree/master/services/users[users (users-business-service)]: Users management
+** link:https://github.com/opfab/operatorfabric-core/tree/master/services/users[users (users-business-service)]: Users management
 service
 * link:https://github.com/opfab/operatorfabric-core/tree/master/web-ui[web-ui]: project based on Nginx server to serve
 the OperatorFabric UI
