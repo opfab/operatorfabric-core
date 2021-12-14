@@ -299,7 +299,20 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                             this.integrateOneChildCard(lastCardLoaded);
                         }
                     }
-                })).subscribe()
+                })).subscribe();
+
+        this.lightCardsStoreService.getDeletedChildCardsIds()
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                map(lastCardDeleted => {
+                    if (!!lastCardDeleted && lastCardDeleted.parentCardId === this.card.id 
+                            && this.childCards.map(childCard => childCard.id).includes(lastCardDeleted.cardId)) {
+
+                        this.removeChildCard(lastCardDeleted.cardId);
+
+                    }
+                })).subscribe();
+
     }
 
     private integrateOneChildCard(newChildCard: Card) {
@@ -313,6 +326,16 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 templateGateway.applyChildCards();
             }
         )
+    }
+
+    private removeChildCard(deletedChildCardId: string) {
+        const newChildArray = this.childCards.filter(childCard => childCard.id !== deletedChildCardId);
+        this.childCards = newChildArray;
+        this.checkIfHasAlreadyResponded();
+        templateGateway.isLocked = this.isResponseLocked;
+        templateGateway.childCards = this.childCards;
+        this.computeEntitiesForResponses();
+        templateGateway.applyChildCards();
     }
 
     private computeEntitiesForResponses() {

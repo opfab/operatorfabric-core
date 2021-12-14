@@ -38,6 +38,8 @@ export class LightCardsStoreService {
     private lightCardsEventsWithLimitedUpdateRate = new ReplaySubject<Array<any>>();
     private newLightCards = new Subject<LightCard>();
     private newLightChildCards = new Subject<LightCard>();
+    private deletedLightChildCards = new Subject<any>();
+    
 
     private orphanedLightChildCardsFromCurrentEntity: Set<string> = new Set();
 
@@ -134,6 +136,10 @@ export class LightCardsStoreService {
         return this.newLightChildCards;
     }
 
+    public getDeletedChildCardsIds(): Observable<any> {
+        return this.deletedLightChildCards;
+    }
+
     // for observable subscribe after the events are emit we use replaySubject 
     public getLightCards(): Observable<any> {
         return this.lightCardsEventsWithLimitedUpdateRate.asObservable();
@@ -225,12 +231,19 @@ export class LightCardsStoreService {
             if (childIdx >= 0){
                 const removed = childs.splice(childIdx, 1);
 
-                if (childs.length == 0 && this.isLightChildCardFromCurrentUserEntity(removed[0])) {
+                this.deletedLightChildCards.next({'cardId': cardId, 'parentCardId': parentCardId });
+
+                if (this.isLightChildCardFromCurrentUserEntity(removed[0]) && this.getChildCardsFromCurrentUserEntity(childs).length == 0) {
                     const parentCard = this.lightCards.get(parentCardId);
                     parentCard.hasChildCardFromCurrentUserEntity = false;
                 }
             }
         })
+    }
+
+    private getChildCardsFromCurrentUserEntity(childs: LightCard[]) {
+        const userEntities = this.userService.getCurrentUserWithPerimeters().userData.entities;
+        return childs.filter(c => userEntities.includes(c.publisher));
     }
 
     private isLightChildCardFromCurrentUserEntity(childCard): boolean {
