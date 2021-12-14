@@ -81,7 +81,7 @@ jobs:
 
 
       - name: Build
-        if: ${{ github.event.inputs.build  == 'true' || github.event_name == 'cron' || github.event_name == 'pull_request' }}
+        if: ${{ github.event.inputs.build  == 'true' || github.event_name == 'cron' || github.event_name == 'pull_request' || github.event_name == 'push'}}
         run: | 
           export OF_VERSION=$(<VERSION)
           echo ${{ secrets.DOCKER_TOKEN }} | docker login --username opfabtravis --password-stdin
@@ -94,7 +94,7 @@ jobs:
   
 
       - name: Karate tests
-        if: ${{ github.event.inputs.karate  == 'true' || github.event_name == 'cron' || github.event_name == 'pull_request'  }}
+        if: ${{ github.event.inputs.karate  == 'true' || github.event_name == 'cron' || github.event_name == 'pull_request' || github.event_name == 'push' }}
         run: |
           cd config/docker
           ./docker-compose.sh
@@ -106,7 +106,7 @@ jobs:
           docker-compose down --remove-orphans
 
       - name: Cypress tests 
-        if: ${{ github.event.inputs.cypress  == 'true' || github.event_name == 'cron' || github.event_name == 'pull_request'  }}
+        if: ${{ github.event.inputs.cypress  == 'true' || github.event_name == 'cron' || github.event_name == 'pull_request' || github.event_name == 'push' }}
         run: |
           cd config/docker
           ./docker-compose-cypress.sh
