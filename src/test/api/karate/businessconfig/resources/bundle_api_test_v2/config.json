@@ -28,7 +28,9 @@
 		  "templateName": "question",
 		  "styles": [],
 		  "acknowledgmentAllowed": "Never",
-		  "type" : "INPROGRESS"
+		  "type" : "INPROGRESS",
+		  "validateAnswerButtonLabel": "Send impact",
+		  "modifyAnswerButtonLabel": "Modify impact"
 		},   
 		"incidentInProgressState": {
 		  "name": "incidentInProgress.name",

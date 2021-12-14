@@ -58,7 +58,9 @@ export class State {
         readonly description?: string,
         readonly showDetailCardHeader?: boolean,
         readonly type?: TypeOfStateEnum,
-        readonly isOnlyAChildState?: boolean
+        readonly isOnlyAChildState?: boolean,
+        readonly validateAnswerButtonLabel?: string,
+        readonly modifyAnswerButtonLabel?: string
     ) {
     }
 }
