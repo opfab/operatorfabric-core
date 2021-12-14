@@ -31,7 +31,7 @@ import {DateTimeNgb, getDateTimeNgbFromMoment} from '@ofModel/datetime-ngb.model
 import * as moment from 'moment-timezone';
 import {HandlebarsService} from '../cards/services/handlebars.service';
 import {DetailContext} from '@ofModel/detail-context.model';
-import {debounceTime, distinctUntilChanged, map, takeUntil} from 'rxjs/operators';
+import {debounceTime, map, takeUntil} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
@@ -399,8 +399,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.messageForm.get('state').valueChanges
         .pipe(
             takeUntil(this.unsubscribe$),
-            debounceTime(10), //See #1891 Cypress usercard test was flaky without this debounce
-            distinctUntilChanged()
+            debounceTime(10) //See #1891 Cypress usercard test was flaky without this debounce
         )
         .subscribe((state) => {
             if (!!state) {
