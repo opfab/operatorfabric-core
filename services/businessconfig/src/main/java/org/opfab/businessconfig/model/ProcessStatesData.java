@@ -31,6 +31,8 @@ public class ProcessStatesData implements ProcessStates {
     private List<String> styles;
     private TypeOfStateEnum type;
     private Boolean isOnlyAChildState;
+    private String validateAnswerButtonLabel;
+    private String modifyAnswerButtonLabel;
 
     @Override
     public Response getResponse() {

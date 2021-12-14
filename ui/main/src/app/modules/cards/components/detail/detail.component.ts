@@ -121,6 +121,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public showExpiredIcon: boolean = true;
     public showExpiredLabel: boolean = true;
     public expiredLabel: string = 'feed.lttdFinished';
+    public btnValidateLabel: string = 'response.btnValidate';
+    public btnUnlockLabel: string = 'response.btnUnlock';
 
     private lastCardSetToReadButNotYetOnFeed;
     private entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = [];
@@ -156,7 +158,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     ngOnInit() {
         this.reloadTemplateWhenGlobalStyleChange();
         if (this._appService.pageType !== PageType.ARCHIVE) this.integrateChildCardsInRealTime();
-
     }
 
     ngAfterViewChecked() {
@@ -201,6 +202,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.formattedPublishDate = this.formatDate(this.card.publishDate);
         this.formattedPublishTime = this.formatTime(this.card.publishDate);
         this.computeLttdParams();
+
+        this.btnValidateLabel = (!! this.cardState.validateAnswerButtonLabel) ? this.cardState.validateAnswerButtonLabel : 'response.btnValidate';
+        this.btnUnlockLabel = (!! this.cardState.modifyAnswerButtonLabel) ? this.cardState.modifyAnswerButtonLabel : 'response.btnUnlock';
     }
 
     ngOnDestroy() {
