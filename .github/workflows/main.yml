@@ -5,9 +5,9 @@ on:
   # Triggers the workflow on push 
   push:
     branches:
-      -develop
-      -master
-      -'**release'
+      - develop
+      - master
+      - '**release'
   pull_request:
   schedule:
     # launch a build every day on develop
