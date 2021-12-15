@@ -72,7 +72,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
           flex: 4,
         },
         'stateRightsColumn': {
-          sortable: true,
+          sortable: false,
           filter: "agTextColumnFilter",
           filterParams: {
             valueGetter: params => {
