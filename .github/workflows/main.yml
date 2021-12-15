@@ -81,7 +81,7 @@ jobs:
 
 
       - name: Build
-        if: ${{ github.event.inputs.build  == 'true' || github.event_name == 'cron' || github.event_name == 'pull_request' || github.event_name == 'push'}}
+        if: ${{ github.event.inputs.build  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push'}}
         run: | 
           export OF_VERSION=$(<VERSION)
           echo ${{ secrets.DOCKER_TOKEN }} | docker login --username opfabtravis --password-stdin
@@ -95,7 +95,7 @@ jobs:
   
 
       - name: Karate tests
-        if: ${{ github.event.inputs.karate  == 'true' || github.event_name == 'cron' || github.event_name == 'pull_request' || github.event_name == 'push' }}
+        if: ${{ github.event.inputs.karate  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
         run: |
           cd config/docker
           ./docker-compose.sh
@@ -107,7 +107,7 @@ jobs:
           docker-compose down --remove-orphans
 
       - name: Cypress tests 
-        if: ${{ github.event.inputs.cypress  == 'true' || github.event_name == 'cron' || github.event_name == 'pull_request' || github.event_name == 'push' }}
+        if: ${{ github.event.inputs.cypress  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
         run: |
           cd config/docker
           ./docker-compose-cypress.sh
@@ -119,7 +119,7 @@ jobs:
           docker-compose down
 
       - name : Publish Documentation
-        if : ${{ github.event.inputs.doc  == 'true' || github.event_name == 'cron'}}
+        if : ${{ github.event.inputs.doc  == 'true' || github.event_name == 'schedule'}}
         run: |
           ./gradlew --build-cache generateSwaggerUI asciidoctor;
           ./CICD/github/upload_doc.sh
@@ -133,7 +133,7 @@ jobs:
           ./CICD/github/upload_doc.sh --updateLatest true
 
       - name : Push images to dockerhub 
-        if: ${{ github.event.inputs.dockerPush  == 'true' || github.event_name == 'cron' || github.ref_name == 'master' }}
+        if: ${{ github.event.inputs.dockerPush  == 'true' || github.event_name == 'schedule' || github.ref_name == 'master' }}
         run: |
           echo ${{ secrets.DOCKER_TOKEN }} | docker login --username opfabtravis --password-stdin
           docker images --format "{{.Repository}}:{{.Tag}}" | grep lfe | while read image; do 
