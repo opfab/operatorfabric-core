@@ -17,6 +17,42 @@ describe('User Card ', function () {
         cy.deleteAllArchivedCards();       
     });
 
+
+    describe('Recipients dropdown should not be displayed for some user cards', function () {
+
+      it('Recipients should not be displayed in IT incident user card', ()=>{
+  
+        cy.loginOpFab('operator1','test');
+
+        cy.get('of-light-card').should('have.length',0);
+  
+        cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+        cy.get("of-usercard").should('exist'); 
+        cy.get("#of-usercard-service-selector").find('select').select('User card examples');
+        cy.get("#opfab-state-filter").find('select').select('IT Incident');
+
+        cy.get('#opfab-recipients').should("not.exist");
+      })
+
+
+
+      it('Recipients dropdown should not be displayed in Tasks user card', ()=>{
+  
+        cy.loginOpFab('operator1','test');
+
+        cy.get('of-light-card').should('have.length',0);
+  
+        cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+        cy.get("of-usercard").should('exist'); 
+        cy.get("#of-usercard-service-selector").find('select').select('User card examples');
+        cy.get("#of-usercard-process-filter").find('select').select('Examples for new cards 3');
+
+        cy.get('#opfab-recipients').should("not.exist");
+      })
+      
+      
+  })
+
     describe('Send user card', function () {
 
         it('Send User card from operator1', ()=>{
@@ -218,5 +254,7 @@ describe('User Card ', function () {
             cy.get('.opfab-info-message').should('have.class','opfab-alert-info').contains("Your card is published");
         });
       })
+
     })
+
 })

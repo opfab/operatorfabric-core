@@ -28,6 +28,7 @@ Feature: Bundle
     And match response.states.incidentInProgressState.userCard.startDateVisible == false
     And match response.states.incidentInProgressState.userCard.endDateVisible == false
     And match response.states.incidentInProgressState.userCard.lttdVisible == false
+    And match response.states.incidentInProgressState.userCard.recipientVisible == false
     And match response.states.incidentInProgressState.userCard.recipientList[0].id == 'ALLCONTROLROOMS'
     And match response.states.incidentInProgressState.userCard.recipientList[0].levels.[0] == 0
     And match response.states.incidentInProgressState.userCard.recipientList[0].levels.[1] == 1

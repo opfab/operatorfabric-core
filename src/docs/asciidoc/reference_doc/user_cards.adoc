@@ -159,6 +159,7 @@ For example :
       "startDateVisible" : true,
       "endDateVisible" : true,
       "lttdVisible" : false,
+      "recipientVisible": true,
       "recipientList" : [{"id": "ALLCONTROLROOMS", "levels": [0,1]}, {"id": "ENTITY4"}]
     },
     "templateName": "message",
@@ -169,6 +170,8 @@ For example :
 ....
 
 In this example the list of available recipients will contain: "ALLCONTROLROOMS" (level 0), all the first level children of "ALLCONTROLROOMS" (level 1) and "ENTITY4".
+
+The recipient field can be hidden using the attribute `recipientVisible` : if hidden, the card will be sent to all the recipients in recipientList and to the user.
 
 == Card editing
 Once a user card has been sent it can be edited by a user member of the publisher entity.

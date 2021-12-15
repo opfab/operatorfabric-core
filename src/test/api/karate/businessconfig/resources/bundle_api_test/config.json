@@ -39,7 +39,8 @@
 					"severityVisible" : true,
 					"startDateVisible" : false,
 					"endDateVisible" : false,
-					"lttdVisible" : false
+					"lttdVisible" : false,
+					"recipientVisible": false
 				},
 		  "color": "#FAF0AF",
 		  "response": {
