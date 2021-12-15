@@ -11,7 +11,7 @@
         <div class="row">
 
             <div class="col" *ngIf="displayProcessGroupFilter()">
-                <of-single-filter i18nRootLabelKey="shared.filters." [parentForm]="messageForm" filterPath="processGroup"
+                <of-single-filter id="of-usercard-service-selector" i18nRootLabelKey="shared.filters." [parentForm]="messageForm" filterPath="processGroup"
                     [values]="processGroupOptions"></of-single-filter>
             </div>
 
@@ -20,7 +20,7 @@
                                   [values]="processOptions"></of-single-filter>
             </div>
             <div class="col" *ngIf="displayProcessGroupFilter() && !! processOptionsWhenSelectedProcessGroup && processOptionsWhenSelectedProcessGroup.length > 1">
-                <of-single-filter i18nRootLabelKey="shared.filters." [parentForm]="messageForm" filterPath="process"
+                <of-single-filter id="of-usercard-process-filter" i18nRootLabelKey="shared.filters." [parentForm]="messageForm" filterPath="process"
                                   [values]="processOptionsWhenSelectedProcessGroup"></of-single-filter>
             </div>
 
@@ -88,18 +88,19 @@
     <br/>   
 
     
+    <div *ngIf="recipientVisible">
+        <form [formGroup]="recipientForm" class="opfab-form-lighter">
+            <div class="row">
+                <div class="col-12">
 
-    <form [formGroup]="recipientForm" class="opfab-form-lighter">
-        <div class="row">
-            <div class="col-12">
+                    <of-multi-filter filterPath="recipients" id="opfab-recipients" [parentForm]="recipientForm"
+                        [values]="recipientsOptions" [translateValues]="false" [dropdownSettings]="dropdownSettings" i18nRootLabelKey="userCard.filters." [selectedItems]="selectedRecipients" >
+                    </of-multi-filter>
+                </div>
 
-                <of-multi-filter filterPath="recipients" id="opfab-recipients" [parentForm]="recipientForm"
-                    [values]="recipientsOptions" [translateValues]="false" [dropdownSettings]="dropdownSettings" i18nRootLabelKey="userCard.filters." [selectedItems]="selectedRecipients" >
-                </of-multi-filter>
-            </div>
-
-        </div> 
-    </form>
+            </div> 
+        </form>
+    </div>
 
 
     <br />

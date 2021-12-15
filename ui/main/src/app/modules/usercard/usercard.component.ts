@@ -104,10 +104,11 @@ export class UserCardComponent implements OnDestroy, OnInit {
     public displaySendingCardInProgress = false;
 
     modalRef: NgbModalRef;
-    severityVisible = true;
-    startDateVisible = true;
-    endDateVisible = true;
-    lttdVisible = true;
+    severityVisible;
+    startDateVisible;
+    endDateVisible;
+    lttdVisible;
+    recipientVisible; // if recipientVisible == false, then selectedRecipients = recipientList
 
     pageLoading = true;
     useDescriptionFieldForEntityList = false;
@@ -444,19 +445,13 @@ export class UserCardComponent implements OnDestroy, OnInit {
                 });
         } else this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
 
-        if (!!userCard) {
-            this.severityVisible = (userCard.severityVisible === undefined) ? true : userCard.severityVisible;
-            this.startDateVisible = (userCard.startDateVisible === undefined) ? true : userCard.startDateVisible;
-            this.endDateVisible = (userCard.endDateVisible === undefined) ? true : userCard.endDateVisible;
-            this.lttdVisible = (userCard.lttdVisible === undefined) ? true : userCard.lttdVisible;
-            if (!!userCard.recipientList) {
-                this.loadRecipientListForState(userCard.recipientList)
-            }
-        } else {
-            this.severityVisible = true;
-            this.startDateVisible = true;
-            this.endDateVisible = true;
-            this.lttdVisible = true;
+        this.severityVisible = (userCard.severityVisible === undefined) ? true : userCard.severityVisible;
+        this.startDateVisible = (userCard.startDateVisible === undefined) ? true : userCard.startDateVisible;
+        this.endDateVisible = (userCard.endDateVisible === undefined) ? true : userCard.endDateVisible;
+        this.lttdVisible = (userCard.lttdVisible === undefined) ? true : userCard.lttdVisible;
+        this.recipientVisible = (userCard.recipientVisible === undefined) ? true : userCard.recipientVisible;
+        if (!!userCard.recipientList) {
+            this.loadRecipientListForState(userCard.recipientList);
         }
 
     }
@@ -539,7 +534,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
             return;
         }
 
-        const selectedRecipients = this.recipientForm.value['recipients'];
+        let allRecipientOptions = selectedProcess.states[state].userCard.recipientList;
+        allRecipientOptions = allRecipientOptions != undefined ? allRecipientOptions : [];
+        const selectedRecipients = this.recipientVisible ? this.recipientForm.value['recipients'] : allRecipientOptions;
         const recipients = [];
         selectedRecipients.forEach(entity => recipients.push(entity.id));
 

@@ -11,12 +11,13 @@
 
 package org.opfab.businessconfig.model;
 
-import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 
 /**
@@ -42,6 +43,8 @@ public class UserCardData implements UserCard {
     private Boolean endDateVisible;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean lttdVisible;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Boolean recipientVisible;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<Recipient> recipientList;
 }

@@ -543,6 +543,8 @@ definitions:
         type: boolean
       lttdVisible: 
         type: boolean
+      recipientVisible: # tells whether to display recipient dropdown when creating a user card
+        type: boolean
       recipientList:
         type: array
         items:

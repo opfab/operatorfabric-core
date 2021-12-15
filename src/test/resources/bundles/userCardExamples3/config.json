@@ -14,7 +14,8 @@
       "color": "#0070C0",
       "userCard" : {
         "template" : "usercard_task",
-        "lttdVisible" : false
+        "lttdVisible" : false,
+        "recipientVisible" : false
       },
       "templateName": "task",
       "styles": [
