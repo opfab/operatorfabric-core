@@ -127,7 +127,7 @@ public class CardSubscriptionServiceShould {
         Assertions.assertThat(subscription.checkActive()).isTrue();
         try {
             await().atMost(6, TimeUnit.SECONDS).until(() -> !subscription.checkActive() && subscription.isCleared());
-            Assertions.assertThat(false).isFalse().describedAs("An exception was expected here");
+            Assertions.assertThat(false).describedAs("An exception was expected here").isFalse();
         }catch (ConditionTimeoutException e){
             //nothing, everything is alright
         }
@@ -135,7 +135,7 @@ public class CardSubscriptionServiceShould {
         Assertions.assertThat(subscription2).isSameAs(subscription);
         try {
             await().atMost(6, TimeUnit.SECONDS).until(() -> !subscription.checkActive() && subscription.isCleared());
-            Assertions.assertThat(false).isFalse().describedAs("An exception was expected here");
+            Assertions.assertThat(false).describedAs("An exception was expected here").isFalse();
         }catch (ConditionTimeoutException e){
             //nothing, everything is alright
         }

@@ -247,25 +247,6 @@ public class CardOperationsControllerShould {
     }
 
     @Test
-    private Runnable createUpdateSubscriptionTask() {
-        return () -> {
-            log.info("execute update subscription task");
-            Mono<CardOperationsGetParameters> parameters = Mono.just(CardOperationsGetParameters.builder()
-                    .currentUserWithPerimeters(currentUserWithPerimeters)
-                    .clientId(TEST_ID)
-                    .test(false)
-                    .rangeStart(nowMinusThree)
-                    .rangeEnd(nowMinusTwo)
-                    .notification(true).build());
-            StepVerifier.create(controller.updateSubscriptionAndPublish(parameters))
-            .expectNextCount(1)
-            .expectComplete()
-            .verify();
-        };
-    }
-
-
-    @Test
     void receiveCardsCheckUserAcks() {
         Flux<String> publisher = controller.registerSubscriptionAndPublish(Mono.just(
                 CardOperationsGetParameters.builder()
