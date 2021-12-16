@@ -184,9 +184,9 @@ public class CardRepositoryShould {
     @Test
     void getTwoCardsInRange()
     {
-        persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
-        persistCard(createSimpleCard("2", now, now, nowPlusTwo, LOGIN, null,null));
-        persistCard(createSimpleCard("3", now, nowPlusTwo, nowPlusThree, LOGIN,null,null));
+        persistCard(createSimpleCard("1", nowMinusOne, now, nowPlusOne, LOGIN,null, null));
+        persistCard(createSimpleCard("2", nowMinusOne, now, nowPlusTwo, LOGIN, null,null));
+        persistCard(createSimpleCard("3", nowMinusOne, nowPlusTwo, nowPlusThree, LOGIN,null,null));
 
         StepVerifier.create(repository.getCardOperations(null, now,nowPlusOne, adminUser)
                 .doOnNext(TestUtilities::logCardOperation))
@@ -230,11 +230,11 @@ public class CardRepositoryShould {
     }
 
     @Test
-    void getTwoCardsInRangeWitnNoEnd()
+    void getTwoCardsInRangeWithNoEnd()
     {
-        persistCard(createSimpleCard("1", now, nowMinusOne, nowPlusThree, LOGIN,null, null));
-        persistCard(createSimpleCard("2", now, nowMinusOne, null, LOGIN, null,null));
-        persistCard(createSimpleCard("3", now, nowPlusOne, null, LOGIN,null,null));
+        persistCard(createSimpleCard("1", nowMinusOne, nowMinusOne, nowPlusThree, LOGIN,null, null));
+        persistCard(createSimpleCard("2", nowMinusOne, nowMinusOne, null, LOGIN, null,null));
+        persistCard(createSimpleCard("3", nowMinusOne, nowPlusOne, null, LOGIN,null,null));
 
         HashMap<String,CardOperation> results = new HashMap<String,CardOperation>();
         StepVerifier.create(repository.getCardOperations(null, now,nowPlusTwo, adminUser)
@@ -252,6 +252,60 @@ public class CardRepositoryShould {
        CardOperation card1 = (CardOperation) results.get("PROCESS1");
        CardOperation card2 = (CardOperation) results.get("PROCESS3");
        assertCard(card1, "PROCESS.PROCESS1", "PUBLISHER", "0");
+       assertCard(card2, "PROCESS.PROCESS3", "PUBLISHER", "0");
+
+    }
+
+    @Test
+    void getTwoCardsInRangeWithoutStart()
+    {
+        persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
+        persistCard(createSimpleCard("2", nowMinusTwo, now, nowPlusOne, LOGIN, null,null));
+        persistCard(createSimpleCard("3", now, nowMinusTwo, nowMinusOne, LOGIN,null,null));
+
+        HashMap<String,CardOperation> results = new HashMap<String,CardOperation>();
+        StepVerifier.create(repository.getCardOperations(null, null, nowMinusOne, adminUser)
+                .doOnNext(TestUtilities::logCardOperation))
+                .assertNext(op -> {
+                    assertThat(op.getCard()).isNotNull();
+                    results.put(op.getCard().getProcessInstanceId(), op);
+                })
+                .assertNext(op -> {
+                    assertThat(op.getCard()).isNotNull();
+                    results.put(op.getCard().getProcessInstanceId(), op);
+                })
+                .expectComplete()
+                .verify();
+       CardOperation card1 = (CardOperation) results.get("PROCESS2");
+       CardOperation card2 = (CardOperation) results.get("PROCESS3");
+       assertCard(card1, "PROCESS.PROCESS2", "PUBLISHER", "0");
+       assertCard(card2, "PROCESS.PROCESS3", "PUBLISHER", "0");
+
+    }
+
+    @Test
+    void getTwoCardsInRangeWithoutEnd()
+    {
+        persistCard(createSimpleCard("1", nowMinusOne, nowMinusOne, now, LOGIN,null, null));
+        persistCard(createSimpleCard("2", now, nowPlusOne, nowPlusTwo, LOGIN, null,null));
+        persistCard(createSimpleCard("3", nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN,null,null));
+
+        HashMap<String,CardOperation> results = new HashMap<String,CardOperation>();
+        StepVerifier.create(repository.getCardOperations(null, nowPlusOne, null, adminUser)
+                .doOnNext(TestUtilities::logCardOperation))
+                .assertNext(op -> {
+                    assertThat(op.getCard()).isNotNull();
+                    results.put(op.getCard().getProcessInstanceId(), op);
+                })
+                .assertNext(op -> {
+                    assertThat(op.getCard()).isNotNull();
+                    results.put(op.getCard().getProcessInstanceId(), op);
+                })
+                .expectComplete()
+                .verify();
+       CardOperation card1 = (CardOperation) results.get("PROCESS2");
+       CardOperation card2 = (CardOperation) results.get("PROCESS3");
+       assertCard(card1, "PROCESS.PROCESS2", "PUBLISHER", "0");
        assertCard(card2, "PROCESS.PROCESS3", "PUBLISHER", "0");
 
     }
@@ -292,11 +346,11 @@ public class CardRepositoryShould {
         }
 
         @Test
-        void getOneCardInRangeAndAfterPublishDate ()
+        void getOneCardInRangeAndAfterPublishDate()
         {
             persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
-            persistCard(createSimpleCard("2", nowPlusTwo, now, nowPlusOne, LOGIN, null,null));
-            persistCard(createSimpleCard("3", nowPlusTwo, nowPlusTwo, nowPlusThree, LOGIN,null,null));
+            persistCard(createSimpleCard("2", nowPlusOne, now, nowPlusOne, LOGIN, null,null));
+            persistCard(createSimpleCard("3", nowPlusOne, nowPlusTwo, nowPlusThree, LOGIN,null,null));
     
             StepVerifier.create(repository.getCardOperations(nowPlusOne, nowPlusTwo,nowPlusThree, adminUser)
                     .doOnNext(TestUtilities::logCardOperation))
@@ -309,6 +363,22 @@ public class CardRepositoryShould {
            
         }
 
+        @Test
+        void getOneCardWithPublishDateInRange()
+        {
+            persistCard(createSimpleCard("1", nowMinusOne, nowPlusTwo, nowPlusThree, LOGIN,null, null));
+            persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN, null,null));
+            persistCard(createSimpleCard("3", nowPlusTwo, nowPlusTwo, nowPlusThree, LOGIN,null,null));
+    
+            StepVerifier.create(repository.getCardOperations(nowMinusThree, now,nowPlusOne, adminUser)
+                    .doOnNext(TestUtilities::logCardOperation))
+                    .assertNext(op -> {
+                        assertThat(op.getCard()).isNotNull();
+                        assertCard(op,"PROCESS.PROCESS2", "PUBLISHER", "0");
+                    })
+                    .expectComplete()
+                    .verify();       
+        }
 
         @Test
         void getNoCardAsRteUserEntity1IsNotAdminUser() {
