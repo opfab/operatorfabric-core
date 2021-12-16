@@ -87,7 +87,8 @@ jobs:
           echo "node version $(node --version)"
           sdk version
           javac -version
-
+          git config --global user.email "opfabtech@gmail.com" 
+          git config --global user.name "OpfabTech"
 
       - name: Build
         if: ${{ github.event.inputs.build  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push'}}
