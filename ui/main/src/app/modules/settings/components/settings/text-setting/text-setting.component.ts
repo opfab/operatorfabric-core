@@ -23,6 +23,7 @@ export class TextSettingComponent extends BaseSettingDirective implements OnInit
 
     @Input() pattern: string;
     @Input() disabled: boolean;
+    @Input() text: string;
 
     constructor(protected store: Store<AppState>) {
         super(store);
@@ -47,7 +48,11 @@ export class TextSettingComponent extends BaseSettingDirective implements OnInit
     }
 
     updateValue(value) {
-        this.form.get('setting').setValue(value, {emitEvent: false});
+        // Undefined or null value means the user does not have made a choice for his settings, so we set the input value "text" (default value)
+        if ((value === null) || (value === undefined))
+            this.form.get('setting').setValue(this.text, {emitEvent: false});
+        else
+            this.form.get('setting').setValue(value, {emitEvent: false});
     }
 
     protected isEqual(formA, formB): boolean {

@@ -110,9 +110,8 @@ describe('Sound notification test', function () {
       cy.loginOpFab(user, 'test');
       stubPlaySound();
 
-      // Activate repeating sound 
+      // Activate repeating sound (no need to click the checkbox because it is already checked, because of the default value set to true in web-ui.json)
       openSettings();
-      cy.get('#opfab-checkbox-setting-form-replay').click();
       cy.waitDefaultTime();
 
       // Open the feed and send card 
@@ -154,6 +153,7 @@ describe('Sound notification test', function () {
 
       // Set repeating interval to 20 seconds
       openSettings();
+      cy.get('#opfab-setting-replayInterval').clear();
       cy.get('#opfab-setting-replayInterval').type('20');
       cy.waitDefaultTime();
 
