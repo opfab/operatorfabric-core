@@ -176,9 +176,9 @@ git push origin X.X.X.RELEASE <3>
 
 . Check that the build is correctly triggered
 +
-You can check the status of the GitHub Action triggered by the commit on
+You can check the status of the GitHub Action workflow triggered by the commit on
 link:https://github.com/opfab/operatorfabric-core/actions[Github Actions].
-The github action should have the following six jobs executed :
+The Github Actions workflow should have the following six jobs executed :
 - Build
 - Karate tests
 - Cypress tests 
