@@ -121,18 +121,24 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 
 	private Criteria getCriteriaForRange(Instant rangeStart,Instant rangeEnd)
 	{	
-		if (rangeStart==null) return where(END_DATE_FIELD).lte(rangeEnd);
+		if (rangeStart==null) return  new Criteria().orOperator(
+			where(END_DATE_FIELD).lte(rangeEnd),
+			where(PUBLISH_DATE_FIELD).lte(rangeEnd)
+		);
 		if (rangeEnd==null) return new Criteria().orOperator(
 			where(END_DATE_FIELD).gte(rangeStart),
-			where(START_DATE_FIELD).gte(rangeStart)
+			where(START_DATE_FIELD).gte(rangeStart),
+			where(PUBLISH_DATE_FIELD).gte(rangeStart)
 		);
 		return new Criteria().orOperator(
 			where(START_DATE_FIELD).gte(rangeStart).lte(rangeEnd),
 			where(END_DATE_FIELD).gte(rangeStart).lte(rangeEnd),
 			new Criteria().andOperator(
 				where(START_DATE_FIELD).lte(rangeStart),
-				where(END_DATE_FIELD).gte(rangeEnd))
-			);
+				where(END_DATE_FIELD).gte(rangeEnd)
+			),
+			where(PUBLISH_DATE_FIELD).gte(rangeStart).lte(rangeEnd)
+		);
 	}
 
 	private Criteria publishDateCriteria(Instant publishFrom) {

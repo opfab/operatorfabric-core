@@ -111,16 +111,11 @@ export class FilterService {
         return new Filter(
             (card: LightCard, status) => {
                 if (!!status.start && !!status.end) {
-                    if (!card.endDate) {
-                        return status.start <= card.startDate && card.startDate <= status.end;
-                    }
-                    return status.start <= card.startDate && card.startDate <= status.end
-                        || status.start <= card.endDate && card.endDate <= status.end
-                        || card.startDate <= status.start && status.end <= card.endDate;
+                    return this.chechCardVisibilityinRange(card, status.start, status.end);
                 } else if (!!status.start) {
-                    return (!card.endDate && card.startDate >= status.start) || (!!card.endDate && status.start <= card.endDate);
+                    return card.publishDate >= status.start || (!card.endDate && card.startDate >= status.start) || (!!card.endDate && status.start <= card.endDate);
                 } else if (!!status.end) {
-                    return card.startDate <= status.end;
+                    return card.publishDate <= status.end || card.startDate <= status.end;
                 }
                 console.warn(new Date().toISOString(), 'Unexpected business date filter situation');
                 return false;
@@ -130,6 +125,18 @@ export class FilterService {
                 start: new Date().valueOf() - FilterService.TWO_HOURS_IN_MILLIS,
                 end: new Date().valueOf() + FilterService.TWO_DAYS_IN_MILLIS
             });
+    }
+
+    private chechCardVisibilityinRange(card: LightCard, start, end ) {
+        if (start <= card.publishDate && card.publishDate <= end) {
+            return true;
+        }
+        if (!card.endDate) {
+            return start <= card.startDate && card.startDate <= end;
+        }
+        return start <= card.startDate && card.startDate <= end
+            || start <= card.endDate && card.endDate <= end
+            || card.startDate <= start && end <= card.endDate;
     }
 
 

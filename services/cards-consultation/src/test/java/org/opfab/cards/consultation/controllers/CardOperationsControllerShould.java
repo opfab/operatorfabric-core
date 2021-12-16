@@ -179,7 +179,7 @@ public class CardOperationsControllerShould {
 
         //create later published cards in past
         //this one overrides first
-        StepVerifier.create(repository.save(createSimpleCard(1, nowPlusOne, nowMinusTwo, nowMinusOne, "operator3", new String[]{"rte","operator"}, null)))
+        StepVerifier.create(repository.save(createSimpleCard(1, nowMinusOne, nowMinusTwo, nowMinusOne, "operator3", new String[]{"rte","operator"}, null)))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
@@ -214,7 +214,7 @@ public class CardOperationsControllerShould {
         StepVerifier.FirstStep<CardOperation> verifier = StepVerifier
                         .create(publisher.map(s -> TestUtilities.readCardOperation(mapper, s))
                                         .doOnNext(TestUtilities::logCardOperation));
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < 8; i++)
                 verifier.assertNext(op -> {
                         assertThat(op.getCard()).isNotNull();
                         results.put(op.getCard().getProcessInstanceId(), op);
@@ -227,6 +227,7 @@ public class CardOperationsControllerShould {
         CardOperation card5 = (CardOperation) results.get("PROCESS5");
         CardOperation card6 = (CardOperation) results.get("PROCESS6");
         CardOperation card8 = (CardOperation) results.get("PROCESS8");
+        CardOperation card9 = (CardOperation) results.get("PROCESS9");
         CardOperation card10 = (CardOperation) results.get("PROCESS10");
 
         assertThat(card2.getCard().getId()).isEqualTo("PROCESS.PROCESS2");
@@ -241,6 +242,8 @@ public class CardOperationsControllerShould {
         assertThat(card6.getPublishDate()).isEqualTo(nowMinusThree);
         assertThat(card8.getCard().getId()).isEqualTo("PROCESS.PROCESS8");
         assertThat(card8.getPublishDate()).isEqualTo(nowMinusThree);
+        assertThat(card9.getCard().getId()).isEqualTo("PROCESS.PROCESS9");
+        assertThat(card9.getPublishDate()).isEqualTo(nowPlusOne);
         assertThat(card10.getCard().getId()).isEqualTo("PROCESS.PROCESS10");
         assertThat(card10.getPublishDate()).isEqualTo(nowPlusOne);
 
