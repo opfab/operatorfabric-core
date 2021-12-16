@@ -35,7 +35,7 @@ release"_.
 
 The repository version on the `develop` branch should always be `SNAPSHOT`.
 
-The daily CRON Travis job generating the documentation and docker images for the `SNAPSHOT` version are run from
+The daily CRON GitHub Action generating the documentation and docker images for the `SNAPSHOT` version are run from
 this branch (see our
 ifdef::single-page-doc[<<CICD, CICD documentation>>]
 ifndef::single-page-doc[<</documentation/current/CICD/index.adoc#CICD, CICD documentation>>]
@@ -48,7 +48,7 @@ should be merged back into master somehow and then tagged with a release number.
 
 This means that any commit on master is a production-ready release, be it a minor or a major version.
 
-Any commit on `master` triggers a Travis build generating and pushing documentation and docker images for the
+Any commit on `master` triggers a GitHub Action build generating and pushing documentation and docker images for the
 corresponding release version. As a version released from master is also by design the latest version, it will also
 update the `latest` docker images and the `current` documentation folder on the website.
 
@@ -336,7 +336,7 @@ stop anyone interested in the topic of a PR to comment and review it.
 * The PR comment contains the text to insert in release note. Otherwise, it should say why this development doesn't need to be on the release notes.
 * If necessary, the PR should create or add content to a migration guide for the next version, under
 `src/docs/asciidoc/resources`
-* Check that Travis build is passing for the PR
+* Check that GitHub Action build is passing for the PR
 * The SonarCloud analysis should report no new bug or code smells, and should pass the quality gate
 * Check that the base branch (i.e. the branch into which we want to merge changes) is correct: for feature branches pull requests, this branch should be `develop`.
 * Look through changed files to make sure everything is relevant to the PR (no mistakenly added changes,

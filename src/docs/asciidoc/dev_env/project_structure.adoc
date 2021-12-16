@@ -8,7 +8,7 @@
 = Project Structure
 
 * link:https://github.com/opfab/operatorfabric-core/tree/master/bin[bin]: contains useful scripts for dev purposes
-** link:https://github.com/opfab/operatorfabric-core/tree/master/CICD/travis[travis]: scripts used by Travis for the
+** link:https://github.com/opfab/operatorfabric-core/tree/master/CICD/github[github]: scripts used by Github for the
 build process
 * link:https://github.com/opfab/operatorfabric-core/tree/master/client[client]: contains REST APIs simple beans definition, may be
 used by external projects
