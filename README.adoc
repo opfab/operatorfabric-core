@@ -115,7 +115,7 @@ image:https://img.shields.io/badge/Using-Swagger-%237473C0.svg?style=for-the-bad
 OperatorFabric is built and integrated using battle-tested tools and (open) platforms.
 
 image:https://img.shields.io/badge/Built%20with-Gradle-%23410099.svg?style=for-the-badge[Built with Gradle,link=https://gradle.org/]
-image:https://img.shields.io/badge/Using-Travis%20CI-%23FF647D.svg?style=for-the-badge[Using Travis CI,link=https://travis-ci.com/opfab/operatorfabric-core]
+image:https://img.shields.io/badge/Using-Github%20CI-%23FF647D.svg?style=for-the-badge[Using Githubactions  CI,link=https://github.com/opfab/operatorfabric-core/actions]
 image:https://img.shields.io/badge/Using-SonarCloud-%23FF647D.svg?style=for-the-badge[Using SonarCloud,link=https://sonarcloud.io/dashboard?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core]
 
 == Licensing

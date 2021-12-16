@@ -13,7 +13,6 @@ source ${BASH_SOURCE%/*}/load_variables.sh
 
 sdk install gradle 7.3
 sdk use gradle 7.3
-# the java version is externalized because also needed for travis configuration
 sdk install java 11.0.13-zulu
 sdk use java 11.0.13-zulu
 nvm install v14.15
