@@ -8,6 +8,7 @@ on:
       - develop
       - master
       - '**release'
+      - '**hotfixes'
   pull_request:
   schedule:
     # launch a build every day on develop
@@ -32,10 +33,18 @@ on:
         description: 'Build and publish documentation '     
         required: false
         default: 'false'
+      docLatest:
+        description: 'Build and publish documentation - Latest'     
+        required: false
+        default: 'false'
       dockerPush:
         description: 'Docker push'     
         required: false
-        default: 'false'       
+        default: 'false'      
+      dockerPushLatest:
+        description: 'Docker push - Latest'     
+        required: false
+        default: 'false'  
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -127,7 +136,7 @@ jobs:
           GH_DOC_TOKEN: ${{ secrets.GH_DOC_TOKEN}}
 
       - name : Publish Documentation (latest)
-        if : ${{ github.ref_name == 'master'}}
+        if : ${{ github.event.inputs.docLatest  == 'true' || github.ref_name == 'master'}}
         run: |
           ./gradlew --build-cache generateSwaggerUI asciidoctor;
           ./CICD/github/upload_doc.sh --updateLatest true
@@ -142,7 +151,7 @@ jobs:
           done
 
       - name : Push images latest to dockerhub 
-        if: ${{ github.ref_name == 'master'  }}
+        if: ${{ github.event.inputs.dockerPushLatest  == 'true'  || github.ref_name == 'master'  }}
         run: |
           echo ${{ secrets.DOCKER_TOKEN }} | docker login --username opfabtravis --password-stdin
           docker images --format "{{.Repository}}:{{.Tag}}" | grep lfe | while read image; do 
