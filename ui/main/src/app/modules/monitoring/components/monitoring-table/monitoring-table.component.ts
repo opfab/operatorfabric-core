@@ -292,7 +292,9 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                 this.exportMonitoringData.push({
                         [this.timeColumnName]: line.data.time,
                         [this.answerColumnName]: line.data.answer,
-                        [this.businessPeriodColumnName]: this.displayTime(line.data.beginningOfBusinessPeriod).concat(this.displayTime(line.data.endOfBusinessPeriod)),
+                        [this.businessPeriodColumnName]: this.displayTime(line.data.beginningOfBusinessPeriod)
+                                                         .concat('-')
+                                                         .concat(this.displayTime(line.data.endOfBusinessPeriod)),
                         [this.titleColumnName]: line.data.title,
                         [this.summaryColumnName]: line.data.summary,
                         [this.typeOfStateColumnName]: line.data.processStatus,
