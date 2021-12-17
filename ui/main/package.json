@@ -42,7 +42,7 @@
     "@swimlane/ngx-charts": "19.2.0",
     "@types/jwt-decode": "2.2.1",
     "ag-grid-angular": "26.2.0",
-    "ag-grid-community": "26.2.0",
+    "ag-grid-community": "26.2.1",
     "angular-oauth2-oidc": "13.0.1",
     "angular2-multiselect-dropdown": "5.0.4",
     "bootstrap": "4.6.1",
