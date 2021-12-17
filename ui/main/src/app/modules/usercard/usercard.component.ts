@@ -104,11 +104,11 @@ export class UserCardComponent implements OnDestroy, OnInit {
     public displaySendingCardInProgress = false;
 
     modalRef: NgbModalRef;
-    severityVisible;
-    startDateVisible;
-    endDateVisible;
-    lttdVisible;
-    recipientVisible; // if recipientVisible == false, then selectedRecipients = recipientList
+    severityVisible = true ;
+    startDateVisible = true ;
+    endDateVisible = true ;
+    lttdVisible = true ;
+    recipientVisible = true; // if recipientVisible == false, then selectedRecipients = recipientList
 
     pageLoading = true;
     useDescriptionFieldForEntityList = false;
@@ -445,6 +445,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
                 });
         } else this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
 
+        if (!!userCard) {
         this.severityVisible = (userCard.severityVisible === undefined) ? true : userCard.severityVisible;
         this.startDateVisible = (userCard.startDateVisible === undefined) ? true : userCard.startDateVisible;
         this.endDateVisible = (userCard.endDateVisible === undefined) ? true : userCard.endDateVisible;
@@ -452,6 +453,13 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.recipientVisible = (userCard.recipientVisible === undefined) ? true : userCard.recipientVisible;
         if (!!userCard.recipientList) {
             this.loadRecipientListForState(userCard.recipientList);
+        }
+        } else {
+            this.severityVisible = true;
+            this.startDateVisible = true;
+            this.endDateVisible = true;
+            this.lttdVisible = true;
+            this.recipientVisible = true;
         }
 
     }
@@ -551,15 +559,14 @@ export class UserCardComponent implements OnDestroy, OnInit {
         if (!startDate) startDate = this.defaultStartDate;
         else startDate = this.createTimestampFromValue(startDate);
 
-        let lttd = this.messageForm.get('lttd').value;
-        if (!lttd) {
-            if (specificInformation.card.lttd) {
-                lttd = specificInformation.card.lttd;
-            } else {
-                lttd = this.lttdVisible ? this.defaultLttdDate : null;
-            }
+        let lttd = null;
+        if (this.lttdVisible) {
+            lttd = this.messageForm.get('lttd').value;
+            lttd = this.createTimestampFromValue(lttd);
+
+        } else {
+            if (specificInformation.card.lttd) lttd = specificInformation.card.lttd;
         }
-        else lttd = this.createTimestampFromValue(lttd);
 
         let endDate = this.messageForm.get('endDate').value;
         if (!endDate)  endDate = this.endDateVisible ? this.defaultEndDate : this.lttdVisible ? lttd : null;
