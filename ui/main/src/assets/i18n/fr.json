@@ -2,6 +2,8 @@
   "global":{
     "connectionLost":"Connexion perdue",
     "tryToReconnect":"Tentative de reconnexion ...",
+    "activateSoundText":"Son non activé, cliquer pour activer",
+    "activateSoundButton":"Activer le son",
     "typeOfState": {
       "INPROGRESS": "EN COURS",
       "FINISHED": "TERMINÉ",
