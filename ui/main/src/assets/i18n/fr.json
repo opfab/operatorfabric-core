@@ -56,7 +56,9 @@
   },
   "global":{
     "connectionLost":"Connexion perdue",
-    "tryToReconnect":"Tentative de reconnexion ..."
+    "tryToReconnect":"Tentative de reconnexion ...",
+    "activateSoundText":"Son non activé, cliquer pour activer",
+    "activateSoundButton":"Activer le son"
   },
   "menu": {
     "feed": "Flux de cartes",
