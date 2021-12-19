@@ -182,6 +182,12 @@ export class SoundNotificationService implements OnDestroy{
         });
     }
 
+    public isAtLeastOneSoundActivated(): boolean {
+        let activated = false;
+        this.soundEnabled.forEach((soundForSeverity) => {
+            if (!!soundForSeverity) activated = true; });
+        return activated;
+    }
 
 }
 

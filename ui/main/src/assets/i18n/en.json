@@ -56,7 +56,9 @@
   },
   "global":{
     "connectionLost":"Connection lost",
-    "tryToReconnect":"Try to reconnect ..."
+    "tryToReconnect":"Try to reconnect ...",
+    "activateSoundText":"Sound not activated, click to activate",
+    "activateSoundButton":"Activate sound"
   },
   "menu": {
     "feed": "Card Feed",
