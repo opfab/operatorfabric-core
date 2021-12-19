@@ -166,8 +166,9 @@ export class SoundNotificationService implements OnDestroy{
                 }),
                 takeUntil(this.ngUnsubscribe$))
             .subscribe((x ) => {
+            console.log(new Date().toISOString() , ' Play sound');
                 this.playSoundForSeverity(severity);
-            })
+        });
     }
 
 
