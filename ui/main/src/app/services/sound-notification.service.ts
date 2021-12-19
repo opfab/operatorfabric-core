@@ -22,7 +22,7 @@ import {EMPTY, iif, merge, of, Subject, timer} from "rxjs"; import {filter, map,
 @Injectable()
 export class SoundNotificationService implements OnDestroy{
 
-    private static RECENT_THRESHOLD: number = 2000; // in milliseconds
+    private static RECENT_THRESHOLD: number = 4000; // in milliseconds
     /* The subscription used by the front end to get cards to display in the feed from the backend doesn't distinguish
      * between old cards loaded from the database and new cards arriving through the notification broker.
      * In addition, the getCardOperation observable on which this sound notification is hooked will also emit events
