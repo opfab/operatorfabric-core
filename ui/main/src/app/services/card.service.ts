@@ -63,6 +63,7 @@ export class CardService {
         this.cardsPubUrl = `${environment.urls.cardspub}/cards`;
         this.userCardReadUrl = `${environment.urls.cardspub}/cards/userCardRead`;
         this.userCardUrl = `${environment.urls.cardspub}/cards/userCard`;
+        this.checkHeartBeatReceive();
     }
 
     loadCard(id: string): Observable<CardData> {
@@ -82,7 +83,11 @@ export class CardService {
                     switch (operation.type) {
                         case CardOperationType.ADD:
 
-                            console.log(new Date().toISOString(), `CardService - Receive card to add id=`, operation.card.id);
+                            console.log(new Date().toISOString(),
+                                `CardService - Receive card to add id=`,
+                                operation.card.id ,
+                                'with date=' ,
+                                new Date(operation.card.publishDate).toISOString());
                             this.lightCardsStoreService.addOrUpdateLightCard(operation.card);
                             if (operation.card.id == this.selectedCardId) this.store.dispatch(new LoadCard({id: operation.card.id}));
                             break;
@@ -171,6 +176,16 @@ export class CardService {
                 }
             };
         });
+    }
+
+    private checkHeartBeatReceive() {
+        setInterval(() => {
+            console.log(new Date().toISOString(),
+                'Last heart beat received ',
+                new Date().valueOf() - this.lastHeardBeatDate,
+                'ms ago');
+        }
+            , 60000);
     }
 
 
