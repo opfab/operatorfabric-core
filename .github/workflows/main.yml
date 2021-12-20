@@ -141,6 +141,8 @@ jobs:
         run: |
           ./gradlew --build-cache generateSwaggerUI asciidoctor;
           ./CICD/github/upload_doc.sh --updateLatest true
+        env:
+          GH_DOC_TOKEN: ${{ secrets.GH_DOC_TOKEN}}
 
       - name : Push images to dockerhub 
         if: ${{ github.event.inputs.dockerPush  == 'true' || github.event_name == 'schedule' || github.ref_name == 'master' }}
