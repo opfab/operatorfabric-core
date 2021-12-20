@@ -198,7 +198,7 @@ export class AppComponent implements OnInit {
         const context = new AudioContext();
         if (context.state !== 'running') {
           context.resume();
-          this.modalRef = this.modalService.open(this.noSoundPopupRef, {centered: true});
+          this.modalRef = this.modalService.open(this.noSoundPopupRef, {centered: true, backdrop: 'static'});
         }
       }
     }
