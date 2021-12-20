@@ -1,0 +1,31 @@
+// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Testing the External Devices service with dummy devices
+
+To test the External Devices service with dummy devices, launch an OperatorFabric instance using the
+`$OF_HOME/config/docker/docker-compose.sh` script.
+
+As described in `$OF_HOME/config/docker/docker-compose.yml`, in addition to lauching all OperatorFabric services it
+will also start up two containers based on the dummy-modbus-device image: `dummy-modbus-device_1` and
+`dummy-modbus-device_2`, both listening on their port 4030.
+
+This matches default configuration provided:
+.$OF_HOME/config/docker/external-devices-docker.yml
+
+[source,yaml]
+----
+include::../../../../config/docker/external-devices-docker.yml[]
+----
+
+This means that provided the users have chosen to play sounds for these severities and to play sounds
+on external devices, sending an ALARM card to operator1 should result in a message about writing 1 in the
+dummy-modbus-device_1 logs, and sending an ACTION card to operator2 should result in a message about writing
+6 in dummy-modbus-device_2.
+
+Since the watchdog is enabled, once the devices are connected (either by calling the /connect endpoint or
+by sending the first signal), you should also see the corresponding messages in the logs.

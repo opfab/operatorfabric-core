@@ -43,36 +43,141 @@ protocols (and ultimately allow people to supply their own drivers) in the futur
 
 == Implementation
 
-Given the use case described above, the following elements need to be configurable:
+=== Architecture
 
-* How to connect to a given external device (host, port)
-* How to map an OperatorFabric signal key footnote:[currently, that means a severity, but in the future it could also
+Given the use case described above, a new service was necessary to act as a link between the OperatorFabric UI and
+the external devices. This service is in charge of:
+
+* Managing the configuration relative to external devices (see below for details)
+* Process requests from the UI (e.g. "play the sound for ALARM for user operator1") and translate them as requests to
+the appropriate device in their supported protocol, based on the above configuration
+* Allow the pool of devices to be managed (connection, disconnection)
+
+This translates as three APIs.
+
+image::ExtDevArchitecture.drawio.png[Architecture diagram]
+
+Here is what happens when user operator1 receives a card with severity ALARM:
+
+. In the Angular code, the reception of the card triggers a sound notification.
+. If the external devices feature is enabled and the user has chosen to play sounds on external devices
+(instead of the browser), the UI code sends a POST request on the `external-devices/notifications` endpoint on the
+NGINX gateway, with the following payload:
++
+[source,json]
+----
+{
+    "opfabSignalId": "ALARM"
+}
+----
++
+. The NGINX server, acting as a gateway, forwards it to the `/notifications` endpoint on the External Devices service.
+. The External Devices service queries the configuration repositories to find out which external device is configured
+for operator1, how to connect to it and what signal "ALARM" translates to on this particular device.
+. It then creates the appropriate connection if it doesn't exist yet, and sends the signal.
+
+=== Configuration
+
+The following elements need to be configurable:
+
+. For each user, which device to use:
++
+.userConfiguration
+[source,json,]
+----
+{
+  "userLogin": "operator1",
+  "externalDeviceId": "CDS_1"
+}
+----
++
+. How to connect to a given external device (host, port)
++
+.deviceConfiguration
+[source,json,]
+----
+{
+  "id": "CDS_1",
+  "host": "localhost",
+  "port": 4300,
+  "signalMappingId": "default_CDS_mapping"
+}
+----
++
+. How to map an OperatorFabric signal key footnote:[currently, that means a severity, but in the future it could also
 be a process id, or anything identifying the signal to be played] to a signal (sound, light) on the external system
-* For each user, which device to use
++
+.signalMapping
+[source,json,]
+----
+{
+  "id": "default_CDS_mapping",
+  "supportedSignals": {
+    "ALARM": 1,
+    "ACTION": 2,
+    "COMPLIANT": 3,
+    "INFORMATION": 4
+  }
+}
+----
 
+This means that a single physical device allowing 2 different sets of sounds to be played (for example one set for desk
+A and another set for desk B) would be represented as two different device configurations, with different ids.
 
+.Device configurations
+[source,json,]
+----
+[{
+  "id": "CDS_A",
+  "host": "localhost",
+  "port": 4300,
+  "signalMappingId": "mapping_A"
+},
+{
+  "id": "CDS_B",
+  "host": "localhost",
+  "port": 4300,
+  "signalMappingId": "mapping_B"
+}]
+----
 
-//TODO Schema 1-n deviceConf, userConf, signalMapping
+.Signal mappings
+[source,json,]
+----
+[{
+  "id": "mapping_A",
+  "supportedSignals": {
+    "ALARM": 1,
+    "ACTION": 2,
+    "COMPLIANT": 3,
+    "INFORMATION": 4
+  }
+},
+{
+  "id": "mapping_B",
+  "supportedSignals": {
+    "ALARM": 5,
+    "ACTION": 6,
+    "COMPLIANT": 7,
+    "INFORMATION": 8
+  }
+}]
+----
 
-//TODO rename OpFab signal key
+NOTE: The signalMapping object is built as a Map with String keys (rather than the Severity enum or any otherwise
+constrained type) because there is a strong possibility that in the future we might want to map something other than
+severities.
 
-//TODO schema web-ui external devices & API
+Please see the https://opfab.github.io/documentation/current/api/external-devices/[API documentation] for details.
 
-
-The external devices system is
-
-//TODO Explain Device vs DeviceConfiguration (realtime)
-
-
-
-//TODO Explain the interface  that a driver should implement (add javadoc) + Exceptions?
-
-
+NOTE: There is a `Device` object distinct from `DeviceConfiguration` because the latter represents static information
+about how to reach a device, while the former contains information about the actual connexion and its status.
+For example, this is why the device configuration contains a `host` (which can be a hostname) while the device
+has a `resolvedAddress`.
+As a result, they are managed through separate endpoints, which might also make things easier if we need to secure
+them differently (some people might be allowed to connect/disconnect devices but not change their configuration).
 
 == Configuration
-
-
-
 
 == Connexion Management
 
@@ -84,11 +189,13 @@ of the actual activation.
 However, if a notification is received by the external devices service that needs to be passed on to a device that is
 configured but not connected yet, the connection will be performed automatically.
 
+== Configuration Management
 
-
-//TODO No checks on existing related resources when creation (imposes order in creation, makes init more complex)
-//but removal when deletion (same as users/groups/perimeters)
-
+In coherence with the way Entities, Perimeters, Users and Groups are managed, SignalMapping, UserConfiguration and
+DeviceConfiguration resources can be deleted even if other resources link to them.
+For example, if a device configuration lists `someMapping` as its `signalMappingId` and a DELETE request is sent
+on `someMapping`, the deletion will be performed and return a 200 Success, and the device will have a `null`
+`signalMappingId`.
 
 == Drivers
 
@@ -97,4 +204,30 @@ the https://en.wikipedia.org/wiki/Modbus[Modbus protocol].
 
 === Modbus Driver
 
-//TODO Explain no response but ok because watchdog
+The Modbus driver is based on the https://github.com/kochedykov/jlibmodbus[jlibmodbus] library to create a
+`ModbusMaster` for each device and then send requests through it using the
+https://github.com/kochedykov/jlibmodbus/blob/master/src/com/intelligt/modbus/jlibmodbus/msg/request/WriteSingleRegisterRequest.java[WriteSingleRegisterRequest]
+object.
+
+We are currently using the "BROADCAST" mode, which (at least in the jlibmodbus implementation) means that the Modbus
+master doesn't expect any response to its requests (which makes sense because if there really are several clients
+responding to the broadcast, )
+This is mitigated by the fact that if watchdog signals are enabled, the external devices will be able to detect that
+they are not receiving signals correctly.
+In the future, it could be interesting to switch to the TCP default so OperatorFabric can be informed of any exception
+in the processing of the request, allowing for example to give a more meaningful connection status
+(see https://github.com/opfab/operatorfabric-core/issues/2294[#2294])
+
+=== Adding new drivers
+
+New drivers should implement the `ExternalDeviceDriver` interface, and a corresponding factory implementing the
+`ExternalDeviceDriverFactory` interface should be created with it.
+
+The idea is that in the future, using dependency injection, Spring should be able to pick up any factory on the classpath implementing
+the correct interface.
+
+NOTE: `ExternalDeviceDriver`, `ExternalDeviceDriverFactory` and the accompanying custom exceptions should be made
+available as a jar on Maven Central if we want to allow project users to provide their own drivers.
+
+NOTE: If several drivers need to be used on a given OperatorFabric instance at the same time, we will need to introduce
+a device type in the deviceConfiguration object.
