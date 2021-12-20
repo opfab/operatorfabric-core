@@ -85,7 +85,7 @@ body {
   animation: fa-spin 2s infinite linear;
 } 
 
-// Spinner when loading cards or table of cards 
+// Spinner when loading cards or table of cards
 // the spinner is in the center of the screen 
 
 .opfab-card-loading-spinner {
@@ -939,5 +939,9 @@ html, body { height: 100%; }
     padding-right: 0px;}
   .opfab-sev-information {background-color: $sev-information;font-size: 0px;
     padding-right: 0px; }
+
+  .ag-cell-wrap-text {
+    word-break: normal;
+  }
 }
 
