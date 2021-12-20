@@ -89,7 +89,7 @@ declare -a dependentProjects
 i=0
 for bservice in "${businessServices[@]}"; do
  dependentProjects[$i]="$bservice-business-service"
- dependentProjects[$i+1]="services/core/$bservice"
+ dependentProjects[$i+1]="services/$bservice"
  dependentProjects[$i+2]=0
  dependentProjects[$i+3]=""
  dependentProjects[$i+4]=$bservice

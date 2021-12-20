@@ -150,9 +150,9 @@ export function getOneRandomLightCard(lightCardTemplate?: any): LightCard {
         lightCardTemplate.startDate ? lightCardTemplate.startDate : startTime,
         lightCardTemplate.endDate ? lightCardTemplate.endDate : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
         lightCardTemplate.severity ? lightCardTemplate.severity : getRandomSeverity(),
-        false,
+        lightCardTemplate.hasBeenAcknowledged ? lightCardTemplate.hasBeenAcknowledged : false,
         lightCardTemplate.hasBeenRead ? lightCardTemplate.hasBeenRead : false,
-        false,
+        lightCardTemplate.hasChildCardFromCurrentUserEntity ? lightCardTemplate.hasChildCardFromCurrentUserEntity : false,
         getRandomAlphanumericValue(3, 24),
         lightCardTemplate.lttd ? lightCardTemplate.lttd : generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
         getRandomI18nData(),
@@ -207,7 +207,8 @@ export function getOneRandomCard(cardTemplate?:any): Card {
         undefined,
         undefined,
         cardTemplate.entitiesAllowedToRespond ? cardTemplate.entitiesAllowedToRespond : null,
-        cardTemplate.entitiesRequiredToRespond ? cardTemplate.entitiesRequiredToRespond : null
+        cardTemplate.entitiesRequiredToRespond ? cardTemplate.entitiesRequiredToRespond : null,
+        cardTemplate.entitiesAllowedToEdit ? cardTemplate.entitiesAllowedToEdit : null
     );
     return oneCard;
 }

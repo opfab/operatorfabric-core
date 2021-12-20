@@ -16,8 +16,8 @@ import {LightCard} from '@ofModel/light-card.model';
 import {Observable} from 'rxjs';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {environment} from '@env/environment';
-import {UserPermissionsService} from '@ofServices/user-permissions-.service';
-import {LightCardsStoreService} from './lightcards-store.service';
+import {UserPermissionsService} from '@ofServices/user-permissions.service';
+import {LightCardsStoreService} from './lightcards/lightcards-store.service';
 
 @Injectable({
     providedIn: 'root'

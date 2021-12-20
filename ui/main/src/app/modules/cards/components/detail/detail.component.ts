@@ -45,9 +45,9 @@ import {TimeService} from '@ofServices/time.service';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {MessageLevel} from '@ofModel/message.model';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
-import {UserPermissionsService} from '@ofServices/user-permissions-.service';
+import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
-import {LightCardsStoreService} from '@ofServices/lightcards-store.service';
+import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 
 declare const templateGateway: any;
 
@@ -108,7 +108,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public showMaxAndReduceButton = false;
     public showAckButton = false;
     public showActionButton = false;
-    public showEditAndDeleteButton = false;
+    public showEditButton = false;
+    public showDeleteButton = false;
     public showDetailCardHeader = false;
     public fromEntityOrRepresentative = null;
     public formattedPublishDate = "";
@@ -120,6 +121,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public showExpiredIcon: boolean = true;
     public showExpiredLabel: boolean = true;
     public expiredLabel: string = 'feed.lttdFinished';
+    public btnValidateLabel: string = 'response.btnValidate';
+    public btnUnlockLabel: string = 'response.btnUnlock';
 
     private lastCardSetToReadButNotYetOnFeed;
     private entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = [];
@@ -155,7 +158,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     ngOnInit() {
         this.reloadTemplateWhenGlobalStyleChange();
         if (this._appService.pageType !== PageType.ARCHIVE) this.integrateChildCardsInRealTime();
-
     }
 
     ngAfterViewChecked() {
@@ -200,6 +202,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.formattedPublishDate = this.formatDate(this.card.publishDate);
         this.formattedPublishTime = this.formatTime(this.card.publishDate);
         this.computeLttdParams();
+
+        this.btnValidateLabel = (!! this.cardState.validateAnswerButtonLabel) ? this.cardState.validateAnswerButtonLabel : 'response.btnValidate';
+        this.btnUnlockLabel = (!! this.cardState.modifyAnswerButtonLabel) ? this.cardState.modifyAnswerButtonLabel : 'response.btnUnlock';
     }
 
     ngOnDestroy() {
@@ -294,7 +299,20 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                             this.integrateOneChildCard(lastCardLoaded);
                         }
                     }
-                })).subscribe()
+                })).subscribe();
+
+        this.lightCardsStoreService.getDeletedChildCardsIds()
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                map(lastCardDeleted => {
+                    if (!!lastCardDeleted && lastCardDeleted.parentCardId === this.card.id 
+                            && this.childCards.map(childCard => childCard.id).includes(lastCardDeleted.cardId)) {
+
+                        this.removeChildCard(lastCardDeleted.cardId);
+
+                    }
+                })).subscribe();
+
     }
 
     private integrateOneChildCard(newChildCard: Card) {
@@ -308,6 +326,16 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 templateGateway.applyChildCards();
             }
         )
+    }
+
+    private removeChildCard(deletedChildCardId: string) {
+        const newChildArray = this.childCards.filter(childCard => childCard.id !== deletedChildCardId);
+        this.childCards = newChildArray;
+        this.checkIfHasAlreadyResponded();
+        templateGateway.isLocked = this.isResponseLocked;
+        templateGateway.childCards = this.childCards;
+        this.computeEntitiesForResponses();
+        templateGateway.applyChildCards();
     }
 
     private computeEntitiesForResponses() {
@@ -438,13 +466,18 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             this.showMaxAndReduceButton = true;
         }
         this.showCloseButton = true;
-        this.showEditAndDeleteButton = this.doesTheUserHavePermissionToDeleteOrEditCard();
+        this.showEditButton = this.doesTheUserHavePermissionToEditCard();
+        this.showDeleteButton = this.doesTheUserHavePermissionToDeleteCard();
         this.showAckButton = this.isAcknowledgmentAllowed() && (this._appService.pageType !== PageType.CALENDAR);
         this.showActionButton = (!!this.cardState.response);
     }
 
-    private doesTheUserHavePermissionToDeleteOrEditCard(): boolean {
-        return this.userPermissionsService.doesTheUserHavePermissionToDeleteOrEditCard(this.userService.getCurrentUserWithPerimeters(), this.card);
+    private doesTheUserHavePermissionToEditCard(): boolean {
+        return this.userPermissionsService.doesTheUserHavePermissionToEditCard(this.userService.getCurrentUserWithPerimeters(), this.card);
+    }
+
+    private doesTheUserHavePermissionToDeleteCard(): boolean {
+        return this.userPermissionsService.doesTheUserHavePermissionToDeleteCard(this.userService.getCurrentUserWithPerimeters(), this.card);
     }
 
     private isAcknowledgmentAllowed(): boolean {

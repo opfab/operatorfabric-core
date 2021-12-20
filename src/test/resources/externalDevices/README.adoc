@@ -7,14 +7,8 @@ device. It's intended as a first draft of the documentation.
 
 ----
 cd $OF_HOME/config/docker
-./docker-compose-external-devices.sh
+./docker-compose.sh
 ----
-
-IMPORTANT: Currently this docker-compose script launches services in cors-permissive mode. If that's not required,
-replace `nginx-external-devices-cors-permissive.conf` by `nginx-external-devices.conf`
-in `docker-compose.external-devices.override.yml`.
-Issue https://github.com/opfab/operatorfabric-core/issues/1806[#1806] is aimed at generally making nginx configuration
-more straightforward.
 
 == Running in dev mode
 

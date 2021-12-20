@@ -14,14 +14,14 @@
       </li>
       <li *ngIf="showButtons" class="nav-item opfab-menu-item-right">
         <div *ngIf="!isSmallscreen()" style="display:flex">
-          <div class="opfab-right-menu-item" *ngIf='showEditAndDeleteButton'>
+          <div class="opfab-right-menu-item" *ngIf='showEditButton'>
             <a id="opfab-card-edit" class="opfab-right-menu-link" (click)='editCard()'>
               <div class="opfab-menu-icon opfab-menu-icon-right opfab-icon-edit"></div>
               <div translate>{{'button.edit'}}</div>
             </a>
           </div>
 
-          <div class="opfab-right-menu-item" *ngIf='showEditAndDeleteButton'>
+          <div class="opfab-right-menu-item" *ngIf='showDeleteButton'>
             <a id="opfab-card-delete" class="opfab-right-menu-link" (click)='openModal(doYouReallyWantToDeleteCardPopup)'>
               <div class="opfab-menu-icon opfab-menu-icon-right opfab-icon-trash"></div>
               <div translate>{{'button.delete'}}</div>
@@ -35,7 +35,7 @@
             <div class="opfab-menu-icon  opfab-icon-reduce" (click)='setFullScreen(false)'></div>
           </div>
         </div>
-        <div *ngIf="showCloseButton" class="opfab-close-card-link" aria-label="Close" (click)="closeDetails()">
+        <div *ngIf="showCloseButton" id="opfab-close-card" class="opfab-close-card-link" aria-label="Close" (click)="closeDetails()">
           <span aria-hidden="true">&times;</span>
         </div>
 
@@ -79,7 +79,7 @@
               </div>
               <span translate>response.answers</span> :
               <span *ngFor="let entity of listVisibleEntitiesToRespond; let isLast = last"
-                [ngStyle]="{'color': entity.color,'text-align': 'center'}">
+                [ngStyle]="{'color': entity.color,'text-align': 'center'}" [id]="'opfab-card-header-entity-'+entity.id">
                 &nbsp; {{entity.name}} &nbsp;
               </span>
               <span *ngIf="listDropdownEntitiesToRespond && listDropdownEntitiesToRespond.length > 0"
@@ -124,12 +124,11 @@
             <div *ngIf="showButtons" style="text-align: right;">
               <button id="opfab-card-details-btn-response" class="opfab-btn"
                 *ngIf='showActionButton && isUserEnabledToRespond && !isResponseLocked' [disabled]='lttdExpiredIsTrue || !isUserEnabledToRespond'
-                (click)='submitResponse()' translate> response.btnValidate </button>
+                (click)='submitResponse()'>{{btnValidateLabel|translate}}</button>
+
               <button id="opfab-card-details-btn-response" class="opfab-btn"
-                [disabled]='lttdExpiredIsTrue || !isUserEnabledToRespond' translate
-                *ngIf='showActionButton && isUserEnabledToRespond && isResponseLocked' (click)='unlockAnswer()'>
-                response.btnUnlock
-              </button>
+                [disabled]='lttdExpiredIsTrue || !isUserEnabledToRespond'
+                *ngIf='showActionButton && isUserEnabledToRespond && isResponseLocked' (click)='unlockAnswer()'>{{btnUnlockLabel|translate}}</button>
 
               <button id="opfab-card-details-btn-ack" class="opfab-btn" *ngIf='showAckButton'
                 (click)='acknowledgeCard()'>{{btnAckText|translate}}</button>

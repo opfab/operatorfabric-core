@@ -55,7 +55,7 @@ public class DevicesController implements DevicesApi {
                     .status(HttpStatus.BAD_REQUEST)
                     .message(String.format(CONNECT_FAILED_DUE_TO_CONFIG,deviceId))
                     .build(), e);
-        }        catch (ExternalDeviceDriverException e) {
+        } catch (ExternalDeviceDriverException e) {
             throw new ApiErrorException(ApiError.builder()
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .message(String.format(CONNECT_FAILED,deviceId))
@@ -85,9 +85,9 @@ public class DevicesController implements DevicesApi {
 
     @Override
     public Device getDevice(HttpServletRequest request, HttpServletResponse response, String deviceId) {
-
         response.setStatus(200);
-        return this.devicesService.getDevice(deviceId).orElseThrow(
+        return this.devicesService.getDevice(deviceId)
+                .orElseThrow(
                 ()-> new ApiErrorException(
                         ApiError.builder()
                                 .status(HttpStatus.NOT_FOUND)
@@ -99,9 +99,7 @@ public class DevicesController implements DevicesApi {
 
     @Override
     public List<Device> getDevices(HttpServletRequest request, HttpServletResponse response) {
-
         response.setStatus(200);
         return this.devicesService.getDevices();
-
     }
 }

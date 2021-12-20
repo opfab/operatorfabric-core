@@ -67,6 +67,8 @@ describe('State type tests', function () {
 
             cy.loginOpFab('operator1', 'test');
 
+            cy.get('of-light-card').should('have.length', 9);
+
             // ----------------- Tests with state present and no lttd
             testDataStateNoLttd.forEach((test_data) => {
                 cy.log(`State type ${test_data.type} with no lttd`);

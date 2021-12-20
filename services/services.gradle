@@ -1,155 +1,163 @@
-plugins {
-    id "com.palantir.docker"
-    id "org.springframework.boot"
-    id "org.hidetake.swagger.generator"
-}
-
 subprojects {
+
     /////// PLUGINS
-    if (!project.name.equals("core")) {
-        apply plugin: 'java'
-        apply plugin: 'jacoco'
-        apply plugin: 'io.spring.dependency-management'
-        apply plugin: 'org.springframework.boot'
-        apply plugin: "com.palantir.docker"
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: "com.palantir.docker"
+    apply plugin: 'org.hidetake.swagger.generator'
 
-        /////// DEPENDENCIES
+    /////// DEPENDENCIES
 
-        dependencyManagement {
-            imports {
-                mavenBom cloud.dependencies
-            }
-        }
-
-        dependencies {
-            implementation boot.actuator
-            implementation misc.micrometer
-            annotationProcessor misc.lombok
-            implementation misc.lombok
-
-            testAnnotationProcessor misc.lombok
-            testCompileOnly misc.lombok
-
-            testImplementation boot.starterTest, testing_deps.assertJ
-            testImplementation project(':tools:generic:test-utilities')
-            testImplementation testing_deps.awaitility
-            testImplementation group:'org.jeasy', name: 'easy-random-core', version: '5.0.0'
-
-        }
-
-        configurations {
-            implementation.exclude module: "spring-boot-starter-tomcat"
-            testImplementation.exclude module: "spring-boot-starter-tomcat"
-        }
-
-        /////// CONFIGURATION
-
-        // Boot
-
-        bootRun {
-            systemProperty 'spring.profiles.active', findProperty('spring.profiles.active') ?: 'dev, native'
-            systemProperty 'spring.cloud.bootstrap.location', findProperty('spring.cloud.bootstrap.location') ?: './src/main/resources/bootstrap-dev.yml'
-        }
-
-        // Tests
-
-        test {
-            useJUnitPlatform()
-
-            filter {
-                includeTestsMatching "*Should"
-            }
-        }
-
-        // This will never actually serve as services rely on bootJars not jars
-        // It's just a temporary workaround so build/libs is not flagged as an implicit dependency of docker
-        jar {
-            destinationDirectory.set(file("build/unused_plain_jar"))
-        }
-
-        jacocoTestReport {
-            group = "Reporting"
-            reports {
-                xml.required = true
-                csv.required = false
-                html.destination file("${buildDir}/reports/jacoco/html")
-                xml.destination file("${buildDir}/reports/jacoco/xml/report.xml")
-
-            }
-        }
-
-        docker {
-            if (project.version.toUpperCase().equals("SNAPSHOT"))
-                name "lfeoperatorfabric/of-${project.name.toLowerCase()}:${project.version.toUpperCase()}" /* more information : https://vsupalov.com/docker-latest-tag/ */
-            else
-                name "lfeoperatorfabric/of-${project.name.toLowerCase()}"
-            tags "latest", "${project.version}"
-            labels (['project':"${project.group}"])
-            files( "build/libs"
-                    , "../../../config/docker/common-docker.yml"
-                    , "../../../config/docker/${project.name.toLowerCase().replaceAll("-business-service","")}-docker.yml"
-                    , '../../../src/main/docker/java-config-docker-entrypoint.sh'
-                    ,'../../../src/main/docker/add-certificates.sh')
-            buildArgs(['JAR_FILE'       : "${project.name.toLowerCase()}-${project.version.toUpperCase()}.jar",
-                       'http_proxy'     : apk.proxy.uri,
-                       'https_proxy'    : apk.proxy.uri,
-                       'HTTP_PROXY_AUTH': "basic:*:$apk.proxy.user:$apk.proxy.password"])
-            dockerfile file("src/main/docker/Dockerfile")
-        }
-
-        /////// CUSTOM TASKS
-
-        /*Task that copies all the dependencies under build/support_libs so Sonar
-        can make sense of the Lombok annotations for example */
-        task copyDependencies(type: Copy) {
-            description 'copy dependencies to build/support_libs'
-            from configurations.compileClasspath
-            into 'build/support_libs'
-        }
-
-        /* convenient copy for generating modifiable configuration from template*/
-        task copyWorkingDir(type: Copy) {
-            description 'copies [sub-project]/src/main/docker/volume to [sub-project]/build/docker-volume'
-            from "$project.projectDir/src/main/docker/volume/"
-            into "$project.projectDir/build/docker-volume/"
-            doFirst {
-                logger.info "creating $project.projectDir/build/docker-volume/"
-                new File("$project.projectDir/build/docker-volume/").mkdirs()
-            }
-        }
-
-        tasks.docker.dependsOn copyWorkingDir
-        tasks.docker.dependsOn build
-        tasks.jacocoTestReport.dependsOn test
-        tasks.dockerPrepare.dependsOn bootJar
-
-        Map[] commands = [
-                [command: ["up"], dependsOn: "copyWorkingDir"],
-                [command: ["down"]],
-                [command: ["logs", "-f"]],
-                [command: ["start"], dependsOn: "copyWorkingDir"],
-                [command: ["stop"]]
-        ]
-        for (Map c : commands) {
-            createComposeTasks(c, project)
+    dependencyManagement {
+        imports {
+            mavenBom cloud.dependencies
         }
     }
-}
 
-void createComposeTasks(Map taskDef, Project prj){
-    def cmdName = taskDef.command[0].capitalize()
-    def baseargs = ["-f", "$prj.projectDir/src/main/docker/docker-compose.yml"]
-    def bashargs = ((baseargs as List) << (taskDef.command as List)).flatten()
-//    println "generating compose$cmdName task with $bashargs"
-    def task = prj.task([type: Exec],"compose$cmdName", {
-        executable "docker-compose"
-        args bashargs
-//      dependsOn prj.tasks.copyWorkingDir
-    })
+    dependencies {
+        swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
+        implementation boot.actuator
+        implementation misc.micrometer
+        annotationProcessor misc.lombok
+        implementation misc.lombok
 
-    if(taskDef.dependsOn){
-        task.dependsOn prj.tasks[taskDef.dependsOn]
+        testAnnotationProcessor misc.lombok
+        testCompileOnly misc.lombok
+
+        testImplementation boot.starterTest, testing_deps.assertJ
+        testImplementation project(':tools:generic:test-utilities')
+        testImplementation testing_deps.awaitility
+        testImplementation group:'org.jeasy', name: 'easy-random-core', version: '5.0.0'
+
     }
 
+    configurations {
+        implementation.exclude module: "spring-boot-starter-tomcat"
+        testImplementation.exclude module: "spring-boot-starter-tomcat"
+    }
+
+    /////// COMPILATION
+
+    sourceSets {
+        main {
+            java {
+                srcDir 'src/main/java'
+                srcDir 'build/swagger/src/main/java'
+            }
+            resources{
+                srcDir 'src/main/resources'
+                srcDir 'build/src/generated/resources'
+            }
+        }
+    }
+
+    /////// CONFIGURATION
+
+    // Boot
+
+    bootRun {
+        systemProperty 'spring.profiles.active', findProperty('spring.profiles.active') ?: 'dev, native'
+        systemProperty 'spring.cloud.bootstrap.location', findProperty('spring.cloud.bootstrap.location') ?: './src/main/resources/bootstrap-dev.yml'
+    }
+
+    // Tests
+
+    test {
+        useJUnitPlatform()
+
+        filter {
+            includeTestsMatching "*Should"
+        }
+    }
+
+    swaggerSources {
+        endpoints {
+            inputFile = file('src/main/modeling/swagger.yaml')
+            code {
+                language = 'org.opfab.generators.OpfabSpringGenerator'
+                additionalProperties = [ignoreImportMappings:"false"]
+                configFile = file('src/main/modeling/config.json')
+                outputDir = file("./build/swagger")
+                templateDir = file('../src/main/resources/swagger-templates')
+            }
+            ui {
+                outputDir = file("./build/docs/api")
+            }
+        }
+    }
+
+    // This will never actually serve as services rely on bootJars not jars
+    // It's just a temporary workaround so build/libs is not flagged as an implicit dependency of docker
+    jar {
+        destinationDirectory.set(file("build/unused_plain_jar"))
+    }
+
+    // This is a temporary fix to avoid false build error, see (#1543)
+    tasks.named("processResources") {
+        duplicatesStrategy = 'include'
+    }
+
+    jacocoTestReport {
+        group = "Reporting"
+        reports {
+            xml.required = true
+            csv.required = false
+            html.destination file("${buildDir}/reports/jacoco/html")
+            xml.destination file("${buildDir}/reports/jacoco/xml/report.xml")
+
+        }
+    }
+
+    docker {
+        if (project.version.toUpperCase().equals("SNAPSHOT"))
+            name "lfeoperatorfabric/of-${project.name.toLowerCase()}:${project.version.toUpperCase()}" /* more information : https://vsupalov.com/docker-latest-tag/ */
+        else
+            name "lfeoperatorfabric/of-${project.name.toLowerCase()}"
+        tags "latest", "${project.version}"
+        labels (['project':"${project.group}"])
+        files( "build/libs"
+                , "../../config/docker/common-docker.yml"
+                , "../../config/docker/${project.name.toLowerCase().replaceAll("-business-service","")}-docker.yml"
+                , '../../src/main/docker/java-config-docker-entrypoint.sh'
+                ,'../../src/main/docker/add-certificates.sh')
+        buildArgs(['JAR_FILE'       : "${project.name.toLowerCase()}-${project.version.toUpperCase()}.jar",
+                   'http_proxy'     : apk.proxy.uri,
+                   'https_proxy'    : apk.proxy.uri,
+                   'HTTP_PROXY_AUTH': "basic:*:$apk.proxy.user:$apk.proxy.password"])
+        dockerfile file("src/main/docker/Dockerfile")
+    }
+
+    /////// CUSTOM TASKS
+
+    /*Task that copies all the dependencies under build/support_libs so Sonar
+    can make sense of the Lombok annotations for example */
+    task copyDependencies(type: Copy) {
+        description 'copy dependencies to build/support_libs'
+        from configurations.compileClasspath
+        into 'build/support_libs'
+    }
+
+    /* convenient copy for generating modifiable configuration from template*/
+    task copyWorkingDir(type: Copy) {
+        description 'copies [sub-project]/src/main/docker/volume to [sub-project]/build/docker-volume'
+        from "$project.projectDir/src/main/docker/volume/"
+        into "$project.projectDir/build/docker-volume/"
+        doFirst {
+            logger.info "creating $project.projectDir/build/docker-volume/"
+            new File("$project.projectDir/build/docker-volume/").mkdirs()
+        }
+    }
+
+    tasks.compileJava.dependsOn generateSwaggerCode
+    tasks.compileTestJava.dependsOn generateSwaggerCode
+    tasks.generateSwaggerCodeEndpoints.dependsOn ':tools:swagger-spring-generators:assemble'
+    tasks.docker.dependsOn copyWorkingDir
+    tasks.docker.dependsOn build
+    tasks.jacocoTestReport.dependsOn test
+    tasks.dockerPrepare.dependsOn bootJar
 
 }
+
+

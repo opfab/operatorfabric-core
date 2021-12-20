@@ -21,8 +21,8 @@
       "selectProcessText": "Sélectionner un Processus",
       "selectStateText": "Sélectionner un Etat",
       "selectTagText": "Sélectionner une Etiquette",
-      "publishDateFrom": "PUBLIE A PARTIR DE",
-      "publishDateTo": "PUBLIE JUSQU'A",
+      "publishDateFrom": "PUBLIEE A PARTIR DE",
+      "publishDateTo": "PUBLIEE JUSQU'A",
       "activeFrom": "ACTIVE A PARTIR DE",
       "activeTo": "ACTIVE JUSQU'A",
       "publishEndDateBeforeStartDate" : "La date de fin doit être postérieure à la date de début",
@@ -47,6 +47,7 @@
       "entitiesResponses": "REPONSES",
       "requiredResponses": "REPONSES REQUISES"
     },
+    "loadingInProgress": "Chargement en cours",
     "noResult": "Votre recherche ne correspond à aucun résultat.",
     "exportToExcel": "Exporter les données",
     "resultsNumber":"Nombre de résultats",
@@ -55,7 +56,9 @@
   },
   "global":{
     "connectionLost":"Connexion perdue",
-    "tryToReconnect":"Tentative de reconnexion ..."
+    "tryToReconnect":"Tentative de reconnexion ...",
+    "activateSoundText":"Son non activé, cliquer pour activer",
+    "activateSoundButton":"Activer le son"
   },
   "menu": {
     "feed": "Flux de cartes",
@@ -123,6 +126,9 @@
         "all": {
           "label": "Toutes"
         }
+      },
+      "applyFiltersToTimeLine" : {
+        "label" : "Appliquer les filtres à la timeline"
       }
     },
     "sort": {
@@ -181,7 +187,6 @@
     "description": "DESCRIPTION",
     "locale": "LANGUE",
     "timeZone": "ZONE HORAIRE",
-    "defaultTags": "TAGS PAR DEFAUT",
     "playSoundLabel": "Jouer des sons pour les cartes de type",
     "playSoundForAlarm": "Alarme",
     "playSoundForAction": "Action",

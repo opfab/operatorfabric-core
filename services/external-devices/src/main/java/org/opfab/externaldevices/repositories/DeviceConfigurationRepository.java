@@ -23,6 +23,6 @@ import java.util.List;
 @Repository
 public interface DeviceConfigurationRepository extends MongoRepository<DeviceConfigurationData,String> {
 
-    List<DeviceConfigurationData> findAll();
+    List<DeviceConfigurationData> findBySignalMappingId(String signalMappingId);
 
 }

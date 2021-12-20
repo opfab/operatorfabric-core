@@ -81,7 +81,9 @@
         "style"
       ],
       "acknowledgmentAllowed": "OnlyWhenResponseDisabledForUser",
-      "type" : "INPROGRESS"
+      "type" : "INPROGRESS",
+      "validateAnswerButtonLabel" : "SEND IMPACT",
+      "modifyAnswerButtonLabel" : "MODIFY IMPACT"
     },
     "multipleOptionsResponseState": {
       "name": "Additional information required",

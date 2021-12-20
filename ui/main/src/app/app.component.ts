@@ -8,7 +8,7 @@
  */
 
 
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -31,6 +31,8 @@ import {AlertActions, AlertActionTypes} from '@ofStore/actions/alert.actions';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {GroupsService} from '@ofServices/groups.service';
 import {SoundNotificationService} from "@ofServices/sound-notification.service";
+import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+
 
 class Alert {
   alert: Message;
@@ -53,6 +55,10 @@ export class AppComponent implements OnInit {
   connectionLostForMoreThanTenSeconds = false;
   alertMessage: Alert = {alert: undefined, className: undefined, display: false};
 
+
+  private modalRef: NgbModalRef;
+  @ViewChild('noSound') noSoundPopupRef: TemplateRef<any>;
+
   /**
    * NB: I18nService is injected to trigger its constructor at application startup
    */
@@ -69,7 +75,8 @@ export class AppComponent implements OnInit {
       , private processesService: ProcessesService
       , private reminderService: ReminderService
       , private soundNotificationService: SoundNotificationService
-      , private actions$: Actions) {
+      , private actions$: Actions,
+      private modalService: NgbModal) {
   }
 
   ngOnInit() {
@@ -156,6 +163,7 @@ export class AppComponent implements OnInit {
                   next: () => {
                   this.loaded = true;
                   this.reminderService.startService(identifier);
+                  this.activateSoundIfNotActivated();
                 },
                   error: catchError((err, caught) => {
                     console.error('Error in application initialization', err);
@@ -174,6 +182,35 @@ export class AppComponent implements OnInit {
         if (this.connectionLost) this.connectionLostForMoreThanTenSeconds = true;
       }, 10000);
     });
+  }
+
+
+  // Due to auto-policy in chromium based browsers, if the user does not interact with the application
+  // sound is not activated. This method open a modal and by clicking OK the user interacts with the application
+  // and activate the sound
+  //
+  // See https://developer.chrome.com/blog/autoplay/#web-audio
+  //
+  private activateSoundIfNotActivated() {
+
+    setTimeout(() => {
+      if (this.isNavigatorChromiumBased() && this.soundNotificationService.isAtLeastOneSoundActivated()) {
+        const context = new AudioContext();
+        if (context.state !== 'running') {
+          context.resume();
+          this.modalRef = this.modalService.open(this.noSoundPopupRef, {centered: true, backdrop: 'static'});
+        }
+      }
+    }
+      , 3000);
+  }
+
+  private isNavigatorChromiumBased() {
+    return (navigator.userAgent.indexOf('Chrom') > -1);
+  }
+
+  public closeModal() {
+    this.modalRef.close();
   }
 
   private subscribeToAlerts() {

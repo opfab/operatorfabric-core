@@ -120,3 +120,7 @@ Cypress.Commands.add('deleteAllArchivedCards', () => {
 Cypress.Commands.add('deleteAllCards', () => {
     cy.exec('cd .. && ./resources/deleteAllCards.sh '+Cypress.env('host'));
 })
+
+Cypress.Commands.add('deleteAllSettings', () => {
+    cy.exec('cd .. && ./resources/deleteAllSettings.sh '+Cypress.env('host'));
+})

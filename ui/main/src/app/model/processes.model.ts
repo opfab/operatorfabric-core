@@ -58,7 +58,9 @@ export class State {
         readonly description?: string,
         readonly showDetailCardHeader?: boolean,
         readonly type?: TypeOfStateEnum,
-        readonly isOnlyAChildState?: boolean
+        readonly isOnlyAChildState?: boolean,
+        readonly validateAnswerButtonLabel?: string,
+        readonly modifyAnswerButtonLabel?: string
     ) {
     }
 }
@@ -70,6 +72,7 @@ export class UserCard {
         readonly startDateVisible?: boolean,
         readonly endDateVisible?: boolean,
         readonly lttdVisible?: boolean,
+        readonly recipientVisible?: boolean,
         readonly recipientList?: Recipient[]
     ) {
     }

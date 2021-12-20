@@ -9,6 +9,10 @@
 
 package org.opfab.externaldevices.drivers;
 
+/**
+ * This interface serves to signal to dependency injections that the class implementing it can provide an
+ * ExternalDeviceDriver.
+ * */
 public interface ExternalDeviceDriverFactory {
 
     ExternalDeviceDriver create(String host, int port) throws ExternalDeviceDriverException;

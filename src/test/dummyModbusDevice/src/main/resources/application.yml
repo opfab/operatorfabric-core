@@ -1,6 +1,6 @@
 spring:
   application:
-    name: dummyModbusDevice
+    name: dummy-modbus-device
   main:
     web-application-type: NONE
 modbus_client:

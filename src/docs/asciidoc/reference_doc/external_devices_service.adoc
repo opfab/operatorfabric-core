@@ -1,0 +1,100 @@
+// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= External Devices Service
+
+The external devices service is an optional service allowing OperatorFabric to relay notifications to external
+physical devices.
+
+== Specification
+
+The aim of this section is to describe the initial business need that led to the creation of this service and what use
+cases are currently supported.
+
+OperatorFabric users already have the option to be notified of a card's arrival by a sound played by their browser.
+There is a different sound for each severity, and they are configurable for a given instance. The users can decide to
+opt out of sound notifications for certain severities.
+We also added an option for the sounds to be repeated until the operator interacted with the application (i.e. clicked
+anywhere on the page) so as to make them harder to miss.
+
+This can be enough for some use cases, but it was not ideal for operators working in control rooms. Indeed, control
+rooms each have an external sound system that is shared for the whole room, and existing applications currently
+trigger sound alerts on these sound systems rather than on each operator's computer.
+
+This has several advantages:
+
+* The sound can be heard by all operators
+* It can be heard even if the operator is not at their desk
+* The sound system can warn that the connexion with an application has been lost if it hasn't received a "watchdog"
+signal for a given period of time.
+
+As a result, external devices support in OperatorFabric aims to allow sound notifications to be passed on to external
+sound systems. The sound system on which the sound will be played can depend on the user receiving the notification.
+For example, all operators working in control room A will have their sounds played on the control room's central sound
+system, while operators from control room B will use theirs.
+Only one external device can be configured for each user.
+
+So far, only sound systems using the Modbus protocol are supported, but we would like to be able to support other
+protocols (and ultimately allow people to supply their own drivers) in the future.
+
+== Implementation
+
+Given the use case described above, the following elements need to be configurable:
+
+* How to connect to a given external device (host, port)
+* How to map an OperatorFabric signal key footnote:[currently, that means a severity, but in the future it could also
+be a process id, or anything identifying the signal to be played] to a signal (sound, light) on the external system
+* For each user, which device to use
+
+
+
+//TODO Schema 1-n deviceConf, userConf, signalMapping
+
+//TODO rename OpFab signal key
+
+//TODO schema web-ui external devices & API
+
+
+The external devices system is
+
+//TODO Explain Device vs DeviceConfiguration (realtime)
+
+
+
+//TODO Explain the interface  that a driver should implement (add javadoc) + Exceptions?
+
+
+
+== Configuration
+
+
+
+
+== Connexion Management
+
+OperatorFabric doesn't automatically attempt to connect to configured external devices on start up as they might not
+be available when the OperatorFabric instance starts. Similarly, posting a new device configuration to the external
+devices service doesn't cause it to attempt to connect immediately, as the configuration setup might be done in advance
+of the actual activation.
+
+However, if a notification is received by the external devices service that needs to be passed on to a device that is
+configured but not connected yet, the connection will be performed automatically.
+
+
+
+//TODO No checks on existing related resources when creation (imposes order in creation, makes init more complex)
+//but removal when deletion (same as users/groups/perimeters)
+
+
+== Drivers
+
+This section contains information that is specific to each type of driver. Currently, the only supported driver uses
+the https://en.wikipedia.org/wiki/Modbus[Modbus protocol].
+
+=== Modbus Driver
+
+//TODO Explain no response but ok because watchdog

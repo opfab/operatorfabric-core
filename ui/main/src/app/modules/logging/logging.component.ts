@@ -28,6 +28,7 @@ import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
+import { Utilities } from 'app/common/utilities';
 
 
 @Component({
@@ -48,6 +49,8 @@ export class LoggingComponent implements OnDestroy, OnInit {
     resultsNumber = 0;
     hasResult = false;
     firstQueryHasBeenDone = false;
+    loadingInProgress: boolean = false;
+    loadingIsTakingMoreThanOneSecond: boolean = false;
 
     processStateDescription = new Map();
     processStateName = new Map();
@@ -172,6 +175,9 @@ export class LoggingComponent implements OnDestroy, OnInit {
             return;
         }
 
+        this.loadingInProgress = true;
+        this.checkIfLoadingIsTakingMoreThanOneSecond();
+
         const { value } = this.loggingForm;
         this.filtersTemplate.filtersToMap(value);
         this.filtersTemplate.filters.set('size', [this.size.toString()]);
@@ -182,6 +188,9 @@ export class LoggingComponent implements OnDestroy, OnInit {
         this.cardService.fetchArchivedCards(this.filtersTemplate.filters)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((page: Page<any>) => {
+                this.loadingInProgress = false;
+                this.loadingIsTakingMoreThanOneSecond = false;
+
                 this.resultsNumber = page.totalElements;
                 this.currentPage = page_number + 1; // page on ngb-pagination component start at 1 , and page on backend start at 0
                 this.firstQueryHasBeenDone = true;
@@ -191,6 +200,12 @@ export class LoggingComponent implements OnDestroy, OnInit {
                 });
                 this.results = page.content;
             });
+    }
+
+    private checkIfLoadingIsTakingMoreThanOneSecond() {
+        setTimeout(() => {
+            this.loadingIsTakingMoreThanOneSecond = this.loadingInProgress;
+        }, 1000);
     }
 
     private extractTime(form: AbstractControl) {
@@ -266,7 +281,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
                         // TO DO translation for old process should be done  , but loading local arrive to late , solution to find
                         if (this.filtersTemplate.displayProcessGroupFilter())
                             exportArchiveData.push({
-                                [severityColumnName]: card.severity,
+                                [severityColumnName]: Utilities.translateSeverity(this.translate, card.severity),
                                 [timeOfActionColumnName]: this.timeService.formatDateTime(card.publishDate),
                                 [processGroupColumnName]: this.translateColumn(this.processesService.findProcessGroupLabelForProcess(card.process)),
                                 [processColumnName]:  card.processName,

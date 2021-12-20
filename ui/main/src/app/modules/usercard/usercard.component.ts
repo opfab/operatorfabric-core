@@ -31,7 +31,7 @@ import {DateTimeNgb, getDateTimeNgbFromMoment} from '@ofModel/datetime-ngb.model
 import * as moment from 'moment-timezone';
 import {HandlebarsService} from '../cards/services/handlebars.service';
 import {DetailContext} from '@ofModel/detail-context.model';
-import {debounceTime, distinctUntilChanged, map, takeUntil} from 'rxjs/operators';
+import {debounceTime, map, takeUntil} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
@@ -88,12 +88,15 @@ export class UserCardComponent implements OnDestroy, OnInit {
     cardToEdit: CardData;
     publisherForCreatingUsercard: string;
 
+    isStartDateValueSet = false;
+    isEndDateValueSet = false;
+
     @Input() cardIdToEdit = null;
     public card: Card;
 
     readonly defaultStartDate = new Date().valueOf() + 60000;
     readonly defaultEndDate = new Date().valueOf() + 60000 * 60 * 24;
-    readonly defaultLttdDate = new Date().valueOf() + 60000 * 60 * 24;
+    readonly defaultLttdDate = this.defaultEndDate - 60000;
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -101,10 +104,11 @@ export class UserCardComponent implements OnDestroy, OnInit {
     public displaySendingCardInProgress = false;
 
     modalRef: NgbModalRef;
-    severityVisible = true;
-    startDateVisible = true;
-    endDateVisible = true;
-    lttdVisible = true;
+    severityVisible = true ;
+    startDateVisible = true ;
+    endDateVisible = true ;
+    lttdVisible = true ;
+    recipientVisible = true; // if recipientVisible == false, then selectedRecipients = recipientList
 
     pageLoading = true;
     useDescriptionFieldForEntityList = false;
@@ -184,8 +188,10 @@ export class UserCardComponent implements OnDestroy, OnInit {
         };
         if (!!this.cardIdToEdit)
             this.loadCardForEdition();
-        else
+        else {
             this.pageLoading = false;
+            this.messageForm.get('lttd').setValue(getDateTimeNgbFromMoment(moment(this.defaultLttdDate)));
+        }
 
         this.publisherForCreatingUsercard = this.findPublisherForCreatingUsercard();
         this.dateTimeFilterChange.pipe(
@@ -233,9 +239,22 @@ export class UserCardComponent implements OnDestroy, OnInit {
                         this.messageForm.get('process').setValue(this.cardToEdit.card.process);
                         this.messageForm.get('process').disable();
                         this.messageForm.get('state').setValue(this.cardToEdit.card.state);
+
                         this.messageForm.get('startDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.startDate)));
-                        if (!!this.cardToEdit.card.endDate && this.endDateVisible) this.messageForm.get('endDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.endDate)));
-                        if (!!this.cardToEdit.card.lttd && this.lttdVisible) this.messageForm.get('lttd').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.lttd)));
+                        if (!!this.cardToEdit.card.startDate && this.startDateVisible) {
+                            this.isStartDateValueSet = true;
+                            this.dateTimeFilterChange.next(null);
+                        }
+
+                        if (!!this.cardToEdit.card.endDate && this.endDateVisible) {
+                            this.messageForm.get('endDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.endDate)));
+                            this.isEndDateValueSet = true;
+                            this.dateTimeFilterChange.next(null);
+                        }
+
+                        if (!!this.cardToEdit.card.lttd && this.lttdVisible) {
+                            this.messageForm.get('lttd').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.lttd)));
+                        }
                         this.selectedRecipients = this.cardToEdit.card.entityRecipients;
                         this.pageLoading = false;
             });
@@ -379,21 +398,26 @@ export class UserCardComponent implements OnDestroy, OnInit {
         });
     }
 
+    // Be careful, the code in the subscribe is executed even if we are editing an existing card
+    // Indeed, in order to display the state of the edited usercard, the state value of the control is changed
     loadTemplateWhenStateChange(): void {
         this.messageForm.get('state').valueChanges
         .pipe(
             takeUntil(this.unsubscribe$),
-            distinctUntilChanged()
+            debounceTime(10) //See #1891 Cypress usercard test was flaky without this debounce
         )
         .subscribe((state) => {
             if (!!state) {
                 this.selectedState = state;
-                this.messageForm.get("startDate").setValue('');
-                this.messageForm.get("endDate").setValue('');
-                this.messageForm.get("lttd").setValue('');
+
+                // We reset these values only if we are not editing an existing usercard
+                if (!this.cardIdToEdit) {
+                    this.messageForm.get("startDate").setValue('');
+                    this.messageForm.get("endDate").setValue('');
+                    this.messageForm.get("lttd").setValue(getDateTimeNgbFromMoment(moment(this.defaultLttdDate)));
+                }
                 this.loadRecipentsOptions();
                 this.loadTemplate();
-
             }
         });
     }
@@ -422,18 +446,20 @@ export class UserCardComponent implements OnDestroy, OnInit {
         } else this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
 
         if (!!userCard) {
-            this.severityVisible = (userCard.severityVisible === undefined) ? true : userCard.severityVisible;
-            this.startDateVisible = (userCard.startDateVisible === undefined) ? true : userCard.startDateVisible;
-            this.endDateVisible = (userCard.endDateVisible === undefined) ? true : userCard.endDateVisible;
-            this.lttdVisible = (userCard.lttdVisible === undefined) ? true : userCard.lttdVisible;
-            if (!!userCard.recipientList) {
-                this.loadRecipientListForState(userCard.recipientList)
-            }
+        this.severityVisible = (userCard.severityVisible === undefined) ? true : userCard.severityVisible;
+        this.startDateVisible = (userCard.startDateVisible === undefined) ? true : userCard.startDateVisible;
+        this.endDateVisible = (userCard.endDateVisible === undefined) ? true : userCard.endDateVisible;
+        this.lttdVisible = (userCard.lttdVisible === undefined) ? true : userCard.lttdVisible;
+        this.recipientVisible = (userCard.recipientVisible === undefined) ? true : userCard.recipientVisible;
+        if (!!userCard.recipientList) {
+            this.loadRecipientListForState(userCard.recipientList);
+        }
         } else {
             this.severityVisible = true;
             this.startDateVisible = true;
             this.endDateVisible = true;
             this.lttdVisible = true;
+            this.recipientVisible = true;
         }
 
     }
@@ -516,7 +542,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
             return;
         }
 
-        const selectedRecipients = this.recipientForm.value['recipients'];
+        let allRecipientOptions = selectedProcess.states[state].userCard.recipientList;
+        allRecipientOptions = allRecipientOptions != undefined ? allRecipientOptions : [];
+        const selectedRecipients = this.recipientVisible ? this.recipientForm.value['recipients'] : allRecipientOptions;
         const recipients = [];
         selectedRecipients.forEach(entity => recipients.push(entity.id));
 
@@ -531,15 +559,14 @@ export class UserCardComponent implements OnDestroy, OnInit {
         if (!startDate) startDate = this.defaultStartDate;
         else startDate = this.createTimestampFromValue(startDate);
 
-        let lttd = this.messageForm.get('lttd').value;
-        if (!lttd) {
-            if (specificInformation.card.lttd) {
-                lttd = specificInformation.card.lttd;
-            } else {
-                lttd = this.lttdVisible ? this.defaultLttdDate : null;
-            }
+        let lttd = null;
+        if (this.lttdVisible) {
+            lttd = this.messageForm.get('lttd').value;
+            lttd = this.createTimestampFromValue(lttd);
+
+        } else {
+            if (specificInformation.card.lttd) lttd = specificInformation.card.lttd;
         }
-        else lttd = this.createTimestampFromValue(lttd);
 
         let endDate = this.messageForm.get('endDate').value;
         if (!endDate)  endDate = this.endDateVisible ? this.defaultEndDate : this.lttdVisible ? lttd : null;
@@ -565,6 +592,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
         const keepChildCards = (!!specificInformation.card.keepChildCards) ? specificInformation.card.keepChildCards : false;
         const secondsBeforeTimeSpanForReminder = (specificInformation.card.secondsBeforeTimeSpanForReminder !== undefined) ? specificInformation.card.secondsBeforeTimeSpanForReminder : null;
         const externalRecipients = (!!specificInformation.card.externalRecipients) ? specificInformation.card.externalRecipients : null;
+        const entitiesAllowedToEdit = (!!specificInformation.card.entitiesAllowedToEdit) ? specificInformation.card.entitiesAllowedToEdit : null;
 
         let severity;
         if (this.severityVisible) {
@@ -604,6 +632,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
                     userRecipients : [this.currentUserWithPerimeters.userData.login],
                     entityRecipients: recipients,
                     entitiesAllowedToRespond: entitiesAllowedToRespond,
+                    entitiesAllowedToEdit: entitiesAllowedToEdit,
                     externalRecipients: externalRecipients,
                     title: title,
                     titleTranslated: titleTranslated,

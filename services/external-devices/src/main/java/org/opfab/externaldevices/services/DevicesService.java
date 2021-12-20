@@ -16,10 +16,10 @@ import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
 import org.opfab.externaldevices.drivers.ExternalDeviceDriver;
 import org.opfab.externaldevices.drivers.ExternalDeviceDriverException;
 import org.opfab.externaldevices.drivers.ExternalDeviceDriverFactory;
-import org.opfab.externaldevices.model.*;
-import org.opfab.externaldevices.repositories.DeviceConfigurationRepository;
-import org.opfab.externaldevices.repositories.SignalMappingRepository;
-import org.opfab.externaldevices.repositories.UserConfigurationRepository;
+import org.opfab.externaldevices.model.Device;
+import org.opfab.externaldevices.model.DeviceConfiguration;
+import org.opfab.externaldevices.model.DeviceData;
+import org.opfab.externaldevices.model.ResolvedConfiguration;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -34,61 +34,36 @@ import java.util.stream.Collectors;
 /**
  * {@link DevicesService}
  * * Acts a an interface between the APIs and the repositories
- * * Queries the repositories to resolve configuration and create external devices drivers
+ * * Creates external devices drivers
  * * Maintains a pool of drivers and acts on their connection status
  * * Translates each notification received through the API into a signal to send to the appropriate driver
+ * * Generates watchdog signals
  */
 @Service
 @Slf4j
 public class DevicesService {
 
-    public static final String CONFIGURATION_NOT_FOUND = "Configuration not found for %1$s %2$s";
-    public static final String DEBUG_RETRIEVED_CONFIG = "Retrieved configuration for";
     public static final String EXISTING_DRIVER = "Driver already exists in pool for {}: {}";
     public static final String OUTDATED_DRIVER = "Driver exists in pool for {}: {}, but configuration has changed. Replacing it with new driver.";
-    public static final String UNSUPPORTED_SIGNAL ="Signal %1$s is not supported by device %2$s";
 
-    private final UserConfigurationRepository userConfigurationRepository;
-    private final DeviceConfigurationRepository deviceConfigurationRepository;
-    private final SignalMappingRepository signalMappingRepository;
+    private final ConfigService configService;
     private final ExternalDeviceDriverFactory externalDeviceDriverFactory;
     private final ExternalDevicesWatchdogProperties externalDevicesWatchdogProperties;
 
     private final Map<String,ExternalDeviceDriver> deviceDriversPool;
 
-    @Scheduled(cron = "${operatorfabric.externaldevices.watchdog.cron:*/5 * * * * *}", zone = "UTC")
-    public void sendWatchdog() {
-        if(externalDevicesWatchdogProperties.getEnabled()) {
-            this.deviceDriversPool.forEach((deviceId, externalDeviceDriver) -> {
-                if(externalDeviceDriver.isConnected()) { // To avoid reconnecting drivers automatically
-                    try {
-                        log.debug("Sending watchdog signal for device {}",deviceId);
-                        externalDeviceDriver.send(externalDevicesWatchdogProperties.getSignalId());
-                    } catch (ExternalDeviceDriverException e) {
-                        log.error("Watchdog signal couldn't be sent to device {} (driver: {})",deviceId,externalDeviceDriver.toString());
-                    }
-                }
-            });
-        } else {
-            log.debug("Watchdog signal disabled.");
-        }
-    }
-
-    public DevicesService(UserConfigurationRepository userConfigurationRepository,
-                          DeviceConfigurationRepository deviceConfigurationRepository,
-                          SignalMappingRepository signalMappingRepository,
+    public DevicesService(ConfigService configService,
                           ExternalDeviceDriverFactory externalDeviceDriverFactory,
                           ExternalDevicesWatchdogProperties externalDevicesWatchdogProperties) {
-        this.userConfigurationRepository = userConfigurationRepository;
-        this.deviceConfigurationRepository = deviceConfigurationRepository;
-        this.signalMappingRepository = signalMappingRepository;
+        this.configService = configService;
         this.externalDeviceDriverFactory = externalDeviceDriverFactory;
         this.externalDevicesWatchdogProperties = externalDevicesWatchdogProperties;
         this.deviceDriversPool = new HashMap<>();
     }
 
     public void connectDevice(String deviceId) throws ExternalDeviceDriverException, ExternalDeviceConfigurationException {
-        ExternalDeviceDriver externalDeviceDriver = getDriverForDevice(deviceId);
+        DeviceConfiguration deviceConfiguration = configService.retrieveDeviceConfiguration(deviceId);
+        ExternalDeviceDriver externalDeviceDriver = getDriverForDevice(deviceConfiguration);
         externalDeviceDriver.connect();
     }
 
@@ -105,45 +80,51 @@ public class DevicesService {
 
     public void sendSignalForUser(String opFabSignalKey, String userLogin) throws ExternalDeviceConfigurationException, ExternalDeviceDriverException {
 
-        UserConfiguration userConfiguration = retrieveUserConfiguration(userLogin);
-        DeviceConfiguration deviceConfiguration = retrieveDeviceConfiguration(userConfiguration.getExternalDeviceId());
-        SignalMapping signalMapping = retrieveSignalMapping(deviceConfiguration.getSignalMappingId());
+        ResolvedConfiguration resolvedConfiguration = configService.getResolvedConfiguration(opFabSignalKey, userLogin);
 
-        if(signalMapping.getSupportedSignals().containsKey(opFabSignalKey)) {
-            int signalId = signalMapping.getSupportedSignals().get(opFabSignalKey);
-            ExternalDeviceDriver externalDeviceDriver = getDriverForDevice(userConfiguration.getExternalDeviceId());
-            if(!externalDeviceDriver.isConnected()) {
-                log.debug("External device {} was not connected. Connecting before send.",userConfiguration.getExternalDeviceId());
-                externalDeviceDriver.connect();
-            }
-            externalDeviceDriver.send(signalId);
-        } else {
-            throw new ExternalDeviceConfigurationException(String.format(UNSUPPORTED_SIGNAL,opFabSignalKey,userConfiguration.getExternalDeviceId()));
+        ExternalDeviceDriver externalDeviceDriver = getDriverForDevice(resolvedConfiguration.getDeviceConfiguration());
+        if(!externalDeviceDriver.isConnected()) {
+            log.debug("External device {} was not connected. Connecting before send.",resolvedConfiguration.getDeviceConfiguration().getId());
+            externalDeviceDriver.connect();
         }
+        externalDeviceDriver.send(resolvedConfiguration.getSignalId());
 
     }
 
-    public void insertDeviceConfiguration(DeviceConfiguration deviceConfiguration) {
-        deviceConfigurationRepository.insert(new DeviceConfigurationData(deviceConfiguration));
-    }
-
-    public List<Device> getDevices() {
-
-        return deviceConfigurationRepository.findAll().stream()
-                .map(this::createDeviceDataFromConfiguration)
-                .collect(Collectors.toList());
-
+    @Scheduled(cron = "${operatorfabric.externaldevices.watchdog.cron:*/5 * * * * *}", zone = "UTC")
+    public void sendWatchdog() {
+        if(externalDevicesWatchdogProperties.getEnabled()) {
+            this.deviceDriversPool.forEach((deviceId, externalDeviceDriver) -> {
+                if(externalDeviceDriver.isConnected()) { // To avoid reconnecting drivers automatically
+                    try {
+                        log.debug("Sending watchdog signal for device {}",deviceId);
+                        externalDeviceDriver.send(externalDevicesWatchdogProperties.getSignalId());
+                    } catch (ExternalDeviceDriverException e) {
+                        log.error("Watchdog signal couldn't be sent to device {} (driver: {}): {}",deviceId,externalDeviceDriver.toString(),e.getMessage());
+                    }
+                }
+            });
+        } else {
+            log.debug("Watchdog signal disabled.");
+        }
     }
 
     public Optional<Device> getDevice(String deviceId) {
-
-        return deviceConfigurationRepository.findById(deviceId)
-                .map(this::createDeviceDataFromConfiguration);
-
+        synchronized (deviceDriversPool) {
+            return Optional.ofNullable(deviceDriversPool.get(deviceId)).map(driver -> createDeviceFromDriver(deviceId,driver));
+        }
     }
 
-    private ExternalDeviceDriver getDriverForDevice(String deviceId) throws ExternalDeviceDriverException, ExternalDeviceConfigurationException {
-        DeviceConfiguration deviceConfiguration = retrieveDeviceConfiguration(deviceId);
+    public List<Device> getDevices() {
+        synchronized (deviceDriversPool) {
+            return deviceDriversPool.entrySet().stream()
+                    .map(entry -> createDeviceFromDriver(entry.getKey(),entry.getValue()))
+                    .collect(Collectors.toList());
+        }
+    }
+
+    private ExternalDeviceDriver getDriverForDevice(DeviceConfiguration deviceConfiguration) throws ExternalDeviceDriverException, ExternalDeviceConfigurationException {
+        String deviceId = deviceConfiguration.getId();
         synchronized (deviceDriversPool) {
             try {
 
@@ -175,51 +156,13 @@ public class DevicesService {
         }
     }
 
-    private DeviceConfiguration retrieveDeviceConfiguration(String deviceId) throws ExternalDeviceConfigurationException {
-
-        Optional<DeviceConfigurationData> deviceConfiguration = deviceConfigurationRepository.findById(deviceId);
-        if(deviceConfiguration.isPresent()) {
-            DeviceConfiguration retrievedDeviceConfig = deviceConfiguration.get();
-            log.debug("{} for device {} : {}", DEBUG_RETRIEVED_CONFIG, deviceId, retrievedDeviceConfig.toString());
-            return retrievedDeviceConfig;
-        } else {
-            throw new ExternalDeviceConfigurationException(String.format(CONFIGURATION_NOT_FOUND, "device", deviceId));
-        }
-
-    }
-
-    private UserConfiguration retrieveUserConfiguration(String userLogin) throws ExternalDeviceConfigurationException {
-
-        Optional<UserConfigurationData> userConfiguration = userConfigurationRepository.findById(userLogin);
-        if(userConfiguration.isPresent()) {
-            UserConfiguration retrievedUserConfig = userConfiguration.get();
-            log.debug("{} for user {} : {}", DEBUG_RETRIEVED_CONFIG, userLogin, retrievedUserConfig.toString());
-            return retrievedUserConfig;
-        } else {
-            throw new ExternalDeviceConfigurationException(String.format(CONFIGURATION_NOT_FOUND, "user", userLogin));
-        }
-
-    }
-
-    private SignalMapping retrieveSignalMapping(String signalMappingId) throws ExternalDeviceConfigurationException {
-
-        Optional<SignalMappingData> signalMapping = signalMappingRepository.findById(signalMappingId);
-        if(signalMapping.isPresent()) {
-            SignalMapping retrievedSignalMapping = signalMapping.get();
-            log.debug("{} for signal {} : {}", DEBUG_RETRIEVED_CONFIG, signalMappingId, retrievedSignalMapping.toString());
-            return retrievedSignalMapping;
-        } else {
-            throw new ExternalDeviceConfigurationException(String.format(CONFIGURATION_NOT_FOUND, "signal", signalMappingId));
-        }
-
-    }
-
-    private DeviceData createDeviceDataFromConfiguration(DeviceConfiguration deviceConfiguration) {
-        DeviceData device = new DeviceData(deviceConfiguration);
-        if (deviceDriversPool.containsKey(device.getId())) {
-            device.setIsConnected(deviceDriversPool.get(device.getId()).isConnected());
-        }
-        return device;
+    private Device createDeviceFromDriver(String id, ExternalDeviceDriver externalDeviceDriver) {
+        return DeviceData.builder()
+                .id(id)
+                .resolvedAddress(externalDeviceDriver.getResolvedHost().toString())
+                .port(externalDeviceDriver.getPort())
+                .isConnected(externalDeviceDriver.isConnected())
+                .build();
     }
 
 }

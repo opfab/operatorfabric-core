@@ -22,6 +22,7 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {ProcessesService} from "@ofServices/processes.service";
+import { Utilities } from 'app/common/utilities';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {JsonToArray} from 'app/common/jsontoarray/json-to-array';
 import {CardService} from '@ofServices/card.service';
@@ -32,7 +33,7 @@ import {ColDef, GridOptions} from "ag-grid-community";
 import {AnswerCellRendererComponent} from '../cell-renderers/answer-cell-renderer.component';
 import {ResponsesCellRendererComponent} from '../cell-renderers/responses-cell-renderer.component';
 import {LightCard} from '@ofModel/light-card.model';
-import {LightCardsStoreService} from '@ofServices/lightcards-store.service';
+import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 
 @Component({
     selector: 'of-monitoring-table',
@@ -168,6 +169,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                     width: 30,
                 }
             },
+            ensureDomOrder : true, // rearrange row-index of rows when sorting cards (used for cypress)
             pagination : true,
             suppressCellSelection: true,
             headerHeight: 70,
@@ -196,14 +198,14 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         };
 
         this.columnDefs = [
-            {type: 'severityColumn', headerName: '', field: 'severityNumber',  cellClassRules: severityCellClassRules},
+            {type: 'severityColumn', headerName: '', field: 'severityNumber',   headerClass: 'opfab-ag-header-with-no-padding',cellClassRules: severityCellClassRules},
             {type: 'timeColumn', headerName: this.timeColumnName, field: 'time'},
             {type: 'answerColumn', headerName: '', field: 'answer', cellRenderer: 'answerCellRenderer'},
             {type: 'dataColumn', headerName: this.titleColumnName, field: 'title'},
             {type: 'dataColumn', headerName: this.summaryColumnName, field: 'summary'},
             {type: 'processColumn', headerName: this.typeOfStateColumnName, field: 'processStatus',cellClassRules: typeOfStateCellClassRules},
             {type: 'emitterColumn', headerName: this.emitterColumnName, field: 'emitter'},
-            {type: 'dataColumn', headerName: this.entitiesResponsesColumnName, field: 'entitiesResponses', cellRenderer: 'responsesCellRenderer'},
+            {type: 'dataColumn', headerName: this.entitiesResponsesColumnName, field: 'entitiesNamesResponses', cellRenderer: 'responsesCellRenderer'},
         ];
 
         this.gridApi.setColumnDefs(this.columnDefs);
@@ -227,21 +229,26 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         this.rowData = [];
         this.displayedResults.forEach(line => {
 
-                this.rowData.push({ severityNumber: this.mapSeverity.get(line.severity),
-                                    time: this.displayTime(line.creationDateTime),
-                                    title: line.titleTranslated,
-                                    summary: line.summaryTranslated,
-                                    processStatus: this.translateValue('shared.typeOfState.' + line.typeOfState),
-                                    typeOfState: line.typeOfState,
-                                    cardId: line.cardId,
-                                    cardUid: line.cardUid,
-                                    severity: line.severity,
-                                    answer: line.answer,
-                                    emitter: line.emitter,
-                                    requiredResponses: line.requiredResponses,
-                                    entitiesResponses: line.entitiesResponses,
-                                    beginningOfBusinessPeriod: line.beginningOfBusinessPeriod,
-                                    endOfBusinessPeriod: line.endOfBusinessPeriod });
+            const entitiesNamesResponses = [];
+            line.entitiesResponses.forEach(entityId => {
+                entitiesNamesResponses.push(this.entitiesService.getEntityName(entityId));
+            });
+            this.rowData.push({ severityNumber: this.mapSeverity.get(line.severity),
+                                time: this.displayTime(line.creationDateTime),
+                                title: line.titleTranslated,
+                                summary: line.summaryTranslated,
+                                processStatus: this.translateValue('shared.typeOfState.' + line.typeOfState),
+                                typeOfState: line.typeOfState,
+                                cardId: line.cardId,
+                                cardUid: line.cardUid,
+                                severity: line.severity,
+                                answer: line.answer,
+                                emitter: line.emitter,
+                                requiredResponses: line.requiredResponses,
+                                entitiesResponses: line.entitiesResponses,
+                                entitiesNamesResponses: entitiesNamesResponses,
+                                beginningOfBusinessPeriod: line.beginningOfBusinessPeriod,
+                                endOfBusinessPeriod: line.endOfBusinessPeriod });
 
         });
         this.rowDataSubject.next(this.rowData);
@@ -285,11 +292,13 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                 this.exportMonitoringData.push({
                         [this.timeColumnName]: line.data.time,
                         [this.answerColumnName]: line.data.answer,
-                        [this.businessPeriodColumnName]: this.displayTime(line.data.beginningOfBusinessPeriod).concat(this.displayTime(line.data.endOfBusinessPeriod)),
+                        [this.businessPeriodColumnName]: this.displayTime(line.data.beginningOfBusinessPeriod)
+                                                         .concat('-')
+                                                         .concat(this.displayTime(line.data.endOfBusinessPeriod)),
                         [this.titleColumnName]: line.data.title,
                         [this.summaryColumnName]: line.data.summary,
                         [this.typeOfStateColumnName]: line.data.processStatus,
-                        [this.severityColumnName]: line.data.severity,
+                        [this.severityColumnName]: Utilities.translateSeverity(this.translate, line.data.severity),
                         [this.emitterColumnName]: line.data.emitter,
                         [this.requiredResponsesColumnName]: line.data.requiredResponses ? this.getEntitiesNames(line.data.requiredResponses).join() : '',
                         [this.entitiesResponsesColumnName]: responses ? responses.join() : ''
@@ -361,6 +370,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         }
         card.card.title = card.card.titleTranslated;
         card.card.summary =  card.card.summaryTranslated;
+        card.card.severity = Utilities.translateSeverity(this.translate, card.card.severity);
 
         card.childCards.forEach(childCard => {
             if (childCard.publisherType==="ENTITY") childCard.publisherName= this.entitiesService.getEntityName(childCard.publisher);

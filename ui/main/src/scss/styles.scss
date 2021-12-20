@@ -78,10 +78,27 @@ body {
 // END CUSTOM SCROLLBAR STYLE
 
 
+// CUSTOM SPINNER
+
 .opfab-slow-spinner {
   -webkit-animation: fa-spin 2s infinite linear;
   animation: fa-spin 2s infinite linear;
 } 
+
+// Spinner when loading cards or table of cards 
+// the spinner is in the center of the screen 
+
+.opfab-card-loading-spinner {
+  font-size: 68px;
+  width: 150px;
+  height: 150px;
+  margin: auto;
+  text-align: center;
+  background-color: var(--opfab-bgcolor);
+  color:var(--opfab-text-color);
+}
+
+// END OF CUSTOM SPINNER
 
 
 // BUTTON STYLE 
@@ -869,6 +886,15 @@ html, body { height: 100%; }
 
   ));
 
+
+  // This is done to reduce min-height (150px by default) in order to remove empty space when there is 1 line or 2
+  // The height of a line is 42 (40 + 1*2 padding)
+  .ag-layout-auto-height {
+    .ag-center-cols-clipper, .ag-center-cols-container, .ag-body-viewport {
+      min-height: 42px;
+    }
+  }
+
   color: var(--opfab-text-color);
 
   .ag-root-wrapper {
@@ -896,6 +922,11 @@ html, body { height: 100%; }
     border: 2px solid #2268FF;
   }
 
+
+  .opfab-ag-header-with-no-padding {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
 
   .action-cell-delete-admin {
     display: none;

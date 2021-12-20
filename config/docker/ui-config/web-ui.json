@@ -47,12 +47,12 @@
       },
       "hideAckFilter": false,
       "hideResponseFilter": false,
+      "hideApplyFiltersToTimeLineChoice": false,
       "secondsBeforeLttdForClockDisplay": 3700,
       "hideReadSort": false,
       "hideSeveritySort": false,
       "hideAckAllCardsFeature": false
     },
-    "notify": false,
     "timeline": {
       "domains": [
         "TR",
@@ -115,9 +115,6 @@
     "changePasswordUrl": "http://localhost:89/auth/realms/dev/account/#/security/signingin"
   },
   "settings": {
-    "tags": {
-      "hide": false
-    },
     "about": {
       "firstapplication": {
         "name": "First application",
@@ -136,7 +133,7 @@
       "operatorfabric": {
         "name": "OperatorFabric",
         "rank": 0,
-        "version": "3.1.0.RELEASE"
+        "version": "3.2.0.RELEASE"
       }
     },
     "infos": {

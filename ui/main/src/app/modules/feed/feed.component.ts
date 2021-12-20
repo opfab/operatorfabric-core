@@ -16,7 +16,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
 import {delay, map} from 'rxjs/operators';
 import * as moment from 'moment';
-import {LightCardsFeedFilterService} from '@ofServices/lightcards-feed-filter.service';
+import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
 import {ConfigService} from '@ofServices/config.service';
 
 @Component({

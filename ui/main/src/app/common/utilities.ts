@@ -8,12 +8,26 @@
  */
 
 import {Process} from '@ofModel/processes.model';
+import {TranslateService} from '@ngx-translate/core';
 
 export abstract class Utilities {
 
+    private static readonly _stringPrefixToAddForTranslation: string = "shared.severity.";
+
+  
     public static getI18nPrefixFromProcess (process: Process): string {
         return process.id + '.' + process.version + '.';
     }
+  
+  
+    public static translateSeverity(translateService: TranslateService, severity: string) : string {
+      let severityTranslated: string;
+      let rawSeverityString: string = Utilities._stringPrefixToAddForTranslation + severity.toLowerCase();
+  
+      severityTranslated = translateService.instant(rawSeverityString);
+  
+      return severityTranslated;
+  }
 
 }
 

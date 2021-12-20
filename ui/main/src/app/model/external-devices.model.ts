@@ -10,6 +10,6 @@
 
 export class Notification {
     constructor(
-        readonly signalId: string) {
+        readonly opfabSignalId: string) {
     }
 }

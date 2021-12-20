@@ -40,7 +40,7 @@ import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {getNextTimeForRepeating} from '@ofServices/reminder/reminderUtils';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
-import {LightCardsFeedFilterService} from '@ofServices/lightcards-feed-filter.service';
+import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
 
 
 @Component({
@@ -317,7 +317,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
 
 
   initDataPipe(): void {
-    this.lightCardsFeedFilterService.getFilteredLightCards()
+    this.lightCardsFeedFilterService.getFilteredLightCardsForTimeLine()
     .pipe(takeUntil(this.ngUnsubscribe$))
     .subscribe(value => this.getAllCardsToDrawOnTheTimeLine(value));
   }

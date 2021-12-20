@@ -34,7 +34,7 @@ public class ObjectMapperShould {
     private ObjectMapper mapper;
 
     @Test
-    public void readDeviceConfiguration() throws IOException {
+    void readDeviceConfiguration() throws IOException {
         String deviceConfigurationString = "{ \"id\": \"loudspeaker_1\", \"host\": \"some_host\", \"port\": 1234, \"signalMappingId\": \"some_mapping\" }";
         DeviceConfiguration deviceConfiguration = mapper.readValue(deviceConfigurationString, DeviceConfiguration.class);
         assertThat(deviceConfiguration).isNotNull();
@@ -46,7 +46,7 @@ public class ObjectMapperShould {
     }
 
     @Test
-    public void readUserConfiguration() throws IOException {
+    void readUserConfiguration() throws IOException {
         String userConfigurationString = "{ \"userLogin\": \"jcleese\", \"externalDeviceId\": \"loudspeaker_1\" }";
         UserConfiguration userConfiguration = mapper.readValue(userConfigurationString, UserConfiguration.class);
         assertThat(userConfiguration).isNotNull();
@@ -56,7 +56,7 @@ public class ObjectMapperShould {
     }
 
     @Test
-    public void readSignalMapping() throws IOException {
+    void readSignalMapping() throws IOException {
         String signalMappingString = "{ \"id\": \"some_mapping\", \"supportedSignals\": { \"ALARM\": 1, \"ACTION\": 2 } }";
         SignalMapping signalMapping = mapper.readValue(signalMappingString, SignalMapping.class);
         assertThat(signalMapping).isNotNull();
@@ -67,11 +67,11 @@ public class ObjectMapperShould {
     }
 
     @Test
-    public void readNotification() throws IOException {
-        String notificationString = "{ \"signalId\": \"ALARM\" }";
+    void readNotification() throws IOException {
+        String notificationString = "{ \"opfabSignalId\": \"ALARM\" }";
         Notification notification = mapper.readValue(notificationString, Notification.class);
         assertThat(notification).isNotNull();
         assertThat(notification).isInstanceOf(NotificationData.class);
-        assertThat(notification.getSignalId()).isEqualTo("ALARM");
+        assertThat(notification.getOpfabSignalId()).isEqualTo("ALARM");
     }
 }

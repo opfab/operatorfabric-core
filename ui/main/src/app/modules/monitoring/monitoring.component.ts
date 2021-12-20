@@ -17,9 +17,9 @@ import {I18n} from '@ofModel/i18n.model';
 import {MonitoringFiltersComponent} from './components/monitoring-filters/monitoring-filters.component';
 import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {ProcessesService} from '@ofServices/processes.service';
-import {LightCardsFeedFilterService} from '@ofServices/lightcards-feed-filter.service';
+import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
 import {Filter} from '@ofModel/feed-filter.model';
-import {LightCardsStoreService} from '@ofServices/lightcards-store.service';
+import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {EntitiesService} from '@ofServices/entities.service';
 
 @Component({
@@ -82,7 +82,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
                 filter( results => this.areFiltersCorrectlySet(results[0])),  
                 map(results => {
                         const activeFilters = results[0].concat(results[1]);
-                        const cards = this.lightCardsService.filterLightCards(results[2], activeFilters);
+                        const cards = results[2].filter(card => Filter.chainFilter(card,activeFilters));
                         if (!!cards && cards.length <= 0) {
                             return null;
                         }

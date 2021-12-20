@@ -12,14 +12,12 @@ import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {CardService} from '@ofServices/card.service';
 import {EMPTY, Observable} from 'rxjs';
-import {catchError, filter, map, switchMap, withLatestFrom} from 'rxjs/operators';
+import {map, switchMap, withLatestFrom} from 'rxjs/operators';
 import {
     LightCardActionTypes,RemoveLightCard, SelectLightCard
 } from '@ofActions/light-card.actions';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {ApplyFilter, FeedActionTypes} from '@ofActions/feed.actions';
-import {FilterType} from '@ofServices/filter.service';
 import {selectCardStateSelectedId} from '@ofSelectors/card.selectors';
 import {AppService} from '@ofServices/app.service';
 
@@ -33,23 +31,6 @@ export class CardOperationEffects {
                 private cardService: CardService,
                 private appService: AppService) {
     }
-
-    
-    updateSubscription: Observable<any> = createEffect(() => this.actions$
-        .pipe(
-            ofType(FeedActionTypes.ApplyFilter),
-            filter((af: ApplyFilter) => af.payload.name === FilterType.BUSINESSDATE_FILTER),
-            switchMap((af: ApplyFilter) => {
-                    this.cardService.setSubscriptionDates(af.payload.status.start, af.payload.status.end);
-                    return EMPTY;
-                }
-            ),
-            catchError((error, caught) => {
-                console.error('CardOperationEffect - Error in update subscription ', error);
-                return caught;
-            })
-        ), { dispatch: false });
-
 
 
     deleteIfSelectedCard: Observable<any> = createEffect(() => this.actions$

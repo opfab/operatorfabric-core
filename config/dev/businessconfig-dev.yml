@@ -6,4 +6,4 @@ spring:
 
 operatorfabric.businessconfig:
   storage:
-    path: "./services/core/businessconfig/build/docker-volume/businessconfig-storage"
+    path: "./services/businessconfig/build/docker-volume/businessconfig-storage"

@@ -28,7 +28,9 @@
 		  "templateName": "question",
 		  "styles": [],
 		  "acknowledgmentAllowed": "Never",
-		  "type" : "INPROGRESS"
+		  "type" : "INPROGRESS",
+		  "validateAnswerButtonLabel": "Send impact",
+		  "modifyAnswerButtonLabel": "Modify impact"
 		},   
 		"incidentInProgressState": {
 		  "name": "incidentInProgress.name",
@@ -38,6 +40,7 @@
 					"startDateVisible" : false,
 					"endDateVisible" : false,
 					"lttdVisible" : false,
+					"recipientVisible": false,
 					"recipientList" : [{"id": "ALLCONTROLROOMS", "levels": [0,1]}, {"id": "ENTITY4"}]
 				},
 		  "color": "#FAF0AF",

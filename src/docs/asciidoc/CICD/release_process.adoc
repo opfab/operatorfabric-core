@@ -27,9 +27,10 @@ the same major version.
 
 == Releasing a Major or Minor Version
 
-IMPORTANT: To release a version we use some Travis dedicated jobs. These jobs are triggered by specific commit keywords
-and rely on the VERSION file at the root of this repository to know which version is being produced.
-It is thus crucial to double-check the content of this file before any push (triggering the Travis jobs) is made.
+IMPORTANT: To release a version we use some GitHub Actions dedicated jobs. These jobs are triggered when pushing a commit in branches 
+containing the keyword release at the end (**release) and rely on the VERSION file at the root of this repository to 
+know which version is being produced. It is thus crucial to double-check the content of this file before any push 
+(triggering the GitHub Actions jobs) is made.
 
 Before releasing a version, you need to prepare the release.
 
@@ -73,9 +74,9 @@ The following files have been updated:
  M VERSION
  M config/dev/docker-compose.yml
  M config/docker/docker-compose.yml
- M services/core/cards-publication/src/main/modeling/swagger.yaml
- M services/core/businessconfig/src/main/modeling/swagger.yaml
- M services/core/users/src/main/modeling/swagger.yaml
+ M services/cards-publication/src/main/modeling/swagger.yaml
+ M services/businessconfig/src/main/modeling/swagger.yaml
+ M services/users/src/main/modeling/swagger.yaml
 ----
 +
 This script performs the following changes:
@@ -98,11 +99,10 @@ git push --set-upstream origin X.X.X.release
 
 . Check that the build is correctly triggered
 +
-You can check the status of the build job triggered by the commit on
-link:https://travis-ci.com/opfab/operatorfabric-core/branches[Travis CI].
-The build job should have two stages: `test-sonar` and `docker-tag-version`.
+You can check the status of the GitHub Actions triggered by the commit on
+link:https://github.com/opfab/operatorfabric-core/actions[Github Actions].
 
-Wait for the build to complete (around 20 minutes) and check that all stages have been successful.
+Wait for the build to complete (around 30 minutes) and check that all jobs have been successful.
 This ensures that the code builds, tests are OK and there is no error preventing documentation or Docker images
 generation.
 
@@ -121,8 +121,10 @@ For example:
 ----
 - id: SNAPSHOT
   type: SNAPSHOT
+  external_devices_api: true
 - id: D.E.F.RELEASE
   badge: current
+  external_devices_api: true
 - id: A.B.C.RELEASE
   #... end of file omitted
 ----
@@ -132,15 +134,21 @@ For example:
 ----
 - id: SNAPSHOT
   type: SNAPSHOT
+  external_devices_api: true
 - id: X.X.X.RELEASE
   badge: current
+  external_devices_api: true
 - id: D.E.F.RELEASE
+  external_devices_api: true
 - id: A.B.C.RELEASE
   #... end of file omitted
 ----
 
 This file determines which versions (and in which order) are displayed on the
 link:https://opfab.github.io/pages/releases.html[release page] of the website.
+
+NOTE: The `external_devices_api` property should be set to true for all new versions, so the API documentation for
+the External Devices API is displayed on the website.
 
 === Merging the release branch into `master`
 
@@ -157,11 +165,6 @@ git merge X.X.X.release <3>
 <2> Make sure your local copy is up to date
 <3> Merge the `X.X.X.release` branch into `master`, accepting changes from X.X.X.release in case of conflicts.
 
-NOTE: Specific keywords such as "ci_docker" etc. are no longer required in the case of a release on master as
-by design any release on master becomes the "latest" version, so docker images generation (both for the version
-tag and the latest tag) and documentation update (both for the release and the "current" folder) should always
-be triggered.
-
 ----
 git tag X.X.X.RELEASE <1>
 git push <2>
@@ -173,13 +176,18 @@ git push origin X.X.X.RELEASE <3>
 
 . Check that the build is correctly triggered
 +
-You can check the status of the build job triggered by the commit on
-link:https://travis-ci.com/opfab/operatorfabric-core/branches[Travis CI].
-The build job should have the following four stages (or three if the images aren't tagged as latest)
-+
-image::master_branch_build.png[Running build for master branch screenshot]
-+
-Wait for the build to complete (around 40 minutes) and check that all stages have been successful.
+You can check the status of the GitHub Action workflow triggered by the commit on
+link:https://github.com/opfab/operatorfabric-core/actions[Github Actions].
+The Github Actions workflow should have the following six jobs executed :
+- Build
+- Karate tests
+- Cypress tests 
+- Publish Documentation (latest)
+- Push images to dockerhub 
+- Push images latest to dockerhub 
+
+
+Wait for the build to complete (around 40 minutes) and check that all jobs have been successful.
 
 . Check that the `X.X.X.RELEASE` images have been generated and pushed to DockerHub.
 
@@ -347,7 +355,7 @@ can release the patch version. To do so:
 +
 ----
 git add .
-git commit -m "[RELEASE] X.X.X.RELEASE ci_docker ci_documentation" <1>
+git commit -m "[RELEASE] X.X.X.RELEASE " <1>
 git tag X.X.X.RELEASE <2>
 git push <3>
 git push origin X.X.X.RELEASE <4>
@@ -357,9 +365,13 @@ git push origin X.X.X.RELEASE <4>
 <3> Push the commit
 <4> Push the tag
 
+
+This will trigger the build and tests in GitHub Actions.
+
+If the build and tests are successful, launch manually GitHubActions with jobs : `Build` , `Docker Push` and `Build and publish documentation` 
+
 IMPORTANT: In the case of a patch on the last major/minor version tagged on master, this version will become the
-`latest` version. In this case, add `ci_latest` instead of `ci_docker ci_documentation` to the commit message
-to also update the `latest` docker images on DockerHub and the `current` documentation on the website.
+`latest` version. In this case, add the jobs `Docker Push - Latest` and  `Build and publish documentation - Latest` instead of `Build and publish documentation` to also update the `latest` docker images on DockerHub and the `current` documentation on the website.
 
 You then need to release the client library jars for the hotfix version. To do so, refer to the
 <<publishing_client_lib_release,corresponding section>> for standard releases.

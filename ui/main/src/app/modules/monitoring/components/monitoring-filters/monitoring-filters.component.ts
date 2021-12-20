@@ -22,7 +22,7 @@ import {TypeOfStateEnum} from '@ofModel/processes.model';
 import {TimelineButtonsComponent} from '../../../share/timeline-buttons/timeline-buttons.component';
 import {LightCard} from '@ofModel/light-card.model';
 import {Filter} from '@ofModel/feed-filter.model';
-import {FilterService} from '@ofServices/filter.service';
+import {FilterService} from '@ofServices/lightcards/filter.service';
 import {ProcessStatesDropdownListService} from "@ofServices/process-states-dropdown-list.service";
 
 @Component({
@@ -40,9 +40,6 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
     size = 10;
     monitoringForm: FormGroup;
 
-    // We should decide on whether we want to use ngrx for this screen (see OC-1271).
-    // If so, these can be replaced by storing the values in the monitoring state, and the summary of filters should
-    // also take the information from there. If not, we should remove the monitoring state and associated actions (ApplyFilter etc.) altogether.
     private selectedProcessGroups;
     private selectedProcesses;
     private selectedTypeOfStates;
@@ -218,9 +215,9 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
                                                                                                    this.processesDropdownListPerProcessGroups);
     }
 
-    domainChanged(domain: number[]) {
+    domainChanged() {
         this.timeDomainChanged = true;
-        this.timelineFilter = this.filterService.getNewBusinessDateFilter(true, domain[0], domain[1]);
+        this.timelineFilter = this.filterService.getBusinessDateFilter();
         this.sendQuery();
         this.timeDomainChanged = false;
     }

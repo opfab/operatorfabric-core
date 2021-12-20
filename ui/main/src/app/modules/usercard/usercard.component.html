@@ -11,7 +11,7 @@
         <div class="row">
 
             <div class="col" *ngIf="displayProcessGroupFilter()">
-                <of-single-filter i18nRootLabelKey="shared.filters." [parentForm]="messageForm" filterPath="processGroup"
+                <of-single-filter id="of-usercard-service-selector" i18nRootLabelKey="shared.filters." [parentForm]="messageForm" filterPath="processGroup"
                     [values]="processGroupOptions"></of-single-filter>
             </div>
 
@@ -20,7 +20,7 @@
                                   [values]="processOptions"></of-single-filter>
             </div>
             <div class="col" *ngIf="displayProcessGroupFilter() && !! processOptionsWhenSelectedProcessGroup && processOptionsWhenSelectedProcessGroup.length > 1">
-                <of-single-filter i18nRootLabelKey="shared.filters." [parentForm]="messageForm" filterPath="process"
+                <of-single-filter id="of-usercard-process-filter" i18nRootLabelKey="shared.filters." [parentForm]="messageForm" filterPath="process"
                                   [values]="processOptionsWhenSelectedProcessGroup"></of-single-filter>
             </div>
 
@@ -54,18 +54,28 @@
         </div>
         <div class="justify-content-center" style="display:flex;width:100%;align-content:center;flex-wrap: wrap;">
             <div *ngIf="startDateVisible" style="width:280px; margin-right: 30px; margin-left: 30px;">
-                <of-datetime-filter filterPath="startDate" formControlName="startDate" labelKey="userCard.filters."
+                <of-datetime-filter *ngIf="!isStartDateValueSet" filterPath="startDate" formControlName="startDate" labelKey="userCard.filters."
                     [offset]="[{amount:1,unit:'minute'}]" [maxDate]="startDateMax" (change)="onDateTimeChange($event)">
                 </of-datetime-filter>
-            </div>
-            <div *ngIf="endDateVisible" style="width: 280px; margin-right: 30px; margin-left: 30px;">
-                <of-datetime-filter filterPath="endDate" formControlName="endDate" labelKey="userCard.filters."
-                    [offset]="[{amount:1,unit:'day'}]" [minDate]="endDateMin" (change)="onDateTimeChange($event)">
+                <of-datetime-filter *ngIf="isStartDateValueSet" filterPath="startDate" formControlName="startDate" labelKey="userCard.filters."
+                    [defaultDate]="this.messageForm.get('startDate').value.date" [defaultTime]="this.messageForm.get('startDate').value.time"
+                    [maxDate]="startDateMax" (change)="onDateTimeChange($event)">
                 </of-datetime-filter>
             </div>
+
+            <div *ngIf="endDateVisible" style="width: 280px; margin-right: 30px; margin-left: 30px;">
+                <of-datetime-filter *ngIf="!isEndDateValueSet" filterPath="endDate" formControlName="endDate" labelKey="userCard.filters."
+                    [offset]="[{amount:1,unit:'day'}]" [minDate]="endDateMin" (change)="onDateTimeChange($event)">
+                </of-datetime-filter>
+                <of-datetime-filter *ngIf="isEndDateValueSet" filterPath="endDate" formControlName="endDate" labelKey="userCard.filters."
+                    [defaultDate]="this.messageForm.get('endDate').value.date" [defaultTime]="this.messageForm.get('endDate').value.time"
+                    [minDate]="endDateMin" (change)="onDateTimeChange($event)">
+                </of-datetime-filter>
+            </div>
+
             <div *ngIf="lttdVisible" style="width: 280px; margin-right: 30px; margin-left: 30px;">
-                <of-datetime-filter filterPath="lttd" formControlName="lttd" labelKey="userCard.filters."
-                    [offset]="[{amount:1,unit:'day'}]"></of-datetime-filter>
+                <of-datetime-filter filterPath="lttd" formControlName="lttd" labelKey="userCard.filters.">
+                </of-datetime-filter>
             </div>
         </div>
 
@@ -78,18 +88,19 @@
     <br/>   
 
     
+    <div *ngIf="recipientVisible">
+        <form [formGroup]="recipientForm" class="opfab-form-lighter">
+            <div class="row">
+                <div class="col-12">
 
-    <form [formGroup]="recipientForm" class="opfab-form-lighter">
-        <div class="row">
-            <div class="col-12">
+                    <of-multi-filter filterPath="recipients" id="opfab-recipients" [parentForm]="recipientForm"
+                        [values]="recipientsOptions" [translateValues]="false" [dropdownSettings]="dropdownSettings" i18nRootLabelKey="userCard.filters." [selectedItems]="selectedRecipients" >
+                    </of-multi-filter>
+                </div>
 
-                <of-multi-filter filterPath="recipients" id="opfab-recipients" [parentForm]="recipientForm"
-                    [values]="recipientsOptions" [translateValues]="false" [dropdownSettings]="dropdownSettings" i18nRootLabelKey="userCard.filters." [selectedItems]="selectedRecipients" >
-                </of-multi-filter>
-            </div>
-
-        </div> 
-    </form>
+            </div> 
+        </form>
+    </div>
 
 
     <br />

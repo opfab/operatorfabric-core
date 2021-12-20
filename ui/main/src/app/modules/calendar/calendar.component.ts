@@ -21,12 +21,12 @@ import {SelectLightCard} from '@ofActions/light-card.actions';
 import {LoadCard} from '@ofActions/card.actions';
 import {buildSettingsOrConfigSelector} from '@ofStore/selectors/settings.x.config.selectors';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {ApplyFilter} from '@ofStore/actions/feed.actions';
-import {FilterType} from '@ofServices/filter.service';
+import {FilterType} from '@ofModel/feed-filter.model';
 import {HourAndMinutes} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
-import {LightCardsStoreService} from '@ofServices/lightcards-store.service';
+import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
+import {FilterService} from '@ofServices/lightcards/filter.service';
 
 @Component({
   selector: 'of-calendar',
@@ -39,7 +39,8 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
               private translate: TranslateService,
               private modalService: NgbModal,
               private processesService: ProcessesService,
-              private lightCardsStoreService: LightCardsStoreService) {
+              private lightCardsStoreService: LightCardsStoreService,
+              private filterService: FilterService) {
     processesService.getAllProcesses().forEach(process => {
       if (!!process.uiVisibility && !!process.uiVisibility.calendar)
         this.mapOfProcesses.set(process.id, 1);
@@ -165,10 +166,11 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   datesRangeChange(dateInfo) {
-    this.store.dispatch(new ApplyFilter({
-      name: FilterType.BUSINESSDATE_FILTER, active: true,
-      status: {start: dateInfo.view.activeStart.getTime(), end: dateInfo.view.activeEnd.getTime()}
-      }));
+    this.filterService.updateFilter(
+      FilterType.BUSINESSDATE_FILTER, 
+      true,{start: dateInfo.view.activeStart.getTime(),
+      end: dateInfo.view.activeEnd.getTime()}
+      );
   }
 
   ngOnDestroy() {

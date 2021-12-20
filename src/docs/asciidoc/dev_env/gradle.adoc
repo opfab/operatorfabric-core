@@ -22,13 +22,6 @@ to gradle and plugins official documentation.
 [sub-project]/build/
 ** copyDependencies: copy dependencies to build/support_libs (for Sonar)
 
-=== Core
-
-* Swagger Generator tasks
-** debugSwaggerOperations: generate swagger code from
-/src/main/modeling/config.json to build/swagger-analyse
-** swaggerHelp: display help regarding swagger configuration options for java
-
 === Businessconfig Service
 
 * Test tasks
@@ -87,7 +80,7 @@ To get the keyName (ID_OF_THE_GPG_KEY_TO_USE) use :
 gpg2 --list-secret-keys 
 ----
 
-LOCATION_OF_THE_KEYRING_HOLDING_THE_GPG_KEY is usually /YOUR_HOME_DIRECTORY/.gnupg/secring.gpg
+LOCATION_OF_THE_KEYRING_HOLDING_THE_GPG_KEY is usually /YOUR_HOME_DIRECTORY/.gnupg/pubring.kbx
 
 
 ==== Set the credential for the publication

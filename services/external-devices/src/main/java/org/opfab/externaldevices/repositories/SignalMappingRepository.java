@@ -15,14 +15,12 @@ import org.opfab.externaldevices.model.SignalMappingData;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 /**
  * Mongo {@link SignalMappingData} repository
  */
 @Repository
 public interface SignalMappingRepository extends MongoRepository<SignalMappingData,String> {
 
-    List<SignalMappingData> findAll();
+
 
 }

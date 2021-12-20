@@ -79,9 +79,9 @@
     document.getElementById("impacts").innerHTML = impact;
 
     templateGateway.applyChildCards = () => {
+        let childsDiv = document.getElementById("childs-div");
 
         if (templateGateway.childCards[0]) {
-            let childsDiv = document.getElementById("childs-div");
             let responses = '<strong> RESPONSES RECEIVED : </strong> <br/>';
             responses += ' <table style="width: 100%"> <tr> <th> Entity </th>';
             responses += ' <th> Service A </th> <th> Service B </th> <th> Service C </th> <th> Service D </th> <th>Service E </th> <th> Service F </th>';
@@ -109,6 +109,8 @@
             responses += '</table> </center>';
 
             childsDiv.innerHTML = responses;
+        } else {
+            childsDiv.innerHTML = '';
         }
     };
 

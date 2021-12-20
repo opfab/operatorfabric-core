@@ -1,0 +1,50 @@
+dependencies {
+    swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
+    swaggerUI generator.swaggerUI
+    implementation project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
+    implementation boot.starterRabbitmq
+    implementation misc.jsonSmart
+    implementation spring.securityOauthResource, spring.securityOauthJose
+    implementation boot.starterAop
+    implementation boot.starterMongo
+    implementation cloud.starterFeign
+    implementation boot.starterSecurity
+    implementation boot.starterValidation
+    compileOnly boot.annotationConfiguration
+    annotationProcessor boot.annotationConfiguration
+
+    implementation boot.starterWebflux
+    implementation project(':client:cards-client-data')
+    implementation project(':client:users-client-data')
+    implementation project(':tools:spring:spring-mongo-utilities')
+    implementation project(':tools:spring:spring-oauth2-utilities')
+    testImplementation testing_deps.reactor
+    testImplementation project(':tools:spring:spring-test-utilities')
+}
+
+bootJar {
+    manifest {
+        attributes( "Created-By"             : "Gradle ${gradle.gradleVersion}",
+                    "Specification-Title"    : "OperatorFabric Card Read Service",
+                    "Implementation-Title"   : "OperatorFabric Card Read Service",
+                    "Implementation-Version" : operatorfabric.version,
+                    "Specification-Version"  : operatorfabric.version
+        )
+    }
+}
+
+swaggerSources {
+    endpoints {
+        inputFile = file('../cards-publication/src/main/modeling/swagger.yaml')
+        code {
+            language = 'org.opfab.generators.OpfabSpringGenerator'
+            configFile = file('src/main/modeling/config.json')
+            outputDir = file("./build/swagger")
+            templateDir = file('../src/main/resources/swagger-templates')
+            components = ['models']
+        }
+        ui {
+            outputDir = file("./build/docs/api")
+        }
+    }
+}

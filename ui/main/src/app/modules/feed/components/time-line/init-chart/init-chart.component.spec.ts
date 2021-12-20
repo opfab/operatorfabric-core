@@ -30,7 +30,7 @@ import {ConfigService} from "@ofServices/config.service";
 import {HttpClient, HttpHandler} from "@angular/common/http";
 import {AppService} from "@ofServices/app.service";
 import {LightCardsServiceMock} from '@tests/mocks/lightcards.service.mock';
-import {LightCardsFeedFilterService} from '@ofServices/lightcards-feed-filter.service';
+import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
 
 
 describe('InitChartComponent', () => {

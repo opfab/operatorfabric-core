@@ -53,7 +53,7 @@
 
 
 <div style="height:2%"> </div>
-<div *ngIf=" hasResult" style="margin-left:5%; margin-right:5%">
+<div *ngIf="!loadingIsTakingMoreThanOneSecond && hasResult" style="margin-left:5%; margin-right:5%">
   <div style="display:flex; justify-content:flex-start;">
     <label style="font-weight:bold; margin-left:5px" class="opfab-checkbox" translate>archive.collapsibleUpdates
       <input type="checkbox" (click)="toggleCollapsibleUpdates()" [checked]="isCollapsibleUpdatesActivated" id="opfab-archives-collapsible-updates">
@@ -136,7 +136,7 @@
 
 <div *ngIf="loadingIsTakingMoreThanOneSecond">
 
-  <div class="opfab-card-loading-spinner redContour">
+  <div class="opfab-card-loading-spinner">
   <em  class="fas fa-spinner fa-spin opfab-slow-spinner" ></em>
   </div>
   <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>

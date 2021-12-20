@@ -22,6 +22,8 @@ import {FormControl, FormGroup} from '@angular/forms';
 export class CheckboxSettingComponent extends BaseSettingDirective implements OnInit, OnDestroy {
 
   @Input() public labelClass: string;
+  @Input() public name : string;
+  @Input() public checked : boolean;
 
   constructor(protected store: Store<AppState>) {
     super(store);
@@ -39,7 +41,11 @@ export class CheckboxSettingComponent extends BaseSettingDirective implements On
   }
 
   updateValue(value) {
-    this.form.get('setting').setValue(value, {emitEvent: false});
+    // Undefined or null value means the user does not have made a choice for his settings, so we set the input value "checked" (default value)
+    if ((value === null) || (value === undefined))
+      this.form.get('setting').setValue(this.checked, {emitEvent: false});
+    else
+      this.form.get('setting').setValue(value, {emitEvent: false});
   }
 
 }

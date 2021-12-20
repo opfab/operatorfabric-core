@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,8 +9,6 @@
 
 
 import {LightCard} from '@ofModel/light-card.model';
-import {FilterType} from '@ofServices/filter.service';
-
 /**
  * A Filter gather both the feed filtering behaviour and the filter status for
  * filtering parametrization and component state
@@ -79,4 +77,12 @@ export class FilterStatus {
         public name: FilterType, public active: boolean, status: any
     ) {
     }
+}
+
+export enum FilterType {
+    TYPE_FILTER,
+    PUBLISHDATE_FILTER,
+    ACKNOWLEDGEMENT_FILTER,
+    RESPONSE_FILTER,
+    BUSINESSDATE_FILTER,
 }

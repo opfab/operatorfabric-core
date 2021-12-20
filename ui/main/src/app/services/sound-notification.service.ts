@@ -15,8 +15,8 @@ import {Notification} from "@ofModel/external-devices.model";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
-import {LightCardsFeedFilterService} from './lightcards-feed-filter.service';
-import {LightCardsStoreService} from './lightcards-store.service';
+import {LightCardsFeedFilterService} from './lightcards/lightcards-feed-filter.service';
+import {LightCardsStoreService} from './lightcards/lightcards-store.service';
 import {EMPTY, iif, merge, of, Subject, timer} from "rxjs"; import {filter, map, switchMap, takeUntil} from "rxjs/operators";
 import {ExternalDevicesService} from "@ofServices/external-devices.service";
 import {ConfigService} from "@ofServices/config.service";
@@ -25,7 +25,7 @@ import {ConfigService} from "@ofServices/config.service";
 @Injectable()
 export class SoundNotificationService implements OnDestroy{
 
-    private static RECENT_THRESHOLD: number = 2000; // in milliseconds
+    private static RECENT_THRESHOLD: number = 4000; // in milliseconds
     /* The subscription used by the front end to get cards to display in the feed from the backend doesn't distinguish
      * between old cards loaded from the database and new cards arriving through the notification broker.
      * In addition, the getCardOperation observable on which this sound notification is hooked will also emit events
@@ -56,6 +56,10 @@ export class SoundNotificationService implements OnDestroy{
                 private externalDevicesService: ExternalDevicesService,
                 private configService: ConfigService) {
 
+
+        // use to have access from cypress to the current object for stubbing method playSound
+        if (window['Cypress'])  window['soundNotificationService'] = this;
+
         this.soundConfigBySeverity = new Map<Severity, SoundConfig>();
         this.soundConfigBySeverity.set(Severity.ALARM, {soundFileName: 'alarm.mp3', soundEnabledSetting: 'playSoundForAlarm'});
         this.soundConfigBySeverity.set(Severity.ACTION, {soundFileName: 'action.mp3', soundEnabledSetting: 'playSoundForAction'});
@@ -67,7 +71,9 @@ export class SoundNotificationService implements OnDestroy{
 
         this.soundEnabled = new Map<Severity, boolean>();
         this.soundConfigBySeverity.forEach((soundConfig, severity) => {
-            store.select(buildSettingsOrConfigSelector(soundConfig.soundEnabledSetting, false)).subscribe(x => {this.soundEnabled.set(severity, x)});
+            store.select(buildSettingsOrConfigSelector(soundConfig.soundEnabledSetting, false)).subscribe(x => {
+                this.soundEnabled.set(severity, x);
+            });
         })
 
         store.select(buildSettingsOrConfigSelector('playSoundOnExternalDevice',false)).subscribe(x => { this.playSoundOnExternalDevice = x;})
@@ -101,7 +107,11 @@ export class SoundNotificationService implements OnDestroy{
     }
 
     public handleLoadedCard(card: LightCard) {
-        if (card.id != this.lastSentCardId && this.lightCardsFeedFilterService.isCardVisibleInFeed(card) && this.checkCardIsRecent(card)) this.incomingCardOrReminder.next(card);
+        if (card.id === this.lastSentCardId) this.lastSentCardId = ''; // no sound as the card was send by the current user
+        else {
+            if (this.lightCardsFeedFilterService.isCardVisibleInFeed(card) && this.checkCardIsRecent(card))
+                this.incomingCardOrReminder.next(card);
+        }
     }
 
     public lastSentCard(cardId: string) {
@@ -156,8 +166,9 @@ export class SoundNotificationService implements OnDestroy{
                 }),
                 takeUntil(this.ngUnsubscribe$))
             .subscribe((x ) => {
+            console.log(new Date().toISOString() , ' Play sound');
                 this.playSoundForSeverity(severity);
-            })
+        });
     }
 
 
@@ -172,6 +183,12 @@ export class SoundNotificationService implements OnDestroy{
         });
     }
 
+    public isAtLeastOneSoundActivated(): boolean {
+        let activated = false;
+        this.soundEnabled.forEach((soundForSeverity) => {
+            if (!!soundForSeverity) activated = true; });
+        return activated;
+    }
 
 }
 

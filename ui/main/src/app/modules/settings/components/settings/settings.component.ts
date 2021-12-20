@@ -24,6 +24,12 @@ export class SettingsComponent implements OnInit {
   timeZones: string[];
   displayInfo: SettingsInputs;
   externalDevicesEnabled: boolean;
+  playSoundForAlarmDefaultValue: boolean;
+  playSoundForActionDefaultValue: boolean;
+  playSoundForCompliantDefaultValue: boolean;
+  playSoundForInformationDefaultValue: boolean;
+  replayEnabledDefaultValue: boolean;
+  replayIntervalDefaultValue: number;
 
   constructor(private store: Store<AppState>,private  configService: ConfigService) { }
 
@@ -32,6 +38,12 @@ export class SettingsComponent implements OnInit {
     this.timeZones = this.configService.getConfigValue('i10n.supported.time-zones');
     this.displayInfo = this.configService.getConfigValue('settings.infos.hide');
     this.externalDevicesEnabled = this.configService.getConfigValue('externalDevicesEnabled');
+    this.playSoundForAlarmDefaultValue = !!this.configService.getConfigValue('settings.playSoundForAlarm') ? this.configService.getConfigValue('settings.playSoundForAlarm') : false;
+    this.playSoundForActionDefaultValue = !!this.configService.getConfigValue('settings.playSoundForAction') ? this.configService.getConfigValue('settings.playSoundForAction') : false;
+    this.playSoundForCompliantDefaultValue = !!this.configService.getConfigValue('settings.playSoundForCompliant') ? this.configService.getConfigValue('settings.playSoundForCompliant') : false;
+    this.playSoundForInformationDefaultValue = !!this.configService.getConfigValue('settings.playSoundForInformation') ? this.configService.getConfigValue('settings.playSoundForInformation') : false;
+    this.replayEnabledDefaultValue = !!this.configService.getConfigValue('settings.replayEnabled') ? this.configService.getConfigValue('settings.replayEnabled') : false;
+    this.replayIntervalDefaultValue = !!this.configService.getConfigValue('settings.replayInterval') ? this.configService.getConfigValue('settings.replayInterval') : 5;
   }
 
 }
@@ -40,6 +52,5 @@ interface SettingsInputs {
   description: boolean;
   language: boolean;
   timezone: boolean;
-  tags: boolean;
   sounds: boolean;
 }

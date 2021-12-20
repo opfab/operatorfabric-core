@@ -30,6 +30,7 @@
 				"startDateVisible" : false,
 				"endDateVisible" : false,
         "lttdVisible" : false,
+        "recipientVisible" : false,
         "recipientList" : [{"id": "ALLCONTROLROOMS", "levels": [0,1]}, {"id": "ENTITY4"}]
 			},
       "color": "#CC9900",
@@ -39,7 +40,9 @@
       "templateName": "incidentInProgress",
       "styles": [],
       "acknowledgmentAllowed": "OnlyWhenResponseDisabledForUser",
-      "type" : "INPROGRESS"
+      "type" : "INPROGRESS",
+      "validateAnswerButtonLabel" : "SEND IMPACT",
+      "modifyAnswerButtonLabel" : "MODIFY IMPACT"
     }
   }
 }

@@ -22,17 +22,23 @@ import {GroupCellRendererComponent} from '../cell-renderers/group-cell-renderer.
 import {AdminItemType, SharingService} from '../../services/sharing.service';
 import {takeUntil} from 'rxjs/operators';
 import {StateRightsCellRendererComponent} from '../cell-renderers/state-rights-cell-renderer.component';
+import {ProcessesService} from "@ofServices/processes.service";
+import {Process} from "@ofModel/processes.model";
 
 @Directive()
 @Injectable()
 export abstract class AdminTableDirective implements OnInit, OnDestroy {
 
+  processesDefinition: Process[];
+
   constructor(
       protected translateService: TranslateService,
       protected confirmationDialogService: ConfirmationDialogService,
       protected modalService: NgbModal,
-      protected dataHandlingService: SharingService) {
+      protected dataHandlingService: SharingService,
+      private processesService: ProcessesService) {
 
+    this.processesDefinition = this.processesService.getAllProcesses();
     this.gridOptions = <GridOptions>{
       context: {
         componentParent: this
@@ -64,6 +70,21 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
           wrapText: true,
           autoHeight: true,
           flex: 4,
+        },
+        'stateRightsColumn': {
+          sortable: false,
+          filter: "agTextColumnFilter",
+          filterParams: {
+            valueGetter: params => {
+              const currentProcessDef = this.processesDefinition.filter(processDef => processDef.id === params.data.process)[0];
+              let text = '';
+              params.data.stateRights.forEach(stateRight => text += (currentProcessDef.states[stateRight.state].name + ' '));
+              return text;
+            }
+          },
+          wrapText: true,
+          autoHeight: true,
+          flex: 4
         }
       },
       localeTextFunc : function (key) {
@@ -106,7 +127,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
   // ag-grid configuration objects
   public gridOptions;
   public gridApi;
-  public rowData: any;
+  public rowData: any[];
 
   public page: number = 1;
 
@@ -134,7 +155,6 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         .subscribe(pageSize => {
           this.gridApi.paginationSetPageSize(pageSize);
         });
-
   }
 
   /** This function generates the ag-grid `ColumnDefs` for the grid from a list of fields
@@ -156,6 +176,10 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         headerName: i18nPrefixForHeader + field.name,
         field: field.name
       };
+
+      if (field.name === 'stateRights')
+        columnDef.type = 'stateRightsColumn';
+
       if (!!field.flex) columnDef['flex'] = field.flex;
       if (!!field.cellRendererName) columnDef['cellRenderer'] = field.cellRendererName;
       if (!!field.valueFormatter) {
@@ -248,9 +272,16 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
   }
 
   refreshData() {
-    this.rowData = this.crudService.getAll();
-  }
+    this.crudService.getAll().subscribe(result => {
+      this.rowData = result;
 
+      // if the total number of pages is lower than the index of the current page, it means that we have returned to the
+      // previous page
+      if (this.gridApi.paginationGetTotalPages() < this.page)
+        this.page--;
+      this.gridApi.paginationGoToPage(this.page-1);
+    });
+  }
 
   updateResultPage(currentPage): void {
     this.gridApi.paginationGoToPage(currentPage-1);

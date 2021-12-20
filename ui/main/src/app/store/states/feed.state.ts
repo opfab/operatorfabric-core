@@ -8,37 +8,10 @@
  */
 
 
-import {Filter} from '@ofModel/feed-filter.model';
-import {FilterService, FilterType} from '@ofServices/filter.service';
-
-
 export interface CardFeedState {
     selectedCardId: string;
-    filters: Map<FilterType, Filter>;
-    sortBySeverity: boolean;
-    sortByRead: boolean;
-    domainId: string,
-    domainStartDate: number;
-    domainEndDate: number;
 }
 
-
-/**
- * Hack to solve OC-604
- * Init is done using a service , to be refactor
- */
-function getDefaultFilter() {
-    const filterService = new FilterService();
-    return filterService.defaultFilters();
-}
-
-export const feedInitialState: CardFeedState = 
-    {
-        selectedCardId: null,
-        filters: getDefaultFilter(),
-        sortBySeverity: false,
-        sortByRead: true,
-        domainId: null,
-        domainStartDate: null,
-        domainEndDate: null
-    };
+export const feedInitialState: CardFeedState = {
+    selectedCardId: null,
+};
