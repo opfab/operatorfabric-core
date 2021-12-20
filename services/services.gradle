@@ -111,11 +111,12 @@ subprojects {
     }
 
     docker {
-        if (project.version.toUpperCase().equals("SNAPSHOT"))
-            name "lfeoperatorfabric/of-${project.name.toLowerCase()}:${project.version.toUpperCase()}" /* more information : https://vsupalov.com/docker-latest-tag/ */
-        else
-            name "lfeoperatorfabric/of-${project.name.toLowerCase()}"
-        tags "latest", "${project.version}"
+        /* We need to specify the version in the name because if empty, it is tagged latest (https://vsupalov.com/docker-latest-tag/)
+        * but we also need to add a "tag" property otherwise the corresponding tasks (dockerTagXXX, dockerPushXXX) are not created */
+        name "lfeoperatorfabric/of-${project.name}:${project.version}"
+        tag "${project.version}", "lfeoperatorfabric/of-${project.name}:${project.version}"
+        if (!project.version.equals("SNAPSHOT"))
+            tag "latest", "latest"
         labels (['project':"${project.group}"])
         files( "build/libs"
                 , "../../config/docker/common-docker.yml"
