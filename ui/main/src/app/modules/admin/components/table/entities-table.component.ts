@@ -21,7 +21,11 @@ export class EntitiesTableComponent extends AdminTableDirective implements OnIni
   
 
   tableType = AdminItemType.ENTITY;
-  fields = [new Field('id', 3), new Field('name', 3), new Field('description', 5), new Field('entityAllowedToSendCard', 3, null, this.translateValue), new Field('parents', 5, 'entityCellRenderer')];
+  fields = [new Field('id', 3),
+            new Field('name', 3),
+            new Field('description', 5),
+            new Field('entityAllowedToSendCard', 3, null, this.translateValue),
+            new Field('parents', 5, 'entityCellRenderer')];
   idField = 'id';
   editModalComponent = EditEntityModalComponent;
 
