@@ -22,4 +22,8 @@ export class GroupCellRendererComponent extends ArrayCellRendererComponent {
      * */
 
     itemType = AdminItemType.GROUP;
+
+    agInit(params: any): void {
+        super.agInit(params);
+    }
 }
