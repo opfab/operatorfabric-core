@@ -12,10 +12,12 @@ package org.opfab.dummy.modbusdevice;
 import com.intelligt.modbus.jlibmodbus.data.DataHolder;
 import com.intelligt.modbus.jlibmodbus.exception.IllegalDataAddressException;
 import com.intelligt.modbus.jlibmodbus.exception.IllegalDataValueException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class OwnDataHolder extends DataHolder {
 
     final List<ModbusEventListener> modbusEventListenerList = new ArrayList<>();
@@ -33,34 +35,31 @@ public class OwnDataHolder extends DataHolder {
     }
 
     @Override
-    public void writeHoldingRegister(int offset, int value) throws IllegalDataAddressException, IllegalDataValueException {
+    public void writeHoldingRegister(int offset, int value) {
         for (ModbusEventListener l : modbusEventListenerList) {
             l.onWriteToSingleHoldingRegister(offset, value);
         }
-        super.writeHoldingRegister(offset, value);
+        try {
+            super.writeHoldingRegister(offset, value);
+        } catch (IllegalDataAddressException e) {
+            log.error("Attempting write on register with illegal address {}",offset,e);
+        } catch (IllegalDataValueException e) {
+            log.error("Attempting write on register with illegal value {}",value,e);
+        }
     }
 
     @Override
-    public void writeHoldingRegisterRange(int offset, int[] range) throws IllegalDataAddressException, IllegalDataValueException {
-        for (ModbusEventListener l : modbusEventListenerList) {
-            l.onWriteToMultipleHoldingRegisters(offset, range.length, range);
-        }
-        super.writeHoldingRegisterRange(offset, range);
+    public void writeHoldingRegisterRange(int offset, int[] range) {
+        // Not needed for our tests
     }
 
     @Override
-    public void writeCoil(int offset, boolean value) throws IllegalDataAddressException, IllegalDataValueException {
-        for (ModbusEventListener l : modbusEventListenerList) {
-            l.onWriteToSingleCoil(offset, value);
-        }
-        super.writeCoil(offset, value);
+    public void writeCoil(int offset, boolean value) {
+        // Not needed for our tests
     }
 
     @Override
-    public void writeCoilRange(int offset, boolean[] range) throws IllegalDataAddressException, IllegalDataValueException {
-        for (ModbusEventListener l : modbusEventListenerList) {
-            l.onWriteToMultipleCoils(offset, range.length, range);
-        }
-        super.writeCoilRange(offset, range);
+    public void writeCoilRange(int offset, boolean[] range) {
+        // Not needed for our tests
     }
 }

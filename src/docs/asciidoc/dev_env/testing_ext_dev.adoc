@@ -7,6 +7,8 @@
 
 = Testing the External Devices service with dummy devices
 
+== Docker mode
+
 To test the External Devices service with dummy devices, launch an OperatorFabric instance using the
 `$OF_HOME/config/docker/docker-compose.sh` script.
 
@@ -29,3 +31,28 @@ dummy-modbus-device_1 logs, and sending an ACTION card to operator2 should resul
 
 Since the watchdog is enabled, once the devices are connected (either by calling the /connect endpoint or
 by sending the first signal), you should also see the corresponding messages in the logs.
+
+== Dev mode
+
+To test in "dev" mode
+
+----
+$OF_HOME/config/dev/docker-compose.sh <1>
+$OF_HOME/bin/run_all.sh status --externalDevices <2>
+$OF_HOME/src/test/dummyModbusDevice/src/main/bin/startDummy.sh <3>
+----
+<1> Launch supporting containers (MongoDB, Keycloak, etc.)
+<2> Launch OperatorFabric services (including External Devices)
+<3> Start a dummy modbus device
+
+NOTE: Configuration for the dummy modbus device can be provided in
+`src/test/dummyModbusDevice/src/main/resources/application.yml`.
+
+NOTE: As only one dummy Modbus device is started in this case, the default configuration for external devices has been
+adapted from the one provided in docker mode so both `CDS_1` and `CDS_2` point to the same device, but with different
+signal mappings. The mapping for `CDS_2` is "broken" on purpose, as it attempts to write in registers that are outside
+the allowed register range, to demonstrate exceptions.
+
+== Dummy devices configuration
+
+See the https://github.com/opfab/operatorfabric-core/blob/develop/src/test/dummyModbusDevice/README.adoc[README for the Dummy Modbus Device module].
