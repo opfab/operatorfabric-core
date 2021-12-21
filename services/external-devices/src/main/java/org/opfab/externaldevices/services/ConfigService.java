@@ -35,7 +35,10 @@ public class ConfigService {
     public static final String DEBUG_RETRIEVED_CONFIG = "Retrieved configuration for";
     public static final String UNSUPPORTED_SIGNAL ="Signal %1$s is not supported in mapping %2$s";
     public static final String NULL_AFTER_DELETE = "Following deletion of {}, no {} is configured for {} {}";
-    public static final String DEVICE_NAME = "device";
+    public static final String CANNOT_RETRIEVE_FOR_NULL_OR_EMPTY_ID = "Cannot retrieve %1$s with null or empty id.";
+    public static final String DEVICE_CONFIG = "device configuration";
+    public static final String SIGNAL_CONFIG = "signal mapping";
+    public static final String USER_CONFIG = "user configuration";
 
     private final UserConfigurationRepository userConfigurationRepository;
     private final DeviceConfigurationRepository deviceConfigurationRepository;
@@ -82,39 +85,45 @@ public class ConfigService {
     }
 
     public DeviceConfiguration retrieveDeviceConfiguration(String deviceId) throws ExternalDeviceConfigurationException {
-
-        Optional<DeviceConfigurationData> deviceConfiguration = deviceConfigurationRepository.findById(deviceId);
-        if(deviceConfiguration.isPresent()) {
-            DeviceConfiguration retrievedDeviceConfig = deviceConfiguration.get();
-            log.debug("{} for device {} : {}", DEBUG_RETRIEVED_CONFIG, deviceId, retrievedDeviceConfig.toString());
-            return retrievedDeviceConfig;
+        if(deviceId == null || deviceId.isEmpty()) {
+           throw new ExternalDeviceConfigurationException(String.format(CANNOT_RETRIEVE_FOR_NULL_OR_EMPTY_ID, DEVICE_CONFIG, deviceId));
         } else {
-            throw new ExternalDeviceConfigurationException(String.format(CONFIGURATION_NOT_FOUND, DEVICE_NAME, deviceId));
+            Optional<DeviceConfigurationData> deviceConfiguration = deviceConfigurationRepository.findById(deviceId);
+            if(deviceConfiguration.isPresent()) {
+                DeviceConfiguration retrievedDeviceConfig = deviceConfiguration.get();
+                log.debug("{} for device {} : {}", DEBUG_RETRIEVED_CONFIG, deviceId, retrievedDeviceConfig.toString());
+                return retrievedDeviceConfig;
+            } else {
+                throw new ExternalDeviceConfigurationException(String.format(CONFIGURATION_NOT_FOUND, DEVICE_CONFIG, deviceId));
+            }
         }
-
     }
 
     public UserConfiguration retrieveUserConfiguration(String userLogin) throws ExternalDeviceConfigurationException {
-
-        Optional<UserConfigurationData> userConfiguration = userConfigurationRepository.findById(userLogin);
-        if(userConfiguration.isPresent()) {
-            UserConfiguration retrievedUserConfig = userConfiguration.get();
-            log.debug("{} for user {} : {}", DEBUG_RETRIEVED_CONFIG, userLogin, retrievedUserConfig.toString());
-            return retrievedUserConfig;
+        if(userLogin == null || userLogin.isEmpty()) {
+            throw new ExternalDeviceConfigurationException(String.format(CANNOT_RETRIEVE_FOR_NULL_OR_EMPTY_ID, USER_CONFIG));
         } else {
-            throw new ExternalDeviceConfigurationException(String.format(CONFIGURATION_NOT_FOUND, "user", userLogin));
+            Optional<UserConfigurationData> userConfiguration = userConfigurationRepository.findById(userLogin);
+            if(userConfiguration.isPresent()) {
+                UserConfiguration retrievedUserConfig = userConfiguration.get();
+                log.debug("{} for user {} : {}", DEBUG_RETRIEVED_CONFIG, userLogin, retrievedUserConfig.toString());
+                return retrievedUserConfig;
+            } else {
+                throw new ExternalDeviceConfigurationException(String.format(CONFIGURATION_NOT_FOUND, USER_CONFIG, userLogin));
+            }
         }
-
     }
     public SignalMapping retrieveSignalMapping(String signalMappingId) throws ExternalDeviceConfigurationException {
-
+        if(signalMappingId == null || signalMappingId.isEmpty()) {
+            throw new ExternalDeviceConfigurationException(String.format(CANNOT_RETRIEVE_FOR_NULL_OR_EMPTY_ID, SIGNAL_CONFIG));
+        }
         Optional<SignalMappingData> signalMapping = signalMappingRepository.findById(signalMappingId);
         if(signalMapping.isPresent()) {
             SignalMapping retrievedSignalMapping = signalMapping.get();
             log.debug("{} for signal {} : {}", DEBUG_RETRIEVED_CONFIG, signalMappingId, retrievedSignalMapping.toString());
             return retrievedSignalMapping;
         } else {
-            throw new ExternalDeviceConfigurationException(String.format(CONFIGURATION_NOT_FOUND, "signal", signalMappingId));
+            throw new ExternalDeviceConfigurationException(String.format(CONFIGURATION_NOT_FOUND, SIGNAL_CONFIG, signalMappingId));
         }
 
     }
@@ -129,7 +138,7 @@ public class ConfigService {
         if (foundUserConfigurations != null) {
             for (UserConfigurationData userConfigurationData :  foundUserConfigurations) {
                 userConfigurationData.setExternalDeviceId(null);
-                log.warn(NULL_AFTER_DELETE, deviceId, DEVICE_NAME, "user", userConfigurationData.getUserLogin());
+                log.warn(NULL_AFTER_DELETE, deviceId, DEVICE_CONFIG, "user", userConfigurationData.getUserLogin());
             }
             userConfigurationRepository.saveAll(foundUserConfigurations);
         }
@@ -150,7 +159,7 @@ public class ConfigService {
         if (foundDeviceConfigurations != null) {
             for (DeviceConfigurationData deviceConfigurationData : foundDeviceConfigurations) {
                 deviceConfigurationData.setSignalMappingId(null);
-                log.warn(NULL_AFTER_DELETE, signalMappingId, "signalMapping", DEVICE_NAME, deviceConfigurationData.getId());
+                log.warn(NULL_AFTER_DELETE, signalMappingId, "signalMapping", DEVICE_CONFIG, deviceConfigurationData.getId());
             }
             deviceConfigurationRepository.saveAll(foundDeviceConfigurations);
         }
