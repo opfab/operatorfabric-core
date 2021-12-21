@@ -126,14 +126,6 @@ class ConfigServiceShould {
     }
 
     @Test
-    void throwExceptionIfDeviceConfigurationToRetrieveDoesNotExist() {
-
-        assertThrows(ExternalDeviceConfigurationException.class,
-                () -> configService.retrieveDeviceConfiguration("device_configuration_that_doesnt_exist"));
-
-    }
-
-    @Test
     void deleteExistingDeviceConfiguration() throws ExternalDeviceConfigurationException {
 
         configService.deleteDeviceConfiguration("ESS1");
@@ -214,14 +206,6 @@ class ConfigServiceShould {
         UserConfiguration retrievedConfiguration = configService.retrieveUserConfiguration("user1");
         Assertions.assertThat(retrievedConfiguration).isNotNull();
         Assertions.assertThat(retrievedConfiguration).usingRecursiveComparison().isEqualTo(userConfiguration1);
-
-    }
-
-    @Test
-    void throwExceptionIfUserConfigurationToRetrieveDoesNotExist() {
-
-        assertThrows(ExternalDeviceConfigurationException.class,
-                () -> configService.retrieveUserConfiguration("user_configuration_that_doesnt_exist"));
 
     }
 
@@ -331,6 +315,27 @@ class ConfigServiceShould {
                 () -> configService.getResolvedConfiguration(opFabSignalKey, userLogin));
     }
 
+    @ParameterizedTest
+    @MethodSource("retrieveConfigurationErrorParams")
+    void throwExceptionWhenAttemptingToRetrieveUserConfiguration(String userLogin) {
+        assertThrows(ExternalDeviceConfigurationException.class,
+                () -> configService.retrieveUserConfiguration(userLogin));
+    }
+
+    @ParameterizedTest
+    @MethodSource("retrieveConfigurationErrorParams")
+    void throwExceptionWhenAttemptingToRetrieveDeviceConfiguration(String deviceId) {
+        assertThrows(ExternalDeviceConfigurationException.class,
+                () -> configService.retrieveDeviceConfiguration(deviceId));
+    }
+
+    @ParameterizedTest
+    @MethodSource("retrieveConfigurationErrorParams")
+    void throwExceptionWhenAttemptingToRetrieveSignalMapping(String signalMappingId) {
+        assertThrows(ExternalDeviceConfigurationException.class,
+                () -> configService.retrieveSignalMapping(signalMappingId));
+    }
+
     @AfterEach
     public void clean(){
         signalMappingRepository.deleteAll();
@@ -431,6 +436,14 @@ class ConfigServiceShould {
                 Arguments.of("user4", "ACTION"), //Configured device for user doesn't exist
                 Arguments.of("user3", "ALARM"), //Configured signal mapping for device doesn't exist
                 Arguments.of("user2", "INFORMATION") //This signal is not mapped in this user's configuration
+        );
+    }
+
+    private static Stream<Arguments> retrieveConfigurationErrorParams() {
+        return Stream.of(
+                Arguments.of("item_that_doesnt_exist"),
+                Arguments.of(""),
+                null
         );
     }
 
