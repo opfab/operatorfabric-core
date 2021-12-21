@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+# Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,6 +25,7 @@ resetConfiguration=true
 businessServices=( "users" "cards-consultation" "cards-publication" "businessconfig")
 offline=false
 waitForOpfabToStart=false
+externalDevices=false
 
 function join_by { local IFS="$1"; shift; echo "$*"; }
 
@@ -39,6 +40,7 @@ function display_usage() {
 	echo -e "\t-r, --reset\t: true or false. Resets service data. Defaults to $resetConfiguration."
 	echo -e "\t-o, --offline\t: true or false. When gradle is invoked, it will be invoked offline. Defaults to $offline.\n"
   echo -e "\t-w, --waitForOpfabToStart\t: true or false , if true the script exits only when opfab is up. Defaults to false.\n"
+  echo -e "\t-e, --externalDevices\t: true or false , if true the external devices service is started as well. Defaults to $externalDevices.\n"
 }
 
 while [[ $# -gt 0 ]]
@@ -63,6 +65,10 @@ case $key in
     ;;
     -w|--waitForOpfabToStart)
     waitForOpfabToStart=true
+    shift # past argument
+    ;;
+    -e|--externalDevices)
+    externalDevices=true
     shift # past argument
     ;;
     -h|--help)
@@ -95,6 +101,15 @@ for bservice in "${businessServices[@]}"; do
  dependentProjects[$i+4]=$bservice
  i=$((i+$PRJ_STRC_FIELDS))
 done
+
+if [ "$externalDevices" = true ]; then
+  dependentProjects[$i]="external-devices-service"
+  dependentProjects[$i+1]="services/external-devices"
+  dependentProjects[$i+2]=0
+  dependentProjects[$i+3]=""
+  dependentProjects[$i+4]="external-devices"
+  i=$((i+$PRJ_STRC_FIELDS))
+fi
 
 debugPort=5005
 version=$OF_VERSION

@@ -5,4 +5,5 @@ spring:
     web-application-type: NONE
 modbus_client:
   port: 4030
+logging.level.org.opfab: debug
 
