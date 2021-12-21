@@ -1,0 +1,9 @@
+{
+  "id":"new_CDS_mapping",
+  "supportedSignals": {
+    "ALARM":1,
+    "ACTION":2,
+    "COMPLIANT":3,
+    "INFORMATION":4
+  }
+}

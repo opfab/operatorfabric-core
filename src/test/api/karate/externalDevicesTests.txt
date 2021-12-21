@@ -1,2 +1,10 @@
-      externaldevices/manageDeviceConfig.feature                    \
+      externaldevices/fetchDeviceConfig.feature                     \
+      externaldevices/fetchUserConfig.feature                       \
+      externaldevices/fetchSignalConfig.feature                     \
+      externaldevices/createDeviceConfig.feature                    \
+      externaldevices/deleteDeviceConfig.feature                    \
+      externaldevices/createUserConfig.feature                      \
+      externaldevices/deleteUserConfig.feature                      \
+      externaldevices/createSignalConfig.feature                    \
+      externaldevices/deleteSignalConfig.feature                    \
       externaldevices/sendNotification.feature                      \

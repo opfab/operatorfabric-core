@@ -1,0 +1,9 @@
+{
+  "id":"default_CDS_mapping",
+  "supportedSignals": {
+    "ALARM":5,
+    "ACTION":6,
+    "COMPLIANT":7,
+    "INFORMATION":8
+  }
+}
