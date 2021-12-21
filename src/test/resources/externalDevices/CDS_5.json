@@ -1,6 +1,0 @@
-{
-	"id" : "CDS_5",
-	"host" : "dummy-modbus-device",
-	"port" : 8080,
-	"signalMappingId": "default_CDS_mapping"
-}
