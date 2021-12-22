@@ -41,6 +41,8 @@ import {takeUntil} from 'rxjs/operators';
 import {getNextTimeForRepeating} from '@ofServices/reminder/reminderUtils';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
+import {FilterType} from '@ofModel/feed-filter.model';
+import {FilterService} from '@ofServices/lightcards/filter.service';
 
 
 @Component({
@@ -152,7 +154,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
      private store: Store<AppState>,
      private router: Router,
      @Inject(PLATFORM_ID) platformId: any,
-     private lightCardsFeedFilterService: LightCardsFeedFilterService) {
+     private lightCardsFeedFilterService: LightCardsFeedFilterService,
+     private filterService: FilterService) {
     super(chartElement, zone, cd, platformId);
   }
 
@@ -164,7 +167,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       }
   });
     this.initGraph();
-    this.updateRealTimeDate();
+    this.updateRealtime();
     this.initDataPipe();
     this.updateDimensions(); // need to init here only for unit test , otherwise dims is null
   }
@@ -192,31 +195,27 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    * update the domain if check follow clock tick is true
    *  Stop it when destroying component to avoid memory leak
    */
-  updateRealTimeDate(): void {
+  updateRealtime(): void {
     this.xRealTimeLine = moment();
-    if (this.followClockTick) {
-      if (this.checkFollowClockTick()) {
-        this.update();
-      }
-    }
+    if (this.followClockTick) this.shiftTimeLineIfNecessary();
     setTimeout(() => {
-      if (!this.isDestroyed) this.updateRealTimeDate();
+      if (!this.isDestroyed) this.updateRealtime();
     }, 1000);
   }
 
 
-  /**
-   * change domain start with the second tick value
-   * if moment is equal to the 4th tick return true
-   */
-  checkFollowClockTick(): boolean {
-    if (this.xTicks && this.xTicks.length > 5) {
-      if (this.xTicks[4].valueOf() <= moment().millisecond(0).valueOf()) {
+  shiftTimeLineIfNecessary() {
+    if (this.xTicks) {
+      if (this.xTicks[10].valueOf() <= moment().valueOf()) {
         this.valueDomain = [this.xTicks[1].valueOf(), this.xDomain[1] + (this.xTicks[1] - this.xDomain[0])];
-        return true;
+        this.filterService.updateFilter(
+          FilterType.BUSINESSDATE_FILTER,
+          true,
+          {start: this.valueDomain[0], end: this.valueDomain[1], domainId: this.domainId}
+        );
+        this.update();
       }
     }
-    return false;
   }
 
   /**

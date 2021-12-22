@@ -72,38 +72,6 @@ describe('CustomTimelineChartComponent', () => {
   });
 
 
-  it('should test checkFollowClockTick && updateRealTimeDate functions with : ' +
-    'an empty ticks list, ' +
-    'a ticks list of moment with a length biggest than 5, ' +
-    'followClockTick set to true', () => {
-    fixture.detectChanges();
-    expect(component.checkFollowClockTick()).toBeFalsy();
-    component.followClockTick = true;
-    component.updateRealTimeDate();
-    component.xTicks = [];
-    component.xDomain = [0, 1];
-    const tmp = moment();
-    tmp.millisecond(0);
-    for (let i = 0; i < 6; i++) {
-      component.xTicks.push(tmp);
-    }
-    expect(component.checkFollowClockTick()).toBeTruthy();
-    expect(component).toBeTruthy();
-  });
-
-  it('should test checkFollowClockTick function with a ticks list ' +
-    'of moment (next day) with a length biggest than 5', () => {
-      fixture.detectChanges();
-    component.xTicks = [];
-    component.xDomain = [0, 1];
-    const tmp = moment();
-    tmp.add(1, 'day');
-    for (let i = 0; i < 6; i++) {
-      component.xTicks.push(tmp);
-    }
-    expect(component.checkFollowClockTick()).toBeFalsy();
-    expect(component).toBeTruthy();
-  });
 
 
 
