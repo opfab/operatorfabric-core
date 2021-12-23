@@ -39,6 +39,7 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
     cardState: State;
     unsubscribe$: Subject<void> = new Subject<void>();
     cardLoadingInProgress = false;
+    cardNotFound = false;
     currentSelectedCardId: string;
     protected _currentPath: string;
 
@@ -54,6 +55,8 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(([card, childCards]: [Card, Card[]]) => {
                 if (!!card) {
+                    this.cardNotFound = false;
+
                     this.businessconfigService.queryProcess(card.process, card.processVersion)
                         .subscribe({
                             next: businessconfig => {
@@ -82,9 +85,11 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
                                 this.cardState = new State();
                             }
                         });
+                } else {
+                    this.cardNotFound = true;
+                    console.log(new Date().toISOString(), 'WARNING card not found.');
                 }
             });
-
         this.store.select(selectCurrentUrl)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(url => {
@@ -94,7 +99,8 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
                     this._currentPath = urlParts[CURRENT_PAGE_INDEX];
                 }
             });
-        this.checkForCardLoadingInProgressForMoreThanOneSecond();
+        if(!this.cardNotFound) 
+            this.checkForCardLoadingInProgressForMoreThanOneSecond();
 
     }
 
