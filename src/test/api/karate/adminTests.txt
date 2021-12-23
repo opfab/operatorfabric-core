@@ -1,1 +1,3 @@
-admin/getPrometheusMonitoring.feature \
+    admin/getPrometheusMonitoring.feature \
+    admin/loggersApi.feature \
+

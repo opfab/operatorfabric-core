@@ -36,6 +36,48 @@ include::RABBITMQ.adoc[leveloffset=+1]
 
 Operator Fabric provides end points for monitoring via link:https://prometheus.io/[prometheus]. The monitoring is available for the four following services: user, businessconfig, cards-consultation, cards-publication. You can start a test prometheus instance via `config/monitoring/startPrometheus.sh` , the monitoring will be accessible on http://localhost:9090/
 
+== Logging Administration
+
+Operator Fabric includes the ability to view and configure the log levels at runtime through APIs. It is possible to configure and view an individual logger configuration, which is made up of both the explicitly configured logging level as well as the effective logging level given to it by the logging framework. These levels can be one of:
+
+* TRACE
+* DEBUG
+* INFO
+* WARN
+* ERROR
+* FATAL
+* OFF
+* null
+
+null indicates that there is no explicit configuration.
+
+Querying and setting logging levels is restricted to administrators.
+
+To view the configured logging level for a given logger it is possible to send a GET request to the '/actuator/logger' URI as follows:
+----
+curl http://<server>:<port>/actuator/loggers/${logger} -H "Authorization: Bearer ${token}" -H "Content-type:application/json"
+----
+where `${token}` is a valid OAuth2 JWT for a user with administration privileges
+and `${logger}` is the logger (ex: org.opfab)
+
+The response will be a json object like the following:
+
+----
+{
+  "configuredLevel" : "INFO",
+  "effectiveLevel" : "INFO"
+}
+----
+
+To configure a given logger, POST a json entity to the '/actuator/logger' URI, as follows:
+
+----
+curl -i -X POST http://<server>:<port>/actuator/loggers/${logger} -H "Authorization: Bearer ${token}" -H 'Content-Type: application/json' -d '{"configuredLevel": "DEBUG"}'
+----
+
+To “reset” the specific level of the logger (and use the default configuration instead) it is possible to pass a value of null as the configuredLevel.
+
+
 include::users_groups_admin.adoc[leveloffset=+1]
 
 
