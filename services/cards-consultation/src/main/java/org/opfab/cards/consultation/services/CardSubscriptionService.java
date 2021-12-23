@@ -17,36 +17,25 @@ import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
-
 import java.util.Collection;
-import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ScheduledFuture;
 
-/**
- * <p>Centralize request for generating {@link CardSubscription} and deleting them.</p>
- *
- * <p>Uses a {@link ThreadPoolTaskScheduler} delay definitive deletion of subscription (defaults to 10s)</p>
- *
- *
- */
+
+
 @Service
 @Slf4j
 public class CardSubscriptionService {
 
-    private final ThreadPoolTaskScheduler taskScheduler;
+ 
     private final FanoutExchange cardExchange;
     private final FanoutExchange processExchange;
     private final FanoutExchange userExchange;
     private final AmqpAdmin amqpAdmin;
-    private final long deletionDelay;
     private final long heartbeatDelay;
     private final ConnectionFactory connectionFactory;
     private Map<String, CardSubscription> cache = new ConcurrentHashMap<>();
-    private Map<String, ScheduledFuture<?>> pendingEvict = new ConcurrentHashMap<>();
 
     @Autowired
     protected UserServiceCache userServiceCache;
@@ -59,25 +48,22 @@ public class CardSubscriptionService {
 
 
     @Autowired
-    public CardSubscriptionService(ThreadPoolTaskScheduler taskScheduler,
+    public CardSubscriptionService(
                                    FanoutExchange cardExchange,
                                    FanoutExchange processExchange,
                                    FanoutExchange userExchange,
                                    ConnectionFactory connectionFactory,
                                    AmqpAdmin amqpAdmin,
-                                   @Value("${operatorfabric.subscriptiondeletion.delay:10000}")
-                                   long deletionDelay,
                                    @Value("${operatorfabric.heartbeat.delay:10000}")
                                    long heartbeatDelay) {
         this.cardExchange = cardExchange;
         this.processExchange = processExchange;
         this.userExchange = userExchange;
-        this.taskScheduler = taskScheduler;
         this.amqpAdmin = amqpAdmin;
         this.connectionFactory = connectionFactory;
-        this.deletionDelay = deletionDelay;
         this.heartbeatDelay = heartbeatDelay;
         Thread heartbeat = new Thread(){
+            @Override
             public void run(){
                 sendHeartbeatMessageInAllSubscriptions();
             }
@@ -103,8 +89,14 @@ public class CardSubscriptionService {
                 }
             log.debug("Send heartbeat to all subscription");
             cache.keySet().forEach(key -> {
-                log.debug("Send heartbeat to {}",key);
-                sendHeartbeat(cache.get(key));
+                CardSubscription sub = cache.get(key); 
+                if (key!=null) // subscription can be null if it has been evict during the process of going throw the keys 
+                {
+                    if (!sub.isClosed()) {
+                        log.debug("Send heartbeat to {}",key);
+                        sendHeartbeat(sub);
+                    }
+                }
             });
 
         }
@@ -117,15 +109,15 @@ public class CardSubscriptionService {
 
     /**
      * <p>Generates a {@link CardSubscription} or retrieve it from a local {@link CardSubscription} cache.</p>
-     * <p>If it finds a {@link CardSubscription} from cache, it will try to cancel possible scheduled evict</p>
      */
-    public synchronized CardSubscription subscribe(
+    public CardSubscription subscribe(
             CurrentUserWithPerimeters currentUserWithPerimeters,
             String clientId) {
         String subId = CardSubscription.computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin(), clientId);
         CardSubscription cardSubscription = cache.get(subId);
-        // The builder may seem declare a bit to early but it allows usage in both branch of the later condition
-        CardSubscription.CardSubscriptionBuilder cardSubscriptionBuilder = CardSubscription.builder()
+        
+        if (cardSubscription == null) {
+            CardSubscription.CardSubscriptionBuilder cardSubscriptionBuilder = CardSubscription.builder()
            .currentUserWithPerimeters(currentUserWithPerimeters)
            .clientId(clientId)
            .amqpAdmin(amqpAdmin)
@@ -133,86 +125,37 @@ public class CardSubscriptionService {
            .processExchange(this.processExchange)
            .userExchange(this.userExchange)
            .connectionFactory(this.connectionFactory);
-        if (cardSubscription == null) {
             cardSubscription = buildSubscription(subId, cardSubscriptionBuilder);
-        } else {
-            if (!cancelEviction(subId)) {
-                cardSubscription = cache.get(subId);
-                if (cardSubscription == null) {
-                    cardSubscription = buildSubscription(subId, cardSubscriptionBuilder);
-                }
-            }
-        }
+        } 
         return cardSubscription;
     }
 
     private CardSubscription buildSubscription(String subId, CardSubscription.CardSubscriptionBuilder cardSubscriptionBuilder) {
         CardSubscription cardSubscription;
         cardSubscription = cardSubscriptionBuilder.build();
-        cardSubscription.initSubscription(retries, retryInterval, () -> scheduleEviction(subId));
+        cardSubscription.initSubscription(retries, retryInterval, () -> evictSubscription(subId));
         cache.put(subId, cardSubscription);
-        log.debug("Subscription created with id {}", cardSubscription.getId());
+        log.info("Subscription created with id {} for user {} ", cardSubscription.getId(),cardSubscription.getUserLogin());
         cardSubscription.userServiceCache = this.userServiceCache;
         return cardSubscription;
     }
 
-    /**
-     * Schedule deletion of subscription in deletionDelay millis
-     *
-     * @param subId
-     *    Subscription computed id
-     */
-    public void scheduleEviction(String subId) {
-        if (!pendingEvict.containsKey(subId)) {
-            ScheduledFuture<?> scheduled = taskScheduler.schedule(createEvictTask(subId),
-               new Date(System.currentTimeMillis() + deletionDelay));
-            pendingEvict.put(subId, scheduled);
-            log.debug("Eviction scheduled for id {}", subId);
+
+
+    public void evictSubscription(String subId) {
+        log.info("Trying to evict subscription with id {}", subId);
+        
+        CardSubscription sub = cache.get(subId);
+        if (sub==null) {
+            log.info("Subscription {} is not existing anymore ", subId);
+            return;
         }
-    }
-
-    /**
-     * Cancel scheduled evict if any
-     *
-     * @param subId
-     *    subscription auto-generated id
-     * @return true if eviction was successfully cancelled, false may indicate that either no cancellation was
-     * possible or no eviction was previously scheduled
-     */
-    public synchronized boolean cancelEviction(String subId) {
-        ScheduledFuture<?> scheduled = pendingEvict.get(subId);
-        if (scheduled != null) {
-            boolean canceled = scheduled.cancel(false);
-            pendingEvict.remove(subId);
-            log.debug("Eviction canceled with id {}", subId);
-            return canceled;
-        }
-        return false;
-    }
-
-    /**
-     * Evict subscription definitively
-     *
-     * @param subId subscription unique id
-     *    subscription autogenerated id
-     */
-    public synchronized void evict(String subId) {
-        log.debug("Trying to evict subscription with id {}", subId);
-        cache.get(subId).clearSubscription();
-        cache.remove(subId);
-        pendingEvict.remove(subId);
-        log.debug("Subscription with id {} evicted ", subId);
-    }
-
-    /**
-     * Create a runnable to to launch {@link #evict(String)}
-     *
-     * @param subId
-     *    subscription autogenerated id
-     * @return the generated task
-     */
-    private Runnable createEvictTask(String subId) {
-        return () -> evict(subId);
+        // remove first in cache to avoid the user getting a close subscription 
+        // if it happens it is not really an issue as the ui will reopen it as it will see 
+        // it is closed 
+        cache.remove(subId); 
+        sub.clearSubscription();
+        log.info("Subscription with id {} evicted (user {})", subId , sub.getUserLogin());
     }
 
     /**
@@ -231,10 +174,10 @@ public class CardSubscriptionService {
         return cache.get(subId);
     }
 
+    // only use for testing purpose
     public void clearSubscriptions() {
         this.cache.forEach((k,v)->v.clearSubscription());
         this.cache.clear();
-        this.pendingEvict.clear();
     }
 
     public Collection<CardSubscription> getSubscriptions()
