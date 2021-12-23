@@ -30,10 +30,12 @@ import org.springframework.security.oauth2.jwt.Jwt;
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     public static final String PROMETHEUS_PATH ="/actuator/prometheus**";
-
+    public static final String LOGGERS_PATH ="/actuator/loggers/**";
     public static final String CONFIGURATIONS_ROOT_PATH = "/configurations/";
     public static final String DEVICES_ROOT_PATH = "/devices/";
     public static final String NOTIFICATIONS_ROOT_PATH = "/notifications";
+
+    public static final String ADMIN_ROLE = "ADMIN";
 
     public static final String AUTH_AND_IP_ALLOWED = "isAuthenticated() and @webSecurityChecks.checkUserIpAddress(authentication)";
     public static final String ADMIN_AND_IP_ALLOWED = "hasRole('ADMIN') and @webSecurityChecks.checkUserIpAddress(authentication)";
@@ -57,6 +59,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll()
+                .antMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
                 .antMatchers(HttpMethod.POST,NOTIFICATIONS_ROOT_PATH).access(AUTH_AND_IP_ALLOWED)
                 .antMatchers(CONFIGURATIONS_ROOT_PATH+"**").access(ADMIN_AND_IP_ALLOWED)
                 .antMatchers(DEVICES_ROOT_PATH+"**").access(ADMIN_AND_IP_ALLOWED)

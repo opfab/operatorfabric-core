@@ -33,6 +33,8 @@ import lombok.extern.slf4j.Slf4j;
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     public static final String PROMETHEUS_PATH ="/actuator/prometheus**";
+    public static final String LOGGERS_PATH ="/actuator/loggers/**";
+
     public static final String USER_PATH = "/users/{login}";
     public static final String USERS_SETTINGS_PATH = "/users/{login}/settings";
     public static final String USERS_PERIMETERS_PATH = "/users/{login}/perimeters";
@@ -87,6 +89,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(ENTITIES_PATH).access(IS_ADMIN_AND_IP_ALLOWED)
                 .antMatchers(PERIMETERS_PATH).access(IS_ADMIN_AND_IP_ALLOWED)
                 .antMatchers(CURRENTUSER_INTERNAL_PATH).authenticated()
+                .antMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
                 .anyRequest().access(AUTH_AND_IP_ALLOWED);
     }
 
