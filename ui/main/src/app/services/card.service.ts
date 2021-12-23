@@ -152,9 +152,6 @@ export class CardService {
                             this.lastHeardBeatDate = new Date().valueOf();
                             console.log(new Date().toISOString(), `CardService - HEARTBEAT received - Connection alive `);
                             break;
-                        case 'RESTORE':
-                            console.log(new Date().toISOString(), `CardService - Subscription restored with server`);
-                            break;
                         case 'BUSINESS_CONFIG_CHANGE':
                             this.store.dispatch(new BusinessConfigChangeAction());
                             console.log(new Date().toISOString(), `CardService - BUSINESS_CONFIG_CHANGE received`);

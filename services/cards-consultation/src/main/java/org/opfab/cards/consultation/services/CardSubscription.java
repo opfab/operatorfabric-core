@@ -31,7 +31,6 @@ import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 
-import java.time.Instant;
 import java.util.*;
 
 /**
@@ -72,17 +71,13 @@ public class CardSubscription {
     private MessageListenerContainer processListener;
     private MessageListenerContainer userListener;
     @Getter
-    private Instant startingPublishDate;
+    private boolean cleared = false; 
     @Getter
-    private boolean cleared = false;
+    private boolean closed = false;
     private final String clientId;
     private String userLogin;
-    private boolean fluxHasBeenFirstInit = false;
 
     protected UserServiceCache userServiceCache;
-
-
-
 
     /**
      * Constructs a card subscription and init access to AMQP exchanges
@@ -113,7 +108,7 @@ public class CardSubscription {
     {
         return userLogin;
     }
-
+    
     public void updateCurrentUserWithPerimeters() {
         if (userServiceCache != null)
             try {
@@ -155,12 +150,7 @@ public class CardSubscription {
                 log.debug("DISPOSING subscription for user {}", userLogin);
                 doOnCancel.run();
             });
-
-            if (!this.fluxHasBeenFirstInit) {
-                emitter.next("INIT");
-                this.fluxHasBeenFirstInit = true;
-            } else
-                emitter.next("RESTORE");
+            emitter.next("INIT");
             cardListener.start();
             processListener.start();
             userListener.start();
@@ -206,6 +196,7 @@ public class CardSubscription {
      */
     public void clearSubscription() {
         log.debug("Clear subscription for user {}", userLogin);
+        closed = true;
         cardListener.stop();
         amqpAdmin.deleteQueue(cardsQueueName);
         processListener.stop();
@@ -213,6 +204,7 @@ public class CardSubscription {
         userListener.stop();
         amqpAdmin.deleteQueue(userQueueName);
         cleared = true;
+       
     }
 
     /**
@@ -238,15 +230,9 @@ public class CardSubscription {
     }
 
     
-
-    public void updateRange() {
-        startingPublishDate = Instant.now();
-    }
-
-
     public void publishDataIntoSubscription(String message)
     {
-        this.messageSink.next(message);
+        if (this.messageSink!=null) this.messageSink.next(message);
     }
 
 

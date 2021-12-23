@@ -101,48 +101,12 @@ public class CardSubscriptionServiceShould {
         CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
         subscription.getPublisher().subscribe(log::info);
         Assertions.assertThat(subscription.checkActive()).isTrue();
-        service.evict(subscription.getId());
-        Assertions.assertThat(subscription.isCleared()).isTrue();
-        Assertions.assertThat(subscription.checkActive()).isFalse();
-//        await().atMost(10, TimeUnit.SECONDS).until(() -> !subscription.checkActive());
-    }
-
-    @Test
-    void deleteSubscriptionWithDelay(){
-        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
-        subscription.getPublisher().subscribe(log::info);
-        Assertions.assertThat(subscription.checkActive()).isTrue();
-        service.scheduleEviction(subscription.getId());
-        Assertions.assertThat(subscription.checkActive()).isTrue();
-        Assertions.assertThat(subscription.isCleared()).isFalse();
-        await().atMost(15, TimeUnit.SECONDS).until(() -> !subscription.checkActive() && subscription.isCleared());
-    }
-
-    @Test
-    void reviveSubscription(){
-        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
-        subscription.getPublisher().subscribe(log::info);
-        Assertions.assertThat(subscription.checkActive()).isTrue();
-        service.scheduleEviction(subscription.getId());
-        Assertions.assertThat(subscription.checkActive()).isTrue();
-        try {
-            await().atMost(6, TimeUnit.SECONDS).until(() -> !subscription.checkActive() && subscription.isCleared());
-            Assertions.assertThat(false).describedAs("An exception was expected here").isFalse();
-        }catch (ConditionTimeoutException e){
-            //nothing, everything is alright
-        }
-        CardSubscription subscription2 = service.subscribe(currentUserWithPerimeters, TEST_ID);
-        Assertions.assertThat(subscription2).isSameAs(subscription);
-        try {
-            await().atMost(6, TimeUnit.SECONDS).until(() -> !subscription.checkActive() && subscription.isCleared());
-            Assertions.assertThat(false).describedAs("An exception was expected here").isFalse();
-        }catch (ConditionTimeoutException e){
-            //nothing, everything is alright
-        }
-        service.evict(subscription.getId());
+        service.evictSubscription(subscription.getId());
         Assertions.assertThat(subscription.isCleared()).isTrue();
         Assertions.assertThat(subscription.checkActive()).isFalse();
     }
+
+
 
     @Test
     void receiveCards(){
