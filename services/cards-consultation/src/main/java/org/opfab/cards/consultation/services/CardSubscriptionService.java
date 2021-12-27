@@ -10,11 +10,10 @@
 package org.opfab.cards.consultation.services;
 
 import lombok.extern.slf4j.Slf4j;
+
+
 import org.opfab.springtools.configuration.oauth.UserServiceCache;
 import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.springframework.amqp.core.AmqpAdmin;
-import org.springframework.amqp.core.FanoutExchange;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -28,39 +27,17 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class CardSubscriptionService {
 
- 
-    private final FanoutExchange cardExchange;
-    private final FanoutExchange processExchange;
-    private final FanoutExchange userExchange;
-    private final AmqpAdmin amqpAdmin;
     private final long heartbeatDelay;
-    private final ConnectionFactory connectionFactory;
     private Map<String, CardSubscription> cache = new ConcurrentHashMap<>();
 
     @Autowired
     protected UserServiceCache userServiceCache;
 
-    @Value("${operatorfabric.amqp.connectionRetries:10}")
-    private int retries;
-
-    @Value("${operatorfabric.amqp.connectionRetryInterval:5000}")
-    private long retryInterval;
-
-
     @Autowired
     public CardSubscriptionService(
-                                   FanoutExchange cardExchange,
-                                   FanoutExchange processExchange,
-                                   FanoutExchange userExchange,
-                                   ConnectionFactory connectionFactory,
-                                   AmqpAdmin amqpAdmin,
                                    @Value("${operatorfabric.heartbeat.delay:10000}")
                                    long heartbeatDelay) {
-        this.cardExchange = cardExchange;
-        this.processExchange = processExchange;
-        this.userExchange = userExchange;
-        this.amqpAdmin = amqpAdmin;
-        this.connectionFactory = connectionFactory;
+
         this.heartbeatDelay = heartbeatDelay;
         Thread heartbeat = new Thread(){
             @Override
@@ -90,21 +67,14 @@ public class CardSubscriptionService {
             log.debug("Send heartbeat to all subscription");
             cache.keySet().forEach(key -> {
                 CardSubscription sub = cache.get(key); 
-                if (key!=null) // subscription can be null if it has been evict during the process of going throw the keys 
+                if (sub!=null) // subscription can be null if it has been evict during the process of going throw the keys 
                 {
-                    if (!sub.isClosed()) {
                         log.debug("Send heartbeat to {}",key);
-                        sendHeartbeat(sub);
-                    }
+                        sub.publishDataIntoSubscription("HEARTBEAT");
                 }
             });
 
         }
-    }
-
-    private void sendHeartbeat(CardSubscription subscription)
-    {
-        if (subscription!=null) subscription.publishDataIntoSubscription("HEARTBEAT");
     }
 
     /**
@@ -119,12 +89,7 @@ public class CardSubscriptionService {
         if (cardSubscription == null) {
             CardSubscription.CardSubscriptionBuilder cardSubscriptionBuilder = CardSubscription.builder()
            .currentUserWithPerimeters(currentUserWithPerimeters)
-           .clientId(clientId)
-           .amqpAdmin(amqpAdmin)
-           .cardExchange(this.cardExchange)
-           .processExchange(this.processExchange)
-           .userExchange(this.userExchange)
-           .connectionFactory(this.connectionFactory);
+           .clientId(clientId);
             cardSubscription = buildSubscription(subId, cardSubscriptionBuilder);
         } 
         return cardSubscription;
@@ -133,7 +98,7 @@ public class CardSubscriptionService {
     private CardSubscription buildSubscription(String subId, CardSubscription.CardSubscriptionBuilder cardSubscriptionBuilder) {
         CardSubscription cardSubscription;
         cardSubscription = cardSubscriptionBuilder.build();
-        cardSubscription.initSubscription(retries, retryInterval, () -> evictSubscription(subId));
+        cardSubscription.initSubscription( () -> evictSubscription(subId));
         cache.put(subId, cardSubscription);
         log.info("Subscription created with id {} for user {} ", cardSubscription.getId(),cardSubscription.getUserLogin());
         cardSubscription.userServiceCache = this.userServiceCache;
@@ -141,20 +106,14 @@ public class CardSubscriptionService {
     }
 
 
-
     public void evictSubscription(String subId) {
-        log.info("Trying to evict subscription with id {}", subId);
         
         CardSubscription sub = cache.get(subId);
         if (sub==null) {
-            log.info("Subscription {} is not existing anymore ", subId);
+            log.info("Subscription with id {} already evicted , as it is not existing anymore ", subId);
             return;
         }
-        // remove first in cache to avoid the user getting a close subscription 
-        // if it happens it is not really an issue as the ui will reopen it as it will see 
-        // it is closed 
         cache.remove(subId); 
-        sub.clearSubscription();
         log.info("Subscription with id {} evicted (user {})", subId , sub.getUserLogin());
     }
 
@@ -176,12 +135,31 @@ public class CardSubscriptionService {
 
     // only use for testing purpose
     public void clearSubscriptions() {
-        this.cache.forEach((k,v)->v.clearSubscription());
         this.cache.clear();
     }
 
     public Collection<CardSubscription> getSubscriptions()
     {
         return cache.values();
+    }
+
+
+    public void onMessage(String queueName, String message) {
+        switch (queueName) {
+            case "process":
+                cache.values().forEach(subscription -> subscription.publishDataIntoSubscription(message));
+                break;
+            case "user":
+                cache.values().forEach(subscription -> {
+                            if (message.equals(subscription.getUserLogin()))
+                                subscription.publishDataIntoSubscription("USER_CONFIG_CHANGE");
+                        });
+                break;
+            case "card":
+                cache.values().forEach(subscription -> subscription.processNewCard(message));
+                break;
+            default:
+                log.info("unrecognized queue {}" , queueName);
+        }
     }
 }

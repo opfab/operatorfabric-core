@@ -11,10 +11,10 @@ package org.opfab.cards.consultation.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
-import org.awaitility.core.ConditionTimeoutException;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
+
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,23 +24,17 @@ import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.User;
-import org.springframework.amqp.core.FanoutExchange;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import reactor.test.StepVerifier;
 
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import static org.awaitility.Awaitility.await;
+
 
 /**
  * <p></p>
@@ -58,17 +52,11 @@ public class CardSubscriptionServiceShould {
 
     private static String TEST_ID = "testClient";
 
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
-    @Autowired
-    private FanoutExchange cardExchange;
+
     @Autowired
     private CardSubscriptionService service;
-    @Autowired
-    private ThreadPoolTaskScheduler taskScheduler;
-    private CurrentUserWithPerimeters currentUserWithPerimeters;
 
-    private static String rabbitTestMessage = "{\"card\":{\"severity\":\"ALARM\",\"summary\":{\"parameters\":{},\"key\":\"defaultProcess.summary\"},\"process\":\"Process1\",\"publishDate\":1592389043000,\"title\":{\"parameters\":{},\"key\":\"defaultProcess.title\"},\"uid\":\"db914230-a5aa-42f2-aa29-f5348700fa55\",\"publisherVersion\":\"1\",\"processInstanceId\":\"process5b\",\"publisher\":\"api_test\",\"id\":\"api_test_process5b\",\"state\":\"State1\",\"startDate\":1592396243446},\"publishDate\":1592389043000,\"groupRecipientsIds\":[\"testgroup1\"],\"type\":\"ADD\"}";
+    private CurrentUserWithPerimeters currentUserWithPerimeters;
 
     public CardSubscriptionServiceShould(){
         User user = new User();
@@ -96,38 +84,6 @@ public class CardSubscriptionServiceShould {
         currentUserWithPerimeters.setComputedPerimeters(Arrays.asList(perimeter));
     }
 
-    @Test
-    void createAndDeleteSubscription(){
-        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
-        subscription.getPublisher().subscribe(log::info);
-        Assertions.assertThat(subscription.checkActive()).isTrue();
-        service.evictSubscription(subscription.getId());
-        Assertions.assertThat(subscription.isCleared()).isTrue();
-        Assertions.assertThat(subscription.checkActive()).isFalse();
-    }
-
-
-
-    @Test
-    void receiveCards(){
-        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
-        StepVerifier.FirstStep<String> verifier = StepVerifier.create(subscription.getPublisher().filter(m -> !m.equals("HEARTBEAT") && !m.equals("BUSINESS_CONFIG_CHANGE") && !m.equals("USER_CONFIG_CHANGE") ));
-        taskScheduler.schedule(createSendMessageTask(),new Date(System.currentTimeMillis() + 1000));
-        verifier
-            .expectNext("INIT")
-            .expectNext(rabbitTestMessage)
-            .expectNext(rabbitTestMessage)
-            .thenCancel()
-            .verify();
-    }
-
-    private Runnable createSendMessageTask() {
-        return () ->{
-          
-            rabbitTemplate.convertAndSend(cardExchange.getName(), currentUserWithPerimeters.getUserData().getLogin(),rabbitTestMessage);
-            rabbitTemplate.convertAndSend(cardExchange.getName(), currentUserWithPerimeters.getUserData().getLogin(),rabbitTestMessage);
-        };
-    }
 
     private  JSONObject createJSONObjectFromString(String jsonString)
     {

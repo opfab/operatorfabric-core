@@ -22,11 +22,6 @@ import net.minidev.json.parser.ParseException;
 import org.opfab.springtools.configuration.oauth.UserServiceCache;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.RightsEnum;
-import org.opfab.utilities.AmqpUtils;
-import org.springframework.amqp.core.*;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
@@ -46,13 +41,8 @@ import java.util.*;
 @EqualsAndHashCode
 public class CardSubscription {
     public static final String GROUPS_SUFFIX = "Groups";
-    public static final String PROCESS_SUFFIX = "Process";
-    public static final String USER_SUFFIX = "User";
     public static final String DELETE_OPERATION = "DELETE";
     public static final String ERROR_MESSAGE_PARSING = "ERROR during received message parsing";
-    private String cardsQueueName;
-    private String processQueueName;
-    private String userQueueName;
     private long current = 0;
     @Getter
     private CurrentUserWithPerimeters currentUserWithPerimeters;
@@ -62,18 +52,7 @@ public class CardSubscription {
     private Flux<String> publisher;
     private Flux<String> amqpPublisher;
     private FluxSink<String> messageSink;
-    private AmqpAdmin amqpAdmin;
-    private FanoutExchange cardExchange;
-    private FanoutExchange processExchange;
-    private FanoutExchange userExchange;
-    private ConnectionFactory connectionFactory;
-    private MessageListenerContainer cardListener;
-    private MessageListenerContainer processListener;
-    private MessageListenerContainer userListener;
-    @Getter
-    private boolean cleared = false; 
-    @Getter
-    private boolean closed = false;
+
     private final String clientId;
     private String userLogin;
 
@@ -84,24 +63,12 @@ public class CardSubscription {
      */
     @Builder
     public CardSubscription(CurrentUserWithPerimeters currentUserWithPerimeters,
-                            String clientId,
-                            AmqpAdmin amqpAdmin,
-                            FanoutExchange cardExchange,
-                            FanoutExchange processExchange,
-                            FanoutExchange userExchange,
-                            ConnectionFactory connectionFactory) {
+                            String clientId
+                            ) {
         userLogin = currentUserWithPerimeters.getUserData().getLogin();
         this.id = computeSubscriptionId(userLogin, clientId);
         this.currentUserWithPerimeters = currentUserWithPerimeters;
-        this.amqpAdmin = amqpAdmin;
-        this.cardExchange = cardExchange;
-        this.processExchange = processExchange;
-        this.userExchange = userExchange;
-        this.connectionFactory = connectionFactory;
         this.clientId = clientId;
-        this.cardsQueueName = computeSubscriptionId(userLogin + GROUPS_SUFFIX, this.clientId);
-        this.processQueueName = computeSubscriptionId(userLogin + PROCESS_SUFFIX, this.clientId);
-        this.userQueueName = computeSubscriptionId(userLogin + USER_SUFFIX, this.clientId);
     }
 
     public String getUserLogin()
@@ -132,101 +99,36 @@ public class CardSubscription {
     }
 
 
-    public void initSubscription(int retries, long retryInterval, Runnable doOnCancel) {
-        AmqpUtils.createQueue(amqpAdmin, cardsQueueName, cardExchange, retries, retryInterval);
-        AmqpUtils.createQueue(amqpAdmin, processQueueName, processExchange, retries, retryInterval);
-        AmqpUtils.createQueue(amqpAdmin, userQueueName, userExchange, retries, retryInterval);
-        this.cardListener = createMessageListenerContainer(cardsQueueName);
-        this.processListener = createMessageListenerContainer(processQueueName);
-        this.userListener = createMessageListenerContainer(userQueueName);
+    public void initSubscription(Runnable doOnCancel) {
         this.publisher = Flux.create(emitter -> {
-            log.debug("Create message flux for user {}", userLogin);
+            log.info("Create subscription for user {}", userLogin);
             this.messageSink = emitter;
-            registerListener(cardListener);
-            registerProcessListener(processListener);
-            registerUserListener(userListener);
-            emitter.onRequest(v -> log.debug("STARTING subscription for user {}", userLogin));
+            emitter.onRequest(v -> log.debug("Starting subscription for user {}", userLogin));
             emitter.onDispose(() -> {
-                log.debug("DISPOSING subscription for user {}", userLogin);
+                log.info("Disposing subscription for user {}", userLogin);
                 doOnCancel.run();
             });
             emitter.next("INIT");
-            cardListener.start();
-            processListener.start();
-            userListener.start();
         });
 
     }
 
-    private void registerListener(MessageListenerContainer mlc) {
-        mlc.setupMessageListener(message -> {
+    public void processNewCard(String message) {
             JSONObject card;
             try
             {
-               card = (JSONObject) (new JSONParser(JSONParser.MODE_PERMISSIVE)).parse(message.getBody());
+               card = (JSONObject) (new JSONParser(JSONParser.MODE_PERMISSIVE)).parse(message);
             }
             catch(ParseException e){ log.error(ERROR_MESSAGE_PARSING, e); return;}
 
             if (checkIfUserMustReceiveTheCard(card)){
-                publishDataIntoSubscription(new String(message.getBody()));
+                publishDataIntoSubscription(message);
             }
             // In case of ADD or UPDATE, we send a delete card operation (to delete the card from the feed, more information in OC-297)
             else {
                 String deleteMessage = createDeleteCardMessageForUserNotRecipient(card);
                 if (! deleteMessage.isEmpty()) publishDataIntoSubscription(deleteMessage);
             }
-        });
-    }
-
-    private void registerProcessListener(MessageListenerContainer mlc) {
-        mlc.setupMessageListener(message -> publishDataIntoSubscription(new String(message.getBody())));
-    }
-
-    private void registerUserListener(MessageListenerContainer mlc) {
-        mlc.setupMessageListener(message -> {
-            String modifiedUserLogin = new String(message.getBody());
-
-            if (this.userLogin.equals(modifiedUserLogin)) 
-                publishDataIntoSubscription("USER_CONFIG_CHANGE");
-        });
-    }
-
-    /**
-     * Stops associated {@link MessageListenerContainer} and delete queues
-     */
-    public void clearSubscription() {
-        log.debug("Clear subscription for user {}", userLogin);
-        closed = true;
-        cardListener.stop();
-        amqpAdmin.deleteQueue(cardsQueueName);
-        processListener.stop();
-        amqpAdmin.deleteQueue(processQueueName);
-        userListener.stop();
-        amqpAdmin.deleteQueue(userQueueName);
-        cleared = true;
-       
-    }
-
-    /**
-     *
-     * @return true if associated AMQP listeners are still running
-     */
-    public boolean checkActive() {
-        return cardListener == null || cardListener.isRunning();
-    }
-
-
-    /**
-     * Create a {@link MessageListenerContainer} for the specified queue
-     * @param queueName AMQP queue name
-     * @return listener container for the specified queue
-     */
-    public MessageListenerContainer createMessageListenerContainer(String queueName) {
-
-        SimpleMessageListenerContainer mlc = new SimpleMessageListenerContainer(connectionFactory);
-        mlc.addQueueNames(queueName);
-        mlc.setAcknowledgeMode(AcknowledgeMode.AUTO);
-        return mlc;
     }
 
     
