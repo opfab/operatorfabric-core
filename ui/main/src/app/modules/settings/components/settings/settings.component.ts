@@ -54,9 +54,11 @@ export class SettingsComponent implements OnInit {
     this.replayIntervalDefaultValue = !!this.configService.getConfigValue('settings.replayInterval') ? this.configService.getConfigValue('settings.replayInterval') : 5;
 
     const userLogin = this.userService.getCurrentUserWithPerimeters().userData.login;
-    this.externalDevicesService.fetchUserConfiguration(userLogin).subscribe(result => {
-      this.userConfiguration = result;
-    });
+
+    if (this.externalDevicesEnabled)
+      this.externalDevicesService.fetchUserConfiguration(userLogin).subscribe(result => {
+        this.userConfiguration = result;
+      });
   }
 
   isExternalDeviceConfiguredForUser() : boolean {

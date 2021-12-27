@@ -58,6 +58,6 @@ Feature: User Configuration Management (Fetch)
     Given url opfabUrl + userConfigEndpoint + '/operator1'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method GET
-    Then status 403
+    Then status 200
 
 
