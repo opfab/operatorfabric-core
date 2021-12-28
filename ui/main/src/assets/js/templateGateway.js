@@ -8,7 +8,8 @@
  */
 
 const templateGateway = {
-    opfabEntityNames : null, 
+    opfabEntityNames : null,
+    opfabEntities : null,
     childCards: [],
     userAllowedToRespond : false,
     userMemberOfAnEntityRequiredToRespond : false,
@@ -20,6 +21,10 @@ const templateGateway = {
     setEntityNames: function(entityNames){
         this.opfabEntityNames = entityNames;
        },
+
+    setEntities: function(entities){
+        this.opfabEntities = entities;
+    },
 
        
     // UTILITIES FOR TEMPLATE 
@@ -34,6 +39,22 @@ const templateGateway = {
             return entityId;
         }
         return this.opfabEntityNames.get(entityId);
+    },
+
+    getEntity: function (entityId) {
+        if (!this.opfabEntities) {
+            console.log(new Date().toISOString() , ` Template.js : no entities information loaded`);
+            return entityId;
+        }
+        if (!this.opfabEntities.has(entityId)) {
+            console.log(new Date().toISOString() , ` Template.js : entityId ${entityId} is unknown`);
+            return entityId;
+        }
+        return this.opfabEntities.get(entityId);
+    },
+
+    getAllEntities: function() {
+        return Array.from(this.opfabEntities.values());
     },
 
     redirectToBusinessMenu: function(menuId,menuItemId,params){

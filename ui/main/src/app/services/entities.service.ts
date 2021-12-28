@@ -92,6 +92,7 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
           if (!!entities) {
             this._entities = entities;
             this.setEntityNamesInTemplateGateway();
+            this.setEntitiesInTemplateGateway();
             console.log(new Date().toISOString(), 'List of entities loaded');
           }
         },
@@ -123,6 +124,19 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
     const entityNames  = new Map();
     this._entities.forEach(entity =>  entityNames.set(entity.id, entity.name));
     templateGateway.setEntityNames(entityNames);
+  }
+
+  private setEntitiesInTemplateGateway(): void {
+    const entities  = new Map();
+    this._entities.forEach(entity =>  entities.set(entity.id,
+        { id: entity.id,
+          name: entity.name,
+          description: entity.description,
+          entityAllowedToSendCard: entity.entityAllowedToSendCard,
+          parents: entity.parents
+        })
+    );
+    templateGateway.setEntities(entities);
   }
 
   /** Given a list of entities that might contain parent entities, this method returns the list of entities
