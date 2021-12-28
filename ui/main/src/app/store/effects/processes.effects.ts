@@ -25,7 +25,7 @@ export class ProcessesEffects {
     updateBusinessConfig: Observable<any> = createEffect(() => this.actions$
         .pipe(
             ofType(ProcessesActionTypes.BusinessConfigChange),
-            debounce(() => timer(10000)),
+            debounce(() => timer(5000 + Math.floor(Math.random() * 5000))), // use a random  part to avoid all UI to access at the same time the server
             map(() => {
                 this.templateService.clearCache();
                 this.service.loadAllProcesses().subscribe();
