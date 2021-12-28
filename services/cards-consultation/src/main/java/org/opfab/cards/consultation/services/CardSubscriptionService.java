@@ -10,7 +10,7 @@
 package org.opfab.cards.consultation.services;
 
 import lombok.extern.slf4j.Slf4j;
-
+import net.minidev.json.parser.JSONParser;
 
 import org.opfab.springtools.configuration.oauth.UserServiceCache;
 import org.opfab.users.model.CurrentUserWithPerimeters;
@@ -20,13 +20,15 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.ParseException;
 
 @Service
 @Slf4j
 public class CardSubscriptionService {
 
+
+    private static final String ERROR_MESSAGE_PARSING = "ERROR during received message parsing";
     private final long heartbeatDelay;
     private Map<String, CardSubscription> cache = new ConcurrentHashMap<>();
 
@@ -77,34 +79,21 @@ public class CardSubscriptionService {
         }
     }
 
-    /**
-     * <p>Generates a {@link CardSubscription} or retrieve it from a local {@link CardSubscription} cache.</p>
-     */
-    public CardSubscription subscribe(
-            CurrentUserWithPerimeters currentUserWithPerimeters,
-            String clientId) {
-        String subId = CardSubscription.computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin(), clientId);
-        CardSubscription cardSubscription = cache.get(subId);
-        
-        if (cardSubscription == null) {
-            CardSubscription.CardSubscriptionBuilder cardSubscriptionBuilder = CardSubscription.builder()
-           .currentUserWithPerimeters(currentUserWithPerimeters)
-           .clientId(clientId);
-            cardSubscription = buildSubscription(subId, cardSubscriptionBuilder);
-        } 
-        return cardSubscription;
-    }
+ 
+    public CardSubscription subscribe( CurrentUserWithPerimeters currentUserWithPerimeters,String clientId) {
 
-    private CardSubscription buildSubscription(String subId, CardSubscription.CardSubscriptionBuilder cardSubscriptionBuilder) {
+        String subId = CardSubscription.computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin(),clientId);
+        CardSubscription.CardSubscriptionBuilder cardSubscriptionBuilder = CardSubscription.builder()
+                .currentUserWithPerimeters(currentUserWithPerimeters)
+                .clientId(clientId);
         CardSubscription cardSubscription;
         cardSubscription = cardSubscriptionBuilder.build();
-        cardSubscription.initSubscription( () -> evictSubscription(subId));
+        cardSubscription.initSubscription(() -> evictSubscription(subId));
         cache.put(subId, cardSubscription);
-        log.info("Subscription created with id {} for user {} ", cardSubscription.getId(),cardSubscription.getUserLogin());
+        log.info("Subscription created with id {} for user {} ", cardSubscription.getId(), cardSubscription.getUserLogin());
         cardSubscription.userServiceCache = this.userServiceCache;
         return cardSubscription;
     }
-
 
     public void evictSubscription(String subId) {
         
@@ -138,13 +127,14 @@ public class CardSubscriptionService {
         this.cache.clear();
     }
 
-    public Collection<CardSubscription> getSubscriptions()
-    {
+    public Collection<CardSubscription> getSubscriptions() {
         return cache.values();
     }
 
 
     public void onMessage(String queueName, String message) {
+
+        log.debug("receive from rabbit queue {} message {}",queueName,message);
         switch (queueName) {
             case "process":
                 cache.values().forEach(subscription -> subscription.publishDataIntoSubscription(message));
@@ -156,10 +146,34 @@ public class CardSubscriptionService {
                         });
                 break;
             case "card":
-                cache.values().forEach(subscription -> subscription.processNewCard(message));
+                cache.values().forEach(subscription ->  processNewCard(message,subscription));
                 break;
             default:
                 log.info("unrecognized queue {}" , queueName);
         }
     }
+
+    private void processNewCard(String cardAsString, CardSubscription subscription) {
+        JSONObject card;
+        try {
+            card = (JSONObject) (new JSONParser(JSONParser.MODE_PERMISSIVE)).parse(cardAsString);
+        } catch (ParseException e) {
+            log.error(ERROR_MESSAGE_PARSING, e);
+            return;
+        }
+
+        if (CardRoutingUtilities.checkIfUserMustReceiveTheCard(card,
+                subscription.getCurrentUserWithPerimeters())) {
+            subscription.publishDataIntoSubscription(cardAsString);
+        }
+        // In case of ADD or UPDATE, we send a delete card operation (to delete the card
+        // from the feed, more information in OC-297)
+        else {
+            String deleteMessage = CardRoutingUtilities.createDeleteCardMessageForUserNotRecipient(card,
+                    subscription.getUserLogin());
+            if (!deleteMessage.isEmpty())
+                subscription.publishDataIntoSubscription(deleteMessage);
+        }
+    }
+
 }
