@@ -22,7 +22,7 @@ import {Page} from '@ofModel/page.model';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {CardSubscriptionClosed, CardSubscriptionOpen} from '@ofActions/cards-subscription.actions';
-import {catchError} from 'rxjs/operators';
+import {catchError, takeUntil} from 'rxjs/operators';
 import {RemoveLightCard} from '@ofActions/light-card.actions';
 import {BusinessConfigChangeAction} from '@ofStore/actions/processes.actions';
 import {UserConfigChangeAction} from '@ofStore/actions/user.actions';
@@ -46,6 +46,7 @@ export class CardService {
     private lastHeardBeatDate: number;
     private firstSubscriptionInitDone = false;
     public initSubscription = new Subject<void>();
+    private unsubscribe$: Subject<void> = new Subject<void>();
 
     private startOfAlreadyLoadedPeriod: number;
     private endOfAlreadyLoadedPeriod: number;
@@ -81,6 +82,7 @@ export class CardService {
     public initCardSubscription() {
 
         this.getCardSubscription()
+            .pipe(takeUntil(this.unsubscribe$))
             .subscribe( {
                 next: operation => {
                     switch (operation.type) {
@@ -121,6 +123,9 @@ export class CardService {
     }
 
 
+    public closeSubscription() {
+        this.unsubscribe$.next();
+    }
 
     private getCardSubscription(): Observable<CardOperation> {
         // security header needed here as SSE request are not intercepted by our header interceptor
