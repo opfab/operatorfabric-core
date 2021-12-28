@@ -73,7 +73,7 @@ export class UserEffects {
     updateUserConfig: Observable<any> = createEffect(() => this.actions$
     .pipe(
         ofType(UserActionsTypes.UserConfigChange),
-        debounce(() => timer(10000)),
+        debounce(() => timer(5000 + Math.floor(Math.random() * 5000))), // use a random  part to avoid all UI to access at the same time the server
         map(() => {
             this.userService.loadUserWithPerimetersData().subscribe();
         }),

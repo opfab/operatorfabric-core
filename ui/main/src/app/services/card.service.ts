@@ -150,7 +150,13 @@ export class CardService {
                             console.log(new Date().toISOString(), `CardService - Card subscription initialized`);
                             this.initSubscription.next();
                             this.initSubscription.complete();
-                            if (this.firstSubscriptionInitDone) this.recoverAnyLostCardWhenConnectionHasBeenReset();
+                            if (this.firstSubscriptionInitDone) {
+                                this.recoverAnyLostCardWhenConnectionHasBeenReset();
+                                // process or user config may have change during connection loss
+                                // so reload both configuration 
+                                this.store.dispatch(new BusinessConfigChangeAction());
+                                this.store.dispatch(new UserConfigChangeAction());
+                            }
                             else this.firstSubscriptionInitDone = true;
                             break;
                         case 'HEARTBEAT':
@@ -162,9 +168,9 @@ export class CardService {
                             console.log(new Date().toISOString(), `CardService - BUSINESS_CONFIG_CHANGE received`);
                             break;
                         case 'USER_CONFIG_CHANGE':
-                                this.store.dispatch(new UserConfigChangeAction());
-                                console.log(new Date().toISOString(), `CardService - USER_CONFIG_CHANGE received`);
-                                break;
+                            this.store.dispatch(new UserConfigChangeAction());
+                            console.log(new Date().toISOString(), `CardService - USER_CONFIG_CHANGE received`);
+                            break;
                         default :
                             return observer.next(JSON.parse(message.data, CardOperation.convertTypeIntoEnum));
                     }
