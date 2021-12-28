@@ -107,7 +107,7 @@ public class CardOperationsController {
      * @return
      */
     private Flux<String> fetchOldCards(CardSubscription subscription,Instant publishFrom,Instant start,Instant end)  {
-        subscription.updateCurrentUserWithPerimeters();
+        
         return fetchOldCards0(publishFrom, start, end, subscription.getCurrentUserWithPerimeters());
     }
 
