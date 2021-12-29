@@ -16,6 +16,7 @@
             [gridOptions]="gridOptions"
             [rowData]="rowData"
             class="opfab-ag-grid-theme"
+            (filterChanged)="onFilterChanged($event)"
     >
     </ag-grid-angular>
 

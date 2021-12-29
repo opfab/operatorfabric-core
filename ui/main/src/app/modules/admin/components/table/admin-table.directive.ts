@@ -217,6 +217,11 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     return this.translateService.instant(this.i18NPrefix + headerIdentifier);
   }
 
+  onFilterChanged(event) {
+    this.page = 1;
+    this.gridApi.paginationGoToPage(0);
+  }
+
   onGridReady(params) {
     this.gridApi = params.api;
     // Column definitions can't be managed in the constructor like the other grid options because they rely on the `fields`
