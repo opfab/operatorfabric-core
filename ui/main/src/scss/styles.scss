@@ -945,3 +945,7 @@ html, body { height: 100%; }
   }
 }
 
+.ag-popup {
+  @extend .opfab-ag-grid-theme;
+}
+
