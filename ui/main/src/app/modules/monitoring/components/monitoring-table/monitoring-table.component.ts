@@ -176,7 +176,8 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             suppressPaginationPanel: true,
             suppressHorizontalScroll: true,
             columnDefs: this.columnDefs,
-            rowHeight: 45  
+            rowHeight: 45,
+            popupParent: document.querySelector("body")
         };
         this.rowData$ = this.rowDataSubject.asObservable();
     }

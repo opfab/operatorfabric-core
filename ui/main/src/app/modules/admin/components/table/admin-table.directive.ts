@@ -170,6 +170,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
       headerHeight: 70,
       suppressPaginationPanel: true,
       suppressHorizontalScroll: true,
+      popupParent: document.querySelector("body")
     };
     // Defining a custom cellRenderer was necessary (instead of using onCellClicked & an inline cellRenderer) because of
     // the need to call a method from the parent component
