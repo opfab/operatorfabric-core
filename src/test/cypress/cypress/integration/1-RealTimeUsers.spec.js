@@ -17,12 +17,8 @@ describe ('RealTimeUsersPage',()=>{
 
     })
 
-    it('Connection of operator1', ()=>{
-        cy.loginOpFab('operator1','test');
-    })
-
-    it('Connection of admin and check of Real time users screen', ()=> {
-        cy.loginOpFab('admin', 'test');
+    it('Connection of operator3 and check of Real time users screen', ()=> {
+        cy.loginOpFab('operator3', 'test');
 
         //click on user menu (top right of the screen)
         cy.get('#opfab-navbar-drop_user_menu').click();
