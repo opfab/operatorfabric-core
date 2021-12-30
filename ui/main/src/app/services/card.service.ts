@@ -43,7 +43,7 @@ export class CardService {
     readonly cardsPubUrl: string;
     readonly userCardReadUrl: string;
     readonly userCardUrl: string;
-    private lastHeardBeatDate: number;
+    private lastHeardBeatDate: number = 0;
     private firstSubscriptionInitDone = false;
     public initSubscription = new Subject<void>();
     private unsubscribe$: Subject<void> = new Subject<void>();
@@ -157,7 +157,10 @@ export class CardService {
                                 this.store.dispatch(new BusinessConfigChangeAction());
                                 this.store.dispatch(new UserConfigChangeAction());
                             }
-                            else this.firstSubscriptionInitDone = true;
+                            else {
+                                this.firstSubscriptionInitDone = true;
+                                this.lastHeardBeatDate = new Date().valueOf();
+                            }
                             break;
                         case 'HEARTBEAT':
                             this.lastHeardBeatDate = new Date().valueOf();
