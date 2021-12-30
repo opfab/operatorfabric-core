@@ -90,7 +90,7 @@ public class CardOperationsController {
                 } else {
                     log.debug("No subscription found for {}#{}", p.getCurrentUserWithPerimeters().getUserData().getLogin(), p.getClientId());
                 }
-                return CardSubscriptionDto.builder().rangeStart(p.getRangeStart()).rangeEnd(p.getRangeEnd()).build();
+                return CardSubscriptionDto.builder().publishFrom(p.getPublishFrom()).rangeStart(p.getRangeStart()).rangeEnd(p.getRangeEnd()).build();
             } catch (IllegalArgumentException e) {
                 log.error("Error searching for old subscription", e);
                 throw new ApiErrorException(
