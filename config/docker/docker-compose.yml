@@ -8,7 +8,20 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
   rabbitmq:
+    container_name: rabbit
     image: rabbitmq:3-management
+    hostname: rabbit
+
+#  If you want to persist queue after rabbit docker container removal mount 
+#  a volume to store persistance data 
+#  WARNING : On Kubernetes , as pod are destroy , it is 
+#  necessary to persist queue . Otherwise in case of restart of 
+#  the rabbit pod, the connection with cards-consultation will be lost
+#
+#    volumes:
+#      - "./rabbit-persistance:/var/lib/rabbitmq/mnesia/"
+
+
 #    Port closed for security reasons , be careful if you open it 
 #    ports:
 #      - "5672:5672"
@@ -99,6 +112,7 @@ services:
       - "./cards-consultation-docker.yml:/config/application-docker.yml"
       - ${CONFIG_PATH}:/external-config
   web-ui:
+    container_name: web-ui
     image: "lfeoperatorfabric/of-web-ui:SNAPSHOT"
     ports:
     - "2002:80"

@@ -1,6 +1,7 @@
 version: '2.1'
 services:
   rabbitmq:
+    container_name: rabbit
     image: rabbitmq:3-management
     ports:
       - "5672:5672"
@@ -26,8 +27,8 @@ services:
       - "89:8080"
       - "90:9990"
   web-ui:
+    container_name: web-ui
     image: "lfeoperatorfabric/of-web-ui:SNAPSHOT"
-    #user: ${USER_ID}:${USER_GID}
     ports:
       - "2002:80"
     volumes:

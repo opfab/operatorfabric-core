@@ -124,3 +124,7 @@ Cypress.Commands.add('deleteAllCards', () => {
 Cypress.Commands.add('deleteAllSettings', () => {
     cy.exec('cd .. && ./resources/deleteAllSettings.sh '+Cypress.env('host'));
 })
+
+Cypress.Commands.add('waitForOpfabToStart', () => {
+    cy.exec('cd ../../.. && ./bin/waitForOpfabToStart.sh ');
+})
