@@ -10,7 +10,7 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {combineLatest, Observable, of, Subject} from 'rxjs';
 import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
-import {catchError, filter, map, takeUntil} from 'rxjs/operators';
+import {catchError, debounceTime, filter, map, takeUntil} from 'rxjs/operators';
 import {LightCard} from '@ofModel/light-card.model';
 import * as moment from 'moment';
 import {I18n} from '@ofModel/i18n.model';
@@ -76,6 +76,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
                 this.lightCardsStoreService.getLightCards()
             ]
             ).pipe(
+                debounceTime(0), // Add this to avoid ExpressionChangedAfterItHasBeenCheckedError so it waits for component init before processing
                 takeUntil(this.unsubscribe$),
                 // the filters are set   by the monitoring filter and by the time line 
                 // so it generates two events , we need to wait until every filter is set 
