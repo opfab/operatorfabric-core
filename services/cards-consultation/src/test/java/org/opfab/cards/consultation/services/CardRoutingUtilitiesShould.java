@@ -37,8 +37,7 @@ import java.util.List;
 @SpringBootTest(classes = {IntegrationTestApplication.class})
 @Slf4j
 @ActiveProfiles("test")
-public class CardRoutingUtilitiesShould {
-
+class CardRoutingUtilitiesShould {
  
     private CurrentUserWithPerimeters currentUserWithPerimeters;
     private String processStateInPerimeter = "\"card\":{\"process\":\"Process1\", \"state\":\"State1\"}";
