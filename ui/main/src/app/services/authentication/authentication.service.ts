@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +20,7 @@ import {
     InitAuthStatus,
     PayloadForSuccessfulAuthentication,
     RejectLogIn,
-    UnableToRefreshOrGetToken,
+    SessionExpired,
     UnAuthenticationFromImplicitFlow
 } from '@ofActions/authentication.actions';
 import {environment} from '@env/environment';
@@ -145,7 +145,7 @@ export class AuthenticationService {
                 this.regularCheckTokenValidity();
             }, MILLIS_TO_WAIT_BETWEEN_TOKEN_EXPIRATION_DATE_CONTROLS);
         } else {// Will send Logout if token is expired
-            this.store.dispatch(new UnableToRefreshOrGetToken());
+            this.store.dispatch(new SessionExpired());
         }
 
     }
@@ -528,7 +528,7 @@ export class ImplicitAuthenticationHandler implements AuthenticationModeHandler 
             // This case arise for example when using a SSO and the session is not valid anymore (session timeout)
             case ('token_error'):
             case('token_refresh_error'):
-                this.store.dispatch(new UnableToRefreshOrGetToken());
+                this.store.dispatch(new SessionExpired());
                 break;
             case('logout'): {
                 this.store.dispatch(new UnAuthenticationFromImplicitFlow());
