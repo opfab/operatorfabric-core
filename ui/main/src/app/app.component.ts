@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 
 import {Component, HostListener, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {Title} from '@angular/platform-browser';
-import {Store} from '@ngrx/store';
+import {Action, Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 import {LoadConfigSuccess} from '@ofActions/config.actions';
@@ -32,6 +32,7 @@ import {Message, MessageLevel} from '@ofModel/message.model';
 import {GroupsService} from '@ofServices/groups.service';
 import {SoundNotificationService} from "@ofServices/sound-notification.service";
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {AuthenticationActionTypes, TryToLogOut} from '@ofStore/actions/authentication.actions';
 
 
 class Alert {
@@ -58,6 +59,7 @@ export class AppComponent implements OnInit {
 
   private modalRef: NgbModalRef;
   @ViewChild('noSound') noSoundPopupRef: TemplateRef<any>;
+  @ViewChild('sessionEnd') sessionEndPopupRef: TemplateRef<any>;
 
   /**
    * NB: I18nService is injected to trigger its constructor at application startup
@@ -88,7 +90,7 @@ export class AppComponent implements OnInit {
 
   @HostListener('document:click', ['$event.target'])
     public onPageClick() {
-        this.soundNotificationService.clearOutstandingNotifications();
+       this.soundNotificationService.clearOutstandingNotifications();
   }
 
 
@@ -164,6 +166,7 @@ export class AppComponent implements OnInit {
                   this.loaded = true;
                   this.reminderService.startService(identifier);
                   this.activateSoundIfNotActivated();
+                  this.subscribeToSessionEnd();
                 },
                   error: catchError((err, caught) => {
                     console.error('Error in application initialization', err);
@@ -218,6 +221,20 @@ export class AppComponent implements OnInit {
         ofType<AlertActions>(AlertActionTypes.AlertMessage)).subscribe( alert => {
       this.displayAlert(alert.payload.alertMessage);
     });
+  }
+
+  private subscribeToSessionEnd() {
+    this.actions$.pipe(
+        ofType<Action>(AuthenticationActionTypes.SessionExpired)).subscribe(  () => {
+          this.soundNotificationService.handleSessionEnd();
+          this.modalRef = this.modalService.open(this.sessionEndPopupRef, {centered: true, backdrop: 'static'});
+        }
+      );
+  }
+
+  public logout() {
+    this.modalRef.close();
+    this.store.dispatch(new TryToLogOut());
   }
 
   private displayAlert(message: Message) {

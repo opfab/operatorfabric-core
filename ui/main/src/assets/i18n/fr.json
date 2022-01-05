@@ -58,7 +58,8 @@
     "connectionLost":"Connexion perdue",
     "tryToReconnect":"Tentative de reconnexion ...",
     "activateSoundText":"Son non activé, cliquer pour activer",
-    "activateSoundButton":"Activer le son"
+    "activateSoundButton":"Activer le son",
+    "sessionExpiredText":"Votre session a expiré"
   },
   "menu": {
     "feed": "Flux de cartes",

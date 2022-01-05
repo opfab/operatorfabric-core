@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,8 +19,7 @@ import {
     AuthenticationActions,
     AuthenticationActionTypes,
     RejectLogIn,
-    TryToLogIn,
-    TryToLogOut
+    TryToLogIn
 } from '@ofActions/authentication.actions';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 import {catchError, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
@@ -41,16 +40,7 @@ import {TranslateService} from "@ngx-translate/core";
 @Injectable()
 export class AuthenticationEffects {
 
-    /**
-     * @constructorCheckImplicitFlowAuthenticationStatus
-     * @param store - {Store<AppState>} state manager
-     * @param actions$ - {Action} {Observable} of Action of the Application
-     * @param authService - service implementing the authentication business rules
-     * @param cardService - service handling request of cards
-     * @param router - router service to redirect user accordingly to the user authentication status or variation of it.
-     * @param translate - object to get translation 
-     *
-     * istanbul ignore next */
+
     constructor(private store: Store<AppState>,
                 private actions$: Actions,
                 private authService: AuthenticationService,
@@ -170,7 +160,7 @@ export class AuthenticationEffects {
      * @typedef {Observable<AuthenticationActions>}
      *
      */
-    
+
     CheckAuthentication: Observable<AuthenticationActions> = createEffect(() =>
         this.actions$
             .pipe(
@@ -235,16 +225,6 @@ export class AuthenticationEffects {
             ));
 
 
-    
-    UnableToRefreshToken: Observable<Action> = createEffect(() =>
-        this.actions$.pipe(
-            ofType(AuthenticationActionTypes.UnableToRefreshOrGetToken),
-            switchMap(() => {
-                window.alert(this.translate.instant("login.error.disconnected"));
-                return of(new TryToLogOut());
-            })
-        ));
-
     handleErrorOnTokenGeneration(errorResponse, category: string) {
         let message, key;
         const params = new Map<string>();
@@ -270,14 +250,12 @@ export class AuthenticationEffects {
     handleRejectedLogin(errorMsg: Message): AuthenticationActions {
         this.authService.clearAuthenticationInformation();
         return new RejectLogIn({error: errorMsg});
-
     }
-    
+
     private resetState() {
         this.authService.clearAuthenticationInformation();
         this.cardService.closeSubscription();
         window.location.href = this.configService.getConfigValue('security.logout-url','https://opfab.github.io');
-       
     }
 
 }

@@ -58,7 +58,8 @@
     "connectionLost":"Connection lost",
     "tryToReconnect":"Try to reconnect ...",
     "activateSoundText":"Sound not activated, click to activate",
-    "activateSoundButton":"Activate sound"
+    "activateSoundButton":"Activate sound",
+    "sessionExpiredText":"Your session has expired"
   },
   "menu": {
     "feed": "Card Feed",
