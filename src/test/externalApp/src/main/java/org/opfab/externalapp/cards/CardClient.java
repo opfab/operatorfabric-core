@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,11 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.client.cards;
+package org.opfab.externalapp.cards;
 
 import org.opfab.cards.model.Card;
 import org.opfab.cards.model.CardCreationReport;
-import org.opfab.client.common.HttpClientInterceptor;
+import org.opfab.externalapp.common.HttpClientInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;

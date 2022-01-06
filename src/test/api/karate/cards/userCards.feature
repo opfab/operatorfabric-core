@@ -6,6 +6,8 @@ Feature: UserCards tests
     * def authToken = signIn.authToken
     * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
+    * def signInAsItsupervisor1 = callonce read('../common/getToken.feature') { username: 'itsupervisor1'}
+    * def authTokenAsItsupervisor1 = signInAsItsupervisor1.authToken
 
     * def groupKarate =
 """
@@ -82,9 +84,29 @@ Feature: UserCards tests
 }
 """
 
+    * def perimeterForDefaultProcess =
+"""
+{
+  "id" : "perimeterForDefaultProcess",
+  "process" : "defaultProcess",
+  "stateRights" : [
+      {
+        "state" : "messageState",
+        "right" : "Receive"
+      }
+    ]
+}
+"""
+
     * def perimeterArray =
 """
 [   "perimeter"
+]
+"""
+
+    * def perimeterForSupervisorGroup =
+"""
+[   "perimeterForDefaultProcess"
 ]
 """
 
@@ -100,6 +122,20 @@ Feature: UserCards tests
     Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
     And header Authorization = 'Bearer ' + authToken
     And request perimeterArray
+    When method patch
+    Then status 200
+
+#Create new perimeter perimeterForDefaultProcess
+    Given url opfabUrl + 'users/perimeters'
+    And header Authorization = 'Bearer ' + authToken
+    And request perimeterForDefaultProcess
+    When method post
+    Then status 201
+
+#Attach perimeterForDefaultProcess to group Supervisor
+    Given url opfabUrl + 'users/groups/Supervisor/perimeters'
+    And header Authorization = 'Bearer ' + authToken
+    And request perimeterForSupervisorGroup
     When method patch
     Then status 200
 
@@ -253,6 +289,14 @@ Feature: UserCards tests
     When method get
     Then status 200
     And match response.card.publisherType == "ENTITY"
+
+
+# We check externalApp has sent a card following reception of card process_1.process_id_w
+    * configure retry = { count: 3, interval: 3000 }
+    Given url opfabUrl + 'cards/cards/defaultProcess.process_id_w'
+    And header Authorization = 'Bearer ' + authTokenAsItsupervisor1
+    And retry until responseStatus == 200 && response.card.data == "Card with id=process_1.process_id_w received by externalApp"
+    When method get
 
 
     * def card =
@@ -504,4 +548,11 @@ Feature: UserCards tests
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
+
+#delete perimeterForDefaultProcess created previously
+    Given url opfabUrl + 'users/perimeters/perimeterForDefaultProcess'
+    And header Authorization = 'Bearer ' + authToken
+    When method delete
+    Then status 200
+
 
