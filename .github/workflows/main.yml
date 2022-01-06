@@ -145,7 +145,6 @@ jobs:
           GH_DOC_TOKEN: ${{ secrets.GH_DOC_TOKEN}}
 
       - name : Push images to dockerhub 
-        environment: publishVersion
         if: ${{ github.event.inputs.dockerPush  == 'true' || github.event_name == 'schedule' || github.ref_name == 'master' }}
         run: |
           echo ${{ secrets.DOCKER_TOKEN }} | docker login --username opfabtravis --password-stdin
@@ -155,7 +154,6 @@ jobs:
           done
 
       - name : Push images latest to dockerhub 
-        environment: publishVersion
         if: ${{ github.event.inputs.dockerPushLatest  == 'true'  || github.ref_name == 'master'  }}
         run: |
           echo ${{ secrets.DOCKER_TOKEN }} | docker login --username opfabtravis --password-stdin
