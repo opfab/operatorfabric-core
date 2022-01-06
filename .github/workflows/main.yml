@@ -95,7 +95,6 @@ jobs:
         if: ${{ github.event.inputs.build  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push'}}
         run: | 
           export OF_VERSION=$(<VERSION)
-          echo ${{ secrets.DOCKER_TOKEN }} | docker login --username opfabtravis --password-stdin
           docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
           ./gradlew --build-cache copyDependencies test jacocoTestReport sonarqube dockerTag${OF_VERSION}
           docker-compose -f src/main/docker/test-environment/docker-compose.yml down
