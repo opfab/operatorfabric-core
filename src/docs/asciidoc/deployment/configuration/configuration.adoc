@@ -202,3 +202,146 @@ externalRecipients-url: "{\
 Note that `topicname` is a placeholder for now. All response cards are returned via the same Kafka response topic, as specified in the `opfab.kafka.topics.response-card` field.
 
 Also note enabling Kafka does not disable the REST interface.
+
+Example Kafka configuration plain:
+[source, yaml]
+----
+spring:
+  application:
+    name: cards-publication
+  deserializer:
+    value:
+      delegate:
+        class: org.opfab.cards.publication.kafka.consumer.KafkaAvroWithoutRegistryDeserializer
+  serializer:
+    value:
+      delegate:
+        class: org.opfab.cards.publication.kafka.producer.KafkaAvroWithoutRegistrySerializer
+  kafka:
+    consumer:
+      group-id: OPFAB
+      properties:
+        specific:
+          avro:
+            reader: true
+    producer:
+      client-id: operatorfabric-producer
+    bootstrap-servers: kafka-server:9092
+opfab:
+  kafka:
+    topics:
+      card:
+        topicname: m_opfab-card-commands_dev
+      response-card:
+        topicname: m_opfab-card-response_dev
+----
+
+Example Kafka configuration SASL:
+[source, yaml]
+----
+spring:
+  application:
+    name: cards-publication
+  deserializer:
+    value:
+      delegate:
+        class: org.opfab.cards.publication.kafka.consumer.KafkaAvroWithoutRegistryDeserializer
+  serializer:
+    value:
+      delegate:
+        class: org.opfab.cards.publication.kafka.producer.KafkaAvroWithoutRegistrySerializer
+  kafka:
+    consumer:
+      group-id: OPFAB
+      security:
+        protocol: SASL_SSL
+      properties:
+        specific:
+          avro:
+            reader: true
+        sasl:
+          mechanism: SCRAM-SHA-256
+          jaas:
+            config: org.apache.kafka.common.security.scram.ScramLoginModule required username="kafkaUsername" password="kafkaPassword";
+    producer:
+      client-id: operatorfabric-producer
+      security:
+        protocol: SASL_SSL
+      properties:
+        sasl:
+          mechanism: SCRAM-SHA-256
+          jaas:
+            config: org.apache.kafka.common.security.scram.ScramLoginModule required username="kafkaUsername" password="kafkaPassword";
+    bootstrap-servers: kafka-server:9094
+    ssl:
+      trust-store-type: PKCS12
+      trust-store-password: truststorePassword
+      trust-store-location: file:///etc/truststore.pkcs
+    properties:
+      ssl:
+        endpoint:
+          identification:
+            algorithm: ""
+opfab:
+  kafka:
+    topics:
+      card:
+        topicname: opfab-card-commands
+      response-card:
+        topicname: opfab-card-response
+----
+
+Example Kafka configuration Kerberos:
+[source, yaml]
+----
+spring:
+  application:
+    name: cards-publication
+  deserializer:
+    key:
+      delegate:
+        class: org.apache.kafka.common.serialization.StringDeserializer
+    value:
+      delegate:
+        class: org.opfab.cards.publication.kafka.consumer.KafkaAvroWithoutRegistryDeserializer
+  serializer:
+    value:
+      delegate:
+        class: org.opfab.cards.publication.kafka.producer.KafkaAvroWithoutRegistrySerializer
+  kafka:
+    security:
+      protocol: SASL_SSL
+    properties:
+      sasl.mechanism: GSSAPI
+      sasl:
+        jaas:
+          config: com.sun.security.auth.module.Krb5LoginModule required useKeyTab=true keyTab="/etc/kafkaUsername.keytab" storeKey=true useTicketCache=false serviceName="kafka" principal="kafkaUsername@DOMAIN";
+    bootstrap-servers: kafka-server:9094
+    ssl:
+      trust-store-type: pkcs12
+      trust-store-password: truststorePassword
+      trust-store-location: file:///etc/truststore.pkcs12
+    consumer:
+      group-id: OPFAB
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        spring:
+          deserializer:
+            key:
+              delegate:
+                class: org.apache.kafka.common.serialization.StringDeserializer
+            value:
+              delegate:
+                class: org.opfab.cards.publication.kafka.consumer.KafkaAvroWithoutRegistryDeserializer
+    producer:
+      client-id: OPFAB
+      value-serializer: org.opfab.cards.publication.kafka.producer.KafkaAvroWithoutRegistrySerializer
+opfab:
+  kafka:
+    topics:
+      card:
+        topicname: opfab-card-commands
+      response-card:
+        topicname: opfab-card-response
+----
