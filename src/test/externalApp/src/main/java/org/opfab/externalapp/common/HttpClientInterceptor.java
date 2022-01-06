@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.client.common;
+package org.opfab.externalapp.common;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpRequest;
@@ -26,8 +26,6 @@ public class HttpClientInterceptor
 	public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
 			throws IOException {
         log.info("Request body: " + new String(body));
-        ClientHttpResponse response = execution.execute(request, body);
-        
-        return response;
+        return execution.execute(request, body);
 	}
 }

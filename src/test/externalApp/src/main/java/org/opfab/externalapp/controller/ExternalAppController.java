@@ -1,5 +1,5 @@
 
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,10 +8,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.externalApp.controller;
+package org.opfab.externalapp.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.opfab.externalApp.service.ExternalAppServiceImpl;
+import org.opfab.externalapp.service.ExternalAppServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +31,9 @@ public class ExternalAppController {
 
     @PostMapping("/test")
     @ResponseStatus(HttpStatus.OK)
-    public void ExternalAppReponse(@RequestBody Optional<JsonNode> requestBody)  {
-        requestBody.orElseThrow(() -> new IllegalArgumentException("No Request Body"));
+    public void externalAppResponse(@RequestBody Optional<JsonNode> requestBody)  {
+        if (requestBody.isEmpty())
+            throw new IllegalArgumentException("No Request Body");
 
         externalAppServiceImpl.receiveCard(requestBody);
     }
@@ -45,6 +46,6 @@ public class ExternalAppController {
 
     @GetMapping("/")
     public String home() {
-        return   externalAppServiceImpl.WelcomeMessage();
+        return   externalAppServiceImpl.welcomeMessage();
     }
 }

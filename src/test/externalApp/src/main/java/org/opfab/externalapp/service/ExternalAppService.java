@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.externalApp.service;
+package org.opfab.externalapp.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Service;
@@ -19,5 +19,5 @@ import java.util.Optional;
 public interface ExternalAppService {
 	void receiveCard(Optional<JsonNode> requestBody);
 	void deleteCard(String id);
-	String WelcomeMessage();
+	String welcomeMessage();
 }

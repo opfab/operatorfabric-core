@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,10 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.client.security;
+package org.opfab.externalapp.security;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -32,20 +31,20 @@ public class AuthClient {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public String getToken(String url) throws JsonMappingException, JsonProcessingException {
+    public String getToken(String url) throws JsonProcessingException {
 
         RestTemplate restTemplate = builder.build();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
         map.add("username", "operator1_fr");
         map.add("password", "test");
         map.add("grant_type", "password");
         map.add("client_id", "opfab-client");
  
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 
         ResponseEntity<String> response = restTemplate.postForEntity( url, request , String.class );
         AuthToken token = objectMapper.readValue(response.getBody(), AuthToken.class);
