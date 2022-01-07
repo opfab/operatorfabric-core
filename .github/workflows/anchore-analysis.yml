@@ -23,11 +23,11 @@ jobs:
     - name: Checkout the code
       uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker pull lfeoperatorfabric/of-cards-consultation-business-service:SNAPSHOT
+      run: docker pull lfeoperatorfabric/of-cards-consultation-business-service:3.2.0.RELEASE
     - name: Run the Anchore scan action itself with GitHub Advanced Security code scanning integration enabled
       uses: anchore/scan-action@v3
       with:
-        image: "lfeoperatorfabric/of-cards-consultation-business-service:SNAPSHOT"
+        image: "lfeoperatorfabric/of-cards-consultation-business-service:3.2.0.RELEASE"
         acs-report-enable: true
         fail-build: false
     - name: Upload Anchore Scan Report
