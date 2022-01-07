@@ -225,7 +225,7 @@
     "search": "RECHERCHER"
   },
   "feedConfiguration": {
-    "title": "CONFIGURATIONS DES NOTIFICATIONS",
+    "title": "CONFIGURATION DES NOTIFICATIONS",
     "confirmSettings": "ENREGISTRER LA CONFIGURATION",
     "popup": {
       "title": "CONFIRMATION",
