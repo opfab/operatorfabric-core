@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -17,18 +17,13 @@ import {Card, CardData, fromCardToCardForPublishing, TimeSpan} from '@ofModel/ca
 import {I18n} from '@ofModel/i18n.model';
 import {Subject} from 'rxjs';
 import {Process, Recipient} from '@ofModel/processes.model';
-import {TimeService} from '@ofServices/time.service';
 import {Severity} from '@ofModel/light-card.model';
 import {Guid} from 'guid-typescript';
-import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {EntitiesService} from '@ofServices/entities.service';
 import {ProcessesService} from '@ofServices/processes.service';
-import {ActivatedRoute} from '@angular/router';
-import {DateTimeNgb, getDateTimeNgbFromMoment} from '@ofModel/datetime-ngb.model';
-import * as moment from 'moment-timezone';
 import {HandlebarsService} from '../cards/services/handlebars.service';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {debounceTime, map, takeUntil} from 'rxjs/operators';
@@ -40,6 +35,8 @@ import {Entity} from '@ofModel/entity.model';
 import {ConfigService} from '@ofServices/config.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
+import {UserCardDatesFormComponent} from './datesForm/usercard-dates-form.component';
+import {DateField, DatesForm} from './datesForm/dates-form.model';
 
 declare const templateGateway: any;
 
@@ -51,6 +48,8 @@ declare const templateGateway: any;
 export class UserCardComponent implements OnDestroy, OnInit {
 
     @Input() modal;
+    @ViewChild('datesForm') datesForm: UserCardDatesFormComponent;
+    public datesFormValue: DatesForm;
 
     displayContext = DisplayContext.PREVIEW;
 
@@ -88,8 +87,6 @@ export class UserCardComponent implements OnDestroy, OnInit {
     cardToEdit: CardData;
     publisherForCreatingUsercard: string;
 
-    isStartDateValueSet = false;
-    isEndDateValueSet = false;
 
     @Input() cardIdToEdit = null;
     public card: Card;
@@ -116,7 +113,6 @@ export class UserCardComponent implements OnDestroy, OnInit {
     endDateMin : {year: number, month: number, day: number} = null;
     startDateMax : {year: number, month: number, day: number} = null;
 
-    dateTimeFilterChange = new Subject();
 
     displayForm() {
         return !!this.publisherForCreatingUsercard && !!this.processOptions && this.processOptions.length > 0;
@@ -129,17 +125,16 @@ export class UserCardComponent implements OnDestroy, OnInit {
     constructor(private store: Store<AppState>,
         private cardService: CardService,
         private userService: UserService,
-        private timeService: TimeService,
         private entitiesService: EntitiesService,
         private sanitizer: DomSanitizer,
         private element: ElementRef,
         private processesService: ProcessesService,
         protected configService: ConfigService,
-        private route: ActivatedRoute,
         private handlebars: HandlebarsService,
         protected translate: TranslateService,
         protected soundNotificationService: SoundNotificationService,
     ) {
+        this.setDateFormValues();
     }
 
     ngOnInit() {
@@ -158,9 +153,6 @@ export class UserCardComponent implements OnDestroy, OnInit {
             processGroup: new FormControl(''),
             process: new FormControl(''),
             state: new FormControl(''),
-            startDate: new FormControl(''),
-            endDate: new FormControl(''),
-            lttd: new FormControl(''),
             comment: new FormControl('')
         });
 
@@ -190,37 +182,28 @@ export class UserCardComponent implements OnDestroy, OnInit {
             this.loadCardForEdition();
         else {
             this.pageLoading = false;
-            this.messageForm.get('lttd').setValue(getDateTimeNgbFromMoment(moment(this.defaultLttdDate)));
         }
 
         this.publisherForCreatingUsercard = this.findPublisherForCreatingUsercard();
-        this.dateTimeFilterChange.pipe(
-            takeUntil(this.unsubscribe$),
-            debounceTime(1000),
-        ).subscribe(() => this.setDateFilterBounds());
+
+       
     }
 
-    onDateTimeChange(event: Event) {
-        this.dateTimeFilterChange.next(null);
-    }
+    private setDateFormValues():void {
 
-    setDateFilterBounds(): void {
-        
-        if (this.messageForm.value.startDate?.date) {
-            this.endDateMin = {year: this.messageForm.value.startDate.date.year, month: this.messageForm.value.startDate.date.month, day: this.messageForm.value.startDate.date.day};
+        const startDate = new DateField(this.startDateVisible,this.defaultStartDate);
+        const endDate = new DateField(this.endDateVisible,this.defaultEndDate);
+        const lttd = new DateField(this.lttdVisible,this.defaultLttdDate);
+        if (!!this.cardToEdit) {
+            if (!!this.cardToEdit.card.startDate) startDate.initialEpochDate = this.cardToEdit.card.startDate;
+            if (!!this.cardToEdit.card.endDate) endDate.initialEpochDate = this.cardToEdit.card.endDate;
+            if (!!this.cardToEdit.card.lttd) lttd.initialEpochDate = this.cardToEdit.card.lttd;
         }
-        else {
-            const today = moment();
-            this.endDateMin = {year: today.year() ,month: today.month(), day: today.day() };
-        }
-        if (this.messageForm.value.endDate?.date) {
-            this.startDateMax = {year: this.messageForm.value.endDate.date.year, month: this.messageForm.value.endDate.date.month, day: this.messageForm.value.endDate.date.day};
-        }
-        else {
-            const tomorrow = moment().add(1,'day');
-            this.startDateMax = {year: tomorrow.year() ,month: tomorrow.month(), day: tomorrow.day() };
-        }
+       
+        this.datesFormValue = new DatesForm(startDate,endDate,lttd);
     }
+ 
+
 
     loadCardForEdition() {
             this.editCardMode = true;
@@ -240,23 +223,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
                         this.messageForm.get('process').disable();
                         this.messageForm.get('state').setValue(this.cardToEdit.card.state);
 
-                        this.messageForm.get('startDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.startDate)));
-                        if (!!this.cardToEdit.card.startDate && this.startDateVisible) {
-                            this.isStartDateValueSet = true;
-                            this.dateTimeFilterChange.next(null);
-                        }
-
-                        if (!!this.cardToEdit.card.endDate && this.endDateVisible) {
-                            this.messageForm.get('endDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.endDate)));
-                            this.isEndDateValueSet = true;
-                            this.dateTimeFilterChange.next(null);
-                        }
-
-                        if (!!this.cardToEdit.card.lttd && this.lttdVisible) {
-                            this.messageForm.get('lttd').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.lttd)));
-                        }
                         this.selectedRecipients = this.cardToEdit.card.entityRecipients;
                         this.pageLoading = false;
+                        this.setDateFormValues();
             });
     }
 
@@ -410,12 +379,6 @@ export class UserCardComponent implements OnDestroy, OnInit {
             if (!!state) {
                 this.selectedState = state;
 
-                // We reset these values only if we are not editing an existing usercard
-                if (!this.cardIdToEdit) {
-                    this.messageForm.get("startDate").setValue('');
-                    this.messageForm.get("endDate").setValue('');
-                    this.messageForm.get("lttd").setValue(getDateTimeNgbFromMoment(moment(this.defaultLttdDate)));
-                }
                 this.loadRecipentsOptions();
                 this.loadTemplate();
             }
@@ -451,6 +414,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
             this.endDateVisible = (userCard.endDateVisible === undefined) ? true : userCard.endDateVisible;
             this.lttdVisible = (userCard.lttdVisible === undefined) ? true : userCard.lttdVisible;
             this.recipientVisible = (userCard.recipientVisible === undefined) ? true : userCard.recipientVisible;
+            this.setDateFormValues();
             if (!!userCard.recipientList) {
                 this.loadRecipientListForState(userCard.recipientList);
             }
@@ -561,22 +525,21 @@ export class UserCardComponent implements OnDestroy, OnInit {
             entitiesRequiredToRespond = (!!specificInformation.card.entitiesRequiredToRespond) ? specificInformation.card.entitiesRequiredToRespond : [];
         }
 
-        let startDate = this.messageForm.get('startDate').value;
+        let startDate = this.datesForm.getStartDateAsEpoch();
         if (!startDate) startDate = this.defaultStartDate;
-        else startDate = this.createTimestampFromValue(startDate);
+
 
         let lttd = null;
-        if (this.lttdVisible) {
-            lttd = this.messageForm.get('lttd').value;
-            lttd = this.createTimestampFromValue(lttd);
-
-        } else {
+        if (this.lttdVisible)  lttd = this.datesForm.getLttdAsEpoch();
+        else {
             if (specificInformation.card.lttd) lttd = specificInformation.card.lttd;
         }
 
-        let endDate = this.messageForm.get('endDate').value;
-        if (!endDate)  endDate = this.endDateVisible ? this.defaultEndDate : this.lttdVisible ? lttd : null;
-        else endDate = this.createTimestampFromValue(endDate);
+        let endDate = null;
+        if (this.endDateVisible) endDate = this.datesForm.getEndDateAsEpoch();
+        else {
+            if (specificInformation.card.endDate) endDate = specificInformation.card.endDate;
+        }
 
         if (!!endDate && endDate < startDate) {
             this.displayMessage('shared.endDateBeforeStartDate', '', MessageLevel.ERROR);
@@ -655,18 +618,8 @@ export class UserCardComponent implements OnDestroy, OnInit {
     }
 
 
-    createTimestampFromValue = (value: any): number => {
-        const { date, time } = value;
-        if (date) {
-            return this.timeService.toNgBNumberTimestamp(this.transformToTimestamp(date, time));
-        } else {
-            return null;
-        }
-    };
 
-    transformToTimestamp(date: NgbDateStruct, time: NgbTimeStruct): string {
-        return new DateTimeNgb(date, time).formatDateTime();
-    }
+ 
 
     getEntityLabel(entity: Entity) {
         return this.useDescriptionFieldForEntityList ? entity.description : entity.name 

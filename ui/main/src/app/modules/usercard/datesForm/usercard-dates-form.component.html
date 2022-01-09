@@ -1,0 +1,30 @@
+<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<form [formGroup]="datesForm" class="opfab-form-lighter">
+    <div class="justify-content-center" style="display:flex;width:100%;align-content:center;flex-wrap: wrap;">
+        <div *ngIf="datesFormInputData.startDate.isVisible" style="width:280px; margin-right: 30px; margin-left: 30px;">
+            <of-datetime-filter  filterPath="startDate" formControlName="startDate"
+                labelKey="userCard.filters."  [maxDate]="startDateMax"
+                (change)="onDateTimeChange($event)">
+            </of-datetime-filter>
+        </div>
+
+        <div *ngIf="datesFormInputData.endDate.isVisible" style="width: 280px; margin-right: 30px; margin-left: 30px;">
+            <of-datetime-filter filterPath="endDate" formControlName="endDate"
+                labelKey="userCard.filters." [minDate]="endDateMin"
+                (change)="onDateTimeChange($event)">
+            </of-datetime-filter>
+        </div>
+
+        <div *ngIf="datesFormInputData.lttd.isVisible" style="width: 280px; margin-right: 30px; margin-left: 30px;">
+            <of-datetime-filter filterPath="lttd" formControlName="lttd" labelKey="userCard.filters.">
+            </of-datetime-filter>
+        </div>
+    </div>
+</form>

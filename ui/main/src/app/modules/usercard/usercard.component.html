@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2020-2021, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020-2022, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -52,36 +52,9 @@
                 <span class="opfab-radio-button-checkmark"></span>
             </label>
         </div>
-        <div class="justify-content-center" style="display:flex;width:100%;align-content:center;flex-wrap: wrap;">
-            <div *ngIf="startDateVisible" style="width:280px; margin-right: 30px; margin-left: 30px;">
-                <of-datetime-filter *ngIf="!isStartDateValueSet" filterPath="startDate" formControlName="startDate" labelKey="userCard.filters."
-                    [offset]="[{amount:1,unit:'minute'}]" [maxDate]="startDateMax" (change)="onDateTimeChange($event)">
-                </of-datetime-filter>
-                <of-datetime-filter *ngIf="isStartDateValueSet" filterPath="startDate" formControlName="startDate" labelKey="userCard.filters."
-                    [defaultDate]="this.messageForm.get('startDate').value.date" [defaultTime]="this.messageForm.get('startDate').value.time"
-                    [maxDate]="startDateMax" (change)="onDateTimeChange($event)">
-                </of-datetime-filter>
-            </div>
-
-            <div *ngIf="endDateVisible" style="width: 280px; margin-right: 30px; margin-left: 30px;">
-                <of-datetime-filter *ngIf="!isEndDateValueSet" filterPath="endDate" formControlName="endDate" labelKey="userCard.filters."
-                    [offset]="[{amount:1,unit:'day'}]" [minDate]="endDateMin" (change)="onDateTimeChange($event)">
-                </of-datetime-filter>
-                <of-datetime-filter *ngIf="isEndDateValueSet" filterPath="endDate" formControlName="endDate" labelKey="userCard.filters."
-                    [defaultDate]="this.messageForm.get('endDate').value.date" [defaultTime]="this.messageForm.get('endDate').value.time"
-                    [minDate]="endDateMin" (change)="onDateTimeChange($event)">
-                </of-datetime-filter>
-            </div>
-
-            <div *ngIf="lttdVisible" style="width: 280px; margin-right: 30px; margin-left: 30px;">
-                <of-datetime-filter filterPath="lttd" formControlName="lttd" labelKey="userCard.filters.">
-                </of-datetime-filter>
-            </div>
-        </div>
-
- 
 
     </form>
+    <of-usercard-dates-form [datesFormInputData]="datesFormValue" #datesForm> </of-usercard-dates-form>
 
     <div class="opfab-form-lighter" [innerHtml]="userCardTemplate"></div>
 
