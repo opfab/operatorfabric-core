@@ -1,4 +1,4 @@
-/* Copyright (c) 2020-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2020-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,9 +18,10 @@ import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime
 import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
 import { CardDetailModule } from 'app/modules/share/card-detail/card-detail.module';
 import { LightCardModule } from 'app/modules/share/light-card/light-card.module';
+import {UserCardDatesFormComponent} from './datesForm/usercard-dates-form.component';
 
 @NgModule({
-    declarations: [UserCardComponent],
+    declarations: [UserCardComponent, UserCardDatesFormComponent],
     imports: [
         CommonModule,
         FormsModule,
