@@ -7,29 +7,17 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <div [hidden]="displayPreview" [hidden]="displaySendingCardInProgress" *ngIf="!pageLoading && displayForm()" class="container" style="padding-top:20px">
-    <form [formGroup]="messageForm" class="opfab-form-lighter">
-        <div class="row">
-
-            <div class="col" *ngIf="displayProcessGroupFilter()">
-                <of-single-filter id="of-usercard-service-selector" i18nRootLabelKey="shared.filters." [parentForm]="messageForm" filterPath="processGroup"
-                    [values]="processGroupOptions"></of-single-filter>
-            </div>
-
-            <div class="col" *ngIf="! displayProcessGroupFilter() && !! processOptions && processOptions.length > 1">
-                <of-single-filter i18nRootLabelKey="shared.filters." [parentForm]="messageForm" filterPath="process"
-                                  [values]="processOptions"></of-single-filter>
-            </div>
-            <div class="col" *ngIf="displayProcessGroupFilter() && !! processOptionsWhenSelectedProcessGroup && processOptionsWhenSelectedProcessGroup.length > 1">
-                <of-single-filter id="of-usercard-process-filter" i18nRootLabelKey="shared.filters." [parentForm]="messageForm" filterPath="process"
-                                  [values]="processOptionsWhenSelectedProcessGroup"></of-single-filter>
-            </div>
-
-            <div class="col" *ngIf="!! stateOptions && stateOptions.length > 1">
-                <of-single-filter id="opfab-state-filter" i18nRootLabelKey="shared.filters." [parentForm]="messageForm" filterPath="state"
-                    [values]="stateOptions" [sortValues]="true" [defaultValueSelected]=!cardIdToEdit></of-single-filter>
-
-            </div>
-        </div>
+    <of-usercard-select-state-form 
+            [cardIdToEdit]="this.cardIdToEdit" 
+            [initialProcess]="this.editCardProcess" 
+            [initialState]="this.editCardState"
+            (stateChange)="stateChanged($event)"
+            (emptyProcessList)="setEmptyProcessList()"
+            > </of-usercard-select-state-form>
+    <br/>
+   
+    <form [formGroup]="severityForm" class="opfab-form-lighter">
+ 
         <div class="row justify-content-center" *ngIf="severityVisible">
 
             <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-alarm" translate> shared.severity.alarm </span>
@@ -79,7 +67,7 @@
     <br />
     <div style="text-align: center;width:100%">
         <button id="opfab-usercard-btn-cancel" class="opfab-btn-cancel" (click)="cancel()" translate> userCard.refuse</button>
-        <button id="opfab-usercard-btn-prepareCard" type="button" class="opfab-btn" [disabled]="!selectedProcess" (click)="prepareCard()" translate>
+        <button id="opfab-usercard-btn-prepareCard" type="button" class="opfab-btn" [disabled]="!selectedProcessId" (click)="prepareCard()" translate>
             userCard.prepareCard
 
         </button>

@@ -19,9 +19,10 @@ import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
 import { CardDetailModule } from 'app/modules/share/card-detail/card-detail.module';
 import { LightCardModule } from 'app/modules/share/light-card/light-card.module';
 import {UserCardDatesFormComponent} from './datesForm/usercard-dates-form.component';
+import {UserCardSelectStateFormComponent} from './selectStateForm/usercard-select-state-form.component';
 
 @NgModule({
-    declarations: [UserCardComponent, UserCardDatesFormComponent],
+    declarations: [UserCardComponent, UserCardDatesFormComponent, UserCardSelectStateFormComponent],
     imports: [
         CommonModule,
         FormsModule,

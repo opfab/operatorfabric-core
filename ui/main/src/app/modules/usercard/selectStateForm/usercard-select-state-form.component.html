@@ -1,0 +1,36 @@
+<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<form [formGroup]="selectStateForm" class="opfab-form-lighter">
+    <div class="row">
+
+        <div class="col" *ngIf="displayProcessGroupFilter()">
+            <of-single-filter id="of-usercard-service-selector" i18nRootLabelKey="shared.filters."
+                [parentForm]="selectStateForm" filterPath="processGroup" [values]="processGroupOptions">
+            </of-single-filter>
+        </div>
+
+        <div class="col" *ngIf="! displayProcessGroupFilter() && !! processOptions && processOptions.length > 1">
+            <of-single-filter i18nRootLabelKey="shared.filters." [parentForm]="selectStateForm" filterPath="process"
+                [values]="processOptions"></of-single-filter>
+        </div>
+        <div class="col"
+            *ngIf="displayProcessGroupFilter() && !! processOptionsWhenSelectedProcessGroup && processOptionsWhenSelectedProcessGroup.length > 1">
+            <of-single-filter id="of-usercard-process-filter" i18nRootLabelKey="shared.filters."
+                [parentForm]="selectStateForm" filterPath="process" [values]="processOptionsWhenSelectedProcessGroup">
+            </of-single-filter>
+        </div>
+
+        <div class="col" *ngIf="!! stateOptions && stateOptions.length > 1">
+            <of-single-filter id="opfab-state-filter" i18nRootLabelKey="shared.filters." [parentForm]="selectStateForm"
+                filterPath="state" [values]="stateOptions" [sortValues]="true" [defaultValueSelected]=!cardIdToEdit>
+            </of-single-filter>
+
+        </div>
+    </div>
+</form>
