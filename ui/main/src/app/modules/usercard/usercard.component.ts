@@ -16,21 +16,20 @@ import {UserService} from '@ofServices/user.service';
 import {Card, CardData, fromCardToCardForPublishing, TimeSpan} from '@ofModel/card.model';
 import {I18n} from '@ofModel/i18n.model';
 import {Subject} from 'rxjs';
-import {Process, Recipient} from '@ofModel/processes.model';
+import {Recipient} from '@ofModel/processes.model';
 import {Severity} from '@ofModel/light-card.model';
 import {Guid} from 'guid-typescript';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
-import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {EntitiesService} from '@ofServices/entities.service';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../cards/services/handlebars.service';
 import {DetailContext} from '@ofModel/detail-context.model';
-import {debounceTime, map, takeUntil} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
-import {RightsEnum} from '@ofModel/perimeter.model';
 import {Entity} from '@ofModel/entity.model';
 import {ConfigService} from '@ofServices/config.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
@@ -48,47 +47,30 @@ declare const templateGateway: any;
 export class UserCardComponent implements OnDestroy, OnInit {
 
     @Input() modal;
+    @Input() cardIdToEdit = null;
+
     @ViewChild('datesForm') datesForm: UserCardDatesFormComponent;
     public datesFormValue: DatesForm;
 
     displayContext = DisplayContext.PREVIEW;
 
-    messageForm: FormGroup;
+    severityForm: FormGroup;
     recipientForm: FormGroup;
 
-    processesDefinition: Process[];
     currentUserWithPerimeters: UserWithPerimeters;
-    processGroups: Map<string, {name: string, processes: string[]}>;
-
-    severityOptions = Object.keys(Severity).map(severity => {
-        return {
-            value: severity,
-            label: new I18n('shared.severity.' + severity)
-        };
-    });
 
     entities: Entity[];
-    stateOptions: any[];
     recipientsOptions = [];
     selectedRecipients = [];
     dropdownSettings = {};
-    processOptions = [];
-    processOptionsWhenSelectedProcessGroup = [];
-    processGroupOptions = [];
 
-    selectedProcess: Process;
+    selectedProcessId: string;
     selectedState: string;
-    processesPerProcessGroups = new Map();
-    processGroupPerProcesses = new Map();
-    processesWithoutProcessGroup = [];
-    statesPerProcesses = new Map();
     userCardTemplate: SafeHtml;
     editCardMode = false;
     cardToEdit: CardData;
     publisherForCreatingUsercard: string;
-
-
-    @Input() cardIdToEdit = null;
+   
     public card: Card;
 
     readonly defaultStartDate = new Date().valueOf() + 60000;
@@ -101,6 +83,13 @@ export class UserCardComponent implements OnDestroy, OnInit {
     public displaySendingCardInProgress = false;
 
     modalRef: NgbModalRef;
+
+    severityOptions = Object.keys(Severity).map(severity => {
+        return {
+            value: severity,
+            label: new I18n('shared.severity.' + severity)
+        };
+    });
     severityVisible = true ;
     startDateVisible = true ;
     endDateVisible = true ;
@@ -110,17 +99,17 @@ export class UserCardComponent implements OnDestroy, OnInit {
     pageLoading = true;
     useDescriptionFieldForEntityList = false;
 
-    endDateMin : {year: number, month: number, day: number} = null;
-    startDateMax : {year: number, month: number, day: number} = null;
+    editCardProcess;
+    editCardState;
 
+    emptyProcessList = false;
 
-    displayForm() {
-        return !!this.publisherForCreatingUsercard && !!this.processOptions && this.processOptions.length > 0;
+    displayForm()  {
+         return !!this.publisherForCreatingUsercard && !this.emptyProcessList;
+       // return !!this.publisherForCreatingUsercard && !!this.processOptions && this.processOptions.length > 0;
     }
 
-    displayProcessGroupFilter() {
-        return !!this.processGroupOptions && this.processGroupOptions.length > 1 ;
-    }
+
 
     constructor(private store: Store<AppState>,
         private cardService: CardService,
@@ -143,29 +132,16 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.useDescriptionFieldForEntityList = this.configService.getConfigValue('usercard.useDescriptionFieldForEntityList',false);
 
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
-        this.processGroups = this.processesService.getProcessGroups();
         this.loadAllEntities();
         this.loadRecipentsOptions();
-        this.loadAllProcessAndStateInUserPerimeter();
 
-        this.messageForm = new FormGroup({
-            severity: new FormControl(''),
-            processGroup: new FormControl(''),
-            process: new FormControl(''),
-            state: new FormControl(''),
-            comment: new FormControl('')
+
+        this.severityForm = new FormGroup({
+            severity: new FormControl('')
         });
 
         this.changeSeverityToDefaultValue();
-        this.changeStatesWhenSelectProcess();
-        this.changeProcessesWhenSelectProcessGroup();
-        this.loadTemplateWhenStateChange();
-        this.loadAllProcessGroupsRelatingToUserPerimeter();
 
-        if (!this.cardIdToEdit && this.processGroupOptions.length == 0 && this.processOptions.length > 0) {
-            this.selectedProcess = this.processOptions[0].value;
-            this.messageForm.get('process').setValue(this.selectedProcess);
-        }
 
         this.recipientForm = new FormGroup({
             recipients: new FormControl([])
@@ -209,20 +185,9 @@ export class UserCardComponent implements OnDestroy, OnInit {
             this.editCardMode = true;
             this.cardService.loadCard(this.cardIdToEdit).subscribe(card => {
                         this.cardToEdit = card;
-                        this.messageForm.get('severity').setValue(this.cardToEdit.card.severity);
-
-                        const processGroupForCardToEdit = this.processGroupPerProcesses.get(this.cardToEdit.card.process);
-                        if (processGroupForCardToEdit)
-                            this.messageForm.get('processGroup').setValue(processGroupForCardToEdit);
-                        else
-                            this.messageForm.get('processGroup').setValue('--');
-                        
-                        this.messageForm.get('processGroup').disable();
-
-                        this.messageForm.get('process').setValue(this.cardToEdit.card.process);
-                        this.messageForm.get('process').disable();
-                        this.messageForm.get('state').setValue(this.cardToEdit.card.state);
-
+                        this.editCardProcess = this.cardToEdit.card.process;
+                        this.editCardState = this.cardToEdit.card.state;
+                        this.severityForm.get('severity').setValue(this.cardToEdit.card.severity);
                         this.selectedRecipients = this.cardToEdit.card.entityRecipients;
                         this.pageLoading = false;
                         this.setDateFormValues();
@@ -242,158 +207,35 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.recipientsOptions.sort(( a, b ) => a.itemName.localeCompare(b.itemName));
     }
 
-    loadAllProcessAndStateInUserPerimeter(): void {
-        this.processesDefinition = this.processesService.getAllProcesses();
-        const processesInPerimeter: Set<string> = new Set();
-        this.currentUserWithPerimeters.computedPerimeters.forEach(perimeter => {
-                    if (UserCardComponent.userCanSendCard(perimeter)) processesInPerimeter.add(perimeter.process);
-                });
-
-        this.processesDefinition.forEach(process => {
-                    if (processesInPerimeter.has(process.id)) {
-                        const label = process.name ? process.name : process.id;
-                        const processToShow = { value: process.id, label: label };
-                        
-                        this.loadStatesForProcess(process);
-                        // Add process option only if there is at least one state
-                        if (this.statesPerProcesses.get(process.id).length > 0) this.processOptions.push(processToShow);
-                    }
-                });
-    }
-
-    isProcessInProcessesGroup(idProcess: string, processesGroup: {name: string, processes: string[]}): boolean {
-        return !!processesGroup.processes.find(process => process === idProcess);
-    }
-
-    loadAllProcessGroupsRelatingToUserPerimeter(): void {
-        let numberOfProcessesAttachedToAProcessGroup = 0;
-
-        this.processGroups.forEach((group, groupId) => {
-
-            const processOptions = [];
-            this.processOptions.forEach(processOption => {
-                if (this.isProcessInProcessesGroup(processOption.value, group)) {
-                    processOptions.push(processOption);
-                    numberOfProcessesAttachedToAProcessGroup++;
-
-                    this.processGroupPerProcesses.set(processOption.value, groupId);
-                }
-            });
-
-            if (processOptions.length > 0)
-                this.processesPerProcessGroups.set(groupId, processOptions);
-        });
-
-        if (this.processOptions.length > numberOfProcessesAttachedToAProcessGroup) {
-            this.loadProcessesWithoutProcessGroup();
-            this.processGroupOptions.push({value: '--', label: 'processGroup.defaultLabel'});
-        }
-        for (const processGroupId of this.processesPerProcessGroups.keys())
-            this.processGroupOptions.push({value: processGroupId, label: this.processGroups.get(processGroupId).name});
-        
-        if (!this.cardIdToEdit && this.processGroupOptions.length > 0) {
-            this.messageForm.get('processGroup').setValue(this.processGroupOptions[0].value);
-        }
-    }
-
-    loadProcessesWithoutProcessGroup(): void {
-        const processesWithProcessGroup = Array.from(this.processGroupPerProcesses.keys());
-        this.processesWithoutProcessGroup = this.processOptions.filter(processOption => processesWithProcessGroup.indexOf(processOption.value) < 0);
-    }
-
-    private static userCanSendCard(perimeter: ComputedPerimeter): boolean {
-        return ((perimeter.rights === RightsEnum.ReceiveAndWrite)
-            || (perimeter.rights === RightsEnum.Write));
-    }
-
-    loadStatesForProcess(process: Process): void {
-        const statesList = [];
-        this.currentUserWithPerimeters.computedPerimeters.forEach(
-            perimeter => {
-                if ((perimeter.process === process.id) && UserCardComponent.userCanSendCard(perimeter)) {
-                    const state = this.getStateFromProcessDefinition(process,perimeter.state)
-                    if (!!state) statesList.push(state);
-                }
-            });
-        this.statesPerProcesses.set(process.id, statesList);
-
-    }
-
-    getStateFromProcessDefinition(process: Process, stateId: string) {
-        const stateFromProcessDefinition = process.states[stateId];
-        if (!!stateFromProcessDefinition) {
-            if (!!stateFromProcessDefinition.userCard) {
-                const label = !!stateFromProcessDefinition.name ? stateFromProcessDefinition.name : stateId;
-                return { value: stateId, label: label };
-            }
-        } else console.log('WARNING : state', stateId, 'is present in perimeter for process'
-            , process.id, 'but not in process definition');
-        return null;
-    }
-
-
     changeSeverityToDefaultValue(): void {
-        this.messageForm.get('severity').valueChanges.subscribe((severity) => {
-            if (!severity) this.messageForm.get('severity').setValue(this.severityOptions[0].value);
+        this.severityForm.get('severity').valueChanges.subscribe((severity) => {
+            if (!severity) this.severityForm.get('severity').setValue(this.severityOptions[0].value);
         });
-        this.messageForm.get('severity').setValue(this.severityOptions[0].value);
+        this.severityForm.get('severity').setValue(this.severityOptions[0].value);
 
     }
 
-    changeProcessesWhenSelectProcessGroup(): void {
-        this.messageForm.get('processGroup').valueChanges.subscribe((processGroup) => {
-            if (!!processGroup) {
-                if (processGroup === '--')
-                    this.processOptionsWhenSelectedProcessGroup = this.processesWithoutProcessGroup;
-                else
-                    this.processOptionsWhenSelectedProcessGroup = this.processesPerProcessGroups.get(processGroup);
-
-                this.selectedProcess = this.processOptionsWhenSelectedProcessGroup[0].value;
-                this.messageForm.get('process').setValue(this.selectedProcess);
-            }
-        });
+    setEmptyProcessList(): void {
+        this.emptyProcessList = true;
     }
 
-    changeStatesWhenSelectProcess(): void {
-        this.messageForm.get('process').valueChanges.subscribe((process) => {
-            if (!!process) {
-                this.stateOptions = this.statesPerProcesses.get(process);
-                this.selectedState = this.stateOptions[0].value;
-                this.selectedProcess = this.processesDefinition.find(processDefinition => {
-                    return processDefinition.id === process;
-                });
-                this.messageForm.get('state').setValue(this.selectedState);
-            }
-        });
-    }
-
-    // Be careful, the code in the subscribe is executed even if we are editing an existing card
-    // Indeed, in order to display the state of the edited usercard, the state value of the control is changed
-    loadTemplateWhenStateChange(): void {
-        this.messageForm.get('state').valueChanges
-        .pipe(
-            takeUntil(this.unsubscribe$),
-            debounceTime(10) //See #1891 Cypress usercard test was flaky without this debounce
-        )
-        .subscribe((state) => {
-            if (!!state) {
-                this.selectedState = state;
-
-                this.loadRecipentsOptions();
-                this.loadTemplate();
-            }
-        });
+    stateChanged(event: any) {
+        this.selectedState = event.state;
+        this.selectedProcessId = event.selectedProcessId;
+        this.loadRecipentsOptions();
+        this.loadTemplate();
     }
 
     loadTemplate() {
 
         let card;
         if  (!!this.cardToEdit) card = this.cardToEdit.card ;
-        const userCard = this.selectedProcess.states[this.selectedState].userCard;
+        const selected = this.processesService.getProcess(this.selectedProcessId);
+        const userCard = selected.states[this.selectedState].userCard;
         if (!!userCard && !!userCard.template) {
             const templateName = userCard.template;
 
-            this.handlebars.queryTemplate(this.selectedProcess.id, this.selectedProcess.version, templateName)
+            this.handlebars.queryTemplate(this.selectedProcessId, selected.version, templateName)
                 .pipe(map(t => t(new DetailContext(card, null, null))))
                 .subscribe({
                     next: (template) => {
@@ -479,14 +321,10 @@ export class UserCardComponent implements OnDestroy, OnInit {
     }
 
     prepareCard() {
-        const formValue = this.messageForm.value;
 
-        const processValue = this.editCardMode ? this.cardToEdit.card.process : formValue['process'];
-        const selectedProcess = this.processesDefinition.find(process => {
-            return process.id === processValue;
-        });
+        const selectedProcess = this.processesService.getProcess(this.selectedProcessId);
         const processVersion = selectedProcess.version;
-        const state = formValue['state'];
+        const state = this.selectedState;
 
         if (!templateGateway.getSpecificCardInformation) {
             console.log('No getSpecificCardInformationMethod() in template can not send card');
@@ -565,7 +403,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
         let severity;
         if (this.severityVisible) {
-            severity = formValue['severity'];
+            severity = this.severityForm.value['severity'];
         } else {
             severity = (!!specificInformation.card.severity) ? specificInformation.card.severity : Severity.INFORMATION;
         }
@@ -617,10 +455,6 @@ export class UserCardComponent implements OnDestroy, OnInit {
             });
     }
 
-
-
- 
-
     getEntityLabel(entity: Entity) {
         return this.useDescriptionFieldForEntityList ? entity.description : entity.name 
     }
@@ -630,10 +464,6 @@ export class UserCardComponent implements OnDestroy, OnInit {
         return entityOption.itemName;
     }
 
-    ngOnDestroy() {
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
-    }
 
     confirm(): void {
         this.displayPreview = false;
@@ -671,12 +501,8 @@ export class UserCardComponent implements OnDestroy, OnInit {
        this.displayPreview = false;
     }
 
-    sendAnotherUserCard() {
-        this.userCardTemplate = '';
-        this.card = null;
-        this.editCardMode = false;
-        this.cardToEdit = null;
-        this.selectedRecipients = [];
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
-
 }
