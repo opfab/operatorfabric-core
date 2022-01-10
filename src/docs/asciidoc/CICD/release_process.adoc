@@ -106,50 +106,6 @@ Wait for the build to complete (around 30 minutes) and check that all jobs have 
 This ensures that the code builds, tests are OK and there is no error preventing documentation or Docker images
 generation.
 
-=== Updating the version list on the website
-
-On the link:{opfab_website_repo}[website repository],
-edit the link:{opfab_website_repo}/blob/master/_data/versions.yml[_/data/versions.yml] file to:
-
-. Add the version being released to the list with the `current` badge
-. Remove the `current` badge from the previous version
-
-For example:
-
-.Before
-[source,yaml]
-----
-- id: SNAPSHOT
-  type: SNAPSHOT
-  external_devices_api: true
-- id: D.E.F.RELEASE
-  badge: current
-  external_devices_api: true
-- id: A.B.C.RELEASE
-  #... end of file omitted
-----
-
-.After
-[source,yaml]
-----
-- id: SNAPSHOT
-  type: SNAPSHOT
-  external_devices_api: true
-- id: X.X.X.RELEASE
-  badge: current
-  external_devices_api: true
-- id: D.E.F.RELEASE
-  external_devices_api: true
-- id: A.B.C.RELEASE
-  #... end of file omitted
-----
-
-This file determines which versions (and in which order) are displayed on the
-link:https://opfab.github.io/pages/releases.html[release page] of the website.
-
-NOTE: The `external_devices_api` property should be set to true for all new versions, so the API documentation for
-the External Devices API is displayed on the website.
-
 === Merging the release branch into `master`
 
 Once the release branch build is passing, you should merge the release branch into `master` to bring the new
@@ -201,6 +157,51 @@ and that the links work.
 
 . Check that the tag was correctly pushed to GitHub and is visible under the
 https://github.com/opfab/operatorfabric-core/tags[tags page] for the repository.
+
+=== Updating the version list on the website
+
+On the link:{opfab_website_repo}[website repository],
+edit the link:{opfab_website_repo}/blob/master/_data/versions.yml[_/data/versions.yml] file to:
+
+. Add the version being released to the list with the `current` badge
+. Remove the `current` badge from the previous version
+
+For example:
+
+.Before
+[source,yaml]
+----
+- id: SNAPSHOT
+  type: SNAPSHOT
+  external_devices_api: true
+- id: D.E.F.RELEASE
+  badge: current
+  external_devices_api: true
+- id: A.B.C.RELEASE
+  #... end of file omitted
+----
+
+.After
+[source,yaml]
+----
+- id: SNAPSHOT
+  type: SNAPSHOT
+  external_devices_api: true
+- id: X.X.X.RELEASE
+  badge: current
+  external_devices_api: true
+- id: D.E.F.RELEASE
+  external_devices_api: true
+- id: A.B.C.RELEASE
+  #... end of file omitted
+----
+
+This file determines which versions (and in which order) are displayed on the
+link:https://opfab.github.io/pages/releases.html[release page] of the website.
+
+NOTE: The `external_devices_api` property should be set to true for all new versions, so the API documentation for
+the External Devices API is displayed on the website.
+
 
 === Checking the docker-compose files
 
