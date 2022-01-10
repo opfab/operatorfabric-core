@@ -34,6 +34,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     public static final String PROMETHEUS_PATH ="/actuator/prometheus**";
+    public static final String LOGGERS_PATH ="/actuator/loggers/**";
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String THIRDS_PATH = "/businessconfig/**";
     private static final String STYLE_URL_PATTERN = "/businessconfig/processes/*/css/*";
@@ -66,6 +67,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, THIRDS_PATH).access(ADMIN_AND_IP_ALLOWED)
                 .antMatchers(HttpMethod.PUT, THIRDS_PATH).access(ADMIN_AND_IP_ALLOWED)
                 .antMatchers(HttpMethod.DELETE, THIRDS_PATH).access(ADMIN_AND_IP_ALLOWED)
+                .antMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
                 .anyRequest().access(AUTH_AND_IP_ALLOWED)
         ;
                 

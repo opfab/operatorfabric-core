@@ -9,7 +9,7 @@
 
 
 import {Injectable} from '@angular/core';
-import {map} from 'rxjs/operators';
+import {debounceTime, map} from 'rxjs/operators';
 import {combineLatest, Observable, Subject, } from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import {LightCardsStoreService} from './lightcards-store.service';
@@ -65,6 +65,8 @@ export class LightCardsFeedFilterService {
             this.onlyBusinessFilterForTimeLine.asObservable(),
         ]
         ).pipe(
+            debounceTime(50), // When resetting components it can happen that we have more than one filter change
+                              // with debounceTime, we avoid processing intermediate states
             map(results => {
                 const lightCards = results[1];
                 const onlyBusinessFitlerForTimeLine = results[2];

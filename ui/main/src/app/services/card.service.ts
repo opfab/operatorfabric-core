@@ -22,7 +22,7 @@ import {Page} from '@ofModel/page.model';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {CardSubscriptionClosed, CardSubscriptionOpen} from '@ofActions/cards-subscription.actions';
-import {catchError} from 'rxjs/operators';
+import {catchError, takeUntil} from 'rxjs/operators';
 import {RemoveLightCard} from '@ofActions/light-card.actions';
 import {BusinessConfigChangeAction} from '@ofStore/actions/processes.actions';
 import {UserConfigChangeAction} from '@ofStore/actions/user.actions';
@@ -43,9 +43,10 @@ export class CardService {
     readonly cardsPubUrl: string;
     readonly userCardReadUrl: string;
     readonly userCardUrl: string;
-    private lastHeardBeatDate: number;
+    private lastHeardBeatDate: number = 0;
     private firstSubscriptionInitDone = false;
     public initSubscription = new Subject<void>();
+    private unsubscribe$: Subject<void> = new Subject<void>();
 
     private startOfAlreadyLoadedPeriod: number;
     private endOfAlreadyLoadedPeriod: number;
@@ -81,6 +82,7 @@ export class CardService {
     public initCardSubscription() {
 
         this.getCardSubscription()
+            .pipe(takeUntil(this.unsubscribe$))
             .subscribe( {
                 next: operation => {
                     switch (operation.type) {
@@ -121,6 +123,9 @@ export class CardService {
     }
 
 
+    public closeSubscription() {
+        this.unsubscribe$.next();
+    }
 
     private getCardSubscription(): Observable<CardOperation> {
         // security header needed here as SSE request are not intercepted by our header interceptor
@@ -145,24 +150,30 @@ export class CardService {
                             console.log(new Date().toISOString(), `CardService - Card subscription initialized`);
                             this.initSubscription.next();
                             this.initSubscription.complete();
-                            if (this.firstSubscriptionInitDone) this.recoverAnyLostCardWhenConnectionHasBeenReset();
-                            else this.firstSubscriptionInitDone = true;
+                            if (this.firstSubscriptionInitDone) {
+                                this.recoverAnyLostCardWhenConnectionHasBeenReset();
+                                // process or user config may have change during connection loss
+                                // so reload both configuration 
+                                this.store.dispatch(new BusinessConfigChangeAction());
+                                this.store.dispatch(new UserConfigChangeAction());
+                            }
+                            else {
+                                this.firstSubscriptionInitDone = true;
+                                this.lastHeardBeatDate = new Date().valueOf();
+                            }
                             break;
                         case 'HEARTBEAT':
                             this.lastHeardBeatDate = new Date().valueOf();
                             console.log(new Date().toISOString(), `CardService - HEARTBEAT received - Connection alive `);
-                            break;
-                        case 'RESTORE':
-                            console.log(new Date().toISOString(), `CardService - Subscription restored with server`);
                             break;
                         case 'BUSINESS_CONFIG_CHANGE':
                             this.store.dispatch(new BusinessConfigChangeAction());
                             console.log(new Date().toISOString(), `CardService - BUSINESS_CONFIG_CHANGE received`);
                             break;
                         case 'USER_CONFIG_CHANGE':
-                                this.store.dispatch(new UserConfigChangeAction());
-                                console.log(new Date().toISOString(), `CardService - USER_CONFIG_CHANGE received`);
-                                break;
+                            this.store.dispatch(new UserConfigChangeAction());
+                            console.log(new Date().toISOString(), `CardService - USER_CONFIG_CHANGE received`);
+                            break;
                         default :
                             return observer.next(JSON.parse(message.data, CardOperation.convertTypeIntoEnum));
                     }

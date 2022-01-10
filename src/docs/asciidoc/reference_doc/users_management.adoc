@@ -40,6 +40,8 @@ The access to this service has to be authorized, in the `OAuth2` service used by
 
 NOTE: User login must be lowercase. Otherwise, it will be converted to lowercase before saving to the database.
 
+WARNING: Resource identifiers such as login, group id, entity id and perimeter id must only contain the following characters: letters, _, - or digits.
+
 
 ==== Automated user creation
 

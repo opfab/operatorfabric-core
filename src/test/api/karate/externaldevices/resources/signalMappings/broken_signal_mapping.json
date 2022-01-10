@@ -1,0 +1,4 @@
+{
+  "id":"default_CDS_mapping",
+  "supportedSignals": "this mapping is broken because supportedSignals is a string"
+}

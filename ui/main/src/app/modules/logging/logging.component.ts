@@ -305,7 +305,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
                                 [representativeColumnName]:  this.translateColumn(card.representative)
                             });
                 });
-                ExportService.exportJsonToExcelFile(exportArchiveData, 'Archive');
+                ExportService.exportJsonToExcelFile(exportArchiveData, 'Logging');
             });
     }
 

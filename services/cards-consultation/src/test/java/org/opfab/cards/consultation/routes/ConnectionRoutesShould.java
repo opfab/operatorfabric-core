@@ -11,23 +11,17 @@ package org.opfab.cards.consultation.routes;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.cards.consultation.application.IntegrationTestApplication;
 import org.opfab.cards.consultation.configuration.webflux.ConnectionRoutesConfig;
-import org.opfab.cards.consultation.model.ArchivedCardConsultationData;
-import org.opfab.cards.consultation.model.ConnectionData;
-import org.opfab.cards.consultation.repositories.ArchivedCardRepository;
 import org.opfab.cards.consultation.services.CardSubscription;
 import org.opfab.cards.consultation.services.CardSubscriptionService;
 import org.opfab.springtools.configuration.test.UserServiceCacheTestApplication;
 import org.opfab.springtools.configuration.test.WithMockOpFabUserReactive;
-import org.opfab.test.EmptyListComparator;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,13 +32,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import reactor.test.StepVerifier;
-
-import java.lang.reflect.Array;
-import java.time.Instant;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.is;
+
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { IntegrationTestApplication.class, ConnectionRoutesConfig.class,
@@ -100,7 +89,6 @@ public class ConnectionRoutesShould {
                 void respondWithOneUserConnected() {
                         CardSubscription subscription = service.subscribe(currentUserWithPerimeters, "test");
                         subscription.getPublisher().subscribe(log::info);
-                        Assertions.assertThat(subscription.checkActive()).isTrue();
                         webTestClient.get().uri("/connections").exchange().expectStatus().isOk()
                                         .expectBody()
                                         .jsonPath("$[0].login").isEqualTo("testuser");

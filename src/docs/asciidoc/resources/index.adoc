@@ -10,8 +10,6 @@
 
 = Resources
 
-include::mock_pipeline.adoc[leveloffset=+1]
-
 include::jar_publication.adoc[leveloffset=+1]
 
 include::migration_guide.adoc[leveloffset=+1]

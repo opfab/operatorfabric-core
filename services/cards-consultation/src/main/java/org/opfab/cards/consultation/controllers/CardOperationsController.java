@@ -85,13 +85,12 @@ public class CardOperationsController {
                 CardSubscription oldSubscription = cardSubscriptionService
                         .findSubscription(p.getCurrentUserWithPerimeters(), p.getClientId());
                 if (oldSubscription != null) {
-                    log.info("Found subscription: {}", oldSubscription.getId());
-                    oldSubscription.updateRange();
+                    log.debug("Found subscription: {}", oldSubscription.getId());
                     oldSubscription.publishDataFluxIntoSubscription(fetchOldCards(oldSubscription, p.getPublishFrom(),p.getRangeStart(), p.getRangeEnd()));
                 } else {
-                    log.info("No subscription found for {}#{}", p.getCurrentUserWithPerimeters().getUserData().getLogin(), p.getClientId());
+                    log.debug("No subscription found for {}#{}", p.getCurrentUserWithPerimeters().getUserData().getLogin(), p.getClientId());
                 }
-                return CardSubscriptionDto.builder().rangeStart(p.getRangeStart()).rangeEnd(p.getRangeEnd()).build();
+                return CardSubscriptionDto.builder().publishFrom(p.getPublishFrom()).rangeStart(p.getRangeStart()).rangeEnd(p.getRangeEnd()).build();
             } catch (IllegalArgumentException e) {
                 log.error("Error searching for old subscription", e);
                 throw new ApiErrorException(
@@ -108,7 +107,7 @@ public class CardOperationsController {
      * @return
      */
     private Flux<String> fetchOldCards(CardSubscription subscription,Instant publishFrom,Instant start,Instant end)  {
-        subscription.updateCurrentUserWithPerimeters();
+        
         return fetchOldCards0(publishFrom, start, end, subscription.getCurrentUserWithPerimeters());
     }
 

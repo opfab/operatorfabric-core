@@ -74,7 +74,9 @@ public class CardPublicationData implements Card {
     private String summaryTranslated;
 
     @CreatedDate
+    @Indexed
     private Instant publishDate;
+
     private Instant lttd;
     
     @Indexed

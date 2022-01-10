@@ -58,6 +58,25 @@ function loadData() {
             responses += templateGateway.getDisplayContext();
             responses += '</span></div>';
 
+            responses += '<div> getAllEntities() : <span id="templateGateway-getAllEntities">';
+            templateGateway.getAllEntities().forEach((entity, i) => {
+                responses += '<br>entity[' + i + ']:' + 'id=' + entity.id + ',';
+                responses += 'name=' + entity.name + ',';
+                responses += 'description=' + entity.description + ',';
+                responses += 'entityAllowedToSendCard=' + entity.entityAllowedToSendCard + ',';
+                responses += 'parents=' + entity.parents;
+                }
+              );
+            responses += '</span></div>';
+
+            responses += '<div> getEntity("ENTITY1") : <span id="templateGateway-getEntity-ENTITY1">';
+            responses += templateGateway.getEntity('ENTITY1').id + ',';
+            responses += templateGateway.getEntity('ENTITY1').name + ',';
+            responses += templateGateway.getEntity('ENTITY1').description + ',';
+            responses += templateGateway.getEntity('ENTITY1').entityAllowedToSendCard + ',';
+            responses += templateGateway.getEntity('ENTITY1').parents;
+            responses += '</span></div>';
+
             templateGatewayResults.innerHTML = responses;
 }
 

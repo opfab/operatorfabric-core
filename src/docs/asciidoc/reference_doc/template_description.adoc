@@ -571,3 +571,21 @@ include::../../../test/resources/bundles/defaultProcess_V1/template/chart.handle
 ----
 
 This can be useful to pass context from the card to the business application.
+
+=== Get list of all entities
+
+To have the list of all entities in OperatorFabric, you can call the javascript function _templateGateway.getAllEntities()_.
+The function returns an array of entity object :
+
+Entity object has the following fields :
+
+- 'id' : id of the entity
+- 'name' : name of the entity
+- 'description' : description of the entity
+- 'entityAllowedToSendCard' : boolean indicating whether the entity is allowed to send card or not
+- 'parents' : list of parent entities
+
+=== Get information about an entity
+
+To have information about an entity in particular, you can call the javascript function _templateGateway.getEntity(entityId)_.
+The function returns an entity object whose fields are mentioned above.

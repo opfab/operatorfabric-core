@@ -51,8 +51,12 @@ describe('Card detail', function () {
             cy.get("#templateGateway-isUserMemberOfAnEntityRequiredToRespond").contains("true");
             cy.get("#templateGateway-getEntityUsedForUserResponse").contains(/^ENTITY1$/);
             cy.get("#templateGateway-getDisplayContext").contains(/^realtime$/);
-            
-            
+            cy.get("#templateGateway-getAllEntities").contains("entity[0]:id=ENTITY1,name=Control Room 1,description=Control Room 1,entityAllowedToSendCard=true,parents=ALLCONTROLROOMS");
+            cy.get("#templateGateway-getAllEntities").contains("entity[1]:id=ENTITY2,name=Control Room 2,description=Control Room 2,entityAllowedToSendCard=true,parents=ALLCONTROLROOMS");
+            cy.get("#templateGateway-getAllEntities").contains("entity[2]:id=ENTITY3,name=Control Room 3,description=Control Room 3,entityAllowedToSendCard=true,parents=ALLCONTROLROOMS");
+            cy.get("#templateGateway-getAllEntities").contains("entity[3]:id=ALLCONTROLROOMS,name=All Control Rooms,description=All Control Rooms,entityAllowedToSendCard=false,parents=");
+            cy.get("#templateGateway-getAllEntities").contains("entity[4]:id=ENTITY4,name=IT Supervision Center,description=IT Supervision Center,entityAllowedToSendCard=true,parents=");
+            cy.get("#templateGateway-getEntity-ENTITY1").contains(/^ENTITY1,Control Room 1,Control Room 1,true,ALLCONTROLROOMS$/);
         
             cy.get("#screenSize").contains("md");
             // see card in full screen 

@@ -25,7 +25,7 @@ export enum AuthenticationActionTypes {
     , UselessAuthAction = '[Authentication] Test purpose action'
     , ImplicitlyAuthenticated = '[Authentication] User is authentication using Implicit Flow'
     , UnAuthenticationFromImplicitFlow = '[Authentication] User is log out by implicit Flow internal management'
-    , UnableToRefreshOrGetToken = '[Authentication] The token can not be refresh or we cannot get a token'
+    , SessionExpired = '[Authentication] The token can not be refresh or is expired'
 }
 
 /**
@@ -143,9 +143,9 @@ export class UnAuthenticationFromImplicitFlow implements Action {
     readonly type = AuthenticationActionTypes.UnAuthenticationFromImplicitFlow;
 }
 
-export class UnableToRefreshOrGetToken implements Action {
+export class SessionExpired implements Action {
     /* istanbul ignore next */
-    readonly type = AuthenticationActionTypes.UnableToRefreshOrGetToken;
+    readonly type = AuthenticationActionTypes.SessionExpired;
 
 }
 
@@ -162,4 +162,4 @@ export type AuthenticationActions =
     | UselessAuthAction
     | ImplicitlyAuthenticated
     | UnAuthenticationFromImplicitFlow
-    | UnableToRefreshOrGetToken;
+    | SessionExpired;

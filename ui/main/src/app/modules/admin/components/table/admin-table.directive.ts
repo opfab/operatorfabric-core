@@ -24,19 +24,27 @@ import {takeUntil} from 'rxjs/operators';
 import {StateRightsCellRendererComponent} from '../cell-renderers/state-rights-cell-renderer.component';
 import {ProcessesService} from "@ofServices/processes.service";
 import {Process} from "@ofModel/processes.model";
+import {GroupsService} from "@ofServices/groups.service";
+import {Group} from "@ofModel/group.model";
+import {Entity} from "@ofModel/entity.model";
+import {EntitiesService} from "@ofServices/entities.service";
 
 @Directive()
 @Injectable()
 export abstract class AdminTableDirective implements OnInit, OnDestroy {
 
   processesDefinition: Process[];
+  groupsDefinition: Group[];
+  entitiesDefinition: Entity[];
 
   constructor(
       protected translateService: TranslateService,
       protected confirmationDialogService: ConfirmationDialogService,
       protected modalService: NgbModal,
       protected dataHandlingService: SharingService,
-      private processesService: ProcessesService) {
+      private processesService: ProcessesService,
+      private groupsService: GroupsService,
+      private entitiesService: EntitiesService) {
 
     this.processesDefinition = this.processesService.getAllProcesses();
     this.gridOptions = <GridOptions>{
@@ -71,6 +79,70 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
           autoHeight: true,
           flex: 4,
         },
+        'groupsColumn': {
+          sortable: true,
+          filter: "agTextColumnFilter",
+          filterParams: {
+            valueGetter: params => {
+              let text = '';
+              params.data.groups.forEach(group => {
+                text += (this.groupsDefinition.filter(groupDefinition => group === groupDefinition.id)
+                    .map(groupDefinition => groupDefinition.name) + ' ');
+                });
+              return text;
+            }
+          },
+          wrapText: true,
+          autoHeight: true,
+          flex: 4,
+        },
+        'entitiesColumn': {
+          sortable: true,
+          filter: "agTextColumnFilter",
+          filterParams: {
+            valueGetter: params => {
+              let text = '';
+              params.data.entities.forEach(entity => {
+                text += (this.entitiesDefinition.filter(entityDefinition => entity === entityDefinition.id)
+                    .map(entityDefinition => entityDefinition.name) + ' ');
+              });
+              return text;
+            }
+          },
+          wrapText: true,
+          autoHeight: true,
+          flex: 4,
+        },
+        'entityAllowedToSendCardColumn': {
+          sortable: true,
+          filter: "agTextColumnFilter",
+          filterParams: {
+            valueGetter: params => {
+              return params.data.entityAllowedToSendCard ? this.translateService.instant('admin.input.entity.true')
+                  : this.translateService.instant('admin.input.entity.false');
+            }
+          },
+          wrapText: true,
+          autoHeight: true,
+          flex: 4,
+        },
+        'parentsColumn': {
+          sortable: true,
+          filter: "agTextColumnFilter",
+          filterParams: {
+            valueGetter: params => {
+              let text = '';
+              params.data.parents.forEach(parent => {
+                text += (this.entitiesDefinition.filter(entityDefinition => parent === entityDefinition.id)
+                    .map(entityDefinition => entityDefinition.name) + ' ');
+              });
+              return text;
+            }
+          },
+          wrapText: true,
+          autoHeight: true,
+          flex: 4,
+        },
         'stateRightsColumn': {
           sortable: false,
           filter: "agTextColumnFilter",
@@ -98,6 +170,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
       headerHeight: 70,
       suppressPaginationPanel: true,
       suppressHorizontalScroll: true,
+      popupParent: document.querySelector("body")
     };
     // Defining a custom cellRenderer was necessary (instead of using onCellClicked & an inline cellRenderer) because of
     // the need to call a method from the parent component
@@ -144,6 +217,11 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     return this.translateService.instant(this.i18NPrefix + headerIdentifier);
   }
 
+  onFilterChanged(event) {
+    this.page = 1;
+    this.gridApi.paginationGoToPage(0);
+  }
+
   onGridReady(params) {
     this.gridApi = params.api;
     // Column definitions can't be managed in the constructor like the other grid options because they rely on the `fields`
@@ -155,6 +233,8 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         .subscribe(pageSize => {
           this.gridApi.paginationSetPageSize(pageSize);
         });
+    this.groupsDefinition = this.groupsService.getGroups();
+    this.entitiesDefinition = this.entitiesService.getEntities();
   }
 
   /** This function generates the ag-grid `ColumnDefs` for the grid from a list of fields
@@ -177,8 +257,20 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         field: field.name
       };
 
-      if (field.name === 'stateRights')
+      if ((this.tableType === AdminItemType.USER) && field.name === 'groups')
+        columnDef.type = 'groupsColumn';
+
+      if ((this.tableType === AdminItemType.USER) && (field.name === 'entities'))
+        columnDef.type = 'entitiesColumn';
+
+      if ((this.tableType === AdminItemType.PERIMETER) && (field.name === 'stateRights'))
         columnDef.type = 'stateRightsColumn';
+
+      if ((this.tableType === AdminItemType.ENTITY) && (field.name === 'entityAllowedToSendCard'))
+        columnDef.type = 'entityAllowedToSendCardColumn';
+
+      if ((this.tableType === AdminItemType.ENTITY) && (field.name === 'parents'))
+        columnDef.type = 'parentsColumn';
 
       if (!!field.flex) columnDef['flex'] = field.flex;
       if (!!field.cellRendererName) columnDef['cellRenderer'] = field.cellRendererName;

@@ -1,0 +1,43 @@
+server:
+  port: 2105
+spring:
+  application:
+    name: external-devices
+operatorfabric:
+  externaldevices:
+    watchdog:
+      enabled: true
+    default:
+      deviceConfigurations:
+        - id: CDS_1
+          host: localhost
+          port: 4030
+          signalMappingId: default_CDS_mapping
+        - id: CDS_2
+          host: localhost
+          port: 4030
+          signalMappingId: broken_CDS_mapping
+      signalMappings:
+        - id: default_CDS_mapping
+          supportedSignals:
+            ALARM: 1
+            ACTION: 2
+            COMPLIANT: 3
+            INFORMATION: 4
+        - id: broken_CDS_mapping
+          supportedSignals:
+            ALARM: 5
+            ACTION: 6
+            COMPLIANT: 7
+            INFORMATION: 8
+      userConfigurations:
+        - userLogin: operator1
+          externalDeviceId: CDS_1
+        - userLogin: operator2
+          externalDeviceId: CDS_2
+        - userLogin: operator3
+          externalDeviceId: CDS_3
+logging.level.org.opfab: debug
+
+
+

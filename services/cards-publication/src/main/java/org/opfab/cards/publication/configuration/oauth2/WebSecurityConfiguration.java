@@ -37,7 +37,10 @@ import org.springframework.security.oauth2.jwt.Jwt;
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     public static final String PROMETHEUS_PATH ="/actuator/prometheus**";
-    
+    public static final String LOGGERS_PATH ="/actuator/loggers/**";
+
+    public static final String ADMIN_ROLE = "ADMIN";
+
     public static final String AUTH_AND_IP_ALLOWED = "isAuthenticated() and @webSecurityChecks.checkUserIpAddress(authentication)";
     public static final String ADMIN_AND_IP_ALLOWED = "hasRole('ADMIN') and @webSecurityChecks.checkUserIpAddress(authentication)";
 
@@ -65,6 +68,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             http
             .authorizeRequests()
             .antMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll() 
+            .antMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
             .antMatchers("/cards/userCard/**").access(AUTH_AND_IP_ALLOWED)
             .antMatchers("/cards/translateCardField").access(AUTH_AND_IP_ALLOWED)
             .antMatchers(HttpMethod.DELETE, "/cards").access(ADMIN_AND_IP_ALLOWED)
@@ -72,6 +76,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         } else {
             http
             .authorizeRequests()
+            .antMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
             .antMatchers("/cards/userCard/**").access(AUTH_AND_IP_ALLOWED)
             .antMatchers("/cards/translateCardField").access(AUTH_AND_IP_ALLOWED)
             .antMatchers("/**").permitAll();

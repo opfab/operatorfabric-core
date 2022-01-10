@@ -44,14 +44,14 @@ describe ('Response card tests',function () {
 
         // Response button is present 
         cy.get('#opfab-card-details-btn-response');
-        cy.get('#opfab-card-details-btn-response').should('have.text', 'SEND IMPACT');
+        cy.get('#opfab-card-details-btn-response').should('have.text', 'SEND RESPONSE');
             
         // Respond to the card 
         cy.get('#question-choice1').click();
         cy.get('#opfab-card-details-btn-response').click();
 
-        // The label of the validate button must be "MODIFY IMPACT" now
-        cy.get('#opfab-card-details-btn-response').should('have.text', 'MODIFY IMPACT');
+        // The label of the validate button must be "MODIFY RESPONSE" now
+        cy.get('#opfab-card-details-btn-response').should('have.text', 'MODIFY RESPONSE');
 
         // See in the feed the fact that user has respond (icon)
         cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity');
@@ -71,7 +71,7 @@ describe ('Response card tests',function () {
 
          // Respond  to the new card 
          cy.get('#question-choice3').click();
-         cy.get('#opfab-card-details-btn-response').should('have.text', 'SEND IMPACT');
+         cy.get('#opfab-card-details-btn-response').should('have.text', 'SEND RESPONSE');
          cy.get('#opfab-card-details-btn-response').click();
          
         // See in the feed the fact that user has respond (icon)

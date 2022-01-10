@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -23,7 +23,7 @@
 
 
     <div class="opfab-reconnecting" *ngIf="connectionLostForMoreThanTenSeconds&& loaded">
-        <div class="opfab-connecting-spinner">
+        <div id="opfab-connecting-spinner" class="opfab-connecting-spinner">
         <em  class="fas fa-spinner fa-spin opfab-slow-spinner" ></em>
         </div>
         <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>
@@ -51,6 +51,16 @@
     <p translate> global.activateSoundText </p>
     <button id="opfab-actviate-sound" type="button" class="opfab-btn"
       (click)="closeModal()" translate> global.activateSoundButton</button>
+
+  </div>
+</ng-template>
+
+
+<ng-template #sessionEnd let-modal>
+  <div class="modal-body text-center">
+    <p translate> global.sessionExpiredText </p>
+    <button id="opfab-sessionEnd" type="button" class="opfab-btn"
+      (click)="logout()" translate> button.ok</button>
 
   </div>
 </ng-template>

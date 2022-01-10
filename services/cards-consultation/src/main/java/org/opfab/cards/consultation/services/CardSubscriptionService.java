@@ -10,74 +10,39 @@
 package org.opfab.cards.consultation.services;
 
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.parser.JSONParser;
+
 import org.opfab.springtools.configuration.oauth.UserServiceCache;
 import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.springframework.amqp.core.AmqpAdmin;
-import org.springframework.amqp.core.FanoutExchange;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
-
 import java.util.Collection;
-import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ScheduledFuture;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.ParseException;
 
-/**
- * <p>Centralize request for generating {@link CardSubscription} and deleting them.</p>
- *
- * <p>Uses a {@link ThreadPoolTaskScheduler} delay definitive deletion of subscription (defaults to 10s)</p>
- *
- *
- */
 @Service
 @Slf4j
 public class CardSubscriptionService {
 
-    private final ThreadPoolTaskScheduler taskScheduler;
-    private final FanoutExchange cardExchange;
-    private final FanoutExchange processExchange;
-    private final FanoutExchange userExchange;
-    private final AmqpAdmin amqpAdmin;
-    private final long deletionDelay;
+
+    private static final String ERROR_MESSAGE_PARSING = "ERROR during received message parsing";
     private final long heartbeatDelay;
-    private final ConnectionFactory connectionFactory;
     private Map<String, CardSubscription> cache = new ConcurrentHashMap<>();
-    private Map<String, ScheduledFuture<?>> pendingEvict = new ConcurrentHashMap<>();
 
     @Autowired
     protected UserServiceCache userServiceCache;
 
-    @Value("${operatorfabric.amqp.connectionRetries:10}")
-    private int retries;
-
-    @Value("${operatorfabric.amqp.connectionRetryInterval:5000}")
-    private long retryInterval;
-
-
     @Autowired
-    public CardSubscriptionService(ThreadPoolTaskScheduler taskScheduler,
-                                   FanoutExchange cardExchange,
-                                   FanoutExchange processExchange,
-                                   FanoutExchange userExchange,
-                                   ConnectionFactory connectionFactory,
-                                   AmqpAdmin amqpAdmin,
-                                   @Value("${operatorfabric.subscriptiondeletion.delay:10000}")
-                                   long deletionDelay,
+    public CardSubscriptionService(
                                    @Value("${operatorfabric.heartbeat.delay:10000}")
                                    long heartbeatDelay) {
-        this.cardExchange = cardExchange;
-        this.processExchange = processExchange;
-        this.userExchange = userExchange;
-        this.taskScheduler = taskScheduler;
-        this.amqpAdmin = amqpAdmin;
-        this.connectionFactory = connectionFactory;
-        this.deletionDelay = deletionDelay;
+
         this.heartbeatDelay = heartbeatDelay;
         Thread heartbeat = new Thread(){
+            @Override
             public void run(){
                 sendHeartbeatMessageInAllSubscriptions();
             }
@@ -103,116 +68,42 @@ public class CardSubscriptionService {
                 }
             log.debug("Send heartbeat to all subscription");
             cache.keySet().forEach(key -> {
-                log.debug("Send heartbeat to {}",key);
-                sendHeartbeat(cache.get(key));
+                CardSubscription sub = cache.get(key); 
+                if (sub!=null) // subscription can be null if it has been evict during the process of going throw the keys 
+                {
+                        log.debug("Send heartbeat to {}",key);
+                        sub.publishDataIntoSubscription("HEARTBEAT");
+                }
             });
 
         }
     }
 
-    private void sendHeartbeat(CardSubscription subscription)
-    {
-        if (subscription!=null) subscription.publishDataIntoSubscription("HEARTBEAT");
-    }
+ 
+    public CardSubscription subscribe( CurrentUserWithPerimeters currentUserWithPerimeters,String clientId) {
 
-    /**
-     * <p>Generates a {@link CardSubscription} or retrieve it from a local {@link CardSubscription} cache.</p>
-     * <p>If it finds a {@link CardSubscription} from cache, it will try to cancel possible scheduled evict</p>
-     */
-    public synchronized CardSubscription subscribe(
-            CurrentUserWithPerimeters currentUserWithPerimeters,
-            String clientId) {
-        String subId = CardSubscription.computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin(), clientId);
-        CardSubscription cardSubscription = cache.get(subId);
-        // The builder may seem declare a bit to early but it allows usage in both branch of the later condition
+        String subId = CardSubscription.computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin(),clientId);
         CardSubscription.CardSubscriptionBuilder cardSubscriptionBuilder = CardSubscription.builder()
-           .currentUserWithPerimeters(currentUserWithPerimeters)
-           .clientId(clientId)
-           .amqpAdmin(amqpAdmin)
-           .cardExchange(this.cardExchange)
-           .processExchange(this.processExchange)
-           .userExchange(this.userExchange)
-           .connectionFactory(this.connectionFactory);
-        if (cardSubscription == null) {
-            cardSubscription = buildSubscription(subId, cardSubscriptionBuilder);
-        } else {
-            if (!cancelEviction(subId)) {
-                cardSubscription = cache.get(subId);
-                if (cardSubscription == null) {
-                    cardSubscription = buildSubscription(subId, cardSubscriptionBuilder);
-                }
-            }
-        }
-        return cardSubscription;
-    }
-
-    private CardSubscription buildSubscription(String subId, CardSubscription.CardSubscriptionBuilder cardSubscriptionBuilder) {
+                .currentUserWithPerimeters(currentUserWithPerimeters)
+                .clientId(clientId);
         CardSubscription cardSubscription;
         cardSubscription = cardSubscriptionBuilder.build();
-        cardSubscription.initSubscription(retries, retryInterval, () -> scheduleEviction(subId));
+        cardSubscription.initSubscription(() -> evictSubscription(subId));
         cache.put(subId, cardSubscription);
-        log.debug("Subscription created with id {}", cardSubscription.getId());
+        log.info("Subscription created with id {} for user {} ", cardSubscription.getId(), cardSubscription.getUserLogin());
         cardSubscription.userServiceCache = this.userServiceCache;
         return cardSubscription;
     }
 
-    /**
-     * Schedule deletion of subscription in deletionDelay millis
-     *
-     * @param subId
-     *    Subscription computed id
-     */
-    public void scheduleEviction(String subId) {
-        if (!pendingEvict.containsKey(subId)) {
-            ScheduledFuture<?> scheduled = taskScheduler.schedule(createEvictTask(subId),
-               new Date(System.currentTimeMillis() + deletionDelay));
-            pendingEvict.put(subId, scheduled);
-            log.debug("Eviction scheduled for id {}", subId);
+    public void evictSubscription(String subId) {
+        
+        CardSubscription sub = cache.get(subId);
+        if (sub==null) {
+            log.info("Subscription with id {} already evicted , as it is not existing anymore ", subId);
+            return;
         }
-    }
-
-    /**
-     * Cancel scheduled evict if any
-     *
-     * @param subId
-     *    subscription auto-generated id
-     * @return true if eviction was successfully cancelled, false may indicate that either no cancellation was
-     * possible or no eviction was previously scheduled
-     */
-    public synchronized boolean cancelEviction(String subId) {
-        ScheduledFuture<?> scheduled = pendingEvict.get(subId);
-        if (scheduled != null) {
-            boolean canceled = scheduled.cancel(false);
-            pendingEvict.remove(subId);
-            log.debug("Eviction canceled with id {}", subId);
-            return canceled;
-        }
-        return false;
-    }
-
-    /**
-     * Evict subscription definitively
-     *
-     * @param subId subscription unique id
-     *    subscription autogenerated id
-     */
-    public synchronized void evict(String subId) {
-        log.debug("Trying to evict subscription with id {}", subId);
-        cache.get(subId).clearSubscription();
-        cache.remove(subId);
-        pendingEvict.remove(subId);
-        log.debug("Subscription with id {} evicted ", subId);
-    }
-
-    /**
-     * Create a runnable to to launch {@link #evict(String)}
-     *
-     * @param subId
-     *    subscription autogenerated id
-     * @return the generated task
-     */
-    private Runnable createEvictTask(String subId) {
-        return () -> evict(subId);
+        cache.remove(subId); 
+        log.info("Subscription with id {} evicted (user {})", subId , sub.getUserLogin());
     }
 
     /**
@@ -231,14 +122,58 @@ public class CardSubscriptionService {
         return cache.get(subId);
     }
 
+    // only use for testing purpose
     public void clearSubscriptions() {
-        this.cache.forEach((k,v)->v.clearSubscription());
         this.cache.clear();
-        this.pendingEvict.clear();
     }
 
-    public Collection<CardSubscription> getSubscriptions()
-    {
+    public Collection<CardSubscription> getSubscriptions() {
         return cache.values();
     }
+
+
+    public void onMessage(String queueName, String message) {
+
+        log.debug("receive from rabbit queue {} message {}",queueName,message);
+        switch (queueName) {
+            case "process":
+                cache.values().forEach(subscription -> subscription.publishDataIntoSubscription(message));
+                break;
+            case "user":
+                cache.values().forEach(subscription -> {
+                            if (message.equals(subscription.getUserLogin()))
+                                subscription.publishDataIntoSubscription("USER_CONFIG_CHANGE");
+                        });
+                break;
+            case "card":
+                cache.values().forEach(subscription ->  processNewCard(message,subscription));
+                break;
+            default:
+                log.info("unrecognized queue {}" , queueName);
+        }
+    }
+
+    private void processNewCard(String cardAsString, CardSubscription subscription) {
+        JSONObject card;
+        try {
+            card = (JSONObject) (new JSONParser(JSONParser.MODE_PERMISSIVE)).parse(cardAsString);
+        } catch (ParseException e) {
+            log.error(ERROR_MESSAGE_PARSING, e);
+            return;
+        }
+
+        if (CardRoutingUtilities.checkIfUserMustReceiveTheCard(card,
+                subscription.getCurrentUserWithPerimeters())) {
+            subscription.publishDataIntoSubscription(cardAsString);
+        }
+        // In case of ADD or UPDATE, we send a delete card operation (to delete the card
+        // from the feed, more information in OC-297)
+        else {
+            String deleteMessage = CardRoutingUtilities.createDeleteCardMessageForUserNotRecipient(card,
+                    subscription.getUserLogin());
+            if (!deleteMessage.isEmpty())
+                subscription.publishDataIntoSubscription(deleteMessage);
+        }
+    }
+
 }

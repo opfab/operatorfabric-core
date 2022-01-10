@@ -1,4 +1,4 @@
-Feature: Device Configuration Management
+Feature: Device Configuration Management (Create)
 
   Background:
     # Get admin token
@@ -11,7 +11,7 @@ Feature: Device Configuration Management
 
     * def deviceConfigEndpoint = 'externaldevices/configurations/devices'
 
-  Scenario: Create device with correct configuration
+  Scenario: Create deviceConfiguration with correct configuration
 
   * def configuration = read("resources/deviceConfigurations/CDS_5.json")
 
@@ -22,7 +22,7 @@ Feature: Device Configuration Management
     When method post
     Then status 201
 
-  Scenario: Create device with correct configuration but duplicate id
+  Scenario: Create deviceConfiguration with correct configuration but duplicate id
 
     * def configuration = read("resources/deviceConfigurations/duplicate_CDS_5.json")
 
@@ -33,7 +33,7 @@ Feature: Device Configuration Management
     When method post
     Then status 400
 
-  Scenario: Create device with incorrect configuration
+  Scenario: Create deviceConfiguration with incorrect configuration
 
   * def configuration = read("resources/deviceConfigurations/broken_config.json")
 
@@ -44,7 +44,7 @@ Feature: Device Configuration Management
     When method post
     Then status 400
 
-  Scenario: Create device without authentication
+  Scenario: Create deviceConfiguration without authentication
 
   * def configuration = read("resources/deviceConfigurations/CDS_5.json")
 
@@ -54,8 +54,7 @@ Feature: Device Configuration Management
     When method post
     Then status 401
 
-
-  Scenario: Create device without admin role
+  Scenario: Create deviceConfiguration without admin role
 
   * def configuration = read("resources/deviceConfigurations/CDS_5.json")
 
@@ -65,6 +64,5 @@ Feature: Device Configuration Management
     And request configuration
     When method post
     Then status 403
-
 
 

@@ -80,6 +80,7 @@ export class TimelineButtonsComponent implements OnInit {
             }, TR: {
                 buttonTitle: 'timeline.buttonTitle.TR',
                 domainId : 'TR',
+                followClockTick: true
             }, '7D': {
                 buttonTitle: 'timeline.buttonTitle.7D',
                 domainId:'7D',

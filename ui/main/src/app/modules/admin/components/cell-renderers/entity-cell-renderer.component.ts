@@ -23,4 +23,8 @@ export class EntityCellRendererComponent extends ArrayCellRendererComponent {
      * */
 
     itemType = AdminItemType.ENTITY;
+
+    agInit(params: any): void {
+        super.agInit(params);
+    }
 }

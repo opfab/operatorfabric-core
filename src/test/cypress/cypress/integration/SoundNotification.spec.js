@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,19 +12,6 @@ describe('Sound notification test', function () {
 
   const user = 'operator1';
 
-  const openSettings = function () {
-    cy.get('#opfab-navbar-drop_user_menu').click();
-    cy.get("#opfab-navbar-right-menu-settings").click({force: true});
-  }
-
-  // Stub playSound method to catch when opfab send a sound 
-  const stubPlaySound = function () {
-    cy.window()
-      .its('soundNotificationService')
-      .then((soundNotificationService) => {
-        cy.stub(soundNotificationService, 'playSound').as('playSound')
-      })
-  }
 
   before('Reset UI configuration file ', function () {
     //cy.loadTestConf(); Avoid to launch it as it is time consuming 
@@ -36,8 +23,8 @@ describe('Sound notification test', function () {
   describe('Checking sound when receiving notification ', function () {
     it('Sound when receiving card   ', () => {
       cy.loginOpFab(user, 'test');
-      stubPlaySound();
-      openSettings();
+      cy.stubPlaySound();
+      cy.openOpfabSettings();
 
       // set severity alarm to be notified by sound
       cy.get('#opfab-checkbox-setting-form-alarm').click();
@@ -59,7 +46,7 @@ describe('Sound notification test', function () {
       // no new sound 
       cy.get('@playSound').its('callCount').should('eq', 1);
 
-      openSettings();
+      cy.openOpfabSettings();
 
       // set severity alarm to NOT be notified by sound 
       cy.get('#opfab-checkbox-setting-form-alarm').click();
@@ -73,7 +60,7 @@ describe('Sound notification test', function () {
       // No new sound 
       cy.get('@playSound').its('callCount').should('eq', 1);
 
-      openSettings();
+      cy.openOpfabSettings();
 
       // set severity action to be notified by sound
       cy.get('#opfab-checkbox-setting-form-action').click();
@@ -88,7 +75,7 @@ describe('Sound notification test', function () {
       // New sound 
       cy.get('@playSound').its('callCount').should('eq', 2);
 
-      openSettings();
+      cy.openOpfabSettings();
 
       // set severity information  to be notified by sound
       cy.get('#opfab-checkbox-setting-form-information').click();
@@ -108,10 +95,10 @@ describe('Sound notification test', function () {
     it('Repeating sound when receiving card with default repeating interval   ', () => {
       cy.delete6TestCards();
       cy.loginOpFab(user, 'test');
-      stubPlaySound();
+      cy.stubPlaySound();
 
       // Activate repeating sound (no need to click the checkbox because it is already checked, because of the default value set to true in web-ui.json)
-      openSettings();
+      cy.openOpfabSettings();
       cy.waitDefaultTime();
 
       // Open the feed and send card 
@@ -149,10 +136,10 @@ describe('Sound notification test', function () {
     it('Repeating sound when receiving card  with  custom repeating interval ', () => {
       cy.delete6TestCards();
       cy.loginOpFab(user, 'test');
-      stubPlaySound();
+      cy.stubPlaySound();
 
       // Set repeating interval to 20 seconds
-      openSettings();
+      cy.openOpfabSettings();
       cy.get('#opfab-setting-replayInterval').clear();
       cy.get('#opfab-setting-replayInterval').type('20');
       cy.waitDefaultTime();

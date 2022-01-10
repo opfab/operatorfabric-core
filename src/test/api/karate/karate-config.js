@@ -17,7 +17,9 @@ function() {
       opfabUserUrl: opfab_server +":2103/",
       opfabBusinessConfigUrl: opfab_server +":2100/",
       opfabCardsConsultationUrl: opfab_server +":2104/",
-      opfabCardsPublicationUrl: opfab_server +":2102/"
+      opfabCardsPublicationUrl: opfab_server +":2102/",
+      opfabExternalDevicesUrl: opfab_server +":2105/"
+
     };
 
     karate.logger.debug('url opfab :' + config.opfabUrl );
