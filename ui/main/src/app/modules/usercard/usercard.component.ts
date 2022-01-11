@@ -446,14 +446,14 @@ export class UserCardComponent implements OnDestroy, OnInit {
         } else this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
 
         if (!!userCard) {
-        this.severityVisible = (userCard.severityVisible === undefined) ? true : userCard.severityVisible;
-        this.startDateVisible = (userCard.startDateVisible === undefined) ? true : userCard.startDateVisible;
-        this.endDateVisible = (userCard.endDateVisible === undefined) ? true : userCard.endDateVisible;
-        this.lttdVisible = (userCard.lttdVisible === undefined) ? true : userCard.lttdVisible;
-        this.recipientVisible = (userCard.recipientVisible === undefined) ? true : userCard.recipientVisible;
-        if (!!userCard.recipientList) {
-            this.loadRecipientListForState(userCard.recipientList);
-        }
+            this.severityVisible = (userCard.severityVisible === undefined) ? true : userCard.severityVisible;
+            this.startDateVisible = (userCard.startDateVisible === undefined) ? true : userCard.startDateVisible;
+            this.endDateVisible = (userCard.endDateVisible === undefined) ? true : userCard.endDateVisible;
+            this.lttdVisible = (userCard.lttdVisible === undefined) ? true : userCard.lttdVisible;
+            this.recipientVisible = (userCard.recipientVisible === undefined) ? true : userCard.recipientVisible;
+            if (!!userCard.recipientList) {
+                this.loadRecipientListForState(userCard.recipientList);
+            }
         } else {
             this.severityVisible = true;
             this.startDateVisible = true;
@@ -548,11 +548,17 @@ export class UserCardComponent implements OnDestroy, OnInit {
         const recipients = [];
         selectedRecipients.forEach(entity => recipients.push(entity.id));
 
-        const entitiesAllowedToRespond = [];
+
+        // load entitiesAllowedToRespond and entitiesRequiredToRespond if the card asks a a response
+        let entitiesAllowedToRespond = [];
+        let entitiesRequiredToRespond = [];
         if (selectedProcess.states[state].response) {
-            recipients.forEach(entity => {
-                entitiesAllowedToRespond.push(entity);
-            });
+
+            let defaultEntityAllowedToRespond = [];
+            recipients.forEach(entity =>  defaultEntityAllowedToRespond.push(entity));
+
+            entitiesAllowedToRespond = (!!specificInformation.card.entitiesAllowedToRespond) ? specificInformation.card.entitiesAllowedToRespond : defaultEntityAllowedToRespond;
+            entitiesRequiredToRespond = (!!specificInformation.card.entitiesRequiredToRespond) ? specificInformation.card.entitiesRequiredToRespond : [];
         }
 
         let startDate = this.messageForm.get('startDate').value;
@@ -632,6 +638,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
                     userRecipients : [this.currentUserWithPerimeters.userData.login],
                     entityRecipients: recipients,
                     entitiesAllowedToRespond: entitiesAllowedToRespond,
+                    entitiesRequiredToRespond: entitiesRequiredToRespond,
                     entitiesAllowedToEdit: entitiesAllowedToEdit,
                     externalRecipients: externalRecipients,
                     title: title,
