@@ -2,9 +2,9 @@ Feature: fetchArchive
 
   Background:
 
-    * def signIn = callonce read('../common/getToken.feature') { username: 'operator1'}
+    * def signIn = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authToken = signIn.authToken
-    * def signInTSO2 = callonce read('../common/getToken.feature') { username: 'operator2'}
+    * def signInTSO2 = callonce read('../common/getToken.feature') { username: 'operator2_fr'}
     * def authTokenTSO2 = signInTSO2.authToken
     * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authTokenAdmin = signInAdmin.authToken
@@ -14,7 +14,7 @@ Feature: fetchArchive
     * def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process_archive_1",
@@ -71,7 +71,7 @@ Feature: fetchArchive
     Then status 201
 
 
-#get card with user operator1
+#get card with user operator1_fr
     Given url opfabUrl + 'cards/cards/api_test.process_archive_1'
     And header Authorization = 'Bearer ' + authToken
     When method get
@@ -79,7 +79,7 @@ Feature: fetchArchive
     And match response.card.data.message == 'a message'
     And def cardUid = response.card.uid
 
-#get card form archives with user operator1
+#get card form archives with user operator1_fr
 
     Given url opfabUrl + 'cards/archives/' + cardUid
     And header Authorization = 'Bearer ' + authToken
@@ -97,7 +97,7 @@ Feature: fetchArchive
     Then status 401
 
 
-# get card form archives with user operator2
+# get card form archives with user operator2_fr
 
 
     Given url opfabUrl + 'cards/archives/' + cardUid
@@ -111,7 +111,7 @@ Feature: fetchArchive
         * def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -134,7 +134,7 @@ Feature: fetchArchive
         Then status 201
 
 
-#get card with user operator1
+#get card with user operator1_fr
         Given url opfabUrl + 'cards/cards/api_test.process1'
         And header Authorization = 'Bearer ' + authToken
         When method get

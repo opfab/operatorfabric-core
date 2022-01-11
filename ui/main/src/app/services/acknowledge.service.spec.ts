@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -48,7 +48,7 @@ describe('AcknowledgeService testing ', () => {
         entitiesService.loadAllEntitiesData().subscribe(); // TODO Unsubscribe in aftereach ?
 
         card = getOneRandomCard({process: 'testProcess', processVersion: '1', state: 'testState', entitiesAllowedToRespond: ['ENTITY1']});
-        cardForEntityParent = getOneRandomCard({process: 'testProcess', processVersion: '1', state: 'testState', entitiesAllowedToRespond: ['ALLCONTROLROOMS']});
+        cardForEntityParent = getOneRandomCard({process: 'testProcess', processVersion: '1', state: 'testState', entitiesAllowedToRespond: ['ENTITY_FR']});
         userMemberOfEntity1 = new User('userTest', 'firstName', 'lastName', ['group1'], ['ENTITY1']);
         userMemberOfEntity2 = new User('userTest', 'firstName', 'lastName', ['group1'], ['ENTITY2']);
     });
@@ -210,7 +210,7 @@ describe('AcknowledgeService testing ', () => {
     });
 
     it('acknowledgmentAllowed of the state is OnlyWhenResponseDisabledForUser, ' +
-        'user can respond (user is a member of entity allowed to respond (ALLCONTROLROOMS) and user rights for the state of the response is Write), ' +
+        'user can respond (user is a member of entity allowed to respond (ENTITY_FR) and user rights for the state of the response is Write), ' +
         'isAcknowledgmentAllowed() must return false', () => {
 
         statesList['testState'] = new State(null, null,
@@ -225,7 +225,7 @@ describe('AcknowledgeService testing ', () => {
     });
 
     it('acknowledgmentAllowed of the state is OnlyWhenResponseDisabledForUser, ' +
-        'user cannot respond (user is a member of entity allowed to respond (ALLCONTROLROOMS) but user rights for the state of the response is Receive), ' +
+        'user cannot respond (user is a member of entity allowed to respond (ENTITY_FR) but user rights for the state of the response is Receive), ' +
         'isAcknowledgmentAllowed() must return true', () => {
 
         statesList['testState'] = new State(null, null,

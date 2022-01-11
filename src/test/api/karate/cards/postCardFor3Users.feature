@@ -3,7 +3,7 @@ Feature: Cards
 
 Background: 
 
-  * def signIn = callonce read('../common/getToken.feature') { username: 'operator1'}
+  * def signIn = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
   * def authToken = signIn.authToken
   * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
   * def authTokenAdmin = signInAdmin.authToken
@@ -18,17 +18,17 @@ Scenario: Post Card
       startDate = new Date().valueOf() + 2*60*60*1000;
 
 		var card = {
-				"publisher" : "operator1",
+				"publisher" : "operator1_fr",
 				"processVersion" : "1",
 				"process"  :"api_test",
 				"processInstanceId" : "process3users",
 				"state": "messageState",
-				"userRecipients": ["operator1", "operator2", "admin"],
+				"userRecipients": ["operator1_fr", "operator2_fr", "admin"],
 				"severity" : "INFORMATION",
 				"startDate" : startDate,
 				"summary" : {"key" : "defaultProcess.summary"},
 				"title" : {"key" : "defaultProcess.title"},
-				"data" : {"message":"a message for 3 users (operator1, operator2 and admin)"}
+				"data" : {"message":"a message for 3 users (operator1_fr, operator2_fr and admin)"}
 			}
 	return JSON.stringify(card);
 
@@ -79,21 +79,21 @@ And header Content-Type = 'application/json'
 When method post
 Then status 201
 
-#get card with user operator1
+#get card with user operator1_fr
 Given url opfabUrl + 'cards/cards/api_test.process3users' 
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200
-And match response.card.data.message == 'a message for 3 users (operator1, operator2 and admin)'
+And match response.card.data.message == 'a message for 3 users (operator1_fr, operator2_fr and admin)'
 And def cardUid = response.card.uid
 
 
-#get card from archives with user operator1
+#get card from archives with user operator1_fr
 Given url opfabUrl + 'cards/archives/' + cardUid 
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200
-And match response.data.message == 'a message for 3 users (operator1, operator2 and admin)'
+And match response.data.message == 'a message for 3 users (operator1_fr, operator2_fr and admin)'
 
 #delete perimeter created previously
   Given url opfabUrl + 'users/perimeters/perimeter'

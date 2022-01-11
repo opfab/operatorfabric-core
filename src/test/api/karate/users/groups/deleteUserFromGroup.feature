@@ -1,10 +1,10 @@
 Feature: deleteUserFromGroup
 
   Background:
-   #Getting token for admin and operator1 user calling getToken.feature
+   #Getting token for admin and operator1_fr user calling getToken.feature
     * def signIn = callonce read('../../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = callonce read('../../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
 
@@ -64,7 +64,7 @@ Feature: deleteUserFromGroup
     Then status 200
 
 
-  Scenario: Delete user from a group (with operator1 authentication)
+  Scenario: Delete user from a group (with operator1_fr authentication)
     #Given url opfabUrl + 'users/groups/' + groupDeletedFrom + '/users/' + userToDelete
     Given url opfabUrl + 'users/groups/' + groupKarate2.id  + '/users/' + karate.lowerCase(userKarate2.login)
     And header Authorization = 'Bearer ' + authTokenAsTSO
@@ -80,7 +80,7 @@ Feature: deleteUserFromGroup
 
   Scenario: Delete user from a non-existent group
   #  non-existent group, expected response 404
-    Given def userToDelete = 'operator3'
+    Given def userToDelete = 'operator3_fr'
     Given url opfabUrl + 'users/groups/' + 'groupNonExistent'  + '/users/' + karate.lowerCase(userKarate2.login)
     And header Authorization = 'Bearer ' + authToken
     When method delete

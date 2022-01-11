@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,32 +31,33 @@ describe('Card detail', function () {
 
         it(`Check card detail`, function () {
             
-            cy.loginOpFab('operator1', 'test');
+            cy.loginOpFab('operator1_fr', 'test');
 
             // Click on the card
             cy.get('of-light-card').eq(0).click();
 
             // Check  user context values 
-            cy.get("#userContext-login").contains(/^operator1$/); // use ^ and $ to have a contains exactly 
+            cy.get("#userContext-login").contains(/^operator1_fr$/); // use ^ and $ to have a contains exactly 
             cy.get("#userContext-token").contains('eyJhb');
             cy.get("#userContext-firstName").contains(/^John$/);
             cy.get("#userContext-lastName").contains(/^Doe$/);
             cy.get("#userContext-groups").contains(/^ReadOnly,REALTIME_USERS,Dispatcher$/);
-            cy.get("#userContext-entities").contains(/^ALLCONTROLROOMS,ENTITY1$/);
+            cy.get("#userContext-entities").contains(/^ENTITY_FR,ENTITY1_FR$/);
 
             // Check templateGateway calls
-            cy.get("#templateGateway-getEntityName").contains("Control Room 1");
+            cy.get("#templateGateway-getEntityName").contains("Control Center FR North");
             cy.get("#templateGateway-getEntityName-unknownEntity").contains("unknownEntity");
             cy.get("#templateGateway-isUserAllowedToRespond").contains("true");
             cy.get("#templateGateway-isUserMemberOfAnEntityRequiredToRespond").contains("true");
-            cy.get("#templateGateway-getEntityUsedForUserResponse").contains(/^ENTITY1$/);
+            cy.get("#templateGateway-getEntityUsedForUserResponse").contains(/^ENTITY1_FR$/);
             cy.get("#templateGateway-getDisplayContext").contains(/^realtime$/);
-            cy.get("#templateGateway-getAllEntities").contains("entity[0]:id=ENTITY1,name=Control Room 1,description=Control Room 1,entityAllowedToSendCard=true,parents=ALLCONTROLROOMS");
-            cy.get("#templateGateway-getAllEntities").contains("entity[1]:id=ENTITY2,name=Control Room 2,description=Control Room 2,entityAllowedToSendCard=true,parents=ALLCONTROLROOMS");
-            cy.get("#templateGateway-getAllEntities").contains("entity[2]:id=ENTITY3,name=Control Room 3,description=Control Room 3,entityAllowedToSendCard=true,parents=ALLCONTROLROOMS");
-            cy.get("#templateGateway-getAllEntities").contains("entity[3]:id=ALLCONTROLROOMS,name=All Control Rooms,description=All Control Rooms,entityAllowedToSendCard=false,parents=");
-            cy.get("#templateGateway-getAllEntities").contains("entity[4]:id=ENTITY4,name=IT Supervision Center,description=IT Supervision Center,entityAllowedToSendCard=true,parents=");
-            cy.get("#templateGateway-getEntity-ENTITY1").contains(/^ENTITY1,Control Room 1,Control Room 1,true,ALLCONTROLROOMS$/);
+            cy.get("#templateGateway-getAllEntities").contains("entity[0]:id=ENTITY1_FR,name=Control Center FR North,description=Control Center FR North,entityAllowedToSendCard=true,parents=ENTITY_FR");
+            cy.get("#templateGateway-getAllEntities").contains("entity[1]:id=ENTITY2_FR,name=Control Center FR South,description=Control Center FR South,entityAllowedToSendCard=true,parents=ENTITY_FR");
+            cy.get("#templateGateway-getAllEntities").contains("entity[2]:id=ENTITY3_FR,name=Control Center FR East,description=Control Center FR East,entityAllowedToSendCard=true,parents=ENTITY_FR");
+            cy.get("#templateGateway-getAllEntities").contains("entity[3]:id=ENTITY4_FR,name=Control Center FR West,description=Control Center FR West,entityAllowedToSendCard=true,parents=ENTITY_FR");
+            cy.get("#templateGateway-getAllEntities").contains("entity[4]:id=ENTITY_FR,name=French Control Centers,description=French Control Centers,entityAllowedToSendCard=false,parents=");
+            cy.get("#templateGateway-getAllEntities").contains("entity[5]:id=IT_SUPERVISOR_ENTITY,name=IT SUPERVISION CENTER,description=IT SUPERVISION CENTER,entityAllowedToSendCard=true,parents=");
+            cy.get("#templateGateway-getEntity-ENTITY1_FR").contains(/^ENTITY1_FR,Control Center FR North,Control Center FR North,true,ENTITY_FR$/);
         
             cy.get("#screenSize").contains("md");
             // see card in full screen 
@@ -76,7 +77,7 @@ describe('Card detail', function () {
 
         it(`Check card detail in archives`, function () {
             
-            cy.loginOpFab('operator1', 'test');
+            cy.loginOpFab('operator1_fr', 'test');
 
             // We move to archives screen
             cy.get('#opfab-navbar-menu-archives').click();
@@ -90,15 +91,15 @@ describe('Card detail', function () {
          
 
             // Check  user context values 
-            cy.get("#userContext-login").contains(/^operator1$/); // use ^ and $ to have a contains exactly 
+            cy.get("#userContext-login").contains(/^operator1_fr$/); // use ^ and $ to have a contains exactly 
             cy.get("#userContext-token").contains('eyJhb');
             cy.get("#userContext-firstName").contains(/^John$/);
             cy.get("#userContext-lastName").contains(/^Doe$/);
             cy.get("#userContext-groups").contains(/^ReadOnly,REALTIME_USERS,Dispatcher$/);
-            cy.get("#userContext-entities").contains(/^ALLCONTROLROOMS,ENTITY1$/);
+            cy.get("#userContext-entities").contains(/^ENTITY_FR,ENTITY1_FR$/);
 
             // Check templateGateway calls
-            cy.get("#templateGateway-getEntityName").contains("Control Room 1");
+            cy.get("#templateGateway-getEntityName").contains("Control Center FR North");
             cy.get("#templateGateway-getEntityName-unknownEntity").contains("unknownEntity");
 
             // in archives is isUserAllowedToRespond always return false 
@@ -118,7 +119,7 @@ describe('Card detail', function () {
 
         it(`Check card detail where response not required `, function () {
             cy.sendCard('cypress/cardDetail/cardDetailResponseNotRequired.json');
-            cy.loginOpFab('operator1', 'test');
+            cy.loginOpFab('operator1_fr', 'test');
 
             // Click on the card
             cy.get('of-light-card').eq(0).click();
@@ -130,7 +131,7 @@ describe('Card detail', function () {
 
         it(`Check card detail where response is not possible `, function () {
             cy.sendCard('cypress/cardDetail/cardDetailResponseNotPossible.json');
-            cy.loginOpFab('operator1', 'test');
+            cy.loginOpFab('operator1_fr', 'test');
 
             // Click on the card
             cy.get('of-light-card').eq(0).click();

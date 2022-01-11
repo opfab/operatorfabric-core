@@ -6,7 +6,7 @@ Feature: User Configuration Management (Fetch)
     * def authToken = signIn.authToken
 
     # Get TSO-operator
-    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
     * def userConfigEndpoint = 'externaldevices/configurations/users'
@@ -21,11 +21,11 @@ Feature: User Configuration Management (Fetch)
 
   Scenario: Fetch existing userConfiguration
 
-    Given url opfabUrl + userConfigEndpoint + '/operator1'
+    Given url opfabUrl + userConfigEndpoint + '/operator1_fr'
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then status 200
-    And match response == { userLogin: 'operator1', externalDeviceId: 'CDS_1'}
+    And match response == { userLogin: 'operator1_fr', externalDeviceId: 'CDS_1'}
 
   Scenario: Attempt to fetch userConfiguration that doesn't exist
 
@@ -49,13 +49,13 @@ Feature: User Configuration Management (Fetch)
 
   Scenario: Fetch a userConfiguration without authentication
 
-    Given url opfabUrl + userConfigEndpoint + '/operator1'
+    Given url opfabUrl + userConfigEndpoint + '/operator1_fr'
     When method GET
     Then status 401
 
   Scenario: Fetch a userConfiguration without admin role
 
-    Given url opfabUrl + userConfigEndpoint + '/operator1'
+    Given url opfabUrl + userConfigEndpoint + '/operator1_fr'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method GET
     Then status 200

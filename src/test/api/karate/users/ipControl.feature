@@ -1,7 +1,7 @@
 Feature: Client ip control
 
   Background:
-   #Getting token for admin and operator1 user calling getToken.feature
+   #Getting token for admin and operator1_fr user calling getToken.feature
     * def signIn = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
     * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'user_test_api_1'}
@@ -22,7 +22,7 @@ Feature: Client ip control
 """
 {
   "login" : "user_test_api_1",
-  "entities" : ['ENTITY1'],
+  "entities" : ['ENTITY1_FR'],
   "authorizedIPAddresses" : ['10.0.2.2','10.0.3.3']
 }
 """
@@ -30,7 +30,7 @@ Feature: Client ip control
 """
 {
   "login" : "user_test_api_1",
-  "entities" : ['ENTITY1'],
+  "entities" : ['ENTITY1_FR'],
   "groups" : ["groupIp"],
   "authorizedIPAddresses" : []
 }
@@ -73,12 +73,12 @@ Feature: Client ip control
     * def card =
 """
 {
-	"publisher" : "ENTITY1",
+	"publisher" : "ENTITY1_FR",
 	"processVersion" : "1",
 	"process"  :"process_1",
 	"processInstanceId" : "initialCardProcess",
 	"state": "state1",
-	"entityRecipients" : ["ENTITY1"],
+	"entityRecipients" : ["ENTITY1_FR"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -96,7 +96,7 @@ Feature: Client ip control
     "process"  :"process_1",
     "processInstanceId" : "initialCardProcess1",
     "state": "state1",
-    "entityRecipients" : ["ENTITY1"],
+    "entityRecipients" : ["ENTITY1_FR"],
     "severity" : "INFORMATION",
     "startDate" : 1553186770681,
     "summary" : {"key" : "defaultProcess.summary"},

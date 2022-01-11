@@ -1,10 +1,10 @@
 Feature: get card Subscription
 
   Background:
-   #Getting token for admin and operator1 user calling getToken.feature
+   #Getting token for admin and operator1_fr user calling getToken.feature
     * def signIn = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
 
@@ -18,7 +18,7 @@ Feature: get card Subscription
         startDate = new Date().valueOf() + 4*60*60*1000;
         endDate = new Date().valueOf() + 8*60*60*1000;
         var card = {
-          "publisher" : "operator1",
+          "publisher" : "operator1_fr",
           "processVersion" : "1",
           "process"  :"api_test",
           "processInstanceId" : "process1",
@@ -82,7 +82,7 @@ Feature: get card Subscription
       When method get
       Then status 401
 
-    Scenario: get card subscription with user operator1
+    Scenario: get card subscription with user operator1_fr
 
     # Push card
       Given url opfabPublishCardUrl + 'cards'

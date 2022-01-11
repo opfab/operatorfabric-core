@@ -31,7 +31,7 @@
 				"endDateVisible" : false,
         "lttdVisible" : false,
         "recipientVisible" : false,
-        "recipientList" : [{"id": "ALLCONTROLROOMS", "levels": [0,1]}, {"id": "ENTITY4"}]
+        "recipientList" : [{"id": "ENTITY_FR", "levels": [0,1]}, {"id": "IT_SUPERVISOR_ENTITY"}]
 			},
       "color": "#CC9900",
       "response": {

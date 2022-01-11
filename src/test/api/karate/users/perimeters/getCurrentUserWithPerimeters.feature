@@ -1,10 +1,10 @@
 Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWithPerimeters)
 
   Background:
-   #Getting token for admin and operator1 user calling getToken.feature
+   #Getting token for admin and operator1_fr user calling getToken.feature
     * def signIn = callonce read('../../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = callonce read('../../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
     * def group15 =
@@ -62,7 +62,7 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
 """
     * def operator1Array =
 """
-[   "operator1"
+[   "operator1_fr"
 ]
 """
     * def group15Array =
@@ -76,12 +76,12 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
 ]
 """
 
-  Scenario: Get current user with perimeters with operator1
+  Scenario: Get current user with perimeters with operator1_fr
     Given url opfabUrl + 'users/CurrentUserWithPerimeters'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
-    And match response.userData.login == 'operator1'
+    And match response.userData.login == 'operator1_fr'
     And assert response.computedPerimeters.length == 0
 
 
@@ -113,7 +113,7 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
     And match response.id == group16.id
 
 
-  Scenario: Add operator1 to group15
+  Scenario: Add operator1_fr to group15
     Given url opfabUrl + 'users/groups/' + group15.id + '/users'
     And header Authorization = 'Bearer ' + authToken
     And request operator1Array
@@ -121,7 +121,7 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
     And status 200
 
 
-  Scenario: Add operator1 to group16
+  Scenario: Add operator1_fr to group16
     Given url opfabUrl + 'users/groups/' + group16.id + '/users'
     And header Authorization = 'Bearer ' + authToken
     And request operator1Array
@@ -167,24 +167,24 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
     Then status 200
 
 
-  Scenario: Get current user with perimeters with operator1
+  Scenario: Get current user with perimeters with operator1_fr
     Given url opfabUrl + 'users/CurrentUserWithPerimeters'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
-    And match response.userData.login == 'operator1'
+    And match response.userData.login == 'operator1_fr'
     And assert response.computedPerimeters.length == 2
     And match response.computedPerimeters contains only [{"process":"process15","state":"state1","rights":"ReceiveAndWrite"}, {"process":"process15","state":"state2","rights":"ReceiveAndWrite"}]
 
 
-  Scenario: Delete user operator1 from group15
-    Given url opfabUrl + 'users/groups/' + group15.id  + '/users/operator1'
+  Scenario: Delete user operator1_fr from group15
+    Given url opfabUrl + 'users/groups/' + group15.id  + '/users/operator1_fr'
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
 
-  Scenario: Delete user operator1 from group16
-    Given url opfabUrl + 'users/groups/' + group16.id  + '/users/operator1'
+  Scenario: Delete user operator1_fr from group16
+    Given url opfabUrl + 'users/groups/' + group16.id  + '/users/operator1_fr'
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200

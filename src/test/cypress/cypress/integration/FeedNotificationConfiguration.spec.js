@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,8 +18,8 @@ describe ('Feed notification configuration tests',function () {
         cy.loadTestConf();
     });
 
-    it('Check feed notification configuration screen for operator1', function () {
-        cy.loginOpFab('operator1', 'test');
+    it('Check feed notification configuration screen for operator1_fr', function () {
+        cy.loginOpFab('operator1_fr', 'test');
 
         // We move to feed notification configuration screen
         cy.get('#opfab-navbar-drop_user_menu').click();
@@ -72,8 +72,8 @@ describe ('Feed notification configuration tests',function () {
         cy.get('.opfab-feedconfiguration-processlist').last().find('.opfab-feedconfiguration-process').first().find('.row').contains('Dummy response state for tests').should('not.exist');
     })
 
-    it('Check feed notification configuration screen for operator4', function () {
-        cy.loginOpFab('operator4', 'test');
+    it('Check feed notification configuration screen for itsupervisor1', function () {
+        cy.loginOpFab('itsupervisor1', 'test');
 
         // We move to feed notification configuration screen
         cy.get('#opfab-navbar-drop_user_menu').click();
@@ -128,8 +128,8 @@ describe ('Feed notification configuration tests',function () {
         cy.get('#opfab-feedconfiguration-no-process-state-available').contains('No process/state available').should('exist');
     })
 
-    it('Check feed notification configuration screen for operator1, with a config without process group', function () {
-        cy.loginOpFab('operator1', 'test');
+    it('Check feed notification configuration screen for operator1_fr, with a config without process group', function () {
+        cy.loginOpFab('operator1_fr', 'test');
 
         cy.loadEmptyProcessGroups();
         cy.reload();
@@ -168,7 +168,7 @@ describe ('Feed notification configuration tests',function () {
     })
 
     it('Check feature select/unselect all states for a process', function () {
-        cy.loginOpFab('operator1', 'test');
+        cy.loginOpFab('operator1_fr', 'test');
 
         // We move to feed notification configuration screen
         cy.get('#opfab-navbar-drop_user_menu').click();
@@ -212,7 +212,7 @@ describe ('Feed notification configuration tests',function () {
         cy.deleteAllCards();
         cy.send6TestCards();
 
-        cy.loginOpFab('operator1', 'test');
+        cy.loginOpFab('operator1_fr', 'test');
 
         // All cards should be present
         cy.get('of-light-card').should('have.length',totalCards);
@@ -269,7 +269,7 @@ describe ('Feed notification configuration tests',function () {
         cy.deleteAllCards();
         cy.send6TestCards();
 
-        cy.loginOpFab('operator1', 'test')
+        cy.loginOpFab('operator1_fr', 'test')
 
         // Check feed
         cy.get('#opfab-navbar-menu-feed').click({force: true}); // Open feed
@@ -293,7 +293,7 @@ describe ('Feed notification configuration tests',function () {
 
 
     it ('Test monitoring all cards', function () {
-        cy.loginOpFab('operator1', 'test')
+        cy.loginOpFab('operator1_fr', 'test')
 
         // Monitor all cards again
         cy.get('#opfab-navbar-drop_user_menu').click(); // Click top right dropdown menu
@@ -333,7 +333,7 @@ describe ('Feed notification configuration tests',function () {
         cy.deleteAllCards();
         cy.send6TestCards();
 
-        cy.loginOpFab('operator1', 'test')
+        cy.loginOpFab('operator1_fr', 'test')
 
 
         

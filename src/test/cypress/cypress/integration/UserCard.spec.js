@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,7 @@ describe('User Card ', function () {
 
       it('Recipients should not be displayed in IT incident user card', ()=>{
   
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
 
         cy.get('of-light-card').should('have.length',0);
   
@@ -38,7 +38,7 @@ describe('User Card ', function () {
 
       it('Recipients dropdown should not be displayed in Tasks user card', ()=>{
   
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
 
         cy.get('of-light-card').should('have.length',0);
   
@@ -55,9 +55,9 @@ describe('User Card ', function () {
 
     describe('Send user card', function () {
 
-        it('Send User card from operator1', ()=>{
+        it('Send User card from operator1_fr', ()=>{
     
-          cy.loginOpFab('operator1','test');
+          cy.loginOpFab('operator1_fr','test');
 
           cy.get('of-light-card').should('have.length',0);
     
@@ -87,7 +87,7 @@ describe('User Card ', function () {
     
         it('Receive User card', ()=>{
     
-          cy.loginOpFab('operator2','test');
+          cy.loginOpFab('operator2_fr','test');
 
           cy.get('of-light-card').should('have.length',1);
           cy.get('of-light-card').eq(0).click()
@@ -104,9 +104,9 @@ describe('User Card ', function () {
 
     describe('Edit user card', function () {
 
-      it('Edit User card from operator1', ()=>{
+      it('Edit User card from operator1_fr', ()=>{
   
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
 
         cy.get('of-light-card').should('have.length',1);
           cy.get('of-light-card').eq(0).click()
@@ -130,7 +130,7 @@ describe('User Card ', function () {
       
       it('Receive modified User card', ()=>{
     
-        cy.loginOpFab('operator2','test');
+        cy.loginOpFab('operator2_fr','test');
 
         cy.get('of-light-card').should('have.length',1);
         cy.get('of-light-card').eq(0).click()
@@ -147,9 +147,9 @@ describe('User Card ', function () {
 
     describe('Delete user card', function () {
 
-      it('Delete User card from operator1', ()=>{
+      it('Delete User card from operator1_fr', ()=>{
   
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
 
         cy.get('of-light-card').should('have.length',1);
           cy.get('of-light-card').eq(0).click()
@@ -163,9 +163,9 @@ describe('User Card ', function () {
         });
       })
       
-      it('User card is deleted for operator2', ()=>{
+      it('User card is deleted for operator2_fr', ()=>{
     
-        cy.loginOpFab('operator2','test');
+        cy.loginOpFab('operator2_fr','test');
         cy.get('of-light-card').should('have.length',0);
       })
       
@@ -182,7 +182,7 @@ describe('User Card ', function () {
       });
 
       it('Edit card from allowed entity', ()=>{
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
         cy.get('of-light-card').eq(0).click()
           .find('[id^=opfab-feed-light-card]')
           .invoke('attr', 'data-urlId')
@@ -198,7 +198,7 @@ describe('User Card ', function () {
       })
       
       it('Cannot edit card from not allowed entity', ()=>{
-        cy.loginOpFab('operator2','test');
+        cy.loginOpFab('operator2_fr','test');
         cy.get('of-light-card').should('have.length',1);
         cy.get('of-light-card').eq(0).click()
           .find('[id^=opfab-feed-light-card]')
@@ -210,9 +210,9 @@ describe('User Card ', function () {
       })
 
 
-      it('Send User card with entitiesAllowedToEdit = "ALLCONTROLROOMS"', ()=>{
+      it('Send User card with entitiesAllowedToEdit = "ENTITY_FR"', ()=>{
         cy.deleteAllCards();
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
 
         cy.get('of-light-card').should('have.length',0);
   
@@ -239,8 +239,8 @@ describe('User Card ', function () {
       })
 
       it('Edit user card from allowed entity', ()=>{
-        // card.entitiesAllowedToEdit = 'ALLCONTROLROOMS'
-        cy.loginOpFab('operator2','test');
+        // card.entitiesAllowedToEdit = 'ENTITY_FR'
+        cy.loginOpFab('operator2_fr','test');
         cy.get('of-light-card').eq(0).click()
           .find('[id^=opfab-feed-light-card]')
           .invoke('attr', 'data-urlId')

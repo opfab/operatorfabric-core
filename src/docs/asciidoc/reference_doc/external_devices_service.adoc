@@ -1,4 +1,4 @@
-// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2021-2022 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -49,7 +49,7 @@ Given the use case described above, a new service was necessary to act as a link
 the external devices. This service is in charge of:
 
 * Managing the configuration relative to external devices (see below for details)
-* Process requests from the UI (e.g. "play the sound for ALARM for user operator1") and translate them as requests to
+* Process requests from the UI (e.g. "play the sound for ALARM for user operator1_fr") and translate them as requests to
 the appropriate device in their supported protocol, based on the above configuration
 * Allow the pool of devices to be managed (connection, disconnection)
 
@@ -57,7 +57,7 @@ This translates as three APIs.
 
 image::ExtDevArchitecture.drawio.png[Architecture diagram]
 
-Here is what happens when user operator1 receives a card with severity ALARM:
+Here is what happens when user operator1_fr receives a card with severity ALARM:
 
 . In the Angular code, the reception of the card triggers a sound notification.
 . If the external devices feature is enabled and the user has chosen to play sounds on external devices
@@ -73,7 +73,7 @@ NGINX gateway, with the following payload:
 +
 . The NGINX server, acting as a gateway, forwards it to the `/notifications` endpoint on the External Devices service.
 . The External Devices service queries the configuration repositories to find out which external device is configured
-for operator1, how to connect to it and what signal "ALARM" translates to on this particular device.
+for operator1_fr, how to connect to it and what signal "ALARM" translates to on this particular device.
 . It then creates the appropriate connection if it doesn't exist yet, and sends the signal.
 
 === Configuration
@@ -86,7 +86,7 @@ The following elements need to be configurable:
 [source,json,]
 ----
 {
-  "userLogin": "operator1",
+  "userLogin": "operator1_fr",
   "externalDeviceId": "CDS_1"
 }
 ----

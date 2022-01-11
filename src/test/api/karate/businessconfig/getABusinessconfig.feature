@@ -31,10 +31,10 @@ Feature: Bundle
     And match response.states.incidentInProgressState.userCard.endDateVisible == false
     And match response.states.incidentInProgressState.userCard.lttdVisible == false
     And match response.states.incidentInProgressState.userCard.recipientVisible == false
-    And match response.states.incidentInProgressState.userCard.recipientList[0].id == 'ALLCONTROLROOMS'
+    And match response.states.incidentInProgressState.userCard.recipientList[0].id == 'ENTITY_FR'
     And match response.states.incidentInProgressState.userCard.recipientList[0].levels.[0] == 0
     And match response.states.incidentInProgressState.userCard.recipientList[0].levels.[1] == 1
-    And match response.states.incidentInProgressState.userCard.recipientList[1].id == 'ENTITY4'
+    And match response.states.incidentInProgressState.userCard.recipientList[1].id == 'IT_SUPERVISOR_ENTITY'
     And match response.states.incidentInProgressState.acknowledgmentAllowed == 'Always'
     And match response.states.incidentInProgressState.type == 'FINISHED'
 

@@ -3,9 +3,9 @@ Feature: CardsUserAcknowledgement
 
   Background:
 
-    * def signIn = callonce read('../common/getToken.feature') { username: 'operator1'}
+    * def signIn = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authToken = signIn.authToken
-    * def signIn2 = callonce read('../common/getToken.feature') { username: 'operator2'}
+    * def signIn2 = callonce read('../common/getToken.feature') { username: 'operator2_fr'}
     * def authToken2 = signIn2.authToken
     * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authTokenAdmin = signInAdmin.authToken
@@ -15,7 +15,7 @@ Feature: CardsUserAcknowledgement
     * def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -71,7 +71,7 @@ Feature: CardsUserAcknowledgement
     When method post
     Then status 201
 
-#get card with user operator1 and check not containing userAcks items
+#get card with user operator1_fr and check not containing userAcks items
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
@@ -80,14 +80,14 @@ Feature: CardsUserAcknowledgement
     And def uid = response.card.uid
 
 
-#make an acknowledgement to the card with operator1
+#make an acknowledgement to the card with operator1_fr
     Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken
     And request ''
     When method post
     Then status 201
 
-#get card with user operator1 and check containing his ack
+#get card with user operator1_fr and check containing his ack
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
@@ -95,7 +95,7 @@ Feature: CardsUserAcknowledgement
     And match response.card.hasBeenAcknowledged == true
     And match response.card.uid == uid
 
-#get card with user operator2 and check containing no ack for him
+#get card with user operator2_fr and check containing no ack for him
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken2
     When method get
@@ -104,14 +104,14 @@ Feature: CardsUserAcknowledgement
     And match response.card.uid == uid
 
 
-#make a second acknowledgement to the card with operator2
+#make a second acknowledgement to the card with operator2_fr
     Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken2
     And request ''
     When method post
     Then status 201
 
-#get card with user operator1 and check containing his ack
+#get card with user operator1_fr and check containing his ack
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
@@ -119,7 +119,7 @@ Feature: CardsUserAcknowledgement
     And match response.card.hasBeenAcknowledged == true
     And match response.card.uid == uid
 
-#get card with user operator2 and check containing his ack
+#get card with user operator2_fr and check containing his ack
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken2
     When method get

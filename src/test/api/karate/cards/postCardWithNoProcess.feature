@@ -3,7 +3,7 @@ Feature: Cards
 
   Background:
 
-    * def signIn = callonce read('../common/getToken.feature') { username: 'operator1'}
+    * def signIn = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authToken = signIn.authToken
 
   Scenario: Post card
@@ -11,7 +11,7 @@ Feature: Cards
     * def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"processInstanceId" : "process1WithNoProcessField",
 	"state": "messageState",

@@ -1,10 +1,10 @@
 Feature: patch user settings
 
   Background:
-   #Getting token for admin and operator1 user calling getToken.feature
+   #Getting token for admin and operator1_fr user calling getToken.feature
     * def signIn = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
    # * def signInAsUser = callonce read('getToken.feature') { username: 'user'}
    # * def authTokenAsUser = signInAsUser.authToken
@@ -24,8 +24,8 @@ Feature: patch user settings
     * def userSettingsDispatcher =
 """
 {
-  "login" : "operator1",
-  "description" : "my dummy operator1 user",
+  "login" : "operator1_fr",
+  "description" : "my dummy operator1_fr user",
   "timeZone" : "Australia/Melbourne",
   "locale" : "en",
   "processesStatesNotNotified": {"processC": ["state5", "state6"], "processD": ["state7", "state8"]}
@@ -76,9 +76,9 @@ Feature: patch user settings
     And match response.processesStatesNotNotified == userSettings.processesStatesNotNotified
 
 
-  Scenario: Patch operator1 user settings with operator1 authentication
+  Scenario: Patch operator1_fr user settings with operator1_fr authentication
 
-    Given url opfabUrl + 'users/users/operator1/settings'
+    Given url opfabUrl + 'users/users/operator1_fr/settings'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And request userSettingsDispatcher
     When method patch

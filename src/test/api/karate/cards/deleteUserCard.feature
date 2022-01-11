@@ -1,12 +1,12 @@
 Feature: deleteUserCards tests
 
   Background:
-   #Getting token for admin and operator1 user calling getToken.feature
+   #Getting token for admin and operator1_fr user calling getToken.feature
     * def signIn = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
-    * def signInAsTSO2 = callonce read('../common/getToken.feature') { username: 'operator2'}
+    * def signInAsTSO2 = callonce read('../common/getToken.feature') { username: 'operator2_fr'}
     * def authTokenAsTSO2 = signInAsTSO2.authToken
 
     * def groupKarate =
@@ -65,12 +65,12 @@ Feature: deleteUserCards tests
 
     * def operator1Array =
 """
-[   "operator1"
+[   "operator1_fr"
 ]
 """
     * def operator2Array =
 """
-[   "operator2"
+[   "operator2_fr"
 ]
 """
     * def groupArray =
@@ -103,14 +103,14 @@ Feature: deleteUserCards tests
     And match response.id == groupKarate2.id
 
 
-  Scenario: Add operator1 to groupKarate
+  Scenario: Add operator1_fr to groupKarate
     Given url opfabUrl + 'users/groups/' + groupKarate.id + '/users'
     And header Authorization = 'Bearer ' + authToken
     And request operator1Array
     When method patch
     And status 200
 
-  Scenario: Add operator2 to groupKarate2
+  Scenario: Add operator2_fr to groupKarate2
     Given url opfabUrl + 'users/groups/' + groupKarate2.id + '/users'
     And header Authorization = 'Bearer ' + authToken
     And request operator2Array
@@ -150,7 +150,7 @@ Feature: deleteUserCards tests
     * def cardForDeleteOk =
 """
 {
-	"publisher" : "ENTITY1",
+	"publisher" : "ENTITY1_FR",
 	"processVersion" : "1",
 	"process"  :"processDeleteUserCard",
 	"processInstanceId" : "processDeleteUserCardOk",
@@ -160,14 +160,14 @@ Feature: deleteUserCards tests
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"a message"},
-	"entityRecipients" : ["ENTITY1"]
+	"entityRecipients" : ["ENTITY1_FR"]
 }
 """
 
     * def cardForDeleteForbidden1 =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"processDeleteUserCard",
 	"processInstanceId" : "processDeleteUserCardForbidden1",
@@ -177,14 +177,14 @@ Feature: deleteUserCards tests
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"a message"},
-	"entityRecipients" : ["ENTITY1"]
+	"entityRecipients" : ["ENTITY1_FR"]
 }
 """
 
     * def cardForDeleteForbidden2 =
 """
 {
-	"publisher" : "ENTITY2",
+	"publisher" : "ENTITY2_FR",
 	"processVersion" : "1",
 	"process"  :"processDeleteUserCard",
 	"processInstanceId" : "processDeleteUserCardForbidden2",
@@ -194,14 +194,14 @@ Feature: deleteUserCards tests
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"a message"},
-	"entityRecipients" : ["ENTITY1"]
+	"entityRecipients" : ["ENTITY1_FR"]
 }
 """
 
     * def cardForDeleteForbidden3 =
 """
 {
-	"publisher" : "ENTITY2",
+	"publisher" : "ENTITY2_FR",
 	"processVersion" : "1",
 	"process"  :"processDeleteUserCard",
 	"processInstanceId" : "processDeleteUserCardForbidden3",
@@ -211,7 +211,7 @@ Feature: deleteUserCards tests
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"a message"},
-	"entityRecipients" : ["ENTITY1"]
+	"entityRecipients" : ["ENTITY1_FR"]
 }
 """
 

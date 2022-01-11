@@ -3,9 +3,9 @@ Feature: Cards routing
 
 Background: 
 
-  * def signInTso1 = callonce read('../common/getToken.feature') { username: 'operator1'}
+  * def signInTso1 = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
   * def authTokenTso1 = signInTso1.authToken
-  * def signInTso2 = callonce read('../common/getToken.feature') { username: 'operator2'}
+  * def signInTso2 = callonce read('../common/getToken.feature') { username: 'operator2_fr'}
   * def authTokenTso2 = signInTso2.authToken
   * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
   * def authTokenAdmin = signInAdmin.authToken
@@ -16,7 +16,7 @@ Scenario: Post Card only for group Dispatcher
 * def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2",
@@ -71,7 +71,7 @@ And request card
 When method post
 Then status 201
 
-#get card with user operator1
+#get card with user operator1_fr
 Given url opfabUrl + 'cards/cards/api_test.process2' 
 And header Authorization = 'Bearer ' + authTokenTso1 
 When method get
@@ -80,7 +80,7 @@ And match response.card.data.message == 'a message for group Dispatcher'
 And def cardUid = response.card.uid
 
 
-#get card from archives with  user operator1
+#get card from archives with  user operator1_fr
 Given url opfabUrl + 'cards/archives/' + cardUid 
 And header Authorization = 'Bearer ' + authTokenTso1 
 When method get
@@ -88,14 +88,14 @@ Then status 200
 And match response.data.message == 'a message for group Dispatcher'
 
 
-#get card with user operator2 should not be possible
+#get card with user operator2_fr should not be possible
 Given url opfabUrl + 'cards/cards/api_test.process2' 
 And header Authorization = 'Bearer ' + authTokenTso2 
 When method get
 Then status 404
 
 
-#get card from archives with user operator2 should not be possible
+#get card from archives with user operator2_fr should not be possible
 Given url opfabUrl + 'cards/archives/' + cardUid 
 And header Authorization = 'Bearer ' + authTokenTso2 
 When method get
@@ -108,7 +108,7 @@ Scenario: Post Card for groups Dispatcher and Planner
 * def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2tso",
@@ -129,7 +129,7 @@ And request card
 When method post
 Then status 201
 
-#get card with user operator1
+#get card with user operator1_fr
 Given url opfabUrl + 'cards/cards/api_test.process2tso' 
 And header Authorization = 'Bearer ' + authTokenTso1 
 When method get
@@ -138,7 +138,7 @@ And match response.card.data.message == 'a message for groups Dispatcher and Pla
 And def cardUid = response.card.uid
 
 
-#get card from archives with user operator1
+#get card from archives with user operator1_fr
 Given url opfabUrl + 'cards/archives/' + cardUid 
 And header Authorization = 'Bearer ' + authTokenTso1 
 When method get
@@ -146,7 +146,7 @@ Then status 200
 And match response.data.message == 'a message for groups Dispatcher and Planner'
 
 
-#get card with user operator2 should be possible
+#get card with user operator2_fr should be possible
 Given url opfabUrl + 'cards/cards/api_test.process2tso' 
 And header Authorization = 'Bearer ' + authTokenTso2 
 When method get
@@ -155,7 +155,7 @@ And match response.card.data.message == 'a message for groups Dispatcher and Pla
 And def cardUid = response.card.uid
 
 
-#get card from archives with user operator2 should be possible
+#get card from archives with user operator2_fr should be possible
 Given url opfabUrl + 'cards/archives/' + cardUid 
 And header Authorization = 'Bearer ' + authTokenTso2 
 When method get

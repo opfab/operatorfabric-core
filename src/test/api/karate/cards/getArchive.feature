@@ -3,7 +3,7 @@ Feature: Cards
 
 Background: 
 
-  * def signIn = callonce read('../common/getToken.feature') { username: 'operator1'}
+  * def signIn = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
   * def authToken = signIn.authToken
   * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
   * def authTokenAdmin = signInAdmin.authToken
@@ -45,7 +45,7 @@ Scenario: Check Archives / must insert 10 cards first with other scenarios
   Then status 200
 
 
-#get cards from archives with user operator1
+#get cards from archives with user operator1_fr
   Given url opfabUrl + 'cards/archives/?size=10&page=0'
   And header Authorization = 'Bearer ' + authToken
   When method get

@@ -3,7 +3,7 @@ Feature: Cards
 
 Background: 
 
-  * def signIn = callonce read('../common/getToken.feature') { username: 'operator1'}
+  * def signIn = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
   * def authToken = signIn.authToken
   * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
   * def authTokenAdmin = signInAdmin.authToken
@@ -13,7 +13,7 @@ Scenario: Post Card
 * def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -68,7 +68,7 @@ And request card
 When method post
 Then status 201
 
-#get card with user operator1
+#get card with user operator1_fr
 Given url opfabUrl + 'cards/cards/api_test.process1' 
 And header Authorization = 'Bearer ' + authToken 
 When method get
@@ -77,7 +77,7 @@ And match response.card.data.message == 'a message'
 And def cardUid = response.card.uid
 
 
-#get card from archives with user operator1
+#get card from archives with user operator1_fr
 Given url opfabUrl + 'cards/archives/' + cardUid 
 And header Authorization = 'Bearer ' + authToken 
 When method get
@@ -89,7 +89,7 @@ Scenario: Post a new version of the Card
 * def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -110,7 +110,7 @@ And request card
 When method post
 Then status 201
 
-#get card with user operator1
+#get card with user operator1_fr
 Given url opfabUrl + 'cards/cards/api_test.process1' 
 And header Authorization = 'Bearer ' + authToken 
 When method get
@@ -119,7 +119,7 @@ And match response.card.data.message == 'new message'
 And def cardUid = response.card.uid
 
 
-#get card from archives with user operator1
+#get card from archives with user operator1_fr
 Given url opfabUrl + 'cards/archives/' + cardUid 
 And header Authorization = 'Bearer ' + authToken 
 When method get
@@ -130,7 +130,7 @@ And match response.data.message == 'new message'
 Scenario: Delete the card 
 
 
-#get card with user operator1
+#get card with user operator1_fr
 Given url opfabUrl + 'cards/cards/api_test.process1' 
 And header Authorization = 'Bearer ' + authToken 
 When method get
@@ -143,13 +143,13 @@ And header Authorization = 'Bearer ' + authToken
 When method delete
 Then status 200
 
-#get card with user operator1 should return 404
+#get card with user operator1_fr should return 404
 Given url opfabUrl + 'cards/cards/api_test.process1' 
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 404
 
-#get card from archives with user operator1 is possible
+#get card from archives with user operator1_fr is possible
 Given url opfabUrl + 'cards/archives/' + cardUid 
 And header Authorization = 'Bearer ' + authToken 
 When method get

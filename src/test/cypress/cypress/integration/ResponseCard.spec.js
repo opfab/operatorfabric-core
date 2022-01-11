@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,11 +22,11 @@ describe ('Response card tests',function () {
     });
 
 
-    it('Check card response for operator 1 ', function () {
+    it('Check card response for operator1_fr ', function () {
 
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
 
-        // operator1 should see the card in their feed
+        // operator1_fr should see the card in their feed
         cy.get('of-light-card').should('have.length',1);
 
         // See in the feed the fact that user has not respond (no icon)
@@ -39,8 +39,8 @@ describe ('Response card tests',function () {
         cy.get('#question-choice1');
 
         // check entities in card header 
-        cy.get('#opfab-card-header-entity-ENTITY1').should('have.css', 'color', 'rgb(255, 102, 0)');// entity 1 color is orange 
-        cy.get('#opfab-card-header-entity-ENTITY2').should('have.css', 'color', 'rgb(255, 102, 0)');  // entity 2 color is orange
+        cy.get('#opfab-card-header-entity-ENTITY1_FR').should('have.css', 'color', 'rgb(255, 102, 0)');// entity 1 color is orange 
+        cy.get('#opfab-card-header-entity-ENTITY2_FR').should('have.css', 'color', 'rgb(255, 102, 0)');  // entity 2 color is orange
 
         // Response button is present 
         cy.get('#opfab-card-details-btn-response');
@@ -57,11 +57,11 @@ describe ('Response card tests',function () {
         cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity');
 
         //check the response has been integrated in the template 
-        cy.get('#response_from_ENTITY1');
+        cy.get('#response_from_ENTITY1_FR');
 
         // check entities in card header 
-        cy.get('#opfab-card-header-entity-ENTITY1').should('have.css', 'color', 'rgb(0, 128, 0)'); // entity 1 color is green 
-        cy.get('#opfab-card-header-entity-ENTITY2').should('have.css', 'color', 'rgb(255, 102, 0)'); // entity 2 color is orange
+        cy.get('#opfab-card-header-entity-ENTITY1_FR').should('have.css', 'color', 'rgb(0, 128, 0)'); // entity 1 color is green 
+        cy.get('#opfab-card-header-entity-ENTITY2_FR').should('have.css', 'color', 'rgb(255, 102, 0)'); // entity 2 color is orange
 
         // update card 
         cy.sendCard('defaultProcess/question.json');
@@ -81,11 +81,11 @@ describe ('Response card tests',function () {
 
 
 
-    it('Check card response for operator 2 ', function () {
+    it('Check card response for operator2_fr ', function () {
 
-        cy.loginOpFab('operator2','test');
+        cy.loginOpFab('operator2_fr','test');
 
-        // operator1 should see the card in their feed
+        // operator1_fr should see the card in their feed
         cy.get('of-light-card').should('have.length',1);
 
         // See in the feed the fact that user has not respond (no icon)
@@ -97,12 +97,12 @@ describe ('Response card tests',function () {
         // Check the correct rendering of card 
         cy.get('#question-choice2');
 
-        // Check the response from ENTITY1 has been integrated in the template 
-        cy.get('#response_from_ENTITY1');
+        // Check the response from ENTITY1_FR has been integrated in the template 
+        cy.get('#response_from_ENTITY1_FR');
         
         // check entities in card header 
-        cy.get('#opfab-card-header-entity-ENTITY1').should('have.css', 'color', 'rgb(0, 128, 0)'); // entity 1 color is green 
-        cy.get('#opfab-card-header-entity-ENTITY2').should('have.css', 'color', 'rgb(255, 102, 0)'); // entity 2 color is orange
+        cy.get('#opfab-card-header-entity-ENTITY1_FR').should('have.css', 'color', 'rgb(0, 128, 0)'); // entity 1 color is green 
+        cy.get('#opfab-card-header-entity-ENTITY2_FR').should('have.css', 'color', 'rgb(255, 102, 0)'); // entity 2 color is orange
 
         // Response button is present 
         cy.get('#opfab-card-details-btn-response');
@@ -115,20 +115,20 @@ describe ('Response card tests',function () {
         cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity');
 
         // Check the response from current user has been integrated in the template 
-        cy.get('#response_from_ENTITY2');
+        cy.get('#response_from_ENTITY2_FR');
 
 
         // check entities in card header 
-        cy.get('#opfab-card-header-entity-ENTITY1').should('have.css', 'color', 'rgb(0, 128, 0)'); // entity 1 color is green 
-        cy.get('#opfab-card-header-entity-ENTITY2').should('have.css', 'color', 'rgb(0, 128, 0)'); // entity 2 color is green
+        cy.get('#opfab-card-header-entity-ENTITY1_FR').should('have.css', 'color', 'rgb(0, 128, 0)'); // entity 1 color is green 
+        cy.get('#opfab-card-header-entity-ENTITY2_FR').should('have.css', 'color', 'rgb(0, 128, 0)'); // entity 2 color is green
     })
 
 
-    it('Check operator 4 see the card but cannot respond ', function () {
+    it('Check itsupervisor1 see the card but cannot respond ', function () {
 
-        cy.loginOpFab('operator4','test');
+        cy.loginOpFab('itsupervisor1','test');
 
-        // operator1 should see the card in their feed
+        // operator1_fr should see the card in their feed
         cy.get('of-light-card').should('have.length',1);
 
         // See in the feed the fact that user has not respond (no icon)
@@ -140,23 +140,23 @@ describe ('Response card tests',function () {
         // Check the correct rendering of card 
         cy.get('#question-choice2');
 
-        // Check the response from ENTITY1 and ENTITY2 has been integrated in the template 
-        cy.get('#response_from_ENTITY1');
-        cy.get('#response_from_ENTITY2');
+        // Check the response from ENTITY1_FR and ENTITY2_FR has been integrated in the template 
+        cy.get('#response_from_ENTITY1_FR');
+        cy.get('#response_from_ENTITY2_FR');
         
         // check entities in card header 
-        cy.get('#opfab-card-header-entity-ENTITY1').should('have.css', 'color', 'rgb(0, 128, 0)'); // entity 1 color is green 
-        cy.get('#opfab-card-header-entity-ENTITY2').should('have.css', 'color', 'rgb(0, 128, 0)'); // entity 2 color is green
+        cy.get('#opfab-card-header-entity-ENTITY1_FR').should('have.css', 'color', 'rgb(0, 128, 0)'); // entity 1 color is green 
+        cy.get('#opfab-card-header-entity-ENTITY2_FR').should('have.css', 'color', 'rgb(0, 128, 0)'); // entity 2 color is green
         
         // Response button is not present 
         cy.get('#opfab-card-details-btn-response').should('not.exist');
         
     })
 
-    it ('Check response for  operator 1  is still present after update of card with keepChildCard=true re-logging',function () {
+    it ('Check response for  operator1_fr  is still present after update of card with keepChildCard=true re-logging',function () {
         cy.sendCard('defaultProcess/questionWithKeepChildCards.json');
 
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
         // See in the feed the fact that user has respond (icon)
         cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity');
 
@@ -166,18 +166,18 @@ describe ('Response card tests',function () {
          // Check the correct rendering of card 
          cy.get('#question-choice2');
  
-         // Check the old response from ENTITY1 has been integrated in the template 
-         cy.get('#response_from_ENTITY1');
+         // Check the old response from ENTITY1_FR has been integrated in the template 
+         cy.get('#response_from_ENTITY1_FR');
 
         // check entities in card header 
-        cy.get('#opfab-card-header-entity-ENTITY1').should('have.css', 'color', 'rgb(0, 128, 0)'); // entity 1 color is green 
-        cy.get('#opfab-card-header-entity-ENTITY2').should('have.css', 'color', 'rgb(0, 128, 0)'); // entity 2 color is green
+        cy.get('#opfab-card-header-entity-ENTITY1_FR').should('have.css', 'color', 'rgb(0, 128, 0)'); // entity 1 color is green 
+        cy.get('#opfab-card-header-entity-ENTITY2_FR').should('have.css', 'color', 'rgb(0, 128, 0)'); // entity 2 color is green
     });
 
-    it ('Check response for  operator 1  is not present after update of card with keepChildCard= false re-logging',function () {
+    it ('Check response for  operator1_fr  is not present after update of card with keepChildCard= false re-logging',function () {
         cy.sendCard('defaultProcess/question.json');
 
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
        
         // Click on the card
         cy.get('of-light-card').eq(0).click(); 
@@ -188,11 +188,11 @@ describe ('Response card tests',function () {
          // Check the correct rendering of card 
          cy.get('#question-choice2');
  
-         // Check the old response from ENTITY1 has not been integrated in the template 
-         cy.get('#response_from_ENTITY1').should('not.exist');
+         // Check the old response from ENTITY1_FR has not been integrated in the template 
+         cy.get('#response_from_ENTITY1_FR').should('not.exist');
 
         // check entities in card header 
-        cy.get('#opfab-card-header-entity-ENTITY1').should('have.css', 'color', 'rgb(255, 102, 0)');// entity 1 color is orange 
-        cy.get('#opfab-card-header-entity-ENTITY2').should('have.css', 'color', 'rgb(255, 102, 0)');  // entity 2 color is orange
+        cy.get('#opfab-card-header-entity-ENTITY1_FR').should('have.css', 'color', 'rgb(255, 102, 0)');// entity 1 color is orange 
+        cy.get('#opfab-card-header-entity-ENTITY2_FR').should('have.css', 'color', 'rgb(255, 102, 0)');  // entity 2 color is orange
     });
 })

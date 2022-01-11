@@ -1,4 +1,4 @@
-// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2021-2022 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -31,7 +31,7 @@ For example :
       "startDateVisible" : true,
       "endDateVisible" : true,
       "lttdVisible" : false,
-      "recipientList" : [{"id": "ALLCONTROLROOMS", "levels": [0,1]}, {"id": "ENTITY4"}]
+      "recipientList" : [{"id": "ENTITY_FR", "levels": [0,1]}, {"id": "IT_SUPERVISOR_ENTITY"}]
     },
     "templateName": "message",
     "styles": [],
@@ -160,7 +160,7 @@ For example :
       "endDateVisible" : true,
       "lttdVisible" : false,
       "recipientVisible": true,
-      "recipientList" : [{"id": "ALLCONTROLROOMS", "levels": [0,1]}, {"id": "ENTITY4"}]
+      "recipientList" : [{"id": "ENTITY_FR", "levels": [0,1]}, {"id": "IT_SUPERVISOR_ENTITY"}]
     },
     "templateName": "message",
     "styles": [],
@@ -169,7 +169,7 @@ For example :
 }
 ....
 
-In this example the list of available recipients will contain: "ALLCONTROLROOMS" (level 0), all the first level children of "ALLCONTROLROOMS" (level 1) and "ENTITY4".
+In this example the list of available recipients will contain: "ENTITY_FR" (level 0), all the first level children of "ENTITY_FR" (level 1) and "IT_SUPERVISOR_ENTITY".
 
 The recipient field can be hidden using the attribute `recipientVisible` : if hidden, the card will be sent to all the recipients in recipientList and to the user.
 

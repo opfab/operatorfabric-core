@@ -1,10 +1,10 @@
 Feature: Fetch users
 
   Background:
-   #Getting token for admin and operator1 user calling getToken.feature
+   #Getting token for admin and operator1_fr user calling getToken.feature
     * def signIn = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
     * def username = 'admin'
 
@@ -46,9 +46,9 @@ Feature: Fetch users
     Then status 404
 
 
-  Scenario:fetching details about operator1
-    #fetching details about operator1 expected response 200
-    Given url opfabUrl + 'users/users/operator1'
+  Scenario:fetching details about operator1_fr
+    #fetching details about operator1_fr expected response 200
+    Given url opfabUrl + 'users/users/operator1_fr'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200

@@ -1,10 +1,10 @@
 Feature: Get current user with perimeters (opfab in JWT mode)(endpoint tested : GET /CurrentUserWithPerimeters)
 
   Background:
-   #Getting token for admin and operator1 user calling getToken.feature
+   #Getting token for admin and operator1_fr user calling getToken.feature
     * def signIn = callonce read('../../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = callonce read('../../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
 
@@ -51,12 +51,12 @@ Feature: Get current user with perimeters (opfab in JWT mode)(endpoint tested : 
 ]
 """
 
-  Scenario: Get current user with perimeters with operator1
+  Scenario: Get current user with perimeters with operator1_fr
     Given url opfabUrl + 'users/CurrentUserWithPerimeters'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
-    And match response.userData.login == 'operator1'
+    And match response.userData.login == 'operator1_fr'
     And assert response.computedPerimeters.length == 0
 
 
@@ -104,12 +104,12 @@ Feature: Get current user with perimeters (opfab in JWT mode)(endpoint tested : 
     And status 200
 
 
-  Scenario: Get current user with perimeters with operator1
+  Scenario: Get current user with perimeters with operator1_fr
     Given url opfabUrl + 'users/CurrentUserWithPerimeters'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
-    And match response.userData.login == 'operator1'
+    And match response.userData.login == 'operator1_fr'
     And assert response.computedPerimeters.length == 2
     And match response.computedPerimeters contains only [{"process":"process15","state":"state1","rights":"ReceiveAndWrite"}, {"process":"process15","state":"state2","rights":"ReceiveAndWrite"}]
 
