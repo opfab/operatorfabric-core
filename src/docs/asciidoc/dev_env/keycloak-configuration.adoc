@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -65,7 +65,7 @@ Used to map the user name to a field that suits services
  * 
  
 repeat process for other users:
-operator3, operator1, operator2
+operator3_fr, operator1_fr, operator2_fr
 
 
 === Development-specific configuration

@@ -1,8 +1,8 @@
 Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespond set
 
   Background:
-   #Getting token for admin and operator1 user calling getToken.feature
-    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
+   #Getting token for admin and operator1_fr user calling getToken.feature
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
 
@@ -11,13 +11,13 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
     * def card1 =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
 	"groupRecipients": ["Dispatcher"],
-	"entitiesAllowedToRespond": ["ENTITY1"],
+	"entitiesAllowedToRespond": ["ENTITY1_FR"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -36,14 +36,14 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
     * def card2 =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
 	"groupRecipients": ["Dispatcher"],
-	"entitiesAllowedToRespond": ["ENTITY1","ENTITY2","ENTITY3"],
-	"entitiesRequiredToRespond": ["ENTITY1","ENTITY2"],
+	"entitiesAllowedToRespond": ["ENTITY1_FR","ENTITY2_FR","ENTITY3_FR"],
+	"entitiesRequiredToRespond": ["ENTITY1_FR","ENTITY2_FR"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -63,13 +63,13 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
     * def card3 =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
 	"groupRecipients": ["Dispatcher"],
-	"entitiesRequiredToRespond": ["ENTITY3"],
+	"entitiesRequiredToRespond": ["ENTITY3_FR"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -88,14 +88,14 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
     * def card4 =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
 	"groupRecipients": ["Dispatcher"],
-	"entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
-	"entitiesRequiredToRespond": ["ENTITY2","ENTITY3"],
+	"entitiesAllowedToRespond": ["ENTITY1_FR","ENTITY2_FR"],
+	"entitiesRequiredToRespond": ["ENTITY2_FR","ENTITY3_FR"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},

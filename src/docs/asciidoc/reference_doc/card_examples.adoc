@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -21,14 +21,14 @@ So the rules for receiving cards are :
 
 1) If the card is sent to user1, the card is received and visible for user1 if he has the receive right for the corresponding process/state
 
-2) If the card is sent to GROUP1 (or ENTITY1), the card is received and visible for user if *all* of the following is true :
+2) If the card is sent to GROUP1 (or ENTITY1_FR), the card is received and visible for user if *all* of the following is true :
 
-* he's a member of GROUP1 (or ENTITY1)
+* he's a member of GROUP1 (or ENTITY1_FR)
 * he has the receive right for the corresponding process/state
 
-3) If the card is sent to ENTITY1 and GROUP1, the card is received and visible for user if *all* of the following is true :
+3) If the card is sent to ENTITY1_FR and GROUP1, the card is received and visible for user if *all* of the following is true :
 
-* he's a member of ENTITY1 (either directly or through one of its children entities)
+* he's a member of ENTITY1_FR (either directly or through one of its children entities)
 * he's a member of GROUP1
 * he has the receive right for the corresponding process/state
 
@@ -48,14 +48,14 @@ The following card contains only the mandatory attributes.
 	"severity":"INFORMATION",
 	"title":{"key":"card.title.key"},
 	"summary":{"key":"card.summary.key"},
-	"userRecipients": ["operator1"]
+	"userRecipients": ["operator1_fr"]
 
 }
 ....
 
 This an information about the process instance `process-000` of process `process`, sent by `TEST_PUBLISHER`. The title and the summary refer to `i18n` keys
 defined in the associated `i18n` file of the process. This card is displayable since the first january 2019 and
-should only be received by the user using the `operator1` login (provided that this user has receive right on this process/state).
+should only be received by the user using the `operator1_fr` login (provided that this user has receive right on this process/state).
 
 === Send to several users
 
@@ -96,11 +96,11 @@ The following example is nearly the same as the previous one except for the reci
 	"severity":"INFORMATION",
 	"title":{"key":"card.title.key"},
 	"summary":{"key":"card.summary.key"},
-	"entityRecipients" : ["ENTITY1"]
+	"entityRecipients" : ["ENTITY1_FR"]
 }
 ....
 
-Here, the recipient is an entity, `ENTITY1`, and there is no group recipient anymore. So all users who are members of this entity and who have a receive right for the process/state of the card will receive it. More information on perimeters can be found in
+Here, the recipient is an entity, `ENTITY1_FR`, and there is no group recipient anymore. So all users who are members of this entity and who have a receive right for the process/state of the card will receive it. More information on perimeters can be found in
 ifdef::single-page-doc[<<'users_management,user documentation'>>]
 ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#users_management, user documentation>>]
 
@@ -147,7 +147,7 @@ Then you can see `group1` is now :
 }
 ....
 
-If the connected user is a member of `group1`, then he has a `Receive` right on process/state `process/myState`. So if the user is also a member of `ENTITY1` then he will receive the card.
+If the connected user is a member of `group1`, then he has a `Receive` right on process/state `process/myState`. So if the user is also a member of `ENTITY1_FR` then he will receive the card.
 
 
 ==== Simple case (sending to a group and an entity)
@@ -166,21 +166,21 @@ The following example is nearly the same as the previous one except for the reci
 	"title":{"key":"card.title.key"},
 	"summary":{"key":"card.summary.key"},
 	"groupRecipients": ["Dispatcher"],
-	"entityRecipients" : ["ENTITY1"]
+	"entityRecipients" : ["ENTITY1_FR"]
 }
 ....
 
-Here, the recipients are a group and an entity, the `Dispatcher` group and `ENTITY1` entity. To receive the card, the user must be a member of both ENTITY1 and GROUP1 and must have the receive right for the corresponding process/state.
+Here, the recipients are a group and an entity, the `Dispatcher` group and `ENTITY1_FR` entity. To receive the card, the user must be a member of both ENTITY1_FR and GROUP1 and must have the receive right for the corresponding process/state.
 
 
 ==== Complex case
 
 If this card need to be viewed by a user who is not in the `Dispatcher` group, it's possible to tune more precisely the
-definition of the recipient. If the `operator2` needs to see also this card, the recipient definition could be(the following code details only the recipient part):
+definition of the recipient. If the `operator2_fr` needs to see also this card, the recipient definition could be(the following code details only the recipient part):
 
 ....
 "groupRecipients": ["Dispatcher"],
-"userRecipients": ["operator2"]
+"userRecipients": ["operator2_fr"]
 ....
 
 
@@ -213,7 +213,7 @@ For this example we will use our previous example for the `Dispatcher` group wit
 	"severity":"INFORMATION",
 	"title":{"key":"card.title.key"},
 	"summary":{"key":"card.summary.key"},
-	"userRecipients": ["operator1"],
+	"userRecipients": ["operator1_fr"],
 	"data":{
 		"stringExample":"This is a not so random string of characters.",
 		"numberExample":123
@@ -247,7 +247,7 @@ At the card level, the attributes in the card telling OperatorFabric which templ
 	"severity":"INFORMATION",
 	"title":{"key":"process.title"},
 	"summary":{"key":"process.summary"},
-	"userRecipients": ["operator1"],
+	"userRecipients": ["operator1_fr"],
 	"data":{"rootProp":"Data displayed in the detail panel"},
 
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2021-2022 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -25,8 +25,8 @@ include::../../../../config/docker/external-devices-docker.yml[]
 ----
 
 This means that provided the users have chosen to play sounds for these severities and to play sounds
-on external devices, sending an ALARM card to operator1 should result in a message about writing 1 in the
-dummy-modbus-device_1 logs, and sending an ACTION card to operator2 should result in a message about writing
+on external devices, sending an ALARM card to operator1_fr should result in a message about writing 1 in the
+dummy-modbus-device_1 logs, and sending an ACTION card to operator2_fr should result in a message about writing
 6 in dummy-modbus-device_2.
 
 Since the watchdog is enabled, once the devices are connected (either by calling the /connect endpoint or

@@ -10,7 +10,7 @@
 
 describe('Session ended test', function () {
 
-  const user = 'operator1';
+  const user = 'operator1_fr';
 
   // Do not use the generic login feature as we 
   // need to launch cy.clock after cy.visit('')
@@ -18,7 +18,7 @@ describe('Session ended test', function () {
 
     cy.visit('')
     cy.clock(new Date());
-    cy.get('#opfab-login').type('operator1')
+    cy.get('#opfab-login').type('operator1_fr')
     cy.get('#opfab-password').type('test')
     cy.get('#opfab-login-btn-submit').click();
 
@@ -58,7 +58,7 @@ describe('Session ended test', function () {
 
   it('Checking sound when session end  ', () => {
     
-    cy.loginOpFab('operator1', 'test');
+    cy.loginOpFab('operator1_fr', 'test');
     cy.openOpfabSettings();
 
     // set severity alarm to be notified by sound 

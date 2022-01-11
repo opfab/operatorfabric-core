@@ -10,24 +10,36 @@ operatorfabric.users.default:
   users:
     - login: admin
       groups: ["ADMIN"]
-      entities: ["ENTITY1","ENTITY2"]
-    - login: operator3
+      entities: ["ENTITY1_FR","ENTITY2_FR"]
+    - login: operator3_fr
       groups: ["RTE","ADMIN","ReadOnly","Dispatcher", "REALTIME_USERS"]
-      entities: ["ENTITY1"]
-    - login: operator1-admin
-      groups: ["Dispatcher","ReadOnly","ADMIN"]
-      entities: ["ENTITY1"]
-    - login: operator1
+      entities: ["ENTITY1_FR"]
+    - login: operator1_fr
       firstname : John
       lastname : Doe
       groups: ["Dispatcher","ReadOnly", "REALTIME_USERS"]
-      entities: ["ENTITY1"]
-    - login: operator2
+      entities: ["ENTITY1_FR"]
+    - login: operator2_fr
       groups: ["Planner", "ReadOnly", "REALTIME_USERS"]
-      entities: ["ENTITY2"]
-    - login: operator4
+      entities: ["ENTITY2_FR"]
+    - login: itsupervisor1
       groups: ["Supervisor", "REALTIME_USERS"]
-      entities: ["ENTITY4"]
+      entities: ["IT_SUPERVISOR_ENTITY"]
+    - login: operator1_it
+      groups: ["Dispatcher", "ReadOnly"]
+      entities: ["ENTITY1_IT"]
+    - login: operator2_it
+      groups: ["Planner","ReadOnly"]
+      entities: ["ENTITY2_IT"]
+    - login: operator3_it
+      groups: ["Dispatcher", "Planner", "ReadOnly"]
+      entities: ["ENTITY3_IT"]
+    - login: operator1_nl
+      groups: ["Dispatcher", "Planner", "ReadOnly"]
+      entities: ["ENTITY1_NL"]
+    - login: operator2_nl
+      groups: ["Dispatcher", "Planner", "ReadOnly"]
+      entities: ["ENTITY2_NL"]
   groups:
     - id: ADMIN
       name: ADMINISTRATORS
@@ -54,23 +66,55 @@ operatorfabric.users.default:
       name: REAL TIME GROUP
       description: Real Time Group
   entities:
-   - id: ENTITY1
-     name: Control Room 1
-     description: Control Room 1
-     parents : ["ALLCONTROLROOMS"]
-   - id: ENTITY2
-     name: Control Room 2
-     description: Control Room 2
-     parents : ["ALLCONTROLROOMS"]
-   - id: ENTITY3
-     name: Control Room 3
-     description: Control Room 3
-     parents : ["ALLCONTROLROOMS"]
-   - id: ALLCONTROLROOMS
-     name: All Control Rooms 
-     description: All Control Rooms
+   - id: ENTITY1_FR
+     name: Control Center FR North
+     description: Control Center FR North
+     parents : ["ENTITY_FR"]
+   - id: ENTITY2_FR
+     name: Control Center FR South
+     description: Control Center FR South
+     parents : ["ENTITY_FR"]
+   - id: ENTITY3_FR
+     name: Control Center FR East
+     description: Control Center FR East
+     parents : ["ENTITY_FR"]
+   - id: ENTITY4_FR
+     name: Control Center FR West
+     description: Control Center FR West
+     parents : ["ENTITY_FR"]
+   - id: ENTITY_FR
+     name: French Control Centers
+     description: French Control Centers
      entityAllowedToSendCard: false
-   - id: ENTITY4
-     name: IT Supervision Center 
-     description: IT Supervision Center 
+   - id: IT_SUPERVISOR_ENTITY
+     name: IT SUPERVISION CENTER 
+     description: IT SUPERVISION CENTER
+   - id: ENTITY1_IT
+     name: Control Center IT North
+     description: Control Center IT North
+     parents : ["ENTITY_FR"]
+   - id: ENTITY2_IT
+     name: Control Center IT Center
+     description: Control Center IT Center
+     parents : ["ENTITY_IT"]
+   - id: ENTITY3_IT
+     name: Control Center IT South
+     description: Control Center IT South
+     parents : ["ENTITY_IT"]
+   - id: ENTITY_IT
+     name: Italian Control Centers
+     description: Italian Control Centers
+     entityAllowedToSendCard: false
+   - id: ENTITY1_NL
+     name: Control Center NL North
+     description: Control Center NL North
+     parents : ["ENTITY_NL"]
+   - id: ENTITY2_NL
+     name: Control Center NL South
+     description: Control Center NL South
+     parents : ["ENTITY_NL"]
+   - id: ENTITY_NL
+     name: Dutch Control Centers
+     description: Dutch Control Centers
+     entityAllowedToSendCard: false
 

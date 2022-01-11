@@ -1,10 +1,10 @@
 Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 
   Background:
-   #Getting token for admin and operator1 user calling getToken.feature
+   #Getting token for admin and operator1_fr user calling getToken.feature
     * def signIn = callonce read('../../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = callonce read('../../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
       #defining perimeters
     * def perimeter =
@@ -36,7 +36,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     * def cardForGroup =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "cardForGroup",
@@ -55,7 +55,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     * def cardForEntityAndWithPerimeter =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "cardForEntityAndWithPerimeter",
@@ -65,7 +65,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"a message"},
-	"entityRecipients" : ["ENTITY1"]
+	"entityRecipients" : ["ENTITY1_FR"]
 }
 """
 
@@ -74,7 +74,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     * def cardForEntityAndPerimeter =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"process1",
 	"processInstanceId" : "cardForEntityAndPerimeter",
@@ -84,7 +84,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"a message"},
-	"entityRecipients" : ["ENTITY1"]
+	"entityRecipients" : ["ENTITY1_FR"]
 }
 """
 
@@ -93,7 +93,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     * def cardForEntityAndGroupButNotRights =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "cardForEntityAndGroupButNotRights",
@@ -104,7 +104,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"a message"},
-	"entityRecipients" : ["ENTITY1"]
+	"entityRecipients" : ["ENTITY1_FR"]
 }
 """
 
@@ -113,7 +113,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     * def cardForEntityAndOtherGroupAndPerimeter =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"process1",
 	"processInstanceId" : "cardForEntityAndOtherGroupAndPerimeter",
@@ -124,7 +124,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"a message"},
-	"entityRecipients" : ["ENTITY1"]
+	"entityRecipients" : ["ENTITY1_FR"]
 }
 """
 

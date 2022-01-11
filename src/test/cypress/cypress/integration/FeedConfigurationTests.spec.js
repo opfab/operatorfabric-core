@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,7 +31,7 @@ describe ('Feed configuration tests',function () {
         cy.removePropertyInConf('feed.card.hideSeveritySort','web-ui');
         cy.removePropertyInConf('feed.card.hideAckAllCardsFeature','web-ui');
 
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
 
         // Open filter menu
         cy.get('#opfab-feed-filter-btn-filter').click();
@@ -63,7 +63,7 @@ describe ('Feed configuration tests',function () {
         cy.setPropertyInConf('feed.card.hideSeveritySort','web-ui',true);
         cy.setPropertyInConf('feed.card.hideAckAllCardsFeature','web-ui',true);
 
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
 
         // Open filter menu
         cy.get('#opfab-feed-filter-btn-filter').click();
@@ -94,7 +94,7 @@ describe ('Feed configuration tests',function () {
         cy.setPropertyInConf('feed.card.hideSeveritySort','web-ui',false);
         cy.setPropertyInConf('feed.card.hideAckAllCardsFeature','web-ui',false);
 
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
 
         // Open filter menu
         cy.get('#opfab-feed-filter-btn-filter').click();

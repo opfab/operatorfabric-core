@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -168,7 +168,7 @@ entities allowed to respond to the card. If the user is not in the entity, he wi
 "process"  :"defaultProcess",
 "processInstanceId" : "process4",
 "state": "questionState",
-"entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
+"entitiesAllowedToRespond": ["ENTITY1_FR","ENTITY2_FR"],
 "severity" : "ACTION",
 ...
 
@@ -190,8 +190,8 @@ NOTE: You can also set the property `entitiesRequiredToRespond` to differentiate
 "process"  :"defaultProcess",
 "processInstanceId" : "process4",
 "state": "questionState",
-"entitiesAllowedToRespond": ["ENTITY1","ENTITY2","ENTITY3"],
-"entitiesRequiredToRespond": ["ENTITY1","ENTITY2"],
+"entitiesAllowedToRespond": ["ENTITY1_FR","ENTITY2_FR","ENTITY3_FR"],
+"entitiesRequiredToRespond": ["ENTITY1_FR","ENTITY2_FR"],
 "severity" : "ACTION",
 ...
 

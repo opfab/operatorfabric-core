@@ -1,3 +1,11 @@
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
 
 describe ('Monitoring screen tests',function () {
 
@@ -7,8 +15,8 @@ describe ('Monitoring screen tests',function () {
     });
 
 
-    it('Check composition of multi-filters for process groups/processes/type of state for operator1', function () {
-        cy.loginOpFab('operator1', 'test');
+    it('Check composition of multi-filters for process groups/processes/type of state for operator1_fr', function () {
+        cy.loginOpFab('operator1_fr', 'test');
 
         // We move to monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
@@ -36,8 +44,8 @@ describe ('Monitoring screen tests',function () {
         cy.get('#opfab-typeOfState').contains('CANCELED').should('exist');
     })
 
-    it('Check composition of multi-filters for process groups/processes/type of state for operator4', function () {
-        cy.loginOpFab('operator4', 'test');
+    it('Check composition of multi-filters for process groups/processes/type of state for itsupervisor1', function () {
+        cy.loginOpFab('itsupervisor1', 'test');
 
         // We move to monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
@@ -80,8 +88,8 @@ describe ('Monitoring screen tests',function () {
         cy.get('#opfab-monitoring-no-process-state-available').contains('No process/state available').should('exist');
     })
 
-    it('Check composition of multi-filters for processes/states/typeOfState for operator1, with a config without process group', function () {
-        cy.loginOpFab('operator1', 'test');
+    it('Check composition of multi-filters for processes/states/typeOfState for operator1_fr, with a config without process group', function () {
+        cy.loginOpFab('operator1_fr', 'test');
 
         cy.loadEmptyProcessGroups();
         cy.reload();
@@ -114,12 +122,12 @@ describe ('Monitoring screen tests',function () {
 
     it('Check monitoring cards reception', function () {
 
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
 
         // We move to monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
 
-        // operator1 should see the grid of monitoring cards
+        // operator1_fr should see the grid of monitoring cards
         cy.get("#opfab-monitoring-table").find('#opfab-monitoring-table-grid').should("exist");
 
         // No card detail is displayed
@@ -140,7 +148,7 @@ describe ('Monitoring screen tests',function () {
 
     it('Check filters and reset button', function () {
 
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
 
         // Access monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
@@ -193,7 +201,7 @@ describe ('Monitoring screen tests',function () {
 
     it('Check title sort', function () {
 
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
 
         // Access monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
@@ -232,7 +240,7 @@ describe ('Monitoring screen tests',function () {
 
     it('Check summary sort', function () {
 
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
 
         // Access monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
@@ -271,7 +279,7 @@ describe ('Monitoring screen tests',function () {
 
     it('Check process state sort', function () {
 
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
 
         // Access monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
@@ -310,7 +318,7 @@ describe ('Monitoring screen tests',function () {
 
     it('Check emitter sort', function () {
 
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
 
         // Access monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
@@ -328,7 +336,7 @@ describe ('Monitoring screen tests',function () {
         cy.wait(500);
 
         // Cards should fe sorted by emitter
-        cy.get('@monitoring-table').find('.ag-row').eq(0).find('.ag-cell').eq(6).should('have.text', 'Control Room 1 (publisher_test)');
+        cy.get('@monitoring-table').find('.ag-row').eq(0).find('.ag-cell').eq(6).should('have.text', 'Control Center FR North (publisher_test)');
         cy.get('@monitoring-table').find('.ag-row').eq(1).find('.ag-cell').eq(6).should('have.text', 'publisher_test');
         cy.get('@monitoring-table').find('.ag-row').eq(2).find('.ag-cell').eq(6).should('have.text', 'publisher_test');
         cy.get('@monitoring-table').find('.ag-row').eq(3).find('.ag-cell').eq(6).should('have.text', 'publisher_test');
@@ -343,13 +351,13 @@ describe ('Monitoring screen tests',function () {
         cy.get('@monitoring-table').find('.ag-row').eq(1).find('.ag-cell').eq(6).should('have.text', 'publisher_test');
         cy.get('@monitoring-table').find('.ag-row').eq(2).find('.ag-cell').eq(6).should('have.text', 'publisher_test');
         cy.get('@monitoring-table').find('.ag-row').eq(3).find('.ag-cell').eq(6).should('have.text', 'publisher_test');
-        cy.get('@monitoring-table').find('.ag-row').eq(4).find('.ag-cell').eq(6).should('have.text', 'Control Room 1 (publisher_test)');
+        cy.get('@monitoring-table').find('.ag-row').eq(4).find('.ag-cell').eq(6).should('have.text', 'Control Center FR North (publisher_test)');
 
     })
 
     it('Check answer sort', function () {
 
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
 
         // Access monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
@@ -371,7 +379,7 @@ describe ('Monitoring screen tests',function () {
         cy.get('@monitoring-table').find('.ag-row').eq(1).find('.ag-cell').eq(7).should('have.text', '');
         cy.get('@monitoring-table').find('.ag-row').eq(2).find('.ag-cell').eq(7).should('have.text', '');
         cy.get('@monitoring-table').find('.ag-row').eq(3).find('.ag-cell').eq(7).should('have.text', '');
-        cy.get('@monitoring-table').find('.ag-row').eq(4).find('.ag-cell').eq(7).should('contain.text', 'Control Room 1').should('contain.text', 'Control Room 2');
+        cy.get('@monitoring-table').find('.ag-row').eq(4).find('.ag-cell').eq(7).should('contain.text', 'Control Center FR East').should('contain.text', 'Control Center FR North');
         
 
         // Sorting answers a second time
@@ -379,7 +387,7 @@ describe ('Monitoring screen tests',function () {
         cy.wait(500);
 
         // Cards should fe sorted by emitter
-        cy.get('@monitoring-table').find('.ag-row').eq(0).find('.ag-cell').eq(7).should('contain.text', 'Control Room 1').should('contain.text', 'Control Room 2');
+        cy.get('@monitoring-table').find('.ag-row').eq(0).find('.ag-cell').eq(7).should('contain.text', 'Control Center FR East').should('contain.text', 'Control Center FR North');
         cy.get('@monitoring-table').find('.ag-row').eq(1).find('.ag-cell').eq(7).should('have.text', '');
         cy.get('@monitoring-table').find('.ag-row').eq(2).find('.ag-cell').eq(7).should('have.text', '');
         cy.get('@monitoring-table').find('.ag-row').eq(3).find('.ag-cell').eq(7).should('have.text', '');

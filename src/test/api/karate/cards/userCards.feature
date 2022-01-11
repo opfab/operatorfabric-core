@@ -1,10 +1,10 @@
 Feature: UserCards tests
 
   Background:
-   #Getting token for admin and operator1 user calling getToken.feature
+   #Getting token for admin and operator1_fr user calling getToken.feature
     * def signIn = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
     * def groupKarate =
@@ -55,7 +55,7 @@ Feature: UserCards tests
 
     * def operator1Array =
 """
-[   "operator1"
+[   "operator1_fr"
 ]
 """
     * def groupArray =
@@ -113,7 +113,7 @@ Feature: UserCards tests
     And match response.id == groupKarate.id
 
 
-  Scenario: Add operator1 to groupKarate
+  Scenario: Add operator1_fr to groupKarate
     Given url opfabUrl + 'users/groups/' + groupKarate.id + '/users'
     And header Authorization = 'Bearer ' + authToken
     And request operator1Array
@@ -156,7 +156,7 @@ Feature: UserCards tests
     * def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"initial",
 	"processInstanceId" : "initialCardProcess",
@@ -180,7 +180,7 @@ Feature: UserCards tests
     Then status 201
 
 
-#get card with user operator1
+#get card with user operator1_fr
     Given url opfabUrl + 'cards/cards/initial.initialCardProcess'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
@@ -217,7 +217,7 @@ Feature: UserCards tests
     * def card =
 """
 {
-	"publisher" : "ENTITY1",
+	"publisher" : "ENTITY1_FR",
 	"processVersion" : "1",
 	"process"  :"process_1",
 	"processInstanceId" : "process_id_w",
@@ -247,7 +247,7 @@ Feature: UserCards tests
     Then status 201
 
 
-#get card with user operator1
+#get card with user operator1_fr
     Given url opfabUrl + 'cards/cards/process_1.process_id_w'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
@@ -258,7 +258,7 @@ Feature: UserCards tests
     * def card =
 """
 {
-	"publisher" : "ENTITY1",
+	"publisher" : "ENTITY1_FR",
 	"processVersion" : "1",
 	"process"  :"process_2",
 	"processInstanceId" : "process_o",
@@ -295,7 +295,7 @@ Feature: UserCards tests
 
 
   Scenario: We update the parent card (which id is : initial.initialCardProcess, with keepChildCards=true), then we check that child card was not deleted
-    #get card with user operator1
+    #get card with user operator1_fr
     Given url opfabUrl + 'cards/cards/initial.initialCardProcess'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
@@ -308,7 +308,7 @@ Feature: UserCards tests
     * def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"initial",
 	"processInstanceId" : "initialCardProcess",
@@ -352,7 +352,7 @@ Feature: UserCards tests
     * def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"initial",
 	"processInstanceId" : "initialCardProcess",
@@ -402,7 +402,7 @@ Feature: UserCards tests
     * def childCard1 =
 """
 {
-	"publisher" : "ENTITY1",
+	"publisher" : "ENTITY1_FR",
 	"processVersion" : "1",
 	"process"  :"process_1",
 	"processInstanceId" : "process_id_4",
@@ -439,7 +439,7 @@ Feature: UserCards tests
     * def childCard2 =
 """
 {
-	"publisher" : "ENTITY1",
+	"publisher" : "ENTITY1_FR",
 	"processVersion" : "1",
 	"process"  :"process_1",
 	"processInstanceId" : "process_id_5",
@@ -493,8 +493,8 @@ Feature: UserCards tests
 
 
 # delete user from group
-  Scenario: Delete user operator1 from groupKarate
-    Given url opfabUrl + 'users/groups/' + groupKarate.id  + '/users/operator1'
+  Scenario: Delete user operator1_fr from groupKarate
+    Given url opfabUrl + 'users/groups/' + groupKarate.id  + '/users/operator1_fr'
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200

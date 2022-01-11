@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -86,7 +86,7 @@ cd ./config/docker
 ./docker-compose.sh
 ----
 
-. After a little while, log into the application UI at *localhost:2002/* using operator1/test as credentials.
+. After a little while, log into the application UI at *localhost:2002/* using operator1_fr/test as credentials.
 
 . Push basic configuration and cards using the following test scripts
 +

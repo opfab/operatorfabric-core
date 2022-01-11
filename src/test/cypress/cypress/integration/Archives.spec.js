@@ -1,3 +1,11 @@
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
 
 describe ('Archives screen tests',function () {
 
@@ -9,7 +17,7 @@ describe ('Archives screen tests',function () {
     it('Check archived cards reception', function () {
         cy.deleteAllArchivedCards();
         cy.send6TestCards();
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
 
         // We move to archives screen
         cy.get('#opfab-navbar-menu-archives').click();
@@ -17,7 +25,7 @@ describe ('Archives screen tests',function () {
         // We click the search button
         cy.get('#opfab-archives-btn-search').click();
 
-        // operator1 should see 6 archived cards
+        // operator1_fr should see 6 archived cards
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length',6);
         // No plus icon is displayed
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-icon-plus').should('not.exist');
@@ -61,8 +69,8 @@ describe ('Archives screen tests',function () {
         cy.get('#opfab-archives-collapsible-updates').click({force: true});
     })
 
-    it('Check composition of multi-filters for process groups/processes/states for operator1', function () {
-        cy.loginOpFab('operator1', 'test');
+    it('Check composition of multi-filters for process groups/processes/states for operator1_fr', function () {
+        cy.loginOpFab('operator1_fr', 'test');
 
         // We move to archives screen
         cy.get('#opfab-navbar-menu-archives').click();
@@ -96,8 +104,8 @@ describe ('Archives screen tests',function () {
         cy.get('#opfab-state').contains('Planned outage date response', {matchCase: false}).should('not.exist');
     })
 
-    it('Check composition of multi-filters for process groups/processes/states for operator4', function () {
-        cy.loginOpFab('operator4', 'test');
+    it('Check composition of multi-filters for process groups/processes/states for itsupervisor1', function () {
+        cy.loginOpFab('itsupervisor1', 'test');
 
         // We move to archives screen
         cy.get('#opfab-navbar-menu-archives').click();
@@ -151,8 +159,8 @@ describe ('Archives screen tests',function () {
         cy.get('#opfab-archives-no-process-state-available').contains('No process/state available').should('exist');
     })
 
-    it('Check composition of multi-filters for process groups/processes/states for operator1, with a config without process group', function () {
-        cy.loginOpFab('operator1', 'test');
+    it('Check composition of multi-filters for process groups/processes/states for operator1_fr, with a config without process group', function () {
+        cy.loginOpFab('operator1_fr', 'test');
 
         cy.loadEmptyProcessGroups();
         cy.reload();
@@ -187,7 +195,7 @@ describe ('Archives screen tests',function () {
     })
 
     it('Check behaviour of "isOnlyAChildState" attribute (in file config.json of bundles)', function () {
-        cy.loginOpFab('operator1', 'test');
+        cy.loginOpFab('operator1_fr', 'test');
 
         // We move to archives screen
         cy.get('#opfab-navbar-menu-archives').click();
@@ -219,7 +227,7 @@ describe ('Archives screen tests',function () {
     it('Check behaviour of plus/minus icons', function () {
         cy.deleteAllArchivedCards();
         cy.send6TestCards();
-        cy.loginOpFab('operator1', 'test');
+        cy.loginOpFab('operator1_fr', 'test');
 
         // We move to archives screen
         cy.get('#opfab-navbar-menu-archives').click();

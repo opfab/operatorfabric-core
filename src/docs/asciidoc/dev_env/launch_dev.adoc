@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -134,10 +134,10 @@ bin/run_all.sh status
 == Log into the UI
 
 *_URL:_* localhost:2002/ +
-*_login:_* operator1 +
+*_login:_* operator1_fr +
 *_password:_* test
 
-The other users available in development mode are `operator3` and `admin`, both with `test` as password.
+The other users available in development mode are `operator3_fr` and `admin`, both with `test` as password.
 
 WARNING: It might take a little while for the UI to load even after all services are running.
 

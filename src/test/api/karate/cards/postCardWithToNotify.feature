@@ -2,7 +2,7 @@ Feature: postCardWithToNotify
 
   Background:
 
-    * def signIn = callonce read('../common/getToken.feature') { username: 'operator1'}
+    * def signIn = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authToken = signIn.authToken
     * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authTokenAdmin = signInAdmin.authToken
@@ -12,7 +12,7 @@ Feature: postCardWithToNotify
     * def cardWithToNotifySetToTrue =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process_postCardWithToNotifySetToTrue",
@@ -31,7 +31,7 @@ Feature: postCardWithToNotify
     * def cardWithToNotifySetToFalse =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process_postCardWithToNotifySetToFalse",
@@ -89,7 +89,7 @@ Feature: postCardWithToNotify
     Then status 201
 
 
-#get card with user operator1
+#get card with user operator1_fr
     Given url opfabUrl + 'cards/cards/api_test.process_postCardWithToNotifySetToTrue'
     And header Authorization = 'Bearer ' + authToken
     When method get
@@ -97,7 +97,7 @@ Feature: postCardWithToNotify
     And match response.card.data.message == 'a message with toNotify=true'
     And def cardUid = response.card.uid
 
-#get card form archives with user operator1
+#get card form archives with user operator1_fr
 
     Given url opfabUrl + 'cards/archives/' + cardUid
     And header Authorization = 'Bearer ' + authToken
@@ -114,13 +114,13 @@ Feature: postCardWithToNotify
     And def cardUid = response.uid
 
 
-#get card with user operator1
+#get card with user operator1_fr
     Given url opfabUrl + 'cards/cards/api_test.process_postCardWithToNotifySetToFalse'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 404
 
-#get card form archives with user operator1
+#get card form archives with user operator1_fr
 
     Given url opfabUrl + 'cards/archives/' + cardUid
     And header Authorization = 'Bearer ' + authToken

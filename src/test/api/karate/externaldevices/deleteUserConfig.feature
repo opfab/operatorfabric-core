@@ -6,14 +6,14 @@ Feature: User Configuration Management (Delete)
     * def authToken = signIn.authToken
 
     # Get TSO-operator
-    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
     * def userConfigEndpoint = 'externaldevices/configurations/users'
 
   Scenario: Delete existing userConfiguration
 
-    Given url opfabUrl + userConfigEndpoint + "/operator2"
+    Given url opfabUrl + userConfigEndpoint + "/operator2_fr"
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
@@ -27,13 +27,13 @@ Feature: User Configuration Management (Delete)
 
   Scenario: Delete userConfiguration without authentication
 
-    Given url opfabUrl + userConfigEndpoint + "/operator2"
+    Given url opfabUrl + userConfigEndpoint + "/operator2_fr"
     When method delete
     Then status 401
 
   Scenario: Delete userConfiguration without admin role
 
-    Given url opfabUrl + userConfigEndpoint + "/operator2"
+    Given url opfabUrl + userConfigEndpoint + "/operator2_fr"
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method delete
     Then status 403

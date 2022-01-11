@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,12 +50,12 @@ public class ClientApplication implements CommandLineRunner {
 
 	private void testCard() {
 		Card card = new Card();
-		card.setPublisher("operator1");
+		card.setPublisher("operator1_fr");
 		card.setProcessVersion("1");
 		card.setProcess("defaultProcess");
 		card.setProcessInstanceId("processClient");
 		card.setState("messageState");
-		card.setUserRecipients(List.of("operator1"));
+		card.setUserRecipients(List.of("operator1_fr"));
 		card.setSeverity(SeverityEnum.INFORMATION);
 		card.setStartDate(Instant.now());
 

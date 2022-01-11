@@ -4,7 +4,7 @@
 	"process"  :"cypress",
 	"processInstanceId" : "message1",
 	"state": "messageState",
-	"userRecipients": ["operator1","operator2"],
+	"userRecipients": ["operator1_fr","operator2_fr"],
 	"severity" : "INFORMATION",
 	"startDate" : ${current_date_in_milliseconds_from_epoch_plus_2hours},
 	"endDate" : ${current_date_in_milliseconds_from_epoch_plus_8hours} ,

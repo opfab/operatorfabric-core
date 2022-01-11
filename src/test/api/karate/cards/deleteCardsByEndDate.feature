@@ -2,10 +2,10 @@ Feature: Delete Cards by end date before
 
 
   Background:
-   #Getting token for admin and operator1 user calling getToken.feature
+   #Getting token for admin and operator1_fr user calling getToken.feature
     * def signIn = call read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = call read('../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = call read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
   Scenario: Post 4 cards and  delete
@@ -13,7 +13,7 @@ Feature: Delete Cards by end date before
     * def card1 =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -30,7 +30,7 @@ Feature: Delete Cards by end date before
     * def card2 =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card1",
@@ -46,7 +46,7 @@ Feature: Delete Cards by end date before
     * def card3 =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card2",
@@ -63,7 +63,7 @@ Feature: Delete Cards by end date before
     * def card4 =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card3",
@@ -156,13 +156,13 @@ Feature: Delete Cards by end date before
     When method get
     Then status 404
 
-#get card with user operator1 
+#get card with user operator1_fr 
     Given url opfabUrl + 'cards/cards/api_test.process2card2'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
 
-#get card with user operator1 
+#get card with user operator1_fr 
     Given url opfabUrl + 'cards/cards/api_test.process2card3'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
