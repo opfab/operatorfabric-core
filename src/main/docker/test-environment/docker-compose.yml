@@ -7,7 +7,7 @@ services:
       - "15672:15672"
       - "15674:15674"
   mongodb:
-    image: mongo:4.4.4-bionic
+    image: mongo:4.4.6-bionic
     ports:
       - "27017:27017"
     environment:
