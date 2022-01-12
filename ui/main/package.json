@@ -68,7 +68,7 @@
     "@fortawesome/fontawesome-free": "5.15.4",
     "@ngrx/schematics": "13.0.2",
     "@ngrx/store-devtools": "13.0.2",
-    "@types/file-saver": "2.0.4",
+    "@types/file-saver": "2.0.5",
     "@types/handlebars": "4.0.40",
     "@types/jasmine": "3.10.3",
     "@types/jasminewd2": "2.0.10",
