@@ -314,6 +314,44 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
+  '/businessconfig/realtimescreens':
+    get:
+      summary: Get the configuration for the real time screen
+      description: >-
+        Get the configuration for the real time screen
+      operationId: getRealTimeScreens
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RealTimeScreens'
+        '401':
+          description: Authentication required
+    post:
+      summary: Upload file defining the configuration for the real time screen
+      description: >-
+        Upload file defining the configuration for the real time screen.
+        This file must be in json format and is saved to disk, under the name 'realtimescreens.json'.
+      operationId: uploadRealTimeScreens
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: file
+          in: formData
+          description: file to upload
+          required: true
+          type: file
+      responses:
+        '201':
+          description: Successful creation
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
   '/businessconfig/monitoring':
     get:
       summary: Get the monitoring configuration 
@@ -531,6 +569,38 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/ProcessGroup'
+  RealTimeScreens:
+    properties:
+      realTimeScreens:
+        type: array
+        items:
+          $ref: '#/definitions/RealTimeScreen'
+  RealTimeScreen:
+    properties:
+      screenName:
+        type: string
+      screenColumns:
+        type: array
+        items:
+          $ref: '#/definitions/ScreenColumn'
+  ScreenColumn:
+    properties:
+      entitiesGroups:
+        type: array
+        items:
+          $ref: '#/definitions/EntitiesGroups'
+  EntitiesGroups:
+    properties:
+      name:
+        type: string
+      entities:
+        type: array
+        items:
+          type: string
+      groups:
+        type: array
+        items:
+          type: string
   UserCard:
     properties:
       template:
