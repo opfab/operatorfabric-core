@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -70,6 +70,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
                 .build();
         service.loadCache();
         service.loadProcessGroupsCache();
+        service.loadRealTimeScreensCache();
     }
 
     @AfterAll
@@ -92,6 +93,15 @@ class GivenNonAdminUserBusinessconfigControllerShould {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.groups", hasSize(0)))
+        ;
+    }
+
+    @Test
+    void listRealTimeScreens() throws Exception {
+        mockMvc.perform(get("/businessconfig/realtimescreens"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.realTimeScreens", hasSize(0)))
         ;
     }
 
@@ -233,6 +243,23 @@ class GivenNonAdminUserBusinessconfigControllerShould {
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.groups", hasSize(0)));
+        }
+
+        @Test
+        void notAllowRealTimeScreensToBePost() throws Exception {
+            Path pathToRealTimeScreensFile = Paths.get("./build/test-data/realtimescreens.json");
+
+            MockMultipartFile realTimeScreensFile = new MockMultipartFile("file", "realtimescreens.json", MediaType.TEXT_PLAIN_VALUE, Files
+                    .readAllBytes(pathToRealTimeScreensFile));
+
+            mockMvc.perform(multipart("/businessconfig/realtimescreens").file(realTimeScreensFile))
+                    .andExpect(status().isForbidden())
+            ;
+
+            mockMvc.perform(get("/businessconfig/realtimescreens"))
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.realTimeScreens", hasSize(0)));
         }
 
         @Test

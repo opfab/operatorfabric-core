@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -62,6 +62,7 @@ public class ProcessesService implements ResourceLoaderAware {
     private ResourceLoader resourceLoader;
     private LocalValidatorFactoryBean validator;
     private ProcessGroupsData processGroupsCache;
+    private RealTimeScreensData realTimeScreensCache;
     private final RabbitTemplate rabbitTemplate;
     
     @Autowired
@@ -77,6 +78,7 @@ public class ProcessesService implements ResourceLoaderAware {
     private void init() {
     	loadCache();
     	loadProcessGroupsCache();
+        loadRealTimeScreensCache();
     }
 
     public ProcessGroups getProcessGroupsCache() {
@@ -111,6 +113,28 @@ public class ProcessesService implements ResourceLoaderAware {
         }
         catch (IOException e) {
             log.warn("Unreadable processGroups.json file at  {}", storagePath);
+        }
+    }
+
+    /**
+     * Loads realTimeScreens data to realTimeScreensCache
+     */
+    public void loadRealTimeScreensCache() {
+
+        this.realTimeScreensCache = new RealTimeScreensData(new ArrayList<>());
+        try {
+            Path rootPath = Paths
+                    .get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath())
+                    .normalize();
+
+            File f = new File(rootPath.toString() + "/realtimescreens.json");
+            if (f.exists() && f.isFile()) {
+                log.info("loading realtimescreens.json file from {}", new File(storagePath).getAbsolutePath());
+                this.realTimeScreensCache = objectMapper.readValue(f, RealTimeScreensData.class);
+            }
+        }
+        catch (IOException e) {
+            log.warn("Unreadable realtimescreens.json file at  {}", storagePath);
         }
     }
 
@@ -544,7 +568,30 @@ public class ProcessesService implements ResourceLoaderAware {
     private void pushProcessChangeInRabbit() {
         rabbitTemplate.convertAndSend("PROCESS_EXCHANGE", "", "BUSINESS_CONFIG_CHANGE");
         log.debug("Operation BUSINESS_CONFIG_CHANGE sent to PROCESS_EXCHANGE");
-
     }
 
+    /**
+     * Updates or creates realtimescreens file from a file uploaded from POST /businessconfig/realtimescreens
+     *
+     * @param is realtimescreens file input stream
+     * @throws IOException if error arise during stream reading
+     */
+    public synchronized void updateRealTimeScreensFile(InputStream is) throws IOException {
+        Path rootPath = Paths
+                .get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath())
+                .normalize();
+        if (!rootPath.toFile().exists())
+            throw new FileNotFoundException("No directory available to copy realtimescreens file");
+
+        RealTimeScreensData newRealTimeScreens = objectMapper.readValue(is, RealTimeScreensData.class);
+        is.reset();
+
+        //copy file
+        PathUtils.copyInputStreamToFile(is, rootPath.toString() + "/realtimescreens.json");
+
+        //update cache
+        realTimeScreensCache = newRealTimeScreens;
+    }
+
+    public RealTimeScreens getRealTimeScreensCache() { return realTimeScreensCache; }
 }
