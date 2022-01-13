@@ -19,7 +19,7 @@ then
 fi
 if [ -z $1 ]
 then
-    echo "Usage loadBundle bundle_name opfab_url"
+    echo "Usage : loadBundle bundle_name opfab_url"
 else
 	echo "Will load bundle $1 on $url"
 	(

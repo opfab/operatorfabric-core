@@ -12,7 +12,7 @@
 
 display_usage() {
 	echo "This script deletes the core menu with the given id in the specified json file."
-	echo "Usage: deleteCoreMenu.sh pathToJsonFile menu_id [pathToTargetJsonFile]\n"
+	echo "Usage : deleteCoreMenu.sh pathToJsonFile menu_id [pathToTargetJsonFile]\n"
 	echo "If pathToTargetJsonFile is absent, the source file will be updated."
 	echo "Warning : Arguments shouldn't contain spaces \n"
 }

@@ -19,7 +19,7 @@ then
 fi
 if [ -z $1 ]
 then
-    echo "Usage loadMonitoringConfig file_name opfab_url"
+    echo "Usage : loadMonitoringConfig file_name opfab_url"
 else
 	echo "Will load monitoringConfig $1 on $url"
 	source ../getToken.sh "admin" $url
