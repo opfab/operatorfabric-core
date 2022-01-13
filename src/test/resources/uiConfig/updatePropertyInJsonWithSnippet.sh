@@ -12,7 +12,7 @@
 
 display_usage() {
 	echo "This script updates the specified property in the source json file with the contents of the snippet json file. If the property doesn't exist, it is added."
-	echo "Usage: updatePropertyWithSnippetInJson.sh pathToJsonFile property pathToSnippetFile [pathToTargetJsonFile]\n"
+	echo "Usage : updatePropertyWithSnippetInJson.sh pathToJsonFile property pathToSnippetFile [pathToTargetJsonFile]\n"
 	echo "If pathToTargetJsonFile is absent, the source file will be updated."
 	echo "Warning : Snippet should contain a single json object"
 }

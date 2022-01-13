@@ -12,7 +12,7 @@
 
 display_usage() {
 	echo "This script updates the value for a given property in the specified json file. If the property doesn't exist, it is added."
-	echo "Usage: updatePropertyInJson.sh pathToJsonFile property value [pathToTargetJsonFile]\n"
+	echo "Usage : updatePropertyInJson.sh pathToJsonFile property value [pathToTargetJsonFile]\n"
 	echo "If pathToTargetJsonFile is absent, the source file will be updated."
 	echo "Warning : Arguments shouldn't contain spaces \n"
 }

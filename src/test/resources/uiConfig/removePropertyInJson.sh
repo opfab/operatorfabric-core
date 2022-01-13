@@ -12,7 +12,7 @@
 
 display_usage() {
 	echo "This script removes a given property in the specified json file."
-	echo "Usage: removePropertyInJson.sh pathToJsonFile property [pathToTargetJsonFile]\n"
+	echo "Usage : removePropertyInJson.sh pathToJsonFile property [pathToTargetJsonFile]\n"
 	echo "If pathToTargetJsonFile is absent, the source file will be updated."
 	echo "Note : If the property doesn't exist, the script doesn't throw an error but logs a message. \n"
 }

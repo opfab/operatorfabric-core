@@ -12,10 +12,10 @@
 
 display_usage() {
 	echo "This script updates the value for a given property in the specified json file. If the property doesn't exist, it is added."
-	echo "Usage: updateCoreMenu.sh pathToJsonFile menu_id property value [pathToTargetJsonFile]\n"
-	echo "menu_id: id of the menu to be updated. If it doesn't exist, it will be created."
-	echo "property: visible or showOnlyForGroups."
-	echo "value: true/false for visible, json-encoded array of groups for showOnlyForGroups (e.g. [\\\"GROUP_1\",\\\"GROUP_2\\\"])"
+	echo "Usage : updateCoreMenu.sh pathToJsonFile menu_id property value [pathToTargetJsonFile]\n"
+	echo "menu_id : id of the menu to be updated. If it doesn't exist, it will be created."
+	echo "property : visible or showOnlyForGroups."
+	echo "value : true/false for visible, json-encoded array of groups for showOnlyForGroups (e.g. [\\\"GROUP_1\",\\\"GROUP_2\\\"])"
 	echo "If pathToTargetJsonFile is absent, the source file will be updated."
 	echo "Warning : Arguments shouldn't contain spaces \n"
 }

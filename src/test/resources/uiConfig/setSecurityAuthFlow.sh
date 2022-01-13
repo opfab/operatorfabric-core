@@ -12,10 +12,10 @@
 
 display_usage() {
 	echo "This script changes the security property in the web-ui.json to "
-	echo "Usage: setSecurityAuthFlow.sh environment flow\n"
-	echo "environment: (dev, docker)\n"
-	echo "flow: (CODE, IMPLICIT, PASSWORD)"
-	echo "Example: setSecurityAuthFlow.sh dev CODE sets the authorization flow to CODE in the web-ui.json used in dev mode.\n"
+	echo "Usage : setSecurityAuthFlow.sh environment flow\n"
+	echo "environment : (dev, docker)\n"
+	echo "flow : (CODE, IMPLICIT, PASSWORD)"
+	echo "Example : setSecurityAuthFlow.sh dev CODE sets the authorization flow to CODE in the web-ui.json used in dev mode.\n"
 	echo "Warning : The docker configuration is version-controlled, so make sure not to commit the changes."
 }
 

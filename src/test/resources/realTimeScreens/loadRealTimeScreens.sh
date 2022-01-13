@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2021, RTE (http://www.rte-france.com)
+# Copyright (c) 2022, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,18 +12,18 @@
 # is called from another folder
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-url=$2 
-if [ -z $url ] 
+url=$2
+if [ -z $url ]
 then
 	url="http://localhost"
 fi
 if [ -z $1 ]
 then
-    echo "Usage : deleteBundle bundle_name opfab_url"
+    echo "Usage : loadRealTimeScreens file_name opfab_url"
 else
-	echo "Will delete bundle $1 on $url"
+	echo "Will load realTimeScreens $1 on $url"
 	source ../getToken.sh "admin" $url
-	curl -s -X DELETE "$url:2100/businessconfig/processes/$1" -H "Authorization:Bearer $token"
+	curl -s -X POST "$url:2100/businessconfig/realtimescreens" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -H "Authorization:Bearer $token" -F "file=@$1"
 	echo ""
 fi
 
