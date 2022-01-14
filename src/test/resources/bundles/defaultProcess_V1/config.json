@@ -50,7 +50,8 @@
       "color": "#0070C0",
       "userCard" : {
         "template" : "usercard_process",
-        "lttdVisible" : false
+        "lttdVisible" : false,
+        "recipientList" : [{"id": "ENTITY_FR", "levels": [0,1]}, {"id": "IT_SUPERVISOR_ENTITY"}]
       },
       "templateName": "process",
       "styles": [
