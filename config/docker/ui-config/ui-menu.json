@@ -44,6 +44,11 @@
       "showOnlyForGroups": ["ADMIN"]
     },
     {
+      "id": "externaldevicesconfiguration",
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
+    },
+    {
       "id": "nightdaymode",
       "visible": true
     },

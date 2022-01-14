@@ -11,7 +11,7 @@ import {environment} from '@env/environment';
 import {HttpClient} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
-import {Notification, UserConfiguration} from "@ofModel/external-devices.model";
+import {Device, Notification, UserConfiguration} from "@ofModel/external-devices.model";
 import {Injectable} from '@angular/core';
 import {ErrorService} from "@ofServices/error-service";
 
@@ -45,4 +45,24 @@ export class ExternalDevicesService extends ErrorService {
         return this.httpClient.get<UserConfiguration>(`${this.configurationsUrl}/users/${login}`);
     }
 
+    getAllUserConfigurations(): Observable<UserConfiguration[]> {
+        return this.httpClient.get<UserConfiguration[]>(`${this.configurationsUrl}/users`);
+    }
+
+    getAllDevices(): Observable<Device[]> {
+        return this.httpClient.get<Device[]>(`${this.configurationsUrl}/devices`);
+    }
+
+    updateUserConfiguration(userconfigData: UserConfiguration): Observable<UserConfiguration> {
+        return this.httpClient.post<UserConfiguration>(`${this.configurationsUrl}/users`, userconfigData).pipe(
+          catchError((error: Response) => this.handleError(error))
+        );
+    }
+
+    deleteByUserLogin(login: string) {
+        const url = `${this.configurationsUrl}/users/${login}`;
+    return this.httpClient.delete(url).pipe(
+      catchError((error: Response) => this.handleError(error))
+    );
+    }
 }

@@ -76,7 +76,8 @@
     "usercard": "Card Creation",
     "switchToNightMode": "Night mode",
     "switchToDayMode": "Day mode",
-    "realTimeUsers": "Real time users"
+    "realTimeUsers": "Real time users",
+    "externalDevicesConfiguration": "External devices configuration"
   },
   "timeline": {
     "hideTimeline" : "Hide Timeline",
@@ -400,5 +401,20 @@
   "realTimeUsers": {
     "connected": "Connected",
     "disconnected": "Disconnected"
+  },
+  "externalDevicesConfiguration": {
+    "input": {
+      "selectUserText": "Select user",
+      "selectDeviceText": "Select device",
+      "add": "Add new user device configuration",
+      "edit": "Edit user device configuration",
+      "confirm": "Please confirm",
+      "confirmDelete": "Do you really want to delete device configuration",
+      "allUsersConfigured": "All users devices are already configured"
+    },
+    "userLogin": "User login",
+    "externalDeviceId": "Device",
+    "edit": "Edit",
+    "delete": "Delete"
   }
 }

@@ -1,0 +1,55 @@
+<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)                   -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<div class="modal-content entityModal">
+  <div class="modal-header">
+    <span class="modal-title" *ngIf="row" translate>externalDevicesConfiguration.input.edit</span>
+    <span class="modal-title" *ngIf="!row" translate>externalDevicesConfiguration.input.add</span>
+    <div id="opfab-admin-edit-btn-close" class="opfab-close-modal-icon" aria-label="Close" (click)="dismissModal('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </div>
+  </div>
+  <div class="modal-body scrollable">
+    <div *ngIf="!row && usersDropdownList.length == 0">
+      <span style="text-align: center; font-size: 20px; padding-top: 100px;" translate>externalDevicesConfiguration.input.allUsersConfigured</span>
+    </div>
+    <div *ngIf="row || (!row && usersDropdownList.length > 0)">
+    <form [formGroup]="userdeviceForm" class="opfab-form-lighter">
+      <div class="container">
+        <div class="col">
+
+          <div *ngIf="row" class="opfab-input row">
+            <label for="opfab-userLogin" translate>externalDevicesConfiguration.userLogin</label>
+            <input type="text" disabled value="{{row.userLogin}}"/>
+          </div>
+          <div *ngIf="!row"  class="row">
+            <of-single-filter id="opfab-usersDropdownList" *ngIf="usersDropdownList.length > 0" i18nRootLabelKey="externalDevicesConfiguration." [parentForm]="userdeviceForm" filterPath="userLogin"
+                              [values]="usersDropdownList" [translateLabels]=false [prefixWithValue]=false style="position:relative"
+                              placeholderKey="externalDevicesConfiguration.input.selectUserText" sortValues=true></of-single-filter>
+          </div>
+
+          <div class="row">
+            <of-single-filter id="opfab-devicesDropdownList" *ngIf="devicesDropdownList.length > 0" i18nRootLabelKey="externalDevicesConfiguration." [parentForm]="userdeviceForm" filterPath="externalDeviceId"
+                              [values]="devicesDropdownList" [translateLabels]=false [prefixWithValue]=false style="position:relative"
+                              placeholderKey="externalDevicesConfiguration.input.selectDeviceText" sortValues=true></of-single-filter>
+          </div>
+
+        </div>
+      </div>
+    </form>
+    <div class="modal-footer" style="border-top: none">
+      <button id="opfab-admin-edit-btn-cancel" type="button" (click)="dismissModal('Cancel click')" class="opfab-btn-cancel" data-dismiss="modal"
+              translate>admin.input.close</button>
+      <button id="opfab-admin-edit-btn-add" [disabled]="!userdeviceForm.valid" *ngIf="!row" (click)="update()" class="opfab-btn"
+              translate>externalDevicesConfiguration.input.add</button>
+      <button id="opfab-admin-user-btn-save" [disabled]="!userdeviceForm.valid" *ngIf="row" (click)="update()" class="opfab-btn"
+              translate>admin.input.save</button>
+    </div>
+  </div>
+  </div>
+</div>
