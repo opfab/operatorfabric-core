@@ -1,14 +1,4 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
 
-# This workflow checks out code, builds an image, performs a container image
-# vulnerability scan with Anchore's Grype tool, and integrates the results with GitHub Advanced Security
-# code scanning feature.  For more information on the Anchore scan action usage
-# and parameters, see https://github.com/anchore/scan-action. For more
-# information on Anchore's container image scanning tool Grype, see
-# https://github.com/anchore/grype
 name: Anchore Container Scan
 
 on:
@@ -22,15 +12,77 @@ jobs:
     steps:
     - name: Checkout the code
       uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker pull lfeoperatorfabric/of-cards-consultation-business-service:3.2.0.RELEASE
-    - name: Run the Anchore scan action itself with GitHub Advanced Security code scanning integration enabled
+    - name: Pull docker images 
+      run: | 
+        docker pull lfeoperatorfabric/of-cards-consultation-business-service:SNAPSHOT
+        docker pull lfeoperatorfabric/of-cards-publication-business-service:SNAPSHOT
+        docker pull lfeoperatorfabric/of-users-business-service:SNAPSHOT
+        docker pull lfeoperatorfabric/of-businessconfig-business-service:SNAPSHOT
+        docker pull lfeoperatorfabric/of-external-devices-service:SNAPSHOT
+        docker pull lfeoperatorfabric/of-web-ui:SNAPSHOT
+    - name: Analyse card consultation 
       uses: anchore/scan-action@v3
       with:
-        image: "lfeoperatorfabric/of-cards-consultation-business-service:3.2.0.RELEASE"
+        image: "lfeoperatorfabric/of-cards-consultation-business-service:SNAPSHOT"
         acs-report-enable: true
         fail-build: false
-    - name: Upload Anchore Scan Report
+    - name: Upload Anchore Scan Report for cards-consultation
       uses: github/codeql-action/upload-sarif@v1
       with:
         sarif_file: results.sarif
+        category: consultation
+    - name: Analyse card publication 
+      uses: anchore/scan-action@v3
+      with:
+        image: "lfeoperatorfabric/of-cards-publication-business-service:SNAPSHOT"
+        acs-report-enable: true
+        fail-build: false
+    - name: Upload Anchore Scan Report for cards-publication
+      uses: github/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: results.sarif
+        category: publication
+    - name: Analyse users 
+      uses: anchore/scan-action@v3
+      with:
+        image: "lfeoperatorfabric/of-users-business-service:SNAPSHOT"
+        acs-report-enable: true
+        fail-build: false
+    - name: Upload Anchore Scan Report for users
+      uses: github/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: results.sarif
+        category: users
+    - name: Analyse businessConfig 
+      uses: anchore/scan-action@v3
+      with:
+        image: "lfeoperatorfabric/of-businessconfig-business-service:SNAPSHOT"
+        acs-report-enable: true
+        fail-build: false
+    - name: Upload Anchore Scan Report for businessConfig
+      uses: github/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: results.sarif
+        category: businessconfig
+    - name: Analyse external-devices 
+      uses: anchore/scan-action@v3
+      with:
+        image: "lfeoperatorfabric/of-external-devices-service:SNAPSHOT"
+        acs-report-enable: true
+        fail-build: false
+    - name: Upload Anchore Scan Report for external devices
+      uses: github/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: results.sarif
+        category: external-devices
+    - name: Analyse web-ui
+      uses: anchore/scan-action@v3
+      with:
+        image: "lfeoperatorfabric/of-web-ui:SNAPSHOT"
+        acs-report-enable: true
+        fail-build: false
+    - name: Upload Anchore Scan Report for web-ui
+      uses: github/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: results.sarif
+        category: web-ui
