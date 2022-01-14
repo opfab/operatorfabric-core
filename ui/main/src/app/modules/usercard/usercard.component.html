@@ -9,8 +9,8 @@
 <div [hidden]="displayPreview" [hidden]="displaySendingCardInProgress" *ngIf="!pageLoading && displayForm()" class="container" style="padding-top:20px">
     <of-usercard-select-state-form 
             [cardIdToEdit]="this.cardIdToEdit" 
-            [initialProcess]="this.editCardProcess" 
-            [initialState]="this.editCardState"
+            [initialProcess]="this.editCardProcessId" 
+            [initialState]="this.editCardStateId"
             (stateChange)="stateChanged($event)"
             (emptyProcessList)="setEmptyProcessList()"
             > </of-usercard-select-state-form>
