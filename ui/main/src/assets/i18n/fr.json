@@ -76,7 +76,8 @@
     "usercard": "Création de cartes",
     "switchToNightMode": "Mode nuit",
     "switchToDayMode": "Mode jour",
-    "realTimeUsers": "Utilisateurs temps réel"
+    "realTimeUsers": "Utilisateurs temps réel",
+    "externalDevicesConfiguration": "Configuration des périphériques externes"
   },
   "timeline": {
     "hideTimeline" : "Masquer la timeline",
@@ -400,5 +401,20 @@
   "realTimeUsers": {
     "connected": "Connecté",
     "disconnected": "Déconnecté"
+  },
+  "externalDevicesConfiguration": {
+    "input": {
+      "selectUserText": "Sélectionner un utilisateurs",
+      "selectDeviceText": "Sélectionner un périphérique",
+      "add": "Ajouter une nouvelle configuration",
+      "edit": "Modifier la configuration",
+      "confirm":"Confirmez...",
+      "confirmDelete": "Voulez-vous vraiment supprimer la configuration",
+      "allUsersConfigured": "Tous les périphériques des utilisateurs sont déjà configurés"
+    },
+    "userLogin": "Identifiant utilisateur",
+    "externalDeviceId": "Périphérique",
+    "edit": "Editer",
+    "delete": "Supprimer"
   }
 }

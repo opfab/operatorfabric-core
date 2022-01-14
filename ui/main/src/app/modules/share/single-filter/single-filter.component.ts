@@ -1,4 +1,4 @@
-/* Copyright (c) 2020-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2020-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,6 +30,7 @@ export class SingleFilterComponent implements OnInit, OnChanges {
   @Input() public prefixWithValue: boolean;
   @Input() public placeholderKey: string;
   @Input() public sortValues: boolean;
+  @Input() public translateLabels: boolean = true;
   @Input() public defaultValueSelected?: boolean;
   placeholderText: Observable<any>;
 
@@ -90,15 +91,15 @@ export class SingleFilterComponent implements OnInit, OnChanges {
 
   computeValueAndLabel(entry: ({ value: string, label: (I18n | string) } | string)): { value: string, label: string } {
     if (typeof entry === 'string') {
-      return {value: entry, label: this.translateItem(entry)};
+      return {value: entry, label: this.translateLabels ? this.translateItem(entry) : entry};
     } else if (typeof entry.label === 'string') {
-      return {value: entry.value, label: this.translateItem(entry.label)};
+      return {value: entry.value, label: this.translateLabels ? this.translateItem(entry.label) : entry.label};
     } else if (!entry.label) {
-      return {value: entry.value, label: this.translateItem(entry.value)};
+      return {value: entry.value, label: this.translateLabels ? this.translateItem(entry.value) : entry.value};
     }
     return {
       value: entry.value,
-      label: this.translateItem(entry.label.key, entry.label.parameters)
+      label: this.translateLabels ? this.translateItem(entry.label.key, entry.label.parameters) : entry.label.key
     };
   }
 

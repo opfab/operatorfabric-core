@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -243,7 +243,7 @@ class ConfigServiceShould {
                 .externalDeviceId("ESS5")
                 .build();
 
-        configService.insertUserConfiguration(userConfiguration5);
+        configService.saveUserConfiguration(userConfiguration5);
 
 
         Assertions.assertThat(userConfigurationRepository.findAll().size()).isEqualTo(INITIAL_NUMBER_OF_USER_CONFIGS+1);
@@ -254,22 +254,21 @@ class ConfigServiceShould {
     }
 
     @Test
-    void abortAndThrowExceptionWhenInsertingDuplicateUserConfiguration() {
+    void updateUserConfiguration() {
 
-        UserConfigurationData userConfiguration_1_duplicate = UserConfigurationData.builder()
+        UserConfigurationData userConfiguration_1_update = UserConfigurationData.builder()
                 .userLogin("user1")
                 .externalDeviceId("someOtherDevice")
                 .build();
 
-        assertThrows(DuplicateKeyException.class,
-                () -> configService.insertUserConfiguration(userConfiguration_1_duplicate));
+        configService.saveUserConfiguration(userConfiguration_1_update);
 
-        // Check that nothing was inserted and that the existing item was not updated.
+        // Check that the existing item was updated.
         Assertions.assertThat(userConfigurationRepository.findAll().size()).isEqualTo(INITIAL_NUMBER_OF_USER_CONFIGS);
         Optional<UserConfigurationData> retrievedConfiguration = userConfigurationRepository.findById("user1");
 
         Assertions.assertThat(retrievedConfiguration).isPresent();
-        Assertions.assertThat(retrievedConfiguration.get()).usingRecursiveComparison().isEqualTo(userConfiguration1);
+        Assertions.assertThat(retrievedConfiguration.get()).usingRecursiveComparison().isEqualTo(userConfiguration_1_update);
     }
 
     @Test

@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -148,7 +148,7 @@ public class ConfigurationsController implements ConfigurationsApi {
     @Override
     public Void createUserConfiguration(HttpServletRequest request, HttpServletResponse response, UserConfiguration userConfiguration) {
         String id = userConfiguration.getUserLogin();
-        configService.insertUserConfiguration(userConfiguration);
+        configService.saveUserConfiguration(userConfiguration);
         response.addHeader(LOCATION_HEADER_NAME, request.getContextPath() + "/configurations/signals/" + id);
         response.setStatus(201);
         log.debug(CREATED_LOG, SIGNAL_MAPPING_NAME, id);
