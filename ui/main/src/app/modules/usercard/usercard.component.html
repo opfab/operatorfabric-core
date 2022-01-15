@@ -50,17 +50,7 @@
 
     
     <div *ngIf="recipientVisible">
-        <form [formGroup]="recipientForm" class="opfab-form-lighter">
-            <div class="row">
-                <div class="col-12">
-
-                    <of-multi-filter filterPath="recipients" id="opfab-recipients" [parentForm]="recipientForm"
-                        [values]="recipientsOptions" [translateValues]="false" [dropdownSettings]="dropdownSettings" i18nRootLabelKey="userCard.filters." [selectedItems]="selectedRecipients" >
-                    </of-multi-filter>
-                </div>
-
-            </div> 
-        </form>
+        <of-usercard-recipients-form [userCardConfiguration]="userCardConfiguration" [initialSelectedRecipients]="initialSelectedRecipients" #recipientsForm> </of-usercard-recipients-form>
     </div>
 
 
