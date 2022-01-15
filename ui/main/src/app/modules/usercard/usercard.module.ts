@@ -14,15 +14,15 @@ import {UserCardComponent} from './usercard.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {SingleFilterModule} from '../../modules/share/single-filter/single-filter.module';
 import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
-
 import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
 import { CardDetailModule } from 'app/modules/share/card-detail/card-detail.module';
 import { LightCardModule } from 'app/modules/share/light-card/light-card.module';
 import {UserCardDatesFormComponent} from './datesForm/usercard-dates-form.component';
 import {UserCardSelectStateFormComponent} from './selectStateForm/usercard-select-state-form.component';
+import {UserCardRecipientsFormComponent} from './recipientForm/usercard-recipients-form.component';
 
 @NgModule({
-    declarations: [UserCardComponent, UserCardDatesFormComponent, UserCardSelectStateFormComponent],
+    declarations: [UserCardComponent, UserCardDatesFormComponent, UserCardSelectStateFormComponent, UserCardRecipientsFormComponent],
     imports: [
         CommonModule,
         FormsModule,
@@ -30,7 +30,6 @@ import {UserCardSelectStateFormComponent} from './selectStateForm/usercard-selec
         TranslateModule,
         SingleFilterModule,
         DatetimeFilterModule,
-
         MultiFilterModule,
         CardDetailModule,
         LightCardModule

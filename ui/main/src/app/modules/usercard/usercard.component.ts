@@ -7,14 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {CardService} from '@ofServices/card.service';
 import {UserService} from '@ofServices/user.service';
 import {Card, CardData, fromCardToCardForPublishing, TimeSpan} from '@ofModel/card.model';
-import {Recipient} from '@ofModel/processes.model';
+import {UserCard} from '@ofModel/processes.model';
 import {Severity} from '@ofModel/light-card.model';
 import {Guid} from 'guid-typescript';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
@@ -26,12 +26,12 @@ import {map} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
-import {Entity} from '@ofModel/entity.model';
 import {ConfigService} from '@ofServices/config.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {UserCardDatesFormComponent} from './datesForm/usercard-dates-form.component';
 import {DateField, DatesForm} from './datesForm/dates-form.model';
+import {UserCardRecipientsFormComponent} from './recipientForm/usercard-recipients-form.component';
 
 declare const templateGateway: any;
 
@@ -49,6 +49,7 @@ export class UserCardComponent implements OnInit {
     private selectedProcessId: string;
     private selectedStateId: string;
     private emptyProcessList = false;
+    public userCardConfiguration: UserCard;
 
     // Severity
     private severityForm: FormGroup;
@@ -66,17 +67,10 @@ export class UserCardComponent implements OnInit {
     private lttdVisible = true;
 
 
-    // For recipient components
-    private recipientForm: FormGroup;
-    private useDescriptionFieldForEntityList = false;
+    // For recipients component
     public recipientVisible = true;
-    public recipientsOptions = [];
-    public selectedRecipients = [];
-    public dropdownSettings = {
-        text: '',
-        badgeShowLimit: 30,
-        enableSearchFilter: true
-    };
+    @ViewChild('recipientsForm') recipientsForm: UserCardRecipientsFormComponent;
+    public initialSelectedRecipients = [];
 
     // For edition mode
     @Input() cardIdToEdit: string = null;
@@ -91,6 +85,7 @@ export class UserCardComponent implements OnInit {
     public card: Card;
     public displayPreview = false;
     public displaySendingCardInProgress = false;
+    private useDescriptionFieldForEntityList = false;
 
     public userCardTemplate: SafeHtml;
 
@@ -112,18 +107,15 @@ export class UserCardComponent implements OnInit {
 
     ngOnInit() {
         this.pageLoading = true;
-        this.useDescriptionFieldForEntityList = this.configService.getConfigValue('usercard.useDescriptionFieldForEntityList', false);
         this.severityForm = new FormGroup({
             severity: new FormControl('')
         });
         this.severityForm.get('severity').setValue(Severity.ALARM);
-        this.recipientForm = new FormGroup({
-            recipients: new FormControl([])
-        });
         if (!!this.cardIdToEdit)this.loadCardForEdition();
         else  this.pageLoading = false;
 
         this.publisherForCreatingUsercard = this.findPublisherForCreatingUsercard();
+        this.useDescriptionFieldForEntityList = this.configService.getConfigValue('usercard.useDescriptionFieldForEntityList', false);
     }
 
     private loadCardForEdition() {
@@ -133,7 +125,7 @@ export class UserCardComponent implements OnInit {
             this.editCardProcessId = this.cardToEdit.card.process;
             this.editCardStateId = this.cardToEdit.card.state;
             this.severityForm.get('severity').setValue(this.cardToEdit.card.severity);
-            this.selectedRecipients = this.cardToEdit.card.entityRecipients;
+            this.initialSelectedRecipients = this.cardToEdit.card.entityRecipients;
             this.pageLoading = false;
             this.setDateFormValues();
         });
@@ -171,61 +163,20 @@ export class UserCardComponent implements OnInit {
     public stateChanged(event: any) {
         this.selectedStateId = event.state;
         this.selectedProcessId = event.selectedProcessId;
-        const userCardConfiguration = this.processesService.getProcess(this.selectedProcessId).states[this.selectedStateId].userCard;
-        this.loadRecipientsOptions(userCardConfiguration);
-        this.setFieldsVisibility(userCardConfiguration);
+        this.userCardConfiguration = this.processesService.getProcess(this.selectedProcessId).states[this.selectedStateId].userCard;
+        this.setFieldsVisibility();
         this.setDateFormValues();
-        this.loadTemplate(userCardConfiguration);
+        this.loadTemplate();
     }
 
 
-    private loadRecipientsOptions(userCardConfiguration) {
-        if (!!userCardConfiguration.recipientList) {
-            this.loadRestrictedRecipientListForState(userCardConfiguration.recipientList);
-        } else {
-            this.recipientsOptions = [];
-            this.entitiesService.getEntities().forEach(entity =>
-                this.recipientsOptions.push({id: entity.id, itemName: this.getEntityLabel(entity)}));
-            this.recipientsOptions.sort((a, b) => a.itemName.localeCompare(b.itemName));
-        }
-    }
-
-    private loadRestrictedRecipientListForState(recipients: Recipient[]): void {
-        this.recipientsOptions = [];
-        recipients.forEach(r => {
-            if (!!r.levels) {
-                r.levels.forEach(l => {
-                    this.entitiesService.resolveChildEntitiesByLevel(r.id, l).forEach(entity => {
-                        if (!this.recipientsOptions.find(o => o.id === entity.id)) {
-                            this.recipientsOptions.push({id: entity.id, itemName: this.getEntityLabel(entity)});
-                        }
-                    });
-                });
-            } else {
-                if (!this.recipientsOptions.find(o => o.id === r.id)) {
-                    const entity = this.entitiesService.getEntities().find(e => e.id === r.id);
-                    if (!!entity)
-                        this.recipientsOptions.push({id: entity.id, itemName: this.getEntityLabel(entity)});
-                    else
-                        console.log(new Date().toISOString(), 'Recipient entity not found : ', r.id);
-                }
-            }
-        });
-
-        this.recipientsOptions.sort((a, b) => a.itemName.localeCompare(b.itemName));
-    }
-
-    private getEntityLabel(entity: Entity) {
-        return this.useDescriptionFieldForEntityList ? entity.description : entity.name;
-    }
-
-    private setFieldsVisibility(userCardConfiguration) {
-        if (!!userCardConfiguration) {
-            this.severityVisible = (userCardConfiguration.severityVisible === undefined) ? true : userCardConfiguration.severityVisible;
-            this.startDateVisible = (userCardConfiguration.startDateVisible === undefined) ? true : userCardConfiguration.startDateVisible;
-            this.endDateVisible = (userCardConfiguration.endDateVisible === undefined) ? true : userCardConfiguration.endDateVisible;
-            this.lttdVisible = (userCardConfiguration.lttdVisible === undefined) ? true : userCardConfiguration.lttdVisible;
-            this.recipientVisible = (userCardConfiguration.recipientVisible === undefined) ? true : userCardConfiguration.recipientVisible;
+    private setFieldsVisibility() {
+        if (!!this.userCardConfiguration) {
+            this.severityVisible = (this.userCardConfiguration.severityVisible === undefined) ? true : this.userCardConfiguration.severityVisible;
+            this.startDateVisible = (this.userCardConfiguration.startDateVisible === undefined) ? true : this.userCardConfiguration.startDateVisible;
+            this.endDateVisible = (this.userCardConfiguration.endDateVisible === undefined) ? true : this.userCardConfiguration.endDateVisible;
+            this.lttdVisible = (this.userCardConfiguration.lttdVisible === undefined) ? true : this.userCardConfiguration.lttdVisible;
+            this.recipientVisible = (this.userCardConfiguration.recipientVisible === undefined) ? true : this.userCardConfiguration.recipientVisible;
         } else {
             this.severityVisible = true;
             this.startDateVisible = true;
@@ -236,12 +187,12 @@ export class UserCardComponent implements OnInit {
 
     }
 
-    private loadTemplate(userCardConfiguration) {
+    private loadTemplate() {
         let card;
         if (!!this.cardToEdit) card = this.cardToEdit.card;
         const selected = this.processesService.getProcess(this.selectedProcessId);
-        if (!!userCardConfiguration && !!userCardConfiguration.template) {
-            const templateName = userCardConfiguration.template;
+        if (!!this.userCardConfiguration && !!this.userCardConfiguration.template) {
+            const templateName = this.userCardConfiguration.template;
 
             this.handlebars.queryTemplate(this.selectedProcessId, selected.version, templateName)
                 .pipe(map(t => t(new DetailContext(card, null, null))))
@@ -300,7 +251,7 @@ export class UserCardComponent implements OnInit {
 
         let allRecipientOptions = selectedProcess.states[state].userCard.recipientList;
         allRecipientOptions = allRecipientOptions !== undefined ? allRecipientOptions : [];
-        const selectedRecipients = this.recipientVisible ? this.recipientForm.value['recipients'] : allRecipientOptions;
+        const selectedRecipients = this.recipientVisible ? this.recipientsForm.getSelectedRecipients() : allRecipientOptions;
         const recipients = [];
         selectedRecipients.forEach(entity => recipients.push(entity.id));
 
@@ -411,8 +362,8 @@ export class UserCardComponent implements OnInit {
     }
 
     public getEntityName(id: string): string {
-        const entityOption = this.recipientsOptions.find(entity => entity.id === id);
-        return entityOption.itemName;
+        if (this.useDescriptionFieldForEntityList)  return this.entitiesService.getEntities().find(entity => entity.id === id).description;
+        else return this.entitiesService.getEntities().find(entity => entity.id === id).name;
     }
 
     public confirm(): void {
