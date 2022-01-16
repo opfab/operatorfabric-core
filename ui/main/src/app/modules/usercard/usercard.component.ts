@@ -23,7 +23,6 @@ import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../cards/services/handlebars.service';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {map} from 'rxjs/operators';
-import {TranslateService} from '@ngx-translate/core';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {ConfigService} from '@ofServices/config.service';
@@ -86,6 +85,7 @@ export class UserCardComponent implements OnInit {
     public displayPreview = false;
     public displaySendingCardInProgress = false;
     private useDescriptionFieldForEntityList = false;
+    private specificInformation = null;
 
     public userCardTemplate: SafeHtml;
 
@@ -98,7 +98,6 @@ export class UserCardComponent implements OnInit {
         private processesService: ProcessesService,
         protected configService: ConfigService,
         private handlebars: HandlebarsService,
-        protected translate: TranslateService,
         protected soundNotificationService: SoundNotificationService,
     ) {
         this.setDateFormValues();
@@ -111,8 +110,8 @@ export class UserCardComponent implements OnInit {
             severity: new FormControl('')
         });
         this.severityForm.get('severity').setValue(Severity.ALARM);
-        if (!!this.cardIdToEdit)this.loadCardForEdition();
-        else  this.pageLoading = false;
+        if (!!this.cardIdToEdit) this.loadCardForEdition();
+        else this.pageLoading = false;
 
         this.publisherForCreatingUsercard = this.findPublisherForCreatingUsercard();
         this.useDescriptionFieldForEntityList = this.configService.getConfigValue('usercard.useDescriptionFieldForEntityList', false);
@@ -227,100 +226,17 @@ export class UserCardComponent implements OnInit {
     }
 
     public prepareCard() {
+        if (!this.isSpecificInformationValid()) return;
+        this.specificInformation = templateGateway.getSpecificCardInformation();
+        const startDate = this.getStartDate();
+        const endDate = this.getEndDate();
+        const lttd = this.getLttd();
+        if (!this.areDatesValid(startDate, endDate, lttd)) return;
+        const title = (!!this.specificInformation.card.title) ? this.specificInformation.card.title : 'UNDEFINED';
         const selectedProcess = this.processesService.getProcess(this.selectedProcessId);
-        const processVersion = selectedProcess.version;
-        const state = this.selectedStateId;
+        const recipients = this.getRecipients();
 
-        if (!templateGateway.getSpecificCardInformation) {
-            console.log('No getSpecificCardInformationMethod() in template can not send card');
-            this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
-            return;
-        }
-
-        const specificInformation = templateGateway.getSpecificCardInformation();
-        if (!specificInformation) {
-            console.log('getSpecificCardInformationMethod() in template return no information');
-            this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
-            return;
-        }
-
-        if (!specificInformation.valid) {
-            this.displayMessage(specificInformation.errorMsg, null, MessageLevel.ERROR);
-            return;
-        }
-
-        let allRecipientOptions = selectedProcess.states[state].userCard.recipientList;
-        allRecipientOptions = allRecipientOptions !== undefined ? allRecipientOptions : [];
-        const selectedRecipients = this.recipientVisible ? this.recipientsForm.getSelectedRecipients() : allRecipientOptions;
-        const recipients = [];
-        selectedRecipients.forEach(entity => recipients.push(entity.id));
-
-        let entitiesAllowedToRespond = [];
-        let entitiesRequiredToRespond = [];
-        if (selectedProcess.states[state].response) {
-            const defaultEntityAllowedToRespond = [];
-            recipients.forEach(entity => defaultEntityAllowedToRespond.push(entity));
-
-            entitiesAllowedToRespond = (!!specificInformation.card.entitiesAllowedToRespond) ? specificInformation.card.entitiesAllowedToRespond : defaultEntityAllowedToRespond;
-            entitiesRequiredToRespond = (!!specificInformation.card.entitiesRequiredToRespond) ? specificInformation.card.entitiesRequiredToRespond : [];
-        }
-
-        let startDate = this.datesForm.getStartDateAsEpoch();
-        if (!startDate) startDate = this.defaultStartDate;
-
-
-        let lttd = null;
-        if (this.lttdVisible) lttd = this.datesForm.getLttdAsEpoch();
-        else {
-            if (specificInformation.card.lttd) lttd = specificInformation.card.lttd;
-        }
-
-        let endDate = null;
-        if (this.endDateVisible) endDate = this.datesForm.getEndDateAsEpoch();
-        else {
-            if (specificInformation.card.endDate) endDate = specificInformation.card.endDate;
-        }
-
-        if (!!endDate && endDate < startDate) {
-            this.displayMessage('shared.endDateBeforeStartDate', '', MessageLevel.ERROR);
-            return;
-        }
-
-        if (!!lttd && lttd < startDate) {
-            this.displayMessage('userCard.error.lttdBeforeStartDate', '', MessageLevel.ERROR);
-            return;
-        }
-
-        if (!!lttd && !!endDate && lttd > endDate) {
-            this.displayMessage('userCard.error.lttdAfterEndDate', '', MessageLevel.ERROR);
-            return;
-        }
-
-        const title = (!!specificInformation.card.title) ? specificInformation.card.title : 'UNDEFINED';
-        const summary = (!!specificInformation.card.summary) ? specificInformation.card.summary : 'UNDEFINED';
-        const keepChildCards = (!!specificInformation.card.keepChildCards) ? specificInformation.card.keepChildCards : false;
-        const secondsBeforeTimeSpanForReminder = (specificInformation.card.secondsBeforeTimeSpanForReminder !== undefined) ? specificInformation.card.secondsBeforeTimeSpanForReminder : null;
-        const externalRecipients = (!!specificInformation.card.externalRecipients) ? specificInformation.card.externalRecipients : null;
-        const entitiesAllowedToEdit = (!!specificInformation.card.entitiesAllowedToEdit) ? specificInformation.card.entitiesAllowedToEdit : null;
-
-        let severity;
-        if (this.severityVisible) {
-            severity = this.severityForm.value['severity'];
-        } else {
-            severity = (!!specificInformation.card.severity) ? specificInformation.card.severity : Severity.INFORMATION;
-        }
-
-        let timeSpans = [];
-        if (!!specificInformation.viewCardInAgenda) {
-            if (!!specificInformation.recurrence) timeSpans = [new TimeSpan(startDate, endDate, specificInformation.recurrence)];
-            else timeSpans = [new TimeSpan(startDate, endDate)];
-        }
-
-        let processInstanceId;
-        if (this.editCardMode) processInstanceId = this.cardToEdit.card.processInstanceId;
-        else processInstanceId = Guid.create().toString();
-
-        this.cardService.postTranslateCardField(selectedProcess.id, processVersion, title)
+        this.cardService.postTranslateCardField(selectedProcess.id, selectedProcess.version, title)
             .subscribe(response => {
                 const titleTranslated = response.body.translatedField;
                 this.card = {
@@ -328,41 +244,171 @@ export class UserCardComponent implements OnInit {
                     publishDate: null,
                     publisher: this.publisherForCreatingUsercard,
                     publisherType: 'ENTITY',
-                    processVersion: processVersion,
+                    processVersion: selectedProcess.version,
                     process: selectedProcess.id,
-                    processInstanceId: processInstanceId,
-                    state: state,
+                    processInstanceId: this.getProcessInstanceId(),
+                    state: this.selectedStateId,
                     startDate: startDate,
                     endDate: endDate,
                     lttd: lttd,
-                    severity: severity,
+                    severity: this.getSeverity(),
                     hasBeenAcknowledged: false,
                     hasBeenRead: false,
                     userRecipients: [this.userService.getCurrentUserWithPerimeters().userData.login],
                     entityRecipients: recipients,
-                    entitiesAllowedToRespond: entitiesAllowedToRespond,
-                    entitiesRequiredToRespond: entitiesRequiredToRespond,
-                    entitiesAllowedToEdit: entitiesAllowedToEdit,
-                    externalRecipients: externalRecipients,
+                    entitiesAllowedToRespond: this.getEntitiesAllowedTorespond(recipients),
+                    entitiesRequiredToRespond: (!!this.specificInformation.card.entitiesRequiredToRespond)
+                                                ? this.specificInformation.card.entitiesRequiredToRespond
+                                                : [],
+                    entitiesAllowedToEdit: this.getValueOrNull(this.specificInformation.card.entitiesAllowedToEdit),
+                    externalRecipients: this.getValueOrNull(this.specificInformation.card.externalRecipients),
                     title: title,
                     titleTranslated: titleTranslated,
-                    summary: summary,
-                    secondsBeforeTimeSpanForReminder: secondsBeforeTimeSpanForReminder,
-                    timeSpans: timeSpans,
-                    keepChildCards: keepChildCards,
-                    data: specificInformation.card.data,
+                    summary: (!!this.specificInformation.card.summary) ? this.specificInformation.card.summary : 'UNDEFINED',
+                    secondsBeforeTimeSpanForReminder: this.getValueOrNull(this.specificInformation.card.secondsBeforeTimeSpanForReminder),
+                    timeSpans: this.getTimeSpans(this.specificInformation, startDate, endDate),
+                    keepChildCards: (!!this.specificInformation.card.keepChildCards) ? this.specificInformation.card.keepChildCards : false,
+                    data: this.specificInformation.card.data,
                 } as Card;
 
                 this.displayPreview = true;
             });
     }
 
+    private isSpecificInformationValid(): boolean {
+        if (!templateGateway.getSpecificCardInformation) {
+            console.log('ERROR : No getSpecificCardInformationMethod() in template, card cannot be send');
+            this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
+            return false;
+        }
+
+        const specificInformation = templateGateway.getSpecificCardInformation();
+        if (!specificInformation) {
+            console.log('ERROR : getSpecificCardInformationMethod() in template return no information, card cannot be send');
+            this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
+            return false;
+        }
+
+        if (!specificInformation.valid) {
+            this.displayMessage(specificInformation.errorMsg, null, MessageLevel.ERROR);
+            return false;
+        }
+
+        if (!specificInformation.card) {
+            console.log('ERROR : getSpecificCardInformationMethod() in template return specificInformation with no card field, card cannot be send');
+            this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
+            return false;
+        }
+
+        return true;
+    }
+
+
+    private getStartDate(): number {
+        let startDate = this.datesForm.getStartDateAsEpoch();
+        if (!startDate) startDate = this.defaultStartDate;
+        return startDate;
+    }
+
+    private getEndDate(): number {
+        let endDate = null;
+        if (this.endDateVisible) endDate = this.datesForm.getEndDateAsEpoch();
+        else {
+            if (this.specificInformation.card.endDate) endDate = this.specificInformation.card.endDate;
+        }
+        return endDate;
+    }
+
+    private getLttd(): number {
+        let lttd = null;
+        if (this.lttdVisible) lttd = this.datesForm.getLttdAsEpoch();
+        else {
+            if (this.specificInformation.card.lttd) lttd = this.specificInformation.card.lttd;
+        }
+        return lttd;
+    }
+
+    private areDatesValid(startDate, endDate, lttd): boolean {
+
+        if (!!endDate && endDate < startDate) {
+            this.displayMessage('shared.endDateBeforeStartDate', '', MessageLevel.ERROR);
+            return false ;
+        }
+
+        if (!!lttd && lttd < startDate) {
+            this.displayMessage('userCard.error.lttdBeforeStartDate', '', MessageLevel.ERROR);
+            return false ;
+        }
+
+        if (!!lttd && !!endDate && lttd > endDate) {
+            this.displayMessage('userCard.error.lttdAfterEndDate', '', MessageLevel.ERROR);
+            return false ;
+        }
+        return true;
+    }
+
+    private getRecipients(): string[] {
+        const selectedProcess = this.processesService.getProcess(this.selectedProcessId);
+        let allRecipientOptions = selectedProcess.states[this.selectedStateId].userCard.recipientList;
+        allRecipientOptions = allRecipientOptions !== undefined ? allRecipientOptions : [];
+        const selectedRecipients = this.recipientVisible ? this.recipientsForm.getSelectedRecipients() : allRecipientOptions;
+        const recipients = [];
+        selectedRecipients.forEach(entity => recipients.push(entity.id));
+        return recipients;
+    }
+
+    private getEntitiesAllowedTorespond(recipients): string[] {
+        let entitiesAllowedToRespond = [];
+        if (this.processesService.getProcess(this.selectedProcessId).states[this.selectedStateId].response) {
+            const defaultEntityAllowedToRespond = [];
+            recipients.forEach(entity => defaultEntityAllowedToRespond.push(entity));
+
+            entitiesAllowedToRespond = (!!this.specificInformation.card.entitiesAllowedToRespond)
+                                        ? this.specificInformation.card.entitiesAllowedToRespond
+                                        : defaultEntityAllowedToRespond;
+        }
+        return entitiesAllowedToRespond;
+    }
+
+    private getProcessInstanceId(): string {
+        let processInstanceId;
+        if (this.editCardMode) processInstanceId = this.cardToEdit.card.processInstanceId;
+        else processInstanceId = Guid.create().toString();
+        return processInstanceId;
+    }
+
+    private getSeverity() {
+        let severity;
+        if (this.severityVisible) {
+            severity = this.severityForm.value['severity'];
+        } else {
+            severity = (this.specificInformation.card.severity !== undefined)
+                        ? this.specificInformation.card.severity
+                        : Severity.INFORMATION;
+        }
+        return severity;
+    }
+
+    private getValueOrNull(value) {
+        return (value !== undefined) ? value : null;
+    }
+
+    private getTimeSpans(specificInformation, startDate, endDate): TimeSpan[] {
+        let timeSpans = [];
+        if (!!specificInformation.viewCardInAgenda) {
+            if (!!specificInformation.recurrence) timeSpans = [new TimeSpan(startDate, endDate, specificInformation.recurrence)];
+            else timeSpans = [new TimeSpan(startDate, endDate)];
+        }
+        return timeSpans;
+    }
+
+
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
         this.store.dispatch(new AlertMessage({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}}));
     }
 
     public getEntityName(id: string): string {
-        if (this.useDescriptionFieldForEntityList)  return this.entitiesService.getEntities().find(entity => entity.id === id).description;
+        if (this.useDescriptionFieldForEntityList) return this.entitiesService.getEntities().find(entity => entity.id === id).description;
         else return this.entitiesService.getEntities().find(entity => entity.id === id).name;
     }
 
@@ -395,11 +441,11 @@ export class UserCardComponent implements OnInit {
             );
     }
 
-    cancel(): void {
+    public cancel(): void {
         this.userCardModal.close();
     }
 
-    decline(): void {
+    public decline(): void {
         this.displayPreview = false;
     }
 
