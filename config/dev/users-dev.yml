@@ -10,22 +10,22 @@ operatorfabric.users.default:
     - login: admin
       groups: ["ADMIN"]
       entities: ["ENTITY1_FR","ENTITY2_FR"]
-    - login: operator3_fr
-      groups: ["RTE","ADMIN","ReadOnly","Dispatcher", "REALTIME_USERS"]
-      entities: ["ENTITY1_FR"]
     - login: operator1_fr
       firstname : John
       lastname : Doe
-      groups: ["Dispatcher","ReadOnly", "REALTIME_USERS"]
+      groups: ["Dispatcher","ReadOnly"]
       entities: ["ENTITY1_FR"]
     - login: operator2_fr
-      groups: ["Planner", "ReadOnly", "REALTIME_USERS"]
+      groups: ["Planner", "ReadOnly"]
       entities: ["ENTITY2_FR"]
+    - login: operator3_fr
+      groups: [ "RTE","ADMIN","ReadOnly","Dispatcher"]
+      entities: [ "ENTITY1_FR" ]
     - login: itsupervisor1
-      groups: ["Supervisor", "REALTIME_USERS"]
+      groups: ["Supervisor"]
       entities: ["IT_SUPERVISOR_ENTITY"]
     - login: operator1_it
-      groups: ["Dispatcher", "ReadOnly",]
+      groups: ["Dispatcher", "ReadOnly"]
       entities: ["ENTITY1_IT"]
     - login: operator2_it
       groups: ["Planner", "ReadOnly"]
@@ -61,9 +61,6 @@ operatorfabric.users.default:
     - id: ReadOnly
       name: ReadOnly
       description: ReadOnly Group
-    - id: REALTIME_USERS
-      name: REAL TIME GROUP
-      description: Real Time Group
   entities:
    - id: ENTITY1_FR
      name: Control Center FR North
@@ -86,7 +83,7 @@ operatorfabric.users.default:
      description: French Control Centers
      entityAllowedToSendCard: false
    - id: IT_SUPERVISOR_ENTITY
-     name: IT SUPERVISION CENTER 
+     name: IT SUPERVISION CENTER
      description: IT SUPERVISION CENTER
    - id: ENTITY1_IT
      name: Control Center IT North

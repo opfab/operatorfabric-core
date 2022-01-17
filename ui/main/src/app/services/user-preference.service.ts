@@ -14,7 +14,7 @@ import {Injectable} from '@angular/core';
   providedIn: 'root'
 })
 export class UserPreferencesService {
-  
+
 
   setPreference(key, value) {
     localStorage.setItem(key, value);

@@ -30,7 +30,7 @@ import {Actions, ofType} from '@ngrx/effects';
 import {AlertActions, AlertActionTypes} from '@ofStore/actions/alert.actions';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {GroupsService} from '@ofServices/groups.service';
-import {SoundNotificationService} from "@ofServices/sound-notification.service";
+import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {AuthenticationActionTypes, TryToLogOut} from '@ofStore/actions/authentication.actions';
 
@@ -105,7 +105,7 @@ export class AppComponent implements OnInit {
       },
       error: catchError((err, caught) => {
         console.error('Impossible to load configuration file web-ui.json', err);
-        return caught;})
+        return caught; })
     });
 
   }
@@ -170,7 +170,7 @@ export class AppComponent implements OnInit {
                 },
                   error: catchError((err, caught) => {
                     console.error('Error in application initialization', err);
-                    return caught;})
+                    return caught; })
                  });
           }
         });

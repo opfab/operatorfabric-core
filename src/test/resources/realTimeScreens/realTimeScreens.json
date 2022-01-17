@@ -1,7 +1,7 @@
 {
   "realTimeScreens": [
     {
-      "screenName": "All control centers",
+      "screenName": "All Control Centers",
       "screenColumns": [
         {
           "entitiesGroups": [
@@ -30,6 +30,108 @@
                 "Planner"
               ]
             },
+            {
+              "name": "Dutch Control Centers",
+              "entities": [
+                "ENTITY1_NL",
+                "ENTITY2_NL"
+              ],
+              "groups": [
+                "Dispatcher",
+                "Planner"
+              ]
+            }
+          ]
+        },
+        {
+          "entitiesGroups": [
+            {
+              "name": "Central Supervision Centers",
+              "entities": [
+                "IT_SUPERVISOR_ENTITY"
+              ],
+              "groups": [
+                "Supervisor"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenName": "French Control Centers",
+      "screenColumns": [
+        {
+          "entitiesGroups": [
+            {
+              "name": "French Control Centers",
+              "entities": [
+                "ENTITY1_FR",
+                "ENTITY2_FR",
+                "ENTITY3_FR",
+                "ENTITY4_FR"
+              ],
+              "groups": [
+                "Dispatcher",
+                "Planner"
+              ]
+            }
+          ]
+        },
+        {
+          "entitiesGroups": [
+            {
+              "name": "Central Supervision Centers",
+              "entities": [
+                "IT_SUPERVISOR_ENTITY"
+              ],
+              "groups": [
+                "Supervisor"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenName": "Italian Control Centers",
+      "screenColumns": [
+        {
+          "entitiesGroups": [
+            {
+              "name": "Italian Control Centers",
+              "entities": [
+                "ENTITY1_IT",
+                "ENTITY2_IT",
+                "ENTITY3_IT"
+              ],
+              "groups": [
+                "Dispatcher",
+                "Planner"
+              ]
+            }
+          ]
+        },
+        {
+          "entitiesGroups": [
+            {
+              "name": "Central Supervision Centers",
+              "entities": [
+                "IT_SUPERVISOR_ENTITY"
+              ],
+              "groups": [
+                "Supervisor"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenName": "Dutch Control Centers",
+      "screenColumns": [
+        {
+          "entitiesGroups": [
             {
               "name": "Dutch Control Centers",
               "entities": [
