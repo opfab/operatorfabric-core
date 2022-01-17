@@ -51,6 +51,11 @@ Cypress.Commands.add('loadTestConf', () => {
     cy.exec('cd .. && ./resources/loadTestConf.sh '+Cypress.env('host'));
 })
 
+Cypress.Commands.add('loadRealTimeScreensConf', () => {
+    // This clears existing realtimescreens.json and loads a new one
+    cy.exec('cd ../resources/realTimeScreens && ./loadRealTimeScreens.sh realTimeScreens.json '+Cypress.env('host'));
+})
+
 Cypress.Commands.add('loadEmptyProcessGroups', () => {
     // This load a process groups file without any process group
     cy.exec('cd ../resources/processGroups && ./loadProcessGroups.sh emptyProcessGroups.json '+Cypress.env('host'));

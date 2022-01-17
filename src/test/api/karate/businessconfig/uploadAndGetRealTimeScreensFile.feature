@@ -47,7 +47,7 @@ Feature: uploadRealTimeScreens
     When method GET
     Then status 200
     And assert response.realTimeScreens.length == 1
-    Then match response.realTimeScreens[0].screenName == 'All control centers'
+    Then match response.realTimeScreens[0].screenName == 'All Control Centers'
     Then assert response.realTimeScreens[0].screenColumns.length == 2
     Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups.length == 3
     Then match response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].name == 'French Control Centers'
@@ -69,7 +69,7 @@ Feature: uploadRealTimeScreens
     When method GET
     Then status 200
     And assert response.realTimeScreens.length == 1
-    Then match response.realTimeScreens[0].screenName == 'All control centers'
+    Then match response.realTimeScreens[0].screenName == 'All Control Centers'
     Then assert response.realTimeScreens[0].screenColumns.length == 2
     Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups.length == 1
     Then match response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].name == 'Central Supervision Centers'

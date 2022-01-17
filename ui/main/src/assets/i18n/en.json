@@ -52,7 +52,8 @@
     "exportToExcel": "Export data",
     "resultsNumber":"Results number",
     "noProcessStateAvailable": "No process/state available",
-    "endDateBeforeStartDate": "End date must be after start date"
+    "endDateBeforeStartDate": "End date must be after start date",
+    "featureNotConfigured": "Feature not configured"
   },
   "global":{
     "connectionLost":"Connection lost",
@@ -402,7 +403,9 @@
   },
   "realTimeUsers": {
     "connected": "Connected",
-    "disconnected": "Disconnected"
+    "disconnected": "Disconnected",
+    "selectScreenText": "Select a screen",
+    "realTimeScreen": "Real time screen"
   },
   "externalDevicesConfiguration": {
     "input": {

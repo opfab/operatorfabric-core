@@ -296,7 +296,7 @@ class GivenAdminUserBusinessconfigControllerShould {
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.realTimeScreens", hasSize(1)))
-                    .andExpect(jsonPath("$.realTimeScreens[0].screenName", is("All control centers")))
+                    .andExpect(jsonPath("$.realTimeScreens[0].screenName", is("All Control Centers")))
                     .andExpect(jsonPath("$.realTimeScreens[0].screenColumns", hasSize(2)))
                     .andExpect(jsonPath("$.realTimeScreens[0].screenColumns[0].entitiesGroups", hasSize(3)))
                     .andExpect(jsonPath("$.realTimeScreens[0].screenColumns[0].entitiesGroups[0].name", is("French Control Centers")))

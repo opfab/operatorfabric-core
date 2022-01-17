@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2021, RTE (http://www.rte-france.com)                   -->
+<!-- Copyright (c) 2021-2022, RTE (http://www.rte-france.com)                   -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -10,18 +10,54 @@
     menu.realTimeUsers
 </div>
 
-<div *ngIf="this.realTimeUsersDisconnected.length" class="row opfab-realtimeusers-userslist" id="opfab-realtimeusers-disconnected">
-    <div *ngFor="let disconnectedUser of this.realTimeUsersDisconnected;" style="padding-right: 30px">
-        <p class="font-weight-bold">{{disconnectedUser}}&nbsp;&nbsp;
-            <span class="badge bg-danger" translate>realTimeUsers.disconnected</span>
-        </p>
-    </div>
-</div>
+<form [formGroup]="realTimeScreensForm">
 
-<div *ngIf="this.realTimeUsersConnected.length" class="row opfab-realtimeusers-userslist" id="opfab-realtimeusers-connected">
-    <div *ngFor="let connectedUser of this.realTimeUsersConnected;" style="padding-right: 30px">
-        <p class="font-weight-bold">{{connectedUser}}&nbsp;&nbsp;
-            <span class="badge bg-success" translate>realTimeUsers.connected</span>
-        </p>
+    <div *ngIf="this.realTimeScreensLoaded && !this.realTimeScreens.length; then noScreenConfiguration"></div>
+    <div *ngIf="this.realTimeScreensLoaded && this.realTimeScreens && this.realTimeScreens.length" >
+
+        <br>
+        <div style="background-color: var(--opfab-bgcolor-darker)">
+            <br>
+            <div class="row" style="margin-left: 0px;margin-right: 0px;">
+                <div class="col-sm text-center" style="max-width: max-content;min-width: 15%">
+                    <of-single-filter id="of-realtimeusers-screen-selector" [parentForm]="realTimeScreensForm" [values]="realTimeScreensOptions"
+                                      i18nRootLabelKey="realTimeUsers." placeholderKey="realTimeUsers.selectScreenText" filterPath="realTimeScreen">
+                    </of-single-filter>
+                </div>
+            </div>
+            <br>
+        </div>
+
+        <div class="row">
+            <div class="col-sm" *ngFor="let column of this.realTimeScreens[realTimeScreenIndexToDisplay].screenColumns; let colIndex = index;">
+                <div class="opfab-realtimeusers-entitiesgroups " *ngFor="let entitiesGroupsElement of column.entitiesGroups;">
+                    <span class="opfab-realtimeusers-entitiesgroups-title">{{entitiesGroupsElement.name}}</span>
+                    <table aria-describedby="real time users table" style="width: 100%;table-layout: fixed">
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col" *ngFor="let group of entitiesGroupsElement.groups;">{{this.groupsService.getGroupName(group)}}</th>
+                            <!-- below, we create empty columns (if necessary) to have same number of columns per screenColumns -->
+                            <th scope="col" *ngFor="let item of [].constructor(this.columnsNumberPerScreenAndScreenColumn.get(realTimeScreenIndexToDisplay + '.' + colIndex)
+                                - entitiesGroupsElement.groups.length)">
+                        </tr>
+                        <tr *ngFor="let entity of entitiesGroupsElement.entities;">
+                            <th scope="row">{{this.entitiesService.getEntityName(entity)}}</th>
+                            <td *ngFor="let group of entitiesGroupsElement.groups;">
+                                <ng-template #connected>
+                                    <span class="badge bg-success badge-pill">{{getNumberOfConnectedUsersInEntityAndGroup(entity + '.' + group)}}
+                                    </span>&nbsp;({{labelForConnectedUsers(entity + '.' + group)}})
+                                </ng-template>
+                                <ng-template #disconnected><span class="badge bg-danger badge-pill">0</span></ng-template>
+                                <span *ngIf="getNumberOfConnectedUsersInEntityAndGroup(entity + '.' + group);then connected else disconnected"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+</form>
+
+<ng-template #noScreenConfiguration>
+    <div id="opfab-realtimeusers-no-screen-configuration" style="text-align: center; font-size: 20px; padding-top: 100px" translate>shared.featureNotConfigured</div>
+</ng-template>

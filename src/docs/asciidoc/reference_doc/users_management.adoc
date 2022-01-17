@@ -96,8 +96,182 @@ The endPoint `/cards/connections` gives the list of connected user in real time.
 
 == Real time users
 
-As an admin (or member of the ADMIN group), OperatorFabric allows you to see which "real-time" users are logged in and not logged in. To be part of the "real-time" users, you must be a member of the REALTIME_USERS group.
+OperatorFabric allows you to see which entities/groups are logged in and not logged in. To have this information, you must upload a configuration file, using the endpoint /businessconfig/realtimescreens, via a POST request. In this file, you can configure several screens, each one containing the list of entities/groups you want to see.
 
 This interface is accessible via the user menu (top right of the screen).
 
+Here is an example of the configuration file :
 
+[source,json]
+----
+{
+  "realTimeScreens": [
+    {
+      "screenName": "All Control Centers",
+      "screenColumns": [
+        {
+          "entitiesGroups": [
+            {
+              "name": "French Control Centers",
+              "entities": [
+                "ENTITY1_FR",
+                "ENTITY2_FR",
+                "ENTITY3_FR",
+                "ENTITY4_FR"
+              ],
+              "groups": [
+                "Dispatcher",
+                "Planner"
+              ]
+            },
+            {
+              "name": "Italian Control Centers",
+              "entities": [
+                "ENTITY1_IT",
+                "ENTITY2_IT",
+                "ENTITY3_IT"
+              ],
+              "groups": [
+                "Dispatcher",
+                "Planner"
+              ]
+            },
+            {
+              "name": "Dutch Control Centers",
+              "entities": [
+                "ENTITY1_NL",
+                "ENTITY2_NL"
+              ],
+              "groups": [
+                "Dispatcher",
+                "Planner"
+              ]
+            }
+          ]
+        },
+        {
+          "entitiesGroups": [
+            {
+              "name": "Central Supervision Centers",
+              "entities": [
+                "IT_SUPERVISOR_ENTITY"
+              ],
+              "groups": [
+                "Supervisor"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenName": "French Control Centers",
+      "screenColumns": [
+        {
+          "entitiesGroups": [
+            {
+              "name": "French Control Centers",
+              "entities": [
+                "ENTITY1_FR",
+                "ENTITY2_FR",
+                "ENTITY3_FR",
+                "ENTITY4_FR"
+              ],
+              "groups": [
+                "Dispatcher",
+                "Planner"
+              ]
+            }
+          ]
+        },
+        {
+          "entitiesGroups": [
+            {
+              "name": "Central Supervision Centers",
+              "entities": [
+                "IT_SUPERVISOR_ENTITY"
+              ],
+              "groups": [
+                "Supervisor"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenName": "Italian Control Centers",
+      "screenColumns": [
+        {
+          "entitiesGroups": [
+            {
+              "name": "Italian Control Centers",
+              "entities": [
+                "ENTITY1_IT",
+                "ENTITY2_IT",
+                "ENTITY3_IT"
+              ],
+              "groups": [
+                "Dispatcher",
+                "Planner"
+              ]
+            }
+          ]
+        },
+        {
+          "entitiesGroups": [
+            {
+              "name": "Central Supervision Centers",
+              "entities": [
+                "IT_SUPERVISOR_ENTITY"
+              ],
+              "groups": [
+                "Supervisor"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenName": "Dutch Control Centers",
+      "screenColumns": [
+        {
+          "entitiesGroups": [
+            {
+              "name": "Dutch Control Centers",
+              "entities": [
+                "ENTITY1_NL",
+                "ENTITY2_NL"
+              ],
+              "groups": [
+                "Dispatcher",
+                "Planner"
+              ]
+            }
+          ]
+        },
+        {
+          "entitiesGroups": [
+            {
+              "name": "Central Supervision Centers",
+              "entities": [
+                "IT_SUPERVISOR_ENTITY"
+              ],
+              "groups": [
+                "Supervisor"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+With this configuration file, 4 different screens will be available : "All Control Centers", "French Control Centers", "Italian Control Centers" and "Dutch Control Centers".
+
+For example, in the UI, "All Control Centers" will look like :
+
+image::realtimescreens_screenshot.png[Real Time Screens screenshot,align="center"]
