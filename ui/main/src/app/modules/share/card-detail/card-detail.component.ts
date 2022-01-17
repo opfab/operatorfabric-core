@@ -152,6 +152,7 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
                     setTimeout(() => { // wait for DOM rendering
                         this.reinsertScripts();
                         templateGateway.setScreenSize(this.screenSize);
+                        setTimeout(() => templateGateway.onTemplateRenderingComplete(), 10);
                     }, 10);
                 },
                 error: (error) => {

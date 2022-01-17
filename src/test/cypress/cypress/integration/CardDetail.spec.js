@@ -58,8 +58,8 @@ describe('Card detail', function () {
             cy.get("#templateGateway-getAllEntities").contains("entity[4]:id=ENTITY_FR,name=French Control Centers,description=French Control Centers,entityAllowedToSendCard=false,parents=");
             cy.get("#templateGateway-getAllEntities").contains("entity[5]:id=IT_SUPERVISOR_ENTITY,name=IT SUPERVISION CENTER,description=IT SUPERVISION CENTER,entityAllowedToSendCard=true,parents=");
             cy.get("#templateGateway-getEntity-ENTITY1_FR").contains(/^ENTITY1_FR,Control Center FR North,Control Center FR North,true,ENTITY_FR$/);
-        
             cy.get("#screenSize").contains("md");
+            cy.get("#templateGateway-onTemplateRenderingComplete").contains("ok");
             // see card in full screen 
             cy.get("#opfab-card-detail-fullscreen-button").click();
             cy.get("#screenSize").contains("lg");
@@ -108,6 +108,7 @@ describe('Card detail', function () {
             cy.get("#templateGateway-isUserMemberOfAnEntityRequiredToRespond").contains("true");
             cy.get("#templateGateway-getDisplayContext").contains(/^archive$/);
             cy.get("#screenSize").contains("lg");
+            cy.get("#templateGateway-onTemplateRenderingComplete").contains("ok");
 
             // handlebars templating 
             cy.get("#handlebars-simpleData").contains(/^test$/);
