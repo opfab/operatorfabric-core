@@ -143,3 +143,12 @@ Cypress.Commands.add('stubPlaySound', () => {
     })
 })
 
+Cypress.Commands.add('setFormDateTime', (formName, year, month, day, hours, minutes) => {
+
+    cy.get('#opfab-datepicker-' + formName).click();
+    cy.get('[aria-label="Select year"]').select(year);
+    cy.get('[aria-label="Select month"]').select(month);
+    cy.get('[aria-label*="' + day + ',"]').click();
+    cy.get('#opfab-timepicker-' + formName).find('[aria-label="Hours"]').click().type('{backspace}{backspace}' + hours);
+    cy.get('#opfab-timepicker-' + formName).find('[aria-label="Minutes"]').click().type('{backspace}{backspace}' + minutes);
+})

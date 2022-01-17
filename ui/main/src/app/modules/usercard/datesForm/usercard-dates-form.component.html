@@ -8,21 +8,21 @@
 
 <form [formGroup]="datesForm" class="opfab-form-lighter">
     <div class="justify-content-center" style="display:flex;width:100%;align-content:center;flex-wrap: wrap;">
-        <div *ngIf="datesFormInputData.startDate.isVisible" style="width:280px; margin-right: 30px; margin-left: 30px;">
+        <div *ngIf="datesFormInputData.startDate.isVisible" style="width:280px; margin-right: 30px; margin-left: 30px;" id="opfab-usercard-startdate-choice">
             <of-datetime-filter  filterPath="startDate" formControlName="startDate"
                 labelKey="userCard.filters."  [maxDate]="startDateMax"
                 (change)="onDateTimeChange($event)">
             </of-datetime-filter>
         </div>
 
-        <div *ngIf="datesFormInputData.endDate.isVisible" style="width: 280px; margin-right: 30px; margin-left: 30px;">
+        <div *ngIf="datesFormInputData.endDate.isVisible" style="width: 280px; margin-right: 30px; margin-left: 30px;" id="opfab-usercard-enddate-choice">
             <of-datetime-filter filterPath="endDate" formControlName="endDate"
                 labelKey="userCard.filters." [minDate]="endDateMin"
                 (change)="onDateTimeChange($event)">
             </of-datetime-filter>
         </div>
 
-        <div *ngIf="datesFormInputData.lttd.isVisible" style="width: 280px; margin-right: 30px; margin-left: 30px;">
+        <div *ngIf="datesFormInputData.lttd.isVisible" style="width: 280px; margin-right: 30px; margin-left: 30px;" id="opfab-usercard-lttd-choice">
             <of-datetime-filter filterPath="lttd" formControlName="lttd" labelKey="userCard.filters.">
             </of-datetime-filter>
         </div>
