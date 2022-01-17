@@ -275,6 +275,11 @@ body {
   background-color: var(--opfab-bgcolor-darker);
 }
 
+// HOUR INPUT FIELD STYLE 
+::-webkit-calendar-picker-indicator {
+  filter: invert(50%); // sets the time picker in gray on google chrome
+}  
+
 // TIME INPUT IN DATE TIME PICKER 
 .ngb-tp-input-container .form-control {
   padding: 0px
