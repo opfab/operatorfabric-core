@@ -11,9 +11,6 @@ operatorfabric.users.default:
     - login: admin
       groups: ["ADMIN"]
       entities: ["ENTITY1_FR","ENTITY2_FR"]
-    - login: operator3_fr
-      groups: ["RTE","ADMIN","ReadOnly","Dispatcher", "REALTIME_USERS"]
-      entities: ["ENTITY1_FR"]
     - login: operator1_fr
       firstname : John
       lastname : Doe
@@ -22,23 +19,26 @@ operatorfabric.users.default:
     - login: operator2_fr
       groups: ["Planner", "ReadOnly", "REALTIME_USERS"]
       entities: ["ENTITY2_FR"]
+    - login: operator3_fr
+      groups: [ "RTE","ADMIN","ReadOnly","Dispatcher", "REALTIME_USERS" ]
+      entities: [ "ENTITY1_FR" ]
     - login: itsupervisor1
       groups: ["Supervisor", "REALTIME_USERS"]
       entities: ["IT_SUPERVISOR_ENTITY"]
     - login: operator1_it
-      groups: ["Dispatcher", "ReadOnly"]
+      groups: ["Dispatcher", "ReadOnly", "REALTIME_USERS"]
       entities: ["ENTITY1_IT"]
     - login: operator2_it
-      groups: ["Planner","ReadOnly"]
+      groups: ["Planner","ReadOnly", "REALTIME_USERS"]
       entities: ["ENTITY2_IT"]
     - login: operator3_it
-      groups: ["Dispatcher", "Planner", "ReadOnly"]
+      groups: ["Dispatcher", "Planner", "ReadOnly", "REALTIME_USERS"]
       entities: ["ENTITY3_IT"]
     - login: operator1_nl
-      groups: ["Dispatcher", "Planner", "ReadOnly"]
+      groups: ["Dispatcher", "Planner", "ReadOnly", "REALTIME_USERS"]
       entities: ["ENTITY1_NL"]
     - login: operator2_nl
-      groups: ["Dispatcher", "Planner", "ReadOnly"]
+      groups: ["Dispatcher", "Planner", "ReadOnly", "REALTIME_USERS"]
       entities: ["ENTITY2_NL"]
   groups:
     - id: ADMIN

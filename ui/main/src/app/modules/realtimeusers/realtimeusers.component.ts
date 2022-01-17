@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,6 +9,11 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UserService} from '@ofServices/user.service';
+import {RealTimeScreensService} from '@ofServices/real-time-screens.service';
+import {RealTimeScreen} from '@ofModel/real-time-screens.model';
+import {User} from '@ofModel/user.model';
+import {EntitiesService} from '@ofServices/entities.service';
+import {GroupsService} from '@ofServices/groups.service';
 
 @Component({
   selector: 'of-realtimeusers',
@@ -17,13 +22,22 @@ import {UserService} from '@ofServices/user.service';
 })
 export class RealtimeusersComponent implements OnInit, OnDestroy {
 
-  realTimeUsersConnected: string[] = [];
-  realTimeUsersDisconnected: string[] = [];
+  realTimeUsersConnected: User[] = [];
   interval;
 
-  constructor(private userService: UserService) { }
+  realTimeScreens: Array<RealTimeScreen>;
+  connectedUsersPerEntityAndGroup: Map<string, Array<string>> = new Map<string, Array<string>>();
+
+  constructor(private userService: UserService,
+              private realTimeScreensService: RealTimeScreensService,
+              private entitiesService: EntitiesService,
+              private groupsService: GroupsService) { }
 
   ngOnInit(): void {
+    this.realTimeScreensService.loadRealTimeScreensData().subscribe(result => {
+      this.realTimeScreens = result.realTimeScreens;
+    });
+
     this.refresh();
 
     this.interval = setInterval(() => {
@@ -33,19 +47,48 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
 
   refresh() {
     this.userService.getAllUsers().subscribe(users => {
-      const realTimeLogins: string[] = [];
-      users.filter(user => user.groups.includes('REALTIME_USERS')).forEach(user => realTimeLogins.push(user.login));
+      const realTimeUsers: User[] = [];
+      users.filter(user => user.groups.includes('REALTIME_USERS')).forEach(user => realTimeUsers.push(user));
 
       this.userService.loadConnectedUsers().subscribe(connectedUsers => {
         const connectedLogins: string[] = [];
+        this.connectedUsersPerEntityAndGroup.clear();
         connectedUsers.forEach(connectedUser => connectedLogins.push(connectedUser.login));
 
-        this.realTimeUsersConnected = realTimeLogins.filter(login => connectedLogins.includes(login));
-        this.realTimeUsersDisconnected = realTimeLogins.filter(login => !this.realTimeUsersConnected.includes(login));
+        this.realTimeUsersConnected = realTimeUsers.filter(user => connectedLogins.includes(user.login));
         this.realTimeUsersConnected.sort((obj1, obj2) => this.compareObj(obj1, obj2));
-        this.realTimeUsersDisconnected.sort((obj1, obj2) => this.compareObj(obj1, obj2));
+
+        this.realTimeUsersConnected.forEach(realTimeUserConnected => {
+          realTimeUserConnected.entities.forEach(entity => {
+            realTimeUserConnected.groups.forEach(group => {
+
+              let usersConnectedPerEntityAndGroup = this.connectedUsersPerEntityAndGroup.get(entity + '.' + group);
+
+              if (! usersConnectedPerEntityAndGroup)
+                usersConnectedPerEntityAndGroup = [];
+
+              usersConnectedPerEntityAndGroup.push(realTimeUserConnected.login);
+              this.connectedUsersPerEntityAndGroup.set(entity + '.' + group, usersConnectedPerEntityAndGroup);
+            });
+          });
+        });
       });
     });
+  }
+
+  labelForConnectedUsers(entityAndGroup: string): string {
+    let label = '';
+    const connectedUsers = this.connectedUsersPerEntityAndGroup.get(entityAndGroup);
+
+    if (!! connectedUsers)
+      label = (connectedUsers.length > 1) ? connectedUsers[0] + ', ...' : connectedUsers[0];
+
+    return label;
+  }
+
+  isSomeoneConnectedInEntityAndGroup(entityAndGroup: string): boolean {
+    const connectedUsers = this.connectedUsersPerEntityAndGroup.get(entityAndGroup);
+    return (!!connectedUsers) && (connectedUsers.length > 0);
   }
 
   ngOnDestroy() {
