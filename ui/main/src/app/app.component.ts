@@ -156,12 +156,11 @@ export class AppComponent implements OnInit {
                 this.configService.loadCoreMenuConfigurations(),
                 this.userService.loadUserWithPerimetersData(),
                 this.entitiesService.loadAllEntitiesData(),
-                this.groupsService.loadAllGroupsData(),
                 this.processesService.loadAllProcesses(),
                 this.processesService.loadProcessGroups(),
                 this.processesService.loadMonitoringConfig(),
                 this.cardService.initSubscription)
-                .pipe(skip(7)) // Need to wait for all initialization to complete before loading main components of the application
+                .pipe(skip(6)) // Need to wait for all initialization to complete before loading main components of the application
                 .subscribe({
                   next: () => {
                   this.loaded = true;
