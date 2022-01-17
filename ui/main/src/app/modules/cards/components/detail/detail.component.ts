@@ -259,6 +259,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                                     templateGateway.setLttdExpired(true);
                                 }
                                 templateGateway.setScreenSize(this.screenSize);
+                                setTimeout(() => templateGateway.onTemplateRenderingComplete(), 10);
                             }, 10);
                         }, 10);
                     },

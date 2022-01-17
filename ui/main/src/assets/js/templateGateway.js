@@ -135,6 +135,12 @@ const templateGateway = {
             console.log(new Date().toISOString(), ` Template.js : no getUserResponse method defined in template , valid set to false`);
             return {valid:false,errorMsg:"Impossible to respond due to a technical error in the template"};
         }
+
+        // OpFab calls this method when it has finished all tasks regarding rendering template :
+        // it is called after applyChildCard(), lockAnswer(), setLttdExpired() and setScreenSize()
+        this.onTemplateRenderingComplete = function () {
+             // This function may be overridden in the template.
+        }
 }
 
 

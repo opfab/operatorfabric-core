@@ -21,6 +21,7 @@
 <div id="templateGatewayResults"></div>
 
 <div> screenSize : <span id="screenSize"> </span>  </div>
+<div> onTemplateRenderingComplete : <span id="templateGateway-onTemplateRenderingComplete"> </span>  </div>
 
 <H3> HANDLEBARS TEMPLATING </H3>
 
@@ -89,6 +90,10 @@ function loadData() {
 
    templateGateway.setScreenSize =  function (size) {
             document.getElementById("screenSize").innerHTML = size;
+        };
+
+    templateGateway.onTemplateRenderingComplete =  function () {
+            document.getElementById("templateGateway-onTemplateRenderingComplete").innerHTML = "ok";
         };
 
 </script>
