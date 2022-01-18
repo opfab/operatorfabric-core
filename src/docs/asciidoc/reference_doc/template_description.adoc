@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -584,6 +584,7 @@ Entity object has the following fields :
 - 'description' : description of the entity
 - 'entityAllowedToSendCard' : boolean indicating whether the entity is allowed to send card or not
 - 'parents' : list of parent entities
+- 'labels' : list of labels associated to the entity
 
 === Get information about an entity
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * Copyright (c) 2020, RTEi (http://www.rte-international.com)
  *  See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -31,6 +31,7 @@ import {ArchivesModule} from './modules/archives/archives.module';
 import {NavbarModule} from './modules/navbar/navbar.module';
 import {NgbModalModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {FontAwesomeIconsModule} from './modules/utilities/fontawesome-icons.module';
+import {TagInputModule} from 'ngx-chips';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import {FontAwesomeIconsModule} from './modules/utilities/fontawesome-icons.modu
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
+    TagInputModule, 
     OAuthModule.forRoot(),
     HttpClientModule,
     StateModule.forRoot(),

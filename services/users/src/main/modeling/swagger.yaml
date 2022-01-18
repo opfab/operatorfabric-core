@@ -90,6 +90,10 @@ definitions:
         type: string
       description:
         type: string
+      labels:
+        type: array
+        items:
+          type: string
       entityAllowedToSendCard:
         type: boolean
       parents:

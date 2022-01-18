@@ -20,7 +20,7 @@ describe ('ExternalDevicesconfigurationPage',()=>{
          //click on "External devices configuration"
         cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
 
-        cy.get('#opfab-externaldevices-table-grid').find('.ag-center-cols-container').find('.ag-row').should('have.length', 3);
+        cy.countAgGridTableRows('#opfab-externaldevices-table-grid', 3);
 
         // Add new configuration
         cy.get('#addItem').click();
@@ -39,10 +39,10 @@ describe ('ExternalDevicesconfigurationPage',()=>{
 
         cy.get('#opfab-admin-edit-btn-add').click();
 
-        cy.get('#opfab-externaldevices-table-grid').find('.ag-center-cols-container').find('.ag-row').should('have.length', 4);
+        cy.countAgGridTableRows('#opfab-externaldevices-table-grid', 4);
 
         // Edit prevously created row
-        cy.get('#opfab-externaldevices-table-grid').find('.ag-center-cols-container').find('.ag-row').eq(3).find('of-action-cell-renderer').eq(0).click();
+        cy.clickAgGridCell('#opfab-externaldevices-table-grid', 3, 2, 'of-action-cell-renderer');
 
         cy.get('of-externaldevices-modal').should('exist'); 
 
@@ -58,15 +58,14 @@ describe ('ExternalDevicesconfigurationPage',()=>{
 
          //click on "External devices configuration"
         cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
-        cy.get('#opfab-externaldevices-table-grid').find('.ag-center-cols-container').find('.ag-row').eq(3).find('.ag-cell-value').eq(1).contains('CDS_2');
-
+        cy.checkAgGridCellValue('#opfab-externaldevices-table-grid', 3, 1, 'CDS_2')
 
         // Delete prevously created row
-        cy.get('#opfab-externaldevices-table-grid').find('.ag-center-cols-container').find('.ag-row').eq(3).find('of-action-cell-renderer').eq(1).click();
+        cy.clickAgGridCell('#opfab-externaldevices-table-grid', 3, 3, 'of-action-cell-renderer');
 
         cy.get('of-confirmation-dialog').should('exist');
         cy.get('of-confirmation-dialog').find('#opfab-admin-confirmation-btn-ok').click();
-        cy.get('#opfab-externaldevices-table-grid').find('.ag-center-cols-container').find('.ag-row').should('have.length', 3);
+        cy.countAgGridTableRows('#opfab-externaldevices-table-grid', 3);
 
     })
 
@@ -79,11 +78,11 @@ describe ('ExternalDevicesconfigurationPage',()=>{
          //click on "External devices configuration"
         cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
 
-        cy.get('#opfab-externaldevices-table-grid').find('.ag-center-cols-container').find('.ag-row').should('have.length', 3);
-        
+
         var i = 0;
         for (i = 0; i < 7; i++) { 
             cy.get('#opfab-externaldevices-table-grid').find('.ag-center-cols-container').find('.ag-row').should('have.length', 3 + i);
+            cy.countAgGridTableRows('#opfab-externaldevices-table-grid', 3 + i);
 
             cy.get('#addItem').click();
 
@@ -97,8 +96,7 @@ describe ('ExternalDevicesconfigurationPage',()=>{
     
     
         }
-
-        cy.get('#opfab-externaldevices-table-grid').find('.ag-center-cols-container').find('.ag-row').should('have.length', 10);
+        cy.countAgGridTableRows('#opfab-externaldevices-table-grid', 10);
 
 
         // When all users devices are configured it is not possible to add new configurations
@@ -113,14 +111,13 @@ describe ('ExternalDevicesconfigurationPage',()=>{
         // Delete previously created configurations
         var j = 0;
         for (j = 0; j < 7; j++) { 
-            cy.get('#opfab-externaldevices-table-grid').find('.ag-center-cols-container').find('.ag-row').eq(3).find('of-action-cell-renderer').eq(1).click();
+            cy.clickAgGridCell('#opfab-externaldevices-table-grid', 3, 3, 'of-action-cell-renderer');
 
             cy.get('of-confirmation-dialog').should('exist');
             cy.get('of-confirmation-dialog').find('#opfab-admin-confirmation-btn-ok').click();
-            cy.get('#opfab-externaldevices-table-grid').find('.ag-center-cols-container').find('.ag-row').should('have.length', 9-j);
-
+            cy.countAgGridTableRows('#opfab-externaldevices-table-grid', 9-j);
         }
-        cy.get('#opfab-externaldevices-table-grid').find('.ag-center-cols-container').find('.ag-row').should('have.length', 3);
+        cy.countAgGridTableRows('#opfab-externaldevices-table-grid', 3);
 
 
     })

@@ -21,9 +21,9 @@ export class EntitiesServiceMock extends EntitiesService {
 
         let entityAllControlRooms: Entity, entity1: Entity, entity2: Entity;
 
-        entityAllControlRooms = new Entity('ENTITY_FR', 'French Control Centers', 'French Control Centers', false, []);
-        entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', true, ['ENTITY_FR']);
-        entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', true, []);
+        entityAllControlRooms = new Entity('ENTITY_FR', 'French Control Centers', 'French Control Centers', false, [], []);
+        entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', true, [], ['ENTITY_FR']);
+        entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', true, [], []);
 
         const mockHttpResponse = new Array<Entity>();
         mockHttpResponse.push(entity1);

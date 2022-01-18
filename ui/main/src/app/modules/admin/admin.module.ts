@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2019-2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2019-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -35,6 +35,7 @@ import {EditPerimeterModalComponent} from './components/editmodal/perimeters/edi
 import {SingleFilterModule} from '../share/single-filter/single-filter.module';
 import {ProcessCellRendererComponent} from './components/cell-renderers/process-cell-renderer.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {TagInputModule} from 'ngx-chips';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
   imports: [
     FormsModule
     , ReactiveFormsModule
+    , TagInputModule
     , AdminRoutingModule
     , CommonModule
     , MultiFilterModule

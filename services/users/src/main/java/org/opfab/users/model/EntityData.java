@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,6 +37,7 @@ public class EntityData implements Entity {
     private String id;
     private String name;
     private String description;
+    private Set<String> labels;
 
     @Builder.Default
     private Boolean entityAllowedToSendCard = true;
@@ -50,6 +51,21 @@ public class EntityData implements Entity {
         this.description = entity.getDescription();
         this.entityAllowedToSendCard = entity.getEntityAllowedToSendCard();
         this.parents = entity.getParents().stream().collect(Collectors.toSet());
+    }
+
+    @Override
+    public List<String> getLabels(){
+        if (labels == null) return Collections.emptyList();
+        return labels.stream().collect(Collectors.toList());
+    }
+
+    @Override
+    public void setLabels(List<String> labels){
+        this.labels = Collections.emptySet();
+        if(labels != null) {
+            this.labels = labels.stream().collect(Collectors.toSet());
+        }
+
     }
 
     @Override
