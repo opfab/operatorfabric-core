@@ -472,7 +472,8 @@ HTTP/1.1 200 OK
     "id": "NEW_ENTITY",
     "parents": ["ENTITY1_FR"],
     "name": "Last New Entity",
-    "description":"This is the last new entity"
+    "description":"This is the last new entity",
+    "labels":[]
 }
 ....
 

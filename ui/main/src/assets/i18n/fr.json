@@ -310,11 +310,13 @@
         "name": "Nom",
         "parents": "Entités parentes",
         "description": "Description",
+        "labels": "Étiquettes",
         "entityAllowedToSendCard": "Envoi de carte autorisé",
         "confirmDelete": "Voulez-vous vraiment supprimer l'entité",
         "add":"Ajouter une nouvelle entité",
         "true": "Oui",
-        "false": "Non"
+        "false": "Non",
+        "addLabel": "Ajouter une etiquette"
       },
       "perimeter": {
         "id": "Id",

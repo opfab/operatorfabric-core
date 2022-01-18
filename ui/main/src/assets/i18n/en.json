@@ -310,11 +310,13 @@
         "name": "Name",
         "parents": "Parent Entities",
         "description": "Description",
+        "labels": "Labels",
         "entityAllowedToSendCard": "Card sending allowed",
         "confirmDelete": "Do you really want to delete entity",
         "add": "Add new entity",
         "true": "Yes",
-        "false": "No"
+        "false": "No",
+        "addLabel": "Add label"
       },
       "perimeter": {
         "id": "Id",
