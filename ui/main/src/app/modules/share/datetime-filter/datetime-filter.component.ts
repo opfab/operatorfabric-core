@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, forwardRef, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, forwardRef, Input, OnDestroy, Output} from '@angular/core';
 import {ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {takeUntil} from 'rxjs/operators';
@@ -25,7 +25,7 @@ import {Subject} from 'rxjs';
     }
     ]
 })
-export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class DatetimeFilterComponent implements ControlValueAccessor,OnDestroy {
 
     private ngUnsubscribe$ = new Subject<void>();
     @Input() labelKey: string;
@@ -52,8 +52,6 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
 
     }
 
-    ngOnInit() {
-    }
 
     ngOnDestroy() {
         this.ngUnsubscribe$.next();
