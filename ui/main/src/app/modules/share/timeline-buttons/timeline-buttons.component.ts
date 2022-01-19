@@ -34,6 +34,7 @@ export class TimelineButtonsComponent implements OnInit {
     // required for domain movements specifications
     public followClockTick: boolean;
     public followClockTickMode: boolean;
+    isTimelineLockDisabled: boolean;
 
     // buttons
     public buttonTitle: string;
@@ -68,6 +69,8 @@ export class TimelineButtonsComponent implements OnInit {
 
         const hideTimeLineInStorage = this.userPreferences.getPreference('opfab.hideTimeLine');
         this.hideTimeLine = (hideTimeLineInStorage === 'true');
+        this.isTimelineLockDisabled = false;
+
         this.initDomains();
     }
 
@@ -285,7 +288,9 @@ export class TimelineButtonsComponent implements OnInit {
         // Move from main visualisation, now domain stop to move
         if (this.followClockTick) {
             this.followClockTick = false;
+            this.isTimelineLockDisabled = true;
         }
+
 
         if (moveForward) {
             startDomain = this.goForward(startDomain);
@@ -360,4 +365,19 @@ export class TimelineButtonsComponent implements OnInit {
             }
         }
     }
+
+    isTimelineLocked(): boolean {
+        return !this.followClockTick;
+    }
+
+    lockTimeline() : void {
+        this.followClockTick = false;
+    }
+
+    unlockTimeline() : void {
+        this.followClockTick = true;
+    }
+
+   
+
 }

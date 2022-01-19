@@ -31,6 +31,22 @@ Cypress.Commands.add('loginOpFab',(username, password)=>
     cy.get('#opfab-cypress-loaded-check', {timeout: 15000}).should('have.text', 'true');
 })
 
+Cypress.Commands.add('loginWithClock', (dateToUse = new Date()) =>{
+  // Do not use the generic login feature as we 
+  // need to launch cy.clock after cy.visit('')
+    cy.visit('')
+    cy.clock(dateToUse);
+    cy.get('#opfab-login').type('operator1_fr')
+    cy.get('#opfab-password').type('test')
+    cy.get('#opfab-login-btn-submit').click();
+
+    //Wait for the app to finish initializing
+    cy.get('#opfab-cypress-loaded-check', {timeout: 15000}).should('have.text', 'true');
+   
+  
+})
+
+
 Cypress.Commands.overwrite('reload',()=>
 {   //go to login page
     cy.visit('');

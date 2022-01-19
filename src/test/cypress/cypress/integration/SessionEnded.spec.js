@@ -10,23 +10,7 @@
 
 describe('Session ended test', function () {
 
-  const user = 'operator1_fr';
-
-  // Do not use the generic login feature as we 
-  // need to launch cy.clock after cy.visit('')
-  const loginWithClock = function () {
-
-    cy.visit('')
-    cy.clock(new Date());
-    cy.get('#opfab-login').type('operator1_fr')
-    cy.get('#opfab-password').type('test')
-    cy.get('#opfab-login-btn-submit').click();
-
-    //Wait for the app to finish initializing
-    cy.get('#opfab-cypress-loaded-check', {timeout: 15000}).should('have.text', 'true');
-   
-  }
-
+  
   before('Reset UI configuration file ', function () {
     cy.resetUIConfigurationFiles();
     cy.deleteAllCards();
@@ -36,8 +20,7 @@ describe('Session ended test', function () {
 
   it('Checking session end after 10 hours  ', () => {
     
-    loginWithClock();
-    cy.stubPlaySound();
+    cy.loginWithClock();
     // go 1 hour in the future 
     cy.tick(1*60*60*1000);
    
@@ -69,7 +52,7 @@ describe('Session ended test', function () {
     cy.waitDefaultTime();
 
     cy.logoutOpFab();
-    loginWithClock();
+    cy.loginWithClock();
     cy.stubPlaySound();
     cy.waitDefaultTime(); // wait for configuration load end (in SoundNotificationService.ts)  
     
