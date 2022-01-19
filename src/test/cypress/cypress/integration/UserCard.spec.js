@@ -219,12 +219,11 @@ describe('User Card ', function () {
 
   })
 
-  describe('Entities allowed to edit card', function () {
+  describe('Entities allowed to edit card sent by user', function () {
 
     before('Set up configuration', function () {
 
       cy.deleteAllCards();
-      cy.deleteAllArchivedCards();
       cy.sendCard('cypress/userCard/process.json');
 
     });
@@ -305,4 +304,42 @@ describe('User Card ', function () {
 
   })
 
+  describe('Entities allowed to edit card sent by third party ', function () {
+
+      before('Set up configuration', function () {
+
+        cy.deleteAllCards();
+        cy.sendCard('cypress/userCard/processSendByExternal.json');
+
+      });
+
+      it('Cannot edit card from not allowed entity', ()=>{
+        cy.loginOpFab('operator2_fr','test');
+        cy.get('of-light-card').should('have.length',1);
+        cy.get('of-light-card').eq(0).click()
+          .find('[id^=opfab-feed-light-card]')
+          .invoke('attr', 'data-urlId')
+          .then((urlId) => {
+              cy.hash().should('eq', '#/feed/cards/'+urlId);
+              cy.get('#opfab-card-edit').should('not.exist');
+        });
+      })
+
+      it('Edit card from allowed entity', ()=>{
+        cy.loginOpFab('operator1_fr','test');
+        cy.get('of-light-card').eq(0).click()
+          .find('[id^=opfab-feed-light-card]')
+          .invoke('attr', 'data-urlId')
+          .then((urlId) => {
+            cy.hash().should('eq', '#/feed/cards/'+urlId);
+            cy.get('#opfab-card-edit').click();
+            cy.get("of-usercard").should('exist');
+            cy.get('#opfab-usercard-btn-prepareCard').click();
+            cy.get('#opfab-usercard-btn-accept').click();
+            // Check that the message indicating successful sending appears
+            cy.get('.opfab-info-message').should('have.class','opfab-alert-info').contains("Your card is published");
+        });
+      })
+
+  })
 })
