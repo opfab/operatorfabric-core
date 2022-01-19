@@ -52,12 +52,9 @@ export class UserPermissionsService {
 
 
   public doesTheUserHavePermissionToEditCard(user: UserWithPerimeters, card: Card): boolean {
-    let permission = false;
-    if ((card.publisherType === 'ENTITY') && (user.userData.entities.includes(card.publisher) 
-      || (!!card.entitiesAllowedToEdit && this.isUserInEntityAllowedToEditCard(user, card)))) {
-        permission = this.checkUserWritePerimeter(user, card);
-    }
-    return permission;
+    if (!!card.entitiesAllowedToEdit && this.isUserInEntityAllowedToEditCard(user, card)) return this.checkUserWritePerimeter(user, card);
+    if ((card.publisherType === 'ENTITY') && user.userData.entities.includes(card.publisher)) return this.checkUserWritePerimeter(user, card);
+    return false;
   }
 
   private checkUserWritePerimeter(user: UserWithPerimeters, card: Card) : boolean {
