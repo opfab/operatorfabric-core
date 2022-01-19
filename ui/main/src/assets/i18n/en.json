@@ -93,6 +93,7 @@
     "hideTimeline" : "Hide Timeline",
     "showTimeline" : "Show Timeline",
     "businessPeriod": "Business period",
+    "blockTimeline" : "Lock Timeline",
     "buttonTitle": {
       "TR": "Real Time",
       "J": "Day",

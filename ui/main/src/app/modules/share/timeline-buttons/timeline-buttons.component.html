@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2021, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -10,8 +10,12 @@
     <div *ngIf='hideTimeLine || isMonitoringScreen' class="opfab-business-period">
       <span translate>timeline.businessPeriod </span> : {{startDate}} &#45;&#45; {{endDate}}
     </div>
+
+
+
     <div id="opfab-menu-timeline-links">
-      <ul>
+
+      <ul class="paddingTop">
         <li *ngIf='hideTimeLine || isMonitoringScreen'>
           <a (click)="moveDomain(false)"> &lt;&lt;
           </a>
@@ -29,6 +33,13 @@
             &gt;&gt;
           </a>
         </li>
+
+        <li style="width:1.5em">
+          <span *ngIf="isTimelineLocked()" id="opfab-timeline-unlock" [disabled]="true"  class="fas fa-lock" (click)="unlockTimeline()" ></span>
+          <span *ngIf="!isTimelineLocked()" id="opfab-timeline-lock" [disabled]="isTimelineLockDisabled"  class="fas fa-lock-open" (click)="lockTimeline()" ></span>
+        </li>
+
+
       </ul>
     </div>
   </div>

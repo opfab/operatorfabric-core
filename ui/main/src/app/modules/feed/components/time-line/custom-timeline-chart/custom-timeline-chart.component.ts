@@ -206,14 +206,32 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
 
   shiftTimeLineIfNecessary() {
     if (this.xTicks) {
-      if (this.xTicks[10].valueOf() <= moment().valueOf()) {
-        this.valueDomain = [this.xTicks[1].valueOf(), this.xDomain[1] + (this.xTicks[1] - this.xDomain[0])];
-        this.filterService.updateFilter(
-          FilterType.BUSINESSDATE_FILTER,
-          true,
-          {start: this.valueDomain[0], end: this.valueDomain[1], domainId: this.domainId}
-        );
-        this.update();
+
+      // the timeline shifts regularly in real time view
+      if (this.domainId == "TR" || this.domainId == "7D") {
+        if (this.xTicks[10].valueOf() <= moment().valueOf()) {
+          this.valueDomain = [this.xTicks[1].valueOf(), this.xDomain[1] + (this.xTicks[1] - this.xDomain[0])];
+          this.filterService.updateFilter(
+            FilterType.BUSINESSDATE_FILTER,
+            true,
+            {start: this.valueDomain[0], end: this.valueDomain[1], domainId: this.domainId}
+          );
+          this.update();
+        }
+      }
+      
+
+      // in other views, the timeline is shifted at the end of the current cycle (day/week/month/year)
+      else {
+        if (this.xTicks[this.xTicks.length - 1].valueOf() <= moment().valueOf()) {
+          this.valueDomain = [this.xTicks[this.xTicks.length].valueOf(), this.xDomain[1] + (this.xTicks[this.xTicks.length] - this.xDomain[0])];
+          this.filterService.updateFilter(
+            FilterType.BUSINESSDATE_FILTER,
+            true,
+            {start: this.valueDomain[0], end: this.valueDomain[1], domainId: this.domainId}
+          );
+          this.update();
+        }
       }
     }
   }
