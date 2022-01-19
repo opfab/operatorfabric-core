@@ -22,7 +22,7 @@ import {DatesForm} from './dates-form.model';
     templateUrl: './usercard-dates-form.component.html',
 
 })
-export class UserCardDatesFormComponent implements OnInit, OnDestroy , OnChanges {
+export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges {
 
     @Input() public datesFormInputData: DatesForm;
 
@@ -56,9 +56,18 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy , OnChanges
 
     private setInitialDateValues(): void {
         if (this.datesForm) {
-            if (this.datesFormInputData.startDate.isVisible) this.datesForm.get('startDate').setValue(this.datesFormInputData.startDate.initialEpochDate != null ? getDateTimeNgbFromMoment(moment(this.datesFormInputData.startDate.initialEpochDate)) : '');
-            if (this.datesFormInputData.endDate.isVisible) this.datesForm.get('endDate').setValue(this.datesFormInputData.endDate.initialEpochDate != null ? getDateTimeNgbFromMoment(moment(this.datesFormInputData.endDate.initialEpochDate)) : '');
-            if (this.datesFormInputData.lttd.isVisible) this.datesForm.get('lttd').setValue(this.datesFormInputData.lttd.initialEpochDate != null ? getDateTimeNgbFromMoment(moment(this.datesFormInputData.lttd.initialEpochDate)) : '');
+            if (this.datesFormInputData.startDate.isVisible) {
+                const startDateValue = this.datesForm.get('endDate').value;
+                if (!startDateValue) this.datesForm.get('startDate').setValue(this.datesFormInputData.startDate.initialEpochDate != null ? getDateTimeNgbFromMoment(moment(this.datesFormInputData.startDate.initialEpochDate)) : '');
+            }
+            if (this.datesFormInputData.endDate.isVisible) {
+                const endDateValue = this.datesForm.get('endDate').value;
+                if (!endDateValue) this.datesForm.get('endDate').setValue(this.datesFormInputData.endDate.initialEpochDate != null ? getDateTimeNgbFromMoment(moment(this.datesFormInputData.endDate.initialEpochDate)) : '');
+            }
+            if (this.datesFormInputData.lttd.isVisible) {
+                const lttdValue = this.datesForm.get('lttd').value;
+                if (!lttdValue) this.datesForm.get('lttd').setValue(this.datesFormInputData.lttd.initialEpochDate != null ? getDateTimeNgbFromMoment(moment(this.datesFormInputData.lttd.initialEpochDate)) : '');
+            }
         }
         this.setDateFilterBounds();
     }
@@ -103,7 +112,7 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy , OnChanges
     }
 
     ngOnChanges() {
-        this.setDateFilterBounds();
+        this.setInitialDateValues();
     }
 
     ngOnDestroy() {
