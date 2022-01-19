@@ -77,25 +77,28 @@ jobs:
           curl -s "https://get.sdkman.io" | bash ;
           echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config ;
           echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config ;
-          source $HOME/.sdkman/bin/sdkman-init.sh;
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-          source ./bin/load_environment_light.sh;
           sudo apt-get install jq
-          echo "npm version $(npm -version)"
-          echo "node version $(node --version)"
-          sdk version
-          javac -version
           git config --global user.email "opfabtech@gmail.com" 
           git config --global user.name "OpfabTech"
 
       - name: Build
         if: ${{ github.event.inputs.build  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push'}}
+        # set variable in this step (sdk, nvm et gradle) 
+        # if variable is set in install step it is not accessible in this step 
         run: | 
           export OF_VERSION=$(<VERSION)
           docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
+          source $HOME/.sdkman/bin/sdkman-init.sh;
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+          source ./bin/load_environment_light.sh;
+          echo "npm version $(npm -version)"
+          echo "node version $(node --version)"
+          sdk version
+          javac -version
+          ./gradlew --version
           ./gradlew --build-cache copyDependencies test jacocoTestReport sonarqube dockerTag${OF_VERSION}
           docker-compose -f src/main/docker/test-environment/docker-compose.yml down
         env:
@@ -107,6 +110,11 @@ jobs:
       - name: Karate tests
         if: ${{ github.event.inputs.karate  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
         run: |
+          source $HOME/.sdkman/bin/sdkman-init.sh;
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+          source ./bin/load_environment_light.sh;
           cd config/docker
           ./docker-compose.sh
           cd ../../bin
@@ -119,6 +127,11 @@ jobs:
       - name: Cypress tests 
         if: ${{ github.event.inputs.cypress  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
         run: |
+          source $HOME/.sdkman/bin/sdkman-init.sh;
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+          source ./bin/load_environment_light.sh;
           cd config/docker
           ./docker-compose-cypress.sh
           cd ../../bin
@@ -161,26 +174,29 @@ jobs:
           curl -s "https://get.sdkman.io" | bash ;
           echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config ;
           echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config ;
-          source $HOME/.sdkman/bin/sdkman-init.sh;
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-          source ./bin/load_environment_light.sh;
           sudo apt-get install jq
-          echo "npm version $(npm -version)"
-          echo "node version $(node --version)"
-          sdk version
-          javac -version
           git config --global user.email "opfabtech@gmail.com" 
           git config --global user.name "OpfabTech"
 
       - name: Build
         if: ${{ github.event.inputs.build  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push'}}
+        # set variable in this step (sdk, nvm et gradle) 
+        # if variable is set in install step it is not accessible in this step 
         run: | 
           export OF_VERSION=$(<VERSION)
           echo ${{ secrets.DOCKER_TOKEN }} | docker login --username opfabtravis --password-stdin
           docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
+          source $HOME/.sdkman/bin/sdkman-init.sh;
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+          source ./bin/load_environment_light.sh;
+          echo "npm version $(npm -version)"
+          echo "node version $(node --version)"
+          sdk version
+          javac -version
+          ./gradlew --version
           ./gradlew --build-cache copyDependencies test jacocoTestReport sonarqube dockerTag${OF_VERSION}
           docker-compose -f src/main/docker/test-environment/docker-compose.yml down
         env:
@@ -191,6 +207,11 @@ jobs:
       - name: Karate tests
         if: ${{ github.event.inputs.karate  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
         run: |
+          source $HOME/.sdkman/bin/sdkman-init.sh;
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+          source ./bin/load_environment_light.sh;
           cd config/docker
           ./docker-compose.sh
           cd ../../bin
@@ -203,6 +224,11 @@ jobs:
       - name: Cypress tests 
         if: ${{ github.event.inputs.cypress  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
         run: |
+          source $HOME/.sdkman/bin/sdkman-init.sh;
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+          source ./bin/load_environment_light.sh;
           cd config/docker
           ./docker-compose-cypress.sh
           cd ../../bin
@@ -215,6 +241,11 @@ jobs:
       - name : Publish Documentation
         if : ${{ github.event.inputs.doc  == 'true' || github.event_name == 'schedule'}}
         run: |
+          source $HOME/.sdkman/bin/sdkman-init.sh;
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+          source ./bin/load_environment_light.sh;
           ./gradlew --build-cache generateSwaggerUI asciidoctor;
           ./CICD/github/upload_doc.sh
         env:
@@ -223,6 +254,11 @@ jobs:
       - name : Publish Documentation (latest)
         if : ${{ github.event.inputs.docLatest  == 'true' || github.ref_name == 'master'}}
         run: |
+          source $HOME/.sdkman/bin/sdkman-init.sh;
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+          source ./bin/load_environment_light.sh;
           ./gradlew --build-cache generateSwaggerUI asciidoctor;
           ./CICD/github/upload_doc.sh --updateLatest true
         env:
