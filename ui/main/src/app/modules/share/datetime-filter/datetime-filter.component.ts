@@ -36,6 +36,8 @@ export class DatetimeFilterComponent implements ControlValueAccessor,OnDestroy {
     @Input() minDate: {year: number, month: number, day: number};
     @Input() maxDate: {year: number, month: number, day: number};
 
+    previousDateValue = null;
+
     disabled = true;
     time = {hour: 0, minute: 0};
 
@@ -58,7 +60,7 @@ export class DatetimeFilterComponent implements ControlValueAccessor,OnDestroy {
         this.ngUnsubscribe$.complete();
     }
 
-    /* istanbul ignore next */
+ 
     public onTouched: () => void = () => {
     }
 
@@ -93,7 +95,14 @@ export class DatetimeFilterComponent implements ControlValueAccessor,OnDestroy {
             if (val) {
                 this.disabled = false;
             }
-            this.change.emit();
+            // we check date value really change
+            // because when we change minDate or maxDate it emit a "valueChange" 
+            // this was causing an infinite loop in usercard-dates-form.component.ts 
+            if (val!==this.previousDateValue) 
+                {
+                this.previousDateValue = val;
+                this.change.emit();
+                }
         });
         this.timeInput.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(val => {
             if (val) {
