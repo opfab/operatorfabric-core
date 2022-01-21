@@ -42,6 +42,26 @@
       "styles": [],
       "acknowledgmentAllowed": "Never",
       "type" : "INPROGRESS"
+    },
+    "confirmationState": {
+      "name": "Confirmation",
+      "description": "Please confirm",
+      "showDetailCardHeader": false,
+      "color": "#0070C0",
+      "userCard" : {
+				"template" : "usercard_confirmation",
+				"severityVisible" : false,
+				"startDateVisible" : true,
+				"endDateVisible" : true,
+        "lttdVisible" : false
+			},
+      "response": {
+        "state": "confirmationState",
+        "emittingEntityAllowedToRespond": "true"
+      },
+      "templateName": "confirmation",
+      "styles": [],
+      "type" : "INPROGRESS"
     }
   }
 }

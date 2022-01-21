@@ -98,7 +98,74 @@ describe('User Card ', function () {
     })
   })
 
+  describe('Show automated response in preview for some user cards', function () {
+
+    it('Show automated response in preview for Confirmation user card if user enabled to respond', () => {
+
+      cy.loginOpFab('operator1_fr', 'test');
+      cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+      cy.get("of-usercard").should('exist');
+      cy.get("#of-usercard-service-selector").find('select').select('User card examples');
+      cy.get("#of-usercard-process-filter").find('select').select('Examples for new cards 2');
+      cy.get("#opfab-state-filter").find('select').select('Confirmation');
+      cy.get('#opfab-recipients').click();
+      // Select recipent entity not in user entities
+      cy.get('#opfab-recipients').find('li').eq(0).click();
+      
+      cy.get('#opfab-recipients').click();
+      cy.get('#question').type('Confirm YES or NO');
+
+      cy.get('#opfab-usercard-btn-prepareCard').click();
+      cy.get("of-card-detail").should('exist');
+
+      // No responses shown 
+      cy.get("#childs-div").should('be.empty');
+      // Cancel sending
+      cy.get('#opfab-usercard-btn-refuse').click();
+
+      cy.get('#opfab-recipients').click();
+      // Select also one of user entities as recipent
+      cy.get('#opfab-recipients').find('li').eq(1).click();
+      cy.get('#opfab-recipients').click();
+
+      cy.get('#opfab-usercard-btn-prepareCard').click();
+      cy.get("of-card-detail").should('exist');
+
+      // Feed preview show response from current entity
+      cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity').should('exist');
+      // Card preview show responses list
+      cy.get("#childs-div").should('not.be.empty');
+      // Response table has 1 header and 1 row 
+      cy.get("#childs-div").find('tr').should('have.length', 2);
+      // Send the card 
+      cy.get('#opfab-usercard-btn-accept').click();
+      // Check that the message indicating successful sending appears
+      cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
+      cy.get('of-light-card').should('have.length', 1);
+      // Feed light card show response from current entity
+      cy.get('of-light-card').eq(0).find('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity').should('exist');
+      cy.get('of-light-card').eq(0).click()
+        .find('[id^=opfab-feed-light-card]')
+        .invoke('attr', 'data-urlId')
+        .then((urlId) => {
+          cy.hash().should('eq', '#/feed/cards/' + urlId);
+          cy.get('of-card-details').find('of-detail');
+          cy.get("#childs-div").should('not.be.empty');
+          // Response table has 1 header and 1 row 
+          cy.get("#childs-div").find('tr').should('have.length', 2);
+        });
+
+    })
+
+
+  })
+
   describe('Send user card', function () {
+
+    before('Delete previous cards', function () {
+      cy.deleteAllCards();
+      cy.deleteAllArchivedCards();
+    });
 
     it('Send User card from operator1_fr', () => {
 

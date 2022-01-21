@@ -39,9 +39,9 @@ describe ('Logging screen tests',function () {
         cy.get('#opfab-process').contains('Select All').click();
         cy.get('#opfab-process').click();
 
-        // We check we have 18 states (and 4 items for their process)
+        // We check we have 19 states (and 4 items for their process)
         cy.get('#opfab-state').click();
-        cy.get('#opfab-state').find('li').should('have.length', 22);
+        cy.get('#opfab-state').find('li').should('have.length', 23);
 
         // We unselect all processes then we select 'Process example' process and we check there are 8 states for this process
         cy.get('#opfab-process').click();
@@ -80,9 +80,9 @@ describe ('Logging screen tests',function () {
         cy.get('#opfab-process').contains('Select All').click();
         cy.get('#opfab-process').click();
 
-        // We check we have 11 states (and 4 items for their process)
+        // We check we have 12 states (and 4 items for their process)
         cy.get('#opfab-state').click();
-        cy.get('#opfab-state').find('li').should('have.length', 15);
+        cy.get('#opfab-state').find('li').should('have.length', 16);
 
         // We unselect all processes then we select 'Process example' process and we check there is only 1 state for this process
         cy.get('#opfab-process').click();
@@ -133,9 +133,9 @@ describe ('Logging screen tests',function () {
         cy.get('#opfab-process').contains('Select All').click();
         cy.get('#opfab-process').click();
 
-        // We check we have 18 states (and 4 items for their process)
+        // We check we have 19 states (and 4 items for their process)
         cy.get('#opfab-state').click();
-        cy.get('#opfab-state').find('li').should('have.length', 22);
+        cy.get('#opfab-state').find('li').should('have.length', 23);
 
         // We unselect all processes then we select 'Process example' process and we check there are 8 states for this process
         cy.get('#opfab-process').click();
