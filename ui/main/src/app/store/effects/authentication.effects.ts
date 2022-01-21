@@ -29,10 +29,9 @@ import {selectCode} from '@ofSelectors/authentication.selectors';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {I18n} from '@ofModel/i18n.model';
 import {Map} from '@ofModel/map';
-import {CardService} from '@ofServices/card.service';
 import {ConfigService} from "@ofServices/config.service";
 import {redirectToCurrentLocation} from "../../app-routing.module";
-import {TranslateService} from "@ngx-translate/core";
+
 
 /**
  * Management of the authentication of the current user
@@ -44,9 +43,7 @@ export class AuthenticationEffects {
     constructor(private store: Store<AppState>,
                 private actions$: Actions,
                 private authService: AuthenticationService,
-                private cardService: CardService,
                 private router: Router,
-                private translate: TranslateService,
                 private configService: ConfigService) {
     }
 
@@ -254,7 +251,6 @@ export class AuthenticationEffects {
 
     private resetState() {
         this.authService.clearAuthenticationInformation();
-        this.cardService.closeSubscription();
         window.location.href = this.configService.getConfigValue('security.logout-url','https://opfab.github.io');
     }
 
