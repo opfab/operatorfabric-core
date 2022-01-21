@@ -15,7 +15,6 @@ import {User} from '@ofModel/user.model';
 import {EntitiesService} from '@ofServices/entities.service';
 import {GroupsService} from '@ofServices/groups.service';
 import {FormControl, FormGroup} from '@angular/forms';
-import {SharingService} from '../admin/services/sharing.service';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 
 
@@ -42,7 +41,6 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
               private realTimeScreensService: RealTimeScreensService,
               private entitiesService: EntitiesService,
               private groupsService: GroupsService,
-              private sharingService: SharingService, // We need SharingService here because this service loads all groups data
               private userPreferences: UserPreferencesService) { }
 
   ngOnInit(): void {

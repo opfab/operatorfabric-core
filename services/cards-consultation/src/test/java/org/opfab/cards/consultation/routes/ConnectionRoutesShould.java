@@ -112,9 +112,9 @@ public class ConnectionRoutesShould {
         @WithMockOpFabUserReactive(login = "userWithGroup", roles = { "TEST" })
         public class ConnectionRoutesForNonAdminShould {
                 @Test
-                void accessIsForbidden() {
+                void accessIsAuthorized() {
                         assertThat(connectionRoutes).isNotNull();
-                        webTestClient.get().uri("/connections").exchange().expectStatus().isForbidden();
+                        webTestClient.get().uri("/connections").exchange().expectStatus().isOk();
                 }
         }
 

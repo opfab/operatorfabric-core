@@ -37,9 +37,8 @@ export class SharingService implements OnDestroy {
 
         this._paginationPageSize$ = new ReplaySubject<number>();
 
-        // Initialization necessary for groups/perimeters selection dropdown in modals and to display names instead of codes
+        // Initialization necessary for perimeters selection dropdown in modals and to display names instead of codes
         // As it is only necessary for admin purposes, it's done here rather than in the app initialization code
-        this.groupsService.loadAllGroupsData().pipe(takeUntil(this.unsubscribe$)).subscribe();
         this.perimetersService.loadAllPerimetersData().pipe(takeUntil(this.unsubscribe$)).subscribe();
     }
 

@@ -40,5 +40,5 @@ Feature: Add users to a group
     Given url opfabUrl + 'users/users'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
-    Then status 403
+    Then status 200
 
