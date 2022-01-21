@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
 
 
 
- package org.opfab.cards.consultation.configuration.webflux;
+package org.opfab.cards.consultation.configuration.webflux;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,6 +36,7 @@ public class WebSecurityConfiguration {
 
     public static final String PROMETHEUS_PATH = "/actuator/prometheus**";
     public static final String LOGGERS_PATH ="/actuator/loggers/**";
+    public static final String CONNECTIONS ="/connections";
     public static final String CONNECTIONS_PATH ="/connections**";
     public static final String ADMIN_ROLE = "ADMIN";
 
@@ -69,6 +70,7 @@ public class WebSecurityConfiguration {
                 .and()
                 .authorizeExchange()
                 .pathMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
+                .pathMatchers(HttpMethod.GET, CONNECTIONS).authenticated()
                 .pathMatchers(CONNECTIONS_PATH).hasRole(ADMIN_ROLE)
                 .pathMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
                 .anyExchange().access(new IpAddressAuthorizationManager());

@@ -40,8 +40,8 @@ Feature: Get Groups
 
 
   Scenario: get groups with simple user
-    #   Using TSO user,  expected response 403
+    #   Using TSO user,  expected response 200
     Given url opfabUrl + 'users/groups'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
-    Then status 403
+    Then status 200

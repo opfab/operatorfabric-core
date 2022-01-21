@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,7 +40,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public static final String USERS_PERIMETERS_PATH = "/users/{login}/perimeters";
     public static final String USER_TOKEN_SYNCHRONIZATION_PATH = "/users/synchronizeWithToken";
     public static final String USERS_PATH = "/users/**";
+    public static final String USERS = "/users";
     public static final String GROUPS_PATH = "/groups/**";
+    public static final String GROUPS = "/groups";
     public static final String ENTITIES_PATH = "/entities/**";
     public static final String ENTITIES = "/entities";
     public static final String PERIMETERS_PATH = "/perimeters/**";
@@ -83,7 +85,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, USERS_SETTINGS_PATH).access(IS_ADMIN_OR_OWNER_AND_IP_ALLOWED)
                 .antMatchers(HttpMethod.PATCH, USERS_SETTINGS_PATH).access(IS_ADMIN_OR_OWNER_AND_IP_ALLOWED)
                 .antMatchers(HttpMethod.GET, USERS_PERIMETERS_PATH).access(IS_ADMIN_OR_OWNER_AND_IP_ALLOWED)
+                .antMatchers(HttpMethod.GET, USERS).access(AUTH_AND_IP_ALLOWED)
                 .antMatchers(USERS_PATH).access(IS_ADMIN_AND_IP_ALLOWED)
+                .antMatchers(HttpMethod.GET, GROUPS).access(AUTH_AND_IP_ALLOWED)
                 .antMatchers(GROUPS_PATH).access(IS_ADMIN_AND_IP_ALLOWED)
                 .antMatchers(HttpMethod.GET, ENTITIES).access(AUTH_AND_IP_ALLOWED)      // OC-1067 : we authorize all users for GET /entities
                 .antMatchers(ENTITIES_PATH).access(IS_ADMIN_AND_IP_ALLOWED)
