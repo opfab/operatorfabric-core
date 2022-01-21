@@ -99,7 +99,7 @@ describe ('Archives screen tests',function () {
 
         // We check we have 27 states (and 6 items for their process)
         cy.get('#opfab-state').click();
-        cy.get('#opfab-state').find('li').should('have.length', 33);
+        cy.get('#opfab-state').find('li').should('have.length', 34);
         // We check this state is not present because it is only a child state
         cy.get('#opfab-state').contains('Planned outage date response', {matchCase: false}).should('not.exist');
     })
@@ -130,9 +130,9 @@ describe ('Archives screen tests',function () {
         cy.get('#opfab-process').contains('Select All').click();
         cy.get('#opfab-process').click();
 
-        // We check we have 12 states (and 5 items for their process)
+        // We check we have 13 states (and 5 items for their process)
         cy.get('#opfab-state').click();
-        cy.get('#opfab-state').find('li').should('have.length', 17);
+        cy.get('#opfab-state').find('li').should('have.length', 18);
 
         // We unselect all processes then we select 'Process example' process and we check there is only 1 state for this process
         cy.get('#opfab-process').click();
@@ -184,9 +184,9 @@ describe ('Archives screen tests',function () {
         cy.get('#opfab-process').contains('Select All').click();
         cy.get('#opfab-process').click();
 
-        // We check we have 27 states (and 6 items for their process)
+        // We check we have 28 states (and 6 items for their process)
         cy.get('#opfab-state').click();
-        cy.get('#opfab-state').find('li').should('have.length', 33);
+        cy.get('#opfab-state').find('li').should('have.length', 34);
         // We check this state is not present because it is only a child state
         cy.get('#opfab-state').contains('Planned outage date response', {matchCase: false}).should('not.exist');
 

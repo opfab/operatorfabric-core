@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -72,11 +72,11 @@ public class CardController {
 
     @PostMapping("/userCard")
     @ResponseStatus(HttpStatus.CREATED)
-    public @Valid Void createUserCard(@Valid @RequestBody CardPublicationData card, Principal principal) {
+    public @Valid CardCreationReportData createUserCard(@Valid @RequestBody CardPublicationData card, Principal principal) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
         cardProcessingService.processUserCard(card,user);
-        return null;
+        return CardCreationReportData.builder().id(card.getId()).uid(card.getUid()).build();
     }
 
     @DeleteMapping("/userCard/{id}")

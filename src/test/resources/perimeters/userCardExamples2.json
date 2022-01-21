@@ -9,6 +9,10 @@
 	  {
 		"state" : "questionState",
 		"right" : "ReceiveAndWrite"
+	  },
+	  {
+		"state" : "confirmationState",
+		"right" : "ReceiveAndWrite"
 	  }
 	]
   }

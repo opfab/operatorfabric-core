@@ -6,5 +6,9 @@
 	"question":{
 		"title":"Question ",
 		"summary":"There is a question for you"
+	},
+	"confirmation":{
+		"title":"Confirmation ",
+		"summary":"Please confirm"
 	}
 }

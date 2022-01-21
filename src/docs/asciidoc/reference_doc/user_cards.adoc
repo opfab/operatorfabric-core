@@ -179,6 +179,40 @@ The recipient field can be hidden using the attribute `recipientVisible` : if hi
 Once a user card has been sent it can be edited by a user member of the publisher entity.
 It is possible to allow other entities to edit the card by specifing the 'entitiesAllowedToEdit' card field.
 
+== Send response automatically (experimental feature)
+
+It is possible to configure a template to automatically send a response when sending a user card expecting an answers from one of the entities of the emitting user. 
+The response card will be sent only if the user is enabled to respond to the card.
+ 
+To enable the automated response the template should add a `childCard` field to the object returned by 
+ `getSpecificCardInformation` method. For example:
+
+....
+ <script>
+    templateGateway.getSpecificCardInformation = function () {
+        const card = {...}
+
+        childCard : { 
+          summary : {key : "exampe.summary"},
+          title : {key : "example.title"},
+          state : "mystateForResponse"
+          data : {
+                  // specific child  card date 
+                  }
+          };
+        ...
+        return {
+            valid: true,
+            card: card,
+            childCard: childCard
+        };
+
+    }
+  </script>
+....
+
+The card preview will display the card detail with the automated response as it will be displayed in Feed page.
+
 == Misc
 
 When a user send a card, it is always sent to himself whatever he chooses in the recipient list.

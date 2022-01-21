@@ -13,7 +13,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {CardService} from '@ofServices/card.service';
 import {UserService} from '@ofServices/user.service';
-import {Card, CardData, fromCardToCardForPublishing, TimeSpan} from '@ofModel/card.model';
+import {Card, CardCreationReportData, CardData, fromCardToCardForPublishing, TimeSpan} from '@ofModel/card.model';
 import {UserCard} from '@ofModel/processes.model';
 import {Severity} from '@ofModel/light-card.model';
 import {Guid} from 'guid-typescript';
@@ -31,6 +31,7 @@ import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {UserCardDatesFormComponent} from './datesForm/usercard-dates-form.component';
 import {DateField, DatesForm} from './datesForm/dates-form.model';
 import {UserCardRecipientsFormComponent} from './recipientForm/usercard-recipients-form.component';
+import {UserPermissionsService} from '@ofServices/user-permissions.service';
 
 declare const templateGateway: any;
 
@@ -87,6 +88,8 @@ export class UserCardComponent implements OnInit {
     private useDescriptionFieldForEntityList = false;
     private specificInformation = null;
 
+    protected childCards: Card[] = [];
+
     public userCardTemplate: SafeHtml;
 
     constructor(private store: Store<AppState>,
@@ -99,6 +102,7 @@ export class UserCardComponent implements OnInit {
         protected configService: ConfigService,
         private handlebars: HandlebarsService,
         protected soundNotificationService: SoundNotificationService,
+        protected userPermissionsService: UserPermissionsService,
     ) {
         this.setDateFormValues();
     }
@@ -190,6 +194,7 @@ export class UserCardComponent implements OnInit {
         let card;
         if (!!this.cardToEdit) card = this.cardToEdit.card;
         const selected = this.processesService.getProcess(this.selectedProcessId);
+
         if (!!this.userCardConfiguration && !!this.userCardConfiguration.template) {
             const templateName = this.userCardConfiguration.template;
 
@@ -270,7 +275,14 @@ export class UserCardComponent implements OnInit {
                     keepChildCards: (!!this.specificInformation.card.keepChildCards) ? this.specificInformation.card.keepChildCards : false,
                     data: this.specificInformation.card.data,
                 } as Card;
-
+                
+                if (!!this.specificInformation.childCard && this.userPermissionsService.isUserEnabledToRespond(this.userService.getCurrentUserWithPerimeters(),
+                this.card, selectedProcess)) {
+                    this.childCards = [this.getChildCard(this.specificInformation.childCard)];
+                    this.card = {...this.card, hasChildCardFromCurrentUserEntity: true}
+                } else {
+                    this.childCards = [];
+                }
                 this.displayPreview = true;
             });
     }
@@ -412,13 +424,52 @@ export class UserCardComponent implements OnInit {
         else return this.entitiesService.getEntities().find(entity => entity.id === id).name;
     }
 
+    public getChildCard(childCard) {
+        const cardState = this.processesService.getProcess(this.selectedProcessId).states[this.selectedStateId]
+
+        return {
+            id: null,
+            uid: null,
+            publisher: this.card.publisher,
+            publisherType: this.card.publisherType,
+            processVersion: this.card.processVersion,
+            process: this.card.process,
+            processInstanceId: `${this.card.processInstanceId}_${this.card.publisher}`,
+            publishDate: this.card.publishDate,
+            state: childCard.responseState ? childCard.responseState : cardState.response.state,
+            startDate: this.card.startDate,
+            endDate: this.card.endDate,
+            severity: Severity.INFORMATION,
+            entityRecipients: this.card.entityRecipients,
+            userRecipients: this.card.userRecipients,
+            groupRecipients: this.card.groupRecipients,
+            externalRecipients: cardState.response.externalRecipients,
+            title: childCard.title,
+            summary: childCard.summary,
+            data: childCard.data,
+            parentCardId: this.card.id,
+            initialParentCardUid: this.card.uid,
+            hasBeenRead: false,
+            hasBeenAcknowledged: false, 
+            hasChildCardFromCurrentUserEntity: false
+        }
+    }
+
     public confirm(): void {
         this.displayPreview = false;
         this.displaySendingCardInProgress = true;
 
         // Exclude card from sound notifications before publishing to avoid synchronization problems
         this.soundNotificationService.lastSentCard(this.card.process + '.' + this.card.processInstanceId);
+        const selectedProcess = this.processesService.getProcess(this.selectedProcessId);
 
+        let childCard = null;
+
+        if (!!this.specificInformation.childCard && this.userPermissionsService.isUserEnabledToRespond(this.userService.getCurrentUserWithPerimeters(),
+                        this.card, selectedProcess)) {
+            childCard = this.specificInformation.childCard;
+        }
+        
         this.cardService.postCard(fromCardToCardForPublishing(this.card))
             .subscribe(
                 resp => {
@@ -428,7 +479,10 @@ export class UserCardComponent implements OnInit {
                         console.log('Impossible to send card , message from service : ', msg, '. Error message : ', error);
                         this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
                     } else {
-                        this.displayMessage('userCard.cardSendWithNoError', null, MessageLevel.INFO);
+                        if (!!childCard) {
+                           this.sendAutomatedResponse(this.getChildCard(childCard), resp.body);
+                        } else 
+                            this.displayMessage('userCard.cardSendWithNoError', null, MessageLevel.INFO);
                     }
 
                     this.userCardModal.dismiss('Close');
@@ -439,6 +493,35 @@ export class UserCardComponent implements OnInit {
                     this.displaySendingCardInProgress = false;
                 }
             );
+    }
+
+    sendAutomatedResponse(responseCard, cardCreationReport: CardCreationReportData) {
+
+        const automatedResponseCard = {...fromCardToCardForPublishing(responseCard), 
+            parentCardId: cardCreationReport.id,
+            initialParentCardUid: cardCreationReport.uid
+        }
+
+        this.cardService.postCard(automatedResponseCard)
+        .subscribe(
+            resp => {
+                if (resp.status !== 201) {
+                    const msg = (!!resp.message ? resp.message : '');
+                    const error = (!!resp.error ? resp.error : '');
+                    console.log('Impossible to send child card , message from service : ', msg, '. Error message : ', error);
+                    this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
+                } else {
+                        this.displayMessage('userCard.cardSendWithNoError', null, MessageLevel.INFO);
+                }
+
+                this.userCardModal.dismiss('Close');
+            },
+            err => {
+                console.error('Error when sending child card :', err);
+                this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
+                this.displaySendingCardInProgress = false;
+            }
+        );
     }
 
     public cancel(): void {
