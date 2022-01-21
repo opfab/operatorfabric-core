@@ -228,6 +228,7 @@ export class AppComponent implements OnInit {
     this.actions$.pipe(
         ofType<Action>(AuthenticationActionTypes.SessionExpired)).subscribe(  () => {
           this.soundNotificationService.handleSessionEnd();
+          this.cardService.closeSubscription();
           this.modalRef = this.modalService.open(this.sessionEndPopupRef, {centered: true, backdrop: 'static'});
         }
       );

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,7 +37,6 @@ import {hot} from 'jasmine-marbles';
 import * as moment from 'moment';
 import {Message} from '@ofModel/message.model';
 import {CardService} from '@ofServices/card.service';
-import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {ConfigService} from '@ofServices/config.service';
 import {injectedSpy} from '@tests/helpers';
 import SpyObj = jasmine.SpyObj;
@@ -50,7 +49,6 @@ describe('AuthenticationEffects', () => {
     let authenticationService: SpyObj<AuthenticationService>;
     let cardService: SpyObj<CardService>;
     let router: SpyObj<Router>;
-    let translate: TranslateService;
     let configService: SpyObj<ConfigService>;
 
     beforeEach(waitForAsync(() => {
@@ -75,7 +73,6 @@ describe('AuthenticationEffects', () => {
         , ['fetchConfiguration']);
         const storeSpy = createSpyObj('Store', ['dispatch', 'select']);
         TestBed.configureTestingModule({
-            imports: [TranslateModule.forRoot()],
             providers: [
                 AuthenticationEffects,
                 provideMockActions(() => actions$),
@@ -88,7 +85,6 @@ describe('AuthenticationEffects', () => {
         });
 
         effects = TestBed.inject(AuthenticationEffects);
-        translate = TestBed.inject(TranslateService);
        
 
     }));
@@ -109,14 +105,14 @@ describe('AuthenticationEffects', () => {
             authenticationService.askTokenFromPassword.and.returnValue(of(
                 new PayloadForSuccessfulAuthentication('johndoe', Guid.create(), 'fake-token', new Date())
             ));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, null,translate,configService);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null,configService);
             expect(effects).toBeTruthy();
             effects.TryToLogIn.subscribe((action: AuthenticationActions) => expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogIn))
         });
         it('should fail if JWT is not generated from backend', () => {
             const localAction$ = new Actions(hot('-a--', {a: new TryToLogIn({username: 'johndoe', password: 'pwd'})}));
             authenticationService.askTokenFromPassword.and.returnValue(throwError(() => 'Something went wrong'));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, null,translate,configService);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null,configService);
             expect(effects).toBeTruthy();
             effects.TryToLogIn.subscribe((action: AuthenticationActions) => expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn))
         });
@@ -126,7 +122,7 @@ describe('AuthenticationEffects', () => {
         it('should success and navigate', () => {
             const localAction$ = new Actions(hot('-a--', {a: new AcceptLogOut()}));
             router.navigate.and.callThrough();
-            effects = new AuthenticationEffects(mockStore, localAction$, null, null, router,translate,configService);
+            effects = new AuthenticationEffects(mockStore, localAction$, null, router, configService);
             expect(effects).toBeTruthy();
             effects.AcceptLogOut.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogOutSuccess);
@@ -145,7 +141,7 @@ describe('AuthenticationEffects', () => {
             ));
             mockStore.select.and.returnValue(of(null));
             authenticationService.loadUserData.and.callFake(auth => of(auth));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router,translate,configService);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, router, configService);
             expect(effects).toBeTruthy();
             effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogIn);
@@ -159,7 +155,7 @@ describe('AuthenticationEffects', () => {
                 new CheckTokenResponse('johndoe', 123, Guid.create().toString())
             ));
             mockStore.select.and.returnValue(of(null));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router,translate,configService);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, router, configService);
             expect(effects).toBeTruthy();
             effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn);
@@ -171,7 +167,7 @@ describe('AuthenticationEffects', () => {
             authenticationService.checkAuthentication.and.returnValue(throwError(() => 'no valid token'));
             authenticationService.askTokenFromCode.and.returnValue(throwError(() => 'no valid code'));
             mockStore.select.and.returnValue(of('code'));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router,translate,configService);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, router, configService);
             expect(effects).toBeTruthy();
             effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn);
