@@ -212,7 +212,6 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.tableType);
-    this.refreshData();
   }
 
   public localizeHeader(parameters: ICellRendererParams): string {
@@ -238,6 +237,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         });
     this.groupsDefinition = this.groupsService.getGroups();
     this.entitiesDefinition = this.entitiesService.getEntities();
+    this.refreshData();
   }
 
   /** This function generates the ag-grid `ColumnDefs` for the grid from a list of fields
