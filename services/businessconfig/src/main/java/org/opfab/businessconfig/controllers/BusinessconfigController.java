@@ -283,4 +283,19 @@ public class BusinessconfigController implements BusinessconfigApi {
     public RealTimeScreens getRealTimeScreens(HttpServletRequest request, HttpServletResponse response) {
         return processService.getRealTimeScreensCache();
     }
+
+    @Override
+    public List<Process>  getProcessHistory(HttpServletRequest request, HttpServletResponse response, String processId) {
+        List<Process> history = processService.listProcessHistory(processId);
+                
+        if (history.isEmpty()) {
+            throw new ApiErrorException(ApiError.builder()
+                    .status(HttpStatus.NOT_FOUND)
+                    .message(String.format("History for process with id %s was not found", processId))
+                    .build());
+        }
+        return history;
+    }
+    
+
 }
