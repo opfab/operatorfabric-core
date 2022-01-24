@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,6 +34,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.opfab.businessconfig.model.ResourceTypeEnum.*;
@@ -70,6 +71,18 @@ class ProcessesServiceShould {
     @Test
     void listProcesses() {
         assertThat(service.listProcesses()).hasSize(2);
+    }
+
+    @Test
+    void listProcessHistory() {
+        List<Process> processHistory = service.listProcessHistory("first");
+        assertThat(processHistory).hasSize(3);
+        assertThat(processHistory.get(0).getId()).isEqualTo("first");
+        assertThat(processHistory.get(0).getVersion()).isEqualTo("0.1");
+        assertThat(processHistory.get(1).getId()).isEqualTo("first");
+        assertThat(processHistory.get(1).getVersion()).isEqualTo("0.5");
+        assertThat(processHistory.get(2).getId()).isEqualTo("first");
+        assertThat(processHistory.get(2).getVersion()).isEqualTo("v1");
     }
 
     @Test

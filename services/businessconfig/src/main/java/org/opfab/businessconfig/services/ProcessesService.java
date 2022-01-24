@@ -40,6 +40,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -92,6 +93,15 @@ public class ProcessesService implements ResourceLoaderAware {
      */
 	public List<Process> listProcesses() {
 		return new ArrayList<>(defaultCache.values());		
+	}
+
+    /**
+     * Lists all registered processes
+     *
+     * @return registered processes
+     */
+	public List<Process> listProcessHistory(String processId) {
+        return completeCache.values().stream().filter( p -> p.getId().equals(processId)).collect(Collectors.toList());
 	}
 
     /**
