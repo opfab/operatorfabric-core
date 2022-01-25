@@ -170,8 +170,6 @@ describe('User Card ', function () {
           cy.get('#opfab-usercard-btn-accept').click();
           // Check that the message indicating successful sending appears
           cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
-          cy.get('#opfab-div-card-template').find('div').eq(0).contains('Hello World');
-
         });
     })
 
