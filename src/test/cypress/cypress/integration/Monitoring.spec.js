@@ -218,7 +218,7 @@ describe ('Monitoring screen tests',function () {
         cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(3).click();
         cy.wait(500);
 
-        // Cards should fe sorted by title
+        // Cards should be sorted by title
         cy.get('@monitoring-table').find('.ag-row').eq(0).find('.ag-cell').eq(3).should('have.text', 'Electricity consumption forecast');
         cy.get('@monitoring-table').find('.ag-row').eq(1).find('.ag-cell').eq(3).should('have.text', 'Message');
         cy.get('@monitoring-table').find('.ag-row').eq(2).find('.ag-cell').eq(3).should('have.text', 'Process state (calcul)');
@@ -229,7 +229,7 @@ describe ('Monitoring screen tests',function () {
         cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(3).click();
         cy.wait(500);
 
-        // Cards should fe sorted by title
+        // Cards should be sorted by title
         cy.get('@monitoring-table').find('.ag-row').eq(0).find('.ag-cell').eq(3).should('have.text', '⚡ Planned Outage');
         cy.get('@monitoring-table').find('.ag-row').eq(1).find('.ag-cell').eq(3).should('have.text', '⚠️ Network Contingencies ⚠️');
         cy.get('@monitoring-table').find('.ag-row').eq(2).find('.ag-cell').eq(3).should('have.text', 'Process state (calcul)');
@@ -257,7 +257,7 @@ describe ('Monitoring screen tests',function () {
         cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(4).click();
         cy.wait(500);
 
-        // Cards should fe sorted by summary
+        // Cards should be sorted by summary
         cy.get('@monitoring-table').find('.ag-row').eq(0).find('.ag-cell').eq(4).should('have.text', 'Contingencies report for French network');
         cy.get('@monitoring-table').find('.ag-row').eq(1).find('.ag-cell').eq(4).should('have.text', 'Message received');
         cy.get('@monitoring-table').find('.ag-row').eq(2).find('.ag-cell').eq(4).should('have.text', 'Message received');
@@ -268,7 +268,7 @@ describe ('Monitoring screen tests',function () {
         cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(4).click();
         cy.wait(500);
 
-        // Cards should fe sorted by summary
+        // Cards should be sorted by summary
         cy.get('@monitoring-table').find('.ag-row').eq(0).find('.ag-cell').eq(4).should('have.text', 'Message received');
         cy.get('@monitoring-table').find('.ag-row').eq(1).find('.ag-cell').eq(4).should('have.text', 'Message received');
         cy.get('@monitoring-table').find('.ag-row').eq(2).find('.ag-cell').eq(4).should('have.text', 'Message received');
@@ -296,7 +296,7 @@ describe ('Monitoring screen tests',function () {
         cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(5).click();
         cy.wait(500);
 
-        // Cards should fe sorted by process states
+        // Cards should be sorted by process states
         cy.get('@monitoring-table').find('.ag-row').eq(0).find('.ag-cell').eq(5).should('have.text', 'CANCELED');
         cy.get('@monitoring-table').find('.ag-row').eq(1).find('.ag-cell').eq(5).should('have.text', 'FINISHED');
         cy.get('@monitoring-table').find('.ag-row').eq(2).find('.ag-cell').eq(5).should('have.text', 'IN PROGRESS');
@@ -307,7 +307,7 @@ describe ('Monitoring screen tests',function () {
         cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(5).click();
         cy.wait(500);
 
-        // Cards should fe sorted by process states
+        // Cards should be sorted by process states
         cy.get('@monitoring-table').find('.ag-row').eq(0).find('.ag-cell').eq(5).should('have.text', 'IN PROGRESS');
         cy.get('@monitoring-table').find('.ag-row').eq(1).find('.ag-cell').eq(5).should('have.text', 'IN PROGRESS');
         cy.get('@monitoring-table').find('.ag-row').eq(2).find('.ag-cell').eq(5).should('have.text', 'IN PROGRESS');
@@ -335,7 +335,7 @@ describe ('Monitoring screen tests',function () {
         cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(6).click();
         cy.wait(500);
 
-        // Cards should fe sorted by emitter
+        // Cards should be sorted by emitter
         cy.get('@monitoring-table').find('.ag-row').eq(0).find('.ag-cell').eq(6).should('have.text', 'Control Center FR North (publisher_test)');
         cy.get('@monitoring-table').find('.ag-row').eq(1).find('.ag-cell').eq(6).should('have.text', 'publisher_test');
         cy.get('@monitoring-table').find('.ag-row').eq(2).find('.ag-cell').eq(6).should('have.text', 'publisher_test');
@@ -346,7 +346,7 @@ describe ('Monitoring screen tests',function () {
         cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(6).click();
         cy.wait(500);
 
-        // Cards should fe sorted by emitter
+        // Cards should be sorted by emitter
         cy.get('@monitoring-table').find('.ag-row').eq(0).find('.ag-cell').eq(6).should('have.text', 'publisher_test');
         cy.get('@monitoring-table').find('.ag-row').eq(1).find('.ag-cell').eq(6).should('have.text', 'publisher_test');
         cy.get('@monitoring-table').find('.ag-row').eq(2).find('.ag-cell').eq(6).should('have.text', 'publisher_test');
@@ -374,20 +374,22 @@ describe ('Monitoring screen tests',function () {
         cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(7).click();
         cy.wait(500);
 
-        // Cards should fe sorted by answer
+        // Cards should be sorted by answer
         cy.get('@monitoring-table').find('.ag-row').eq(0).find('.ag-cell').eq(7).should('have.text', '');
         cy.get('@monitoring-table').find('.ag-row').eq(1).find('.ag-cell').eq(7).should('have.text', '');
         cy.get('@monitoring-table').find('.ag-row').eq(2).find('.ag-cell').eq(7).should('have.text', '');
         cy.get('@monitoring-table').find('.ag-row').eq(3).find('.ag-cell').eq(7).should('have.text', '');
-        cy.get('@monitoring-table').find('.ag-row').eq(4).find('.ag-cell').eq(7).should('contain.text', 'Control Center FR East').should('contain.text', 'Control Center FR North');
+        cy.get('@monitoring-table').find('.ag-row').eq(4).find('.ag-cell').eq(7).should('not.contain.text', 'Control Center FR East')
+            .should('contain.text', 'Control Center FR North').should('contain.text', 'Control Center FR South');
         
 
         // Sorting answers a second time
         cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(7).click();
         cy.wait(500);
 
-        // Cards should fe sorted by emitter
-        cy.get('@monitoring-table').find('.ag-row').eq(0).find('.ag-cell').eq(7).should('contain.text', 'Control Center FR East').should('contain.text', 'Control Center FR North');
+        // Cards should be sorted by emitter
+        cy.get('@monitoring-table').find('.ag-row').eq(0).find('.ag-cell').eq(7).should('not.contain.text', 'Control Center FR East')
+            .should('contain.text', 'Control Center FR North').should('contain.text', 'Control Center FR South');
         cy.get('@monitoring-table').find('.ag-row').eq(1).find('.ag-cell').eq(7).should('have.text', '');
         cy.get('@monitoring-table').find('.ag-row').eq(2).find('.ag-cell').eq(7).should('have.text', '');
         cy.get('@monitoring-table').find('.ag-row').eq(3).find('.ag-cell').eq(7).should('have.text', '');
