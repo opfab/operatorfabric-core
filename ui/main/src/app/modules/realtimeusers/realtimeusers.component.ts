@@ -16,6 +16,7 @@ import {EntitiesService} from '@ofServices/entities.service';
 import {GroupsService} from '@ofServices/groups.service';
 import {FormControl, FormGroup} from '@angular/forms';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
+import {Utilities} from '../../common/utilities';
 
 
 @Component({
@@ -99,7 +100,7 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
         connectedUsers.forEach(connectedUser => connectedLogins.push(connectedUser.login));
 
         this.realTimeUsersConnected = users.filter(user => connectedLogins.includes(user.login));
-        this.realTimeUsersConnected.sort((obj1, obj2) => this.compareObj(obj1, obj2));
+        this.realTimeUsersConnected.sort((obj1, obj2) => Utilities.compareObj(obj1, obj2));
 
         this.realTimeUsersConnected.forEach(realTimeUserConnected => {
           realTimeUserConnected.entities.forEach(entity => {
@@ -152,13 +153,5 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     clearInterval(this.interval);
-  }
-
-  compareObj(obj1, obj2) {
-    if (obj1 > obj2)
-      return 1;
-    if (obj1 < obj2)
-      return -1;
-    return 0;
   }
 }

@@ -158,6 +158,14 @@
       </a>
     </div>
 
+    <div class="opfab-right-menu-item" *ngIf="(displayActivityArea)">
+      <a  id="opfab-navbar-right-menu-activityarea" class="opfab-right-menu-link" routerLink="/activityarea"  routerLinkActive
+          #rla="routerLinkActive">
+        <em class="fas fa-user-cog" id="opfab-menu-icon-activityarea"></em>
+        <div translate> menu.activityArea</div>
+      </a>
+    </div>
+
     <div class="opfab-right-menu-item" *ngIf="(displayFeedConfiguration)">
       <a  id="opfab-navbar-right-menu-feedconfiguration" class="opfab-right-menu-link" routerLink="/feedconfiguration"  routerLinkActive
         #rla="routerLinkActive">

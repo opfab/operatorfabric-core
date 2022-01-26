@@ -16,7 +16,8 @@ Feature: patch user settings
   "login" : "loginKarate1",
   "description" : "my dummy user",
   "locale" : "en",
-  "processesStatesNotNotified": {"processA": ["state1", "state2"], "processB": ["state3", "state4"]}
+  "processesStatesNotNotified": {"processA": ["state1", "state2"], "processB": ["state3", "state4"]},
+  "entitiesDisconnected": ["ENTITY_A", "ENTITY_B"]
 }
 """
 
@@ -26,7 +27,8 @@ Feature: patch user settings
   "login" : "operator1_fr",
   "description" : "my dummy operator1_fr user",
   "locale" : "en",
-  "processesStatesNotNotified": {"processC": ["state5", "state6"], "processD": ["state7", "state8"]}
+  "processesStatesNotNotified": {"processC": ["state5", "state6"], "processD": ["state7", "state8"]},
+  "entitiesDisconnected": ["ENTITY_C", "ENTITY_D"]
 }
 """
 
@@ -69,6 +71,7 @@ Feature: patch user settings
     And match response.description == userSettings.description
     And match response.locale == userSettings.locale
     And match response.processesStatesNotNotified == userSettings.processesStatesNotNotified
+    And match response.entitiesDisconnected == userSettings.entitiesDisconnected
 
 
   Scenario: Patch operator1_fr user settings with operator1_fr authentication
@@ -82,5 +85,6 @@ Feature: patch user settings
     And match response.description == userSettingsDispatcher.description
     And match response.locale == userSettingsDispatcher.locale
     And match response.processesStatesNotNotified == userSettingsDispatcher.processesStatesNotNotified
+    And match response.entitiesDisconnected == userSettingsDispatcher.entitiesDisconnected
 
 

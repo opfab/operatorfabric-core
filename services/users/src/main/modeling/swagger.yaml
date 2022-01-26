@@ -197,6 +197,11 @@ definitions:
           description: List of process states for which the user will not be notified
           items:
             type: string
+      entitiesDisconnected:
+        description: Entities not represented by the user for his current session
+        type: array
+        items:
+          type: string
     required:
       - login
     example:

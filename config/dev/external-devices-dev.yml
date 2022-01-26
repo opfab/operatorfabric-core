@@ -37,6 +37,8 @@ operatorfabric:
           externalDeviceId: CDS_2
         - userLogin: operator3_fr
           externalDeviceId: CDS_3
+        - userLogin: operator4_fr
+          externalDeviceId: CDS_1
 logging.level.org.opfab: debug
 
 

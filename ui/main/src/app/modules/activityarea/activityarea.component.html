@@ -1,0 +1,46 @@
+<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
+<div class="opfab-activityarea-title" translate>
+    activityArea.title
+</div>
+
+<div *ngIf="userEntities.length">
+    <form [formGroup]="activityAreaForm">
+        <div class="opfab-activityarea-entitieslist">
+            <p *ngFor="let userEntity of userEntities;" class="font-weight-bold">
+                <label style="font-weight: bold" class="opfab-checkbox">{{userEntity.entityName}}
+                    <input type="checkbox" [formControlName]=userEntity.entityId [checked]="true">
+                    <span class="opfab-checkbox-checkmark"></span>
+                </label>
+            </p>
+        </div>
+        <br />
+
+        <div *ngIf="displaySendResultError">
+            <h4 translate style="text-align: center" class="text-danger"> {{messageAfterSavingSettings}} </h4>
+        </div>
+        <div style="text-align: center;width:100%">
+            <button id="opfab-activityarea-btn-confirm" type="button" class="opfab-btn" (click)='openConfirmSaveSettingsModal(confirmationPopup)' style="text-align: center;min-width: 243px;" translate>shared.confirmSettings</button>
+        </div>
+    </form>
+</div>
+
+<div class="my-3">
+    <ng-template #confirmationPopup let-modal>
+        <div class="modal-header">
+            <div translate> shared.popup.title </div>
+        </div>
+        <div class="modal-body text-center">
+            <p translate>shared.popup.areYouSure</p>
+            <button id="opfab-activityarea-btn-no" type="button" class="opfab-btn-cancel" (click)="doNotConfirmSaveSettings()" translate>button.cancel</button>
+            <button id="opfab-activityarea-btn-yes" type="button" class="opfab-btn" (click)="confirmSaveSettings()" translate>button.yes</button>
+        </div>
+    </ng-template>
+</div>

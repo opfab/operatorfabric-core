@@ -21,6 +21,9 @@ operatorfabric.users.default:
     - login: operator3_fr
       groups: [ "RTE","ADMIN","ReadOnly","Dispatcher"]
       entities: [ "ENTITY1_FR" ]
+    - login: operator4_fr
+      groups: ["ReadOnly", "Dispatcher"]
+      entities: ["ENTITY1_FR", "ENTITY2_FR", "ENTITY3_FR"]
     - login: itsupervisor1
       groups: ["Supervisor"]
       entities: ["IT_SUPERVISOR_ENTITY"]

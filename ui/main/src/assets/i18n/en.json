@@ -53,7 +53,15 @@
     "resultsNumber":"Results number",
     "noProcessStateAvailable": "No process/state available",
     "endDateBeforeStartDate": "End date must be after start date",
-    "featureNotConfigured": "Feature not configured"
+    "featureNotConfigured": "Feature not configured",
+    "confirmSettings": "CONFIRM SETTINGS",
+    "popup": {
+      "title": "CONFIRMATION",
+      "areYouSure": "You have made some changes. Are you sure you want to save them ?"
+    },
+    "error": {
+      "impossibleToSaveSettings": "Impossible to save settings for technical reasons"
+    }
   },
   "global":{
     "connectionLost":"Connection lost",
@@ -78,7 +86,8 @@
     "switchToNightMode": "Night mode",
     "switchToDayMode": "Day mode",
     "realTimeUsers": "Real time users",
-    "externalDevicesConfiguration": "External devices configuration"
+    "externalDevicesConfiguration": "External devices configuration",
+    "activityArea": "Activity area"
   },
   "timeline": {
     "hideTimeline" : "Hide Timeline",
@@ -225,16 +234,11 @@
     "yes": "YES",
     "search" : "SEARCH"
   },
+  "activityArea": {
+    "title": "ACTIVITY AREA"
+  },
   "feedConfiguration": {
-    "title": "NOTIFICATION RECEPTION CONFIGURATION",
-    "confirmSettings": "CONFIRM SETTINGS",
-    "popup": {
-      "title": "CONFIRMATION",
-      "areYouSure": "You have made some changes. Are you sure you want to save them ?"
-    },
-    "error": {
-      "impossibleToSaveSettings": "Impossible to save settings for technical reasons"
-    }
+    "title": "NOTIFICATION RECEPTION CONFIGURATION"
   },
   "userCard": {
     "title": "CREATE A NEW CARD ",

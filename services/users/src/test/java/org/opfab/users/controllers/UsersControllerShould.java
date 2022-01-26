@@ -118,10 +118,13 @@ class UsersControllerShould {
                 .description("Once played Sir Lancelot")
                 .processStatesNotNotified("processA", Arrays.asList("state1", "state2"))
                 .processStatesNotNotified("processB", Arrays.asList("state3", "state4"))
+                .entityDisconnected("ENTITY3_FR")
+                .entityDisconnected("ENTITY4_FR")
                 .build();
         us2 = UserSettingsData.builder()
                 .login("gchapman")
                 .processesStatesNotNotified(Collections.emptyMap())
+                .entitiesDisconnected(Collections.emptyList())
                 .build();
         us3 = UserSettingsData.builder()
                 .login("kkline")
@@ -234,6 +237,9 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.processesStatesNotNotified.processA.[1]", is("state2")))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processB.[0]", is("state3")))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processB.[1]", is("state4")))
+                    .andExpect(jsonPath("$.entitiesDisconnected", hasSize(2)))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[0]", is("ENTITY3_FR")))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[1]", is("ENTITY4_FR")))
             ;
 
             ResultActions result2 = mockMvc.perform(get("/users/gchapman/settings"));
@@ -242,6 +248,7 @@ class UsersControllerShould {
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
                     .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(0)))
+                    .andExpect(jsonPath("$.entitiesDisconnected", hasSize(0)))
             ;
 
             ResultActions result3 = mockMvc.perform(get("/users/kkline/settings"));
@@ -250,6 +257,7 @@ class UsersControllerShould {
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("kkline")))
                     .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(0)))
+                    .andExpect(jsonPath("$.entitiesDisconnected", hasSize(0)))
             ;
         }
 
@@ -277,6 +285,7 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.login", is("mpalin")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
                     .andExpect(jsonPath("$.processesStatesNotNotified", is(nullValue())))
+                    .andExpect(jsonPath("$.entitiesDisconnected", is(nullValue())))
             ;
 
             mockMvc.perform(get("/users/mpalin/settings"))
@@ -285,12 +294,14 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.login", is("mpalin")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
                     .andExpect(jsonPath("$.processesStatesNotNotified", is(nullValue())))
+                    .andExpect(jsonPath("$.entitiesDisconnected", is(nullValue())))
             ;
 
             mockMvc.perform(put("/users/mpalin/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"mpalin\"," +
+                            "\"entitiesDisconnected\": [\"ENTITY5_FR\", \"ENTITY6_FR\"]," +
                             "\"processesStatesNotNotified\": {\"processC\":[\"state5\", \"state6\"]}}")
             )
                     .andExpect(status().isOk())
@@ -301,6 +312,9 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
+                    .andExpect(jsonPath("$.entitiesDisconnected", hasSize(2)))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[0]", is("ENTITY5_FR")))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[1]", is("ENTITY6_FR")))
             ;
             mockMvc.perform(get("/users/mpalin/settings"))
                     .andExpect(status().isOk())
@@ -311,6 +325,9 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
+                    .andExpect(jsonPath("$.entitiesDisconnected", hasSize(2)))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[0]", is("ENTITY5_FR")))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[1]", is("ENTITY6_FR")))
             ;
 
         }
@@ -327,6 +344,7 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.login", is("mpalin")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
                     .andExpect(jsonPath("$.processesStatesNotNotified", is(nullValue())))
+                    .andExpect(jsonPath("$.entitiesDisconnected", is(nullValue())))
             ;
 
             mockMvc.perform(get("/users/mpalin/settings"))
@@ -335,12 +353,14 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.login", is("mpalin")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
                     .andExpect(jsonPath("$.processesStatesNotNotified", is(nullValue())))
+                    .andExpect(jsonPath("$.entitiesDisconnected", is(nullValue())))
             ;
 
             mockMvc.perform(patch("/users/mpalin/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"mpalin\"," +
+                            "\"entitiesDisconnected\": [\"ENTITY5_FR\", \"ENTITY6_FR\"]," +
                             "\"processesStatesNotNotified\": {\"processC\": [\"state5\", \"state6\"]}}")
             )
                     .andExpect(status().isOk())
@@ -351,6 +371,9 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
+                    .andExpect(jsonPath("$.entitiesDisconnected", hasSize(2)))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[0]", is("ENTITY5_FR")))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[1]", is("ENTITY6_FR")))
             ;
             mockMvc.perform(get("/users/mpalin/settings"))
                     .andExpect(status().isOk())
@@ -361,6 +384,9 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
+                    .andExpect(jsonPath("$.entitiesDisconnected", hasSize(2)))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[0]", is("ENTITY5_FR")))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[1]", is("ENTITY6_FR")))
             ;
 
             mockMvc.perform(patch("/users/mpalin/settings")
@@ -377,8 +403,11 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
+                    .andExpect(jsonPath("$.entitiesDisconnected", hasSize(2)))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[0]", is("ENTITY5_FR")))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[1]", is("ENTITY6_FR")))
             ;
-            //We check that processesStatesNotNotified has not been deleted
+            //We check that processesStatesNotNotified and entitiesDisconnected have not been deleted
             mockMvc.perform(get("/users/mpalin/settings"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -388,6 +417,9 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
+                    .andExpect(jsonPath("$.entitiesDisconnected", hasSize(2)))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[0]", is("ENTITY5_FR")))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[1]", is("ENTITY6_FR")))
             ;
 
         }
@@ -405,6 +437,7 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.login", is("tjones")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
                     .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(0)))
+                    .andExpect(jsonPath("$.entitiesDisconnected", hasSize(0)))
             ;
             mockMvc.perform(get("/users/tjones/settings"))
                     .andExpect(status().isOk())
@@ -412,6 +445,7 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.login", is("tjones")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
                     .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(0)))
+                    .andExpect(jsonPath("$.entitiesDisconnected", hasSize(0)))
             ;
 
         }
@@ -963,6 +997,7 @@ class UsersControllerShould {
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
                     .andExpect(jsonPath("$.processesStatesNotNotified.*", hasSize(0)))
+                    .andExpect(jsonPath("$.entitiesDisconnected", hasSize(0)))
             ;
         }
 
@@ -981,6 +1016,7 @@ class UsersControllerShould {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"gchapman\"," +
+                            "\"entitiesDisconnected\": [\"ENTITY5_FR\", \"ENTITY6_FR\"]," +
                             "\"processesStatesNotNotified\": {\"processC\": [\"state5\", \"state6\"]}}")
             )
                     .andExpect(status().isOk())
@@ -991,6 +1027,9 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
+                    .andExpect(jsonPath("$.entitiesDisconnected", hasSize(2)))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[0]", is("ENTITY5_FR")))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[1]", is("ENTITY6_FR")))
             ;
 
             mockMvc.perform(get("/users/gchapman/settings"))
@@ -1002,12 +1041,16 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
+                    .andExpect(jsonPath("$.entitiesDisconnected", hasSize(2)))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[0]", is("ENTITY5_FR")))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[1]", is("ENTITY6_FR")))
             ;
 
             mockMvc.perform(put("/users/gchapman/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"gchapman\"," +
+                            "\"entitiesDisconnected\": [\"ENTITY5_FR\", \"ENTITY6_FR\"]," +
                             "\"processesStatesNotNotified\": {\"processC\": [\"state5\", \"state6\"]}}")
             )
                     .andExpect(status().isOk())
@@ -1018,6 +1061,9 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
+                    .andExpect(jsonPath("$.entitiesDisconnected", hasSize(2)))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[0]", is("ENTITY5_FR")))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[1]", is("ENTITY6_FR")))
             ;
             mockMvc.perform(get("/users/gchapman/settings"))
                     .andExpect(status().isOk())
@@ -1028,6 +1074,9 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
+                    .andExpect(jsonPath("$.entitiesDisconnected", hasSize(2)))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[0]", is("ENTITY5_FR")))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[1]", is("ENTITY6_FR")))
             ;
 
         }
@@ -1055,6 +1104,7 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.login", is("gchapman")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
                     .andExpect(jsonPath("$.processesStatesNotNotified", is(nullValue())))
+                    .andExpect(jsonPath("$.entitiesDisconnected", is(nullValue())))
             ;
 
             mockMvc.perform(get("/users/gchapman/settings"))
@@ -1063,12 +1113,14 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.login", is("gchapman")))
                     .andExpect(jsonPath("$.description", is(nullValue())))
                     .andExpect(jsonPath("$.processesStatesNotNotified", is(nullValue())))
+                    .andExpect(jsonPath("$.entitiesDisconnected", is(nullValue())))
             ;
 
             mockMvc.perform(patch("/users/gchapman/settings")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"gchapman\"," +
+                            "\"entitiesDisconnected\": [\"ENTITY5_FR\", \"ENTITY6_FR\"]," +
                             "\"processesStatesNotNotified\": {\"processC\":[\"state5\", \"state6\"]}}")
             )
                     .andExpect(status().isOk())
@@ -1079,6 +1131,9 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
+                    .andExpect(jsonPath("$.entitiesDisconnected", hasSize(2)))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[0]", is("ENTITY5_FR")))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[1]", is("ENTITY6_FR")))
             ;
             mockMvc.perform(get("/users/gchapman/settings"))
                     .andExpect(status().isOk())
@@ -1089,6 +1144,9 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
+                    .andExpect(jsonPath("$.entitiesDisconnected", hasSize(2)))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[0]", is("ENTITY5_FR")))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[1]", is("ENTITY6_FR")))
             ;
 
             mockMvc.perform(patch("/users/gchapman/settings")
@@ -1105,8 +1163,11 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
+                    .andExpect(jsonPath("$.entitiesDisconnected", hasSize(2)))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[0]", is("ENTITY5_FR")))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[1]", is("ENTITY6_FR")))
             ;
-            //We check that processesStatesNotNotified has not been deleted
+            //We check that processesStatesNotNotified and entitiesDisconnected have not been deleted
             mockMvc.perform(get("/users/gchapman/settings"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -1116,6 +1177,9 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC", hasSize(2)))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[0]", is("state5")))
                     .andExpect(jsonPath("$.processesStatesNotNotified.processC.[1]", is("state6")))
+                    .andExpect(jsonPath("$.entitiesDisconnected", hasSize(2)))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[0]", is("ENTITY5_FR")))
+                    .andExpect(jsonPath("$.entitiesDisconnected.[1]", is("ENTITY6_FR")))
             ;
 
         }
