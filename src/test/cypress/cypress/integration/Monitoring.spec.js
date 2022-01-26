@@ -10,6 +10,7 @@
 describe ('Monitoring screen tests',function () {
 
     before('Set up configuration', function () {
+        cy.deleteAllCards();
         cy.loadTestConf();
         cy.send6TestCards();
     });
