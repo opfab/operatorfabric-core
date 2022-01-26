@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -49,7 +49,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ApiErrorException.class)
     public ResponseEntity<Object> handleApiError(ApiErrorException exception, final WebRequest
             request) {
-        log.info(GENERIC_MSG,exception);
+        log.info(GENERIC_MSG, exception);
         return new ResponseEntity<>(exception.getError(), exception.getError().getStatus());
     }
 
@@ -73,7 +73,14 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        log.error("Uncaught internal server exception",ex);
-        return super.handleExceptionInternal(ex, body, headers, status, request);
+        log.error("Uncaught internal server exception", ex);
+
+        ApiError error = ApiError.builder()
+                .status(status)
+                .message("Uncaught internal server exception")
+                .error(ex.getMessage())
+                .build();
+
+        return new ResponseEntity<>(error, error.getStatus());
     }
 }
