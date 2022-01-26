@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-/** Test for the OpFab real time users page */
+/** Test for the OpFab external devices configuration page */
 
 describe ('ExternalDevicesconfigurationPage',()=>{
 
@@ -20,7 +20,7 @@ describe ('ExternalDevicesconfigurationPage',()=>{
          //click on "External devices configuration"
         cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
 
-        cy.countAgGridTableRows('#opfab-externaldevices-table-grid', 3);
+        cy.countAgGridTableRows('#opfab-externaldevices-table-grid', 4);
 
         // Add new configuration
         cy.get('#addItem').click();
@@ -39,10 +39,10 @@ describe ('ExternalDevicesconfigurationPage',()=>{
 
         cy.get('#opfab-admin-edit-btn-add').click();
 
-        cy.countAgGridTableRows('#opfab-externaldevices-table-grid', 4);
+        cy.countAgGridTableRows('#opfab-externaldevices-table-grid', 5);
 
-        // Edit prevously created row
-        cy.clickAgGridCell('#opfab-externaldevices-table-grid', 3, 2, 'of-action-cell-renderer');
+        // Edit previously created row
+        cy.clickAgGridCell('#opfab-externaldevices-table-grid', 4, 2, 'of-action-cell-renderer');
 
         cy.get('of-externaldevices-modal').should('exist'); 
 
@@ -50,7 +50,7 @@ describe ('ExternalDevicesconfigurationPage',()=>{
 
         cy.get('#opfab-admin-user-btn-save').click();
 
-        // Workaround to let ag-grid update the value in dom, otherwise it fail even if the rigth value is shown on screen
+        // Workaround to let ag-grid update the value in dom, otherwise it fails even if the right value is shown on screen
         cy.reload();
 
         //click on user menu (top right of the screen)
@@ -58,14 +58,14 @@ describe ('ExternalDevicesconfigurationPage',()=>{
 
          //click on "External devices configuration"
         cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
-        cy.checkAgGridCellValue('#opfab-externaldevices-table-grid', 3, 1, 'CDS_2')
+        cy.checkAgGridCellValue('#opfab-externaldevices-table-grid', 4, 1, 'CDS_2')
 
-        // Delete prevously created row
-        cy.clickAgGridCell('#opfab-externaldevices-table-grid', 3, 3, 'of-action-cell-renderer');
+        // Delete previously created row
+        cy.clickAgGridCell('#opfab-externaldevices-table-grid', 4, 3, 'of-action-cell-renderer');
 
         cy.get('of-confirmation-dialog').should('exist');
         cy.get('of-confirmation-dialog').find('#opfab-admin-confirmation-btn-ok').click();
-        cy.countAgGridTableRows('#opfab-externaldevices-table-grid', 3);
+        cy.countAgGridTableRows('#opfab-externaldevices-table-grid', 4);
 
     })
 
@@ -79,10 +79,10 @@ describe ('ExternalDevicesconfigurationPage',()=>{
         cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
 
 
-        var i = 0;
-        for (i = 0; i < 7; i++) { 
-            cy.get('#opfab-externaldevices-table-grid').find('.ag-center-cols-container').find('.ag-row').should('have.length', 3 + i);
-            cy.countAgGridTableRows('#opfab-externaldevices-table-grid', 3 + i);
+        // We iterate 7 times because there are 11 users and 4 users have already a configuration
+        for (let i = 0; i < 7; i++) {
+            cy.get('#opfab-externaldevices-table-grid').find('.ag-center-cols-container').find('.ag-row').should('have.length', 4 + i);
+            cy.countAgGridTableRows('#opfab-externaldevices-table-grid', 4 + i);
 
             cy.get('#addItem').click();
 
@@ -98,6 +98,9 @@ describe ('ExternalDevicesconfigurationPage',()=>{
         }
         cy.countAgGridTableRows('#opfab-externaldevices-table-grid', 10);
 
+        // Pagination should display ' Results number  : 11 '
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 11')
+
 
         // When all users devices are configured it is not possible to add new configurations
         cy.get('#addItem').click();
@@ -107,17 +110,23 @@ describe ('ExternalDevicesconfigurationPage',()=>{
 
         cy.get('#opfab-admin-edit-btn-close').eq(0).click();
 
+        // We go to the second page and delete the first line of the grid (there is only one line)
+        cy.get('.page-link').eq(1).click();
+        cy.clickAgGridCell('#opfab-externaldevices-table-grid', 0, 3, 'of-action-cell-renderer');
+        cy.get('of-confirmation-dialog').should('exist');
+        cy.get('of-confirmation-dialog').find('#opfab-admin-confirmation-btn-ok').click();
+        // Pagination should display ' Results number  : 10 '
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 10')
 
         // Delete previously created configurations
-        var j = 0;
-        for (j = 0; j < 7; j++) { 
-            cy.clickAgGridCell('#opfab-externaldevices-table-grid', 3, 3, 'of-action-cell-renderer');
+        for (let j = 0; j < 6; j++) {
+            cy.clickAgGridCell('#opfab-externaldevices-table-grid', 4, 3, 'of-action-cell-renderer');
 
             cy.get('of-confirmation-dialog').should('exist');
             cy.get('of-confirmation-dialog').find('#opfab-admin-confirmation-btn-ok').click();
             cy.countAgGridTableRows('#opfab-externaldevices-table-grid', 9-j);
         }
-        cy.countAgGridTableRows('#opfab-externaldevices-table-grid', 3);
+        cy.countAgGridTableRows('#opfab-externaldevices-table-grid', 4);
 
 
     })

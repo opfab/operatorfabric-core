@@ -58,7 +58,7 @@ describe ('Archives screen tests',function () {
         // We click collapsible updates
         cy.get('#opfab-archives-collapsible-updates').click({force: true});
 
-        // We check that the we have 6 lines of archived cards (6 * 2 instances per card)
+        // We check that we have 6 lines of archived cards (6 * 2 instances per card)
         // and we check we have plus icon for each line
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length',6);
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-icon-plus').should('have.length',6);

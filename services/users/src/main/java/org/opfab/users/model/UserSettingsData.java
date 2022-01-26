@@ -37,6 +37,8 @@ public class UserSettingsData implements UserSettings {
 
     @Singular("processStatesNotNotified")
     private Map<String, List<String>> processesStatesNotNotified;
+    @Singular("entityDisconnected")
+    private List<String> entitiesDisconnected;
 
     public UserSettingsData(UserSettings settings) {
         this.login = settings.getLogin();
@@ -54,11 +56,21 @@ public class UserSettingsData implements UserSettings {
             this.processesStatesNotNotified = new HashMap<>(settings.getProcessesStatesNotNotified());
         else
             this.processesStatesNotNotified = null;
+
+        if (settings.getEntitiesDisconnected() != null)
+            this.entitiesDisconnected = new ArrayList<>(settings.getEntitiesDisconnected());
+        else
+            this.entitiesDisconnected = null;
     }
 
 
     public UserSettingsData clearProcessesStatesNotNotified(){
         setProcessesStatesNotNotified(null);
+        return this;
+    }
+
+    public UserSettingsData clearEntitiesDisconnected(){
+        setEntitiesDisconnected(null);
         return this;
     }
 
@@ -84,12 +96,17 @@ public class UserSettingsData implements UserSettings {
         result.replayEnabled = other.getReplayEnabled() != null ? other.getReplayEnabled() : this.getReplayEnabled();
         result.replayInterval = other.getReplayInterval() != null ? other.getReplayInterval() : this.getReplayInterval();
 
+        result.processesStatesNotNotified = null;
         if (other.getProcessesStatesNotNotified() != null)
             result.processesStatesNotNotified = new HashMap<>(other.getProcessesStatesNotNotified());
         else if (this.getProcessesStatesNotNotified() != null)
             result.processesStatesNotNotified = new HashMap<>(this.getProcessesStatesNotNotified());
-        else
-            result.processesStatesNotNotified = null;
+
+        result.entitiesDisconnected = null;
+        if (other.getEntitiesDisconnected() != null)
+            result.entitiesDisconnected = new ArrayList<>(other.getEntitiesDisconnected());
+        else if (this.getEntitiesDisconnected() != null)
+            result.entitiesDisconnected = new ArrayList<>(this.getEntitiesDisconnected());
 
         return result;
     }

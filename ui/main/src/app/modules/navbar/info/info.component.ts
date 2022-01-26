@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,7 +32,7 @@ export class InfoComponent implements OnInit {
      timeToDisplay: string;
 
 
-    constructor(private store: Store<AppState>, 
+    constructor(private store: Store<AppState>,
       private timeService: TimeService,
       private userService: UserService,
       private entitiesService: EntitiesService,
@@ -42,7 +42,7 @@ export class InfoComponent implements OnInit {
     ngOnInit() {
         this.updateTime();
         this._userName$ = this.store.select(selectUserNameOrIdentifier);
-        if (this.configService.getConfigValue('showUserEntitiesOnTopRightOfTheScreen',false)) this.setUserEntitiesToDisplay();
+        if (this.configService.getConfigValue('showUserEntitiesOnTopRightOfTheScreen', false)) this.setUserEntitiesToDisplay();
     }
 
 
@@ -53,26 +53,24 @@ export class InfoComponent implements OnInit {
     }, 1000);
   }
 
-  setUserEntitiesToDisplay()
-  {
-    let user_entities = this.userService.getCurrentUserWithPerimeters().userData.entities;
+  setUserEntitiesToDisplay() {
+    const user_entities = this.userService.getCurrentUserWithPerimeters().userData.entities;
     if (!!user_entities) {
-        this.userEntitiesToDisplay = "";
-        let entities = this.entitiesService.getEntitiesFromIds(user_entities);
+        this.userEntitiesToDisplay = '';
+        const entities = this.entitiesService.getEntitiesFromIds(user_entities);
         entities.forEach( (entity) => {
-          if (entity.entityAllowedToSendCard) { // this avoid to display entities use only for grouping 
-            if (this.userEntitiesToDisplay.length>0) this.userEntitiesToDisplay+= ', ' 
-            this.userEntitiesToDisplay += entity.name; 
+          if (entity.entityAllowedToSendCard) { // this avoids to display entities used only for grouping
+            if (this.userEntitiesToDisplay.length > 0)
+                this.userEntitiesToDisplay += ', ';
+            this.userEntitiesToDisplay += entity.name;
           }
         });
         this.trimTooLongEntitiesList();
-        
       }
     }
 
-  trimTooLongEntitiesList()
-  {
-    if (this.userEntitiesToDisplay.length>20) this.userEntitiesToDisplay = this.userEntitiesToDisplay.slice(0,17) + '...';
+  trimTooLongEntitiesList() {
+    if (this.userEntitiesToDisplay.length > 20) this.userEntitiesToDisplay = this.userEntitiesToDisplay.slice(0, 17) + '...';
   }
 
 }

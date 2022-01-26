@@ -1,4 +1,4 @@
-/* Copyright (c) 2020-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2020-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,6 +19,7 @@ import {SettingsService} from '@ofServices/settings.service';
 import {CardService} from '@ofServices/card.service';
 import {TranslateService} from '@ngx-translate/core';
 import {ConfigService} from '@ofServices/config.service';
+import {Utilities} from '../../common/utilities';
 
 
 @Component({
@@ -58,7 +59,7 @@ export class FeedconfigurationComponent implements OnInit {
     isAllProcessesSelectedPerProcessGroup: Map<string, boolean>;
 
     modalRef: NgbModalRef;
-    private saveSettingsInProgress: boolean = false; 
+    private saveSettingsInProgress = false;
 
     public displaySendResultError = false;
     messageAfterSavingSettings: string;
@@ -97,12 +98,11 @@ export class FeedconfigurationComponent implements OnInit {
 
     private toggleSelectAllStates(idProcess: string) {
         if (this.isAllStatesSelectedPerProcess.get(idProcess)) {
-            for (let state of this.processesStatesLabels.get(idProcess).states)
+            for (const state of this.processesStatesLabels.get(idProcess).states)
                 if (this.feedConfigurationForm.value.processesStates[state.stateControlIndex])
                     document.getElementById('' + state.stateControlIndex).click();
-        }
-        else {
-            for (let state of this.processesStatesLabels.get(idProcess).states)
+        } else {
+            for (const state of this.processesStatesLabels.get(idProcess).states)
                 if (! this.feedConfigurationForm.value.processesStates[state.stateControlIndex])
                     document.getElementById('' + state.stateControlIndex).click();
         }
@@ -110,29 +110,28 @@ export class FeedconfigurationComponent implements OnInit {
 
     private toggleSelectAllProcesses(idProcessGroup: string) {
         if (this.isAllProcessesSelectedPerProcessGroup.get(idProcessGroup)) {
-            for (let processId of this.processIdsByProcessGroup.get(idProcessGroup))
+            for (const processId of this.processIdsByProcessGroup.get(idProcessGroup))
                 if (this.isAllStatesSelectedPerProcess.get(processId))
                     this.toggleSelectAllStates(processId);
-        }
-        else {
-            for (let processId of this.processIdsByProcessGroup.get(idProcessGroup))
+        } else {
+            for (const processId of this.processIdsByProcessGroup.get(idProcessGroup))
                 if (! this.isAllStatesSelectedPerProcess.get(processId))
                     this.toggleSelectAllStates(processId);
         }
     }
 
     private loadIsAllStatesSelected() {
-        for (let idProcess of Array.from(this.processesStatesLabels.keys()))
+        for (const idProcess of Array.from(this.processesStatesLabels.keys()))
             this.updateIsAllStatesSelected(idProcess, '');
     }
 
     private loadIsAllProcessesSelected() {
-        for (let idProcessGroup of this.processIdsByProcessGroup.keys())
+        for (const idProcessGroup of this.processIdsByProcessGroup.keys())
             this.isAllProcessesSelectedPerProcessGroup.set(idProcessGroup, this.isAllProcessesSelected(idProcessGroup));
     }
 
     private isAllStatesSelected(idProcess) {
-        for (let state of this.processesStatesLabels.get(idProcess).states) {
+        for (const state of this.processesStatesLabels.get(idProcess).states) {
             if (! this.feedConfigurationForm.value.processesStates[state.stateControlIndex])
                 return false;
         }
@@ -140,7 +139,7 @@ export class FeedconfigurationComponent implements OnInit {
     }
 
     private isAllProcessesSelected(idProcessGroup) {
-        for (let processId of this.processIdsByProcessGroup.get(idProcessGroup)) {
+        for (const processId of this.processIdsByProcessGroup.get(idProcessGroup)) {
             if (! this.isAllStatesSelectedPerProcess.get(processId))
                 return false;
         }
@@ -164,7 +163,7 @@ export class FeedconfigurationComponent implements OnInit {
                     processLabel: processLabel});
             }
         });
-        this.processesWithoutGroup.sort((obj1, obj2) => this.compareObj(obj1.processLabel, obj2.processLabel));
+        this.processesWithoutGroup.sort((obj1, obj2) => Utilities.compareObj(obj1.processLabel, obj2.processLabel));
     }
 
     private addCheckboxesInFormArray() {
@@ -189,13 +188,13 @@ export class FeedconfigurationComponent implements OnInit {
         for (const process of this.processesDefinition) {
             const states: { stateId: string, stateLabel: string, stateControlIndex: number }[] = [];
 
-            let processLabel = ((!! process.name) ? process.name : process.id);
+            const processLabel = ((!! process.name) ? process.name : process.id);
 
             for (const stateId of Object.keys(process.states)) {
                 const state = process.states[stateId];
 
                 if (this.checkIfStateMustBeDisplayed(state, process, stateId)) {
-                    let stateLabel = ((!! state.name) ? state.name : stateId);
+                    const stateLabel = ((!! state.name) ? state.name : stateId);
 
                     states.push({stateId, stateLabel, stateControlIndex});
                     this.preparedListOfProcessesStates.push({processId: process.id, stateId});
@@ -203,7 +202,7 @@ export class FeedconfigurationComponent implements OnInit {
                 }
             }
             if (states.length) {
-                states.sort((obj1, obj2) => this.compareObj(obj1.stateLabel, obj2.stateLabel));
+                states.sort((obj1, obj2) => Utilities.compareObj(obj1.stateLabel, obj2.stateLabel));
                 this.processesStatesLabels.set(process.id, {processLabel, states});
             }
         }
@@ -215,7 +214,7 @@ export class FeedconfigurationComponent implements OnInit {
 
     /** cleaning of the two arrays : processGroupsAndLabels and processesWithoutGroup
      * processGroupsAndLabels : we don't display process which doesn't have any displayed state (a state is not displayed
-     *                          if user doesn't have receive right on it, or if the state is 'isOnlyAChildState'
+     *                          if user doesn't have received right on it, or if the state is 'isOnlyAChildState'
      *                          and we don't display process group which doesn't have any process
      * processesWithoutGroup : we don't display process which doesn't have any state with Receive or ReceiveAndWrite right*/
     private removeProcessesWithoutDisplayedStates() {
@@ -239,10 +238,10 @@ export class FeedconfigurationComponent implements OnInit {
 
             this.processGroupsAndLabels = this.processesService.getProcessGroupsAndLabels();
             this.processGroupsAndLabels.forEach(group => {
-                group.processes.sort((obj1, obj2) => this.compareObj(obj1.processLabel, obj2.processLabel));
+                group.processes.sort((obj1, obj2) => Utilities.compareObj(obj1.processLabel, obj2.processLabel));
             });
 
-            this.processGroupsAndLabels.sort((obj1, obj2) => this.compareObj(obj1.groupLabel, obj2.groupLabel));
+            this.processGroupsAndLabels.sort((obj1, obj2) => Utilities.compareObj(obj1.groupLabel, obj2.groupLabel));
 
             if (this.processesDefinition) this.computePreparedListOfProcessesStatesAndProcessesStatesLabels();
             this.makeProcessesWithoutGroup();
@@ -257,7 +256,7 @@ export class FeedconfigurationComponent implements OnInit {
 
     makeProcessIdsByProcessGroup() {
         this.processGroupsAndLabels.forEach(element => {
-            let processIds = [];
+            const processIds = [];
             element.processes.forEach(process => processIds.push(process.processId));
             this.processIdsByProcessGroup.set(element.groupId, processIds);
         });
@@ -265,7 +264,7 @@ export class FeedconfigurationComponent implements OnInit {
 
     confirmSaveSettings() {
 
-        if (this.saveSettingsInProgress) return; // avoid multiple clicks      
+        if (this.saveSettingsInProgress) return; // avoid multiple clicks
         this.saveSettingsInProgress = true;
         const processesStatesNotNotifiedUpdate = new Map<string, string[]>();
         this.feedConfigurationForm.value.processesStates.map((checked, i) => {
@@ -290,7 +289,7 @@ export class FeedconfigurationComponent implements OnInit {
                     const msg = resp.message;
                     if (!!msg && msg.includes('unable')) {
                         console.log('Impossible to save settings, error message from service : ', msg);
-                        this.messageAfterSavingSettings = 'feedConfiguration.error.impossibleToSaveSettings';
+                        this.messageAfterSavingSettings = 'shared.error.impossibleToSaveSettings';
                         this.displaySendResultError = true;
                     } else {
                         this.cardService.removeAllLightCardFromMemory();
@@ -300,30 +299,22 @@ export class FeedconfigurationComponent implements OnInit {
                 error: err => {
                     console.error('Error when saving settings :', err);
                     this.modalRef.close();
-                    this.messageAfterSavingSettings = 'feedConfiguration.error.impossibleToSaveSettings';
+                    this.messageAfterSavingSettings = 'shared.error.impossibleToSaveSettings';
                     this.displaySendResultError = true;
                 }
             });
     }
 
     doNotConfirmSaveSettings() {
-        // The modal must not be closed until the settings has been saved in the back  
-        // If not , with  slow network, when user go to the feed before the end of the request
-        // it end up with nothing in the feed 
-        // This happens because method this.cardService.removeAllLightCardFromMemory() 
-        // is call too late (in method confirmSaveSettings)
+        // The modal must not be closed until the settings has been saved in the back
+        // If not, with  slow network, when user go to the feed before the end of the request
+        // it ends up with nothing in the feed
+        // This happens because method this.cardService.removeAllLightCardFromMemory()
+        // is called too late (in method confirmSaveSettings)
         if (!this.saveSettingsInProgress) this.modalRef.close();
     }
 
     openConfirmSaveSettingsModal(content) {
-        this.modalRef = this.modalService.open(content, {centered: true,backdrop: 'static'});
-    }
-
-    compareObj(obj1, obj2) {
-        if (obj1 > obj2)
-            return 1;
-        if (obj1 < obj2)
-            return -1;
-        return 0;
+        this.modalRef = this.modalService.open(content, {centered: true, backdrop: 'static'});
     }
 }

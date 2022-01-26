@@ -18,6 +18,7 @@ import org.opfab.users.model.RightsEnum;
 
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class CardRoutingUtilities {

@@ -53,6 +53,7 @@ export class NavbarComponent implements OnInit {
   width: number;
   limitSize: boolean;
   displayAdmin: boolean;
+  displayActivityArea: boolean;
   displayFeedConfiguration: boolean;
   displayRealTimeUsers: boolean;
   displayExternalDevicesConfiguration: boolean
@@ -111,6 +112,7 @@ export class NavbarComponent implements OnInit {
 
     this.navigationRoutes = navigationRoutes.filter(route => visibleCoreMenus.includes(route.path));
     this.displayAdmin = visibleCoreMenus.includes('admin');
+    this.displayActivityArea = visibleCoreMenus.includes('activityarea');
     this.displayFeedConfiguration = visibleCoreMenus.includes('feedconfiguration');
     this.displayRealTimeUsers = visibleCoreMenus.includes('realtimeusers');
     this.displayExternalDevicesConfiguration = visibleCoreMenus.includes('externaldevicesconfiguration');

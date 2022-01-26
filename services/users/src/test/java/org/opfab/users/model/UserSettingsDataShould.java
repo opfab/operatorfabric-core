@@ -12,10 +12,7 @@ package org.opfab.users.model;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
@@ -87,5 +84,9 @@ public class UserSettingsDataShould {
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"processesStatesNotNotified");
         assertThat(patched.getProcessesStatesNotNotified()).hasSize(1).contains(entry("processC", Arrays.asList("state5", "state6")));
 
+        List<String> newEntitiesDisconnected = new ArrayList<>(Arrays.asList("ENTITY3_FR", "ENTITY4_FR"));
+        patched = userData.patch(UserSettingsData.builder().entitiesDisconnected(newEntitiesDisconnected).build().clearProcessesStatesNotNotified());
+        assertThat(patched).isEqualToIgnoringGivenFields(userData,"entitiesDisconnected");
+        assertThat(patched.getEntitiesDisconnected()).hasSize(2).containsExactly("ENTITY3_FR", "ENTITY4_FR");
     }
 }

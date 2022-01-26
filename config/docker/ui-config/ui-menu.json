@@ -35,6 +35,10 @@
       "visible": true
     },
     {
+      "id": "activityarea",
+      "visible": true
+    },
+    {
       "id": "feedconfiguration",
       "visible": true
     },
