@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2021, RTE (http://www.rte-france.com)
+# Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,15 @@ if [ -z $url ]
 then
 	url="http://localhost"
 fi
+
+export customEpochDate1=$3
+export customEpochDate2=$4
+
+
+echo ~~~~~~~~~~~~~~~~~~~~~~~~~   Sending card > tmp.txt
+echo $customEpochDate1 >> tmp.txt
+echo $customEpochDate2 >> tmp.txt
+echo Current date : $(date +%s%3N) >> tmp.txt
 
 # MacOs doesn't have date, so check for that and use gdate instead.
 if [ $OSTYPE == 'darwin'* ]
@@ -42,6 +51,6 @@ else
     export current_date_in_milliseconds_from_epoch_plus_12hours=$(($current_date_millis + 12*60*60*1000))
     export current_date_in_milliseconds_from_epoch_plus_24hours=$(($current_date_millis + 24*60*60*1000))
     export current_date_in_milliseconds_from_epoch_plus_48hours=$(($current_date_millis + 48*60*60*1000))
-    echo "send card $1 (url: $url)"
+    echo "send card $1 (url: $url)" >> tmp.txt
     curl -X POST $url:2102/cards -H "Authorization: Bearer $token" -H "Content-type:application/json" --data "$(envsubst <$1)"
 fi
