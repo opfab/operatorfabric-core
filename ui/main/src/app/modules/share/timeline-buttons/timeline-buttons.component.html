@@ -35,8 +35,8 @@
         </li>
 
         <li style="width:1.5em">
-          <span *ngIf="isTimelineLocked()" id="opfab-timeline-unlock" [disabled]="true"  class="fas fa-lock" (click)="unlockTimeline()" ></span>
-          <span *ngIf="!isTimelineLocked()" id="opfab-timeline-lock" [disabled]="isTimelineLockDisabled"  class="fas fa-lock-open" (click)="lockTimeline()" ></span>
+          <span *ngIf="isTimelineLocked()" id="opfab-timeline-unlock" class="fas fa-lock" (click)="unlockTimeline()" ></span>
+          <span *ngIf="!isTimelineLocked()" id="opfab-timeline-lock" class="fas fa-lock-open" (click)="lockTimeline()" ></span>
         </li>
 
 

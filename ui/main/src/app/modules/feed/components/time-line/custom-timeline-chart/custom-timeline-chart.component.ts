@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -62,6 +62,10 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   public title: string;
   public oldWidth = 0;
   public openPopover: NgbPopover;
+  
+  
+  public useOverlap: boolean; // If true, will display cards received after xDomaine[1]-OVERLAP_TIME will be displayed at the very beginning of the timeline
+  public readonly OVERLAP_TIME = 15*60*1000; // Create a 15 min overlap
 
 
   @ViewChild(ChartComponent, { read: ElementRef }) chart: ElementRef;
@@ -170,12 +174,18 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.updateRealtime();
     this.initDataPipe();
     this.updateDimensions(); // need to init here only for unit test , otherwise dims is null
+    this.initOverlap();
   }
 
   ngOnDestroy() {
     this.ngUnsubscribe$.next();
     this.ngUnsubscribe$.complete();
     this.isDestroyed = true;
+  }
+
+  initOverlap() {
+    let domainsUsingOverlap = ["J", "W", "M", "Y"];
+    this.useOverlap = domainsUsingOverlap.includes(this.domainId);
   }
 
   // set inside ngx-charts library verticalSpacing variable to 10
@@ -207,7 +217,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   shiftTimeLineIfNecessary() {
     if (this.xTicks) {
 
-      // the timeline shifts regularly in real time view
+      // the timeline shifts regularly in "real time" and "7 days" views
       if (this.domainId == "TR" || this.domainId == "7D") {
         if (this.xTicks[10].valueOf() <= moment().valueOf()) {
           this.valueDomain = [this.xTicks[1].valueOf(), this.xDomain[1] + (this.xTicks[1] - this.xDomain[0])];
@@ -223,8 +233,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
 
       // in other views, the timeline is shifted at the end of the current cycle (day/week/month/year)
       else {
+
         if (this.xTicks[this.xTicks.length - 1].valueOf() <= moment().valueOf()) {
-          this.valueDomain = [this.xTicks[this.xTicks.length].valueOf(), this.xDomain[1] + (this.xTicks[this.xTicks.length] - this.xDomain[0])];
+          this.valueDomain = [this.xTicks[this.xTicks.length - 1].valueOf(), this.xDomain[1] + (this.xTicks[this.xTicks.length - 1] - this.xDomain[0])];
           this.filterService.updateFilter(
             FilterType.BUSINESSDATE_FILTER,
             true,
@@ -316,7 +327,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
           nextTick.add(1, 'month').startOf('month');
         }
       }  else {
-        nextTick.add(tickSize.amount, tickSize.unit)
+        nextTick.add(tickSize.amount, tickSize.unit);
          if ((this.domainId === '7D' || this.domainId === 'W')) {
            // OC-1205 : Deal with winter/summer time changes
            // if hour is 5, we are switching from winter to summer time, we subtract 1 hour to keep  ticks  to 04 / 08 / 12 ...
@@ -411,12 +422,15 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       cardsBySeverity[card.circleYPosition - 1].push(card);
     }
 
+    // define the beginning of the domain to display depending on overlap
+    let domainBegin = this.useOverlap ? this.xDomain[0] - this.OVERLAP_TIME : this.xDomain[0];
+
     // foreach severity array create the circles
     for (const cards of cardsBySeverity ) {
       let cardIndex = 0;
       // move index to the first card in the time domain
       if (cards.length > 0) {
-        while (cards[cardIndex] && (cards[cardIndex].date < this.xDomain[0]) && (cardIndex < cards.length)) { cardIndex++; }
+        while (cards[cardIndex] && (cards[cardIndex].date < domainBegin) && (cardIndex < cards.length)) { cardIndex++; }
       }
       // for each interval , if a least one card in the interval , create a circle object.
       if (cardIndex < cards.length) {

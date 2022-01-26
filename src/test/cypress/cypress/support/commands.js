@@ -78,11 +78,11 @@ Cypress.Commands.add('loadEmptyProcessGroups', () => {
 })
 
 Cypress.Commands.add('send6TestCards', () => {
-    cy.exec('cd .. && ./resources/send6TestCards.sh '+Cypress.env('host'));
+    cy.exec('cd .. && ./resources/send6TestCards.sh ' + Cypress.env('host'));
 })
 
-Cypress.Commands.add('sendCard', (cardFile) => {
-    cy.exec('cd ../resources/cards/ && ./sendCard.sh '+ cardFile + ' ' + Cypress.env('host'));
+Cypress.Commands.add('sendCard', (cardFile, customEpochDate1 = new Date().getTime(), customEpochDate2 = new Date().getTime + (5 * 60 * 1000)) => {
+    cy.exec('cd ../resources/cards/ && ./sendCard.sh '+ cardFile + ' '  + Cypress.env('host') + ' ' + customEpochDate1 + ' ' + customEpochDate2);
 })
 
 Cypress.Commands.add('delete6TestCards', () => {
@@ -132,8 +132,8 @@ Cypress.Commands.add('updateCoreMenuInConf', (menu, property, value) => {
 Cypress.Commands.add('deleteCoreMenuFromConf', (menu) => {
     const filePath = `./config/cypress/ui-config/ui-menu.json`;
     cy.exec(`cd ../../.. && ./src/test/resources/uiConfig/deleteCoreMenu.sh ${filePath} ${menu}`);
-})
 
+})
 Cypress.Commands.add('deleteAllArchivedCards', () => {
     cy.exec('cd .. && ./resources/deleteAllArchivedCards.sh '+Cypress.env('host'));
 })
