@@ -7,19 +7,26 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
- <span *ngFor="let entity of listVisibleEntities; let isLast = last"
- [ngStyle]="{'color': entity.color,'text-align': 'center'}">
- &nbsp; {{entity.name}} &nbsp;
-</span>
-<ng-template #entitiesDropdown>
-    <div *ngFor="let entity of listDropdownEntities;"
-      [ngStyle]="{'color': entity.color,'text-align': 'left'}">
-      &nbsp; {{entity.name}} &nbsp;
-    </div>
-  </ng-template>
-<span *ngIf="listDropdownEntities && listDropdownEntities.length > 0"
-    id="opfab-entities-dropdown" class="opfab-responses-dropdown" placement="bottom-right"
-    [ngbPopover]="entitiesDropdown" container="body" [autoClose]="'true'"  triggers="mouseenter:mouseleave"
-    popoverClass="opfab-popover-no-arrow">
-    &nbsp;..&nbsp;
+
+
+<span *ngIf="entities.length ===1"  id="opfab-entities-dropdown">
+  <span *ngFor="let entity of entities"
+    [ngStyle]="{'color': entity.color,'text-align': 'center'}">
+    &nbsp; {{entity.name}} &nbsp;
   </span>
+</span>
+
+<span *ngIf="entities.length > 1 " id="opfab-entities-dropdown"
+  placement="bottom-left" [ngbPopover]="entitiesDropdown" container="body" [autoClose]="'true'"
+  triggers="mouseenter:mouseleave" popoverClass="opfab-popover-no-arrow">
+  <span *ngFor="let entity of entities"
+    [ngStyle]="{'color': entity.color,'text-align': 'center'}">
+    &nbsp; {{entity.name}} &nbsp;
+  </span>
+</span>
+
+<ng-template #entitiesDropdown>
+  <div *ngFor="let entity of entities;" [ngStyle]="{'color': entity.color,'text-align': 'left'}">
+    &nbsp; {{entity.name}} &nbsp;
+  </div>
+</ng-template>
