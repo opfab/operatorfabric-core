@@ -22,12 +22,9 @@ public class EmptyListComparator<T> implements Comparator<List<T>> {
     @Override
     public int compare(List<T> ts, List<T> t1) {
         if (ts==null && t1==null) return 0;
-        if((ts==null&&t1.isEmpty())||(ts.isEmpty()&&t1==null)) {
-            return 0;
-        } else {
-            if (ts.equals(t1)) {
-                return 0;
-            } else return 1;
-        }
+        if((ts==null&&t1.isEmpty())||(t1==null && ts.isEmpty())) return 0;
+        if (ts==null)  return 1; 
+        if (ts.equals(t1)) return 0;
+        return 1;
     }
 }
