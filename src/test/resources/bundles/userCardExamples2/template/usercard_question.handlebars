@@ -1,5 +1,5 @@
 
-<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020-2022, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -9,10 +9,15 @@
 
 
 <div class="opfab-input">
-    <label> QUESTION </label>
+    <label id="label"> QUESTION </label>
     <input id="question" name="question" style="width:100%" value="{{card.data.question}}">
 </div>
 <script>
+    if (usercardTemplateGateway.getEditionMode() == 'EDITION') {
+        const question = document.getElementById('label').innerHTML = ' QUESTION (New) ';
+    }
+
+
     templateGateway.getSpecificCardInformation = function () {
         const question = document.getElementById('question').value;
 

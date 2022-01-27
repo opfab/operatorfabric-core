@@ -37,6 +37,7 @@
             "scripts": [
               "node_modules/svg-pan-zoom/dist/svg-pan-zoom.js",
               "src/assets/js/templateGateway.js",
+              "src/assets/js/usercardTemplateGateway.js",
               "src/assets/js/chart.min.js",
               "src/assets/js/chartjs-adapter-date-fns.bundle.min.js"
             ],
@@ -131,7 +132,8 @@
               "src/scss/styles.scss"
             ],
             "scripts": [
-              "src/assets/js/templateGateway.js"
+              "src/assets/js/templateGateway.js",
+              "src/assets/js/usercardTemplateGateway.js"
             ],
             "assets": [
               "src/favicon.ico",
