@@ -17,6 +17,50 @@ describe('User Card ', function () {
     cy.deleteAllArchivedCards();
   });
 
+
+  describe('Check edition mode', function () {
+
+    it('Label change in edition mode for Question user card', () => {
+
+      cy.loginOpFab('operator1_fr', 'test');
+      cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+      cy.get("of-usercard").should('exist');
+      cy.get("#of-usercard-service-selector").find('select').select('User card examples');
+      cy.get("#of-usercard-process-filter").find('select').select('Examples for new cards 2');
+      cy.get("#opfab-state-filter").find('select').select('Question');
+      cy.get('#label').should('not.have.text', 'QUESTION (New)');
+
+      cy.get('#question').type('First question');
+
+      cy.get('#opfab-usercard-btn-prepareCard').click();
+      cy.get("of-card-detail").should('exist');
+
+      cy.get('#opfab-usercard-btn-accept').click();
+      // Check that the message indicating successful sending appears
+      cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
+      
+    })
+
+    it('Label change in edition mode for Question user card', () => {
+
+      cy.loginOpFab('operator1_fr', 'test');
+
+      cy.get('of-light-card').should('have.length', 1);
+      cy.get('of-light-card').eq(0).click()
+        .find('[id^=opfab-feed-light-card]')
+        .invoke('attr', 'data-urlId')
+        .then((urlId) => {
+          cy.waitDefaultTime();
+          cy.hash().should('eq', '#/feed/cards/' + urlId);
+          cy.get('#opfab-card-edit').click();
+          cy.get("of-usercard").should('exist');
+          cy.get('#label').contains('QUESTION (New)');
+        });
+      
+    })
+
+  })
+
   describe('Recipients dropdown should not be displayed for some user cards', function () {
 
     it('Recipients should not be displayed in IT incident user card', () => {
@@ -99,6 +143,11 @@ describe('User Card ', function () {
   })
 
   describe('Show automated response in preview for some user cards', function () {
+
+    before('Delete previous cards', function () {
+      cy.deleteAllCards();
+      cy.deleteAllArchivedCards();
+    });
 
     it('Show automated response in preview for Confirmation user card if user enabled to respond', () => {
 

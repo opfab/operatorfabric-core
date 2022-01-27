@@ -34,7 +34,7 @@ import {UserCardRecipientsFormComponent} from './recipientForm/usercard-recipien
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
 
 declare const templateGateway: any;
-
+declare const usercardTemplateGateway: any;
 @Component({
     selector: 'of-usercard',
     templateUrl: './usercard.component.html',
@@ -114,8 +114,13 @@ export class UserCardComponent implements OnInit {
             severity: new FormControl('')
         });
         this.severityForm.get('severity').setValue(Severity.ALARM);
-        if (!!this.cardIdToEdit) this.loadCardForEdition();
-        else this.pageLoading = false;
+        if (!!this.cardIdToEdit) {
+            usercardTemplateGateway.editionMode = 'EDITION';
+            this.loadCardForEdition();
+        } else {
+            usercardTemplateGateway.editionMode = 'CREATE';
+            this.pageLoading = false;
+        }
 
         this.publisherForCreatingUsercard = this.findPublisherForCreatingUsercard();
         this.useDescriptionFieldForEntityList = this.configService.getConfigValue('usercard.useDescriptionFieldForEntityList', false);
