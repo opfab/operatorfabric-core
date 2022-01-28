@@ -414,7 +414,7 @@
       "add": "Add new user device configuration",
       "edit": "Edit user device configuration",
       "confirm": "Please confirm",
-      "confirmDelete": "Do you really want to delete device configuration",
+      "confirmDelete": "Do you really want to delete device configuration for user",
       "allUsersConfigured": "All users devices are already configured"
     },
     "userLogin": "User login",

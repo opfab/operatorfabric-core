@@ -409,12 +409,12 @@
   },
   "externalDevicesConfiguration": {
     "input": {
-      "selectUserText": "Sélectionner un utilisateurs",
+      "selectUserText": "Sélectionner un utilisateur",
       "selectDeviceText": "Sélectionner un périphérique",
       "add": "Ajouter une nouvelle configuration",
       "edit": "Modifier la configuration",
       "confirm":"Confirmez...",
-      "confirmDelete": "Voulez-vous vraiment supprimer la configuration",
+      "confirmDelete": "Voulez-vous vraiment supprimer la configuration pour l'utilisateur",
       "allUsersConfigured": "Tous les périphériques des utilisateurs sont déjà configurés"
     },
     "userLogin": "Identifiant utilisateur",
