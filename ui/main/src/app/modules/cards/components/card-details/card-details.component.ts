@@ -99,25 +99,28 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
                     this._currentPath = urlParts[CURRENT_PAGE_INDEX];
                 }
             });
-        if(!this.cardNotFound) 
             this.checkForCardLoadingInProgressForMoreThanOneSecond();
 
     }
 
     // we show a spinner on screen if card loading take more than 1 second
     checkForCardLoadingInProgressForMoreThanOneSecond() {
-        this.store.select(feedSelectors.selectLightCardSelection) 
+        this.store.select(feedSelectors.selectLightCardSelection)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((cardId) => {   // a new card has been selected and will be downloaded 
+            .subscribe((cardId) => {   // a new card has been selected and will be downloaded
                 this.currentSelectedCardId = cardId;
                 setTimeout(() => {
-                    if (this.currentSelectedCardId == cardId) // the selected card has not changed in between 
-                    {
+                    if (this.cardNotFound)  {
+                        this.cardLoadingInProgress = false;
+                        return;
+                    }
+                    // the selected card has not changed in between
+                    if (this.currentSelectedCardId === cardId) {
                         if (!this.card) this.cardLoadingInProgress = !!this.currentSelectedCardId;
-                        else this.cardLoadingInProgress = (this.card.id != this.currentSelectedCardId);
+                        else this.cardLoadingInProgress = (this.card.id !== this.currentSelectedCardId);
                     }
                 }, 1000);
-            })
+            });
 
     }
 
