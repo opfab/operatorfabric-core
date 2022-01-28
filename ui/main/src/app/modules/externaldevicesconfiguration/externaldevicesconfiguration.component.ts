@@ -165,7 +165,7 @@ export class ExternaldevicesconfigurationComponent {
   openDeleteConfirmationDialog(row: any): any {
     this.confirmationDialogService.confirm(
         this.translateService.instant('externalDevicesConfiguration.input.confirm'),
-        this.translateService.instant('externalDevicesConfiguration.input.confirmDelete') + ' for user ' + row['userLogin'] + '?',
+        this.translateService.instant('externalDevicesConfiguration.input.confirmDelete') + ' ' + row['userLogin'] + '?',
         'OK',
         this.translateService.instant('admin.input.cancel')
     ).then((confirmed) => {
