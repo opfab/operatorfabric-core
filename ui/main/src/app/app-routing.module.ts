@@ -77,7 +77,7 @@ const routes: Routes = [
     }
 ];
 const startIndex = 0;
-const numberOfHiddenRoutes = 8 ; // 'Calendar', 'businessconfigparty', 'settings', 'navbar', 'admin', 'realtimeusers', 'feedconfiguration'
+const numberOfHiddenRoutes = 9 ; // 'Calendar', 'businessconfigparty', 'settings', 'navbar', 'admin', 'realtimeusers', 'feedconfiguration', 'changepassword', 'externaldevicesconfiguration'
 const manageIndexesWhichBeginAtZero = 1;
 const numberOfRoutes = routes.length;
 const lastIndexOfVisibleElements = numberOfRoutes - numberOfHiddenRoutes - manageIndexesWhichBeginAtZero;
