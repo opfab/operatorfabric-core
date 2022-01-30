@@ -105,14 +105,14 @@ describe('AuthenticationEffects', () => {
             authenticationService.askTokenFromPassword.and.returnValue(of(
                 new PayloadForSuccessfulAuthentication('johndoe', Guid.create(), 'fake-token', new Date())
             ));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null,configService);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null,configService, cardService);
             expect(effects).toBeTruthy();
             effects.TryToLogIn.subscribe((action: AuthenticationActions) => expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogIn))
         });
         it('should fail if JWT is not generated from backend', () => {
             const localAction$ = new Actions(hot('-a--', {a: new TryToLogIn({username: 'johndoe', password: 'pwd'})}));
             authenticationService.askTokenFromPassword.and.returnValue(throwError(() => 'Something went wrong'));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null,configService);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, configService, cardService);
             expect(effects).toBeTruthy();
             effects.TryToLogIn.subscribe((action: AuthenticationActions) => expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn))
         });
@@ -122,7 +122,7 @@ describe('AuthenticationEffects', () => {
         it('should success and navigate', () => {
             const localAction$ = new Actions(hot('-a--', {a: new AcceptLogOut()}));
             router.navigate.and.callThrough();
-            effects = new AuthenticationEffects(mockStore, localAction$, null, router, configService);
+            effects = new AuthenticationEffects(mockStore, localAction$, null, router, configService, cardService);
             expect(effects).toBeTruthy();
             effects.AcceptLogOut.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogOutSuccess);
@@ -141,7 +141,7 @@ describe('AuthenticationEffects', () => {
             ));
             mockStore.select.and.returnValue(of(null));
             authenticationService.loadUserData.and.callFake(auth => of(auth));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, router, configService);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, router, configService, cardService);
             expect(effects).toBeTruthy();
             effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogIn);
@@ -155,7 +155,7 @@ describe('AuthenticationEffects', () => {
                 new CheckTokenResponse('johndoe', 123, Guid.create().toString())
             ));
             mockStore.select.and.returnValue(of(null));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, router, configService);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, router, configService, cardService);
             expect(effects).toBeTruthy();
             effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn);
@@ -167,7 +167,7 @@ describe('AuthenticationEffects', () => {
             authenticationService.checkAuthentication.and.returnValue(throwError(() => 'no valid token'));
             authenticationService.askTokenFromCode.and.returnValue(throwError(() => 'no valid code'));
             mockStore.select.and.returnValue(of('code'));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, router, configService);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, router, configService, cardService);
             expect(effects).toBeTruthy();
             effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn);
