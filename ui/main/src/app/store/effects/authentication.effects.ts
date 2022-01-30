@@ -31,6 +31,7 @@ import {I18n} from '@ofModel/i18n.model';
 import {Map} from '@ofModel/map';
 import {ConfigService} from "@ofServices/config.service";
 import {redirectToCurrentLocation} from "../../app-routing.module";
+import {CardService} from '@ofServices/card.service';
 
 
 /**
@@ -44,7 +45,8 @@ export class AuthenticationEffects {
                 private actions$: Actions,
                 private authService: AuthenticationService,
                 private router: Router,
-                private configService: ConfigService) {
+                private configService: ConfigService,
+                private cardService: CardService) {
     }
 
     /**
@@ -251,6 +253,7 @@ export class AuthenticationEffects {
 
     private resetState() {
         this.authService.clearAuthenticationInformation();
+        this.cardService.closeSubscription();
         window.location.href = this.configService.getConfigValue('security.logout-url','https://opfab.github.io');
     }
 
