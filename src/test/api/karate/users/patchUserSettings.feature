@@ -15,7 +15,6 @@ Feature: patch user settings
 {
   "login" : "loginKarate1",
   "description" : "my dummy user",
-  "timeZone" : "Europe/Dublin",
   "locale" : "en",
   "processesStatesNotNotified": {"processA": ["state1", "state2"], "processB": ["state3", "state4"]}
 }
@@ -26,7 +25,6 @@ Feature: patch user settings
 {
   "login" : "operator1_fr",
   "description" : "my dummy operator1_fr user",
-  "timeZone" : "Australia/Melbourne",
   "locale" : "en",
   "processesStatesNotNotified": {"processC": ["state5", "state6"], "processD": ["state7", "state8"]}
 }
@@ -37,7 +35,6 @@ Feature: patch user settings
 {
   "login" : "nonexistentUser",
   "description" : "my dummy nonexistentUser user",
-  "timeZone" : "France/Paris",
   "locale" : "fr",
   "processesStatesNotNotified": {"processE": ["state9", "state10"], "processF": ["state11", "state12"]}
 }
@@ -62,7 +59,6 @@ Feature: patch user settings
 
 
   Scenario: Patch user settings with admin user
-    # patch /users/{login}/settings
 
     Given url opfabUrl + 'users/users/' + userSettings.login + '/settings'
     And header Authorization = 'Bearer ' + authToken
@@ -71,7 +67,6 @@ Feature: patch user settings
     Then status 200
     And match response.login == userSettings.login
     And match response.description == userSettings.description
-    And match response.timeZone == userSettings.timeZone
     And match response.locale == userSettings.locale
     And match response.processesStatesNotNotified == userSettings.processesStatesNotNotified
 
@@ -85,16 +80,7 @@ Feature: patch user settings
     Then status 200
     And match response.login == userSettingsDispatcher.login
     And match response.description == userSettingsDispatcher.description
-    And match response.timeZone == userSettingsDispatcher.timeZone
     And match response.locale == userSettingsDispatcher.locale
     And match response.processesStatesNotNotified == userSettingsDispatcher.processesStatesNotNotified
 
 
-  #404 : return status not reproducible with karate
- #Scenario: Patch an nonexistent user
-
-  #Given url opfabUrl + 'users/users/' + nonexistentUserSettings.login + '/settings'
-    #And header Authorization = 'Bearer ' + authToken
-    #And request nonexistentUserSettings
-    #When method patch
-    #Then status 404

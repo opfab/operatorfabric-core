@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 
 package org.opfab.users.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -27,7 +26,6 @@ public class UserSettingsData implements UserSettings {
     @Id
     private String login;
     private String description;
-    private String timeZone;
     private String locale;
     private Boolean playSoundForAlarm;
     private Boolean playSoundForAction;
@@ -43,7 +41,6 @@ public class UserSettingsData implements UserSettings {
     public UserSettingsData(UserSettings settings) {
         this.login = settings.getLogin();
         this.description = settings.getDescription();
-        this.timeZone = settings.getTimeZone();
         this.locale = settings.getLocale();
         this.playSoundForAlarm = settings.getPlaySoundForAlarm();
         this.playSoundForAction = settings.getPlaySoundForAction();
@@ -78,7 +75,6 @@ public class UserSettingsData implements UserSettings {
         UserSettingsData result = new UserSettingsData();
         result.login = this.login;
         result.description = other.getDescription() != null ? other.getDescription() : this.getDescription();
-        result.timeZone = other.getTimeZone() != null ? other.getTimeZone() : this.getTimeZone();
         result.locale = other.getLocale() != null ? other.getLocale() : this.getLocale();
         result.playSoundForAlarm = other.getPlaySoundForAlarm() != null ? other.getPlaySoundForAlarm() : this.getPlaySoundForAlarm();
         result.playSoundForAction = other.getPlaySoundForAction() != null ? other.getPlaySoundForAction() : this.getPlaySoundForAction();

@@ -189,7 +189,6 @@
     "title": "PARAMETRES",
     "description": "DESCRIPTION",
     "locale": "LANGUE",
-    "timeZone": "ZONE HORAIRE",
     "playSoundLabel": "Jouer des sons pour les cartes de type",
     "playSoundForAlarm": "Alarme",
     "playSoundForAction": "Action",

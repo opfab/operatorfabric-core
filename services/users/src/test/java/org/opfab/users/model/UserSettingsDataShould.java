@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,7 +30,6 @@ public class UserSettingsDataShould {
                 .login("test-login")
                 .description("test-description")
                 .locale("fr")
-                .timeZone("Europe/Berlin")
                 .playSoundForAlarm(true)
                 .playSoundForAction(false)
                 //Not setting Compliant and Information to test patch on empty
@@ -53,10 +52,6 @@ public class UserSettingsDataShould {
         patched = userData.patch(UserSettingsData.builder().locale("patched-locale").build().clearProcessesStatesNotNotified());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"locale");
         assertThat(patched.getLocale()).isEqualTo("patched-locale");
-
-        patched = userData.patch(UserSettingsData.builder().timeZone("patched-zone").build().clearProcessesStatesNotNotified());
-        assertThat(patched).isEqualToIgnoringGivenFields(userData,"timeZone");
-        assertThat(patched.getTimeZone()).isEqualTo("patched-zone");
 
         patched = userData.patch(UserSettingsData.builder().playSoundForAlarm(false).build().clearProcessesStatesNotNotified());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"playSoundForAlarm");

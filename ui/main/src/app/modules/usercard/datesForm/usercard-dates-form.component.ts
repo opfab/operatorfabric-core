@@ -13,7 +13,7 @@ import {Subject} from 'rxjs';
 import {TimeService} from '@ofServices/time.service';
 import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
 import {DateTimeNgb, getDateTimeNgbFromMoment} from '@ofModel/datetime-ngb.model';
-import * as moment from 'moment-timezone';
+import * as moment from 'moment';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 import {DatesForm} from './dates-form.model';
 
