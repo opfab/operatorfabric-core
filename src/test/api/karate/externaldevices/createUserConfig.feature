@@ -6,7 +6,7 @@ Feature: User Configuration Management (Create)
     * def authToken = signIn.authToken
 
     # Get TSO-operator
-    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
     * def userConfigEndpoint = 'externaldevices/configurations/users'
@@ -22,16 +22,16 @@ Feature: User Configuration Management (Create)
     When method post
     Then status 201
 
-  Scenario: Create userConfiguration with correct configuration but duplicate id
+  Scenario: Update userConfiguration 
 
-    * def configuration = read("resources/userConfigurations/duplicate_operator1.json")
+    * def configuration = read("resources/userConfigurations/update_operator5.json")
 
     # Push configuration
     Given url opfabUrl + userConfigEndpoint
     And header Authorization = 'Bearer ' + authToken
     And request configuration
     When method post
-    Then status 400
+    Then status 201
 
   Scenario: Create userConfiguration with incorrect configuration
 

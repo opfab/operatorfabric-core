@@ -40,19 +40,13 @@
             <td style="width:4%">
                 AT :
             </td>
-            <td style="width:10%">
+            <td style="width:15%">
                 <div class="opfab-input">
-                    <label> HOUR </label>
-                    <input style="text-align:center" size="10" maxlength="2" type="text" id="hours"  value="{{card.data.hours}}">
+                    <label> TIME </label>
+                    <input type="time" id="time" style="text-align:center" value="{{card.data.hours}}:{{card.data.minutes}}">
                 </div>
             </td>
-    
-            <td style="width:10%">
-                <div class="opfab-input">
-                    <label> MIN </label>
-                    <input style="text-align:center" size="10" maxlength="2" type="text" id="minutes" value="{{card.data.minutes}}">
-                </div>
-            </td>
+
             <td style="width:6%">
     
             </td>
@@ -82,8 +76,11 @@
 <script>
     templateGateway.getSpecificCardInformation = function () {
         const taskDescription = document.getElementById('taskDescription').value;
-        const hours =  document.getElementById('hours').value;
-        const minutes =  document.getElementById('minutes').value;
+        
+        const time = document.getElementById('time').value;
+        const hours =  time.slice(0, 2); // the hours are the 2 first characters
+        const minutes =  time.slice(-2); // the minutes are the 2 last characterss
+        
         const minutesForReminder =  document.getElementById('minutesForReminder').value;
         const durationInMinutes =  document.getElementById('durationInMinutes').value;
 

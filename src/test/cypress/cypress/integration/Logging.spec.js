@@ -1,3 +1,11 @@
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
 
 describe ('Logging screen tests',function () {
 
@@ -5,8 +13,8 @@ describe ('Logging screen tests',function () {
         cy.loadTestConf();
     });
 
-    it('Check composition of multi-filters for process groups/processes/states for operator1', function () {
-        cy.loginOpFab('operator1', 'test');
+    it('Check composition of multi-filters for process groups/processes/states for operator1_fr', function () {
+        cy.loginOpFab('operator1_fr', 'test');
 
         // We move to logging screen
         cy.get('#opfab-navbar-menu-logging').click();
@@ -31,9 +39,9 @@ describe ('Logging screen tests',function () {
         cy.get('#opfab-process').contains('Select All').click();
         cy.get('#opfab-process').click();
 
-        // We check we have 18 states (and 4 items for their process)
+        // We check we have 19 states (and 4 items for their process)
         cy.get('#opfab-state').click();
-        cy.get('#opfab-state').find('li').should('have.length', 22);
+        cy.get('#opfab-state').find('li').should('have.length', 23);
 
         // We unselect all processes then we select 'Process example' process and we check there are 8 states for this process
         cy.get('#opfab-process').click();
@@ -46,8 +54,8 @@ describe ('Logging screen tests',function () {
         cy.get('#opfab-state').contains('Planned outage date response').should('exist');
     })
 
-    it('Check composition of multi-filters for process groups/processes/states for operator4', function () {
-        cy.loginOpFab('operator4', 'test');
+    it('Check composition of multi-filters for process groups/processes/states for itsupervisor1', function () {
+        cy.loginOpFab('itsupervisor1', 'test');
 
         // We move to logging screen
         cy.get('#opfab-navbar-menu-logging').click();
@@ -72,9 +80,9 @@ describe ('Logging screen tests',function () {
         cy.get('#opfab-process').contains('Select All').click();
         cy.get('#opfab-process').click();
 
-        // We check we have 11 states (and 4 items for their process)
+        // We check we have 12 states (and 4 items for their process)
         cy.get('#opfab-state').click();
-        cy.get('#opfab-state').find('li').should('have.length', 15);
+        cy.get('#opfab-state').find('li').should('have.length', 16);
 
         // We unselect all processes then we select 'Process example' process and we check there is only 1 state for this process
         cy.get('#opfab-process').click();
@@ -101,8 +109,8 @@ describe ('Logging screen tests',function () {
         cy.get('#opfab-logging-no-process-state-available').contains('No process/state available').should('exist');
     })
 
-    it('Check composition of multi-filters for process groups/processes/states for operator1, with a config without process group', function () {
-        cy.loginOpFab('operator1', 'test');
+    it('Check composition of multi-filters for process groups/processes/states for operator1_fr, with a config without process group', function () {
+        cy.loginOpFab('operator1_fr', 'test');
 
         cy.loadEmptyProcessGroups();
         cy.reload();
@@ -125,9 +133,9 @@ describe ('Logging screen tests',function () {
         cy.get('#opfab-process').contains('Select All').click();
         cy.get('#opfab-process').click();
 
-        // We check we have 18 states (and 4 items for their process)
+        // We check we have 19 states (and 4 items for their process)
         cy.get('#opfab-state').click();
-        cy.get('#opfab-state').find('li').should('have.length', 22);
+        cy.get('#opfab-state').find('li').should('have.length', 23);
 
         // We unselect all processes then we select 'Process example' process and we check there are 8 states for this process
         cy.get('#opfab-process').click();

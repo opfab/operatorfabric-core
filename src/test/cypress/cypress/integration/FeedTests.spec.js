@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,14 +26,14 @@ describe ('FeedScreen tests',function () {
 
     it('Check card reception and read behaviour', function () {
 
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
 
         // Set feed sort to "Date" so the cards don't move down the feed once they're read
         cy.get('#opfab-feed-filter-btn-sort').click();
         cy.get('#opfab-sort-form').find('input[value=date]').parent().click();
         cy.get('#opfab-feed-filter-btn-sort').click();
 
-        // operator1 should see 6 cards in their feed
+        // operator1_fr should see 6 cards in their feed
         cy.get('of-light-card').should('have.length',6);
 
         // No card detail is displayed
@@ -118,7 +118,7 @@ describe ('FeedScreen tests',function () {
 
     it('Check card visibility by publish date when business period is after selected time range', function () {
         cy.sendCard('cypress/feed/futureEvent.json');
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
         cy.get('of-light-card').should('have.length',1);
     })
 })

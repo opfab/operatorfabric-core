@@ -6,7 +6,7 @@ Feature: uploadProcessGroups
     * def authToken = signIn.authToken
 
     # Get TSO-operator
-    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
 

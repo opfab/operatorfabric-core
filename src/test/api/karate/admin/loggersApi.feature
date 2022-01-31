@@ -1,7 +1,7 @@
 Feature: Log Level Access
 
   Background:
-   #Getting token for admin and operator1 user calling getToken.feature
+   #Getting token for admin and user_test_api_1 user calling getToken.feature
     * def signIn = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
     * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'user_test_api_1'}

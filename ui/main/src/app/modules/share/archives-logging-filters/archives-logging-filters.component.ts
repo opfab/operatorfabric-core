@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {TimeService} from '@ofServices/time.service';
 import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
-import {ProcessStatesDropdownListService} from "@ofServices/process-states-dropdown-list.service";
+import {ProcessStatesDropdownListService} from '@ofServices/process-states-dropdown-list.service';
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -51,7 +51,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
 
     @Input() public card: Card | LightCard;
     @Input() parentForm: FormGroup;
-    @Input() visibleProcesses: [];
+    @Input() visibleProcesses: any[];
     @Input() hideChildStates: boolean;
     @Input() tags: any[];
 
@@ -86,10 +86,9 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.processesGroups = this.processesService.getProcessGroups();
-        this.processDropdownList = this.visibleProcesses;
         this.processDropdownListWhenSelectedProcessGroup = [];
         this.stateDropdownListWhenSelectedProcess = [];
-        this.visibleProcessesId = this.processDropdownList.map(element => element.id);
+        this.visibleProcessesId = this.visibleProcesses.map(element => element.id);
 
         if (!!this.tags) {
             this.tags.forEach(tag => this.tagsDropdownList.push({ id: tag.value, itemName: tag.label }));
@@ -136,6 +135,10 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
         this.processesDropdownListPerProcessGroups = this.processStatesDropdownListService.computeProcessesDropdownListPerProcessGroup(this.visibleProcessesId);
         this.processGroupDropdownList = this.processStatesDropdownListService.computeProcessGroupsDropdownList(this.processesWithoutProcessGroupDropdownList,
                                                                                                    this.processesDropdownListPerProcessGroups);
+
+        // we must filter visibleProcesses to keep only the processes in the perimeter of the user
+        const processesIds = Array.from(this.statesDropdownListPerProcesses.keys());
+        this.processDropdownList = this.visibleProcesses.filter(visibleProcess => processesIds.includes(visibleProcess.id));
     }
 
     /**

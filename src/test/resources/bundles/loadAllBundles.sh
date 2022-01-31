@@ -13,7 +13,7 @@
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 for d in */; do
-bundle=${d:0:-1}  #remove last character /
+bundle=${d:0:$((${#d} - 1))}  #remove last character /
  ./loadBundle.sh $bundle $1
 done
 

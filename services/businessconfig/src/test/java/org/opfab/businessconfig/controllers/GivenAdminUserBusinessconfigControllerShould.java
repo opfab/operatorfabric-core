@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -72,6 +72,7 @@ class GivenAdminUserBusinessconfigControllerShould {
                 .build();
         service.loadCache();
         service.loadProcessGroupsCache();
+        service.loadRealTimeScreensCache();
     }
 
     @AfterAll
@@ -197,6 +198,15 @@ class GivenAdminUserBusinessconfigControllerShould {
                 ));
     }
 
+    @Test
+    void listRealTimeScreens() throws Exception {
+        mockMvc.perform(get("/businessconfig/realtimescreens"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.realTimeScreens", hasSize(0)))
+        ;
+    }
+
     @Nested
     @WithMockOpFabUser(login="adminUser", roles = {"ADMIN"})
     class CreateContent {
@@ -269,6 +279,29 @@ class GivenAdminUserBusinessconfigControllerShould {
             mockMvc.perform(multipart("/businessconfig/processgroups").file(processGroupsFile))
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.message", is("There is a duplicate process in the file you have sent")));
+        }
+
+        @Test
+        void createRealTimeScreens() throws Exception {
+            Path pathToRealTimeScreensFile = Paths.get("./build/test-data/realtimescreens.json");
+
+            MockMultipartFile realTimeScreensFile = new MockMultipartFile("file", "realtimescreens.json", MediaType.TEXT_PLAIN_VALUE, Files
+                    .readAllBytes(pathToRealTimeScreensFile));
+
+            mockMvc.perform(multipart("/businessconfig/realtimescreens").file(realTimeScreensFile))
+                    .andExpect(status().isCreated())
+                    .andExpect(header().string("Location", "/businessconfig/realtimescreens"));
+
+            mockMvc.perform(get("/businessconfig/realtimescreens"))
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.realTimeScreens", hasSize(1)))
+                    .andExpect(jsonPath("$.realTimeScreens[0].screenName", is("All Control Centers")))
+                    .andExpect(jsonPath("$.realTimeScreens[0].screenColumns", hasSize(2)))
+                    .andExpect(jsonPath("$.realTimeScreens[0].screenColumns[0].entitiesGroups", hasSize(3)))
+                    .andExpect(jsonPath("$.realTimeScreens[0].screenColumns[0].entitiesGroups[0].name", is("French Control Centers")))
+                    .andExpect(jsonPath("$.realTimeScreens[0].screenColumns[0].entitiesGroups[0].entities", hasSize(4)))
+                    .andExpect(jsonPath("$.realTimeScreens[0].screenColumns[0].entitiesGroups[0].groups", hasSize(2)));
         }
 
         @Nested

@@ -1,8 +1,8 @@
 Feature: Security
 
   Background:
-   #Getting token for admin and operator1 user calling getToken.feature
-    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
+   #Getting token for admin and operator1_fr user calling getToken.feature
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
     * def process = 'api_test'
     * def templateName = 'template'

@@ -3,7 +3,7 @@ Feature: Cards
 
 Background: 
 
-  * def signIn = callonce read('../common/getToken.feature') { username: 'operator1'}
+  * def signIn = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
   * def authToken = signIn.authToken
   * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
   * def authTokenAdmin = signInAdmin.authToken
@@ -54,7 +54,7 @@ When method post
 Then status 201
 
 
-#get card with user operator1
+#get card with user operator1_fr
 Given url opfabUrl + 'cards/cards/APOGEESEA.SEA0' 
 And header Authorization = 'Bearer ' + authToken 
 When method get
@@ -62,7 +62,7 @@ Then status 200
 And def cardUid = response.card.uid
 
 
-#get card from archives with user operator1
+#get card from archives with user operator1_fr
 Given url opfabUrl + 'cards/archives/' + cardUid 
 And header Authorization = 'Bearer ' + authToken 
 When method get

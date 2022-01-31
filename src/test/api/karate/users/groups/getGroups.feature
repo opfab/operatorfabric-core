@@ -1,10 +1,10 @@
 Feature: Get Groups
 
   Background:
-   #Getting token for admin and operator1 user calling getToken.feature
+   #Getting token for admin and operator1_fr user calling getToken.feature
     * def signIn = callonce read('../../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = callonce read('../../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
 
@@ -40,8 +40,8 @@ Feature: Get Groups
 
 
   Scenario: get groups with simple user
-    #   Using TSO user,  expected response 403
+    #   Using TSO user,  expected response 200
     Given url opfabUrl + 'users/groups'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
-    Then status 403
+    Then status 200

@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -46,7 +46,7 @@ describe('Acknowledgment  tests', function () {
 
     it('Check acknowledgment for operator 1', function () {
 
-        cy.loginOpFab('operator1', 'test');
+        cy.loginOpFab('operator1_fr', 'test');
 
         // Operator1 should see 6 cards in his feed
         cy.get('of-light-card').should('have.length', 6);
@@ -128,7 +128,7 @@ describe('Acknowledgment  tests', function () {
 
     it('Check acknowledgment for operator 1 after re-logging  ', function () {
 
-        cy.loginOpFab('operator1', 'test');
+        cy.loginOpFab('operator1_fr', 'test');
 
         // Set feed filter to see all card
         cy.get('#opfab-feed-filter-btn-filter').click();
@@ -144,7 +144,7 @@ describe('Acknowledgment  tests', function () {
 
     it('Check no acknowledgment for operator 2  ', function () {
 
-        cy.loginOpFab('operator2', 'test');
+        cy.loginOpFab('operator2_fr', 'test');
 
         // Set feed filter to see all card
         cy.get('#opfab-feed-filter-btn-filter').click();

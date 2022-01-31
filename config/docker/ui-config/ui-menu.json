@@ -40,6 +40,10 @@
     },
     {
       "id": "realtimeusers",
+      "visible": true
+    },
+    {
+      "id": "externaldevicesconfiguration",
       "visible": true,
       "showOnlyForGroups": ["ADMIN"]
     },

@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -57,7 +57,7 @@ ifndef::single-page-doc[<</documentation/current/deployment/index.adoc#opfab_spe
 The notion of entity is loose and can be used to model organizations structures(examples : control center, company , department... ).
 Entities are used to send cards to several users without a name specifically. The information about membership to an
 entity is stored in the user's data (`entities` field of the `user` object). In Entity objects, the `parents` property (array) expresses the fact that this entity is a part of one or several other entities. This feature allows cards to be sent to a group of entities without having to repeat the detailed list of entities for each card.
-The boolean property `entityAllowedToSendCard` (default value `true`) can be used to mark an Entity as not eligible as card publisher. This can be useful for a group of entities where only child entities should be used as card publishers while the parent is just a logical group usable as card recipient.
+The boolean property `entityAllowedToSendCard` (default value `true`) can be used to mark an Entity as not eligible as card publisher. This can be useful for a group of entities where only child entities should be used as card publishers while the parent is just a logical group usable as card recipient. The `labels` property (array) allows to associate string labels to an Entity object.
 
 Examples using entities can be found 
 ifdef::single-page-doc[<<_send_to_several_users, here>>]
@@ -96,8 +96,182 @@ The endPoint `/cards/connections` gives the list of connected user in real time.
 
 == Real time users
 
-As an admin (or member of the ADMIN group), OperatorFabric allows you to see which "real-time" users are logged in and not logged in. To be part of the "real-time" users, you must be a member of the REALTIME_USERS group.
+OperatorFabric allows you to see which entities/groups are logged in and not logged in. To have this information, you must upload a configuration file, using the endpoint /businessconfig/realtimescreens, via a POST request. In this file, you can configure several screens, each one containing the list of entities/groups you want to see.
 
 This interface is accessible via the user menu (top right of the screen).
 
+Here is an example of the configuration file :
 
+[source,json]
+----
+{
+  "realTimeScreens": [
+    {
+      "screenName": "All Control Centers",
+      "screenColumns": [
+        {
+          "entitiesGroups": [
+            {
+              "name": "French Control Centers",
+              "entities": [
+                "ENTITY1_FR",
+                "ENTITY2_FR",
+                "ENTITY3_FR",
+                "ENTITY4_FR"
+              ],
+              "groups": [
+                "Dispatcher",
+                "Planner"
+              ]
+            },
+            {
+              "name": "Italian Control Centers",
+              "entities": [
+                "ENTITY1_IT",
+                "ENTITY2_IT",
+                "ENTITY3_IT"
+              ],
+              "groups": [
+                "Dispatcher",
+                "Planner"
+              ]
+            },
+            {
+              "name": "Dutch Control Centers",
+              "entities": [
+                "ENTITY1_NL",
+                "ENTITY2_NL"
+              ],
+              "groups": [
+                "Dispatcher",
+                "Planner"
+              ]
+            }
+          ]
+        },
+        {
+          "entitiesGroups": [
+            {
+              "name": "Central Supervision Centers",
+              "entities": [
+                "IT_SUPERVISOR_ENTITY"
+              ],
+              "groups": [
+                "Supervisor"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenName": "French Control Centers",
+      "screenColumns": [
+        {
+          "entitiesGroups": [
+            {
+              "name": "French Control Centers",
+              "entities": [
+                "ENTITY1_FR",
+                "ENTITY2_FR",
+                "ENTITY3_FR",
+                "ENTITY4_FR"
+              ],
+              "groups": [
+                "Dispatcher",
+                "Planner"
+              ]
+            }
+          ]
+        },
+        {
+          "entitiesGroups": [
+            {
+              "name": "Central Supervision Centers",
+              "entities": [
+                "IT_SUPERVISOR_ENTITY"
+              ],
+              "groups": [
+                "Supervisor"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenName": "Italian Control Centers",
+      "screenColumns": [
+        {
+          "entitiesGroups": [
+            {
+              "name": "Italian Control Centers",
+              "entities": [
+                "ENTITY1_IT",
+                "ENTITY2_IT",
+                "ENTITY3_IT"
+              ],
+              "groups": [
+                "Dispatcher",
+                "Planner"
+              ]
+            }
+          ]
+        },
+        {
+          "entitiesGroups": [
+            {
+              "name": "Central Supervision Centers",
+              "entities": [
+                "IT_SUPERVISOR_ENTITY"
+              ],
+              "groups": [
+                "Supervisor"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenName": "Dutch Control Centers",
+      "screenColumns": [
+        {
+          "entitiesGroups": [
+            {
+              "name": "Dutch Control Centers",
+              "entities": [
+                "ENTITY1_NL",
+                "ENTITY2_NL"
+              ],
+              "groups": [
+                "Dispatcher",
+                "Planner"
+              ]
+            }
+          ]
+        },
+        {
+          "entitiesGroups": [
+            {
+              "name": "Central Supervision Centers",
+              "entities": [
+                "IT_SUPERVISOR_ENTITY"
+              ],
+              "groups": [
+                "Supervisor"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+With this configuration file, 4 different screens will be available : "All Control Centers", "French Control Centers", "Italian Control Centers" and "Dutch Control Centers".
+
+For example, in the UI, "All Control Centers" will look like :
+
+image::realtimescreens_screenshot.png[Real Time Screens screenshot,align="center"]

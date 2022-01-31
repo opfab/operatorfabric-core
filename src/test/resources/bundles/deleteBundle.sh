@@ -19,7 +19,7 @@ then
 fi
 if [ -z $1 ]
 then
-    echo "Usage deleteBundle bundle_name opfab_url"
+    echo "Usage : deleteBundle bundle_name opfab_url"
 else
 	echo "Will delete bundle $1 on $url"
 	source ../getToken.sh "admin" $url

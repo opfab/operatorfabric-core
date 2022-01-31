@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -31,6 +31,7 @@ To do the job, the following business components are defined :
 - Card Consultation : this component delivers the cards to the operators and provide access to all cards exchanged (archives)
 - Card rendering and process definition : this component stores the information for the card rendering (templates, internationalization, ...) and a light description of the process associate (states, response card, ...). This configuration data can be provided either by an administrator or by a third party tool.
 - User Management : this component is used to manage users, groups, entities and perimeters.
+- External devices : this optional component permit to send alarm to an external device instead of playing a sound on the user computer. For now, only one driver exists using modbus protocol. 
 
 === Business objects 
 
@@ -44,6 +45,7 @@ image::BusinessObjects.jpg[business objects diagram]
 * Entity : an entity (containing a list of users) , it can be used to model organizations (examples : control center, company , department... ) . An entity can be part of another entity or even of several entities.
 * Group : a group (containing a list of users) , it can be used to model roles in organizations (examples : supervisor, dispatcher ... ) 
 * Process : the process the card is about
+* Process Group : a way to group processes on the user interface
 * State : the step in the process
 * Perimeter : for a defined group the visibility of a card for a specific process and state
 * Card Rendering : data for card rendering 

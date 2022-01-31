@@ -9,5 +9,7 @@
       businessconfig/getBusinessconfigTemplate.feature    \
       businessconfig/getProcessGroups.feature             \
       businessconfig/uploadProcessGroupsFile.feature      \
+      businessconfig/uploadAndGetRealTimeScreensFile.feature \
       businessconfig/getResponseBusinessconfig.feature    \
+      businessconfig/getBusinessconfigHistory.feature     \
       businessconfig/security.feature                     \

@@ -1,10 +1,10 @@
 Feature: CreateEntities
 
   Background:
-   #Getting token for admin and operator1 user calling getToken.feature
+   #Getting token for admin and operator1_fr user calling getToken.feature
     * def signIn = callonce read('../../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = callonce read('../../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
       #defining entities
     * def entity =
@@ -12,7 +12,8 @@ Feature: CreateEntities
 {
   "id" : "entityKarate1",
   "name" : "entityKarate1 name",
-  "description" : "Karate is driving me crazy"
+  "description" : "Karate is driving me crazy",
+  "labels" : ["Label1"]
 }
 """
     * def entityUpdated =
@@ -21,6 +22,7 @@ Feature: CreateEntities
   "id" : "entityKarate1",
   "name" : "entityKarate1 name",
   "description" : "I Love Karate",
+  "labels" : ["Label2", "Label3"],
   "entityAllowedToSendCard" : false
 }
 """
@@ -44,6 +46,8 @@ Feature: CreateEntities
     And match response.name == entity.name
     And match response.id == entity.id
     And match response.entityAllowedToSendCard == true
+    And assert response.labels.length == 1
+    And match response.labels[0] == 'Label1'
 
   Scenario: Update my entity
 
@@ -57,6 +61,8 @@ Feature: CreateEntities
     And match response.name == entityUpdated.name
     And match response.id == entity.id
     And match response.entityAllowedToSendCard == false
+    And assert response.labels.length == 2
+    And match response.labels contains ['Label2', 'Label3'] 
 
   Scenario: create without admin role
         #HForbiden without admin role, expected response 403

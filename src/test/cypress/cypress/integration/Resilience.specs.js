@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,7 +27,7 @@ describe ('Resilience tests',function () {
 
     it('Check card reception after nginx restart ', function () {
 
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
 
         cy.get('of-light-card').should('have.length',0);
 
@@ -56,7 +56,7 @@ describe ('Resilience tests',function () {
 
     it('Check card reception after rabbit restart ', function () {
 
-        cy.loginOpFab('operator1','test');
+        cy.loginOpFab('operator1_fr','test');
 
         cy.delete6TestCards();
         cy.get('of-light-card').should('have.length',0);
@@ -75,7 +75,7 @@ describe ('Resilience tests',function () {
     // in dev mode it will execute but the cards-consultation services will not be restart 
     it('Check card reception when cards-consultation is restarted ', function () {
 
-        cy.loginOpFab('operator1', 'test');
+        cy.loginOpFab('operator1_fr', 'test');
 
         cy.delete6TestCards();
         cy.get('of-light-card').should('have.length', 0);

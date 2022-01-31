@@ -52,7 +52,6 @@ include 'services:external-devices'
 include 'web-ui'
 include 'ui:main'
 include 'externalApp'
-include 'clientApp'
 include 'karateTests'
 include 'cypressTests'
 include 'dummyModbusDevice'
@@ -69,7 +68,6 @@ project(':services:external-devices').name = 'external-devices-service'
 project(':web-ui').name = 'web-ui'
 project(':ui:main').name = 'main-user-interface'
 project(':externalApp').projectDir = file('src/test/externalApp')
-project(':clientApp').projectDir = file('src/test/clientApp')
 project(':karateTests').projectDir = file('src/test/api/karate')
 project(':cypressTests').projectDir = file('src/test/cypress')
 project(':dummyModbusDevice').projectDir = file('src/test/dummyModbusDevice')

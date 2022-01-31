@@ -3,7 +3,7 @@ Feature: Cards
 
   Background:
 
-    * def signIn = callonce read('../common/getToken.feature') { username: 'operator1'}
+    * def signIn = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authToken = signIn.authToken
     * def signInUserWithNoGroupNoEntity = callonce read('../common/getToken.feature') { username: 'userwithnogroupnoentity'}
     * def authTokenUserWithNoGroupNoEntity = signInUserWithNoGroupNoEntity.authToken
@@ -15,7 +15,7 @@ Feature: Cards
     * def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -78,7 +78,7 @@ Feature: Cards
     * def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -101,7 +101,7 @@ Feature: Cards
     And def cardUid = response.uid
     And def cardId = response.id
 
-#get card with user operator1
+#get card with user operator1_fr
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
@@ -122,7 +122,7 @@ Feature: Cards
 
   Scenario: Delete the card
 
-#get card with user operator1
+#get card with user operator1_fr
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
@@ -153,7 +153,7 @@ Feature: Cards
     * def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -175,7 +175,7 @@ Feature: Cards
     When method post
     Then status 201
 
-#get card with user operator1 and new attribute externalRecipients
+#get card with user operator1_fr and new attribute externalRecipients
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
@@ -196,7 +196,7 @@ Scenario:  Post card with no recipient but entityRecipients
     * def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2",
@@ -222,7 +222,7 @@ Scenario:  Post card with initialParentCardUid not correct
     * def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -251,7 +251,7 @@ Scenario:  Post card with parentCardId not correct
     * def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -281,7 +281,7 @@ Scenario:  Post card with correct parentCardId but initialParentCardUid not corr
     * def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -312,7 +312,7 @@ Scenario:  Post card with correct parentCardId but initialParentCardUid not corr
     * def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -350,7 +350,7 @@ Scenario:  Post card with correct parentCardId and initialParentCardUid
 	* def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -378,7 +378,7 @@ Scenario: Push card and its two child cards, then get the parent card
     * def parentCard =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
@@ -411,7 +411,7 @@ Scenario: Push card and its two child cards, then get the parent card
     * def childCard1 =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" :"1",
 	"process"  :"api_test",
 	"processInstanceId" : "processChild1",
@@ -430,7 +430,7 @@ Scenario: Push card and its two child cards, then get the parent card
 	* def childCard2 =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "processChild2",
@@ -474,7 +474,7 @@ Scenario: Push a card for a user with no group and no entity
     * def cardForUserWithNoGroupNoEntity =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "processForUserWithNoGroupNoEntity",
@@ -507,7 +507,7 @@ Scenario: Push card with null keepChilCards and publisherType
     * def parentCard2 =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "processKeepChildCardsNull",

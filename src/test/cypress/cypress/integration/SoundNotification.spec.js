@@ -10,7 +10,7 @@
 
 describe('Sound notification test', function () {
 
-  const user = 'operator1';
+  const user = 'operator1_fr';
 
 
   before('Reset UI configuration file ', function () {

@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -67,7 +67,7 @@ Wait a moment before trying to connect to the`SPA`, leaving time for the Operato
 
 The `SPA`, on a local machine, is available at the following Url: `http://localhost:2002/`.
 
-To log in you need to use a valid user among the following: `operator1`, `operator3` or `admin`.
+To log in you need to use a valid user among the following: `operator1_fr`, `operator3_fr` or `admin`.
 The common password is `test` for them all.
 
 To test the reception of cards, you can use the following scripts to push basic configuration and example cards:
@@ -78,7 +78,7 @@ ${OF_HOME}/src/test/resources/loadTestConf.sh
 ${OF_HOME}/src/test/resources/send6TestCards.sh
 ----
 
-Once logged in with operator1, after those scripts have been running, you should be able to see some cards displayed in `http://localhost:2002/`.
+Once logged in with operator1_fr, after those scripts have been running, you should be able to see some cards displayed in `http://localhost:2002/`.
 
 == Build
 

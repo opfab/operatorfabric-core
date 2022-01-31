@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -40,8 +40,8 @@ HTTP/1.1 200 OK
             "ADMIN"
         ],
         "entities": [
-            "ENTITY1",
-            "ENTITY2"
+            "ENTITY1_FR",
+            "ENTITY2_FR"
         ],
         "lastName": null,
         "login": "admin"
@@ -56,7 +56,7 @@ HTTP/1.1 200 OK
             "TEST"
         ],
         "lastName": null,
-        "login": "operator3"
+        "login": "operator3_fr"
     },
     {
         "firstName": null,
@@ -82,10 +82,10 @@ HTTP/1.1 200 OK
             "TEST"
         ],
         "entities": [
-            "ENTITY1"
+            "ENTITY1_FR"
         ],
         "lastName": null,
-        "login": "operator1"
+        "login": "operator1_fr"
     },
     {
         "firstName": null,
@@ -94,10 +94,10 @@ HTTP/1.1 200 OK
             "ReadOnly"
         ],
         "entities": [
-            "ENTITY2"
+            "ENTITY2_FR"
         ],
         "lastName": null,
-        "login": "operator2"
+        "login": "operator2_fr"
     },
 ]
 ....
@@ -454,14 +454,14 @@ On a positive cycle detection cancels the addition or the patch.
 
 using httpie:
 ....
-echo '{"id":"NEW_ENTITY","name":"Last New Entity","description":"This is the last new entity","parents": ["ENTITY1"]}' \
+echo '{"id":"NEW_ENTITY","name":"Last New Entity","description":"This is the last new entity","parents": ["ENTITY1_FR"]}' \
 | http POST http://localhost:2103/entities "Authorization:Bearer $token" "Content-Type:application/json"
 ....
 
 using cURL:
 ....
 curl http://localhost:2103/entities -H "Authorization:Bearer $token" -H "Content-Type:application/json" \
---data '{"id":"NEW_ENTITY","name":"Last New Entity","description":"This is the last new entity","parents": ["ENTITY1"]}'
+--data '{"id":"NEW_ENTITY","name":"Last New Entity","description":"This is the last new entity","parents": ["ENTITY1_FR"]}'
 ....
 
 response
@@ -470,9 +470,10 @@ HTTP/1.1 200 OK
 
 {
     "id": "NEW_ENTITY",
-    "parents": ["ENTITY1"],
+    "parents": ["ENTITY1_FR"],
     "name": "Last New Entity",
-    "description":"This is the last new entity"
+    "description":"This is the last new entity",
+    "labels":[]
 }
 ....
 

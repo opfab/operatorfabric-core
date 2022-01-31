@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,7 @@
 @import "../../node_modules/ag-grid-community/dist/styles/ag-grid.css";
 @import "../../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
 @import "../../node_modules/ag-grid-community/dist/styles/ag-theme-alpine/sass/ag-theme-alpine-mixin.scss";
-
+@import "../../node_modules/ngx-chips/core/styles/core/_core.scss";
 
 
 @each $color, $value in $theme-colors {
@@ -37,7 +37,7 @@ body {
   margin: 0px;
   background-color: $dark;
   height: 100vh;
-  font-family: 'Open Sans', sans-serif;
+  font-family: $opfab-font-family;
   font-size: 13px;
 
   // scroll styling for firefox only
@@ -274,6 +274,11 @@ body {
   color: var(--opfab-form-label-text-color);
   background-color: var(--opfab-bgcolor-darker);
 }
+
+// HOUR INPUT FIELD STYLE 
+::-webkit-calendar-picker-indicator {
+  filter: invert(50%); // sets the time picker in gray on google chrome
+}  
 
 // TIME INPUT IN DATE TIME PICKER 
 .ngb-tp-input-container .form-control {
@@ -949,3 +954,55 @@ html, body { height: 100%; }
   @extend .opfab-ag-grid-theme;
 }
 
+
+// OpFab customization of the default theme for ngx-chips component
+// It allows the colors to match the ones from the OpFab global style and to respond to the night/day mode
+
+tag-input {
+  .ng2-tag-input.opfab-theme {
+    @include tag-input-theme((
+      container-border-bottom: none,
+      container-border-bottom-focused: none,
+      box-shadow: none
+    ));
+
+    tag {
+      @include tag-theme((
+        background: #2784FF,
+        background-focused: #2784FF,
+        background-active: #2784FF,
+        background-hover: #2784FF,
+        color: #fff,
+        color-hover: #fff,
+        border-radius: 2px,
+        box-shadow: none,
+        margin: 0.3rem 0.1rem 0.3rem 0.8rem,
+        height: 26px,
+        line-height: 26px,
+        font-family: $opfab-font-family
+    ));
+
+      delete-icon {
+        @include icon-theme((
+          fill: #fff,
+          fill-focus: #fff,
+          transition: all 0.35s,
+        ));
+        svg {
+          transform:  translate(0px, -4px) scale(0.8)
+        }
+      }
+    }
+
+    input {
+      @include tag-theme((
+        background: var(--opfab-bgcolor),
+        background-focused: var(--opfab-bgcolor),
+        background-active: var(--opfab-bgcolor),
+        background-hover: var(--opfab-bgcolor),
+        color:  var(--opfab-color),
+        color-hover:  var(--opfab-color),
+    ));
+    }
+  }
+}

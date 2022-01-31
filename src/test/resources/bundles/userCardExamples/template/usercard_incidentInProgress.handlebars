@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020-2022, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -57,6 +57,8 @@
         const card = {
             summary: { key: "incidentInProgress.summary" },
             title: { key: "incidentInProgress.title" },
+            entitiesAllowedToRespond: [ "ENTITY3_FR", "ENTITY2_FR"],
+            entitiesRequiredToRespond: [ "ENTITY4_FR"],
             keepChildCards: true,
             data: {
                 message: message,

@@ -12,16 +12,20 @@ import { CommonModule } from '@angular/common';
 import { RealtimeusersComponent } from './realtimeusers.component';
 import {RealtimeusersRoutingModule} from './realtimeusers-routing.module';
 import {TranslateModule} from '@ngx-translate/core';
+import {SingleFilterModule} from "../share/single-filter/single-filter.module";
+import {ReactiveFormsModule} from "@angular/forms";
 
 
 @NgModule({
   declarations: [
     RealtimeusersComponent
   ],
-  imports: [
-    CommonModule,
-    TranslateModule,
-    RealtimeusersRoutingModule
-  ]
+    imports: [
+        CommonModule,
+        TranslateModule,
+        RealtimeusersRoutingModule,
+        SingleFilterModule,
+        ReactiveFormsModule
+    ]
 })
 export class RealtimeusersModule { }

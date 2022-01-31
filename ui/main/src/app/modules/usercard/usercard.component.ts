@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,39 +7,31 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {CardService} from '@ofServices/card.service';
 import {UserService} from '@ofServices/user.service';
-import {Card, CardData, fromCardToCardForPublishing, TimeSpan} from '@ofModel/card.model';
-import {I18n} from '@ofModel/i18n.model';
-import {Subject} from 'rxjs';
-import {Process, Recipient} from '@ofModel/processes.model';
-import {TimeService} from '@ofServices/time.service';
+import {Card, CardCreationReportData, CardData, fromCardToCardForPublishing, TimeSpan} from '@ofModel/card.model';
+import {UserCard} from '@ofModel/processes.model';
 import {Severity} from '@ofModel/light-card.model';
 import {Guid} from 'guid-typescript';
-import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
-import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
-import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {EntitiesService} from '@ofServices/entities.service';
 import {ProcessesService} from '@ofServices/processes.service';
-import {ActivatedRoute} from '@angular/router';
-import {DateTimeNgb, getDateTimeNgbFromMoment} from '@ofModel/datetime-ngb.model';
-import * as moment from 'moment-timezone';
 import {HandlebarsService} from '../cards/services/handlebars.service';
 import {DetailContext} from '@ofModel/detail-context.model';
-import {debounceTime, map, takeUntil} from 'rxjs/operators';
-import {TranslateService} from '@ngx-translate/core';
+import {map} from 'rxjs/operators';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
-import {RightsEnum} from '@ofModel/perimeter.model';
-import {Entity} from '@ofModel/entity.model';
 import {ConfigService} from '@ofServices/config.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
+import {UserCardDatesFormComponent} from './datesForm/usercard-dates-form.component';
+import {DateField, DatesForm} from './datesForm/dates-form.model';
+import {UserCardRecipientsFormComponent} from './recipientForm/usercard-recipients-form.component';
+import {UserPermissionsService} from '@ofServices/user-permissions.service';
 
 declare const templateGateway: any;
 
@@ -48,412 +40,146 @@ declare const templateGateway: any;
     templateUrl: './usercard.component.html',
     styleUrls: ['./usercard.component.scss']
 })
-export class UserCardComponent implements OnDestroy, OnInit {
+export class UserCardComponent implements OnInit {
 
-    @Input() modal;
+    @Input() userCardModal;
+    public pageLoading = true;
 
-    displayContext = DisplayContext.PREVIEW;
+    // Process and state choice
+    private selectedProcessId: string;
+    private selectedStateId: string;
+    private emptyProcessList = false;
+    public userCardConfiguration: UserCard;
 
-    messageForm: FormGroup;
-    recipientForm: FormGroup;
+    // Severity
+    private severityForm: FormGroup;
+    public severityVisible = true;
 
-    processesDefinition: Process[];
-    currentUserWithPerimeters: UserWithPerimeters;
-    processGroups: Map<string, {name: string, processes: string[]}>;
 
-    severityOptions = Object.keys(Severity).map(severity => {
-        return {
-            value: severity,
-            label: new I18n('shared.severity.' + severity)
-        };
-    });
-
-    entities: Entity[];
-    stateOptions: any[];
-    recipientsOptions = [];
-    selectedRecipients = [];
-    dropdownSettings = {};
-    processOptions = [];
-    processOptionsWhenSelectedProcessGroup = [];
-    processGroupOptions = [];
-
-    selectedProcess: Process;
-    selectedState: string;
-    processesPerProcessGroups = new Map();
-    processGroupPerProcesses = new Map();
-    processesWithoutProcessGroup = [];
-    statesPerProcesses = new Map();
-    userCardTemplate: SafeHtml;
-    editCardMode = false;
-    cardToEdit: CardData;
-    publisherForCreatingUsercard: string;
-
-    isStartDateValueSet = false;
-    isEndDateValueSet = false;
-
-    @Input() cardIdToEdit = null;
-    public card: Card;
-
+    // Dates
+    @ViewChild('datesForm') datesForm: UserCardDatesFormComponent;
+    public datesFormValue: DatesForm;
     readonly defaultStartDate = new Date().valueOf() + 60000;
     readonly defaultEndDate = new Date().valueOf() + 60000 * 60 * 24;
     readonly defaultLttdDate = this.defaultEndDate - 60000;
+    private startDateVisible = true;
+    private endDateVisible = true;
+    private lttdVisible = true;
 
-    unsubscribe$: Subject<void> = new Subject<void>();
 
+    // For recipients component
+    public recipientVisible = true;
+    @ViewChild('recipientsForm') recipientsForm: UserCardRecipientsFormComponent;
+    public initialSelectedRecipients = [];
+
+    // For edition mode
+    @Input() cardIdToEdit: string = null;
+    private editCardMode = false;
+    private cardToEdit: CardData;
+    public editCardProcessId: string;
+    public editCardStateId: string;
+
+    // Preview and send card
+    readonly displayContext = DisplayContext.PREVIEW;
+    private publisherForCreatingUsercard: string;
+    public card: Card;
     public displayPreview = false;
     public displaySendingCardInProgress = false;
+    private useDescriptionFieldForEntityList = false;
+    private specificInformation = null;
 
-    modalRef: NgbModalRef;
-    severityVisible = true ;
-    startDateVisible = true ;
-    endDateVisible = true ;
-    lttdVisible = true ;
-    recipientVisible = true; // if recipientVisible == false, then selectedRecipients = recipientList
+    protected childCards: Card[] = [];
 
-    pageLoading = true;
-    useDescriptionFieldForEntityList = false;
-
-    endDateMin : {year: number, month: number, day: number} = null;
-    startDateMax : {year: number, month: number, day: number} = null;
-
-    dateTimeFilterChange = new Subject();
-
-    displayForm() {
-        return !!this.publisherForCreatingUsercard && !!this.processOptions && this.processOptions.length > 0;
-    }
-
-    displayProcessGroupFilter() {
-        return !!this.processGroupOptions && this.processGroupOptions.length > 1 ;
-    }
+    public userCardTemplate: SafeHtml;
 
     constructor(private store: Store<AppState>,
         private cardService: CardService,
         private userService: UserService,
-        private timeService: TimeService,
         private entitiesService: EntitiesService,
         private sanitizer: DomSanitizer,
         private element: ElementRef,
         private processesService: ProcessesService,
         protected configService: ConfigService,
-        private route: ActivatedRoute,
         private handlebars: HandlebarsService,
-        protected translate: TranslateService,
         protected soundNotificationService: SoundNotificationService,
+        protected userPermissionsService: UserPermissionsService,
     ) {
+        this.setDateFormValues();
     }
+
 
     ngOnInit() {
         this.pageLoading = true;
-
-        this.useDescriptionFieldForEntityList = this.configService.getConfigValue('usercard.useDescriptionFieldForEntityList',false);
-
-        this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
-        this.processGroups = this.processesService.getProcessGroups();
-        this.loadAllEntities();
-        this.loadRecipentsOptions();
-        this.loadAllProcessAndStateInUserPerimeter();
-
-        this.messageForm = new FormGroup({
-            severity: new FormControl(''),
-            processGroup: new FormControl(''),
-            process: new FormControl(''),
-            state: new FormControl(''),
-            startDate: new FormControl(''),
-            endDate: new FormControl(''),
-            lttd: new FormControl(''),
-            comment: new FormControl('')
+        this.severityForm = new FormGroup({
+            severity: new FormControl('')
         });
-
-        this.changeSeverityToDefaultValue();
-        this.changeStatesWhenSelectProcess();
-        this.changeProcessesWhenSelectProcessGroup();
-        this.loadTemplateWhenStateChange();
-        this.loadAllProcessGroupsRelatingToUserPerimeter();
-
-        if (!this.cardIdToEdit && this.processGroupOptions.length == 0 && this.processOptions.length > 0) {
-            this.selectedProcess = this.processOptions[0].value;
-            this.messageForm.get('process').setValue(this.selectedProcess);
-        }
-
-        this.recipientForm = new FormGroup({
-            recipients: new FormControl([])
-        });
-
-
-        
-        this.dropdownSettings = {
-            text: '',
-            badgeShowLimit: 30,
-            enableSearchFilter: true
-        };
-        if (!!this.cardIdToEdit)
-            this.loadCardForEdition();
-        else {
-            this.pageLoading = false;
-            this.messageForm.get('lttd').setValue(getDateTimeNgbFromMoment(moment(this.defaultLttdDate)));
-        }
+        this.severityForm.get('severity').setValue(Severity.ALARM);
+        if (!!this.cardIdToEdit) this.loadCardForEdition();
+        else this.pageLoading = false;
 
         this.publisherForCreatingUsercard = this.findPublisherForCreatingUsercard();
-        this.dateTimeFilterChange.pipe(
-            takeUntil(this.unsubscribe$),
-            debounceTime(1000),
-        ).subscribe(() => this.setDateFilterBounds());
+        this.useDescriptionFieldForEntityList = this.configService.getConfigValue('usercard.useDescriptionFieldForEntityList', false);
     }
 
-    onDateTimeChange(event: Event) {
-        this.dateTimeFilterChange.next(null);
-    }
-
-    setDateFilterBounds(): void {
-        
-        if (this.messageForm.value.startDate?.date) {
-            this.endDateMin = {year: this.messageForm.value.startDate.date.year, month: this.messageForm.value.startDate.date.month, day: this.messageForm.value.startDate.date.day};
-        }
-        else {
-            const today = moment();
-            this.endDateMin = {year: today.year() ,month: today.month(), day: today.day() };
-        }
-        if (this.messageForm.value.endDate?.date) {
-            this.startDateMax = {year: this.messageForm.value.endDate.date.year, month: this.messageForm.value.endDate.date.month, day: this.messageForm.value.endDate.date.day};
-        }
-        else {
-            const tomorrow = moment().add(1,'day');
-            this.startDateMax = {year: tomorrow.year() ,month: tomorrow.month(), day: tomorrow.day() };
-        }
-    }
-
-    loadCardForEdition() {
-            this.editCardMode = true;
-            this.cardService.loadCard(this.cardIdToEdit).subscribe(card => {
-                        this.cardToEdit = card;
-                        this.messageForm.get('severity').setValue(this.cardToEdit.card.severity);
-
-                        const processGroupForCardToEdit = this.processGroupPerProcesses.get(this.cardToEdit.card.process);
-                        if (processGroupForCardToEdit)
-                            this.messageForm.get('processGroup').setValue(processGroupForCardToEdit);
-                        else
-                            this.messageForm.get('processGroup').setValue('--');
-                        
-                        this.messageForm.get('processGroup').disable();
-
-                        this.messageForm.get('process').setValue(this.cardToEdit.card.process);
-                        this.messageForm.get('process').disable();
-                        this.messageForm.get('state').setValue(this.cardToEdit.card.state);
-
-                        this.messageForm.get('startDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.startDate)));
-                        if (!!this.cardToEdit.card.startDate && this.startDateVisible) {
-                            this.isStartDateValueSet = true;
-                            this.dateTimeFilterChange.next(null);
-                        }
-
-                        if (!!this.cardToEdit.card.endDate && this.endDateVisible) {
-                            this.messageForm.get('endDate').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.endDate)));
-                            this.isEndDateValueSet = true;
-                            this.dateTimeFilterChange.next(null);
-                        }
-
-                        if (!!this.cardToEdit.card.lttd && this.lttdVisible) {
-                            this.messageForm.get('lttd').setValue(getDateTimeNgbFromMoment(moment(this.cardToEdit.card.lttd)));
-                        }
-                        this.selectedRecipients = this.cardToEdit.card.entityRecipients;
-                        this.pageLoading = false;
-            });
-    }
-
-
-    loadAllEntities(): void {
-        this.entities = this.entitiesService.getEntities();
-    }
-
-    loadRecipentsOptions() {
-        this.recipientsOptions = [];
-        this.entities.forEach(entity =>
-            this.recipientsOptions.push({ id: entity.id, itemName: this.getEntityLabel(entity) }));
-
-        this.recipientsOptions.sort(( a, b ) => a.itemName.localeCompare(b.itemName));
-    }
-
-    loadAllProcessAndStateInUserPerimeter(): void {
-        this.processesDefinition = this.processesService.getAllProcesses();
-        const processesInPerimeter: Set<string> = new Set();
-        this.currentUserWithPerimeters.computedPerimeters.forEach(perimeter => {
-                    if (UserCardComponent.userCanSendCard(perimeter)) processesInPerimeter.add(perimeter.process);
-                });
-
-        this.processesDefinition.forEach(process => {
-                    if (processesInPerimeter.has(process.id)) {
-                        const label = process.name ? process.name : process.id;
-                        const processToShow = { value: process.id, label: label };
-                        
-                        this.loadStatesForProcess(process);
-                        // Add process option only if there is at least one state
-                        if (this.statesPerProcesses.get(process.id).length > 0) this.processOptions.push(processToShow);
-                    }
-                });
-    }
-
-    isProcessInProcessesGroup(idProcess: string, processesGroup: {name: string, processes: string[]}): boolean {
-        return !!processesGroup.processes.find(process => process === idProcess);
-    }
-
-    loadAllProcessGroupsRelatingToUserPerimeter(): void {
-        let numberOfProcessesAttachedToAProcessGroup = 0;
-
-        this.processGroups.forEach((group, groupId) => {
-
-            const processOptions = [];
-            this.processOptions.forEach(processOption => {
-                if (this.isProcessInProcessesGroup(processOption.value, group)) {
-                    processOptions.push(processOption);
-                    numberOfProcessesAttachedToAProcessGroup++;
-
-                    this.processGroupPerProcesses.set(processOption.value, groupId);
-                }
-            });
-
-            if (processOptions.length > 0)
-                this.processesPerProcessGroups.set(groupId, processOptions);
-        });
-
-        if (this.processOptions.length > numberOfProcessesAttachedToAProcessGroup) {
-            this.loadProcessesWithoutProcessGroup();
-            this.processGroupOptions.push({value: '--', label: 'processGroup.defaultLabel'});
-        }
-        for (const processGroupId of this.processesPerProcessGroups.keys())
-            this.processGroupOptions.push({value: processGroupId, label: this.processGroups.get(processGroupId).name});
-        
-        if (!this.cardIdToEdit && this.processGroupOptions.length > 0) {
-            this.messageForm.get('processGroup').setValue(this.processGroupOptions[0].value);
-        }
-    }
-
-    loadProcessesWithoutProcessGroup(): void {
-        const processesWithProcessGroup = Array.from(this.processGroupPerProcesses.keys());
-        this.processesWithoutProcessGroup = this.processOptions.filter(processOption => processesWithProcessGroup.indexOf(processOption.value) < 0);
-    }
-
-    private static userCanSendCard(perimeter: ComputedPerimeter): boolean {
-        return ((perimeter.rights === RightsEnum.ReceiveAndWrite)
-            || (perimeter.rights === RightsEnum.Write));
-    }
-
-    loadStatesForProcess(process: Process): void {
-        const statesList = [];
-        this.currentUserWithPerimeters.computedPerimeters.forEach(
-            perimeter => {
-                if ((perimeter.process === process.id) && UserCardComponent.userCanSendCard(perimeter)) {
-                    const state = this.getStateFromProcessDefinition(process,perimeter.state)
-                    if (!!state) statesList.push(state);
-                }
-            });
-        this.statesPerProcesses.set(process.id, statesList);
-
-    }
-
-    getStateFromProcessDefinition(process: Process, stateId: string) {
-        const stateFromProcessDefinition = process.states[stateId];
-        if (!!stateFromProcessDefinition) {
-            if (!!stateFromProcessDefinition.userCard) {
-                const label = !!stateFromProcessDefinition.name ? stateFromProcessDefinition.name : stateId;
-                return { value: stateId, label: label };
-            }
-        } else console.log('WARNING : state', stateId, 'is present in perimeter for process'
-            , process.id, 'but not in process definition');
-        return null;
-    }
-
-
-    changeSeverityToDefaultValue(): void {
-        this.messageForm.get('severity').valueChanges.subscribe((severity) => {
-            if (!severity) this.messageForm.get('severity').setValue(this.severityOptions[0].value);
-        });
-        this.messageForm.get('severity').setValue(this.severityOptions[0].value);
-
-    }
-
-    changeProcessesWhenSelectProcessGroup(): void {
-        this.messageForm.get('processGroup').valueChanges.subscribe((processGroup) => {
-            if (!!processGroup) {
-                if (processGroup === '--')
-                    this.processOptionsWhenSelectedProcessGroup = this.processesWithoutProcessGroup;
-                else
-                    this.processOptionsWhenSelectedProcessGroup = this.processesPerProcessGroups.get(processGroup);
-
-                this.selectedProcess = this.processOptionsWhenSelectedProcessGroup[0].value;
-                this.messageForm.get('process').setValue(this.selectedProcess);
-            }
+    private loadCardForEdition() {
+        this.editCardMode = true;
+        this.cardService.loadCard(this.cardIdToEdit).subscribe(card => {
+            this.cardToEdit = card;
+            this.editCardProcessId = this.cardToEdit.card.process;
+            this.editCardStateId = this.cardToEdit.card.state;
+            this.severityForm.get('severity').setValue(this.cardToEdit.card.severity);
+            this.initialSelectedRecipients = this.cardToEdit.card.entityRecipients;
+            this.pageLoading = false;
+            this.setDateFormValues();
         });
     }
 
-    changeStatesWhenSelectProcess(): void {
-        this.messageForm.get('process').valueChanges.subscribe((process) => {
-            if (!!process) {
-                this.stateOptions = this.statesPerProcesses.get(process);
-                this.selectedState = this.stateOptions[0].value;
-                this.selectedProcess = this.processesDefinition.find(processDefinition => {
-                    return processDefinition.id === process;
-                });
-                this.messageForm.get('state').setValue(this.selectedState);
-            }
-        });
-    }
 
-    // Be careful, the code in the subscribe is executed even if we are editing an existing card
-    // Indeed, in order to display the state of the edited usercard, the state value of the control is changed
-    loadTemplateWhenStateChange(): void {
-        this.messageForm.get('state').valueChanges
-        .pipe(
-            takeUntil(this.unsubscribe$),
-            debounceTime(10) //See #1891 Cypress usercard test was flaky without this debounce
-        )
-        .subscribe((state) => {
-            if (!!state) {
-                this.selectedState = state;
-
-                // We reset these values only if we are not editing an existing usercard
-                if (!this.cardIdToEdit) {
-                    this.messageForm.get("startDate").setValue('');
-                    this.messageForm.get("endDate").setValue('');
-                    this.messageForm.get("lttd").setValue(getDateTimeNgbFromMoment(moment(this.defaultLttdDate)));
-                }
-                this.loadRecipentsOptions();
-                this.loadTemplate();
-            }
-        });
-    }
-
-    loadTemplate() {
-
-        let card;
-        if  (!!this.cardToEdit) card = this.cardToEdit.card ;
-        const userCard = this.selectedProcess.states[this.selectedState].userCard;
-        if (!!userCard && !!userCard.template) {
-            const templateName = userCard.template;
-
-            this.handlebars.queryTemplate(this.selectedProcess.id, this.selectedProcess.version, templateName)
-                .pipe(map(t => t(new DetailContext(card, null, null))))
-                .subscribe({
-                    next: (template) => {
-                        this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml(template);
-                        setTimeout(() => { // wait for DOM rendering
-                            this.reinsertScripts();
-                        }, 10);},
-                    error:(error) =>  {
-                        console.log('WARNING impossible to load template ', templateName , ', error = ' , error);
-                        this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
-                    }
-                });
-        } else this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
-
-        if (!!userCard) {
-        this.severityVisible = (userCard.severityVisible === undefined) ? true : userCard.severityVisible;
-        this.startDateVisible = (userCard.startDateVisible === undefined) ? true : userCard.startDateVisible;
-        this.endDateVisible = (userCard.endDateVisible === undefined) ? true : userCard.endDateVisible;
-        this.lttdVisible = (userCard.lttdVisible === undefined) ? true : userCard.lttdVisible;
-        this.recipientVisible = (userCard.recipientVisible === undefined) ? true : userCard.recipientVisible;
-        if (!!userCard.recipientList) {
-            this.loadRecipientListForState(userCard.recipientList);
+    private setDateFormValues(): void {
+        const startDate = new DateField(this.startDateVisible, this.defaultStartDate);
+        const endDate = new DateField(this.endDateVisible, this.defaultEndDate);
+        const lttd = new DateField(this.lttdVisible, this.defaultLttdDate);
+        if (!!this.cardToEdit) {
+            if (!!this.cardToEdit.card.startDate) startDate.initialEpochDate = this.cardToEdit.card.startDate;
+            if (!!this.cardToEdit.card.endDate) endDate.initialEpochDate = this.cardToEdit.card.endDate;
+            if (!!this.cardToEdit.card.lttd) lttd.initialEpochDate = this.cardToEdit.card.lttd;
         }
+        this.datesFormValue = new DatesForm(startDate, endDate, lttd);
+    }
+
+
+    private findPublisherForCreatingUsercard(): string {
+        return this.userService.getCurrentUserWithPerimeters().userData.entities.find(userEntity => {
+            const entity = this.entitiesService.getEntities().find(e => e.id === userEntity);
+            return entity.entityAllowedToSendCard;
+        });
+    }
+
+    public displayForm() {
+        return !!this.publisherForCreatingUsercard && !this.emptyProcessList;
+    }
+
+    public setEmptyProcessList(): void {
+        this.emptyProcessList = true;
+    }
+
+    public stateChanged(event: any) {
+        this.selectedStateId = event.state;
+        this.selectedProcessId = event.selectedProcessId;
+        this.userCardConfiguration = this.processesService.getProcess(this.selectedProcessId).states[this.selectedStateId].userCard;
+        this.setFieldsVisibility();
+        this.setDateFormValues();
+        this.loadTemplate();
+    }
+
+
+    private setFieldsVisibility() {
+        if (!!this.userCardConfiguration) {
+            this.severityVisible = (this.userCardConfiguration.severityVisible === undefined) ? true : this.userCardConfiguration.severityVisible;
+            this.startDateVisible = (this.userCardConfiguration.startDateVisible === undefined) ? true : this.userCardConfiguration.startDateVisible;
+            this.endDateVisible = (this.userCardConfiguration.endDateVisible === undefined) ? true : this.userCardConfiguration.endDateVisible;
+            this.lttdVisible = (this.userCardConfiguration.lttdVisible === undefined) ? true : this.userCardConfiguration.lttdVisible;
+            this.recipientVisible = (this.userCardConfiguration.recipientVisible === undefined) ? true : this.userCardConfiguration.recipientVisible;
         } else {
             this.severityVisible = true;
             this.startDateVisible = true;
@@ -464,32 +190,33 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     }
 
-    loadRecipientListForState(recipients: Recipient[]): void {
-        this.recipientsOptions = [];
-        recipients.forEach(r => {
-            if (!!r.levels) {
-                r.levels.forEach(l => {
-                    this.entitiesService.resolveChildEntitiesByLevel(r.id, l).forEach(entity => {
-                        if (!this.recipientsOptions.find(o => o.id === entity.id)) {
-                            this.recipientsOptions.push({ id: entity.id, itemName: this.getEntityLabel(entity) });
-                        }
-                    });
-                });
-            } else {
-                if (!this.recipientsOptions.find(o => o.id === r.id)) {
-                    const entity = this.entities.find(e => e.id === r.id);
-                    if (!!entity)
-                        this.recipientsOptions.push({ id: entity.id, itemName: this.getEntityLabel(entity)});
-                    else 
-                        console.log(new Date().toISOString(), 'Recipient entity not found : ', r.id )
-                }
-            }
-        });
+    private loadTemplate() {
+        let card;
+        if (!!this.cardToEdit) card = this.cardToEdit.card;
+        const selected = this.processesService.getProcess(this.selectedProcessId);
 
-        this.recipientsOptions.sort(( a, b ) => a.itemName.localeCompare(b.itemName));
+        if (!!this.userCardConfiguration && !!this.userCardConfiguration.template) {
+            const templateName = this.userCardConfiguration.template;
+
+            this.handlebars.queryTemplate(this.selectedProcessId, selected.version, templateName)
+                .pipe(map(t => t(new DetailContext(card, null, null))))
+                .subscribe({
+                    next: (template) => {
+                        this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml(template);
+                        setTimeout(() => { // wait for DOM rendering
+                            this.reinsertScripts();
+                        }, 10);
+                    },
+                    error: (error) => {
+                        console.log('WARNING impossible to load template ', templateName, ', error = ', error);
+                        this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
+                    }
+                });
+        } else this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
     }
 
-    reinsertScripts(): void {
+
+    private reinsertScripts(): void {
         const scripts = <HTMLScriptElement[]>this.element.nativeElement.getElementsByTagName('script');
         Array.prototype.forEach.call(scripts, script => {   // scripts.foreach does not work ...
             const scriptCopy = document.createElement('script');
@@ -503,220 +230,307 @@ export class UserCardComponent implements OnDestroy, OnInit {
         });
     }
 
-    private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(new AlertMessage({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}}));
-    }
+    public prepareCard() {
+        if (!this.isSpecificInformationValid()) return;
+        this.specificInformation = templateGateway.getSpecificCardInformation();
+        const startDate = this.getStartDate();
+        const endDate = this.getEndDate();
+        const lttd = this.getLttd();
+        if (!this.areDatesValid(startDate, endDate, lttd)) return;
+        const title = (!!this.specificInformation.card.title) ? this.specificInformation.card.title : 'UNDEFINED';
+        const selectedProcess = this.processesService.getProcess(this.selectedProcessId);
+        const recipients = this.getRecipients();
 
-    findPublisherForCreatingUsercard(): string {
-        return this.currentUserWithPerimeters.userData.entities.find(userEntity => {
-            const entity = this.entities.find(e => e.id === userEntity);
-            return entity.entityAllowedToSendCard;
-        });
-    }
-
-    prepareCard() {
-        const formValue = this.messageForm.value;
-
-        const processValue = this.editCardMode ? this.cardToEdit.card.process : formValue['process'];
-        const selectedProcess = this.processesDefinition.find(process => {
-            return process.id === processValue;
-        });
-        const processVersion = selectedProcess.version;
-        const state = formValue['state'];
-
-        if (!templateGateway.getSpecificCardInformation) {
-            console.log('No getSpecificCardInformationMethod() in template can not send card');
-            this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
-            return;
-        }
-
-        const specificInformation = templateGateway.getSpecificCardInformation();
-        if (!specificInformation) {
-            console.log('getSpecificCardInformationMethod() in template return no information');
-            this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
-            return;
-        }
-
-        if (!specificInformation.valid) {
-            this.displayMessage(specificInformation.errorMsg, null, MessageLevel.ERROR);
-            return;
-        }
-
-        let allRecipientOptions = selectedProcess.states[state].userCard.recipientList;
-        allRecipientOptions = allRecipientOptions != undefined ? allRecipientOptions : [];
-        const selectedRecipients = this.recipientVisible ? this.recipientForm.value['recipients'] : allRecipientOptions;
-        const recipients = [];
-        selectedRecipients.forEach(entity => recipients.push(entity.id));
-
-        const entitiesAllowedToRespond = [];
-        if (selectedProcess.states[state].response) {
-            recipients.forEach(entity => {
-                entitiesAllowedToRespond.push(entity);
-            });
-        }
-
-        let startDate = this.messageForm.get('startDate').value;
-        if (!startDate) startDate = this.defaultStartDate;
-        else startDate = this.createTimestampFromValue(startDate);
-
-        let lttd = null;
-        if (this.lttdVisible) {
-            lttd = this.messageForm.get('lttd').value;
-            lttd = this.createTimestampFromValue(lttd);
-
-        } else {
-            if (specificInformation.card.lttd) lttd = specificInformation.card.lttd;
-        }
-
-        let endDate = this.messageForm.get('endDate').value;
-        if (!endDate)  endDate = this.endDateVisible ? this.defaultEndDate : this.lttdVisible ? lttd : null;
-        else endDate = this.createTimestampFromValue(endDate);
-
-        if (!!endDate && endDate < startDate) {
-            this.displayMessage('shared.endDateBeforeStartDate', '', MessageLevel.ERROR);
-            return;
-        }
-
-        if (!!lttd && lttd < startDate) {
-            this.displayMessage('userCard.error.lttdBeforeStartDate', '', MessageLevel.ERROR);
-            return;
-        }
-
-        if (!!lttd && !!endDate && lttd > endDate) {
-            this.displayMessage('userCard.error.lttdAfterEndDate', '', MessageLevel.ERROR);
-            return;
-        }
-
-        const title = (!!specificInformation.card.title) ? specificInformation.card.title : 'UNDEFINED';
-        const summary = (!!specificInformation.card.summary) ? specificInformation.card.summary : 'UNDEFINED';
-        const keepChildCards = (!!specificInformation.card.keepChildCards) ? specificInformation.card.keepChildCards : false;
-        const secondsBeforeTimeSpanForReminder = (specificInformation.card.secondsBeforeTimeSpanForReminder !== undefined) ? specificInformation.card.secondsBeforeTimeSpanForReminder : null;
-        const externalRecipients = (!!specificInformation.card.externalRecipients) ? specificInformation.card.externalRecipients : null;
-        const entitiesAllowedToEdit = (!!specificInformation.card.entitiesAllowedToEdit) ? specificInformation.card.entitiesAllowedToEdit : null;
-
-        let severity;
-        if (this.severityVisible) {
-            severity = formValue['severity'];
-        } else {
-            severity = (!!specificInformation.card.severity) ? specificInformation.card.severity : Severity.INFORMATION;
-        }
-
-        let timeSpans = [];
-        if  (!!specificInformation.viewCardInAgenda) {
-            if (!!specificInformation.recurrence) timeSpans = [new TimeSpan(startDate , endDate , specificInformation.recurrence )];
-            else timeSpans = [new TimeSpan(startDate , endDate )];
-        }
-
-        let processInstanceId ;
-        if (this.editCardMode) processInstanceId = this.cardToEdit.card.processInstanceId;
-        else processInstanceId  = Guid.create().toString();
-
-        this.cardService.postTranslateCardField(selectedProcess.id, processVersion, title)
+        this.cardService.postTranslateCardField(selectedProcess.id, selectedProcess.version, title)
             .subscribe(response => {
                 const titleTranslated = response.body.translatedField;
                 this.card = {
                     id: 'dummyId',
                     publishDate: null,
                     publisher: this.publisherForCreatingUsercard,
-                    publisherType : 'ENTITY',
-                    processVersion: processVersion,
+                    publisherType: 'ENTITY',
+                    processVersion: selectedProcess.version,
                     process: selectedProcess.id,
-                    processInstanceId: processInstanceId,
-                    state: state,
+                    processInstanceId: this.getProcessInstanceId(),
+                    state: this.selectedStateId,
                     startDate: startDate,
                     endDate: endDate,
                     lttd: lttd,
-                    severity: severity,
+                    severity: this.getSeverity(),
                     hasBeenAcknowledged: false,
                     hasBeenRead: false,
-                    userRecipients : [this.currentUserWithPerimeters.userData.login],
+                    userRecipients: [this.userService.getCurrentUserWithPerimeters().userData.login],
                     entityRecipients: recipients,
-                    entitiesAllowedToRespond: entitiesAllowedToRespond,
-                    entitiesAllowedToEdit: entitiesAllowedToEdit,
-                    externalRecipients: externalRecipients,
+                    entitiesAllowedToRespond: this.getEntitiesAllowedTorespond(recipients),
+                    entitiesRequiredToRespond: (!!this.specificInformation.card.entitiesRequiredToRespond)
+                                                ? this.specificInformation.card.entitiesRequiredToRespond
+                                                : [],
+                    entitiesAllowedToEdit: this.getValueOrNull(this.specificInformation.card.entitiesAllowedToEdit),
+                    externalRecipients: this.getValueOrNull(this.specificInformation.card.externalRecipients),
                     title: title,
                     titleTranslated: titleTranslated,
-                    summary: summary,
-                    secondsBeforeTimeSpanForReminder: secondsBeforeTimeSpanForReminder,
-                    timeSpans : timeSpans,
-                    keepChildCards: keepChildCards,
-                    data: specificInformation.card.data,
+                    summary: (!!this.specificInformation.card.summary) ? this.specificInformation.card.summary : 'UNDEFINED',
+                    secondsBeforeTimeSpanForReminder: this.getValueOrNull(this.specificInformation.card.secondsBeforeTimeSpanForReminder),
+                    timeSpans: this.getTimeSpans(this.specificInformation, startDate, endDate),
+                    keepChildCards: (!!this.specificInformation.card.keepChildCards) ? this.specificInformation.card.keepChildCards : false,
+                    data: this.specificInformation.card.data,
                 } as Card;
-
+                
+                if (!!this.specificInformation.childCard && this.userPermissionsService.isUserEnabledToRespond(this.userService.getCurrentUserWithPerimeters(),
+                this.card, selectedProcess)) {
+                    this.childCards = [this.getChildCard(this.specificInformation.childCard)];
+                    this.card = {...this.card, hasChildCardFromCurrentUserEntity: true}
+                } else {
+                    this.childCards = [];
+                }
                 this.displayPreview = true;
             });
     }
 
-
-    createTimestampFromValue = (value: any): number => {
-        const { date, time } = value;
-        if (date) {
-            return this.timeService.toNgBNumberTimestamp(this.transformToTimestamp(date, time));
-        } else {
-            return null;
+    private isSpecificInformationValid(): boolean {
+        if (!templateGateway.getSpecificCardInformation) {
+            console.log('ERROR : No getSpecificCardInformationMethod() in template, card cannot be send');
+            this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
+            return false;
         }
-    };
 
-    transformToTimestamp(date: NgbDateStruct, time: NgbTimeStruct): string {
-        return new DateTimeNgb(date, time).formatDateTime();
+        const specificInformation = templateGateway.getSpecificCardInformation();
+        if (!specificInformation) {
+            console.log('ERROR : getSpecificCardInformationMethod() in template return no information, card cannot be send');
+            this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
+            return false;
+        }
+
+        if (!specificInformation.valid) {
+            this.displayMessage(specificInformation.errorMsg, null, MessageLevel.ERROR);
+            return false;
+        }
+
+        if (!specificInformation.card) {
+            console.log('ERROR : getSpecificCardInformationMethod() in template return specificInformation with no card field, card cannot be send');
+            this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
+            return false;
+        }
+
+        return true;
     }
 
-    getEntityLabel(entity: Entity) {
-        return this.useDescriptionFieldForEntityList ? entity.description : entity.name 
+
+    private getStartDate(): number {
+        let startDate = this.datesForm.getStartDateAsEpoch();
+        if (!startDate) startDate = this.defaultStartDate;
+        return startDate;
     }
 
-    getEntityName(id: string): string {
-        const entityOption = this.recipientsOptions.find(entity => entity.id === id);
-        return entityOption.itemName;
+    private getEndDate(): number {
+        let endDate = null;
+        if (this.endDateVisible) endDate = this.datesForm.getEndDateAsEpoch();
+        else {
+            if (this.specificInformation.card.endDate) endDate = this.specificInformation.card.endDate;
+        }
+        return endDate;
     }
 
-    ngOnDestroy() {
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
+    private getLttd(): number {
+        let lttd = null;
+        if (this.lttdVisible) lttd = this.datesForm.getLttdAsEpoch();
+        else {
+            if (this.specificInformation.card.lttd) lttd = this.specificInformation.card.lttd;
+        }
+        return lttd;
     }
 
-    confirm(): void {
+    private areDatesValid(startDate, endDate, lttd): boolean {
+
+        if (!!endDate && endDate < startDate) {
+            this.displayMessage('shared.endDateBeforeStartDate', '', MessageLevel.ERROR);
+            return false ;
+        }
+
+        if (!!lttd && lttd < startDate) {
+            this.displayMessage('userCard.error.lttdBeforeStartDate', '', MessageLevel.ERROR);
+            return false ;
+        }
+
+        if (!!lttd && !!endDate && lttd > endDate) {
+            this.displayMessage('userCard.error.lttdAfterEndDate', '', MessageLevel.ERROR);
+            return false ;
+        }
+        return true;
+    }
+
+    private getRecipients(): string[] {
+        const selectedProcess = this.processesService.getProcess(this.selectedProcessId);
+        let allRecipientOptions = selectedProcess.states[this.selectedStateId].userCard.recipientList;
+        allRecipientOptions = allRecipientOptions !== undefined ? allRecipientOptions : [];
+        const selectedRecipients = this.recipientVisible ? this.recipientsForm.getSelectedRecipients() : allRecipientOptions;
+        const recipients = [];
+        selectedRecipients.forEach(entity => recipients.push(entity.id));
+        return recipients;
+    }
+
+    private getEntitiesAllowedTorespond(recipients): string[] {
+        let entitiesAllowedToRespond = [];
+        if (this.processesService.getProcess(this.selectedProcessId).states[this.selectedStateId].response) {
+            const defaultEntityAllowedToRespond = [];
+            recipients.forEach(entity => defaultEntityAllowedToRespond.push(entity));
+
+            entitiesAllowedToRespond = (!!this.specificInformation.card.entitiesAllowedToRespond)
+                                        ? this.specificInformation.card.entitiesAllowedToRespond
+                                        : defaultEntityAllowedToRespond;
+        }
+        return entitiesAllowedToRespond;
+    }
+
+    private getProcessInstanceId(): string {
+        let processInstanceId;
+        if (this.editCardMode) processInstanceId = this.cardToEdit.card.processInstanceId;
+        else processInstanceId = Guid.create().toString();
+        return processInstanceId;
+    }
+
+    private getSeverity() {
+        let severity;
+        if (this.severityVisible) {
+            severity = this.severityForm.value['severity'];
+        } else {
+            severity = (this.specificInformation.card.severity !== undefined)
+                        ? this.specificInformation.card.severity
+                        : Severity.INFORMATION;
+        }
+        return severity;
+    }
+
+    private getValueOrNull(value) {
+        return (value !== undefined) ? value : null;
+    }
+
+    private getTimeSpans(specificInformation, startDate, endDate): TimeSpan[] {
+        let timeSpans = [];
+        if (!!specificInformation.viewCardInAgenda) {
+            if (!!specificInformation.recurrence) timeSpans = [new TimeSpan(startDate, endDate, specificInformation.recurrence)];
+            else timeSpans = [new TimeSpan(startDate, endDate)];
+        }
+        return timeSpans;
+    }
+
+
+    private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
+        this.store.dispatch(new AlertMessage({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}}));
+    }
+
+    public getEntityName(id: string): string {
+        if (this.useDescriptionFieldForEntityList) return this.entitiesService.getEntities().find(entity => entity.id === id).description;
+        else return this.entitiesService.getEntities().find(entity => entity.id === id).name;
+    }
+
+    public getChildCard(childCard) {
+        const cardState = this.processesService.getProcess(this.selectedProcessId).states[this.selectedStateId]
+
+        return {
+            id: null,
+            uid: null,
+            publisher: this.card.publisher,
+            publisherType: this.card.publisherType,
+            processVersion: this.card.processVersion,
+            process: this.card.process,
+            processInstanceId: `${this.card.processInstanceId}_${this.card.publisher}`,
+            publishDate: this.card.publishDate,
+            state: childCard.responseState ? childCard.responseState : cardState.response.state,
+            startDate: this.card.startDate,
+            endDate: this.card.endDate,
+            severity: Severity.INFORMATION,
+            entityRecipients: this.card.entityRecipients,
+            userRecipients: this.card.userRecipients,
+            groupRecipients: this.card.groupRecipients,
+            externalRecipients: cardState.response.externalRecipients,
+            title: childCard.title,
+            summary: childCard.summary,
+            data: childCard.data,
+            parentCardId: this.card.id,
+            initialParentCardUid: this.card.uid,
+            hasBeenRead: false,
+            hasBeenAcknowledged: false, 
+            hasChildCardFromCurrentUserEntity: false
+        }
+    }
+
+    public confirm(): void {
         this.displayPreview = false;
         this.displaySendingCardInProgress = true;
 
         // Exclude card from sound notifications before publishing to avoid synchronization problems
         this.soundNotificationService.lastSentCard(this.card.process + '.' + this.card.processInstanceId);
+        const selectedProcess = this.processesService.getProcess(this.selectedProcessId);
 
+        let childCard = null;
+
+        if (!!this.specificInformation.childCard && this.userPermissionsService.isUserEnabledToRespond(this.userService.getCurrentUserWithPerimeters(),
+                        this.card, selectedProcess)) {
+            childCard = this.specificInformation.childCard;
+        }
+        
         this.cardService.postCard(fromCardToCardForPublishing(this.card))
             .subscribe(
                 resp => {
                     if (resp.status !== 201) {
-                        const msg = (!! resp.message ? resp.message : '');
-                        const error = (!! resp.error ? resp.error : '');
+                        const msg = (!!resp.message ? resp.message : '');
+                        const error = (!!resp.error ? resp.error : '');
                         console.log('Impossible to send card , message from service : ', msg, '. Error message : ', error);
                         this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
                     } else {
-                        this.displayMessage('userCard.cardSendWithNoError', null, MessageLevel.INFO);
+                        if (!!childCard) {
+                           this.sendAutomatedResponse(this.getChildCard(childCard), resp.body);
+                        } else 
+                            this.displayMessage('userCard.cardSendWithNoError', null, MessageLevel.INFO);
                     }
 
-                    this.modal.dismiss('Close');
+                    this.userCardModal.dismiss('Close');
                 },
                 err => {
                     console.error('Error when sending card :', err);
                     this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
+                    this.displaySendingCardInProgress = false;
                 }
             );
     }
 
-    cancel(): void {
-        this.modal.close();
+    sendAutomatedResponse(responseCard, cardCreationReport: CardCreationReportData) {
+
+        const automatedResponseCard = {...fromCardToCardForPublishing(responseCard), 
+            parentCardId: cardCreationReport.id,
+            initialParentCardUid: cardCreationReport.uid
+        }
+
+        this.cardService.postCard(automatedResponseCard)
+        .subscribe(
+            resp => {
+                if (resp.status !== 201) {
+                    const msg = (!!resp.message ? resp.message : '');
+                    const error = (!!resp.error ? resp.error : '');
+                    console.log('Impossible to send child card , message from service : ', msg, '. Error message : ', error);
+                    this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
+                } else {
+                        this.displayMessage('userCard.cardSendWithNoError', null, MessageLevel.INFO);
+                }
+
+                this.userCardModal.dismiss('Close');
+            },
+            err => {
+                console.error('Error when sending child card :', err);
+                this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
+                this.displaySendingCardInProgress = false;
+            }
+        );
     }
 
-    decline(): void {
-       this.displayPreview = false;
+    public cancel(): void {
+        this.userCardModal.close();
     }
 
-    sendAnotherUserCard() {
-        this.userCardTemplate = '';
-        this.card = null;
-        this.editCardMode = false;
-        this.cardToEdit = null;
-        this.selectedRecipients = [];
+    public decline(): void {
+        this.displayPreview = false;
     }
+
 
 }

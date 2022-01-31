@@ -52,7 +52,8 @@
     "exportToExcel": "Exporter les données",
     "resultsNumber":"Nombre de résultats",
     "noProcessStateAvailable": "Aucun processus/état disponible",
-    "endDateBeforeStartDate": "La date de fin doit être postérieure à la date de début"
+    "endDateBeforeStartDate": "La date de fin doit être postérieure à la date de début",
+    "featureNotConfigured": "Fonctionnalité non configurée"
   },
   "global":{
     "connectionLost":"Connexion perdue",
@@ -76,7 +77,8 @@
     "usercard": "Création de cartes",
     "switchToNightMode": "Mode nuit",
     "switchToDayMode": "Mode jour",
-    "realTimeUsers": "Utilisateurs temps réel"
+    "realTimeUsers": "Utilisateurs temps réel",
+    "externalDevicesConfiguration": "Configuration des périphériques externes"
   },
   "timeline": {
     "hideTimeline" : "Masquer la timeline",
@@ -309,11 +311,13 @@
         "name": "Nom",
         "parents": "Entités parentes",
         "description": "Description",
+        "labels": "Étiquettes",
         "entityAllowedToSendCard": "Envoi de carte autorisé",
         "confirmDelete": "Voulez-vous vraiment supprimer l'entité",
         "add":"Ajouter une nouvelle entité",
         "true": "Oui",
-        "false": "Non"
+        "false": "Non",
+        "addLabel": "Ajouter une étiquette"
       },
       "perimeter": {
         "id": "Id",
@@ -399,6 +403,23 @@
   },
   "realTimeUsers": {
     "connected": "Connecté",
-    "disconnected": "Déconnecté"
+    "disconnected": "Déconnecté",
+    "selectScreenText": "Sélectionner un écran",
+    "realTimeScreen": "Ecran temps réel"
+  },
+  "externalDevicesConfiguration": {
+    "input": {
+      "selectUserText": "Sélectionner un utilisateur",
+      "selectDeviceText": "Sélectionner un périphérique",
+      "add": "Ajouter une nouvelle configuration",
+      "edit": "Modifier la configuration",
+      "confirm":"Confirmez...",
+      "confirmDelete": "Voulez-vous vraiment supprimer la configuration pour l'utilisateur",
+      "allUsersConfigured": "Tous les périphériques des utilisateurs sont déjà configurés"
+    },
+    "userLogin": "Identifiant utilisateur",
+    "externalDeviceId": "Périphérique",
+    "edit": "Editer",
+    "delete": "Supprimer"
   }
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -35,7 +35,7 @@ describe ('Core menu configuration tests',function () {
 
     const allMenuItems = navbarMenuItems.concat(userMenuItems);
 
-    const users = ['admin','operator1'];
+    const users = ['admin','operator1_fr'];
 
     //TODO Check collapsed navbar as well
 
@@ -166,9 +166,9 @@ describe ('Core menu configuration tests',function () {
 
         })
 
-        it('Menu should be not be visible for operator1', ()=>{
+        it('Menu should be not be visible for operator1_fr', ()=>{
 
-            cy.loginOpFab('operator1','test');
+            cy.loginOpFab('operator1_fr','test');
 
             allMenuItems.forEach((item) => {
                 cy.updateCoreMenuInConf(item.menu_id,"visible",true);
@@ -220,9 +220,9 @@ describe ('Core menu configuration tests',function () {
 
         })
 
-        it('Tests with operator1', ()=>{
+        it('Tests with operator1_fr', ()=>{
 
-            cy.loginOpFab('operator1','test');
+            cy.loginOpFab('operator1_fr','test');
 
             cy.log('Testing visible: true and showOnlyForGroups: []')
             cy.updateCoreMenuInConf(item.menu_id,"visible",true);

@@ -52,7 +52,8 @@
     "exportToExcel": "Export data",
     "resultsNumber":"Results number",
     "noProcessStateAvailable": "No process/state available",
-    "endDateBeforeStartDate": "End date must be after start date"
+    "endDateBeforeStartDate": "End date must be after start date",
+    "featureNotConfigured": "Feature not configured"
   },
   "global":{
     "connectionLost":"Connection lost",
@@ -76,7 +77,8 @@
     "usercard": "Card Creation",
     "switchToNightMode": "Night mode",
     "switchToDayMode": "Day mode",
-    "realTimeUsers": "Real time users"
+    "realTimeUsers": "Real time users",
+    "externalDevicesConfiguration": "External devices configuration"
   },
   "timeline": {
     "hideTimeline" : "Hide Timeline",
@@ -309,11 +311,13 @@
         "name": "Name",
         "parents": "Parent Entities",
         "description": "Description",
+        "labels": "Labels",
         "entityAllowedToSendCard": "Card sending allowed",
         "confirmDelete": "Do you really want to delete entity",
         "add": "Add new entity",
         "true": "Yes",
-        "false": "No"
+        "false": "No",
+        "addLabel": "Add label"
       },
       "perimeter": {
         "id": "Id",
@@ -399,6 +403,23 @@
   },
   "realTimeUsers": {
     "connected": "Connected",
-    "disconnected": "Disconnected"
+    "disconnected": "Disconnected",
+    "selectScreenText": "Select a screen",
+    "realTimeScreen": "Real time screen"
+  },
+  "externalDevicesConfiguration": {
+    "input": {
+      "selectUserText": "Select user",
+      "selectDeviceText": "Select device",
+      "add": "Add new user device configuration",
+      "edit": "Edit user device configuration",
+      "confirm": "Please confirm",
+      "confirmDelete": "Do you really want to delete device configuration for user",
+      "allUsersConfigured": "All users devices are already configured"
+    },
+    "userLogin": "User login",
+    "externalDeviceId": "Device",
+    "edit": "Edit",
+    "delete": "Delete"
   }
 }

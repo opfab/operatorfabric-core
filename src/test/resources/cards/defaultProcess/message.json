@@ -1,5 +1,5 @@
 {
-	"publisher" : "ENTITY1",
+	"publisher" : "ENTITY1_FR",
 	"publisherType": "ENTITY",
 	"representative": "publisher_test",
 	"representativeType": "EXTERNAL",
@@ -10,7 +10,7 @@
 	"tags":["tag1"],
 	"groupRecipients": ["Dispatcher","Planner"],
 	"severity" : "INFORMATION",
-	"entitiesAllowedToEdit": ["ENTITY1", "ENTITY2"],
+	"entitiesAllowedToEdit": ["ENTITY1_FR", "ENTITY2_FR"],
 	"startDate" : ${current_date_in_milliseconds_from_epoch_plus_2hours},
 	"endDate" : ${current_date_in_milliseconds_from_epoch_plus_8hours} ,
 	"summary" : {"key" : "message.summary"},

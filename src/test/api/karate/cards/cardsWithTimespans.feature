@@ -2,7 +2,7 @@ Feature: Cards with timespans
 
   Background:
 
-    * def signIn = callonce read('../common/getToken.feature') { username: 'operator1'}
+    * def signIn = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authToken = signIn.authToken
     * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authTokenAdmin = signInAdmin.authToken
@@ -12,7 +12,7 @@ Feature: Cards with timespans
     * def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "processTimeSpan",
@@ -88,7 +88,7 @@ Feature: Cards with timespans
 
   Scenario: Delete the card
 
-#get card with user operator1
+#get card with user operator1_fr
     Given url opfabUrl + 'cards/cards/api_test.processTimeSpan'
     And header Authorization = 'Bearer ' + authToken
     When method get
@@ -119,7 +119,7 @@ Scenario: When post a card with no timeZone in timespan recurrence , it set the 
     * def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "processTimeSpan",
@@ -150,7 +150,7 @@ Scenario: When post a card with no timeZone in timespan recurrence , it set the 
     Then status 201
 
 
-#get card with user operator1
+#get card with user operator1_fr
     Given url opfabUrl + 'cards/cards/api_test.processTimeSpan'
     And header Authorization = 'Bearer ' + authToken
     When method get
@@ -174,7 +174,7 @@ Scenario: When post a card with no timeZone in timespan recurrence , it set the 
     * def card =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "processTimeSpan",

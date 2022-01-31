@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,20 +22,16 @@ import {GroupCellRendererComponent} from '../cell-renderers/group-cell-renderer.
 import {AdminItemType, SharingService} from '../../services/sharing.service';
 import {takeUntil} from 'rxjs/operators';
 import {StateRightsCellRendererComponent} from '../cell-renderers/state-rights-cell-renderer.component';
-import {ProcessesService} from "@ofServices/processes.service";
-import {Process} from "@ofModel/processes.model";
-import {GroupsService} from "@ofServices/groups.service";
-import {Group} from "@ofModel/group.model";
-import {Entity} from "@ofModel/entity.model";
-import {EntitiesService} from "@ofServices/entities.service";
+import {ProcessesService} from '@ofServices/processes.service';
+import {Process} from '@ofModel/processes.model';
+import {GroupsService} from '@ofServices/groups.service';
+import {Group} from '@ofModel/group.model';
+import {Entity} from '@ofModel/entity.model';
+import {EntitiesService} from '@ofServices/entities.service';
 
 @Directive()
 @Injectable()
 export abstract class AdminTableDirective implements OnInit, OnDestroy {
-
-  processesDefinition: Process[];
-  groupsDefinition: Group[];
-  entitiesDefinition: Entity[];
 
   constructor(
       protected translateService: TranslateService,
@@ -81,7 +77,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         },
         'groupsColumn': {
           sortable: true,
-          filter: "agTextColumnFilter",
+          filter: 'agTextColumnFilter',
           filterParams: {
             valueGetter: params => {
               let text = '';
@@ -98,7 +94,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         },
         'entitiesColumn': {
           sortable: true,
-          filter: "agTextColumnFilter",
+          filter: 'agTextColumnFilter',
           filterParams: {
             valueGetter: params => {
               let text = '';
@@ -115,7 +111,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         },
         'entityAllowedToSendCardColumn': {
           sortable: true,
-          filter: "agTextColumnFilter",
+          filter: 'agTextColumnFilter',
           filterParams: {
             valueGetter: params => {
               return params.data.entityAllowedToSendCard ? this.translateService.instant('admin.input.entity.true')
@@ -128,7 +124,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         },
         'parentsColumn': {
           sortable: true,
-          filter: "agTextColumnFilter",
+          filter: 'agTextColumnFilter',
           filterParams: {
             valueGetter: params => {
               let text = '';
@@ -145,12 +141,15 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         },
         'stateRightsColumn': {
           sortable: false,
-          filter: "agTextColumnFilter",
+          filter: 'agTextColumnFilter',
           filterParams: {
             valueGetter: params => {
               const currentProcessDef = this.processesDefinition.filter(processDef => processDef.id === params.data.process)[0];
               let text = '';
-              params.data.stateRights.forEach(stateRight => text += (currentProcessDef.states[stateRight.state].name + ' '));
+              params.data.stateRights.forEach(stateRight => {
+                if (!!currentProcessDef.states[stateRight.state])
+                  text += (currentProcessDef.states[stateRight.state].name + ' ');
+              });
               return text;
             }
           },
@@ -170,7 +169,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
       headerHeight: 70,
       suppressPaginationPanel: true,
       suppressHorizontalScroll: true,
-      popupParent: document.querySelector("body")
+      popupParent: document.querySelector('body')
     };
     // Defining a custom cellRenderer was necessary (instead of using onCellClicked & an inline cellRenderer) because of
     // the need to call a method from the parent component
@@ -180,6 +179,10 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     backdrop: 'static', // Modal shouldn't close even if we click outside it
     size: 'lg'
   };
+
+  processesDefinition: Process[];
+  groupsDefinition: Group[];
+  entitiesDefinition: Entity[];
 
   unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -202,14 +205,13 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
   public gridApi;
   public rowData: any[];
 
-  public page: number = 1;
+  public page = 1;
 
   protected i18NPrefix = 'admin.input.';
   protected crudService: CrudService;
 
   ngOnInit() {
     this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.tableType);
-    this.refreshData();
   }
 
   public localizeHeader(parameters: ICellRendererParams): string {
@@ -235,6 +237,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         });
     this.groupsDefinition = this.groupsService.getGroups();
     this.entitiesDefinition = this.entitiesService.getEntities();
+    this.refreshData();
   }
 
   /** This function generates the ag-grid `ColumnDefs` for the grid from a list of fields
@@ -282,7 +285,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     });
 
     const deleteActionCellClassRules = {
-      "action-cell-delete-admin": params =>
+      'action-cell-delete-admin': params =>
           (params.context.componentParent.tableType === AdminItemType.USER && params.data.login.toLowerCase() === 'admin') ||
           (params.context.componentParent.tableType === AdminItemType.GROUP && params.data.id.toLowerCase() === 'admin')
     };
@@ -303,7 +306,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     return columnDefs;
   }
 
-  translateValue(params: ValueFormatterParams) : string {
+  translateValue(params: ValueFormatterParams): string {
     return params.context.componentParent.translateService.instant(params.context.componentParent.i18NPrefix + params.context.componentParent.tableType + '.' + params.value);
   }
 
@@ -371,12 +374,12 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
       // previous page
       if (this.gridApi.paginationGetTotalPages() < this.page)
         this.page--;
-      this.gridApi.paginationGoToPage(this.page-1);
+      this.gridApi.paginationGoToPage(this.page - 1);
     });
   }
 
   updateResultPage(currentPage): void {
-    this.gridApi.paginationGoToPage(currentPage-1);
+    this.gridApi.paginationGoToPage(currentPage - 1);
     this.page = currentPage;
   }
 

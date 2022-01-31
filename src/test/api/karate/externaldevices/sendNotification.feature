@@ -2,12 +2,12 @@ Feature: Device Configuration Management
 
   Background:
 
-    # Get operator1
-    * def signInAsTSO1 = callonce read('../common/getToken.feature') { username: 'operator1'}
+    # Get operator1_fr
+    * def signInAsTSO1 = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO1 = signInAsTSO1.authToken
 
-    # Get operator4 (no external device is configured for this user)
-    * def signInAsTSO4 = callonce read('../common/getToken.feature') { username: 'operator4'}
+    # Get itsupervisor1 (no external device is configured for this user)
+    * def signInAsTSO4 = callonce read('../common/getToken.feature') { username: 'itsupervisor1'}
     * def authTokenAsTSO4 = signInAsTSO4.authToken
 
     * def notificationEndpoint = 'externaldevices/notifications'

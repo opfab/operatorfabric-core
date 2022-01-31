@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,12 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, forwardRef, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, forwardRef, Input, OnDestroy, Output} from '@angular/core';
 import {ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {offSetCurrentTime} from '@ofModel/datetime-ngb.model';
+
 
 @Component({
     selector: 'of-datetime-filter',
@@ -25,18 +25,18 @@ import {offSetCurrentTime} from '@ofModel/datetime-ngb.model';
     }
     ]
 })
-export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class DatetimeFilterComponent implements ControlValueAccessor,OnDestroy {
 
     private ngUnsubscribe$ = new Subject<void>();
     @Input() labelKey: string;
     @Input() filterPath: string;
     @Input() defaultDate: NgbDateStruct;
     @Input() defaultTime: { hour: number, minute: number };
-    // no "unit of time enforcement", so be careful using offset
-    @Input() offset: { amount: number, unit: string }[];
     @Output() change = new EventEmitter();
     @Input() minDate: {year: number, month: number, day: number};
     @Input() maxDate: {year: number, month: number, day: number};
+
+    previousDateValue = null;
 
     disabled = true;
     time = {hour: 0, minute: 0};
@@ -54,35 +54,21 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
 
     }
 
-    ngOnInit() {
-        if (!!this.offset) {
-            const converted = offSetCurrentTime(this.offset);
-            this.defaultDate = converted.date;
-            this.defaultTime = converted.time;
-            this.disabled = false;
-            this.dateInput.setValue(this.defaultDate);
-            this.timeInput.setValue(this.defaultTime);
-
-            this.dateInput.updateValueAndValidity({onlySelf: false, emitEvent: false});
-            this.datetimeForm.updateValueAndValidity({onlySelf: false, emitEvent: true});
-
-        }
-    }
 
     ngOnDestroy() {
         this.ngUnsubscribe$.next();
         this.ngUnsubscribe$.complete();
     }
 
-    /* istanbul ignore next */
+ 
     public onTouched: () => void = () => {
     }
 
     // Method call when archive-filter.component.ts set value to null
     writeValue(val: any): void {
-        if (!this.offset) {
-            this.disabled = true;
-        }
+ 
+        this.disabled = true;
+
         if (!!val) {
             this.disabled = false;
             this.datetimeForm.setValue(val, {emitEvent: false});
@@ -109,7 +95,14 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
             if (val) {
                 this.disabled = false;
             }
-            this.change.emit();
+            // we check date value really change
+            // because when we change minDate or maxDate it emit a "valueChange" 
+            // this was causing an infinite loop in usercard-dates-form.component.ts 
+            if (val!==this.previousDateValue) 
+                {
+                this.previousDateValue = val;
+                this.change.emit();
+                }
         });
         this.timeInput.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(val => {
             if (val) {

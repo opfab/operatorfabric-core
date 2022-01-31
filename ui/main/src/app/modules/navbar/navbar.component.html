@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -138,7 +138,12 @@
         <div translate> menu.admin </div>
       </a>
     </div>
-
+    <div class="opfab-right-menu-item" *ngIf="(displayExternalDevicesConfiguration)">
+      <a id="opfab-navbar-right-menu-externaldevicesconfiguration" class="opfab-right-menu-link"  routerLink="/externaldevicesconfiguration" routerLinkActive #rla="routerLinkActive">
+        <div class="opfab-menu-icon opfab-menu-icon-admin"></div>
+        <div translate> menu.externalDevicesConfiguration </div>
+      </a>
+    </div>
     <div class="opfab-right-menu-item" *ngIf="(displayRealTimeUsers)">
       <a id="opfab-navbar-right-menu-realtimeusers" class="opfab-right-menu-link"  routerLink="/realtimeusers" routerLinkActive #rla="routerLinkActive">
         <div class="opfab-menu-icon opfab-menu-icon-admin"></div>
@@ -208,7 +213,7 @@
   </div>
   <div class="modal-body">
       <div>
-          <of-usercard [modal]="modal"> </of-usercard>
+          <of-usercard [userCardModal]="modal"> </of-usercard>
       </div>
   </div>
 </ng-template>

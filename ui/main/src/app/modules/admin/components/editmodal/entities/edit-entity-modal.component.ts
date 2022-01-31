@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,6 +31,7 @@ export class EditEntityModalComponent implements OnInit {
     name: new FormControl('', [Validators.required]),
     description: new FormControl(''),
     entityAllowedToSendCard: new FormControl(false),
+    labels: new FormControl([]),
     parents: new FormControl([]),
   });
 
@@ -41,6 +42,7 @@ export class EditEntityModalComponent implements OnInit {
   entitiesDropdownList = [];
   selectedEntities = [];
   entitiesDropdownSettings = {};
+  labelsPlaceholder: string;
 
   private crudService: CrudService;
 
@@ -68,6 +70,12 @@ export class EditEntityModalComponent implements OnInit {
               enableSearchFilter: true
           };
     });
+
+    this.translate.get('admin.input.entity.addLabel')
+        .subscribe(translation => {
+          this.labelsPlaceholder = translation;
+        });
+
 
     // Initialize value lists for Entities 
     this.entities = this.entitiesService.getEntities();
@@ -106,23 +114,27 @@ export class EditEntityModalComponent implements OnInit {
   }
 
   get id() {
-    return this.entityForm.get('id') as FormControl;
+    return this.entityForm.get('id');
   }
 
   get name() {
-    return this.entityForm.get('name') as FormControl;
+    return this.entityForm.get('name');
   }
 
   get description() {
-    return this.entityForm.get('description') as FormControl;
+    return this.entityForm.get('description');
   }
 
   get entityAllowedToSendCard() {
-    return this.entityForm.get('entityAllowedToSendCard') as FormControl;
+    return this.entityForm.get('entityAllowedToSendCard');
+  }
+
+  get labels() {
+    return this.entityForm.get('labels');
   }
 
   get parents() {
-    return this.entityForm.get('parents') as FormControl;
+    return this.entityForm.get('parents');
   }
 
 

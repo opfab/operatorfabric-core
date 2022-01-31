@@ -1,4 +1,4 @@
-FROM nginx:1.21.5-alpine
+FROM nginx:1.21.6-alpine
 VOLUME /tmp
 ARG http_proxy
 ARG https_proxy

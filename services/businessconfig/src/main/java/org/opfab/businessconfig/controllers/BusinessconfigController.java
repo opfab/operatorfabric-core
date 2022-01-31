@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -43,6 +43,7 @@ import java.util.List;
 public class BusinessconfigController implements BusinessconfigApi {
 
     public static final String UNABLE_TO_LOAD_FILE_MSG = "Unable to load submitted file";
+    public static final String LOCATION = "Location";
     private ProcessesService processService;
     private MonitoringService monitoringService;
 
@@ -112,7 +113,7 @@ public class BusinessconfigController implements BusinessconfigApi {
     public Process uploadBundle(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file) {
         try (InputStream is = file.getInputStream()) {
             Process result = processService.updateProcess(is);
-            response.addHeader("Location", request.getContextPath() + "/businessconfig/processes/" + result.getId());
+            response.addHeader(LOCATION, request.getContextPath() + "/businessconfig/processes/" + result.getId());
             response.setStatus(201);
             return result;
         } catch (FileNotFoundException e) {
@@ -140,32 +141,7 @@ public class BusinessconfigController implements BusinessconfigApi {
 
     @Override
     public Void uploadProcessgroups(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file) {
-        try (InputStream is = file.getInputStream()) {
-            processService.updateProcessGroupsFile(is);
-            response.addHeader("Location", request.getContextPath() + "/businessconfig/processgroups");
-            response.setStatus(201);
-            return null;
-        } catch (FileNotFoundException e) {
-            log.error("File not found while loading processgroups file", e);
-            throw new ApiErrorException(
-                    ApiError.builder()
-                            .status(HttpStatus.BAD_REQUEST)
-                            .message("Incorrect inner file structure")
-                            .error(e.getMessage())
-                            .build(),
-                    UNABLE_TO_LOAD_FILE_MSG
-                    , e);
-        } catch (IOException e) {
-            log.error("IOException while loading processgroups file", e);
-            throw new ApiErrorException(
-                    ApiError.builder()
-                            .status(HttpStatus.BAD_REQUEST)
-                            .message("unable to load submitted file")
-                            .error(e.getMessage())
-                            .build(),
-                    UNABLE_TO_LOAD_FILE_MSG
-                    , e);
-        }
+        return uploadFile(request, response, file, "processgroups");
     }
 
     @Override
@@ -265,5 +241,61 @@ public class BusinessconfigController implements BusinessconfigApi {
         return null;
     }
 
+    public Void uploadFile(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file, String endPointName) {
+        try (InputStream is = file.getInputStream()) {
+            if (endPointName.equals("processgroups"))
+                processService.updateProcessGroupsFile(is);
+            else
+                processService.updateRealTimeScreensFile(is);
+
+            response.addHeader(LOCATION, request.getContextPath() + "/businessconfig/" + endPointName);
+            response.setStatus(201);
+            return null;
+        } catch (FileNotFoundException e) {
+            log.error("File not found while loading " + endPointName + " file", e);
+            throw new ApiErrorException(
+                    ApiError.builder()
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message("Incorrect inner file structure")
+                            .error(e.getMessage())
+                            .build(),
+                    UNABLE_TO_LOAD_FILE_MSG
+                    , e);
+        } catch (IOException e) {
+            log.error("IOException while loading " + endPointName + " file", e);
+            throw new ApiErrorException(
+                    ApiError.builder()
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message("unable to load submitted file")
+                            .error(e.getMessage())
+                            .build(),
+                    UNABLE_TO_LOAD_FILE_MSG
+                    , e);
+        }
+    }
+
+    @Override
+    public Void uploadRealTimeScreens(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file) {
+        return uploadFile(request, response, file, "realtimescreens");
+    }
+
+    @Override
+    public RealTimeScreens getRealTimeScreens(HttpServletRequest request, HttpServletResponse response) {
+        return processService.getRealTimeScreensCache();
+    }
+
+    @Override
+    public List<Process>  getProcessHistory(HttpServletRequest request, HttpServletResponse response, String processId) {
+        List<Process> history = processService.listProcessHistory(processId);
+                
+        if (history.isEmpty()) {
+            throw new ApiErrorException(ApiError.builder()
+                    .status(HttpStatus.NOT_FOUND)
+                    .message(String.format("History for process with id %s was not found", processId))
+                    .build());
+        }
+        return history;
+    }
+    
 
 }

@@ -3,7 +3,7 @@ Feature: Cards
 
 Background: 
 
-  * def signIn = callonce read('../common/getToken.feature') { username: 'operator1'}
+  * def signIn = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
   * def authToken = signIn.authToken
 
 Scenario: Post a big Card

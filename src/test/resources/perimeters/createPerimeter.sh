@@ -19,7 +19,7 @@ then
 fi
 if [ -z $1 ]
 then
-    echo "Usage createPerimeter perimeter_name opfab_url"
+    echo "Usage : createPerimeter perimeter_name opfab_url"
 else
     source ../getToken.sh "admin" $url
     echo "delete perimeter $1 on $url if existing "

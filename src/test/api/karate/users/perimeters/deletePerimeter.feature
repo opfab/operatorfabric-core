@@ -1,10 +1,10 @@
 Feature: deletePerimeter
 
   Background:
-   #Getting token for admin and operator1 user calling getToken.feature
+   #Getting token for admin and operator1_fr user calling getToken.feature
     * def signIn = callonce read('../../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = callonce read('../../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
 
@@ -56,7 +56,7 @@ Feature: deletePerimeter
     Then status 401
 
 
-  Scenario: delete perimeter with no admin authentication (with operator1 authentication), expected response 403
+  Scenario: delete perimeter with no admin authentication (with operator1_fr authentication), expected response 403
     Given url opfabUrl + 'users/perimeters/' + perimeterForEndpointDeletePerimeter.id
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method delete

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,7 +25,7 @@ import {UserService} from '@ofServices/user.service';
 import {User} from '@ofModel/user.model';
 import {EntitiesService} from '@ofServices/entities.service';
 import {AppService, PageType} from "@ofServices/app.service";
-
+import {UserPermissionsService} from '@ofServices/user-permissions.service';
 
 declare const templateGateway: any;
 
@@ -39,6 +39,7 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
     @Input() card: Card;
     @Input() screenSize: string = 'md';
     @Input() displayContext: any;
+    @Input() childCards: Card[] = [];
 
     public active = false;
     unsubscribe$: Subject<void> = new Subject<void>();
@@ -54,6 +55,7 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
     constructor(private element: ElementRef, private businessconfigService: ProcessesService,
                 private handlebars: HandlebarsService, private sanitizer: DomSanitizer,
                 private store: Store<AppState>,private userService: UserService, private entitiesService: EntitiesService,
+                private userPermissionsService: UserPermissionsService,
                 private _appService: AppService) {
 
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
@@ -138,6 +140,7 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
         templateGateway.displayContext =  this.displayContext;
         templateGateway.userMemberOfAnEntityRequiredToRespond = this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
 
+        templateGateway.childCards = this.childCards;
 
         this.businessconfigService.queryProcessFromCard(this.card).pipe(
             takeUntil(this.unsubscribe$),
@@ -152,6 +155,9 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
                     setTimeout(() => { // wait for DOM rendering
                         this.reinsertScripts();
                         templateGateway.setScreenSize(this.screenSize);
+                        templateGateway.applyChildCards();
+
+                        setTimeout(() => templateGateway.onTemplateRenderingComplete(), 10);
                     }, 10);
                 },
                 error: (error) => {

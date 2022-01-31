@@ -1,0 +1,62 @@
+{
+  "realTimeScreens": [
+    {
+      "screenName": "All Control Centers",
+      "screenColumns": [
+        {
+          "entitiesGroups": [
+            {
+              "name": "French Control Centers",
+              "entities": [
+                "ENTITY1_FR",
+                "ENTITY2_FR",
+                "ENTITY3_FR",
+                "ENTITY4_FR"
+              ],
+              "groups": [
+                "Dispatcher",
+                "Planner"
+              ]
+            },
+            {
+              "name": "Italian Control Centers",
+              "entities": [
+                "ENTITY1_IT",
+                "ENTITY2_IT",
+                "ENTITY3_IT"
+              ],
+              "groups": [
+                "Dispatcher",
+                "Planner"
+              ]
+            },
+            {
+              "name": "Dutch Control Centers",
+              "entities": [
+                "ENTITY1_NL",
+                "ENTITY2_NL"
+              ],
+              "groups": [
+                "Dispatcher",
+                "Planner"
+              ]
+            }
+          ]
+        },
+        {
+          "entitiesGroups": [
+            {
+              "name": "Central Supervision Centers",
+              "entities": [
+                "IT_SUPERVISOR_ENTITY"
+              ],
+              "groups": [
+                "Supervisor"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

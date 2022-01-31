@@ -86,7 +86,7 @@ describe('ReminderList', () => {
   it('should remind if timespan start date is now and secondsBeforeTimeSpanForReminder = 0 ', () => {
     const testCard: Card = getOneRandomCard();
     testCard.timeSpans = [new TimeSpan(new Date().valueOf())];
-    testCard.secondsBeforeTimeSpanForReminder = 0,
+    testCard.secondsBeforeTimeSpanForReminder = 0;
     remindList.addAReminder(testCard);
     expect(remindList.hasAReminder(testCard.id)).toBeTruthy();
     const cardsToRemind: Array<string> = remindList.getCardIdsToRemindNow();

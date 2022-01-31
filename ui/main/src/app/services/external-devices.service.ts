@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,9 +11,9 @@ import {environment} from '@env/environment';
 import {HttpClient} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
-import {Notification, UserConfiguration} from "@ofModel/external-devices.model";
+import {Device, Notification, UserConfiguration} from "@ofModel/external-devices.model";
 import {Injectable} from '@angular/core';
-import {ErrorService} from "@ofServices/error-service";
+import {ErrorService} from '@ofServices/error-service';
 
 @Injectable({
     providedIn: 'root'
@@ -31,8 +31,8 @@ export class ExternalDevicesService extends ErrorService {
     constructor(private httpClient: HttpClient) {
         super();
         this.externalDevicesUrl = `${environment.urls.externalDevices}`;
-        this.notificationsUrl = this.externalDevicesUrl+'/notifications';
-        this.configurationsUrl = this.externalDevicesUrl+'/configurations';
+        this.notificationsUrl = this.externalDevicesUrl + '/notifications';
+        this.configurationsUrl = this.externalDevicesUrl + '/configurations';
     }
 
     sendNotification(notification: Notification): Observable<any> {
@@ -45,4 +45,24 @@ export class ExternalDevicesService extends ErrorService {
         return this.httpClient.get<UserConfiguration>(`${this.configurationsUrl}/users/${login}`);
     }
 
+    getAllUserConfigurations(): Observable<UserConfiguration[]> {
+        return this.httpClient.get<UserConfiguration[]>(`${this.configurationsUrl}/users`);
+    }
+
+    getAllDevices(): Observable<Device[]> {
+        return this.httpClient.get<Device[]>(`${this.configurationsUrl}/devices`);
+    }
+
+    updateUserConfiguration(userconfigData: UserConfiguration): Observable<UserConfiguration> {
+        return this.httpClient.post<UserConfiguration>(`${this.configurationsUrl}/users`, userconfigData).pipe(
+          catchError((error: Response) => this.handleError(error))
+        );
+    }
+
+    deleteByUserLogin(login: string) {
+        const url = `${this.configurationsUrl}/users/${login}`;
+    return this.httpClient.delete(url).pipe(
+      catchError((error: Response) => this.handleError(error))
+    );
+    }
 }

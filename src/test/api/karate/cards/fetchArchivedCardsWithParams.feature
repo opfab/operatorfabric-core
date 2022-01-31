@@ -3,7 +3,7 @@ Feature: Archives
 
   Background:
 
-    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1'}
+    * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
     * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authTokenAdmin = signInAdmin.authToken
@@ -12,7 +12,7 @@ Feature: Archives
     * def card1 =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card1",
@@ -30,7 +30,7 @@ Feature: Archives
 	* def card2 =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card2",
@@ -47,7 +47,7 @@ Feature: Archives
 	* def card3 =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card3",
@@ -65,7 +65,7 @@ Feature: Archives
 	* def card4 =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card4",
@@ -83,7 +83,7 @@ Feature: Archives
 	* def card5 =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card5",
@@ -101,7 +101,7 @@ Feature: Archives
 	* def card6 =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card6",
@@ -120,7 +120,7 @@ Feature: Archives
 	* def card7 =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card7",
@@ -138,7 +138,7 @@ Feature: Archives
 	* def card8 =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card8",
@@ -156,7 +156,7 @@ Feature: Archives
 	* def card9 =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process2card9",
@@ -175,7 +175,7 @@ Feature: Archives
 	* def card10 =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"parentCardId" : "api_test.process2card9",
 	"process"  :"api_test",
@@ -194,7 +194,7 @@ Feature: Archives
     * def mycard =
 """
 {
-	"publisher" : "operator1",
+	"publisher" : "operator1_fr",
 	"processVersion" : "2",
 	"process"  :"api_test",
 	"processInstanceId" : "process10",
@@ -325,14 +325,14 @@ Feature: Archives
 
     Scenario: filter on a given publisher
 
-    Given url opfabUrl + 'cards/archives/' +'?publisher=operator1'
+    Given url opfabUrl + 'cards/archives/' +'?publisher=operator1_fr'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
     And assert response.numberOfElements == 9
 
    Scenario: without authentication
-    Given url opfabUrl + 'cards/archives/' +'?publisher=operator1'
+    Given url opfabUrl + 'cards/archives/' +'?publisher=operator1_fr'
     When method get
     Then status 401
 

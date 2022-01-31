@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,8 +12,8 @@ import {Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 import {StateRight} from '@ofModel/perimeter.model';
-import {Process} from "@ofModel/processes.model";
-import {ProcessesService} from "@ofServices/processes.service";
+import {Process} from '@ofModel/processes.model';
+import {ProcessesService} from '@ofServices/processes.service';
 
 @Component({
     selector: 'of-state-rights-cell-renderer',
@@ -37,7 +37,10 @@ export class StateRightsCellRendererComponent implements ICellRendererAngularCom
         const currentProcessDef = this.processesDefinition.filter(processDef => processDef.id === params.data.process)[0];
 
         stateRightsValues.forEach(stateRight => {
-            this._stateRightsValues.push({stateName: currentProcessDef.states[stateRight.state].name, stateRight: stateRight});
+            if (!!currentProcessDef.states[stateRight.state])
+                this._stateRightsValues.push({stateName: currentProcessDef.states[stateRight.state].name, stateRight: stateRight});
+            else
+                console.log(new Date().toISOString(), 'The state ' + stateRight.state + ' of process ' + currentProcessDef.id + ' does not exist anymore');
         });
     }
 

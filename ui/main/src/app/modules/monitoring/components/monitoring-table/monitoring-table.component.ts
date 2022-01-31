@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
 * Copyright (c) 2020, RTEi (http://www.rte-international.com)
 * See AUTHORS.txt
 * This Source Code Form is subject to the terms of the Mozilla Public
@@ -231,9 +231,12 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         this.displayedResults.forEach(line => {
 
             const entitiesNamesResponses = [];
-            line.entitiesResponses.forEach(entityId => {
+            const entitiesResponses = (!! line.requiredResponses && line.requiredResponses.length) ? line.requiredResponses : line.allowedOrRequiredResponses;
+
+            entitiesResponses.forEach(entityId => {
                 entitiesNamesResponses.push(this.entitiesService.getEntityName(entityId));
             });
+
             this.rowData.push({ severityNumber: this.mapSeverity.get(line.severity),
                                 time: this.displayTime(line.creationDateTime),
                                 title: line.titleTranslated,
@@ -246,7 +249,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                                 answer: line.answer,
                                 emitter: line.emitter,
                                 requiredResponses: line.requiredResponses,
-                                entitiesResponses: line.entitiesResponses,
+                                entitiesResponses: entitiesResponses,
                                 entitiesNamesResponses: entitiesNamesResponses,
                                 beginningOfBusinessPeriod: line.beginningOfBusinessPeriod,
                                 endOfBusinessPeriod: line.endOfBusinessPeriod });

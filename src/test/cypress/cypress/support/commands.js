@@ -51,6 +51,11 @@ Cypress.Commands.add('loadTestConf', () => {
     cy.exec('cd .. && ./resources/loadTestConf.sh '+Cypress.env('host'));
 })
 
+Cypress.Commands.add('loadRealTimeScreensConf', () => {
+    // This clears existing realtimescreens.json and loads a new one
+    cy.exec('cd ../resources/realTimeScreens && ./loadRealTimeScreens.sh realTimeScreens.json '+Cypress.env('host'));
+})
+
 Cypress.Commands.add('loadEmptyProcessGroups', () => {
     // This load a process groups file without any process group
     cy.exec('cd ../resources/processGroups && ./loadProcessGroups.sh emptyProcessGroups.json '+Cypress.env('host'));
@@ -143,3 +148,35 @@ Cypress.Commands.add('stubPlaySound', () => {
     })
 })
 
+Cypress.Commands.add('setFormDateTime', (formName, year, month, day, hours, minutes) => {
+
+    cy.get('#opfab-datepicker-' + formName).click();
+    cy.get('[aria-label="Select year"]').select(year);
+    cy.get('[aria-label="Select month"]').select(month);
+    cy.get('[aria-label*="' + day + ',"]').click();
+    cy.get('#opfab-timepicker-' + formName).find('[aria-label="Hours"]').click().type('{backspace}{backspace}' + hours);
+    cy.get('#opfab-timepicker-' + formName).find('[aria-label="Minutes"]').click().type('{backspace}{backspace}' + minutes);
+})
+
+// Count ag-grid table rows
+Cypress.Commands.add('countAgGridTableRows', (table, rowsNum) => {
+    cy.get(table).find('.ag-center-cols-container').find('.ag-row').should('have.length', rowsNum);
+
+})
+
+// Check ag-grid cell value
+Cypress.Commands.add('checkAgGridCellValue', (table, row, col, value) => {
+    cy.get(table).find('.ag-center-cols-container').find('.ag-row').eq(row).find('.ag-cell-value').eq(col).contains(value);
+})
+
+// Click on ag-grid cell
+// Specific tag should be specified in case of cell renderers 
+Cypress.Commands.add('clickAgGridCell', (table, row, col, tag) => {
+    if (!!tag) {
+        cy.get(table).find('.ag-center-cols-container').find('.ag-row').eq(row).find('.ag-cell-value').eq(col).find(tag).eq(0).click();
+    } else {
+        cy.get(table).find('.ag-center-cols-container').find('.ag-row').eq(row).find('.ag-cell-value').eq(col).click();
+
+    }
+
+})

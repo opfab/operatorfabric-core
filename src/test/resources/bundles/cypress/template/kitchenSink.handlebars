@@ -1,3 +1,10 @@
+<!-- Copyright (c) 2021-2022, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
 
 <H3> USER CONTEXT VALUES </H3>
 
@@ -14,6 +21,7 @@
 <div id="templateGatewayResults"></div>
 
 <div> screenSize : <span id="screenSize"> </span>  </div>
+<div> onTemplateRenderingComplete : <span id="templateGateway-onTemplateRenderingComplete"> </span>  </div>
 
 <H3> HANDLEBARS TEMPLATING </H3>
 
@@ -33,8 +41,8 @@ function loadData() {
     
             let templateGatewayResults = document.getElementById("templateGatewayResults");
             
-            let responses = '<div> getEntityName("ENTITY1") : <span id="templateGateway-getEntityName">';
-            responses += templateGateway.getEntityName('ENTITY1');
+            let responses = '<div> getEntityName("ENTITY1_FR") : <span id="templateGateway-getEntityName">';
+            responses += templateGateway.getEntityName('ENTITY1_FR');
             responses += '</span></div>';
 
             responses += '<div> getEntityName("unknownEntity") : <span id="templateGateway-getEntityName-unknownEntity">';
@@ -69,12 +77,12 @@ function loadData() {
               );
             responses += '</span></div>';
 
-            responses += '<div> getEntity("ENTITY1") : <span id="templateGateway-getEntity-ENTITY1">';
-            responses += templateGateway.getEntity('ENTITY1').id + ',';
-            responses += templateGateway.getEntity('ENTITY1').name + ',';
-            responses += templateGateway.getEntity('ENTITY1').description + ',';
-            responses += templateGateway.getEntity('ENTITY1').entityAllowedToSendCard + ',';
-            responses += templateGateway.getEntity('ENTITY1').parents;
+            responses += '<div> getEntity("ENTITY1_FR") : <span id="templateGateway-getEntity-ENTITY1_FR">';
+            responses += templateGateway.getEntity('ENTITY1_FR').id + ',';
+            responses += templateGateway.getEntity('ENTITY1_FR').name + ',';
+            responses += templateGateway.getEntity('ENTITY1_FR').description + ',';
+            responses += templateGateway.getEntity('ENTITY1_FR').entityAllowedToSendCard + ',';
+            responses += templateGateway.getEntity('ENTITY1_FR').parents;
             responses += '</span></div>';
 
             templateGatewayResults.innerHTML = responses;
@@ -82,6 +90,10 @@ function loadData() {
 
    templateGateway.setScreenSize =  function (size) {
             document.getElementById("screenSize").innerHTML = size;
+        };
+
+    templateGateway.onTemplateRenderingComplete =  function () {
+            document.getElementById("templateGateway-onTemplateRenderingComplete").innerHTML = "ok";
         };
 
 </script>
