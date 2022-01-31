@@ -125,6 +125,7 @@ describe('User Card ', function () {
 
       cy.get('#opfab-recipients').click();
       // Select also one of user entities as recipent
+      cy.waitDefaultTime(); // avoid detach dom error
       cy.get('#opfab-recipients').find('li').eq(1).click();
       cy.get('#opfab-recipients').click();
 
