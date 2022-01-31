@@ -47,9 +47,9 @@ describe('AuthenticationEffects', () => {
     let effects: AuthenticationEffects;
     let mockStore: SpyObj<Store<AppState>>;
     let authenticationService: SpyObj<AuthenticationService>;
-    let cardService: SpyObj<CardService>;
     let router: SpyObj<Router>;
     let configService: SpyObj<ConfigService>;
+    let cardService: SpyObj<CardService>;
 
     beforeEach(waitForAsync(() => {
         const routerSpy = createSpyObj('Router', ['navigate']);
@@ -92,9 +92,8 @@ describe('AuthenticationEffects', () => {
     beforeEach(() => {
         actions$ = TestBed.inject(Actions);
         authenticationService = injectedSpy(AuthenticationService);
-        cardService = injectedSpy(CardService);
         router = injectedSpy(Router);
-        mockStore = injectedSpy(Store) as SpyObj<Store<AppState>>;;
+        mockStore = injectedSpy(Store) as SpyObj<Store<AppState>>;
         configService = injectedSpy(ConfigService);
     });
 

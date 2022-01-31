@@ -86,6 +86,7 @@ describe('Acknowledgment  tests', function () {
         // Set feed filter to see all card and check message card is present 
         cy.get('#opfab-feed-filter-btn-filter').click();
         cy.get('#opfab-feed-filter-ack-all').click();
+        cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD 
         cy.get('#opfab-feed-filter-btn-filter').click();
 
         // Operator1 should see 6 cards in his feed

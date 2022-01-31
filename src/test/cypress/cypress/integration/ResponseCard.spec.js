@@ -70,8 +70,9 @@ describe ('Response card tests',function () {
          cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity').should('not.exist');
 
          // Respond  to the new card 
-         cy.get('#question-choice3').click();
+         
          cy.get('#opfab-card-details-btn-response').should('have.text', 'SEND RESPONSE');
+         cy.get('#question-choice3').click(); // to avoid detach dom error , check before send response and click after 
          cy.get('#opfab-card-details-btn-response').click();
          
         // See in the feed the fact that user has respond (icon)
