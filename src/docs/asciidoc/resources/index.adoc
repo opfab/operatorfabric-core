@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -37,3 +37,5 @@ include::migration_guide_to_3.0.adoc[leveloffset=+1]
 include::migration_guide_to_3.1.adoc[leveloffset=+1]
 
 include::migration_guide_to_3.2.adoc[leveloffset=+1]
+
+include::migration_guide_to_3.5.adoc[leveloffset=+1]

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 
 import { Card, Recurrence, TimeSpan } from '@ofModel/card.model';
 import { getOneRandomCard } from '@tests/helpers';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import {getNextTimeForRepeating } from './reminderUtils';
 
 
@@ -184,7 +184,6 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
 
   beforeAll(() => {
     testCard = getOneRandomCard();
-    moment.tz.setDefault('Europe/Paris');
   });
 
   beforeEach(() => {

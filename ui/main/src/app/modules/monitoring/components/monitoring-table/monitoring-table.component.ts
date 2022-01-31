@@ -11,7 +11,7 @@
 import {Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild} from '@angular/core';
 import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
 import {TimeService} from '@ofServices/time.service';
-import {Moment} from 'moment-timezone';
+import {Moment} from 'moment';
 import {TranslateService} from '@ngx-translate/core';
 import {ExportService} from '@ofServices/export.service';
 import {takeUntil} from 'rxjs/operators';

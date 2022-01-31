@@ -64,30 +64,6 @@
       ]
     }
   },
-  "i10n": {
-    "supported": {
-      "time-zones": [
-        {
-          "label": "Headquarters timezone",
-          "value": "Europe/Paris"
-        },
-        {
-          "label": "Down Under",
-          "value": "Australia/Melbourne"
-        },
-        "Europe/London",
-        "Europe/Dublin",
-        "Europe/Brussels",
-        "Europe/Berlin",
-        "Europe/Rome",
-        "Europe/Madrid",
-        "Europe/Lisbon",
-        "Europe/Amsterdam",
-        "Europe/Athens",
-        "Pacific/Samoa"
-      ]
-    }
-  },
   "i18n": {
     "supported": {
       "locales": [

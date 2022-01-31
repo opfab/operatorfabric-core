@@ -9,8 +9,7 @@
 
 
 import {NgbDate, NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
-import * as moment from 'moment-timezone';
-import {Moment} from 'moment-timezone';
+import * as moment from 'moment';
 
 export function padNumber(value: any) {
     if (isNumber(value)) {
@@ -83,7 +82,7 @@ export class DateTimeNgb {
         return result;
     }
 
-    convertToMomentOrNull(): Moment {
+    convertToMomentOrNull(): moment.Moment {
         const dateString = this.formatDateTime();
         if (!!dateString && dateString !== '' && !dateString.includes('--')) {
             return moment(dateString);

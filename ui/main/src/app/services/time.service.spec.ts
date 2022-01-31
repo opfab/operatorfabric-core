@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
 
 
 import {TestBed} from '@angular/core/testing';
@@ -24,13 +23,12 @@ describe('TimeService', () => {
     let service: TimeService;
     let httpMock: HttpTestingController;
     beforeAll(()=>{
-       moment.tz.setDefault("Europe/Paris");
        moment.locale('fr-FR');
     });
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [TimeService],
-            imports:[  HttpClientTestingModule,
+            imports: [  HttpClientTestingModule,
                         RouterTestingModule,
                         StoreModule.forRoot(appReducer)
                     ],
@@ -45,26 +43,58 @@ describe('TimeService', () => {
     })
     it('should parse', () => {
         expect(service).toBeTruthy();
-        expect(service.parseString('2019-05-24T10:25').valueOf()).toEqual(1558686300000);
+        const date = new Date();
+        date.setFullYear(2019);
+        date.setMonth(4);
+        date.setDate(24);
+        date.setHours(10);
+        date.setMinutes(25);
+        date.setSeconds(0);
+        date.setUTCMilliseconds(0);
+        expect(service.parseString('2019-05-24T10:25').valueOf()).toEqual(date.valueOf());
     });
 
     it('should format timestamp, date and moment to date time string', () => {
         moment.locale('en');
+        const date = new Date();
+        date.setFullYear(2019);
+        date.setMonth(5);
+        date.setDate(5);
+        date.setHours(10);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        date.setUTCMilliseconds(0);
         expect(service).toBeTruthy();
-        expect(service.formatDateTime(1559721634989)).toEqual('06/05/2019 10:00 AM');
-        expect(service.formatDateTime(new Date(1559721634989))).toEqual('06/05/2019 10:00 AM');
-        expect(service.formatDateTime(moment(new Date(1559721634989)))).toEqual('06/05/2019 10:00 AM');
+        expect(service.formatDateTime(date.valueOf())).toEqual('06/05/2019 10:00 AM');
+        expect(service.formatDateTime(date)).toEqual('06/05/2019 10:00 AM');
+        expect(service.formatDateTime(moment(date))).toEqual('06/05/2019 10:00 AM');
     });
 
     it('should format timestamp, date and moment to date string', () => {
         moment.locale('en');
+        const date = new Date();
+        date.setFullYear(2019);
+        date.setMonth(5);
+        date.setDate(5);
+        date.setHours(10);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        date.setUTCMilliseconds(0);
         expect(service).toBeTruthy();
-        expect(service.formatDate(1559721634989)).toEqual('06/05/2019');
-        expect(service.formatDate(new Date(1559721634989))).toEqual('06/05/2019');
-        expect(service.formatDate(moment(new Date(1559721634989)))).toEqual('06/05/2019');
+        expect(service.formatDate(date.valueOf())).toEqual('06/05/2019');
+        expect(service.formatDate(date)).toEqual('06/05/2019');
+        expect(service.formatDate(moment(date))).toEqual('06/05/2019');
     });
 
     it('should convert date string to timestamp', () => {
-        expect(service.toNgBTimestamp('2019-05-24T10:25').valueOf()).toEqual('1558686300000');
+        const date = new Date();
+        date.setFullYear(2019);
+        date.setMonth(4);
+        date.setDate(24);
+        date.setHours(10);
+        date.setMinutes(25);
+        date.setSeconds(0);
+        date.setUTCMilliseconds(0);
+        expect(service.toNgBTimestamp('2019-05-24T10:25').valueOf()).toEqual(date.valueOf() + '');
     });
 });
