@@ -55,7 +55,7 @@
     "ngx-chips": "3.0.0",
     "rxjs": "7.5.2",
     "svg-pan-zoom": "3.6.1",
-    "xlsx": "0.17.5"
+    "xlsx": "0.18.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "13.2.1",
