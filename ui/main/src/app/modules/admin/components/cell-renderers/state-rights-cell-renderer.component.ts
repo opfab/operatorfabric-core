@@ -35,13 +35,15 @@ export class StateRightsCellRendererComponent implements ICellRendererAngularCom
         const stateRightsValues = params.getValue();
 
         const currentProcessDef = this.processesDefinition.filter(processDef => processDef.id === params.data.process)[0];
-
-        stateRightsValues.forEach(stateRight => {
-            if (!!currentProcessDef.states[stateRight.state])
-                this._stateRightsValues.push({stateName: currentProcessDef.states[stateRight.state].name, stateRight: stateRight});
-            else
-                console.log(new Date().toISOString(), 'The state ' + stateRight.state + ' of process ' + currentProcessDef.id + ' does not exist anymore');
-        });
+        if (!!currentProcessDef) {
+            stateRightsValues.forEach(stateRight => {
+                if (!!currentProcessDef.states[stateRight.state])
+                    this._stateRightsValues.push({stateName: currentProcessDef.states[stateRight.state].name, stateRight: stateRight});
+                else
+                    console.log(new Date().toISOString(), 'The state ' + stateRight.state + ' of process ' + currentProcessDef.id + ' does not exist anymore');
+            });
+        } else
+            console.log(new Date().toISOString(), 'The process ' + params.data.process + ' does not exist anymore');
     }
 
     /** This method returns true to signal to the grid that this renderer doesn't need to be recreated if the underlying data changes
