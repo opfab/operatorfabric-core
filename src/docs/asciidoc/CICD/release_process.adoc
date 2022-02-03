@@ -198,7 +198,7 @@ This file determines which versions (and in which order) are displayed on the
 link:https://opfab.github.io/pages/releases.html[release page] of the website.
 
 Check that you see the X.X.X.RELEASE under the link:https://opfab.github.io/pages/releases.html[releases page]
-and that the links work.
+and that the links work (It may need a few minutes for the website to be updated).
 
 NOTE: The `external_devices_api` property should be set to true for all new versions, so the API documentation for
 the External Devices API is displayed on the website.
@@ -359,7 +359,7 @@ can release the patch version. To do so:
 git add .
 git commit -m "[RELEASE] X.X.X.RELEASE " <1>
 git tag X.X.X.RELEASE <2>
-git push <3>
+git push --set-upstream origin X.X.hotfixes <3>
 git push origin X.X.X.RELEASE <4>
 ----
 <1> Commit the changes
