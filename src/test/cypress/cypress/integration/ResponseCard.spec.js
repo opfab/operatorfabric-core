@@ -72,7 +72,9 @@ describe ('Response card tests',function () {
          // Respond  to the new card 
          
          cy.get('#opfab-card-details-btn-response').should('have.text', 'SEND RESPONSE');
-         cy.get('#question-choice3').click(); // to avoid detach dom error , check before send response and click after 
+
+         cy.waitDefaultTime(); // to avoid detach dom error , we need to wait the new template has been rendered 
+         cy.get('#question-choice3').click(); 
          cy.get('#opfab-card-details-btn-response').click();
          
         // See in the feed the fact that user has respond (icon)
