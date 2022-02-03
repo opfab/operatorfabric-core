@@ -421,5 +421,29 @@
     "externalDeviceId": "Périphérique",
     "edit": "Editer",
     "delete": "Supprimer"
+  },
+  "datePicker": {
+    "monday": "Lu",
+    "tuesday" : "Ma", 
+    "wednesday" : "Me", 
+    "thursday": "Je", 
+    "friday": "Ve", 
+    "saturday": "Sa",  
+    "sunday": "Di",
+    "january": "Jan", 
+    "february": "Fév",
+    "march": "Mar", 
+    "april": "Avr", 
+    "may": "Mai", 
+    "june": "Juin", 
+    "july": "Juil", 
+    "august": "Aou", 
+    "september": "Sep", 
+    "october": "Oct", 
+    "november": "Nov", 
+    "december": "Déc",
+    "week": "sem",
+    "placeholder": "AAAA-MM-JJ"
   }
+
 }

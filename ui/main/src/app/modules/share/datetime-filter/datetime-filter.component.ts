@@ -7,11 +7,37 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, forwardRef, Input, OnDestroy, Output} from '@angular/core';
+import {Component, EventEmitter, forwardRef, Injectable, Input, OnInit, OnDestroy, Output} from '@angular/core';
 import {ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
+import {NgbDatepickerI18n, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {takeUntil} from 'rxjs/operators';
-import {Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
+import {TranslateService} from '@ngx-translate/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {buildSettingsOrConfigSelector} from '@ofStore/selectors/settings.x.config.selectors';
+
+
+  const i18nPrefix = "datePicker.";
+  
+  const I18N_KEYS = {
+      weekdays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
+      months: ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'],
+      weekLabel: 'week'
+  };
+
+  
+  // Define custom service providing the months and weekdays translations
+  @Injectable()
+  export class CustomDatepickerI18n extends NgbDatepickerI18n {
+    constructor(private translateService: TranslateService) { super(); }
+  
+    getWeekdayLabel(weekday: number): string { return this.translateService.instant(i18nPrefix + I18N_KEYS.weekdays[weekday - 1]); }
+    getWeekLabel(): string { return this.translateService.instant(i18nPrefix + I18N_KEYS.weekLabel); }
+    getMonthShortName(month: number): string { return this.translateService.instant(i18nPrefix + I18N_KEYS.months[month - 1]); }
+    getMonthFullName(month: number): string { return this.getMonthShortName(month); }
+    getDayAriaLabel(date: NgbDateStruct): string { return `${this.getMonthFullName(date.month)}, ${date.day}, ${date.year}`; }
+  }
 
 
 @Component({
@@ -22,10 +48,11 @@ import {Subject} from 'rxjs';
         provide: NG_VALUE_ACCESSOR,
         useExisting: forwardRef(() => DatetimeFilterComponent),
         multi: true
-    }
+    }, {provide: NgbDatepickerI18n, useClass: CustomDatepickerI18n}
     ]
 })
-export class DatetimeFilterComponent implements ControlValueAccessor,OnDestroy {
+
+export class DatetimeFilterComponent implements ControlValueAccessor,OnInit, OnDestroy {
 
     private ngUnsubscribe$ = new Subject<void>();
     @Input() labelKey: string;
@@ -35,6 +62,8 @@ export class DatetimeFilterComponent implements ControlValueAccessor,OnDestroy {
     @Output() change = new EventEmitter();
     @Input() minDate: {year: number, month: number, day: number};
     @Input() maxDate: {year: number, month: number, day: number};
+
+    placeholder: string;
 
     previousDateValue = null;
 
@@ -48,10 +77,21 @@ export class DatetimeFilterComponent implements ControlValueAccessor,OnDestroy {
         time: this.timeInput
     });
 
-    constructor() {
+    constructor(private store: Store<AppState>, private translateService: TranslateService) {
         this.onChanges();
         this.resetDateAndTime();
+    }
 
+    ngOnInit(): void {
+        this.getLocale().pipe(takeUntil(this.ngUnsubscribe$)).subscribe(locale => {
+            this.translateService.use(locale);
+            this.placeholder = this.translateService.instant(i18nPrefix + "placeholder");
+
+        });
+    }
+
+    protected getLocale(): Observable<string> {
+        return this.store.select(buildSettingsOrConfigSelector('locale'));
     }
 
 
