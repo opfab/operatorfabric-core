@@ -110,6 +110,7 @@ export class UserCardComponent implements OnInit {
 
     ngOnInit() {
         this.pageLoading = true;
+        usercardTemplateGateway.initUsercardTemplateGateway();
         this.severityForm = new FormGroup({
             severity: new FormControl('')
         });
@@ -136,6 +137,9 @@ export class UserCardComponent implements OnInit {
             this.initialSelectedRecipients = this.cardToEdit.card.entityRecipients;
             this.pageLoading = false;
             this.setDateFormValues();
+            
+            const userResponse = this.cardToEdit.childCards.find(child => child.publisher === this.publisherForCreatingUsercard);
+            usercardTemplateGateway.setUserEntityChildCardFromCurrentCard(userResponse);
         });
     }
 

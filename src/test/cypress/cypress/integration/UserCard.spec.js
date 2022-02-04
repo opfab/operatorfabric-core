@@ -205,6 +205,15 @@ describe('User Card ', function () {
           cy.get("#childs-div").find('tr').should('have.length', 2);
         });
 
+      //Modify response and check it is taken into account when editing the card
+      cy.get("#opfab-card-details-btn-response").click();
+      cy.get("#resp_confirm").select('NO');
+      cy.get("#resp_message").type('modified');
+      cy.get("#opfab-card-details-btn-response").click();
+      cy.get('#opfab-card-edit').click();
+      cy.get("of-usercard").should('exist');
+      cy.get('select#confirm option:selected').should('have.text', 'NO');
+      cy.get("#message").should('have.value', 'modified');
     })
 
 

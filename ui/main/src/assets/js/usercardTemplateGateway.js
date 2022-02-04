@@ -10,12 +10,24 @@
 const usercardTemplateGateway = {
 
     editionMode: null,
+    childCard: null,
+
+    setUserEntityChildCardFromCurrentCard : function(childCard){
+        this.childCard = childCard;
+    },
     
     // The template calls this method to get the editon mode (CREATE/EDITION)
     getEditionMode() {
         return this.editionMode;
+    },
+
+    getUserEntityChildCardFromCurrentCard() {
+        return this.childCard;
+    },
+
+    initUsercardTemplateGateway() {
+        this.editionMode=  null;
+        this.childCard = null;
     }
-
-
 };
 
