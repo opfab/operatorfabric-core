@@ -43,6 +43,7 @@ import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {FilterService} from '@ofServices/lightcards/filter.service';
+import { TimelineModel } from '@ofModel/timeline-domains.model';
 
 
 @Component({
@@ -62,10 +63,12 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   public title: string;
   public oldWidth = 0;
   public openPopover: NgbPopover;
+  private timelineModel: TimelineModel;
   
-  
-  public useOverlap: boolean; // If true, will display cards received after xDomaine[1]-OVERLAP_TIME will be displayed at the very beginning of the timeline
-  public readonly OVERLAP_TIME = 15*60*1000; // Create a 15 min overlap
+  // OVERLAP
+  xDomainWithOverlap: any;
+  public useOverlap: boolean; // If true, will display cards received after xDomaine[1]-overlapDurationInMs will be displayed at the very beginning of the timeline
+  overlapDurationInMs: number; 
 
 
   @ViewChild(ChartComponent, { read: ElementRef }) chart: ElementRef;
@@ -83,6 +86,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   private isDestroyed = false ;
   public weekRectangles;
 
+
+
   // TOOLTIP
   public currentCircleHovered;
   public circles;
@@ -95,8 +100,21 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   @Input()
   set valueDomain(value: any) {
     this.xDomain = value;
+    this.addOverlap(value);
     this.setTitle();
     this.setWeekRectanglePositions();
+  }
+
+  addOverlap(domain: any) {
+    // Refresh this.useOverlap
+    this.initOverlap();
+
+    this.xDomainWithOverlap = domain;
+
+    if (this.useOverlap) {
+      this.xDomain = [domain[0], domain[1]];
+      this.xDomainWithOverlap = [domain[0] + this.overlapDurationInMs, domain[1]];
+    }
   }
 
   setTitle()
@@ -104,17 +122,17 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     switch (this.domainId) {
       case 'TR':
       case 'J':
-        this.title = moment(this.xDomain[0]).format('DD MMMM YYYY');
+        this.title = moment(this.xDomainWithOverlap[0]).format('DD MMMM YYYY');
         break;
       case 'M':
-        this.title = moment(this.xDomain[0]).format('MMMM YYYY').toLocaleUpperCase();
+        this.title = moment(this.xDomainWithOverlap[0]).format('MMMM YYYY').toLocaleUpperCase();
         break;
       case 'Y':
-        this.title = moment(this.xDomain[0]).format('YYYY').toLocaleUpperCase();
+        this.title = moment(this.xDomainWithOverlap[0]).format('YYYY').toLocaleUpperCase();
         break;
       case '7D':
       case 'W':
-        this.title = moment(this.xDomain[0]).format('DD/MM/YYYY').toLocaleUpperCase() + ' - ' +  moment(this.xDomain[1]).format('DD/MM/YYYY') ; 
+        this.title = moment(this.xDomainWithOverlap[0]).format('DD/MM/YYYY').toLocaleUpperCase() + ' - ' +  moment(this.xDomainWithOverlap[1]).format('DD/MM/YYYY') ; 
         break;
       default:
     }
@@ -123,13 +141,13 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   setWeekRectanglePositions() {
     this.weekRectangles = new Array();
     if (this.domainId === 'W' || this.domainId === '7D') {
-      let startOfDay = this.xDomain[0];
+      let startOfDay = this.xDomainWithOverlap[0];
       let changeBgColor = true;
-      while (startOfDay < this.xDomain[1]) {
+      while (startOfDay < this.xDomainWithOverlap[1]) {
         let endOfDay = moment(startOfDay);
         endOfDay.set('hour',23);
         endOfDay.set('minute',59);
-        if (endOfDay > this.xDomain[1]) endOfDay = this.xDomain[1];
+        if (endOfDay > this.xDomainWithOverlap[1]) endOfDay = this.xDomainWithOverlap[1];
         const week = {
           start: startOfDay,
           end: endOfDay,
@@ -146,7 +164,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   }
 
   get valueDomain() {
-    return this.xDomain;
+    return this.xDomainWithOverlap;
   }
 
   @Output() zoomChange: EventEmitter<string> = new EventEmitter<string>();
@@ -160,7 +178,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
      @Inject(PLATFORM_ID) platformId: any,
      private lightCardsFeedFilterService: LightCardsFeedFilterService,
      private filterService: FilterService) {
+
     super(chartElement, zone, cd, platformId);
+    this.timelineModel = new TimelineModel();
   }
 
   ngOnInit(): void {
@@ -173,8 +193,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.initGraph();
     this.updateRealtime();
     this.initDataPipe();
+
+    this.addOverlap(this.xDomain);
     this.updateDimensions(); // need to init here only for unit test , otherwise dims is null
-    this.initOverlap();
   }
 
   ngOnDestroy() {
@@ -183,9 +204,12 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.isDestroyed = true;
   }
 
-  initOverlap() {
-    let domainsUsingOverlap = ["J", "W", "M", "Y"];
-    this.useOverlap = domainsUsingOverlap.includes(this.domainId);
+  initOverlap() {    
+    if (this.domainId) {
+      let domainUsed = this.timelineModel.getDomains()[this.domainId];
+      this.useOverlap = domainUsed.useOverlap;
+      this.overlapDurationInMs = this.useOverlap ? domainUsed.overlapDurationInMs : 0;
+    }
   }
 
   // set inside ngx-charts library verticalSpacing variable to 10
@@ -215,35 +239,37 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
 
 
   shiftTimeLineIfNecessary() {
+
     if (this.xTicks) {
+      let shiftTimeline: boolean = false;
 
       // the timeline shifts regularly in "real time" and "7 days" views
       if (this.domainId == "TR" || this.domainId == "7D") {
         if (this.xTicks[10].valueOf() <= moment().valueOf()) {
-          this.valueDomain = [this.xTicks[1].valueOf(), this.xDomain[1] + (this.xTicks[1] - this.xDomain[0])];
-          this.filterService.updateFilter(
-            FilterType.BUSINESSDATE_FILTER,
-            true,
-            {start: this.valueDomain[0], end: this.valueDomain[1], domainId: this.domainId}
-          );
-          this.update();
+          this.valueDomain = [this.xTicks[1].valueOf(), this.xDomainWithOverlap[1].valueOf() + (this.xTicks[1] - this.xDomainWithOverlap[0].valueOf())];
+          shiftTimeline = true;
         }
       }
       
 
       // in other views, the timeline is shifted at the end of the current cycle (day/week/month/year)
       else {
-
         if (this.xTicks[this.xTicks.length - 1].valueOf() <= moment().valueOf()) {
-          this.valueDomain = [this.xTicks[this.xTicks.length - 1].valueOf(), this.xDomain[1] + (this.xTicks[this.xTicks.length - 1] - this.xDomain[0])];
-          this.filterService.updateFilter(
-            FilterType.BUSINESSDATE_FILTER,
-            true,
-            {start: this.valueDomain[0], end: this.valueDomain[1], domainId: this.domainId}
-          );
-          this.update();
+          this.valueDomain = [this.xTicks[this.xTicks.length - 1].valueOf() - this.overlapDurationInMs, this.xDomainWithOverlap[1].valueOf() + (this.xTicks[this.xTicks.length - 1] - this.xDomainWithOverlap[0].valueOf())];
+          shiftTimeline = true;
+
         }
       }
+
+      if (shiftTimeline) {
+        this.filterService.updateFilter(
+          FilterType.BUSINESSDATE_FILTER,
+          true,
+          {start: this.xDomainWithOverlap[0], end: this.xDomainWithOverlap[1], domainId: this.domainId}
+        );
+        this.update();
+      }
+
     }
   }
 
@@ -270,7 +296,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       showLegend: false,
       legendType: ScaleType.Time
     });
-    this.xScale =  scaleTime().range([0, this.dims.width]).domain(this.xDomain);
+
+    this.xScale =  scaleTime().range([0, this.dims.width]).domain(this.xDomainWithOverlap);
     this.yScale =  scaleLinear().range([this.dims.height, 0]).domain([0, 5]);
     this.translateGraph = `translate(${this.dims.xOffset} , ${this.margin[0]})`;
     this.translateXTicksTwo = `translate(0, ${this.dims.height + 5})`;
@@ -311,13 +338,13 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   }
 
   setXTicksValue(): void {
-    const startDomain = moment(this.xDomain[0]);
+    const startDomain = moment(this.xDomainWithOverlap[0]);
     this.xTicks = [];
     this.xTicks.push(startDomain);
     const nextTick = moment(startDomain);
     const tickSize = this.getTickSize();
 
-    while (nextTick.valueOf() < this.xDomain[1]) {
+    while (nextTick.valueOf() < this.xDomainWithOverlap[1].valueOf()) {
 
       // we need to make half month tick when Y domain
       if (this.domainId === 'Y') {
@@ -358,9 +385,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         if (card.timeSpans && card.timeSpans.length > 0) {
           card.timeSpans.forEach(timeSpan => {
             if (!!timeSpan.recurrence) {
-              let dateForReminder: number = getNextTimeForRepeating(card, this.xDomain[0] + 1000 * card.secondsBeforeTimeSpanForReminder);
+              let dateForReminder: number = getNextTimeForRepeating(card, this.xDomainWithOverlap[0].valueOf() + 1000 * card.secondsBeforeTimeSpanForReminder);
 
-              while(dateForReminder >= 0 && (!timeSpan.end || (dateForReminder < timeSpan.end)) && dateForReminder < this.xDomain[1]) {
+              while(dateForReminder >= 0 && (!timeSpan.end || (dateForReminder < timeSpan.end)) && dateForReminder < this.xDomainWithOverlap[1].valueOf()) {
                 const myCardTimeline = {
                   date: dateForReminder,
                   id: card.id,
@@ -406,6 +433,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
 
   createCircles(): void {
 
+    console.log("In createCircles");
+
     this.circles = [];
     if (this.cardsData === undefined || this.cardsData === []) { return; }
 
@@ -422,28 +451,26 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       cardsBySeverity[card.circleYPosition - 1].push(card);
     }
 
-    // define the beginning of the domain to display depending on overlap
-    let domainBegin = this.useOverlap ? this.xDomain[0] - this.OVERLAP_TIME : this.xDomain[0];
-
+    console.log("startDate = ", this.xTicks[0], " - endDate = ", this.xTicks[this.xTicks.length - 1]);
     // foreach severity array create the circles
     for (const cards of cardsBySeverity ) {
       let cardIndex = 0;
-      // move index to the first card in the time domain
-      if (cards.length > 0) {
-        while (cards[cardIndex] && (cards[cardIndex].date < domainBegin) && (cardIndex < cards.length)) { cardIndex++; }
-      }
+
+
       // for each interval , if a least one card in the interval , create a circle object.
-      if (cardIndex < cards.length) {
+      if (cards.length > 0) {
+        console.log("this.xTicks = ", this.xTicks);
         for (let tickIndex = 1; tickIndex < this.xTicks.length; tickIndex++) {
 
+          let startLimit = this.xTicks[tickIndex - 1].valueOf();
           let endLimit = this.xTicks[tickIndex].valueOf();
-          if (tickIndex + 1 === this.xTicks.length)
-              {
-                endLimit += 1; // Include the limit domain value by adding 1ms
-              }
 
+          if (tickIndex + 1 === this.xTicks.length) {
+            endLimit += 1; // Include the limit domain value by adding 1ms
+          }
 
-          if (cards[cardIndex] && cards[cardIndex].date < endLimit ) {
+          
+          if (cards[cardIndex] && cards[cardIndex].date >= startLimit && cards[cardIndex].date < endLimit ) {
             // initialisation of a new circle
             const circle = {
               start: cards[cardIndex].date,
@@ -482,6 +509,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         }
       }
     }
+
+    console.log("this.circles.length = ", this.circles.length);
+
   }
 
   getCircleYPosition(severity: string): number {
@@ -549,7 +579,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   }
 
   checkInsideDomain(date): boolean {
-    const domain = this.xDomain;
+    const domain = this.xDomainWithOverlap;
     return date >= domain[0] && date <= domain[1];
   }
 
