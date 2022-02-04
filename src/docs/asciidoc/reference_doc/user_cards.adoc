@@ -222,6 +222,11 @@ To enable the automated response the template should add a `childCard` field to 
 
 The card preview will display the card detail with the automated response as it will be displayed in Feed page.
 
+When editing a user card, the template can get the response sent by current user by calling the _usercardTemplateGateway.getUserEntityChildCardFromCurrentCard()_ function. The function will return the response child card sent by current user or null if there is no response from current user.
+
+An example of _usercardTemplateGateway.getUserEntityChildCardFromCurrentCard()_ usage can be found in the file
+https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/userCardExamples2/template/usercard_confirmation.handlebars[src/test/resources/bundles/userCardExamples2/template/usercard_confirmation.handlebars].
+
 == Misc
 
 When a user send a card, it is always sent to himself whatever he chooses in the recipient list.
