@@ -19,7 +19,6 @@ describe ('Feed configuration tests',function () {
         cy.resetUIConfigurationFiles();
     })
 
-    /*
 
     it('Buttons and filters visibility - Check default behaviour', function () {
 
@@ -155,7 +154,6 @@ describe ('Feed configuration tests',function () {
     })    
 
     ////////////////////////////// Test on real time view
-    
     it('Check if timeline moves when unlocked in real time view', 
         { defaultCommandTimeout: 10000}, function () {
 
@@ -168,7 +166,7 @@ describe ('Feed configuration tests',function () {
         cy.get('#opfab-timeline-link-period-TR').click();
         
         cy.get("@firstTimelineXTick").should("exist");
-        cy.get("@firstTimelineXTick").should("have.text", " 21h ");
+        cy.get("@firstTimelineXTick").should("have.text", " 21h30 ");
 
         // go 1 hour in the future 
         cy.tick(1*60*60*1000);
@@ -191,14 +189,14 @@ describe ('Feed configuration tests',function () {
         cy.get("#opfab-timeline-lock").click()
         
         cy.get("@firstTimelineXTick").should("exist");
-        cy.get("@firstTimelineXTick").should("have.text", " 21h ");
+        cy.get("@firstTimelineXTick").should("have.text", " 21h30 ");
     
         // go 1 hour in the future 
         cy.tick(1*60*60*1000);
         cy.wait(250);
     
         // Check that the timeline moved accordingly
-        cy.get("@firstTimelineXTick").should("have.text", " 21h ");
+        cy.get("@firstTimelineXTick").should("have.text", " 21h30 ");
     })   
 
     ////////////////////////////// Test on seven dayw view
@@ -327,7 +325,7 @@ it('Check if timeline moves when locked in seven days view',
     it('Check if timeline moves when locked in Day view', 
     { defaultCommandTimeout: 10000}, function () {
 
-    // Logging on Sunday, 31rst of March 2030, at 23h59
+    // Logging on Sunday, 31rst of December 2028, at 23h59
     // NB : for some reason month seems to start at 0
     cy.loginWithClock(new Date(2028, 11, 31, 23, 59));
 
@@ -352,16 +350,15 @@ it('Check if timeline moves when locked in seven days view',
     cy.get("#opfab-timeline-time-cursor").should("not.exist");
 
 })
-*/
 
 
-    it('Check if timeline moves when unlocked in Day view', 
+    it('Check the overlap in Day view when timeline shifts', 
     { defaultCommandTimeout: 10000}, function () {
 
         // Logging on Sunday, 31rst of December 2028, at 23h30l
         // NB : for some reason month seems to start at 0
         const afternoonDate = new Date(2028, 11, 31, 15, 30);
-        const justBeforeMidnightDate = new Date(2028, 11, 31, 23, 50);
+        const justBeforeMidnightDate = new Date(2028, 11, 31, 23, 55);
         cy.loginWithClock(justBeforeMidnightDate);
 
         cy.get('#opfab-timeline-link-period-J').click();
@@ -388,9 +385,46 @@ it('Check if timeline moves when locked in seven days view',
         // The card before midnight should be visible
         cy.get("#opfab-timeline-title").should("have.text", " 01 January 2029 ");
         cy.get("of-custom-timeline-chart").find("circle").should('have.length', 1);
+    })
+
+
+    it('Check the overlap in Day view when clicking on next day', 
+    { defaultCommandTimeout: 10000}, function () {
+
+        // Logging on Sunday, 31rst of December 2028, at 23h30l
+        // NB : for some reason month seems to start at 0
+        const afternoonDate = new Date(2028, 11, 31, 15, 30);
+        const justBeforeMidnightDate = new Date(2028, 11, 31, 23, 55);
+        cy.loginWithClock(justBeforeMidnightDate);
+
+        cy.get('#opfab-timeline-link-period-J').click();
+        cy.get("#opfab-timeline-unlock").click()
+
+        // send cards
+        cy.sendCard('cypress/feed/customEvent.json', afternoonDate.getTime(), afternoonDate.getTime() + 5*60*1000);
+        cy.wait(500);
+        cy.tick(1000);
+        cy.sendCard('cypress/feed/customAlarm.json', justBeforeMidnightDate.getTime(), justBeforeMidnightDate.getTime() + 5*60*1000);
+
+        // Wait for the card to arrive
+        cy.wait(500);
+        cy.tick(1000);
+
+        // Check the card is received
+        cy.get("#opfab-timeline-title").should("have.text", " 31 December 2028 ");
+        cy.get("of-custom-timeline-chart").find("circle").should('have.length', 2);
+
+
+        // click on the button to display the following day
+        cy.get("#opfab-timeline-link-move-right").click();
+
+        // The card before midnight should be visible
+        cy.get("#opfab-timeline-title").should("have.text", " 01 January 2029 ");
+        //cy.get("of-custom-timeline-chart").find("circle").should('have.length', 1);
 
 
 
     })
+
 
 })

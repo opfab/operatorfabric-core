@@ -8,6 +8,7 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { TimelineModel } from '@ofModel/timeline-domains.model';
 import {AppService} from "@ofServices/app.service";
 import {ConfigService} from "@ofServices/config.service";
 import {UserService} from "@ofServices/user.service";
@@ -19,6 +20,7 @@ import {AppState} from "@ofStore/index";
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {TimeService} from "@ofServices/time.service";
 import {FilterService} from '@ofServices/lightcards/filter.service';
+import { dom } from '@fortawesome/fontawesome-svg-core';
 
 @Component({
     selector: 'of-timeline-buttons',
@@ -30,11 +32,16 @@ export class TimelineButtonsComponent implements OnInit {
     // required by Timeline
     public myDomain: number[];
     public domainId: string;
+    public timelineModel: TimelineModel;
 
     // required for domain movements specifications
     public followClockTick: boolean;
     public followClockTickMode: boolean;
     isTimelineLockDisabled: boolean;
+
+    // Overlap
+    public useOverlap: boolean; // If true, will display cards received after xDomaine[1]-overlapDurationInMs will be displayed at the very beginning of the timeline
+    public overlapDurationInMs: number;
 
     // buttons
     public buttonTitle: string;
@@ -61,6 +68,8 @@ export class TimelineButtonsComponent implements OnInit {
                 private userService: UserService,
                 private _appService: AppService,
                 private filterService: FilterService) {
+
+                    this.timelineModel = new TimelineModel();
     }
 
     ngOnInit() {
@@ -74,35 +83,9 @@ export class TimelineButtonsComponent implements OnInit {
         this.initDomains();
     }
 
+
     loadConfiguration() {
-
-        this.domains = {
-            J: {
-                buttonTitle: 'timeline.buttonTitle.J',
-                domainId:'J',
-            }, TR: {
-                buttonTitle: 'timeline.buttonTitle.TR',
-                domainId : 'TR',
-                followClockTick: true
-            }, '7D': {
-                buttonTitle: 'timeline.buttonTitle.7D',
-                domainId:'7D',
-                followClockTick: true
-            }, 'W': {
-                buttonTitle: 'timeline.buttonTitle.W',
-                domainId : 'W',
-                followClockTick: false
-            }, M: {
-                buttonTitle: 'timeline.buttonTitle.M',
-                domainId : 'M',
-                followClockTick: false
-            }, Y: {
-                buttonTitle: 'timeline.buttonTitle.Y',
-                domainId: 'Y',
-                followClockTick: false
-            }
-        };
-
+        this.domains = this.timelineModel.getDomains();
     }
 
     loadDomainsListFromConfiguration() {
@@ -165,6 +148,15 @@ export class TimelineButtonsComponent implements OnInit {
             this.buttonTitle = conf.buttonTitle;
         }
 
+        this.overlapDurationInMs = 0;
+        if (conf.useOverlap != undefined) {
+            this.useOverlap = conf.useOverlap;
+
+            if (conf.useOverlap && conf.overlapDurationInMs != undefined) {
+                this.overlapDurationInMs = conf.overlapDurationInMs;
+            }
+        }
+
         this.selectZoomButton(conf.buttonTitle);
         this.domainId = conf.domainId;
 
@@ -184,7 +176,7 @@ export class TimelineButtonsComponent implements OnInit {
         switch (this.domainId) {
 
             case 'TR': {
-                startDomain = moment().minutes(0).second(0).millisecond(0).subtract(2, 'hours');
+                startDomain = this.getRealTimeStartDate();
                 endDomain = moment().minutes(0).second(0).millisecond(0).add(10, 'hours');
                 break;
             }
@@ -224,6 +216,14 @@ export class TimelineButtonsComponent implements OnInit {
         this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
     }
 
+    private getRealTimeStartDate() {
+        let currentMinutes = moment().minutes();
+        let roundedMinutes = Math.floor(currentMinutes/15)*15; // rounds minutes to previous quarter
+        let startDate = moment().minutes(roundedMinutes).second(0).millisecond(0).subtract(2, 'hours').subtract(15, 'minutes');
+
+        return startDate;
+    }
+
     /**
      * apply new timeline domain
      * feed state dispatch a change on filter, provide the new filter start and end
@@ -238,12 +238,14 @@ export class TimelineButtonsComponent implements OnInit {
             * To compute start day of week add 2 days to startDate to avoid changing week passing from locale with saturday as first day of week
             * to a locale with monday as first day of week
             */
-            let startOfWeek = moment(startDomain).add(2,'day').startOf('week').minutes(0).second(0).millisecond(0);
+            let startOfWeek = moment(startDomain).add(2,'day').startOf('week').minutes(0).second(0).millisecond(0).valueOf();
             let endOfWeek = moment(startDomain).add(2,'day').startOf('week').minutes(0).second(0).millisecond(0).add(1, 'week');
             startDomain = startOfWeek.valueOf();
             endDomain = endOfWeek.valueOf();
         }
-        this.myDomain = [startDomain, endDomain];
+
+        let startDomainWithOverlap = this.removeOverlap(startDomain);
+        this.myDomain = [startDomainWithOverlap, endDomain];
         this.startDate = this.getDateFormatting(startDomain);
         this.endDate = this.getDateFormatting(endDomain);
 
@@ -253,6 +255,16 @@ export class TimelineButtonsComponent implements OnInit {
             {start: startDomain, end: endDomain, domainId: this.domainId}
         );
         this.domainChange.emit(true);
+    }
+
+    removeOverlap(startDomain) {
+        let domainWithOverlap = startDomain;
+
+        if (this.useOverlap) {
+            domainWithOverlap = startDomain.valueOf() - this.overlapDurationInMs;
+        }
+
+        return domainWithOverlap;
     }
 
     getDateFormatting(value): string {
@@ -293,10 +305,10 @@ export class TimelineButtonsComponent implements OnInit {
 
 
         if (moveForward) {
-            startDomain = this.goForward(startDomain);
+            startDomain = this.goForward(startDomain.add(this.overlapDurationInMs, "milliseconds"));
             endDomain = this.goForward(endDomain);
         } else {
-            startDomain = this.goBackward(startDomain);
+            startDomain = this.goBackward(startDomain.add(this.overlapDurationInMs, "milliseconds"));
             endDomain = this.goBackward(endDomain);
         }
 

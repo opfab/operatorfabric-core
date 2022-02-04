@@ -81,7 +81,9 @@ Cypress.Commands.add('send6TestCards', () => {
     cy.exec('cd .. && ./resources/send6TestCards.sh ' + Cypress.env('host'));
 })
 
-Cypress.Commands.add('sendCard', (cardFile, customEpochDate1 = new Date().getTime(), customEpochDate2 = new Date().getTime + (5 * 60 * 1000)) => {
+Cypress.Commands.add('sendCard', (cardFile, customEpochDate1 = new Date().getTime(), customEpochDate2 = new Date().getTime()+ (5 * 60 * 1000)) => {
+    console.log("date1", customEpochDate1, ", date2 = ", customEpochDate2);
+    console.log('cd ../resources/cards/ && ./sendCard.sh '+ cardFile + ' '  + Cypress.env('host') + ' ' + customEpochDate1 + ' ' + customEpochDate2)
     cy.exec('cd ../resources/cards/ && ./sendCard.sh '+ cardFile + ' '  + Cypress.env('host') + ' ' + customEpochDate1 + ' ' + customEpochDate2);
 })
 
