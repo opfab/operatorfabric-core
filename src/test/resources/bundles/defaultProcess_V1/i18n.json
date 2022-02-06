@@ -1,13 +1,18 @@
 {
 	"message":{
-		"title":"Message",
-		"summary":"Message received"
+		"title": "Message",
+		"summary": "Message received"
 	},
-	"chartDetail" : { "title":"A Chart"},
-	"chartLine" : { "title":"Electricity consumption forecast"},
+	"messageState":{
+		"title": "Message",
+		"summary": "Message received : {{{summary}}}",
+		"usercard": {"title": "Message - {{{title}}}"}
+	},
+	"chartDetail" : { "title": "A Chart"},
+	"chartLine" : { "title": "Electricity consumption forecast"},
 	"question" : {"title": "⚡ Planned Outage"},
-	"contingencies": {"title" : "⚠️ Network Contingencies ⚠️","summary":"Contingencies report for French network"},
+	"contingencies": {"title" : "⚠️ Network Contingencies ⚠️", "summary": "Contingencies report for French network"},
 	"processState": {
-		"title":"Process state ({{status}})"
+		"title": "Process state ({{status}})"
 	}
 }

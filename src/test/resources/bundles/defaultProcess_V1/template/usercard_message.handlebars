@@ -19,7 +19,7 @@
         const message = document.getElementById('message').value;
         const card = {
         summary : {key : "message.summary"},
-		title : {key : "message.title"},
+		title : {key : "messageState.usercard.title", parameters : {"title":message}},
         data : {message: message},
         entitiesAllowedToEdit: ['ENTITY_FR'],
         };
