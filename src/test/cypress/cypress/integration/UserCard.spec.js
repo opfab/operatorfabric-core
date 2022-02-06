@@ -234,7 +234,7 @@ describe('User Card ', function () {
 
       cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
       cy.get("of-usercard").should('exist');
-      cy.get('#message').type('Hello');
+      cy.get('#message').type('Hello, that\'s a test message / Result is <OK> & work done is 100%');
       cy.setFormDateTime('startDate','2020','Jan',20,8,0);
       cy.setFormDateTime('endDate','2029','Jun',25,11,10);
       cy.get('#opfab-recipients').click();
@@ -252,7 +252,8 @@ describe('User Card ', function () {
         .then((urlId) => {
           cy.hash().should('eq', '#/feed/cards/' + urlId);
           cy.get('of-card-details').find('of-detail');
-          cy.get('#opfab-div-card-template').find('div').eq(0).contains('Hello');
+          cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', "\n  Hello, that's a test message / Result is <OK> & work done is 100%\n");
+          cy.get('#opfab-card-title').should('have.text', "Message -   Hello, that's a test message / Result is <OK> & work done is 100%");
         });
     })
 
@@ -270,7 +271,8 @@ describe('User Card ', function () {
         .then((urlId) => {
           cy.hash().should('eq', '#/feed/cards/' + urlId);
           cy.get('of-card-details').find('of-detail');
-          cy.get('#opfab-div-card-template').find('div').eq(0).contains('Hello');
+          cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', "\n  Hello, that's a test message / Result is <OK> & work done is 100%\n");
+          cy.get('#opfab-card-title').should('have.text', "Message -   Hello, that's a test message / Result is <OK> & work done is 100%");
         });
     })
   })
@@ -291,7 +293,7 @@ describe('User Card ', function () {
           cy.hash().should('eq', '#/feed/cards/' + urlId);
           cy.get('#opfab-card-edit').click();
           cy.get("of-usercard").should('exist');
-          cy.get('#message').should('be.visible').type(' World')
+          cy.get('#message').should('be.visible').type(' (updated)')
           cy.get('#opfab-usercard-btn-prepareCard').click();
           cy.get('#opfab-usercard-btn-accept').click();
           // Check that the message indicating successful sending appears
@@ -311,7 +313,8 @@ describe('User Card ', function () {
         .then((urlId) => {
           cy.hash().should('eq', '#/feed/cards/' + urlId);
           cy.get('of-card-details').find('of-detail');
-          cy.get('#opfab-div-card-template').find('div').eq(0).contains('Hello World');
+          cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', "\n   Hello, that's a test message / Result is <OK> & work done is 100%  (updated)\n");
+          cy.get('#opfab-card-title').should('have.text', "Message -    Hello, that's a test message / Result is <OK> & work done is 100%  (updated)");
         });
     })
   })
@@ -405,7 +408,8 @@ describe('User Card ', function () {
         .then((urlId) => {
           cy.hash().should('eq', '#/feed/cards/' + urlId);
           cy.get('of-card-details').find('of-detail');
-          cy.get('#opfab-div-card-template').find('div').eq(0).contains('Hello');
+          cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', '\n  Hello\n')
+          cy.get('#opfab-card-title').should('have.text', 'Message -   Hello')
         });
     })
 

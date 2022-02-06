@@ -13,9 +13,9 @@
 	"entitiesAllowedToEdit": ["ENTITY1_FR", "ENTITY2_FR"],
 	"startDate" : ${current_date_in_milliseconds_from_epoch_plus_2hours},
 	"endDate" : ${current_date_in_milliseconds_from_epoch_plus_8hours} ,
-	"summary" : {"key" : "message.summary"},
-	"title" : {"key" : "message.title"},
-	"data" : {"message":" Information card number 1"},
+	"summary" : {"key" : "messageState.summary", "parameters" : {"summary": "France-England's interconnection is 100% operational / Result of the maintenance is <OK>"}},
+	"title" : {"key" : "messageState.title"},
+	"data" : {"message": "France-England's interconnection is 100% operational / Result of the maintenance is <OK>"},
 	"timeSpans" : [
 		{"start" :${current_date_in_milliseconds_from_epoch_plus_2hours}},
 		{"start" : ${current_date_in_milliseconds_from_epoch_plus_8hours}}
