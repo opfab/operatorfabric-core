@@ -83,7 +83,7 @@ describe('Card detail', function () {
             cy.get('#opfab-navbar-menu-archives').click();
 
             // We click the search button
-            cy.get('#opfab-archives-btn-search').click();
+            cy.get('#opfab-archives-logging-btn-search').click();
 
             // Click on the card
             cy.waitDefaultTime();
