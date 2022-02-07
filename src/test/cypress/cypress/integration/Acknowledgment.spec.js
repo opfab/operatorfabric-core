@@ -48,6 +48,9 @@ describe('Acknowledgment  tests', function () {
 
         cy.loginOpFab('operator1_fr', 'test');
 
+        // Wait for all cards to be loaded (check the last one is present)
+        cy.get('#opfab-feed-light-card-cypress-message6');
+
         // Operator1 should see 6 cards in his feed
         cy.get('of-light-card').should('have.length', 6);
 
