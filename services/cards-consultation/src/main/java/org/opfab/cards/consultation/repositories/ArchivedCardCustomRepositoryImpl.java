@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,6 +30,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
+
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -37,13 +41,18 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepository {
 
     public static final String PUBLISH_DATE_FIELD = "publishDate";
+    public static final String START_DATE_FIELD = "startDate";
+    public static final String END_DATE_FIELD = "endDate";
+    public static final String PROCESS_FIELD = "process";
+    public static final String PROCESS_INSTANCE_ID_FIELD = "processInstanceId";
+
+
     public static final String PUBLISH_DATE_FROM_PARAM = "publishDateFrom";
     public static final String PUBLISH_DATE_TO_PARAM = "publishDateTo";
 
-    public static final String START_DATE_FIELD = "startDate";
-    public static final String END_DATE_FIELD = "endDate";
     public static final String ACTIVE_FROM_PARAM = "activeFrom";
     public static final String ACTIVE_TO_PARAM = "activeTo";
+
 
     public static final String PAGE_PARAM = "page";
     public static final String PAGE_SIZE_PARAM = "size";
@@ -84,20 +93,33 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         //Handle Paging
         Pageable pageableRequest = createPageableFromParams(params.getT2());
 
-        Aggregation agg = createAggregationFromUserAndParams(params, pageableRequest);
-        Aggregation countAgg = createAggregationFromUserAndParams(params,null);
+        Aggregation agg = newAggregation( this.getOperations(params,pageableRequest));
+        Aggregation countAgg = newAggregation( this.getOperationsForCount(params));
 
         if (pageableRequest.isPaged()) {
             return template.aggregate(agg, ARCHIVED_CARDS_COLLECTION, LightCardConsultationData.class)
                     .cast(LightCard.class).collectList()
-                    .zipWith(template.aggregate(countAgg, ARCHIVED_CARDS_COLLECTION, LightCardConsultationData.class).count())
-                    .map(tuple -> new PageImpl<>(tuple.getT1(), pageableRequest, tuple.getT2()));
+                    .zipWith(template.aggregate(countAgg, ARCHIVED_CARDS_COLLECTION, String.class)
+                        .defaultIfEmpty("{\"count\":0}")
+                        .single())
+                    .map(tuple -> new PageImpl<>(tuple.getT1(), pageableRequest, this.getCountFromJson(tuple.getT2())));
         } else {
             return template.aggregate(agg, ARCHIVED_CARDS_COLLECTION, LightCardConsultationData.class)
                     .cast(LightCard.class).collectList()
                     .map(PageImpl::new);
         }
         //The class used as a parameter for the find & count methods is LightCard (and not LightCardConsultationData) to make use of the existing LightCardReadConverter
+    }
+
+    private long getCountFromJson(String json ) {
+        JSONObject count;
+        try {
+            count = (JSONObject) (new JSONParser(JSONParser.MODE_PERMISSIVE)).parse(json);
+        } catch (ParseException e) {
+            log.error("Error", e);
+            return 0;
+        }
+        return ((Integer) count.get("count")).longValue();
     }
 
     private Pageable createPageableFromParams(MultiValueMap<String, String> queryParams) {
@@ -114,30 +136,13 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         }
     }
 
-    private Aggregation createAggregationFromUserAndParams(Tuple2<CurrentUserWithPerimeters,
-            MultiValueMap<String, String>> params, Pageable pageableRequest) {
 
-        List<Criteria> criteria = new ArrayList<>();
+    private  List<AggregationOperation> getOperations(Tuple2<CurrentUserWithPerimeters,
+    MultiValueMap<String, String>> params,Pageable pageableRequest) {
 
         CurrentUserWithPerimeters currentUserWithPerimeters = params.getT1();
         MultiValueMap<String, String> queryParams = params.getT2();
-
-        /* Handle special parameters */
-
-        // Publish date range
-        criteria.addAll(publishDateCriteria(queryParams));
-
-        // Active range
-        criteria.addAll(activeRangeCriteria(queryParams));
-
-        /* Handle regular parameters */
-        criteria.addAll(regularParametersCriteria(queryParams));
-
-        /* Add user criteria */
-        criteria.add(computeCriteriaForUser(currentUserWithPerimeters));
-
-        /* Add child cards criteria (by default, child cards are not included) */
-        criteria.add(childCardsIncludedOrNotCriteria(queryParams));
+        List<Criteria> criteria = getCriteria(queryParams, currentUserWithPerimeters);
 
         boolean latestUpdateOnly = isLatestUpdateOnlyParamPresent(params.getT2());
         
@@ -151,8 +156,8 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
                 project("uid",
                         "publisher",
                         "processVersion",
-                        "process",
-                        "processInstanceId",
+                        PROCESS_FIELD,
+                        PROCESS_INSTANCE_ID_FIELD,
                         "state",
                         "title",
                         "summary",
@@ -169,16 +174,65 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
                 sort(Sort.by(Sort.Order.desc(PUBLISH_DATE_FIELD)))));
 
         if (latestUpdateOnly) {
-            operations.add(group("process", "processInstanceId").first(Aggregation.ROOT).as(LATEST_UPDATE_ONLY));
+            operations.add(group(PROCESS_FIELD,PROCESS_INSTANCE_ID_FIELD).first(Aggregation.ROOT).as(LATEST_UPDATE_ONLY));
             operations.add(project(LATEST_UPDATE_ONLY).andExclude("_id"));
             operations.add(sort(Sort.by(Sort.Order.desc(LATEST_UPDATE_ONLY + "." + PUBLISH_DATE_FIELD))));
+           
         }
         if ((pageableRequest != null) && (pageableRequest.isPaged())) {
             operations.add(skip((long) (pageableRequest.getPageNumber() * pageableRequest.getPageSize())));
             operations.add(limit(pageableRequest.getPageSize()));
         }
-        return newAggregation(operations);
+        return operations;
     }
+
+    private  List<AggregationOperation> getOperationsForCount(Tuple2<CurrentUserWithPerimeters,
+    MultiValueMap<String, String>> params) {
+
+        CurrentUserWithPerimeters currentUserWithPerimeters = params.getT1();
+        MultiValueMap<String, String> queryParams = params.getT2();
+        List<Criteria> criteria = getCriteria(queryParams, currentUserWithPerimeters);
+
+        boolean latestUpdateOnly = isLatestUpdateOnlyParamPresent(params.getT2());
+        
+        List<AggregationOperation> operations = new ArrayList<>(Arrays.asList(
+                match(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()]))),
+                project("uid",
+                        PROCESS_FIELD,
+                        PROCESS_INSTANCE_ID_FIELD
+                        )
+
+                ));
+        if (latestUpdateOnly) {
+            operations.add(group(PROCESS_FIELD,PROCESS_INSTANCE_ID_FIELD).first(Aggregation.ROOT).as(LATEST_UPDATE_ONLY));
+            operations.add(project(LATEST_UPDATE_ONLY).andExclude("_id"));
+        }
+        operations.add(count().as("count"));
+        return operations;
+    }
+
+    private List<Criteria> getCriteria(MultiValueMap<String, String> queryParams,
+            CurrentUserWithPerimeters currentUserWithPerimeters) {
+        List<Criteria> criteria = new ArrayList<>();
+        // Publish date range
+        criteria.addAll(publishDateCriteria(queryParams));
+
+        // Active range
+        criteria.addAll(activeRangeCriteria(queryParams));
+
+        /* Handle regular parameters */
+        criteria.addAll(regularParametersCriteria(queryParams));
+
+        /* Add user criteria */
+        criteria.add(computeCriteriaForUser(currentUserWithPerimeters));
+
+        /* Add child cards criteria (by default, child cards are not included) */
+        criteria.add(childCardsIncludedOrNotCriteria(queryParams));
+
+        return criteria;
+
+    }
+
 
     private List<Criteria> regularParametersCriteria(MultiValueMap<String, String> params) {
 
