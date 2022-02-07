@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,7 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subject} from 'rxjs';
 
 import {ProcessesService} from '@ofServices/processes.service';
-import {debounceTime, takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {ConfigService} from '@ofServices/config.service';
 import {TimeService} from '@ofServices/time.service';
@@ -29,6 +29,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import { Utilities } from 'app/common/utilities';
+
 
 
 @Component({
@@ -60,13 +61,6 @@ export class LoggingComponent implements OnDestroy, OnInit {
     @ViewChild('filters') filtersTemplate: ArchivesLoggingFiltersComponent;
     listOfProcessesForFilter = [];
     listOfProcessesForRequest = []; 
-
-    publishMinDate : {year: number, month: number, day: number} = null;
-    publishMaxDate : {year: number, month: number, day: number} = null;
-    activeMinDate : {year: number, month: number, day: number} = null;
-    activeMaxDate : {year: number, month: number, day: number} = null;
-
-    dateTimeFilterChange = new Subject();
 
     isThereProcessStateToDisplay: boolean;
 
@@ -113,30 +107,10 @@ export class LoggingComponent implements OnDestroy, OnInit {
     ngOnInit() {
         this.size = this.configService.getConfigValue('logging.filters.page.size', 10);
         this.tags = this.configService.getConfigValue('logging.filters.tags.list');
+
         this.results = [];
-        this.dateTimeFilterChange.pipe(
-            takeUntil(this.unsubscribe$),
-            debounceTime(1000),
-        ).subscribe(() => this.setDateFilterBounds());
+
         this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(false).size > 0;
-    }
-
-
-    setDateFilterBounds(): void {
-
-        if (this.loggingForm.value.publishDateFrom?.date) {
-            this.publishMinDate = {year: this.loggingForm.value.publishDateFrom.date.year, month: this.loggingForm.value.publishDateFrom.date.month, day: this.loggingForm.value.publishDateFrom.date.day};
-        }
-        if (this.loggingForm.value.publishDateTo?.date) {
-            this.publishMaxDate = {year: this.loggingForm.value.publishDateTo.date.year, month: this.loggingForm.value.publishDateTo.date.month, day: this.loggingForm.value.publishDateTo.date.day};
-        }
-
-        if (this.loggingForm.value.activeFrom?.date) {
-            this.activeMinDate = {year: this.loggingForm.value.activeFrom.date.year, month: this.loggingForm.value.activeFrom.date.month, day: this.loggingForm.value.activeFrom.date.day};
-        }
-        if (this.loggingForm.value.activeTo?.date) {
-            this.activeMaxDate = {year: this.loggingForm.value.activeTo.date.year, month: this.loggingForm.value.activeTo.date.month, day: this.loggingForm.value.activeTo.date.day};
-        }
     }
 
     resetForm() {
@@ -144,15 +118,8 @@ export class LoggingComponent implements OnDestroy, OnInit {
         this.firstQueryHasBeenDone = false;
         this.hasResult = false;
         this.resultsNumber = 0;
-        this.publishMinDate = null;
-        this.publishMaxDate = null;
-        this.activeMinDate = null;
-        this.activeMaxDate = null;
     }
 
-    onDateTimeChange(event: Event) {
-        this.dateTimeFilterChange.next(null);
-    }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
         this.store.dispatch(new AlertMessage({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}}));

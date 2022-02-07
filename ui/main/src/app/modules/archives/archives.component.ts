@@ -13,7 +13,7 @@ import {Subject} from 'rxjs';
 import {AppState} from '@ofStore/index';
 import {ProcessesService} from '@ofServices/processes.service';
 import {Store} from '@ngrx/store';
-import {debounceTime, takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {ConfigService} from '@ofServices/config.service';
 import {TimeService} from '@ofServices/time.service';
@@ -65,13 +65,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     fromEntityOrRepresentativeSelectedCard = null;
     listOfProcesses = [];
 
-    publishMinDate: {year: number, month: number, day: number} = null;
-    publishMaxDate: {year: number, month: number, day: number} = null;
-    activeMinDate: {year: number, month: number, day: number} = null;
-    activeMaxDate: {year: number, month: number, day: number} = null;
-
-    dateTimeFilterChange = new Subject();
-
     lastRequestID: number;
 
     displayContext: any = DisplayContext.ARCHIVE;
@@ -121,10 +114,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.tags = this.configService.getConfigValue('archive.filters.tags.list');
         this.results = [];
         this.updatesByCardId = [];
-        this.dateTimeFilterChange.pipe(
-            takeUntil(this.unsubscribe$),
-            debounceTime(1000),
-        ).subscribe(() => this.setDateFilterBounds());
+        
         this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(true).size > 0;
     }
 
@@ -134,37 +124,11 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.sendQuery(0);
     }
 
-    setDateFilterBounds(): void {
-
-        if (this.archiveForm.value.publishDateFrom?.date) {
-            this.publishMinDate = {year: this.archiveForm.value.publishDateFrom.date.year, month: this.archiveForm.value.publishDateFrom.date.month, day: this.archiveForm.value.publishDateFrom.date.day};
-        }
-        if (this.archiveForm.value.publishDateTo?.date) {
-            this.publishMaxDate = {year: this.archiveForm.value.publishDateTo.date.year, month: this.archiveForm.value.publishDateTo.date.month, day: this.archiveForm.value.publishDateTo.date.day};
-        }
-
-        if (this.archiveForm.value.activeFrom?.date) {
-            this.activeMinDate = {year: this.archiveForm.value.activeFrom.date.year, month: this.archiveForm.value.activeFrom.date.month, day: this.archiveForm.value.activeFrom.date.day};
-        }
-        if (this.archiveForm.value.activeTo?.date) {
-            this.activeMaxDate = {year: this.archiveForm.value.activeTo.date.year, month: this.archiveForm.value.activeTo.date.month, day: this.archiveForm.value.activeTo.date.day};
-        }
-    }
-
     resetForm() {
         this.archiveForm.reset();
         this.firstQueryHasBeenDone = false;
         this.hasResult = false;
         this.resultsNumber = 0;
-        this.publishMinDate = null;
-        this.publishMaxDate = null;
-        this.activeMinDate = null;
-        this.activeMaxDate = null;
-    }
-
-
-    onDateTimeChange(event: Event) {
-        this.dateTimeFilterChange.next(null);
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {

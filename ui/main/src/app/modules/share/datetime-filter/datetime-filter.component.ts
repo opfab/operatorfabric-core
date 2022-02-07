@@ -8,7 +8,7 @@
  */
 
 import {Component, EventEmitter, forwardRef, Injectable, Input, OnInit, OnDestroy, Output} from '@angular/core';
-import {ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {AbstractControl, ControlContainer, ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {NgbDatepickerI18n, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
@@ -76,8 +76,10 @@ export class DatetimeFilterComponent implements ControlValueAccessor,OnInit, OnD
         date: this.dateInput,
         time: this.timeInput
     });
+    private control: AbstractControl;
 
-    constructor(private store: Store<AppState>, private translateService: TranslateService) {
+    constructor(private store: Store<AppState>, private translateService: TranslateService,
+    private controlContainer: ControlContainer) {
         this.onChanges();
         this.resetDateAndTime();
     }
@@ -88,6 +90,9 @@ export class DatetimeFilterComponent implements ControlValueAccessor,OnInit, OnD
             this.placeholder = this.translateService.instant(i18nPrefix + "placeholder");
 
         });
+        if (!!this.controlContainer && !!this.filterPath) {
+            this.control = this.controlContainer.control.get(this.filterPath);
+          }
     }
 
     protected getLocale(): Observable<string> {
@@ -171,9 +176,14 @@ export class DatetimeFilterComponent implements ControlValueAccessor,OnInit, OnD
         let dateVal = null;
         if (this.defaultDate) {
             dateVal = this.defaultDate;
+            this.disabled = false;
         }
         // option `{emitEvent: false})` to reset completely control and mark it as 'pristine'
         this.dateInput.reset(dateVal, {emitEvent: false});
+
+        if (this.control) {
+            this.control.setValue(this.datetimeForm.value);
+        }
 
     }
 
