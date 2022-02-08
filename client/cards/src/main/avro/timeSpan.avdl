@@ -1,0 +1,18 @@
+@namespace("org.opfab.avro")
+protocol TimeSpanProtocl {
+	record HoursAndMinutes {
+		int hours;
+		int minutes;
+	}
+	record Recurrence {
+		HoursAndMinutes hoursAndMinutes;
+		union {null, array<int>} daysOfWeek = null;
+		union {null, string} timeZone = null;
+		union {null, int} durationInMinutes = null;
+	}
+	record TimeSpan {
+		timestamp_ms start;
+		union {null, timestamp_ms} end = null;
+		union {null, Recurrence} recurrence = null;
+	}
+}

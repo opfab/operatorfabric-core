@@ -151,9 +151,10 @@ public class SendKafkaCardShould {
             properties = {"auto.offset.reset = earliest"})
     public void consumer(ConsumerRecord<String, CardCommand> consumerRecord) {
         CardCommand cardCommand = consumerRecord.value();
-        Card card = cardCommand.getCard();
+        ResponseCard card = cardCommand.getResponseCard();
 
         receiveCardCommandResultIsOK = card.getPublisher().equals("PUBLISHER_1") &&
+                card.getParentCardId().equals("MyParent123") &&
                 cardCommand.getCommand() == CommandType.RESPONSE_CARD;
         latch.countDown();
     }
@@ -166,6 +167,9 @@ public class SendKafkaCardShould {
 
         // Send response card via Kafka
         CardPublicationData cardPublicationData = CardPublicationData.builder()
+                .id("12345")
+                .uid("uid1234")
+                .parentCardId("MyParent123")
                 .publisher("PUBLISHER_1").processVersion("O")
                 .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                 .title(I18nPublicationData.builder().key("title").build())

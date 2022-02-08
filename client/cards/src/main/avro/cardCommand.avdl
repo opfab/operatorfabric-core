@@ -1,0 +1,14 @@
+@namespace("org.opfab.avro")
+protocol CardCommandProtocol {
+	import idl "card.avdl";
+	import idl "responseCard.avdl";
+	enum CommandType {
+		UNKNOWN,CREATE_CARD, UPDATE_CARD, DELETE_CARD, RESPONSE_CARD
+	} = UNKNOWN;
+
+	record CardCommand {
+		CommandType command;
+		union {null, Card} card = null;
+		union {null, ResponseCard} responseCard = null;
+	}
+}
