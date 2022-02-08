@@ -9,9 +9,9 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Router, UrlSegment} from '@angular/router';
 import {concatMap, map, skip, takeUntil} from 'rxjs/operators';
-import {Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
@@ -35,6 +35,7 @@ export class IframeDisplayComponent implements OnInit, OnDestroy {
     private store: Store<AppState>,
     private globalStyleService: GlobalStyleService,
     private router: Router,
+    private document: Document
   ) {
    }
 
@@ -46,6 +47,7 @@ export class IframeDisplayComponent implements OnInit, OnDestroy {
   private loadIframe() {
     this.route.paramMap.pipe(
       concatMap(paramMap => this.businessconfigService.queryMenuEntryURL(paramMap.get('menu_id'), paramMap.get('menu_entry_id'))),
+      concatMap((url) => this.addRoutingToUrl(url)),
       map((url) => this.addOpfabThemeParamToUrl(url)),
       map((url) => this.addParamToUrl(url)),
       map((url) => this.sanitizer.bypassSecurityTrustResourceUrl(url)),
@@ -56,6 +58,17 @@ export class IframeDisplayComponent implements OnInit, OnDestroy {
         console.log('Error in business application redirection = ', err); this.router.navigate(['/feed']);
       }
     });
+  }
+
+  private addRoutingToUrl(url: string): Observable<string> {
+    return this.route.paramMap.pipe(
+        map(paramMap => {
+          // Capture everything between the last part of the menu and the first occurrence of question mark. (to avoid messing with parameters).
+          // example: /menu1/entry1/deeplink?someParam=param turns into "/deeplink"
+          const additionalRouting = this.router.url.match(`.*${paramMap.get('menu_id')}\/${paramMap.get('menu_entry_id')}(\/[^?]*)`);
+          return additionalRouting ? additionalRouting[1] : '';
+        }),
+        map(routing => url += routing));
   }
 
 
@@ -75,9 +88,8 @@ export class IframeDisplayComponent implements OnInit, OnDestroy {
   //
   // The user will be redirected to the url configured + the parameters
 
-  private addParamToUrl(url)
-  {
-    const params = document.location.href.split('?');
+  private addParamToUrl(url) {
+    const params = this.document.location.href.split('?');
     if (!!params[1]) return url+ '&' + params[1]
     return url;
   }
@@ -88,10 +100,8 @@ export class IframeDisplayComponent implements OnInit, OnDestroy {
       .subscribe(() => this.loadIframe());
   }
 
-
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
-
 }

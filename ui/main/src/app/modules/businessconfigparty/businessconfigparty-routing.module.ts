@@ -15,8 +15,14 @@ import {IframeDisplayComponent} from "./iframedisplay.component";
 
 const routes: Routes = [
     {
-        path: ':menu_id/:menu_entry_id',
-        component: IframeDisplayComponent
+      path: ':menu_id/:menu_entry_id',
+      component: IframeDisplayComponent,
+      children: [
+        {
+          path: "**",
+          component: IframeDisplayComponent
+        }
+      ]
     }
 ];
 
