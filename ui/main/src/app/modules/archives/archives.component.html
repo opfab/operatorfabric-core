@@ -98,8 +98,8 @@
             <td></td>
             <td style="padding-left: 30px"> {{displayTime(historyCard.publishDate)}} </td>
             <td style="padding-left: 30px"> {{displayTime(historyCard.startDate)}} - {{displayTime(historyCard.endDate)}} </td>
-            <td>{{historyCard.titleTranslated}}</td>
-            <td>{{ historyCard.summaryTranslated}}</td>
+            <td style="padding-left: 30px">{{historyCard.titleTranslated}}</td>
+            <td style="padding-left: 30px">{{ historyCard.summaryTranslated}}</td>
             <td style="padding-left: 30px" *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>{{ processesService.findProcessGroupLabelForProcess(historyCard.process) }}</td>
           </tr>
           <tr *ngIf="updates.tooManyRows">
