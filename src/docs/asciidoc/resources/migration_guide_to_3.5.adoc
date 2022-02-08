@@ -13,3 +13,26 @@ The feature to manage timeline inside opfab has been removed. In consequence, yo
 
  * i10n.supported.time-zones
  * settings.infos.hide.timezone
+
+== Kafka card format changes
+
+The Kafka message schema has been changed. The single card used to send messages to and receive from Operator Fabric
+has been split into two cards; one for sending to OpFab and one for receiving messages from OpFab. The CardCommand structure now contains a `card`  (to OpFab) and a `responseCard` (from OpFab).
+You will need to change the Kafka listener to get the response card.
+
+For example change
+```java
+ @KafkaListener
+    public void receivedResponseCard(@Payload ConsumerRecord<String, CardCommand> consumerRecord) {
+        CardCommand cardCommand = consumerRecord.value();
+        Card = cardCommand.getCard();
+```
+
+to
+```java
+ @KafkaListener
+    public void receivedResponseCard(@Payload ConsumerRecord<String, CardCommand> consumerRecord) {
+        CardCommand cardCommand = consumerRecord.value();
+        ResponseCard = cardCommand.getResponseCard();
+```
+

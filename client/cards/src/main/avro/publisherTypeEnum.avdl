@@ -1,0 +1,6 @@
+@namespace("org.opfab.avro")
+protocol PublisherTypeEnumProtocol {
+	enum PublisherTypeEnum {
+		EXTERNAL, ENTITY
+	}
+}

@@ -54,8 +54,8 @@ To enable Kafka support you need to set the `kafka.consumer.group_id property` i
         group-id: opfab-command
 ----
 
-The default topic from which the messages are consumed is called `opfab`. This setting can be modified by setting `opfab.kafka.card.topics.topicname`.
-The default topic to which messages are produced is called `opfab-response`. This setting can be modified by setting the `opfab.kafka.topics.response-card`, see below.
+The default topic from which the messages are consumed is called `opfab`. This setting can be modified by setting `opfab.kafka.card.topics.topicname`. Messages are encoded in the `CardCommand.card` field.
+The default topic to which messages are produced is called `opfab-response`. This setting can be modified by setting the `opfab.kafka.topics.response-card`, see below. Messages produced by Operator Fabric are encoded in the `CardCommand.responseCard` field
 
 The default Kafka Avro serializers and deserializers need a registry service. Make sure the registry service setting is provided in
 the `card-publication.yml` file. When you use the provided `KafkaAvroWithoutRegistrySerializer` and
@@ -154,7 +154,6 @@ When you dump the card (which is about to be put on a topic) to stdout, you shou
       "tso2-operator"
     ],
     "groupRecipients": null,
-    "externalRecipients": null,
     "entitiesAllowedToRespond": [
       "ENTITY1_FR"
     ],

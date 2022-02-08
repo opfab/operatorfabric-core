@@ -1,0 +1,48 @@
+@namespace("org.opfab.avro")
+protocol ResponseCardProtocol {
+	import idl "severityType.avdl";
+	import idl "timeSpan.avdl";
+	import idl "i18n.avdl";
+	import idl "publisherTypeEnum.avdl";
+
+	record ResponseCard {
+		string id;
+		string uid;
+		union {null, string} parentCardId = null;
+		union {null, string} initialParentCardUid = null;
+		union {null, array<string>} externalRecipients = null;
+
+		//Below is a copy of the card.avdl file.
+		union {null, boolean} keepChildCards = null;
+		string publisher;
+		string processVersion;
+		string process;
+		string processInstanceId;
+		string state;
+		union {null, timestamp_ms} publishDate = null;
+		union {null, timestamp_ms} lttd = null;
+		timestamp_ms startDate;
+		union {null, timestamp_ms} endDate = null;
+		SeverityType severity;
+		union {null, array<string>} tags = null;
+		union {null, array<TimeSpan>} timeSpans = null;
+		I18n title;
+		I18n summary;
+		union {null, string} titleTranslated = null;
+		union {null, string} summaryTranslated = null;
+		union {null, array<string>} userRecipients = null;
+		union {null, array<string>} groupRecipients = null;
+		union {null, array<string>} entitiesAllowedToRespond = null;
+		union {null, array<string>} entitiesRequiredToRespond = null;
+		union {null, array<string>} entityRecipients = null;
+		union {null, array<string>} entitiesAllowedToEdit = null;
+		union {null, string} data = null;
+		union {null, boolean} hasBeenAcknowledged = null;
+		union {null, boolean} hasBeenRead = null;
+		union {null, PublisherTypeEnum} publisherType = null;
+		union {null, string} representative = null;
+		union {null, PublisherTypeEnum} representativeType = null;
+		union {null, int} secondsBeforeTimeSpanForReminder = null;
+		union {null, boolean} toNotify = null;
+	}
+}

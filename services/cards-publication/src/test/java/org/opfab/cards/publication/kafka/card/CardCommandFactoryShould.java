@@ -39,24 +39,24 @@ class CardCommandFactoryShould {
     @InjectMocks
     CardCommandFactory cut;
     @Test
-    void create() {
+    void createResponseCard() {
         ReflectionTestUtils.setField(cut, "objectMapper", new CardObjectMapper());
 
         CardPublicationData cardPublicationData = createCardPublicationData();
-        CardCommand cardCommand = cut.create(cardPublicationData);
+        CardCommand cardCommand = cut.createResponseCard(cardPublicationData);
 
         assertThat (cardCommand.getCommand(), is (CommandType.RESPONSE_CARD));
-        assertThat (cardCommand.getCard().getProcess(), is (cardPublicationData.getProcess()));
-        assertThat (cardCommand.getCard().getState(), is(cardPublicationData.getState()));
+        assertThat (cardCommand.getResponseCard().getProcess(), is (cardPublicationData.getProcess()));
+        assertThat (cardCommand.getResponseCard().getState(), is(cardPublicationData.getState()));
     }
 
     @Test
-    void createFailure() throws JsonProcessingException {
+    void createResponseCardFailure() throws JsonProcessingException {
         CardObjectMapper failMapper = mock (CardObjectMapper.class);
         when (failMapper.readCardValue(any(), any())).thenThrow(JsonProcessingException.class);
         ReflectionTestUtils.setField(cut, "objectMapper", failMapper);
 
-        CardCommand cardCommand = cut.create(createCardPublicationData());
+        CardCommand cardCommand = cut.createResponseCard(createCardPublicationData());
         assertThat(cardCommand.getCommand(), is(nullValue()));
     }
 

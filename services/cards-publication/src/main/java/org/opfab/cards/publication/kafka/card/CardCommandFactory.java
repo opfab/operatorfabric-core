@@ -13,9 +13,9 @@ package org.opfab.cards.publication.kafka.card;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.opfab.avro.Card;
 import org.opfab.avro.CardCommand;
 import org.opfab.avro.CommandType;
+import org.opfab.avro.ResponseCard;
 import org.opfab.cards.publication.kafka.CardObjectMapper;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.springframework.stereotype.Component;
@@ -26,16 +26,16 @@ import org.springframework.stereotype.Component;
 public class CardCommandFactory {
     private final CardObjectMapper objectMapper;
 
-    public CardCommand create(CardPublicationData cardPublicationData) {
+    public CardCommand createResponseCard(CardPublicationData cardPublicationData) {
         CardCommand cardCommand = new CardCommand();
         final Object cardData = cardPublicationData.getData();
-        Card kafkaCard;
+        ResponseCard kafkaCard;
         try {
             cardPublicationData.setData(null); // Prevent Jackson errors
 
-            kafkaCard = objectMapper.readCardValue(objectMapper.writeValueAsString(cardPublicationData), Card.class);
+            kafkaCard = objectMapper.readCardValue(objectMapper.writeValueAsString(cardPublicationData), ResponseCard.class);
             cardCommand.setCommand(CommandType.RESPONSE_CARD);
-            cardCommand.setCard(kafkaCard);
+            cardCommand.setResponseCard(kafkaCard);
 
             String cardDataString = objectMapper.writeValueAsString(cardData);
             kafkaCard.setData(cardDataString);
