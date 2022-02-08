@@ -9,7 +9,7 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {ActivatedRoute, Router, UrlSegment} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {concatMap, map, skip, takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {Store} from '@ngrx/store';
