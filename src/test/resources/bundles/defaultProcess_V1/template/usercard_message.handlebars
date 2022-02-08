@@ -17,9 +17,13 @@
 <script>
     templateGateway.getSpecificCardInformation = function () {
         const message = document.getElementById('message').value;
+        let summaryParameter = message.slice(0, 100);
+        if (message.length > summaryParameter.length)
+            summaryParameter += '...';
+
         const card = {
-        summary : {key : "message.summary"},
-		title : {key : "messageState.usercard.title", parameters : {"title":message}},
+        summary : {key : "messageState.summary", parameters : {"summary": summaryParameter}},
+		title : {key : "messageState.title"},
         data : {message: message},
         entitiesAllowedToEdit: ['ENTITY_FR'],
         };

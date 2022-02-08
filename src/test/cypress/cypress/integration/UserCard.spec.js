@@ -253,7 +253,8 @@ describe('User Card ', function () {
           cy.hash().should('eq', '#/feed/cards/' + urlId);
           cy.get('of-card-details').find('of-detail');
           cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', "\n  Hello, that's a test message / Result is <OK> & work done is 100%\n");
-          cy.get('#opfab-card-title').should('have.text', "Message -   Hello, that's a test message / Result is <OK> & work done is 100%");
+          cy.get('#opfab-card-title').should('have.text', "Message");
+          cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Hello, that's a test message / Result is <OK> & work done is 100%");
         });
     })
 
@@ -272,7 +273,8 @@ describe('User Card ', function () {
           cy.hash().should('eq', '#/feed/cards/' + urlId);
           cy.get('of-card-details').find('of-detail');
           cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', "\n  Hello, that's a test message / Result is <OK> & work done is 100%\n");
-          cy.get('#opfab-card-title').should('have.text', "Message -   Hello, that's a test message / Result is <OK> & work done is 100%");
+          cy.get('#opfab-card-title').should('have.text', "Message");
+          cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Hello, that's a test message / Result is <OK> & work done is 100%");
         });
     })
   })
@@ -314,7 +316,8 @@ describe('User Card ', function () {
           cy.hash().should('eq', '#/feed/cards/' + urlId);
           cy.get('of-card-details').find('of-detail');
           cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', "\n   Hello, that's a test message / Result is <OK> & work done is 100%  (updated)\n");
-          cy.get('#opfab-card-title').should('have.text', "Message -    Hello, that's a test message / Result is <OK> & work done is 100%  (updated)");
+          cy.get('#opfab-card-title').should('have.text', "Message");
+          cy.get('#opfab-selected-card-summary').should('have.text', "Message received :    Hello, that's a test message / Result is <OK> & work done is 100%  (updated)");
         });
     })
   })
@@ -409,7 +412,8 @@ describe('User Card ', function () {
           cy.hash().should('eq', '#/feed/cards/' + urlId);
           cy.get('of-card-details').find('of-detail');
           cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', '\n  Hello\n')
-          cy.get('#opfab-card-title').should('have.text', 'Message -   Hello')
+          cy.get('#opfab-card-title').should('have.text', 'Message')
+          cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Hello");
         });
     })
 
