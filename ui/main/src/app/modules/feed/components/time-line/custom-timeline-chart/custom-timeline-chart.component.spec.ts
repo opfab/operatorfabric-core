@@ -109,6 +109,30 @@ describe('CustomTimelineChartComponent', () => {
     expect(component.circles[0].circleYPosition).toEqual(4);
   });
 
+  it('set one circle if one card is just before time domain ', () => {
+    fixture.detectChanges();
+    component.domainId = 'Y'
+    component.xDomainWithOverlap = [startDate,endDate];
+    component.setXTicksValue();
+
+    console.log("xDomain = ", startDate, ", ", endDate);
+
+    // Test 1
+    const card1 = {
+      date:   moment(startDate).subtract(5,"hours"),
+      severity: 'ALARM',
+      summary: {parameters: 'param', key: 'process'},
+      publisher: 'TEST',
+      processVersion: '1',
+    };
+
+    component.cardsData = [card1];
+    component.createCircles();
+
+    expect(component.circles.length).toEqual(1);
+
+  });
+
 
   it('set no circle if one card is before time domain ', () => {
     fixture.detectChanges();

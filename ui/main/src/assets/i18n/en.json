@@ -101,7 +101,9 @@
       "W": "Week",
       "M": "Month",
       "Y": "Year"
-    }
+    },
+    "lockTooltip": "This button enables you to lock/unlock the timeline. The timeline is currently locked : it will stop moving as time goes by, regardless of the current timeline domain",
+    "unlockTooltip": "This button enables you to lock/unlock the timeline. The timeline is currently unlocked : it will shift as time goes by, regardless of the current timeline domain"
   },
   "multiFilter": {
     "searchPlaceholderText": "Search",

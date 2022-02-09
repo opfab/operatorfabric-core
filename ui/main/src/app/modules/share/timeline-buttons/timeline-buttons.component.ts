@@ -21,6 +21,7 @@ import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {TimeService} from "@ofServices/time.service";
 import {FilterService} from '@ofServices/lightcards/filter.service';
 import { dom } from '@fortawesome/fontawesome-svg-core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'of-timeline-buttons',
@@ -32,7 +33,6 @@ export class TimelineButtonsComponent implements OnInit {
     // required by Timeline
     public myDomain: number[];
     public domainId: string;
-    public timelineModel: TimelineModel;
 
     // required for domain movements specifications
     public followClockTick: boolean;
@@ -63,13 +63,13 @@ export class TimelineButtonsComponent implements OnInit {
 
     constructor(private store: Store<AppState>,
                 private time: TimeService,
+                private translate: TranslateService,
                 private userPreferences : UserPreferencesService,
                 private configService: ConfigService,
                 private userService: UserService,
                 private _appService: AppService,
                 private filterService: FilterService) {
 
-                    this.timelineModel = new TimelineModel();
     }
 
     ngOnInit() {
@@ -81,11 +81,22 @@ export class TimelineButtonsComponent implements OnInit {
         this.isTimelineLockDisabled = false;
 
         this.initDomains();
+
+        // Call appropriate methods to set tooltips on timeline lock button
+        // There is a verification that the buttons exist in order to make the test pass
+        let unlockButton = document.getElementById('opfab-timeline-unlock');
+        let lockButton = document.getElementById('opfab-timeline-lock');
+        if (unlockButton) {
+            unlockButton.setAttribute('title', this.getUnockedTimelineTooltipText());
+        }
+        if (lockButton) {
+            lockButton.setAttribute('title', this.getLockedTimelineTooltipText());
+        }
     }
 
 
     loadConfiguration() {
-        this.domains = this.timelineModel.getDomains();
+        this.domains = TimelineModel.getDomains();
     }
 
     loadDomainsListFromConfiguration() {
@@ -307,6 +318,7 @@ export class TimelineButtonsComponent implements OnInit {
         if (moveForward) {
             startDomain = this.goForward(startDomain.add(this.overlapDurationInMs, "milliseconds"));
             endDomain = this.goForward(endDomain);
+            console.log("~~~~~~~~~~~~~~~~~        Timeline moved");
         } else {
             startDomain = this.goBackward(startDomain.add(this.overlapDurationInMs, "milliseconds"));
             endDomain = this.goBackward(endDomain);
@@ -388,8 +400,17 @@ export class TimelineButtonsComponent implements OnInit {
 
     unlockTimeline() : void {
         this.followClockTick = true;
+
+        // Restore default domain when the user unlocks the timeline
+        this.setDefaultStartAndEndDomain(); 
     }
 
-   
+    getLockedTimelineTooltipText(): string {
+        return this.translate['timeline.lockTooltip'];
+    }
+
+    getUnockedTimelineTooltipText(): string {
+        return this.translate['timeline.unlockTooltip'];
+    }
 
 }

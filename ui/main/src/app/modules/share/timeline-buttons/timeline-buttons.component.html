@@ -35,8 +35,18 @@
         </li>
 
         <li style="width:1.5em">
-          <span *ngIf="isTimelineLocked()" id="opfab-timeline-unlock" class="fas fa-lock" (click)="unlockTimeline()" ></span>
-          <span *ngIf="!isTimelineLocked()" id="opfab-timeline-lock" class="fas fa-lock-open" (click)="lockTimeline()" ></span>
+          <span *ngIf="isTimelineLocked()" id="opfab-timeline-unlock" class="fas fa-lock" (click)="unlockTimeline()"
+                [ngbPopover]="tipLockedTimeline" popoverClass="opfab-popover" placement="left" container="body" triggers="mouseenter:mouseleave"></span>
+          <span *ngIf="!isTimelineLocked()" id="opfab-timeline-lock" class="fas fa-lock-open" (click)="lockTimeline()" 
+                [ngbPopover]="tipUnlockedTimeline" popoverClass="opfab-popover" placement="left" container="body" triggers="mouseenter:mouseleave"></span>
+
+          <ng-template #tipLockedTimeline>
+            <span translate>timeline.lockTooltip</span>
+          </ng-template>
+
+          <ng-template #tipUnlockedTimeline>
+            <span translate>timeline.unlockTooltip</span>
+          </ng-template>
         </li>
 
 

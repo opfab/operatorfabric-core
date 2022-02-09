@@ -21,6 +21,7 @@ describe('Session ended test', function () {
   it('Checking session end after 10 hours  ', () => {
     
     cy.loginWithClock();
+    cy.stubPlaySound();
     // go 1 hour in the future 
     cy.tick(1*60*60*1000);
    

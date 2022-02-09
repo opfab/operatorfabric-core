@@ -23,12 +23,14 @@ import {CustomRouterStateSerializer} from '@ofStates/router.state';
 import {RouterTestingModule} from '@angular/router/testing';
 import {MouseWheelDirective} from '../directives/mouse-wheel.directive';
 import {TimeService} from '@ofServices/time.service';
+import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
 import {GlobalStyleService} from "@ofServices/global-style.service";
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TimelineButtonsComponent} from "../../../../share/timeline-buttons/timeline-buttons.component";
 import {ConfigService} from "@ofServices/config.service";
 import {HttpClient, HttpHandler} from "@angular/common/http";
 import {AppService} from "@ofServices/app.service";
+import {BusinessconfigI18nLoaderFactory} from '@tests/helpers';
 import {LightCardsServiceMock} from '@tests/mocks/lightcards.service.mock';
 import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
 
@@ -38,6 +40,8 @@ describe('InitChartComponent', () => {
   let timelineButtonsComponent: TimelineButtonsComponent;
   let fixture: ComponentFixture<InitChartComponent>;
   let fixture2: ComponentFixture<TimelineButtonsComponent>;
+  let translate: TranslateService;
+  
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -48,7 +52,15 @@ describe('InitChartComponent', () => {
         RouterTestingModule,
         StoreRouterConnectingModule.forRoot(),
         NgxChartsModule,
-        NgbModule],
+        NgbModule,
+        TranslateModule.forRoot({
+          loader: {
+              provide: TranslateLoader,
+              useFactory: BusinessconfigI18nLoaderFactory
+          },
+          useDefaultLang: false
+      })
+      ],
       declarations: [ InitChartComponent, CustomTimelineChartComponent, MouseWheelDirective, TimelineButtonsComponent],
       providers: [{provide: APP_BASE_HREF, useValue: '/'},
         {provide: Store, useClass: Store},
@@ -63,11 +75,13 @@ describe('InitChartComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
     })
     .compileComponents();
+
     fixture = TestBed.createComponent(InitChartComponent);
     component = fixture.componentInstance;
 
     fixture2 = TestBed.createComponent(TimelineButtonsComponent);
     timelineButtonsComponent = fixture2.componentInstance;
+
   }));
 
 
