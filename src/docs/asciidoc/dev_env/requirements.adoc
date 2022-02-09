@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -27,7 +27,7 @@ below for details on:
 * Angular CLI
 * https://stedolan.github.io/jq/[jq]
 
-NOTE: the current Jdk used for the project is Java 11.0.9-zulu.
+NOTE: the current Jdk used for the project is Java 11.0.14-zulu.
 
 IMPORTANT: It is highly recommended to use https://sdkman.io/[sdkman] and
 https://github.com/nvm-sh/nvm[nvm] to manage tools versions. The following steps rely on these tools.

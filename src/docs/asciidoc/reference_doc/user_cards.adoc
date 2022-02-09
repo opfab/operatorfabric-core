@@ -103,6 +103,8 @@ The following card fields can be set via the object `card` in the object returne
 
 * title 
 * summary
+* endDate (epoch date in ms)
+* lttd (epoch date in ms)
 * keepChildCards
 * secondsBeforeTimeSpanForReminder
 * severity (in case it is not visible from the user , when `severityVisible` set to false in `config.json`)
