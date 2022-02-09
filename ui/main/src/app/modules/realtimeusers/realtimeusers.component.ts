@@ -11,7 +11,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UserService} from '@ofServices/user.service';
 import {RealTimeScreensService} from '@ofServices/real-time-screens.service';
 import {RealTimeScreen} from '@ofModel/real-time-screens.model';
-import {User} from '@ofModel/user.model';
 import {EntitiesService} from '@ofServices/entities.service';
 import {GroupsService} from '@ofServices/groups.service';
 import {FormControl, FormGroup} from '@angular/forms';
@@ -27,8 +26,6 @@ import {Utilities} from '../../common/utilities';
 export class RealtimeusersComponent implements OnInit, OnDestroy {
 
   realTimeScreensForm: FormGroup;
-
-  realTimeUsersConnected: User[] = [];
   interval;
 
   realTimeScreens: Array<RealTimeScreen>;
@@ -92,28 +89,24 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
   }
 
   refresh() {
-    this.userService.getAllUsers().subscribe(users => {
+    this.userService.loadConnectedUsers().subscribe(connectedUsers => {
+      this.connectedUsersPerEntityAndGroup.clear();
 
-      this.userService.loadConnectedUsers().subscribe(connectedUsers => {
-        const connectedLogins: string[] = [];
-        this.connectedUsersPerEntityAndGroup.clear();
-        connectedUsers.forEach(connectedUser => connectedLogins.push(connectedUser.login));
+      connectedUsers.sort((obj1, obj2) => Utilities.compareObj(obj1.login, obj2.login));
 
-        this.realTimeUsersConnected = users.filter(user => connectedLogins.includes(user.login));
-        this.realTimeUsersConnected.sort((obj1, obj2) => Utilities.compareObj(obj1, obj2));
+      connectedUsers.forEach(realTimeUserConnected => {
+        realTimeUserConnected.entitiesConnected.forEach(entityConnected => {
+          realTimeUserConnected.groups.forEach(group => {
 
-        this.realTimeUsersConnected.forEach(realTimeUserConnected => {
-          realTimeUserConnected.entities.forEach(entity => {
-            realTimeUserConnected.groups.forEach(group => {
+            let usersConnectedPerEntityAndGroup = this.connectedUsersPerEntityAndGroup.get(entityConnected + '.' + group);
 
-              let usersConnectedPerEntityAndGroup = this.connectedUsersPerEntityAndGroup.get(entity + '.' + group);
+            if (! usersConnectedPerEntityAndGroup)
+              usersConnectedPerEntityAndGroup = [];
 
-              if (! usersConnectedPerEntityAndGroup)
-                usersConnectedPerEntityAndGroup = [];
-
+            // we don't want duplicates for the same user
+            if (! usersConnectedPerEntityAndGroup.includes(realTimeUserConnected.login))
               usersConnectedPerEntityAndGroup.push(realTimeUserConnected.login);
-              this.connectedUsersPerEntityAndGroup.set(entity + '.' + group, usersConnectedPerEntityAndGroup);
-            });
+            this.connectedUsersPerEntityAndGroup.set(entityConnected + '.' + group, usersConnectedPerEntityAndGroup);
           });
         });
       });

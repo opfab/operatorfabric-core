@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -53,8 +53,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     resultsNumber = 0;
     hasResult = false;
     firstQueryHasBeenDone = false;
-    loadingInProgress: boolean = false;
-    loadingIsTakingMoreThanOneSecond: boolean = false;
+    loadingInProgress = false;
+    loadingIsTakingMoreThanOneSecond = false;
     isCollapsibleUpdatesActivated = false;
 
     // View card
@@ -65,10 +65,10 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     fromEntityOrRepresentativeSelectedCard = null;
     listOfProcesses = [];
 
-    publishMinDate : {year: number, month: number, day: number} = null;
-    publishMaxDate : {year: number, month: number, day: number} = null;
-    activeMinDate : {year: number, month: number, day: number} = null;
-    activeMaxDate : {year: number, month: number, day: number} = null;
+    publishMinDate: {year: number, month: number, day: number} = null;
+    publishMaxDate: {year: number, month: number, day: number} = null;
+    activeMinDate: {year: number, month: number, day: number} = null;
+    activeMaxDate: {year: number, month: number, day: number} = null;
 
     dateTimeFilterChange = new Subject();
 
@@ -176,7 +176,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         const publishEnd = this.extractTime(this.archiveForm.get('publishDateTo'));
 
         if (publishStart != null && !isNaN(publishStart) && publishEnd != null && !isNaN(publishEnd) && publishStart > publishEnd) {
-            this.displayMessage('shared.filters.publishEndDateBeforeStartDate','',MessageLevel.ERROR);
+            this.displayMessage('shared.filters.publishEndDateBeforeStartDate', '', MessageLevel.ERROR);
             return;
         }
 
@@ -184,7 +184,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         const activeEnd = this.extractTime(this.archiveForm.get('activeTo'));
 
         if (activeStart != null && !isNaN(activeStart) && activeEnd != null && !isNaN(activeEnd) && activeStart > activeEnd) {
-            this.displayMessage('shared.filters.activeEndDateBeforeStartDate','',MessageLevel.ERROR);
+            this.displayMessage('shared.filters.activeEndDateBeforeStartDate', '', MessageLevel.ERROR);
             return;
         }
 
@@ -206,14 +206,13 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 this.hasResult = page.content.length > 0;
                 this.results = page.content;
 
-               
+
 
                 if (this.isCollapsibleUpdatesActivated) {
-                    let requestID = new Date().valueOf();
+                    const requestID = new Date().valueOf();
                     this.lastRequestID = requestID;
                     this.loadUpdatesByCardId(requestID);
-                }
-                else {
+                } else {
                     this.updatesByCardId = [];
                     this.results.forEach((lightCard, index) => {
                         this.updatesByCardId.push({mostRecent: lightCard, cardHistories: [], displayHistory: false, tooManyRows: false});
@@ -222,7 +221,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             });
     }
 
-    
+
         // we show a spinner on screen if archives loading takes more than 1 second
         private checkForArchiveLoadingInProgressForMoreThanOneSecond() {
             setTimeout(() => {
@@ -245,7 +244,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 .subscribe((page: Page<LightCard>) => {
                     this.removeMostRecentCardFromHistories(lightCard.id, page.content);
 
-                    //since we are in asynchronous mode, we test requestId to avoid that the requests "overlap" and that the results appear in a wrong order
+                    // since we are in asynchronous mode, we test requestId to avoid that the requests "overlap" and that the results appear in a wrong order
                     if (requestID === this.lastRequestID)
                         this.updatesByCardId.splice(index, 1, {mostRecent: lightCard, cardHistories: page.content, displayHistory: false, tooManyRows: page.totalPages > 1});
                 });
