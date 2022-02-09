@@ -101,7 +101,9 @@
       "W": "Semaine",
       "M": "Mois",
       "Y": "Année"
-    }
+    },
+    "lockTooltip": "Ce bouton permet de vérouiller/dévérouiller la timeline. La timeline est actuellement vérouillée : elle ne bougera pas avec le temps, quel que soit le domaine actuellement observé",
+    "unlockTooltip": "Ce bouton permet de vérouiller/dévérouiller la timeline. La timeline est actuellement dévérouillée : elle se décalera avec le temps, quel que soit le domaine actuellement observé"
   },
   "multiFilter": {
     "searchPlaceholderText": "Rechercher",

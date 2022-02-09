@@ -1,11 +1,12 @@
 export class TimelineModel {
 
 
-    public getDomains(): Object {
+    public static getDomains(): Object {
         return {
             J: {
                 buttonTitle: 'timeline.buttonTitle.J',
                 domainId:'J',
+                followClockTick: true,
                 useOverlap: true,
                 overlapDurationInMs: 15*60*1000
             }, TR: {
@@ -21,19 +22,19 @@ export class TimelineModel {
             }, 'W': {
                 buttonTitle: 'timeline.buttonTitle.W',
                 domainId : 'W',
-                followClockTick: false,
+                followClockTick: true,
                 useOverlap: true,
                 overlapDurationInMs: 2*60*60*1000
             }, M: {
                 buttonTitle: 'timeline.buttonTitle.M',
                 domainId : 'M',
-                followClockTick: false,
+                followClockTick: true,
                 useOverlap: true,
                 overlapDurationInMs: 4*60*60*1000
             }, Y: {
                 buttonTitle: 'timeline.buttonTitle.Y',
                 domainId: 'Y',
-                followClockTick: false,
+                followClockTick: true,
                 useOverlap: true,
                 overlapDurationInMs: 6*60*60*1000
             }

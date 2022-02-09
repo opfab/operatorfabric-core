@@ -63,7 +63,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   public title: string;
   public oldWidth = 0;
   public openPopover: NgbPopover;
-  private timelineModel: TimelineModel;
   
   // OVERLAP
   xDomainWithOverlap: any;
@@ -180,7 +179,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
      private filterService: FilterService) {
 
     super(chartElement, zone, cd, platformId);
-    this.timelineModel = new TimelineModel();
   }
 
   ngOnInit(): void {
@@ -206,7 +204,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
 
   initOverlap() {    
     if (this.domainId) {
-      let domainUsed = this.timelineModel.getDomains()[this.domainId];
+      let domainUsed = TimelineModel.getDomains()[this.domainId];
       this.useOverlap = domainUsed.useOverlap;
       this.overlapDurationInMs = this.useOverlap ? domainUsed.overlapDurationInMs : 0;
     }
@@ -255,7 +253,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       // in other views, the timeline is shifted at the end of the current cycle (day/week/month/year)
       else {
         if (this.xTicks[this.xTicks.length - 1].valueOf() <= moment().valueOf()) {
-          this.valueDomain = [this.xTicks[this.xTicks.length - 1].valueOf() - this.overlapDurationInMs, this.xDomainWithOverlap[1].valueOf() + (this.xTicks[this.xTicks.length - 1] - this.xDomainWithOverlap[0].valueOf())];
+          this.valueDomain = [this.xTicks[this.xTicks.length - 1].valueOf() - this.overlapDurationInMs, 
+                              this.xDomainWithOverlap[1].valueOf() + (this.xTicks[this.xTicks.length - 1] - this.xDomainWithOverlap[0].valueOf())];
           shiftTimeline = true;
 
         }
@@ -433,10 +432,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
 
   createCircles(): void {
 
-    console.log("In createCircles");
-
     this.circles = [];
     if (this.cardsData === undefined || this.cardsData === []) { return; }
+
 
     // filter cards by date
     this.cardsData.sort((val1, val2) => {
@@ -451,18 +449,14 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       cardsBySeverity[card.circleYPosition - 1].push(card);
     }
 
-    console.log("startDate = ", this.xTicks[0], " - endDate = ", this.xTicks[this.xTicks.length - 1]);
     // foreach severity array create the circles
     for (const cards of cardsBySeverity ) {
       let cardIndex = 0;
 
-
       // for each interval , if a least one card in the interval , create a circle object.
       if (cards.length > 0) {
-        console.log("this.xTicks = ", this.xTicks);
         for (let tickIndex = 1; tickIndex < this.xTicks.length; tickIndex++) {
 
-          let startLimit = this.xTicks[tickIndex - 1].valueOf();
           let endLimit = this.xTicks[tickIndex].valueOf();
 
           if (tickIndex + 1 === this.xTicks.length) {
@@ -470,7 +464,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
           }
 
           
-          if (cards[cardIndex] && cards[cardIndex].date >= startLimit && cards[cardIndex].date < endLimit ) {
+          if (cards[cardIndex] && cards[cardIndex].date < endLimit ) {
             // initialisation of a new circle
             const circle = {
               start: cards[cardIndex].date,
@@ -509,9 +503,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         }
       }
     }
-
-    console.log("this.circles.length = ", this.circles.length);
-
   }
 
   getCircleYPosition(severity: string): number {
