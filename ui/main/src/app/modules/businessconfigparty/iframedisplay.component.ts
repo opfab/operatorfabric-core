@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {ActivatedRoute, Router} from '@angular/router';
 import {concatMap, map, skip, takeUntil} from 'rxjs/operators';
@@ -17,6 +17,7 @@ import {AppState} from '@ofStore/index';
 import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {ConfigService} from '@ofServices/config.service';
+import {DOCUMENT} from "@angular/common";
 
 @Component({
   selector: 'of-iframedisplay',
@@ -35,7 +36,7 @@ export class IframeDisplayComponent implements OnInit, OnDestroy {
     private store: Store<AppState>,
     private globalStyleService: GlobalStyleService,
     private router: Router,
-    private document: Document
+    @Inject(DOCUMENT) private document: Document
   ) {
    }
 

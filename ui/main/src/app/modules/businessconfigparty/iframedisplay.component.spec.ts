@@ -9,6 +9,7 @@ import {
 } from "@ofSelectors/global-style.selectors";
 import {GlobalStyleService} from "@ofServices/global-style.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
+import {DOCUMENT} from "@angular/common";
 
 export class ActivatedRouteMock {
   public paramMap = of(convertToParamMap({
@@ -19,7 +20,7 @@ export class ActivatedRouteMock {
   public queryParamMap = of();
 }
 
-describe('IFrameDisplayComponent', () => {
+fdescribe('IFrameDisplayComponent', () => {
   let component: IframeDisplayComponent;
   let mockConfigService: jasmine.SpyObj<ConfigService>;
   let mockGlobalStyleService: jasmine.SpyObj<GlobalStyleService>;
@@ -31,7 +32,7 @@ describe('IFrameDisplayComponent', () => {
     TestBed.configureTestingModule({
       providers: [
         { provide: Router, useValue: { url: '/menu/entry' } },
-        { provide: Document, useValue: mockDocument },
+        { provide: DOCUMENT, useValue: mockDocument },
           IframeDisplayComponent,
         { provide: ActivatedRoute, useValue: new ActivatedRouteMock() },
         { provide: ConfigService, useValue: jasmine.createSpyObj('ConfigService', ['queryMenuEntryURL']) },
