@@ -61,7 +61,39 @@
     },
     "notBefore" : 0,
     "groups" : [ ]
-  }, {
+  },
+  {
+    "id" : "555a469f-8d21-4308-8229-3532fe6e52f5",
+    "createdTimestamp" : 1557499482370,
+    "username" : "operator5_fr",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "attributes" : {
+      "groups" : ["RTE;ADMIN;ReadOnly"]
+    },
+    "credentials" : [ {
+      "type" : "password",
+      "hashedSaltedValue" : "dD2BxsdcXiP8llVoM/YgTxWFPUYWDJ2oyYXvEBZSHADbNplTDk4GgHL5YJKCLbSE4ju2Itho510sFIDLjQrw7A==",
+      "salt" : "r2KO+r+7+qzvDWnN9Uer+A==",
+      "hashIterations" : 27500,
+      "counter" : 0,
+      "algorithm" : "pbkdf2-sha256",
+      "digits" : 0,
+      "period" : 0,
+      "createdDate" : 1557499490489,
+      "config" : { }
+    } ],
+    "disableableCredentialTypes" : [ "password" ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "uma_authorization", "offline_access" ],
+    "clientRoles" : {
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  },
+   {
     "id" : "d87d0a32-0ce9-4890-9b1c-0bde18df1977",
     "createdTimestamp" : 1557499437664,
     "username" : "service-account-opfab-client",
@@ -155,7 +187,7 @@
     "firstName" : "",
     "lastName" : "",
     "attributes" : {
-      "entitiesId" : [ "ENTITY1_FR;ENTITY2_FR;ENTITY3_FR" ],
+      "entitiesId" : [ "ENTITY1_FR;ENTITY2_FR;ENTITY3_FR;ENTITY3_FR" ],
       "groups" : ["Dispatcher;ReadOnly"]
     },
     "credentials" : [ {
