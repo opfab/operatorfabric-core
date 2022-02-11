@@ -33,7 +33,6 @@ public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters 
     private User userData;
     private Set<ComputedPerimeter> computedPerimeters;
     private Map<String, List<String>> processesStatesNotNotified;
-    private List<String> entitiesDisconnected;
 
     @Override
     public User getUserData(){return userData;}

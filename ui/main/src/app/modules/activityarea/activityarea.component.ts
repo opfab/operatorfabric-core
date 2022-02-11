@@ -54,23 +54,27 @@ export class ActivityareaComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+        this.userService.currentUserWithPerimeters().subscribe(result => {
+            this.currentUserWithPerimeters = result;
 
-        // we retrieve all the entities to which the user can connect
-        this.userService.getUser(this.currentUserWithPerimeters.userData.login).subscribe(currentUser => {
+            // we retrieve all the entities to which the user can connect
+            this.userService.getUser(this.currentUserWithPerimeters.userData.login).subscribe(currentUser => {
 
-            const entities = this.entitiesService.getEntitiesFromIds(currentUser.entities);
-            entities.forEach(entity => {
-                if (entity.entityAllowedToSendCard) { // this avoids to display entities used only for grouping
-                    const isDisconnected = ! this.currentUserWithPerimeters.userData.entities.includes(entity.id);
-                    this.userEntities.push(
-                        {entityId: entity.id,
-                            entityName: entity.name,
-                            isDisconnected: isDisconnected} );
-                }
+                const entities = this.entitiesService.getEntitiesFromIds(currentUser.entities);
+                entities.forEach(entity => {
+                    if (entity.entityAllowedToSendCard) { // this avoids to display entities used only for grouping
+                        const isDisconnected = !this.currentUserWithPerimeters.userData.entities.includes(entity.id);
+                        this.userEntities.push(
+                            {
+                                entityId: entity.id,
+                                entityName: entity.name,
+                                isDisconnected: isDisconnected
+                            });
+                    }
+                });
+                this.userEntities.sort((a, b) => Utilities.compareObj(a.entityName, b.entityName));
+                this.initForm();
             });
-            this.userEntities.sort((a, b) => Utilities.compareObj(a.entityName, b.entityName));
-            this.initForm();
         });
     }
 

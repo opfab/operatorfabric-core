@@ -45,7 +45,7 @@ describe ('Archives screen tests',function () {
         cy.get('of-card-detail').should('not.exist');
         cy.get('#opfab-archive-results-number').should('have.text', ' Results number  : 6 ')
 
-        // We send again the test cards and we check that the we have 10 lines of archived cards
+        // We send again the test cards, we check that we have 10 lines of archived cards,
         // and we check there is no plus or minus icon (because 'collapsible updates' mode is not activated)
         cy.send6TestCards();
         cy.get('#opfab-archives-logging-btn-search').click();
@@ -134,7 +134,7 @@ describe ('Archives screen tests',function () {
         cy.get('#opfab-state').click();
         cy.get('#opfab-state').find('li').should('have.length', 18);
 
-        // We unselect all processes then we select 'Process example' process and we check there is only 1 state for this process
+        // We unselect all processes then we select 'Process example' process, and we check there is only 1 state for this process
         cy.get('#opfab-process').click();
         cy.get('#opfab-process').contains('UnSelect All').click();
         cy.get('#opfab-process').contains('Process example').click();
@@ -232,7 +232,7 @@ describe ('Archives screen tests',function () {
         // We move to archives screen
         cy.get('#opfab-navbar-menu-archives').click();
 
-        // We send again the test cards, we activate the 'collapsible updates' mode and we check that the we have 6 lines of
+        // We send again the test cards, we activate the 'collapsible updates' mode and we check that we have 6 lines of
         // archived cards (6 * 2 instances per card) and we check we have plus icon for each line
         cy.send6TestCards();
         cy.get('#opfab-archives-logging-btn-search').click();
