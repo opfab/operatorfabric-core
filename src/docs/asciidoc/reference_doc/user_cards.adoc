@@ -103,6 +103,7 @@ The following card fields can be set via the object `card` in the object returne
 
 * title 
 * summary
+* startDate (epoch date in ms)
 * endDate (epoch date in ms)
 * lttd (epoch date in ms)
 * keepChildCards

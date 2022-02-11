@@ -326,8 +326,12 @@ export class UserCardComponent implements OnInit {
 
 
     private getStartDate(): number {
-        let startDate = this.datesForm.getStartDateAsEpoch();
-        if (!startDate) startDate = this.defaultStartDate;
+        let startDate = this.defaultStartDate;
+        if (this.startDateVisible) {
+            startDate = this.datesForm.getStartDateAsEpoch();
+        } else if (this.specificInformation.card.startDate) {
+            startDate = this.specificInformation.card.startDate;
+        }
         return startDate;
     }
 
