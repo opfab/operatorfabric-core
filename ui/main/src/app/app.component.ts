@@ -93,6 +93,29 @@ export class AppComponent implements OnInit {
        this.soundNotificationService.clearOutstandingNotifications();
   }
 
+  // On chrome or edge chromium, when exiting opfab via changing url in the browser tab
+  // the long polling HTTP connection is not closed due to the back/forward mechanism (see https://web.dev/bfcache/)
+  // this method force the closing of the HTTP connection when exiting opfab page
+  @HostListener('window:beforeunload')
+  onBeforeUnload() {
+    this.cardService.closeSubscription();
+    return null;
+  }
+
+  // Due to the previous method, when user use browser back function to return to opfab 
+  // if the back forward cache mechanism is activated, opfab is restored from browser memory but
+  // the HTTP long polling connection is closed
+  // so we need to reinitialize the application
+
+  @HostListener('window:pageshow', ['$event'])
+  pageShow(event) {
+    if (event.persisted) {
+      console.log('This page was restored from the bfcache , force opfab restart ');
+      location.reload();
+    }
+  }
+
+
 
   private loadConfiguration() {
 
