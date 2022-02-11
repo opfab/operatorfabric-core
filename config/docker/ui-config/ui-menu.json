@@ -175,6 +175,36 @@
           }
         }
       }
+    },
+    {
+      "language": "nl",
+      "i18n": {
+        "menu1": {
+          "title": {
+            "single": "Eerste menu"
+          },
+          "entry": {
+            "single": "Enkel menu-item"
+          }
+        },
+        "menu2": {
+          "title": {
+            "multi": "Tweede menu"
+          },
+          "entry": {
+            "entry1": "Eerste menu-item",
+            "entry2": "Tweede menu-item"
+          }
+        },
+        "adminmenu": {
+          "title": {
+            "admin": "Admin menu"
+          },
+          "entry": {
+            "admin": "Admin menu-item"
+          }
+        }
+      }
     }
   ]
 }

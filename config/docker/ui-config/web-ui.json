@@ -68,7 +68,8 @@
     "supported": {
       "locales": [
         "en",
-        "fr"
+        "fr",
+        "nl"
       ]
     }
   },
