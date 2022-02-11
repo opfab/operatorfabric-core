@@ -5,7 +5,7 @@
 	},
 	"messageState":{
 		"title": "Message",
-		"summary": "Message received : {{{summary}}}"
+		"summary": "Message received : {{summary}}"
 	},
 	"chartDetail" : { "title": "A Chart"},
 	"chartLine" : { "title": "Electricity consumption forecast"},

@@ -79,7 +79,8 @@ ext {
             jsonSmart      : "net.minidev:json-smart:2.4.7",
             handlebars     : "com.github.jknack:handlebars:4.3.0",
             jacksonDatabind   : "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabind",
-            jlibmodbus     : "com.intelligt.modbus:jlibmodbus:WORKAROUND"
+            jlibmodbus     : "com.intelligt.modbus:jlibmodbus:WORKAROUND",
+            commonsText    : "org.apache.commons:commons-text:$apacheCommonsText"
     ]
 
     generator = [
