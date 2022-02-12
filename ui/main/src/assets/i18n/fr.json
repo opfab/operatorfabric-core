@@ -92,7 +92,6 @@
   "timeline": {
     "hideTimeline" : "Masquer la timeline",
     "showTimeline" : "Afficher la Timeline",
-    "blockTimeline" : "Figer la timeline",
     "businessPeriod": "Période métier",
     "buttonTitle": {
       "TR": "Temps réel",
