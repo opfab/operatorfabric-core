@@ -99,20 +99,20 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   @Input()
   set valueDomain(value: any) {
     this.xDomain = value;
-    this.setDomainForTimeLineGridDisplay(value);
+    this.setDomainForTimeLineGridDisplay();
     this.setTitle();
     this.setWeekRectanglePositions();
   }
 
-  setDomainForTimeLineGridDisplay(domain: any) {
+  setDomainForTimeLineGridDisplay() {
     // Refresh this.useOverlap
     this.initOverlap();
 
-    this.xDomainForTimeLineGridDisplay = domain;
+    this.xDomainForTimeLineGridDisplay = this.xDomain;
 
     if (this.useOverlap) {
-      this.xDomain = [domain[0], domain[1]];
-      this.xDomainForTimeLineGridDisplay = [domain[0] + this.overlapDurationInMs, domain[1]];
+      this.xDomain = [this.xDomain[0], this.xDomain[1]];
+      this.xDomainForTimeLineGridDisplay = [this.xDomain[0] + this.overlapDurationInMs, this.xDomain[1]];
     }
   }
 
@@ -192,7 +192,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.updateRealtime();
     this.initDataPipe();
 
-    this.setDomainForTimeLineGridDisplay(this.xDomain);
+    this.setDomainForTimeLineGridDisplay();
     this.updateDimensions(); // need to init here only for unit test , otherwise dims is null
   }
 
