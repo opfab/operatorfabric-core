@@ -19,7 +19,7 @@ describe ('Feed configuration tests',function () {
     })
 
 
-    it('Check if timeline is unlocked for each view', function () {
+    it('Check timeline is unlocked for each view', function () {
 
         cy.loginOpFab('operator1_fr','test');
 
@@ -55,7 +55,7 @@ describe ('Feed configuration tests',function () {
 
     })
 
-    it('Check if timelime resets to current cycle when locking it, changing domain and unlocking timeline', function () {
+    it('Check timelime resets to current cycle when locking it, changing domain and unlocking timeline', function () {
 
         // Logging on Sunday, 31rst of March 2030, at 11h59
         // NB : for some reason month seems to start at 0
@@ -78,7 +78,7 @@ describe ('Feed configuration tests',function () {
 
 
     ////////////////////////////// Test on real time view
-    it('Check if timeline moves when unlocked in real time view', 
+    it('Check timeline moves when unlocked in real time view', 
         { defaultCommandTimeout: 10000}, function () {
 
         // Logging on Sunday, 31rst of March 2030, at 23h59
@@ -100,7 +100,7 @@ describe ('Feed configuration tests',function () {
         cy.get("@firstTimelineXTick").should("have.text", " 22h30 ");
     })
 
-    it('Check if timeline moves when locked in real time view',
+    it('Check timeline does not move when locked in real time view',
         { defaultCommandTimeout: 10000}, function () {
 
         // Logging on Sunday, 31rst of March 2030, at 23h59
@@ -126,7 +126,7 @@ describe ('Feed configuration tests',function () {
     ////////////////////////////// Test on seven dayw view
 
 
-    it('Check if timeline moves when unlocked in seven days view', 
+    it('Check timeline moves when unlocked in seven days view', 
         { defaultCommandTimeout: 10000}, function () {
 
         // Logging on Sunday, 31rst of March 2030, at 23h59
@@ -159,7 +159,7 @@ describe ('Feed configuration tests',function () {
         cy.get(".of-custom-timeline-chart").find(".chart").find("text").first().should("have.text", " ");
     })
 
-    it('Check if timeline moves when locked in seven days view', 
+    it('Check timeline does not move when locked in seven days view', 
     { defaultCommandTimeout: 10000}, function () {
 
     // Logging on Sunday, 31rst of March 2030, at 23h59
@@ -197,7 +197,7 @@ describe ('Feed configuration tests',function () {
     ////////////////////////////// Test on day view
 
 
-    it('Check if timeline moves when unlocked in Day view', 
+    it('Check timeline moves when unlocked in Day view', 
     { defaultCommandTimeout: 10000}, function () {
 
     // Logging on Sunday, 31rst of December 2028, at 23h59
@@ -244,7 +244,7 @@ describe ('Feed configuration tests',function () {
 
     })
 
-    it('Check if timeline moves when locked in Day view', 
+    it('Check timeline does not moves when locked in Day view', 
     { defaultCommandTimeout: 10000}, function () {
 
     // Logging on Sunday, 31rst of December 2028, at 23h59
