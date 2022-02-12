@@ -83,6 +83,7 @@ describe ('Feed configuration tests',function () {
 
         // Logging on Sunday, 31rst of March 2030, at 23h59
         // NB : for some reason month seems to start at 0
+        const currentDate =  new Date(2030, 2, 31, 23, 59)
         cy.loginWithClock(new Date(2030, 2, 31, 23, 59));
 
         cy.get(".axis").find("text").first().as('firstTimelineXTick');
@@ -92,12 +93,28 @@ describe ('Feed configuration tests',function () {
         cy.get("@firstTimelineXTick").should("exist");
         cy.get("@firstTimelineXTick").should("have.text", " 21h30 ");
 
-        // go 1 hour in the future 
-        cy.tick(1*60*60*1000);
+        // send a card with a bubble a the start of the time line 
+        cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime() - (2 * 60 * 60 *1000 + 15*60*1000) , currentDate.getTime() + 5*60*1000);
+        cy.wait(500);
+        cy.tick(1000);
+        cy.sendCard('cypress/feed/customAlarm.json', currentDate.getTime(), currentDate.getTime() + 10*60*60*1000);
+
+        // Wait for the card to arrive
+        cy.wait(500);
+        
+        cy.tick(1000);
+        cy.get("of-custom-timeline-chart").find("circle").should('have.length', 2);
+
+
+        // go 15 minutes in the future 
+        cy.tick(15*60*1000);
         cy.wait(500);
 
         // Check that the timeline moved accordingly
-        cy.get("@firstTimelineXTick").should("have.text", " 22h30 ");
+        cy.get("@firstTimelineXTick").should("have.text", " 22h ");
+        
+        // the bubble at the start of the timeline has disappear 
+        cy.get("of-custom-timeline-chart").find("circle").should('have.length', 1);
     })
 
     it('Check timeline does not move when locked in real time view',
@@ -341,7 +358,7 @@ describe ('Feed configuration tests',function () {
 
         // The card before midnight should be visible
         cy.get("#opfab-timeline-title").should("have.text", " 01 January 2029 ");
-        //cy.get("of-custom-timeline-chart").find("circle").should('have.length', 1);
+        cy.get("of-custom-timeline-chart").find("circle").should('have.length', 1);
 
     })
 

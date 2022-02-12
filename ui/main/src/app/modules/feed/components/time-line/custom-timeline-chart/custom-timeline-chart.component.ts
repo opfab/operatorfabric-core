@@ -447,9 +447,12 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     // foreach severity array create the circles
     for (const cards of cardsBySeverity ) {
       let cardIndex = 0;
-
-      // for each interval , if a least one card in the interval , create a circle object.
+      // move index to the first card in the time domain
       if (cards.length > 0) {
+        while (cards[cardIndex] && (cards[cardIndex].date < this.xDomain[0]) && (cardIndex < cards.length)) { cardIndex++; }
+      }
+      // for each interval , if a least one card in the interval , create a circle object.
+      if (cardIndex < cards.length) {
         for (let tickIndex = 1; tickIndex < this.xTicks.length; tickIndex++) {
 
           let endLimit = this.xTicks[tickIndex].valueOf();
