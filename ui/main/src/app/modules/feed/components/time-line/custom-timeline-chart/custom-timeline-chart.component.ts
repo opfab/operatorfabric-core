@@ -107,13 +107,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   setDomainForTimeLineGridDisplay() {
     // Refresh this.useOverlap
     this.initOverlap();
-
     this.xDomainForTimeLineGridDisplay = this.xDomain;
-
-    if (this.useOverlap) {
-      this.xDomain = [this.xDomain[0], this.xDomain[1]];
-      this.xDomainForTimeLineGridDisplay = [this.xDomain[0] + this.overlapDurationInMs, this.xDomain[1]];
-    }
+    if (this.useOverlap) this.xDomainForTimeLineGridDisplay = [this.xDomain[0] + this.overlapDurationInMs, this.xDomain[1]];
+    
   }
 
   setTitle()
