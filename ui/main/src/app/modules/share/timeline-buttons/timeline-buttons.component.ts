@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,20 +8,14 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import { TimelineModel } from '@ofModel/timeline-domains.model';
-import {AppService} from "@ofServices/app.service";
+import { TimelineModel } from '@ofModel/timeline-domains.model';    
 import {ConfigService} from "@ofServices/config.service";
-import {UserService} from "@ofServices/user.service";
 import moment from "moment";
 import {FilterType} from '@ofModel/feed-filter.model';
 import * as _ from 'lodash-es';
-import {Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {TimeService} from "@ofServices/time.service";
 import {FilterService} from '@ofServices/lightcards/filter.service';
-import { dom } from '@fortawesome/fontawesome-svg-core';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'of-timeline-buttons',
@@ -61,13 +55,9 @@ export class TimelineButtonsComponent implements OnInit {
 
     public hideTimeLine = false;
 
-    constructor(private store: Store<AppState>,
-                private time: TimeService,
-                private translate: TranslateService,
+    constructor(private time: TimeService,
                 private userPreferences : UserPreferencesService,
                 private configService: ConfigService,
-                private userService: UserService,
-                private _appService: AppService,
                 private filterService: FilterService) {
 
     }
@@ -82,16 +72,6 @@ export class TimelineButtonsComponent implements OnInit {
 
         this.initDomains();
 
-        // Call appropriate methods to set tooltips on timeline lock button
-        // There is a verification that the buttons exist in order to make the test pass
-        let unlockButton = document.getElementById('opfab-timeline-unlock');
-        let lockButton = document.getElementById('opfab-timeline-lock');
-        if (unlockButton) {
-            unlockButton.setAttribute('title', this.getUnockedTimelineTooltipText());
-        }
-        if (lockButton) {
-            lockButton.setAttribute('title', this.getLockedTimelineTooltipText());
-        }
     }
 
 
@@ -403,14 +383,6 @@ export class TimelineButtonsComponent implements OnInit {
 
         // Restore default domain when the user unlocks the timeline
         this.setDefaultStartAndEndDomain(); 
-    }
-
-    getLockedTimelineTooltipText(): string {
-        return this.translate['timeline.lockTooltip'];
-    }
-
-    getUnockedTimelineTooltipText(): string {
-        return this.translate['timeline.unlockTooltip'];
     }
 
 }
