@@ -65,7 +65,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   public openPopover: NgbPopover;
   
   // OVERLAP
-  xDomainWithOverlap: any;
+  xDomainForTimeLineGridDisplay: any;
   public useOverlap: boolean; // If true, will display cards received after xDomaine[1]-overlapDurationInMs will be displayed at the very beginning of the timeline
   overlapDurationInMs: number; 
 
@@ -99,20 +99,20 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   @Input()
   set valueDomain(value: any) {
     this.xDomain = value;
-    this.addOverlap(value);
+    this.setDomainForTimeLineGridDisplay(value);
     this.setTitle();
     this.setWeekRectanglePositions();
   }
 
-  addOverlap(domain: any) {
+  setDomainForTimeLineGridDisplay(domain: any) {
     // Refresh this.useOverlap
     this.initOverlap();
 
-    this.xDomainWithOverlap = domain;
+    this.xDomainForTimeLineGridDisplay = domain;
 
     if (this.useOverlap) {
       this.xDomain = [domain[0], domain[1]];
-      this.xDomainWithOverlap = [domain[0] + this.overlapDurationInMs, domain[1]];
+      this.xDomainForTimeLineGridDisplay = [domain[0] + this.overlapDurationInMs, domain[1]];
     }
   }
 
@@ -121,17 +121,17 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     switch (this.domainId) {
       case 'TR':
       case 'J':
-        this.title = moment(this.xDomainWithOverlap[0]).format('DD MMMM YYYY');
+        this.title = moment(this.xDomainForTimeLineGridDisplay[0]).format('DD MMMM YYYY');
         break;
       case 'M':
-        this.title = moment(this.xDomainWithOverlap[0]).format('MMMM YYYY').toLocaleUpperCase();
+        this.title = moment(this.xDomainForTimeLineGridDisplay[0]).format('MMMM YYYY').toLocaleUpperCase();
         break;
       case 'Y':
-        this.title = moment(this.xDomainWithOverlap[0]).format('YYYY').toLocaleUpperCase();
+        this.title = moment(this.xDomainForTimeLineGridDisplay[0]).format('YYYY').toLocaleUpperCase();
         break;
       case '7D':
       case 'W':
-        this.title = moment(this.xDomainWithOverlap[0]).format('DD/MM/YYYY').toLocaleUpperCase() + ' - ' +  moment(this.xDomainWithOverlap[1]).format('DD/MM/YYYY') ; 
+        this.title = moment(this.xDomainForTimeLineGridDisplay[0]).format('DD/MM/YYYY').toLocaleUpperCase() + ' - ' +  moment(this.xDomainForTimeLineGridDisplay[1]).format('DD/MM/YYYY') ; 
         break;
       default:
     }
@@ -140,13 +140,13 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   setWeekRectanglePositions() {
     this.weekRectangles = new Array();
     if (this.domainId === 'W' || this.domainId === '7D') {
-      let startOfDay = this.xDomainWithOverlap[0];
+      let startOfDay = this.xDomainForTimeLineGridDisplay[0];
       let changeBgColor = true;
-      while (startOfDay < this.xDomainWithOverlap[1]) {
+      while (startOfDay < this.xDomainForTimeLineGridDisplay[1]) {
         let endOfDay = moment(startOfDay);
         endOfDay.set('hour',23);
         endOfDay.set('minute',59);
-        if (endOfDay > this.xDomainWithOverlap[1]) endOfDay = this.xDomainWithOverlap[1];
+        if (endOfDay > this.xDomainForTimeLineGridDisplay[1]) endOfDay = this.xDomainForTimeLineGridDisplay[1];
         const week = {
           start: startOfDay,
           end: endOfDay,
@@ -163,7 +163,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   }
 
   get valueDomain() {
-    return this.xDomainWithOverlap;
+    return this.xDomainForTimeLineGridDisplay;
   }
 
   @Output() zoomChange: EventEmitter<string> = new EventEmitter<string>();
@@ -192,7 +192,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.updateRealtime();
     this.initDataPipe();
 
-    this.addOverlap(this.xDomain);
+    this.setDomainForTimeLineGridDisplay(this.xDomain);
     this.updateDimensions(); // need to init here only for unit test , otherwise dims is null
   }
 
@@ -244,7 +244,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       // the timeline shifts regularly in "real time" and "7 days" views
       if (this.domainId == "TR" || this.domainId == "7D") {
         if (this.xTicks[10].valueOf() <= moment().valueOf()) {
-          this.valueDomain = [this.xTicks[1].valueOf(), this.xDomainWithOverlap[1].valueOf() + (this.xTicks[1] - this.xDomainWithOverlap[0].valueOf())];
+          this.valueDomain = [this.xTicks[1].valueOf(), this.xDomainForTimeLineGridDisplay[1].valueOf() + (this.xTicks[1] - this.xDomainForTimeLineGridDisplay[0].valueOf())];
           shiftTimeline = true;
         }
       }
@@ -254,7 +254,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       else {
         if (this.xTicks[this.xTicks.length - 1].valueOf() <= moment().valueOf()) {
           this.valueDomain = [this.xTicks[this.xTicks.length - 1].valueOf() - this.overlapDurationInMs, 
-                              this.xDomainWithOverlap[1].valueOf() + (this.xTicks[this.xTicks.length - 1] - this.xDomainWithOverlap[0].valueOf())];
+                              this.xDomainForTimeLineGridDisplay[1].valueOf() + (this.xTicks[this.xTicks.length - 1] - this.xDomainForTimeLineGridDisplay[0].valueOf())];
           shiftTimeline = true;
 
         }
@@ -264,7 +264,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         this.filterService.updateFilter(
           FilterType.BUSINESSDATE_FILTER,
           true,
-          {start: this.xDomainWithOverlap[0], end: this.xDomainWithOverlap[1], domainId: this.domainId}
+          {start: this.xDomainForTimeLineGridDisplay[0], end: this.xDomainForTimeLineGridDisplay[1], domainId: this.domainId}
         );
         this.update();
       }
@@ -296,7 +296,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       legendType: ScaleType.Time
     });
 
-    this.xScale =  scaleTime().range([0, this.dims.width]).domain(this.xDomainWithOverlap);
+    this.xScale =  scaleTime().range([0, this.dims.width]).domain(this.xDomainForTimeLineGridDisplay);
     this.yScale =  scaleLinear().range([this.dims.height, 0]).domain([0, 5]);
     this.translateGraph = `translate(${this.dims.xOffset} , ${this.margin[0]})`;
     this.translateXTicksTwo = `translate(0, ${this.dims.height + 5})`;
@@ -337,13 +337,13 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   }
 
   setXTicksValue(): void {
-    const startDomain = moment(this.xDomainWithOverlap[0]);
+    const startDomain = moment(this.xDomainForTimeLineGridDisplay[0]);
     this.xTicks = [];
     this.xTicks.push(startDomain);
     const nextTick = moment(startDomain);
     const tickSize = this.getTickSize();
 
-    while (nextTick.valueOf() < this.xDomainWithOverlap[1].valueOf()) {
+    while (nextTick.valueOf() < this.xDomainForTimeLineGridDisplay[1].valueOf()) {
 
       // we need to make half month tick when Y domain
       if (this.domainId === 'Y') {
@@ -384,9 +384,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         if (card.timeSpans && card.timeSpans.length > 0) {
           card.timeSpans.forEach(timeSpan => {
             if (!!timeSpan.recurrence) {
-              let dateForReminder: number = getNextTimeForRepeating(card, this.xDomainWithOverlap[0].valueOf() + 1000 * card.secondsBeforeTimeSpanForReminder);
+              let dateForReminder: number = getNextTimeForRepeating(card, this.xDomainForTimeLineGridDisplay[0].valueOf() + 1000 * card.secondsBeforeTimeSpanForReminder);
 
-              while(dateForReminder >= 0 && (!timeSpan.end || (dateForReminder < timeSpan.end)) && dateForReminder < this.xDomainWithOverlap[1].valueOf()) {
+              while(dateForReminder >= 0 && (!timeSpan.end || (dateForReminder < timeSpan.end)) && dateForReminder < this.xDomainForTimeLineGridDisplay[1].valueOf()) {
                 const myCardTimeline = {
                   date: dateForReminder,
                   id: card.id,
@@ -570,7 +570,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   }
 
   checkInsideDomain(date): boolean {
-    const domain = this.xDomainWithOverlap;
+    const domain = this.xDomainForTimeLineGridDisplay;
     return date >= domain[0] && date <= domain[1];
   }
 
