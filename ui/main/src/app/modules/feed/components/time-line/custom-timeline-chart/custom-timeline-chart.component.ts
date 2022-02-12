@@ -259,7 +259,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         this.filterService.updateFilter(
           FilterType.BUSINESSDATE_FILTER,
           true,
-          {start: this.xDomainForTimeLineGridDisplay[0], end: this.xDomainForTimeLineGridDisplay[1], domainId: this.domainId}
+          {start: this.valueDomain[0], end: this.valueDomain[1], domainId: this.domainId}
         );
         this.update();
       }
