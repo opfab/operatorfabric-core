@@ -1,44 +1,46 @@
 export class TimelineModel {
 
+    public static OVERLAP_DURATION_IN_MS = 15 * 60 * 1000;
 
     public static getDomains(): Object {
         return {
-            J: {
+            'J': {
                 buttonTitle: 'timeline.buttonTitle.J',
-                domainId:'J',
+                domainId: 'J',
                 followClockTick: true,
-                useOverlap: true,
-                overlapDurationInMs: 15*60*1000
-            }, TR: {
+                useOverlap: true
+            },
+            'TR': {
                 buttonTitle: 'timeline.buttonTitle.TR',
-                domainId : 'TR',
+                domainId: 'TR',
                 followClockTick: true,
                 useOverlap: false
-            }, '7D': {
+            },
+            '7D': {
                 buttonTitle: 'timeline.buttonTitle.7D',
-                domainId:'7D',
+                domainId: '7D',
                 followClockTick: true,
                 useOverlap: false
-            }, 'W': {
+            },
+            'W': {
                 buttonTitle: 'timeline.buttonTitle.W',
-                domainId : 'W',
+                domainId: 'W',
                 followClockTick: true,
-                useOverlap: true,
-                overlapDurationInMs: 2*60*60*1000
-            }, M: {
+                useOverlap: true
+            },
+            'M': {
                 buttonTitle: 'timeline.buttonTitle.M',
-                domainId : 'M',
+                domainId: 'M',
                 followClockTick: true,
-                useOverlap: true,
-                overlapDurationInMs: 4*60*60*1000
-            }, Y: {
+                useOverlap: true
+            },
+            'Y': {
                 buttonTitle: 'timeline.buttonTitle.Y',
                 domainId: 'Y',
                 followClockTick: true,
-                useOverlap: true,
-                overlapDurationInMs: 6*60*60*1000
+                useOverlap: true
             }
-        };        
+        };
     }
 
 }
