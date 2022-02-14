@@ -25,7 +25,7 @@ import {FilterService} from '@ofServices/lightcards/filter.service';
 export class TimelineButtonsComponent implements OnInit {
 
     // required by Timeline
-    public myDomain: number[];
+    private myDomain: number[];
     public domainId: string;
 
     // required for domain movements specifications
@@ -71,6 +71,7 @@ export class TimelineButtonsComponent implements OnInit {
         this.isTimelineLockDisabled = false;
 
         this.initDomains();
+        this.shiftTimeLineIfNecessary();
 
     }
 
@@ -251,10 +252,12 @@ export class TimelineButtonsComponent implements OnInit {
     removeOverlap(startDomain) {
         let domainWithOverlap = startDomain;
 
+/** 
         if (this.useOverlap) {
             domainWithOverlap = startDomain.valueOf() - this.overlapDurationInMs;
+            console.log("Remove overlap = " , this.overlapDurationInMs);
         }
-
+*/
         return domainWithOverlap;
     }
 
@@ -298,7 +301,6 @@ export class TimelineButtonsComponent implements OnInit {
         if (moveForward) {
             startDomain = this.goForward(startDomain.add(this.overlapDurationInMs, "milliseconds"));
             endDomain = this.goForward(endDomain);
-            console.log("~~~~~~~~~~~~~~~~~        Timeline moved");
         } else {
             startDomain = this.goBackward(startDomain.add(this.overlapDurationInMs, "milliseconds"));
             endDomain = this.goBackward(endDomain);
@@ -384,5 +386,62 @@ export class TimelineButtonsComponent implements OnInit {
         // Restore default domain when the user unlocks the timeline
         this.setDefaultStartAndEndDomain(); 
     }
+
+    private shiftTimeLineIfNecessary() {
+        if (this.followClockTick) {
+            const currentDate = moment().valueOf();
+            let startDomain;
+            let endDomain;
+
+            switch (this.domainId) {
+                case 'TR':
+                    if (currentDate > 150 * 60 * 1000 + this.myDomain[0]) {
+                        this.setDefaultStartAndEndDomain();
+                    }
+                    break;
+                case 'J':
+                    // shift day  one minute before change of day 
+                    if (currentDate > this.myDomain[1] - 60 * 1000) {
+                        startDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0);
+                        endDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0).add(1, 'days');
+                        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
+                        break;
+                    }
+                    break;
+                case '7D':
+                    if (currentDate > 16 * 60 * 60 * 1000 + this.myDomain[0]) {
+                        this.setDefaultStartAndEndDomain();
+                    }
+                    break;
+                case 'W':
+                     // shift day  one minute before change of week 
+                    if (currentDate > this.myDomain[1] - 60 * 1000) {
+                        startDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0);
+                        endDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0).add(1, 'week');
+                        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
+                    }
+                    break;
+                case 'M':
+                    // shift day  one minute before change of month 
+                    if (currentDate > this.myDomain[1] - 60 * 1000) {
+                        startDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0);
+                        endDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0).add(1, 'months');
+                        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
+                    }
+                    break;
+
+                case 'Y':
+                    // shift day  one minute before change of year 
+                    if (currentDate > this.myDomain[1] - 60 * 1000) {
+                        startDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0);
+                        endDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0).add(1, 'years');
+                        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
+                    }
+                    break;
+            }
+        }
+        setTimeout(() => this.shiftTimeLineIfNecessary(), 10000);
+    }
+
 
 }
