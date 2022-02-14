@@ -88,45 +88,45 @@ describe('InitChartComponent', () => {
   it('check applyNewZoom function with only one button' +
       'forward level activated is different', () => {
     fixture.detectChanges();
-    timelineButtonsComponent.buttonTitle = 'W';
+    timelineButtonsComponent.selectedButtonTitle = 'W';
     timelineButtonsComponent.buttonList = [{buttonTitle: 'M',domainId:'M'}];
-    const tmp = timelineButtonsComponent.buttonTitle;
+    const tmp = timelineButtonsComponent.selectedButtonTitle;
     timelineButtonsComponent.applyNewZoom('in');
     // no change expected, cause button buttonList is not equal to buttonTitle
-    expect(tmp).toEqual(timelineButtonsComponent.buttonTitle);
+    expect(tmp).toEqual(timelineButtonsComponent.selectedButtonTitle);
     timelineButtonsComponent.applyNewZoom('out');
-    expect(tmp).toEqual(timelineButtonsComponent.buttonTitle);
+    expect(tmp).toEqual(timelineButtonsComponent.selectedButtonTitle);
     expect(component).toBeTruthy();
   });
 
   it('check applyNewZoom function with only one button' +
       'forward level activated is same than one button', () => {
     fixture.detectChanges();
-    timelineButtonsComponent.buttonTitle = 'W';
+    timelineButtonsComponent.selectedButtonTitle = 'W';
     timelineButtonsComponent.buttonList = [{buttonTitle: 'W'}];
-    const tmp = timelineButtonsComponent.buttonTitle;
+    const tmp = timelineButtonsComponent.selectedButtonTitle;
     timelineButtonsComponent.applyNewZoom('in');
     // no change expected, cause buttonList got only one button
-    expect(tmp).toEqual(timelineButtonsComponent.buttonTitle);
+    expect(tmp).toEqual(timelineButtonsComponent.selectedButtonTitle);
     timelineButtonsComponent.applyNewZoom('out');
-    expect(tmp).toEqual(timelineButtonsComponent.buttonTitle);
+    expect(tmp).toEqual(timelineButtonsComponent.selectedButtonTitle);
     expect(component).toBeTruthy();
   });
 
   it('check applyNewZoom function with two buttons' +
       'forward level activated is same than last button', () => {
     fixture.detectChanges();
-    timelineButtonsComponent.buttonTitle = 'W';
+    timelineButtonsComponent.selectedButtonTitle = 'W';
     timelineButtonsComponent.buttonList = [{buttonTitle: 'M',domainId:'M'}, {buttonTitle: 'W',domainId:'W'}];
     timelineButtonsComponent.applyNewZoom('in');
     // change expected, cause buttonList got two buttons :
     //  - one is the same than actual buttonTitle
     //  - next one has buttonList differe
-    expect(timelineButtonsComponent.buttonTitle).toEqual('M');
+    expect(timelineButtonsComponent.selectedButtonTitle).toEqual('M');
     expect(timelineButtonsComponent.buttonList[0].selected).toBeTruthy();
     expect(timelineButtonsComponent.buttonList[1].selected).toBeFalsy();
     timelineButtonsComponent.applyNewZoom('out');
-    expect(timelineButtonsComponent.buttonTitle).toEqual('W');
+    expect(timelineButtonsComponent.selectedButtonTitle).toEqual('W');
     expect(timelineButtonsComponent.buttonList[0].selected).toBeFalsy();
     expect(timelineButtonsComponent.buttonList[1].selected).toBeTruthy();
 
