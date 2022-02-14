@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,11 +39,11 @@ export class UserEffects {
 
     /**
      * after that the user is authenticated through the token,
-     * synchronize user data from the token with the backend 
-     * (if the user does not exists in the database it will be created) 
+     * synchronize user data from the token with the backend
+     * (if the user does not exist in the database it will be created)
      * and raise the UserApplicationRegistered action.
      */
-    
+
     checkUserApplication: Observable<UserActions> = createEffect(() => this.actions$
         .pipe(
             ofType(AuthenticationActionTypes.AcceptLogIn),
@@ -52,7 +52,7 @@ export class UserEffects {
                 .pipe(
                     map((user: User) => new UserApplicationRegistered({user})),
                     catchError((error, caught) => {
-                        console.log("Error in synchronizeWithToken");
+                        console.log('Error in synchronizeWithToken');
                         this.authService.clearAuthenticationInformation();
                         return caught;
                     })

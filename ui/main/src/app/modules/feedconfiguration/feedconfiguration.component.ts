@@ -233,24 +233,25 @@ export class FeedconfigurationComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.userService.currentUserWithPerimeters().subscribe(result => {
-            this.currentUserWithPerimeters = result;
+        this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
 
-            this.processGroupsAndLabels = this.processesService.getProcessGroupsAndLabels();
-            this.processGroupsAndLabels.forEach(group => {
-                group.processes.sort((obj1, obj2) => Utilities.compareObj(obj1.processLabel, obj2.processLabel));
-            });
-
-            this.processGroupsAndLabels.sort((obj1, obj2) => Utilities.compareObj(obj1.groupLabel, obj2.groupLabel));
-
-            if (this.processesDefinition) this.computePreparedListOfProcessesStatesAndProcessesStatesLabels();
-            this.makeProcessesWithoutGroup();
-            this.addCheckboxesInFormArray();
-            this.removeProcessesWithoutDisplayedStates();
-            this.loadIsAllStatesSelected();
-            this.makeProcessIdsByProcessGroup();
-            this.loadIsAllProcessesSelected();
+        this.processGroupsAndLabels = this.processesService.getProcessGroupsAndLabels();
+        this.processGroupsAndLabels.forEach(group => {
+            group.processes.sort((obj1, obj2) => Utilities.compareObj(obj1.processLabel, obj2.processLabel));
         });
+
+        this.processGroupsAndLabels.sort((obj1, obj2) => Utilities.compareObj(obj1.groupLabel, obj2.groupLabel));
+
+        if (this.processesDefinition)
+            this.computePreparedListOfProcessesStatesAndProcessesStatesLabels();
+
+        this.makeProcessesWithoutGroup();
+        this.addCheckboxesInFormArray();
+        this.removeProcessesWithoutDisplayedStates();
+        this.loadIsAllStatesSelected();
+        this.makeProcessIdsByProcessGroup();
+        this.loadIsAllProcessesSelected();
+
         this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(true).size > 0;
     }
 
@@ -293,6 +294,7 @@ export class FeedconfigurationComponent implements OnInit {
                         this.displaySendResultError = true;
                     } else {
                         this.cardService.removeAllLightCardFromMemory();
+                        this.userService.loadUserWithPerimetersData().subscribe();
                     }
                     this.modalRef.close();
                 },
