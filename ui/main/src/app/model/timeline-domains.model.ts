@@ -6,33 +6,27 @@ export class TimelineModel {
         return {
             'J': {
                 buttonTitle: 'timeline.buttonTitle.J',
-                domainId: 'J',
-                followClockTick: true
+                domainId: 'J'
             },
             'TR': {
                 buttonTitle: 'timeline.buttonTitle.TR',
-                domainId: 'TR',
-                followClockTick: true
+                domainId: 'TR'
             },
             '7D': {
                 buttonTitle: 'timeline.buttonTitle.7D',
-                domainId: '7D',
-                followClockTick: true
+                domainId: '7D'
             },
             'W': {
                 buttonTitle: 'timeline.buttonTitle.W',
-                domainId: 'W',
-                followClockTick: true
+                domainId: 'W'
             },
             'M': {
                 buttonTitle: 'timeline.buttonTitle.M',
-                domainId: 'M',
-                followClockTick: true
+                domainId: 'M'
             },
             'Y': {
                 buttonTitle: 'timeline.buttonTitle.Y',
-                domainId: 'Y',
-                followClockTick: true
+                domainId: 'Y'
             }
         };
     }

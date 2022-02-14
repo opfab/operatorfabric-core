@@ -89,8 +89,7 @@ describe('InitChartComponent', () => {
     fixture.detectChanges();
     timelineButtonsComponent.confDomain = [{
       buttonTitle: '7D',
-      domainId:'7D',
-      followClockTick: true
+      domainId:'7D'
     }];
     timelineButtonsComponent.initDomains();
     expect(timelineButtonsComponent.buttonList.length).toEqual(1);
