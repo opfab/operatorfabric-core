@@ -23,23 +23,19 @@ import {FilterService} from '@ofServices/lightcards/filter.service';
 })
 export class TimelineButtonsComponent implements OnInit {
 
-    private  OVERLAP_DURATION_IN_MS = 15 * 60 * 1000;
-    // required by Timeline
-    private currentDomain ;
-    public domainId: string;
+    private OVERLAP_DURATION_IN_MS = 15 * 60 * 1000;
 
-    // required for domain movements specifications
-    public followClockTick: boolean;
-    isTimelineLockDisabled: boolean;
+    public hideTimeLine = false;
+    public currentDomain ;
+    public currentDomainId: string;
+    private followClockTick: boolean;
+    private overlap = 0;
 
-    public overlap = 0;
-
-    // buttons
-    public buttonTitle: string;
+    public selectedButtonTitle: string;
     public buttonList;
 
-    public startDate;
-    public endDate;
+    public startDateForBusinessPeriodDisplay;
+    public endDateForBusinessPeriodDisplay;
 
 
     @Input()
@@ -48,7 +44,7 @@ export class TimelineButtonsComponent implements OnInit {
     @Output()
     public domainChange : EventEmitter<any> = new EventEmitter();
 
-    public hideTimeLine = false;
+   
 
     constructor(private time: TimeService,
                 private userPreferences : UserPreferencesService,
@@ -59,14 +55,10 @@ export class TimelineButtonsComponent implements OnInit {
 
     ngOnInit() {
         this.loadDomainConfiguration();
-
         const hideTimeLineInStorage = this.userPreferences.getPreference('opfab.hideTimeLine');
         this.hideTimeLine = (hideTimeLineInStorage === 'true');
-        this.isTimelineLockDisabled = false;
-
         this.setInitialDomain();
         this.shiftTimeLineIfNecessary();
-
     }
 
 
@@ -132,18 +124,17 @@ export class TimelineButtonsComponent implements OnInit {
      */
     changeGraphConf(conf: any): void {
 
-
         this.followClockTick = true;
   
         if (conf.buttonTitle) {
-            this.buttonTitle = conf.buttonTitle;
+            this.selectedButtonTitle = conf.buttonTitle;
         }
 
         this.selectZoomButton(conf.buttonTitle);
-        this.domainId = conf.domainId;
+        this.currentDomainId = conf.domainId;
 
         this.setDefaultStartAndEndDomain();
-        this.userPreferences.setPreference('opfab.timeLine.domain', this.domainId);
+        this.userPreferences.setPreference('opfab.timeLine.domain', this.currentDomainId);
     }
 
     selectZoomButton(buttonTitle) {
@@ -155,7 +146,7 @@ export class TimelineButtonsComponent implements OnInit {
     setDefaultStartAndEndDomain() {
         let startDomain;
         let endDomain;
-        switch (this.domainId) {
+        switch (this.currentDomainId) {
 
             case 'TR': {
                 startDomain = this.getRealTimeStartDate();
@@ -199,11 +190,9 @@ export class TimelineButtonsComponent implements OnInit {
     }
 
     private getRealTimeStartDate() {
-        let currentMinutes = moment().minutes();
-        let roundedMinutes = Math.floor(currentMinutes/15)*15; // rounds minutes to previous quarter
-        let startDate = moment().minutes(roundedMinutes).second(0).millisecond(0).subtract(2, 'hours').subtract(15, 'minutes');
-
-        return startDate;
+        const currentMinutes = moment().minutes();
+        const roundedMinutes = Math.floor(currentMinutes/15)*15; // rounds minutes to previous quarter
+        return  moment().minutes(roundedMinutes).second(0).millisecond(0).subtract(2, 'hours').subtract(15, 'minutes');
     }
 
     /**
@@ -214,7 +203,7 @@ export class TimelineButtonsComponent implements OnInit {
      */
     setStartAndEndDomain(startDomain: number, endDomain: number , useOverlap = false ): void {
 
-        if (this.domainId == 'W') {
+        if (this.currentDomainId == 'W') {
             /*
             * In case of 'week' domain reset start and end date to take into account different locale setting for first day of week
             * To compute start day of week add 2 days to startDate to avoid changing week passing from locale with saturday as first day of week
@@ -233,20 +222,20 @@ export class TimelineButtonsComponent implements OnInit {
         else this.overlap = 0;   
         
         this.currentDomain = {startDate : startDomain, endDate : endDomain ,overlap : this.overlap};
-        this.startDate = this.getDateFormatting(startDomain);
-        this.endDate = this.getDateFormatting(endDomain);
+        this.startDateForBusinessPeriodDisplay = this.getDateFormatting(startDomain);
+        this.endDateForBusinessPeriodDisplay = this.getDateFormatting(endDomain);
 
         this.filterService.updateFilter(
             FilterType.BUSINESSDATE_FILTER,
             true,
-            {start: startDomain, end: endDomain, domainId: this.domainId}
+            {start: startDomain, end: endDomain, domainId: this.currentDomainId}
         );
         this.domainChange.emit(true);
     }
 
     getDateFormatting(value): string {
         const date = moment(value);
-        switch (this.domainId) {
+        switch (this.currentDomainId) {
             case 'TR':
                 return this.time.formatDateTime(value);
             case 'J':
@@ -275,12 +264,8 @@ export class TimelineButtonsComponent implements OnInit {
         let endDomain = moment(this.currentDomain.endDate);
 
         // Move from main visualisation, now domain stop to move
-        if (this.followClockTick) {
-            this.followClockTick = false;
-            this.isTimelineLockDisabled = true;
-        }
-
-
+        this.followClockTick = false;
+ 
         if (moveForward) {
             startDomain = this.goForward(startDomain.add(this.overlap, "milliseconds"));
             endDomain = this.goForward(endDomain);
@@ -293,7 +278,7 @@ export class TimelineButtonsComponent implements OnInit {
     }
 
     goForward(dateToMove: moment.Moment) {
-        switch (this.domainId) {
+        switch (this.currentDomainId) {
             case 'TR':
                 return dateToMove.add(2, 'hour');
             case 'J':
@@ -310,7 +295,7 @@ export class TimelineButtonsComponent implements OnInit {
     }
 
     goBackward(dateToMove: moment.Moment) {
-        switch (this.domainId) {
+        switch (this.currentDomainId) {
             case 'TR':
                 return dateToMove.subtract(2, 'hour');
             case 'J':
@@ -340,7 +325,7 @@ export class TimelineButtonsComponent implements OnInit {
     applyNewZoom(direction: string): void {
 
         for (let i = 0; i < this.buttonList.length; i++) {
-            if (this.buttonList[i].buttonTitle === this.buttonTitle) {
+            if (this.buttonList[i].buttonTitle === this.selectedButtonTitle) {
                 if (direction === 'in') {
                     if (i !== 0) {
                         this.changeGraphConf(this.buttonList[i - 1]);
@@ -376,7 +361,7 @@ export class TimelineButtonsComponent implements OnInit {
             let startDomain;
             let endDomain;
 
-            switch (this.domainId) {
+            switch (this.currentDomainId) {
                 case 'TR':
                     if (currentDate > 150 * 60 * 1000 + this.currentDomain.startDate) {
                         this.setDefaultStartAndEndDomain();
