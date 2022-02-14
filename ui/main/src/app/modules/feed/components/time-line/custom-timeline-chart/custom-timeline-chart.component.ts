@@ -107,7 +107,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   setDomainForTimeLineGridDisplay() {
     this.initOverlap();
     this.xDomainForTimeLineGridDisplay = this.xDomain;
-    if (this.useOverlap) this.xDomainForTimeLineGridDisplay = [this.xDomain[0] + this.overlapDurationInMs, this.xDomain[1]];
+   // if (this.useOverlap) this.xDomainForTimeLineGridDisplay = [this.xDomain[0] + this.overlapDurationInMs, this.xDomain[1]];
     
   }
 
@@ -224,48 +224,11 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    */
   updateRealtime(): void {
     this.xRealTimeLine = moment();
-    if (this.followClockTick) this.shiftTimeLineIfNecessary();
     setTimeout(() => {
       if (!this.isDestroyed) this.updateRealtime();
     }, 1000);
   }
 
-
-  shiftTimeLineIfNecessary() {
-
-    if (this.xTicks) {
-      let shiftTimeline: boolean = false;
-
-      // the timeline shifts regularly in "real time" and "7 days" views
-      if (this.domainId == "TR" || this.domainId == "7D") {
-        if (this.xTicks[10].valueOf() <= moment().valueOf()) {
-          this.valueDomain = [this.xTicks[1].valueOf(), this.xDomainForTimeLineGridDisplay[1].valueOf() + (this.xTicks[1] - this.xDomainForTimeLineGridDisplay[0].valueOf())];
-          shiftTimeline = true;
-        }
-      }
-      
-
-      // in other views, the timeline is shifted at the end of the current cycle (day/week/month/year)
-      else {
-        if (this.xTicks[this.xTicks.length - 1].valueOf() <= moment().valueOf()) {
-          this.valueDomain = [this.xTicks[this.xTicks.length - 1].valueOf() - this.overlapDurationInMs, 
-                              this.xDomainForTimeLineGridDisplay[1].valueOf() + (this.xTicks[this.xTicks.length - 1] - this.xDomainForTimeLineGridDisplay[0].valueOf())];
-          shiftTimeline = true;
-
-        }
-      }
-
-      if (shiftTimeline) {
-        this.filterService.updateFilter(
-          FilterType.BUSINESSDATE_FILTER,
-          true,
-          {start: this.valueDomain[0], end: this.valueDomain[1], domainId: this.domainId}
-        );
-        this.update();
-      }
-
-    }
-  }
 
   /**
    * Main function for ngx-charts
