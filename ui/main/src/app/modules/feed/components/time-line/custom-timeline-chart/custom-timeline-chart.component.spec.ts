@@ -137,7 +137,8 @@ describe('CustomTimelineChartComponent', () => {
   it('set no circle if one card is before time domain ', () => {
     fixture.detectChanges();
     component.domainId = 'Y'
-    component.xDomain = [startDate,endDate];
+    component.xDomain = {startDate:startDate,endDate: endDate, overlap: 0};
+    component.setDomainForTimeLineGridDisplay();
     component.setXTicksValue();
 
     // Test 1
