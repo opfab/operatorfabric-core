@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';   
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';   
 import {ConfigService} from "@ofServices/config.service";
 import moment from "moment";
 import {FilterType} from '@ofModel/feed-filter.model';
@@ -21,7 +21,7 @@ import {FilterService} from '@ofServices/lightcards/filter.service';
     templateUrl: './timeline-buttons.component.html',
     styleUrls: ['./timeline-buttons.component.scss']
 })
-export class TimelineButtonsComponent implements OnInit {
+export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
     private OVERLAP_DURATION_IN_MS = 15 * 60 * 1000;
 
@@ -44,7 +44,7 @@ export class TimelineButtonsComponent implements OnInit {
     @Output()
     public domainChange : EventEmitter<any> = new EventEmitter();
 
-   
+    private isDestroyed = false ;
 
     constructor(private time: TimeService,
                 private userPreferences : UserPreferencesService,
@@ -408,8 +408,12 @@ export class TimelineButtonsComponent implements OnInit {
                     break;
             }
         }
-        setTimeout(() => this.shiftTimeLineIfNecessary(), 10000);
+        if (!this.isDestroyed) setTimeout(() => this.shiftTimeLineIfNecessary(), 10000);
     }
+
+    ngOnDestroy() {
+        this.isDestroyed = true;
+      }
 
 
 }
