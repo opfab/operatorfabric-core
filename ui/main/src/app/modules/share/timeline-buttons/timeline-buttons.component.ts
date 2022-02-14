@@ -236,8 +236,7 @@ export class TimelineButtonsComponent implements OnInit {
             endDomain = endOfWeek.valueOf();
         }
 
-        let startDomainWithOverlap = this.removeOverlap(startDomain);
-        this.myDomain = [startDomainWithOverlap, endDomain];
+        this.myDomain = [startDomain, endDomain];
         this.startDate = this.getDateFormatting(startDomain);
         this.endDate = this.getDateFormatting(endDomain);
 
@@ -247,18 +246,6 @@ export class TimelineButtonsComponent implements OnInit {
             {start: startDomain, end: endDomain, domainId: this.domainId}
         );
         this.domainChange.emit(true);
-    }
-
-    removeOverlap(startDomain) {
-        let domainWithOverlap = startDomain;
-
-/** 
-        if (this.useOverlap) {
-            domainWithOverlap = startDomain.valueOf() - this.overlapDurationInMs;
-            console.log("Remove overlap = " , this.overlapDurationInMs);
-        }
-*/
-        return domainWithOverlap;
     }
 
     getDateFormatting(value): string {
