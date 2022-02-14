@@ -41,9 +41,8 @@ import {takeUntil} from 'rxjs/operators';
 import {getNextTimeForRepeating} from '@ofServices/reminder/reminderUtils';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
-import {FilterType} from '@ofModel/feed-filter.model';
 import {FilterService} from '@ofServices/lightcards/filter.service';
-import { TimelineModel } from '@ofModel/timeline-domains.model';
+
 
 
 @Component({
@@ -64,11 +63,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   public oldWidth = 0;
   public openPopover: NgbPopover;
   
-  // OVERLAP
+  
   xDomainForTimeLineGridDisplay: any;
-  public useOverlap: boolean; // If true, will display cards received after xDomaine[1]-overlapDurationInMs will be displayed at the very beginning of the timeline
-  overlapDurationInMs: number; 
-
 
   @ViewChild(ChartComponent, { read: ElementRef }) chart: ElementRef;
   public dims: ViewDimensions;
@@ -105,10 +101,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   }
 
   setDomainForTimeLineGridDisplay() {
-    this.initOverlap();
     this.xDomainForTimeLineGridDisplay = this.xDomain;
-   // if (this.useOverlap) this.xDomainForTimeLineGridDisplay = [this.xDomain[0] + this.overlapDurationInMs, this.xDomain[1]];
-    
   }
 
   setTitle()
@@ -197,13 +190,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.isDestroyed = true;
   }
 
-  initOverlap() {    
-    if (this.domainId) {
-      let domainUsed = TimelineModel.getDomains()[this.domainId];
-      this.useOverlap = domainUsed.useOverlap;
-      this.overlapDurationInMs = this.useOverlap ? domainUsed.overlapDurationInMs : 0;
-    }
-  }
 
   // set inside ngx-charts library verticalSpacing variable to 10
   // library need to rotate ticks one time for set verticalSpacing to 10px on ngx-charts-x-axis-ticks
