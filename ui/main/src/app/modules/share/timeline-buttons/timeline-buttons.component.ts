@@ -30,7 +30,6 @@ export class TimelineButtonsComponent implements OnInit {
 
     // required for domain movements specifications
     public followClockTick: boolean;
-    public followClockTickMode: boolean;
     isTimelineLockDisabled: boolean;
 
     public overlap = 0;
@@ -127,13 +126,9 @@ export class TimelineButtonsComponent implements OnInit {
      */
     changeGraphConf(conf: any): void {
 
-        this.followClockTick = false;
-        this.followClockTickMode = false;
 
-        if (conf.followClockTick) {
-            this.followClockTick = true;
-            this.followClockTickMode = true;
-        }
+        this.followClockTick = true;
+  
         if (conf.buttonTitle) {
             this.buttonTitle = conf.buttonTitle;
         }
