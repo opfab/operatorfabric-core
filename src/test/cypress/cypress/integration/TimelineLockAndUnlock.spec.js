@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-describe('Feed configuration tests', function () {
+describe('Time line moves', function () {
 
     const SECONDS = 1000;
     const MINUTES = 60000;
@@ -62,16 +62,13 @@ describe('Feed configuration tests', function () {
 
     beforeEach('Reset UI configuration file ', function () {
         cy.deleteAllCards();
-    })
-
+    }) 
 
         it('Check timelime manual moves in TR mode', function () {
     
-            // Logging on Sunday, 31rst of March 2030, at 11h59
-            // NB : for some reason month seems to start at 0
+            // NB : month  starts at 0
             cy.loginWithClock(new Date(2030, 2, 31, 11, 59));
     
-            // Checking real time view
             setTimeLineDomain('TR');
             checkFirstTickLabel(" 09h30 ");
             moveRight();
@@ -93,11 +90,9 @@ describe('Feed configuration tests', function () {
 
         it('Check timelime manual moves in Day mode', function () {
     
-            // Logging on Sunday, 31rst of March 2030, at 11h59
-            // NB : for some reason month seems to start at 0
+
             cy.loginWithClock(new Date(2030, 2, 31, 11, 59));
     
-            // Checking real time view
             setTimeLineDomain('J');
             checkFirstTickLabel(" 00h ");
             checkTitle(" 31 March 2030 ");
@@ -126,11 +121,8 @@ describe('Feed configuration tests', function () {
 
         it('Check timelime manual moves in 7 Day mode', function () {
     
-            // Logging on Sunday, 31rst of March 2030, at 11h59
-            // NB : for some reason month seems to start at 0
             cy.loginWithClock(new Date(2030, 2, 31, 10, 50));
-    
-            // Checking real time view
+
             setTimeLineDomain('7D');
             checkFirstTickLabel(" 00h ");
             checkTitle(" 30/03/2030 - 07/04/2030 ");
@@ -158,12 +150,9 @@ describe('Feed configuration tests', function () {
         })
     
         it('Check timelime manual moves in month mode', function () {
-    
-            // Logging on Sunday, 31rst of March 2030, at 11h59
-            // NB : for some reason month seems to start at 0
+
             cy.loginWithClock(new Date(2030, 2, 31, 10, 50));
     
-            // Checking real time view
             setTimeLineDomain('M');
             checkFirstTickLabel(" F 01 ");
             checkTitle(" MARCH 2030 ");
@@ -192,11 +181,8 @@ describe('Feed configuration tests', function () {
 
         it('Check timelime manual moves in year mode', function () {
     
-            // Logging on Sunday, 31rst of March 2030, at 11h59
-            // NB : for some reason month seems to start at 0
             cy.loginWithClock(new Date(2030, 2, 31, 10, 50));
     
-            // Checking real time view
             setTimeLineDomain('Y');
             checkFirstTickLabel(" 1 Jan ");
             checkTitle(" 2030 ");
@@ -223,10 +209,9 @@ describe('Feed configuration tests', function () {
             checkTitle(" 2030 ");
         })
     
-        ////////////////////////////// Test on real time view
+
         it('Check timeline moves when unlocked in real time view', function () {
-    
-            // NB : month  starts at 0
+
             const currentDate = new Date(2030, 2, 31, 23, 55)
             cy.loginWithClock(currentDate);
     
@@ -713,5 +698,134 @@ describe('Feed configuration tests', function () {
         checkHaveCircle(1);
 
     });
+
+    it('Check timeline move automatically with overlap in day view', function () {
     
+        const currentDate = new Date(2030, 2, 31, 23, 55)
+        cy.loginWithClock(currentDate);
+
+        setTimeLineDomain('J');
+        checkFirstTickLabel(" 00h ");
+        checkTitle(" 31 March 2030 ");
+
+        cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * 60 * 1000);
+        cy.tick(1 * SECONDS); 
+        checkTimeCursorText( " 31/03/30 23:55 ");
+        checkTitle(" 31 March 2030 ");
+        checkHaveCircle(1);
+
+        cy.tick(15 * MINUTES);
+        checkTimeCursorText( " 01/04/30 00:10 ");
+        checkFirstTickLabel(" 00h ");
+        checkTitle(" 01 April 2030 ");
+        checkHaveCircle(1);
+
+        cy.tick(15 * MINUTES);
+        checkTimeCursorText( " 01/04/30 00:25 ");
+        checkFirstTickLabel(" 00h ");
+        checkTitle(" 01 April 2030 ");
+        checkHaveCircle(1);
+
+        // check when we move manually we have no overlap 
+        moveLeft();
+        checkNoTimeCursor();
+        checkHaveCircle(1);
+        moveRight();
+        checkHaveCircle(0);
+
+    });
+    
+    it('Check timeline move automatically with overlap in week view', function () {
+    
+        const currentDate = new Date(2030, 3, 5, 23 , 50);
+        cy.loginWithClock(currentDate);
+
+        setTimeLineDomain('W');
+        checkFirstTickLabel(" 00h ");
+        checkTitle(" 30/03/2030 - 06/04/2030 ");
+
+        cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
+        cy.wait(500);
+        cy.tick(1 * SECONDS);
+        checkTimeCursorText( " 05/04/30 23:50 ");
+        checkTitle(" 30/03/2030 - 06/04/2030 ");
+        checkHaveCircle(1);
+
+        cy.tick(20 * MINUTES);
+        checkTimeCursorText( " 06/04/30 00:10 ");
+        checkFirstTickLabel(" 00h ");
+        checkTitle(" 06/04/2030 - 13/04/2030 ");
+        checkHaveCircle(1);
+
+        // check when we move manually we have no overlap 
+        moveLeft();
+        checkNoTimeCursor();
+        checkHaveCircle(1);
+        moveRight();
+        checkHaveCircle(0);
+
+    });
+
+    it('Check timeline move automatically with overlap in month view', function () {
+    
+        const currentDate = new Date(2030, 3, 30, 23, 52);
+        cy.loginWithClock(currentDate);
+
+        setTimeLineDomain('M');
+        checkFirstTickLabel(" M 01 ");
+        checkTitle(" APRIL 2030 ");
+
+        cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
+        cy.wait(500);
+        cy.tick(1 * SECONDS);
+        checkTimeCursorText(" 30/04/30 23:52 ");
+        checkHaveCircle(1);
+
+        cy.tick(24 * HOURS);
+        checkTimeCursorText(" 01/05/30 23:52 ");
+        checkFirstTickLabel(" W 01 ");
+        checkTitle(" MAY 2030 ");
+        checkHaveCircle(1);
+
+
+        // check when we move manually we have no overlap 
+        moveLeft();
+        checkNoTimeCursor();
+        checkHaveCircle(1);
+        moveRight();
+        checkHaveCircle(0);
+
+    });
+
+    it('Check timeline move automatically with overlap in year view', function () {
+    
+        const currentDate = new Date(2030, 11, 31, 23, 46);
+        cy.loginWithClock(currentDate);
+
+        setTimeLineDomain('Y');
+        checkFirstTickLabel(" 1 Jan ");
+        checkTitle(" 2030 ");
+
+        cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
+        cy.wait(500);
+        cy.tick(1 * SECONDS); 
+        checkTimeCursorText(" 31/12/30 23:46 ");
+        checkHaveCircle(1);
+
+        cy.tick(2 * HOURS);
+        checkTimeCursorText(" 01/01/31 01:46 ");
+        checkFirstTickLabel(" 1 Jan ");
+        checkTitle(" 2031 ");
+        checkHaveCircle(1);
+
+
+        // check when we move manually we have no overlap 
+        moveLeft();
+        checkNoTimeCursor();
+        checkHaveCircle(1);
+        moveRight();
+        checkHaveCircle(0);
+
+    });
+
 })
