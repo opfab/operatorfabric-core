@@ -25,7 +25,7 @@ import {FilterService} from '@ofServices/lightcards/filter.service';
 export class TimelineButtonsComponent implements OnInit {
 
     // required by Timeline
-    private myDomain: number[];
+    private currentDomain ;
     public domainId: string;
 
     // required for domain movements specifications
@@ -231,7 +231,7 @@ export class TimelineButtonsComponent implements OnInit {
         }
         else this.overlap = 0;   
         
-        this.myDomain = [startDomain, endDomain ,this.overlap];
+        this.currentDomain = {startDate : startDomain, endDate : endDomain ,overlap : this.overlap};
         this.startDate = this.getDateFormatting(startDomain);
         this.endDate = this.getDateFormatting(endDomain);
 
@@ -270,8 +270,8 @@ export class TimelineButtonsComponent implements OnInit {
      * @param moveForward direction: add or subtract conf object
      */
     moveDomain(moveForward: boolean): void {
-        let startDomain = moment(this.myDomain[0]);
-        let endDomain = moment(this.myDomain[1]);
+        let startDomain = moment(this.currentDomain.startDate);
+        let endDomain = moment(this.currentDomain.endDate);
 
         // Move from main visualisation, now domain stop to move
         if (this.followClockTick) {
@@ -377,13 +377,13 @@ export class TimelineButtonsComponent implements OnInit {
 
             switch (this.domainId) {
                 case 'TR':
-                    if (currentDate > 150 * 60 * 1000 + this.myDomain[0]) {
+                    if (currentDate > 150 * 60 * 1000 + this.currentDomain.startDate) {
                         this.setDefaultStartAndEndDomain();
                     }
                     break;
                 case 'J':
                     // shift day  one minute before change of day 
-                    if (currentDate > this.myDomain[1] - 60 * 1000) {
+                    if (currentDate > this.currentDomain.endDate - 60 * 1000) {
                         startDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0);
                         endDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0).add(1, 'days');
                         this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(),true);
@@ -391,13 +391,13 @@ export class TimelineButtonsComponent implements OnInit {
                     }
                     break;
                 case '7D':
-                    if (currentDate > 16 * 60 * 60 * 1000 + this.myDomain[0]) {
+                    if (currentDate > 16 * 60 * 60 * 1000 + this.currentDomain.startDate) {
                         this.setDefaultStartAndEndDomain();
                     }
                     break;
                 case 'W':
                      // shift day  one minute before change of week 
-                    if (currentDate > this.myDomain[1] - 60 * 1000) {
+                    if (currentDate > this.currentDomain.endDate - 60 * 1000) {
                         startDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0);
                         endDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0).add(1, 'week');
                         this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(),true);
@@ -405,7 +405,7 @@ export class TimelineButtonsComponent implements OnInit {
                     break;
                 case 'M':
                     // shift day  one minute before change of month 
-                    if (currentDate > this.myDomain[1] - 60 * 1000) {
+                    if (currentDate > this.currentDomain.endDate - 60 * 1000) {
                         startDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0);
                         endDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0).add(1, 'months');
                         this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(),true);
@@ -414,7 +414,7 @@ export class TimelineButtonsComponent implements OnInit {
 
                 case 'Y':
                     // shift day  one minute before change of year 
-                    if (currentDate > this.myDomain[1] - 60 * 1000) {
+                    if (currentDate > this.currentDomain.endDate - 60 * 1000) {
                         startDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0);
                         endDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0).add(1, 'years');
                         this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(),true);

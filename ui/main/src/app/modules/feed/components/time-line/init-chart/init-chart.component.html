@@ -30,7 +30,7 @@
   -->
 
     <of-custom-timeline-chart class="of-custom-timeline-chart" [prod]="true" [domainId]="this.timelineButtons.domainId"
-                              [valueDomain]="this.timelineButtons.myDomain" [followClockTick]="this.timelineButtons.followClockTick"
+                              [valueDomain]="this.timelineButtons.currentDomain" [followClockTick]="this.timelineButtons.followClockTick"
                               (zoomChange)="this.timelineButtons.applyNewZoom($event)">
     </of-custom-timeline-chart>
 

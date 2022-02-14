@@ -102,7 +102,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   }
 
   setDomainForTimeLineGridDisplay() {
-    this.xDomainForTimeLineGridDisplay = [this.xDomain[0] + this.xDomain[2],this.xDomain[1]];
+    this.xDomainForTimeLineGridDisplay = [this.xDomain.startDate + this.xDomain.overlap,this.xDomain.endDate];
   }
 
   setTitle()
@@ -399,7 +399,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       let cardIndex = 0;
       // move index to the first card in the time domain
       if (cards.length > 0) {
-        while (cards[cardIndex] && (cards[cardIndex].date < this.xDomain[0]) && (cardIndex < cards.length)) { cardIndex++; }
+        while (cards[cardIndex] && (cards[cardIndex].date < this.xDomain.startDate) && (cardIndex < cards.length)) { cardIndex++; }
       }
       // for each interval , if a least one card in the interval , create a circle object.
       if (cardIndex < cards.length) {
