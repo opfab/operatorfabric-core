@@ -7,465 +7,711 @@
  * This file is part of the OperatorFabric project.
  */
 
-describe ('Feed configuration tests',function () {
+describe('Feed configuration tests', function () {
+
+    const SECONDS = 1000;
+    const MINUTES = 60000;
+    const HOURS = 3600000;
+
+    function setTimeLineDomain(domain) {
+        cy.get('#opfab-timeline-link-period-'+ domain).click();
+    }
+
+    function lockTimeLine() {
+        cy.get("#opfab-timeline-lock").click();
+    }
+
+    function unlockTimeLine() {
+        cy.get("#opfab-timeline-unlock").click();
+    }
+
+    function moveRight() {
+        cy.get("#opfab-timeline-link-move-right").click();
+    }
+
+    function moveLeft() {
+        cy.get("#opfab-timeline-link-move-left").click();
+    }
+    
+    
+    function checkHaveCircle(nb) {
+        cy.get("of-custom-timeline-chart").find("circle").should('have.length', nb);
+    }
+
+    function checkTitle(title) {
+        cy.get("#opfab-timeline-title").should("have.text", title);
+    }
+
+    function checkTimeCursorText(text) {
+        cy.get("#opfab-timeline-time-cursor").should("have.text", text);
+    }
+
+    function checkNoTimeCursor(text) {
+        cy.get("#opfab-timeline-time-cursor").should("not.exist");
+    }
+
+    function checkFirstTickLabel(label) {
+        cy.get(".axis").find("text").first().should("have.text", label);
+    }
+
+
 
     before('Set up configuration and cards', function () {
         cy.loadTestConf();
-        cy.deleteAllCards();
     });
 
     beforeEach('Reset UI configuration file ', function () {
-        cy.resetUIConfigurationFiles();
+        cy.deleteAllCards();
     })
 
 
-    it('Check timeline is unlocked for each view', function () {
+        it('Check timelime manual moves in TR mode', function () {
+    
+            // Logging on Sunday, 31rst of March 2030, at 11h59
+            // NB : for some reason month seems to start at 0
+            cy.loginWithClock(new Date(2030, 2, 31, 11, 59));
+    
+            // Checking real time view
+            setTimeLineDomain('TR');
+            checkFirstTickLabel(" 09h30 ");
+            moveRight();
+            checkFirstTickLabel(" 11h30 ");
+            moveRight();
+            checkFirstTickLabel(" 13h30 ");
+    
+            unlockTimeLine(); // timeline shall return to initial position
+            checkFirstTickLabel(" 09h30 ");
 
-        cy.loginOpFab('operator1_fr','test');
+            moveLeft();
+            checkFirstTickLabel(" 07h30 ");
+            moveLeft();
+            checkFirstTickLabel(" 05h30 ");
 
-        // Checking real time view
-        cy.get('#opfab-timeline-link-period-TR').click();
-        cy.get("#opfab-timeline-lock").should("exist");
-        cy.get("#opfab-timeline-unlock").should("not.exist");
+            unlockTimeLine(); // timeline shall return to initial position
+            checkFirstTickLabel(" 09h30 ");
+        })
 
-        // Checking Day view
-        cy.get('#opfab-timeline-link-period-J').click();
-        cy.get("#opfab-timeline-lock").should("exist");
-        cy.get("#opfab-timeline-unlock").should("not.exist");
+        it('Check timelime manual moves in Day mode', function () {
+    
+            // Logging on Sunday, 31rst of March 2030, at 11h59
+            // NB : for some reason month seems to start at 0
+            cy.loginWithClock(new Date(2030, 2, 31, 11, 59));
+    
+            // Checking real time view
+            setTimeLineDomain('J');
+            checkFirstTickLabel(" 00h ");
+            checkTitle(" 31 March 2030 ");
+            moveRight();
+            checkFirstTickLabel(" 00h ");
+            checkTitle(" 01 April 2030 ")
+            moveRight();
+            checkFirstTickLabel(" 00h ");
+            checkTitle(" 02 April 2030 ")
+    
+            unlockTimeLine(); // timeline shall return to initial position
+            checkFirstTickLabel(" 00h ");
+            checkTitle(" 31 March 2030 ")
 
-        // Checking 7 Day view
-        cy.get('#opfab-timeline-link-period-7D').click();
-        cy.get("#opfab-timeline-lock").should("exist");
-        cy.get("#opfab-timeline-unlock").should("not.exist");
+            moveLeft();
+            checkFirstTickLabel(" 00h ");
+            checkTitle(" 30 March 2030 ")
+            moveLeft();
+            checkFirstTickLabel(" 00h ");
+            checkTitle(" 29 March 2030 ");
 
-        // Checking Week view
-        cy.get('#opfab-timeline-link-period-W').click();
-        cy.get("#opfab-timeline-lock").should("exist");
-        cy.get("#opfab-timeline-unlock").should("not.exist");
+            unlockTimeLine(); // timeline shall return to initial position
+            checkFirstTickLabel(" 00h ");
+            checkTitle(" 31 March 2030 ")
+        })
 
-        // Checking Month view
-        cy.get('#opfab-timeline-link-period-M').click();
-        cy.get("#opfab-timeline-lock").should("exist");
-        cy.get("#opfab-timeline-unlock").should("not.exist");
+        it('Check timelime manual moves in 7 Day mode', function () {
+    
+            // Logging on Sunday, 31rst of March 2030, at 11h59
+            // NB : for some reason month seems to start at 0
+            cy.loginWithClock(new Date(2030, 2, 31, 10, 50));
+    
+            // Checking real time view
+            setTimeLineDomain('7D');
+            checkFirstTickLabel(" 00h ");
+            checkTitle(" 30/03/2030 - 07/04/2030 ");
+            moveRight();
+            checkFirstTickLabel(" 00h ");
+            checkTitle(" 01/04/2030 - 09/04/2030 ");
+            moveRight();
+            checkFirstTickLabel(" 00h ");
+            checkTitle(" 02/04/2030 - 10/04/2030 ");
+    
+            unlockTimeLine(); // timeline shall return to initial position
+            checkFirstTickLabel(" 00h ");
+            checkTitle(" 30/03/2030 - 07/04/2030 ");
 
-        // Checking 7 Year view
-        cy.get('#opfab-timeline-link-period-Y').click();
-        cy.get("#opfab-timeline-lock").should("exist");
-        cy.get("#opfab-timeline-unlock").should("not.exist");
+            moveLeft();
+            checkFirstTickLabel(" 00h ");
+            checkTitle(" 30/03/2030 - 07/04/2030 ");
+            moveLeft();
+            checkFirstTickLabel(" 00h ");
+            checkTitle(" 29/03/2030 - 06/04/2030 ");
 
-    })
+            unlockTimeLine(); // timeline shall return to initial position
+            checkFirstTickLabel(" 00h ");
+            checkTitle(" 30/03/2030 - 07/04/2030 ");
+        })
+    
+        it('Check timelime manual moves in month mode', function () {
+    
+            // Logging on Sunday, 31rst of March 2030, at 11h59
+            // NB : for some reason month seems to start at 0
+            cy.loginWithClock(new Date(2030, 2, 31, 10, 50));
+    
+            // Checking real time view
+            setTimeLineDomain('M');
+            checkFirstTickLabel(" F 01 ");
+            checkTitle(" MARCH 2030 ");
+            moveRight();
+            checkFirstTickLabel(" M 01 ");
+            checkTitle(" APRIL 2030 ");
+            moveRight();
+            checkFirstTickLabel(" W 01 ");
+            checkTitle(" MAY 2030 ");
+    
+            unlockTimeLine(); // timeline shall return to initial position
+            checkFirstTickLabel(" F 01 ");
+            checkTitle(" MARCH 2030 ");
 
-    it('Check timelime resets to current cycle when locking it, changing domain and unlocking timeline', function () {
+            moveLeft();
+            checkFirstTickLabel(" F 01 ");
+            checkTitle(" FEBRUARY 2030 ");
+            moveLeft();
+            checkFirstTickLabel(" T 01 ");
+            checkTitle(" JANUARY 2030 ");
 
-        // Logging on Sunday, 31rst of March 2030, at 11h59
-        // NB : for some reason month seems to start at 0
-        cy.loginWithClock(new Date(2030, 2, 31, 11, 59));
+            unlockTimeLine(); // timeline shall return to initial position
+            checkFirstTickLabel(" F 01 ");
+            checkTitle(" MARCH 2030 ");
+        })
 
-        // Checking real time view
-        cy.get('#opfab-timeline-link-period-TR').click();
-        cy.get(".axis").find("text").first().as('firstTimelineXTick');
+        it('Check timelime manual moves in year mode', function () {
+    
+            // Logging on Sunday, 31rst of March 2030, at 11h59
+            // NB : for some reason month seems to start at 0
+            cy.loginWithClock(new Date(2030, 2, 31, 10, 50));
+    
+            // Checking real time view
+            setTimeLineDomain('Y');
+            checkFirstTickLabel(" 1 Jan ");
+            checkTitle(" 2030 ");
+            moveRight();
+            checkFirstTickLabel(" 1 Jan ");
+            checkTitle(" 2031 ");
+            moveRight();
+            checkFirstTickLabel(" 1 Jan ");
+            checkTitle(" 2032 ");
+    
+            unlockTimeLine(); // timeline shall return to initial position
+            checkFirstTickLabel(" 1 Jan ");
+            checkTitle(" 2030 ");
 
-        cy.get("@firstTimelineXTick").should("have.text", " 09h30 ");
+            moveLeft();
+            checkFirstTickLabel(" 1 Jan ");
+            checkTitle(" 2029 ");
+            moveLeft();
+            checkFirstTickLabel(" 1 Jan ");
+            checkTitle(" 2028 ");
+
+            unlockTimeLine(); // timeline shall return to initial position
+            checkFirstTickLabel(" 1 Jan ");
+            checkTitle(" 2030 ");
+        })
+    
+        ////////////////////////////// Test on real time view
+        it('Check timeline moves when unlocked in real time view', function () {
+    
+            // NB : month  starts at 0
+            const currentDate = new Date(2030, 2, 31, 23, 55)
+            cy.loginWithClock(currentDate);
+    
+            setTimeLineDomain('TR');
+            checkFirstTickLabel(" 21h30 ");
+            checkTitle(" 31 March 2030 ");
+    
+            // send a card with a bubble a the start of the time line 
+            cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime() - (2 * 60 * 60 * 1000 + 15 * 60 * 1000), currentDate.getTime() + 5 * 60 * 1000);
+            cy.tick(1 * SECONDS);
+            cy.sendCard('cypress/feed/customAlarm.json', currentDate.getTime(), currentDate.getTime() + 10 * 60 * 60 * 1000);
+    
+            // Wait for the card to arrive
+            cy.wait(500);
+            cy.tick(1 * SECONDS);
+            checkTimeCursorText(" 31/03/30 23:55 ");
+            checkTitle(" 31 March 2030 ");
+            checkHaveCircle(2);
+    
+            cy.tick(15 * MINUTES);
+            checkTimeCursorText( " 01/04/30 00:10 ");
+            checkTitle(" 31 March 2030 ");
+            checkFirstTickLabel(" 22h ");
+            // the bubble at the start of the timeline has disappear 
+            checkHaveCircle(1);
+    
+            cy.tick(15 * MINUTES);
+            checkTimeCursorText( " 01/04/30 00:25 ");
+            checkTitle(" 31 March 2030 ");
+            checkFirstTickLabel(" 22h ");
+            checkHaveCircle(1);
+    
+            cy.tick(15 * MINUTES);
+            checkTimeCursorText( " 01/04/30 00:40 ");
+            checkTitle(" 31 March 2030 ");
+            checkFirstTickLabel(" 22h30 ");
+            checkHaveCircle(1);
+    
+            cy.tick(15 * MINUTES);
+            checkTimeCursorText( " 01/04/30 00:55 ");
+            checkTitle(" 31 March 2030 ");
+            checkFirstTickLabel(" 22h30 ");
+            checkHaveCircle(1);
+    
+        })
+    
+        it('Check timeline does not moves when locked in real time view', function () {
+    
+            const currentDate = new Date(2030, 2, 31, 23, 55)
+            cy.loginWithClock(currentDate);
+    
+            setTimeLineDomain('TR');
+            lockTimeLine();
+            checkFirstTickLabel(" 21h30 ");
+            checkTitle(" 31 March 2030 ")
+    
+            // send a card with a bubble a the start of the time line 
+            cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime() - (2 * 60 * 60 * 1000 + 15 * 60 * 1000), currentDate.getTime() + 5 * 60 * 1000);
+            cy.tick(1 * SECONDS);
+            cy.sendCard('cypress/feed/customAlarm.json', currentDate.getTime(), currentDate.getTime() + 10 * 60 * 60 * 1000);
+    
+            cy.wait(500);
+            cy.tick(1 * SECONDS);
+            checkTimeCursorText( " 31/03/30 23:55 ");
+            checkTitle(" 31 March 2030 ");
+            checkHaveCircle(2);
+    
+            cy.tick(15 * MINUTES);
+            checkTimeCursorText( " 01/04/30 00:10 ");
+            checkTitle(" 31 March 2030 ");
+            checkFirstTickLabel(" 21h30 ");
+            checkHaveCircle(2);
+    
+            cy.tick(15 * MINUTES);
+            checkTimeCursorText( " 01/04/30 00:25 ");
+            checkTitle(" 31 March 2030 ");
+            checkFirstTickLabel(" 21h30 ");
+            checkHaveCircle(2);
+    
+            cy.tick(15 * MINUTES);
+            checkTimeCursorText( " 01/04/30 00:40 ");
+            checkTitle(" 31 March 2030 ");
+            checkFirstTickLabel(" 21h30 ");
+            checkHaveCircle(2);
+    
+            cy.tick(15 * MINUTES);
+            checkTimeCursorText( " 01/04/30 00:55 ");
+            checkTitle(" 31 March 2030 ");
+            checkFirstTickLabel(" 21h30 ");
+            checkHaveCircle(2);
+    
+        })
+    
+        it('Check timeline moves when unlocked in day view', function () {
+    
+            const currentDate = new Date(2030, 2, 31, 23, 35)
+            cy.loginWithClock(currentDate);
+    
+            setTimeLineDomain('J');
+            checkFirstTickLabel(" 00h ");
+            checkTitle(" 31 March 2030 ");
+    
+            cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * 60 * 1000);
+            cy.tick(1 * SECONDS); 
+            checkTimeCursorText( " 31/03/30 23:35 ");
+            checkTitle(" 31 March 2030 ");
+            checkHaveCircle(1);
+    
+            cy.tick(15 * MINUTES);
+            checkTimeCursorText( " 31/03/30 23:50 ");
+            checkFirstTickLabel(" 00h ");
+            checkTitle(" 31 March 2030 ");
+            checkHaveCircle(1);
+    
+            cy.tick(15 * MINUTES);
+            checkTimeCursorText( " 01/04/30 00:05 ");
+             checkTitle(" 01 April 2030 ");
+            checkFirstTickLabel(" 00h ");
+            checkHaveCircle(0);
+    
+            cy.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 5 * 60 * 60 * 1000, currentDate.getTime() + 6 * 60 * 60 * 1000);
+            cy.tick(1 * SECONDS);
+            checkHaveCircle(1);
+    
+            cy.tick(15 * MINUTES);
+            checkTimeCursorText( " 01/04/30 00:20 ");
+             checkTitle(" 01 April 2030 ");
+            checkFirstTickLabel(" 00h ");
+            checkHaveCircle(1);
+    
+            cy.tick(10 * HOURS);
+            checkTimeCursorText( " 01/04/30 10:20 ");
+             checkTitle(" 01 April 2030 ");
+            checkFirstTickLabel(" 00h ");
+            checkHaveCircle(1);
+    
+        });
+    
+    
+        it('Check timeline does not moves when locked in day view', function () {
+    
+            const currentDate = new Date(2030, 2, 31, 23, 35)
+            cy.loginWithClock(currentDate);
+    
+            setTimeLineDomain('J');
+            lockTimeLine();
+            checkFirstTickLabel(" 00h ");
+    
+            checkTitle(" 31 March 2030 ");
+    
+            cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * 60 * 1000);
+            cy.tick(1 * SECONDS);
+            checkTimeCursorText( " 31/03/30 23:35 ");
+            checkTitle(" 31 March 2030 ");
+            checkHaveCircle(1);
+    
+            cy.tick(15 * MINUTES);
+            checkTimeCursorText( " 31/03/30 23:50 ");
+            checkTitle(" 31 March 2030 ");
+            checkFirstTickLabel(" 00h ");
+            checkHaveCircle(1);
+    
+            cy.tick(15 * MINUTES);
+            cy.get("#opfab-timeline-time-cursor").should("not.exist"); // no realtime bar anymore 
+            checkTitle(" 31 March 2030 ");
+            checkFirstTickLabel(" 00h ");
+            checkHaveCircle(1);
+    
+            // send a card that should not be visible
+            cy.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 5 * 60 * 60 * 1000, currentDate.getTime() + 6 * 60 * 60 * 1000);
+            cy.tick(1 * SECONDS);
+            checkHaveCircle(1);
+    
+            cy.tick(15 * MINUTES);
+            cy.get("#opfab-timeline-time-cursor").should("not.exist");
+            checkTitle(" 31 March 2030 ");
+            checkFirstTickLabel(" 00h ");
+            checkHaveCircle(1);
+    
+            cy.tick(10 * HOURS);
+            cy.get("#opfab-timeline-time-cursor").should("not.exist");
+            checkTitle(" 31 March 2030 ");
+            checkFirstTickLabel(" 00h ");
+            checkHaveCircle(1);
+    
+        });
+    
+        it('Check timeline moves when unlocked in 7 day view', function () {
+    
+            const currentDate = new Date(2030, 2, 31, 23, 35)
+            cy.loginWithClock(currentDate);
+
+            setTimeLineDomain('7D');
+            checkFirstTickLabel(" 08h ");
+            checkTitle(" 31/03/2030 - 08/04/2030 ");
+    
+            cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * 60 * 1000);
+            cy.wait(500);
+            cy.tick(1 * SECONDS); 
+            checkTimeCursorText( " 31/03/30 23:35 ");
+            checkTitle(" 31/03/2030 - 08/04/2030 ");
+            checkHaveCircle(1);
+    
+            cy.tick(15 * MINUTES);
+            checkTimeCursorText( " 31/03/30 23:50 ");
+            checkFirstTickLabel(" 08h ");
+            checkTitle(" 31/03/2030 - 08/04/2030 ");
+            checkHaveCircle(1);
+    
+            cy.tick(15 * MINUTES);
+            checkTimeCursorText( " 01/04/30 00:05 ");
+            checkTitle(" 31/03/2030 - 08/04/2030 ");
+            checkFirstTickLabel(" 16h ");
+            checkHaveCircle(1);
+    
+            cy.tick(12 * HOURS);
+            checkTimeCursorText( " 01/04/30 12:05 ");
+            checkTitle(" 01/04/2030 - 09/04/2030 ");
+            checkFirstTickLabel(" 00h ");
+            checkHaveCircle(0);
+    
+            cy.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 5 * 60 * 60 * 1000, currentDate.getTime() + 6 * 60 * 60 * 1000);
+            cy.wait(500);
+            cy.tick(1 * SECONDS);
+            checkHaveCircle(1);
+    
+            cy.tick(15 * MINUTES);
+            checkTimeCursorText( " 01/04/30 12:20 ");
+            checkTitle(" 01/04/2030 - 09/04/2030 ");;
+            checkFirstTickLabel(" 00h ");
+            checkHaveCircle(1);
+    
+            cy.tick(24 * HOURS);
+            checkTimeCursorText( " 02/04/30 12:20 ");
+            checkTitle(" 02/04/2030 - 10/04/2030 ");
+            checkFirstTickLabel(" 00h ");
+            checkHaveCircle(0);
+    
+        });
+    
+        it('Check timeline does not moves when locked in 7 day view', function () {
+    
+            const currentDate = new Date(2030, 2, 31, 23, 35)
+            cy.loginWithClock(currentDate);
+
+            setTimeLineDomain('7D');
+            lockTimeLine();
+            checkFirstTickLabel(" 08h ");
+            checkTitle(" 31/03/2030 - 08/04/2030 ");
+    
+            cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * 60 * 1000);
+            cy.wait(500);
+            cy.tick(1 * SECONDS);
+            checkTimeCursorText( " 31/03/30 23:35 ");
+            checkTitle(" 31/03/2030 - 08/04/2030 ");
+            checkHaveCircle(1);
+    
+            cy.tick(15 * MINUTES);
+            checkTimeCursorText( " 31/03/30 23:50 ");
+            checkFirstTickLabel(" 08h ");
+            checkTitle(" 31/03/2030 - 08/04/2030 ");
+            checkHaveCircle(1);
+    
+            cy.tick(15 * MINUTES);
+            checkTimeCursorText( " 01/04/30 00:05 ");
+            checkTitle(" 31/03/2030 - 08/04/2030 ");
+            checkFirstTickLabel(" 08h ");
+            checkHaveCircle(1);
+    
+            cy.tick(12 * HOURS);
+            checkTimeCursorText( " 01/04/30 12:05 ");
+            checkTitle(" 31/03/2030 - 08/04/2030 ");
+            checkFirstTickLabel(" 08h ");
+            checkHaveCircle(1);
+    
+            cy.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 5 * 60 * 60 * 1000, currentDate.getTime() + 6 * 60 * 60 * 1000);
+            cy.wait(500);
+            cy.tick(1 * SECONDS);
+            checkHaveCircle(2);
+    
+            cy.tick(15 * MINUTES);
+            checkTimeCursorText( " 01/04/30 12:20 ");
+            checkTitle(" 31/03/2030 - 08/04/2030 ");
+            checkFirstTickLabel(" 08h ");
+            checkHaveCircle(2);
+    
+            cy.tick(24 * HOURS);
+            checkTimeCursorText( " 02/04/30 12:20 ");
+            checkTitle(" 31/03/2030 - 08/04/2030 ");
+            checkFirstTickLabel(" 08h ");
+            checkHaveCircle(2);
+    
+        });
         
-        cy.get("#opfab-timeline-lock").click();
-        cy.get("#opfab-timeline-link-move-right").click();
-        cy.get("@firstTimelineXTick").should("have.text", " 11h30 ");
+        it('Check timeline moves when unlocked in week day view', function () {
+    
+            const currentDate = new Date(2030, 3, 4, 22,0);
+            cy.loginWithClock(currentDate);
+    
+            setTimeLineDomain('W');
+            checkFirstTickLabel(" 00h ");
+            checkTitle(" 30/03/2030 - 06/04/2030 ");
+    
+            cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
+            cy.wait(500);
+            cy.tick(1 * SECONDS);
+            checkTimeCursorText( " 04/04/30 22:00 ");
+            checkTitle(" 30/03/2030 - 06/04/2030 ");
+            checkHaveCircle(1);
+    
+            cy.tick(24 * HOURS);
+            checkTimeCursorText( " 05/04/30 22:00 ");
+            checkFirstTickLabel(" 00h ");
+            checkTitle(" 30/03/2030 - 06/04/2030 ");
+            checkHaveCircle(1);
+    
+            cy.tick(24 * HOURS);
+            checkTimeCursorText( " 06/04/30 22:00 ");
+            checkTitle(" 06/04/2030 - 13/04/2030 ");
+            checkFirstTickLabel(" 00h ");
+            checkHaveCircle(0);
+    
+            cy.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 72 * HOURS , currentDate.getTime() + 80 * HOURS);
+            cy.wait(500);
+            cy.tick(1 * SECONDS);
+            checkHaveCircle(1);
+    
+        });
+    
+    
+        it('Check timeline does not moves when unlocked in week day view', function () {
+    
+            const currentDate = new Date(2030, 3, 4, 22,0);
+            cy.loginWithClock(currentDate);
+    
+            setTimeLineDomain('W');
+            lockTimeLine();
+    
+            checkFirstTickLabel(" 00h ");
+            checkTitle(" 30/03/2030 - 06/04/2030 ");
+    
+            cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
+            cy.wait(500);
+            cy.tick(1 * SECONDS); 
+            checkTimeCursorText( " 04/04/30 22:00 ");
+            checkTitle(" 30/03/2030 - 06/04/2030 ");
+            checkHaveCircle(1);
+    
+            cy.tick(24 * HOURS);
+            checkTimeCursorText( " 05/04/30 22:00 ");
+            checkFirstTickLabel(" 00h ");
+            checkTitle(" 30/03/2030 - 06/04/2030 ");
+            checkHaveCircle(1);
+    
+            cy.tick(24 * HOURS);
+            checkNoTimeCursor();
+            checkTitle(" 30/03/2030 - 06/04/2030 ");
+            checkFirstTickLabel(" 00h ");
+            checkHaveCircle(1);
+    
+            cy.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 72 * HOURS , currentDate.getTime() + 80 * HOURS);
+            cy.wait(500);
+            cy.tick(1 * HOURS);
+            checkHaveCircle(1);
+    
+        });
+    
+    it('Check timeline moves when unlocked in month view', function () {
 
+        const currentDate = new Date(2030, 3, 30, 15, 0);
+        cy.loginWithClock(currentDate);
 
-        cy.get("#opfab-timeline-unlock").click();
-        cy.get("@firstTimelineXTick").should("have.text", " 09h30 ");
-    })
+        setTimeLineDomain('M');
+        checkFirstTickLabel(" M 01 ");
+        checkTitle(" APRIL 2030 ");
 
-
-    ////////////////////////////// Test on real time view
-    it('Check timeline moves when unlocked in real time view', 
-        { defaultCommandTimeout: 10000}, function () {
-
-        // Logging on Sunday, 31rst of March 2030, at 23h59
-        // NB : for some reason month seems to start at 0
-        const currentDate =  new Date(2030, 2, 31, 23, 59)
-        cy.loginWithClock(new Date(2030, 2, 31, 23, 59));
-
-        cy.get(".axis").find("text").first().as('firstTimelineXTick');
-
-        cy.get('#opfab-timeline-link-period-TR').click();
-        
-        cy.get("@firstTimelineXTick").should("exist");
-        cy.get("@firstTimelineXTick").should("have.text", " 21h30 ");
-
-        // send a card with a bubble a the start of the time line 
-        cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime() - (2 * 60 * 60 *1000 + 15*60*1000) , currentDate.getTime() + 5*60*1000);
+        cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
         cy.wait(500);
-        cy.tick(1000);
-        cy.sendCard('cypress/feed/customAlarm.json', currentDate.getTime(), currentDate.getTime() + 10*60*60*1000);
+        cy.tick(1 * SECONDS);
+        checkTimeCursorText(" 30/04/30 15:00 ");
+        checkHaveCircle(1);
 
-        // Wait for the card to arrive
+        cy.tick(24 * HOURS);
+        checkTimeCursorText(" 01/05/30 15:00 ");
+        checkFirstTickLabel(" W 01 ");
+        checkTitle(" MAY 2030 ");
+        checkHaveCircle(0);
+
+        cy.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 72 * HOURS, currentDate.getTime() + 80 * HOURS);
         cy.wait(500);
-        
-        cy.tick(1000);
-        cy.get("of-custom-timeline-chart").find("circle").should('have.length', 2);
+        cy.tick(1 * SECONDS);
+        checkHaveCircle(1);
+
+    });
 
 
-        // go 15 minutes in the future 
-        cy.tick(15*60*1000);
+    it('Check timeline does not moves when locked in month view', function () {
+
+        const currentDate = new Date(2030, 3, 30, 15, 0);
+        cy.loginWithClock(currentDate);
+
+        setTimeLineDomain('M');
+        lockTimeLine();
+
+        checkFirstTickLabel(" M 01 ");
+        checkTitle(" APRIL 2030 ");
+
+        cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
         cy.wait(500);
+        cy.tick(1 * SECONDS); 
+        checkTimeCursorText(" 30/04/30 15:00 ");
+        checkHaveCircle(1);
 
-        // Check that the timeline moved accordingly
-        cy.get("@firstTimelineXTick").should("have.text", " 22h ");
-        
-        // the bubble at the start of the timeline has disappear 
-        cy.get("of-custom-timeline-chart").find("circle").should('have.length', 1);
-    })
+        cy.tick(24 * HOURS);
+        checkNoTimeCursor();
+        checkFirstTickLabel(" M 01 ");
+        checkTitle(" APRIL 2030 ");
+        checkHaveCircle(1);
 
-    it('Check timeline does not move when locked in real time view',
-        { defaultCommandTimeout: 10000}, function () {
-
-        // Logging on Sunday, 31rst of March 2030, at 23h59
-        // NB : for some reason month seems to start at 0
-        cy.loginWithClock(new Date(2030, 2, 31, 23, 59));
-
-        cy.get(".axis").find("text").first().as('firstTimelineXTick');
-
-        cy.get('#opfab-timeline-link-period-TR').click();
-        cy.get("#opfab-timeline-lock").click();
-        
-        cy.get("@firstTimelineXTick").should("exist");
-        cy.get("@firstTimelineXTick").should("have.text", " 21h30 ");
-
-        // go 1 hour in the future 
-        cy.tick(1*60*60*1000);
-        cy.wait(250);
-
-        // Check that the timeline moved accordingly
-        cy.get("@firstTimelineXTick").should("have.text", " 21h30 ");
-    })   
-
-    ////////////////////////////// Test on seven dayw view
-
-
-    it('Check timeline moves when unlocked in seven days view', 
-        { defaultCommandTimeout: 10000}, function () {
-
-        // Logging on Sunday, 31rst of March 2030, at 23h59
-        // NB : for some reason month seems to start at 0
-        cy.loginWithClock(new Date(2030, 2, 31, 23, 59));
-
-        cy.get(".axis").find("text").first().as('firstTimelineXTick');
-
-        cy.get('#opfab-timeline-link-period-7D').click();
-
-        cy.get("@firstTimelineXTick").should("exist");
-        cy.get("@firstTimelineXTick").should("have.text", " 08h ");
-        cy.get(".of-custom-timeline-chart").find(".chart").find("text").first().should("have.text", " Sun 31 Mar");
-
-        // go 1 hour in the future 
-        cy.tick(1*60*60*1000);
-        cy.wait(250);
-
-        // Check that the timeline did not move
-        cy.get("@firstTimelineXTick").should("have.text", " 08h ");
-        cy.get(".of-custom-timeline-chart").find(".chart").find("text").first().should("have.text", " Sun 31 Mar");
-
-
-        // go 27 hours in the future 
-        cy.tick(27*60*60*1000);
-        cy.wait(250);
-
-        // Check that the timeline moved accordingly
-        cy.get("@firstTimelineXTick").should("have.text", " 16h ");
-        cy.get(".of-custom-timeline-chart").find(".chart").find("text").first().should("have.text", " ");
-    })
-
-    it('Check timeline does not move when locked in seven days view', 
-    { defaultCommandTimeout: 10000}, function () {
-
-    // Logging on Sunday, 31rst of March 2030, at 23h59
-    // NB : for some reason month seems to start at 0
-    cy.loginWithClock(new Date(2030, 2, 31, 23, 59));
-
-    cy.get(".axis").find("text").first().as('firstTimelineXTick');
-
-    cy.get('#opfab-timeline-link-period-7D').click();
-    cy.get("#opfab-timeline-lock").click()
-
-    cy.get("@firstTimelineXTick").should("exist");
-    cy.get("@firstTimelineXTick").should("have.text", " 08h ");
-    cy.get(".of-custom-timeline-chart").find(".chart").find("text").first().should("have.text", " Sun 31 Mar");
-
-    // go 1 hour in the future 
-    cy.tick(1*60*60*1000);
-    cy.wait(250);
-
-    // Check that the timeline did not move
-    cy.get("@firstTimelineXTick").should("have.text", " 08h ");
-    cy.get(".of-custom-timeline-chart").find(".chart").find("text").first().should("have.text", " Sun 31 Mar");
-
-
-    // go 27 hours in the future 
-    cy.tick(27*60*60*1000);
-    cy.wait(250);
-
-    // Check that the timeline moved accordingly
-    cy.get("@firstTimelineXTick").should("have.text", " 08h ");
-    cy.get(".of-custom-timeline-chart").find(".chart").find("text").first().should("have.text", " Sun 31 Mar");
-
-    })
-
-    ////////////////////////////// Test on day view
-
-
-    it('Check timeline moves when unlocked in Day view', 
-    { defaultCommandTimeout: 10000}, function () {
-
-    // Logging on Sunday, 31rst of December 2028, at 23h59
-    // NB : for some reason month seems to start at 0
-    cy.loginWithClock(new Date(2028, 11, 31, 23, 59));
-
-    cy.get(".axis").find("text").first().as('firstTimelineXTick');
-
-    cy.get('#opfab-timeline-link-period-J').click();
-
-    cy.get("@firstTimelineXTick").should("exist");
-    cy.get("@firstTimelineXTick").should("have.text", " 00h ");
-    cy.get("#opfab-timeline-title").should("have.text", " 31 December 2028 ");
-    cy.get("#opfab-timeline-time-cursor").should("exist");
-    cy.get("#opfab-timeline-time-cursor").should("have.text", " 31/12/28 23:59 ");
-
-    // send cards
-    cy.loadTestConf().send6TestCards();
-
-    cy.tick(1000);
-
-    // go 2 minutes in the future 
-    cy.tick(2*60*1000);
-    cy.wait(250);
-
-    // Check that the timeline moved accordingly
-    cy.get("@firstTimelineXTick").should("exist");
-    cy.get("@firstTimelineXTick").should("have.text", " 00h ");
-    cy.get("#opfab-timeline-title").should("have.text", " 01 January 2029 ");
-    cy.get("#opfab-timeline-time-cursor").should("exist");
-    cy.get("#opfab-timeline-time-cursor").should("have.text", " 01/01/29 00:01 ");
-
-
-    // go 16 hours in the future 
-    cy.tick(16*60*60*1000);
-    cy.wait(250);
-
-    // Check that the timeline did not move
-    cy.get("@firstTimelineXTick").should("exist");
-    cy.get("@firstTimelineXTick").should("have.text", " 00h ");
-    cy.get("#opfab-timeline-title").should("have.text", " 01 January 2029 ");
-    cy.get("#opfab-timeline-time-cursor").should("exist");
-    cy.get("#opfab-timeline-time-cursor").should("have.text", " 01/01/29 16:01 ");
-
-    })
-
-    it('Check timeline does not moves when locked in Day view', 
-    { defaultCommandTimeout: 10000}, function () {
-
-    // Logging on Sunday, 31rst of December 2028, at 23h59
-    // NB : for some reason month seems to start at 0
-    cy.loginWithClock(new Date(2028, 11, 31, 23, 59));
-
-    cy.get(".axis").find("text").first().as('firstTimelineXTick');
-
-    cy.get('#opfab-timeline-link-period-J').click();
-    cy.get("#opfab-timeline-lock").click();
-
-    cy.get("@firstTimelineXTick").should("exist");
-    cy.get("@firstTimelineXTick").should("have.text", " 00h ");
-    cy.get("#opfab-timeline-title").should("have.text", " 31 December 2028 ");
-    cy.get("#opfab-timeline-time-cursor").should("exist");
-    cy.get("#opfab-timeline-time-cursor").should("have.text", " 31/12/28 23:59 ");
-
-    // go 10 minutes in the future 
-    cy.tick(10*60*1000);
-    cy.wait(250);
-
-    // Check that the timeline did not move
-    cy.get("@firstTimelineXTick").should("exist");
-    cy.get("@firstTimelineXTick").should("have.text", " 00h ");
-    cy.get("#opfab-timeline-title").should("have.text", " 31 December 2028 ");
-    cy.get("#opfab-timeline-time-cursor").should("not.exist");
-
-    })
-
-    it('Check the overlap in Day view when timeline shifts', 
-    { defaultCommandTimeout: 10000}, function () {
-
-        // Logging on Sunday, 31rst of December 2028, at 23h30l
-        // NB : for some reason month seems to start at 0
-        const afternoonDate = new Date(2028, 11, 31, 15, 30);
-        const justBeforeMidnightDate = new Date(2028, 11, 31, 23, 55);
-        cy.loginWithClock(justBeforeMidnightDate);
-
-        cy.get('#opfab-timeline-link-period-J').click();
-
-        // send cards
-        cy.sendCard('cypress/feed/customEvent.json', afternoonDate.getTime(), afternoonDate.getTime() + 5*60*1000);
+        cy.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 72 * HOURS, currentDate.getTime() + 80 * HOURS);
         cy.wait(500);
-        cy.tick(1000);
-        cy.sendCard('cypress/feed/customAlarm.json', justBeforeMidnightDate.getTime(), justBeforeMidnightDate.getTime() + 5*60*1000);
+        cy.tick(1 * SECONDS);
+        checkHaveCircle(1);
 
-        // Wait for the card to arrive
+    });
+
+    
+
+    it('Check timeline moves when unlocked in year view', function () {
+
+        const currentDate = new Date(2030, 11, 30, 8, 0);
+        cy.loginWithClock(currentDate);
+
+        setTimeLineDomain('Y');
+        checkFirstTickLabel(" 1 Jan ");
+        checkTitle(" 2030 ");
+
+        cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
         cy.wait(500);
-        cy.tick(1000);
+        cy.tick(1 * SECONDS); 
+        checkTimeCursorText(" 30/12/30 08:00 ");
+        checkHaveCircle(1);
 
-        // Check the card is received
-        cy.get("#opfab-timeline-title").should("have.text", " 31 December 2028 ");
-        cy.get("of-custom-timeline-chart").find("circle").should('have.length', 2);
+        cy.tick(48 * HOURS);
+        checkTimeCursorText(" 01/01/31 08:00 ");
+        checkFirstTickLabel(" 1 Jan ");
+        checkTitle(" 2031 ");
+        checkHaveCircle(0);
 
-
-        // go 35 minutes in the future 
-        cy.tick(35*60*1000);
-
-        // The card before midnight should be visible
-        cy.get("#opfab-timeline-title").should("have.text", " 01 January 2029 ");
-        cy.get("of-custom-timeline-chart").find("circle").should('have.length', 1);
-    })
-
-    it('Check the overlap in Day view when clicking on next day', 
-    { defaultCommandTimeout: 10000}, function () {
-
-        console.log("########################## Click TU")
-
-        // Logging on Sunday, 31rst of December 2028, at 23h30l
-        // NB : for some reason month seems to start at 0
-        const afternoonDate = new Date(2028, 11, 31, 15, 30);
-        const justBeforeMidnightDate = new Date(2028, 11, 31, 23, 55);
-        cy.loginWithClock(justBeforeMidnightDate);
-
-        cy.get('#opfab-timeline-link-period-J').click();
-
-        // send cards
-        cy.sendCard('cypress/feed/customEvent.json', afternoonDate.getTime(), afternoonDate.getTime() + 5*60*1000);
+        cy.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 72 * HOURS, currentDate.getTime() + 80 * HOURS);
         cy.wait(500);
-        cy.tick(1000);
-        cy.sendCard('cypress/feed/customAlarm.json', justBeforeMidnightDate.getTime(), justBeforeMidnightDate.getTime() + 5*60*1000);
+        cy.tick(1 * SECONDS);
+        checkHaveCircle(1);
 
-        // Wait for the card to arrive
+    });
+
+
+    it('Check timeline does not moves when locked in year view', function () {
+
+        const currentDate = new Date(2030, 11, 30, 8, 0);
+        cy.loginWithClock(currentDate);
+
+        setTimeLineDomain('Y');
+        lockTimeLine();
+
+        checkFirstTickLabel(" 1 Jan ");
+        checkTitle(" 2030 ");
+
+        cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
         cy.wait(500);
-        cy.tick(1000);
+        cy.tick(1 * SECONDS); 
+        checkTimeCursorText(" 30/12/30 08:00 ");
+        checkHaveCircle(1);
 
-        // Check the card is received
-        cy.get("#opfab-timeline-title").should("have.text", " 31 December 2028 ");
-        cy.get("of-custom-timeline-chart").find("circle").should('have.length', 2);
+        cy.tick(48 * HOURS);
+        checkNoTimeCursor();
+        checkFirstTickLabel(" 1 Jan ");
+        checkTitle(" 2030 ");
+        checkHaveCircle(1);
 
-
-        // click on the button to display the following day
-        cy.get("#opfab-timeline-link-move-right").click();
-
-        // The card before midnight should be visible
-        cy.get("#opfab-timeline-title").should("have.text", " 01 January 2029 ");
-        cy.get("of-custom-timeline-chart").find("circle").should('have.length', 1);
-
-    })
-
-    it('Check the overlap in Week view when timeline shifts', 
-    { defaultCommandTimeout: 10000}, function () {
-
-        // In English week timelines ends on Friday
-        // Logging on Friday, 29th of December 2028, at 23h30l
-        // NB : for some reason month seems to start at 0
-        const afternoonDate = new Date(2028, 11, 29, 15, 30);
-        const justBeforeMidnightDate = new Date(2028, 11, 29, 23, 55);
-        cy.loginWithClock(justBeforeMidnightDate);
-
-        cy.get('#opfab-timeline-link-period-W').click();
-
-        // send cards
-        cy.sendCard('cypress/feed/customEvent.json', afternoonDate.getTime(), afternoonDate.getTime() + 5*60*1000);
+        cy.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 72 * HOURS, currentDate.getTime() + 80 * HOURS);
         cy.wait(500);
-        cy.tick(1000);
-        cy.sendCard('cypress/feed/customAlarm.json', justBeforeMidnightDate.getTime(), justBeforeMidnightDate.getTime() + 5*60*1000);
+        cy.tick(1 * SECONDS);
+        checkHaveCircle(1);
 
-        // Wait for the card to arrive
-        cy.wait(500);
-        cy.tick(1000);
-
-        // Check the card is received
-        cy.get("#opfab-timeline-title").should("have.text", " 23/12/2028 - 30/12/2028 ");
-        cy.get("of-custom-timeline-chart").find("circle").should('have.length', 2);
-
-
-        // go 35 minutes in the future 
-        cy.tick(35*60*1000);
-
-        // The card before midnight should be visible
-        cy.get("#opfab-timeline-title").should("have.text", " 30/12/2028 - 06/01/2029 ");
-        cy.get("of-custom-timeline-chart").find("circle").should('have.length', 1);
-    })
-
-
-    it('Check the overlap in Month view when timeline shifts', 
-    { defaultCommandTimeout: 10000}, function () {
-
-        // Logging on Sunday, 31st of December 2028, at 23h30
-        // NB : for some reason month seems to start at 0
-        const afternoonDate = new Date(2028, 11, 31, 15, 30);
-        const justBeforeMidnightDate = new Date(2028, 11, 31, 23, 55);
-        cy.loginWithClock(justBeforeMidnightDate);
-
-        cy.get('#opfab-timeline-link-period-M').click();
-
-        // send cards
-        cy.sendCard('cypress/feed/customEvent.json', afternoonDate.getTime(), afternoonDate.getTime() + 5*60*1000);
-        cy.wait(500);
-        cy.tick(1000);
-        cy.sendCard('cypress/feed/customAlarm.json', justBeforeMidnightDate.getTime(), justBeforeMidnightDate.getTime() + 5*60*1000);
-
-        // Wait for the card to arrive
-        cy.wait(500);
-        cy.tick(1000);
-
-        // Check the card is received
-        cy.get("#opfab-timeline-title").should("have.text", " DECEMBER 2028 ");
-        cy.get("of-custom-timeline-chart").find("circle").should('have.length', 2);
-
-
-        // go 35 minutes in the future 
-        cy.tick(35*60*1000);
-
-        // The card before midnight should be visible
-        cy.get("#opfab-timeline-title").should("have.text", " JANUARY 2029 ");
-        cy.get("of-custom-timeline-chart").find("circle").should('have.length', 1);
-    })
-
-
-    it('Check the overlap in Year view when timeline shifts', 
-    { defaultCommandTimeout: 10000}, function () {
-
-        // Logging on Sunday, 31st of December 2028, at 23h30
-        // NB : for some reason month seems to start at 0
-        const afternoonDate = new Date(2028, 11, 31, 15, 30);
-        const justBeforeMidnightDate = new Date(2028, 11, 31, 23, 55);
-        cy.loginWithClock(justBeforeMidnightDate);
-
-        cy.get('#opfab-timeline-link-period-Y').click();
-
-        // send cards
-        cy.sendCard('cypress/feed/customEvent.json', afternoonDate.getTime(), afternoonDate.getTime() + 5*60*1000);
-        cy.wait(500);
-        cy.tick(1000);
-        cy.sendCard('cypress/feed/customAlarm.json', justBeforeMidnightDate.getTime(), justBeforeMidnightDate.getTime() + 5*60*1000);
-
-        // Wait for the card to arrive
-        cy.wait(500);
-        cy.tick(1000);
-
-        // Check the card is received
-        cy.get("#opfab-timeline-title").should("have.text", " 2028 ");
-        cy.get("of-custom-timeline-chart").find("circle").should('have.length', 2);
-
-
-        // go 35 minutes in the future 
-        cy.tick(35*60*1000);
-
-        // The card before midnight should be visible
-        cy.get("#opfab-timeline-title").should("have.text", " 2029 ");
-        cy.get("of-custom-timeline-chart").find("circle").should('have.length', 1);
-    })
-
-
+    });
+    
 })
