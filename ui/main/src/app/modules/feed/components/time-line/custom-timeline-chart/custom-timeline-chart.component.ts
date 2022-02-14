@@ -92,6 +92,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   @Input() prod; // Workaround for testing, the variable is not set  in unit test an true in production mode
   @Input() domainId;
   @Input() followClockTick;
+  @Input() overlap; // left part of the time line that is not visible on the timeline grid 
   @Input()
   set valueDomain(value: any) {
     this.xDomain = value;
@@ -101,7 +102,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   }
 
   setDomainForTimeLineGridDisplay() {
-    this.xDomainForTimeLineGridDisplay = this.xDomain;
+    this.xDomainForTimeLineGridDisplay = [this.xDomain[0] + this.xDomain[2],this.xDomain[1]];
   }
 
   setTitle()

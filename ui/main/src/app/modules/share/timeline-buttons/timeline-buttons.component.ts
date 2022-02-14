@@ -33,9 +33,7 @@ export class TimelineButtonsComponent implements OnInit {
     public followClockTickMode: boolean;
     isTimelineLockDisabled: boolean;
 
-    // Overlap
-    public useOverlap: boolean; // If true, will display cards received after xDomaine[1]-overlapDurationInMs will be displayed at the very beginning of the timeline
-    public overlapDurationInMs: number;
+    public overlap = 0;
 
     // buttons
     public buttonTitle: string;
@@ -140,15 +138,6 @@ export class TimelineButtonsComponent implements OnInit {
             this.buttonTitle = conf.buttonTitle;
         }
 
-        this.overlapDurationInMs = 0;
-        if (conf.useOverlap != undefined) {
-            this.useOverlap = conf.useOverlap;
-
-            if (conf.useOverlap && conf.overlapDurationInMs != undefined) {
-                this.overlapDurationInMs = conf.overlapDurationInMs;
-            }
-        }
-
         this.selectZoomButton(conf.buttonTitle);
         this.domainId = conf.domainId;
 
@@ -205,7 +194,7 @@ export class TimelineButtonsComponent implements OnInit {
                 break;
             }
         }
-        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
+        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(),false);
     }
 
     private getRealTimeStartDate() {
@@ -222,7 +211,7 @@ export class TimelineButtonsComponent implements OnInit {
      * @param startDomain new start of domain
      * @param endDomain new end of domain
      */
-    setStartAndEndDomain(startDomain: number, endDomain: number): void {
+    setStartAndEndDomain(startDomain: number, endDomain: number , useOverlap = false ): void {
 
         if (this.domainId == 'W') {
             /*
@@ -236,7 +225,13 @@ export class TimelineButtonsComponent implements OnInit {
             endDomain = endOfWeek.valueOf();
         }
 
-        this.myDomain = [startDomain, endDomain];
+        if (useOverlap) {
+            this.overlap = TimelineModel.OVERLAP_DURATION_IN_MS;
+            startDomain = startDomain - this.overlap;
+        }
+        else this.overlap = 0;   
+        
+        this.myDomain = [startDomain, endDomain ,this.overlap];
         this.startDate = this.getDateFormatting(startDomain);
         this.endDate = this.getDateFormatting(endDomain);
 
@@ -286,14 +281,14 @@ export class TimelineButtonsComponent implements OnInit {
 
 
         if (moveForward) {
-            startDomain = this.goForward(startDomain.add(this.overlapDurationInMs, "milliseconds"));
+            startDomain = this.goForward(startDomain.add(this.overlap, "milliseconds"));
             endDomain = this.goForward(endDomain);
         } else {
-            startDomain = this.goBackward(startDomain.add(this.overlapDurationInMs, "milliseconds"));
+            startDomain = this.goBackward(startDomain.add(this.overlap, "milliseconds"));
             endDomain = this.goBackward(endDomain);
         }
 
-        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
+        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(),false);
     }
 
     goForward(dateToMove: moment.Moment) {
@@ -391,7 +386,7 @@ export class TimelineButtonsComponent implements OnInit {
                     if (currentDate > this.myDomain[1] - 60 * 1000) {
                         startDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0);
                         endDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0).add(1, 'days');
-                        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
+                        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(),true);
                         break;
                     }
                     break;
@@ -405,7 +400,7 @@ export class TimelineButtonsComponent implements OnInit {
                     if (currentDate > this.myDomain[1] - 60 * 1000) {
                         startDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0);
                         endDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0).add(1, 'week');
-                        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
+                        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(),true);
                     }
                     break;
                 case 'M':
@@ -413,7 +408,7 @@ export class TimelineButtonsComponent implements OnInit {
                     if (currentDate > this.myDomain[1] - 60 * 1000) {
                         startDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0);
                         endDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0).add(1, 'months');
-                        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
+                        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(),true);
                     }
                     break;
 
@@ -422,7 +417,7 @@ export class TimelineButtonsComponent implements OnInit {
                     if (currentDate > this.myDomain[1] - 60 * 1000) {
                         startDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0);
                         endDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0).add(1, 'years');
-                        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
+                        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(),true);
                     }
                     break;
             }
