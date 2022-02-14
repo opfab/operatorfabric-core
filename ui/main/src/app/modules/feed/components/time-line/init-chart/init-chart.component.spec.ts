@@ -85,17 +85,6 @@ describe('InitChartComponent', () => {
   }));
 
 
-  it('should create button list', () => {
-    fixture.detectChanges();
-    timelineButtonsComponent.confDomain = [{
-      buttonTitle: '7D',
-      domainId:'7D'
-    }];
-    timelineButtonsComponent.initDomains();
-    expect(timelineButtonsComponent.buttonList.length).toEqual(1);
-    expect(component).toBeTruthy();
-  });
-
   it('check applyNewZoom function with only one button' +
       'forward level activated is different', () => {
     fixture.detectChanges();

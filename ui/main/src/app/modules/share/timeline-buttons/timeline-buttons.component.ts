@@ -7,8 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import { TimelineModel } from '@ofModel/timeline-domains.model';    
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';   
 import {ConfigService} from "@ofServices/config.service";
 import moment from "moment";
 import {FilterType} from '@ofModel/feed-filter.model';
@@ -24,6 +23,7 @@ import {FilterService} from '@ofServices/lightcards/filter.service';
 })
 export class TimelineButtonsComponent implements OnInit {
 
+    private  OVERLAP_DURATION_IN_MS = 15 * 60 * 1000;
     // required by Timeline
     private currentDomain ;
     public domainId: string;
@@ -41,8 +41,6 @@ export class TimelineButtonsComponent implements OnInit {
     public startDate;
     public endDate;
 
-    public confDomain = [];
-    public domains: any;
 
     @Input()
     public isMonitoringScreen: boolean;
@@ -60,49 +58,57 @@ export class TimelineButtonsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.loadConfiguration();
-        this.loadDomainsListFromConfiguration();
+        this.loadDomainConfiguration();
 
         const hideTimeLineInStorage = this.userPreferences.getPreference('opfab.hideTimeLine');
         this.hideTimeLine = (hideTimeLineInStorage === 'true');
         this.isTimelineLockDisabled = false;
 
-        this.initDomains();
+        this.setInitialDomain();
         this.shiftTimeLineIfNecessary();
 
     }
 
 
-    loadConfiguration() {
-        this.domains = TimelineModel.getDomains();
-    }
-
-    loadDomainsListFromConfiguration() {
-
+    loadDomainConfiguration() {
+        const domains = {
+            'J': {
+                buttonTitle: 'timeline.buttonTitle.J',
+                domainId: 'J'
+            },
+            'TR': {
+                buttonTitle: 'timeline.buttonTitle.TR',
+                domainId: 'TR'
+            },
+            '7D': {
+                buttonTitle: 'timeline.buttonTitle.7D',
+                domainId: '7D'
+            },
+            'W': {
+                buttonTitle: 'timeline.buttonTitle.W',
+                domainId: 'W'
+            },
+            'M': {
+                buttonTitle: 'timeline.buttonTitle.M',
+                domainId: 'M'
+            },
+            'Y': {
+                buttonTitle: 'timeline.buttonTitle.Y',
+                domainId: 'Y'
+            }
+        };
         const domainsConf = this.configService.getConfigValue('feed.timeline.domains', ["TR", "J", "7D", "W", "M", "Y"]);
+        this.buttonList = [];
         domainsConf.map(domain => {
-            if (Object.keys(this.domains).includes(domain)) {
-                this.confDomain.push(this.domains[domain]);
+            if (Object.keys(domains).includes(domain)) {
+                this.buttonList.push(domains[domain]);
             }
         });
-
     }
 
-    /**
-     * if it was given on confDomain, set the list of zoom buttons and use first zoom of list
-     * else default zoom is weekly
-     */
-    initDomains(): void {
-        this.buttonList = [];
-        if (this.confDomain && this.confDomain.length > 0) {
-            for (const elem of this.confDomain) {
-                const tmp = _.cloneDeep(elem);
-                this.buttonList.push(tmp);
-            }
-        } else {
-            const defaultConfig = {buttonTitle: 'W', domainId: 'W'};
-            this.buttonList.push(defaultConfig);
-        }
+
+    setInitialDomain(): void {
+
         // Set the zoom activated
         let initialGraphConf = this.buttonList.length > 0 ? this.buttonList[0] : null;
 
@@ -221,7 +227,7 @@ export class TimelineButtonsComponent implements OnInit {
         }
 
         if (useOverlap) {
-            this.overlap = TimelineModel.OVERLAP_DURATION_IN_MS;
+            this.overlap = this.OVERLAP_DURATION_IN_MS;
             startDomain = startDomain - this.overlap;
         }
         else this.overlap = 0;   
