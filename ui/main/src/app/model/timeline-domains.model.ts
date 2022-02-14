@@ -7,38 +7,32 @@ export class TimelineModel {
             'J': {
                 buttonTitle: 'timeline.buttonTitle.J',
                 domainId: 'J',
-                followClockTick: true,
-                useOverlap: true
+                followClockTick: true
             },
             'TR': {
                 buttonTitle: 'timeline.buttonTitle.TR',
                 domainId: 'TR',
-                followClockTick: true,
-                useOverlap: false
+                followClockTick: true
             },
             '7D': {
                 buttonTitle: 'timeline.buttonTitle.7D',
                 domainId: '7D',
-                followClockTick: true,
-                useOverlap: false
+                followClockTick: true
             },
             'W': {
                 buttonTitle: 'timeline.buttonTitle.W',
                 domainId: 'W',
-                followClockTick: true,
-                useOverlap: true
+                followClockTick: true
             },
             'M': {
                 buttonTitle: 'timeline.buttonTitle.M',
                 domainId: 'M',
-                followClockTick: true,
-                useOverlap: true
+                followClockTick: true
             },
             'Y': {
                 buttonTitle: 'timeline.buttonTitle.Y',
                 domainId: 'Y',
-                followClockTick: true,
-                useOverlap: true
+                followClockTick: true
             }
         };
     }
