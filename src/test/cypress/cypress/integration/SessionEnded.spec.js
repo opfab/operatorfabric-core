@@ -18,18 +18,24 @@ describe('Session ended test', function () {
   })
 
 
-  it('Checking session end after 10 hours  ', () => {
+  it('Checking session end after 7 days  ', () => {
     
     cy.loginWithClock();
     cy.stubPlaySound();
+
+    // clock on timeline Year mode to avoid having a lot of update subscription request  when simulating time 
+    cy.get(".axis").find("text").first().as('firstTimelineXTick');
+    cy.get('#opfab-timeline-link-period-Y').click();
+
+
     // go 1 hour in the future 
     cy.tick(1*60*60*1000);
    
     // The session is active
     cy.get('#opfab-sessionEnd').should('not.exist');
 
-    // go 10 hour in the future 
-    cy.tick(10*60*60*1000); 
+    // go 7 days in the future 
+    cy.tick(7*24*60*60*1000); 
 
     // Session is closed 
     // check session end message 
@@ -43,6 +49,11 @@ describe('Session ended test', function () {
   it('Checking sound when session end  ', () => {
     
     cy.loginOpFab('operator1_fr', 'test');
+
+    // clock on timeline Year mode to avoid having a lot of update subscription request  when simulating time 
+    cy.get(".axis").find("text").first().as('firstTimelineXTick');
+    cy.get('#opfab-timeline-link-period-Y').click();
+
     cy.openOpfabSettings();
 
     // set severity alarm to be notified by sound 
@@ -63,8 +74,8 @@ describe('Session ended test', function () {
     // The session is active
     cy.get('#opfab-sessionEnd').should('not.exist');
 
-    // go 10 hour in the future 
-    cy.tick(10*60*60*1000); 
+    // go 7 days in the future 
+    cy.tick(7*24*60*60*1000); 
 
     // Session is closed 
     // check session end message 
