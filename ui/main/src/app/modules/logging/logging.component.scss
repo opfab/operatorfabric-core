@@ -28,6 +28,17 @@
     padding-left: 5%;
   
   }
+
+  td {
+    max-width: 350px;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  th {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
  
  // ADAPT MARGINS TO SCREEN SIZE 
 
@@ -35,6 +46,7 @@
     .opfab-logging {
       padding-left : 2%;
     }
+
   } 
 
 
