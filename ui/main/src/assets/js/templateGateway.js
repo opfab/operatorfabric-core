@@ -57,10 +57,10 @@ const templateGateway = {
         return Array.from(this.opfabEntities.values());
     },
 
-    redirectToBusinessMenu: function(menuId,menuItemId,params){
+    redirectToBusinessMenu: function(menuId,menuItemId,urlExtension){
         const urlSplit = document.location.href.split('#');
         var  newUrl =  urlSplit[0] + '#/businessconfigparty/' + menuId + '/' + menuItemId ;
-        if (!!params) newUrl +=  '?' + params;
+        if (!!urlExtension) newUrl += urlExtension;
         document.location.href = newUrl;
     },
 
