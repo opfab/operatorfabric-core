@@ -36,3 +36,23 @@ to
         ResponseCard = cardCommand.getResponseCard();
 ```
 
+=== Redirect to business application from a card
+
+The `templateGateway.redirectToBusinessMenu` function to redirect to business application from a card has changed. The third argument of the function is now a url extension that can contain sub paths and/or parameters instead of only parameters.
+
+You will need to change the call adding a '?' character at the beginning of the third argument.
+
+
+For example change:
+
+....
+templateGateway.redirectToBusinessMenu('myMenu','myEntry','param1=aParam&param2=anotherParam')
+....
+
+to 
+
+....
+templateGateway.redirectToBusinessMenu('myMenu','myEntry','?param1=aParam&param2=anotherParam')
+....
+
+

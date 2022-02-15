@@ -556,10 +556,10 @@ templateGateway.redirectToBusinessMenu(idMenu,idEntry)
   - idMenu is the id of the menu defined in ui-menu.json
   - idEntry is the id of the entry defined in ui-menu.json
 
-It is also possible to append parameters to the url that will be called:
+It is also possible to append url extension (sub paths and/or parameters) to the url that will be called:
 
 ....
-templateGateway.redirectToBusinessMenu('myMenu','myEntry','param1=aParam&param2=anotherParam')
+templateGateway.redirectToBusinessMenu('myMenu','myEntry','/extension?param1=aParam&param2=anotherParam')
 ....
 
 For example:
