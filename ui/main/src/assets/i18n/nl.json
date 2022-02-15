@@ -53,7 +53,15 @@
     "resultsNumber":"Aantal resultaten",
     "noProcessStateAvailable": "Geen proces/status beschikbaar",
     "endDateBeforeStartDate": "Einddatum moet na start datum liggen",
-    "featureNotConfigured": "Functie niet geconfigureerd"
+    "featureNotConfigured": "Functie niet geconfigureerd",
+    "confirmSettings": "BEVESTIG INSTELLINGEN",
+    "popup": {
+      "title": "BEVESTIGING",
+      "areYouSure": "U heeft enkele wijzigingen aangebracht. Weet u zeker dat u ze wilt opslaan?"
+    },
+    "error": {
+      "impossibleToSaveSettings": "Om technische redenen is het niet mogelijk om de instellingen op te slaan"
+    }
   },
   "global":{
     "connectionLost":"Verbinding verbroken",
@@ -78,7 +86,8 @@
     "switchToNightMode": "Nacht modus",
     "switchToDayMode": "Dag modus",
     "realTimeUsers": "Realtime gebruikers",
-    "externalDevicesConfiguration": "Extern apparaat configuratie"
+    "externalDevicesConfiguration": "Extern apparaat configuratie",
+    "activityArea": "Activiteitengebied"
   },
   "timeline": {
     "hideTimeline" : "Verberg Tijdlijn",
@@ -226,16 +235,11 @@
     "yes": "JA",
     "search" : "ZOEK"
   },
+  "activityArea": {
+    "title": "ACTIVITEITENGEBIED"
+  },
   "feedConfiguration": {
-    "title": "NOTIFICATIE CONFIGURATIE",
-    "confirmSettings": "BEVESTIG INSTELLINGEN",
-    "popup": {
-      "title": "BEVESTIGING",
-      "areYouSure": "U heeft enkele wijzigingen aangebracht. Weet u zeker dat u ze wilt opslaan?"
-    },
-    "error": {
-      "impossibleToSaveSettings": "Om technische redenen is het niet mogelijk om de instellingen op te slaan"
-    }
+    "title": "NOTIFICATIE CONFIGURATIE"
   },
   "userCard": {
     "title": "MAAK EEN NIEUWE KAART ",
