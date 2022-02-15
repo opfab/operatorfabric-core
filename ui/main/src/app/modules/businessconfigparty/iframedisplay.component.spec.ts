@@ -20,7 +20,7 @@ export class ActivatedRouteMock {
   public queryParamMap = of();
 }
 
-fdescribe('IFrameDisplayComponent', () => {
+describe('IFrameDisplayComponent', () => {
   let component: IframeDisplayComponent;
   let mockConfigService: jasmine.SpyObj<ConfigService>;
   let mockGlobalStyleService: jasmine.SpyObj<GlobalStyleService>;
