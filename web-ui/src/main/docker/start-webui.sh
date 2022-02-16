@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+# Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -51,5 +51,7 @@ sed -i "s/$(echo $nginx_conf_path_default | sed 's/\//\\\//g')\/conf\.d/$(echo $
 
 echo "The conf.d path in the personal nginx.conf file:"
 grep "conf.d" $nginx_conf_path_personal/nginx.conf
+
+/usr/sbin/crond
 
 nginx -c /personal-conf/nginx.conf -g "daemon off;"
