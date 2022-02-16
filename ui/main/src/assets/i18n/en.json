@@ -207,7 +207,8 @@
     "playSoundForInformation": "Information",
     "replayEnabled": "Sound replay enabled",
     "playSoundOnExternalDevice": "Play sound on external device",
-    "replayInterval": "Interval between sound replays (seconds)"
+    "replayInterval": "Interval between sound replays (seconds)",
+    "remoteLoggingEnabled": "Remote logging enabled"
   },
   "archive": {
     "loadingInProgress": "Loading archived cards",

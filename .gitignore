@@ -100,7 +100,7 @@ gradle-app.setting
 # End of https://www.gitignore.io/api/gradle,intellij+all,visualstudiocode
 
 # ignoring logs
-**/logs
+services/**/logs
 
 # ignoring sonar generated reports
 .sonar

@@ -209,7 +209,8 @@
     "playSoundForInformation": "Informatie",
     "replayEnabled": "Geluidsherhaling ingeschakeld",
     "playSoundOnExternalDevice": "Geluid afspelen op extern apparaat",
-    "replayInterval": "Interval tussen geluidsherhalingen (seconden)"
+    "replayInterval": "Interval tussen geluidsherhalingen (seconden)",
+    "remoteLoggingEnabled": "Loggen op afstand ingeschakeld"
   },
   "archive": {
     "loadingInProgress": "Gearchiveerde kaarten laden",

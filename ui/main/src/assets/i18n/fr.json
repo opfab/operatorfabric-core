@@ -207,7 +207,8 @@
     "playSoundForInformation": "Information",
     "replayEnabled": "Répétition des sons activée",
     "playSoundOnExternalDevice": "Jouer le son sur un appareil externe",
-    "replayInterval": "Délai entre les répétitions (en secondes)"
+    "replayInterval": "Délai entre les répétitions (en secondes)",
+    "remoteLoggingEnabled": "Journalisation à distance activée"
   },
   "archive": {
     "loadingInProgress": "Chargement des cartes archivées",
