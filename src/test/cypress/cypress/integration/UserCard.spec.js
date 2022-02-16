@@ -474,4 +474,59 @@ describe('User Card ', function () {
       })
 
   })
+
+
+  describe('Show responses in card preview when keepChildCards=true ', function () {
+
+    it('Send User card with keepChildCards=true', () => {
+      cy.deleteAllCards();
+      cy.loginOpFab('operator1_fr', 'test');
+
+      cy.get('of-light-card').should('have.length', 0);
+
+      cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+      cy.get("of-usercard").should('exist');
+      cy.get("#of-usercard-service-selector").find('select').select('User card examples');
+      cy.get("#opfab-state-filter").find('select').select('IT Incident');
+      cy.get('#opfab-usercard-btn-prepareCard').click();
+      // Validate sending of the card
+      cy.get('#opfab-usercard-btn-accept').click();
+      // Check that the message indicating successful sending appears
+      cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
+      cy.get('of-light-card').should('have.length', 1);
+    })
+
+    it('Respond as operator2_fr', () => {
+      cy.loginOpFab('operator2_fr', 'test');
+
+      cy.get('of-light-card').should('have.length', 1);
+
+      // Click on the card
+      cy.get('of-light-card').eq(0).click();
+
+      // template is ready
+      cy.get("#services").should('exist');
+      // Respond to the card 
+      cy.get('#opfab-card-details-btn-response').click();
+    })
+
+    it('Edit card and check card preview show the response', ()=>{
+      cy.loginOpFab('operator1_fr','test');
+      cy.get('of-light-card').eq(0).click()
+        .find('[id^=opfab-feed-light-card]')
+        .invoke('attr', 'data-urlId')
+        .then((urlId) => {
+          cy.hash().should('eq', '#/feed/cards/'+urlId);
+          cy.get('#opfab-card-edit').click();
+          cy.get("of-usercard").should('exist');
+          cy.get('#opfab-usercard-btn-prepareCard').click();
+          // Card preview show responses list
+          cy.get("#childs-div").should('not.be.empty');
+          // Response table has 1 header and 1 row 
+          cy.get("#childs-div").find('tr').should('have.length', 2);
+
+      });
+    })
+  })
+
 })

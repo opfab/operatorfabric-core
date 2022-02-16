@@ -285,12 +285,14 @@ export class UserCardComponent implements OnInit {
                     data: this.specificInformation.card.data,
                 } as Card;
                 
+                this.childCards = (!!this.cardToEdit && this.cardToEdit.card.keepChildCards) ? this.cardToEdit.childCards : [];
                 if (!!this.specificInformation.childCard && this.userPermissionsService.isUserEnabledToRespond(this.userService.getCurrentUserWithPerimeters(),
                 this.card, selectedProcess)) {
-                    this.childCards = [this.getChildCard(this.specificInformation.childCard)];
+                    const userChildCard = this.getChildCard(this.specificInformation.childCard);
+                    this.childCards = this.childCards.filter( c => c.publisher != userChildCard.publisher);
+                    this.childCards.push(userChildCard);
+
                     this.card = {...this.card, hasChildCardFromCurrentUserEntity: true}
-                } else {
-                    this.childCards = [];
                 }
                 this.displayPreview = true;
             });
