@@ -17,7 +17,8 @@ Feature: patch user settings
   "description" : "my dummy user",
   "locale" : "en",
   "processesStatesNotNotified": {"processA": ["state1", "state2"], "processB": ["state3", "state4"]},
-  "entitiesDisconnected": ["ENTITY_A", "ENTITY_B"]
+  "entitiesDisconnected": ["ENTITY_A", "ENTITY_B"],
+  "remoteLoggingEnabled" : true
 }
 """
 
@@ -28,7 +29,8 @@ Feature: patch user settings
   "description" : "my dummy operator1_fr user",
   "locale" : "en",
   "processesStatesNotNotified": {"processC": ["state5", "state6"], "processD": ["state7", "state8"]},
-  "entitiesDisconnected": ["ENTITY_C", "ENTITY_D"]
+  "entitiesDisconnected": ["ENTITY_C", "ENTITY_D"],
+  "remoteLoggingEnabled" : false
 }
 """
 
@@ -72,6 +74,7 @@ Feature: patch user settings
     And match response.locale == userSettings.locale
     And match response.processesStatesNotNotified == userSettings.processesStatesNotNotified
     And match response.entitiesDisconnected == userSettings.entitiesDisconnected
+    And match response.remoteLoggingEnabled == userSettings.remoteLoggingEnabled
 
 
   Scenario: Patch operator1_fr user settings with operator1_fr authentication
@@ -86,5 +89,6 @@ Feature: patch user settings
     And match response.locale == userSettingsDispatcher.locale
     And match response.processesStatesNotNotified == userSettingsDispatcher.processesStatesNotNotified
     And match response.entitiesDisconnected == userSettingsDispatcher.entitiesDisconnected
+    And match response.remoteLoggingEnabled == userSettingsDispatcher.remoteLoggingEnabled
 
 

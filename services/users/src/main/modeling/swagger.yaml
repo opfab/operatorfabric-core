@@ -189,6 +189,10 @@ definitions:
         type: integer
         description: |-
           Interval (in seconds) between sound replays.
+      remoteLoggingEnabled:
+        type: boolean
+        description: |-
+          If this is set to true, some of the ui logs are stored in the log file of cards-consultation service 
       processesStatesNotNotified:
         type: object
         description: Filters on processes and states for user feed (exclusion filter)

@@ -32,6 +32,7 @@ export class SettingsComponent implements OnInit {
   playSoundForInformationDefaultValue: boolean;
   replayEnabledDefaultValue: boolean;
   replayIntervalDefaultValue: number;
+  remoteLoggingEnabledDefaultValue: boolean;
 
   userConfiguration: UserConfiguration;
 
@@ -50,6 +51,7 @@ export class SettingsComponent implements OnInit {
     this.playSoundForInformationDefaultValue = !!this.configService.getConfigValue('settings.playSoundForInformation') ? this.configService.getConfigValue('settings.playSoundForInformation') : false;
     this.replayEnabledDefaultValue = !!this.configService.getConfigValue('settings.replayEnabled') ? this.configService.getConfigValue('settings.replayEnabled') : false;
     this.replayIntervalDefaultValue = !!this.configService.getConfigValue('settings.replayInterval') ? this.configService.getConfigValue('settings.replayInterval') : 5;
+    this.remoteLoggingEnabledDefaultValue = !!this.configService.getConfigValue('settings.remoteLoggingEnabled') ? this.configService.getConfigValue('settings.remoteLoggingEnabled') : false;
 
     const userLogin = this.userService.getCurrentUserWithPerimeters().userData.login;
 
@@ -59,7 +61,7 @@ export class SettingsComponent implements OnInit {
       });
   }
 
-  isExternalDeviceConfiguredForUser() : boolean {
+  isExternalDeviceConfiguredForUser(): boolean {
     return (!!this.userConfiguration && !!this.userConfiguration.externalDeviceId);
   }
 
@@ -69,4 +71,5 @@ interface SettingsInputs {
   description: boolean;
   language: boolean;
   sounds: boolean;
+  remoteLoggingEnabled: boolean;
 }

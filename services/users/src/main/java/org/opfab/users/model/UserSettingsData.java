@@ -34,6 +34,7 @@ public class UserSettingsData implements UserSettings {
     private Boolean playSoundOnExternalDevice;
     private Boolean replayEnabled;
     private Integer replayInterval;
+    private Boolean remoteLoggingEnabled;
 
     @Singular("processStatesNotNotified")
     private Map<String, List<String>> processesStatesNotNotified;
@@ -51,6 +52,7 @@ public class UserSettingsData implements UserSettings {
         this.playSoundOnExternalDevice = settings.getPlaySoundOnExternalDevice();
         this.replayEnabled = settings.getReplayEnabled();
         this.replayInterval = settings.getReplayInterval();
+        this.remoteLoggingEnabled = settings.getRemoteLoggingEnabled();
 
         if (settings.getProcessesStatesNotNotified() != null)
             this.processesStatesNotNotified = new HashMap<>(settings.getProcessesStatesNotNotified());
@@ -95,6 +97,7 @@ public class UserSettingsData implements UserSettings {
         result.playSoundOnExternalDevice = other.getPlaySoundOnExternalDevice() != null ? other.getPlaySoundOnExternalDevice() : this.getPlaySoundOnExternalDevice();
         result.replayEnabled = other.getReplayEnabled() != null ? other.getReplayEnabled() : this.getReplayEnabled();
         result.replayInterval = other.getReplayInterval() != null ? other.getReplayInterval() : this.getReplayInterval();
+        result.remoteLoggingEnabled = other.getRemoteLoggingEnabled() != null ? other.getRemoteLoggingEnabled() : this.getRemoteLoggingEnabled();
 
         result.processesStatesNotNotified = null;
         if (other.getProcessesStatesNotNotified() != null)
