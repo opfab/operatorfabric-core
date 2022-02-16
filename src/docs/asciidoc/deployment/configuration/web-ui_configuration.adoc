@@ -135,6 +135,8 @@ It should look like:
 |checkPerimeterForResponseCard|true|no|If false, OperatorFabric will not check that a user has write rights on a process/state to respond to a card.
 |usercard.useDescriptionFieldForEntityList|false|no|If true, show entity `description` field instead of `name` in user card page
 |externalDevicesEnabled|false|no|If true, users have the opportunity to play sounds on external devices rather than in the browser. See `settings.playSoundOnExternalDevice`
+|secondsToCloseSession|60|no|Number of seconds between logout and token expiration
+
 
 
 |===
