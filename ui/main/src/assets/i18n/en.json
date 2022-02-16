@@ -101,8 +101,8 @@
       "M": "Month",
       "Y": "Year"
     },
-    "lockTooltip": "The timeline is currently locked : it will stop moving as time goes by",
-    "unlockTooltip": "The timeline is currently unlocked : it will shift as time goes by"
+    "lockTooltip": "The visibility domain is currently locked : it will not move as time goes by",
+    "unlockTooltip": "The visibility domain is currently unlocked : it will shift as time goes by"
   },
   "multiFilter": {
     "searchPlaceholderText": "Search",

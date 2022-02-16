@@ -101,8 +101,8 @@
       "M": "Mois",
       "Y": "Année"
     },
-    "lockTooltip": "La timeline est actuellement vérouillée : elle ne bougera pas avec le temps",
-    "unlockTooltip": "La timeline est actuellement dévérouillée : elle se décalera avec le temps"
+    "lockTooltip": "Le domaine de visibilité est actuellement vérouillé : il ne bougera pas avec le temps",
+    "unlockTooltip": "Le domaine de visibilité est actuellement dévérouillé : il se décalera avec le temps"
   },
   "multiFilter": {
     "searchPlaceholderText": "Rechercher",

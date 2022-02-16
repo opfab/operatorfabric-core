@@ -11,7 +11,6 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {ConfigService} from "@ofServices/config.service";
 import moment from "moment";
 import {FilterType} from '@ofModel/feed-filter.model';
-import * as _ from 'lodash-es';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {TimeService} from "@ofServices/time.service";
 import {FilterService} from '@ofServices/lightcards/filter.service';
@@ -358,8 +357,6 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     private shiftTimeLineIfNecessary() {
         if (this.followClockTick) {
             const currentDate = moment().valueOf();
-            let startDomain;
-            let endDomain;
 
             switch (this.currentDomainId) {
                 case 'TR':
@@ -368,13 +365,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
                     }
                     break;
                 case 'J':
-                    // shift day  one minute before change of day 
-                    if (currentDate > this.currentDomain.endDate - 60 * 1000) {
-                        startDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0);
-                        endDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0).add(1, 'days');
-                        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(),true);
-                        break;
-                    }
+                    this.shiftIfNecessaryDomainUsingOverlap('days');
                     break;
                 case '7D':
                     if (currentDate > 16 * 60 * 60 * 1000 + this.currentDomain.startDate) {
@@ -382,38 +373,35 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
                     }
                     break;
                 case 'W':
-                     // shift day  one minute before change of week 
-                    if (currentDate > this.currentDomain.endDate - 60 * 1000) {
-                        startDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0);
-                        endDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0).add(1, 'week');
-                        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(),true);
-                    }
+                    this.shiftIfNecessaryDomainUsingOverlap('week');
                     break;
                 case 'M':
-                    // shift day  one minute before change of month 
-                    if (currentDate > this.currentDomain.endDate - 60 * 1000) {
-                        startDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0);
-                        endDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0).add(1, 'months');
-                        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(),true);
-                    }
+                    this.shiftIfNecessaryDomainUsingOverlap('months');
                     break;
-
                 case 'Y':
-                    // shift day  one minute before change of year 
-                    if (currentDate > this.currentDomain.endDate - 60 * 1000) {
-                        startDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0);
-                        endDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0).add(1, 'years');
-                        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(),true);
-                    }
+                    this.shiftIfNecessaryDomainUsingOverlap('years');
                     break;
             }
         }
         if (!this.isDestroyed) setTimeout(() => this.shiftTimeLineIfNecessary(), 10000);
     }
 
+    private shiftIfNecessaryDomainUsingOverlap(domainDuration: moment.unitOfTime.DurationConstructor): void {
+        const currentDate = moment().valueOf();
+        
+        // shift domain one minute before change of cycle 
+        if (currentDate > this.currentDomain.endDate - 60 * 1000) {
+            let startDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0);
+            let endDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0).add(1, domainDuration);
+            this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(),true);
+        }
+    }
+
     ngOnDestroy() {
         this.isDestroyed = true;
-      }
+    }
+
+
 
 
 }

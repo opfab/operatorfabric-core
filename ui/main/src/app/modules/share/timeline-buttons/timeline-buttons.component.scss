@@ -38,14 +38,7 @@
       margin: 0;
       list-style: none;
       display: flex;
-
-      .leftButtons {
-        justify-content: flex-start;
-      }
-
-      .rightButtons {
-        justify-content: flex-end;
-      }
+      justify-content: flex-end;
 
 
       li {
