@@ -68,6 +68,8 @@ export class AuthenticationService {
     private authModeHandler: AuthenticationModeHandler;
     private implicitConf = implicitAuthenticationConfigFallback;
 
+    private secondsToCloseSession: number;
+
     /**
      * @constructor
      * @param httpClient - Angular build-in
@@ -104,6 +106,7 @@ export class AuthenticationService {
         this.familyNameClaim = _.get(oauth2Conf, 'jwt.family-name-claim', 'family_name');
         this.expireClaim = _.get(oauth2Conf, 'jwt.expire-claim', 'exp');
         this.mode = _.get(oauth2Conf, 'oauth2.flow.mode', 'PASSWORD');
+        this.secondsToCloseSession = this.configService.getConfigValue('secondsToCloseSession', 60);
     }
 
 
@@ -157,7 +160,7 @@ export class AuthenticationService {
         // + to convert the stored number as a string back to number
         const expirationDate = +localStorage.getItem(LocalStorageAuthContent.expirationDate);
         const isNotANumber = isNaN(expirationDate);
-        const stillValid = (expirationDate > Date.now());
+        const stillValid = ((expirationDate - (this.secondsToCloseSession * 1000)) > Date.now());
         return !isNotANumber && stillValid;
     }
 
