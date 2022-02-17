@@ -115,6 +115,7 @@ export class UserCardComponent implements OnInit {
             severity: new FormControl('')
         });
         this.severityForm.get('severity').setValue(Severity.ALARM);
+        this.publisherForCreatingUsercard = this.findPublisherForCreatingUsercard();
         if (!!this.cardIdToEdit) {
             usercardTemplateGateway.editionMode = 'EDITION';
             this.loadCardForEdition();
@@ -123,7 +124,6 @@ export class UserCardComponent implements OnInit {
             this.pageLoading = false;
         }
 
-        this.publisherForCreatingUsercard = this.findPublisherForCreatingUsercard();
         this.useDescriptionFieldForEntityList = this.configService.getConfigValue('usercard.useDescriptionFieldForEntityList', false);
     }
 
@@ -137,7 +137,7 @@ export class UserCardComponent implements OnInit {
             this.initialSelectedRecipients = this.cardToEdit.card.entityRecipients;
             this.pageLoading = false;
             this.setDateFormValues();
-            
+
             const userResponse = this.cardToEdit.childCards.find(child => child.publisher === this.publisherForCreatingUsercard);
             usercardTemplateGateway.setUserEntityChildCardFromCurrentCard(userResponse);
         });
@@ -284,7 +284,7 @@ export class UserCardComponent implements OnInit {
                     keepChildCards: (!!this.specificInformation.card.keepChildCards) ? this.specificInformation.card.keepChildCards : false,
                     data: this.specificInformation.card.data,
                 } as Card;
-                
+
                 this.childCards = (!!this.cardToEdit && this.cardToEdit.card.keepChildCards) ? this.cardToEdit.childCards : [];
                 if (!!this.specificInformation.childCard && this.userPermissionsService.isUserEnabledToRespond(this.userService.getCurrentUserWithPerimeters(),
                 this.card, selectedProcess)) {
@@ -465,9 +465,9 @@ export class UserCardComponent implements OnInit {
             parentCardId: this.card.id,
             initialParentCardUid: this.card.uid,
             hasBeenRead: false,
-            hasBeenAcknowledged: false, 
+            hasBeenAcknowledged: false,
             hasChildCardFromCurrentUserEntity: false
-        }
+        };
     }
 
     public confirm(): void {
@@ -484,7 +484,7 @@ export class UserCardComponent implements OnInit {
                         this.card, selectedProcess)) {
             childCard = this.specificInformation.childCard;
         }
-        
+
         this.cardService.postCard(fromCardToCardForPublishing(this.card))
             .subscribe(
                 resp => {
@@ -496,7 +496,7 @@ export class UserCardComponent implements OnInit {
                     } else {
                         if (!!childCard) {
                            this.sendAutomatedResponse(this.getChildCard(childCard), resp.body);
-                        } else 
+                        } else
                             this.displayMessage('userCard.cardSendWithNoError', null, MessageLevel.INFO);
                     }
 
@@ -512,10 +512,10 @@ export class UserCardComponent implements OnInit {
 
     sendAutomatedResponse(responseCard, cardCreationReport: CardCreationReportData) {
 
-        const automatedResponseCard = {...fromCardToCardForPublishing(responseCard), 
+        const automatedResponseCard = {...fromCardToCardForPublishing(responseCard),
             parentCardId: cardCreationReport.id,
             initialParentCardUid: cardCreationReport.uid
-        }
+        };
 
         this.cardService.postCard(automatedResponseCard)
         .subscribe(
