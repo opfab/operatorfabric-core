@@ -100,7 +100,10 @@
       "W": "Week",
       "M": "Maand",
       "Y": "Jaar"
-    }
+    },
+    "lockTooltip": "Het zichtbaarheidsdomein is momenteel vergrendeld: het zal niet bewegen naarmate de tijd verstrijkt",
+    "unlockTooltip": "Het zichtbaarheidsdomein is momenteel ontgrendeld: het zal in de loop van de tijd verschuiven"
+
   },
   "multiFilter": {
     "searchPlaceholderText": "Zoeken",
