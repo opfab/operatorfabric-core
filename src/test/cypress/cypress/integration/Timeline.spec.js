@@ -364,6 +364,7 @@ describe('Time line moves', function () {
         checkTitle(" 31 March 2030 ");
 
         cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * 60 * 1000);
+        cy.wait(500);
         cy.tick(1 * SECONDS);
         checkTimeCursorText(" 31/03/30 23:35 ");
         checkTitle(" 31 March 2030 ");
@@ -383,6 +384,7 @@ describe('Time line moves', function () {
 
         // send a card that should not be visible
         cy.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 5 * HOURS, currentDate.getTime() + 6 * HOURS);
+        cy.wait(500);
         cy.tick(1 * SECONDS);
         checkHaveCircle(1);
 
