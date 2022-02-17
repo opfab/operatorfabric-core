@@ -218,8 +218,6 @@ export class CardService {
         const dateForRecovering = this.lastHeardBeatDate - CardService.TWO_MINUTES;
         this.logger.info( `CardService - Card subscription has been init again , recover any lost card from date `
             + new Date(dateForRecovering), LogOption.LOCAL_AND_REMOTE);
-        console.log(new Date().toISOString(), `CardService - Card subscription has been init again , recover any lost card from date `
-            + new Date(dateForRecovering));
         this.httpClient.post<any>(
             `${this.cardOperationsUrl}`,
             {publishFrom: dateForRecovering}).subscribe();
