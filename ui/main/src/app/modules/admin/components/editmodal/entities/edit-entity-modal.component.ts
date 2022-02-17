@@ -98,9 +98,12 @@ export class EditEntityModalComponent implements OnInit {
     // user chose to perform an action (here, update the selected item).
     // This is important as code in the corresponding table components relies on the resolution of the
     // `NgbModalRef.result` promise to trigger a refresh of the data shown on the table.
-    this.crudService.update(this.entityForm.value).subscribe(() => {
-      this.activeModal.close('Update button clicked on ' + this.type + ' modal');
-    });
+    // Wait 100ms to let labels <tag-component> update pending values
+    setTimeout(() => {
+      this.crudService.update(this.entityForm.value).subscribe(() => {
+        this.activeModal.close('Update button clicked on ' + this.type + ' modal');
+      });
+    }, 100);
   }
 
   private cleanForm() {
