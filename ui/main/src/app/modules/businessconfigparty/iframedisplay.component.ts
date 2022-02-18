@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,8 +10,8 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {ActivatedRoute, Router} from '@angular/router';
-import {concatMap, map, skip, takeUntil} from 'rxjs/operators';
-import {Observable, Subject} from 'rxjs';
+import {map, skip, takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
@@ -28,6 +28,8 @@ export class IframeDisplayComponent implements OnInit, OnDestroy {
 
   public iframeURL: SafeUrl;
   unsubscribe$: Subject<void> = new Subject<void>();
+  private menu_id;
+  private menu_entry_id;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -46,35 +48,34 @@ export class IframeDisplayComponent implements OnInit, OnDestroy {
   }
 
   private loadIframe() {
-    this.route.paramMap.pipe(
-      concatMap(paramMap => this.businessconfigService.queryMenuEntryURL(paramMap.get('menu_id'), paramMap.get('menu_entry_id'))),
-      concatMap((url) => this.addRoutingToUrl(url)),
-      map((url) => this.addOpfabThemeParamToUrl(url)),
-      map((url) => this.addParamToUrl(url)),
-      map((url) => this.sanitizer.bypassSecurityTrustResourceUrl(url)),
-      takeUntil(this.unsubscribe$)
-    ).subscribe({
-      next: url => this.iframeURL = url,
-      error: err => {
-        console.log('Error in business application redirection = ', err); this.router.navigate(['/feed']);
-      }
-    });
+    this.route.paramMap.subscribe(
+      paramMap => {
+        this.menu_id = paramMap.get('menu_id');
+        this.menu_entry_id = paramMap.get('menu_entry_id');
+        this.businessconfigService.queryMenuEntryURL(this.menu_id, this.menu_entry_id).pipe(
+          map((url) => this.addRoutingToUrl(url)),
+          map((url) => this.addOpfabThemeParamToUrl(url)),
+          map((url) => this.addParamToUrl(url)),
+          map((url) => this.sanitizer.bypassSecurityTrustResourceUrl(url)),
+          takeUntil(this.unsubscribe$)
+        ).subscribe({
+          next: url => this.iframeURL = url,
+          error: err => {
+            console.log('Error in business application redirection = ', err); this.router.navigate(['/feed']);
+          }
+        });
+      });
   }
 
-  private addRoutingToUrl(url: string): Observable<string> {
-    return this.route.paramMap.pipe(
-        map(paramMap => {
+  private addRoutingToUrl(url: string): string {
           // Capture everything between the last part of the menu and the first occurrence of question mark. (to avoid messing with parameters).
           // example: /menu1/entry1/deeplink?someParam=param turns into "/deeplink"
-          const additionalRouting = this.router.url.match(`.*${paramMap.get('menu_id')}\/${paramMap.get('menu_entry_id')}(\/[^?]*)`);
-          return additionalRouting ? additionalRouting[1] : '';
-        }),
-        map(routing => url += routing));
+          const additionalRouting = this.router.url.match(`.*${this.menu_id}\/${this.menu_entry_id}(\/[^?]*)`);
+          return url + (additionalRouting ? additionalRouting[1] : '');
   }
 
 
   private addOpfabThemeParamToUrl(url: string ): string {
-    console.log("url=",url);
     this.globalStyleService.getStyle();
     url += (url.includes('?')) ? '&' : '?';
     url += 'opfab_theme=';
