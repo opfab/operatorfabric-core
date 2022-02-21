@@ -62,7 +62,7 @@
             <td style="width:32%">
                 <div class="opfab-input">
                     <label> MINUTES TO REMIND BEFORE TASK</label>
-                    <input size="2" maxlength="2" type="text" id="minutesForReminder" value="5">
+                    <input size="2" maxlength="2" type="text" id="minutesForReminder" value="{{#if card.data.minutesForReminder}}{{card.data.minutesForReminder}}{{else}}5{{/if}}">
                 </div>
             </td>
         </tr>
@@ -109,6 +109,7 @@
                 hours: hours,
                 minutes: minutes,
                 durationInMinutes: durationInMinutes,
+                minutesForReminder: minutesForReminder,
                 daysOfWeek: daysOfWeek
             }
         };

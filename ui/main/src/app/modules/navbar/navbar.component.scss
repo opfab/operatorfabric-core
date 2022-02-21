@@ -13,7 +13,7 @@
 .opfab-navbar {
     background-color: var(--opfab-bgcolor) ;
     font-size: 16px;
-
+    top: 5px;
 
     .navbar-nav {
       .nav-link {
@@ -215,3 +215,12 @@
 
 
 } 
+
+.opfab-sticky-menu {
+  position: absolute;
+  top: 3px;
+  right: 0;
+  padding-right: 30px;
+  padding-left: 15px;
+  background: var( --opfab-bgcolor);
+}

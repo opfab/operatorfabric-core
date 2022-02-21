@@ -34,7 +34,7 @@ import {UserCardRecipientsFormComponent} from './recipientForm/usercard-recipien
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
 
 declare const templateGateway: any;
-
+declare const usercardTemplateGateway: any;
 @Component({
     selector: 'of-usercard',
     templateUrl: './usercard.component.html',
@@ -110,12 +110,18 @@ export class UserCardComponent implements OnInit {
 
     ngOnInit() {
         this.pageLoading = true;
+        usercardTemplateGateway.initUsercardTemplateGateway();
         this.severityForm = new FormGroup({
             severity: new FormControl('')
         });
         this.severityForm.get('severity').setValue(Severity.ALARM);
-        if (!!this.cardIdToEdit) this.loadCardForEdition();
-        else this.pageLoading = false;
+        if (!!this.cardIdToEdit) {
+            usercardTemplateGateway.editionMode = 'EDITION';
+            this.loadCardForEdition();
+        } else {
+            usercardTemplateGateway.editionMode = 'CREATE';
+            this.pageLoading = false;
+        }
 
         this.publisherForCreatingUsercard = this.findPublisherForCreatingUsercard();
         this.useDescriptionFieldForEntityList = this.configService.getConfigValue('usercard.useDescriptionFieldForEntityList', false);
@@ -131,6 +137,9 @@ export class UserCardComponent implements OnInit {
             this.initialSelectedRecipients = this.cardToEdit.card.entityRecipients;
             this.pageLoading = false;
             this.setDateFormValues();
+            
+            const userResponse = this.cardToEdit.childCards.find(child => child.publisher === this.publisherForCreatingUsercard);
+            usercardTemplateGateway.setUserEntityChildCardFromCurrentCard(userResponse);
         });
     }
 
@@ -276,12 +285,14 @@ export class UserCardComponent implements OnInit {
                     data: this.specificInformation.card.data,
                 } as Card;
                 
+                this.childCards = (!!this.cardToEdit && this.cardToEdit.card.keepChildCards) ? this.cardToEdit.childCards : [];
                 if (!!this.specificInformation.childCard && this.userPermissionsService.isUserEnabledToRespond(this.userService.getCurrentUserWithPerimeters(),
                 this.card, selectedProcess)) {
-                    this.childCards = [this.getChildCard(this.specificInformation.childCard)];
+                    const userChildCard = this.getChildCard(this.specificInformation.childCard);
+                    this.childCards = this.childCards.filter( c => c.publisher != userChildCard.publisher);
+                    this.childCards.push(userChildCard);
+
                     this.card = {...this.card, hasChildCardFromCurrentUserEntity: true}
-                } else {
-                    this.childCards = [];
                 }
                 this.displayPreview = true;
             });
@@ -317,8 +328,12 @@ export class UserCardComponent implements OnInit {
 
 
     private getStartDate(): number {
-        let startDate = this.datesForm.getStartDateAsEpoch();
-        if (!startDate) startDate = this.defaultStartDate;
+        let startDate = this.defaultStartDate;
+        if (this.startDateVisible) {
+            startDate = this.datesForm.getStartDateAsEpoch();
+        } else if (this.specificInformation.card.startDate) {
+            startDate = this.specificInformation.card.startDate;
+        }
         return startDate;
     }
 

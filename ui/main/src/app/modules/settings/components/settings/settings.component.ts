@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,7 +24,6 @@ import {UserConfiguration} from "@ofModel/external-devices.model";
 })
 export class SettingsComponent implements OnInit {
   locales: string[];
-  timeZones: string[];
   displayInfo: SettingsInputs;
   externalDevicesEnabled: boolean;
   playSoundForAlarmDefaultValue: boolean;
@@ -33,6 +32,7 @@ export class SettingsComponent implements OnInit {
   playSoundForInformationDefaultValue: boolean;
   replayEnabledDefaultValue: boolean;
   replayIntervalDefaultValue: number;
+  remoteLoggingEnabledDefaultValue: boolean;
 
   userConfiguration: UserConfiguration;
 
@@ -43,7 +43,6 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit() {
     this.locales = this.configService.getConfigValue('i18n.supported.locales');
-    this.timeZones = this.configService.getConfigValue('i10n.supported.time-zones');
     this.displayInfo = this.configService.getConfigValue('settings.infos.hide');
     this.externalDevicesEnabled = this.configService.getConfigValue('externalDevicesEnabled');
     this.playSoundForAlarmDefaultValue = !!this.configService.getConfigValue('settings.playSoundForAlarm') ? this.configService.getConfigValue('settings.playSoundForAlarm') : false;
@@ -52,6 +51,7 @@ export class SettingsComponent implements OnInit {
     this.playSoundForInformationDefaultValue = !!this.configService.getConfigValue('settings.playSoundForInformation') ? this.configService.getConfigValue('settings.playSoundForInformation') : false;
     this.replayEnabledDefaultValue = !!this.configService.getConfigValue('settings.replayEnabled') ? this.configService.getConfigValue('settings.replayEnabled') : false;
     this.replayIntervalDefaultValue = !!this.configService.getConfigValue('settings.replayInterval') ? this.configService.getConfigValue('settings.replayInterval') : 5;
+    this.remoteLoggingEnabledDefaultValue = !!this.configService.getConfigValue('settings.remoteLoggingEnabled') ? this.configService.getConfigValue('settings.remoteLoggingEnabled') : false;
 
     const userLogin = this.userService.getCurrentUserWithPerimeters().userData.login;
 
@@ -61,7 +61,7 @@ export class SettingsComponent implements OnInit {
       });
   }
 
-  isExternalDeviceConfiguredForUser() : boolean {
+  isExternalDeviceConfiguredForUser(): boolean {
     return (!!this.userConfiguration && !!this.userConfiguration.externalDeviceId);
   }
 
@@ -70,6 +70,6 @@ export class SettingsComponent implements OnInit {
 interface SettingsInputs {
   description: boolean;
   language: boolean;
-  timezone: boolean;
   sounds: boolean;
+  remoteLoggingEnabled: boolean;
 }

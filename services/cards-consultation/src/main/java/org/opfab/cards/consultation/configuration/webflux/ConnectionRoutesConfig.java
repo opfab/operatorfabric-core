@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -47,9 +47,18 @@ public class ConnectionRoutesConfig implements UserExtractor {
 
     private List<Connection> getSubscriptions()
     {
-        List<Connection> connectionData = new ArrayList<>(); 
-        cardSubscriptionService.getSubscriptions().forEach( subscription -> connectionData.add(ConnectionData.builder().login(subscription.getUserLogin()).build()));
-        return connectionData;
+        List<Connection> connectionsData = new ArrayList<>();
+        cardSubscriptionService.getSubscriptions().forEach( subscription -> {
+            ConnectionData connection = ConnectionData.builder()
+                            .login(subscription.getUserLogin())
+                            .build();
+            if (subscription.getCurrentUserWithPerimeters().getUserData() != null) {
+                connection.setEntitiesConnected(subscription.getCurrentUserWithPerimeters().getUserData().getEntities());
+                connection.setGroups(subscription.getCurrentUserWithPerimeters().getUserData().getGroups());
+            }
+            connectionsData.add(connection);
+        });
+        return connectionsData;
     }
     
 

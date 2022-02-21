@@ -6,6 +6,8 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
     * def authToken = signIn.authToken
     * def signInAsTSO = callonce read('../../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
+    * def signInAsTSO4 = callonce read('../../common/getToken.feature') { username: 'operator4_fr'}
+    * def authTokenAsTSO4 = signInAsTSO4.authToken
 
     * def group15 =
 """
@@ -76,12 +78,38 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
 ]
 """
 
+    * def userSettingsForTSO4 =
+"""
+{
+  "login" : "operator4_fr",
+  "entitiesDisconnected": ["ENTITY2_FR", "ENTITY3_FR", "ENTITY4_FR"]
+}
+"""
+
+    * def userSettingsForTSO4_disconnectAllEntities =
+"""
+{
+  "login" : "operator4_fr",
+  "entitiesDisconnected": ["ENTITY1_FR", "ENTITY2_FR", "ENTITY3_FR", "ENTITY4_FR"]
+}
+"""
+
+    * def userSettingsForTSO4_reconnectAllEntities =
+"""
+{
+  "login" : "operator4_fr",
+  "entitiesDisconnected": []
+}
+"""
+
   Scenario: Get current user with perimeters with operator1_fr
     Given url opfabUrl + 'users/CurrentUserWithPerimeters'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
     And match response.userData.login == 'operator1_fr'
+    And match response.userData.firstName == 'John'
+    And match response.userData.lastName == 'Doe'
     And assert response.computedPerimeters.length == 0
 
 
@@ -188,3 +216,71 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
+
+  Scenario: Get current user with perimeters with operator4_fr
+    Given url opfabUrl + 'users/CurrentUserWithPerimeters'
+    And header Authorization = 'Bearer ' + authTokenAsTSO4
+    When method get
+    Then status 200
+    And match response.userData.login == 'operator4_fr'
+    And assert response.computedPerimeters.length == 0
+    And assert response.userData.entities.length == 5
+    And match response.userData.entities contains only ["ENTITY_FR", "ENTITY1_FR", "ENTITY2_FR", "ENTITY3_FR", "ENTITY4_FR"]
+
+  Scenario: Patch operator4_fr user settings
+    Given url opfabUrl + 'users/users/operator4_fr/settings'
+    And header Authorization = 'Bearer ' + authTokenAsTSO4
+    And request userSettingsForTSO4
+    When method patch
+    Then status 200
+    And match response.login == 'operator4_fr'
+    And assert response.entitiesDisconnected.length == 3
+    And match response.entitiesDisconnected contains only ["ENTITY2_FR", "ENTITY3_FR", "ENTITY4_FR"]
+
+  Scenario: We check operator4_fr's entities are updated
+    Given url opfabUrl + 'users/CurrentUserWithPerimeters'
+    And header Authorization = 'Bearer ' + authTokenAsTSO4
+    When method get
+    Then status 200
+    And match response.userData.login == 'operator4_fr'
+    And assert response.computedPerimeters.length == 0
+    And assert response.userData.entities.length == 2
+    And match response.userData.entities contains only ["ENTITY_FR", "ENTITY1_FR"]
+
+  Scenario: Patch operator4_fr user settings (we disconnect all entities)
+    Given url opfabUrl + 'users/users/operator4_fr/settings'
+    And header Authorization = 'Bearer ' + authTokenAsTSO4
+    And request userSettingsForTSO4_disconnectAllEntities
+    When method patch
+    Then status 200
+    And match response.login == 'operator4_fr'
+    And assert response.entitiesDisconnected.length == 4
+    And match response.entitiesDisconnected contains only ["ENTITY1_FR", "ENTITY2_FR", "ENTITY3_FR", "ENTITY4_FR"]
+
+  Scenario: We check entities list of operator4_fr is empty (even the parent entity "ENTITY_FR" should not be present)
+    Given url opfabUrl + 'users/CurrentUserWithPerimeters'
+    And header Authorization = 'Bearer ' + authTokenAsTSO4
+    When method get
+    Then status 200
+    And match response.userData.login == 'operator4_fr'
+    And assert response.computedPerimeters.length == 0
+    And assert response.userData.entities.length == 0
+
+  Scenario: Patch operator4_fr user settings (we reconnect all entities)
+    Given url opfabUrl + 'users/users/operator4_fr/settings'
+    And header Authorization = 'Bearer ' + authTokenAsTSO4
+    And request userSettingsForTSO4_reconnectAllEntities
+    When method patch
+    Then status 200
+    And match response.login == 'operator4_fr'
+    And assert response.entitiesDisconnected.length == 0
+
+  Scenario: We check entities list of operator4_fr contains all entities again
+    Given url opfabUrl + 'users/CurrentUserWithPerimeters'
+    And header Authorization = 'Bearer ' + authTokenAsTSO4
+    When method get
+    Then status 200
+    And match response.userData.login == 'operator4_fr'
+    And assert response.computedPerimeters.length == 0
+    And assert response.userData.entities.length == 5
+    And match response.userData.entities contains only ["ENTITY_FR", "ENTITY1_FR", "ENTITY2_FR", "ENTITY3_FR", "ENTITY4_FR"]

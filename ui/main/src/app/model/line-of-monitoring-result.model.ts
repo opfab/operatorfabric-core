@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Moment} from 'moment-timezone';
+import {Moment} from 'moment';
 import {I18n} from '@ofModel/i18n.model';
 import {TypeOfStateEnum} from '@ofModel/processes.model';
 

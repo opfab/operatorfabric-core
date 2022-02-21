@@ -19,6 +19,7 @@ describe ('Feed configuration tests',function () {
         cy.resetUIConfigurationFiles();
     })
 
+
     it('Buttons and filters visibility - Check default behaviour', function () {
 
         // Default is "false" (i.e. visible) except for hideAckAllCardsFeature
@@ -114,4 +115,8 @@ describe ('Feed configuration tests',function () {
         cy.get('#opfab-feed-ack-all-link');
 
     })
+
+    
+
+
 })

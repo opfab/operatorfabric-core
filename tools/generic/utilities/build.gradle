@@ -5,6 +5,7 @@ dependencies{
     implementation boot.starterRabbitmq
     testImplementation misc.slf4j
     testImplementation project(':tools:generic:test-utilities')
+    implementation misc.commonsText
 }
 
 task prepareTestData(type: Copy){

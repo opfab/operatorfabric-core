@@ -33,6 +33,9 @@ import {GroupsService} from '@ofServices/groups.service';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {AuthenticationActionTypes, TryToLogOut} from '@ofStore/actions/authentication.actions';
+import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {RemoteLoggerService} from '@ofServices/logs/remote-logger.service';
+
 
 
 class Alert {
@@ -77,8 +80,10 @@ export class AppComponent implements OnInit {
       , private processesService: ProcessesService
       , private reminderService: ReminderService
       , private soundNotificationService: SoundNotificationService
-      , private actions$: Actions,
-      private modalService: NgbModal) {
+      , private actions$: Actions
+      , private modalService: NgbModal
+      , private logger: OpfabLoggerService
+      , private remoteLogger: RemoteLoggerService) {
   }
 
   ngOnInit() {
@@ -91,6 +96,41 @@ export class AppComponent implements OnInit {
   @HostListener('document:click', ['$event.target'])
     public onPageClick() {
        this.soundNotificationService.clearOutstandingNotifications();
+  }
+
+
+  @HostListener('document:visibilitychange')
+  onVisibilityChange() {
+    if (document.hidden) {
+        this.logger.info('Application tab is not visible anymore', LogOption.REMOTE);
+     } else {
+      this.logger.info('Application tab is visible again', LogOption.REMOTE);
+  }
+    return null;
+  }
+
+  // On chrome or edge chromium, when exiting opfab via changing url in the browser tab
+  // the long polling HTTP connection is not closed due to the back/forward mechanism (see https://web.dev/bfcache/)
+  // this method force the closing of the HTTP connection when exiting opfab page
+  @HostListener('window:beforeunload')
+  onBeforeUnload() {
+    this.logger.info('Unload opfab', LogOption.REMOTE);
+    this.cardService.closeSubscription();
+    this.remoteLogger.flush(); // flush log before exiting opfab
+    return null;
+  }
+
+  // Due to the previous method, when user use browser back function to return to opfab
+  // if the back forward cache mechanism is activated, opfab is restored from browser memory but
+  // the HTTP long polling connection is closed
+  // so we need to reinitialize the application
+
+  @HostListener('window:pageshow', ['$event'])
+  pageShow(event) {
+    if (event.persisted) {
+      this.logger.info('This page was restored from the bfcache , force opfab restart ', LogOption.LOCAL);
+      location.reload();
+    }
   }
 
 
@@ -202,6 +242,7 @@ export class AppComponent implements OnInit {
         const context = new AudioContext();
         if (context.state !== 'running') {
           context.resume();
+          this.logger.info('Sound not activated',LogOption.REMOTE);
           this.modalRef = this.modalService.open(this.noSoundPopupRef, {centered: true, backdrop: 'static'});
         }
       }
@@ -214,6 +255,7 @@ export class AppComponent implements OnInit {
   }
 
   public closeModal() {
+    this.logger.info('Sound activated',LogOption.REMOTE);
     this.modalRef.close();
   }
 
@@ -235,6 +277,7 @@ export class AppComponent implements OnInit {
   }
 
   public logout() {
+    this.logger.info('Logout ', LogOption.REMOTE);
     this.modalRef.close();
     this.store.dispatch(new TryToLogOut());
   }

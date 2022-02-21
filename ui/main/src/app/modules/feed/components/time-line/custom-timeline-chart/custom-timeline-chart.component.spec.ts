@@ -78,7 +78,7 @@ describe('CustomTimelineChartComponent', () => {
   it('set no circle if no card ', () => {
     fixture.detectChanges();
     component.domainId = 'Y'
-    component.xDomain = [startDate,endDate];
+    component.xDomainForTimeLineGridDisplay = [startDate,endDate];
     component.setXTicksValue();
     component.cardsData = [];
     component.createCircles();
@@ -89,12 +89,12 @@ describe('CustomTimelineChartComponent', () => {
   it('set one circle with count=1 if one card ', () => {
     fixture.detectChanges();
     component.domainId = 'Y'
-    component.xDomain = [startDate,endDate];
+    component.xDomainForTimeLineGridDisplay = [startDate,endDate];
     component.setXTicksValue();
 
     // Test 1
     const card1 = {
-      date:   moment(startDate).add(5,'day').add(1,'hour'),
+      date:   moment(startDate).add(5,'days').add(1,'hours'),
       severity: 'ALARM',
       summary: {parameters: 'param', key: 'process'},
       publisher: 'TEST',
@@ -109,32 +109,11 @@ describe('CustomTimelineChartComponent', () => {
     expect(component.circles[0].circleYPosition).toEqual(4);
   });
 
-  it('set no circle if one card is before time domain ', () => {
-    fixture.detectChanges();
-    component.domainId = 'Y'
-    component.xDomain = [startDate,endDate];
-    component.setXTicksValue();
-
-    // Test 1
-    const card1 = {
-      date:   moment(startDate).subtract(2,'day'),
-      severity: 'ALARM',
-      summary: {parameters: 'param', key: 'process'},
-      publisher: 'TEST',
-      processVersion: '1',
-    };
-
-    component.cardsData = [card1];
-    component.createCircles();
-
-    expect(component.circles.length).toEqual(0);
-
-  });
 
   it('set no circle if one card is after time domain ', () => {
     fixture.detectChanges();
     component.domainId = 'Y'
-    component.xDomain = [startDate,endDate];
+    component.xDomainForTimeLineGridDisplay = [startDate,endDate];
     component.setXTicksValue();
     // Test 1
     const card1 = {
@@ -155,7 +134,7 @@ describe('CustomTimelineChartComponent', () => {
   it('set one circle with count=2 if two card in the same interval and same severity ', () => {
     fixture.detectChanges();
     component.domainId = 'Y'
-    component.xDomain = [startDate,endDate];
+    component.xDomainForTimeLineGridDisplay = [startDate,endDate];
     component.setXTicksValue();
 
     const card1 = {
@@ -187,7 +166,7 @@ describe('CustomTimelineChartComponent', () => {
   it('set two circles with count=1 if two card are not in the same interval but same severity ', () => {
     fixture.detectChanges();
     component.domainId = 'Y'
-    component.xDomain = [startDate,endDate];
+    component.xDomainForTimeLineGridDisplay = [startDate,endDate];
     component.setXTicksValue();
 
     const card1 = {
@@ -218,7 +197,7 @@ describe('CustomTimelineChartComponent', () => {
   it('set two circles with count=1 if two cards are in the same interval but not same severity ', () => {
     fixture.detectChanges();
     component.domainId = 'Y'
-    component.xDomain = [startDate,endDate];
+    component.xDomainForTimeLineGridDisplay = [startDate,endDate];
     component.setXTicksValue();
 
     const card1 = {
@@ -249,7 +228,7 @@ describe('CustomTimelineChartComponent', () => {
   it('set two circles with one count=1 and one count= 2 if three cards of same severity  and 2 in the same interval ', () => {
     fixture.detectChanges();
     component.domainId = 'Y'
-    component.xDomain = [startDate,endDate];
+    component.xDomainForTimeLineGridDisplay = [startDate,endDate];
     component.setXTicksValue();
 
     const card1 = {
@@ -289,7 +268,7 @@ describe('CustomTimelineChartComponent', () => {
   it('set three card in the same interval and same severity , the end date should be the max date of the cards ', () => {
     fixture.detectChanges();
     component.domainId = 'Y'
-    component.xDomain = [startDate,endDate];
+    component.xDomainForTimeLineGridDisplay = [startDate,endDate];
     component.setXTicksValue();
 
     const card1 = {
@@ -329,7 +308,7 @@ describe('CustomTimelineChartComponent', () => {
   it('set three cards in the same interval and same severity , there shoud be one circle with 3 summary  ', () => {
     fixture.detectChanges();
     component.domainId = 'Y'
-    component.xDomain = [startDate,endDate];
+    component.xDomainForTimeLineGridDisplay = [startDate,endDate];
     component.setXTicksValue();
 
     const card1 = {

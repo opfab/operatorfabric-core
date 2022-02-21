@@ -30,6 +30,7 @@ import {LightCardsStoreService} from './lightcards/lightcards-store.service';
 import {LoadCard} from '@ofStore/actions/card.actions';
 import {I18n} from '@ofModel/i18n.model';
 import {FilterService} from '@ofServices/lightcards/filter.service';
+import {LogOption, OpfabLoggerService} from './logs/opfab-logger.service';
 
 
 @Injectable()
@@ -59,7 +60,8 @@ export class CardService {
         private store: Store<AppState>,
         private authService: AuthenticationService,
         private lightCardsStoreService: LightCardsStoreService,
-        private filterService: FilterService) {
+        private filterService: FilterService,
+        private logger: OpfabLoggerService) {
         const clientId = this.guidService.getCurrentGuidString();
         this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}`;
         this.cardsUrl = `${environment.urls.cards}/cards`;
@@ -87,19 +89,18 @@ export class CardService {
                 next: operation => {
                     switch (operation.type) {
                         case CardOperationType.ADD:
-
-                            console.log(new Date().toISOString(),
-                                `CardService - Receive card to add id=`,
-                                operation.card.id ,
-                                'with date=' ,
-                                new Date(operation.card.publishDate).toISOString());
+                            this.logger.info('CardService - Receive card to add id='
+                            + operation.card.id
+                            + 'with date='
+                            + new Date(operation.card.publishDate).toISOString()
+                            , LogOption.LOCAL_AND_REMOTE);
                             this.lightCardsStoreService.addOrUpdateLightCard(operation.card);
-                            if (operation.card.id == this.selectedCardId) this.store.dispatch(new LoadCard({id: operation.card.id}));
+                            if (operation.card.id === this.selectedCardId) this.store.dispatch(new LoadCard({id: operation.card.id}));
                             break;
                         case CardOperationType.DELETE:
                             console.log(new Date().toISOString(), `CardService - Receive card to delete id=`, operation.cardId);
                             this.lightCardsStoreService.removeLightCard(operation.cardId);
-                            if (operation.cardId == this.selectedCardId) this.store.dispatch(new RemoveLightCard({card: operation.cardId}));
+                            if (operation.cardId === this.selectedCardId) this.store.dispatch(new RemoveLightCard({card: operation.cardId}));
                             break;
                         default:
                             console.log(new Date().toISOString(), `CardService - Unknown operation`, operation.type , ` for card id=`, operation.cardId);
@@ -124,7 +125,7 @@ export class CardService {
 
 
     public closeSubscription() {
-        console.log(new Date().toISOString(),"Closing subscription")
+        this.logger.info('Closing subscription',LogOption.LOCAL_AND_REMOTE);
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }
@@ -166,7 +167,7 @@ export class CardService {
                             break;
                         case 'HEARTBEAT':
                             this.lastHeardBeatDate = new Date().valueOf();
-                            console.log(new Date().toISOString(), `CardService - HEARTBEAT received - Connection alive `);
+                            this.logger.info( `CardService - HEARTBEAT received - Connection alive `,LogOption.LOCAL);
                             break;
                         case 'BUSINESS_CONFIG_CHANGE':
                             this.store.dispatch(new BusinessConfigChangeAction());
@@ -203,10 +204,9 @@ export class CardService {
 
     private checkHeartBeatReceive() {
         setInterval(() => {
-            console.log(new Date().toISOString(),
-                'Last heart beat received ',
-                new Date().valueOf() - this.lastHeardBeatDate,
-                'ms ago');
+            this.logger.info('Last heart beat received ' +
+                (new Date().valueOf() - this.lastHeardBeatDate) +
+                'ms ago', LogOption.LOCAL_AND_REMOTE);
         }
             , 60000);
     }
@@ -216,13 +216,11 @@ export class CardService {
 
         // Subtracts two minutes from the last heard beat to avoid loosing card due to latency, buffering and not synchronized clock
         const dateForRecovering = this.lastHeardBeatDate - CardService.TWO_MINUTES;
-
-        console.log(new Date().toISOString(), `CardService - Card subscription has been init again , recover any lost card from date `
-            + new Date(dateForRecovering));
+        this.logger.info( `CardService - Card subscription has been init again , recover any lost card from date `
+            + new Date(dateForRecovering), LogOption.LOCAL_AND_REMOTE);
         this.httpClient.post<any>(
             `${this.cardOperationsUrl}`,
             {publishFrom: dateForRecovering}).subscribe();
-
     }
 
     public removeAllLightCardFromMemory() {
@@ -231,7 +229,7 @@ export class CardService {
     }
 
     private setSubscriptionDates(start: number, end: number) {
-        console.log(new Date().toISOString(), 'CardService - Set subscription date', new Date(start), ' -', new Date(end));
+        this.logger.info( 'CardService - Set subscription date' + new Date(start) + ' -' +  new Date(end), LogOption.LOCAL_AND_REMOTE);
         if (!this.startOfAlreadyLoadedPeriod) { // First loading , no card loaded yet
             this.askCardsForPeriod(start, end);
             return;
@@ -248,12 +246,12 @@ export class CardService {
             this.askCardsForPeriod(this.endOfAlreadyLoadedPeriod, end);
             return;
         }
-        console.log(new Date().toISOString(), 'CardService - Card already loaded for the chosen period');
+        this.logger.info('CardService - Card already loaded for the chosen period', LogOption.LOCAL_AND_REMOTE);
     }
 
     private askCardsForPeriod(start: number, end: number) {
-        console.log(new Date().toISOString(), 'CardService - Need to load card for period '
-            , new Date(start), ' -', new Date(end));
+        this.logger.info('CardService - Need to load card for period ' + new Date(start) + ' -' + new Date(end),
+            LogOption.LOCAL_AND_REMOTE);
         this.httpClient.post<any>(
             `${this.cardOperationsUrl}`,
             { rangeStart: start, rangeEnd: end }).subscribe(result => {

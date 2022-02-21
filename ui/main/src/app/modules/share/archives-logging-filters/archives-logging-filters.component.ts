@@ -7,13 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ConfigService} from '@ofServices/config.service';
 import {Card} from '@ofModel/card.model';
 import {LightCard} from '@ofModel/light-card.model';
 import {FormGroup} from '@angular/forms';
 import {ProcessesService} from '@ofServices/processes.service';
-import {takeUntil} from 'rxjs/operators';
+import {debounceTime, takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {buildSettingsOrConfigSelector} from '@ofSelectors/settings.x.config.selectors';
 import {Store} from '@ngrx/store';
@@ -23,6 +23,7 @@ import {TimeService} from '@ofServices/time.service';
 import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import {ProcessStatesDropdownListService} from '@ofServices/process-states-dropdown-list.service';
+import moment from 'moment';
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -45,7 +46,8 @@ export const transformToTimestamp = (date: NgbDateStruct, time: NgbTimeStruct): 
 
 @Component({
     selector: 'of-archives-logging-filters',
-    templateUrl: './archives-logging-filters.component.html'
+    templateUrl: './archives-logging-filters.component.html',
+    styleUrls: ['./archives-logging-filters.component.scss']
 })
 export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
 
@@ -54,6 +56,8 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     @Input() visibleProcesses: any[];
     @Input() hideChildStates: boolean;
     @Input() tags: any[];
+    @Output() search = new EventEmitter<string>();
+    @Output() reset = new EventEmitter<string>();
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -75,6 +79,16 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
 
     statesDropdownListPerProcesses = new Map();
     processesGroups: Map<string, {name: string, processes: string[]}>;
+
+    dateTimeFilterChange = new Subject();
+
+    publishMinDate : {year: number, month: number, day: number} = null;
+    publishMaxDate : {year: number, month: number, day: number} = null;
+    activeMinDate : {year: number, month: number, day: number} = null;
+    activeMaxDate : {year: number, month: number, day: number} = null;
+
+    defaultMinPublishDate: NgbDateStruct;
+    defaultMaxPublishDate: NgbDateStruct;
 
     constructor(private store: Store<AppState>,
                 private translate: TranslateService,
@@ -127,6 +141,13 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
 
         this.changeProcessesWhenSelectProcessGroup();
         this.changeStatesWhenSelectProcess();
+
+        this. setDefaultPublishDateFilter();
+
+        this.dateTimeFilterChange.pipe(
+            takeUntil(this.unsubscribe$),
+            debounceTime(1000),
+        ).subscribe(() => this.setDateFilterBounds());
     }
 
     loadValuesForFilters() {
@@ -252,6 +273,49 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
 
     isThereProcessStateToDisplay(): boolean {
         return !!this.statesDropdownListPerProcesses && this.statesDropdownListPerProcesses.size > 0;
+    }
+
+
+    setDefaultPublishDateFilter() {
+        const defaultPublishDateInterval = this.configService.getConfigValue('archive.filters.publishDate.days', 10);
+
+        const min = moment(Date.now());
+        min.subtract(defaultPublishDateInterval, 'day');
+        var minDate = min.toDate();
+        this.defaultMinPublishDate = { day: minDate.getDate(), month: minDate.getMonth() + 1, year: minDate.getFullYear()};
+    }
+
+    setDateFilterBounds(): void {
+
+        if (this.parentForm.value.publishDateFrom?.date) {
+            this.publishMinDate = {year: this.parentForm.value.publishDateFrom.date.year, month: this.parentForm.value.publishDateFrom.date.month, day: this.parentForm.value.publishDateFrom.date.day};
+        }
+        if (this.parentForm.value.publishDateTo?.date) {
+            this.publishMaxDate = {year: this.parentForm.value.publishDateTo.date.year, month: this.parentForm.value.publishDateTo.date.month, day: this.parentForm.value.publishDateTo.date.day};
+        }
+
+        if (this.parentForm.value.activeFrom?.date) {
+            this.activeMinDate = {year: this.parentForm.value.activeFrom.date.year, month: this.parentForm.value.activeFrom.date.month, day: this.parentForm.value.activeFrom.date.day};
+        }
+        if (this.parentForm.value.activeTo?.date) {
+            this.activeMaxDate = {year: this.parentForm.value.activeTo.date.year, month: this.parentForm.value.activeTo.date.month, day: this.parentForm.value.activeTo.date.day};
+        }
+    }
+    
+    onDateTimeChange(event: Event) {
+        this.dateTimeFilterChange.next(null);
+    }
+
+    query(): void {
+        this.search.emit(null);
+    }
+
+    resetForm() {
+        this.publishMinDate = null;
+        this.publishMaxDate = null;
+        this.activeMinDate = null;
+        this.activeMaxDate = null;
+        this.reset.emit(null);
     }
 
     protected getLocale(): Observable<string> {

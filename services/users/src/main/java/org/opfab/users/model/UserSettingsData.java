@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 
 package org.opfab.users.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -27,7 +26,6 @@ public class UserSettingsData implements UserSettings {
     @Id
     private String login;
     private String description;
-    private String timeZone;
     private String locale;
     private Boolean playSoundForAlarm;
     private Boolean playSoundForAction;
@@ -36,14 +34,16 @@ public class UserSettingsData implements UserSettings {
     private Boolean playSoundOnExternalDevice;
     private Boolean replayEnabled;
     private Integer replayInterval;
+    private Boolean remoteLoggingEnabled;
 
     @Singular("processStatesNotNotified")
     private Map<String, List<String>> processesStatesNotNotified;
+    @Singular("entityDisconnected")
+    private List<String> entitiesDisconnected;
 
     public UserSettingsData(UserSettings settings) {
         this.login = settings.getLogin();
         this.description = settings.getDescription();
-        this.timeZone = settings.getTimeZone();
         this.locale = settings.getLocale();
         this.playSoundForAlarm = settings.getPlaySoundForAlarm();
         this.playSoundForAction = settings.getPlaySoundForAction();
@@ -52,16 +52,27 @@ public class UserSettingsData implements UserSettings {
         this.playSoundOnExternalDevice = settings.getPlaySoundOnExternalDevice();
         this.replayEnabled = settings.getReplayEnabled();
         this.replayInterval = settings.getReplayInterval();
+        this.remoteLoggingEnabled = settings.getRemoteLoggingEnabled();
 
         if (settings.getProcessesStatesNotNotified() != null)
             this.processesStatesNotNotified = new HashMap<>(settings.getProcessesStatesNotNotified());
         else
             this.processesStatesNotNotified = null;
+
+        if (settings.getEntitiesDisconnected() != null)
+            this.entitiesDisconnected = new ArrayList<>(settings.getEntitiesDisconnected());
+        else
+            this.entitiesDisconnected = null;
     }
 
 
     public UserSettingsData clearProcessesStatesNotNotified(){
         setProcessesStatesNotNotified(null);
+        return this;
+    }
+
+    public UserSettingsData clearEntitiesDisconnected(){
+        setEntitiesDisconnected(null);
         return this;
     }
 
@@ -78,7 +89,6 @@ public class UserSettingsData implements UserSettings {
         UserSettingsData result = new UserSettingsData();
         result.login = this.login;
         result.description = other.getDescription() != null ? other.getDescription() : this.getDescription();
-        result.timeZone = other.getTimeZone() != null ? other.getTimeZone() : this.getTimeZone();
         result.locale = other.getLocale() != null ? other.getLocale() : this.getLocale();
         result.playSoundForAlarm = other.getPlaySoundForAlarm() != null ? other.getPlaySoundForAlarm() : this.getPlaySoundForAlarm();
         result.playSoundForAction = other.getPlaySoundForAction() != null ? other.getPlaySoundForAction() : this.getPlaySoundForAction();
@@ -87,13 +97,19 @@ public class UserSettingsData implements UserSettings {
         result.playSoundOnExternalDevice = other.getPlaySoundOnExternalDevice() != null ? other.getPlaySoundOnExternalDevice() : this.getPlaySoundOnExternalDevice();
         result.replayEnabled = other.getReplayEnabled() != null ? other.getReplayEnabled() : this.getReplayEnabled();
         result.replayInterval = other.getReplayInterval() != null ? other.getReplayInterval() : this.getReplayInterval();
+        result.remoteLoggingEnabled = other.getRemoteLoggingEnabled() != null ? other.getRemoteLoggingEnabled() : this.getRemoteLoggingEnabled();
 
+        result.processesStatesNotNotified = null;
         if (other.getProcessesStatesNotNotified() != null)
             result.processesStatesNotNotified = new HashMap<>(other.getProcessesStatesNotNotified());
         else if (this.getProcessesStatesNotNotified() != null)
             result.processesStatesNotNotified = new HashMap<>(this.getProcessesStatesNotNotified());
-        else
-            result.processesStatesNotNotified = null;
+
+        result.entitiesDisconnected = null;
+        if (other.getEntitiesDisconnected() != null)
+            result.entitiesDisconnected = new ArrayList<>(other.getEntitiesDisconnected());
+        else if (this.getEntitiesDisconnected() != null)
+            result.entitiesDisconnected = new ArrayList<>(this.getEntitiesDisconnected());
 
         return result;
     }

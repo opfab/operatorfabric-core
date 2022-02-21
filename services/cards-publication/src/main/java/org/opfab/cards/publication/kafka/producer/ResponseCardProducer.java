@@ -36,11 +36,11 @@ public class ResponseCardProducer {
     public void send(CardPublicationData cardPublicationData) {
         log.debug("ResponseCard: {}", cardPublicationData.toString());
 
-        CardCommand cardCommand = cardCommandFactory.create(cardPublicationData);
+        CardCommand cardCommand = cardCommandFactory.createResponseCard(cardPublicationData);
 
         ListenableFuture<SendResult<String, CardCommand>> future =
-                kafkaTemplate.send(topic, cardCommand.getCard().getProcess(), cardCommand);
-        future.addCallback(new ListenableFutureCallback<SendResult<String, CardCommand>>() {
+                kafkaTemplate.send(topic, cardCommand.getResponseCard().getProcess(), cardCommand);
+        future.addCallback(new ListenableFutureCallback<>() {
             @Override
             public void onFailure(Throwable throwable) {
                 log.error("Failure to send responseCard: {}", throwable.getMessage());

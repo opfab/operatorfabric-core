@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2021, RTE (http://www.rte-france.com)
+# Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,10 @@ if [ -z $url ]
 then
 	url="http://localhost"
 fi
+
+export customEpochDate1=$3
+export customEpochDate2=$4
+
 
 # MacOs doesn't have date, so check for that and use gdate instead.
 if [ $OSTYPE == 'darwin'* ]

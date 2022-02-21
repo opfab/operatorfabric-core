@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -10,7 +10,7 @@
   <div style="display: block;  margin-top:10px;">
     <ul class="nav nav-tabs opfab-line-undertab">
       <li class="nav-item opfab-tab opfab-menu-item-left" data-toggle="tab">
-          <span class="opfab-tab text-uppercase" >{{card.titleTranslated}}</span>
+          <span class="opfab-tab text-uppercase" id="opfab-card-title">{{card.titleTranslated}}</span>
       </li>
       <li *ngIf="showButtons" class="nav-item opfab-menu-item-right">
         <div *ngIf="!isSmallscreen()" style="display:flex">
@@ -100,7 +100,7 @@
           <div id='div-detail-btn'>
 
 
-              <div class="opfab-card-received-footer">
+              <div class="opfab-card-received-footer" style="max-width: 50%;text-align: left">
                 <span translate>feed.received</span>
                 {{formattedPublishDate}} <span translate> feed.at </span> {{formattedPublishTime}}
               

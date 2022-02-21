@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -84,20 +84,20 @@ a|card time display mode in the feed. Values :
 
 |feed.timeline.domains|["TR", "J", "7D", "W", "M", "Y"]|no| List of domains to show on the timeline, possible domains are : "TR", "J", "7D", "W", "M", "Y".
 |i18n.supported.locales||no|List of supported locales (Only fr and en so far)
-|i10n.supported.time-zones||no|List of supported time zones, for instance 'Europe/Paris'.
 Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_database_time_zones[TZ database].
 
 |archive.filters.page.size|10|no|The page size of archive filters
 |archive.history.size|100|no|The maximum size of card history visible
 |archive.filters.tags.list||no|List of tags to choose from in the corresponding filter in archives page
+|archive.filters.publishDate.days|10|no|The default search period (days) for publish date filter in archives page
 |logging.filters.tags.list||no|List of tags to choose from in the corresponding filter in logging page
+|logging.filters.publishDate.days|10|no|The default search period (days) for publish date filter in logging page
 |settings.styleWhenNightDayModeDesactivated||no|style to apply if not using day night mode, possible value are DAY or NIGHT 
 |settings.dateFormat|Value from the browser configuration|no|Format for date rendering (example : DD/MM/YYYY )
 |settings.timeFormat|Value from the browser configuration|no|Format for time rendering (example : HH:mm )
 |settings.dateTimeFormat|Value from the browser configuration|no|Format for date and time rendering (example : HH:mm DD/MM/YYYY )
 |settings.infos.hide.description|false|no|Control if we want to hide(true) or display(false or not specified) the user description in the settings page
 |settings.infos.hide.language|false|no|Control if we want to hide(true) or display(false or not specified) the language in the settings page
-|settings.infos.hide.timezone|false|no|Control if we want to hide(true) or display(false or not specified) the timezone in the settings page
 |settings.infos.hide.sounds|false|no|Control if we want to hide(true) or display(false or not specified) the checkboxes for sound notifications in the settings page
 |settings.playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
 |settings.playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
@@ -135,6 +135,8 @@ It should look like:
 |checkPerimeterForResponseCard|true|no|If false, OperatorFabric will not check that a user has write rights on a process/state to respond to a card.
 |usercard.useDescriptionFieldForEntityList|false|no|If true, show entity `description` field instead of `name` in user card page
 |externalDevicesEnabled|false|no|If true, users have the opportunity to play sounds on external devices rather than in the browser. See `settings.playSoundOnExternalDevice`
+|secondsToCloseSession|60|no|Number of seconds between logout and token expiration
+
 
 
 |===
@@ -143,7 +145,6 @@ It should look like:
 
 |===
 |name|default|mandatory?|Description
-|settings.timeZone||no|Default user time zone for users 
 |settings.locale|en|no|Default user locale (use en if not set)
 
 |===

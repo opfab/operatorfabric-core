@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,10 +12,7 @@ package org.opfab.users.model;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
@@ -30,7 +27,6 @@ public class UserSettingsDataShould {
                 .login("test-login")
                 .description("test-description")
                 .locale("fr")
-                .timeZone("Europe/Berlin")
                 .playSoundForAlarm(true)
                 .playSoundForAction(false)
                 //Not setting Compliant and Information to test patch on empty
@@ -53,10 +49,6 @@ public class UserSettingsDataShould {
         patched = userData.patch(UserSettingsData.builder().locale("patched-locale").build().clearProcessesStatesNotNotified());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"locale");
         assertThat(patched.getLocale()).isEqualTo("patched-locale");
-
-        patched = userData.patch(UserSettingsData.builder().timeZone("patched-zone").build().clearProcessesStatesNotNotified());
-        assertThat(patched).isEqualToIgnoringGivenFields(userData,"timeZone");
-        assertThat(patched.getTimeZone()).isEqualTo("patched-zone");
 
         patched = userData.patch(UserSettingsData.builder().playSoundForAlarm(false).build().clearProcessesStatesNotNotified());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"playSoundForAlarm");
@@ -92,5 +84,9 @@ public class UserSettingsDataShould {
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"processesStatesNotNotified");
         assertThat(patched.getProcessesStatesNotNotified()).hasSize(1).contains(entry("processC", Arrays.asList("state5", "state6")));
 
+        List<String> newEntitiesDisconnected = new ArrayList<>(Arrays.asList("ENTITY3_FR", "ENTITY4_FR"));
+        patched = userData.patch(UserSettingsData.builder().entitiesDisconnected(newEntitiesDisconnected).build().clearProcessesStatesNotNotified());
+        assertThat(patched).isEqualToIgnoringGivenFields(userData,"entitiesDisconnected");
+        assertThat(patched.getEntitiesDisconnected()).hasSize(2).containsExactly("ENTITY3_FR", "ENTITY4_FR");
     }
 }

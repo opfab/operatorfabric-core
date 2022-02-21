@@ -21,9 +21,9 @@ describe ('Archives screen tests',function () {
 
         // We move to archives screen
         cy.get('#opfab-navbar-menu-archives').click();
-
+        cy.waitDefaultTime();
         // We click the search button
-        cy.get('#opfab-archives-btn-search').click();
+        cy.get('#opfab-archives-logging-btn-search').click();
 
         // operator1_fr should see 6 archived cards
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length',6);
@@ -40,15 +40,15 @@ describe ('Archives screen tests',function () {
 
         // We delete the test cards and we check that we still have the corresponding archived cards
         cy.deleteAllCards();
-        cy.get('#opfab-archives-btn-search').click();
+        cy.get('#opfab-archives-logging-btn-search').click();
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length',6);
         cy.get('of-card-detail').should('not.exist');
         cy.get('#opfab-archive-results-number').should('have.text', ' Results number  : 6 ')
 
-        // We send again the test cards and we check that the we have 10 lines of archived cards
+        // We send again the test cards, we check that we have 10 lines of archived cards,
         // and we check there is no plus or minus icon (because 'collapsible updates' mode is not activated)
         cy.send6TestCards();
-        cy.get('#opfab-archives-btn-search').click();
+        cy.get('#opfab-archives-logging-btn-search').click();
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length',10);
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-icon-plus').should('not.exist');
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-icon-minus').should('not.exist');
@@ -58,7 +58,7 @@ describe ('Archives screen tests',function () {
         // We click collapsible updates
         cy.get('#opfab-archives-collapsible-updates').click({force: true});
 
-        // We check that the we have 6 lines of archived cards (6 * 2 instances per card)
+        // We check that we have 6 lines of archived cards (6 * 2 instances per card)
         // and we check we have plus icon for each line
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length',6);
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-icon-plus').should('have.length',6);
@@ -134,7 +134,7 @@ describe ('Archives screen tests',function () {
         cy.get('#opfab-state').click();
         cy.get('#opfab-state').find('li').should('have.length', 18);
 
-        // We unselect all processes then we select 'Process example' process and we check there is only 1 state for this process
+        // We unselect all processes then we select 'Process example' process, and we check there is only 1 state for this process
         cy.get('#opfab-process').click();
         cy.get('#opfab-process').contains('UnSelect All').click();
         cy.get('#opfab-process').contains('Process example').click();
@@ -232,10 +232,10 @@ describe ('Archives screen tests',function () {
         // We move to archives screen
         cy.get('#opfab-navbar-menu-archives').click();
 
-        // We send again the test cards, we activate the 'collapsible updates' mode and we check that the we have 6 lines of
+        // We send again the test cards, we activate the 'collapsible updates' mode and we check that we have 6 lines of
         // archived cards (6 * 2 instances per card) and we check we have plus icon for each line
         cy.send6TestCards();
-        cy.get('#opfab-archives-btn-search').click();
+        cy.get('#opfab-archives-logging-btn-search').click();
 
         // We click collapsible updates
         cy.get('#opfab-archives-collapsible-updates').click({force: true});

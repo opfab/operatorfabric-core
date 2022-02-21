@@ -103,6 +103,9 @@ The following card fields can be set via the object `card` in the object returne
 
 * title 
 * summary
+* startDate (epoch date in ms)
+* endDate (epoch date in ms)
+* lttd (epoch date in ms)
 * keepChildCards
 * secondsBeforeTimeSpanForReminder
 * severity (in case it is not visible from the user , when `severityVisible` set to false in `config.json`)
@@ -179,6 +182,15 @@ The recipient field can be hidden using the attribute `recipientVisible` : if hi
 Once a user card has been sent it can be edited by a user member of the publisher entity.
 It is possible to allow other entities to edit the card by specifing the 'entitiesAllowedToEdit' card field.
 
+== Get edition mode
+The template can know if the user is creating a new card or editing an existing card by calling the _usercardTemplateGateway.getEditionMode()_ function. The function will return one of the following values:
+
+* 'CREATE'
+* 'EDITION'
+
+An example of _usercardTemplateGateway.getEditionMode()_ usage can be found in the file
+https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/userCardExamples2/template/usercard_question.handlebars[src/test/resources/bundles/userCardExamples2/template/usercard_question.handlebars].
+
 == Send response automatically (experimental feature)
 
 It is possible to configure a template to automatically send a response when sending a user card expecting an answers from one of the entities of the emitting user. 
@@ -212,6 +224,11 @@ To enable the automated response the template should add a `childCard` field to 
 ....
 
 The card preview will display the card detail with the automated response as it will be displayed in Feed page.
+
+When editing a user card, the template can get the response sent by current user by calling the _usercardTemplateGateway.getUserEntityChildCardFromCurrentCard()_ function. The function will return the response child card sent by current user or null if there is no response from current user.
+
+An example of _usercardTemplateGateway.getUserEntityChildCardFromCurrentCard()_ usage can be found in the file
+https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/userCardExamples2/template/usercard_confirmation.handlebars[src/test/resources/bundles/userCardExamples2/template/usercard_confirmation.handlebars].
 
 == Misc
 

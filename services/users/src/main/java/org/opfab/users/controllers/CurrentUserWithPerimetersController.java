@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -87,6 +87,16 @@ public class CurrentUserWithPerimetersController implements CurrentUserWithPerim
  */
     protected void handleEntities(User userData) {
         List<String> userEntityList = userData.getEntities();
+
+        // we retrieve entitiesDisconnected of the user
+        List<String> entitiesDisconnected = userService.retrieveUserSettings(userData.getLogin()).getEntitiesDisconnected();
+
+        // we remove entitiesDisconnected from the entities list of the user
+        if (entitiesDisconnected != null) {
+            userEntityList = userEntityList.stream().filter(
+                    entityId -> !entitiesDisconnected.contains(entityId)).collect(Collectors.toList());
+        }
+
         Set<String> userEntityNames = userEntityList.stream().collect(Collectors.toSet());
         List<EntityData> systemEntities = entityRepository.findAll();
         Map<String, EntityData> systemEntityDictionary = systemEntities.stream()
@@ -95,7 +105,6 @@ public class CurrentUserWithPerimetersController implements CurrentUserWithPerim
             this.manageParentsRef(entityName, systemEntityDictionary, userEntityNames);
         });
         userData.setEntities(userEntityNames.stream().collect(Collectors.toList()));
-
     }
 // recursive because by convention there are no cycle in entity relationship (cf above)
     protected void manageParentsRef(String entity, Map<String, EntityData> dictionary, Set<String> records) {

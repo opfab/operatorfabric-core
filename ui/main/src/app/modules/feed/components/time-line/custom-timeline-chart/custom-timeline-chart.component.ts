@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -41,8 +41,8 @@ import {takeUntil} from 'rxjs/operators';
 import {getNextTimeForRepeating} from '@ofServices/reminder/reminderUtils';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
-import {FilterType} from '@ofModel/feed-filter.model';
 import {FilterService} from '@ofServices/lightcards/filter.service';
+
 
 
 @Component({
@@ -62,7 +62,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   public title: string;
   public oldWidth = 0;
   public openPopover: NgbPopover;
-
+  
+  
+  xDomainForTimeLineGridDisplay: any;
 
   @ViewChild(ChartComponent, { read: ElementRef }) chart: ElementRef;
   public dims: ViewDimensions;
@@ -79,6 +81,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   private isDestroyed = false ;
   public weekRectangles;
 
+
+
   // TOOLTIP
   public currentCircleHovered;
   public circles;
@@ -87,12 +91,16 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
 
   @Input() prod; // Workaround for testing, the variable is not set  in unit test an true in production mode
   @Input() domainId;
-  @Input() followClockTick;
   @Input()
   set valueDomain(value: any) {
     this.xDomain = value;
+    this.setDomainForTimeLineGridDisplay();
     this.setTitle();
     this.setWeekRectanglePositions();
+  }
+
+  setDomainForTimeLineGridDisplay() {
+    this.xDomainForTimeLineGridDisplay = [this.xDomain.startDate + this.xDomain.overlap,this.xDomain.endDate];
   }
 
   setTitle()
@@ -100,17 +108,17 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     switch (this.domainId) {
       case 'TR':
       case 'J':
-        this.title = moment(this.xDomain[0]).format('DD MMMM YYYY');
+        this.title = moment(this.xDomainForTimeLineGridDisplay[0]).format('DD MMMM YYYY');
         break;
       case 'M':
-        this.title = moment(this.xDomain[0]).format('MMMM YYYY').toLocaleUpperCase();
+        this.title = moment(this.xDomainForTimeLineGridDisplay[0]).format('MMMM YYYY').toLocaleUpperCase();
         break;
       case 'Y':
-        this.title = moment(this.xDomain[0]).format('YYYY').toLocaleUpperCase();
+        this.title = moment(this.xDomainForTimeLineGridDisplay[0]).format('YYYY').toLocaleUpperCase();
         break;
       case '7D':
       case 'W':
-        this.title = moment(this.xDomain[0]).format('DD/MM/YYYY').toLocaleUpperCase() + ' - ' +  moment(this.xDomain[1]).format('DD/MM/YYYY') ; 
+        this.title = moment(this.xDomainForTimeLineGridDisplay[0]).format('DD/MM/YYYY').toLocaleUpperCase() + ' - ' +  moment(this.xDomainForTimeLineGridDisplay[1]).format('DD/MM/YYYY') ; 
         break;
       default:
     }
@@ -119,13 +127,13 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   setWeekRectanglePositions() {
     this.weekRectangles = new Array();
     if (this.domainId === 'W' || this.domainId === '7D') {
-      let startOfDay = this.xDomain[0];
+      let startOfDay = this.xDomainForTimeLineGridDisplay[0];
       let changeBgColor = true;
-      while (startOfDay < this.xDomain[1]) {
+      while (startOfDay < this.xDomainForTimeLineGridDisplay[1]) {
         let endOfDay = moment(startOfDay);
         endOfDay.set('hour',23);
         endOfDay.set('minute',59);
-        if (endOfDay > this.xDomain[1]) endOfDay = this.xDomain[1];
+        if (endOfDay > this.xDomainForTimeLineGridDisplay[1]) endOfDay = this.xDomainForTimeLineGridDisplay[1];
         const week = {
           start: startOfDay,
           end: endOfDay,
@@ -142,7 +150,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   }
 
   get valueDomain() {
-    return this.xDomain;
+    return this.xDomainForTimeLineGridDisplay;
   }
 
   @Output() zoomChange: EventEmitter<string> = new EventEmitter<string>();
@@ -156,6 +164,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
      @Inject(PLATFORM_ID) platformId: any,
      private lightCardsFeedFilterService: LightCardsFeedFilterService,
      private filterService: FilterService) {
+
     super(chartElement, zone, cd, platformId);
   }
 
@@ -169,6 +178,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.initGraph();
     this.updateRealtime();
     this.initDataPipe();
+
+    this.setDomainForTimeLineGridDisplay();
     this.updateDimensions(); // need to init here only for unit test , otherwise dims is null
   }
 
@@ -177,6 +188,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.ngUnsubscribe$.complete();
     this.isDestroyed = true;
   }
+
 
   // set inside ngx-charts library verticalSpacing variable to 10
   // library need to rotate ticks one time for set verticalSpacing to 10px on ngx-charts-x-axis-ticks
@@ -197,26 +209,11 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    */
   updateRealtime(): void {
     this.xRealTimeLine = moment();
-    if (this.followClockTick) this.shiftTimeLineIfNecessary();
     setTimeout(() => {
       if (!this.isDestroyed) this.updateRealtime();
     }, 1000);
   }
 
-
-  shiftTimeLineIfNecessary() {
-    if (this.xTicks) {
-      if (this.xTicks[10].valueOf() <= moment().valueOf()) {
-        this.valueDomain = [this.xTicks[1].valueOf(), this.xDomain[1] + (this.xTicks[1] - this.xDomain[0])];
-        this.filterService.updateFilter(
-          FilterType.BUSINESSDATE_FILTER,
-          true,
-          {start: this.valueDomain[0], end: this.valueDomain[1], domainId: this.domainId}
-        );
-        this.update();
-      }
-    }
-  }
 
   /**
    * Main function for ngx-charts
@@ -241,7 +238,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       showLegend: false,
       legendType: ScaleType.Time
     });
-    this.xScale =  scaleTime().range([0, this.dims.width]).domain(this.xDomain);
+
+    this.xScale =  scaleTime().range([0, this.dims.width]).domain(this.xDomainForTimeLineGridDisplay);
     this.yScale =  scaleLinear().range([this.dims.height, 0]).domain([0, 5]);
     this.translateGraph = `translate(${this.dims.xOffset} , ${this.margin[0]})`;
     this.translateXTicksTwo = `translate(0, ${this.dims.height + 5})`;
@@ -282,13 +280,13 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   }
 
   setXTicksValue(): void {
-    const startDomain = moment(this.xDomain[0]);
+    const startDomain = moment(this.xDomainForTimeLineGridDisplay[0]);
     this.xTicks = [];
     this.xTicks.push(startDomain);
     const nextTick = moment(startDomain);
     const tickSize = this.getTickSize();
 
-    while (nextTick.valueOf() < this.xDomain[1]) {
+    while (nextTick.valueOf() < this.xDomainForTimeLineGridDisplay[1].valueOf()) {
 
       // we need to make half month tick when Y domain
       if (this.domainId === 'Y') {
@@ -298,7 +296,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
           nextTick.add(1, 'month').startOf('month');
         }
       }  else {
-        nextTick.add(tickSize.amount, tickSize.unit)
+        nextTick.add(tickSize.amount, tickSize.unit);
          if ((this.domainId === '7D' || this.domainId === 'W')) {
            // OC-1205 : Deal with winter/summer time changes
            // if hour is 5, we are switching from winter to summer time, we subtract 1 hour to keep  ticks  to 04 / 08 / 12 ...
@@ -329,9 +327,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         if (card.timeSpans && card.timeSpans.length > 0) {
           card.timeSpans.forEach(timeSpan => {
             if (!!timeSpan.recurrence) {
-              let dateForReminder: number = getNextTimeForRepeating(card, this.xDomain[0] + 1000 * card.secondsBeforeTimeSpanForReminder);
+              let dateForReminder: number = getNextTimeForRepeating(card, this.xDomainForTimeLineGridDisplay[0].valueOf() + 1000 * card.secondsBeforeTimeSpanForReminder);
 
-              while(dateForReminder >= 0 && (!timeSpan.end || (dateForReminder < timeSpan.end)) && dateForReminder < this.xDomain[1]) {
+              while(dateForReminder >= 0 && (!timeSpan.end || (dateForReminder < timeSpan.end)) && dateForReminder < this.xDomainForTimeLineGridDisplay[1].valueOf()) {
                 const myCardTimeline = {
                   date: dateForReminder,
                   id: card.id,
@@ -380,6 +378,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.circles = [];
     if (this.cardsData === undefined || this.cardsData === []) { return; }
 
+
     // filter cards by date
     this.cardsData.sort((val1, val2) => {
       return val1.date - val2.date;
@@ -398,19 +397,19 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       let cardIndex = 0;
       // move index to the first card in the time domain
       if (cards.length > 0) {
-        while (cards[cardIndex] && (cards[cardIndex].date < this.xDomain[0]) && (cardIndex < cards.length)) { cardIndex++; }
+        while (cards[cardIndex] && (cards[cardIndex].date < this.xDomain.startDate) && (cardIndex < cards.length)) { cardIndex++; }
       }
       // for each interval , if a least one card in the interval , create a circle object.
       if (cardIndex < cards.length) {
         for (let tickIndex = 1; tickIndex < this.xTicks.length; tickIndex++) {
 
           let endLimit = this.xTicks[tickIndex].valueOf();
-          if (tickIndex + 1 === this.xTicks.length)
-              {
-                endLimit += 1; // Include the limit domain value by adding 1ms
-              }
 
+          if (tickIndex + 1 === this.xTicks.length) {
+            endLimit += 1; // Include the limit domain value by adding 1ms
+          }
 
+          
           if (cards[cardIndex] && cards[cardIndex].date < endLimit ) {
             // initialisation of a new circle
             const circle = {
@@ -517,7 +516,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   }
 
   checkInsideDomain(date): boolean {
-    const domain = this.xDomain;
+    const domain = this.xDomainForTimeLineGridDisplay;
     return date >= domain[0] && date <= domain[1];
   }
 

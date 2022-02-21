@@ -59,15 +59,14 @@
     </div>
     <div class="d-flex p-0 border-0">
         <div class="badge-border  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}}"></div>
-        <div class="p-1">
+        <div class="p-1" style="width: 100%">
             <span *ngIf="open">
                 <span id="opfab-selected-card-summary">{{lightCard.summaryTranslated}}</span>
-                <span id="opfab-form-entity" *ngIf="fromEntity">
-                    
-                    <span translate> feed.from</span>
-                    <span class="text-uppercase"> {{fromEntity}}</span>
-          
-                </span>
+
+                <div id="opfab-form-entity" *ngIf="fromEntity" style="font-style: italic;text-align: right;width: 100%">
+                    <span style="text-transform: capitalize" translate>feed.from</span>
+                    <span class="text-uppercase">&nbsp;:&nbsp;{{fromEntity}}</span>
+                </div>
             </span>
         </div>
     </div>

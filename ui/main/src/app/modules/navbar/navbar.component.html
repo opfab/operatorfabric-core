@@ -51,7 +51,7 @@
       </li>
     </ul>
 
-    <ul class="navbar-nav navbar-right">
+    <ul class="navbar-nav navbar-right opfab-sticky-menu">
       <li id="opfab-newcard-menu" style="display:flex;margin-top: 12px;cursor:pointer;margin-right:20px" (click)="openCardCreation()" *ngIf="(displayCreateUserCard)">
         <span class="opfab-menu-icon-newcard"></span>
      </li>
@@ -155,6 +155,14 @@
       <a id="opfab-navbar-right-menu-settings" *ngIf="(displaySettings)" class="opfab-right-menu-link" routerLink="/settings"  routerLinkActive #rla="routerLinkActive">
         <div class="opfab-menu-icon opfab-menu-icon-parameters"></div>
         <div translate> menu.settings </div>
+      </a>
+    </div>
+
+    <div class="opfab-right-menu-item" *ngIf="(displayActivityArea)">
+      <a  id="opfab-navbar-right-menu-activityarea" class="opfab-right-menu-link" routerLink="/activityarea"  routerLinkActive
+          #rla="routerLinkActive">
+        <em class="fas fa-user-cog" id="opfab-menu-icon-activityarea"></em>
+        <div translate> menu.activityArea</div>
       </a>
     </div>
 

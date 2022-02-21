@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
+import org.apache.commons.text.StringEscapeUtils;
 
 
 public class I18nTranslation {
@@ -46,7 +47,7 @@ public class I18nTranslation {
         Handlebars handlebars = new Handlebars();
         Template template = handlebars.compileInline(nodeText);
     
-        return template.apply(parameters);
+        return StringEscapeUtils.unescapeHtml4(template.apply(parameters));
     }
 
 }

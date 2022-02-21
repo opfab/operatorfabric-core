@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,16 +7,17 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {ActivatedRoute, Router} from '@angular/router';
-import {concatMap, map, skip, takeUntil} from 'rxjs/operators';
+import {map, skip, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {ConfigService} from '@ofServices/config.service';
+import {DOCUMENT} from "@angular/common";
 
 @Component({
   selector: 'of-iframedisplay',
@@ -27,6 +28,8 @@ export class IframeDisplayComponent implements OnInit, OnDestroy {
 
   public iframeURL: SafeUrl;
   unsubscribe$: Subject<void> = new Subject<void>();
+  private menu_id;
+  private menu_entry_id;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -35,6 +38,7 @@ export class IframeDisplayComponent implements OnInit, OnDestroy {
     private store: Store<AppState>,
     private globalStyleService: GlobalStyleService,
     private router: Router,
+    @Inject(DOCUMENT) private document: Document
   ) {
    }
 
@@ -44,23 +48,34 @@ export class IframeDisplayComponent implements OnInit, OnDestroy {
   }
 
   private loadIframe() {
-    this.route.paramMap.pipe(
-      concatMap(paramMap => this.businessconfigService.queryMenuEntryURL(paramMap.get('menu_id'), paramMap.get('menu_entry_id'))),
-      map((url) => this.addOpfabThemeParamToUrl(url)),
-      map((url) => this.addParamToUrl(url)),
-      map((url) => this.sanitizer.bypassSecurityTrustResourceUrl(url)),
-      takeUntil(this.unsubscribe$)
-    ).subscribe({
-      next: url => this.iframeURL = url,
-      error: err => {
-        console.log('Error in business application redirection = ', err); this.router.navigate(['/feed']);
-      }
-    });
+    this.route.paramMap.subscribe(
+      paramMap => {
+        this.menu_id = paramMap.get('menu_id');
+        this.menu_entry_id = paramMap.get('menu_entry_id');
+        this.businessconfigService.queryMenuEntryURL(this.menu_id, this.menu_entry_id).pipe(
+          map((url) => this.addRoutingToUrl(url)),
+          map((url) => this.addOpfabThemeParamToUrl(url)),
+          map((url) => this.addParamToUrl(url)),
+          map((url) => this.sanitizer.bypassSecurityTrustResourceUrl(url)),
+          takeUntil(this.unsubscribe$)
+        ).subscribe({
+          next: url => this.iframeURL = url,
+          error: err => {
+            console.log('Error in business application redirection = ', err); this.router.navigate(['/feed']);
+          }
+        });
+      });
+  }
+
+  private addRoutingToUrl(url: string): string {
+          // Capture everything between the last part of the menu and the first occurrence of question mark. (to avoid messing with parameters).
+          // example: /menu1/entry1/deeplink?someParam=param turns into "/deeplink"
+          const additionalRouting = this.router.url.match(`.*${this.menu_id}\/${this.menu_entry_id}(\/[^?]*)`);
+          return url + (additionalRouting ? additionalRouting[1] : '');
   }
 
 
   private addOpfabThemeParamToUrl(url: string ): string {
-    console.log("url=",url);
     this.globalStyleService.getStyle();
     url += (url.includes('?')) ? '&' : '?';
     url += 'opfab_theme=';
@@ -75,9 +90,8 @@ export class IframeDisplayComponent implements OnInit, OnDestroy {
   //
   // The user will be redirected to the url configured + the parameters
 
-  private addParamToUrl(url)
-  {
-    const params = document.location.href.split('?');
+  private addParamToUrl(url) {
+    const params = this.document.location.href.split('?');
     if (!!params[1]) return url+ '&' + params[1]
     return url;
   }
@@ -88,10 +102,8 @@ export class IframeDisplayComponent implements OnInit, OnDestroy {
       .subscribe(() => this.loadIframe());
   }
 
-
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
-
 }

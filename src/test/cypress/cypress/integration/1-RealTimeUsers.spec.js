@@ -39,14 +39,14 @@ describe ('RealTimeUsersPage',()=>{
         //click on "Real time users"
         cy.get('#opfab-navbar-right-menu-realtimeusers').click();
 
-        // we should have 18 disconnected entities/groups and 1 connected (operator3_fr for ENTITY1_FR/Dispatcher)
-        // we check the connected badge is for the first row/first column
+        // we should have 18 disconnected entities/groups and 1 connected (operator3_fr for ENTITY3_FR/Dispatcher)
+        // we check the connected badge is for the third row/first column
         cy.get('.badge').should('have.length', 19);
         cy.get('.bg-success').should('have.length', 1);
         cy.get('.bg-danger').should('have.length', 18);
-        cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('.bg-success').should('have.length', 1);
-        cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', '(operator3_fr)');
+        cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('.bg-success').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
+        cy.get('table').first().find('tr').eq(3).find('td').eq(0).should('contain.text', '(operator3_fr)');
 
         // we choose another screen (French Control Centers screen) and we check the titles
         cy.get('#of-realtimeusers-screen-selector').find('select').select('French Control Centers');
@@ -76,5 +76,129 @@ describe ('RealTimeUsersPage',()=>{
         cy.get('#of-realtimeusers-screen-selector').find('select').select('French Control Centers');
         cy.get('.opfab-realtimeusers-entitiesgroups').eq(0).find('span').eq(0).should('have.text', 'French Control Centers');
         cy.get('.opfab-realtimeusers-entitiesgroups').eq(1).find('span').eq(0).should('have.text', 'Central Supervision Centers');
+    })
+
+    it('Connection of operator4_fr, which is connected to ENTITY1_FR, ENTITY2_FR, ENTITY3_FR, ENTITY4_FR, ' +
+        'interact with activity area screen and check Real time users screen is updated', ()=> {
+        cy.loginOpFab('operator4_fr', 'test');
+
+        //click on user menu (top right of the screen)
+        cy.get('#opfab-navbar-drop_user_menu').click();
+
+        //click on "Real time users"
+        cy.get('#opfab-navbar-right-menu-realtimeusers').click();
+
+        // we should have 15 disconnected entities/groups and 4 connected (operator4_fr for ENTITY1_FR/Dispatcher, ENTITY2_FR/Dispatcher, ENTITY3_FR/Dispatcher and ENTITY4_FR/Dispatcher)
+        cy.get('.badge').should('have.length', 19);
+        cy.get('.bg-success').should('have.length', 4);
+        cy.get('.bg-danger').should('have.length', 15);
+
+        // we check the connected badges
+        // first row/first column
+        cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('.bg-success').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
+        cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        // second row/first column
+        cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('.bg-success').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
+        cy.get('table').first().find('tr').eq(2).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        // third row/first column
+        cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('.bg-success').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
+        cy.get('table').first().find('tr').eq(3).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        // fourth row/first column
+        cy.get('table').first().find('tr').eq(4).find('td').eq(0).find('.bg-success').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(4).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
+        cy.get('table').first().find('tr').eq(4).find('td').eq(0).should('contain.text', '(operator4_fr)');
+
+        // we choose another screen (French Control Centers screen) and we check the titles
+        cy.get('#of-realtimeusers-screen-selector').find('select').select('French Control Centers');
+        cy.get('.opfab-realtimeusers-entitiesgroups').eq(0).find('span').eq(0).should('have.text', 'French Control Centers');
+        cy.get('.opfab-realtimeusers-entitiesgroups').eq(1).find('span').eq(0).should('have.text', 'Central Supervision Centers');
+
+        // we should have 5 disconnected entities/groups and 4 connected (operator4_fr for ENTITY1_FR/Dispatcher, ENTITY2_FR/Dispatcher, ENTITY3_FR/Dispatcher and ENTITY4_FR/Dispatcher)
+        cy.get('.badge').should('have.length', 9);
+        cy.get('.bg-success').should('have.length', 4);
+        cy.get('.bg-danger').should('have.length', 5);
+
+        // operator4_fr disconnect from ENTITY2_FR, ENTITY3_FR and ENTITY4_FR
+        // click on user menu (top right of the screen)
+        cy.get('#opfab-navbar-drop_user_menu').click();
+
+        // click on "Activity area"
+        cy.get('#opfab-navbar-right-menu-activityarea').click();
+        cy.get('.opfab-checkbox').contains('Control Center FR East').click();
+        cy.get('.opfab-checkbox').contains('Control Center FR South').click();
+        cy.get('.opfab-checkbox').contains('Control Center FR West').click();
+        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); //click confirm settings
+        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
+
+        // we go back to the real time screen
+        cy.get('#opfab-navbar-drop_user_menu').should('exist').click();
+        cy.get('#opfab-navbar-right-menu-realtimeusers').should('exist').click();
+
+        // we are on the French control centers
+        // we should have 8 disconnected entities/groups and 1 connected (operator4_fr for ENTITY1_FR/Dispatcher only)
+        cy.get('.badge').should('have.length', 9);
+        cy.get('.bg-success').should('have.length', 1);
+        cy.get('.bg-danger').should('have.length', 8);
+
+        // we check the connected/disconnected badges
+        // first row/first column
+        cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('.bg-success').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
+        cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        // second row/first column
+        cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('.bg-danger').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('span').eq(0).should('have.text', '0');
+        cy.get('table').first().find('tr').eq(2).find('td').eq(0).should('contain.text', '');
+        // third row/first column
+        cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('.bg-danger').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('span').eq(0).should('have.text', '0');
+        cy.get('table').first().find('tr').eq(3).find('td').eq(0).should('contain.text', '');
+        // fourth row/first column
+        cy.get('table').first().find('tr').eq(4).find('td').eq(0).find('.bg-danger').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(4).find('td').eq(0).find('span').eq(0).should('have.text', '0');
+        cy.get('table').first().find('tr').eq(4).find('td').eq(0).should('contain.text', '');
+
+        // operator4_fr reconnect to ENTITY2_FR, ENTITY3_FR and ENTITY4_FR
+        // click on user menu (top right of the screen)
+        cy.get('#opfab-navbar-drop_user_menu').click();
+
+        // click on "Activity area"
+        cy.get('#opfab-navbar-right-menu-activityarea').click();
+        cy.get('.opfab-checkbox').contains('Control Center FR East').click();
+        cy.get('.opfab-checkbox').contains('Control Center FR South').click();
+        cy.get('.opfab-checkbox').contains('Control Center FR West').click();
+        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); //click confirm settings
+        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
+
+        // we go back to the real time screen
+        cy.get('#opfab-navbar-drop_user_menu').should('exist').click();
+        cy.get('#opfab-navbar-right-menu-realtimeusers').should('exist').click();
+
+        // we are on the French control centers
+        // we should have 5 disconnected entities/groups and 4 connected (operator4_fr for ENTITY1_FR/Dispatcher, ENTITY2_FR/Dispatcher, ENTITY3_FR/Dispatcher and ENTITY4_FR/Dispatcher )
+        cy.get('.badge').should('have.length', 9);
+        cy.get('.bg-success').should('have.length', 4);
+        cy.get('.bg-danger').should('have.length', 5);
+
+        // we check the connected/disconnected badges
+        // first row/first column
+        cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('.bg-success').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
+        cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        // second row/first column
+        cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('.bg-success').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
+        cy.get('table').first().find('tr').eq(2).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        // third row/first column
+        cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('.bg-success').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
+        cy.get('table').first().find('tr').eq(3).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        // fourth row/first column
+        cy.get('table').first().find('tr').eq(4).find('td').eq(0).find('.bg-success').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(4).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
+        cy.get('table').first().find('tr').eq(4).find('td').eq(0).should('contain.text', '(operator4_fr)');
     })
 })

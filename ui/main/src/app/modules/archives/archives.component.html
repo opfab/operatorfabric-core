@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -15,37 +15,11 @@
       <div *ngIf="isThereProcessStateToDisplay; else noProcessStateToDisplay" class="opfab-archives">
         <div style="display: flex;">
 
-          <of-archives-logging-filters [parentForm]="archiveForm" [visibleProcesses]="listOfProcesses"
+          <of-archives-logging-filters [parentForm]="archiveForm" [visibleProcesses]="listOfProcesses" (reset)='resetForm()' (search)='sendQuery(0)'
                                        [hideChildStates]="true" [tags]="tags" #filters></of-archives-logging-filters>
 
-          <div class="opfab-vertical-bar"></div>
-          <div class="opfab-publish-date">
-            <div>
-              <of-datetime-filter filterPath="publishDateFrom" formControlName="publishDateFrom"
-                labelKey="shared.filters." [maxDate]="publishMaxDate" (change)="onDateTimeChange($event)"></of-datetime-filter>
-            </div>
-            <div>
-              <of-datetime-filter filterPath="publishDateTo" formControlName="publishDateTo"
-                labelKey="shared.filters." [minDate]="publishMinDate" (change)="onDateTimeChange($event)"></of-datetime-filter>
-            </div>
-          </div>
 
-          <div class="opfab-vertical-bar"></div>
-          <div style="margin-left:40px;width:230px;min-width: 230px;">
-            <div>
-              <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom" labelKey="shared.filters." [maxDate]="activeMaxDate" (change)="onDateTimeChange($event)">
-              </of-datetime-filter>
-            </div>
-            <div>
-              <of-datetime-filter filterPath="activeTo" formControlName="activeTo" labelKey="shared.filters." [minDate]="activeMinDate" (change)="onDateTimeChange($event)">
-              </of-datetime-filter>
-            </div>
           </div>
-          <div  class="opfab-buttons">
-            <button id="opfab-archives-btn-search" class="opfab-btn"  (click)='sendQuery(0)' translate> button.search</button>
-            <button id="opfab-archives-btn-reset" class="opfab-btn-cancel" style="margin-top:50px" (click)='resetForm()' translate> button.reset</button>
-          </div>
-        </div>
       </div>
 
     </form>
@@ -98,8 +72,8 @@
             <td></td>
             <td style="padding-left: 30px"> {{displayTime(historyCard.publishDate)}} </td>
             <td style="padding-left: 30px"> {{displayTime(historyCard.startDate)}} - {{displayTime(historyCard.endDate)}} </td>
-            <td>{{historyCard.titleTranslated}}</td>
-            <td>{{ historyCard.summaryTranslated}}</td>
+            <td style="padding-left: 30px">{{historyCard.titleTranslated}}</td>
+            <td style="padding-left: 30px">{{ historyCard.summaryTranslated}}</td>
             <td style="padding-left: 30px" *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>{{ processesService.findProcessGroupLabelForProcess(historyCard.process) }}</td>
           </tr>
           <tr *ngIf="updates.tooManyRows">

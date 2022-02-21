@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,7 @@ import {Subject} from 'rxjs';
 import {AppState} from '@ofStore/index';
 import {ProcessesService} from '@ofServices/processes.service';
 import {Store} from '@ngrx/store';
-import {debounceTime, takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {ConfigService} from '@ofServices/config.service';
 import {TimeService} from '@ofServices/time.service';
@@ -53,8 +53,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     resultsNumber = 0;
     hasResult = false;
     firstQueryHasBeenDone = false;
-    loadingInProgress: boolean = false;
-    loadingIsTakingMoreThanOneSecond: boolean = false;
+    loadingInProgress = false;
+    loadingIsTakingMoreThanOneSecond = false;
     isCollapsibleUpdatesActivated = false;
 
     // View card
@@ -64,13 +64,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     selectedCard: Card;
     fromEntityOrRepresentativeSelectedCard = null;
     listOfProcesses = [];
-
-    publishMinDate : {year: number, month: number, day: number} = null;
-    publishMaxDate : {year: number, month: number, day: number} = null;
-    activeMinDate : {year: number, month: number, day: number} = null;
-    activeMaxDate : {year: number, month: number, day: number} = null;
-
-    dateTimeFilterChange = new Subject();
 
     lastRequestID: number;
 
@@ -121,10 +114,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.tags = this.configService.getConfigValue('archive.filters.tags.list');
         this.results = [];
         this.updatesByCardId = [];
-        this.dateTimeFilterChange.pipe(
-            takeUntil(this.unsubscribe$),
-            debounceTime(1000),
-        ).subscribe(() => this.setDateFilterBounds());
+        
         this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(true).size > 0;
     }
 
@@ -134,37 +124,11 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.sendQuery(0);
     }
 
-    setDateFilterBounds(): void {
-
-        if (this.archiveForm.value.publishDateFrom?.date) {
-            this.publishMinDate = {year: this.archiveForm.value.publishDateFrom.date.year, month: this.archiveForm.value.publishDateFrom.date.month, day: this.archiveForm.value.publishDateFrom.date.day};
-        }
-        if (this.archiveForm.value.publishDateTo?.date) {
-            this.publishMaxDate = {year: this.archiveForm.value.publishDateTo.date.year, month: this.archiveForm.value.publishDateTo.date.month, day: this.archiveForm.value.publishDateTo.date.day};
-        }
-
-        if (this.archiveForm.value.activeFrom?.date) {
-            this.activeMinDate = {year: this.archiveForm.value.activeFrom.date.year, month: this.archiveForm.value.activeFrom.date.month, day: this.archiveForm.value.activeFrom.date.day};
-        }
-        if (this.archiveForm.value.activeTo?.date) {
-            this.activeMaxDate = {year: this.archiveForm.value.activeTo.date.year, month: this.archiveForm.value.activeTo.date.month, day: this.archiveForm.value.activeTo.date.day};
-        }
-    }
-
     resetForm() {
         this.archiveForm.reset();
         this.firstQueryHasBeenDone = false;
         this.hasResult = false;
         this.resultsNumber = 0;
-        this.publishMinDate = null;
-        this.publishMaxDate = null;
-        this.activeMinDate = null;
-        this.activeMaxDate = null;
-    }
-
-
-    onDateTimeChange(event: Event) {
-        this.dateTimeFilterChange.next(null);
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
@@ -176,7 +140,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         const publishEnd = this.extractTime(this.archiveForm.get('publishDateTo'));
 
         if (publishStart != null && !isNaN(publishStart) && publishEnd != null && !isNaN(publishEnd) && publishStart > publishEnd) {
-            this.displayMessage('shared.filters.publishEndDateBeforeStartDate','',MessageLevel.ERROR);
+            this.displayMessage('shared.filters.publishEndDateBeforeStartDate', '', MessageLevel.ERROR);
             return;
         }
 
@@ -184,7 +148,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         const activeEnd = this.extractTime(this.archiveForm.get('activeTo'));
 
         if (activeStart != null && !isNaN(activeStart) && activeEnd != null && !isNaN(activeEnd) && activeStart > activeEnd) {
-            this.displayMessage('shared.filters.activeEndDateBeforeStartDate','',MessageLevel.ERROR);
+            this.displayMessage('shared.filters.activeEndDateBeforeStartDate', '', MessageLevel.ERROR);
             return;
         }
 
@@ -206,14 +170,13 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 this.hasResult = page.content.length > 0;
                 this.results = page.content;
 
-               
+
 
                 if (this.isCollapsibleUpdatesActivated) {
-                    let requestID = new Date().valueOf();
+                    const requestID = new Date().valueOf();
                     this.lastRequestID = requestID;
                     this.loadUpdatesByCardId(requestID);
-                }
-                else {
+                } else {
                     this.updatesByCardId = [];
                     this.results.forEach((lightCard, index) => {
                         this.updatesByCardId.push({mostRecent: lightCard, cardHistories: [], displayHistory: false, tooManyRows: false});
@@ -222,7 +185,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             });
     }
 
-    
+
         // we show a spinner on screen if archives loading takes more than 1 second
         private checkForArchiveLoadingInProgressForMoreThanOneSecond() {
             setTimeout(() => {
@@ -245,7 +208,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 .subscribe((page: Page<LightCard>) => {
                     this.removeMostRecentCardFromHistories(lightCard.id, page.content);
 
-                    //since we are in asynchronous mode, we test requestId to avoid that the requests "overlap" and that the results appear in a wrong order
+                    // since we are in asynchronous mode, we test requestId to avoid that the requests "overlap" and that the results appear in a wrong order
                     if (requestID === this.lastRequestID)
                         this.updatesByCardId.splice(index, 1, {mostRecent: lightCard, cardHistories: page.content, displayHistory: false, tooManyRows: page.totalPages > 1});
                 });

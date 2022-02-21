@@ -31,7 +31,9 @@ export const environment = {
         monitoringConfig: 'http://localhost:2002/businessconfig/monitoring',
         config: 'http://localhost:2002/config/web-ui.json',
         menuConfig: 'http://localhost:2002/config/ui-menu.json',
-        externalDevices: 'http://localhost:2002/externaldevices'
+        externalDevices: 'http://localhost:2002/externaldevices',
+        remoteLogs: 'http://localhost:2002/cards/logs'
+
     },
     paths: {
         i18n: '/assets/i18n/'

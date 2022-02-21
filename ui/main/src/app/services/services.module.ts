@@ -30,6 +30,8 @@ import {ReminderService} from '@ofServices/reminder/reminder.service';
 import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
 import {LightCardsStoreService} from './lightcards/lightcards-store.service';
 import {SortService} from './lightcards/sort.service';
+import {RemoteLoggerService} from './logs/remote-logger.service';
+import {OpfabLoggerService} from './logs/opfab-logger.service';
 
 @NgModule({
     imports: [
@@ -58,7 +60,9 @@ import {SortService} from './lightcards/sort.service';
         ReminderService,
         LightCardsFeedFilterService,
         LightCardsStoreService,
-        SortService
+        SortService,
+        OpfabLoggerService,
+        RemoteLoggerService,
     ]
 })
 export class ServicesModule {

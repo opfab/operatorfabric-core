@@ -149,11 +149,9 @@ Wait for the build to complete (around 40 minutes) and check that all jobs have 
 
 . Check that the `latest` images have been updated on DockerHub (if this has been triggered).
 
-. Check that the documentation has been generated and pushed to the GitHub pages website
-.. Check the version and revision date at the top of the documents in the current documentation
+. Check that the documentation has been generated and pushed to the GitHub pages website : check the version and revision date at the top of the documents in the current documentation
 (for example link:https://opfab.github.io/documentation/current/architecture/[the architecture documentation])
-.. Check that you see the X.X.X.RELEASE under the link:https://opfab.github.io/pages/releases.html[releases page]
-and that the links work.
+
 
 . Check that the tag was correctly pushed to GitHub and is visible under the
 https://github.com/opfab/operatorfabric-core/tags[tags page] for the repository.
@@ -161,7 +159,7 @@ https://github.com/opfab/operatorfabric-core/tags[tags page] for the repository.
 === Updating the version list on the website
 
 On the link:{opfab_website_repo}[website repository],
-edit the link:{opfab_website_repo}/blob/master/_data/versions.yml[_/data/versions.yml] file to:
+edit the link:{opfab_website_repo}/blob/master/_data/versions.yml[/_data/versions.yml] file to:
 
 . Add the version being released to the list with the `current` badge
 . Remove the `current` badge from the previous version
@@ -198,6 +196,9 @@ For example:
 
 This file determines which versions (and in which order) are displayed on the
 link:https://opfab.github.io/pages/releases.html[release page] of the website.
+
+Check that you see the X.X.X.RELEASE under the link:https://opfab.github.io/pages/releases.html[releases page]
+and that the links work (It may need a few minutes for the website to be updated).
 
 NOTE: The `external_devices_api` property should be set to true for all new versions, so the API documentation for
 the External Devices API is displayed on the website.
@@ -358,7 +359,7 @@ can release the patch version. To do so:
 git add .
 git commit -m "[RELEASE] X.X.X.RELEASE " <1>
 git tag X.X.X.RELEASE <2>
-git push <3>
+git push --set-upstream origin X.X.hotfixes <3>
 git push origin X.X.X.RELEASE <4>
 ----
 <1> Commit the changes

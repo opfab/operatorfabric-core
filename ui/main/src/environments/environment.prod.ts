@@ -27,7 +27,8 @@ export const environment = {
         monitoringConfig: '/businessconfig/monitoring',
         config: '/config/web-ui.json',
         menuConfig: '/config/ui-menu.json',
-        externalDevices: '/externaldevices'
+        externalDevices: '/externaldevices',
+        remoteLogs: '/cards/logs'
 
     },
     paths: {

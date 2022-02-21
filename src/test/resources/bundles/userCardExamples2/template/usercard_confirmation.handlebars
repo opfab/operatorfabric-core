@@ -17,8 +17,8 @@
     <div class="opfab-select" style="flex-basis:0;width:20%;position:relative;flex-grow:1;">
         <label for="confirm"> CONFIRM </label>
         <select id="confirm" name="confirm">
-            <option  value="YES" {{conditionalAttribute (bool card.data.confirm '==' 'YES') 'selected'}}>YES</option>
-            <option  value="NO" {{conditionalAttribute (bool card.data.confirm '==' 'NO') 'selected'}}>NO</option>
+            <option id="yes" value="YES" {{conditionalAttribute (bool card.data.confirm '==' 'YES') 'selected'}}>YES</option>
+            <option id="no" value="NO" {{conditionalAttribute (bool card.data.confirm '==' 'NO') 'selected'}}>NO</option>
         </select>
     </div>
     <div class="opfab-input" style="flex-basis:0;width:100%;position:relative;flex-grow:1;margin-left:20px">
@@ -28,6 +28,18 @@
 </div>
 
 <script>
+
+    if (usercardTemplateGateway.getUserEntityChildCardFromCurrentCard()) {
+        if (usercardTemplateGateway.getUserEntityChildCardFromCurrentCard().data.confirm == 'YES') {
+            document.getElementById('yes').selected=true;
+            document.getElementById('no').selected=false;
+        } else {
+            document.getElementById('yes').selected=false;
+            document.getElementById('no').selected=true;
+        }
+        document.getElementById('message').value=usercardTemplateGateway.getUserEntityChildCardFromCurrentCard().data.message;
+    }
+
     templateGateway.getSpecificCardInformation = function () {
         const question = document.getElementById('question').value;
         if (question.length <1) return {

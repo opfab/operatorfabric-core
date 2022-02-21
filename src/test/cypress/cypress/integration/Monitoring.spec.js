@@ -263,14 +263,16 @@ describe ('Monitoring screen tests',function () {
         cy.get('@monitoring-table').find('.ag-row').eq(1).find('.ag-cell').eq(4).should('have.text', 'Message received');
         cy.get('@monitoring-table').find('.ag-row').eq(2).find('.ag-cell').eq(4).should('have.text', 'Message received');
         cy.get('@monitoring-table').find('.ag-row').eq(3).find('.ag-cell').eq(4).should('have.text', 'Message received');
-        cy.get('@monitoring-table').find('.ag-row').eq(4).find('.ag-cell').eq(4).should('have.text', 'Message received');
+        cy.get('@monitoring-table').find('.ag-row').eq(4).find('.ag-cell').eq(4)
+            .should('have.text', 'Message received : France-England\'s interconnection is 100% operational / Result of the maintenance is <OK>');
         
         // Sorting summaries a second time
         cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(4).click();
         cy.wait(500);
 
         // Cards should be sorted by summary
-        cy.get('@monitoring-table').find('.ag-row').eq(0).find('.ag-cell').eq(4).should('have.text', 'Message received');
+        cy.get('@monitoring-table').find('.ag-row').eq(0).find('.ag-cell').eq(4)
+            .should('have.text', 'Message received : France-England\'s interconnection is 100% operational / Result of the maintenance is <OK>');
         cy.get('@monitoring-table').find('.ag-row').eq(1).find('.ag-cell').eq(4).should('have.text', 'Message received');
         cy.get('@monitoring-table').find('.ag-row').eq(2).find('.ag-cell').eq(4).should('have.text', 'Message received');
         cy.get('@monitoring-table').find('.ag-row').eq(3).find('.ag-cell').eq(4).should('have.text', 'Message received');

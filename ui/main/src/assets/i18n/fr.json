@@ -53,7 +53,15 @@
     "resultsNumber":"Nombre de résultats",
     "noProcessStateAvailable": "Aucun processus/état disponible",
     "endDateBeforeStartDate": "La date de fin doit être postérieure à la date de début",
-    "featureNotConfigured": "Fonctionnalité non configurée"
+    "featureNotConfigured": "Fonctionnalité non configurée",
+    "confirmSettings": "ENREGISTRER LA CONFIGURATION",
+    "popup": {
+      "title": "CONFIRMATION",
+      "areYouSure": "Vous avez fait des modifications. Etes-vous sûr de vouloir les enregistrer ?"
+    },
+    "error": {
+      "impossibleToSaveSettings": "Impossible d'enregistrer les paramètres pour des raisons techniques"
+    }
   },
   "global":{
     "connectionLost":"Connexion perdue",
@@ -78,7 +86,8 @@
     "switchToNightMode": "Mode nuit",
     "switchToDayMode": "Mode jour",
     "realTimeUsers": "Utilisateurs temps réel",
-    "externalDevicesConfiguration": "Configuration des périphériques externes"
+    "externalDevicesConfiguration": "Configuration des périphériques externes",
+    "activityArea": "Zone d'activité"
   },
   "timeline": {
     "hideTimeline" : "Masquer la timeline",
@@ -91,7 +100,9 @@
       "W": "Semaine",
       "M": "Mois",
       "Y": "Année"
-    }
+    },
+    "lockTooltip": "Le domaine de visibilité est actuellement vérrouillé : il ne bougera pas avec le temps",
+    "unlockTooltip": "Le domaine de visibilité est actuellement dévérrouillé : il se décalera avec le temps"
   },
   "multiFilter": {
     "searchPlaceholderText": "Rechercher",
@@ -189,7 +200,6 @@
     "title": "PARAMETRES",
     "description": "DESCRIPTION",
     "locale": "LANGUE",
-    "timeZone": "ZONE HORAIRE",
     "playSoundLabel": "Jouer des sons pour les cartes de type",
     "playSoundForAlarm": "Alarme",
     "playSoundForAction": "Action",
@@ -197,7 +207,8 @@
     "playSoundForInformation": "Information",
     "replayEnabled": "Répétition des sons activée",
     "playSoundOnExternalDevice": "Jouer le son sur un appareil externe",
-    "replayInterval": "Délai entre les répétitions (en secondes)"
+    "replayInterval": "Délai entre les répétitions (en secondes)",
+    "remoteLoggingEnabled": "Journalisation à distance activée"
   },
   "archive": {
     "loadingInProgress": "Chargement des cartes archivées",
@@ -226,16 +237,11 @@
     "yes": "OUI",
     "search": "RECHERCHER"
   },
+  "activityArea": {
+    "title": "ZONE D'ACTIVITE"
+  },
   "feedConfiguration": {
-    "title": "CONFIGURATION DES NOTIFICATIONS",
-    "confirmSettings": "ENREGISTRER LA CONFIGURATION",
-    "popup": {
-      "title": "CONFIRMATION",
-      "areYouSure": "Vous avez fait des modifications. Etes-vous sûr de vouloir les enregistrer ?"
-    },
-    "error": {
-      "impossibleToSaveSettings": "Impossible d'enregistrer les paramètres pour des raisons techniques"
-    }
+    "title": "CONFIGURATION DES NOTIFICATIONS"
   },
   "userCard": {
     "title": "CREATION D'UNE NOUVELLE CARTE",
@@ -421,5 +427,29 @@
     "externalDeviceId": "Périphérique",
     "edit": "Editer",
     "delete": "Supprimer"
+  },
+  "datePicker": {
+    "monday": "Lu",
+    "tuesday" : "Ma", 
+    "wednesday" : "Me", 
+    "thursday": "Je", 
+    "friday": "Ve", 
+    "saturday": "Sa",  
+    "sunday": "Di",
+    "january": "Jan", 
+    "february": "Fév",
+    "march": "Mar", 
+    "april": "Avr", 
+    "may": "Mai", 
+    "june": "Juin", 
+    "july": "Juil", 
+    "august": "Aou", 
+    "september": "Sep", 
+    "october": "Oct", 
+    "november": "Nov", 
+    "december": "Déc",
+    "week": "sem",
+    "placeholder": "AAAA-MM-JJ"
   }
+
 }

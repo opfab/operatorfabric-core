@@ -5,6 +5,7 @@
 	"processInstanceId" : "process5",
 	"state": "chartLineState",
 	"groupRecipients": ["Dispatcher", "Planner"],
+	"entityRecipients": ["ENTITY1_FR", "ENTITY2_FR", "ENTITY3_FR"],
 	"severity" : "ALARM",
 	"startDate" : ${current_date_in_milliseconds_from_epoch_plus_1hours},
 	"summary" : {"key" : "message.summary"},

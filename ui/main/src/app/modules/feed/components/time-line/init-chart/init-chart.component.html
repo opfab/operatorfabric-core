@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -19,18 +19,8 @@
       <a id="opfab-timeline-link-move-left" (click)="this.timelineButtons.moveDomain(false)"> &lt;&lt;
       </a>
     </div>
-    <!--
-   [results] is the basic input for data on ngx-charts
-   [prod] Workaround for testing, the variable is not set  in unit test an true in production mode 
-   [myData] is the data used by our timeline
-   [valueDomain] preDefine the Domain of timeline
-   [followClockTick] allow timeline to move by its self until to had 4 ticks before current moment
-
-   (zoomChange) call when custom timeline chart change his domain
-  -->
-
-    <of-custom-timeline-chart class="of-custom-timeline-chart" [prod]="true" [domainId]="this.timelineButtons.domainId"
-                              [valueDomain]="this.timelineButtons.myDomain" [followClockTick]="this.timelineButtons.followClockTick"
+    <of-custom-timeline-chart class="of-custom-timeline-chart" [prod]="true" [domainId]="this.timelineButtons.currentDomainId"
+                              [valueDomain]="this.timelineButtons.currentDomain" 
                               (zoomChange)="this.timelineButtons.applyNewZoom($event)">
     </of-custom-timeline-chart>
 

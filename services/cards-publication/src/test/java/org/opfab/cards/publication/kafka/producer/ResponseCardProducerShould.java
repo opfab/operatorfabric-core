@@ -15,8 +15,8 @@ import org.apache.kafka.common.TopicPartition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.opfab.avro.Card;
 import org.opfab.avro.CardCommand;
+import org.opfab.avro.ResponseCard;
 import org.opfab.cards.publication.kafka.card.CardCommandFactory;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.mockito.InjectMocks;
@@ -49,7 +49,7 @@ class ResponseCardProducerShould {
     private ListenableFuture<SendResult<String, CardCommand>> responseFuture;
     private CardPublicationData cardPublicationData;
     private CardCommand cardCommand;
-    private Card card;
+    private ResponseCard card;
 
     private final int partition = 11;
     private final int offset = 2;
@@ -62,10 +62,10 @@ class ResponseCardProducerShould {
 
         cardPublicationData = mock(CardPublicationData.class);
         cardCommand = mock(CardCommand.class);
-        card = mock(Card.class);
+        card = mock(ResponseCard.class);
         when(card.getProcess()).thenReturn(key);
-        when(cardCommand.getCard()).thenReturn(card);
-        when (cardCommandFactory.create(any())).thenReturn(cardCommand);
+        when(cardCommand.getResponseCard()).thenReturn(card);
+        when (cardCommandFactory.createResponseCard(any())).thenReturn(cardCommand);
 
         responseFuture = mock(ListenableFuture.class);
         sendResult = mock(SendResult.class);
@@ -78,7 +78,7 @@ class ResponseCardProducerShould {
         when (producerRecord.value()).thenReturn(cardCommand);
         when(sendResult.getProducerRecord()).thenReturn(producerRecord);
 
-        RecordMetadata recordMetadata = new RecordMetadata(new TopicPartition(topic, partition), offset, 0L, 0L, 0L, 0, 0);
+        RecordMetadata recordMetadata = new RecordMetadata(new TopicPartition(topic, partition), offset, 0, 0L,  0, 0);
         when(sendResult.getRecordMetadata()).thenReturn(recordMetadata);
         doAnswer( invocation -> {
             ListenableFutureCallback listenableFutureCallback = invocation.getArgument(0);

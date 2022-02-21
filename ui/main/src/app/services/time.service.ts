@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,8 +9,8 @@
 
 
 import {Injectable} from '@angular/core';
-import * as moment from 'moment-timezone';
-import {Moment} from 'moment-timezone/moment-timezone';
+import * as moment from 'moment';
+import {Moment} from 'moment/moment';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {buildSettingsOrConfigSelector} from '@ofSelectors/settings.x.config.selectors';

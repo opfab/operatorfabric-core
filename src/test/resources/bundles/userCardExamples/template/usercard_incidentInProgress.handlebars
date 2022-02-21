@@ -53,6 +53,7 @@
         const OTHERS = document.getElementById('OTHERS').value;
 
         const lttd = new Date().valueOf() + 1800000; // 30 min after current time
+        const startDate = new Date().valueOf() + 300000; // 5 min after current time
 
         const card = {
             summary: { key: "incidentInProgress.summary" },
@@ -60,6 +61,7 @@
             entitiesAllowedToRespond: [ "ENTITY3_FR", "ENTITY2_FR"],
             entitiesRequiredToRespond: [ "ENTITY4_FR"],
             keepChildCards: true,
+            startDate: startDate,
             data: {
                 message: message,
                 impacts :

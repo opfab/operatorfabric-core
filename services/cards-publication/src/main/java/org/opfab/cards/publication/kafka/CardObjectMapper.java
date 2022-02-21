@@ -15,9 +15,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.opfab.avro.Card;
+import org.opfab.avro.ResponseCard;
 import org.opfab.cards.publication.configuration.json.CardsModule;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.springtools.json.InstantModule;
@@ -31,8 +32,8 @@ public class CardObjectMapper {
     private final ObjectMapper objectMapper;
 
     public CardObjectMapper() {
-        this.objectMapper = new ObjectMapper();
-        objectMapper.enable(MapperFeature.REQUIRE_SETTERS_FOR_GETTERS);
+        this.objectMapper = JsonMapper.builder().enable(MapperFeature.REQUIRE_SETTERS_FOR_GETTERS).build();
+
         objectMapper.registerModule(new Jdk8Module());
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.registerModule(new CardsModule());
@@ -44,7 +45,7 @@ public class CardObjectMapper {
         return objectMapper.writeValueAsString(value);
     }
 
-    public Card readCardValue(String writeValueAsString, Class<Card> clazz) throws JsonProcessingException {
+    public ResponseCard readCardValue(String writeValueAsString, Class<ResponseCard> clazz) throws JsonProcessingException {
         return objectMapper.readValue(writeValueAsString, clazz);
     }
     public CardPublicationData readValue(String writeValueAsString, Class<CardPublicationData> clazz) throws JsonProcessingException {

@@ -1,0 +1,58 @@
+// Copyright (c) 2022 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 3.4.0 to release 3.5.0
+
+== Timezone management removal  
+
+The feature to manage timeline inside opfab has been removed. In consequence, you can remove the following parameters in your web-ui.json configuration file: 
+
+ * i10n.supported.time-zones
+ * settings.infos.hide.timezone
+
+== Kafka card format changes
+
+The Kafka message schema has been changed. The single card used to send messages to and receive from Operator Fabric
+has been split into two cards; one for sending to OpFab and one for receiving messages from OpFab. The CardCommand structure now contains a `card`  (to OpFab) and a `responseCard` (from OpFab).
+You will need to change the Kafka listener to get the response card.
+
+For example change
+```java
+ @KafkaListener
+    public void receivedResponseCard(@Payload ConsumerRecord<String, CardCommand> consumerRecord) {
+        CardCommand cardCommand = consumerRecord.value();
+        Card = cardCommand.getCard();
+```
+
+to
+```java
+ @KafkaListener
+    public void receivedResponseCard(@Payload ConsumerRecord<String, CardCommand> consumerRecord) {
+        CardCommand cardCommand = consumerRecord.value();
+        ResponseCard = cardCommand.getResponseCard();
+```
+
+=== Redirect to business application from a card
+
+The `templateGateway.redirectToBusinessMenu` function to redirect to business application from a card has changed. The third argument of the function is now a url extension that can contain sub paths and/or parameters instead of only parameters.
+
+You will need to change the call adding a '?' character at the beginning of the third argument.
+
+
+For example change:
+
+....
+templateGateway.redirectToBusinessMenu('myMenu','myEntry','param1=aParam&param2=anotherParam')
+....
+
+to 
+
+....
+templateGateway.redirectToBusinessMenu('myMenu','myEntry','?param1=aParam&param2=anotherParam')
+....
+
+

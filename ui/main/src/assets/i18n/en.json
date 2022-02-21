@@ -53,7 +53,15 @@
     "resultsNumber":"Results number",
     "noProcessStateAvailable": "No process/state available",
     "endDateBeforeStartDate": "End date must be after start date",
-    "featureNotConfigured": "Feature not configured"
+    "featureNotConfigured": "Feature not configured",
+    "confirmSettings": "CONFIRM SETTINGS",
+    "popup": {
+      "title": "CONFIRMATION",
+      "areYouSure": "You have made some changes. Are you sure you want to save them ?"
+    },
+    "error": {
+      "impossibleToSaveSettings": "Impossible to save settings for technical reasons"
+    }
   },
   "global":{
     "connectionLost":"Connection lost",
@@ -78,7 +86,8 @@
     "switchToNightMode": "Night mode",
     "switchToDayMode": "Day mode",
     "realTimeUsers": "Real time users",
-    "externalDevicesConfiguration": "External devices configuration"
+    "externalDevicesConfiguration": "External devices configuration",
+    "activityArea": "Activity area"
   },
   "timeline": {
     "hideTimeline" : "Hide Timeline",
@@ -91,7 +100,9 @@
       "W": "Week",
       "M": "Month",
       "Y": "Year"
-    }
+    },
+    "lockTooltip": "The visibility domain is currently locked : it will not move as time goes by",
+    "unlockTooltip": "The visibility domain is currently unlocked : it will shift as time goes by"
   },
   "multiFilter": {
     "searchPlaceholderText": "Search",
@@ -189,7 +200,6 @@
     "title": "SETTINGS",
     "description": "DESCRIPTION",
     "locale": "LANGUAGE",
-    "timeZone": "TIME ZONE",
     "playSoundLabel": "Play sounds for cards with severity",
     "playSoundForAlarm": "Alarm",
     "playSoundForAction": "Action",
@@ -197,7 +207,8 @@
     "playSoundForInformation": "Information",
     "replayEnabled": "Sound replay enabled",
     "playSoundOnExternalDevice": "Play sound on external device",
-    "replayInterval": "Interval between sound replays (seconds)"
+    "replayInterval": "Interval between sound replays (seconds)",
+    "remoteLoggingEnabled": "Remote logging enabled"
   },
   "archive": {
     "loadingInProgress": "Loading archived cards",
@@ -226,16 +237,11 @@
     "yes": "YES",
     "search" : "SEARCH"
   },
+  "activityArea": {
+    "title": "ACTIVITY AREA"
+  },
   "feedConfiguration": {
-    "title": "NOTIFICATION RECEPTION CONFIGURATION",
-    "confirmSettings": "CONFIRM SETTINGS",
-    "popup": {
-      "title": "CONFIRMATION",
-      "areYouSure": "You have made some changes. Are you sure you want to save them ?"
-    },
-    "error": {
-      "impossibleToSaveSettings": "Impossible to save settings for technical reasons"
-    }
+    "title": "NOTIFICATION RECEPTION CONFIGURATION"
   },
   "userCard": {
     "title": "CREATE A NEW CARD ",
@@ -421,5 +427,28 @@
     "externalDeviceId": "Device",
     "edit": "Edit",
     "delete": "Delete"
+  },
+  "datePicker": {
+    "monday": "Mo",
+    "tuesday" : "Tu", 
+    "wednesday" : "We", 
+    "thursday": "Th", 
+    "friday": "Fr", 
+    "saturday": "Sa",  
+    "sunday": "Su",
+    "january": "Jan", 
+    "february": "Feb",
+    "march": "Mar", 
+    "april": "Apr", 
+    "may": "May", 
+    "june": "Jun", 
+    "july": "Jul", 
+    "august": "Aug", 
+    "september": "Sep", 
+    "october": "Oct", 
+    "november": "Nov", 
+    "december": "Dec",
+    "week": "Week",
+    "placeholder": "YYYY-MM-DD"
   }
 }

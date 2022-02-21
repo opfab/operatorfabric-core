@@ -61,6 +61,10 @@ const routes: Routes = [
         loadChildren: () => import('./modules/realtimeusers/realtimeusers.module').then(m => m.RealtimeusersModule),
     },
     {
+        path: 'activityarea',
+        loadChildren: () => import('./modules/activityarea/activityarea.module').then(m => m.ActivityareaModule),
+    },
+    {
         path: 'feedconfiguration',
         loadChildren: () => import('./modules/feedconfiguration/feedconfiguration.module').then(m => m.FeedconfigurationModule),
     },
@@ -77,7 +81,7 @@ const routes: Routes = [
     }
 ];
 const startIndex = 0;
-const numberOfHiddenRoutes = 9 ; // 'Calendar', 'businessconfigparty', 'settings', 'navbar', 'admin', 'realtimeusers', 'feedconfiguration', 'changepassword', 'externaldevicesconfiguration'
+const numberOfHiddenRoutes = 10 ; // 'Calendar', 'businessconfigparty', 'settings', 'navbar', 'admin', 'realtimeusers', 'activityarea', 'feedconfiguration', 'changepassword', 'externaldevicesconfiguration'
 const manageIndexesWhichBeginAtZero = 1;
 const numberOfRoutes = routes.length;
 const lastIndexOfVisibleElements = numberOfRoutes - numberOfHiddenRoutes - manageIndexesWhichBeginAtZero;

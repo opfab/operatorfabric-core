@@ -31,6 +31,22 @@ Cypress.Commands.add('loginOpFab',(username, password)=>
     cy.get('#opfab-cypress-loaded-check', {timeout: 15000}).should('have.text', 'true');
 })
 
+Cypress.Commands.add('loginWithClock', (dateToUse = new Date()) =>{
+  // Do not use the generic login feature as we 
+  // need to launch cy.clock after cy.visit('')
+    cy.visit('')
+    cy.clock(dateToUse);
+    cy.get('#opfab-login').type('operator1_fr')
+    cy.get('#opfab-password').type('test')
+    cy.get('#opfab-login-btn-submit').click();
+
+    //Wait for the app to finish initializing
+    cy.get('#opfab-cypress-loaded-check', {timeout: 15000}).should('have.text', 'true');
+   
+  
+})
+
+
 Cypress.Commands.overwrite('reload',()=>
 {   //go to login page
     cy.visit('');
@@ -62,11 +78,11 @@ Cypress.Commands.add('loadEmptyProcessGroups', () => {
 })
 
 Cypress.Commands.add('send6TestCards', () => {
-    cy.exec('cd .. && ./resources/send6TestCards.sh '+Cypress.env('host'));
+    cy.exec('cd .. && ./resources/send6TestCards.sh ' + Cypress.env('host'));
 })
 
-Cypress.Commands.add('sendCard', (cardFile) => {
-    cy.exec('cd ../resources/cards/ && ./sendCard.sh '+ cardFile + ' ' + Cypress.env('host'));
+Cypress.Commands.add('sendCard', (cardFile, customEpochDate1 = new Date().getTime(), customEpochDate2 = new Date().getTime()+ (5 * 60 * 1000)) => {
+    cy.exec('cd ../resources/cards/ && ./sendCard.sh '+ cardFile + ' '  + Cypress.env('host') + ' ' + customEpochDate1 + ' ' + customEpochDate2);
 })
 
 Cypress.Commands.add('delete6TestCards', () => {
@@ -116,8 +132,8 @@ Cypress.Commands.add('updateCoreMenuInConf', (menu, property, value) => {
 Cypress.Commands.add('deleteCoreMenuFromConf', (menu) => {
     const filePath = `./config/cypress/ui-config/ui-menu.json`;
     cy.exec(`cd ../../.. && ./src/test/resources/uiConfig/deleteCoreMenu.sh ${filePath} ${menu}`);
-})
 
+})
 Cypress.Commands.add('deleteAllArchivedCards', () => {
     cy.exec('cd .. && ./resources/deleteAllArchivedCards.sh '+Cypress.env('host'));
 })
