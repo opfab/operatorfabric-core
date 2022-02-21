@@ -429,5 +429,28 @@
     "externalDeviceId": "Apparaat",
     "edit": "Wijzigen",
     "delete": "Verwijderen"
+  },
+  "datePicker": {
+    "monday": "Ma",
+    "tuesday" : "Di",
+    "wednesday" : "Wo",
+    "thursday": "Do",
+    "friday": "Vr",
+    "saturday": "Za",
+    "sunday": "Zo",
+    "january": "Jan",
+    "february": "Feb",
+    "march": "Mar",
+    "april": "Apr",
+    "may": "Mei",
+    "june": "Jun",
+    "july": "Jul",
+    "august": "Aug",
+    "september": "Sep",
+    "october": "Okt",
+    "november": "Nov",
+    "december": "Dec",
+    "week": "Week",
+    "placeholder": "JJJJ-MM-DD"
   }
 }
