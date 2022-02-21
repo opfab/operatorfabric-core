@@ -20,9 +20,14 @@ import { LightCardModule } from 'app/modules/share/light-card/light-card.module'
 import {UserCardDatesFormComponent} from './datesForm/usercard-dates-form.component';
 import {UserCardSelectStateFormComponent} from './selectStateForm/usercard-select-state-form.component';
 import {UserCardRecipientsFormComponent} from './recipientForm/usercard-recipients-form.component';
+import {UsercardSelectCardEmitterFormComponent} from './selectCardEmitterForm/usercard-select-card-emitter-form.component';
 
 @NgModule({
-    declarations: [UserCardComponent, UserCardDatesFormComponent, UserCardSelectStateFormComponent, UserCardRecipientsFormComponent],
+    declarations: [UserCardComponent,
+                   UserCardDatesFormComponent,
+                   UserCardSelectStateFormComponent,
+                   UserCardRecipientsFormComponent,
+                   UsercardSelectCardEmitterFormComponent],
     imports: [
         CommonModule,
         FormsModule,

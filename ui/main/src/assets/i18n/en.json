@@ -55,6 +55,7 @@
     "endDateBeforeStartDate": "End date must be after start date",
     "featureNotConfigured": "Feature not configured",
     "confirmSettings": "CONFIRM SETTINGS",
+    "cardEmitter": "EMITTER",
     "popup": {
       "title": "CONFIRMATION",
       "areYouSure": "You have made some changes. Are you sure you want to save them ?"
