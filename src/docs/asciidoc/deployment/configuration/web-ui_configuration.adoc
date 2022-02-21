@@ -99,6 +99,7 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |settings.infos.hide.description|false|no|Control if we want to hide(true) or display(false or not specified) the user description in the settings page
 |settings.infos.hide.language|false|no|Control if we want to hide(true) or display(false or not specified) the language in the settings page
 |settings.infos.hide.sounds|false|no|Control if we want to hide(true) or display(false or not specified) the checkboxes for sound notifications in the settings page
+|settings.infos.hide.remoteLoggingEnabled|false|no|Control if we want to hide(true) or display(false or not specified) the checkbox to activate remote logging 
 |settings.playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
 |settings.playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
 |settings.playSoundForCompliant|false|no|If set to true, a sound is played when Compliant cards are added or updated in the feed
@@ -106,6 +107,7 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |settings.playSoundOnExternalDevice|false|no|If set to true (and `externalDevicesEnabled` is set to true as well) and the user has an external device configured, sounds will be played on this device rather than in the browser
 |settings.replayEnabled|false|no|If set to true, sounds are replayed every `settings.replayInterval` seconds until the user interacts with the application
 |settings.replayInterval|5|no|Interval between sound replays (see `settings.replayEnabled`)
+|settings.remoteLoggingEnabled|false|no| If set to true, some logs form the UI are send to the back and write in the log file of the cards-consultation service
 
 |settings.about
 a|none
