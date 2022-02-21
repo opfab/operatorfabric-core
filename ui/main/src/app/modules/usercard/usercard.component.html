@@ -46,9 +46,14 @@
 
     <div class="opfab-form-lighter" [innerHtml]="userCardTemplate"></div>
 
-    <br/>   
+    <br/>
 
-    
+    <div *ngIf="userEntitiesAllowedToSendCardOptions.length > 1">
+        <of-usercard-select-card-emitter-form [userEntitiesAllowedToSendCardOptions]="userEntitiesAllowedToSendCardOptions"
+                                              [initialPublisher]="this.publisherForCreatingUsercard" #cardEmitterForm>
+        </of-usercard-select-card-emitter-form>
+    </div>
+
     <div *ngIf="recipientVisible">
         <of-usercard-recipients-form [userCardConfiguration]="userCardConfiguration" [initialSelectedRecipients]="initialSelectedRecipients" #recipientsForm> </of-usercard-recipients-form>
     </div>

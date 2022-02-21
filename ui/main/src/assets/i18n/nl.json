@@ -55,6 +55,7 @@
     "endDateBeforeStartDate": "Einddatum moet na start datum liggen",
     "featureNotConfigured": "Functie niet geconfigureerd",
     "confirmSettings": "BEVESTIG INSTELLINGEN",
+    "cardEmitter": "EMITTER",
     "popup": {
       "title": "BEVESTIGING",
       "areYouSure": "U heeft enkele wijzigingen aangebracht. Weet u zeker dat u ze wilt opslaan?"

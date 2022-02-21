@@ -32,6 +32,8 @@ import {UserCardDatesFormComponent} from './datesForm/usercard-dates-form.compon
 import {DateField, DatesForm} from './datesForm/dates-form.model';
 import {UserCardRecipientsFormComponent} from './recipientForm/usercard-recipients-form.component';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
+import {Utilities} from '../../common/utilities';
+import {UsercardSelectCardEmitterFormComponent} from './selectCardEmitterForm/usercard-select-card-emitter-form.component';
 
 declare const templateGateway: any;
 declare const usercardTemplateGateway: any;
@@ -55,7 +57,6 @@ export class UserCardComponent implements OnInit {
     private severityForm: FormGroup;
     public severityVisible = true;
 
-
     // Dates
     @ViewChild('datesForm') datesForm: UserCardDatesFormComponent;
     public datesFormValue: DatesForm;
@@ -66,6 +67,10 @@ export class UserCardComponent implements OnInit {
     private endDateVisible = true;
     private lttdVisible = true;
 
+    private userEntitiesAllowedToSendCardOptions = [];
+
+    // Card emitter
+    @ViewChild('cardEmitterForm') cardEmitterForm: UsercardSelectCardEmitterFormComponent;
 
     // For recipients component
     public recipientVisible = true;
@@ -115,12 +120,16 @@ export class UserCardComponent implements OnInit {
             severity: new FormControl('')
         });
         this.severityForm.get('severity').setValue(Severity.ALARM);
-        this.publisherForCreatingUsercard = this.findPublisherForCreatingUsercard();
+
+        this.userEntitiesAllowedToSendCardOptions = this.findUserEntitiesAllowedToSendCard();
+        this.userEntitiesAllowedToSendCardOptions.sort((a, b) => Utilities.compareObj(a.label, b.label));
+
         if (!!this.cardIdToEdit) {
             usercardTemplateGateway.editionMode = 'EDITION';
             this.loadCardForEdition();
         } else {
             usercardTemplateGateway.editionMode = 'CREATE';
+            this.publisherForCreatingUsercard = this.userEntitiesAllowedToSendCardOptions[0].value;
             this.pageLoading = false;
         }
 
@@ -138,11 +147,21 @@ export class UserCardComponent implements OnInit {
             this.pageLoading = false;
             this.setDateFormValues();
 
+            this.setPublisherForCreatingUsercardForCardToEdit();
+
             const userResponse = this.cardToEdit.childCards.find(child => child.publisher === this.publisherForCreatingUsercard);
             usercardTemplateGateway.setUserEntityChildCardFromCurrentCard(userResponse);
         });
     }
 
+    private setPublisherForCreatingUsercardForCardToEdit() {
+        this.publisherForCreatingUsercard = this.userEntitiesAllowedToSendCardOptions[0].value;
+
+        this.userEntitiesAllowedToSendCardOptions.forEach(entityOption => {
+            if (entityOption.value === this.cardToEdit.card.publisher)
+                this.publisherForCreatingUsercard = this.cardToEdit.card.publisher;
+        });
+    }
 
     private setDateFormValues(): void {
         const startDate = new DateField(this.startDateVisible, this.defaultStartDate);
@@ -156,12 +175,20 @@ export class UserCardComponent implements OnInit {
         this.datesFormValue = new DatesForm(startDate, endDate, lttd);
     }
 
+    private findUserEntitiesAllowedToSendCard(): Array<any> {
+        const entitiesList = [];
+        this.userService.getCurrentUserWithPerimeters().userData.entities.forEach(userEntityId => {
+            const entity = this.entitiesService.getEntities().find(e => e.id === userEntityId);
+            if (entity.entityAllowedToSendCard)
+                entitiesList.push({value: entity.id, label: entity.name});
+        });
+        return entitiesList;
+    }
 
     private findPublisherForCreatingUsercard(): string {
-        return this.userService.getCurrentUserWithPerimeters().userData.entities.find(userEntity => {
-            const entity = this.entitiesService.getEntities().find(e => e.id === userEntity);
-            return entity.entityAllowedToSendCard;
-        });
+        if ((!! this.userEntitiesAllowedToSendCardOptions) && (this.userEntitiesAllowedToSendCardOptions.length === 1))
+            return this.userEntitiesAllowedToSendCardOptions[0].value;
+        return this.cardEmitterForm.getSelectedCardEmitter();
     }
 
     public displayForm() {
@@ -248,6 +275,7 @@ export class UserCardComponent implements OnInit {
         if (!this.areDatesValid(startDate, endDate, lttd)) return;
         const title = (!!this.specificInformation.card.title) ? this.specificInformation.card.title : 'UNDEFINED';
         const selectedProcess = this.processesService.getProcess(this.selectedProcessId);
+        const cardEmitter = this.findPublisherForCreatingUsercard();
         const recipients = this.getRecipients();
 
         this.cardService.postTranslateCardField(selectedProcess.id, selectedProcess.version, title)
@@ -256,7 +284,7 @@ export class UserCardComponent implements OnInit {
                 this.card = {
                     id: 'dummyId',
                     publishDate: null,
-                    publisher: this.publisherForCreatingUsercard,
+                    publisher: cardEmitter,
                     publisherType: 'ENTITY',
                     processVersion: selectedProcess.version,
                     process: selectedProcess.id,

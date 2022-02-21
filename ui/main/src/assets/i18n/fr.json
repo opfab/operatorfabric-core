@@ -55,6 +55,7 @@
     "endDateBeforeStartDate": "La date de fin doit être postérieure à la date de début",
     "featureNotConfigured": "Fonctionnalité non configurée",
     "confirmSettings": "ENREGISTRER LA CONFIGURATION",
+    "cardEmitter": "EMETTEUR",
     "popup": {
       "title": "CONFIRMATION",
       "areYouSure": "Vous avez fait des modifications. Etes-vous sûr de vouloir les enregistrer ?"
