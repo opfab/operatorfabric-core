@@ -73,34 +73,13 @@ jobs:
      
       # Install all required tools 
       - name: Install 
-        run: |
-          curl -s "https://get.sdkman.io" | bash ;
-          echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config ;
-          echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config ;
-          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-          sudo apt-get install jq
-          git config --global user.email "opfabtech@gmail.com" 
-          git config --global user.name "OpfabTech"
+        run: ./CICD/github/install.sh
 
       - name: Build
         if: ${{ github.event.inputs.build  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push'}}
-        # set variable in this step (sdk, nvm et gradle) 
+        # build.sh set variable for sdk, nvm and gradle 
         # if variable is set in install step it is not accessible in this step 
-        run: | 
-          export OF_VERSION=$(<VERSION)
-          docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
-          source $HOME/.sdkman/bin/sdkman-init.sh;
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-          source ./bin/load_environment_light.sh;
-          echo "npm version $(npm -version)"
-          echo "node version $(node --version)"
-          sdk version
-          javac -version
-          ./gradlew --version
-          ./gradlew --build-cache copyDependencies test jacocoTestReport sonarqube dockerTag${OF_VERSION}
-          docker-compose -f src/main/docker/test-environment/docker-compose.yml down
+        run: ./CICD/github/build.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # SonarCloud access token should be generated from https://sonarcloud.io/account/security/
@@ -109,37 +88,11 @@ jobs:
 
       - name: Karate tests
         if: ${{ github.event.inputs.karate  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
-        run: |
-          source $HOME/.sdkman/bin/sdkman-init.sh;
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-          source ./bin/load_environment_light.sh;
-          cd config/docker
-          ./docker-compose.sh
-          cd ../../bin
-          ./waitForOpfabToStart.sh
-          cd ../src/test/api/karate
-          ./launchAll.sh
-          cd ../../../../config/docker
-          docker-compose down --remove-orphans
-
+        run: ./CICD/github/launch_karate_tests.sh
+    
       - name: Cypress tests 
         if: ${{ github.event.inputs.cypress  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
-        run: |
-          source $HOME/.sdkman/bin/sdkman-init.sh;
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-          source ./bin/load_environment_light.sh;
-          cd config/docker
-          ./docker-compose-cypress.sh
-          cd ../../bin
-          ./waitForOpfabToStart.sh
-          cd ../
-          ./gradlew runCypressTests
-          cd config/docker
-          docker-compose down
+        run: ./CICD/github/launch_cypress_tests.sh
 
 
   publish:
@@ -170,35 +123,13 @@ jobs:
      
       # Install all required tools 
       - name: Install 
-        run: |
-          curl -s "https://get.sdkman.io" | bash ;
-          echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config ;
-          echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config ;
-          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-          sudo apt-get install jq
-          git config --global user.email "opfabtech@gmail.com" 
-          git config --global user.name "OpfabTech"
+        run: ./CICD/github/install.sh
 
       - name: Build
         if: ${{ github.event.inputs.build  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push'}}
         # set variable in this step (sdk, nvm et gradle) 
         # if variable is set in install step it is not accessible in this step 
-        run: | 
-          export OF_VERSION=$(<VERSION)
-          echo ${{ secrets.DOCKER_TOKEN }} | docker login --username opfabtravis --password-stdin
-          docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
-          source $HOME/.sdkman/bin/sdkman-init.sh;
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-          source ./bin/load_environment_light.sh;
-          echo "npm version $(npm -version)"
-          echo "node version $(node --version)"
-          sdk version
-          javac -version
-          ./gradlew --version
-          ./gradlew --build-cache copyDependencies test jacocoTestReport sonarqube dockerTag${OF_VERSION}
-          docker-compose -f src/main/docker/test-environment/docker-compose.yml down
+        run: ./CICD/github/build.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # SonarCloud access token should be generated from https://sonarcloud.io/account/security/
@@ -206,37 +137,11 @@ jobs:
 
       - name: Karate tests
         if: ${{ github.event.inputs.karate  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
-        run: |
-          source $HOME/.sdkman/bin/sdkman-init.sh;
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-          source ./bin/load_environment_light.sh;
-          cd config/docker
-          ./docker-compose.sh
-          cd ../../bin
-          ./waitForOpfabToStart.sh
-          cd ../src/test/api/karate
-          ./launchAll.sh
-          cd ../../../../config/docker
-          docker-compose down --remove-orphans
+        run: ./CICD/github/launch_karate_tests.sh
 
       - name: Cypress tests 
         if: ${{ github.event.inputs.cypress  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
-        run: |
-          source $HOME/.sdkman/bin/sdkman-init.sh;
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-          source ./bin/load_environment_light.sh;
-          cd config/docker
-          ./docker-compose-cypress.sh
-          cd ../../bin
-          ./waitForOpfabToStart.sh
-          cd ../
-          ./gradlew runCypressTests
-          cd config/docker
-          docker-compose down
+        run: ./CICD/github/launch_cypress_tests.sh
 
       - name : Publish Documentation
         if : ${{ github.event.inputs.doc  == 'true' || github.event_name == 'schedule'}}
