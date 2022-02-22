@@ -51,7 +51,7 @@ It aims to facilitate operational activities for utilities in two ways :
 ** Introduce pre-formatted question/response exchanges between control centers. This can be used to implement operational processes (with the notion of "last time to respond").  
 ** Share events in calendar (also allowing repeating events)
 
-In addition, the following features are available :  internationalization, time-zone management, light/dark mode for the UI,  authorization mechanism.
+In addition, the following features are available: internationalization, light/dark mode for the UI, realtime connected users supervision, authorization mechanism.
 
 Integration with existing IT systems is an overarching concern: support of Firefox and Chromium-based browsers, docker deployment, communication with business applications via REST API or Kafka, integration with external authentication systems (via OAuth2), monitoring via Prometheus endpoints.
 
