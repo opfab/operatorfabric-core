@@ -406,7 +406,9 @@
     "orCondition": "OR",
     "to": "to",
     "of": "of",
-    "page": "Page"
+    "page": "Page",
+    "blank": "Blank",
+    "notBlank": "Not blank"
   },
   "realTimeUsers": {
     "connected": "Connected",
