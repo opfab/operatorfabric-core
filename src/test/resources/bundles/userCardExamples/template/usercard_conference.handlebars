@@ -38,6 +38,20 @@
             </div>
         </td>
     </tr>
+
+    <!-- Hidden attribute for cypress tests -->
+    <!-- remove them if you use this template as example -->
+     <tr>
+        <div hidden="true" class="opfab-input" style="margin-right:5px">
+            <label>HIDDEN PROCESS MOCK </label>
+            <input id="hidden_process" name="hidden_process">
+        </div>
+        <div hidden="true" class="opfab-input" style="margin-right:5px">
+            <label>HIDDEN STATE MOCK </label>
+            <input id="hidden_state" name="hidden_state">
+        </div>
+    </tr>
+    
 </table>
 <br/>
         
@@ -48,23 +62,30 @@
 
 
 <script>
+
+    // The two following lines are used for cypress test 
+    // remove them if you use this template as example 
+    document.getElementById("hidden_process").value = usercardTemplateGateway.getCurrentProcess();
+    document.getElementById("hidden_state").value = usercardTemplateGateway.getCurrentState();
+
     templateGateway.getSpecificCardInformation = function () {
         const message = document.getElementById('message').value;
         const conf_subject = document.getElementById('conf_subject').value;
         const conf_link = document.getElementById('conf_link').value;
         const report_title = document.getElementById('report_title').value;
         const report_link = document.getElementById('report_link').value;
+        
         const card = {
-        summary : {key : "conference.summary"},
-		title : {key : "conference.title"},
-        secondsBeforeTimeSpanForReminder: 300,
-        data : {
+            summary : {key : "conference.summary"},
+            title : {key : "conference.title"},
+            secondsBeforeTimeSpanForReminder: 300,
+            data : {
                 message: message,
                 conf_subject:conf_subject,
                 conf_link:conf_link,
                 report_title:report_title,
                 report_link:report_link
-                 }
+            }
         };
         return {
             valid: true,
@@ -73,4 +94,6 @@
         };
 
     }
+
+
 </script>

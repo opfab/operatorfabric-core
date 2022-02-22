@@ -202,6 +202,10 @@ export class UserCardComponent implements OnInit {
     public stateChanged(event: any) {
         this.selectedStateId = event.state;
         this.selectedProcessId = event.selectedProcessId;
+
+        usercardTemplateGateway.currentState = event.state;
+        usercardTemplateGateway.currentProcess = event.selectedProcessId;
+
         this.userCardConfiguration = this.processesService.getProcess(this.selectedProcessId).states[this.selectedStateId].userCard;
         this.setFieldsVisibility();
         this.setDateFormValues();
