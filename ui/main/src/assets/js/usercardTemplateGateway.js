@@ -11,6 +11,8 @@ const usercardTemplateGateway = {
 
     editionMode: null,
     childCard: null,
+    currentState: null,
+    currentProcess: null,
 
     setUserEntityChildCardFromCurrentCard : function(childCard){
         this.childCard = childCard;
@@ -25,9 +27,19 @@ const usercardTemplateGateway = {
         return this.childCard;
     },
 
+    getCurrentState() {
+        return this.currentState;
+    },
+
+    getCurrentProcess() {
+        return this.currentProcess;
+    },
+
     initUsercardTemplateGateway() {
         this.editionMode=  null;
         this.childCard = null;
+        this.currentState = null;
+        this.currentProcess = null;
     }
 };
 

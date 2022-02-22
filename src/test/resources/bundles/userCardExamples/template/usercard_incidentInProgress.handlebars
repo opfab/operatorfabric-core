@@ -37,10 +37,26 @@
     <input id="OTHERS" name="OTHERS"
         style="width:100%" value="{{card.data.impacts.OTHERS}}">
 </div>
+
+<!-- Hidden attribute for cypress tests -->
+<!-- remove them if you use this template as example -->
+<tr>
+    <div hidden="true" class="opfab-input" style="margin-right:5px">
+        <label>HIDDEN PROCESS MOCK </label>
+        <input id="hidden_process" name="hidden_process">
+    </div>
+    <div hidden="true" class="opfab-input" style="margin-right:5px">
+        <label>HIDDEN STATE MOCK </label>
+        <input id="hidden_state" name="hidden_state">
+    </div>
+</tr>
 <br/>
 <script>
 
-
+    // The two following lines are used for cypress test 
+    // remove them if you use this template as example 
+    document.getElementById("hidden_process").value = usercardTemplateGateway.getCurrentProcess();
+    document.getElementById("hidden_state").value = usercardTemplateGateway.getCurrentState();
 
     templateGateway.getSpecificCardInformation = function () {
         const message = document.getElementById('message').value;
