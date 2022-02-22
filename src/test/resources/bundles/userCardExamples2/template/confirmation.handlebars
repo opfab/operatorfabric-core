@@ -42,7 +42,7 @@
             responses += ' </tr>';
 
             templateGateway.childCards.forEach((c, i) => {
-                responses += `<tr> <td> ${c.publisher} </td>`
+                responses += `<tr> <td> ${templateGateway.getEntityName(c.publisher)} </td>`
                 responses += `<td> ${c.data.confirm} </td>`;
                 responses += `<td> ${c.data.message} </td>`;
                 responses += "</tr>";
