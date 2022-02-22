@@ -24,6 +24,7 @@ subprojects {
             java {
                 srcDir 'src/main/java'
                 srcDir 'build/swagger/src/main/java'
+                srcDir "$projectDir/../src/main/java"
             }
             resources{
                 srcDir 'src/main/resources'

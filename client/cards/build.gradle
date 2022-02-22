@@ -4,6 +4,8 @@ plugins {
 
 dependencies {
     implementation cloud.avro
+    implementation boot.starterWeb
+    implementation project(':tools:spring:spring-utilities')
 }
 
 jar {
@@ -16,7 +18,9 @@ jar {
         )
 
     }
+
 }
+
 
 swaggerSources {
 
