@@ -122,6 +122,11 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             defaultColDef : {
                 editable: false
             },
+            localeTextFunc : function (key) {
+                // To avoid clashing with opfab assets, all keys defined by ag-grid are prefixed with "ag-grid."
+                // e.g. key "to" defined by ag-grid for use with pagination can be found under "ag-grid.to" in assets
+                return translate.instant('ag-grid.' + key);
+            },
             columnTypes: {
                 'timeColumn': {
                     sortable: true,

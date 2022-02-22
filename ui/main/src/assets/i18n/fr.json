@@ -405,7 +405,9 @@
     "orCondition": "OU",
     "to": "à",
     "of": "de",
-    "page": "Page"
+    "page": "Page",
+    "blank": "Vide",
+    "notBlank": "Pas vide"
   },
   "realTimeUsers": {
     "connected": "Connecté",

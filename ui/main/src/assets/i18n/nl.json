@@ -407,7 +407,9 @@
     "orCondition": "OF",
     "to": "tot",
     "of": "van",
-    "page": "Pagina"
+    "page": "Pagina",
+    "blank": "Leeg",
+    "notBlank": "Niet leeg"
   },
   "realTimeUsers": {
     "connected": "Verbonden",
