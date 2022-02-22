@@ -334,6 +334,7 @@ describe('Time line moves', function () {
         checkHaveCircle(0);
 
         cy.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 5 * HOURS, currentDate.getTime() + 6 * HOURS);
+        cy.wait(500);
         cy.tick(1 * SECONDS);
         checkHaveCircle(1);
 
