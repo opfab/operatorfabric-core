@@ -16,7 +16,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {ExportService} from '@ofServices/export.service';
 import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
-import {SelectLightCard} from '@ofActions/light-card.actions';
+import {ClearLightCardSelection, SelectLightCard} from '@ofActions/light-card.actions';
 import {LoadCard} from '@ofActions/card.actions';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Store} from '@ngrx/store';
@@ -422,6 +422,13 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             size: 'fullscreen'
         };
         this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
+
+        // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
+        // Closing event is already handled in card detail component
+        this.modalRef.dismissed.subscribe(() => {
+            this.store.dispatch(new ClearLightCardSelection());
+        })
+
     }
 
 }
