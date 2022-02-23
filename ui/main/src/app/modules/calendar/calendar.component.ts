@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,7 @@ import {FullCalendarComponent} from '@fullcalendar/angular';
 import {EventInput} from '@fullcalendar/core';
 import allLocales from '@fullcalendar/core/locales-all';
 import {TranslateService} from '@ngx-translate/core';
-import {SelectLightCard} from '@ofActions/light-card.actions';
+import {ClearLightCardSelection, SelectLightCard} from '@ofActions/light-card.actions';
 import {LoadCard} from '@ofActions/card.actions';
 import {buildSettingsOrConfigSelector} from '@ofStore/selectors/settings.x.config.selectors';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
@@ -159,10 +159,15 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store.dispatch(new SelectLightCard({ selectedCardId: info.event.id }));
     this.store.dispatch(new LoadCard({ id: info.event.id }));
     const options: NgbModalOptions = {
-      size: 'fullscreen'
-  };
-  this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
-
+        size: 'fullscreen'
+    };
+    this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
+    
+      // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
+      // Closing event is already handled in card detail component
+      this.modalRef.dismissed.subscribe(() => {
+        this.store.dispatch(new ClearLightCardSelection());
+    })
   }
 
   datesRangeChange(dateInfo) {
