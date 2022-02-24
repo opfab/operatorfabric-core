@@ -42,7 +42,7 @@ export class AboutComponent implements OnInit {
         const aboutConfig = this.configService.getConfigValue('settings.about');
         this.aboutElements.push({name: 'OperatorFabric',
                                  rank: '0',
-                                 version: packageInfo.version});
+                                 version: packageInfo.opfabVersion});
         if (aboutConfig)
             this.aboutElements = this.aboutElements.concat(extractNameWithVersionAndSortByRank(aboutConfig));
     }
