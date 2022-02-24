@@ -125,7 +125,7 @@ export class CardService {
 
 
     public closeSubscription() {
-        this.logger.info('Closing subscription',LogOption.LOCAL_AND_REMOTE);
+        this.logger.info('Closing subscription', LogOption.LOCAL_AND_REMOTE);
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }
@@ -156,7 +156,7 @@ export class CardService {
                             if (this.firstSubscriptionInitDone) {
                                 this.recoverAnyLostCardWhenConnectionHasBeenReset();
                                 // process or user config may have change during connection loss
-                                // so reload both configuration 
+                                // so reload both configuration
                                 this.store.dispatch(new BusinessConfigChangeAction());
                                 this.store.dispatch(new UserConfigChangeAction());
                             }
@@ -167,7 +167,7 @@ export class CardService {
                             break;
                         case 'HEARTBEAT':
                             this.lastHeardBeatDate = new Date().valueOf();
-                            this.logger.info( `CardService - HEARTBEAT received - Connection alive `,LogOption.LOCAL);
+                            this.logger.info( `CardService - HEARTBEAT received - Connection alive `, LogOption.LOCAL);
                             break;
                         case 'BUSINESS_CONFIG_CHANGE':
                             this.store.dispatch(new BusinessConfigChangeAction());
@@ -214,7 +214,7 @@ export class CardService {
 
     private recoverAnyLostCardWhenConnectionHasBeenReset() {
 
-        // Subtracts two minutes from the last heard beat to avoid loosing card due to latency, buffering and not synchronized clock
+        // Subtracts two minutes from the last heart beat to avoid loosing card due to latency, buffering and not synchronized clock
         const dateForRecovering = this.lastHeardBeatDate - CardService.TWO_MINUTES;
         this.logger.info( `CardService - Card subscription has been init again , recover any lost card from date `
             + new Date(dateForRecovering), LogOption.LOCAL_AND_REMOTE);
