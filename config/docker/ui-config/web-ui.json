@@ -106,11 +106,6 @@
       "lastapplication": {
         "name": "Wonderful Solution",
         "version": "0.1.2-RELEASE"
-      },
-      "operatorfabric": {
-        "name": "OperatorFabric",
-        "rank": 0,
-        "version": "SNAPSHOT"
       }
     },
     "infos": {
