@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+# Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -69,7 +69,7 @@ sed -i "s/\( *image *: *\"lfeoperatorfabric\/.*:\)\(.*\)\"/\1$newVersion\"/g" ./
 sed -i "s/\( *image *: *\"lfeoperatorfabric\/.*:\)\(.*\)\"/\1$newVersion\"/g" ./config/dev/docker-compose.yml;
 
 echo "Using $newVersion for About menu in web-ui.json files"
-jq --arg a "${newVersion}" '.settings.about.operatorfabric.version = $a' ./config/docker/ui-config/web-ui.json > "tmp" && mv "tmp" ./config/docker/ui-config/web-ui.json
+jq --arg a "${newVersion}" '.version = $a' ./ui/main/package.json > "tmp" && mv "tmp" ./ui/main/package.json
 
 echo "The following files have been updated: "
 echo | git status --porcelain
