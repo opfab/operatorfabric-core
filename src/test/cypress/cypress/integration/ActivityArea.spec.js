@@ -94,6 +94,7 @@ describe ('ActivityAreaPage',()=>{
 
         // now, operator4_fr should see only 3 cards in the feed
         cy.get('#opfab-navbar-menu-feed').click({force: true});
+        cy.waitDefaultTime();
         cy.get('of-light-card').should('have.length', 3);
         cy.get('of-light-card').eq(0).find('.card-title').should('have.text', "Process state (calcul) ");
         cy.get('of-light-card').eq(1).find('.card-title').should('have.text', "A Chart ");
