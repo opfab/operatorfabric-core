@@ -16,6 +16,7 @@ import {ConfigService} from '@ofServices/config.service';
 import {ExternalDevicesService} from '@ofServices/external-devices.service';
 import {UserService} from '@ofServices/user.service';
 import {UserConfiguration} from '@ofModel/external-devices.model';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'of-settings',
@@ -41,10 +42,11 @@ export class SettingsComponent implements OnInit {
   constructor(private store: Store<AppState>,
               private configService: ConfigService,
               private userService: UserService,
-              private externalDevicesService: ExternalDevicesService) { }
+              private externalDevicesService: ExternalDevicesService,
+              private translateService: TranslateService) { }
 
   ngOnInit() {
-    this.locales = this.configService.getConfigValue('i18n.supported.locales');
+    this.locales = this.translateService.getLangs();
     this.displayInfo = this.configService.getConfigValue('settings.infos.hide');
     this.externalDevicesEnabled = this.configService.getConfigValue('externalDevicesEnabled');
     this.playSoundForAlarmDefaultValue = !!this.configService.getConfigValue('settings.playSoundForAlarm') ? this.configService.getConfigValue('settings.playSoundForAlarm') : false;
