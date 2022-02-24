@@ -1,6 +1,6 @@
 {
   "name": "operatorfabric-ui-main",
-  "version": "SNAPSHOT",
+  "opfabVersion": "SNAPSHOT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
