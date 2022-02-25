@@ -61,7 +61,8 @@
       "areYouSure": "You have made some changes. Are you sure you want to save them ?"
     },
     "error": {
-      "impossibleToSaveSettings": "Impossible to save settings for technical reasons"
+      "impossibleToSaveSettings": "Impossible to save settings for technical reasons",
+      "incorrectSubmission": "Incorrect submission"
     }
   },
   "global":{

@@ -61,7 +61,8 @@
       "areYouSure": "Vous avez fait des modifications. Etes-vous sûr de vouloir les enregistrer ?"
     },
     "error": {
-      "impossibleToSaveSettings": "Impossible d'enregistrer les paramètres pour des raisons techniques"
+      "impossibleToSaveSettings": "Impossible d'enregistrer les paramètres pour des raisons techniques",
+      "incorrectSubmission": "Saisie incorrecte"
     }
   },
   "global":{

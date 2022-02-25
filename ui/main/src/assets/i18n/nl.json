@@ -61,7 +61,8 @@
       "areYouSure": "U heeft enkele wijzigingen aangebracht. Weet u zeker dat u ze wilt opslaan?"
     },
     "error": {
-      "impossibleToSaveSettings": "Om technische redenen is het niet mogelijk om de instellingen op te slaan"
+      "impossibleToSaveSettings": "Om technische redenen is het niet mogelijk om de instellingen op te slaan",
+      "incorrectSubmission": "Onjuiste invoer"
     }
   },
   "global":{
