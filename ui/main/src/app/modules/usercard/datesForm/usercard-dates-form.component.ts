@@ -30,7 +30,6 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
     unsubscribe$: Subject<void> = new Subject<void>();
 
     endDateMin: {year: number, month: number, day: number} = null;
-    startDateMax: {year: number, month: number, day: number} = null;
 
     dateTimeFilterChange = new Subject();
 
@@ -82,16 +81,8 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
                 };
             } else {
                 this.endDateMin = null;
-            }
-            if (this.datesFormInputData.endDate.isVisible) {
-                this.startDateMax = {
-                    year: this.datesForm.value.endDate.date.year,
-                    month: this.datesForm.value.endDate.date.month,
-                    day: this.datesForm.value.endDate.date.day
-                };
-            } else {
-                this.startDateMax = null;
-            }
+            }          
+            
         }
     }
 

@@ -10,7 +10,7 @@
     <div class="justify-content-center" style="display:flex;width:100%;align-content:center;flex-wrap: wrap;">
         <div *ngIf="datesFormInputData.startDate.isVisible" style="width:280px; margin-right: 30px; margin-left: 30px;" id="opfab-usercard-startdate-choice">
             <of-datetime-filter  filterPath="startDate" formControlName="startDate"
-                labelKey="userCard.filters."  [maxDate]="startDateMax"
+                labelKey="userCard.filters." 
                 (change)="onDateTimeChange($event)">
             </of-datetime-filter>
         </div>
