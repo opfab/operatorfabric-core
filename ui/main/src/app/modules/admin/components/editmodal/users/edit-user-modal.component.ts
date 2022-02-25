@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,6 +34,8 @@ export class EditUserModalComponent implements OnInit {
   selectedGroups = [];
 
   groupsDropdownSettings = {};
+
+  isExistingLogin = false;
 
 
   @Input() row: User;
@@ -88,7 +90,7 @@ export class EditUserModalComponent implements OnInit {
             };
       });
 
-    
+
     // Initialize value lists for Entities and Groups inputs
     this.entitiesService.getEntities().forEach((entity) => {
       const id = entity.id;
@@ -126,14 +128,24 @@ export class EditUserModalComponent implements OnInit {
     });
   }
 
+  checkExistingLogin() {
+    if (!! this.userForm.value['login'])
+      this.crudService.getAllUsers().subscribe(users => {
+        if (users.filter(user => user.login === this.userForm.value['login']).length)
+          this.isExistingLogin = true;
+      });
+    else
+      this.isExistingLogin = false;
+  }
+
   private cleanForm() {
     if (this.row) {
       this.userForm.value['login'] = this.row.login;
     }
     this.login.setValue((this.login.value as string).trim());
-    if (!!this.lastName.value) 
+    if (!!this.lastName.value)
       this.lastName.setValue((this.lastName.value as string).trim());
-    if (!!this.firstName.value) 
+    if (!!this.firstName.value)
       this.firstName.setValue((this.firstName.value as string).trim());
 
   }

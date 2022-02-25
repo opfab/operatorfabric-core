@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,6 +20,7 @@ import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {MessageLevel} from '@ofModel/message.model';
+import {GroupsService} from '@ofServices/groups.service';
 
 @Component({
   selector: 'of-edit-group-modal',
@@ -45,12 +46,15 @@ export class EditGroupModalComponent implements OnInit {
 
   private crudService: CrudService;
 
+  isExistingGroupId = false;
+
   constructor(
     private store: Store<AppState>,
     private translate: TranslateService,
     private activeModal: NgbActiveModal,
     private dataHandlingService: SharingService,
-    private perimetersService: PerimetersService
+    private perimetersService: PerimetersService,
+    private groupsService: GroupsService
   ) {
   }
 
@@ -93,7 +97,13 @@ export class EditGroupModalComponent implements OnInit {
       next: () => this.onSavesuccess(),
       error: (e) => this.onSaveError(e)
     });
-      
+  }
+
+  checkExistingGroupId() {
+    if ((!! this.groupForm.value['id']) && (this.groupsService.getGroups().filter(group => group.id === this.groupForm.value['id']).length))
+      this.isExistingGroupId = true;
+    else
+      this.isExistingGroupId = false;
   }
 
   onSavesuccess() {
@@ -101,7 +111,7 @@ export class EditGroupModalComponent implements OnInit {
   }
 
   onSaveError(res) {
-    this.perimeters.setValue(this.perimeters.value.map(perimeterId => {return {id: perimeterId, itemName: perimeterId}}));
+    this.perimeters.setValue(this.perimeters.value.map(perimeterId => {return {id: perimeterId, itemName: perimeterId}; }));
     this.store.dispatch(new AlertMessage({alertMessage: {message: res.originalError.error.message, level: MessageLevel.ERROR}}));
   }
 

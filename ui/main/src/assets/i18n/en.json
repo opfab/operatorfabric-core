@@ -361,7 +361,8 @@
       "login": {
         "required": "Login is required.",
         "minLength": "Login should be minimum 2 characters.",
-        "pattern": "Login should only contain the following characters: lowercase letters, _, -, . or digits."
+        "pattern": "Login should only contain the following characters: lowercase letters, _, -, . or digits.",
+        "alreadyExisting": "Login already existing."
       },
       "firstName": {
         "required": "First name is required."
@@ -373,7 +374,8 @@
         "required": "Id is required.",
         "minLength": "Id should be minimum 2 characters.",
         "pattern": "Id should only contain the following characters: letters, _, - or digits.",
-        "label":"Id"
+        "label":"Id",
+        "alreadyExisting": "Id already existing."
       },
       "name": {
         "required": "Name is required.",
