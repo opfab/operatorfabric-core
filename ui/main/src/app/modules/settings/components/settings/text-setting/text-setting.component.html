@@ -15,6 +15,6 @@
 
     <input id="opfab-setting-{{settingPath}}" *ngIf="!((settingPath === 'description') && disabled)" type="text"  formControlName="setting" [pattern]="pattern" [attr.required]="requiredField">
 
-    <span class="text-danger" *ngIf="!form.valid">Incorrect submission</span>
+    <span class="text-danger" *ngIf="!form.valid" translate>shared.error.incorrectSubmission</span>
   </div>
 </form>

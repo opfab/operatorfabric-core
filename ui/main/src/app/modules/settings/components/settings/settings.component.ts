@@ -13,9 +13,9 @@ import {Component, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {ConfigService} from '@ofServices/config.service';
-import {ExternalDevicesService} from "@ofServices/external-devices.service";
-import {UserService} from "@ofServices/user.service";
-import {UserConfiguration} from "@ofModel/external-devices.model";
+import {ExternalDevicesService} from '@ofServices/external-devices.service';
+import {UserService} from '@ofServices/user.service';
+import {UserConfiguration} from '@ofModel/external-devices.model';
 
 @Component({
   selector: 'of-settings',
@@ -35,6 +35,8 @@ export class SettingsComponent implements OnInit {
   remoteLoggingEnabledDefaultValue: boolean;
 
   userConfiguration: UserConfiguration;
+
+  patternReplayInterval = '[0-9]*';
 
   constructor(private store: Store<AppState>,
               private configService: ConfigService,
