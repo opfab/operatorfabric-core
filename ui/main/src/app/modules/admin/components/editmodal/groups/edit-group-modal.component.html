@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2020, RTEi (http://www.rte-international.com)           -->
-<!-- Copyright (c) 2021, RTE (http://www.rte-france.com)                   -->
+<!-- Copyright (c) 2021-2022, RTE (http://www.rte-france.com)                   -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -22,12 +22,15 @@
 
           <div *ngIf="!row" class="opfab-input row">
             <label for="opfab-id" translate>admin.input.id.label</label>
-            <input formControlName="id" name="id" id="opfab-id" type="text">
+            <input formControlName="id" name="id" id="opfab-id" type="text" (change)="checkExistingGroupId()">
           </div>
           <div *ngIf="id.invalid" class="row alert alert-danger">
             <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
             <div *ngIf="id.errors.minlength" translate>admin.input.id.minLength</div>
             <div *ngIf="id.errors.pattern" translate>admin.input.id.pattern</div>
+          </div>
+          <div *ngIf="isExistingGroupId" class="row alert alert-danger">
+            <div translate>admin.input.id.alreadyExisting</div>
           </div>
 
           <div class="opfab-input row">
@@ -55,7 +58,7 @@
     <div class="modal-footer" style="border-top: none">
       <button id="opfab-admin-edit-btn-cancel" type="button" (click)="dismissModal('Cancel click')" class="opfab-btn-cancel" data-dismiss="modal"
               translate>admin.input.close</button>
-      <button id="opfab-admin-edit-btn-add" [disabled]="!groupForm.valid" *ngIf="!row" (click)="update()" class="opfab-btn"
+      <button id="opfab-admin-edit-btn-add" [disabled]="!groupForm.valid || isExistingGroupId" *ngIf="!row" (click)="update()" class="opfab-btn"
               translate>admin.input.{{type}}.add</button>
       <button id="opfab-admin-user-btn-save" [disabled]="!groupForm.valid" *ngIf="row" (click)="update()" class="opfab-btn"
               translate>admin.input.save</button>

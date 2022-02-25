@@ -46,6 +46,8 @@ export class EditEntityModalComponent implements OnInit {
 
   private crudService: CrudService;
 
+  isExistingEntityId = false;
+
   constructor(
     private translate: TranslateService,
     private activeModal: NgbActiveModal,
@@ -104,6 +106,13 @@ export class EditEntityModalComponent implements OnInit {
         this.activeModal.close('Update button clicked on ' + this.type + ' modal');
       });
     }, 100);
+  }
+
+  checkExistingEntityId() {
+    if ((!! this.entityForm.value['id']) && (this.entitiesService.getEntities().filter(group => group.id === this.entityForm.value['id']).length))
+      this.isExistingEntityId = true;
+    else
+      this.isExistingEntityId = false;
   }
 
   private cleanForm() {

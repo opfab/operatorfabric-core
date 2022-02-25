@@ -363,7 +363,8 @@
       "login": {
         "required": "Gebruikersnaam is vereist.",
         "minLength": "Gebruikersnaam moet minimaal 2 tekens bevatten.",
-        "pattern": "Gebruikersnaam mag alleen de volgende tekens bevatten: kleine letters, _, -, . of cijfers."
+        "pattern": "Gebruikersnaam mag alleen de volgende tekens bevatten: kleine letters, _, -, . of cijfers.",
+        "alreadyExisting": "Gebruikersnaam bestaat al."
       },
       "firstName": {
         "required": "Voornaam is vereist."
@@ -375,7 +376,8 @@
         "required": "Id is vereist.",
         "minLength": "Id moet minimaal 2 tekens bevatten.",
         "pattern": "Id mag alleen de volgende tekens bevatten: kleine letters, _, -, . of cijfers.",
-        "label":"Id"
+        "label":"Id",
+        "alreadyExisting": "Id bestaat al."
       },
       "name": {
         "required": "Naam is vereist.",
