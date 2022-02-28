@@ -731,4 +731,73 @@ describe('User Card ', function () {
 
   })
 
+
+  describe('Loading start date, end date and lttd from template', function () {
+
+    it('Check dates are loaded from template for Question user card', () => {
+
+      cy.loginOpFab('operator1_fr', 'test');
+
+      cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+      selectService('User card examples');
+      selectProcess('Examples for new cards 2');
+      selectState('Question');
+
+      var startDate = new Date();
+      startDate.setTime(startDate.getTime()+ 3600000);
+      startDate.setMinutes(0);
+      startDate.setSeconds(0);
+      const expectedStartDate = startDate.toISOString().split('T')[0];
+
+      const endDate = new Date(startDate.getTime() + 8 * 3600000);
+      const expectedEndDate = endDate.toISOString().split('T')[0];
+      
+      const lttdDate = new Date(startDate.getTime() + 4 * 3600000);
+      const expectedLttdDate = lttdDate.toISOString().split('T')[0];
+
+      cy.waitDefaultTime();
+
+      cy.get('#opfab-datepicker-startDate').invoke('val').then((text) => {
+        expect(expectedStartDate).to.equal(text);
+      });
+
+      const startHour = startDate.getHours() < 10 ? '0' + startDate.getHours() : '' + startDate.getHours();
+      cy.get('#opfab-timepicker-startDate').find('[aria-label="Hours"]').invoke('val').then((text) => {
+        expect(startHour).to.equal(text);
+      });
+      cy.get('#opfab-timepicker-startDate').find('[aria-label="Minutes"]').invoke('val').then((text) => {
+        expect('00').to.equal(text);
+      });
+
+      cy.get('#opfab-datepicker-endDate').invoke('val').then((text) => {
+        expect(expectedEndDate).to.equal(text);
+      });
+
+      const endHour = endDate.getHours() < 10 ? '0' + endDate.getHours() : '' + endDate.getHours();
+
+      cy.get('#opfab-timepicker-endDate').find('[aria-label="Hours"]').invoke('val').then((text) => {
+        expect(endHour).to.equal(text);
+      });
+      cy.get('#opfab-timepicker-endDate').find('[aria-label="Minutes"]').invoke('val').then((text) => {
+        expect('00').to.equal(text);
+      });
+
+      cy.get('#opfab-datepicker-lttd').invoke('val').then((text) => {
+        expect(expectedLttdDate).to.equal(text);
+      });
+
+      const lttdHour = lttdDate.getHours() < 10 ? '0' + lttdDate.getHours() : '' + lttdDate.getHours();
+
+      cy.get('#opfab-timepicker-lttd').find('[aria-label="Hours"]').invoke('val').then((text) => {
+        expect(lttdHour).to.equal(text);
+      });
+      cy.get('#opfab-timepicker-lttd').find('[aria-label="Minutes"]').invoke('val').then((text) => {
+        expect('00').to.equal(text);
+      });
+
+    })
+
+
+  })
+
 })

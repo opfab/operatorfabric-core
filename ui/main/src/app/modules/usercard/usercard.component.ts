@@ -83,6 +83,8 @@ export class UserCardComponent implements OnInit {
     private cardToEdit: CardData;
     public editCardProcessId: string;
     public editCardStateId: string;
+    private datesFromCardToEdit: boolean;
+    private datesFromTemplate: boolean;
 
     // Preview and send card
     readonly displayContext = DisplayContext.PREVIEW;
@@ -109,12 +111,13 @@ export class UserCardComponent implements OnInit {
         protected soundNotificationService: SoundNotificationService,
         protected userPermissionsService: UserPermissionsService,
     ) {
-        this.setDateFormValues();
+        this.setDefaultDateFormValues();
     }
 
 
     ngOnInit() {
         this.pageLoading = true;
+        this.datesFromTemplate = true;
         usercardTemplateGateway.initUsercardTemplateGateway();
         this.severityForm = new FormGroup({
             severity: new FormControl('')
@@ -145,7 +148,7 @@ export class UserCardComponent implements OnInit {
             this.severityForm.get('severity').setValue(this.cardToEdit.card.severity);
             this.initialSelectedRecipients = this.cardToEdit.card.entityRecipients;
             this.pageLoading = false;
-            this.setDateFormValues();
+            this.datesFromCardToEdit = true;
 
             this.setPublisherForCreatingUsercardForCardToEdit();
 
@@ -163,16 +166,32 @@ export class UserCardComponent implements OnInit {
         });
     }
 
-    private setDateFormValues(): void {
+
+    private setDefaultDateFormValues(): void {
         const startDate = new DateField(this.startDateVisible, this.defaultStartDate);
         const endDate = new DateField(this.endDateVisible, this.defaultEndDate);
         const lttd = new DateField(this.lttdVisible, this.defaultLttdDate);
-        if (!!this.cardToEdit) {
-            if (!!this.cardToEdit.card.startDate) startDate.initialEpochDate = this.cardToEdit.card.startDate;
-            if (!!this.cardToEdit.card.endDate) endDate.initialEpochDate = this.cardToEdit.card.endDate;
-            if (!!this.cardToEdit.card.lttd) lttd.initialEpochDate = this.cardToEdit.card.lttd;
-        }
         this.datesFormValue = new DatesForm(startDate, endDate, lttd);
+    }
+
+    private setInitialDateFormValues(): void {
+            let startDate = new DateField(this.startDateVisible, this.datesFromTemplate && !!usercardTemplateGateway.getStartDate() ? usercardTemplateGateway.getStartDate() : this.getStartDate());
+            let endDate = new DateField(this.endDateVisible, this.datesFromTemplate && !!usercardTemplateGateway.getEndDate() ? usercardTemplateGateway.getEndDate() : this.getEndDate());
+            let lttd = new DateField(this.lttdVisible, this.datesFromTemplate && !!usercardTemplateGateway.getLttd() ? usercardTemplateGateway.getLttd() :this.getLttd());
+            
+            if (!!usercardTemplateGateway.getStartDate() || !!usercardTemplateGateway.getEndDate() || !!usercardTemplateGateway.getEndDate() || !!usercardTemplateGateway.getLttd()) {
+                this.datesFromTemplate = false
+            }
+
+            this.datesFormValue = this.datesFromCardToEdit ? this.setDatesFromCardToEdit(startDate, endDate, lttd) : new DatesForm(startDate, endDate, lttd);
+    }
+
+    private setDatesFromCardToEdit(startDate : DateField, endDate : DateField, lttd : DateField) : DatesForm {
+        if (!!this.cardToEdit.card.startDate) startDate.initialEpochDate = this.cardToEdit.card.startDate;
+        if (!!this.cardToEdit.card.endDate) endDate.initialEpochDate = this.cardToEdit.card.endDate;
+        if (!!this.cardToEdit.card.lttd) lttd.initialEpochDate = this.cardToEdit.card.lttd;
+        this.datesFromCardToEdit = false;
+        return new DatesForm(startDate, endDate, lttd);
     }
 
     private findUserEntitiesAllowedToSendCard(): Array<any> {
@@ -205,10 +224,12 @@ export class UserCardComponent implements OnInit {
 
         usercardTemplateGateway.currentState = event.state;
         usercardTemplateGateway.currentProcess = event.selectedProcessId;
+        usercardTemplateGateway.setInitialStartDate(null);
+        usercardTemplateGateway.setInitialEndDate(null);
+        usercardTemplateGateway.setInitialLttd(null);
 
         this.userCardConfiguration = this.processesService.getProcess(this.selectedProcessId).states[this.selectedStateId].userCard;
         this.setFieldsVisibility();
-        this.setDateFormValues();
         this.loadTemplate();
     }
 
@@ -245,6 +266,7 @@ export class UserCardComponent implements OnInit {
                         this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml(template);
                         setTimeout(() => { // wait for DOM rendering
                             this.reinsertScripts();
+                            this.setInitialDateFormValues();
                         }, 10);
                     },
                     error: (error) => {
@@ -277,6 +299,11 @@ export class UserCardComponent implements OnInit {
         const endDate = this.getEndDate();
         const lttd = this.getLttd();
         if (!this.areDatesValid(startDate, endDate, lttd)) return;
+
+        usercardTemplateGateway.startDate = startDate;
+        usercardTemplateGateway.endDate = endDate;
+        usercardTemplateGateway.lttd = lttd;
+
         const title = (!!this.specificInformation.card.title) ? this.specificInformation.card.title : 'UNDEFINED';
         const selectedProcess = this.processesService.getProcess(this.selectedProcessId);
         const cardEmitter = this.findPublisherForCreatingUsercard();
@@ -363,7 +390,7 @@ export class UserCardComponent implements OnInit {
         let startDate = this.defaultStartDate;
         if (this.startDateVisible) {
             startDate = this.datesForm.getStartDateAsEpoch();
-        } else if (this.specificInformation.card.startDate) {
+        } else if (this.specificInformation && this.specificInformation.card.startDate) {
             startDate = this.specificInformation.card.startDate;
         }
         return startDate;
@@ -373,7 +400,7 @@ export class UserCardComponent implements OnInit {
         let endDate = null;
         if (this.endDateVisible) endDate = this.datesForm.getEndDateAsEpoch();
         else {
-            if (this.specificInformation.card.endDate) endDate = this.specificInformation.card.endDate;
+            if (this.specificInformation && this.specificInformation.card.endDate) endDate = this.specificInformation.card.endDate;
         }
         return endDate;
     }
@@ -382,7 +409,7 @@ export class UserCardComponent implements OnInit {
         let lttd = null;
         if (this.lttdVisible) lttd = this.datesForm.getLttdAsEpoch();
         else {
-            if (this.specificInformation.card.lttd) lttd = this.specificInformation.card.lttd;
+            if (this.specificInformation && this.specificInformation.card.lttd) lttd = this.specificInformation.card.lttd;
         }
         return lttd;
     }

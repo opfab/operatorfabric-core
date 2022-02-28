@@ -178,6 +178,19 @@ In this example the list of available recipients will contain: "ENTITY_FR" (leve
 
 The recipient field can be hidden using the attribute `recipientVisible` : if hidden, the card will be sent to all the recipients in recipientList and to the user.
 
+== Setting card dates
+From the template it is possible to set the initial values for `startDate`, `endDate` and `lttd` fields of the card by calling the following functions: 
+
+* _usercardTemplateGateway.setInitialStartDate(epochMs)_ 
+* _usercardTemplateGateway.setInitialEndDate(epochMs)_ 
+* _usercardTemplateGateway.setInitialLttd(epochMs)_  
+
+It is also possible to get the values of  `startDate`, `endDate` and `lttd` by calling the following functions:
+
+* _usercardTemplateGateway.getStartDate()_ 
+* _usercardTemplateGateway.getEndDate()_
+* _usercardTemplateGateway.getLttd()_  
+
 == Card editing
 Once a user card has been sent it can be edited by a user member of the publisher entity.
 It is possible to allow other entities to edit the card by specifing the 'entitiesAllowedToEdit' card field.
