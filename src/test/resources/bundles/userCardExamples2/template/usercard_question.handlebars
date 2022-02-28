@@ -17,6 +17,17 @@
         const question = document.getElementById('label').innerHTML = ' QUESTION (New) ';
     }
 
+    
+    var mystartDate = new Date();
+    mystartDate.setTime(mystartDate.getTime()+ 3600000);
+    mystartDate.setMinutes(0);
+    mystartDate.setSeconds(0);
+    usercardTemplateGateway.setInitialStartDate(mystartDate.getTime());
+
+    usercardTemplateGateway.setInitialEndDate(mystartDate.getTime() + 8 * 3600000);
+
+    usercardTemplateGateway.setInitialLttd(mystartDate.getTime() + 4 * 3600000);
+
 
     templateGateway.getSpecificCardInformation = function () {
         const question = document.getElementById('question').value;

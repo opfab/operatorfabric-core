@@ -13,6 +13,9 @@ const usercardTemplateGateway = {
     childCard: null,
     currentState: null,
     currentProcess: null,
+    startDate: null,
+    endDate: null,
+    lttd: null,
 
     setUserEntityChildCardFromCurrentCard : function(childCard){
         this.childCard = childCard;
@@ -35,11 +38,38 @@ const usercardTemplateGateway = {
         return this.currentProcess;
     },
 
+    getStartDate() {
+        return this.startDate;
+    },
+
+    getEndDate() {
+        return this.endDate;
+    },
+
+    getLttd() {
+        return this.lttd;
+    },
+
+    setInitialStartDate: function(start)  {
+        this.startDate = start;
+    },
+
+    setInitialEndDate: function(endDate)  {
+        this.endDate = endDate;
+    },
+
+    setInitialLttd: function(lttd)  {
+        this.lttd = lttd;
+    },
+
     initUsercardTemplateGateway() {
         this.editionMode=  null;
         this.childCard = null;
         this.currentState = null;
         this.currentProcess = null;
+        this.startDate = null;
+        this.endDate = null;
+        this.lttd = null;
     }
 };
 
