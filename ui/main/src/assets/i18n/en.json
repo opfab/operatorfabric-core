@@ -56,6 +56,7 @@
     "featureNotConfigured": "Feature not configured",
     "confirmSettings": "CONFIRM SETTINGS",
     "cardEmitter": "EMITTER",
+    "entity": "ENTITY",
     "popup": {
       "title": "CONFIRMATION",
       "areYouSure": "You have made some changes. Are you sure you want to save them ?"
@@ -296,7 +297,9 @@
     "answers": "Answers",
     "answered": "Answered",
     "unanswered": "Not answered yet",
-    "status": "Process Status"
+    "status": "Process Status",
+    "chooseEntityForResponse": "Choose the entity you are responding for :",
+    "entityChoice": "Entity choice"
   },
   "cardAcknowledgment": {
     "button": {

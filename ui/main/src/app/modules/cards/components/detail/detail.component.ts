@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -48,6 +48,8 @@ import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
+import {FormControl, FormGroup} from '@angular/forms';
+import {Utilities} from '../../../../common/utilities';
 
 declare const templateGateway: any;
 
@@ -97,6 +99,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     @ViewChild('cardDeletedWithNoErrorPopup') cardDeletedWithNoErrorPopupRef: TemplateRef<any>;
     @ViewChild('impossibleToDeleteCardPopup') impossibleToDeleteCardPopupRef: TemplateRef<any>;
     @ViewChild('userCard') userCardTemplate: TemplateRef<any>;
+    @ViewChild('chooseEntityForResponsePopup') chooseEntityForResponsePopupRef: TemplateRef<any>;
+
+    private selectEntityForm: FormGroup;
 
     public isUserEnabledToRespond = false;
     public lttdExpiredIsTrue: boolean;
@@ -112,21 +117,23 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public showDeleteButton = false;
     public showDetailCardHeader = false;
     public fromEntityOrRepresentative = null;
-    public formattedPublishDate = "";
-    public formattedPublishTime = "";
+    public formattedPublishDate = '';
+    public formattedPublishTime = '';
     public htmlTemplateContent: SafeHtml;
     public listVisibleEntitiesToRespond = [];
     public listDropdownEntitiesToRespond = [];
     public isCardAQuestionCard = false;
-    public showExpiredIcon: boolean = true;
-    public showExpiredLabel: boolean = true;
-    public expiredLabel: string = 'feed.lttdFinished';
-    public btnValidateLabel: string = 'response.btnValidate';
-    public btnUnlockLabel: string = 'response.btnUnlock';
+    public showExpiredIcon = true;
+    public showExpiredLabel = true;
+    public expiredLabel = 'feed.lttdFinished';
+    public btnValidateLabel = 'response.btnValidate';
+    public btnUnlockLabel = 'response.btnUnlock';
 
     private lastCardSetToReadButNotYetOnFeed;
     private entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = [];
-    private userEntityIdToUseForResponse: string;
+    private userEntityIdsPossibleForResponse = [];
+    private userEntityOptionsDropdownList = [];
+    private userEntityIdToUseForResponse = '';
     private userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;
     private userContext: UserContext;
     private unsubscribe$: Subject<void> = new Subject<void>();
@@ -153,11 +160,16 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
 
-    // START - ANGULAR COMPONENT LIFECYCLE 
+    // START - ANGULAR COMPONENT LIFECYCLE
 
     ngOnInit() {
         this.reloadTemplateWhenGlobalStyleChange();
-        if (this._appService.pageType !== PageType.ARCHIVE) this.integrateChildCardsInRealTime();
+        if (this._appService.pageType !== PageType.ARCHIVE)
+            this.integrateChildCardsInRealTime();
+
+        this.selectEntityForm = new FormGroup({
+            entity: new FormControl('')
+        });
     }
 
     ngAfterViewChecked() {
@@ -182,14 +194,14 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             this.computeEntitiesForResponses();
             this.isUserEnabledToRespond = this.userPermissionsService.isUserEnabledToRespond(this.userService.getCurrentUserWithPerimeters(),
                 this.card, this.businessconfigService.getProcess(this.card.process));
-        }
-        else this.isCardAQuestionCard = false;
+            this.computeEntityOptionsDropdownListForResponse();
+        } else this.isCardAQuestionCard = false;
 
-        
+
 
         this.checkIfHasAlreadyResponded();
 
-        // this call is necessary done after computeEntitiesForResponses() and  checkIfHasAlreadyResponded() 
+        // this call is necessary done after computeEntitiesForResponses() and  checkIfHasAlreadyResponded()
         // to have the variables for templateGateway set
         this.setTemplateGatewayVariables();
 
@@ -214,7 +226,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.unsubscribe$.complete();
     }
 
-    // END  - ANGULAR COMPONENT LIFECYCLE 
+    // END  - ANGULAR COMPONENT LIFECYCLE
 
     // For certain types of template , we need to reload it to take into account
     // the new css style (for example with chart done with chart.js)
@@ -306,7 +318,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             .pipe(
                 takeUntil(this.unsubscribe$),
                 map(lastCardDeleted => {
-                    if (!!lastCardDeleted && lastCardDeleted.parentCardId === this.card.id 
+                    if (!!lastCardDeleted && lastCardDeleted.parentCardId === this.card.id
                             && this.childCards.map(childCard => childCard.id).includes(lastCardDeleted.cardId)) {
 
                         this.removeChildCard(lastCardDeleted.cardId);
@@ -326,7 +338,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 this.computeEntitiesForResponses();
                 templateGateway.applyChildCards();
             }
-        )
+        );
     }
 
     private removeChildCard(deletedChildCardId: string) {
@@ -341,12 +353,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     private computeEntitiesForResponses() {
 
-        let entityIdsRequiredToRespondAndAllowedToSendCards = this.getEntityIdsRequiredToRespondAndAllowedToSendCards();
+        const entityIdsRequiredToRespondAndAllowedToSendCards = this.getEntityIdsRequiredToRespondAndAllowedToSendCards();
         this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = this.getEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards();
         console.log(new Date().toISOString(), ' Detail card - entities allowed to respond = ', this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards);
 
         this.setEntitiesToRespondForCardHeader(entityIdsRequiredToRespondAndAllowedToSendCards);
-        this.setUserEntityIdToUseForResponse();
+        this.setUserEntityIdsPossibleForResponse();
         const userEntitiesRequiredToRespondAndAllowedToSendCards = entityIdsRequiredToRespondAndAllowedToSendCards.filter(entityId => this.user.entities.includes(entityId));
         this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = userEntitiesRequiredToRespondAndAllowedToSendCards.length > 0;
     }
@@ -372,10 +384,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private setEntitiesToRespondForCardHeader(entityIdsRequiredToRespondAndAllowedToSendCards) {
         if (this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards) {
 
-            // Entities for card header 
+            // Entities for card header
             let listEntitiesToRespondForHeader;
-            if (entityIdsRequiredToRespondAndAllowedToSendCards.length > 0) listEntitiesToRespondForHeader = this.createEntityHeaderFromList(entityIdsRequiredToRespondAndAllowedToSendCards);
-            else listEntitiesToRespondForHeader = this.createEntityHeaderFromList(this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards);
+            if (entityIdsRequiredToRespondAndAllowedToSendCards.length > 0)
+                listEntitiesToRespondForHeader = this.createEntityHeaderFromList(entityIdsRequiredToRespondAndAllowedToSendCards);
+            else
+                listEntitiesToRespondForHeader = this.createEntityHeaderFromList(this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards);
 
             listEntitiesToRespondForHeader.sort((a, b) => a.name?.localeCompare(b.name));
 
@@ -386,8 +400,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             this.listDropdownEntitiesToRespond = listEntitiesToRespondForHeader.length > maxVisibleEntitiesForCardHeader ?
                                                     listEntitiesToRespondForHeader.slice(maxVisibleEntitiesForCardHeader) :
                                                     [];
-        }
-        else {
+        } else {
             this.listVisibleEntitiesToRespond = [];
             this.listDropdownEntitiesToRespond = [];
         }
@@ -409,12 +422,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         return entityHeader;
     }
 
-    private setUserEntityIdToUseForResponse() {
-        const userEntityIdsAllowedToRespond = this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards.filter(x => this.user.entities.includes(x));
-        console.log(new Date().toISOString(), ' Detail card - users entities allowed to respond = ', userEntityIdsAllowedToRespond);
-        if (userEntityIdsAllowedToRespond.length > 1)
-            console.log(new Date().toISOString(), 'Warning : user can respond on behalf of more than one entity, so response is disabled');
-        this.userEntityIdToUseForResponse = userEntityIdsAllowedToRespond.length === 1 ? userEntityIdsAllowedToRespond[0] : null;
+    private setUserEntityIdsPossibleForResponse() {
+        this.userEntityIdsPossibleForResponse = this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards.filter(x => this.user.entities.includes(x));
+        console.log(new Date().toISOString(), ' Detail card - users entities allowed to respond = ', this.userEntityIdsPossibleForResponse);
+        if (this.userEntityIdsPossibleForResponse.length === 1)
+            this.userEntityIdToUseForResponse = this.userEntityIdsPossibleForResponse[0];
     }
 
     private checkEntityAnswered(entity: string): boolean {
@@ -452,12 +464,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             } else if (this.isCardAQuestionCard) {
                 this.showExpiredIcon = false;
                 this.showExpiredLabel = true;
-                this.expiredLabel = 'feed.responsesClosed'
+                this.expiredLabel = 'feed.responsesClosed';
             } else {
                 this.showExpiredIcon = true;
                 this.showExpiredLabel = true;
             }
-        })
+        });
     }
 
 
@@ -482,7 +494,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private isAcknowledgmentAllowed(): boolean {
-        // default value is true 
+        // default value is true
         if (!this.cardState.acknowledgmentAllowed) return true;
 
         return (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS ||
@@ -539,8 +551,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             }
             this.lastCardSetToReadButNotYetOnFeed = this.card;
             this.cardService.postUserCardRead(this.card.uid).subscribe();
-        }
-        else this.updateLastReadCardStatusOnFeedIfNeeded();
+        } else this.updateLastReadCardStatusOnFeedIfNeeded();
     }
 
     private updateLastReadCardStatusOnFeedIfNeeded() {
@@ -576,7 +587,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         return this.time.formatTime(date);
     }
 
-    //START - METHODS CALLED ONLY FROM HTML COMPONENT  
+    // START - METHODS CALLED ONLY FROM HTML COMPONENT
 
     get i18nPrefix() {
         return `${this.card.process}.${this.card.processVersion}.`;
@@ -586,10 +597,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         return this.card.hasBeenAcknowledged ? AckI18nKeys.BUTTON_TEXT_UNACK : AckI18nKeys.BUTTON_TEXT_ACK;
     }
 
-    // This method will be called many time per second. 
-    // In case of performances issues it could be optimized by defining a variable 
-    // and evaluating it every time there is a change in childCards 
-    get lastResponse() : Card {
+    // This method will be called many time per second.
+    // In case of performances issues it could be optimized by defining a variable
+    // and evaluating it every time there is a change in childCards
+    get lastResponse(): Card {
         if (!!this.childCards && this.childCards.length > 0) {
             return [...this.childCards].sort( (a, b) => a.publishDate < b.publishDate ? 1 : -1)[0];
         }
@@ -598,7 +609,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     public getResponsePublisher(resp: Card) {
         return this.entitiesService.getEntityName(resp.publisher)
-    } 
+    }
 
     public isSmallscreen() {
         return (window.innerWidth < 1000);
@@ -702,7 +713,43 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         templateGateway.unlockAnswer();
     }
 
+    public cancelEntityChoice(): void {
+        this.modalRef.dismiss();
+    }
+
+    public computeEntityOptionsDropdownListForResponse(): void {
+        this.userEntityOptionsDropdownList = [];
+        this.userEntityIdsPossibleForResponse.forEach(entityId => {
+            const entity = this.entitiesService.getEntities().find(e => e.id === entityId);
+            this.userEntityOptionsDropdownList.push({value: entity.id, label: entity.name});
+        });
+        this.userEntityOptionsDropdownList.sort((a, b) => Utilities.compareObj(a.label, b.label));
+    }
+
+    public displayEntityChoicePopup() {
+        this.userEntityIdToUseForResponse = '';
+        this.selectEntityForm.get('entity').setValue(this.userEntityOptionsDropdownList[0].value);
+        this.openModal(this.chooseEntityForResponsePopupRef);
+    }
+
     public submitResponse() {
+        if (this.userEntityIdsPossibleForResponse.length > 1)
+            this.displayEntityChoicePopup();
+        else
+            this.submitResponse0();
+    }
+
+    public getSelectedEntity() {
+        return this.selectEntityForm.value['entity'];
+    }
+
+    public submitEntityChoice() {
+        this.modalRef.dismiss();
+        this.userEntityIdToUseForResponse = this.getSelectedEntity();
+        this.submitResponse0();
+    }
+
+    public submitResponse0() {
 
         const responseData: FormResult = templateGateway.getUserResponse();
 
@@ -754,6 +801,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         }
     }
 
-    // END - METHODS CALLED ONLY FROM HTML COMPONENT  
+    // END - METHODS CALLED ONLY FROM HTML COMPONENT
 
 }

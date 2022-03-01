@@ -56,6 +56,7 @@
     "featureNotConfigured": "Fonctionnalité non configurée",
     "confirmSettings": "ENREGISTRER LA CONFIGURATION",
     "cardEmitter": "EMETTEUR",
+    "entity": "ENTITÉ",
     "popup": {
       "title": "CONFIRMATION",
       "areYouSure": "Vous avez fait des modifications. Etes-vous sûr de vouloir les enregistrer ?"
@@ -296,7 +297,9 @@
     "answers": "Réponses",
     "answered": "A répondu",
     "unanswered": "Pas encore répondu",
-    "status": "Statut du processus"
+    "status": "Statut du processus",
+    "chooseEntityForResponse": "Choissisez l'entité pour laquelle vous répondez :",
+    "entityChoice": "Choix de l'entité"
   },
   "cardAcknowledgment": {
     "button": {

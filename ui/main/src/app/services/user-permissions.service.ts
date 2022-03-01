@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -72,9 +72,9 @@ export class UserPermissionsService {
   }
 
   private isUserInEntityAllowedToEditCard(user: UserWithPerimeters, card: Card) {
-    const userEntitiesAllowed = user.userData.entities.filter(entity => 
+    const userEntitiesAllowed = user.userData.entities.filter(entity =>
       card.entitiesAllowedToEdit.includes(entity)
-    )
+    );
     return userEntitiesAllowed.length > 0;
   }
 
@@ -97,9 +97,10 @@ export class UserPermissionsService {
       const entitiesAllowedToRespond = this.entitiesService.getEntities().filter(entity =>
         entitiesAllowedToRespondAndEntitiesRequiredToRespond.includes(entity.id));
 
-      
-      let emittingEntityAllowedToRespond = false;  
-      if (!!processDefinition.extractState(card).response)  emittingEntityAllowedToRespond = !!processDefinition.extractState(card).response.emittingEntityAllowedToRespond;
+
+      let emittingEntityAllowedToRespond = false;
+      if (!!processDefinition.extractState(card).response)
+        emittingEntityAllowedToRespond = !!processDefinition.extractState(card).response.emittingEntityAllowedToRespond;
 
       const allowed = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond)
         .map(entity => entity.id).filter(x => x !== card.publisher || emittingEntityAllowedToRespond);
@@ -108,10 +109,8 @@ export class UserPermissionsService {
 
       userEntitiesAllowedToRespond = allowed.filter(x => user.userData.entities.includes(x));
       console.log(new Date().toISOString(), ' Detail card - users entities allowed to respond = ', userEntitiesAllowedToRespond);
-      if (userEntitiesAllowedToRespond.length > 1)
-        console.log(new Date().toISOString(), 'Warning : user can respond on behalf of more than one entity, so response is disabled');
     }
-    return userEntitiesAllowedToRespond.length === 1;
+    return userEntitiesAllowedToRespond.length > 0;
   }
 
   private doesTheUserHaveThePerimeterToRespond(user: UserWithPerimeters, card: Card, processDefinition: Process): boolean {
