@@ -22,15 +22,13 @@
 
           <div *ngIf="!row" class="opfab-input row">
             <label for="opfab-id" translate>admin.input.id.label</label>
-            <input formControlName="id" name="id" id="opfab-id" type="text" (change)="checkExistingEntityId()">
+            <input formControlName="id" name="id" id="opfab-id" type="text">
           </div>
           <div *ngIf="id.invalid" class="row alert alert-danger">
             <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
             <div *ngIf="id.errors.minlength" translate>admin.input.id.minLength</div>
             <div *ngIf="id.errors.pattern" translate>admin.input.id.pattern</div>
-          </div>
-          <div *ngIf="isExistingEntityId" class="row alert alert-danger">
-            <div translate>admin.input.id.alreadyExisting</div>
+            <div *ngIf="id.errors.uniqueEntityIdViolation" translate>admin.input.id.alreadyExisting</div>
           </div>
 
           <div class="opfab-input row">
@@ -68,7 +66,7 @@
     <div class="modal-footer" style="border-top: none">
       <button id="opfab-admin-edit-btn-cancel" type="button" (click)="dismissModal('Cancel click')" class="opfab-btn-cancel" data-dismiss="modal"
               translate>admin.input.close</button>
-      <button id="opfab-admin-edit-btn-add" [disabled]="!entityForm.valid || isExistingEntityId" *ngIf="!row" (click)="update()" class="opfab-btn"
+      <button id="opfab-admin-edit-btn-add" [disabled]="!entityForm.valid" *ngIf="!row" (click)="update()" class="opfab-btn"
               translate>admin.input.{{type}}.add</button>
       <button id="opfab-admin-user-btn-save" [disabled]="!entityForm.valid" *ngIf="row" (click)="update()" class="opfab-btn"
               translate>admin.input.save</button>

@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {AsyncValidatorFn, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Component, Input, OnInit} from '@angular/core';
 import {User} from '@ofModel/user.model';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
@@ -16,6 +16,8 @@ import {UserService} from '@ofServices/user.service';
 import {GroupsService} from '@ofServices/groups.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {TranslateService} from '@ngx-translate/core';
+import {debounceTime, distinctUntilChanged, first, map, switchMap} from 'rxjs/operators';
+import {Observable, Subject} from 'rxjs';
 
 @Component({
   selector: 'of-edit-user-modal',
@@ -35,9 +37,6 @@ export class EditUserModalComponent implements OnInit {
 
   groupsDropdownSettings = {};
 
-  isExistingLogin = false;
-
-
   @Input() row: User;
 
   constructor(
@@ -47,9 +46,18 @@ export class EditUserModalComponent implements OnInit {
       private groupsService: GroupsService,
       private entitiesService: EntitiesService) {
 
+  }
+
+  ngOnInit() {
+
+    const uniqueLoginValidator = [];
+    if (! this.row) // modal used for creating a new user
+      uniqueLoginValidator.push(this.uniqueLoginValidatorFn());
+
     this.userForm = new FormGroup({
       login: new FormControl(''
-          , [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-z\d\-_.]+$/)]),
+          , [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-z\d\-_.]+$/)]
+          , uniqueLoginValidator),
       firstName: new FormControl('', []),
       lastName: new FormControl('', []),
       groups: new FormControl([]),
@@ -57,9 +65,6 @@ export class EditUserModalComponent implements OnInit {
       authorizedIPAddresses: new FormControl('', [])
     });
 
-  }
-
-  ngOnInit() {
     if (this.row) { // If the modal is used for edition, initialize the modal with current data from this row
 
       // For 'simple' fields (where the value is directly displayed), we use the form's patching method
@@ -128,14 +133,30 @@ export class EditUserModalComponent implements OnInit {
     });
   }
 
-  checkExistingLogin() {
-    if (!! this.userForm.value['login'])
+  isUniqueLogin(login: string): Observable<boolean> {
+    const subject = new Subject<boolean>();
+
+    if (!! login) {
       this.crudService.getAllUsers().subscribe(users => {
-        if (users.filter(user => user.login === this.userForm.value['login']).length)
-          this.isExistingLogin = true;
+        if (users.filter(user => user.login === login).length)
+          subject.next(false);
+        else
+          subject.next(true);
       });
-    else
-      this.isExistingLogin = false;
+    } else
+        subject.next(true);
+
+    return subject.asObservable();
+  }
+
+  uniqueLoginValidatorFn(): AsyncValidatorFn {
+    return control => control.valueChanges
+        .pipe(
+            debounceTime(500),
+            distinctUntilChanged(),
+            switchMap(value => this.isUniqueLogin(value)),
+            map((unique: boolean) => (unique ? null : {'uniqueLoginViolation': true})),
+            first()); // important to make observable finite
   }
 
   private cleanForm() {

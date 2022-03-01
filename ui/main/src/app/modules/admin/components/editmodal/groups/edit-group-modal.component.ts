@@ -10,7 +10,7 @@
 
 
 import {Component, Input, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {AsyncValidatorFn, FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from '@ofServices/crud-service';
@@ -21,6 +21,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {MessageLevel} from '@ofModel/message.model';
 import {GroupsService} from '@ofServices/groups.service';
+import {debounceTime, distinctUntilChanged, first, map, switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'of-edit-group-modal',
@@ -29,13 +30,7 @@ import {GroupsService} from '@ofServices/groups.service';
 })
 export class EditGroupModalComponent implements OnInit {
 
-  groupForm = new FormGroup({
-    id: new FormControl(''
-      , [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-z\d\-_]+$/)]),
-    name: new FormControl('', [Validators.required]),
-    description: new FormControl(''),
-    perimeters: new FormControl([])
-  });
+  groupForm: FormGroup;
 
   perimetersDropdownList = [];
   selectedPerimeters = [];
@@ -45,8 +40,6 @@ export class EditGroupModalComponent implements OnInit {
   @Input() type: AdminItemType;
 
   private crudService: CrudService;
-
-  isExistingGroupId = false;
 
   constructor(
     private store: Store<AppState>,
@@ -59,6 +52,20 @@ export class EditGroupModalComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    const uniqueGroupIdValidator = [];
+    if (! this.row) // modal used for creating a new group
+      uniqueGroupIdValidator.push(this.uniqueGroupIdValidatorFn());
+
+    this.groupForm = new FormGroup({
+      id: new FormControl(''
+          , [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-z\d\-_]+$/)]
+          , uniqueGroupIdValidator),
+      name: new FormControl('', [Validators.required]),
+      description: new FormControl(''),
+      perimeters: new FormControl([])
+    });
+
     this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.type);
 
     if (this.row) { // If the modal is used for edition, initialize the modal with current data from this row
@@ -99,11 +106,21 @@ export class EditGroupModalComponent implements OnInit {
     });
   }
 
-  checkExistingGroupId() {
-    if ((!! this.groupForm.value['id']) && (this.groupsService.getGroups().filter(group => group.id === this.groupForm.value['id']).length))
-      this.isExistingGroupId = true;
+  isUniqueGroupId(groupId: string): boolean {
+    if ((!! groupId) && (this.groupsService.getGroups().filter(group => group.id === groupId).length))
+      return false;
     else
-      this.isExistingGroupId = false;
+      return true;
+  }
+
+  uniqueGroupIdValidatorFn(): AsyncValidatorFn {
+    return control => control.valueChanges
+        .pipe(
+            debounceTime(500),
+            distinctUntilChanged(),
+            switchMap(async (value) => this.isUniqueGroupId(value)),
+            map((unique: boolean) => (unique ? null : {'uniqueGroupIdViolation': true})),
+            first()); // important to make observable finite
   }
 
   onSavesuccess() {
