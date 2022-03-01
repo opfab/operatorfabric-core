@@ -56,6 +56,7 @@
     "featureNotConfigured": "Functie niet geconfigureerd",
     "confirmSettings": "BEVESTIG INSTELLINGEN",
     "cardEmitter": "EMITTER",
+    "entity": "ENTITEIT",
     "popup": {
       "title": "BEVESTIGING",
       "areYouSure": "U heeft enkele wijzigingen aangebracht. Weet u zeker dat u ze wilt opslaan?"
@@ -298,7 +299,9 @@
     "answers": "Antwoorden",
     "answered": "Beantwoord",
     "unanswered": "Nog niet beantwoord",
-    "status": "Proces Status"
+    "status": "Proces Status",
+    "chooseEntityForResponse": "Kies de entiteit waarvoor u reageert :",
+    "entityChoice": "Entiteit keuze"
   },
   "cardAcknowledgment": {
     "button": {

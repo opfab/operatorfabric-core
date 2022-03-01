@@ -17,18 +17,22 @@ import {ProcessesService} from '@ofServices/processes.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountDownModule} from '../share/countdown/countdown.module';
 import {UserCardModule} from '../usercard/usercard.module';
+import {SingleFilterModule} from "../share/single-filter/single-filter.module";
+import {ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
        CardDetailsComponent
       , DetailComponent],
-  imports: [
-    CommonModule,
-      CountDownModule,
-      TranslateModule,
-      NgbModule,
-      UserCardModule
-  ],
+    imports: [
+        CommonModule,
+        CountDownModule,
+        TranslateModule,
+        NgbModule,
+        UserCardModule,
+        SingleFilterModule,
+        ReactiveFormsModule
+    ],
     exports: [
          CardDetailsComponent
         , DetailComponent
