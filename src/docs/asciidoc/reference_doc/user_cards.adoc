@@ -180,7 +180,7 @@ The recipient field can be hidden using the attribute `recipientVisible` : if hi
 
 == Card editing
 Once a user card has been sent it can be edited by a user member of the publisher entity.
-It is possible to allow other entities to edit the card by specifing the 'entitiesAllowedToEdit' card field.
+It is possible to allow other entities to edit the card by specifying the 'entitiesAllowedToEdit' card field.
 
 == Get edition mode
 The template can know if the user is creating a new card or editing an existing card by calling the _usercardTemplateGateway.getEditionMode()_ function. The function will return one of the following values:
@@ -190,6 +190,9 @@ The template can know if the user is creating a new card or editing an existing 
 
 An example of _usercardTemplateGateway.getEditionMode()_ usage can be found in the file
 https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/userCardExamples2/template/usercard_question.handlebars[src/test/resources/bundles/userCardExamples2/template/usercard_question.handlebars].
+
+== Get current process and current state of the card
+The template can know the process and the state of the card by calling the _usercardTemplateGateway.getCurrentProcess()_ and _usercardTemplateGateway.getCurrentState()_ functions. These functions will return a string corresponding to the process id (or state id).
 
 == Send response automatically (experimental feature)
 
