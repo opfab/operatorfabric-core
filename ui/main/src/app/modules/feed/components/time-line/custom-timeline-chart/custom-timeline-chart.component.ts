@@ -44,7 +44,6 @@ import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-fee
 import {FilterService} from '@ofServices/lightcards/filter.service';
 
 
-
 @Component({
   selector: 'of-custom-timeline-chart',
   templateUrl: './custom-timeline-chart.component.html',
@@ -418,6 +417,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
               date: moment(this.xTicks[tickIndex - 1].valueOf()),
               dateOrPeriod: '',
               count: 0,
+              width: 10,
               color: this.getCircleColor(cards[cardIndex].severity),
               circleYPosition: cards[cardIndex].circleYPosition,
               summary: []
@@ -435,6 +435,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
               });
               cardIndex++;
             }
+            circle.width = 10 + 2 * this.getEllipseWidth(circle.count);
+
 
             //  add the circle to the list of circles to display
             if (circle.start.valueOf() === circle.end.valueOf()) {
@@ -449,6 +451,10 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         }
       }
     }
+  }
+
+  getEllipseWidth(count: number) {
+    return Math.log(count) * Math.LOG10E | 0;
   }
 
   getCircleYPosition(severity: string): number {

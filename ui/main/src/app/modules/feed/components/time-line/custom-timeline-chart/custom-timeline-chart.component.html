@@ -118,8 +118,8 @@
         <svg:g *ngFor="let circle of circles" type="button">
 
         <svg:g *ngIf="(circle.count>1)" (mouseenter)="feedCircleHovered(circle, p1)" container="body" #p1="ngbPopover"   [ngbPopover]="tooltipTemplate"    triggers="mouseenter:mouseleave" closeDelay="3000" popoverClass="opfab-popover">
-            <svg:circle [attr.cx]="xScale(circle.date)"
-                [attr.cy]="yScale(circle.circleYPosition)" [attr.r]="'10'" [attr.fill]=circle.color [attr.stroke]="'stroke'"
+            <svg:ellipse [attr.cx]="xScale(circle.date)"
+                [attr.cy]="yScale(circle.circleYPosition)" [attr.ry]="'10'" [attr.rx]="circle.width" [attr.fill]=circle.color [attr.stroke]="'stroke'"
                 />
             <text  [attr.x]="xScale(circle.date)"
                 [attr.y]="yScale(circle.circleYPosition)" text-anchor="middle"  stroke-width="0px"
