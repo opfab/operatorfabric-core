@@ -106,7 +106,7 @@ sonarqube {
         property 'sonar.junit.reportPaths','build/test-results/test'
         property 'sonar.coverage.jacoco.xmlReportPaths','build/reports/jacoco/xml/report.xml'
         // **/src/tooling/** : one-time migration tools, not meant to evolve or be tested for regressions
-        property 'sonar.coverage.exclusions','**/config*/**/*,operatorfabric-core/ui/**/*,**/controllers/**,**/src/tooling/**,operatorfabric-core/src/test/**'
+        property 'sonar.coverage.exclusions','**/config*/**/*,**/ui/**/*,**/controllers/**,**/src/tooling/**,**/src/test/**'
         property 'sonar.exclusions','**/generated/**/*,**/src/docs/**/*,**/*Application.java,**/node_modules/**/*'
         // exclusions for analyse of duplicated code , test classes are excluded 
         property 'sonar.cpd.exclusions','**/model/**/*,**/src/test/**/*,**/*.spec.ts,src/test/**'
