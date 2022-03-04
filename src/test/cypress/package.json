@@ -11,5 +11,8 @@
   "devDependencies": {
     "cypress": "9.5.1",
     "cypress-terminal-report": "3.4.2"
+  },
+  "dependencies": {
+    "xlsx": "0.18.2"
   }
 }

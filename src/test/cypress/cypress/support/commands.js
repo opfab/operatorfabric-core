@@ -181,8 +181,13 @@ Cypress.Commands.add('countAgGridTableRows', (table, rowsNum) => {
 })
 
 // Check ag-grid cell value
-Cypress.Commands.add('checkAgGridCellValue', (table, row, col, value) => {
-    cy.get(table).find('.ag-center-cols-container').find('.ag-row').eq(row).find('.ag-cell-value').eq(col).contains(value);
+Cypress.Commands.add('agGridCellShould', (table, row, col, operator, value) => {
+    cy.get(table).find('.ag-center-cols-container').find('.ag-row').eq(row).find('.ag-cell-value').eq(col).should(operator, value);
+})
+
+// Check ag-grid cell value
+Cypress.Commands.add('agGridCellElementShould', (table, row, col, element, operator, value) => {
+    cy.get(table).find('.ag-center-cols-container').find('.ag-row').eq(row).find('.ag-cell-value').eq(col).get(element).should(operator, value);
 })
 
 // Click on ag-grid cell

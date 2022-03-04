@@ -58,7 +58,7 @@ describe ('ExternalDevicesconfigurationPage',()=>{
 
          //click on "External devices configuration"
         cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
-        cy.checkAgGridCellValue('#opfab-externaldevices-table-grid', 4, 1, 'CDS_2')
+        cy.agGridCellShould('#opfab-externaldevices-table-grid', 4, 1, 'have.text', 'CDS_2')
 
         // Delete previously created row
         cy.clickAgGridCell('#opfab-externaldevices-table-grid', 4, 3, 'of-action-cell-renderer');
