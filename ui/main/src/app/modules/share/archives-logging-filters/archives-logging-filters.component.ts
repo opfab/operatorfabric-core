@@ -82,13 +82,12 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
 
     dateTimeFilterChange = new Subject();
 
-    publishMinDate : {year: number, month: number, day: number} = null;
-    publishMaxDate : {year: number, month: number, day: number} = null;
-    activeMinDate : {year: number, month: number, day: number} = null;
-    activeMaxDate : {year: number, month: number, day: number} = null;
+    publishMinDate: {year: number, month: number, day: number} = null;
+    publishMaxDate: {year: number, month: number, day: number} = null;
+    activeMinDate: {year: number, month: number, day: number} = null;
+    activeMaxDate: {year: number, month: number, day: number} = null;
 
     defaultMinPublishDate: NgbDateStruct;
-    defaultMaxPublishDate: NgbDateStruct;
 
     constructor(private store: Store<AppState>,
                 private translate: TranslateService,
@@ -142,7 +141,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
         this.changeProcessesWhenSelectProcessGroup();
         this.changeStatesWhenSelectProcess();
 
-        this. setDefaultPublishDateFilter();
+        this.setDefaultPublishDateFilter();
 
         this.dateTimeFilterChange.pipe(
             takeUntil(this.unsubscribe$),
@@ -242,7 +241,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
                         this.addProcessesDropdownList(this.processesDropdownListPerProcessGroups.get(processGroup.id));
                 });
             } else
-                this.processDropdownListWhenSelectedProcessGroup = [];
+                this.processDropdownListWhenSelectedProcessGroup = this.processDropdownList;
         });
     }
 
@@ -268,7 +267,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     }
 
     isThereOnlyOneProcessGroupInDropdownList(): boolean {
-        return !!this.processGroupDropdownList && this.processGroupDropdownList.length == 1;
+        return !!this.processGroupDropdownList && this.processGroupDropdownList.length === 1;
     }
 
     isThereProcessStateToDisplay(): boolean {
@@ -281,7 +280,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
 
         const min = moment(Date.now());
         min.subtract(defaultPublishDateInterval, 'day');
-        var minDate = min.toDate();
+        const minDate = min.toDate();
         this.defaultMinPublishDate = { day: minDate.getDate(), month: minDate.getMonth() + 1, year: minDate.getFullYear()};
     }
 
@@ -301,7 +300,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
             this.activeMaxDate = {year: this.parentForm.value.activeTo.date.year, month: this.parentForm.value.activeTo.date.month, day: this.parentForm.value.activeTo.date.day};
         }
     }
-    
+
     onDateTimeChange(event: Event) {
         this.dateTimeFilterChange.next(null);
     }
