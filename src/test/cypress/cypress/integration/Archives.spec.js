@@ -75,6 +75,16 @@ describe ('Archives screen tests',function () {
         // We move to archives screen
         cy.get('#opfab-navbar-menu-archives').click();
 
+        // We check we have 6 items in process multi-filter, even without choosing a process group
+        cy.get('#opfab-process').click();
+        cy.get('#opfab-process').find('li').should('have.length', 6);
+        cy.get('#opfab-process').contains('Examples for new cards').should('exist');
+        cy.get('#opfab-process').contains('Examples for new cards 2').should('exist');
+        cy.get('#opfab-process').contains('Examples for new cards 3').should('exist');
+        cy.get('#opfab-process').contains('IGCC').should('exist');
+        cy.get('#opfab-process').contains('Process example').should('exist');
+        cy.get('#opfab-process').contains('Test process for cypress').should('exist');
+
         // We check we have 3 items in process groups multi-filter
         cy.get('#opfab-processGroup').click();
         cy.get('#opfab-processGroup').find('li').should('have.length', 3);
@@ -109,6 +119,15 @@ describe ('Archives screen tests',function () {
 
         // We move to archives screen
         cy.get('#opfab-navbar-menu-archives').click();
+
+        // We check we have 5 items in process multi-filter, even without choosing a process group
+        cy.get('#opfab-process').click();
+        cy.get('#opfab-process').find('li').should('have.length', 5);
+        cy.get('#opfab-process').contains('Examples for new cards').should('exist');
+        cy.get('#opfab-process').contains('Examples for new cards 2').should('exist');
+        cy.get('#opfab-process').contains('Examples for new cards 3').should('exist');
+        cy.get('#opfab-process').contains('IGCC').should('exist');
+        cy.get('#opfab-process').contains('Process example').should('exist');
 
         // We check we have 2 items in process groups multi-filter
         cy.get('#opfab-processGroup').click();

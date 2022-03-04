@@ -22,6 +22,14 @@ describe ('Monitoring screen tests',function () {
         // We move to monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
 
+        // We check we have 4 items in process multi-filter, even without choosing a process group
+        cy.get('#opfab-process').click();
+        cy.get('#opfab-process').find('li').should('have.length', 4);
+        cy.get('#opfab-process').contains('Examples for new cards').should('exist');
+        cy.get('#opfab-process').contains('Examples for new cards 2').should('exist');
+        cy.get('#opfab-process').contains('IGCC').should('exist');
+        cy.get('#opfab-process').contains('Process example').should('exist');
+
         // We check we have 2 items in process groups multi-filter
         cy.get('#opfab-processGroup').click();
         cy.get('#opfab-processGroup').find('li').should('have.length', 2);
@@ -50,6 +58,14 @@ describe ('Monitoring screen tests',function () {
 
         // We move to monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
+
+        // We check we have 4 items in process multi-filter, even without choosing a process group
+        cy.get('#opfab-process').click();
+        cy.get('#opfab-process').find('li').should('have.length', 4);
+        cy.get('#opfab-process').contains('Examples for new cards').should('exist');
+        cy.get('#opfab-process').contains('Examples for new cards 2').should('exist');
+        cy.get('#opfab-process').contains('IGCC').should('exist');
+        cy.get('#opfab-process').contains('Process example').should('exist');
 
         // We check we have 2 items in process groups multi-filter
         cy.get('#opfab-processGroup').click();
@@ -98,7 +114,7 @@ describe ('Monitoring screen tests',function () {
         // We move to monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
 
-        // We check we have 2 items in process groups multi-filter
+        // We check we have no process groups multi-filter
         cy.get('#opfab-processGroup').should('not.exist');
 
         // We check we have 4 items in process multi-filter
