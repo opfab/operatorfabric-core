@@ -12,6 +12,8 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
+const readXlsx = require('./read-xlsx')
+
 /**
  * @type {Cypress.PluginConfig}
  */
@@ -19,4 +21,10 @@ module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
     require('cypress-terminal-report/src/installLogsPrinter')(on);
+
+    on('task', {
+      'readXlsx': readXlsx.read,
+      'list': readXlsx.list,
+      "deleteFile": readXlsx.deleteFile
+    })
 }

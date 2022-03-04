@@ -300,7 +300,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                 const responses = this.getResponses(line.data.cardId, line.data.entitiesResponses);
                 this.exportMonitoringData.push({
                         [this.timeColumnName]: line.data.time,
-                        [this.answerColumnName]: line.data.answer,
+                        [this.answerColumnName]: !!line.data.answer ? line.data.answer : false,
                         [this.businessPeriodColumnName]: this.displayTime(line.data.beginningOfBusinessPeriod)
                                                          .concat('-')
                                                          .concat(this.displayTime(line.data.endOfBusinessPeriod)),
