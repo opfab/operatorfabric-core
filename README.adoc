@@ -105,10 +105,13 @@ link:https://opfab.github.io/documentation/current/getting_started/[Getting Star
 
 OperatorFabric is mostly written in Java and based on the Spring framework. This makes writing and integrating software for a simplified and better coordination very easy.
 
-image:https://img.shields.io/badge/Using-Java-%237473C0.svg?style=for-the-badge[Using Java,link=]
+image:https://img.shields.io/badge/Using-Java-%237473C0.svg?style=for-the-badge[Using Java,link=https://www.java.com]
 image:https://img.shields.io/badge/Using-Spring-%236db33f.svg?style=for-the-badge[Using Spring,link=https://spring.io/]
 image:https://img.shields.io/badge/Using-Angular-%237473C0.svg?style=for-the-badge[Using Angular,link=https://angular.io/]
+image:https://img.shields.io/badge/Using-MongoDB-%236db33f.svg?style=for-the-badge[Using Swagger,link=https://www.mongodb.com/community/]
 image:https://img.shields.io/badge/Using-Swagger-%237473C0.svg?style=for-the-badge[Using Swagger,link=https://swagger.io/]
+image:https://img.shields.io/badge/Using-RabbitMQ-%236db33f.svg?style=for-the-badge[Using Swagger,link=https://www.rabbitmq.com/]
+
 
 === Continuous Integration / Continuous Delivery
 
