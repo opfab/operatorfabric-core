@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,6 @@
 package org.opfab.cards.consultation.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -47,16 +46,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.opfab.cards.consultation.TestUtilities.createSimpleCard;
 import static org.opfab.cards.consultation.TestUtilities.roundingToMillis;
 
-/**
- * <p></p>
- * Created on 29/10/18
- *
- *
- */
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {IntegrationTestApplication.class, CardSubscriptionService.class, CardOperationsController
    .class, UserServiceCacheTestApplication.class})
-@Slf4j
 @ActiveProfiles("test")
 @Tag("end-to-end")
 @Tag("amqp")
@@ -231,21 +224,21 @@ public class CardOperationsControllerShould {
         CardOperation card10 = (CardOperation) results.get("PROCESS10");
 
         assertThat(card2.getCard().getId()).isEqualTo("PROCESS.PROCESS2");
-        assertThat(card2.getPublishDate()).isEqualTo(nowMinusThree);
+        assertThat(card2.getCard().getPublishDate()).isEqualTo(nowMinusThree);
         assertThat(card3.getCard().getId()).isEqualTo("PROCESS.PROCESS3");
-        assertThat(card3.getPublishDate()).isEqualTo(nowPlusOne);
+        assertThat(card3.getCard().getPublishDate()).isEqualTo(nowPlusOne);
         assertThat(card4.getCard().getId()).isEqualTo("PROCESS.PROCESS4");
-        assertThat(card4.getPublishDate()).isEqualTo(nowMinusThree);
+        assertThat(card4.getCard().getPublishDate()).isEqualTo(nowMinusThree);
         assertThat(card5.getCard().getId()).isEqualTo("PROCESS.PROCESS5");
-        assertThat(card5.getPublishDate()).isEqualTo(nowMinusThree);
+        assertThat(card5.getCard().getPublishDate()).isEqualTo(nowMinusThree);
         assertThat(card6.getCard().getId()).isEqualTo("PROCESS.PROCESS6");
-        assertThat(card6.getPublishDate()).isEqualTo(nowMinusThree);
+        assertThat(card6.getCard().getPublishDate()).isEqualTo(nowMinusThree);
         assertThat(card8.getCard().getId()).isEqualTo("PROCESS.PROCESS8");
-        assertThat(card8.getPublishDate()).isEqualTo(nowMinusThree);
+        assertThat(card8.getCard().getPublishDate()).isEqualTo(nowMinusThree);
         assertThat(card9.getCard().getId()).isEqualTo("PROCESS.PROCESS9");
-        assertThat(card9.getPublishDate()).isEqualTo(nowPlusOne);
+        assertThat(card9.getCard().getPublishDate()).isEqualTo(nowPlusOne);
         assertThat(card10.getCard().getId()).isEqualTo("PROCESS.PROCESS10");
-        assertThat(card10.getPublishDate()).isEqualTo(nowPlusOne);
+        assertThat(card10.getCard().getPublishDate()).isEqualTo(nowPlusOne);
 
     }
 

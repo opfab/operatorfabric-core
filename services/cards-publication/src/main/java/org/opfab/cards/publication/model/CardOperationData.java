@@ -13,8 +13,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.opfab.cards.model.CardOperationTypeEnum;
-
-import java.time.Instant;
 import java.util.List;
 
 
@@ -24,7 +22,6 @@ import java.util.List;
 @Builder
 public class CardOperationData implements CardOperation {
 
-    private Instant publishDate;
     private CardOperationTypeEnum type;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String cardId;

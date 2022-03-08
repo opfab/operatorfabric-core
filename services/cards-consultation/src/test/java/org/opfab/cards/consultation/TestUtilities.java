@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -136,7 +136,7 @@ public class TestUtilities {
 
 
     public static void logCardOperation(CardOperation o) {
-        log.info("op publication: " + format(o.getPublishDate()));
+        log.info("op publication: " + format(o.getCard().getPublishDate()));
         if (o.getCard() != null)
             log.info(String.format("card [%s]: %s", o.getCard().getId(), format(o.getCard().getStartDate())));
     }

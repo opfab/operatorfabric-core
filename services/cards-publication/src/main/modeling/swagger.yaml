@@ -15,8 +15,6 @@ basePath: /cards
 tags:
   - name: cards
     description: Everything concerning cards
-  - name: actions
-    description: Everything concerning actions
   - name: read
     description: Everything concerning resource state
   - name: creation
@@ -84,13 +82,8 @@ definitions:
         FR: Mon Titre
   CardOperation:
     type: object
-    description: >-
-      This object holds an operation to be performed as well as a collection of
-      cards (published in the same second) so as to be able to perform the
-      operation on a batch of cards rather than on a single card.
+    description: 'Operation to do:  Add, Update or Delete a card' 
     properties:
-      publishDate:
-        $ref: '#/definitions/EpochDate'
       type:
         $ref: '#/definitions/CardOperationTypeEnum'
       cardId:
@@ -104,8 +97,6 @@ definitions:
           Card object to be added or updated. Only used for CardOperations of
           ADD or UPDATE type.
     example:
-      number: 3
-      publishDate: 1546300800000
       type: DELETE
       cardId:
         - 12345
@@ -322,32 +313,13 @@ definitions:
       tags:
         - MyService
         - MyProcess
-        - ACTION
-      actions:
-        - type: URL
-          lockAction: true
-          called: false
-          updateStateBeforeAction: false
-          hidden: true
-          buttonStyle: button.css
-          label:
-            key: myCard.myAction.label
-            parameters:
-              EN: My actions label
-              FR: Mon intitule d'actions
       title:
         key: myservice.myprocess.title
-        parameters:
-          EN: My process name
-          FR: Mon nom de processus
       summary:
         key: myservice.myprocess.title.summary
-        parameters:
-          EN: Summary of card content
-          FR: Resume du contenu de la carte
   CardCreationReport:
     type: object
-    description: Created card identifiers
+    description: Created card report
     properties:
       id:
         type: string
@@ -365,10 +337,6 @@ definitions:
       rangeEnd:
         $ref: '#/definitions/EpochDate'
         description: subscription range end time
-      loadedCards:
-        type: array
-        items:
-          type: string
   Connection:
     type: object
     description: Object representing a user connection (subscription)
