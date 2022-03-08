@@ -1,8 +1,3 @@
-dependencies {
-    implementation boot.starterWeb
-    implementation project(':tools:spring:spring-utilities')
-}
-
 jar {
     manifest {
         attributes("Created-By": "Gradle ${gradle.gradleVersion}",
