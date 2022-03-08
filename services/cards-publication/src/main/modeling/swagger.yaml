@@ -98,8 +98,7 @@ definitions:
           ADD or UPDATE type.
     example:
       type: DELETE
-      cardId:
-        - 12345
+      cardId: 12345
   TimeSpan:
     type: object
     description: An object to define a business time span
@@ -348,10 +347,12 @@ definitions:
         type: array
         items:
           type: string
+        description: List of entities the user is attached to 
       groups:
         type: array
         items:
           type: string
+        description: Groups of the user
   LightCard:
     type: object
     description: >-
