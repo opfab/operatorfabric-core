@@ -32,10 +32,6 @@ definitions:
     type: object
     description: Number of milliseconds since Epoch (long integer)
     example: 1551868290379
-  LongInteger:
-    type: object
-    description: Number of items
-    example: 10
   CardOperationTypeEnum:
     type: string
     description: |-
@@ -93,8 +89,6 @@ definitions:
       cards (published in the same second) so as to be able to perform the
       operation on a batch of cards rather than on a single card.
     properties:
-      number:
-        $ref: '#/definitions/LongInteger'
       publishDate:
         $ref: '#/definitions/EpochDate'
       type:
