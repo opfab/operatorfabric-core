@@ -16,7 +16,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.opfab.cards.model.CardOperationTypeEnum;
 
-import java.time.Instant;
 
 @Data
 @NoArgsConstructor
@@ -24,12 +23,10 @@ import java.time.Instant;
 @Builder
 public class CardOperationConsultationData implements CardOperation {
 
-    private Instant publishDate;
     private CardOperationTypeEnum type;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String cardId;
     
-
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private LightCard card;
 }
