@@ -7,14 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
-package org.opfab.client.configuration.json;
+package org.opfab.externalapp.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import com.fasterxml.jackson.databind.introspect.AnnotatedClass;
-import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
@@ -27,13 +22,14 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 /**
  * Json configuration
  *
+ *
  */
 @Configuration
 @Slf4j
 public class JacksonConfig {
 
   /**
-   * Builds object mapper adding java 8 custom configuration and business module configuration ({@link CardsModule})
+   * Builds object mapper adding java 8 custom configuration and business module configuration ({@link BusinessconfigModule})
    * @param builder Spring internal {@link ObjectMapper} builder [injected]
    * @return configured object mapper for json
    */
@@ -41,15 +37,7 @@ public class JacksonConfig {
   @Autowired
   public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {
     ObjectMapper objectMapper = builder.createXmlMapper(false).build();
-    objectMapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector() {
-      @Override
-      public JsonPOJOBuilder.Value findPOJOBuilderConfig(AnnotatedClass ac) {
-        if (ac.hasAnnotation(JsonPOJOBuilder.class)) {//If no annotation present use default as empty prefix
-          return super.findPOJOBuilderConfig(ac);
-        }
-        return new JsonPOJOBuilder.Value("build", "");
-      }
-    });
+
     // Some other custom configuration to support Java 8 features
     objectMapper.registerModule(new Jdk8Module());
     objectMapper.registerModule(new JavaTimeModule());
@@ -57,3 +45,4 @@ public class JacksonConfig {
     return objectMapper;
   }
 }
+
