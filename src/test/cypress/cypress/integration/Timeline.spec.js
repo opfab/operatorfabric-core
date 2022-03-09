@@ -33,9 +33,23 @@ describe('Time line moves', function () {
         cy.get("#opfab-timeline-link-move-left").click();
     }
 
-
     function checkHaveCircle(nb) {
-        cy.get("of-custom-timeline-chart").find("circle").should('have.length', nb);
+        cy.get("of-custom-timeline-chart").find("ellipse").should('have.length', nb);
+    }
+
+    function getNthCircle(nb) {
+        return cy.get("of-custom-timeline-chart").find("ellipse").eq(nb);
+    }
+
+    function hoverNthCircle(nb) {
+        //  force:true enables to click the circle even if the text is covering it
+        getNthCircle(nb).trigger('mouseenter', {force: true });
+    }
+
+
+    function clickNthCircle(nb) {
+        //  { force:true } enables to click the circle even if the text is covering it
+        getNthCircle(nb).click({force: true});
     }
 
     function checkTitle(title) {
@@ -52,6 +66,10 @@ describe('Time line moves', function () {
 
     function checkFirstTickLabel(label) {
         cy.get(".axis").find("text").first().should("have.text", label);
+    }
+
+    function checkDisplayedCardTitle(title) {
+        cy.get("#opfab-card-title").should("have.text", title);
     }
 
 
@@ -831,6 +849,48 @@ describe('Time line moves', function () {
         moveRight();
         checkHaveCircle(0);
 
+    });
+
+
+    
+    it('Check timeline circles have valid popover', function () {
+
+        cy.loginOpFab("operator1_fr", "test");
+        const currentDate = new Date(); 
+
+        checkHaveCircle(0);
+
+        cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime() + 2 * HOURS, currentDate.getTime() + 5 * HOURS);
+        cy.wait(500);
+        checkHaveCircle(1);
+
+        hoverNthCircle(0);
+        cy.get(".popover-body").find('button').should("have.length", 1);
+        cy.get("#opfab-div-card-template").should("not.exist");
+
+        clickNthCircle(0);
+        cy.get("#opfab-div-card-template").should("exist");
+        checkDisplayedCardTitle("State to test template rendering features");
+    
+        cy.sendCard('defaultProcess/chartLine.json');
+        cy.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 1 * HOURS, currentDate.getTime() + 5 * HOURS);
+        cy.wait(500);
+
+        checkHaveCircle(2);
+
+        // Clicking on a circle with several cards should not change the currently displayed card
+        clickNthCircle(1);
+        cy.get("#opfab-div-card-template").should("exist");
+        checkDisplayedCardTitle("State to test template rendering features");
+
+
+        hoverNthCircle(1);
+        cy.get(".popover-body").find('button').should("have.length", 2);
+        hoverNthCircle(1);  // hover again due to be sure the popover is still visible
+        cy.get(".popover-body").find('button').eq(1).click();
+        
+        cy.wait(500);
+        checkDisplayedCardTitle("Electricity consumption forecast");
     });
 
 })

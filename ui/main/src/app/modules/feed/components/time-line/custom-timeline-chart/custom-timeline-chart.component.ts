@@ -511,7 +511,14 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     return '';
   }
 
-  showCard(cardId): void {
+  onCircleClick(circle) {
+    if (circle.count==1) {
+      let cardId = circle.summary[0].cardId
+      this.showCard(cardId);
+    }
+  }
+
+  showCard(cardId): void {     
     this.router.navigate(['/' + this.currentPath, 'cards', cardId]);
     this.scrollToSelectedCard();
   }
