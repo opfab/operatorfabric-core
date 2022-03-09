@@ -719,24 +719,31 @@ type-ahead > .badge-primary {
 
 
 // Pagination component config 
-
 ngb-pagination {
-  .page-link,.page-item.disabled .page-link {
+  .page-link {
       background-color: var(--opfab-bgcolor-darker);
       color : var(--opfab-text-color-stronger);
       border : 0px;
     }
     .page-item.active .page-link{
-      background-color: white;
-      color : black;
-      border: 0px;
+      background-color: var(--opfab-pagination-active-page-background);
+      color : var(--opfab-bgcolor-darker);
+    }
+
+    .page-item :hover{
+      background-color: var(--opfab-button-disable-bgcolor);
+      color : var(--opfab-text-color-stronger);
     }
 
     .page-link:focus {
       box-shadow: none;
     }
-}
 
+  .page-item.disabled .page-link {
+    background-color: var(--opfab-bgcolor-darker);
+    color: var(--opfab-pagination-disabled-link);
+  }
+}
 
 .archives-page .form-control {
   border-radius: 5px;
