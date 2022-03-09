@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.dockerPush  != 'true' && github.event.inputs.dockerPushLatest  != 'true' &&  github.event.inputs.doc  != 'true' && github.event.inputs.docLatest  != 'true' && github.event_name != 'schedule' && github.ref_name != 'master' }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       
       - name: Job  status
         run: | 
@@ -100,7 +100,7 @@ jobs:
     environment: publishVersion
     if: ${{ github.event.inputs.dockerPush  == 'true' || github.event.inputs.dockerPushLatest  == 'true'  ||  github.event.inputs.doc  == 'true' || github.event.inputs.docLatest  == 'true' || github.event_name == 'schedule' || github.ref_name == 'master' }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
     
       - name: Job  status
         run: | 
