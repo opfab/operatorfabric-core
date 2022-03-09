@@ -1,7 +1,0 @@
-dependencies {
-    implementation boot.starterAop
-    implementation boot.starterMongo
-    implementation project(':client:users-client-data')
-    implementation project(':tools:spring:spring-mongo-utilities')
-    implementation misc.jacksonAnnotations
-}

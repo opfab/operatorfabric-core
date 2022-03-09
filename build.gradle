@@ -24,7 +24,6 @@ ext {
             starterWeb              : "org.springframework.boot:spring-boot-starter-web:$springBoot",
             starterWebflux          : "org.springframework.boot:spring-boot-starter-webflux:$springBoot",
             actuator                : "org.springframework.boot:spring-boot-starter-actuator:$springBoot",
-            starterAop              : "org.springframework.boot:spring-boot-starter-aop:$springBoot",
             starterJetty            : "org.springframework.boot:spring-boot-starter-jetty:$springBoot",
             starterRabbitmq         : "org.springframework.boot:spring-boot-starter-amqp:$springBoot",
             starterSecurity         : "org.springframework.boot:spring-boot-starter-security:$springBoot",

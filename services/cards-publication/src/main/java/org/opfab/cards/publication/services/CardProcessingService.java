@@ -12,8 +12,6 @@ package org.opfab.cards.publication.services;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.opfab.aop.process.AopTraceType;
-import org.opfab.aop.process.mongo.models.UserActionTraceData;
 import org.opfab.cards.model.CardOperationTypeEnum;
 import org.opfab.cards.publication.model.ArchivedCardPublicationData;
 import org.opfab.cards.publication.model.CardPublicationData;
@@ -62,8 +60,7 @@ public class CardProcessingService {
     private UserCardProcessor userCardProcessor;
     @Autowired
     private ExternalAppClientImpl externalAppClient;
-    @Autowired
-    private TraceRepository traceRepository;
+
 
     @Autowired
     private CardTranslationService cardTranslationService;
@@ -351,9 +348,5 @@ public class CardProcessingService {
 	public UserBasedOperationResult deleteUserAcknowledgement(String cardUid, String userName) {
 		return cardRepositoryService.deleteUserAck(userName, cardUid);
 	}
-
-    public UserActionTraceData findTraceByCardUid(String name, String cardUid) {
-        return traceRepository.findByCardUidAndActionAndUserName(cardUid, AopTraceType.ACK.getAction(),name);
-    }
 
 }

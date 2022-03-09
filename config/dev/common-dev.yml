@@ -22,7 +22,6 @@ security:
     enabled: false
 
 operatorfabric:
-  businessLogActivated: true
   servicesUrls:
     users: "http://localhost:2103"
     businessconfig: "http://localhost:2100"

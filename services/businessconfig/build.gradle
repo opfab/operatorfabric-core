@@ -2,7 +2,6 @@ dependencies {
     swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
     swaggerUI generator.swaggerUI
     implementation boot.starterRabbitmq
-    implementation boot.starterAop
     implementation boot.starterSecurity
     implementation spring.securityOauthResource, spring.securityOauthJose
     implementation boot.starterValidation
