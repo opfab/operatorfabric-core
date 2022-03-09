@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.opfab.aop.process.mongo.models.UserActionTraceData;
 import org.opfab.cards.model.SeverityEnum;
 import org.opfab.cards.publication.application.UnitTestApplication;
 import org.opfab.cards.publication.configuration.TestCardReceiver;
@@ -33,7 +32,6 @@ import org.opfab.cards.publication.model.RecurrencePublicationData;
 import org.opfab.cards.publication.model.TimeSpanPublicationData;
 import org.opfab.cards.publication.repositories.ArchivedCardRepositoryForTest;
 import org.opfab.cards.publication.repositories.CardRepositoryForTest;
-import org.opfab.cards.publication.repositories.TraceRepositoryForTest;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
@@ -89,9 +87,6 @@ class CardProcessServiceShould {
 
     @Autowired
     private CardRepositoryForTest cardRepository;
-
-    @Autowired
-    private TraceRepositoryForTest traceRepository;
 
     @Autowired
     private ArchivedCardRepositoryForTest archiveRepository;
@@ -718,35 +713,6 @@ class CardProcessServiceShould {
     }
 
 
-    @Test
-    void processAddTraceAcknowledgement() {
-        EasyRandom easyRandom = instantiateRandomCardGenerator();
-        int numberOfCards = 1;
-        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
-        cards.get(0).setUsersAcks(null);
-        cards.get(0).setParentCardId(null);
-        cards.get(0).setInitialParentCardUid(null);
-        cards.forEach(card-> cardProcessingService.processCard(card));
-
-        Long block = cardRepository.count();
-        Assertions.assertThat(block).withFailMessage(
-                "The number of registered cards should be '%d' but is " + "'%d' actually",
-                numberOfCards, block).isEqualTo(numberOfCards);
-
-        CardPublicationData firstCard = cardRepository.findById(cards.get(0).getId()).get();
-        Assertions.assertThat(firstCard.getUsersAcks()).as("Expecting Card doesn't contain any ack at the beginning").isNullOrEmpty();
-
-        String cardUid = firstCard.getUid();
-        user.setLogin("aaa");
-        UserBasedOperationResult res = cardProcessingService.processUserAcknowledgement(cardUid, user);
-        Assertions.assertThat(UserBasedOperationResult.cardFound().operationDone(true).equals(res));
-        UserActionTraceData trace= cardProcessingService.findTraceByCardUid("aaa",cardUid);
-
-        Assertions.assertThat(trace.getAction()).as("Expecting Acknowledgment trace after ack ").isEqualToIgnoringCase("Acknowledgment");
-        Assertions.assertThat(trace.getUserName()).as("Expecting  Acknowledgment trace after ack with user name").isEqualTo("aaa");
-
-
-    }
 
     @Test
     void processDeleteUserAcknowledgement() {

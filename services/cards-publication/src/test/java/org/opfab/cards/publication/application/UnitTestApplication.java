@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,14 +28,12 @@ import org.opfab.springtools.configuration.oauth.I18nProcessesCache;
 import org.opfab.springtools.configuration.test.I18nProcessesCacheTestApplication;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.opfab.aop.annotations.EnableAopTraceProcessing;
 import org.opfab.cards.publication.configuration.mongo.LocalMongoConfiguration;
 import org.opfab.cards.publication.services.CardNotificationService;
 import org.opfab.cards.publication.services.CardProcessingService;
 import org.opfab.cards.publication.services.CardRepositoryService;
 import org.opfab.cards.publication.services.CardTranslationService;
 import org.opfab.cards.publication.services.processors.impl.UserCardProcessorImpl;
-import org.opfab.cards.publication.services.TraceRepository;
 import org.opfab.cards.publication.configuration.json.JacksonConfig;
 import org.opfab.cards.publication.configuration.Common;
 import org.opfab.cards.publication.controllers.CardController;
@@ -45,8 +43,7 @@ import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
 @EnableOperatorFabricMongo
-@EnableMongoRepositories(basePackageClasses = {CardRepositoryForTest.class , TraceRepository.class,  ArchivedCardRepositoryForTest.class})
-@EnableAopTraceProcessing
+@EnableMongoRepositories(basePackageClasses = {CardRepositoryForTest.class , ArchivedCardRepositoryForTest.class})
 @Import({LocalMongoConfiguration.class, CardProcessingService.class, CardTranslationService.class, CardNotificationService.class,
     CardRepositoryService.class, UserCardProcessorImpl.class, ExternalAppClientImpl.class , ResponseCardProducer.class
 , CardCommandFactory.class, CardObjectMapper.class, TestCardReceiver.class , TestConsumerConfig.class, JacksonConfig.class

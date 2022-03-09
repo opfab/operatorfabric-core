@@ -5,7 +5,6 @@ dependencies {
     implementation boot.starterRabbitmq
     implementation misc.jsonSmart
     implementation spring.securityOauthResource, spring.securityOauthJose
-    implementation boot.starterAop
     implementation boot.starterMongo
     implementation cloud.starterFeign
     implementation boot.starterSecurity
