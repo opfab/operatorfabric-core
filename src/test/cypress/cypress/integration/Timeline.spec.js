@@ -37,19 +37,19 @@ describe('Time line moves', function () {
         cy.get("of-custom-timeline-chart").find("ellipse").should('have.length', nb);
     }
 
-    function getNthCircle(nb) {
-        return cy.get("of-custom-timeline-chart").find("ellipse").eq(nb);
-    }
+    function checkNthCircleContains(nb,value) {
+        cy.get('#opfab-timelineCircle-' + nb ).within(() => {
+            cy.get("text").contains(value);
+        })  
+    } 
 
     function hoverNthCircle(nb) {
-        //  force:true enables to click the circle even if the text is covering it
-        getNthCircle(nb).trigger('mouseenter', {force: true });
+        cy.get('#opfab-timelineCircle-' + nb).trigger('mouseenter');
     }
 
 
     function clickNthCircle(nb) {
-        //  { force:true } enables to click the circle even if the text is covering it
-        getNthCircle(nb).click({force: true});
+        cy.get('#opfab-timelineCircle-' + nb).click();
     }
 
     function checkTitle(title) {
@@ -71,8 +71,6 @@ describe('Time line moves', function () {
     function checkDisplayedCardTitle(title) {
         cy.get("#opfab-card-title").should("have.text", title);
     }
-
-
 
     before('Set up configuration and cards', function () {
         cy.loadTestConf();
@@ -852,7 +850,6 @@ describe('Time line moves', function () {
     });
 
 
-    
     it('Check timeline circles have valid popover', function () {
 
         cy.loginOpFab("operator1_fr", "test");
@@ -861,8 +858,8 @@ describe('Time line moves', function () {
         checkHaveCircle(0);
 
         cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime() + 2 * HOURS, currentDate.getTime() + 5 * HOURS);
-        cy.wait(500);
         checkHaveCircle(1);
+        checkNthCircleContains(0,"1");
 
         hoverNthCircle(0);
         cy.get(".popover-body").find('button').should("have.length", 1);
@@ -874,9 +871,12 @@ describe('Time line moves', function () {
     
         cy.sendCard('defaultProcess/chartLine.json');
         cy.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 1 * HOURS, currentDate.getTime() + 5 * HOURS);
-        cy.wait(500);
 
-        checkHaveCircle(2);
+         // wait we receive the cards (when we have 3 cards in the feed)
+         cy.get('of-light-card').should('have.length',3);
+         checkHaveCircle(2);
+         checkNthCircleContains(0,"1");
+         checkNthCircleContains(1,"2");
 
         // Clicking on a circle with several cards should not change the currently displayed card
         clickNthCircle(1);
@@ -886,10 +886,9 @@ describe('Time line moves', function () {
 
         hoverNthCircle(1);
         cy.get(".popover-body").find('button').should("have.length", 2);
-        hoverNthCircle(1);  // hover again due to be sure the popover is still visible
         cy.get(".popover-body").find('button').eq(1).click();
         
-        cy.wait(500);
+        
         checkDisplayedCardTitle("Electricity consumption forecast");
     });
 
