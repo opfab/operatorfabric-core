@@ -115,9 +115,9 @@
         ></svg:rect>
 
 
-        <svg:g *ngFor="let circle of circles" type="button">
+        <svg:g *ngFor="let circle of circles;let index = index;" type="button">
 
-        <svg:g (click)="onCircleClick(circle)" (mouseenter)="feedCircleHovered(circle, p1)" container="body" #p1="ngbPopover"   [ngbPopover]="tooltipTemplate"    triggers="mouseenter:mouseleave" closeDelay="3000" popoverClass="opfab-popover">
+        <svg:g id="opfab-timelineCircle-{{index}}" (click)="onCircleClick(circle)" (mouseenter)="feedCircleHovered(circle, p1)" container="body" #p1="ngbPopover"   [ngbPopover]="tooltipTemplate"    triggers="mouseenter:mouseleave" closeDelay="3000" popoverClass="opfab-popover">
             <svg:ellipse [attr.cx]="xScale(circle.date)"
                 [attr.cy]="yScale(circle.circleYPosition)" [attr.ry]="'10'" [attr.rx]="circle.width" [attr.fill]=circle.color [attr.stroke]="'stroke'"
                 />
