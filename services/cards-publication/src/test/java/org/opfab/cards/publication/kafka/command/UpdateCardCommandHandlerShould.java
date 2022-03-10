@@ -47,7 +47,7 @@ class UpdateCardCommandHandlerShould {
 
     @Test
     void getCommandType() {
-        assertThat(cut.getCommandType().equals(CommandType.UPDATE_CARD));
+        assertThat(cut.getCommandType()).isEqualTo(CommandType.UPDATE_CARD);
     }
 
     @Test

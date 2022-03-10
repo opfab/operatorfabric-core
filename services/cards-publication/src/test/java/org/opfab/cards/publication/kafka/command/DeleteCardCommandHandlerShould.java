@@ -54,7 +54,7 @@ class DeleteCardCommandHandlerShould {
 
     @Test
     void getCommandType() {
-        assertThat(cut.getCommandType().equals(CommandType.DELETE_CARD));
+        assertThat(cut.getCommandType()).isEqualTo(CommandType.DELETE_CARD);
     }
 
     @Test
