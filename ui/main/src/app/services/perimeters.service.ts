@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -59,14 +59,14 @@ export class PerimetersService extends CachedCrudService implements OnDestroy {
     this._perimeters = updatedPerimeters;
   }
 
-  getAllPerimeters(): Observable<Perimeter[]> {
+  private queryAllPerimeters(): Observable<Perimeter[]> {
     return this.httpClient.get<Perimeter[]>(`${this.perimetersUrl}`).pipe(
       catchError((error: Response) => this.handleError(error))
     );
   }
 
   public loadAllPerimetersData(): Observable<any> {
-    return this.getAllPerimeters()
+    return this.queryAllPerimeters()
         .pipe(takeUntil(this.ngUnsubscribe$)
             , tap({
                 next: (perimeters) => {
@@ -107,7 +107,7 @@ export class PerimetersService extends CachedCrudService implements OnDestroy {
 
 
   getAll(): Observable<any[]> {
-    return this.getAllPerimeters();
+    return this.queryAllPerimeters();
   }
 
   create(data: any): Observable<any> {

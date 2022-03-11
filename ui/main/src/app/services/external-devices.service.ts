@@ -45,11 +45,11 @@ export class ExternalDevicesService extends ErrorService {
         return this.httpClient.get<UserConfiguration>(`${this.configurationsUrl}/users/${login}`);
     }
 
-    getAllUserConfigurations(): Observable<UserConfiguration[]> {
+    queryAllUserConfigurations(): Observable<UserConfiguration[]> {
         return this.httpClient.get<UserConfiguration[]>(`${this.configurationsUrl}/users`);
     }
 
-    getAllDevices(): Observable<Device[]> {
+    queryAllDevices(): Observable<Device[]> {
         return this.httpClient.get<Device[]>(`${this.configurationsUrl}/devices`);
     }
 

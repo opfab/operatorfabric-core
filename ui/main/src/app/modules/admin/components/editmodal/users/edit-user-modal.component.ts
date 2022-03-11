@@ -137,7 +137,7 @@ export class EditUserModalComponent implements OnInit {
     const subject = new Subject<boolean>();
 
     if (!! login) {
-      this.crudService.getAllUsers().subscribe(users => {
+      this.crudService.queryAllUsers().subscribe(users => {
         if (users.filter(user => user.login === login).length)
           subject.next(false);
         else
