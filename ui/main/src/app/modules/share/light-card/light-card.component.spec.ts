@@ -19,7 +19,6 @@ import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {ProcessesService} from '@ofServices/processes.service';
-import {ServicesModule} from '@ofServices/services.module';
 import {Router} from '@angular/router';
 import 'moment/locale/fr';
 import {TimeService} from '@ofServices/time.service';
@@ -36,7 +35,7 @@ describe('LightCardComponent', () => {
     let injector: TestBed;
     let translateService: TranslateService;
     let i18nService: I18nService;
-    
+
 
     beforeEach(waitForAsync(() => {
         const routerSpy = createSpyObj('Router', ['navigate']);
@@ -45,7 +44,6 @@ describe('LightCardComponent', () => {
         TestBed.configureTestingModule({
             imports: [
                 HttpClientTestingModule,
-                ServicesModule,
                 StoreModule.forRoot(appReducer),
                 RouterTestingModule,
                 HttpClientTestingModule,

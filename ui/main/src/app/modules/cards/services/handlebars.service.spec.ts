@@ -19,7 +19,6 @@ import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
 import {AuthenticationImportHelperForSpecs, BusinessconfigI18nLoaderFactory, getOneRandomCard} from '@tests/helpers';
 import {LightCard} from '@ofModel/light-card.model';
-import {ServicesModule} from '@ofServices/services.module';
 import {HandlebarsService} from './handlebars.service';
 import {Guid} from 'guid-typescript';
 import {I18n} from '@ofModel/i18n.model';
@@ -42,7 +41,6 @@ describe('Handlebars Services', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                ServicesModule,
                 StoreModule.forRoot(appReducer),
                 HttpClientTestingModule,
                 RouterTestingModule,
@@ -75,8 +73,8 @@ describe('Handlebars Services', () => {
     });
 
     describe('#executeTemplate', () => {
-        let userContext = new UserContext('jdoe', 'token', 'John', 'Doe');
-        let card = getOneRandomCard({
+        const userContext = new UserContext('jdoe', 'token', 'John', 'Doe');
+        const card = getOneRandomCard({
             data: {
                 name: 'something',
                 numbers: [0, 1, 2, 3, 4, 5],
@@ -113,7 +111,7 @@ describe('Handlebars Services', () => {
                     expect(result).toEqual('English template something');
                     done();
                 });
-            let calls = httpMock.match(req => req.url == computeTemplateUri('testTemplate'));
+            const calls = httpMock.match(req => req.url == computeTemplateUri('testTemplate'));
             expect(calls.length).toEqual(1);
             calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
@@ -129,7 +127,7 @@ describe('Handlebars Services', () => {
                         `Expected result to be ${expectedResult} when testing [${v1} ${cond} ${v2}]`);
                     done();
                 });
-            let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
+            const calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
             calls.forEach(call => {
                 expect(call.request.method).toBe('GET');

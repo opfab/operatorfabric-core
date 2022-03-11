@@ -15,7 +15,9 @@ import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class ReminderService {
 
     private reminderList: ReminderList;

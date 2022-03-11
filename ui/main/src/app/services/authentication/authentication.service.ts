@@ -49,8 +49,9 @@ export enum LocalStorageAuthContent {
 
 export const ONE_SECOND = 1000;
 export const MILLIS_TO_WAIT_BETWEEN_TOKEN_EXPIRATION_DATE_CONTROLS = 5000;
-
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class AuthenticationService {
 
     /** url to check authentication token (jwt) */
