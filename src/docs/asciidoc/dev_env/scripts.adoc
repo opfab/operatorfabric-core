@@ -14,7 +14,6 @@
 bin/load_environment_light.sh:: sets up environment when *sourced* (java
 version & node version)
 bin/run_all.sh:: runs all all services (see below)
-bin/setup_dockerized_environment.sh:: generate docker images for all services
 
 == run_all.sh
 
@@ -48,8 +47,3 @@ instance).
 
 +++ </div></details> +++
 
-== setup_dockerized_environment.sh
-
-Please see `setup_dockerized_environment.sh -h` usage before running.
-
-Builds all sub-projects, generate docker images and volumes for docker-compose.
