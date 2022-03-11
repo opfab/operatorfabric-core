@@ -18,5 +18,5 @@ then
 	url="http://localhost"
 fi
 (
-	docker exec $(docker ps --format "{{.Names}}" | grep "mongodb") bash -c "mongo mongodb://root:password@localhost:27017 --eval \"db=db.getSiblingDB('operator-fabric'); db['archivedCards'].drop();\""
+	docker exec $(docker ps --format "{{.Names}}" | grep "mongodb") bash -c "mongo mongodb://root:password@localhost:27017/?authSource=admin --eval \"db=db.getSiblingDB('operator-fabric'); db['archivedCards'].drop();\""
 )
