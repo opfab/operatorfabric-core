@@ -5,80 +5,13 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-
-
-
 = User Interface
-
-The https://github.com/angular/angular-cli[Angular CLI] version 6.0.8 has been used to generate this project.
 
 IMPORTANT: In the following document the variable declared as `OF_HOME` is the root folder of the `operatorfabric-core project`.
 
 [horizontal]
 CLI:: stands for *Command Line Interface*
-SPA:: stands for *Single Page Application*
 
-== Run
-
-=== Front End development
-
-OperatorFabric uses 4 external services to run properly :
- 
- * an event queue: RabbitMQ;
- * a no SQL database: MongoDB;
- * an authentication provider: Keycloak;
- * a web server: Nginx.
-
-Those instances are available as docker images in the project.
-se `docker-compose` and the `${OF_HOME}/config/dev/docker-compose.yml` to run them.
-After launching docker containers, use the following command line `$OF_HOME/bin/run_all.sh start` to run the application.
-
-Once the whole application is ready, you should have the following output in your terminal:
-
-[source, shell]
-----
-##########################################################
-Starting users-business-service, debug port: 5009
-##########################################################
-pid file: $OF_HOME/services/users/build/PIDFILE
-Started with pid: 7483
-
-##########################################################
-Starting cards-consultation-business-service, debug port: 5011
-##########################################################
-pid file: $OF_HOME/services/cards-consultation/build/PIDFILE
-Started with pid: 7493
-
-##########################################################
-Starting cards-publication-business-service, debug port: 5012
-##########################################################
-pid file: $OF_HOME/services/cards-publication/build/PIDFILE
-Started with pid: 7500
-
-##########################################################
-Starting businessconfig-business-service, debug port: 5008
-##########################################################
-pid file: $OF_HOME//services/businessconfig/build/PIDFILE
-Started with pid: 7501
-
-----
-
-Wait a moment before trying to connect to the`SPA`, leaving time for the OperatorFabricServices to boot up completely.
-
-The `SPA`, on a local machine, is available at the following Url: `http://localhost:2002/`.
-
-To log in you need to use a valid user among the following: `operator1_fr`, `operator3_fr` or `admin`.
-The common password is `test` for them all.
-
-To test the reception of cards, you can use the following scripts to push basic configuration and example cards:
-
-[source,shell]
-----
-${OF_HOME}/src/test/resources/loadTestConf.sh
-${OF_HOME}/src/test/resources/send6TestCards.sh
-----
-
-Once logged in with operator1_fr, after those scripts have been running, you should be able to see some cards displayed in `http://localhost:2002/`.
 
 == Build
 
