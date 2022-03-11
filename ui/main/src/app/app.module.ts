@@ -12,11 +12,10 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {ErrorHandler, NgModule} from '@angular/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {CommonModule, HashLocationStrategy, LocationStrategy} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {StateModule} from '@ofStore/state.module';
-import {ServicesModule} from '@ofServices/services.module';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {LoginComponent} from './modules/login/login.component';
@@ -32,6 +31,7 @@ import {NavbarModule} from './modules/navbar/navbar.module';
 import {NgbModalModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {FontAwesomeIconsModule} from './modules/utilities/fontawesome-icons.module';
 import {TagInputModule} from 'ngx-chips';
+import {TokenInjector} from '@ofServices/interceptors.service';
 
 
 @NgModule({
@@ -41,11 +41,10 @@ import {TagInputModule} from 'ngx-chips';
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    TagInputModule, 
+    TagInputModule,
     OAuthModule.forRoot(),
     HttpClientModule,
     StateModule.forRoot(),
-    ServicesModule.forRoot(),
     NgbModule,
     TranslateModule.forRoot(),
     FontAwesomeIconsModule,
@@ -64,7 +63,12 @@ import {TagInputModule} from 'ngx-chips';
 
 
   providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy },
-  { provide: ErrorHandler, useClass: AppErrorHandler }
+  { provide: ErrorHandler, useClass: AppErrorHandler },
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: TokenInjector,
+    multi: true
+}
   ],
   bootstrap: [AppComponent]
 })

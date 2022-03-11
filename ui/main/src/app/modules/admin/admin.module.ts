@@ -8,13 +8,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ErrorHandler, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AdminComponent} from './admin.component';
 import {AdminRoutingModule} from './admin-routing.module';
 import {TranslateModule} from '@ngx-translate/core';
-import {AppErrorHandler} from 'app/common/error/app-error-handler';
 import {ConfirmationDialogComponent} from './components/confirmation-dialog/confirmation-dialog.component';
 import {UsersTableComponent} from './components/table/users-table.component';
 import {EditUserModalComponent} from './components/editmodal/users/edit-user-modal.component';
@@ -77,7 +76,6 @@ import {TagInputModule} from 'ngx-chips';
     ]]), SingleFilterModule
   ],
   providers: [
-    { provide: ErrorHandler, useClass: AppErrorHandler },
     { provide: SharingService, useClass: SharingService}
   ]
 })

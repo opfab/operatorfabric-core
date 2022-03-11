@@ -33,7 +33,9 @@ import {FilterService} from '@ofServices/lightcards/filter.service';
 import {LogOption, OpfabLoggerService} from './logs/opfab-logger.service';
 
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class CardService {
 
     private static TWO_MINUTES = 120000;

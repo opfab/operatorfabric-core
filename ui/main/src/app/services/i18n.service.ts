@@ -20,7 +20,9 @@ import {Observable} from 'rxjs';
 import {environment} from '@env/environment';
 import { tap } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class I18nService {
 
 

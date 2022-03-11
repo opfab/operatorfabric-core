@@ -17,7 +17,9 @@ import {buildSettingsOrConfigSelector} from '@ofSelectors/settings.x.config.sele
 import {isMoment} from 'moment';
 
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class TimeService {
 
 
