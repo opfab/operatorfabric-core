@@ -39,7 +39,6 @@ Getting Started Guide, etc.)
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/src/main[main]
 *** link:https://github.com/opfab/operatorfabric-core/tree/master/src/main/docker[docker]: contains docker-compose files to help with
 tests and demonstrations
-*** link:https://github.com/opfab/operatorfabric-core/tree/master/src/main/headers[headers]: contains license header files
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/src/test[test]
 *** link:https://github.com/opfab/operatorfabric-core/tree/master/src/test/api[api] : karate code for automatic api testing (non-regression tests)
 *** link:https://github.com/opfab/operatorfabric-core/tree/master/src/test/cypress[cypress] : cypress code for automatic ui testing
