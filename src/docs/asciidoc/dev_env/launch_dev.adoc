@@ -14,7 +14,7 @@
 WARNING: The steps below assume that you have installed and are using
 https://sdkman.io/[sdkman] and
 https://github.com/nvm-sh/nvm[nvm] to manage tool versions ( for java,
-gradle, node and npm).
+ node and npm).
 
 There are several ways to get started with `OperatorFabric`. Please look into
 the section that best fits your needs.
@@ -36,7 +36,7 @@ git clone https://github.com/opfab/operatorfabric-core.git
 cd operatorfabric-core
 ----
 
-== Set up your environment (environment variables & appropriate versions of gradle, maven, etc…)
+== Set up your environment (environment variables & appropriate versions of tools)
 [source,shell]
 ----
 source bin/load_environment_light.sh
@@ -76,7 +76,7 @@ To export the reports into the `SonarQube` docker instance, install and use link
 `OperatorFabric` development needs docker images of `MongoDB`, `RabbitMQ`, `web-ui` and `Keycloak` running.
 The `web-ui` configuration needs a `nginx.conf`.
 
-The `${OF_HOME}/config/dev/$docker-compose.sh` creates the `nginx.conf` file and then runs `docker-compose` in detached mode.
+The `${OF_HOME}/config/dev/docker-compose.sh` creates the `nginx.conf` file and then runs `docker-compose` in detached mode.
 For this, use:
 [source,shell]
 ----
