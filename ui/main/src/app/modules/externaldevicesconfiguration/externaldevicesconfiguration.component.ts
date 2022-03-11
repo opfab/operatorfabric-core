@@ -119,7 +119,7 @@ export class ExternaldevicesconfigurationComponent {
   }
 
   refreshData() {
-    this.externalDevicesService.getAllUserConfigurations().subscribe(configurations => {
+    this.externalDevicesService.queryAllUserConfigurations().subscribe(configurations => {
       this.userConfigurations = configurations;
     });
   }

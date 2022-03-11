@@ -59,14 +59,14 @@ export class GroupsService extends CachedCrudService implements OnDestroy {
     this._groups = updatedGroups;
   }
 
-  getAllGroups(): Observable<Group[]> {
+  private queryAllGroups(): Observable<Group[]> {
     return this.httpClient.get<Group[]>(`${this.groupsUrl}`).pipe(
       catchError((error: Response) => this.handleError(error))
     );
   }
 
   public loadAllGroupsData(): Observable<any> {
-    return this.getAllGroups()
+    return this.queryAllGroups()
         .pipe(takeUntil(this.ngUnsubscribe$)
             , tap({
                 next: (groups) => {
@@ -105,7 +105,7 @@ export class GroupsService extends CachedCrudService implements OnDestroy {
   }
 
   getAll(): Observable<any[]> {
-    return this.getAllGroups();
+    return this.queryAllGroups();
   }
 
   update(data: any): Observable<any> {

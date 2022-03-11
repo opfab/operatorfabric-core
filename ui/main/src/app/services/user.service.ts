@@ -64,14 +64,14 @@ export class UserService extends CrudService {
     );
   }
 
-  getAllUsers(): Observable<User[]> {
+  queryAllUsers(): Observable<User[]> {
     return this.httpClient.get<User[]>(`${this.userUrl}`).pipe(
       catchError((error: Response) => this.handleError(error))
     );
   }
 
   getAll(): Observable<User[]> {
-    return this.getAllUsers();
+    return this.queryAllUsers();
   }
 
   updateUser(userData: User): Observable<User> {
