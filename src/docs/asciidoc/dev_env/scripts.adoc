@@ -12,7 +12,7 @@
 
 [horizontal]
 bin/load_environment_light.sh:: sets up environment when *sourced* (java
-version, gradle version, maven version, node version)
+version & node version)
 bin/run_all.sh:: runs all all services (see below)
 bin/setup_dockerized_environment.sh:: generate docker images for all services
 

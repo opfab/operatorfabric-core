@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -9,8 +9,7 @@
 
 == Running sub-project from jar file
 
-* gradle :[sub-projectPath]:bootJar
-* or java -jar [sub-projectPath]/build/libs/[sub-project].jar
+*  java -jar [sub-projectPath]/build/libs/[sub-project].jar
 
 == Overriding properties when running from jar file
 
