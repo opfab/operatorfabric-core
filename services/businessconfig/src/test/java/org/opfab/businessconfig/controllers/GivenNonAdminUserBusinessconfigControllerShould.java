@@ -37,7 +37,7 @@ import java.nio.file.Paths;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.opfab.test.AssertUtils.assertException;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.opfab.utilities.PathUtils.copy;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -203,7 +203,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
                 .andExpect(content().string(is("card.title=\"Title $1 0.1\"")))
         ;
 
-        assertException(FileNotFoundException.class).isThrownBy(() ->
+        assertThatExceptionOfType(FileNotFoundException.class).isThrownBy(() ->
                 mockMvc.perform(
                         get("/businessconfig/processes/first/i18n?version=2.1")
                                 .accept("text/plain")

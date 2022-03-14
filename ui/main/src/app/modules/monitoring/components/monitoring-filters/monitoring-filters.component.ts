@@ -247,8 +247,7 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
         if (!!control) {
             const isNotPristine = !control.pristine;
             const valueIsNotDefault = control.value !== '';
-            const result = isNotPristine && valueIsNotDefault;
-            return result;
+            return isNotPristine && valueIsNotDefault;
         }
         return false;
     }

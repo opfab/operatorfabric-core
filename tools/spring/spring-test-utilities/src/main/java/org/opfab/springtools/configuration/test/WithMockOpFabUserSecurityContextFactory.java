@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,6 +29,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -169,12 +170,12 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
 
         @Override
         public String[] getParameterValues(String name) {
-            return null;
+            return new String[0];
         }
 
         @Override
-        public Map getParameterMap() {
-            return null;
+        public Map<String,String[]>  getParameterMap() {
+            return new HashMap<>();
         }
 
         @Override
@@ -272,7 +273,7 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
 
         @Override
         public Cookie[] getCookies() {
-            return null;
+            return new Cookie[0];
         }
 
         @Override
@@ -286,12 +287,12 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
         }
 
         @Override
-        public Enumeration getHeaders(String name) {
+        public Enumeration<String> getHeaders(String name) {
             return null;
         }
 
         @Override
-        public Enumeration getHeaderNames() {
+        public Enumeration<String> getHeaderNames() {
             return null;
         }
 
@@ -397,7 +398,7 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
 
         @Override
         public Collection<Part> getParts() {
-            return null;
+            return new ArrayList<>(0);
         }
 
         @Override

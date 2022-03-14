@@ -69,7 +69,7 @@ class BaseCommandHandlerShould {
         when(card.getData()).thenReturn(null);
         CardPublicationData result = cut.buildCardPublicationData(cardCommand);
         Map<String,Object> data = (Map<String,Object>) result.getData();
-        Assertions.assertThat(data.size()).isEqualTo(0);
+        Assertions.assertThat(data).isEmpty();
     }
 
     @Test
@@ -80,8 +80,9 @@ class BaseCommandHandlerShould {
         when(objectMapper.readValue(anyString(), (TypeReference<Map<String, Object>>) any())).thenReturn(cardData);
         CardPublicationData result = cut.buildCardPublicationData(cardCommand);
         Map<String,Object> data = (Map<String,Object>) result.getData();
-        Assertions.assertThat(data.size()).isEqualTo(1);
-        Assertions.assertThat(data.get(DATA_KEY)).isEqualTo(DATA_VALUE);
+        Assertions.assertThat(data)
+            .hasSize(1)
+            .containsEntry(DATA_KEY,DATA_VALUE);
     }
 
 }

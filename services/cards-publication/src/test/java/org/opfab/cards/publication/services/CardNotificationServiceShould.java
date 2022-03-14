@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,6 @@
 
 package org.opfab.cards.publication.services;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,7 +39,6 @@ import static org.awaitility.Awaitility.await;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = UnitTestApplication.class)
 @ActiveProfiles(profiles = {"native","test"})
-@Slf4j
 class CardNotificationServiceShould {
 
     @Autowired
@@ -73,17 +71,19 @@ class CardNotificationServiceShould {
 
         cardNotificationService.notifyOneCard(newCard,CardOperationTypeEnum.ADD);
         await().pollDelay(1, TimeUnit.SECONDS).until(()->true);
-        assertThat(testCardReceiver.getCardQueue().size()).isEqualTo(1);
+        assertThat(testCardReceiver.getCardQueue()).hasSize(1);
 
         CardOperationData cardOperationData = testCardReceiver.getCardQueue().element();
         List<String> groupRecipientsIds = cardOperationData.getGroupRecipientsIds();
-        assertThat(groupRecipientsIds.size()).isEqualTo(2);
-        assertThat(groupRecipientsIds.contains("mytso")).isTrue();
-        assertThat(groupRecipientsIds.contains("admin")).isTrue();
+        assertThat(groupRecipientsIds)
+            .hasSize(2)
+            .contains("mytso")
+            .contains("admin");
 
         List<String> userRecipientsIds = cardOperationData.getUserRecipientsIds();
-        assertThat(userRecipientsIds.size()).isEqualTo(2);
-        assertThat(userRecipientsIds.contains("graham")).isTrue();
-        assertThat(userRecipientsIds.contains("eric")).isTrue();
+        assertThat(userRecipientsIds)
+            .hasSize(2)
+            .contains("graham")
+            .contains("eric");
     }
 }

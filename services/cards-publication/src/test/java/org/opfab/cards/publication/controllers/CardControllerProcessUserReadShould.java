@@ -1,4 +1,4 @@
-/* Copyright (c) 2020-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2020-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,6 @@
 
  package org.opfab.cards.publication.controllers;
 
-import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.*;
@@ -40,9 +39,8 @@ import java.util.Optional;
 @ActiveProfiles("test")
 @WebAppConfiguration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Slf4j
 @WithMockOpFabUser(login = "someUser", roles = { "AROLE" })
-public class CardControllerProcessUserReadShould extends CardControllerShouldBase {
+class CardControllerProcessUserReadShould extends CardControllerShouldBase {
 
 	String cardUid;
 	String cardNeverContainsReadsUid;

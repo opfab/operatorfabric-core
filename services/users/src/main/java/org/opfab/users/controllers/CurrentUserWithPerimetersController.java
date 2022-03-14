@@ -101,9 +101,7 @@ public class CurrentUserWithPerimetersController implements CurrentUserWithPerim
         List<EntityData> systemEntities = entityRepository.findAll();
         Map<String, EntityData> systemEntityDictionary = systemEntities.stream()
                 .collect(Collectors.toMap(Entity::getId, Function.identity()));
-        userEntityList.stream().forEach(entityName -> {
-            this.manageParentsRef(entityName, systemEntityDictionary, userEntityNames);
-        });
+        userEntityList.stream().forEach(entityName -> this.manageParentsRef(entityName, systemEntityDictionary, userEntityNames));
         userData.setEntities(userEntityNames.stream().collect(Collectors.toList()));
     }
 // recursive because by convention there are no cycle in entity relationship (cf above)

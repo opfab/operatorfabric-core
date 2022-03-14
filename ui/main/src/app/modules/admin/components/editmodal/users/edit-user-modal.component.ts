@@ -172,27 +172,27 @@ export class EditUserModalComponent implements OnInit {
   }
 
   get login() {
-    return this.userForm.get('login') as FormControl;
+    return this.userForm.get('login');
   }
 
   get firstName() {
-    return this.userForm.get('firstName') as FormControl;
+    return this.userForm.get('firstName');
   }
 
   get lastName() {
-    return this.userForm.get('lastName') as FormControl;
+    return this.userForm.get('lastName');
   }
 
   get groups() {
-    return this.userForm.get('groups') as FormControl;
+    return this.userForm.get('groups');
   }
 
   get entities() {
-    return this.userForm.get('entities') as FormControl;
+    return this.userForm.get('entities');
   }
 
   get authorizedIPAddresses() {
-    return this.userForm.get('authorizedIPAddresses') as FormControl;
+    return this.userForm.get('authorizedIPAddresses');
   }
 
 

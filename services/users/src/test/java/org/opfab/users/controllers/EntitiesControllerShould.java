@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -406,14 +406,13 @@ class EntitiesControllerShould {
             assertThat(freshlyNewUser.getEntities()).containsExactly("ENTITY2");
 
             List<UserData> entity2 = userRepository.findByEntitiesContaining("ENTITY2");
-            assertThat(entity2).isNotNull();
-            assertThat(entity2).containsExactly(freshlyNewUser);
+            assertThat(entity2).isNotNull().containsExactly(freshlyNewUser);
         }
 
         @Test
         void deleteEntitiesFromUsers() throws Exception {
             List<UserData> entity1 = userRepository.findByEntitiesContaining("ENTITY1");
-            assertThat(entity1.size()).isEqualTo(2);
+            assertThat(entity1).hasSize(2);
             mockMvc.perform(delete("/entities/ENTITY1/users")
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -497,7 +496,7 @@ class EntitiesControllerShould {
             assertThat(e1).isNotNull();
             e1.setParents(Arrays.asList("PARENT1"));
             entityRepository.save(e1);
-            assertThat(e1.getParents().size()).isEqualTo(1);
+            assertThat(e1.getParents()).hasSize(1);
             assertThat(e1.getParents().get(0)).isEqualTo("PARENT1");
 
             mockMvc.perform(delete("/entities/PARENT1")
@@ -516,7 +515,7 @@ class EntitiesControllerShould {
         @Test
         void deleteEntitiesFromUser() throws Exception {
             List<UserData> entity1 = userRepository.findByEntitiesContaining("ENTITY1");
-            assertThat(entity1.size()).isEqualTo(2);
+            assertThat(entity1).hasSize(2);
             mockMvc.perform(delete("/entities/ENTITY1/users/gchapman")
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -524,7 +523,7 @@ class EntitiesControllerShould {
             ;
 
             entity1 = userRepository.findByEntitiesContaining("ENTITY1");
-            assertThat(entity1.size()).isEqualTo(1);
+            assertThat(entity1).hasSize(1);
         }
 
         @Test

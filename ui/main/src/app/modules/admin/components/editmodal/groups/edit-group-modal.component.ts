@@ -143,19 +143,19 @@ export class EditGroupModalComponent implements OnInit {
   }
 
   get id() {
-    return this.groupForm.get('id') as FormControl;
+    return this.groupForm.get('id');
   }
 
   get name() {
-    return this.groupForm.get('name') as FormControl;
+    return this.groupForm.get('name') ;
   }
 
   get description() {
-    return this.groupForm.get('description') as FormControl;
+    return this.groupForm.get('description');
   }
 
   get perimeters() {
-    return this.groupForm.get('perimeters') as FormControl;
+    return this.groupForm.get('perimeters');
   }
 
   dismissModal(reason: string): void {

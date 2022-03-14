@@ -1,4 +1,4 @@
-/* Copyright (c) 2020-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2020-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
 
 package org.opfab.cards.publication.controllers;
 
-import lombok.extern.slf4j.Slf4j;
+
 import org.assertj.core.api.Assertions;
 import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.*;
@@ -39,9 +39,8 @@ import java.util.Optional;
 @ActiveProfiles("test")
 @WebAppConfiguration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Slf4j
 @WithMockOpFabUser(login = "someUser", roles = { "AROLE" })
-public class CardControllerUserCardShould extends CardControllerShouldBase {
+class CardControllerUserCardShould extends CardControllerShouldBase {
 
 	String cardUid;
 	int cardNumber = 2;
@@ -76,7 +75,7 @@ public class CardControllerUserCardShould extends CardControllerShouldBase {
 	void deleteNonExistingUserCard() throws Exception {
 		String cardId = "NotExistingCardId";
 		Optional <CardPublicationData> card = cardRepository.findById(cardId);
-		Assertions.assertThat(card.isPresent()).isFalse();
+		Assertions.assertThat(card).isNotPresent();
 		mockMvc.perform(delete("/cards/userCard/" + cardId)).andExpect(status().isNotFound());
 	}
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 package org.opfab.externaldevices.configuration.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.externaldevices.application.UnitTestApplication;
@@ -27,8 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes={UnitTestApplication.class, JacksonConfig.class})
 @ActiveProfiles(profiles = {"default","test"})
-@Slf4j
-public class ObjectMapperShould {
+class ObjectMapperShould {
 
     @Autowired
     private ObjectMapper mapper;
@@ -37,8 +35,7 @@ public class ObjectMapperShould {
     void readDeviceConfiguration() throws IOException {
         String deviceConfigurationString = "{ \"id\": \"loudspeaker_1\", \"host\": \"some_host\", \"port\": 1234, \"signalMappingId\": \"some_mapping\" }";
         DeviceConfiguration deviceConfiguration = mapper.readValue(deviceConfigurationString, DeviceConfiguration.class);
-        assertThat(deviceConfiguration).isNotNull();
-        assertThat(deviceConfiguration).isInstanceOf(DeviceConfigurationData.class);
+        assertThat(deviceConfiguration).isNotNull().isInstanceOf(DeviceConfigurationData.class);
         assertThat(deviceConfiguration.getId()).isEqualTo("loudspeaker_1");
         assertThat(deviceConfiguration.getHost()).isEqualTo("some_host");
         assertThat(deviceConfiguration.getPort()).isEqualTo(1234);
@@ -49,8 +46,7 @@ public class ObjectMapperShould {
     void readUserConfiguration() throws IOException {
         String userConfigurationString = "{ \"userLogin\": \"jcleese\", \"externalDeviceId\": \"loudspeaker_1\" }";
         UserConfiguration userConfiguration = mapper.readValue(userConfigurationString, UserConfiguration.class);
-        assertThat(userConfiguration).isNotNull();
-        assertThat(userConfiguration).isInstanceOf(UserConfigurationData.class);
+        assertThat(userConfiguration).isNotNull().isInstanceOf(UserConfigurationData.class);
         assertThat(userConfiguration.getUserLogin()).isEqualTo("jcleese");
         assertThat(userConfiguration.getExternalDeviceId()).isEqualTo("loudspeaker_1");
     }
@@ -59,8 +55,7 @@ public class ObjectMapperShould {
     void readSignalMapping() throws IOException {
         String signalMappingString = "{ \"id\": \"some_mapping\", \"supportedSignals\": { \"ALARM\": 1, \"ACTION\": 2 } }";
         SignalMapping signalMapping = mapper.readValue(signalMappingString, SignalMapping.class);
-        assertThat(signalMapping).isNotNull();
-        assertThat(signalMapping).isInstanceOf(SignalMappingData.class);
+        assertThat(signalMapping).isNotNull().isInstanceOf(SignalMappingData.class);
         assertThat(signalMapping.getId()).isEqualTo("some_mapping");
         assertThat(signalMapping.getSupportedSignals()).containsEntry("ALARM",1);
         assertThat(signalMapping.getSupportedSignals()).containsEntry("ACTION",2);
@@ -70,8 +65,7 @@ public class ObjectMapperShould {
     void readNotification() throws IOException {
         String notificationString = "{ \"opfabSignalId\": \"ALARM\" }";
         Notification notification = mapper.readValue(notificationString, Notification.class);
-        assertThat(notification).isNotNull();
-        assertThat(notification).isInstanceOf(NotificationData.class);
+        assertThat(notification).isNotNull().isInstanceOf(NotificationData.class);
         assertThat(notification.getOpfabSignalId()).isEqualTo("ALARM");
     }
 }

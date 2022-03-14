@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,11 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.businessconfig.controllers;
 
-import lombok.extern.slf4j.Slf4j;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -35,18 +33,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-/**
- * <p></p>
- * Created on 17/04/18
- *
- */
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {IntegrationTestApplication.class})
 @WebAppConfiguration
 @ActiveProfiles("service_error")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Slf4j
-public class BusinessconfigControllerWithWrongConfigurationShould {
+
+class BusinessconfigControllerWithWrongConfigurationShould {
 
   private MockMvc mockMvc;
 
