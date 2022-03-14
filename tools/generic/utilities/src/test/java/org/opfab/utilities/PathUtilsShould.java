@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
 
 
 package org.opfab.utilities;
@@ -22,16 +21,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.opfab.test.AssertUtils.assertException;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-/**
- * <basePath></basePath>
- * Created on 22/06/18
- *
- *
- */
 @Slf4j
-public class PathUtilsShould {
+class PathUtilsShould {
 
   private static final Path basePath = Paths.get("build","test-data");
 
@@ -77,7 +70,7 @@ public class PathUtilsShould {
   void getPath(){
     File f = basePath.toFile();
     Path result = PathUtils.getPath(f);
-    assertThat(result.normalize().toAbsolutePath().toString()).isEqualTo(f.getAbsolutePath());
+    assertThat(result.normalize().toAbsolutePath()).hasToString(f.getAbsolutePath());
   }
 
   @Test
@@ -98,23 +91,23 @@ public class PathUtilsShould {
 
   @Test
   void handleErrorOnCopy(){
-    assertException(IOException.class).isThrownBy(()->{
+    assertThatExceptionOfType(IOException.class).isThrownBy(()->{
       PathUtils.copy(
          basePath.resolve("dir").resolve("empty.file"),
          basePath.resolve("already-existing").resolve("empty.file"));
     });
-    assertException(IOException.class).isThrownBy(()->{
+    assertThatExceptionOfType(IOException.class).isThrownBy(()->{
       PathUtils.copy(basePath.resolve("turlututu"), basePath.resolve("turlututu-copy"));
     });
   }
 
   @Test
   void handleErrorOnDelete(){
-    assertException(IOException.class).isThrownBy(()->{
+    assertThatExceptionOfType(IOException.class).isThrownBy(()->{
       PathUtils.delete(
          basePath.resolve("dir2").resolve("empty.file"));
     });
-    assertException(IOException.class).isThrownBy(()->{
+    assertThatExceptionOfType(IOException.class).isThrownBy(()->{
       PathUtils.deleteDir(
          basePath.resolve("dir2"));
     });

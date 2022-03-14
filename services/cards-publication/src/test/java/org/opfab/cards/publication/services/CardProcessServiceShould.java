@@ -348,7 +348,7 @@ class CardProcessServiceShould {
                 .withFailMessage("The number of registered cards should be '%d' but is '%d' "
                                 + "when first parent card is deleted(processInstanceId:'%s').",
                         0, block, id)
-                .isEqualTo(0);
+                .isZero();
     }
 
     @Test
@@ -399,22 +399,24 @@ class CardProcessServiceShould {
                 .publisherType(PublisherTypeEnum.EXTERNAL)
                 .representative("ENTITY1")
                 .representativeType(PublisherTypeEnum.ENTITY)
-                .secondsBeforeTimeSpanForReminder(new Integer(1000))
+                .secondsBeforeTimeSpanForReminder(Integer.valueOf(1000))
                 .build();
         cardProcessingService.processCard(newCard);
         CardPublicationData persistedCard = cardRepository.findById(newCard.getId()).get();
-        assertThat(persistedCard).isEqualToIgnoringGivenFields(newCard);
+        assertThat(persistedCard).isEqualTo(newCard);
         assertThat(persistedCard.getTitleTranslated()).isEqualTo("Title translated");
         assertThat(persistedCard.getSummaryTranslated()).isEqualTo("Summary translated value1");
 
         ArchivedCardPublicationData archivedPersistedCard = archiveRepository.findById(newCard.getUid()).get();
-        assertThat(archivedPersistedCard).isEqualToIgnoringGivenFields(newCard, "uid", "id",
-                "actions", "timeSpans");
+        assertThat(archivedPersistedCard).usingRecursiveComparison()
+            .ignoringFields("uid", "id","timeSpans")
+            .isEqualTo(newCard);
+
         assertThat(archivedPersistedCard.getId()).isEqualTo(newCard.getUid());
         assertThat(archivedPersistedCard.getTitleTranslated()).isEqualTo("Title translated");
         assertThat(archivedPersistedCard.getSummaryTranslated()).isEqualTo("Summary translated value1");
 
-        assertThat(testCardReceiver.getCardQueue().size()).isEqualTo(1);
+        assertThat(testCardReceiver.getCardQueue()).hasSize(1);
     }
 
     private boolean checkCardCount(long expectedCount) {
@@ -665,7 +667,6 @@ class CardProcessServiceShould {
         Assertions.assertThat(cardToDelete).isNotNull();
 
         Object resultingData = cardToDelete.getData();
-        Assertions.assertThat(resultingData).isNotEqualTo(fakeDataContent);
         Assertions.assertThat(resultingData).isNull();
 
     }

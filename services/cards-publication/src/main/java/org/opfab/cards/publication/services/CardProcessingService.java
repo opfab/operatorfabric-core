@@ -224,7 +224,7 @@ public class CardProcessingService {
                 if (c.getTimeSpans().get(i) != null) {
                     Instant endInstant = c.getTimeSpans().get(i).getEnd();
                     Instant startInstant = c.getTimeSpans().get(i).getStart();
-                    if ((endInstant != null) && (startInstant != null) && (endInstant.compareTo(startInstant) < 0))
+                    if ((endInstant != null) && (endInstant.compareTo(startInstant) < 0))
                         return false;
                 }
             }

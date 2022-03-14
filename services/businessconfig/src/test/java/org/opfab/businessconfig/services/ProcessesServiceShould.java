@@ -26,6 +26,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,8 +39,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.opfab.businessconfig.model.ResourceTypeEnum.*;
-import static org.opfab.test.AssertUtils.assertException;
 import static org.opfab.utilities.PathUtils.copy;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {IntegrationTestApplication.class})
@@ -171,25 +172,25 @@ class ProcessesServiceShould {
 
     @Test
     void fetchResourceError() {
-        assertException(FileNotFoundException.class).isThrownBy(() ->
+        assertThatExceptionOfType(FileNotFoundException.class).isThrownBy(() ->
                 service.fetchResource("what",
                         TEMPLATE,
                         "0.1",
                         null,
                         "template"));
-        assertException(FileNotFoundException.class).isThrownBy(() ->
+        assertThatExceptionOfType(FileNotFoundException.class).isThrownBy(() ->
                 service.fetchResource("first",
                         TEMPLATE,
                         "0.2",
                         null,
                         "template"));
-        assertException(FileNotFoundException.class).isThrownBy(() ->
+        assertThatExceptionOfType(FileNotFoundException.class).isThrownBy(() ->
                 service.fetchResource("first",
                         CSS,
                         "0.1",
                         null,
                         "styleWhat"));
-        assertException(FileNotFoundException.class).isThrownBy(() ->
+        assertThatExceptionOfType(FileNotFoundException.class).isThrownBy(() ->
                 service.fetchResource("first",
                         TEMPLATE,
                         "0.1",
@@ -225,9 +226,9 @@ class ProcessesServiceShould {
                 Process process = service.updateProcess(is);
                 assertThat(process).hasFieldOrPropertyWithValue("id", "second");
                 assertThat(process).hasFieldOrPropertyWithValue("version", "2.0");
-                assertThat(process.getStates().size()).isEqualTo(1);
+                assertThat(process.getStates()).hasSize(1);
                 assertThat(process.getStates().get("firstState").getTemplateName()).isEqualTo("template");
-                assertThat(process.getStates().get("firstState").getResponse().getExternalRecipients().size()).isEqualTo(2);
+                assertThat(process.getStates().get("firstState").getResponse().getExternalRecipients()).hasSize(2);
                 assertThat(service.listProcesses()).hasSize(3);
             } catch (IOException e) {
                 log.trace("rethrowing exception");
@@ -261,7 +262,7 @@ class ProcessesServiceShould {
                 Assertions.assertNull(service.fetch(bundleName, "0.1"));
                 Process process = service.fetch(bundleName);
                 Assertions.assertNotNull(process);
-                Assertions.assertFalse(process.getVersion().equals("0.1"));
+                assertThat(process.getVersion()).isNotEqualTo("0.1");
                 Assertions.assertTrue(Files.isDirectory(bundleDir));
                 Assertions.assertFalse(Files.isDirectory(bundleVersionDir));
             }
@@ -270,7 +271,7 @@ class ProcessesServiceShould {
             void deleteBundleByNameAndVersionWhichBeingDeafult1() throws Exception {
                 Path bundleDir = testDataDir.resolve(bundleName);
                 Process process = service.fetch(bundleName);
-                Assertions.assertTrue(process.getVersion().equals("v1"));
+                assertThat(process.getVersion()).isEqualTo("v1");
                 Path bundleVersionDir = bundleDir.resolve("v1");
                 Path bundleNewDefaultVersionDir = bundleDir.resolve("0.1");
                 FileUtils.touch(bundleNewDefaultVersionDir.toFile());//this is to be sure this version is the last modified
@@ -280,7 +281,7 @@ class ProcessesServiceShould {
                 Assertions.assertNull(service.fetch(bundleName, "v1"));
                 process = service.fetch(bundleName);
                 Assertions.assertNotNull(process);
-                Assertions.assertTrue(process.getVersion().equals("0.1"));
+                assertThat(process.getVersion()).isEqualTo("0.1");
                 Assertions.assertTrue(Files.isDirectory(bundleDir));
                 Assertions.assertFalse(Files.isDirectory(bundleVersionDir));
                 Assertions.assertTrue(Files.isDirectory(bundleNewDefaultVersionDir));
@@ -292,7 +293,7 @@ class ProcessesServiceShould {
             void deleteBundleByNameAndVersionWhichBeingDefault2() throws Exception {
                 Path bundleDir = testDataDir.resolve(bundleName);
                 final Process process = service.fetch(bundleName);
-                Assertions.assertTrue(process.getVersion().equals("v1"));
+                assertThat(process.getVersion()).isEqualTo("v1");
                 Path bundleVersionDir = bundleDir.resolve("v1");
                 Path bundleNewDefaultVersionDir = bundleDir.resolve("0.5");
                 FileUtils.touch(bundleNewDefaultVersionDir.toFile());//this is to be sure this version is the last modified
@@ -302,7 +303,7 @@ class ProcessesServiceShould {
                 Assertions.assertNull(service.fetch(bundleName, "v1"));
                 Process _process = service.fetch(bundleName);
                 Assertions.assertNotNull(_process);
-                Assertions.assertTrue(_process.getVersion().equals("0.5"));
+                assertThat(_process.getVersion()).isEqualTo("0.5");
                 Assertions.assertTrue(Files.isDirectory(bundleDir));
                 Assertions.assertFalse(Files.isDirectory(bundleVersionDir));
                 Assertions.assertTrue(Files.isDirectory(bundleNewDefaultVersionDir));
@@ -343,7 +344,7 @@ class ProcessesServiceShould {
                 @Test
                 void clean() throws IOException {
                     service.clear();
-                    assertThat(service.listProcesses()).hasSize(0);
+                    assertThat(service.listProcesses()).isEmpty();
                 }
             }
         }

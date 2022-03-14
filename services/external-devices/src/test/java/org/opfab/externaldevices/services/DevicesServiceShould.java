@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,6 @@
 
 package org.opfab.externaldevices.services;
 
-import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +32,6 @@ import java.util.Optional;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@Slf4j
 class DevicesServiceShould {
 
     // We use IP addresses for hosts rather than names for tests because otherwise we would need to mock the static
@@ -262,8 +260,7 @@ class DevicesServiceShould {
         devicesService.connectDevice("testDeviceId");
 
         List<Device> deviceList = devicesService.getDevices();
-        Assertions.assertThat(deviceList).isNotNull();
-        Assertions.assertThat(deviceList.size()).isEqualTo(1);
+        Assertions.assertThat(deviceList).isNotNull().hasSize(1);
         Device device = deviceList.get(0);
         Assertions.assertThat(device.getId()).isEqualTo("testDeviceId");
         Assertions.assertThat(device.getResolvedAddress()).isEqualTo("/123.45.67.1");
@@ -276,8 +273,7 @@ class DevicesServiceShould {
     void returnEmptyDevicesList() {
 
         List<Device> deviceList = devicesService.getDevices();
-        Assertions.assertThat(deviceList).isNotNull();
-        Assertions.assertThat(deviceList.size()).isZero();
+        Assertions.assertThat(deviceList).isNotNull().isEmpty();
 
     }
 

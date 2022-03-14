@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,6 @@ package org.opfab.users.controllers;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.opfab.users.application.UnitTestApplication;
 import org.opfab.users.application.configuration.WithMockOpFabUser;
 import org.opfab.users.model.*;
@@ -22,7 +21,6 @@ import org.opfab.users.repositories.PerimeterRepository;
 import org.opfab.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -592,7 +590,7 @@ class PerimetersControllerShould {
         @Test
         void deletePerimetersFromGroups() throws Exception {
             List<GroupData> groupsHavingPerimeter1_1 = groupRepository.findByPerimetersContaining("PERIMETER1_1");
-            assertThat(groupsHavingPerimeter1_1.size()).isEqualTo(2);
+            assertThat(groupsHavingPerimeter1_1).hasSize(2);
             mockMvc.perform(delete("/perimeters/PERIMETER1_1/groups")
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -606,7 +604,7 @@ class PerimetersControllerShould {
         @Test
         void deletePerimetersFromGroup() throws Exception {
             List<GroupData> groupsHavingPerimeter1_1 = groupRepository.findByPerimetersContaining("PERIMETER1_1");
-            assertThat(groupsHavingPerimeter1_1.size()).isEqualTo(2);
+            assertThat(groupsHavingPerimeter1_1).hasSize(2);
             mockMvc.perform(delete("/perimeters/PERIMETER1_1/groups/G2")
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -614,7 +612,7 @@ class PerimetersControllerShould {
             ;
 
             groupsHavingPerimeter1_1 = groupRepository.findByPerimetersContaining("PERIMETER1_1");
-            assertThat(groupsHavingPerimeter1_1.size()).isEqualTo(1);
+            assertThat(groupsHavingPerimeter1_1).hasSize(1);
         }
 
         @Test

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -147,7 +147,6 @@ describe('Handlebars Services', () => {
             expectIfCond(card, 'card.data.numbers.[0]', '===', 'card.data.numberStrings.[0]', 'false', done);
         });
         it('compile polyIf helper <', (done) => {
-            // expectIfCond(card, 'card.data.numbers.[0]', '<', 'card.data.numbers.[1]', 'true');
             expectIfCond(card, 'card.data.numbers.[0]', '<', 'card.data.numberStrings.[1]', 'true', done);
             expectIfCond(card, 'card.data.numbers.[1]', '<', 'card.data.numbers.[0]', 'false', done);
             expectIfCond(card, 'card.data.numbers.[1]', '<', 'card.data.numbers.[1]', 'false', done);
@@ -528,21 +527,6 @@ describe('Handlebars Services', () => {
             });
         });
         it('compile dateFormat with number for epoch date  (using en locale fallback)', (done) => {
-            now.locale('en');
-            const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
-                .subscribe((result) => {
-                    expect(result).toEqual("July 19th 2021");
-                    done();
-                });
-            let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
-            expect(calls.length).toEqual(1);
-            calls.forEach(call => {
-                expect(call.request.method).toBe('GET');
-                call.flush('{{dateFormat 1626685587000 format="MMMM Do YYYY"}}');
-            });
-        });
-        it('compile dateFormat with string for epoch date  (using en locale fallback)', (done) => {
             now.locale('en');
             const templateName = Guid.create().toString();
             handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))

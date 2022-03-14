@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -76,7 +76,7 @@ class KafkaListenerContainerFactoryConfigurationShould {
 
         ConcurrentMessageListenerContainer container = kafkaListenerContainerFactory.createContainer("dummyTopic");
 
-        assertThat (container.getConcurrency()).isGreaterThan(0);
+        assertThat (container.getConcurrency()).isPositive();
         assertThat(container.getContainerProperties().getPollTimeout()).isEqualTo(ConsumerProperties.DEFAULT_POLL_TIMEOUT);
     }
 

@@ -17,7 +17,7 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 
-public class UserSettingsDataShould {
+class UserSettingsDataShould {
 
 
 
@@ -40,53 +40,53 @@ public class UserSettingsDataShould {
 
 
         patched = userData.patch(UserSettingsData.builder().login("new-login").build().clearProcessesStatesNotNotified());
-        assertThat(patched).isEqualToIgnoringGivenFields(userData);
+        assertThat(patched).usingRecursiveComparison().isEqualTo(userData);
 
         patched = userData.patch(UserSettingsData.builder().description("patched-description").build().clearProcessesStatesNotNotified());
-        assertThat(patched).isEqualToIgnoringGivenFields(userData,"description");
+        assertThat(patched).usingRecursiveComparison().ignoringFields("description").isEqualTo(userData);
         assertThat(patched.getDescription()).isEqualTo("patched-description");
 
         patched = userData.patch(UserSettingsData.builder().locale("patched-locale").build().clearProcessesStatesNotNotified());
-        assertThat(patched).isEqualToIgnoringGivenFields(userData,"locale");
+        assertThat(patched).usingRecursiveComparison().ignoringFields("locale").isEqualTo(userData);
         assertThat(patched.getLocale()).isEqualTo("patched-locale");
 
         patched = userData.patch(UserSettingsData.builder().playSoundForAlarm(false).build().clearProcessesStatesNotNotified());
-        assertThat(patched).isEqualToIgnoringGivenFields(userData,"playSoundForAlarm");
-        assertThat(patched.getPlaySoundForAlarm()).isEqualTo(false);
+        assertThat(patched).usingRecursiveComparison().ignoringFields("playSoundForAlarm").isEqualTo(userData);
+        assertThat(patched.getPlaySoundForAlarm()).isFalse();
 
         patched = userData.patch(UserSettingsData.builder().playSoundForAction(true).build().clearProcessesStatesNotNotified());
-        assertThat(patched).isEqualToIgnoringGivenFields(userData,"playSoundForAction");
-        assertThat(patched.getPlaySoundForAction()).isEqualTo(true);
+        assertThat(patched).usingRecursiveComparison().ignoringFields("playSoundForAction").isEqualTo(userData);
+        assertThat(patched.getPlaySoundForAction()).isTrue();
 
         patched = userData.patch(UserSettingsData.builder().playSoundForCompliant(false).build().clearProcessesStatesNotNotified());
-        assertThat(patched).isEqualToIgnoringGivenFields(userData,"playSoundForCompliant");
-        assertThat(patched.getPlaySoundForCompliant()).isEqualTo(false);
+        assertThat(patched).usingRecursiveComparison().ignoringFields("playSoundForCompliant").isEqualTo(userData);
+        assertThat(patched.getPlaySoundForCompliant()).isFalse();
 
         patched = userData.patch(UserSettingsData.builder().playSoundForInformation(true).build().clearProcessesStatesNotNotified());
-        assertThat(patched).isEqualToIgnoringGivenFields(userData,"playSoundForInformation");
-        assertThat(patched.getPlaySoundForInformation()).isEqualTo(true);
+        assertThat(patched).usingRecursiveComparison().ignoringFields("playSoundForInformation").isEqualTo(userData);
+        assertThat(patched.getPlaySoundForInformation()).isTrue();
 
         patched = userData.patch(UserSettingsData.builder().playSoundOnExternalDevice(false).build().clearProcessesStatesNotNotified());
-        assertThat(patched).isEqualToIgnoringGivenFields(userData,"playSoundOnExternalDevice");
-        assertThat(patched.getPlaySoundOnExternalDevice()).isEqualTo(false);
+        assertThat(patched).usingRecursiveComparison().ignoringFields("playSoundOnExternalDevice").isEqualTo(userData);
+        assertThat(patched.getPlaySoundOnExternalDevice()).isFalse();
 
         patched = userData.patch(UserSettingsData.builder().replayEnabled(false).build().clearProcessesStatesNotNotified());
-        assertThat(patched).isEqualToIgnoringGivenFields(userData,"replayEnabled");
-        assertThat(patched.getReplayEnabled()).isEqualTo(false);
+        assertThat(patched).usingRecursiveComparison().ignoringFields("replayEnabled").isEqualTo(userData);
+        assertThat(patched.getReplayEnabled()).isFalse();
 
         patched = userData.patch(UserSettingsData.builder().replayInterval(456).build().clearProcessesStatesNotNotified());
-        assertThat(patched).isEqualToIgnoringGivenFields(userData,"replayInterval");
+        assertThat(patched).usingRecursiveComparison().ignoringFields("replayInterval").isEqualTo(userData);
         assertThat(patched.getReplayInterval()).isEqualTo(456);
 
         Map<String, List<String>> newProcessesStatesNotNotified = new HashMap<String, List<String>>();
         newProcessesStatesNotNotified.put("processC", Arrays.asList("state5", "state6"));
         patched = userData.patch(UserSettingsData.builder().processesStatesNotNotified(newProcessesStatesNotNotified).build());
-        assertThat(patched).isEqualToIgnoringGivenFields(userData,"processesStatesNotNotified");
+        assertThat(patched).usingRecursiveComparison().ignoringFields("processesStatesNotNotified").isEqualTo(userData);
         assertThat(patched.getProcessesStatesNotNotified()).hasSize(1).contains(entry("processC", Arrays.asList("state5", "state6")));
 
         List<String> newEntitiesDisconnected = new ArrayList<>(Arrays.asList("ENTITY3_FR", "ENTITY4_FR"));
         patched = userData.patch(UserSettingsData.builder().entitiesDisconnected(newEntitiesDisconnected).build().clearProcessesStatesNotNotified());
-        assertThat(patched).isEqualToIgnoringGivenFields(userData,"entitiesDisconnected");
+        assertThat(patched).usingRecursiveComparison().ignoringFields("entitiesDisconnected").isEqualTo(userData);
         assertThat(patched.getEntitiesDisconnected()).hasSize(2).containsExactly("ENTITY3_FR", "ENTITY4_FR");
     }
 }

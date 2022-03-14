@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,11 +15,6 @@ import org.springframework.stereotype.Component;
 
 import lombok.Data;
 
-/**
- * define the jwt properties
- *
- *
- */
 
 @ConfigurationProperties("operatorfabric.security.jwt")
 @Component
@@ -27,14 +22,14 @@ import lombok.Data;
 public class JwtProperties {
 	
 	// mandatory claim, default value
-	public String loginClaim = "sub";
+	private String loginClaim = "sub";
 	
 	// optional claims
-	public String givenNameClaim = "given-name";
-	public String familyNameClaim = "family-name";
+	private String givenNameClaim = "given-name";
+	private String familyNameClaim = "family-name";
 
 	
-	public String entitiesIdClaim = "entitiesId";
-	public boolean gettingEntitiesFromToken = false;
+	private String entitiesIdClaim = "entitiesId";
+	private boolean gettingEntitiesFromToken = false;
 
 }

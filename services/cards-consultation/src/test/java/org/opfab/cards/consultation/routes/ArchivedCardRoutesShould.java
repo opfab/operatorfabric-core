@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,6 @@
 
 package org.opfab.cards.consultation.routes;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -45,8 +44,7 @@ import static org.opfab.cards.consultation.TestUtilities.roundingToMillis;
 @ActiveProfiles(profiles = {"native", "test"})
 @Tag("end-to-end")
 @Tag("mongo")
-@Slf4j
-public class ArchivedCardRoutesShould {
+class ArchivedCardRoutesShould {
 
     private static String publisher = "PUBLISHER";
 
@@ -104,7 +102,7 @@ public class ArchivedCardRoutesShould {
 
     @Nested
     @WithMockOpFabUserReactive(login="userWithNoGroup", roles = {})
-    public class GivenUserWithNoGroupArchivedCardRoutesShould {
+    class GivenUserWithNoGroupArchivedCardRoutesShould {
 
         @Test
         void findOutCard(){
@@ -123,7 +121,7 @@ public class ArchivedCardRoutesShould {
 
     @Nested
     @WithMockOpFabUserReactive(login="userWithGroupAndEntity", roles={"SOME_GROUP"}, entities={"SOME_ENTITY"})
-    public class GivenUserWithGroupAndEntityArchivedCardRoutesShould {
+    class GivenUserWithGroupAndEntityArchivedCardRoutesShould {
 
         @Test
         void findArchivedCardById() {

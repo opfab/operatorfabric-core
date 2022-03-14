@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,7 +42,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureWebTestClient
 @ActiveProfiles(profiles = { "native", "test" })
 @Slf4j
-public class ConnectionRoutesShould {
+class ConnectionRoutesShould {
 
         @Autowired
         private WebTestClient webTestClient;
@@ -110,7 +110,7 @@ public class ConnectionRoutesShould {
 
         @Nested
         @WithMockOpFabUserReactive(login = "userWithGroup", roles = { "TEST" })
-        public class ConnectionRoutesForNonAdminShould {
+        class ConnectionRoutesForNonAdminShould {
                 @Test
                 void accessIsAuthorized() {
                         assertThat(connectionRoutes).isNotNull();

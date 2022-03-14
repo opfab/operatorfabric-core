@@ -8,13 +8,11 @@
  */
 
 
-
 package org.opfab.users.controllers;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.opfab.users.application.UnitTestApplication;
 import org.opfab.users.application.configuration.WithMockOpFabUser;
 import org.opfab.users.model.*;
@@ -23,7 +21,6 @@ import org.opfab.users.repositories.PerimeterRepository;
 import org.opfab.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -43,12 +40,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-/**
- * <p></p>
- * Created on 13/09/18
- *
- *
- */
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = UnitTestApplication.class)
 @ActiveProfiles("test")
@@ -454,14 +446,13 @@ class GroupsControllerShould {
             assertThat(freshlyNewUser.getGroups()).containsExactly("WANDA");
 
             List<UserData> wanda = userRepository.findByGroupSetContaining("WANDA");
-            assertThat(wanda).isNotNull();
-            assertThat(wanda).containsExactly(freshlyNewUser);
+            assertThat(wanda).isNotNull().containsExactly(freshlyNewUser);
         }
 
         @Test
         void deleteGroupsFromUsers() throws Exception {
             List<UserData> pythons = userRepository.findByGroupSetContaining("MONTY");
-            assertThat(pythons.size()).isEqualTo(2);
+            assertThat(pythons).hasSize(2);
             mockMvc.perform(delete("/groups/MONTY/users")
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -475,7 +466,7 @@ class GroupsControllerShould {
         @Test
         void deleteGroupsFromUser() throws Exception {
             List<UserData> pythons = userRepository.findByGroupSetContaining("MONTY");
-            assertThat(pythons.size()).isEqualTo(2);
+            assertThat(pythons).hasSize(2);
             mockMvc.perform(delete("/groups/MONTY/users/gchapman")
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -483,7 +474,7 @@ class GroupsControllerShould {
             ;
 
             pythons = userRepository.findByGroupSetContaining("MONTY");
-            assertThat(pythons.size()).isEqualTo(1);
+            assertThat(pythons).hasSize(1);
         }
 
         @Test

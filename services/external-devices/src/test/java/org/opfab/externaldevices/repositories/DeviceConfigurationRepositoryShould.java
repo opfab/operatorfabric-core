@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles(profiles = {"default","test"})
 @Tag("end-to-end")
 @Tag("mongo")
-public class DeviceConfigurationRepositoryShould {
+class DeviceConfigurationRepositoryShould {
 
     // This test class might be overkill given that so far we're only using native MongoRepository methods in this
     // repository but it was created to make sure the test setup (resources etc.) was working, then kept as a sanity
@@ -64,7 +64,7 @@ public class DeviceConfigurationRepositoryShould {
     @Test
     void findAll() {
         List<DeviceConfigurationData> deviceConfigurationDataList = deviceConfigurationRepository.findAll();
-        assertThat(deviceConfigurationDataList.size()).isEqualTo(2);
+        assertThat(deviceConfigurationDataList).hasSize(2);
     }
 
     @AfterEach

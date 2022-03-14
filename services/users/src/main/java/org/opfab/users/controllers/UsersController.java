@@ -154,15 +154,14 @@ public class UsersController implements UsersApi, UserExtractor {
     @Override
     public User updateUser(HttpServletRequest request, HttpServletResponse response, String login, User user) throws Exception {
         //login from user body parameter should match login path parameter
-        if ((user.getLogin() != null) && (!user.getLogin().equalsIgnoreCase(login))) {
+        if (!user.getLogin().equalsIgnoreCase(login)) {
             throw new ApiErrorException(
                     ApiError.builder()
                             .status(HttpStatus.BAD_REQUEST)
                             .message(NO_MATCHING_USER_NAME_MSG)
                             .build());
         }
-        if (user.getLogin() != null)
-            user.setLogin(user.getLogin().toLowerCase());
+        user.setLogin(user.getLogin().toLowerCase());
         return createUser(request, response, user);
     }
 
@@ -227,7 +226,7 @@ public class UsersController implements UsersApi, UserExtractor {
             }
         }
 
-        if (jwtProperties.gettingEntitiesFromToken) {
+        if (jwtProperties.isGettingEntitiesFromToken()) {
             List<String> missingEntities = user.getEntities().stream()
                     .filter(entityId -> this.entityRepository.findById(entityId).isEmpty())
                     .collect(Collectors.toList());
@@ -249,7 +248,7 @@ public class UsersController implements UsersApi, UserExtractor {
             if (groupsProperties.getMode() == GroupsMode.JWT) {
                 updatedFromToken = !existingUser.getGroupSet().equals(new HashSet<String>(user.getGroups()));
             }
-            if (!updatedFromToken && jwtProperties.gettingEntitiesFromToken) {
+            if (!updatedFromToken && jwtProperties.isGettingEntitiesFromToken()) {
                 updatedFromToken = !new HashSet<String>(existingUser.getEntities()).equals(new HashSet<String>(user.getEntities()));
             }
             if (updatedFromToken) {
@@ -275,7 +274,7 @@ public class UsersController implements UsersApi, UserExtractor {
     private void checkAndsetUserLogin(User user) {
         String login = user.getLogin();
 
-        if ((login == null) || (login.length() == 0)) {
+        if (login.length() == 0) {
             throw new ApiErrorException(
                     ApiError.builder()
                                 .status(HttpStatus.BAD_REQUEST)

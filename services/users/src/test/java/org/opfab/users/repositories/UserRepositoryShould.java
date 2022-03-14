@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,6 @@
 
 package org.opfab.users.repositories;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -28,18 +27,12 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * <p></p>
- * Created on 13/09/18
- *
- */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = UnitTestApplication.class)
 @ActiveProfiles(profiles = {"default","test"})
-@Slf4j
 @Tag("end-to-end")
 @Tag("mongo")
-public class UserRepositoryShould {
+class UserRepositoryShould {
 
     @Autowired
     private UserRepository repository;
@@ -115,6 +108,6 @@ public class UserRepositoryShould {
         results = repository.findByEntitiesContaining("ENTITY1");
         assertThat(results).hasSize(2);
         results = repository.findByEntitiesContaining("ENTITY3");
-        assertThat(results).hasSize(0);
+        assertThat(results).isEmpty();
     }
 }

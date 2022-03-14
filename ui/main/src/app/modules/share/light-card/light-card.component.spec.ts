@@ -26,7 +26,6 @@ import {TimeService} from '@ofServices/time.service';
 import {I18nService} from '@ofServices/i18n.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountDownModule} from '../countdown/countdown.module';
-import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
 
 
@@ -34,7 +33,6 @@ describe('LightCardComponent', () => {
     let lightCardDetailsComp: LightCardComponent;
     let fixture: ComponentFixture<LightCardComponent>;
     let store: Store<AppState>;
-    let router: SpyObj<Router>;
     let injector: TestBed;
     let translateService: TranslateService;
     let i18nService: I18nService;
@@ -76,7 +74,6 @@ describe('LightCardComponent', () => {
         translateService = injector.get(TranslateService);
         translateService.addLangs(['en', 'fr']);
         translateService.setDefaultLang('en');
-        // translateService.use("en");
         i18nService = injector.get(I18nService);
         i18nService.changeLocale('en');
 
@@ -85,7 +82,7 @@ describe('LightCardComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(LightCardComponent);
         lightCardDetailsComp = fixture.debugElement.componentInstance;
-        router = injectedSpy(Router);
+        injectedSpy(Router);
     });
     it('should handle non existent timestamp with an empty string', () => {
         const expectedEmptyString = lightCardDetailsComp.handleDate(undefined);

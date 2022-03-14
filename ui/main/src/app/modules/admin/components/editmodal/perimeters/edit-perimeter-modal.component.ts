@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,6 @@ import {Perimeter, RightsEnum, StateRight} from '@ofModel/perimeter.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {PerimetersService} from '@ofServices/perimeters.service';
 import {Process} from '@ofModel/processes.model';
-import {Utilities} from '../../../../../common/utilities';
 import {MessageLevel} from '@ofModel/message.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -46,15 +45,15 @@ export class EditPerimeterModalComponent implements OnInit {
   }
 
   get id() {
-    return this.perimeterForm.get('id') as FormControl;
+    return this.perimeterForm.get('id');
   }
 
   get process() {
-    return this.perimeterForm.get('process') as FormControl;
+    return this.perimeterForm.get('process');
   }
 
   get stateRights() {
-    return this.perimeterForm.get('stateRights') as FormGroup;
+    return this.perimeterForm.get('stateRights');
   }
 
   perimeterForm: FormGroup;

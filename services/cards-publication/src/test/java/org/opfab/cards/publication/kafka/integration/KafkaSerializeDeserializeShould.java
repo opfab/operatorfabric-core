@@ -22,7 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles(profiles = "test")
 
-public class KafkaSerializeDeserializeShould {
+class KafkaSerializeDeserializeShould {
 
     @Test
     void SerializeDeserialize() {

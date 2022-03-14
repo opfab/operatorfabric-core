@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,8 +34,8 @@ export const emptyAppState4Test: AppState = {
     menu: null,
     config: null,
     settings: null,
-    user:null,
-    cardsSubscription:null,
+    user: null,
+    cardsSubscription: null,
     globalStyle: null
 };
 
@@ -47,8 +47,8 @@ export const AuthenticationImportHelperForSpecs = [AuthenticationService,
 
 
 export function getOneRandomMenu(): Menu {
-    let entries: MenuEntry[]=[];
-    let entryCount = getPositiveRandomNumberWithinRange(2,5);
+    const entries: MenuEntry[]=[];
+    const entryCount = getPositiveRandomNumberWithinRange(2,5);
     for (let j = 0; j < entryCount; j++) {
         entries.push(new MenuEntry(
             getRandomAlphanumericValue(3, 10),
@@ -65,8 +65,8 @@ export function getOneRandomMenu(): Menu {
 }
 
 export function getRandomMenus(): Menu[] {
-    let result: Menu[] = [];
-    let menuCount = getPositiveRandomNumberWithinRange(2,4);
+    const result: Menu[] = [];
+    const menuCount = getPositiveRandomNumberWithinRange(2,4);
     for (let i=0;i<menuCount;i++){
         result.push(getOneRandomMenu())
     }
@@ -75,21 +75,10 @@ export function getRandomMenus(): Menu[] {
 
 export function getOneRandomProcess(processTemplate?:any): Process {
     processTemplate=processTemplate?processTemplate:{};
-    let entries:MenuEntry[]=[];
-    let entryCount = getPositiveRandomNumberWithinRange(1,3);
-    for(let i=0;i<entryCount;i++){
-        entries.push(new MenuEntry(
-            getRandomAlphanumericValue(3,10),
-            getRandomAlphanumericValue(3,10),
-            getRandomAlphanumericValue(3,10),
-            MenuEntryLinkTypeEnum.BOTH
-        ))
-    }
-    let states = new OfMap();
-    let stateCount = getPositiveRandomNumberWithinRange(1,3);
+    const states = new OfMap();
+    const stateCount = getPositiveRandomNumberWithinRange(1,3);
 
     for(let j=0; j<stateCount;j++){
-        const titleKey =  getRandomI18nData();
         const templateName = 'template1';
         states[getRandomAlphanumericValue(3,10)]=
             new State(templateName, ['style1','style2']);
@@ -121,8 +110,7 @@ export function getOneRandomAddCardOperation(): CardOperation {
 export function pickARandomItemOfAnEnum<E>(currentEnum: E): E {
     const keys = Object.keys(currentEnum).filter(k => {
         const parsedInt = parseInt(k);
-        const isNum = !isNaN(parsedInt);
-        return isNum;
+        return !isNaN(parsedInt);
     });
     const randomIndex = getRandomIndex(keys);
     const key = keys[randomIndex];
@@ -142,7 +130,7 @@ export function getOneRandomLightCard(lightCardTemplate?: any): LightCard {
     lightCardTemplate = lightCardTemplate ? lightCardTemplate : {};
     const today = new Date().getTime();
     const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
-    const oneCard = new LightCard(getRandomAlphanumericValue(3, 24),
+    return new LightCard(getRandomAlphanumericValue(3, 24),
         lightCardTemplate.id ? lightCardTemplate.id : getRandomAlphanumericValue(3, 24),
         lightCardTemplate.publisher ? lightCardTemplate.publisher : 'testPublisher',
         lightCardTemplate.publisherVersion ? lightCardTemplate.publisherVersion : getRandomAlphanumericValue(3, 24),
@@ -163,7 +151,6 @@ export function getOneRandomLightCard(lightCardTemplate?: any): LightCard {
         lightCardTemplate.timeSpans?lightCardTemplate.timeSpans:null,
         lightCardTemplate.process?lightCardTemplate.process:'testProcess'
     );
-    return oneCard;
 }
 
 export function getRandomSeverity(): Severity {
@@ -173,8 +160,7 @@ export function getRandomSeverity(): Severity {
 
 export function getRandomPage(totalPages = 1, totalElements = 10): Page<LightCard> {
     const lightCards = getSeveralRandomLightCards(totalElements);
-    const randomPage = new Page<LightCard>(totalPages, totalElements, lightCards);
-    return randomPage;
+    return new Page<LightCard>(totalPages, totalElements, lightCards);
 }
 
 
@@ -182,7 +168,7 @@ export function getOneRandomCard(cardTemplate?:any): Card {
     cardTemplate = cardTemplate ? cardTemplate : {};
     const today = new Date().getTime();
     const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
-    const oneCard = new Card(getRandomAlphanumericValue(3, 24),
+    return new Card(getRandomAlphanumericValue(3, 24),
         cardTemplate.id ? cardTemplate.id : getRandomAlphanumericValue(3, 24),
         cardTemplate.publisher ? cardTemplate.publisher : getRandomAlphanumericValue(3, 24),
         cardTemplate.processVersion ? cardTemplate.processVersion : getRandomAlphanumericValue(3, 24),
@@ -210,7 +196,6 @@ export function getOneRandomCard(cardTemplate?:any): Card {
         cardTemplate.entitiesRequiredToRespond ? cardTemplate.entitiesRequiredToRespond : null,
         cardTemplate.entitiesAllowedToEdit ? cardTemplate.entitiesAllowedToEdit : null
     );
-    return oneCard;
 }
 
 export function generateRandomArray<T>(min = 1, max = 2, func: () => T): Array<T> {
@@ -266,14 +251,12 @@ export function getRandomBoolean(): boolean {
 }
 
 function forcePositiveAndOneMinimum(min: number): number {
-    const result = (min < 0) ? 1 : min;
-    return result;
+    return (min < 0) ? 1 : min;
 }
 
 function handleMaxAgainstMin(min: number, max: number) {
     const minimum = forcePositiveAndOneMinimum(min);
-    const result = (!max || max < minimum) ? minimum : max;
-    return result;
+    return (!max || max < minimum) ? minimum : max;
 }
 
 export function getFixedLengthAlphanumericValue(length = 1): string {
@@ -318,16 +301,13 @@ export function shuffleArrayContentByFisherYatesLike<T>(array: Array<T>): Array<
 export function generateBusinessconfigWithVersion(businessconfigName?: string, versions?: Set<string>): Map<Set<string>> {
     const result = new Map<Set<string>>();
     const businessconfig = (businessconfigName) ? businessconfigName : getRandomAlphanumericValue(3, 5);
-    function getSomeVersions(){return getRandomAlphanumericValue(3,8)};
+    function getSomeVersions() {return getRandomAlphanumericValue(3, 8); }
     const versionValues = (versions) ? versions : new Set( generateRandomArray(3, 6, getSomeVersions));
     result[businessconfig] = versionValues;
     return result;
 }
 
 export class BusinessconfigI18nLoader implements TranslateLoader {
-
-    constructor() {
-    }
 
     getTranslation(lang: string): Observable<any> {
         return of({});

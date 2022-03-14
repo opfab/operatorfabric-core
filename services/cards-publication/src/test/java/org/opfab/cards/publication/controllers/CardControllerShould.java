@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -41,7 +40,6 @@ import org.springframework.web.context.WebApplicationContext;
 @WebAppConfiguration
 @WithMockOpFabUser(login = "api_test", roles = { "AROLE" })
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Slf4j
 class CardControllerShould {
 
     private MockMvc mockMvc;
@@ -93,7 +91,7 @@ class CardControllerShould {
         mockMvc.perform(post("/cards").contentType(MediaType.APPLICATION_JSON).content(getCard()));
         mockMvc.perform(delete("/cards/api_test.process1"))
                 .andExpect(status().isOk());
-        Assertions.assertThat(cardRepository.count()).isEqualTo(0);
+        Assertions.assertThat(cardRepository.count()).isZero();
     }
 
 

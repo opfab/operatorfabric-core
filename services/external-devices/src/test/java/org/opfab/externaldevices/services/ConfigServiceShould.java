@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
@@ -101,7 +100,7 @@ class ConfigServiceShould {
                 () -> configService.insertDeviceConfiguration(deviceConfiguration_1_duplicate));
 
         // Check that nothing was inserted and that the existing item was not updated.
-        Assertions.assertThat(deviceConfigurationRepository.findAll().size()).isEqualTo(INITIAL_NUMBER_OF_DEVICE_CONFIGS);
+        Assertions.assertThat(deviceConfigurationRepository.findAll()).hasSize(INITIAL_NUMBER_OF_DEVICE_CONFIGS);
         Optional<DeviceConfigurationData> retrievedConfiguration = deviceConfigurationRepository.findById("ESS1");
 
         Assertions.assertThat(retrievedConfiguration).isPresent();
@@ -112,16 +111,18 @@ class ConfigServiceShould {
     @Test
     void getDeviceConfigurations() {
         List<DeviceConfiguration> deviceConfigurationList = configService.getDeviceConfigurations();
-        Assertions.assertThat(deviceConfigurationList.size()).isEqualTo(INITIAL_NUMBER_OF_DEVICE_CONFIGS);
-        Assertions.assertThat(deviceConfigurationList).containsExactlyInAnyOrder(deviceConfiguration1,deviceConfiguration2,deviceConfiguration3);
+        Assertions.assertThat(deviceConfigurationList)
+            .hasSize(INITIAL_NUMBER_OF_DEVICE_CONFIGS)
+            .containsExactlyInAnyOrder(deviceConfiguration1,deviceConfiguration2,deviceConfiguration3);
     }
 
     @Test
     void retrieveExistingDeviceConfiguration() throws ExternalDeviceConfigurationException {
 
         DeviceConfiguration retrievedConfiguration = configService.retrieveDeviceConfiguration("ESS1");
-        Assertions.assertThat(retrievedConfiguration).isNotNull();
-        Assertions.assertThat(retrievedConfiguration).usingRecursiveComparison().isEqualTo(deviceConfiguration1);
+        Assertions.assertThat(retrievedConfiguration)
+            .isNotNull()
+            .usingRecursiveComparison().isEqualTo(deviceConfiguration1);
 
     }
 
@@ -131,7 +132,7 @@ class ConfigServiceShould {
         configService.deleteDeviceConfiguration("ESS1");
 
         // Check that the deleted device is gone from the repository
-        Assertions.assertThat(deviceConfigurationRepository.findAll().size()).isEqualTo(INITIAL_NUMBER_OF_DEVICE_CONFIGS-1);
+        Assertions.assertThat(deviceConfigurationRepository.findAll()).hasSize(INITIAL_NUMBER_OF_DEVICE_CONFIGS-1);
         Optional<DeviceConfigurationData> retrievedConfiguration = deviceConfigurationRepository.findById("ESS1");
         Assertions.assertThat(retrievedConfiguration).isEmpty();
 
@@ -147,7 +148,7 @@ class ConfigServiceShould {
                 () -> configService.deleteDeviceConfiguration("device_configuration_that_doesnt_exist"));
 
         // Check that nothing was deleted
-        Assertions.assertThat(deviceConfigurationRepository.findAll().size()).isEqualTo(INITIAL_NUMBER_OF_DEVICE_CONFIGS);
+        Assertions.assertThat(deviceConfigurationRepository.findAll()).hasSize(INITIAL_NUMBER_OF_DEVICE_CONFIGS);
 
     }
 
@@ -164,7 +165,7 @@ class ConfigServiceShould {
 
         configService.insertSignalMapping(signalMapping3);
 
-        Assertions.assertThat(signalMappingRepository.findAll().size()).isEqualTo(INITIAL_NUMBER_OF_SIGNAL_MAPPINGS+1);
+        Assertions.assertThat(signalMappingRepository.findAll()).hasSize(INITIAL_NUMBER_OF_SIGNAL_MAPPINGS+1);
         Optional<SignalMappingData> retrievedConfiguration = signalMappingRepository.findById("signalMapping3");
         Assertions.assertThat(retrievedConfiguration).isPresent();
         Assertions.assertThat(retrievedConfiguration.get()).usingRecursiveComparison().isEqualTo(signalMapping3);
@@ -186,7 +187,7 @@ class ConfigServiceShould {
                 () -> configService.insertSignalMapping(signalMapping_1_duplicate));
 
         // Check that nothing was inserted and that the existing item was not updated.
-        Assertions.assertThat(signalMappingRepository.findAll().size()).isEqualTo(INITIAL_NUMBER_OF_SIGNAL_MAPPINGS);
+        Assertions.assertThat(signalMappingRepository.findAll()).hasSize(INITIAL_NUMBER_OF_SIGNAL_MAPPINGS);
         Optional<SignalMappingData> retrievedConfiguration = signalMappingRepository.findById("signalMapping1");
 
         Assertions.assertThat(retrievedConfiguration).isPresent();
@@ -196,16 +197,18 @@ class ConfigServiceShould {
     @Test
     void getSignalMappings() {
         List<SignalMapping> signalMappingsList = configService.getSignalMappings();
-        Assertions.assertThat(signalMappingsList.size()).isEqualTo(INITIAL_NUMBER_OF_SIGNAL_MAPPINGS);
-        Assertions.assertThat(signalMappingsList).containsExactlyInAnyOrder(signalMapping1,signalMapping2);
+        Assertions.assertThat(signalMappingsList)
+            .hasSize(INITIAL_NUMBER_OF_SIGNAL_MAPPINGS)
+            .containsExactlyInAnyOrder(signalMapping1,signalMapping2);
     }
 
     @Test
     void retrieveExistingUserConfiguration() throws ExternalDeviceConfigurationException {
 
         UserConfiguration retrievedConfiguration = configService.retrieveUserConfiguration("user1");
-        Assertions.assertThat(retrievedConfiguration).isNotNull();
-        Assertions.assertThat(retrievedConfiguration).usingRecursiveComparison().isEqualTo(userConfiguration1);
+        Assertions.assertThat(retrievedConfiguration)
+            .isNotNull()
+            .usingRecursiveComparison().isEqualTo(userConfiguration1);
 
     }
 
@@ -215,7 +218,7 @@ class ConfigServiceShould {
         configService.deleteSignalMapping("signalMapping1");
 
         // Check that the deleted signal mapping is gone from the repository
-        Assertions.assertThat(signalMappingRepository.findAll().size()).isEqualTo(INITIAL_NUMBER_OF_SIGNAL_MAPPINGS-1);
+        Assertions.assertThat(signalMappingRepository.findAll()).hasSize(INITIAL_NUMBER_OF_SIGNAL_MAPPINGS-1);
         Optional<SignalMappingData> retrievedConfiguration = signalMappingRepository.findById("signalMapping1");
         Assertions.assertThat(retrievedConfiguration).isEmpty();
 
@@ -231,7 +234,7 @@ class ConfigServiceShould {
                 () -> configService.deleteSignalMapping("signal_mapping_that_doesnt_exist"));
 
         // Check that nothing was deleted
-        Assertions.assertThat(signalMappingRepository.findAll().size()).isEqualTo(INITIAL_NUMBER_OF_SIGNAL_MAPPINGS);
+        Assertions.assertThat(signalMappingRepository.findAll()).hasSize(INITIAL_NUMBER_OF_SIGNAL_MAPPINGS);
 
     }
 
@@ -246,7 +249,7 @@ class ConfigServiceShould {
         configService.saveUserConfiguration(userConfiguration5);
 
 
-        Assertions.assertThat(userConfigurationRepository.findAll().size()).isEqualTo(INITIAL_NUMBER_OF_USER_CONFIGS+1);
+        Assertions.assertThat(userConfigurationRepository.findAll()).hasSize(INITIAL_NUMBER_OF_USER_CONFIGS+1);
         Optional<UserConfigurationData> retrievedConfiguration = userConfigurationRepository.findById("user5");
         Assertions.assertThat(retrievedConfiguration).isPresent();
         Assertions.assertThat(retrievedConfiguration.get()).usingRecursiveComparison().isEqualTo(userConfiguration5);
@@ -264,7 +267,7 @@ class ConfigServiceShould {
         configService.saveUserConfiguration(userConfiguration_1_update);
 
         // Check that the existing item was updated.
-        Assertions.assertThat(userConfigurationRepository.findAll().size()).isEqualTo(INITIAL_NUMBER_OF_USER_CONFIGS);
+        Assertions.assertThat(userConfigurationRepository.findAll()).hasSize(INITIAL_NUMBER_OF_USER_CONFIGS);
         Optional<UserConfigurationData> retrievedConfiguration = userConfigurationRepository.findById("user1");
 
         Assertions.assertThat(retrievedConfiguration).isPresent();
@@ -274,8 +277,9 @@ class ConfigServiceShould {
     @Test
     void getUserConfigurations() {
         List<UserConfiguration> userConfigurationList = configService.getUserConfigurations();
-        Assertions.assertThat(userConfigurationList.size()).isEqualTo(INITIAL_NUMBER_OF_USER_CONFIGS);
-        Assertions.assertThat(userConfigurationList).containsExactlyInAnyOrder(userConfiguration1,userConfiguration2,userConfiguration3,userConfiguration4);
+        Assertions.assertThat(userConfigurationList)
+            .hasSize(INITIAL_NUMBER_OF_USER_CONFIGS)
+            .containsExactlyInAnyOrder(userConfiguration1,userConfiguration2,userConfiguration3,userConfiguration4);
     }
 
     @Test
@@ -284,7 +288,7 @@ class ConfigServiceShould {
         configService.deleteUserConfiguration("user1");
 
         // Check that the deleted device is gone from the repository
-        Assertions.assertThat(userConfigurationRepository.findAll().size()).isEqualTo(INITIAL_NUMBER_OF_USER_CONFIGS-1);
+        Assertions.assertThat(userConfigurationRepository.findAll()).hasSize(INITIAL_NUMBER_OF_USER_CONFIGS-1);
         Optional<UserConfigurationData> retrievedConfiguration = userConfigurationRepository.findById("user1");
         Assertions.assertThat(retrievedConfiguration).isEmpty();
 
@@ -297,7 +301,7 @@ class ConfigServiceShould {
                 () -> configService.deleteUserConfiguration("user_configuration_that_doesnt_exist"));
 
         // Check that nothing was deleted
-        Assertions.assertThat(userConfigurationRepository.findAll().size()).isEqualTo(INITIAL_NUMBER_OF_USER_CONFIGS);
+        Assertions.assertThat(userConfigurationRepository.findAll()).hasSize(INITIAL_NUMBER_OF_USER_CONFIGS);
 
     }
 

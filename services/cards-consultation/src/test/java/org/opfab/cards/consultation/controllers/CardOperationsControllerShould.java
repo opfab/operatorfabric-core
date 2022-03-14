@@ -7,8 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.cards.consultation.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,7 +51,7 @@ import static org.opfab.cards.consultation.TestUtilities.roundingToMillis;
 @ActiveProfiles("test")
 @Tag("end-to-end")
 @Tag("amqp")
-public class CardOperationsControllerShould {
+class CardOperationsControllerShould {
     private static String TEST_ID = "testClient";
 
     private static Instant now = roundingToMillis(Instant.now());

@@ -1,4 +1,4 @@
-/* Copyright (c) 2020-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2020-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
 
 package org.opfab.cards.publication.controllers;
 
-import lombok.extern.slf4j.Slf4j;
+
 import org.assertj.core.api.Assertions;
 import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.*;
@@ -40,9 +40,8 @@ import java.util.Optional;
 @ActiveProfiles("test")
 @WebAppConfiguration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Slf4j
 @WithMockOpFabUser(login = "someUser", roles = { "AROLE" })
-public class CardControllerProcessAcknowledgementShould extends CardControllerShouldBase {
+class CardControllerProcessAcknowledgementShould extends CardControllerShouldBase {
 
 	String cardUid;
 	String cardNeverContainsAcksUid;
@@ -78,7 +77,7 @@ public class CardControllerProcessAcknowledgementShould extends CardControllerSh
 	void processUserAcknowledgementOfUnexistingCard() throws Exception {
 		String cardUid = "NotExistingCardUid";		
 		Optional <CardPublicationData> card = cardRepository.findByUid(cardUid);
-		Assertions.assertThat(card.isPresent()).isFalse();
+		Assertions.assertThat(card).isNotPresent();
 		mockMvc.perform(post("/cards/userAcknowledgement/" + cardUid)).andExpect(status().isNotFound());		
 	}
 	
@@ -86,7 +85,7 @@ public class CardControllerProcessAcknowledgementShould extends CardControllerSh
 	void deleteUserAcknowledgementOfUnexistingCard() throws Exception {
 		String cardUid = "NotExistingCardUid";
 		Optional <CardPublicationData> card = cardRepository.findByUid(cardUid);
-		Assertions.assertThat(card.isPresent()).isFalse();
+		Assertions.assertThat(card).isNotPresent();
 		mockMvc.perform(delete("/cards/userAcknowledgement/" + cardUid)).andExpect(status().isNotFound());			
 	}
 
@@ -99,7 +98,7 @@ public class CardControllerProcessAcknowledgementShould extends CardControllerSh
 		mockMvc.perform(post("/cards/userAcknowledgement/" + cardUid)).andExpect(status().isCreated());	
 		card = cardRepository.findByUid(cardUid);
 		Assertions.assertThat(card.get().getUsersAcks()).contains("someUser");
-		Assertions.assertThat(card.get().getUsersAcks().size()).isEqualTo(initialNumOfAcks + 1);
+		Assertions.assertThat(card.get().getUsersAcks()).hasSize(initialNumOfAcks + 1);
 	}
 
 	@Nested
@@ -115,7 +114,7 @@ public class CardControllerProcessAcknowledgementShould extends CardControllerSh
 			mockMvc.perform(post("/cards/userAcknowledgement/" + cardUid)).andExpect(status().isCreated());	
 			card = cardRepository.findByUid(cardUid);
 			Assertions.assertThat(card.get().getUsersAcks()).contains("someUser", "someOtherUser");
-			Assertions.assertThat(card.get().getUsersAcks().size()).isEqualTo(initialNumOfAcks + 1);
+			Assertions.assertThat(card.get().getUsersAcks()).hasSize(initialNumOfAcks + 1);
 
 		}
 
@@ -133,7 +132,7 @@ public class CardControllerProcessAcknowledgementShould extends CardControllerSh
 				mockMvc.perform(post("/cards/userAcknowledgement/" + cardUid)).andExpect(status().isOk());	
 				card = cardRepository.findByUid(cardUid);
 				Assertions.assertThat(card.get().getUsersAcks()).contains("someUser", "someOtherUser");
-				Assertions.assertThat(card.get().getUsersAcks().size()).isEqualTo(initialNumOfAcks);
+				Assertions.assertThat(card.get().getUsersAcks()).hasSize(initialNumOfAcks);
 			}
 
 			@Nested
@@ -151,7 +150,7 @@ public class CardControllerProcessAcknowledgementShould extends CardControllerSh
 					mockMvc.perform(delete("/cards/userAcknowledgement/" + cardUid)).andExpect(status().isOk());	
 					card = cardRepository.findByUid(cardUid);
 					Assertions.assertThat(card.get().getUsersAcks()).doesNotContain("someUser");
-					Assertions.assertThat(card.get().getUsersAcks().size()).isEqualTo(initialNumOfAcks - 1);
+					Assertions.assertThat(card.get().getUsersAcks()).hasSize(initialNumOfAcks - 1);
 				}
 
 				@Nested
@@ -169,7 +168,7 @@ public class CardControllerProcessAcknowledgementShould extends CardControllerSh
 						mockMvc.perform(delete("/cards/userAcknowledgement/" + cardUid)).andExpect(status().isNoContent());	
 						card = cardRepository.findByUid(cardUid);
 						Assertions.assertThat(card.get().getUsersAcks()).doesNotContain("someUser");
-						Assertions.assertThat(card.get().getUsersAcks().size()).isEqualTo(initialNumOfAcks);
+						Assertions.assertThat(card.get().getUsersAcks()).hasSize(initialNumOfAcks);
 					}
 
 				}

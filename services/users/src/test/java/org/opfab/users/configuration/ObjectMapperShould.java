@@ -12,7 +12,6 @@
 package org.opfab.users.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.users.application.UnitTestApplication;
@@ -38,8 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes={UnitTestApplication.class, JacksonConfig.class})
 @ActiveProfiles(profiles = {"default","test"})
-@Slf4j
-public class ObjectMapperShould {
+class ObjectMapperShould {
 
     @Autowired
     private ObjectMapper mapper;
@@ -54,8 +52,7 @@ public class ObjectMapperShould {
             "\"entities\":[\"entity1\",\"entity2\"]" + 
            "}";
         User user = mapper.readValue(stringUser, User.class);
-        assertThat(user).isNotNull();
-        assertThat(user).isInstanceOf(UserData.class);
+        assertThat(user).isNotNull().isInstanceOf(UserData.class);
         assertThat(user.getLogin()).isEqualTo("jdoe");
         assertThat(user.getFirstName()).isEqualTo("john");
         assertThat(user.getLastName()).isEqualTo("doe");
@@ -70,8 +67,7 @@ public class ObjectMapperShould {
            "\"description\": \"A group used for tests\"" +
            "}";
         Group group = mapper.readValue(stringGroup, Group.class);
-        assertThat(group).isNotNull();
-        assertThat(group).isInstanceOf(GroupData.class);
+        assertThat(group).isNotNull().isInstanceOf(GroupData.class);
         assertThat(group.getName()).isEqualTo("testGroup");
         assertThat(group.getDescription()).isEqualTo("A group used for tests");
     }
@@ -86,8 +82,7 @@ public class ObjectMapperShould {
                 "\"entityAllowedToSendCard\": false" +
                 "}";
         Entity entity = mapper.readValue(stringEntity, Entity.class);
-        assertThat(entity).isNotNull();
-        assertThat(entity).isInstanceOf(EntityData.class);
+        assertThat(entity).isNotNull().isInstanceOf(EntityData.class);
         assertThat(entity.getId()).isEqualTo("TESTENTITY");
         assertThat(entity.getName()).isEqualTo("Test Entity");
         assertThat(entity.getDescription()).isEqualTo("An entity used for tests");
