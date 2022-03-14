@@ -29,8 +29,8 @@
 <div style="height:2%"> </div>
 <div *ngIf="!loadingIsTakingMoreThanOneSecond && hasResult" style="margin-left:5%; margin-right:5%">
   <div style="display:flex; justify-content:flex-start;">
-    <label style="font-weight:bold; margin-left:5px" class="opfab-checkbox" translate>archive.collapsibleUpdates
-      <input type="checkbox" (click)="toggleCollapsibleUpdates()" [checked]="isCollapsibleUpdatesActivated" id="opfab-archives-collapsible-updates">
+    <label id="opfab-archives-collapsible-updates" style="font-weight:bold; margin-left:5px" class="opfab-checkbox" translate>archive.collapsibleUpdates
+      <input type="checkbox" (click)="toggleCollapsibleUpdates()" [checked]="isCollapsibleUpdatesActivated" >
       <span class="opfab-checkbox-checkmark"></span>
     </label>
   </div>
