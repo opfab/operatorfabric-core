@@ -28,7 +28,7 @@ Cypress.Commands.add('loginOpFab',(username, password)=>
     cy.get('#opfab-login-btn-submit').should('be.visible')
 
     //Wait for the app to finish initializing
-    cy.get('#opfab-cypress-loaded-check', {timeout: 15000}).should('have.text', 'true');
+    cy.get('#opfab-cypress-loaded-check', {timeout: 20000}).should('have.text', 'true');
 })
 
 Cypress.Commands.add('loginWithClock', (dateToUse = new Date()) =>{
