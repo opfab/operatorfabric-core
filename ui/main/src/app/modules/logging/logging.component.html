@@ -41,7 +41,7 @@
 <div style="height:5%"> </div>
 <div *ngIf="!loadingInProgress && hasResult" style="margin-left:5%;margin-right:5%">
   <div class="opfab-table">
-    <table aria-describedby="Archive results table">
+    <table aria-describedby="Archive results table" id="opfab-logging-cards-list">
       <thead>
         <tr>
           <th scope="col"></th>
@@ -76,7 +76,7 @@
       </tr>
     </table>
     <div class="opfab-pagination">
-      <div style="white-space: nowrap;margin-top:17px">
+      <div style="white-space: nowrap;margin-top:17px" id="opfab-logging-results-number">
         <span translate> shared.resultsNumber </span> : {{resultsNumber}}
       </div>
       <div style="width:40%;margin-top:5px">
