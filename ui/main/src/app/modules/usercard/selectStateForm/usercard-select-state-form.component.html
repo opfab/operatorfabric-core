@@ -15,12 +15,12 @@
             </of-single-filter>
         </div>
 
-        <div class="col" *ngIf="! displayProcessGroupFilter() && !! processOptions && processOptions.length > 1">
+        <div class="col" *ngIf="! displayProcessGroupFilter() && !! processOptions && processOptions.length > 0">
             <of-single-filter i18nRootLabelKey="shared.filters." [parentForm]="selectStateForm" filterPath="process"
                 [values]="processOptions"></of-single-filter>
         </div>
         <div class="col"
-            *ngIf="displayProcessGroupFilter() && !! processOptionsWhenSelectedProcessGroup && processOptionsWhenSelectedProcessGroup.length > 1">
+            *ngIf="displayProcessGroupFilter() && !! processOptionsWhenSelectedProcessGroup && processOptionsWhenSelectedProcessGroup.length > 0">
             <of-single-filter id="of-usercard-process-filter" i18nRootLabelKey="shared.filters."
                 [parentForm]="selectStateForm" filterPath="process" [values]="processOptionsWhenSelectedProcessGroup">
             </of-single-filter>

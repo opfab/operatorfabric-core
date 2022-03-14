@@ -105,9 +105,9 @@ describe('User Card ', function () {
 
   })
 
-  describe('Fields visiblity', function () {
+  describe('Fields visibility', function () {
 
-    it('Severity  choice should not be displayed in Question user card', () => {
+    it('Severity choice should not be displayed in Question user card', () => {
 
       cy.loginOpFab('operator1_fr', 'test');
       cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
@@ -156,6 +156,16 @@ describe('User Card ', function () {
       cy.get('#opfab-usercard-enddate-choice').should("not.exist");
       cy.get('#opfab-usercard-lttd-choice').should("not.exist");
       cy.get('#of-usercard-card-emitter-selector').should("not.exist");
+    })
+
+    it('Process select should be displayed even if there is only one process', () => {
+
+        cy.loginOpFab('operator1_fr', 'test');
+        cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+        selectService('Base Examples');
+        cy.get('#of-usercard-process-filter').should("exist");
+        cy.get('#of-usercard-process-filter').find('option').should("have.length", 1);
+        cy.get('#of-usercard-process-filter').find('option').eq(0).should("have.text", "Process example ");
     })
   })
 
