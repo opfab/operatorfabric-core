@@ -235,7 +235,7 @@ describe ('Response card tests',function () {
         cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
         cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
         cy.waitDefaultTime();
-        cy.get('#opfab-navbar-menu-feed').click({force: true}); // go back to feed
+        cy.get('#opfab-navbar-menu-feed').click(); // go back to feed
         cy.get('of-light-card').eq(0).click(); // click the card
         cy.get('#opfab-card-details-btn-response').click(); // button "modify response"
         cy.get('#question-choice2').click(); // to check the box

@@ -94,7 +94,7 @@ describe ('ActivityAreaPage',()=>{
         cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
 
         // now, operator4_fr should see only 4 cards in the feed
-        cy.get('#opfab-navbar-menu-feed').click({force: true});
+        cy.get('#opfab-navbar-menu-feed').click();
         cy.waitDefaultTime();
         cy.get('of-light-card').should('have.length', 4);
         cy.get('of-light-card').eq(0).find('.card-title').should('have.text', "⚡ Planned Outage ");

@@ -272,7 +272,7 @@ describe ('Feed notification configuration tests',function () {
         cy.loginOpFab('operator1_fr', 'test')
 
         // Check feed
-        cy.get('#opfab-navbar-menu-feed').click({force: true}); // Open feed
+        cy.get('#opfab-navbar-menu-feed').click(); // Open feed
 
         // Cards should not be visible anymore in the card feed
         cardsToTest.forEach((c) => {
@@ -306,7 +306,7 @@ describe ('Feed notification configuration tests',function () {
         cy.get('#opfab-feedconfiguration-btn-yes').should('not.exist'); // wait for dialog to go away
 
         // Check feed
-        cy.get('#opfab-navbar-menu-feed').click({force: true}); // Open feed
+        cy.get('#opfab-navbar-menu-feed').click(); // Open feed
 
         // Cards should be visible in the card feed
         cardsToTest.forEach((c) => {

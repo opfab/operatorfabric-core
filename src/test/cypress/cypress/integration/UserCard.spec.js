@@ -656,7 +656,7 @@ describe('User Card ', function () {
       cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
 
       // We go back to the feed
-      cy.get('#opfab-navbar-menu-feed').click({force: true});
+      cy.get('#opfab-navbar-menu-feed').click();
       cy.waitDefaultTime();
       cy.get('of-light-card').should('have.length', 1);
       cy.get('of-light-card').eq(0).click()

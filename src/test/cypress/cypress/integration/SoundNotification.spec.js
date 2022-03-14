@@ -32,7 +32,7 @@ describe('Sound notification test', function () {
       cy.waitDefaultTime();
 
       // Open the feed
-      cy.get('#opfab-navbar-menu-feed').click({force: true});
+      cy.get('#opfab-navbar-menu-feed').click();
 
       // send card with severity alarm
       cy.sendCard('defaultProcess/contingencies.json');
@@ -52,7 +52,7 @@ describe('Sound notification test', function () {
       cy.get('#opfab-checkbox-setting-form-alarm').click();
 
       // Open the feed
-      cy.get('#opfab-navbar-menu-feed').click({force: true});
+      cy.get('#opfab-navbar-menu-feed').click();
 
       // Send a card with severity alarm 
       cy.sendCard('defaultProcess/contingencies.json');
@@ -67,7 +67,7 @@ describe('Sound notification test', function () {
       
 
       // Open the archives screen  , even if user is in archives screen sound are activated 
-      cy.get('#opfab-navbar-menu-archives').click({force: true});
+      cy.get('#opfab-navbar-menu-archives').click();
 
       // send card with severity action
       cy.sendCard('defaultProcess/question.json');
@@ -81,7 +81,7 @@ describe('Sound notification test', function () {
       cy.get('#opfab-checkbox-setting-form-information').click();
 
       // Open the archives screen  
-      cy.get('#opfab-navbar-menu-archives').click({force: true});
+      cy.get('#opfab-navbar-menu-archives').click();
 
       // Send three cars : alarm ,information  and action
       cy.sendCard('defaultProcess/contingencies.json');
@@ -102,7 +102,7 @@ describe('Sound notification test', function () {
       cy.waitDefaultTime();
 
       // Open the feed and send card 
-      cy.get('#opfab-navbar-menu-feed').click({force: true});
+      cy.get('#opfab-navbar-menu-feed').click();
       cy.waitDefaultTime();
 
       // Use cypress time simulation 
@@ -125,7 +125,7 @@ describe('Sound notification test', function () {
       cy.get('@playSound').its('callCount').should('eq', 3);
 
       // Click somewhere to stop repeating sound 
-      cy.get('#opfab-navbar-menu-feed').click({force: true});
+      cy.get('#opfab-navbar-menu-feed').click();
 
       // Wait 30 seconds more , no new sound 
       cy.tick(30000);
@@ -145,7 +145,7 @@ describe('Sound notification test', function () {
       cy.waitDefaultTime();
 
       // Open the feed and send card 
-      cy.get('#opfab-navbar-menu-feed').click({force: true});
+      cy.get('#opfab-navbar-menu-feed').click();
       cy.waitDefaultTime();
 
       cy.clock(new Date());
@@ -163,7 +163,7 @@ describe('Sound notification test', function () {
 
 
       // Click somewhere to stop repeating sound 
-      cy.get('#opfab-navbar-menu-feed').click({force: true});
+      cy.get('#opfab-navbar-menu-feed').click();
 
       // Wait 30 seconds more , no new sound 
       cy.tick(30000);

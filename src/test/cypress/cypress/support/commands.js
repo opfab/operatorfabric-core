@@ -58,7 +58,7 @@ Cypress.Commands.overwrite('reload',()=>
 Cypress.Commands.add('logoutOpFab',()=>
 {
     cy.get('#opfab-navbar-drop_user_menu').click(); // Click top right dropdown menu
-    cy.get('#opfab-navbar-right-menu-logout').click({force: true}); // Click logout button
+    cy.get('#opfab-navbar-right-menu-logout').click(); // Click logout button
 
 })
 
@@ -152,7 +152,7 @@ Cypress.Commands.add('waitForOpfabToStart', () => {
 
 Cypress.Commands.add('openOpfabSettings', () => {
     cy.get('#opfab-navbar-drop_user_menu').click();
-    cy.get("#opfab-navbar-right-menu-settings").click({force: true});
+    cy.get("#opfab-navbar-right-menu-settings").click();
 })
 
   // Stub playSound method to catch when opfab send a sound 
