@@ -462,8 +462,8 @@ describe ('Monitoring screen tests',function () {
             cy.task('readXlsx', { file: './cypress/downloads/' + files[0], sheet: "data" }).then((rows) => {
                 expect(rows.length).to.equal(5);
 
-                expect(rows[0]['TIME']).not.to.be.empty;
-                expect(rows[0]['BUSINESS PERIOD']).not.to.be.empty;
+                expect(rows[0]['TIME']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
+                expect(rows[0]['BUSINESS PERIOD']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}-\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
                 expect(rows[0]['ANSWER']).to.equal(false);
                 expect(rows[0].TITLE).to.equal('⚠️ Network Contingencies ⚠️');
                 expect(rows[0].SUMMARY).to.equal('Contingencies report for French network');
@@ -473,8 +473,8 @@ describe ('Monitoring screen tests',function () {
                 expect(rows[0]['REQUIRED ANSWERS']).to.equal('');
                 expect(rows[0].ANSWERS).to.equal('');
 
-                expect(rows[1]['TIME']).not.to.be.empty;
-                expect(rows[1]['BUSINESS PERIOD']).not.to.be.empty;
+                expect(rows[1]['TIME']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
+                expect(rows[1]['BUSINESS PERIOD']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}-$/);
                 expect(rows[1]['ANSWER']).to.equal(false);
                 expect(rows[1].TITLE).to.equal('Electricity consumption forecast');
                 expect(rows[1].SUMMARY).to.equal('Message received');
@@ -484,8 +484,8 @@ describe ('Monitoring screen tests',function () {
                 expect(rows[1]['REQUIRED ANSWERS']).to.equal('');
                 expect(rows[1].ANSWERS).to.equal('');
                 
-                expect(rows[2]['TIME']).not.to.be.empty;
-                expect(rows[2]['BUSINESS PERIOD']).not.to.be.empty;
+                expect(rows[2]['TIME']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
+                expect(rows[2]['BUSINESS PERIOD']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}-\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
                 expect(rows[2]['ANSWER']).to.equal(true);
                 expect(rows[2].TITLE).to.equal('⚡ Planned Outage');
                 expect(rows[2].SUMMARY).to.equal('Message received');
@@ -495,8 +495,8 @@ describe ('Monitoring screen tests',function () {
                 expect(rows[2]['REQUIRED ANSWERS']).to.equal('Control Center FR North,Control Center FR South');
                 expect(rows[2].ANSWERS).to.equal('Control Center FR North');
 
-                expect(rows[3]['TIME']).not.to.be.empty;
-                expect(rows[3]['BUSINESS PERIOD']).not.to.be.empty;
+                expect(rows[3]['TIME']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
+                expect(rows[3]['BUSINESS PERIOD']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}-\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
                 expect(rows[3]['ANSWER']).to.equal(false);
                 expect(rows[3].TITLE).to.equal('Process state (calcul)');
                 expect(rows[3].SUMMARY).to.equal('Message received');
@@ -506,8 +506,8 @@ describe ('Monitoring screen tests',function () {
                 expect(rows[3]['REQUIRED ANSWERS']).to.equal('');
                 expect(rows[3].ANSWERS).to.equal('');
 
-                expect(rows[4]['TIME']).not.to.be.empty;
-                expect(rows[4]['BUSINESS PERIOD']).not.to.be.empty;
+                expect(rows[4]['TIME']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
+                expect(rows[4]['BUSINESS PERIOD']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}-\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
                 expect(rows[4]['ANSWER']).to.equal(false);
                 expect(rows[4].TITLE).to.equal('Message');
                 expect(rows[4].SUMMARY).to.equal("Message received : France-England's interconnection is 100% operational / Result of the maintenance is <OK>");
