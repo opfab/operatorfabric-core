@@ -11,7 +11,7 @@
 <nav class="navbar navbar-expand-lg fixed-top  opfab-navbar">
   <a class="navbar-brand">
     <div *ngIf="this.customLogo; else opFabLogo">
-      <of-custom-logo [base64]="customLogo" [limitSize]="limitSize" [height]="height" [width]="width"></of-custom-logo>
+      <of-custom-logo [base64]="customLogo"  [height]="height" [width]="width"></of-custom-logo>
     </div>
     <ng-template #opFabLogo>
       <div class="brand-bg-light">
