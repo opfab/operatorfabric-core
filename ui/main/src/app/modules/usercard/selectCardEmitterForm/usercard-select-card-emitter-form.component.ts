@@ -7,8 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
+import {takeUntil, debounceTime, Subject} from 'rxjs';
 
 
 @Component({
@@ -20,6 +21,11 @@ export class UsercardSelectCardEmitterFormComponent implements OnInit {
     @Input() public userEntitiesAllowedToSendCardOptions;
     @Input() public initialPublisher;
 
+    @Output() public cardEmitterChange: EventEmitter<any> = new EventEmitter<any>();
+
+
+    unsubscribe$: Subject<void> = new Subject<void>();
+
     selectCardEmitterForm: FormGroup;
 
     constructor() {
@@ -30,10 +36,35 @@ export class UsercardSelectCardEmitterFormComponent implements OnInit {
         this.selectCardEmitterForm = new FormGroup({
             cardEmitter: new FormControl('')
         });
+
         this.selectCardEmitterForm.get('cardEmitter').setValue(this.initialPublisher);
+        this.listenForEmitterChange();
     }
 
     public getSelectedCardEmitter() {
         return this.selectCardEmitterForm.value['cardEmitter'];
+    }
+
+    private listenForEmitterChange() {
+        this.selectCardEmitterForm.get('cardEmitter').valueChanges
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                debounceTime(10) 
+            )
+            .subscribe((state) => {
+                if (!!state) {
+                    this.cardEmitterChange.emit(
+                        {
+                            'emitter': this.selectCardEmitterForm.get('cardEmitter').value
+                        });
+
+                }
+            });
+    }
+
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 }

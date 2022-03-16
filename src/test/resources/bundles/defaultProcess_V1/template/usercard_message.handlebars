@@ -24,6 +24,10 @@
             <label>HIDDEN STATE MOCK </label>
             <input id="hidden_state" name="hidden_state">
         </div>
+        <div hidden="true" class="opfab-input" style="margin-right:5px">
+            <label>HIDDEN SENDER MOCK </label>
+            <input id="hidden_sender" name="hidden_sender">
+        </div>
     </tr>
 
 
@@ -52,5 +56,10 @@
             card: card
         };
 
-    }
+    };
+
+    usercardTemplateGateway.setEntityUsedForSendingCard = function(senderEntity) {
+        document.getElementById("hidden_sender").value = senderEntity;
+    };
+
 </script>

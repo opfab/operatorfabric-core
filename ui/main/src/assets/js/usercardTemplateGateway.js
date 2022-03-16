@@ -70,6 +70,12 @@ const usercardTemplateGateway = {
         this.startDate = null;
         this.endDate = null;
         this.lttd = null;
+
+        // OpFab calls this function to inform the template on sender entity
+        this.setEntityUsedForSendingCard = function (senderEntity) {
+            // This function should be overridden in the template.
+        };
+
     }
 };
 

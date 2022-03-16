@@ -50,7 +50,8 @@
 
     <div *ngIf="userEntitiesAllowedToSendCardOptions.length > 1">
         <of-usercard-select-card-emitter-form [userEntitiesAllowedToSendCardOptions]="userEntitiesAllowedToSendCardOptions"
-                                              [initialPublisher]="this.publisherForCreatingUsercard" #cardEmitterForm>
+                                              [initialPublisher]="this.publisherForCreatingUsercard" #cardEmitterForm
+                                              (cardEmitterChange)="cardEmitterChanged($event)">
         </of-usercard-select-card-emitter-form>
     </div>
 

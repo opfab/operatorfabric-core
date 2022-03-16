@@ -233,6 +233,9 @@ export class UserCardComponent implements OnInit {
         this.loadTemplate();
     }
 
+    public cardEmitterChanged(event: any) {
+        usercardTemplateGateway.setEntityUsedForSendingCard(event.emitter);
+    }
 
     private setFieldsVisibility() {
         if (!!this.userCardConfiguration) {
@@ -267,6 +270,7 @@ export class UserCardComponent implements OnInit {
                         setTimeout(() => { // wait for DOM rendering
                             this.reinsertScripts();
                             this.setInitialDateFormValues();
+                            usercardTemplateGateway.setEntityUsedForSendingCard(this.findPublisherForCreatingUsercard())
                         }, 10);
                     },
                     error: (error) => {

@@ -207,6 +207,14 @@ https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bund
 == Get current process and current state of the card
 The template can know the process and the state of the card by calling the _usercardTemplateGateway.getCurrentProcess()_ and _usercardTemplateGateway.getCurrentState()_ functions. These functions will return a string corresponding to the process id (or state id).
 
+== Receiving emitter entity of the card
+The template can receive the emitter entity of the card by implementing the _usercardTemplateGateway.setEntityUsedForSendingCard()_  function. 
+This function will be called by OperatorFabric after loading the template and every time the card emitter changes (if the user can choose from multiple entities).
+
+An example of _usercardTemplateGateway.setEntityUsedForSendingCard()_ usage can be found in the file
+https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/defaultProcess_V1/template/usercard_message.handlebars[src/test/resources/bundles/defaultProcess_V1/template/usercard_message.handlebars].
+
+
 == Send response automatically (experimental feature)
 
 It is possible to configure a template to automatically send a response when sending a user card expecting an answers from one of the entities of the emitting user. 
