@@ -87,9 +87,9 @@ Feature: Cards with representative
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And match response.data.message == 'a message with fields representative and representativeType'
-    And match response.representative == 'ENTITY1_FR'
-    And match response.representativeType == 'ENTITY'
+    And match response.card.data.message == 'a message with fields representative and representativeType'
+    And match response.card.representative == 'ENTITY1_FR'
+    And match response.card.representativeType == 'ENTITY'
 
 
  #delete card

@@ -103,7 +103,7 @@ Feature: postCardWithToNotify
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And match response.data.message == 'a message with toNotify=true'
+    And match response.card.data.message == 'a message with toNotify=true'
 
 # Push card
     Given url opfabPublishCardUrl + 'cards'
@@ -126,7 +126,7 @@ Feature: postCardWithToNotify
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And match response.data.message == 'a message with toNotify=false'
+    And match response.card.data.message == 'a message with toNotify=false'
 
 #delete perimeter created previously
       Given url opfabUrl + 'users/perimeters/perimeter'

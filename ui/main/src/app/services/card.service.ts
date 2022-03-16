@@ -265,8 +265,8 @@ export class CardService {
 
     }
 
-    loadArchivedCard(id: string): Observable<Card> {
-        return this.httpClient.get<Card>(`${this.archivesUrl}/${id}`);
+    loadArchivedCard(id: string): Observable<CardData> {
+        return this.httpClient.get<CardData>(`${this.archivesUrl}/${id}`);
     }
 
     fetchArchivedCards(filters: Map<string, string[]>): Observable<Page<LightCard>> {

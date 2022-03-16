@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,12 @@
 
 package org.opfab.cards.consultation.configuration.webflux;
 
+import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
+
+import org.opfab.cards.consultation.model.ArchivedCardConsultationData;
+import org.opfab.cards.consultation.model.ArchivedCardData;
 import org.opfab.cards.consultation.repositories.ArchivedCardRepository;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.users.model.CurrentUserWithPerimeters;
@@ -25,6 +30,7 @@ import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
 import static org.springframework.web.reactive.function.BodyInserters.fromObject;
+import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 import static org.springframework.web.reactive.function.server.ServerResponse.notFound;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 import static reactor.util.function.Tuples.of;
@@ -60,9 +66,19 @@ public class ArchivedCardRoutesConfig implements UserExtractor {
 
     private HandlerFunction<ServerResponse> archivedCardGetRoute() {
         return request ->
+        
                 extractUserFromJwtToken(request)
-                        .flatMap(user -> archivedCardRepository.findByIdWithUser(request.pathVariable("id"),user))
-                        .flatMap(card-> ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(card)))
+                        .flatMap(user -> Mono.just(user).zipWith(archivedCardRepository.findByIdWithUser(request.pathVariable("id"),user)))
+                        .flatMap(userCardT2 -> Mono.just(userCardT2).zipWith(archivedCardRepository.findByParentCard(userCardT2.getT2()).collectList()))
+                        .flatMap(t2 -> {
+                            
+                            ArchivedCardConsultationData card = t2.getT1().getT2();
+                            List<ArchivedCardConsultationData> childCards = t2.getT2();
+                            return ok()
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .body(fromValue(ArchivedCardData.builder().card(card).childCards(childCards).build()));
+
+                        })
                         .switchIfEmpty(notFound().build());
     }
 
