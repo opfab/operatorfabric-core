@@ -810,4 +810,59 @@ describe('User Card ', function () {
 
   })
 
+  describe("Should receive card emitter from gateway", function() {
+
+    it('Check card emitter for operator1_fr', () => {
+
+      cy.loginOpFab('operator1_fr', 'test');
+      cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+
+
+      // Test on Message card
+      cy.get("#hidden_sender").should("exist");
+      cy.get("#hidden_sender").should("have.value", "ENTITY1_FR");
+
+
+
+    });
+
+    it('Should receive card emitter changes for operator4_fr', () => {
+
+      cy.loginOpFab('operator4_fr', 'test');
+      cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+
+      // Test on Message card
+
+      // Check that card emitter is set to Control Center FR East
+      cy.get('#of-usercard-card-emitter-selector').should("exist");
+      cy.get('#of-usercard-card-emitter-selector').find('option:selected').should('have.text', 'Control Center FR East');
+
+
+      cy.get("#hidden_sender").should("exist");
+      cy.get("#hidden_sender").should("have.value", "ENTITY3_FR");
+
+      // Now we choose Control Center FR North as card emitter
+      cy.get("#of-usercard-card-emitter-selector").find('select').select('Control Center FR South');
+      cy.get("#hidden_sender").should("have.value", "ENTITY2_FR");
+
+      // Test on editing existing card, opened from the feed
+      prepareAndSendCard();
+      
+      cy.waitDefaultTime();
+
+      cy.get('of-light-card').eq(0).click()
+      .find('[id^=opfab-feed-light-card]')
+      .invoke('attr', 'data-urlId')
+      .then((urlId) => {
+        cy.waitDefaultTime();
+        cy.hash().should('eq', '#/feed/cards/' + urlId);
+        cy.get('#opfab-card-edit').click();
+
+        cy.get("#hidden_sender").should("exist");
+        cy.get("#hidden_sender").should("have.value", "ENTITY2_FR");
+      })
+
+    });
+  })
+
 })
