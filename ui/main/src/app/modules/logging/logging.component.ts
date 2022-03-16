@@ -52,6 +52,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
     firstQueryHasBeenDone = false;
     loadingInProgress: boolean = false;
     loadingIsTakingMoreThanOneSecond: boolean = false;
+    technicalError = false;
 
     processStateDescription = new Map();
     processStateName = new Map();
@@ -126,6 +127,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
     }
     
     sendQuery(page_number): void {
+        this.technicalError = false;
         const publishStart = this.extractTime(this.loggingForm.get('publishDateFrom'));
         const publishEnd = this.extractTime(this.loggingForm.get('publishDateTo'));
 
@@ -154,7 +156,8 @@ export class LoggingComponent implements OnDestroy, OnInit {
         if (this.listOfProcessesForRequest.length && !this.filtersTemplate.filters.has('process')) this.filtersTemplate.filters.set('process', this.listOfProcessesForRequest);
         this.cardService.fetchArchivedCards(this.filtersTemplate.filters)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((page: Page<any>) => {
+            .subscribe( {
+                next:  (page: Page<any>) => {
                 this.loadingInProgress = false;
                 this.loadingIsTakingMoreThanOneSecond = false;
 
@@ -166,6 +169,12 @@ export class LoggingComponent implements OnDestroy, OnInit {
                     this.cardPostProcessing(card);
                 });
                 this.results = page.content;
+                },
+                error: () =>  {
+                    this.firstQueryHasBeenDone = false;
+                    this.loadingInProgress = false;
+                    this.technicalError = true;
+                }
             });
     }
 

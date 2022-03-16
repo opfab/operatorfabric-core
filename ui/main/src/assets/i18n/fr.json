@@ -63,7 +63,8 @@
     },
     "error": {
       "impossibleToSaveSettings": "Impossible d'enregistrer les paramètres pour des raisons techniques",
-      "incorrectSubmission": "Saisie incorrecte"
+      "incorrectSubmission": "Saisie incorrecte",
+      "technicalError" : "Erreur technique"
     }
   },
   "global":{
