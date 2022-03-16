@@ -692,25 +692,33 @@ class CardProcessServiceShould {
         String cardUid = firstCard.getUid();
         user.setLogin("aaa");
 
-        UserBasedOperationResult res = cardProcessingService.processUserAcknowledgement(cardUid, user);
+        UserBasedOperationResult res = cardProcessingService.processUserAcknowledgement(cardUid, user, user.getEntities());
         Assertions.assertThat(res.isCardFound() && res.getOperationDone()).as("Expecting one successful addition").isTrue();
         
         CardPublicationData cardReloaded = cardRepository.findByUid(cardUid).get();
         Assertions.assertThat(cardReloaded.getUsersAcks()).as("Expecting Card after ack processing contains exactly an ack by user aaa").containsExactly("aaa");
+        Assertions.assertThat(cardReloaded.getEntitiesAcks()).as("Expecting Card after ack processing contains exactly 2 entities in field entitiesAcks").containsExactly("newPublisherId", "entity2");
 
         user.setLogin("bbb");
-        res = cardProcessingService.processUserAcknowledgement(cardUid, user);
+        user.setEntities(Arrays.asList("newPublisherId_bbb", "entity2_bbb"));
+        res = cardProcessingService.processUserAcknowledgement(cardUid, user, user.getEntities());
         Assertions.assertThat(res.isCardFound() && res.getOperationDone()).as("Expecting one successful addition").isTrue();
         
         cardReloaded = cardRepository.findByUid(cardUid).get();
         Assertions.assertThat(cardReloaded.getUsersAcks()).as("Expecting Card after ack processing contains exactly two acks by users aaa and bbb").containsExactly("aaa","bbb");
+        Assertions.assertThat(cardReloaded.getEntitiesAcks()).as("Expecting Card after ack processing contains exactly 4 entities in field entitiesAcks")
+                .containsExactly("newPublisherId", "entity2", "newPublisherId_bbb", "entity2_bbb");
+
         //try to insert aaa again
         user.setLogin("aaa");
-        res = cardProcessingService.processUserAcknowledgement(cardUid, user);
+        user.setEntities(Arrays.asList("newPublisherId", "entity2"));
+        res = cardProcessingService.processUserAcknowledgement(cardUid, user, user.getEntities());
         Assertions.assertThat(res.isCardFound() && !res.getOperationDone()).as("Expecting no addition because already done").isTrue();
         
         cardReloaded = cardRepository.findByUid(cardUid).get();
         Assertions.assertThat(cardReloaded.getUsersAcks()).as("Expecting  Card after ack processing contains exactly two acks by users aaa(only once) and bbb").containsExactly("aaa","bbb");
+        Assertions.assertThat(cardReloaded.getEntitiesAcks()).as("Expecting Card after ack processing contains exactly 4 entities in field entitiesAcks")
+                .containsExactly("newPublisherId", "entity2", "newPublisherId_bbb", "entity2_bbb");
     }
 
 

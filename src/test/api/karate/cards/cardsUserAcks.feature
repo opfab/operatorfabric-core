@@ -49,6 +49,24 @@ Feature: CardsUserAcknowledgement
 ]
 """
 
+      * def entity1Array =
+"""
+[   "ENTITY1_FR"
+]
+"""
+
+      * def entity1entity2Array =
+"""
+[   "ENTITY1_FR", "ENTITY2_FR"
+]
+"""
+
+      * def entity2Array =
+"""
+[   "ENTITY2_FR"
+]
+"""
+
 #Create new perimeter
     Given url opfabUrl + 'users/perimeters'
     And header Authorization = 'Bearer ' + authTokenAdmin
@@ -79,11 +97,18 @@ Feature: CardsUserAcknowledgement
     And match response.card.hasBeenAcknowledged == false
     And def uid = response.card.uid
 
+#make an acknowledgement to the card with operator1_fr with entities for which the user is not a member
+    Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
+    And header Authorization = 'Bearer ' + authToken
+    And request entity1entity2Array
+    When method post
+    Then status 403
+
 
 #make an acknowledgement to the card with operator1_fr
     Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken
-    And request ''
+    And request entity1Array
     When method post
     Then status 201
 
@@ -107,7 +132,7 @@ Feature: CardsUserAcknowledgement
 #make a second acknowledgement to the card with operator2_fr
     Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken2
-    And request ''
+    And request entity2Array
     When method post
     Then status 201
 
@@ -131,7 +156,7 @@ Feature: CardsUserAcknowledgement
 
     Given url opfabUrl + 'cardspub/cards/userAcknowledgement/unexisting_card_uid'
     And header Authorization = 'Bearer ' + authToken
-    And request ''
+    And request entity1Array
     When method post
     Then status 404
 

@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -108,14 +109,16 @@ public class CardController {
      */
     @PostMapping("/userAcknowledgement/{cardUid}")
     public Void postUserAcknowledgement(Principal principal,
-                                              @PathVariable("cardUid") String cardUid, HttpServletResponse response) {
+                                        @PathVariable("cardUid") String cardUid,
+                                        HttpServletResponse response,
+                                        @RequestBody List<String> entitiesAcks) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
 
-        UserBasedOperationResult result=  cardProcessingService.processUserAcknowledgement(cardUid,user.getUserData());
+        UserBasedOperationResult result = cardProcessingService.processUserAcknowledgement(cardUid, user.getUserData(), entitiesAcks);
  
         if (!result.isCardFound()) response.setStatus(404);
-        else  {
+        else {
             if (Boolean.TRUE.equals(result.getOperationDone()))
                 response.setStatus(201);
             else

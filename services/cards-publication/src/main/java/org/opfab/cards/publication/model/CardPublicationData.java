@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,9 +22,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * <p>Please use builder to instantiate</p>
@@ -106,7 +104,7 @@ public class CardPublicationData implements Card {
     private List<String> entitiesAllowedToRespond;
     @Singular("entityRequiredToRespond")
     private List<String> entitiesRequiredToRespond;
-    @Singular("entitiesAllowedToEdit")
+    @Singular("entityAllowedToEdit")
     private List<String> entitiesAllowedToEdit;
     @Singular
     @Indexed
@@ -115,6 +113,8 @@ public class CardPublicationData implements Card {
     private List<String> externalRecipients;
     @JsonIgnore
     private List<String> usersAcks;
+    @JsonIgnore
+    private List<String> entitiesAcks;
     @JsonIgnore
     private List<String> usersReads;
 
@@ -140,6 +140,7 @@ public class CardPublicationData implements Card {
         if (null == this.uid)
         	this.uid = UUID.randomUUID().toString();
         this.processStateKey = process + "." + state;
+        this.entitiesAcks = Collections.emptyList();
     }
 
     public LightCardPublicationData toLightCard() {
