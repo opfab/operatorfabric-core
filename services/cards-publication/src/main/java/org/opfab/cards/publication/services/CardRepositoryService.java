@@ -10,6 +10,7 @@
 
 package org.opfab.cards.publication.services;
 
+import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
@@ -93,9 +94,16 @@ public class CardRepositoryService {
         return Optional.ofNullable(template.find(findCardByParentCardIdWithoutDataField, CardPublicationData.class));
     }
 
-	public UserBasedOperationResult addUserAck(User user, String cardUid) {
+	public UserBasedOperationResult addUserAck(User user, String cardUid, List<String> entitiesAcks) {
+        Update update = new Update().addToSet("usersAcks", user.getLogin());
+        update.addToSet(
+                "entitiesAcks",
+                BasicDBObjectBuilder.start("$each", entitiesAcks).get()
+        );
+
 		UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)), 
-				new Update().addToSet("usersAcks", user.getLogin()),CardPublicationData.class);
+                                                        update,
+                                                        CardPublicationData.class);
 		log.debug("added {} occurrence of {}'s userAcks in the card with uid: {}", updateFirst.getModifiedCount(),
 				cardUid);
 		return toUserBasedOperationResult(updateFirst);

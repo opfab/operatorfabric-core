@@ -637,7 +637,13 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 }
             });
         } else {
-            this.acknowledgeService.postUserAcknowledgement(this.card.uid).subscribe(resp => {
+            const entitiesAcks = [];
+            const entities = this.entitiesService.getEntitiesFromIds(this.user.entities);
+            entities.forEach(entity => {
+                if (entity.entityAllowedToSendCard) // this avoids to display entities used only for grouping
+                    entitiesAcks.push(entity.id);
+            });
+            this.acknowledgeService.postUserAcknowledgement(this.card.uid, entitiesAcks).subscribe(resp => {
                 if (resp.status === 201 || resp.status === 200) {
                     this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, true);
                     this.closeDetails();

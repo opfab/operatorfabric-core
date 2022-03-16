@@ -305,7 +305,7 @@ public class CardProcessingService {
             cardRepositoryService.deleteCard(cardToDelete);
             externalAppClient.notifyExternalApplicationThatCardIsDeleted(cardToDelete);
             Optional<List<CardPublicationData>> childCard=cardRepositoryService.findChildCard(cardToDelete);
-            if(childCard.isPresent()){
+            if (childCard.isPresent()){
                 childCard.get().forEach(x->deleteCard(x.getId()));
             }
         }
@@ -332,8 +332,13 @@ public class CardProcessingService {
         return false;
     }
     
-	public UserBasedOperationResult processUserAcknowledgement(String cardUid, User user) {
-		return cardRepositoryService.addUserAck(user, cardUid);
+	public UserBasedOperationResult processUserAcknowledgement(String cardUid, User user, List<String> entitiesAcks) {
+        if (! user.getEntities().containsAll(entitiesAcks))
+            throw new ApiErrorException(ApiError.builder()
+                    .status(HttpStatus.FORBIDDEN)
+                    .message("Acknowledgement impossible : User is not member of all the entities given in the request")
+                    .build());
+		return cardRepositoryService.addUserAck(user, cardUid, entitiesAcks);
 	}
 
 

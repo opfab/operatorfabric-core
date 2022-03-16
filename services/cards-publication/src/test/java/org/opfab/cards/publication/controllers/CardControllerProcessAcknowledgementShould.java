@@ -22,6 +22,7 @@ import org.opfab.cards.publication.services.CardProcessingService;
 import org.opfab.springtools.configuration.test.WithMockOpFabUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -40,7 +41,7 @@ import java.util.Optional;
 @ActiveProfiles("test")
 @WebAppConfiguration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@WithMockOpFabUser(login = "someUser", roles = { "AROLE" })
+@WithMockOpFabUser(login = "someUser", roles = { "AROLE" }, entities = { "entity1", "entity2", "entity3" })
 class CardControllerProcessAcknowledgementShould extends CardControllerShouldBase {
 
 	String cardUid;
@@ -78,7 +79,8 @@ class CardControllerProcessAcknowledgementShould extends CardControllerShouldBas
 		String cardUid = "NotExistingCardUid";		
 		Optional <CardPublicationData> card = cardRepository.findByUid(cardUid);
 		Assertions.assertThat(card).isNotPresent();
-		mockMvc.perform(post("/cards/userAcknowledgement/" + cardUid)).andExpect(status().isNotFound());		
+		mockMvc.perform(post("/cards/userAcknowledgement/" + cardUid)
+				        .contentType(MediaType.APPLICATION_JSON).content("[]")).andExpect(status().isNotFound());
 	}
 	
 	@Test
@@ -95,14 +97,19 @@ class CardControllerProcessAcknowledgementShould extends CardControllerShouldBas
 		Assertions.assertThat(cardRepository.count()).isEqualTo(cardNumber);
 		Optional <CardPublicationData> card = cardRepository.findByUid(cardUid);
 		int initialNumOfAcks = card.get().getUsersAcks() != null ? card.get().getUsersAcks().size() : 0;
-		mockMvc.perform(post("/cards/userAcknowledgement/" + cardUid)).andExpect(status().isCreated());	
+		int initialNumOfEntitiesAcks = card.get().getEntitiesAcks() != null ? card.get().getEntitiesAcks().size() : 0;
+		mockMvc.perform(post("/cards/userAcknowledgement/" + cardUid)
+						.contentType(MediaType.APPLICATION_JSON).content("[\"entity1\", \"entity2\"]")).andExpect(status().isCreated());
 		card = cardRepository.findByUid(cardUid);
 		Assertions.assertThat(card.get().getUsersAcks()).contains("someUser");
 		Assertions.assertThat(card.get().getUsersAcks()).hasSize(initialNumOfAcks + 1);
+		Assertions.assertThat(card.get().getEntitiesAcks()).contains("entity1", "entity2");
+		Assertions.assertThat(card.get().getEntitiesAcks()).doesNotContain("entity3");
+		Assertions.assertThat(card.get().getEntitiesAcks()).hasSize(initialNumOfEntitiesAcks + 2);
 	}
 
 	@Nested
-	@WithMockOpFabUser(login = "someOtherUser", roles = { "AROLE" })
+	@WithMockOpFabUser(login = "someOtherUser", roles = { "AROLE" }, entities = { "entity1", "entity4" })
 	@TestInstance(Lifecycle.PER_CLASS)
 	class ProcessUserAcknowledgementNested {
 		@Test
@@ -111,15 +118,19 @@ class CardControllerProcessAcknowledgementShould extends CardControllerShouldBas
 			Assertions.assertThat(cardRepository.count()).isEqualTo(cardNumber);
 			Optional <CardPublicationData> card = cardRepository.findByUid(cardUid);
 			int initialNumOfAcks = card.get().getUsersAcks() != null ? card.get().getUsersAcks().size() : 0;
-			mockMvc.perform(post("/cards/userAcknowledgement/" + cardUid)).andExpect(status().isCreated());	
+			int initialNumOfEntitiesAcks = card.get().getEntitiesAcks() != null ? card.get().getEntitiesAcks().size() : 0;
+			mockMvc.perform(post("/cards/userAcknowledgement/" + cardUid)
+					       .contentType(MediaType.APPLICATION_JSON).content("[\"entity1\", \"entity4\"]")).andExpect(status().isCreated());
 			card = cardRepository.findByUid(cardUid);
 			Assertions.assertThat(card.get().getUsersAcks()).contains("someUser", "someOtherUser");
 			Assertions.assertThat(card.get().getUsersAcks()).hasSize(initialNumOfAcks + 1);
-
+			Assertions.assertThat(card.get().getEntitiesAcks()).contains("entity1", "entity2", "entity4");
+			Assertions.assertThat(card.get().getEntitiesAcks()).doesNotContain("entity3");
+			Assertions.assertThat(card.get().getEntitiesAcks()).hasSize(initialNumOfEntitiesAcks + 1);
 		}
 
 		@Nested
-		@WithMockOpFabUser(login = "someUser", roles = { "AROLE" })
+		@WithMockOpFabUser(login = "someUser", roles = { "AROLE" }, entities = { "entity1", "entity2", "entity3" })
 		@TestInstance(Lifecycle.PER_CLASS)
 		class ProcessUserAcknowledgementNestedTwice {
 
@@ -129,14 +140,18 @@ class CardControllerProcessAcknowledgementShould extends CardControllerShouldBas
 				Assertions.assertThat(cardRepository.count()).isEqualTo(cardNumber);
 				Optional<CardPublicationData> card = cardRepository.findByUid(cardUid);
 				int initialNumOfAcks = card.get().getUsersAcks() != null ? card.get().getUsersAcks().size() : 0;
-				mockMvc.perform(post("/cards/userAcknowledgement/" + cardUid)).andExpect(status().isOk());	
+				int initialNumOfEntitiesAcks = card.get().getEntitiesAcks() != null ? card.get().getEntitiesAcks().size() : 0;
+				mockMvc.perform(post("/cards/userAcknowledgement/" + cardUid)
+						       .contentType(MediaType.APPLICATION_JSON).content("[\"entity1\", \"entity3\"]")).andExpect(status().isCreated());
 				card = cardRepository.findByUid(cardUid);
 				Assertions.assertThat(card.get().getUsersAcks()).contains("someUser", "someOtherUser");
 				Assertions.assertThat(card.get().getUsersAcks()).hasSize(initialNumOfAcks);
+				Assertions.assertThat(card.get().getEntitiesAcks()).contains("entity1", "entity2", "entity4", "entity3");
+				Assertions.assertThat(card.get().getEntitiesAcks()).hasSize(initialNumOfEntitiesAcks + 1);
 			}
 
 			@Nested
-			@WithMockOpFabUser(login = "someUser", roles = { "AROLE" })
+			@WithMockOpFabUser(login = "someUser", roles = { "AROLE" }, entities = { "entity1", "entity2", "entity3" })
 			@TestInstance(Lifecycle.PER_CLASS)
 			class ProcessDeleteUserAcknowledgement {
 
@@ -147,14 +162,17 @@ class CardControllerProcessAcknowledgementShould extends CardControllerShouldBas
 					Optional<CardPublicationData> card = cardRepository.findByUid(cardUid);
 					Assertions.assertThat(card.get().getUsersAcks()).contains("someUser");
 					int initialNumOfAcks = card.get().getUsersAcks().size();
+					int initialNumOfEntitiesAcks = card.get().getEntitiesAcks().size();
 					mockMvc.perform(delete("/cards/userAcknowledgement/" + cardUid)).andExpect(status().isOk());	
 					card = cardRepository.findByUid(cardUid);
 					Assertions.assertThat(card.get().getUsersAcks()).doesNotContain("someUser");
 					Assertions.assertThat(card.get().getUsersAcks()).hasSize(initialNumOfAcks - 1);
+					Assertions.assertThat(card.get().getEntitiesAcks()).contains("entity1", "entity2", "entity4", "entity3");
+					Assertions.assertThat(card.get().getEntitiesAcks()).hasSize(initialNumOfEntitiesAcks); //ack for entities are not deleted
 				}
 
 				@Nested
-				@WithMockOpFabUser(login = "someUser", roles = { "AROLE" })
+				@WithMockOpFabUser(login = "someUser", roles = { "AROLE" }, entities = { "entity1", "entity2", "entity3" })
 				@TestInstance(Lifecycle.PER_CLASS)
 				class ProcessDeleteUserAcknowledgementSecond {
 
@@ -165,10 +183,13 @@ class CardControllerProcessAcknowledgementShould extends CardControllerShouldBas
 						Optional<CardPublicationData> card = cardRepository.findByUid(cardUid);
 						Assertions.assertThat(card.get().getUsersAcks()).doesNotContain("someUser");
 						int initialNumOfAcks = card.get().getUsersAcks().size();
+						int initialNumOfEntitiesAcks = card.get().getEntitiesAcks().size();
 						mockMvc.perform(delete("/cards/userAcknowledgement/" + cardUid)).andExpect(status().isNoContent());	
 						card = cardRepository.findByUid(cardUid);
 						Assertions.assertThat(card.get().getUsersAcks()).doesNotContain("someUser");
 						Assertions.assertThat(card.get().getUsersAcks()).hasSize(initialNumOfAcks);
+						Assertions.assertThat(card.get().getEntitiesAcks()).contains("entity1", "entity2", "entity4", "entity3");
+						Assertions.assertThat(card.get().getEntitiesAcks()).hasSize(initialNumOfEntitiesAcks); //ack for entities are not deleted
 					}
 
 				}

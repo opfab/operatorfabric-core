@@ -53,6 +53,12 @@ Feature: CardsUserAcknowledgementUpdateCheck
 ]
 """
 
+      * def entityArray =
+"""
+[   "ENTITY1_FR"
+]
+"""
+
 #Create new perimeter
       Given url opfabUrl + 'users/perimeters'
       And header Authorization = 'Bearer ' + authTokenAdmin
@@ -84,7 +90,7 @@ Feature: CardsUserAcknowledgementUpdateCheck
 #make an acknowledgement to the card with operator1_fr
     Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken
-    And request ''
+    And request entityArray
     When method post
     Then status 201
 
