@@ -63,7 +63,8 @@
     },
     "error": {
       "impossibleToSaveSettings": "Om technische redenen is het niet mogelijk om de instellingen op te slaan",
-      "incorrectSubmission": "Onjuiste invoer"
+      "incorrectSubmission": "Onjuiste invoer",
+      "technicalError" : "Technische fout"
     }
   },
   "global":{

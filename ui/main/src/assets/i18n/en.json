@@ -63,7 +63,8 @@
     },
     "error": {
       "impossibleToSaveSettings": "Impossible to save settings for technical reasons",
-      "incorrectSubmission": "Incorrect submission"
+      "incorrectSubmission": "Incorrect submission",
+      "technicalError" : "Technical Error"
     }
   },
   "global":{

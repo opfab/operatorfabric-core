@@ -159,8 +159,6 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
                         PROCESS_FIELD,
                         PROCESS_INSTANCE_ID_FIELD,
                         "state",
-                        "title",
-                        "summary",
                         "titleTranslated",
                         "summaryTranslated",
                         PUBLISH_DATE_FIELD,
