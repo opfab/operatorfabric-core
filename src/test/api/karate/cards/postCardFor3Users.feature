@@ -93,7 +93,7 @@ Given url opfabUrl + 'cards/archives/' + cardUid
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200
-And match response.data.message == 'a message for 3 users (operator1_fr, operator2_fr and admin)'
+And match response.card.data.message == 'a message for 3 users (operator1_fr, operator2_fr and admin)'
 
 #delete perimeter created previously
   Given url opfabUrl + 'users/perimeters/perimeter'

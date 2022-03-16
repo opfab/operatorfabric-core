@@ -82,7 +82,7 @@ Given url opfabUrl + 'cards/archives/' + cardUid
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200
-And match response.data.message == 'a message'
+And match response.card.data.message == 'a message'
 
 Scenario: Post a new version of the Card
 
@@ -124,7 +124,7 @@ Given url opfabUrl + 'cards/archives/' + cardUid
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200
-And match response.data.message == 'new message'
+And match response.card.data.message == 'new message'
 
 
 Scenario: Delete the card 
@@ -154,7 +154,7 @@ Given url opfabUrl + 'cards/archives/' + cardUid
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200
-And match response.data.message == 'new message'
+And match response.card.data.message == 'new message'
 
 #delete perimeter created previously
   Given url opfabUrl + 'users/perimeters/perimeter'

@@ -133,14 +133,14 @@ public class CardProcessingService {
             String idCard = card.getProcess() + "." + card.getProcessInstanceId();
             Optional<List<CardPublicationData>> childCard = cardRepositoryService.findChildCard(cardRepositoryService.findCardById(idCard));
             if (childCard.isPresent()) {
-                deleteCards(childCard.get());
+                deleteCards(childCard.get(), card.getPublishDate());
             }
         }
         return null;
     }
 
-    private void deleteCards(List<CardPublicationData> cardPublicationData) {
-        cardPublicationData.forEach(x->deleteCard(x.getId()));
+    private void deleteCards(List<CardPublicationData> cardPublicationData, Instant deletionDate) {
+        cardPublicationData.forEach(x->deleteCard(x.getId(), deletionDate));
     }
     
 
@@ -247,6 +247,11 @@ public class CardProcessingService {
         deleteCard(cardToDelete);
     }
 
+    public void deleteCard(String id, Instant deletionDate) {
+        CardPublicationData cardToDelete = cardRepositoryService.findCardById(id);
+        deleteCard(cardToDelete, deletionDate);
+    }
+
     public void deleteCards(Instant endDateBefore) {
         cardRepositoryService.deleteCardsByEndDateBefore(endDateBefore);
     }
@@ -299,14 +304,23 @@ public class CardProcessingService {
     }
 
     private Optional<CardPublicationData> deleteCard(CardPublicationData cardToDelete) {
+        return deleteCard(cardToDelete, Instant.now());
+    }
+
+    private Optional<CardPublicationData> deleteCard(CardPublicationData cardToDelete, Instant deletionDate) {
         Optional<CardPublicationData> deletedCard = Optional.ofNullable(cardToDelete);
         if (null != cardToDelete) {
             cardNotificationService.notifyOneCard(cardToDelete, CardOperationTypeEnum.DELETE);
             cardRepositoryService.deleteCard(cardToDelete);
+            cardRepositoryService.findArchivedCardByUid(cardToDelete.getUid()).ifPresent(deleted -> {
+                deleted.setDeletionDate(deletionDate);
+                cardRepositoryService.updateArchivedCard(deleted);
+            });
+            
             externalAppClient.notifyExternalApplicationThatCardIsDeleted(cardToDelete);
             Optional<List<CardPublicationData>> childCard=cardRepositoryService.findChildCard(cardToDelete);
-            if (childCard.isPresent()){
-                childCard.get().forEach(x->deleteCard(x.getId()));
+            if(childCard.isPresent()){
+                childCard.get().forEach(x->deleteCard(x.getId(), deletionDate));
             }
         }
         return deletedCard;

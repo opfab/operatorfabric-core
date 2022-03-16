@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,7 +30,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 /**
  * 
  * Responsible of Write of Cards in card and archiveCard mongo collection
@@ -64,6 +64,14 @@ public class CardRepositoryService {
     }
 
     public void saveCardToArchive(ArchivedCardPublicationData card) {
+        // Update deletionDate on previous version of this card in archives
+        Query query = new Query();
+        query.addCriteria(new Criteria().andOperator(
+            where("process").is(card.getProcess()),
+            where("processInstanceId").is(card.getProcessInstanceId()),
+            where("deletionDate").isNull())
+        );
+        template.updateFirst(query, Update.update("deletionDate", card.getPublishDate()), ArchivedCardPublicationData.class);
         this.template.insert(card);
     }
 
@@ -71,7 +79,9 @@ public class CardRepositoryService {
         this.template.remove(cardToDelete);
     }
 
-
+    public void updateArchivedCard(ArchivedCardPublicationData card) {
+        this.template.save(card);
+    }
 
     public CardPublicationData findCardById(String id) {
         /**

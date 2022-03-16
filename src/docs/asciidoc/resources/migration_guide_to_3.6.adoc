@@ -1,0 +1,31 @@
+// Copyright (c) 2022 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 3.5.0 to release 3.6.0
+
+== Mongo data migration steps
+
+This section outlines the necessary steps to migrate existing data.
+
+[IMPORTANT]
+You need to perform these steps before starting up the OperatorFabric instance to avoid displaying wrong data in archives page.
+
+. Backup your existing Mongo data.
+
+. Run the following scripts in the mongo shell to update the value of the new field `deletionDate` for archived cards:
+
++
+[source, shell]
+----
+db.archivedCards.updateMany(
+{"deletionDate": {"$exists": false}},
+{"$set": {"deletionDate": new ISODate("1970-01-01T00:00:00Z")}} 
+)
+----
+
+
+

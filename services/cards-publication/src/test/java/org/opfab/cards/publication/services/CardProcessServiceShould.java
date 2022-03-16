@@ -408,10 +408,8 @@ class CardProcessServiceShould {
         assertThat(persistedCard.getSummaryTranslated()).isEqualTo("Summary translated value1");
 
         ArchivedCardPublicationData archivedPersistedCard = archiveRepository.findById(newCard.getUid()).get();
-        assertThat(archivedPersistedCard).usingRecursiveComparison()
-            .ignoringFields("uid", "id","timeSpans")
-            .isEqualTo(newCard);
-
+        assertThat(archivedPersistedCard).usingRecursiveComparison().ignoringFields("uid", "id",
+        "actions", "timeSpans", "deletionDate").isEqualTo(newCard);
         assertThat(archivedPersistedCard.getId()).isEqualTo(newCard.getUid());
         assertThat(archivedPersistedCard.getTitleTranslated()).isEqualTo("Title translated");
         assertThat(archivedPersistedCard.getSummaryTranslated()).isEqualTo("Summary translated value1");

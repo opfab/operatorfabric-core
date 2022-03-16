@@ -19,6 +19,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.cards.consultation.application.IntegrationTestApplication;
 import org.opfab.cards.consultation.configuration.webflux.ArchivedCardRoutesConfig;
 import org.opfab.cards.consultation.model.ArchivedCardConsultationData;
+import org.opfab.cards.consultation.model.ArchivedCardData;
 import org.opfab.cards.consultation.repositories.ArchivedCardRepository;
 import org.opfab.springtools.configuration.test.WithMockOpFabUserReactive;
 import org.opfab.test.EmptyListComparator;
@@ -90,8 +91,8 @@ class ArchivedCardRoutesShould {
             assertThat(archivedCardRoutes).isNotNull();
             webTestClient.get().uri("/archives/{id}", simpleCard.getId()).exchange()
                     .expectStatus().isOk()
-                    .expectBody(ArchivedCardConsultationData.class).value(card -> {
-                assertThat(card)
+                    .expectBody(ArchivedCardData.class).value(res -> {
+                assertThat(res.getCard())
                         .usingRecursiveComparison()
                         //This is necessary because empty lists are ignored in the returned JSON
                         .withComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
@@ -158,8 +159,8 @@ class ArchivedCardRoutesShould {
             assertThat(archivedCardRoutes).isNotNull();
             webTestClient.get().uri("/archives/{id}", simpleCard1.getId()).exchange()
                     .expectStatus().isOk()
-                    .expectBody(ArchivedCardConsultationData.class).value(card -> {
-                assertThat(card)
+                    .expectBody(ArchivedCardData.class).value(res -> {
+                assertThat(res.getCard())
                         .usingRecursiveComparison()
                         //This is necessary because empty lists are ignored in the returned JSON
                         .withComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
@@ -189,8 +190,8 @@ class ArchivedCardRoutesShould {
             assertThat(archivedCardRoutes).isNotNull();
             webTestClient.get().uri("/archives/{id}", simpleCard4.getId()).exchange()
                     .expectStatus().isOk()
-                    .expectBody(ArchivedCardConsultationData.class).value(card -> {
-                assertThat(card)
+                    .expectBody(ArchivedCardData.class).value(res -> {
+                assertThat(res.getCard())
                         .usingRecursiveComparison()
                         //This is necessary because empty lists are ignored in the returned JSON
                         .withComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
@@ -204,8 +205,8 @@ class ArchivedCardRoutesShould {
             assertThat(archivedCardRoutes).isNotNull();
             webTestClient.get().uri("/archives/{id}", simpleCard5.getId()).exchange()
                     .expectStatus().isOk()
-                    .expectBody(ArchivedCardConsultationData.class).value(card -> {
-                assertThat(card)
+                    .expectBody(ArchivedCardData.class).value(res -> {
+                assertThat(res.getCard())
                         .usingRecursiveComparison()
                         //This is necessary because empty lists are ignored in the returned JSON
                         .withComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")

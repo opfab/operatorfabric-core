@@ -17,6 +17,7 @@ describe ('Response card tests',function () {
         cy.loadTestConf();
         // Clean up existing cards
         cy.deleteAllCards();
+        cy.deleteAllArchivedCards();
 
         cy.sendCard('defaultProcess/question.json');
     });
@@ -326,6 +327,9 @@ describe ('Response card tests',function () {
         // check entities in card header 
         cy.get('#opfab-card-header-entity-ENTITY1_FR').should('have.css', 'color', 'rgb(0, 128, 0)'); // entity 1 color is green 
         cy.get('#opfab-card-header-entity-ENTITY2_FR').should('have.css', 'color', 'rgb(0, 128, 0)'); // entity 2 color is green
+
+       
+
     });
 
     it ('Check response for  operator1_fr  is not present after update of card with keepChildCard= false re-logging',function () {
@@ -350,5 +354,64 @@ describe ('Response card tests',function () {
         // check entities in card header 
         cy.get('#opfab-card-header-entity-ENTITY1_FR').should('have.css', 'color', 'rgb(255, 102, 0)');// entity 1 color is orange 
         cy.get('#opfab-card-header-entity-ENTITY2_FR').should('have.css', 'color', 'rgb(255, 102, 0)');  // entity 2 color is orange
+    
+        
+
     });
+
+    it ('Check responses in archived cards detail',function () {
+        cy.loginOpFab('operator1_fr','test');
+        // We move to archives screen
+        cy.get('#opfab-navbar-menu-archives').click();
+        cy.waitDefaultTime();
+        // We click the search button
+        cy.get('#opfab-archives-logging-btn-search').click();
+
+        // operator1_fr should see 3 archived cards
+        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length',3);
+
+        // open card detail for card with keepChildCards=false and check there are no responses
+        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').eq(0).click();
+        cy.waitDefaultTime();
+        cy.get('of-card-detail').should('exist');
+
+        //Check the responses from ENTITY1_FR, ENTITY2_FR and ENTITY3_FR have not been integrated in the template
+        cy.get('#response_from_ENTITY1_FR').should('not.exist');
+        cy.get('#response_from_ENTITY2_FR').should('not.exist');
+        cy.get('#response_from_ENTITY3_FR').should('not.exist');
+
+        // close card detail
+        cy.get('#opfab-archives-card-detail-close').click();
+
+        // open card detail for card with keepChildCards=true and check it should have 3 child cards
+        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').eq(1).click();
+        cy.waitDefaultTime();
+        cy.get('of-card-detail').should('exist');
+        // Check the responses from ENTITY1_FR, ENTITY2_FR and ENTITY3_FR have been integrated in the template
+        cy.get('#childs-div').find('tr').should('have.length',4);
+        cy.get('#response_from_ENTITY1_FR').next().should("have.text", ' OK ')
+                                            .next().should("have.text", ' NOK ')
+                                            .next().should("have.text", ' NOK ');
+        cy.get('#response_from_ENTITY2_FR').next().should("have.text", ' NOK ')
+                                            .next().should("have.text", ' OK ')
+                                            .next().should("have.text", ' NOK ');
+        cy.get('#response_from_ENTITY3_FR').next().should("have.text", ' NOK ')
+                                            .next().should("have.text", ' OK ')
+                                            .next().should("have.text", ' NOK ');
+
+        // close card detail
+        cy.get('#opfab-archives-card-detail-close').click();
+
+        // open card detail for first card and check it should have 1 child card
+        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').eq(2).click();
+        cy.waitDefaultTime();
+        cy.get('of-card-detail').should('exist');
+        // Check the responses from ENTITY1_FR  has been integrated in the template
+        cy.get('#childs-div').find('tr').should('have.length',2);
+        cy.get('#response_from_ENTITY1_FR').next().should("have.text", ' OK ')
+                                            .next().should("have.text", ' NOK ')
+                                            .next().should("have.text", ' NOK ');
+
+    });
+
 })

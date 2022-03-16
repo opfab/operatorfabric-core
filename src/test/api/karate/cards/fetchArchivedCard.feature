@@ -85,9 +85,9 @@ Feature: fetchArchive
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And match response.data.message == 'a message'
-    And match response.titleTranslated == 'card Title'
-    And match response.summaryTranslated == 'card summary'
+    And match response.card.data.message == 'a message'
+    And match response.card.titleTranslated == 'card Title'
+    And match response.card.summaryTranslated == 'card summary'
 
 # get card form archives without authentication
 
