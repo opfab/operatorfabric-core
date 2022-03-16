@@ -64,7 +64,7 @@
     "@fortawesome/fontawesome-free": "6.0.0",
     "@ngrx/store-devtools": "13.0.2",
     "@types/handlebars": "4.0.40",
-    "@types/jasmine": "3.10.4",
+    "@types/jasmine": "4.0.0",
     "@types/moment": "2.13.0",
     "codelyzer": "6.0.2",
     "jasmine-core": "4.0.1",
