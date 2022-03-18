@@ -233,11 +233,13 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private addAckFromSubscription(entitiesAcksToAdd: string[]) {
-        entitiesAcksToAdd.forEach(entityAckToAdd => {
-            const indexToUpdate = this.card.entityRecipients.findIndex(entityId => entityId === entityAckToAdd);
-            if (indexToUpdate !== -1)
-                this.listEntitiesToAck[indexToUpdate].color = 'green';
-        });
+        if (!!this.listEntitiesToAck && this.listEntitiesToAck.length > 0) {
+            entitiesAcksToAdd.forEach(entityAckToAdd => {
+                const indexToUpdate = this.card.entityRecipients.findIndex(entityId => entityId === entityAckToAdd);
+                if (indexToUpdate !== -1)
+                    this.listEntitiesToAck[indexToUpdate].color = 'green';
+            });
+        }
     }
 
     private computeListEntitiesToAck() {

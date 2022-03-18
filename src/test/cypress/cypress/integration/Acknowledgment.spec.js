@@ -463,4 +463,124 @@ describe('Acknowledgment  tests', function () {
                 .and('have.css', 'color', 'rgb(0, 128, 0)');
         })
     });
+
+    it('Check pinned card', function () {
+
+        cy.deleteAllCards();
+        // Send card with automaticPinWhenAcknowledged = true
+        cy.sendCard('defaultProcess/contingencies.json');
+
+        cy.loginOpFab('operator1_fr', 'test');
+
+        //There are no pinned cards
+        cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
+
+        cy.get('of-light-card').eq(0).click()
+        .find('[id^=opfab-feed-light-card]')
+        .invoke('attr', 'data-urlId')
+        .then((urlId) => {
+            cy.waitDefaultTime();
+            cy.hash().should('eq', '#/feed/cards/' + urlId);
+            //Acknowledge card
+            cy.get('#opfab-card-details-btn-ack').click();
+             //The card is pinned
+            cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
+            // Detail card it not present anymore 
+            cy.get('of-detail').should('not.exist');
+        });
+
+        
+        // Click on pinned card to open card detail
+        cy.get('#of-pinned-cards').find('.opfab-pinned-card').eq(0).click();
+        // Detail card is present  
+        cy.get('of-detail').should('exist');
+        // Unack the card 
+        cy.get('#opfab-card-details-btn-ack').click();
+        //There are no pinned cards
+        cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
+
+        // Ack the card
+        cy.get('#opfab-card-details-btn-ack').click();
+        //Card is pinned
+        cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
+
+        //Update the card by resending
+        cy.sendCard('defaultProcess/contingencies.json');
+
+        //There are no pinned cards
+        cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
+
+        cy.waitDefaultTime();
+
+        // Open and ack the new card
+        cy.get('of-light-card').eq(0).click()
+        .find('[id^=opfab-feed-light-card]')
+        .invoke('attr', 'data-urlId')
+        .then((urlId) => {
+            cy.waitDefaultTime();
+            cy.hash().should('eq', '#/feed/cards/' + urlId);
+            //Acknowledge card
+            cy.get('#opfab-card-details-btn-ack').click();
+             //The card is pinned
+            cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
+            // Detail card it not present anymore 
+            cy.get('of-detail').should('not.exist');
+        });
+
+
+         //Delete the card
+         cy.deleteCard('defaultProcess.process6');
+
+         //There are no pinned cards
+        cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
+    });
+
+    it('Check pinned card is removed after end date', function () {
+
+        const SECONDS = 1000;
+        const MINUTES = 60000;
+        const HOURS = 3600000;
+
+        const currentDate =  new Date(2022, 3, 22, 16, 10);
+
+        cy.loginWithClock(currentDate);
+       
+        // Send card with automaticPinWhenAcknowledged = true
+        cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime() - (2 * HOURS ), currentDate.getTime() + 5 * MINUTES);
+
+        cy.waitDefaultTime();
+
+        cy.tick(1 * SECONDS);
+
+        //There are no pinned cards
+        cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
+
+        cy.get('of-light-card').eq(0).click()
+        .find('[id^=opfab-feed-light-card]')
+        .invoke('attr', 'data-urlId')
+        .then((urlId) => {
+            cy.hash().should('eq', '#/feed/cards/' + urlId);
+
+            //Acknowledge card
+            cy.get('#opfab-card-details-btn-ack').click();
+
+            cy.waitDefaultTime();
+
+            cy.tick(1 * SECONDS);
+
+            //The card is pinned
+            cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
+            // Detail card it not present anymore 
+            cy.get('of-detail').should('not.exist');
+        });
+
+        cy.tick(5 * MINUTES);
+        // Check card is still pinned before endDate
+        cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
+
+        cy.tick(1 * MINUTES);
+
+        //There is no more pinned card after end date is passed
+        cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
+    });
 })

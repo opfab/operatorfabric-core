@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,6 +33,7 @@ public class ProcessStatesData implements ProcessStates {
     private Boolean isOnlyAChildState;
     private String validateAnswerButtonLabel;
     private String modifyAnswerButtonLabel;
+    private Boolean automaticPinWhenAcknowledged;
 
     @Override
     public Response getResponse() {
@@ -55,4 +56,14 @@ public class ProcessStatesData implements ProcessStates {
 
     @Override
     public void setType(TypeOfStateEnum type) { this.type = type; }
+
+    @Override
+    public Boolean getAutomaticPinWhenAcknowledged() {
+        return this.automaticPinWhenAcknowledged;
+    }
+
+    @Override
+    public void setAutomaticPinWhenAcknowledged(Boolean automaticPinWhenAcknowledged) {
+        this.automaticPinWhenAcknowledged = automaticPinWhenAcknowledged;
+    }
 }

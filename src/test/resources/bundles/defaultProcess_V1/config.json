@@ -68,7 +68,8 @@
         "contingencies"
       ],
       "acknowledgmentAllowed": "Always",
-      "type" : "INPROGRESS"
+      "type" : "INPROGRESS",
+      "automaticPinWhenAcknowledged" : true
     },
     "questionState": {
       "name": "Action required",
