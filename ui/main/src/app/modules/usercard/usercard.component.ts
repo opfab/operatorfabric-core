@@ -34,6 +34,7 @@ import {UserCardRecipientsFormComponent} from './recipientForm/usercard-recipien
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {Utilities} from '../../common/utilities';
 import {UsercardSelectCardEmitterFormComponent} from './selectCardEmitterForm/usercard-select-card-emitter-form.component';
+import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 
 declare const templateGateway: any;
 declare const usercardTemplateGateway: any;
@@ -110,6 +111,7 @@ export class UserCardComponent implements OnInit {
         private handlebars: HandlebarsService,
         protected soundNotificationService: SoundNotificationService,
         protected userPermissionsService: UserPermissionsService,
+        private opfabLogger: OpfabLoggerService
     ) {
         this.setDefaultDateFormValues();
     }
@@ -261,7 +263,9 @@ export class UserCardComponent implements OnInit {
 
         if (!!this.userCardConfiguration && !!this.userCardConfiguration.template) {
             const templateName = this.userCardConfiguration.template;
-            usercardTemplateGateway.setEntityUsedForSendingCard = (entity) => {}; // init template method 
+            usercardTemplateGateway.setEntityUsedForSendingCard = (entity) => {
+                // default method if not override by template
+            };  
 
             this.handlebars.queryTemplate(this.selectedProcessId, selected.version, templateName)
                 .pipe(map(t => t(new DetailContext(card, null, null))))
@@ -271,7 +275,7 @@ export class UserCardComponent implements OnInit {
                         setTimeout(() => { // wait for DOM rendering
                             this.reinsertScripts();
                             this.setInitialDateFormValues();
-                            usercardTemplateGateway.setEntityUsedForSendingCard(this.findPublisherForCreatingUsercard())
+                            usercardTemplateGateway.setEntityUsedForSendingCard(this.findPublisherForCreatingUsercard());
                         }, 10);
                     },
                     error: (error) => {
@@ -364,14 +368,14 @@ export class UserCardComponent implements OnInit {
 
     private isSpecificInformationValid(): boolean {
         if (!templateGateway.getSpecificCardInformation) {
-            console.log('ERROR : No getSpecificCardInformationMethod() in template, card cannot be send');
+            this.opfabLogger.error('ERROR : No getSpecificCardInformationMethod() in template, card cannot be send');
             this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
             return false;
         }
 
         const specificInformation = templateGateway.getSpecificCardInformation();
         if (!specificInformation) {
-            console.log('ERROR : getSpecificCardInformationMethod() in template return no information, card cannot be send');
+            this.opfabLogger.error('ERROR : getSpecificCardInformationMethod() in template return no information, card cannot be send');
             this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
             return false;
         }
@@ -382,7 +386,7 @@ export class UserCardComponent implements OnInit {
         }
 
         if (!specificInformation.card) {
-            console.log('ERROR : getSpecificCardInformationMethod() in template return specificInformation with no card field, card cannot be send');
+            this.opfabLogger.error('ERROR : getSpecificCardInformationMethod() in template return specificInformation with no card field, card cannot be send');
             this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
             return false;
         }
@@ -439,13 +443,26 @@ export class UserCardComponent implements OnInit {
     }
 
     private getRecipients(): string[] {
-        const selectedProcess = this.processesService.getProcess(this.selectedProcessId);
-        let allRecipientOptions = selectedProcess.states[this.selectedStateId].userCard.recipientList;
-        allRecipientOptions = allRecipientOptions !== undefined ? allRecipientOptions : [];
-        const selectedRecipients = this.recipientVisible ? this.recipientsForm.getSelectedRecipients() : allRecipientOptions;
-        const recipients = [];
-        selectedRecipients.forEach(entity => recipients.push(entity.id));
+        let  recipients = [];
+        if (this.recipientVisible) {
+            this.recipientsForm.getSelectedRecipients().forEach(entity => recipients.push(entity.id));
+        } else {
+            if (this.specificInformation.card.entityRecipients) {
+                recipients = this.specificInformation.card.entityRecipients;
+            } else {
+                const recipientListFromStateConfig = this.getRecipientListFromState_Deprecated();
+                if (recipientListFromStateConfig !== undefined) {
+                    this.opfabLogger.info('Use of state configuration to define list of recipient is deprecated, provide  it via  templateGateway.getSpecificCardInformation()  ');
+                    recipientListFromStateConfig.forEach(entity => recipients.push(entity.id));
+                }
+            }
+        }    
         return recipients;
+    }
+
+    private getRecipientListFromState_Deprecated() {
+        const selectedProcess = this.processesService.getProcess(this.selectedProcessId);
+        return  selectedProcess.states[this.selectedStateId].userCard.recipientList;
     }
 
     private getEntitiesAllowedTorespond(recipients): string[] {
@@ -555,7 +572,7 @@ export class UserCardComponent implements OnInit {
                     if (resp.status !== 201) {
                         const msg = (!!resp.message ? resp.message : '');
                         const error = (!!resp.error ? resp.error : '');
-                        console.log('Impossible to send card , message from service : ', msg, '. Error message : ', error);
+                        this.opfabLogger.error('Impossible to send card , message from service : ' + msg + '. Error message : '+ error);
                         this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
                     } else {
                         if (!!childCard) {
@@ -567,7 +584,7 @@ export class UserCardComponent implements OnInit {
                     this.userCardModal.dismiss('Close');
                 },
                 err => {
-                    console.error('Error when sending card :', err);
+                    this.opfabLogger.error('Error when sending card :', err);
                     this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
                     this.displaySendingCardInProgress = false;
                 }
@@ -587,7 +604,7 @@ export class UserCardComponent implements OnInit {
                 if (resp.status !== 201) {
                     const msg = (!!resp.message ? resp.message : '');
                     const error = (!!resp.error ? resp.error : '');
-                    console.log('Impossible to send child card , message from service : ', msg, '. Error message : ', error);
+                    this.opfabLogger.error('Impossible to send child card , message from service : '+ msg + '. Error message : '+ error);
                     this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
                 } else {
                         this.displayMessage('userCard.cardSendWithNoError', null, MessageLevel.INFO);
@@ -596,7 +613,7 @@ export class UserCardComponent implements OnInit {
                 this.userCardModal.dismiss('Close');
             },
             err => {
-                console.error('Error when sending child card :', err);
+                this.opfabLogger.error('Error when sending child card :' +  err);
                 this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
                 this.displaySendingCardInProgress = false;
             }

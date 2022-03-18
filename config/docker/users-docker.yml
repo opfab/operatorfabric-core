@@ -95,7 +95,7 @@ operatorfabric.users.default:
    - id: ENTITY1_IT
      name: Control Center IT North
      description: Control Center IT North
-     parents : ["ENTITY_FR"]
+     parents : ["ENTITY_IT"]
    - id: ENTITY2_IT
      name: Control Center IT Center
      description: Control Center IT Center

@@ -3,7 +3,7 @@
   "viewportWidth": 1848,
   "viewportHeight": 949,
   "chromeWebSecurity": false ,
-  "defaultCommandTimeout": 4000,
+  "defaultCommandTimeout": 6000,
   "env": {
     "defaultWaitTime": 500,
     "host": "http://localhost"
