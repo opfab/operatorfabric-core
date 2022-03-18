@@ -27,6 +27,7 @@ import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime
 import {FeedSortComponent } from './components/card-list/filters/feed-sort/feed-sort.component';
 import {LightCardModule } from 'app/modules/share/light-card/light-card.module';
 import {TimelineButtonsModule} from '../share/timeline-buttons/timeline-buttons.module';
+import {PinnedCardsComponent} from './components/pinned-cards/pinned-cards.component';
 
 @NgModule({
     imports: [
@@ -51,7 +52,8 @@ import {TimelineButtonsModule} from '../share/timeline-buttons/timeline-buttons.
         InitChartComponent,
         CustomTimelineChartComponent,
         MouseWheelDirective,
-        FeedSortComponent],
+        FeedSortComponent,
+        PinnedCardsComponent],
     exports: [FeedComponent]
 })
 export class FeedModule {

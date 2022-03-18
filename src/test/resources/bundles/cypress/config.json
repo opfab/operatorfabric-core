@@ -83,8 +83,8 @@
       "templateName" : "kitchenSink",
       "response": {
         "state": "dummyResponseState"
-      }
-
+      },
+      "automaticPinWhenAcknowledged" : true
     }
   }
 }

@@ -33,10 +33,14 @@
   </div>
 </div>
 <div class="opfab-showhide-timeline">
-  <div id="opfab-timeline-link-hide-timeline" *ngIf="!this.timelineButtons.hideTimeLine" >
+  <of-pinned-cards class="col-md-10"></of-pinned-cards>
+
+  <div id="opfab-timeline-link-hide-timeline" class="col-md-2" *ngIf="!this.timelineButtons.hideTimeLine">
     <a (click)="this.timelineButtons.showOrHideTimeline()">˄ &nbsp;&nbsp; <span translate> timeline.hideTimeline </span></a>
   </div>
-  <div id="opfab-timeline-link-show-timeline" *ngIf="this.timelineButtons.hideTimeLine">
+
+  <div id="opfab-timeline-link-show-timeline" class="col-md-2" *ngIf="this.timelineButtons.hideTimeLine">
     <a  (click)="this.timelineButtons.showOrHideTimeline()">˅ &nbsp;&nbsp; <span translate> timeline.showTimeline </span></a>
   </div>
+
 </div>
