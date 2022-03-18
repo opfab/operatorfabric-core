@@ -23,13 +23,20 @@ import java.util.List;
 public class CardOperationData implements CardOperation {
 
     private CardOperationTypeEnum type;
+
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String cardId;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private String cardUid;
+
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private LightCard card;
+
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> groupRecipientsIds;
+
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> entityRecipientsIds;
@@ -39,6 +46,10 @@ public class CardOperationData implements CardOperation {
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> userRecipientsIds;
+
+    @Singular("entityAck")
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<String> entitiesAcks;
 
     /**
      * Class used to encapsulate builder in order to bypass javadoc inability to handle annotation processor generated classes

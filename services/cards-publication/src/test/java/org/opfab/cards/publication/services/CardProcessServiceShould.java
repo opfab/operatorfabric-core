@@ -361,7 +361,7 @@ class CardProcessServiceShould {
 
     @Test
     void preserveData() {
-        // as date are stored in millis in mongo , we should not used nanos otherwise 
+        // as date are stored in millis in mongo , we should not use nanos otherwise
         // we will have different results when comparing date send and date stored 
         // resulting  in failed test 
 
@@ -409,7 +409,7 @@ class CardProcessServiceShould {
 
         ArchivedCardPublicationData archivedPersistedCard = archiveRepository.findById(newCard.getUid()).get();
         assertThat(archivedPersistedCard).usingRecursiveComparison().ignoringFields("uid", "id",
-        "actions", "timeSpans", "deletionDate").isEqualTo(newCard);
+        "actions", "timeSpans", "deletionDate", "entitiesAcks").isEqualTo(newCard);
         assertThat(archivedPersistedCard.getId()).isEqualTo(newCard.getUid());
         assertThat(archivedPersistedCard.getTitleTranslated()).isEqualTo("Title translated");
         assertThat(archivedPersistedCard.getSummaryTranslated()).isEqualTo("Summary translated value1");

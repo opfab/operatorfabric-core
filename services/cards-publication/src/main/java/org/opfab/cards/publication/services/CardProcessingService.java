@@ -352,7 +352,10 @@ public class CardProcessingService {
                     .status(HttpStatus.FORBIDDEN)
                     .message("Acknowledgement impossible : User is not member of all the entities given in the request")
                     .build());
-		return cardRepositoryService.addUserAck(user, cardUid, entitiesAcks);
+
+        cardNotificationService.pushAckOfCardInRabbit(cardUid, entitiesAcks);
+
+        return cardRepositoryService.addUserAck(user, cardUid, entitiesAcks);
 	}
 
 

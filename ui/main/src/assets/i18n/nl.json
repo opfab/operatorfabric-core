@@ -308,7 +308,8 @@
     "button": {
       "ack": "BEVESTIG EN SLUIT",
       "unack": "ANNULEER BEVESTIGING"
-    }
+    },
+    "acknowledged": "Bevestigd"
   },
   "admin": {
     "input": {

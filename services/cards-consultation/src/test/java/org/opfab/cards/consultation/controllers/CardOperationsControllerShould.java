@@ -124,7 +124,8 @@ class CardOperationsControllerShould {
         StepVerifier.create(repository.deleteAll()).expectComplete().verify();
         int processNo = 0;
         //create past cards
-        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne, "operator3", new String[]{"rte","operator"}, new String[]{"entity1","entity2"}, new String[]{"operator3","some-operator"}, new String[]{"operator3","some-operator"})))
+        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne, "operator3", new String[]{"rte","operator"}, new String[]{"entity1","entity2"},
+                                                             new String[]{"operator3","some-operator"}, new String[]{"operator3","some-operator"}, null)))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
@@ -132,7 +133,8 @@ class CardOperationsControllerShould {
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
-        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusOne, now, "operator3", new String[]{"rte","operator"}, new String[]{"entity1","entity2"}, new String[]{"any-operator","some-operator"}, new String[]{"any-operator","some-operator"})))
+        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusOne, now, "operator3", new String[]{"rte","operator"}, new String[]{"entity1","entity2"},
+                                                             new String[]{"any-operator","some-operator"}, new String[]{"any-operator","some-operator"}, null)))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
