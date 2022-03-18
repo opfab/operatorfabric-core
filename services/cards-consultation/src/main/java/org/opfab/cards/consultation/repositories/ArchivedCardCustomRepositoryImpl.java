@@ -107,7 +107,8 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
                     where(DELETION_DATE_FIELD).isNull()
                 )
             );
-        } else if (parentCard.getDeletionDate().toEpochMilli() == 0) {
+        } else if (parentCard.getDeletionDate().toEpochMilli() == 0) { 
+            // use to exclude old card inserted in archives before adding the current feature 
             return Flux.empty();
         } else {
             query.addCriteria(
