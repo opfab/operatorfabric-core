@@ -80,28 +80,66 @@ describe('User Card ', function () {
 
   })
 
-  describe('Recipients dropdown should not be displayed for some user cards', function () {
+  describe('Recipients dropdown should not be displayed or restricted for some user cards', function () {
 
-    it('Recipients should not be displayed in IT incident user card', () => {
-
-      cy.loginOpFab('operator1_fr', 'test');
-      cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
-      selectService('User card examples');
-      selectState('IT Incident');
-      cy.get('#opfab-recipients').should("not.exist");
-    })
-
-
-
-    it('Recipients dropdown should not be displayed in Tasks user card', () => {
+    it('Recipients dropdown should not be displayed in Tasks user card and only current user shall receive the card ', () => {
 
       cy.loginOpFab('operator1_fr', 'test');
       cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
       selectService('User card examples');
       selectProcess('Examples for new cards 3');
       cy.get('#opfab-recipients').should("not.exist");
+      cy.get('#opfab-usercard-btn-prepareCard').click();
+      cy.get('#opfab-entity-recipients').contains("You are the only recipient of this card");
     })
 
+    it('Recipients should not be displayed in IT incident user card but set via template code', () => {
+
+      cy.loginOpFab('operator1_fr', 'test');
+      cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+      selectService('User card examples');
+      selectState('IT Incident');
+      cy.get('#opfab-recipients').should("not.exist");
+      cy.get('#opfab-usercard-btn-prepareCard').click();
+      cy.get('#opfab-entity-recipients').contains("French Control Centers");
+      cy.get('#opfab-entity-recipients').contains("IT SUPERVISION CENTER");
+    })
+
+    it('Recipients dropdown should be restricted in message user card  - Deprecated method using state config ', () => {
+      cy.loginOpFab('operator1_fr', 'test');
+      cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+      selectProcess('Process example');
+      selectState('Process example');
+      cy.get('#opfab-recipients').should("exist");
+      cy.get('#opfab-recipients').click();
+      cy.get('#opfab-recipients').find('li').should('have.length', 6);
+      cy.get('#opfab-recipients').find('li').eq(0).find('label').contains("Control Center FR East");
+      cy.get('#opfab-recipients').find('li').eq(1).find('label').contains("Control Center FR North");
+      cy.get('#opfab-recipients').find('li').eq(2).find('label').contains("Control Center FR South");
+      cy.get('#opfab-recipients').find('li').eq(3).find('label').contains("Control Center FR West");
+      cy.get('#opfab-recipients').find('li').eq(4).find('label').contains("French Control Centers");
+      cy.get('#opfab-recipients').find('li').eq(5).find('label').contains("IT SUPERVISION CENTER");
+    })
+
+
+    it('Recipients dropdown should be restricted in message user card', () => {
+
+      cy.loginOpFab('operator1_fr', 'test');
+      cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+      selectService('User card examples');
+      selectProcess('Examples for new cards 2');
+      selectState('Message');
+      cy.get('#opfab-recipients').should("exist");
+      cy.get('#opfab-recipients').click();
+      cy.get('#opfab-recipients').find('li').should('have.length', 7);
+      cy.get('#opfab-recipients').find('li').eq(0).find('label').contains("Control Center FR East");
+      cy.get('#opfab-recipients').find('li').eq(1).find('label').contains("Control Center FR North");
+      cy.get('#opfab-recipients').find('li').eq(2).find('label').contains("Control Center FR South");
+      cy.get('#opfab-recipients').find('li').eq(3).find('label').contains("Control Center FR West");
+      cy.get('#opfab-recipients').find('li').eq(4).find('label').contains("French Control Centers");
+      cy.get('#opfab-recipients').find('li').eq(5).find('label').contains("IT SUPERVISION CENTER");
+      cy.get('#opfab-recipients').find('li').eq(6).find('label').contains("Italian Control Centers");
+    })
 
   })
 
@@ -864,5 +902,4 @@ describe('User Card ', function () {
 
     });
   })
-
 })

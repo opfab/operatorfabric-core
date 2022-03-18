@@ -12,7 +12,7 @@
 This section outlines the necessary steps to migrate existing data.
 
 [IMPORTANT]
-You need to perform these steps before starting up the OperatorFabric instance to avoid displaying wrong data in archives page.
+If you use response card feature, you need to perform these steps before starting up the OperatorFabric instance to avoid displaying wrong data in archives page.
 
 . Backup your existing Mongo data.
 
@@ -27,5 +27,45 @@ db.archivedCards.updateMany(
 )
 ----
 
+
+== Deprecated feature 
+
+Using "recipientList" in state definition (in config.json) is now deprecated 
+
+=== Restrict recipient dropdown list for user 
+
+If you use  "recipientList" to restrict the list of recipient shown to user, replace it with code in template as in the following example : 
+
+....
+    usercardTemplateGateway.setDropdownEntityRecipientList([
+            {"id": "ENTITY_FR", "levels": [0,1]},
+            {"id": "IT_SUPERVISOR_ENTITY"}
+        ]);
+....
+
+=== Set the list of recipients  
+
+If you use  "recipientList" to set the list of recipient , provide now the list of recipients when returning the card object in templateGateway.getSpecificCardInformation() in the field entityRecipients.
+
+
+
+Example:
+....
+
+    templateGateway.getSpecificCardInformation = function () {
+        const message = document.getElementById('message').value;
+        const card = {
+          summary : {key : "message.summary"},
+          title : {key : "message.title"},
+          entityRecipients: ["ENTITY_FR","IT_SUPERVISOR_ENTITY"],
+          data : {message: message}
+        };
+        if (message.length<1) return { valid:false , errorMsg:'You must provide a message'}
+        return {
+            valid: true,
+            card: card
+        };
+
+....
 
 
