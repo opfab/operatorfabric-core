@@ -306,7 +306,8 @@
     "button": {
       "ack": "ACQUITTER ET FERMER",
       "unack": "ANNULER L'ACQUITTEMENT"
-    }
+    },
+    "acknowledged": "Acquittements"
   },
   "admin": {
     "input": {

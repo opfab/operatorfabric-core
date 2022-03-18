@@ -17,7 +17,9 @@ export class CardOperation implements CardOperation {
         readonly publicationDate: number,
         readonly type: CardOperationType,
         readonly card?: LightCard,
-        readonly cardId?: string
+        readonly cardId?: string,
+        readonly cardUid?: string,
+        readonly entitiesAcks?: string[]
     ) {
     }
 
@@ -31,5 +33,5 @@ export class CardOperation implements CardOperation {
 }
 
 export enum CardOperationType {
-    ADD, UPDATE, DELETE
+    ADD, UPDATE, DELETE, ACK
 }

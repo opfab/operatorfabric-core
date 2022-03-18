@@ -48,9 +48,9 @@ public class ArchivedCardPublicationData implements Card {
 
     @Indexed
     private String process;
-
+    
     private String processInstanceId;
-
+    
     @Indexed
     private String state;
     private I18n title;
@@ -90,10 +90,10 @@ public class ArchivedCardPublicationData implements Card {
     @Singular("entityAllowedToRespond")
     private List<String> entitiesAllowedToRespond;
 
-    @Singular("entitiyRequiredToRespond")
+    @Singular("entityRequiredToRespond")
     private List<String> entitiesRequiredToRespond;
 
-    @Singular("entitiesAllowedToEdit")
+    @Singular("entityAllowedToEdit")
     private List<String> entitiesAllowedToEdit;
 
     @Transient
@@ -115,6 +115,8 @@ public class ArchivedCardPublicationData implements Card {
     @Indexed
     private Instant deletionDate;
 
+    private List<String> entitiesAcks;
+
     public Instant getDeletionDate() {
         return this.deletionDate;
     }
@@ -123,7 +125,7 @@ public class ArchivedCardPublicationData implements Card {
         this.deletionDate = deletionDate;
     }
 
-    public ArchivedCardPublicationData(CardPublicationData card) {
+    public ArchivedCardPublicationData(CardPublicationData card){
         this.id = card.getUid();
         this.parentCardId = card.getParentCardId();
         this.initialParentCardUid = card.getInitialParentCardUid();

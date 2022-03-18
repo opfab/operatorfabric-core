@@ -128,6 +128,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public expiredLabel = 'feed.lttdFinished';
     public btnValidateLabel = 'response.btnValidate';
     public btnUnlockLabel = 'response.btnUnlock';
+    public listEntitiesToAck = [];
 
     private lastCardSetToReadButNotYetOnFeed;
     private entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = [];
@@ -156,7 +157,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         private lightCardsStoreService: LightCardsStoreService) {
 
             const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
-            if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
+            if (!!userWithPerimeters)
+                this.user = userWithPerimeters.userData;
     }
 
 
@@ -170,6 +172,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.selectEntityForm = new FormGroup({
             entity: new FormControl('')
         });
+
+        this.cardService.getReceivedAcks().pipe(takeUntil(this.unsubscribe$)).subscribe(receivedAck => {
+            if (receivedAck.cardUid === this.card.uid)
+                this.addAckFromSubscription(receivedAck.entitiesAcks);
+            });
     }
 
     ngAfterViewChecked() {
@@ -197,11 +204,13 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             this.computeEntityOptionsDropdownListForResponse();
         } else this.isCardAQuestionCard = false;
 
-
-
         this.checkIfHasAlreadyResponded();
 
-        // this call is necessary done after computeEntitiesForResponses() and  checkIfHasAlreadyResponded()
+        this.listEntitiesToAck = [];
+        if (this.isCardPublishedByUserEntity() && !! this.card.entityRecipients)
+            this.computeListEntitiesToAck();
+
+        // this call is necessary done after computeEntitiesForResponses() and checkIfHasAlreadyResponded()
         // to have the variables for templateGateway set
         this.setTemplateGatewayVariables();
 
@@ -217,6 +226,28 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
         this.btnValidateLabel = (!! this.cardState.validateAnswerButtonLabel) ? this.cardState.validateAnswerButtonLabel : 'response.btnValidate';
         this.btnUnlockLabel = (!! this.cardState.modifyAnswerButtonLabel) ? this.cardState.modifyAnswerButtonLabel : 'response.btnUnlock';
+    }
+
+    private addAckFromSubscription(entitiesAcksToAdd: string[]) {
+        entitiesAcksToAdd.forEach(entityAckToAdd => {
+            const indexToUpdate = this.card.entityRecipients.findIndex(entityId => entityId === entityAckToAdd);
+            if (indexToUpdate !== -1)
+                this.listEntitiesToAck[indexToUpdate].color = 'green';
+        });
+    }
+
+    private computeListEntitiesToAck() {
+        this.card.entityRecipients.forEach(entityRecipient => {
+            this.listEntitiesToAck.push({
+                id: entityRecipient,
+                name: this.entitiesService.getEntityName(entityRecipient),
+                color: this.checkEntityAcknowledged(entityRecipient) ? 'green' : '#ff6600'
+            });
+        });
+    }
+
+    private isCardPublishedByUserEntity(): boolean {
+        return (this.card.publisherType === 'ENTITY') && (this.user.entities.includes(this.card.publisher));
     }
 
     ngOnDestroy() {
@@ -431,6 +462,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     private checkEntityAnswered(entity: string): boolean {
         return this.childCards.some(childCard => childCard.publisher === entity );
+    }
+
+    private checkEntityAcknowledged(entityId: string): boolean {
+        return (!! this.card.entitiesAcks) && (this.card.entitiesAcks.includes(entityId));
     }
 
     private adaptTemplateSize() {

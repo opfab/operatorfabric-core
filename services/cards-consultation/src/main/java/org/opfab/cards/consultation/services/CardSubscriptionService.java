@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -69,10 +69,10 @@ public class CardSubscriptionService {
             log.debug("Send heartbeat to all subscription");
             cache.keySet().forEach(key -> {
                 CardSubscription sub = cache.get(key); 
-                if (sub!=null) // subscription can be null if it has been evict during the process of going throw the keys 
+                if (sub != null) // subscription can be null if it has been evicted during the process of going throw the keys
                 {
-                        log.debug("Send heartbeat to {}",key);
-                        sub.publishDataIntoSubscription("HEARTBEAT");
+                    log.debug("Send heartbeat to {}",key);
+                    sub.publishDataIntoSubscription("HEARTBEAT");
                 }
             });
 
@@ -80,7 +80,7 @@ public class CardSubscriptionService {
     }
 
  
-    public CardSubscription subscribe( CurrentUserWithPerimeters currentUserWithPerimeters,String clientId) {
+    public CardSubscription subscribe(CurrentUserWithPerimeters currentUserWithPerimeters,String clientId) {
 
         String subId = CardSubscription.computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin(),clientId);
         CardSubscription.CardSubscriptionBuilder cardSubscriptionBuilder = CardSubscription.builder()
@@ -98,7 +98,7 @@ public class CardSubscriptionService {
     public void evictSubscription(String subId) {
         
         CardSubscription sub = cache.get(subId);
-        if (sub==null) {
+        if (sub == null) {
             log.info("Subscription with id {} already evicted , as it is not existing anymore ", subId);
             return;
         }
@@ -114,9 +114,9 @@ public class CardSubscriptionService {
      * @return
      */
     public CardSubscription findSubscription(CurrentUserWithPerimeters currentUserWithPerimeters, String uiId) {
-        if(currentUserWithPerimeters == null)
+        if (currentUserWithPerimeters == null)
             throw new IllegalArgumentException("user is a mandatory parameter of CardSubscriptionService#findSubscription");
-        if(uiId == null)
+        if (uiId == null)
             throw new IllegalArgumentException("uiId is a mandatory parameter of CardSubscriptionService#findSubscription");
         String subId = CardSubscription.computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin(), uiId);
         return cache.get(subId);
@@ -134,9 +134,10 @@ public class CardSubscriptionService {
 
     public void onMessage(String queueName, String message) {
 
-        log.debug("receive from rabbit queue {} message {}",queueName,message);
+        log.debug("receive from rabbit queue {} message {}", queueName, message);
         switch (queueName) {
             case "process":
+            case "ack":
                 cache.values().forEach(subscription -> subscription.publishDataIntoSubscription(message));
                 break;
             case "user":
@@ -146,7 +147,7 @@ public class CardSubscriptionService {
                         });
                 break;
             case "card":
-                cache.values().forEach(subscription ->  processNewCard(message,subscription));
+                cache.values().forEach(subscription -> processNewCard(message, subscription));
                 break;
             default:
                 log.info("unrecognized queue {}" , queueName);

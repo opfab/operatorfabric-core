@@ -46,7 +46,7 @@ export class CardService {
     readonly cardsPubUrl: string;
     readonly userCardReadUrl: string;
     readonly userCardUrl: string;
-    private lastHeardBeatDate: number = 0;
+    private lastHeardBeatDate = 0;
     private firstSubscriptionInitDone = false;
     public initSubscription = new Subject<void>();
     private unsubscribe$: Subject<void> = new Subject<void>();
@@ -56,6 +56,7 @@ export class CardService {
 
     private selectedCardId: string = null;
 
+    private receivedAcksSubject = new Subject<{cardUid: string, entitiesAcks: string[]}>();
 
     constructor(private httpClient: HttpClient,
         private guidService: GuidService,
@@ -100,12 +101,16 @@ export class CardService {
                             if (operation.card.id === this.selectedCardId) this.store.dispatch(new LoadCard({id: operation.card.id}));
                             break;
                         case CardOperationType.DELETE:
-                            console.log(new Date().toISOString(), `CardService - Receive card to delete id=`, operation.cardId);
+                            this.logger.info(`CardService - Receive card to delete id=` + operation.cardId, LogOption.LOCAL_AND_REMOTE);
                             this.lightCardsStoreService.removeLightCard(operation.cardId);
                             if (operation.cardId === this.selectedCardId) this.store.dispatch(new RemoveLightCard({card: operation.cardId}));
                             break;
+                        case CardOperationType.ACK:
+                            this.logger.info('CardService - Receive ack on card uid=' + operation.cardUid, LogOption.LOCAL_AND_REMOTE);
+                            this.receivedAcksSubject.next({cardUid: operation.cardUid, entitiesAcks: operation.entitiesAcks});
+                            break;
                         default:
-                            console.log(new Date().toISOString(), `CardService - Unknown operation`, operation.type , ` for card id=`, operation.cardId);
+                            this.logger.info(`CardService - Unknown operation ` + operation.type + ` for card id=` + operation.cardId, LogOption.LOCAL_AND_REMOTE);
                     }
                 },
                 error: (error) => {
@@ -142,7 +147,7 @@ export class CardService {
             `${this.cardOperationsUrl}&notification=true`
             , {
                 headers: securityHeader,
-                // if necessary , we cans set here  heartbeatTimeout: xxx (in ms)
+                // if necessary, we can set here heartbeatTimeout: xxx (in ms)
             });
         return new Observable(observer => {
             try {
@@ -161,8 +166,7 @@ export class CardService {
                                 // so reload both configuration
                                 this.store.dispatch(new BusinessConfigChangeAction());
                                 this.store.dispatch(new UserConfigChangeAction());
-                            }
-                            else {
+                            } else {
                                 this.firstSubscriptionInitDone = true;
                                 this.lastHeardBeatDate = new Date().valueOf();
                             }
@@ -299,6 +303,10 @@ export class CardService {
     postTranslateCardField(processId: string, processVersion: string, i18nValue: I18n): any {
         const fieldToTranslate = {process: processId, processVersion: processVersion, i18nValue: i18nValue};
         return this.httpClient.post<any>(`${this.cardsPubUrl}/translateCardField`, fieldToTranslate, {observe: 'response'});
+    }
+
+    getReceivedAcks(): Observable<{cardUid: string, entitiesAcks: string[]}> {
+        return this.receivedAcksSubject.asObservable();
     }
 
 }

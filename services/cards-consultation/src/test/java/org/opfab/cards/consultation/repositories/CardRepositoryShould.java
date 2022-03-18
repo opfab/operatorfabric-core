@@ -452,7 +452,7 @@ class CardRepositoryShould {
         void getTwoCardsWithOneAcknowledge()
         {
             persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
-            persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,new String[] {"admin"},null));
+            persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,new String[] {"admin"},null, null));
     
             StepVerifier.create(repository.getCardOperations(null, now,nowPlusThree, adminUser)
                     .doOnNext(TestUtilities::logCardOperation))
@@ -474,8 +474,8 @@ class CardRepositoryShould {
         @Test
         void getTwoCardsWithNoneAcknowledgeAsCardsHasNotBeenAcknowledgeByCurrentUser()
         {
-            persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null,new String[] {"user1","user2"},null));
-            persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,new String[] {"dummyuser"},null));
+            persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null,new String[] {"user1","user2"},null, null));
+            persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,new String[] {"dummyuser"},null, null));
     
             StepVerifier.create(repository.getCardOperations(null, now,nowPlusThree, adminUser)
                     .doOnNext(TestUtilities::logCardOperation))
@@ -498,7 +498,7 @@ class CardRepositoryShould {
         void getTwoCardsWithOneRead()
         {
             persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
-            persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,null,new String[] {"admin"}));
+            persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,null,new String[] {"admin"}, null));
     
             StepVerifier.create(repository.getCardOperations(null, now,nowPlusThree, adminUser)
                     .doOnNext(TestUtilities::logCardOperation))
@@ -520,8 +520,8 @@ class CardRepositoryShould {
         @Test
         void getTwoCardsWithNoneReadAsCardsHasNotBeenReadByCurrentUser()
         {
-            persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null,null,new String[] {"user1","user2"}));
-            persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,null,new String[] {"dummyuser"}));
+            persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null,null,new String[] {"user1","user2"}, null));
+            persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,null,new String[] {"dummyuser"}, null));
     
             StepVerifier.create(repository.getCardOperations(null, now,nowPlusThree, adminUser)
                     .doOnNext(TestUtilities::logCardOperation))

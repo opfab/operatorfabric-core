@@ -62,19 +62,19 @@ public class TestUtilities {
     /* Utilities regarding Cards */
 
     public static CardConsultationData createSimpleCard(int processSuffix, Instant publication, Instant start, Instant end) {
-        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, null, null, null, null, null);
+        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, null, null, null, null, null, null);
     }
     
     public static CardConsultationData createSimpleCard(int processSuffix, Instant publication, Instant start, Instant end, String[] userAcks, String[] userReads) {
-        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, null, null, null, userAcks, userReads);
+        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, null, null, null, userAcks, userReads, null);
     }
 
     public static CardConsultationData createSimpleCard(int processSuffix, Instant publication, Instant start, Instant end, String login, String[] groups, String[] entities) {
-        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, login, groups, entities,null, null);
+        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, login, groups, entities,null, null, null);
     }
     
-    public static CardConsultationData createSimpleCard(int processSuffix, Instant publication, Instant start, Instant end, String login, String[] groups, String[] entities, String[] userAcks, String[] userReads) {
-        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, login, groups, entities, userAcks, userReads);
+    public static CardConsultationData createSimpleCard(int processSuffix, Instant publication, Instant start, Instant end, String login, String[] groups, String[] entities, String[] userAcks, String[] userReads, String[] entitiesAcks) {
+        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, login, groups, entities, userAcks, userReads, entitiesAcks);
     }
     
     public static CardConsultationData createSimpleCard(String processSuffix
@@ -82,7 +82,7 @@ public class TestUtilities {
             , Instant start
             , Instant end
             , String login, String[] groups, String[] entities) {
-    	return createSimpleCard(processSuffix, publication, start, end, login, groups, entities, null, null);
+    	return createSimpleCard(processSuffix, publication, start, end, login, groups, entities, null, null, null);
     }
 
     public static CardConsultationData createSimpleCard(String processSuffix
@@ -91,7 +91,8 @@ public class TestUtilities {
             , Instant end
             , String login, String[] groups, String[] entities
             , String[] userAcks
-            , String[] userReads) {    	
+            , String[] userReads
+            , String[] entitiesAcks) {
         CardConsultationData.CardConsultationDataBuilder cardBuilder = CardConsultationData.builder()
                 .process("PROCESS")
                 .processInstanceId("PROCESS" + processSuffix)
@@ -103,8 +104,9 @@ public class TestUtilities {
                 .severity(SeverityEnum.ALARM)
                 .title(I18nConsultationData.builder().key("title").build())
                 .summary(I18nConsultationData.builder().key("summary").build())
-                .usersAcks(userAcks!=null ? Arrays.asList(userAcks) : null)
-                .usersReads(userReads!=null ? Arrays.asList(userReads) : null);
+                .usersAcks(userAcks != null ? Arrays.asList(userAcks) : null)
+                .usersReads(userReads != null ? Arrays.asList(userReads) : null)
+                .entitiesAcks(entitiesAcks != null ? Arrays.asList(entitiesAcks) : null);
 
         if (groups != null && groups.length > 0)
             cardBuilder.groupRecipients(Arrays.asList(groups));
@@ -305,7 +307,8 @@ public class TestUtilities {
                 .overrideDefaultInitialization(false)
                 .ignoreRandomizationErrors(true)
                 .excludeField(predicate->predicate.getName().equals("usersAcks"))
-                .excludeField(predicate->predicate.getName().equals("usersReads"));
+                .excludeField(predicate->predicate.getName().equals("usersReads"))
+                .excludeField(predicate->predicate.getName().equals("entitiesAcks"));
 
         return new EasyRandom(parameters);
     }

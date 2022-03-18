@@ -85,7 +85,7 @@ public class ArchivedCardConsultationData implements Card {
     private List<String> entitiesAllowedToRespond;
     @Singular("entityRequiredToRespond")
     private List<String> entitiesRequiredToRespond;
-    @Singular("entitiesAllowedToEdit")
+    @Singular("entityAllowedToEdit")
     private List<String> entitiesAllowedToEdit;
     @Singular
     private List<String> externalRecipients;
@@ -113,8 +113,11 @@ public class ArchivedCardConsultationData implements Card {
     public Instant getDeletionDate() {
         return this.deletionDate;
     }
-    
+
     public void setDeletionDate(Instant deletionDate) {
         this.deletionDate = deletionDate;
     }
+
+    @JsonIgnore
+    private List<String> entitiesAcks;
 }
