@@ -261,6 +261,7 @@ export class UserCardComponent implements OnInit {
 
         if (!!this.userCardConfiguration && !!this.userCardConfiguration.template) {
             const templateName = this.userCardConfiguration.template;
+            usercardTemplateGateway.setEntityUsedForSendingCard = (entity) => {}; // init template method 
 
             this.handlebars.queryTemplate(this.selectedProcessId, selected.version, templateName)
                 .pipe(map(t => t(new DetailContext(card, null, null))))
@@ -274,7 +275,7 @@ export class UserCardComponent implements OnInit {
                         }, 10);
                     },
                     error: (error) => {
-                        console.log('WARNING impossible to load template ', templateName, ', error = ', error);
+                        this.opfabLogger.error('WARNING impossible to load template '+ templateName +  ', error = ' + error);
                         this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
                     }
                 });
