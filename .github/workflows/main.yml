@@ -63,7 +63,7 @@ jobs:
           echo "Opfab Version : ${OF_VERSION}"
           echo "---------------------------"
       - name: Cache Gradle packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -113,7 +113,7 @@ jobs:
           echo "Opfab Version : ${OF_VERSION}"
           echo "---------------------------"
       - name: Cache Gradle packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
