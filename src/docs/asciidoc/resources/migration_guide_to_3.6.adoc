@@ -30,11 +30,17 @@ db.archivedCards.updateMany(
 
 == Deprecated feature 
 
-Using "recipientList" in state definition (in config.json) is now deprecated 
+
+===  Method templateGateway.getSpecificInformation() 
+  
+Implementation of method templateGateway.getSpecificInformation() in usercard templates is now deprecated, replace it by usercardTemplateGateway.getSpecificInformation(). It is just a naming change, the behavior is the same.
+
 
 === Restrict recipient dropdown list for user 
 
-If you use  "recipientList" to restrict the list of recipient shown to user, replace it with code in template as in the following example : 
+Using "recipientList" in state definition (in config.json) is now deprecated 
+
+If you use  "recipientList" to restrict the list of recipients shown to user, replace it with code in template as in the following example : 
 
 ....
     usercardTemplateGateway.setDropdownEntityRecipientList([
@@ -45,14 +51,16 @@ If you use  "recipientList" to restrict the list of recipient shown to user, rep
 
 === Set the list of recipients  
 
-If you use  "recipientList" to set the list of recipient , provide now the list of recipients when returning the card object in templateGateway.getSpecificCardInformation() in the field entityRecipients.
+Using "recipientList" in state definition (in config.json) is now deprecated 
+
+If you use  "recipientList" to set the list of recipients, provide now the list of recipients when returning the card object in usercardTemplateGateway.getSpecificCardInformation() in the field entityRecipients.
 
 
 
 Example:
 ....
 
-    templateGateway.getSpecificCardInformation = function () {
+    usercardTemplateGateway.getSpecificCardInformation = function () {
         const message = document.getElementById('message').value;
         const card = {
           summary : {key : "message.summary"},

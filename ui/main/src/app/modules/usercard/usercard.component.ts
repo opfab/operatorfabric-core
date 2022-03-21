@@ -265,7 +265,9 @@ export class UserCardComponent implements OnInit {
             const templateName = this.userCardConfiguration.template;
             usercardTemplateGateway.setEntityUsedForSendingCard = (entity) => {
                 // default method if not override by template
-            };  
+            };
+            templateGateway.getSpecificCardInformation = null;
+            usercardTemplateGateway.getSpecificCardInformation = null;
 
             this.handlebars.queryTemplate(this.selectedProcessId, selected.version, templateName)
                 .pipe(map(t => t(new DetailContext(card, null, null))))
@@ -302,8 +304,9 @@ export class UserCardComponent implements OnInit {
     }
 
     public prepareCard() {
+        this.dealWithDeprecatedUseOfTemplateGateway();
         if (!this.isSpecificInformationValid()) return;
-        this.specificInformation = templateGateway.getSpecificCardInformation();
+        this.specificInformation = usercardTemplateGateway.getSpecificCardInformation();
         const startDate = this.getStartDate();
         const endDate = this.getEndDate();
         const lttd = this.getLttd();
@@ -366,16 +369,25 @@ export class UserCardComponent implements OnInit {
             });
     }
 
+    private dealWithDeprecatedUseOfTemplateGateway(): void {
+        if (!usercardTemplateGateway.getSpecificCardInformation && templateGateway.getSpecificCardInformation) {
+            this.opfabLogger.info('Use of templateGateway.getSpecificCardInformation() is deprecated , use usercardTemplateGateway.getSpecificCardInformation instead');
+            usercardTemplateGateway.getSpecificCardInformation = templateGateway.getSpecificCardInformation;
+        }
+
+    }
+
     private isSpecificInformationValid(): boolean {
-        if (!templateGateway.getSpecificCardInformation) {
-            this.opfabLogger.error('ERROR : No getSpecificCardInformationMethod() in template, card cannot be send');
+
+        if (!usercardTemplateGateway.getSpecificCardInformation) {
+            this.opfabLogger.error('ERROR : No usercardTemplateGateway.getSpecificCardInformationMethod() in template, card cannot be send');
             this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
             return false;
         }
 
-        const specificInformation = templateGateway.getSpecificCardInformation();
+        const specificInformation = usercardTemplateGateway.getSpecificCardInformation();
         if (!specificInformation) {
-            this.opfabLogger.error('ERROR : getSpecificCardInformationMethod() in template return no information, card cannot be send');
+            this.opfabLogger.error('ERROR : usercardTemplateGateway.getSpecificCardInformationMethod() in template return no information, card cannot be send');
             this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
             return false;
         }
@@ -386,7 +398,7 @@ export class UserCardComponent implements OnInit {
         }
 
         if (!specificInformation.card) {
-            this.opfabLogger.error('ERROR : getSpecificCardInformationMethod() in template return specificInformation with no card field, card cannot be send');
+            this.opfabLogger.error('ERROR : usercardTemplateGateway.getSpecificCardInformationMethod() in template return specificInformation with no card field, card cannot be send');
             this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
             return false;
         }
