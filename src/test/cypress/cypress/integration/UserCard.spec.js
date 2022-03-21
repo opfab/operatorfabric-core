@@ -36,6 +36,7 @@ describe('User Card ', function () {
     cy.loadTestConf();
     cy.deleteAllCards();
     cy.deleteAllArchivedCards();
+    cy.deleteAllSettings();
   });
 
 

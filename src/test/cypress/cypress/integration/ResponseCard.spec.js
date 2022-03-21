@@ -18,6 +18,7 @@ describe ('Response card tests',function () {
         // Clean up existing cards
         cy.deleteAllCards();
         cy.deleteAllArchivedCards();
+        cy.deleteAllSettings();
 
         cy.sendCard('defaultProcess/question.json');
     });
