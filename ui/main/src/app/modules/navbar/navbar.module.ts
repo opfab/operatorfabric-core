@@ -17,7 +17,6 @@ import { InfoComponent } from './info/info.component';
 import { MenuLinkComponent } from './menus/menu-link/menu-link.component';
 import { AppRoutingModule } from 'app/app-routing.module';
 import { UserCardModule} from '../usercard/usercard.module';
-import { FontAwesomeIconsModule } from 'app/modules/utilities/fontawesome-icons.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AboutComponent } from '../about/about.component';
 
@@ -34,7 +33,6 @@ import { AboutComponent } from '../about/about.component';
         TranslateModule,
         AppRoutingModule,
         UserCardModule,
-        FontAwesomeIconsModule,
         NgbModule
     ],
     exports: [NavbarComponent]
