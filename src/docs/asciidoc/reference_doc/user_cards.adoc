@@ -56,7 +56,7 @@ This template works the same as templates for card presentation. Here is an exam
 
 
 <script>
-    templateGateway.getSpecificCardInformation = function () {
+    usercardTemplateGateway.getSpecificCardInformation = function () {
         const message = document.getElementById('message').value;
         const card = {
           summary : {key : "message.summary"},
@@ -172,13 +172,13 @@ In this example the list of available recipients will contain: "ENTITY_FR" (leve
 To do that , you have to :
 
 * hide the recipient dropdown using the attribute `recipientVisible` in state definition in config.json 
-* provide the list of recipients when returning the card object in templateGateway.getSpecificCardInformation() in the field entityRecipients 
+* provide the list of recipients when returning the card object in usercardTemplateGateway.getSpecificCardInformation() in the field entityRecipients 
 
 
 Example:
 ....
 
-    templateGateway.getSpecificCardInformation = function () {
+    usercardTemplateGateway.getSpecificCardInformation = function () {
         const message = document.getElementById('message').value;
         const card = {
           summary : {key : "message.summary"},
@@ -242,7 +242,7 @@ To enable the automated response the template should add a `childCard` field to 
 
 ....
  <script>
-    templateGateway.getSpecificCardInformation = function () {
+    usercardTemplateGateway.getSpecificCardInformation = function () {
         const card = {...}
 
         childCard : { 

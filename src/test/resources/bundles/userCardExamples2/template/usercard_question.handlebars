@@ -29,7 +29,7 @@
     usercardTemplateGateway.setInitialLttd(mystartDate.getTime() + 4 * 3600000);
 
 
-    templateGateway.getSpecificCardInformation = function () {
+    usercardTemplateGateway.getSpecificCardInformation = function () {
         const question = document.getElementById('question').value;
 
         if (question.length <1) return {
