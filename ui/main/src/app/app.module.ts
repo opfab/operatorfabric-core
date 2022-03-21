@@ -29,7 +29,6 @@ import {AppErrorHandler} from './common/error/app-error-handler';
 import {ArchivesModule} from './modules/archives/archives.module';
 import {NavbarModule} from './modules/navbar/navbar.module';
 import {NgbModalModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {FontAwesomeIconsModule} from './modules/utilities/fontawesome-icons.module';
 import {TagInputModule} from 'ngx-chips';
 import {TokenInjector} from '@ofServices/interceptors.service';
 
@@ -47,7 +46,6 @@ import {TokenInjector} from '@ofServices/interceptors.service';
     StateModule.forRoot(),
     NgbModule,
     TranslateModule.forRoot(),
-    FontAwesomeIconsModule,
     ArchivesModule,
     LoggingModule,
     MonitoringModule,

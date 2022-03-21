@@ -16,6 +16,6 @@
 <div *ngIf=hasLinkType(LinkType.BOTH)>
   <a id="opfab-navbar-menu-{{menu.id}}" class="text-link " [routerLink]="['/businessconfigparty',menu.id,menuEntry.id]" translate>{{menu.id}}.{{menuEntry.label}}</a>
   <a id="opfab-navbar-menu-icon-{{menu.id}}" class="icon-link " [href]="menuEntry.url" rel="noopener noreferrer" target="_blank">
-    <fa-icon icon="external-link-alt"></fa-icon>
+    <em class="fas fa-external-link-alt" ></em>
   </a>
 </div>
