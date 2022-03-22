@@ -20,7 +20,7 @@
       <div class="container">
         <div class="col">
 
-          <div *ngIf="!row" class="opfab-input row">
+          <div *ngIf="!row" class="opfab-input opfab-edit-row">
             <label for="opfab-id" translate>admin.input.id.label</label>
             <input formControlName="id" name="id" id="opfab-id" type="text">
           </div>
@@ -31,7 +31,7 @@
             <div *ngIf="id.errors.uniqueGroupIdViolation" translate>admin.input.id.alreadyExisting</div>
           </div>
 
-          <div class="opfab-input row">
+          <div class="opfab-input opfab-edit-row">
             <label for="opfab-name" translate>admin.input.name.label</label>
             <input formControlName="name" name="name" id="opfab-name" type="text">
           </div>
@@ -39,12 +39,12 @@
             <div *ngIf="name.errors.required" translate>admin.input.name.required</div>
           </div>
 
-          <div class="opfab-input row">
+          <div class="opfab-input opfab-edit-row">
             <label for="opfab-description" translate>admin.input.description</label>
             <input formControlName="description" name="description" id="opfab-description" type="text">
           </div>
 
-          <div class="row">
+          <div class="opfab-edit-row">
             <of-multi-filter filterPath="perimeters" id="opfab-perimeters" [parentForm]="groupForm" [values]="perimetersDropdownList"
                              [translateValues]="false" [dropdownSettings]="perimetersDropdownSettings" [selectedItems]="selectedPerimeters"
                              sortValues=true i18nRootLabelKey="admin.input.group.">

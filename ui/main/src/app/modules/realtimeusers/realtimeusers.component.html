@@ -19,7 +19,7 @@
         <div style="background-color: var(--opfab-bgcolor-darker)">
             <br>
             <div class="row" style="margin-left: 0px;margin-right: 0px;">
-                <div class="col-sm text-center" style="max-width: max-content;min-width: 15%">
+                <div class="col-sm text-center" style="max-width: max-content;min-width: 15%;position:relative">
                     <of-single-filter id="of-realtimeusers-screen-selector" [parentForm]="realTimeScreensForm" [values]="realTimeScreensOptions"
                                       i18nRootLabelKey="realTimeUsers." placeholderKey="realTimeUsers.selectScreenText" filterPath="realTimeScreen">
                     </of-single-filter>
@@ -44,10 +44,10 @@
                             <th scope="row">{{this.entitiesService.getEntityName(entity)}}</th>
                             <td *ngFor="let group of entitiesGroupsElement.groups;">
                                 <ng-template #connected>
-                                    <span class="badge bg-success badge-pill">{{getNumberOfConnectedUsersInEntityAndGroup(entity + '.' + group)}}
+                                    <span class="badge rounded-pill bg-success">{{getNumberOfConnectedUsersInEntityAndGroup(entity + '.' + group)}}
                                     </span>&nbsp;({{labelForConnectedUsers(entity + '.' + group)}})
                                 </ng-template>
-                                <ng-template #disconnected><span class="badge bg-danger badge-pill">0</span></ng-template>
+                                <ng-template #disconnected><span class="badge rounded-pill bg-danger">0</span></ng-template>
                                 <span *ngIf="getNumberOfConnectedUsersInEntityAndGroup(entity + '.' + group);then connected else disconnected"></span>
                             </td>
                         </tr>

@@ -16,6 +16,7 @@ describe ('Feed notification configuration tests',function () {
 
     before('Set up configuration', function () {
         cy.loadTestConf();
+        cy.deleteAllSettings();
     });
 
     it('Check feed notification configuration screen for operator1_fr', function () {
@@ -230,10 +231,10 @@ describe ('Feed notification configuration tests',function () {
 
         // Unselect some notifications
         cy.get('#opfab-navbar-drop_user_menu').click(); // Click top right dropdown menu
-        cy.get('#opfab-navbar-right-menu-feedconfiguration').click({force:true}); // Click notification reception
+        cy.get('#opfab-navbar-right-menu-feedconfiguration').click(); // Click notification reception
 
         cardsToTest.forEach((c) => {
-            cy.get('.opfab-feedconfiguration-process').contains(c).click(); // Unselect card
+            cy.get('.opfab-feedconfiguration-process').contains(c).click({force:true}); // Unselect card
         })
 
         // Save
@@ -243,7 +244,7 @@ describe ('Feed notification configuration tests',function () {
 
 
         // Check feed
-        cy.get('#opfab-navbar-menu-feed').click({force:true}); // Open feed
+        cy.get('#opfab-navbar-menu-feed').click(); // Open feed
 
 
         // All cards minus the cards to check should be visible
@@ -299,7 +300,7 @@ describe ('Feed notification configuration tests',function () {
         cy.get('#opfab-navbar-drop_user_menu').click(); // Click top right dropdown menu
         cy.get('#opfab-navbar-right-menu-feedconfiguration').click({force:true}); // Click notification reception
 
-        cy.get('.opfab-feedconfiguration-processlist').contains("Base Examples").click(); // Select all
+        cy.get('.opfab-feedconfiguration-processlist').contains("Base Examples").click({force:true}); // Select all
 
         cy.get('#opfab-feedconfiguration-btn-confirm').click(); // Save settings
         cy.get('#opfab-feedconfiguration-btn-yes').click(); // and confirm

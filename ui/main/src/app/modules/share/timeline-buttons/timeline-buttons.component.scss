@@ -33,6 +33,7 @@
     padding-bottom: 5px;
     margin-top: -10px;
     height: 2em;
+   
 
     ul {
       margin: 0;
@@ -60,6 +61,7 @@
         .link-unselect {
           background-color: var(--opfab-bgcolor);
           color: var(--opfab-navbar-color);
+          text-decoration: none;
         }
 
         .circle-btn {

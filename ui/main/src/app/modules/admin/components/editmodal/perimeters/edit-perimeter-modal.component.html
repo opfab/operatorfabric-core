@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2020, RTEi (http://www.rte-international.com)           -->
-<!-- Copyright (c) 2021, RTE (http://www.rte-france.com)                   -->
+<!-- Copyright (c) 2021-2022, RTE (http://www.rte-france.com)                   -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -21,7 +21,7 @@
       <div class="container">
         <div class="col">
 
-          <div *ngIf="!row" class="opfab-input row">
+          <div *ngIf="!row" class="opfab-input opfab-edit-row" style="position: relative;">
             <label for="opfab-id" translate>admin.input.perimeter.id</label>
             <input formControlName="id" name="id" id="opfab-id" type="text">
           </div>
@@ -32,9 +32,9 @@
             <div *ngIf="id.errors.pattern" translate>admin.input.id.pattern</div>
           </div>
 
-          <div class="row">
+          <div class="opfab-edit-row"  style="position: relative;">
             <of-single-filter i18nRootLabelKey="admin.input.perimeter." [parentForm]="perimeterForm" filterPath="process"
-                              [values]="processOptions" [prefixWithValue]=true style="position:relative"
+                              [values]="processOptions" [prefixWithValue]=true 
                               placeholderKey="admin.input.selectProcessText" sortValues=true></of-single-filter>
           </div>
 
@@ -42,14 +42,14 @@
 
         <form [formGroup]="perimeterForm">
           <div formArrayName="stateRights">
-            <div class="row" *ngFor="let stateRight of perimeterForm.get('stateRights')['controls']; let i = index"
+            <div class="opfab-edit-row row" *ngFor="let stateRight of perimeterForm.get('stateRights')['controls']; let i = index"
                  [formGroupName]="i">
-              <div class="col-7">
+              <div class="col-7" style="position: relative;">
                 <of-single-filter i18nRootLabelKey="admin.input.perimeter." [parentForm]="stateRight" filterPath="state"
                                   [values]="stateOptions" placeholderKey="admin.input.selectStateText"
                                   sortValues=true></of-single-filter>
               </div>
-              <div class="col-3">
+              <div class="col-3" style="position: relative;">
                 <of-single-filter i18nRootLabelKey="admin.input.perimeter." [parentForm]="stateRight" filterPath="right"
                                   [values]="rightOptions" placeholderKey="admin.input.selectRightText"></of-single-filter>
               </div>

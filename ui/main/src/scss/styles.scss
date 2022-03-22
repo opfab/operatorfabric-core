@@ -781,6 +781,11 @@ html, body { height: 100%; }
 // ngbModal configuration 
 .modal-fullscreen{
   max-width: 100vw * 0.9;
+  margin-left: 100vw * 0.05;
+  max-height: calc(100% - 35px) ;
+  margin-top: 25px;
+  margin-bottom: 10px;
+  transition: 0s !important;
 }
 
 .modal-usercard{
@@ -846,6 +851,24 @@ html, body { height: 100%; }
 .opfab-popover {
   background-color: var(--opfab-popover-bgcolor);
   color: var(--opfab-text-color);
+  .popover-header {
+    color: var(--opfab-text-color);
+    background-color: var(--opfab-popover-bgcolor);
+    border-bottom: 1px solid var(--opfab-text-color);
+  }
+  .popover-body {
+    color: var(--opfab-text-color);
+  }
+  .arrow::after{
+    border-right-color: var(--opfab-popover-bgcolor);
+  }
+}
+
+.opfab-popover-left-menu {
+  background-color: var(--opfab-popover-bgcolor);
+  color: var(--opfab-text-color);
+  min-width: 330px !important;
+  padding-right: 0px;
   .popover-header {
     color: var(--opfab-text-color);
     background-color: var(--opfab-popover-bgcolor);
