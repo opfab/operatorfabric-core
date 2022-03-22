@@ -796,13 +796,13 @@ describe('User Card ', function () {
       startDate.setTime(startDate.getTime()+ 3600000);
       startDate.setMinutes(0);
       startDate.setSeconds(0);
-      const expectedStartDate = startDate.toISOString().split('T')[0];
+      const expectedStartDate = startDate.getFullYear() + '-' + (startDate.getMonth()+1).toString().padStart(2, '0') + '-' + startDate.getDate().toString().padStart(2, '0');
 
       const endDate = new Date(startDate.getTime() + 8 * 3600000);
-      const expectedEndDate = endDate.toISOString().split('T')[0];
+      const expectedEndDate = endDate.getFullYear() + '-' + (endDate.getMonth()+1).toString().padStart(2, '0') + '-' + endDate.getDate().toString().padStart(2, '0');
       
       const lttdDate = new Date(startDate.getTime() + 4 * 3600000);
-      const expectedLttdDate = lttdDate.toISOString().split('T')[0];
+      const expectedLttdDate = lttdDate.getFullYear() + '-' + (lttdDate.getMonth()+1).toString().padStart(2, '0') + '-' + lttdDate.getDate().toString().padStart(2, '0');
 
       cy.waitDefaultTime();
 
