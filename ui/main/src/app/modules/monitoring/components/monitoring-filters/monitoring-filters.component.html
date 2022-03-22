@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -46,13 +46,17 @@
                 </of-multi-filter>
             </div>
 
-            <div style="margin-top:23px; margin-left:60px;min-width: 320px; ">
+            <div style="margin-top: 20px;margin-bottom: 20px ; margin-left:60px;min-width: 320px; ">
                 <div class="form-group">
-                    <div class="row">
-                        <button id="opfab-monitoring-btn-search" class="opfab-btn" (click)='sendQuery()' translate> button.search</button>
-                        <button id="opfab-monitoring-btn-reset" class="opfab-btn-cancel" (click)='resetForm()' translate> button.reset</button>
-                    </div>
+                    
+                        <div  class="opfab-buttons">
+                            <button id="opfab-monitoring-btn-search" class="opfab-btn"  (click)='sendQuery()' translate> button.search</button>
+                            <button id="opfab-monitoring-btn-reset" class="opfab-btn-cancel" (click)='resetForm()' translate> button.reset</button>
+                    
+                        </div>
+                    
                 </div>
+
             </div>
         </div>
     </div>

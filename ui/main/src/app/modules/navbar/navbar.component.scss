@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,7 @@
 
 
 .opfab-navbar {
+    padding-left: 20px;
     background-color: var(--opfab-bgcolor) ;
     font-size: 16px;
     top: 5px;
@@ -20,7 +21,6 @@
         color:var(--opfab-navbar-color);
         margin-left: 10px;
         margin-right: 10px;
-        letter-spacing: 0.54px;
         line-height: 18px;
         white-space: nowrap;
   
@@ -36,7 +36,6 @@
       .nav-link.active {
         color:var(--opfab-navbar-color-active);
         font-weight: bold;
-        //text-decoration: underline;
         padding-bottom: 3px;
         padding-left: 3px;
         padding-right: 3px;
@@ -75,22 +74,23 @@
   .opfab-right-menu {
     background-color:var(--opfab-navbar-right-menu-bgcolor);
     color:var(--opfab-navbar-color);
-    border-top: 2px solid var(--opfab-navbar-color);
-    margin-top: -8px;
+    border-top: 2px solid var(--opfab-navbar-color); 
+    margin-top: -16px;
     margin-left: -12px;
     margin-right: -12px;
     margin-bottom: -10px;
     padding-top: 10px;
-    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
+    letter-spacing: normal;
   }
 
   .opfab-right-menu-item {
     color:var(--opfab-navbar-color);
     margin-left: 20px;
     margin-right: 20px;
-    letter-spacing: 0.54px;
     font-size: 16px;
     line-height: 40px;
+    letter-spacing: normal;
+
     &:hover,
     &:focus {
       color:var( --opfab-navbar-color-hover);
@@ -102,11 +102,12 @@
     grid-template-columns: 30px auto;
     color:var(--opfab-navbar-color);
     align-items: center;
+    text-decoration: none;
+    font-size: 16px;
 
     &:hover,
     &:focus {
       color:var( --opfab-navbar-color-hover);
-      text-decoration: none;
     }
 }
 

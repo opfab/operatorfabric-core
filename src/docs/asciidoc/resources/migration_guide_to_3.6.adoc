@@ -7,6 +7,13 @@
 
 = Migration Guide from release 3.5.0 to release 3.6.0
 
+== Template rendering
+
+Bootstrap library has been migrate to v5.
+
+[IMPORTANT]
+If you use bootstrap css classes in your templates, it's strongly recommended to check your template rendering after migration.
+
 == Mongo data migration steps
 
 This section outlines the necessary steps to migrate existing data.

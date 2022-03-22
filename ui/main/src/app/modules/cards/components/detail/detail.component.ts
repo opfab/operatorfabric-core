@@ -475,7 +475,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             const divBtn = document.getElementById('div-detail-btn');
 
             let cardTemplateHeight = window.innerHeight - diffWindow.top;
-            if (this._appService.pageType !== PageType.FEED) cardTemplateHeight -= 50;
+            if (this._appService.pageType !== PageType.FEED) cardTemplateHeight -= 20;
 
             if (divBtn) {
                 cardTemplateHeight -= divBtn.scrollHeight + 15;
