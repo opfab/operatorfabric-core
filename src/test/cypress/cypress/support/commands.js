@@ -93,6 +93,10 @@ Cypress.Commands.add('deleteCard', (cardId) => {
     cy.exec('cd ../resources/cards/ && ./deleteCard.sh '+ cardId + ' ' + Cypress.env('host'));
 })
 
+Cypress.Commands.add('sendAckForCard', (user, cardUid, entitiesAcks) => {
+    cy.exec('cd ../resources/cards/ && ./sendAckForCard.sh '+ user + ' ' + cardUid + ' ' + entitiesAcks);
+})
+
 Cypress.Commands.add('resetUIConfigurationFiles', () => {
 
     cy.exec('cp ../../../config/cypress/ui-config/web-ui-base.json ../../../config/cypress/ui-config/web-ui.json');
@@ -200,4 +204,25 @@ Cypress.Commands.add('clickAgGridCell', (table, row, col, tag) => {
 
     }
 
+})
+
+Cypress.Commands.add('usercardSelectService', (serviceName) => {
+    cy.get("of-usercard").should('exist');
+    cy.get("#of-usercard-service-selector").find('select').select(serviceName);
+    cy.get("#of-usercard-service-selector").find("option:selected").should("have.text", serviceName);
+})
+
+Cypress.Commands.add('usercardSelectProcess', (processName) => {
+    cy.get("#of-usercard-process-filter").find('select').select(processName);
+})
+
+Cypress.Commands.add('usercardSelectState', (stateName) => {
+    cy.get("#opfab-state-filter").find('select').select(stateName);
+})
+
+Cypress.Commands.add('usercardPrepareAndSendCard', () => {
+    cy.get('#opfab-usercard-btn-prepareCard').click();
+    cy.get("of-card-detail").should('exist');
+
+    cy.get('#opfab-usercard-btn-accept').click();
 })
