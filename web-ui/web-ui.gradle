@@ -15,6 +15,7 @@ docker {
 				}
 				from('src/main/docker') {
 					include 'start-webui.sh'
+					include 'nginx-logrotate-conf'
 					into '.'
 				}
 			}
