@@ -228,6 +228,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.btnUnlockLabel = (!! this.cardState.modifyAnswerButtonLabel) ? this.cardState.modifyAnswerButtonLabel : 'response.btnUnlock';
     }
 
+    public displayCardAcknowledgedFooter(): boolean {
+        return (this.cardState.acknowledgmentAllowed !== AcknowledgmentAllowedEnum.NEVER && this.listEntitiesToAck.length > 0);
+    }
+
     private addAckFromSubscription(entitiesAcksToAdd: string[]) {
         entitiesAcksToAdd.forEach(entityAckToAdd => {
             const indexToUpdate = this.card.entityRecipients.findIndex(entityId => entityId === entityAckToAdd);
