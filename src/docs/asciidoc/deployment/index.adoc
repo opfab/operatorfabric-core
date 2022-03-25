@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -26,6 +26,13 @@ ifdef::single-page-doc[<<dev_env, the development environment documentation>>]
 ifndef::single-page-doc[<</documentation/current/dev_env/index.adoc#dev_env, the development environment documentation>>]
 .
 
+== User computer
+
+From the user perspective, OperatorFabric is compatible with recent versions of chrome, edge and firefox and has no specific hardware performance constraints.
+
+Be aware that if you use OperatorFabric in realtime you should prevent user's computers to go in "sleep mode".
+
+In particular, *if you are using edge have a look to https://github.com/opfab/operatorfabric-core/issues/2754*
 
 
 include::configuration/configuration.adoc[leveloffset=+1]
