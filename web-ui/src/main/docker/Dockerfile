@@ -14,4 +14,5 @@ ENV HTTP_PROXY_AUTH=""
 RUN env
 COPY distribution /usr/share/nginx/html/
 COPY start-webui.sh /
+COPY nginx-logrotate-conf /etc/logrotate.d/nginx
 CMD ["/bin/sh", "/start-webui.sh"]
