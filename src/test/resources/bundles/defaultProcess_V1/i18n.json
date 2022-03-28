@@ -7,7 +7,7 @@
 		"title": "Message",
 		"summary": "Message received : {{summary}}"
 	},
-	"chartDetail" : { "title": "A Chart"},
+	"chartDetail" : { "title": "Data quality"},
 	"chartLine" : { "title": "Electricity consumption forecast"},
 	"question" : {"title": "⚡ Planned Outage"},
 	"contingencies": {"title" : "⚠️ Network Contingencies ⚠️", "summary": "Contingencies report for French network"},

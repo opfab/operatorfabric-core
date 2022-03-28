@@ -11,7 +11,7 @@
       "right" : "ReceiveAndWrite"
     },
     {
-      "state" : "chartState",
+      "state" : "dataQualityState",
       "right" : "ReceiveAndWrite"
     },
     {

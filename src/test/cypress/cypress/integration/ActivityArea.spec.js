@@ -76,7 +76,7 @@ describe ('ActivityAreaPage',()=>{
         cy.get('of-light-card').eq(0).find('.card-title').should('have.text', "Electricity consumption forecast ");
         cy.get('of-light-card').eq(1).find('.card-title').should('have.text', "⚡ Planned Outage ");
         cy.get('of-light-card').eq(2).find('.card-title').should('have.text', "Process state (calcul) ");
-        cy.get('of-light-card').eq(3).find('.card-title').should('have.text', "A Chart ");
+        cy.get('of-light-card').eq(3).find('.card-title').should('have.text', "Data quality ");
         cy.get('of-light-card').eq(4).find('.card-title').should('have.text', "Message ");
 
         // operator4_fr should see 5 cards in archives page
@@ -105,7 +105,7 @@ describe ('ActivityAreaPage',()=>{
         cy.get('of-light-card').should('have.length', 4);
         cy.get('of-light-card').eq(0).find('.card-title').should('have.text', "⚡ Planned Outage ");
         cy.get('of-light-card').eq(1).find('.card-title').should('have.text', "Process state (calcul) ");
-        cy.get('of-light-card').eq(2).find('.card-title').should('have.text', "A Chart ");
+        cy.get('of-light-card').eq(2).find('.card-title').should('have.text', "Data quality ");
         cy.get('of-light-card').eq(3).find('.card-title').should('have.text', "Message ");
 
         // and now operator4_fr should see only 4 cards in archives page
@@ -115,7 +115,7 @@ describe ('ActivityAreaPage',()=>{
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').as('archives-table');
         cy.get('@archives-table').eq(0).find('td').eq(4).should('have.text', '⚡ Planned Outage');
         cy.get('@archives-table').eq(1).find('td').eq(4).should('have.text', 'Process state (calcul)');
-        cy.get('@archives-table').eq(2).find('td').eq(4).should('have.text', 'A Chart');
+        cy.get('@archives-table').eq(2).find('td').eq(4).should('have.text', 'Data quality');
         cy.get('@archives-table').eq(3).find('td').eq(4).should('have.text', 'Message');
 
         // We reconnect to ENTITY1_FR, ENTITY2_FR and ENTITY3_FR
