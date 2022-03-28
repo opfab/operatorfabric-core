@@ -234,7 +234,7 @@ describe ('Archives screen tests',function () {
         // One list item is for the process 
         cy.get('#opfab-state').contains('Process example').should('exist');
         cy.get('#opfab-state').contains('Message').should('exist');
-        cy.get('#opfab-state').contains('A Chart').should('exist');
+        cy.get('#opfab-state').contains('Data quality').should('exist');
         cy.get('#opfab-state').contains('Process example').should('exist');
         cy.get('#opfab-state').contains('Electricity consumption forecast').should('exist');
         cy.get('#opfab-state').contains('Action required').should('exist');
@@ -348,7 +348,7 @@ describe ('Archives screen tests',function () {
                 expect(rows[4]['SEVERITY']).to.equal('Information');
                 expect(rows[4]['PUBLICATION DATE']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
                 expect(rows[4]['BUSINESS PERIOD']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}-\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
-                expect(rows[4]['TITLE']).to.equal('A Chart');
+                expect(rows[4]['TITLE']).to.equal('Data quality');
                 expect(rows[4]['SUMMARY']).to.equal('Message received');
                 expect(rows[4]['SERVICE']).to.equal('Base Examples');
 
@@ -390,7 +390,7 @@ describe ('Archives screen tests',function () {
                 expect(rows[10]['SEVERITY']).to.equal('Information');
                 expect(rows[10]['PUBLICATION DATE']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
                 expect(rows[10]['BUSINESS PERIOD']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}-\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
-                expect(rows[10]['TITLE']).to.equal('A Chart');
+                expect(rows[10]['TITLE']).to.equal('Data quality');
                 expect(rows[10]['SUMMARY']).to.equal('Message received');
                 expect(rows[10]['SERVICE']).to.equal('Base Examples');
 

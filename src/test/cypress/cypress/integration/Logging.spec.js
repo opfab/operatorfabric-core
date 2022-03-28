@@ -244,10 +244,10 @@ describe ('Logging screen tests',function () {
                 expect(rows[4]['TIME OF ACTION']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
                 expect(rows[4]['SERVICE']).to.equal('Base Examples');
                 expect(rows[4]['PROCESS']).to.equal('Process example ');
-                expect(rows[4]['TITLE']).to.equal('A Chart');
+                expect(rows[4]['TITLE']).to.equal('Data quality');
                 expect(rows[4]['SUMMARY']).to.equal('Message received');
-                expect(rows[4]['STATE']).to.equal('A Chart');
-                expect(rows[4]['STATE DESCRIPTION']).to.equal('Chart state');
+                expect(rows[4]['STATE']).to.equal('Data quality');
+                expect(rows[4]['STATE DESCRIPTION']).to.equal('Data quality state');
                 expect(rows[4]['ACTOR']).to.equal('publisher_test');
                 expect(rows[4]['REPRESENTATIVE']).to.be.empty;
 
