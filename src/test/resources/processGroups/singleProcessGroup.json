@@ -6,9 +6,9 @@
       "processes": [
         "defaultProcess",
         "gridCooperation",
-        "userCardExamples",
-        "userCardExamples2",
-        "userCardExamples3",
+        "conferenceAndITIncidentExample",
+        "messageOrQuestionExample",
+        "taskExample",
         "cypress"
       ]
     }

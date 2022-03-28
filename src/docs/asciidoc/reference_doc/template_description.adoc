@@ -540,7 +540,7 @@ The function returns a string with one of the following values :
 - 'archive' : archive page context 
 - 'preview': preview context (user card)
 
-An example of usage can be found in operator fabric git: (https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/userCardExamples2/template/question.handlebars[src/test/resources/bundles/userCardExamples2/template/question.handlebars]).
+An example of usage can be found in operator fabric git: (https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/messageOrQuestionExample/template/question.handlebars[src/test/resources/bundles/messageOrQuestionExample/template/question.handlebars]).
 
 
 === Redirect to business application from a card

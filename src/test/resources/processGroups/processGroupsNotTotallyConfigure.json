@@ -5,14 +5,14 @@
       "name": "Service number 1",
       "processes": [
         "defaultProcess",
-        "userCardExamples"
+        "conferenceAndITIncidentExample"
       ]
     },
     {
       "id": "service2",
       "name": "Service number 2",
       "processes": [
-        "userCardExamples2"
+        "messageOrQuestionExample"
       ]
     }
   ]
