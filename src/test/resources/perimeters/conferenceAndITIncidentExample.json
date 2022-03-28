@@ -1,6 +1,6 @@
 {
-	"id" : "userCardExamples",
-	"process" : "userCardExamples",
+	"id" : "conferenceAndITIncidentExample",
+	"process" : "conferenceAndITIncidentExample",
 	"stateRights" : [
 	  {
 		"state" : "conferenceState",

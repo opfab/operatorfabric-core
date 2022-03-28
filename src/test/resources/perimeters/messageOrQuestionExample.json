@@ -1,6 +1,6 @@
 {
-	"id" : "userCardExamples2",
-	"process" : "userCardExamples2",
+	"id" : "messageOrQuestionExample",
+	"process" : "messageOrQuestionExample",
 	"stateRights" : [
 	  {
 		"state" : "messageState",

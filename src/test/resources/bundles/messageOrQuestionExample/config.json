@@ -1,6 +1,6 @@
 {
-  "id": "userCardExamples2",
-  "name": "Examples for new cards 2",
+  "id": "messageOrQuestionExample",
+  "name": "Message or question",
   "version": "1",
   "uiVisibility": {
     "monitoring": true,

@@ -1,6 +1,6 @@
 {
-  "id": "userCardExamples3",
-  "name": "Examples for new cards 3",
+  "id": "taskExample",
+  "name": "Task",
   "version": "1",
   "uiVisibility": {
     "monitoring": false,

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2021, RTE (http://www.rte-france.com)
+# Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,15 +21,15 @@ done
  ./addPerimeterToGroup.sh question Planner $1
  ./addPerimeterToGroup.sh defaultProcess Dispatcher $1
  ./addPerimeterToGroup.sh defaultProcess Planner $1
- ./addPerimeterToGroup.sh userCardExamples Dispatcher $1
- ./addPerimeterToGroup.sh userCardExamples Planner $1
- ./addPerimeterToGroup.sh userCardExamples Supervisor $1
- ./addPerimeterToGroup.sh userCardExamples2 Dispatcher $1
- ./addPerimeterToGroup.sh userCardExamples2 Planner $1
- ./addPerimeterToGroup.sh userCardExamples2 Supervisor $1
- ./addPerimeterToGroup.sh userCardExamples3 Dispatcher $1
- ./addPerimeterToGroup.sh userCardExamples3 Planner $1
- ./addPerimeterToGroup.sh userCardExamples3 Supervisor $1
+ ./addPerimeterToGroup.sh conferenceAndITIncidentExample Dispatcher $1
+ ./addPerimeterToGroup.sh conferenceAndITIncidentExample Planner $1
+ ./addPerimeterToGroup.sh conferenceAndITIncidentExample Supervisor $1
+ ./addPerimeterToGroup.sh messageOrQuestionExample Dispatcher $1
+ ./addPerimeterToGroup.sh messageOrQuestionExample Planner $1
+ ./addPerimeterToGroup.sh messageOrQuestionExample Supervisor $1
+ ./addPerimeterToGroup.sh taskExample Dispatcher $1
+ ./addPerimeterToGroup.sh taskExample Planner $1
+ ./addPerimeterToGroup.sh taskExample Supervisor $1
  ./addPerimeterToGroup.sh gridCooperation Dispatcher $1
  ./addPerimeterToGroup.sh gridCooperation Planner $1
  ./addPerimeterToGroup.sh gridCooperation Supervisor $1

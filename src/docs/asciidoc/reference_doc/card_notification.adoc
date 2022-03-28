@@ -129,5 +129,5 @@ If the user is not connected at the time of the remind,  when he connects if cur
 
 When the user receives a card with a reminder to set, the log (console) of the browser contains a line with the date when the remind will arise . For example : 
 
-`2020-11-22T21:00:36.011Z Reminder Will remind card userCardExamples.0cf5537b-f0df-4314-f17f-2797ccd8e4e9 at
+`2020-11-22T21:00:36.011Z Reminder Will remind card conferenceAndITIncidentExample.0cf5537b-f0df-4314-f17f-2797ccd8e4e9 at
                          Sun Nov 22 2020 22:55:00 GMT+0100 (heure normale d’Europe centrale)`

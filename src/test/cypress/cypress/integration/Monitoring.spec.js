@@ -25,8 +25,8 @@ describe ('Monitoring screen tests',function () {
         // We check we have 4 items in process multi-filter, even without choosing a process group
         cy.get('#opfab-process').click();
         cy.get('#opfab-process').find('li').should('have.length', 4);
-        cy.get('#opfab-process').contains('Examples for new cards').should('exist');
-        cy.get('#opfab-process').contains('Examples for new cards 2').should('exist');
+        cy.get('#opfab-process').contains('Conference and IT incident').should('exist');
+        cy.get('#opfab-process').contains('Message or question').should('exist');
         cy.get('#opfab-process').contains('IGCC').should('exist');
         cy.get('#opfab-process').contains('Process example').should('exist');
 
@@ -41,8 +41,8 @@ describe ('Monitoring screen tests',function () {
         // We check we have 4 items in process multi-filter
         cy.get('#opfab-process').click();
         cy.get('#opfab-process').find('li').should('have.length', 4);
-        cy.get('#opfab-process').contains('Examples for new cards').should('exist');
-        cy.get('#opfab-process').contains('Examples for new cards 2').should('exist');
+        cy.get('#opfab-process').contains('Conference and IT incident').should('exist');
+        cy.get('#opfab-process').contains('Message or question').should('exist');
         cy.get('#opfab-process').contains('IGCC').should('exist');
         cy.get('#opfab-process').contains('Process example').should('exist');
 
@@ -62,8 +62,8 @@ describe ('Monitoring screen tests',function () {
         // We check we have 4 items in process multi-filter, even without choosing a process group
         cy.get('#opfab-process').click();
         cy.get('#opfab-process').find('li').should('have.length', 4);
-        cy.get('#opfab-process').contains('Examples for new cards').should('exist');
-        cy.get('#opfab-process').contains('Examples for new cards 2').should('exist');
+        cy.get('#opfab-process').contains('Conference and IT incident').should('exist');
+        cy.get('#opfab-process').contains('Message or question').should('exist');
         cy.get('#opfab-process').contains('IGCC').should('exist');
         cy.get('#opfab-process').contains('Process example').should('exist');
 
@@ -78,8 +78,8 @@ describe ('Monitoring screen tests',function () {
         // We check we have 4 items in process multi-filter
         cy.get('#opfab-process').click();
         cy.get('#opfab-process').find('li').should('have.length', 4);
-        cy.get('#opfab-process').contains('Examples for new cards').should('exist');
-        cy.get('#opfab-process').contains('Examples for new cards 2').should('exist');
+        cy.get('#opfab-process').contains('Conference and IT incident').should('exist');
+        cy.get('#opfab-process').contains('Message or question').should('exist');
         cy.get('#opfab-process').contains('IGCC').should('exist');
         cy.get('#opfab-process').contains('Process example').should('exist');
 
@@ -120,8 +120,8 @@ describe ('Monitoring screen tests',function () {
         // We check we have 4 items in process multi-filter
         cy.get('#opfab-process').click();
         cy.get('#opfab-process').find('li').should('have.length', 4);
-        cy.get('#opfab-process').contains('Examples for new cards').should('exist');
-        cy.get('#opfab-process').contains('Examples for new cards 2').should('exist');
+        cy.get('#opfab-process').contains('Conference and IT incident').should('exist');
+        cy.get('#opfab-process').contains('Message or question').should('exist');
         cy.get('#opfab-process').contains('IGCC').should('exist');
         cy.get('#opfab-process').contains('Process example').should('exist');
 

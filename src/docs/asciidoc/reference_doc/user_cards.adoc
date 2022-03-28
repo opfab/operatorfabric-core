@@ -19,8 +19,8 @@ you need to define it in the bundle for this process.
 For example : 
 
 ....
-"id": "userCardExamples",
-"name": "userCardExamples.label",
+"id": "conferenceAndITIncidentExample",
+"name": "conferenceAndITIncidentExample.label",
 "version": "1",
 "states": {
   "messageState": {
@@ -94,7 +94,7 @@ with the value of the field `message` from the card's data.
 The second part is a javascript method you need to implement to allow OperatorFabric to get your specific data .
 
 To have a better understanding of this feature, we encourage you to have a look at the examples in the OperatorFabric
-core repository under (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/resources/bundles/userCardExamples[src/test/resources/bundles/userCardExamples]).
+core repository under (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/resources/bundles/conferenceAndITIncidentExample[src/test/resources/bundles/conferenceAndITIncidentExample]).
 
 
 == Method getSpecificCardInformation
@@ -135,7 +135,7 @@ or `Write` for the chosen process and state. For example:
 ....
 {
   "id" : "perimeterUserCard",
-  "process" : "userCardExamples",
+  "process" : "conferenceAndITIncidentExample",
   "stateRights" : [
     {
       "state" : "messageState",
@@ -219,7 +219,7 @@ The template can know if the user is creating a new card or editing an existing 
 * 'EDITION'
 
 An example of _usercardTemplateGateway.getEditionMode()_ usage can be found in the file
-https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/userCardExamples2/template/usercard_question.handlebars[src/test/resources/bundles/userCardExamples2/template/usercard_question.handlebars].
+https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/messageOrQuestionExample/template/usercard_question.handlebars[src/test/resources/bundles/messageOrQuestionExample/template/usercard_question.handlebars].
 
 == Get current process and current state of the card
 The template can know the process and the state of the card by calling the _usercardTemplateGateway.getCurrentProcess()_ and _usercardTemplateGateway.getCurrentState()_ functions. These functions will return a string corresponding to the process id (or state id).
@@ -269,7 +269,7 @@ The card preview will display the card detail with the automated response as it 
 When editing a user card, the template can get the response sent by current user by calling the _usercardTemplateGateway.getUserEntityChildCardFromCurrentCard()_ function. The function will return the response child card sent by current user or null if there is no response from current user.
 
 An example of _usercardTemplateGateway.getUserEntityChildCardFromCurrentCard()_ usage can be found in the file
-https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/userCardExamples2/template/usercard_confirmation.handlebars[src/test/resources/bundles/userCardExamples2/template/usercard_confirmation.handlebars].
+https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/messageOrQuestionExample/template/usercard_confirmation.handlebars[src/test/resources/bundles/messageOrQuestionExample/template/usercard_confirmation.handlebars].
 
 == Misc
 
