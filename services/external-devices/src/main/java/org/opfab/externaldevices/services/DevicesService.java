@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,10 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -50,7 +47,7 @@ public class DevicesService {
     private final ExternalDeviceDriverFactory externalDeviceDriverFactory;
     private final ExternalDevicesWatchdogProperties externalDevicesWatchdogProperties;
 
-    private final Map<String,ExternalDeviceDriver> deviceDriversPool;
+    private final Map<String, ExternalDeviceDriver> deviceDriversPool;
 
     public DevicesService(ConfigService configService,
                           ExternalDeviceDriverFactory externalDeviceDriverFactory,
@@ -93,14 +90,21 @@ public class DevicesService {
 
     @Scheduled(cron = "${operatorfabric.externaldevices.watchdog.cron:*/5 * * * * *}", zone = "UTC")
     public void sendWatchdog() {
-        if(externalDevicesWatchdogProperties.getEnabled()) {
+        if (externalDevicesWatchdogProperties.getEnabled()) {
+
+            HashSet<String> hostAndPorSet = new HashSet<>();
+
             this.deviceDriversPool.forEach((deviceId, externalDeviceDriver) -> {
-                if(externalDeviceDriver.isConnected()) { // To avoid reconnecting drivers automatically
+
+                String hostAndPort = externalDeviceDriver.getResolvedHost() + ":" + externalDeviceDriver.getPort();
+
+                if (externalDeviceDriver.isConnected() && (! hostAndPorSet.contains(hostAndPort))) { // To avoid reconnecting drivers automatically
                     try {
-                        log.debug("Sending watchdog signal for device {}",deviceId);
+                        log.debug("Sending watchdog signal for device {}", deviceId);
+                        hostAndPorSet.add(hostAndPort);
                         externalDeviceDriver.send(externalDevicesWatchdogProperties.getSignalId());
                     } catch (ExternalDeviceDriverException e) {
-                        log.error("Watchdog signal couldn't be sent to device {} (driver: {}): {}",deviceId,externalDeviceDriver.toString(),e.getMessage());
+                        log.error("Watchdog signal couldn't be sent to device {} (driver: {}): {}", deviceId, externalDeviceDriver.toString(), e.getMessage());
                     }
                 }
             });
