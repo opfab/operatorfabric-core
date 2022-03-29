@@ -54,8 +54,7 @@ class UserServiceCacheShould {
     void shouldReturnCorrectUserData(){
         String principalID ="testuser";
         CurrentUserWithPerimeters user = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalID);
-        assertThat(user).isNotNull();
-        assertThat(user).isInstanceOf(CurrentUserWithPerimeters.class);
+        assertThat(user).isNotNull().isInstanceOf(CurrentUserWithPerimeters.class);
         assertThat(user.getUserData().getLogin()).isEqualTo(principalID);
         assertThat(user.getUserData().getGroups()).containsExactlyInAnyOrder("testgroup1");
         assertThat(user.getUserData().getFirstName()).isEqualTo("John");
@@ -98,8 +97,7 @@ class UserServiceCacheShould {
         //Second call
         CurrentUserWithPerimeters user2 = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalID);
 
-        assertThat(user1).isNotNull();
-        assertThat(user1).isEqualTo(user2);
+        assertThat(user1).isNotNull().isEqualTo(user2);
     }
 
 

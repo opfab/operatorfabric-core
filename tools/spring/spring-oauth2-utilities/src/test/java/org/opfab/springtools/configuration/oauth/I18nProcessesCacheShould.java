@@ -70,8 +70,7 @@ class I18nProcessesCacheShould {
         // Second call
         JsonNode trx2 = i18nProcessesCache.fetchProcessI18nFromCacheOrProxy(TEST_PROCESS, TEST_VERSION);
 
-        assertThat(trx1).isNotNull();
-        assertThat(trx1).isEqualTo(trx2);
+        assertThat(trx1).isNotNull().isEqualTo(trx2);
     }
 
     @Test
