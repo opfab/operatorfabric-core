@@ -1,6 +1,14 @@
+
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
 package org.opfab.users.utils;
 
-import lombok.extern.slf4j.Slf4j;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.Entity;
@@ -15,7 +23,6 @@ import java.util.stream.Collectors;
 /*
 This helper class presumes that stored Entities don't cycle (beware manual database updates)
  */
-@Slf4j
 public class EntityCycleDetector {
 
     static final String CYCLE_DETECTION = "A cycle has been detected: ";
