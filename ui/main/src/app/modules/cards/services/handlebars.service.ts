@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,7 +34,6 @@ export class HandlebarsService {
         HandlebarsService.registerPreserveSpace();
         this.registerNumberFormat();
         this.registerDateFormat();
-        HandlebarsService.registerCardAction();
         this.registerSvg();
         this.registerI18n();
         this.registerSort();
@@ -157,19 +156,6 @@ export class HandlebarsService {
         });
     }
 
-    private static registerCardAction() {
-        Handlebars.registerHelper('action', function () {
-            const args = [];
-            for (let i = 0; i < arguments.length - 1; i++) {
-                args.push(arguments[i]);
-            }
-            let actionId = '';
-            for (let i = 0; i < args.length; i++) {
-                actionId += args[i];
-            }
-            return `<button action-id="${actionId}"><i></i></button>`;
-        });
-    }
 
     private static registerPreserveSpace() {
         Handlebars.registerHelper('preserveSpace', function (value) {
