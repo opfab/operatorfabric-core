@@ -270,11 +270,11 @@ export function appendFixedLengthAlphanumericValue(length = 1, base = ''): strin
     const indexOfTheRandomNumberToTrim0AndDot = 2; // random  numbers begin with '0.'
     const intermediateResult = Math.random()
         .toString(numericBase)
-        .substr(indexOfTheRandomNumberToTrim0AndDot);
+        .substring(indexOfTheRandomNumberToTrim0AndDot);
 
     const stringSize = intermediateResult.length;
     if (stringSize >= finalLength) {
-        const remainingString = intermediateResult.substr(0, finalLength);
+        const remainingString = intermediateResult.substring(0, finalLength);
         return base + remainingString;
     } else {
         const nextLength = finalLength - stringSize;
