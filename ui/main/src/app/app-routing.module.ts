@@ -95,7 +95,7 @@ export const navigationRoutes: Routes = routes.slice(startIndex, lastIndexOfVisi
 export function redirectToCurrentLocation(currentRouter: Router): void {
     const pathname = window.location.hash;
     const hashLength = pathname.length;
-    const destination = (hashLength > 2) ? pathname.substr(1, hashLength - 1) : defaultPath;
+    const destination = (hashLength > 2) ? pathname.substring(1, hashLength) : defaultPath;
     // as archive searches are not stored need to got back to archives root path
     const lastDestination = (destination.includes(archivePath)) ? archivePath : destination;
     currentRouter.navigate([lastDestination]);
