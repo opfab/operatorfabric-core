@@ -198,7 +198,7 @@ export function getOneRandomCard(cardTemplate?:any): Card {
     );
 }
 
-export function generateRandomArray<T>(min = 1, max = 2, func: () => T): Array<T> {
+export function generateRandomArray<T>(func: () => T,min = 1, max = 2): Array<T> {
     const size = generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(min, max);
     const array = [];
     for (let i = 0; i < size; ++i) {
@@ -302,7 +302,7 @@ export function generateBusinessconfigWithVersion(businessconfigName?: string, v
     const result = new Map<Set<string>>();
     const businessconfig = (businessconfigName) ? businessconfigName : getRandomAlphanumericValue(3, 5);
     function getSomeVersions() {return getRandomAlphanumericValue(3, 8); }
-    const versionValues = (versions) ? versions : new Set( generateRandomArray(3, 6, getSomeVersions));
+    const versionValues = (versions) ? versions : new Set( generateRandomArray(getSomeVersions ,3 ,6 ));
     result[businessconfig] = versionValues;
     return result;
 }
