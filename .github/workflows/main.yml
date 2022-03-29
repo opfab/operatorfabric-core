@@ -23,6 +23,10 @@ on:
         description: 'Cypress Tests'
         required: false
         default: 'true'
+      cypressTestFiles:
+        description: 'Cypress Test files'
+        required: false
+        default: '*'
       doc:
         description: 'Build and publish documentation '     
         required: false
@@ -86,7 +90,7 @@ jobs:
     
       - name: Cypress tests 
         if: ${{ github.event.inputs.cypress  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
-        run: ./CICD/github/launch_cypress_tests.sh
+        run: ./CICD/github/launch_cypress_tests.sh ${{ github.event.inputs.cypressTestFiles }}
 
 
   publish:
@@ -135,7 +139,7 @@ jobs:
 
       - name: Cypress tests 
         if: ${{ github.event.inputs.cypress  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
-        run: ./CICD/github/launch_cypress_tests.sh
+        run: ./CICD/github/launch_cypress_tests.sh 
 
       - name : Publish Documentation
         if : ${{ github.event.inputs.doc  == 'true' || github.event_name == 'schedule'}}

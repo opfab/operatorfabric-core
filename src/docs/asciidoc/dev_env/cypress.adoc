@@ -125,6 +125,13 @@ The tests can also be run in command line mode using a Gradle task :
 ./gradlew runCypressTests
 ----
 
+You can run a subset of the tests, for example if you want to run all the tests starting with 'User':
+
+[source,bash]
+----
+./gradlew runSomeCypressTests -PspecFiles=User*
+----
+
 == Clearing MongoDB
 
 If you want to start with a clean database (from the cards and archived cards point of view), you can purge the

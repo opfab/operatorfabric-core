@@ -11,6 +11,13 @@
 
 # Script launch form the root of the git projet by github actions 
 
+testFiles=$1
+if [ -z $testFiles ] 
+then
+	testFiles="*"
+fi
+
+
 source $HOME/.sdkman/bin/sdkman-init.sh;
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -23,7 +30,7 @@ cd ../../bin
 cd ../
 # Set a more important timeout for CI/CD as it is usually slower than local computer 
 export CYPRESS_defaultCommandTimeout=10000
-./gradlew runCypressTests
+./gradlew runSomeCypressTests -PspecFiles=$testFiles
 status_code=$?
 cd config/docker
 docker-compose down
