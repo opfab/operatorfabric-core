@@ -64,7 +64,7 @@ class ArchivedCardRoutesShould {
 
     @Nested
     @WithMockOpFabUserReactive(login="userWithGroup", roles = {"SOME_GROUP"})
-    public class GivenUserWithGroupArchivedCardRoutesShould {
+    class GivenUserWithGroupArchivedCardRoutesShould {
 
         @Test
         void respondOkIfOptions() {

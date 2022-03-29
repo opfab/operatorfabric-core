@@ -69,7 +69,7 @@ class ConnectionRoutesShould {
 
         @Nested
         @WithMockOpFabUserReactive(login = "userWithGroup", roles = { "ADMIN" })
-        public class ConnectionRoutesForAdminShould {
+        class ConnectionRoutesForAdminShould {
                 @Test
                 void respondOk() {
                         assertThat(connectionRoutes).isNotNull();
