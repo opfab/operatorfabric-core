@@ -11,7 +11,7 @@ import {environment} from '@env/environment';
 import {HttpClient} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
-import {Device, Notification, UserConfiguration} from "@ofModel/external-devices.model";
+import {Device, Notification, UserConfiguration} from '@ofModel/external-devices.model';
 import {Injectable} from '@angular/core';
 import {ErrorService} from '@ofServices/error-service';
 
@@ -23,6 +23,7 @@ export class ExternalDevicesService extends ErrorService {
     readonly externalDevicesUrl: string;
     readonly notificationsUrl: string;
     readonly configurationsUrl: string;
+    readonly devicesUrl: string;
     private ngUnsubscribe$ = new Subject<void>();
     /**
      * @constructor
@@ -33,10 +34,17 @@ export class ExternalDevicesService extends ErrorService {
         this.externalDevicesUrl = `${environment.urls.externalDevices}`;
         this.notificationsUrl = this.externalDevicesUrl + '/notifications';
         this.configurationsUrl = this.externalDevicesUrl + '/configurations';
+        this.devicesUrl = this.externalDevicesUrl + '/devices';
     }
 
     sendNotification(notification: Notification): Observable<any> {
         return this.httpClient.post<Notification>(`${this.notificationsUrl}`, notification).pipe(
+            catchError((error: Response) => this.handleError(error))
+        );
+    }
+
+    connect(externalDeviceId: string): Observable<any> {
+        return this.httpClient.post<void>(`${this.devicesUrl}/${externalDeviceId}/connect`, null).pipe(
             catchError((error: Response) => this.handleError(error))
         );
     }
@@ -61,8 +69,8 @@ export class ExternalDevicesService extends ErrorService {
 
     deleteByUserLogin(login: string) {
         const url = `${this.configurationsUrl}/users/${login}`;
-    return this.httpClient.delete(url).pipe(
-      catchError((error: Response) => this.handleError(error))
-    );
+        return this.httpClient.delete(url).pipe(
+          catchError((error: Response) => this.handleError(error))
+        );
     }
 }

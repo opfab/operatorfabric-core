@@ -60,14 +60,14 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
       if (!alreadyConfiguredUser) {
         this.usersDropdownList.push(usr.login);
       }
-    })
+    });
   }
 
   setDevicesList(allDevices: Device[]) {
     this.devices = allDevices;
     this.devices.forEach(dev => {
-      this.devicesDropdownList.push(dev.id)
-    })
+      this.devicesDropdownList.push(dev.id);
+    });
   }
 
   update() {
@@ -75,7 +75,7 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
     // user chose to perform an action (here, update the selected item).
     // This is important as code in the corresponding table components relies on the resolution of the
     // `NgbModalRef.result` promise to trigger a refresh of the data shown on the table.
-    
+
     this.externalDevicesService.updateUserConfiguration(this.formToUserConfig()).subscribe(() => {
       this.activeModal.close('Update button clicked on modal');
     });
@@ -85,7 +85,7 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
     return {
       userLogin: this.userLogin.value as string,
       externalDeviceId: this.externalDeviceId.value as string
-    }
+    };
   }
 
   get userLogin() {

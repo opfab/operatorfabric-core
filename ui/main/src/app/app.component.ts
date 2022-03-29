@@ -35,6 +35,8 @@ import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {AuthenticationActionTypes, TryToLogOut} from '@ofStore/actions/authentication.actions';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 import {RemoteLoggerService} from '@ofServices/logs/remote-logger.service';
+import {ExternalDevicesService} from '@ofServices/external-devices.service';
+import {UserConfiguration} from "@ofModel/external-devices.model";
 
 
 class Alert {
@@ -82,7 +84,8 @@ export class AppComponent implements OnInit {
       , private actions$: Actions
       , private modalService: NgbModal
       , private logger: OpfabLoggerService
-      , private remoteLogger: RemoteLoggerService) {
+      , private remoteLogger: RemoteLoggerService
+      , private externalDevicesService: ExternalDevicesService) {
   }
 
   ngOnInit() {
@@ -147,6 +150,21 @@ export class AppComponent implements OnInit {
         return caught; })
     });
 
+  }
+
+  private connectToExternalDevice() {
+    if (this.configService.getConfigValue('externalDevicesEnabled')) {
+      this.externalDevicesService.fetchUserConfiguration(this.userService.getCurrentUserWithPerimeters().userData.login).subscribe(result => {
+        this.externalDevicesService.connect(result.externalDeviceId).subscribe({
+          next: () => {
+            this.logger.info('External device id=' + result.externalDeviceId + ' connected', LogOption.LOCAL_AND_REMOTE);
+          },
+          error: () => {
+            this.logger.error('Impossible to connect to external device id=' + result.externalDeviceId, LogOption.LOCAL_AND_REMOTE);
+          }
+        });
+      });
+    }
   }
 
   private setTitle() {
@@ -239,6 +257,7 @@ export class AppComponent implements OnInit {
                   this.loaded = true;
                   this.reminderService.startService(identifier);
                   this.activateSoundIfNotActivated();
+                  this.connectToExternalDevice();
                   this.subscribeToSessionEnd();
                 },
                   error: catchError((err, caught) => {

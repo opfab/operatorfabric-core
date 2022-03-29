@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,6 +34,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public static final String CONFIGURATIONS_ROOT_PATH = "/configurations/";
     public static final String CONFIGURATIONS_USERS_PATH = CONFIGURATIONS_ROOT_PATH + "users/{login}";
     public static final String DEVICES_ROOT_PATH = "/devices/";
+    public static final String DEVICE_CONNECT_PATH = "/devices/{externalDeviceId}/connect";
     public static final String NOTIFICATIONS_ROOT_PATH = "/notifications";
 
     public static final String ADMIN_ROLE = "ADMIN";
@@ -64,6 +65,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,NOTIFICATIONS_ROOT_PATH).access(AUTH_AND_IP_ALLOWED)
                 .antMatchers(HttpMethod.GET, CONFIGURATIONS_USERS_PATH).access(AUTH_AND_IP_ALLOWED)
                 .antMatchers(CONFIGURATIONS_ROOT_PATH+"**").access(ADMIN_AND_IP_ALLOWED)
+                .antMatchers(HttpMethod.POST, DEVICE_CONNECT_PATH).access(AUTH_AND_IP_ALLOWED)
                 .antMatchers(DEVICES_ROOT_PATH+"**").access(ADMIN_AND_IP_ALLOWED)
                 .anyRequest().access(AUTH_AND_IP_ALLOWED);
                 
