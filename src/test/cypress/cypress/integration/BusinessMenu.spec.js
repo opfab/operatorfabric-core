@@ -49,6 +49,9 @@ describe ('Business nenu',()=>{
 
         cy.get('.icon-link').eq(2).invoke('attr', 'href').should('eq', 'https://www.wikipedia.org/');
 
+        // close dropdown menu by clicking a second time , otherwise the menu keeps open 
+        cy.get('#opfab-navbar-menu-dropdown-menu2').click();
+
         //Click on single business menu 
         cy.get('#opfab-navbar-menu-menu1').click();
 
@@ -64,6 +67,7 @@ describe ('Business nenu',()=>{
         // Switch to Day Mode
         cy.get('#opfab-navbar-right-menu-day-mode').click();
 
+
         // check link in chart card detail
         cy.get('of-light-card').eq(0).click()
         .find('[id^=opfab-feed-light-card]')
@@ -74,8 +78,6 @@ describe ('Business nenu',()=>{
             cy.get('#opfab-div-card-template').find('a').eq(0).click();
             cy.get('iframe').invoke('attr', 'src').should('eq', 'https://en.wikipedia.org/w/index.php?opfab_theme=DAY&search=chart&fulltext=1');
         });
-
-        cy.wait(4000);
 
         // Open business dropdown menu
         cy.get('#opfab-navbar-menu-dropdown-menu2').click();
