@@ -111,7 +111,6 @@ The cards-publication service has these specific properties :
 |===
 |name|default|mandatory?|Description
 
-|checkPerimeterForResponseCard|true|no|If false, OperatorFabric will not check that a user has write rights on a process/state to respond to a card
 |checkAuthenticationForCardSending|true|no|If false, OperatorFabric will not require user authentication to send or delete a card via endpoint /cards (it does not concern user cards which always need authentication). Be careful when setting the value to false, nginx conf must be adapted for security reasons (see security warning in link:https://github.com/opfab/operatorfabric-core/blob/master/config/docker/nginx.conf[the reference nginx.conf])
 |spring.kafka.consumer.group-id |null|no| If set, support for receiving cards via Kafka is enabled
 |spring.deserializer.value.delegate.class|io.confluent.kafka.serializers.

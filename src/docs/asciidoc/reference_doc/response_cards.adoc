@@ -155,7 +155,6 @@ To configure it in OperatorFabric , you need to make a POST of this json file to
 To add it to a group name for example "mygroup", you need to make a PATCH request  to endpoint
 'users/groups/mygroup/perimeters' with payload ["perimeterQuestion"]
 
-NOTE: If you don't want OperatorFabric to check for user perimeter when responding to a card, you can add the variable "checkPerimeterForResponseCard" and set it to false, in the config file of cards-publication and in web-ui.json.
 
 == Send a question card
 

@@ -29,13 +29,8 @@ export class UserPermissionsService {
 
     if (this.isLttdExpired(card)) return false;
 
-    const checkPerimeterForResponseCard = this.configService.getConfigValue('checkPerimeterForResponseCard');
-
-    if (checkPerimeterForResponseCard === false)
-      return this.isUserInEntityAllowedToRespond(user, card, processDefinition);
-    else
-      return this.isUserInEntityAllowedToRespond(user, card, processDefinition)
-        && this.doesTheUserHaveThePerimeterToRespond(user, card, processDefinition);
+    return this.isUserInEntityAllowedToRespond(user, card, processDefinition)
+      && this.doesTheUserHaveThePerimeterToRespond(user, card, processDefinition);
   }
 
 

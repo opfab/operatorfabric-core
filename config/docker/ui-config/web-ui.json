@@ -1,7 +1,6 @@
 {
   "environmentName": "DOCKER ENV",
   "environmentColor": "blue",
-  "checkPerimeterForResponseCard": true,
   "showUserEntitiesOnTopRightOfTheScreen": true,
   "externalDevicesEnabled": true,
   "settings.replayInterval": 10,
