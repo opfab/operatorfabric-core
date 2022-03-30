@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
 import org.opfab.externaldevices.drivers.ExternalDeviceDriverException;
 import org.opfab.externaldevices.model.Device;
+import org.opfab.externaldevices.model.DeviceConfiguration;
+import org.opfab.externaldevices.services.ConfigService;
 import org.opfab.externaldevices.services.DevicesService;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
@@ -38,10 +40,28 @@ public class DevicesController implements DevicesApi {
     private static final String DEVICE_NOT_FOUND_MSG = "Device %s not found";
 
     private final DevicesService devicesService;
+    private final ConfigService configService;
 
     @Autowired
-    public DevicesController(DevicesService devicesService) {
+    public DevicesController(DevicesService devicesService,
+                             ConfigService configService) {
         this.devicesService = devicesService;
+        this.configService = configService;
+
+        List<DeviceConfiguration> deviceConfigurationList = this.configService.getDeviceConfigurations();
+
+        if (deviceConfigurationList != null) {
+            deviceConfigurationList.forEach(deviceConfiguration -> {
+                try {
+                    this.devicesService.connectDevice(deviceConfiguration.getId());
+                    log.info("External device id={} connected to opfab", deviceConfiguration.getId());
+                } catch (ExternalDeviceConfigurationException e) {
+                    log.warn(String.format(CONNECT_FAILED_DUE_TO_CONFIG, deviceConfiguration.getId()));
+                } catch (ExternalDeviceDriverException e) {
+                    log.warn(String.format(CONNECT_FAILED, deviceConfiguration.getId()));
+                }
+            });
+        }
     }
 
 
