@@ -658,6 +658,21 @@ describe('Handlebars Services', () => {
                 call.flush('{{objectContainsKey card.data.pythons "wrongKey"}}');
             });
         });
+
+        it('compile keyValue ', (done) => {
+            const templateName = Guid.create().toString();
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
+                .subscribe((result) => {
+                    expect(result).toEqual('firstName:John:0,lastName:Cleese:1,');
+                    done();
+                });
+            let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
+            expect(calls.length).toEqual(1);
+            calls.forEach(call => {
+                expect(call.request.method).toBe('GET');
+                call.flush('{{#keyValue card.data.pythons.john}}{{key}}:{{value}}:{{index}},{{/keyValue}}');
+            });
+        });
     });
 
 });

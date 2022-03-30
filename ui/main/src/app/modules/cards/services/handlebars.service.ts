@@ -217,16 +217,19 @@ export class HandlebarsService {
             if (Object.keys(obj).length === 0) {
               return options.fn({value: false});
             }
-            let buffer, key;
+            let buffer, key , index ;
             buffer = '';
+            index = 0;
             for (key in obj) {
                 if (!Object.hasOwnProperty.call(obj, key)) {
                     continue;
                 }
                 buffer += options.fn({
                     key: key,
-                    value: obj[key]
+                    value: obj[key],
+                    index: index
                 }) || '';
+                index++;
             }
             return buffer;
         });
