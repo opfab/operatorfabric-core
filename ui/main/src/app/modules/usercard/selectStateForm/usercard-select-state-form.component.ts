@@ -14,6 +14,7 @@ import {Process} from '@ofModel/processes.model';
 import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {UserService} from '@ofServices/user.service';
+import {Utilities} from 'app/common/utilities';
 import {Subject} from 'rxjs';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 
@@ -101,6 +102,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
                 if (this.statesPerProcesses.get(process.id).length > 0) this.processOptions.push(processToShow);
             }
         });
+        this.processOptions.sort((a, b) => Utilities.compareObj(a.label, b.label));
     }
 
     private userCanSendCard(perimeter: ComputedPerimeter): boolean {
@@ -155,12 +157,16 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
                 this.processesPerProcessGroups.set(groupId, processOptions);
         });
 
-        if (this.processOptions.length > numberOfProcessesAttachedToAProcessGroup) {
-            this.loadProcessesWithoutProcessGroup();
-            this.processGroupOptions.push({value: '--', label: 'processGroup.defaultLabel'});
-        }
+
         for (const processGroupId of this.processesPerProcessGroups.keys())
             this.processGroupOptions.push({value: processGroupId, label: this.processGroups.get(processGroupId).name});
+
+        this.processGroupOptions.sort((a, b) => Utilities.compareObj(a.label, b.label));
+
+        if (this.processOptions.length > numberOfProcessesAttachedToAProcessGroup) {
+            this.loadProcessesWithoutProcessGroup();
+            this.processGroupOptions.unshift({value: '--', label: 'processGroup.defaultLabel'});
+        }
 
         if (!this.cardIdToEdit && this.processGroupOptions.length > 0) {
             this.selectStateForm.get('processGroup').setValue(this.processGroupOptions[0].value);
@@ -186,7 +192,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
                     this.processOptionsWhenSelectedProcessGroup = this.processesWithoutProcessGroup;
                 else
                     this.processOptionsWhenSelectedProcessGroup = this.processesPerProcessGroups.get(processGroup);
-
+                this.processOptionsWhenSelectedProcessGroup.sort((a, b) => Utilities.compareObj(a.label, b.label));
                 this.selectedProcess = this.processOptionsWhenSelectedProcessGroup[0].value;
                 this.selectStateForm.get('process').setValue(this.selectedProcess);
             }
