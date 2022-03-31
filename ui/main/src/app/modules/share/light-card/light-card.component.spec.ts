@@ -89,28 +89,14 @@ describe('LightCardComponent', () => {
 
     it( 'should handle timestamp in English', () => {
         i18nService.changeLocale('en');
-        const date = new Date();
-        date.setFullYear(2019);
-        date.setMonth(5);
-        date.setDate(25);
-        date.setHours(10);
-        date.setMinutes(0);
-        date.setSeconds(0);
-        date.setUTCMilliseconds(0);
+        const date = new Date(2019, 5, 25, 10, 0, 0, 0);
         const TwentyFiveJune2019at10AMDateString = lightCardDetailsComp.handleDate(date.valueOf());
         expect(TwentyFiveJune2019at10AMDateString).toEqual('06/25/2019 10:00 AM');
         });
 
     it( 'should handle timestamp in French', () => {
         i18nService.changeLocale('fr');
-        const date = new Date();
-        date.setFullYear(2019);
-        date.setMonth(5);
-        date.setDate(25);
-        date.setHours(10);
-        date.setMinutes(0);
-        date.setSeconds(0);
-        date.setUTCMilliseconds(0);
+        const date = new Date(2019, 5, 25, 10, 0, 0, 0);
         const TwentyFiveJune2019at10AMDateString = lightCardDetailsComp.handleDate(date.valueOf());
         expect(TwentyFiveJune2019at10AMDateString).toEqual('25/06/2019 10:00');
         });

@@ -43,27 +43,13 @@ describe('TimeService', () => {
     })
     it('should parse', () => {
         expect(service).toBeTruthy();
-        const date = new Date();
-        date.setFullYear(2019);
-        date.setMonth(4);
-        date.setDate(24);
-        date.setHours(10);
-        date.setMinutes(25);
-        date.setSeconds(0);
-        date.setUTCMilliseconds(0);
+        const date = new Date(2019, 4, 24, 10, 25, 0, 0);
         expect(service.parseString('2019-05-24T10:25').valueOf()).toEqual(date.valueOf());
     });
 
     it('should format timestamp, date and moment to date time string', () => {
         moment.locale('en');
-        const date = new Date();
-        date.setFullYear(2019);
-        date.setMonth(5);
-        date.setDate(5);
-        date.setHours(10);
-        date.setMinutes(0);
-        date.setSeconds(0);
-        date.setUTCMilliseconds(0);
+        const date = new Date(2019, 5, 5, 10, 0, 0, 0);
         expect(service).toBeTruthy();
         expect(service.formatDateTime(date.valueOf())).toEqual('06/05/2019 10:00 AM');
         expect(service.formatDateTime(date)).toEqual('06/05/2019 10:00 AM');
@@ -72,14 +58,7 @@ describe('TimeService', () => {
 
     it('should format timestamp, date and moment to date string', () => {
         moment.locale('en');
-        const date = new Date();
-        date.setFullYear(2019);
-        date.setMonth(5);
-        date.setDate(5);
-        date.setHours(10);
-        date.setMinutes(0);
-        date.setSeconds(0);
-        date.setUTCMilliseconds(0);
+        const date = new Date(2019, 5, 5, 10, 0, 0, 0);
         expect(service).toBeTruthy();
         expect(service.formatDate(date.valueOf())).toEqual('06/05/2019');
         expect(service.formatDate(date)).toEqual('06/05/2019');
@@ -87,14 +66,7 @@ describe('TimeService', () => {
     });
 
     it('should convert date string to timestamp', () => {
-        const date = new Date();
-        date.setFullYear(2019);
-        date.setMonth(4);
-        date.setDate(24);
-        date.setHours(10);
-        date.setMinutes(25);
-        date.setSeconds(0);
-        date.setUTCMilliseconds(0);
+        const date = new Date(2019, 4, 24, 10, 25, 0, 0);
         expect(service.toNgBTimestamp('2019-05-24T10:25').valueOf()).toEqual(date.valueOf() + '');
     });
 });
