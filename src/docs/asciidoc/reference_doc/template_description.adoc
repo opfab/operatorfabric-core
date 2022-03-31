@@ -188,7 +188,7 @@ Notice that this should normally be feasible by using the built-in each helper, 
 
 ....
 {{#keyValue studentGrades}}
-  <p>{{key}}: {{value}}</p>
+  <p> {{index}} - {{key}}: {{value}} </p>
 {{/keyValue}}
 ....
 
@@ -205,9 +205,9 @@ If the value of the studentGrades map is:
 The output will be:
 
 ....
-<p>student1: 15</p>
-<p>student2: 12</p>
-<p>student3: 9</p>
+<p> 0 - student1: 15</p>
+<p> 1 - student2: 12</p>
+<p> 2 - student3: 9</p>
 ....
 
 [[math]]
