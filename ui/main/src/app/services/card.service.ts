@@ -54,9 +54,11 @@ export class CardService {
     private startOfAlreadyLoadedPeriod: number;
     private endOfAlreadyLoadedPeriod: number;
 
+
     private selectedCardId: string = null;
 
     private receivedAcksSubject = new Subject<{cardUid: string, entitiesAcks: string[]}>();
+    private receivedDisconnectedSubject = new Subject<boolean>()
 
     constructor(private httpClient: HttpClient,
         private guidService: GuidService,
@@ -177,11 +179,16 @@ export class CardService {
                             break;
                         case 'BUSINESS_CONFIG_CHANGE':
                             this.store.dispatch(new BusinessConfigChangeAction());
-                            console.log(new Date().toISOString(), `CardService - BUSINESS_CONFIG_CHANGE received`);
+                            this.logger.info(`CardService - BUSINESS_CONFIG_CHANGE received`);
                             break;
                         case 'USER_CONFIG_CHANGE':
                             this.store.dispatch(new UserConfigChangeAction());
-                            console.log(new Date().toISOString(), `CardService - USER_CONFIG_CHANGE received`);
+                            this.logger.info(`CardService - USER_CONFIG_CHANGE received`);
+                            break;
+                        case 'DISCONNECT_USER_DUE_TO_NEW_CONNECTION':
+                            this.logger.info("CardService - Disconnecting user because a new connection is being opened for this account")
+                            this.closeSubscription();
+                            this.receivedDisconnectedSubject.next(true);
                             break;
                         default :
                             return observer.next(JSON.parse(message.data, CardOperation.convertTypeIntoEnum));
@@ -216,7 +223,6 @@ export class CardService {
         }
             , 60000);
     }
-
 
     private recoverAnyLostCardWhenConnectionHasBeenReset() {
 
@@ -307,6 +313,10 @@ export class CardService {
 
     getReceivedAcks(): Observable<{cardUid: string, entitiesAcks: string[]}> {
         return this.receivedAcksSubject.asObservable();
+    }
+
+    getReceivedDisconnectUser(): Observable<boolean> {
+        return this.receivedDisconnectedSubject.asObservable();
     }
 
 }

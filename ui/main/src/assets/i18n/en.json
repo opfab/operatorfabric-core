@@ -72,7 +72,8 @@
     "tryToReconnect":"Try to reconnect ...",
     "activateSoundText":"Sound not activated, click to activate",
     "activateSoundButton":"Activate sound",
-    "sessionExpiredText":"Your session has expired"
+    "sessionExpiredText":"Your session has expired",
+    "disconnectedByNewUser": "You have been disconnected because another user logged in using this account."
   },
   "menu": {
     "feed": "Card Feed",
@@ -181,6 +182,7 @@
     "reset": "Reset",
     "login": "Login",
     "password": "Password",
+    "confirmationBecauseAccountIsAreadyUsed":"This account is already being used by at least another user. Do you still want to log in ? \n\n By clicking OK, you will disconnect anyone using this account.",
     "submit": {
       "password": "Sign In",
       "code": "Sign in using {{name}}"

@@ -12,6 +12,7 @@
     <of-navbar *ngIf="loaded"></of-navbar>
     <router-outlet *ngIf="loaded" ></router-outlet>
     <of-login *ngIf="!isAuthenticated && !useCodeOrImplicitFlow"></of-login>
+    
     <div class="opfab-connecting" *ngIf="!loaded && useCodeOrImplicitFlow">
         <div class="opfab-connecting-spinner">
             <em  class="fas fa-spinner fa-spin opfab-slow-spinner" ></em>
@@ -31,16 +32,22 @@
         </div>
         <div style="text-align: center;font:16px;font-weight: bold;" translate>
             global.tryToReconnect
-      </div>
-      
-      </div>
-      <div id='div-detail-msg' class="opfab-info-message {{alertMessage.className}}" *ngIf='alertMessage && alertMessage.display'>
-        <span *ngIf="alertMessage.alert.i18n" translate>{{alertMessage.alert.i18n.key}}</span>
-        <span *ngIf="alertMessage.alert.message">&nbsp; {{alertMessage.alert.message}}</span>
-        <div id="opfab-usercard-close" class="opfab-alert-close" aria-label="Close" (click)="alertMessage.display = false">
-          <span aria-hidden="true">&times;</span>
         </div>
+    </div>
+
+    <div class="opfab-disconnectedDueToNewUser" *ngIf="isDisconnectedByNewUser">
+      <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>
+          global.disconnectedByNewUser
       </div>
+    </div>
+
+    <div id='div-detail-msg' class="opfab-info-message {{alertMessage.className}}" *ngIf='alertMessage && alertMessage.display'>
+      <span *ngIf="alertMessage.alert.i18n" translate>{{alertMessage.alert.i18n.key}}</span>
+      <span *ngIf="alertMessage.alert.message">&nbsp; {{alertMessage.alert.message}}</span>
+      <div id="opfab-usercard-close" class="opfab-alert-close" aria-label="Close" (click)="alertMessage.display = false">
+        <span aria-hidden="true">&times;</span>
+      </div>
+    </div>
 </div>
 <!-- This element is used by Cypress tests to make sure actual tests are not launched until the application has
  finished loading -->
@@ -61,6 +68,18 @@
     <p translate> global.sessionExpiredText </p>
     <button id="opfab-sessionEnd" type="button" class="opfab-btn"
       (click)="logout()" translate> button.ok</button>
+
+  </div>
+</ng-template>
+
+
+<ng-template #sessionAlreadyInUse let-modal>
+  <div class="modal-body text-center" style="white-space: pre-wrap;">
+    <p translate> login.confirmationBecauseAccountIsAreadyUsed </p>
+    <button id="opfab-cancelLogIn" type="button" class="opfab-btn"
+      (click)="logout()" translate> button.cancel</button>
+    <button id="opfab-confirmLogIn" type="button" class="opfab-btn"
+      (click)="login()" translate> button.ok</button>
 
   </div>
 </ng-template>
