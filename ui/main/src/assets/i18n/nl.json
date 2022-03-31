@@ -72,7 +72,8 @@
     "tryToReconnect":"Bezig met verbinden ...",
     "activateSoundText":"Geluid is niet geactiveerd, klik om te activeren",
     "activateSoundButton":"Activeer geluid",
-    "sessionExpiredText":"De sessie is verlopen"
+    "sessionExpiredText":"De sessie is verlopen",
+    "disconnectedByNewUser": "De verbinding met u is verbroken omdat een andere gebruiker met dit account heeft ingelogd."
   },
   "menu": {
     "feed": "Kaart Feed",
@@ -182,6 +183,7 @@
     "reset": "Opnieuw instellen",
     "login": "Gebruikersnaam",
     "password": "Wachtwoord",
+    "confirmationBecauseAccountIsAreadyUsed": "Dit account wordt al gebruikt door minstens één andere gebruiker. Wilt u zich nog steeds aanmelden ?\n\n Door op OK te klikken, verbreekt u de verbinding met iedereen die dit account gebruikt.",
     "submit": {
       "password": "Inloggen",
       "code": "Log in met {{name}}"

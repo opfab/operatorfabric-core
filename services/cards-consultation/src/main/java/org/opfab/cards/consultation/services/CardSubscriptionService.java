@@ -10,23 +10,26 @@
 package org.opfab.cards.consultation.services;
 
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
-
+import net.minidev.json.parser.ParseException;
 import org.opfab.springtools.configuration.oauth.UserServiceCache;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.ParseException;
 
 @Service
 @Slf4j
 public class CardSubscriptionService {
 
+    @Value("${checkIfUserIsAlreadyConnected:true}")
+    private boolean checkIfUserIsAlreadyConnected;
 
     private static final String ERROR_MESSAGE_PARSING = "ERROR during received message parsing";
     private final long heartbeatDelay;
@@ -79,8 +82,21 @@ public class CardSubscriptionService {
         }
     }
 
- 
-    public CardSubscription subscribe(CurrentUserWithPerimeters currentUserWithPerimeters,String clientId) {
+    public boolean mustCheckIfUserIsAlreadyConnected() {
+        return checkIfUserIsAlreadyConnected;
+    }
+
+    public boolean willDisconnectAnExistingSubscriptionWhenLoggingIn(String userLogin) {
+        return mustCheckIfUserIsAlreadyConnected() && isUserAlreadyConnected(userLogin);
+    }
+
+
+    public CardSubscription subscribe(CurrentUserWithPerimeters currentUserWithPerimeters, String clientId) {
+
+        if (mustCheckIfUserIsAlreadyConnected()) {
+            String userLogin = currentUserWithPerimeters.getUserData().getLogin();
+            disconnectAllUsersWithSameLogin(userLogin);
+        }
 
         String subId = CardSubscription.computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin(),clientId);
         CardSubscription.CardSubscriptionBuilder cardSubscriptionBuilder = CardSubscription.builder()
@@ -88,11 +104,33 @@ public class CardSubscriptionService {
                 .clientId(clientId);
         CardSubscription cardSubscription;
         cardSubscription = cardSubscriptionBuilder.build();
+
         cardSubscription.initSubscription(() -> evictSubscription(subId));
         cache.put(subId, cardSubscription);
         log.info("Subscription created with id {} for user {} ", cardSubscription.getId(), cardSubscription.getUserLogin());
         cardSubscription.userServiceCache = this.userServiceCache;
+
         return cardSubscription;
+    }
+
+
+
+    private void disconnectAllUsersWithSameLogin(String userLogin) {
+        cache.keySet().forEach(key -> {
+            CardSubscription sub = cache.get(key);
+            boolean isSameLogin = sub != null && userLogin.equals(sub.getUserLogin());
+
+            if (isSameLogin)  {
+                log.info("Send disconnection request message to {}",key);
+                sub.publishDataIntoSubscription("DISCONNECT_USER_DUE_TO_NEW_CONNECTION");
+            }
+        });
+
+    }
+
+    private boolean isUserAlreadyConnected(String userLogin) {
+        Optional<CardSubscription> userSubscription = cache.values().stream().filter(sub -> sub.getUserLogin().equals(userLogin)).findFirst();
+        return userSubscription.isPresent();
     }
 
     public void evictSubscription(String subId) {

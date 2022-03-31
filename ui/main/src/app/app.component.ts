@@ -53,6 +53,7 @@ export class AppComponent implements OnInit {
   readonly title = 'OperatorFabric';
   isAuthenticated = false;
   loaded = false;
+  isDisconnectedByNewUser = false;
   useCodeOrImplicitFlow = true;
   connectionLost = false;
   connectionLostForMoreThanTenSeconds = false;
@@ -62,7 +63,8 @@ export class AppComponent implements OnInit {
   private modalRef: NgbModalRef;
   @ViewChild('noSound') noSoundPopupRef: TemplateRef<any>;
   @ViewChild('sessionEnd') sessionEndPopupRef: TemplateRef<any>;
-
+  @ViewChild('sessionAlreadyInUse') sessionAlreadyInUsePopupRef: TemplateRef<any>;
+  
   /**
    * NB: I18nService is injected to trigger its constructor at application startup
    */
@@ -216,6 +218,17 @@ export class AppComponent implements OnInit {
     this.useCodeOrImplicitFlow = this.authenticationService.isAuthModeCodeOrImplicitFlow();
   }
 
+  login(): void {
+    this.modalRef.close();
+    this.store
+        .select(selectIdentifier)
+        .subscribe(identifier => {
+          if (identifier) {
+            this.proceedLogin(identifier); 
+          }
+        });
+  }
+
   private initApplicationWhenUserAuthenticated() {
     this.store
         .select(selectIdentifier)
@@ -223,30 +236,46 @@ export class AppComponent implements OnInit {
           if (identifier) {
             console.log(new Date().toISOString(), `User ${identifier} logged`);
             this.isAuthenticated = true;
-            this.cardService.initCardSubscription();
-            merge(
-                this.configService.loadCoreMenuConfigurations(),
-                this.userService.loadUserWithPerimetersData(),
-                this.entitiesService.loadAllEntitiesData(),
-                this.groupsService.loadAllGroupsData(),
-                this.processesService.loadAllProcesses(),
-                this.processesService.loadProcessGroups(),
-                this.processesService.loadMonitoringConfig(),
-                this.cardService.initSubscription)
-                .pipe(skip(7)) // Need to wait for all initialization to complete before loading main components of the application
-                .subscribe({
-                  next: () => {
-                  this.loaded = true;
-                  this.reminderService.startService(identifier);
-                  this.activateSoundIfNotActivated();
-                  this.subscribeToSessionEnd();
-                },
-                  error: catchError((err, caught) => {
-                    console.error('Error in application initialization', err);
-                    return caught; })
-                 });
+
+            this.userService.willNewSubscriptionDisconnectAnExistingSubscription().subscribe(isUserAlreadyConnected => {
+
+              if (isUserAlreadyConnected) {
+                this.modalRef = this.modalService.open(this.sessionAlreadyInUsePopupRef, {centered: true, backdrop: 'static'});
+              } else {
+                this.proceedLogin(identifier);
+              }
+            });
+            
+
           }
         });
+  }
+
+  private proceedLogin(identifier) {
+    this.cardService.initCardSubscription();
+    merge(
+      this.configService.loadCoreMenuConfigurations(),
+      this.userService.loadUserWithPerimetersData(),
+      this.entitiesService.loadAllEntitiesData(),
+      this.groupsService.loadAllGroupsData(),
+      this.processesService.loadAllProcesses(),
+      this.processesService.loadProcessGroups(),
+      this.processesService.loadMonitoringConfig(),
+      this.cardService.initSubscription)
+    .pipe(skip(7)) // Need to wait for all initialization to complete before loading main components of the application
+    .subscribe({
+      next: () => {
+        this.loaded = true;
+        this.reminderService.startService(identifier);
+        this.activateSoundIfNotActivated();
+        this.subscribeToSessionEnd();
+        this.subscribeToSessionClosedByNewUser();
+      },
+      error: catchError((err, caught) => {
+        console.error('Error in application initialization', err);
+        return caught; 
+      })
+    });
   }
 
   private detectConnectionLost() {
@@ -307,6 +336,11 @@ export class AppComponent implements OnInit {
         }
       );
   }
+
+  private subscribeToSessionClosedByNewUser() {
+    this.cardService.getReceivedDisconnectUser().subscribe(isDisconnected => this.isDisconnectedByNewUser = isDisconnected);
+  }
+
 
   public logout() {
     this.logger.info('Logout ', LogOption.REMOTE);
