@@ -191,11 +191,9 @@
       <br/><p translate>response.chooseEntityForResponse</p><br/>
       <form [formGroup]="selectEntityForm" class="opfab-form-lighter">
         <div class="row">
-          <div class="col">
-            <of-single-filter id="opfab-card-details-entity-choice-selector" i18nRootLabelKey="shared."
+            <of-single-filter id="opfab-card-details-entity-choice-selector" i18nRootLabelKey="shared." style="position: relative;"
                               [parentForm]="selectEntityForm" filterPath="entity" [values]="userEntityOptionsDropdownList">
             </of-single-filter>
-          </div>
         </div>
         <br/>
       </form>
