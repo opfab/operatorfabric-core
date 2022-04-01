@@ -13,7 +13,7 @@
     <router-outlet *ngIf="loaded" ></router-outlet>
     <of-login *ngIf="!isAuthenticated && !useCodeOrImplicitFlow"></of-login>
     
-    <div class="opfab-connecting" *ngIf="!loaded && useCodeOrImplicitFlow">
+    <div class="opfab-connecting" *ngIf="!loaded && useCodeOrImplicitFlow && !modalForSessionAlreadyInUseIsActive">
         <div class="opfab-connecting-spinner">
             <em  class="fas fa-spinner fa-spin opfab-slow-spinner" ></em>
             </div>

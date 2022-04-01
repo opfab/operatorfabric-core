@@ -57,6 +57,7 @@ export class AppComponent implements OnInit {
   useCodeOrImplicitFlow = true;
   connectionLost = false;
   connectionLostForMoreThanTenSeconds = false;
+  modalForSessionAlreadyInUseIsActive = false;
   alertMessage: Alert = {alert: undefined, className: undefined, display: false};
 
 
@@ -220,6 +221,7 @@ export class AppComponent implements OnInit {
 
   login(): void {
     this.modalRef.close();
+    this.modalForSessionAlreadyInUseIsActive = false;
     this.store
         .select(selectIdentifier)
         .subscribe(identifier => {
@@ -241,6 +243,7 @@ export class AppComponent implements OnInit {
 
               if (isUserAlreadyConnected) {
                 this.modalRef = this.modalService.open(this.sessionAlreadyInUsePopupRef, {centered: true, backdrop: 'static'});
+                this.modalForSessionAlreadyInUseIsActive = true;
               } else {
                 this.proceedLogin(identifier);
               }
