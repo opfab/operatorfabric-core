@@ -25,7 +25,7 @@ import {ExportService} from '@ofServices/export.service';
 import {TranslateService} from '@ngx-translate/core';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import { Utilities } from 'app/common/utilities';
-import {Card} from '@ofModel/card.model';
+import {Card, CardData} from '@ofModel/card.model';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 import { EntitiesService } from '@ofServices/entities.service';
 import {MessageLevel} from '@ofModel/message.model';
@@ -56,12 +56,14 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     loadingInProgress = false;
     loadingIsTakingMoreThanOneSecond = false;
     isCollapsibleUpdatesActivated = false;
+    technicalError = false;
 
     // View card
     modalRef: NgbModalRef;
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
     @ViewChild('filters') filtersTemplate: ArchivesLoggingFiltersComponent;
     selectedCard: Card;
+    selectedChildCards: Card[];
     fromEntityOrRepresentativeSelectedCard = null;
     listOfProcesses = [];
 
@@ -136,6 +138,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     sendQuery(page_number): void {
+        this.technicalError = false;
         const publishStart = this.extractTime(this.archiveForm.get('publishDateFrom'));
         const publishEnd = this.extractTime(this.archiveForm.get('publishDateTo'));
 
@@ -154,33 +157,40 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
         this.loadingInProgress = true;
         this.checkForArchiveLoadingInProgressForMoreThanOneSecond();
-        const { value } = this.archiveForm;
+        const {value} = this.archiveForm;
         this.filtersTemplate.filtersToMap(value);
         this.filtersTemplate.filters.set('size', [this.size.toString()]);
         this.filtersTemplate.filters.set('page', [page_number]);
         this.filtersTemplate.filters.set('latestUpdateOnly', [String(this.isCollapsibleUpdatesActivated)]);
         this.cardService.fetchArchivedCards(this.filtersTemplate.filters)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((page: Page<LightCard>) => {
-                this.resultsNumber = page.totalElements;
-                this.currentPage = page_number + 1; // page on ngb-pagination component start at 1 , and page on backend start at 0
-                this.firstQueryHasBeenDone = true;
-                this.loadingInProgress = false;
-                this.loadingIsTakingMoreThanOneSecond = false;
-                this.hasResult = page.content.length > 0;
-                this.results = page.content;
+            .subscribe({
+                next: (page: Page<LightCard>) => {
+                    this.resultsNumber = page.totalElements;
+                    this.currentPage = page_number + 1; // page on ngb-pagination component start at 1 , and page on backend start at 0
+                    this.firstQueryHasBeenDone = true;
+                    this.loadingInProgress = false;
+                    this.loadingIsTakingMoreThanOneSecond = false;
+                    this.hasResult = page.content.length > 0;
+                    this.results = page.content;
 
 
 
-                if (this.isCollapsibleUpdatesActivated) {
-                    const requestID = new Date().valueOf();
-                    this.lastRequestID = requestID;
-                    this.loadUpdatesByCardId(requestID);
-                } else {
-                    this.updatesByCardId = [];
-                    this.results.forEach((lightCard, index) => {
-                        this.updatesByCardId.push({mostRecent: lightCard, cardHistories: [], displayHistory: false, tooManyRows: false});
-                    });
+                    if (this.isCollapsibleUpdatesActivated) {
+                        const requestID = new Date().valueOf();
+                        this.lastRequestID = requestID;
+                        this.loadUpdatesByCardId(requestID);
+                    } else {
+                        this.updatesByCardId = [];
+                        this.results.forEach((lightCard) => {
+                            this.updatesByCardId.push({mostRecent: lightCard, cardHistories: [], displayHistory: false, tooManyRows: false});
+                        });
+                    }
+                },
+                error: () =>  {
+                    this.firstQueryHasBeenDone = false;
+                    this.loadingInProgress = false;
+                    this.technicalError = true;
                 }
             });
     }
@@ -320,8 +330,9 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     openCard(cardId) {
-        this.cardService.loadArchivedCard(cardId).subscribe((card: Card) => {
-                this.selectedCard = card;
+        this.cardService.loadArchivedCard(cardId).subscribe((card: CardData) => {
+                this.selectedCard = card.card;
+                this.selectedChildCards = card.childCards;
                 const options: NgbModalOptions = {
                     size: 'fullscreen'
                 };

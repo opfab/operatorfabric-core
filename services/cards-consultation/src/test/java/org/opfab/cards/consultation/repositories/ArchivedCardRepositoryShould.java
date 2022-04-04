@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,6 @@
 package org.opfab.cards.consultation.repositories;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.cards.consultation.application.IntegrationTestApplication;
@@ -40,17 +39,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.opfab.cards.consultation.TestUtilities.*;
 import static reactor.util.function.Tuples.of;
 
-/**
- *
- */
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = IntegrationTestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles(profiles = {"native", "test"})
-//@Disabled
 @Tag("end-to-end")
 @Tag("mongo")
-@Slf4j
+
 public class ArchivedCardRepositoryShould {
 
     public static final String login1 = "user1Login";
@@ -280,9 +275,9 @@ public class ArchivedCardRepositoryShould {
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
-                    assertThat(page.getTotalElements()).isEqualTo(0L);
+                    assertThat(page.getTotalElements()).isZero();
                     assertThat(page.getTotalPages()).isEqualTo(1);
-                    assertThat(page.getContent().size()).isEqualTo(0);
+                    assertThat(page.getContent()).isEmpty();
                 })
                 .expectComplete()
                 .verify();
@@ -451,7 +446,7 @@ public class ArchivedCardRepositoryShould {
                     int expectedNbOfPages = 3;
                     assertThat(page.getTotalPages()).isEqualTo(expectedNbOfPages);
                     int expectedNbOfElementsForTheFirstPage = 2;
-                    assertThat(page.getContent().size()).isEqualTo(expectedNbOfElementsForTheFirstPage);
+                    assertThat(page.getContent()).hasSize(expectedNbOfElementsForTheFirstPage);
                     //Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
                             card -> checkIfCardActiveInRange(card, start, null))
@@ -472,7 +467,7 @@ public class ArchivedCardRepositoryShould {
                     int expectedNbOfPages = 3;
                     assertThat(page.getTotalPages()).isEqualTo(expectedNbOfPages);
                     int expectedNbOfElementsForTheSecondPage = 2;
-                    assertThat(page.getContent().size()).isEqualTo(expectedNbOfElementsForTheSecondPage);
+                    assertThat(page.getContent()).hasSize(expectedNbOfElementsForTheSecondPage);
                     //Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
                             card -> checkIfCardActiveInRange(card, start, null))
@@ -494,7 +489,7 @@ public class ArchivedCardRepositoryShould {
                     int expectedNbOfPages = 3;
                     assertThat(page.getTotalPages()).isEqualTo(expectedNbOfPages);
                     int expectedNbOfElementsForTheBusinessconfigPage = 1;
-                    assertThat(page.getContent().size()).isEqualTo(expectedNbOfElementsForTheBusinessconfigPage);
+                    assertThat(page.getContent()).hasSize(expectedNbOfElementsForTheBusinessconfigPage);
                     //Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
                             card -> checkIfCardActiveInRange(card, start, null))

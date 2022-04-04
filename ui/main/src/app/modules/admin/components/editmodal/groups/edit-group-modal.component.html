@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2020, RTEi (http://www.rte-international.com)           -->
-<!-- Copyright (c) 2021, RTE (http://www.rte-france.com)                   -->
+<!-- Copyright (c) 2021-2022, RTE (http://www.rte-france.com)                   -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -20,7 +20,7 @@
       <div class="container">
         <div class="col">
 
-          <div *ngIf="!row" class="opfab-input row">
+          <div *ngIf="!row" class="opfab-input opfab-edit-row">
             <label for="opfab-id" translate>admin.input.id.label</label>
             <input formControlName="id" name="id" id="opfab-id" type="text">
           </div>
@@ -28,9 +28,10 @@
             <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
             <div *ngIf="id.errors.minlength" translate>admin.input.id.minLength</div>
             <div *ngIf="id.errors.pattern" translate>admin.input.id.pattern</div>
+            <div *ngIf="id.errors.uniqueGroupIdViolation" translate>admin.input.id.alreadyExisting</div>
           </div>
 
-          <div class="opfab-input row">
+          <div class="opfab-input opfab-edit-row">
             <label for="opfab-name" translate>admin.input.name.label</label>
             <input formControlName="name" name="name" id="opfab-name" type="text">
           </div>
@@ -38,12 +39,12 @@
             <div *ngIf="name.errors.required" translate>admin.input.name.required</div>
           </div>
 
-          <div class="opfab-input row">
+          <div class="opfab-input opfab-edit-row">
             <label for="opfab-description" translate>admin.input.description</label>
             <input formControlName="description" name="description" id="opfab-description" type="text">
           </div>
 
-          <div class="row">
+          <div class="opfab-edit-row">
             <of-multi-filter filterPath="perimeters" id="opfab-perimeters" [parentForm]="groupForm" [values]="perimetersDropdownList"
                              [translateValues]="false" [dropdownSettings]="perimetersDropdownSettings" [selectedItems]="selectedPerimeters"
                              sortValues=true i18nRootLabelKey="admin.input.group.">

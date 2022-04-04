@@ -55,12 +55,16 @@
     "endDateBeforeStartDate": "End date must be after start date",
     "featureNotConfigured": "Feature not configured",
     "confirmSettings": "CONFIRM SETTINGS",
+    "cardEmitter": "EMITTER",
+    "entity": "ENTITY",
     "popup": {
       "title": "CONFIRMATION",
       "areYouSure": "You have made some changes. Are you sure you want to save them ?"
     },
     "error": {
-      "impossibleToSaveSettings": "Impossible to save settings for technical reasons"
+      "impossibleToSaveSettings": "Impossible to save settings for technical reasons",
+      "incorrectSubmission": "Incorrect submission",
+      "technicalError" : "Technical Error"
     }
   },
   "global":{
@@ -68,7 +72,8 @@
     "tryToReconnect":"Try to reconnect ...",
     "activateSoundText":"Sound not activated, click to activate",
     "activateSoundButton":"Activate sound",
-    "sessionExpiredText":"Your session has expired"
+    "sessionExpiredText":"Your session has expired",
+    "disconnectedByNewUser": "You have been disconnected because another user logged in using this account."
   },
   "menu": {
     "feed": "Card Feed",
@@ -177,6 +182,7 @@
     "reset": "Reset",
     "login": "Login",
     "password": "Password",
+    "confirmationBecauseAccountIsAreadyUsed":"This account is already being used by at least another user. Do you still want to log in ? \n\n By clicking OK, you will disconnect anyone using this account.",
     "submit": {
       "password": "Sign In",
       "code": "Sign in using {{name}}"
@@ -294,13 +300,16 @@
     "answers": "Answers",
     "answered": "Answered",
     "unanswered": "Not answered yet",
-    "status": "Process Status"
+    "status": "Process Status",
+    "chooseEntityForResponse": "Choose the entity you are responding for :",
+    "entityChoice": "Entity choice"
   },
   "cardAcknowledgment": {
     "button": {
       "ack": "ACKNOWLEDGE AND CLOSE",
       "unack": "CANCEL ACKNOWLEDGMENT"
-    }
+    },
+    "acknowledged": "Acknowledged"
   },
   "admin": {
     "input": {
@@ -359,7 +368,8 @@
       "login": {
         "required": "Login is required.",
         "minLength": "Login should be minimum 2 characters.",
-        "pattern": "Login should only contain the following characters: lowercase letters, _, -, . or digits."
+        "pattern": "Login should only contain the following characters: lowercase letters, _, -, . or digits.",
+        "alreadyExisting": "Login already existing."
       },
       "firstName": {
         "required": "First name is required."
@@ -371,7 +381,8 @@
         "required": "Id is required.",
         "minLength": "Id should be minimum 2 characters.",
         "pattern": "Id should only contain the following characters: letters, _, - or digits.",
-        "label":"Id"
+        "label":"Id",
+        "alreadyExisting": "Id already existing."
       },
       "name": {
         "required": "Name is required.",
@@ -405,7 +416,9 @@
     "orCondition": "OR",
     "to": "to",
     "of": "of",
-    "page": "Page"
+    "page": "Page",
+    "blank": "Blank",
+    "notBlank": "Not blank"
   },
   "realTimeUsers": {
     "connected": "Connected",

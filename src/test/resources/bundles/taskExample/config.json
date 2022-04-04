@@ -1,0 +1,27 @@
+{
+  "id": "taskExample",
+  "name": "Task",
+  "version": "1",
+  "uiVisibility": {
+    "monitoring": false,
+    "logging": false,
+    "calendar": true
+  },
+  "states": {
+    "taskState": {
+      "name": "Task ",
+      "description": "Task ",
+      "color": "#0070C0",
+      "userCard" : {
+        "template" : "usercard_task",
+        "lttdVisible" : false,
+        "recipientVisible" : false
+      },
+      "templateName": "task",
+      "styles": [
+      ],
+      "acknowledgmentAllowed": "Always",
+      "type" : "INPROGRESS"
+    }
+  }
+}

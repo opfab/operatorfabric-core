@@ -8,7 +8,6 @@ dependencies {
     implementation cloud.starterFeign
     implementation boot.starterMongo
     implementation misc.jsonSmart
-    implementation boot.starterAop
     implementation misc.collections4
 
     compileOnly boot.annotationConfiguration

@@ -20,6 +20,7 @@ import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.util.MultiValueMap;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -45,6 +46,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
     public static final String END_DATE_FIELD = "endDate";
     public static final String PROCESS_FIELD = "process";
     public static final String PROCESS_INSTANCE_ID_FIELD = "processInstanceId";
+    public static final String DELETION_DATE_FIELD = "deletionDate";
 
 
     public static final String PUBLISH_DATE_FROM_PARAM = "publishDateFrom";
@@ -85,8 +87,42 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
     public Flux<ArchivedCardConsultationData> findByParentCardId(String parentId) {
         return findByParentCardId(template, parentId, ArchivedCardConsultationData.class);
     }
+
     public Flux<ArchivedCardConsultationData> findByInitialParentCardUid(String initialParentCardUid) {
         return findByInitialParentCardUid(template, initialParentCardUid, ArchivedCardConsultationData.class);
+    }
+
+    public Flux<ArchivedCardConsultationData> findByParentCard(ArchivedCardConsultationData parentCard) {
+        return findByParentCard(template, parentCard);
+    }
+
+
+    public Flux<ArchivedCardConsultationData> findByParentCard(ReactiveMongoTemplate template, ArchivedCardConsultationData parentCard) {
+
+        Query query = new Query();
+        if (parentCard.getDeletionDate() == null) {
+            query.addCriteria(
+                new Criteria().andOperator(
+                    where(PARENT_CARD_ID_FIELD).is(parentCard.getProcess() + "." + parentCard.getProcessInstanceId()),
+                    where(DELETION_DATE_FIELD).isNull()
+                )
+            );
+        } else if (parentCard.getDeletionDate().toEpochMilli() == 0) { 
+            // use to exclude old card inserted in archives before adding the current feature 
+            return Flux.empty();
+        } else {
+            query.addCriteria(
+                new Criteria().andOperator(
+                    where(PARENT_CARD_ID_FIELD).is(parentCard.getProcess() + "." + parentCard.getProcessInstanceId()),
+                    where(PUBLISH_DATE_FIELD).lt(parentCard.getDeletionDate()),
+                    new Criteria().orOperator(
+                        where(DELETION_DATE_FIELD).isNull(), // when parent has keepChildCard=true
+                        where(DELETION_DATE_FIELD).gte(parentCard.getDeletionDate())
+                    )
+                )
+            );
+        }
+        return template.find(query,  ArchivedCardConsultationData.class);
     }
 
     public Mono<Page<LightCard>> findWithUserAndParams(Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params) {
@@ -159,8 +195,6 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
                         PROCESS_FIELD,
                         PROCESS_INSTANCE_ID_FIELD,
                         "state",
-                        "title",
-                        "summary",
                         "titleTranslated",
                         "summaryTranslated",
                         PUBLISH_DATE_FIELD,

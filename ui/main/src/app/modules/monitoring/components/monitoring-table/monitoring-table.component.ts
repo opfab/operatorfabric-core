@@ -16,7 +16,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {ExportService} from '@ofServices/export.service';
 import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
-import {SelectLightCard} from '@ofActions/light-card.actions';
+import {ClearLightCardSelection, SelectLightCard} from '@ofActions/light-card.actions';
 import {LoadCard} from '@ofActions/card.actions';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Store} from '@ngrx/store';
@@ -121,6 +121,11 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             domLayout: 'autoHeight',
             defaultColDef : {
                 editable: false
+            },
+            localeTextFunc : function (key) {
+                // To avoid clashing with opfab assets, all keys defined by ag-grid are prefixed with "ag-grid."
+                // e.g. key "to" defined by ag-grid for use with pagination can be found under "ag-grid.to" in assets
+                return translate.instant('ag-grid.' + key);
             },
             columnTypes: {
                 'timeColumn': {
@@ -295,7 +300,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                 const responses = this.getResponses(line.data.cardId, line.data.entitiesResponses);
                 this.exportMonitoringData.push({
                         [this.timeColumnName]: line.data.time,
-                        [this.answerColumnName]: line.data.answer,
+                        [this.answerColumnName]: !!line.data.answer ? line.data.answer : false,
                         [this.businessPeriodColumnName]: this.displayTime(line.data.beginningOfBusinessPeriod)
                                                          .concat('-')
                                                          .concat(this.displayTime(line.data.endOfBusinessPeriod)),
@@ -417,6 +422,13 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             size: 'fullscreen'
         };
         this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
+
+        // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
+        // Closing event is already handled in card detail component
+        this.modalRef.dismissed.subscribe(() => {
+            this.store.dispatch(new ClearLightCardSelection());
+        })
+
     }
 
 }

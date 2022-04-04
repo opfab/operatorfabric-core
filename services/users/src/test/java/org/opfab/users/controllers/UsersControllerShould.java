@@ -14,7 +14,6 @@ package org.opfab.users.controllers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.opfab.users.application.UnitTestApplication;
 import org.opfab.users.application.configuration.WithMockOpFabUser;
 import org.opfab.users.model.*;
@@ -22,11 +21,9 @@ import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.PerimeterRepository;
 import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.repositories.UserSettingsRepository;
-import org.opfab.users.model.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -46,12 +43,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 import java.util.*;
 
-/**
- * <p></p>
- * Created on 13/09/18
- *
- *
- */
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = UnitTestApplication.class)
 @ActiveProfiles("test")
@@ -762,10 +754,10 @@ class UsersControllerShould {
         @Test
         void deleteUser() throws Exception {
             List<UserData> pythons = userRepository.findByGroupSetContaining("Monty Pythons");
-            assertThat(pythons.size()).isEqualTo(2);
+            assertThat(pythons).hasSize(2);
 
             List<UserData> wanda = userRepository.findByGroupSetContaining("Wanda");
-            assertThat(wanda.size()).isEqualTo(2);
+            assertThat(wanda).hasSize(2);
 
             assertThat(userRepository.findById("jcleese")).isNotEmpty();
 
@@ -777,10 +769,10 @@ class UsersControllerShould {
             ;
 
             pythons = userRepository.findByGroupSetContaining("Monty Pythons");
-            assertThat(pythons.size()).isEqualTo(1);
+            assertThat(pythons).hasSize(1);
 
             wanda = userRepository.findByGroupSetContaining("Wanda");
-            assertThat(wanda.size()).isEqualTo(1);
+            assertThat(wanda).hasSize(1);
 
             assertThat(userRepository.findById("jcleese")).isEmpty();
         }

@@ -11,7 +11,7 @@
 <nav class="navbar navbar-expand-lg fixed-top  opfab-navbar">
   <a class="navbar-brand">
     <div *ngIf="this.customLogo; else opFabLogo">
-      <of-custom-logo [base64]="customLogo" [limitSize]="limitSize" [height]="height" [width]="width"></of-custom-logo>
+      <of-custom-logo [base64]="customLogo"  [height]="height" [width]="width"></of-custom-logo>
     </div>
     <ng-template #opFabLogo>
       <div class="brand-bg-light">
@@ -60,9 +60,9 @@
         <a  href="javascript:void(0)" [class.active]="(currentPath.includes('calendar'))" class="opfab-menu-icon-calendar"></a>
      </li>
 
-      <li class="nav-item dropdown align-middle">
-        <a class="nav-link dropdown-toggle" id="opfab-navbar-drop_user_menu" 
-          [ngbPopover]="menuContent" container="body" [autoClose]="'always'" popoverClass="opfab-popover" href="javascript:void(0)">
+      <li >
+        <a class="nav-link" id="opfab-navbar-drop_user_menu" 
+          [ngbPopover]="menuContent" container="body"  popoverClass="opfab-popover-left-menu" href="javascript:void(0)">
           <of-info></of-info>
         </a>
 
@@ -71,8 +71,7 @@
     </ul>
 
     <div *ngIf="displayEnvironmentName" 
-      style="width:80px;height:87px;overflow: hidden;margin-top: -30px;margin-bottom:-20px;
-      margin-left: -50px;margin-right: -15px;">
+      style=" position: absolute;right:0;width:80px;height:87px;overflow: hidden;margin-top: -30px;margin-bottom:-20px;">
       <div [style.background-color]="environmentColor" 
           style="font-size:10px;transform:rotate(45deg);color:white;
           margin-top:33px; margin-left: -57px; width:210px;
@@ -85,40 +84,40 @@
 </nav>
 
 <ng-template #menuCollapsedContent>
-  <div style=" display: flex;">
+  <div>
     <ul class="navbar-nav mr-auto " style="flex-direction: row; float:left;">
       <li class="nav-item" [class.active]="'feed' === currentPath[1]">
-        <a id="opfab-navbar-menu-feed" class="nav-link" routerLink="/feed"  routerLinkActive #rla="routerLinkActive"
+        <a id="opfab-navbar-menu-feed-collapsed" class="nav-link" routerLink="/feed"  routerLinkActive #rla="routerLinkActive"
           translate>{{'menu.feed'}}</a>
       </li>
     </ul>
     <ul class="navbar-nav mr-auto " style="flex-direction: row; float:right;margin-top: 10px; margin-right: 0px !important;">
 
       <li class="nav-item">
-        <a id="opfab-navbar-right-menu-settings" *ngIf="(displaySettings)" class="opfab-right-menu-link" routerLink="/settings"  routerLinkActive #rla="routerLinkActive">
+        <a id="opfab-navbar-right-menu-settings-collapsed" *ngIf="(displaySettings)" class="opfab-right-menu-link" routerLink="/settings"  routerLinkActive #rla="routerLinkActive">
           <div class="opfab-menu-icon opfab-menu-icon-parameters"></div>
         </a>
       </li>
 
       <li class="nav-item" *ngIf="(displayFeedConfiguration)">
-        <a  id="opfab-navbar-right-menu-feedconfiguration" class="opfab-right-menu-link" routerLink="/feedconfiguration"  routerLinkActive
+        <a  id="opfab-navbar-right-menu-feedconfiguration-collapsed" class="opfab-right-menu-link" routerLink="/feedconfiguration"  routerLinkActive
           #rla="routerLinkActive">
           <div class="opfab-menu-icon opfab-menu-icon-notification"></div>
         </a>
       </li>
 
       <li class="nav-item" *ngIf="(nightDayMode)">
-        <a id="opfab-navbar-right-menu-night-mode" *ngIf="(!(getNightMode()|async))" class="opfab-right-menu-link" (click)='switchToNightMode()'>
+        <a id="opfab-navbar-right-menu-night-mode-collapsed" *ngIf="(!(getNightMode()|async))" class="opfab-right-menu-link" (click)='switchToNightMode()'>
           <div class="opfab-menu-icon opfab-menu-icon-dark-light"></div>
         </a>
-        <a id="opfab-navbar-right-menu-day-mode"  *ngIf="(getNightMode()|async)" class="opfab-right-menu-link"  (click)='switchToDayMode()'>
+        <a id="opfab-navbar-right-menu-day-mode-collapsed"  *ngIf="(getNightMode()|async)" class="opfab-right-menu-link"  (click)='switchToDayMode()'>
           <div class="opfab-menu-icon opfab-menu-icon-dark-light"></div>
         </a>
       </li>
       
       <li class="nav-item" *ngIf="(displayLogOut)">
         <form>
-          <a id="opfab-navbar-right-menu-logout"  class="opfab-right-menu-link" (click)="logOut()" href="javascript:void(0)">
+          <a id="opfab-navbar-right-menu-logout-collapsed"  class="opfab-right-menu-link" (click)="logOut()" href="javascript:void(0)">
             <div class="opfab-menu-icon opfab-menu-icon-logout"></div>
           </a>
         </form>

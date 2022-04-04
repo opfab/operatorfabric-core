@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,43 +7,36 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.cards.publication.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.opfab.cards.model.CardOperationTypeEnum;
-
-import java.time.Instant;
 import java.util.List;
 
-/**
- * <p>Please use builder to instantiate</p>
- *
- * <p>Card Operation Model, documented at {@link CardOperation}</p>
- *
- * {@inheritDoc}
- *
- *
- */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class CardOperationData implements CardOperation {
 
-    private Long number;
-    private Instant publishDate;
     private CardOperationTypeEnum type;
+
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String cardId;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private String cardUid;
+
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private LightCard card;
+
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> groupRecipientsIds;
+
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> entityRecipientsIds;
@@ -53,6 +46,10 @@ public class CardOperationData implements CardOperation {
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> userRecipientsIds;
+
+    @Singular("entityAck")
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<String> entitiesAcks;
 
     /**
      * Class used to encapsulate builder in order to bypass javadoc inability to handle annotation processor generated classes

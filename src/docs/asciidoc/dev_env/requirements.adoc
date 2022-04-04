@@ -19,12 +19,11 @@ below for details on:
 
 == Tools and libraries
 
-* Gradle 7 +
 * Java 11.0 +
 * Docker
 * Docker Compose with 2.1+ file format support
 * Chrome (needed for UI tests in build)
-* Angular CLI
+* Node 14.15 (Npm 6.14)
 * https://stedolan.github.io/jq/[jq]
 
 NOTE: the current Jdk used for the project is Java 11.0.14-zulu.
@@ -33,8 +32,8 @@ IMPORTANT: It is highly recommended to use https://sdkman.io/[sdkman] and
 https://github.com/nvm-sh/nvm[nvm] to manage tools versions. The following steps rely on these tools.
 
 Once you have installed sdkman and nvm, you can **source** the following
-script to set up your development environment (appropriate versions of Gradle,
-Java, Maven and project variables set):
+script to set up your development environment (appropriate versions of Node 
+Java and project variables set):
 
 .Set up development environment (using sdkman and nvm)
 [source]

@@ -5,3 +5,5 @@ spring:
     name: cards-consultation
 #logging.level.org.opfab: debug
 
+checkIfUserIsAlreadyConnected: false
+

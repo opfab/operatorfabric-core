@@ -10,13 +10,14 @@
 
 
 import {Component, Input, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {AsyncValidatorFn, FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from '@ofServices/crud-service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {Entity} from '@ofModel/entity.model';
 import {TranslateService} from '@ngx-translate/core';
+import {debounceTime, distinctUntilChanged, first, map, switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'of-edit-entity-modal',
@@ -25,15 +26,7 @@ import {TranslateService} from '@ngx-translate/core';
 })
 export class EditEntityModalComponent implements OnInit {
 
-  entityForm = new FormGroup({
-    id: new FormControl(''
-      , [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-z\d\-_]+$/)]),
-    name: new FormControl('', [Validators.required]),
-    description: new FormControl(''),
-    entityAllowedToSendCard: new FormControl(false),
-    labels: new FormControl([]),
-    parents: new FormControl([]),
-  });
+  entityForm: FormGroup;
 
   @Input() row: any;
   @Input() type: AdminItemType;
@@ -55,6 +48,22 @@ export class EditEntityModalComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    const uniqueEntityIdValidator = [];
+    if (! this.row) // modal used for creating a new entity
+      uniqueEntityIdValidator.push(this.uniqueEntityIdValidatorFn());
+
+    this.entityForm = new FormGroup({
+      id: new FormControl(''
+          , [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-z\d\-_]+$/)]
+          , uniqueEntityIdValidator),
+      name: new FormControl('', [Validators.required]),
+      description: new FormControl(''),
+      entityAllowedToSendCard: new FormControl(false),
+      labels: new FormControl([]),
+      parents: new FormControl([]),
+    });
+
     this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.type);
     if (this.row) { // If the modal is used for edition, initialize the modal with current data from this row
       this.entityForm.patchValue(this.row, { onlySelf: true });
@@ -77,7 +86,7 @@ export class EditEntityModalComponent implements OnInit {
         });
 
 
-    // Initialize value lists for Entities 
+    // Initialize value lists for Entities
     this.entities = this.entitiesService.getEntities();
     this.entities.forEach((entity) => {
       const id = entity.id;
@@ -98,9 +107,29 @@ export class EditEntityModalComponent implements OnInit {
     // user chose to perform an action (here, update the selected item).
     // This is important as code in the corresponding table components relies on the resolution of the
     // `NgbModalRef.result` promise to trigger a refresh of the data shown on the table.
-    this.crudService.update(this.entityForm.value).subscribe(() => {
-      this.activeModal.close('Update button clicked on ' + this.type + ' modal');
-    });
+    // Wait 100ms to let labels <tag-component> update pending values
+    setTimeout(() => {
+      this.crudService.update(this.entityForm.value).subscribe(() => {
+        this.activeModal.close('Update button clicked on ' + this.type + ' modal');
+      });
+    }, 100);
+  }
+
+  isUniqueEntityId(entityId: string): boolean {
+    if ((!! entityId) && (this.entitiesService.getEntities().filter(entity => entity.id === entityId).length))
+      return false;
+    else
+      return true;
+  }
+
+  uniqueEntityIdValidatorFn(): AsyncValidatorFn {
+    return control => control.valueChanges
+        .pipe(
+            debounceTime(500),
+            distinctUntilChanged(),
+            switchMap(async (value) => this.isUniqueEntityId(value)),
+            map((unique: boolean) => (unique ? null : {'uniqueEntityIdViolation': true})),
+            first()); // important to make observable finite
   }
 
   private cleanForm() {

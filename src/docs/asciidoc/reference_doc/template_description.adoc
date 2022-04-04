@@ -188,7 +188,7 @@ Notice that this should normally be feasible by using the built-in each helper, 
 
 ....
 {{#keyValue studentGrades}}
-  <p>{{key}}: {{value}}</p>
+  <p> {{index}} - {{key}}: {{value}} </p>
 {{/keyValue}}
 ....
 
@@ -205,9 +205,9 @@ If the value of the studentGrades map is:
 The output will be:
 
 ....
-<p>student1: 15</p>
-<p>student2: 12</p>
-<p>student3: 9</p>
+<p> 0 - student1: 15</p>
+<p> 1 - student2: 12</p>
+<p> 2 - student3: 9</p>
 ....
 
 [[math]]
@@ -521,6 +521,7 @@ Your can find example using these classes in the OperatorFabric core repository 
 
 The library https://www.chartjs.org/[charts.js] is integrated in OperatorFabric, it means it's possible to show charts in cards, you can find a bundle example in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/resources/bundles/defaultProcess_V1[src/test/resources/bundle/defaultProcess_V1]).
 
+The version of chartjs integrated in OperatorFabric is v3.7.1.
 
 == OperatorFabric specific functions
 
@@ -540,7 +541,7 @@ The function returns a string with one of the following values :
 - 'archive' : archive page context 
 - 'preview': preview context (user card)
 
-An example of usage can be found in operator fabric git: (https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/userCardExamples2/template/question.handlebars[src/test/resources/bundles/userCardExamples2/template/question.handlebars]).
+An example of usage can be found in operator fabric git: (https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/messageOrQuestionExample/template/question.handlebars[src/test/resources/bundles/messageOrQuestionExample/template/question.handlebars]).
 
 
 === Redirect to business application from a card

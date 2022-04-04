@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -64,7 +64,6 @@ public class ArchivedCardPublicationData implements Card {
     private Instant publishDate;
     private Instant lttd;
 
-    
     @Indexed
     private Instant startDate;
     @Indexed
@@ -76,25 +75,25 @@ public class ArchivedCardPublicationData implements Card {
 
     @Indexed
     private List<String> userRecipients;
-    
+
     @Indexed
     private List<String> groupRecipients;
-    
+
     @Transient
     private List<TimeSpan> timeSpans;
-    
+
     @Indexed
     private List<String> entityRecipients;
-    
+
     private List<String> externalRecipients;
-    
+
     @Singular("entityAllowedToRespond")
     private List<String> entitiesAllowedToRespond;
-    
-    @Singular("entitiyRequiredToRespond")
+
+    @Singular("entityRequiredToRespond")
     private List<String> entitiesRequiredToRespond;
 
-    @Singular("entitiesAllowedToEdit")
+    @Singular("entityAllowedToEdit")
     private List<String> entitiesAllowedToEdit;
 
     @Transient
@@ -106,12 +105,25 @@ public class ArchivedCardPublicationData implements Card {
 
     private PublisherTypeEnum publisherType;
 
-    private String  representative;
+    private String representative;
     private PublisherTypeEnum representativeType;
 
-    private Integer  secondsBeforeTimeSpanForReminder;
+    private Integer secondsBeforeTimeSpanForReminder;
 
     private Boolean toNotify;
+
+    @Indexed
+    private Instant deletionDate;
+
+    private List<String> entitiesAcks;
+
+    public Instant getDeletionDate() {
+        return this.deletionDate;
+    }
+
+    public void setDeletionDate(Instant deletionDate) {
+        this.deletionDate = deletionDate;
+    }
 
     public ArchivedCardPublicationData(CardPublicationData card){
         this.id = card.getUid();
@@ -137,10 +149,14 @@ public class ArchivedCardPublicationData implements Card {
         this.userRecipients = card.getUserRecipients() == null ? null : new ArrayList<>(card.getUserRecipients());
         this.groupRecipients = card.getGroupRecipients() == null ? null : new ArrayList<>(card.getGroupRecipients());
         this.entityRecipients = card.getEntityRecipients() == null ? null : new ArrayList<>(card.getEntityRecipients());
-        this.externalRecipients = card.getExternalRecipients() == null ? null : new ArrayList<>(card.getExternalRecipients());
-        this.entitiesAllowedToRespond = card.getEntitiesAllowedToRespond() == null ? null : new ArrayList<>(card.getEntitiesAllowedToRespond());
-        this.entitiesRequiredToRespond = card.getEntitiesRequiredToRespond() == null ? null : new ArrayList<>(card.getEntitiesRequiredToRespond());
-        this.entitiesAllowedToEdit = card.getEntitiesAllowedToEdit() == null ? null : new ArrayList<>(card.getEntitiesAllowedToEdit());
+        this.externalRecipients = card.getExternalRecipients() == null ? null
+                : new ArrayList<>(card.getExternalRecipients());
+        this.entitiesAllowedToRespond = card.getEntitiesAllowedToRespond() == null ? null
+                : new ArrayList<>(card.getEntitiesAllowedToRespond());
+        this.entitiesRequiredToRespond = card.getEntitiesRequiredToRespond() == null ? null
+                : new ArrayList<>(card.getEntitiesRequiredToRespond());
+        this.entitiesAllowedToEdit = card.getEntitiesAllowedToEdit() == null ? null
+                : new ArrayList<>(card.getEntitiesAllowedToEdit());
         this.processStateKey = process + "." + state;
         this.publisherType = card.getPublisherType();
         this.representative = card.getRepresentative();

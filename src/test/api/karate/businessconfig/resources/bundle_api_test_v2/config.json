@@ -50,7 +50,9 @@
 		  "templateName": "incidentInProgress",
 		  "styles": [],
 		  "acknowledgmentAllowed": "Always",
-		  "type" : "FINISHED"
+		  "type" : "FINISHED",
+		  "automaticPinWhenAcknowledged": true
+
 		}
 	  }
 }

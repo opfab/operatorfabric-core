@@ -1,7 +1,6 @@
 {
   "environmentName": "DOCKER ENV",
   "environmentColor": "blue",
-  "checkPerimeterForResponseCard": true,
   "showUserEntitiesOnTopRightOfTheScreen": true,
   "externalDevicesEnabled": true,
   "settings.replayInterval": 10,
@@ -106,11 +105,6 @@
       "lastapplication": {
         "name": "Wonderful Solution",
         "version": "0.1.2-RELEASE"
-      },
-      "operatorfabric": {
-        "name": "OperatorFabric",
-        "rank": 0,
-        "version": "3.5.0.RELEASE"
       }
     },
     "infos": {

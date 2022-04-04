@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
 
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams, HttpUrlEncodingCodec} from '@angular/common/http';
@@ -20,7 +19,9 @@ import {Card} from '@ofModel/card.model';
 import {LightCardsStoreService} from './lightcards/lightcards-store.service';
 import {UserService} from "@ofServices/user.service";
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class ProcessesService {
     readonly processesUrl: string;
     readonly processGroupsUrl: string;

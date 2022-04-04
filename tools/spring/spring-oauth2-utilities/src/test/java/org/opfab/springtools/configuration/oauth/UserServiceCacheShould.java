@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
 
 
 package org.opfab.springtools.configuration.oauth;
@@ -26,7 +25,7 @@ import java.util.Map;
 
 
 @SpringBootTest(classes = UserServiceCacheTestApplication.class)
-public class UserServiceCacheShould {
+class UserServiceCacheShould {
 
     @Autowired
     UserServiceCache userServiceCache;
@@ -55,8 +54,7 @@ public class UserServiceCacheShould {
     void shouldReturnCorrectUserData(){
         String principalID ="testuser";
         CurrentUserWithPerimeters user = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalID);
-        assertThat(user).isNotNull();
-        assertThat(user).isInstanceOf(CurrentUserWithPerimeters.class);
+        assertThat(user).isNotNull().isInstanceOf(CurrentUserWithPerimeters.class);
         assertThat(user.getUserData().getLogin()).isEqualTo(principalID);
         assertThat(user.getUserData().getGroups()).containsExactlyInAnyOrder("testgroup1");
         assertThat(user.getUserData().getFirstName()).isEqualTo("John");
@@ -99,8 +97,7 @@ public class UserServiceCacheShould {
         //Second call
         CurrentUserWithPerimeters user2 = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalID);
 
-        assertThat(user1).isNotNull();
-        assertThat(user1).isEqualTo(user2);
+        assertThat(user1).isNotNull().isEqualTo(user2);
     }
 
 

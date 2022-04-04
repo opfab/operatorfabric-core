@@ -12,9 +12,9 @@
       "id": "service2",
       "name": "User card examples",
       "processes": [
-        "userCardExamples",
-        "userCardExamples2",
-        "userCardExamples3"
+        "conferenceAndITIncidentExample",
+        "messageOrQuestionExample",
+        "taskExample"
       ]
     }
   ]

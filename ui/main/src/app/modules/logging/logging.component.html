@@ -39,9 +39,9 @@
 </div>
 
 <div style="height:5%"> </div>
-<div *ngIf="!loadingInProgress && hasResult" style="margin-left:5%;margin-right:5%">
+<div *ngIf="!loadingIsTakingMoreThanOneSecond && hasResult && !technicalError" style="margin-left:5%;margin-right:5%">
   <div class="opfab-table">
-    <table aria-describedby="Archive results table">
+    <table aria-describedby="Archive results table" id="opfab-logging-cards-list">
       <thead>
         <tr>
           <th scope="col"></th>
@@ -76,7 +76,7 @@
       </tr>
     </table>
     <div class="opfab-pagination">
-      <div style="white-space: nowrap;margin-top:17px">
+      <div style="white-space: nowrap;margin-top:17px" id="opfab-logging-results-number">
         <span translate> shared.resultsNumber </span> : {{resultsNumber}}
       </div>
       <div style="width:40%;margin-top:5px">
@@ -94,7 +94,11 @@
   </div>
 </div>
 
-<div *ngIf="firstQueryHasBeenDone&&!hasResult" style="text-align: center;font-size: 20px;" translate>shared.noResult
+<div *ngIf="firstQueryHasBeenDone&&!hasResult&&!loadingInProgress" style="text-align: center;font-size: 20px;" translate>shared.noResult
+</div>
+
+
+<div *ngIf="technicalError" style="text-align: center;font-size: 20px;" translate> shared.error.technicalError
 </div>
 
 

@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 
 
 import {Component, Input, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {AsyncValidatorFn, FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from '@ofServices/crud-service';
@@ -20,6 +20,8 @@ import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {MessageLevel} from '@ofModel/message.model';
+import {GroupsService} from '@ofServices/groups.service';
+import {debounceTime, distinctUntilChanged, first, map, switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'of-edit-group-modal',
@@ -28,13 +30,7 @@ import {MessageLevel} from '@ofModel/message.model';
 })
 export class EditGroupModalComponent implements OnInit {
 
-  groupForm = new FormGroup({
-    id: new FormControl(''
-      , [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-z\d\-_]+$/)]),
-    name: new FormControl('', [Validators.required]),
-    description: new FormControl(''),
-    perimeters: new FormControl([])
-  });
+  groupForm: FormGroup;
 
   perimetersDropdownList = [];
   selectedPerimeters = [];
@@ -50,11 +46,26 @@ export class EditGroupModalComponent implements OnInit {
     private translate: TranslateService,
     private activeModal: NgbActiveModal,
     private dataHandlingService: SharingService,
-    private perimetersService: PerimetersService
+    private perimetersService: PerimetersService,
+    private groupsService: GroupsService
   ) {
   }
 
   ngOnInit() {
+
+    const uniqueGroupIdValidator = [];
+    if (! this.row) // modal used for creating a new group
+      uniqueGroupIdValidator.push(this.uniqueGroupIdValidatorFn());
+
+    this.groupForm = new FormGroup({
+      id: new FormControl(''
+          , [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-z\d\-_]+$/)]
+          , uniqueGroupIdValidator),
+      name: new FormControl('', [Validators.required]),
+      description: new FormControl(''),
+      perimeters: new FormControl([])
+    });
+
     this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.type);
 
     if (this.row) { // If the modal is used for edition, initialize the modal with current data from this row
@@ -93,7 +104,23 @@ export class EditGroupModalComponent implements OnInit {
       next: () => this.onSavesuccess(),
       error: (e) => this.onSaveError(e)
     });
-      
+  }
+
+  isUniqueGroupId(groupId: string): boolean {
+    if ((!! groupId) && (this.groupsService.getGroups().filter(group => group.id === groupId).length))
+      return false;
+    else
+      return true;
+  }
+
+  uniqueGroupIdValidatorFn(): AsyncValidatorFn {
+    return control => control.valueChanges
+        .pipe(
+            debounceTime(500),
+            distinctUntilChanged(),
+            switchMap(async (value) => this.isUniqueGroupId(value)),
+            map((unique: boolean) => (unique ? null : {'uniqueGroupIdViolation': true})),
+            first()); // important to make observable finite
   }
 
   onSavesuccess() {
@@ -101,7 +128,7 @@ export class EditGroupModalComponent implements OnInit {
   }
 
   onSaveError(res) {
-    this.perimeters.setValue(this.perimeters.value.map(perimeterId => {return {id: perimeterId, itemName: perimeterId}}));
+    this.perimeters.setValue(this.perimeters.value.map(perimeterId => {return {id: perimeterId, itemName: perimeterId}; }));
     this.store.dispatch(new AlertMessage({alertMessage: {message: res.originalError.error.message, level: MessageLevel.ERROR}}));
   }
 
@@ -116,19 +143,19 @@ export class EditGroupModalComponent implements OnInit {
   }
 
   get id() {
-    return this.groupForm.get('id') as FormControl;
+    return this.groupForm.get('id');
   }
 
   get name() {
-    return this.groupForm.get('name') as FormControl;
+    return this.groupForm.get('name') ;
   }
 
   get description() {
-    return this.groupForm.get('description') as FormControl;
+    return this.groupForm.get('description');
   }
 
   get perimeters() {
-    return this.groupForm.get('perimeters') as FormControl;
+    return this.groupForm.get('perimeters');
   }
 
   dismissModal(reason: string): void {

@@ -5,7 +5,6 @@ import org.opfab.cards.publication.services.processors.UserCardProcessor;
 import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.RightsEnum;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
@@ -15,12 +14,9 @@ import java.util.Optional;
 @Component
 public class UserCardProcessorImpl implements UserCardProcessor {
 
-    @Value("${checkPerimeterForResponseCard:true}")
-    private boolean checkPerimeterForResponseCard;
-
     public String processPublisher(CardPublicationData card, CurrentUserWithPerimeters user) {
 
-        if ((checkPerimeterForResponseCard) && (!isAuthorizedCard(card,user))){
+        if (!isAuthorizedCard(card,user)){
             throw new AccessDeniedException("user not authorized, the card is rejected");
         }
 

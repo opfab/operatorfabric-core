@@ -1,4 +1,4 @@
-// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2021-2022 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -24,7 +24,7 @@ In opfab git repository, you can find in directory https://github.com/opfab/oper
   
   - a script to load a monitoring configuration `loadMonitoringConfig.sh`
 
-  - an example of configuration in `monitoringConfig.json` (for the response fields to be filled , you need to need to respond to a card question in process userCardExamples2 )
+  - an example of configuration in `monitoringConfig.json` (for the response fields to be filled , you need to need to respond to a card question in process messageOrQuestionExample )
 
 
 A description of the structure of the configuration can be found in 

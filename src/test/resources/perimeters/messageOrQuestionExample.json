@@ -1,0 +1,18 @@
+{
+	"id" : "messageOrQuestionExample",
+	"process" : "messageOrQuestionExample",
+	"stateRights" : [
+	  {
+		"state" : "messageState",
+		"right" : "ReceiveAndWrite"
+	  },
+	  {
+		"state" : "questionState",
+		"right" : "ReceiveAndWrite"
+	  },
+	  {
+		"state" : "confirmationState",
+		"right" : "ReceiveAndWrite"
+	  }
+	]
+  }

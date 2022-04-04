@@ -1,0 +1,47 @@
+{
+  "id": "conferenceAndITIncidentExample",
+  "name": "Conference and IT incident ",
+  "version": "1",
+  "uiVisibility": {
+    "monitoring": true,
+    "logging": true,
+    "calendar": true
+  },
+  "states": {
+    "conferenceState": {
+      "name": "Conference Call ☏",
+      "description": "Conference Call ☏",
+      "color": "#CC9900",
+      "userCard" : {
+        "template" : "usercard_conference",
+        "lttdVisible" : false
+      },
+      "templateName": "conference",
+      "styles": [],
+      "acknowledgmentAllowed": "Always",
+      "type" : "INPROGRESS"
+    },
+    "incidentInProgressState": {
+      "name": "IT Incident",
+      "description": "IT Incident",
+      "userCard" : {
+				"template" : "usercard_incidentInProgress",
+				"severityVisible" : true,
+				"startDateVisible" : false,
+				"endDateVisible" : false,
+        "lttdVisible" : false,
+        "recipientVisible" : false
+			},
+      "color": "#CC9900",
+      "response": {
+        "state": "incidentInProgressState"
+      },
+      "templateName": "incidentInProgress",
+      "styles": [],
+      "acknowledgmentAllowed": "OnlyWhenResponseDisabledForUser",
+      "type" : "INPROGRESS",
+      "validateAnswerButtonLabel" : "SEND IMPACT",
+      "modifyAnswerButtonLabel" : "MODIFY IMPACT"
+    }
+  }
+}

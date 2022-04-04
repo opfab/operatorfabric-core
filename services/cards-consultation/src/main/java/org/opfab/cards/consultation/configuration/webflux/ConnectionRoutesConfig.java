@@ -11,19 +11,21 @@
 package org.opfab.cards.consultation.configuration.webflux;
 
 import lombok.extern.slf4j.Slf4j;
-
-
 import org.opfab.cards.consultation.model.Connection;
 import org.opfab.cards.consultation.model.ConnectionData;
 import org.opfab.cards.consultation.services.CardSubscriptionService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.reactive.function.server.*;
-
-import static org.springframework.web.reactive.function.server.ServerResponse.ok;
+import org.springframework.web.reactive.function.server.HandlerFunction;
+import org.springframework.web.reactive.function.server.RequestPredicates;
+import org.springframework.web.reactive.function.server.RouterFunction;
+import org.springframework.web.reactive.function.server.RouterFunctions;
+import org.springframework.web.reactive.function.server.ServerResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 @Slf4j
 @Configuration
@@ -45,8 +47,7 @@ public class ConnectionRoutesConfig implements UserExtractor {
         return request -> ok().bodyValue(getSubscriptions());
     }
 
-    private List<Connection> getSubscriptions()
-    {
+    private List<Connection> getSubscriptions()  {
         List<Connection> connectionsData = new ArrayList<>();
         cardSubscriptionService.getSubscriptions().forEach( subscription -> {
             ConnectionData connection = ConnectionData.builder()

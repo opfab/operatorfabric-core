@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -60,9 +60,9 @@ public class CardSubscription {
                 currentUserWithPerimeters = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(userLogin);
 
             } catch (Exception exc) {
-                // This situation arise when the usercache has been cleared and the token is expired
+                // This situation arises when the usercache has been cleared and the token is expired
                 // in this case the service cannot retrieve the user information 
-                // it arise only in implicit mode as the user is not deconnected 
+                // it arises only in implicit mode as the user is not disconnected
                 // if token expired due to silent refresh mechanism
                 //
                 // When the user will make another request (for example : click on a card feed) 
@@ -95,16 +95,12 @@ public class CardSubscription {
     
     public void publishDataIntoSubscription(String message)
     {
-        if (this.messageSink!=null) this.messageSink.next(message);
+        if (this.messageSink != null) this.messageSink.next(message);
     }
 
     public void publishDataFluxIntoSubscription(Flux<String> messageFlux) {
 
         messageFlux.subscribe(next -> this.messageSink.next(next));
     }
-
-
-
-   
 
 }

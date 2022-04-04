@@ -18,7 +18,7 @@ import {selectIdentifier} from '@ofSelectors/authentication.selectors';
 import {ConfigService} from '@ofServices/config.service';
 import {TranslateService} from '@ngx-translate/core';
 import {catchError, skip} from 'rxjs/operators';
-import {merge} from 'rxjs';
+import {merge, Observable, Subject} from 'rxjs';
 import {I18nService} from '@ofServices/i18n.service';
 import {CardService} from '@ofServices/card.service';
 import {UserService} from '@ofServices/user.service';
@@ -37,7 +37,6 @@ import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.servi
 import {RemoteLoggerService} from '@ofServices/logs/remote-logger.service';
 
 
-
 class Alert {
   alert: Message;
   display: boolean;
@@ -54,16 +53,19 @@ export class AppComponent implements OnInit {
   readonly title = 'OperatorFabric';
   isAuthenticated = false;
   loaded = false;
+  isDisconnectedByNewUser = false;
   useCodeOrImplicitFlow = true;
   connectionLost = false;
   connectionLostForMoreThanTenSeconds = false;
+  modalForSessionAlreadyInUseIsActive = false;
   alertMessage: Alert = {alert: undefined, className: undefined, display: false};
 
 
   private modalRef: NgbModalRef;
   @ViewChild('noSound') noSoundPopupRef: TemplateRef<any>;
   @ViewChild('sessionEnd') sessionEndPopupRef: TemplateRef<any>;
-
+  @ViewChild('sessionAlreadyInUse') sessionAlreadyInUsePopupRef: TemplateRef<any>;
+  
   /**
    * NB: I18nService is injected to trigger its constructor at application startup
    */
@@ -167,21 +169,66 @@ export class AppComponent implements OnInit {
   private loadTranslationAndLaunchAuthenticationProcess(config) {
     if (!!config.i18n.supported.locales) {
       const localeRequests$ = [];
-      (config.i18n.supported.locales as string[]).forEach(local => localeRequests$.push(this.i18nService.loadLocale(local)));
-      merge(...localeRequests$).pipe(skip(localeRequests$.length - 1)).subscribe(() => { // Wait for all request to complete
-        console.log(new Date().toISOString(), 'All opfab translation loaded for locales:', config.i18n.supported.locales.toString());
-        this.translateService.addLangs(config.i18n.supported.locales);
+      (config.i18n.supported.locales as string[]).forEach(locale => localeRequests$.push(this.i18nService.loadLocale(locale)));
+
+      this.waitForAllObservables(localeRequests$).subscribe(() => {
+        this.logger.info('opfab translation loaded for locales: ' + this.translateService.getLangs(), LogOption.LOCAL_AND_REMOTE);
+
         this.loadTranslationForMenu();
         this.launchAuthenticationProcess();
       });
     }
-
   }
+
+  // Returns an observable that provides an array. Each item of the array represents even first value of Observable, or it's error
+  private waitForAllObservables(args: Observable<any>[]): Observable<any[]> {
+    const final = new Subject<any[]>();
+    const flags = new Array(args.length);
+    const result = new Array(args.length);
+    let numberOfWaitedObservables = args.length;
+    for (let i = 0; i < args.length; i++) {
+      flags[i] = false;
+      args[i].subscribe({
+        next: res => {
+          if (flags[i] === false) {
+            flags[i] = true;
+            result[i] = res;
+            numberOfWaitedObservables--;
+            if (numberOfWaitedObservables < 1)
+              final.next(result);
+          }
+        },
+        error: error => {
+          if (flags[i] === false) {
+            flags[i] = true;
+            result[i] = error;
+            numberOfWaitedObservables--;
+            if (numberOfWaitedObservables < 1)
+              final.next(result);
+          }
+        }
+      });
+    }
+    return final.asObservable();
+  }
+
 
   private launchAuthenticationProcess() {
     console.log(new Date().toISOString(), `Launch authentication process`);
     this.authenticationService.initializeAuthentication();
     this.useCodeOrImplicitFlow = this.authenticationService.isAuthModeCodeOrImplicitFlow();
+  }
+
+  login(): void {
+    this.modalRef.close();
+    this.modalForSessionAlreadyInUseIsActive = false;
+    this.store
+        .select(selectIdentifier)
+        .subscribe(identifier => {
+          if (identifier) {
+            this.proceedLogin(identifier); 
+          }
+        });
   }
 
   private initApplicationWhenUserAuthenticated() {
@@ -191,30 +238,47 @@ export class AppComponent implements OnInit {
           if (identifier) {
             console.log(new Date().toISOString(), `User ${identifier} logged`);
             this.isAuthenticated = true;
-            this.cardService.initCardSubscription();
-            merge(
-                this.configService.loadCoreMenuConfigurations(),
-                this.userService.loadUserWithPerimetersData(),
-                this.entitiesService.loadAllEntitiesData(),
-                this.groupsService.loadAllGroupsData(),
-                this.processesService.loadAllProcesses(),
-                this.processesService.loadProcessGroups(),
-                this.processesService.loadMonitoringConfig(),
-                this.cardService.initSubscription)
-                .pipe(skip(7)) // Need to wait for all initialization to complete before loading main components of the application
-                .subscribe({
-                  next: () => {
-                  this.loaded = true;
-                  this.reminderService.startService(identifier);
-                  this.activateSoundIfNotActivated();
-                  this.subscribeToSessionEnd();
-                },
-                  error: catchError((err, caught) => {
-                    console.error('Error in application initialization', err);
-                    return caught; })
-                 });
+
+            this.userService.willNewSubscriptionDisconnectAnExistingSubscription().subscribe(isUserAlreadyConnected => {
+
+              if (isUserAlreadyConnected) {
+                this.modalRef = this.modalService.open(this.sessionAlreadyInUsePopupRef, {centered: true, backdrop: 'static'});
+                this.modalForSessionAlreadyInUseIsActive = true;
+              } else {
+                this.proceedLogin(identifier);
+              }
+            });
+            
+
           }
         });
+  }
+
+  private proceedLogin(identifier) {
+    this.cardService.initCardSubscription();
+    merge(
+      this.configService.loadCoreMenuConfigurations(),
+      this.userService.loadUserWithPerimetersData(),
+      this.entitiesService.loadAllEntitiesData(),
+      this.groupsService.loadAllGroupsData(),
+      this.processesService.loadAllProcesses(),
+      this.processesService.loadProcessGroups(),
+      this.processesService.loadMonitoringConfig(),
+      this.cardService.initSubscription)
+    .pipe(skip(7)) // Need to wait for all initialization to complete before loading main components of the application
+    .subscribe({
+      next: () => {
+        this.loaded = true;
+        this.reminderService.startService(identifier);
+        this.activateSoundIfNotActivated();
+        this.subscribeToSessionEnd();
+        this.subscribeToSessionClosedByNewUser();
+      },
+      error: catchError((err, caught) => {
+        console.error('Error in application initialization', err);
+        return caught; 
+      })
+    });
   }
 
   private detectConnectionLost() {
@@ -242,7 +306,7 @@ export class AppComponent implements OnInit {
         const context = new AudioContext();
         if (context.state !== 'running') {
           context.resume();
-          this.logger.info('Sound not activated',LogOption.REMOTE);
+          this.logger.info('Sound not activated', LogOption.REMOTE);
           this.modalRef = this.modalService.open(this.noSoundPopupRef, {centered: true, backdrop: 'static'});
         }
       }
@@ -255,7 +319,7 @@ export class AppComponent implements OnInit {
   }
 
   public closeModal() {
-    this.logger.info('Sound activated',LogOption.REMOTE);
+    this.logger.info('Sound activated', LogOption.REMOTE);
     this.modalRef.close();
   }
 
@@ -275,6 +339,11 @@ export class AppComponent implements OnInit {
         }
       );
   }
+
+  private subscribeToSessionClosedByNewUser() {
+    this.cardService.getReceivedDisconnectUser().subscribe(isDisconnected => this.isDisconnectedByNewUser = isDisconnected);
+  }
+
 
   public logout() {
     this.logger.info('Logout ', LogOption.REMOTE);

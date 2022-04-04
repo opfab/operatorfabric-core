@@ -99,6 +99,7 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |settings.infos.hide.description|false|no|Control if we want to hide(true) or display(false or not specified) the user description in the settings page
 |settings.infos.hide.language|false|no|Control if we want to hide(true) or display(false or not specified) the language in the settings page
 |settings.infos.hide.sounds|false|no|Control if we want to hide(true) or display(false or not specified) the checkboxes for sound notifications in the settings page
+|settings.infos.hide.remoteLoggingEnabled|false|no|Control if we want to hide(true) or display(false or not specified) the checkbox to activate remote logging 
 |settings.playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
 |settings.playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
 |settings.playSoundForCompliant|false|no|If set to true, a sound is played when Compliant cards are added or updated in the feed
@@ -106,6 +107,7 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |settings.playSoundOnExternalDevice|false|no|If set to true (and `externalDevicesEnabled` is set to true as well) and the user has an external device configured, sounds will be played on this device rather than in the browser
 |settings.replayEnabled|false|no|If set to true, sounds are replayed every `settings.replayInterval` seconds until the user interacts with the application
 |settings.replayInterval|5|no|Interval between sound replays (see `settings.replayEnabled`)
+|settings.remoteLoggingEnabled|false|no| If set to true, some logs form the UI are send to the back and write in the log file of the cards-consultation service
 
 |settings.about
 a|none
@@ -125,14 +127,12 @@ It should look like:
 }
 ----
 |logo.base64|medium OperatorFabric icon|no|The encoding result of converting the svg logo to Base64, use this link:https://base64.guru/converter/encode/image/svg[online tool] to encode your svg. If it is not set, a medium (32px) OperatorFabric icon is displayed.
-|logo.height|32|no|The height of the logo (in px) (only taken into account if logo.base64 is set).
-|logo.width|150|no|The width of the logo (in px) (only taken into account if logo.base64 is set).
-|logo.limitSize|true|no|If it is true, the height limit is 32(px) and the width limit is 200(px), it means that if the height is over than 32, it will be set to 32, if the width is over than 200, it is set to 200. If it is false, no limit restriction for the height and the width. 
+|logo.height|40|no|The height of the logo (in px) (only taken into account if logo.base64 is set). The value cannot be more than 48px (if it is set to more than 48px, it will be ignore and set to 48px).
+|logo.width|40|no|The width of the logo (in px) (only taken into account if logo.base64 is set). 
 |title|OperatorFabric|no|Title of the application, displayed on the browser
 |environmentName||no| Name of the environment to display in the top-right corner (examples: PROD , TEST .. ), if the value not set the environment name is not shown .
 |environmentColor|blue|no| Color of the background of the environment name. The format of color is css, for example : `red` , `#4052FF`
 |showUserEntitiesOnTopRightOfTheScreen|false|no| if set to true the users entities will be displayed under the login on top right of the screen
-|checkPerimeterForResponseCard|true|no|If false, OperatorFabric will not check that a user has write rights on a process/state to respond to a card.
 |usercard.useDescriptionFieldForEntityList|false|no|If true, show entity `description` field instead of `name` in user card page
 |externalDevicesEnabled|false|no|If true, users have the opportunity to play sounds on external devices rather than in the browser. See `settings.playSoundOnExternalDevice`
 |secondsToCloseSession|60|no|Number of seconds between logout and token expiration

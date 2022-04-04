@@ -15,4 +15,6 @@
     </rabbit:fanout-exchange>
     <rabbit:fanout-exchange id="userExchange" name="USER_EXCHANGE" auto-delete="false" durable="true">
     </rabbit:fanout-exchange>
+    <rabbit:fanout-exchange id="ackExchange" name="ACK_EXCHANGE" auto-delete="false" durable="true">
+    </rabbit:fanout-exchange>
 </beans>

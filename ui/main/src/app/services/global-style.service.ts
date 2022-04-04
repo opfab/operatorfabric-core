@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,9 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {GlobalStyleUpdate} from '@ofActions/global-style.actions';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class GlobalStyleService {
 
     private static style: string;
@@ -77,6 +79,8 @@ export class GlobalStyleService {
                                         --opfab-scrollbar-bar-border-color: #979797;
                                         --opfab-scrollbar-bgcolor-firefox: #dddddd;
                                         --opfab-scrollbar-bar-bgcolor-firefox: #bbbbbb;
+                                        --opfab-pagination-active-page-background: #909090;
+                                        --opfab-pagination-disabled-link: #808080;
                                         }`;
 
     private static NIGHT_STYLE = `:root {
@@ -137,6 +141,8 @@ export class GlobalStyleService {
                                         --opfab-scrollbar-bar-border-color: #979797;
                                         --opfab-scrollbar-bgcolor-firefox: #131D2B;
                                         --opfab-scrollbar-bar-bgcolor-firefox: #333D4B;
+                                        --opfab-pagination-active-page-background: #bababa;
+                                        --opfab-pagination-disabled-link: #606060
                                     }`;
 
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -63,7 +63,7 @@ describe('Authentication Reducer', () => {
     describe('InitAuthStatus Action', () => {
 
         it('should return a new state with information corresponding to used payload on an Initial State', () => {
-            const myPayload = produceMockPayLoadForSucessfulAuthintication();
+            produceMockPayLoadForSucessfulAuthintication();
             const initAction = new InitAuthStatus({code:'123'});
             const result = reducer(authInitialState, initAction);
             expect(result).not.toBe(authInitialState);

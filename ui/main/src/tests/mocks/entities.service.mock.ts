@@ -17,7 +17,7 @@ import {Injectable} from '@angular/core';
 @Injectable()
 export class EntitiesServiceMock extends EntitiesService {
 
-    public getAllEntities(): Observable<Entity[]> {
+    public queryAllEntities(): Observable<Entity[]> {
 
         let entityAllControlRooms: Entity, entity1: Entity, entity2: Entity;
 

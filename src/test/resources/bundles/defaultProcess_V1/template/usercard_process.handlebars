@@ -40,7 +40,7 @@
     selectedProcessStatus = "{{card.data.status}}";
     if (selectedProcessStatus.length >0) document.getElementById('status').value = selectedProcessStatus;
 
-    templateGateway.getSpecificCardInformation = function () {
+    usercardTemplateGateway.getSpecificCardInformation = function () {
         const state = document.getElementById('state').value;
         const status = document.getElementById('status').value;
         const card = {

@@ -22,7 +22,9 @@ import {ExternalDevicesService} from '@ofServices/external-devices.service';
 import {ConfigService} from '@ofServices/config.service';
 
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class SoundNotificationService implements OnDestroy {
 
     private static RECENT_THRESHOLD = 4000; // in milliseconds

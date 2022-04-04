@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -90,12 +90,6 @@ describe('Ngb Datetime modal', () => {
   it('should test toInteger function - case whre the argument is not a number', () => {
     const date = isNumber('A');
     expect(date).toBeFalsy();
-  });
-  // {hour: 3, minute: 3, second: 0}
-  it('should format time function', () => {
-    const time = {hour: 3, minute: 3, second: 0};
-    const customDateFormatter = new DateTimeNgb(null, time);
-    expect(customDateFormatter.formatTime()).toEqual('03:03');
   });
   it('should format date and time', () => {
     const time = {hour: 3, minute: 3, second: 0};

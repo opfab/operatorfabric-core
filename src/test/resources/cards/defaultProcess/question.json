@@ -5,6 +5,7 @@
 		"processInstanceId" : "process4",
 		"state": "questionState",
 		"userRecipients": ["operator1_fr", "operator2_fr","operator3_fr","itsupervisor1"],
+	 	"entityRecipients": ["ENTITY4_FR"],
 		"entitiesAllowedToRespond": ["ENTITY1_FR","ENTITY2_FR","ENTITY3_FR"],
 		"entitiesRequiredToRespond": ["ENTITY1_FR","ENTITY2_FR"],
 		"severity" : "ACTION",

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,16 +8,11 @@
  */
 
 
-
 package org.opfab.generators;
 
 import io.swagger.codegen.CodegenOperation;
 import io.swagger.codegen.languages.SpringCodegen;
 import io.swagger.models.Operation;
-import io.swagger.models.properties.ArrayProperty;
-import io.swagger.models.properties.MapProperty;
-import io.swagger.models.properties.Property;
-import io.swagger.models.properties.RefProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,8 +49,8 @@ public class OpfabSpringGenerator extends SpringCodegen {
                 if(subPath!=null && !"".equals(subPath))
                     co.vendorExtensions.put("x-operatorfabric-spring-subPath",subPath);
             }
-        }catch (Throwable t){
-            log.error("Unexpected Error arose", t);
+        }catch (Exception exc){
+            log.error("Unexpected Error arose", exc);
         }
     } 
     @Override

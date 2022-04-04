@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -85,7 +85,7 @@ public class ArchivedCardConsultationData implements Card {
     private List<String> entitiesAllowedToRespond;
     @Singular("entityRequiredToRespond")
     private List<String> entitiesRequiredToRespond;
-    @Singular("entitiesAllowedToEdit")
+    @Singular("entityAllowedToEdit")
     private List<String> entitiesAllowedToEdit;
     @Singular
     private List<String> externalRecipients;
@@ -106,4 +106,18 @@ public class ArchivedCardConsultationData implements Card {
     private String processStateKey;
 
     private Boolean toNotify;
+
+    @Indexed
+    private Instant deletionDate;
+
+    public Instant getDeletionDate() {
+        return this.deletionDate;
+    }
+
+    public void setDeletionDate(Instant deletionDate) {
+        this.deletionDate = deletionDate;
+    }
+
+    @JsonIgnore
+    private List<String> entitiesAcks;
 }

@@ -42,6 +42,8 @@ NOTE: User login must be lowercase. Otherwise, it will be converted to lowercase
 
 WARNING: Resource identifiers such as login, group id, entity id and perimeter id must only contain the following characters: letters, _, - or digits.
 
+NOTE: By default, a user cannot have several sessions at the same time. If you want to enable it, set checkIfUserIsAlreadyConnected to false in the configuration file of the card consultation service ( cards-consultation-XXX.yml ). However, this is not recommended as it may cause synchronization problems between the sessions using the same login
+
 
 ==== Automated user creation
 

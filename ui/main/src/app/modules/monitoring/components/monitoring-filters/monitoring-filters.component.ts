@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,7 +23,7 @@ import {TimelineButtonsComponent} from '../../../share/timeline-buttons/timeline
 import {LightCard} from '@ofModel/light-card.model';
 import {Filter} from '@ofModel/feed-filter.model';
 import {FilterService} from '@ofServices/lightcards/filter.service';
-import {ProcessStatesDropdownListService} from "@ofServices/process-states-dropdown-list.service";
+import {ProcessStatesDropdownListService} from '@ofServices/process-states-dropdown-list.service';
 
 @Component({
     selector: 'of-monitoring-filters',
@@ -164,7 +164,7 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
                         this.addProcessesDropdownList(this.processesDropdownListPerProcessGroups.get(processGroup.id));
                 });
             } else
-                this.processDropdownListWhenSelectedProcessGroup = [];
+                this.processDropdownListWhenSelectedProcessGroup = this.processDropdownList;
         });
     }
 
@@ -247,8 +247,7 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
         if (!!control) {
             const isNotPristine = !control.pristine;
             const valueIsNotDefault = control.value !== '';
-            const result = isNotPristine && valueIsNotDefault;
-            return result;
+            return isNotPristine && valueIsNotDefault;
         }
         return false;
     }

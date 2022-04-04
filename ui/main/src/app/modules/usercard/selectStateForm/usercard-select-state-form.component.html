@@ -9,24 +9,24 @@
 <form [formGroup]="selectStateForm" class="opfab-form-lighter">
     <div class="row">
 
-        <div class="col" *ngIf="displayProcessGroupFilter()">
+        <div style="position:relative" class="col" *ngIf="displayProcessGroupFilter()">
             <of-single-filter id="of-usercard-service-selector" i18nRootLabelKey="shared.filters."
                 [parentForm]="selectStateForm" filterPath="processGroup" [values]="processGroupOptions">
             </of-single-filter>
         </div>
 
-        <div class="col" *ngIf="! displayProcessGroupFilter() && !! processOptions && processOptions.length > 1">
+        <div style="position:relative" class="col" *ngIf="! displayProcessGroupFilter() && !! processOptions && processOptions.length > 0">
             <of-single-filter i18nRootLabelKey="shared.filters." [parentForm]="selectStateForm" filterPath="process"
                 [values]="processOptions"></of-single-filter>
         </div>
-        <div class="col"
-            *ngIf="displayProcessGroupFilter() && !! processOptionsWhenSelectedProcessGroup && processOptionsWhenSelectedProcessGroup.length > 1">
+        <div style="position:relative" class="col"
+            *ngIf="displayProcessGroupFilter() && !! processOptionsWhenSelectedProcessGroup && processOptionsWhenSelectedProcessGroup.length > 0">
             <of-single-filter id="of-usercard-process-filter" i18nRootLabelKey="shared.filters."
                 [parentForm]="selectStateForm" filterPath="process" [values]="processOptionsWhenSelectedProcessGroup">
             </of-single-filter>
         </div>
 
-        <div class="col" [hidden]="!stateOptions || (stateOptions.length < 2)">
+        <div style="position:relative" class="col" [hidden]="!stateOptions || (stateOptions.length < 2)">
             <of-single-filter id="opfab-state-filter" i18nRootLabelKey="shared.filters." [parentForm]="selectStateForm"
                 filterPath="state" [values]="stateOptions" [sortValues]="true" [defaultValueSelected]=!cardIdToEdit>
             </of-single-filter>

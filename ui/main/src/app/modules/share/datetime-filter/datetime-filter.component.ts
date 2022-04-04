@@ -111,14 +111,14 @@ export class DatetimeFilterComponent implements ControlValueAccessor,OnInit, OnD
 
     // Method call when archive-filter.component.ts set value to null
     writeValue(val: any): void {
- 
         this.disabled = true;
-
-        if (!!val) {
+        if (!val) {
+            this.resetDateAndTime();
+        }
+        else if (!!val.date) {
             this.disabled = false;
             this.datetimeForm.setValue(val, {emitEvent: false});
         }
-        else this.resetDateAndTime();
     }
 
     registerOnChange(fn: any): void {

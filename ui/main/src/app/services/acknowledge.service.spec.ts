@@ -45,7 +45,7 @@ describe('AcknowledgeService testing ', () => {
         acknowledgeService = TestBed.inject(AcknowledgeService);
         entitiesService = TestBed.inject(EntitiesService);
 
-        entitiesService.loadAllEntitiesData().subscribe(); // TODO Unsubscribe in aftereach ?
+        entitiesService.loadAllEntitiesData().subscribe(); 
 
         card = getOneRandomCard({process: 'testProcess', processVersion: '1', state: 'testState', entitiesAllowedToRespond: ['ENTITY1']});
         cardForEntityParent = getOneRandomCard({process: 'testProcess', processVersion: '1', state: 'testState', entitiesAllowedToRespond: ['ENTITY_FR']});
@@ -99,18 +99,6 @@ describe('AcknowledgeService testing ', () => {
     it('acknowledgmentAllowed of the state is Always, isAcknowledgmentAllowed() must return true', () => {
 
         statesList['testState'] = new State(null, null, null, AcknowledgmentAllowedEnum.ALWAYS);
-        const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
-        const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1,
-            [{process: 'testProcess', state: 'testState', rights: RightsEnum.Receive}]);
-
-        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
-        expect(res).toBeTrue();
-    });
-
-
-    it('acknowledgmentAllowed of the state is not defined , isAcknowledgmentAllowed() must return true', () => {
-
-        statesList['testState'] = new State(null, null, null, null);
         const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1,
             [{process: 'testProcess', state: 'testState', rights: RightsEnum.Receive}]);

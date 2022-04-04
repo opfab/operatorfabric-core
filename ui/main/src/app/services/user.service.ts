@@ -26,6 +26,7 @@ import {RightsEnum} from '@ofModel/perimeter.model';
 export class UserService extends CrudService {
   readonly userUrl: string;
   readonly connectionsUrl: string;
+  readonly willNewSubscriptionDisconnectAnExistingSubscriptionUrl: string;
   private _userWithPerimeters: UserWithPerimeters;
   private ngUnsubscribe = new Subject<void>();
   private _userRightsPerProcessAndState: Map<string, RightsEnum>;
@@ -39,6 +40,7 @@ export class UserService extends CrudService {
     super();
     this.userUrl = `${environment.urls.users}`;
     this.connectionsUrl = `${environment.urls.cards}/connections`;
+    this.willNewSubscriptionDisconnectAnExistingSubscriptionUrl = `${environment.urls.cards}/willNewSubscriptionDisconnectAnExistingSubscription`;
     this._userRightsPerProcessAndState = new Map();
     this._receiveRightPerProcess = new Map();
   }
@@ -64,14 +66,14 @@ export class UserService extends CrudService {
     );
   }
 
-  getAllUsers(): Observable<User[]> {
+  queryAllUsers(): Observable<User[]> {
     return this.httpClient.get<User[]>(`${this.userUrl}`).pipe(
       catchError((error: Response) => this.handleError(error))
     );
   }
 
   getAll(): Observable<User[]> {
-    return this.getAllUsers();
+    return this.queryAllUsers();
   }
 
   updateUser(userData: User): Observable<User> {
@@ -142,5 +144,9 @@ export class UserService extends CrudService {
 
   loadConnectedUsers(): Observable<any[]> {
     return this.httpClient.get<any[]>(`${this.connectionsUrl}`);
+  }
+
+  willNewSubscriptionDisconnectAnExistingSubscription(): Observable<boolean> {
+    return this.httpClient.get<boolean>(`${this.willNewSubscriptionDisconnectAnExistingSubscriptionUrl}`);
   }
 }

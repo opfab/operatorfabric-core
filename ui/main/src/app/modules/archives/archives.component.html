@@ -27,10 +27,10 @@
 
 
 <div style="height:2%"> </div>
-<div *ngIf="!loadingIsTakingMoreThanOneSecond && hasResult" style="margin-left:5%; margin-right:5%">
+<div *ngIf="!loadingIsTakingMoreThanOneSecond && hasResult && !technicalError" style="margin-left:5%; margin-right:5%">
   <div style="display:flex; justify-content:flex-start;">
-    <label style="font-weight:bold; margin-left:5px" class="opfab-checkbox" translate>archive.collapsibleUpdates
-      <input type="checkbox" (click)="toggleCollapsibleUpdates()" [checked]="isCollapsibleUpdatesActivated" id="opfab-archives-collapsible-updates">
+    <label id="opfab-archives-collapsible-updates" style="font-weight:bold; margin-left:5px" class="opfab-checkbox" translate>archive.collapsibleUpdates
+      <input type="checkbox" (click)="toggleCollapsibleUpdates()" [checked]="isCollapsibleUpdatesActivated" >
       <span class="opfab-checkbox-checkmark"></span>
     </label>
   </div>
@@ -105,7 +105,11 @@
   </div>
 </div>
 
-<div *ngIf="firstQueryHasBeenDone&&!hasResult" style="text-align: center;font-size: 20px;" translate>shared.noResult
+<div *ngIf="firstQueryHasBeenDone&&!hasResult&&!loadingInProgress" style="text-align: center;font-size: 20px;" translate>shared.noResult
+</div>
+
+
+<div *ngIf="technicalError" style="text-align: center;font-size: 20px;" translate> shared.error.technicalError
 </div>
 
 <div *ngIf="loadingIsTakingMoreThanOneSecond">
@@ -128,9 +132,9 @@
         <span aria-hidden="true" >&times;</span>
     </div>
   </div>
-  <div class="modal-body">
-      <div>
-          <of-card-detail [card]="selectedCard" [screenSize]="'lg'" [displayContext]="displayContext"> </of-card-detail>
+  <div class="modal-body" >
+      <div style="height: calc(100% - 50px);">
+          <of-card-detail [card]="selectedCard" [childCards]="selectedChildCards" [screenSize]="'lg'" [displayContext]="displayContext"> </of-card-detail>
       </div>
       <div>
       <span class="opfab-card-received-footer">

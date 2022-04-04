@@ -48,9 +48,9 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
       this.userdeviceForm.patchValue(this.row, { onlySelf: true });
     }
 
-    this.userService.getAllUsers().subscribe(allUsers => this.setUsersList(allUsers));
+    this.userService.queryAllUsers().subscribe(allUsers => this.setUsersList(allUsers));
 
-    this.externalDevicesService.getAllDevices().subscribe(allDevices => this.setDevicesList(allDevices));
+    this.externalDevicesService.queryAllDevices().subscribe(allDevices => this.setDevicesList(allDevices));
   }
 
   setUsersList(allUsers: User[]) {

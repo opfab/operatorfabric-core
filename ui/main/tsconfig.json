@@ -4,6 +4,7 @@
     "baseUrl": "./src",
     "importHelpers": true,
     "module": "es2020",
+    "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
       "@env/*": ["environments/*"],

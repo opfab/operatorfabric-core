@@ -53,6 +53,19 @@
   color: #aaaaaa;
 }
 
+.opfab-disconnectedDueToNewUser {
+  position: fixed; 
+  z-index: 5000; /* Sit on top */
+  left: 0;
+  top: 0; 
+  padding-top: 20%;
+  width: 100%; 
+  height: 100%;
+  background-color: rgba(0,0,0,0.6); 
+  color: white;
+  font-size: 1.5em;
+}
+
 .opfab-info-message {
   text-align: center;
   width:100% ;

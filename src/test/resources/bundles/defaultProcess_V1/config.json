@@ -23,9 +23,9 @@
       "acknowledgmentAllowed": "Always",
       "type" : "FINISHED"
     },
-    "chartState": {
-      "name": "A Chart",
-      "description": "Chart state",
+    "dataQualityState": {
+      "name": "Data quality",
+      "description": "Data quality state",
       "color": "#DA00DA",
       "templateName": "chart",
       "styles": [
@@ -68,7 +68,8 @@
         "contingencies"
       ],
       "acknowledgmentAllowed": "Always",
-      "type" : "INPROGRESS"
+      "type" : "INPROGRESS",
+      "automaticPinWhenAcknowledged" : true
     },
     "questionState": {
       "name": "Action required",

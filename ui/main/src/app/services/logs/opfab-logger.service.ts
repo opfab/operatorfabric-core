@@ -19,8 +19,8 @@ export class OpfabLoggerService {
   constructor(private remoteLogger: RemoteLoggerService) {
   }
 
-  private log(log: string, logOption: LogOption) {
-    const logLine = new Date().toISOString() + ' ' + log;
+  private log(log: string, logLevel: string, logOption: LogOption) {
+    const logLine = new Date().toISOString() + ' ' + logLevel + ' ' + log;
     switch (logOption) {
       case LogOption.LOCAL:
         console.log(logLine);
@@ -36,15 +36,20 @@ export class OpfabLoggerService {
   }
 
   debug(log: string, logOption: LogOption = LogOption.LOCAL) {
-    this.log(log, logOption);
+    this.log(log, 'DEBUG', logOption);
   }
 
   info(log: string, logOption: LogOption = LogOption.LOCAL) {
-    this.log(log, logOption);
+    this.log(log, 'INFO', logOption);
   }
 
+  warn(log: string, logOption: LogOption = LogOption.LOCAL) {
+    this.log(log, 'WARNING', logOption);
+  }
+
+
   error(log: string, logOption: LogOption = LogOption.LOCAL) {
-    this.log(log, logOption);
+    this.log(log, 'ERROR', logOption);
   }
 
 
@@ -53,3 +58,4 @@ export class OpfabLoggerService {
 export enum LogOption {
   LOCAL, REMOTE, LOCAL_AND_REMOTE
 }
+

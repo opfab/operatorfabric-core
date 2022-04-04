@@ -28,7 +28,7 @@ Cypress.Commands.add('loginOpFab',(username, password)=>
     cy.get('#opfab-login-btn-submit').should('be.visible')
 
     //Wait for the app to finish initializing
-    cy.get('#opfab-cypress-loaded-check', {timeout: 15000}).should('have.text', 'true');
+    cy.get('#opfab-cypress-loaded-check', {timeout: 20000}).should('have.text', 'true');
 })
 
 Cypress.Commands.add('loginWithClock', (dateToUse = new Date()) =>{
@@ -58,7 +58,7 @@ Cypress.Commands.overwrite('reload',()=>
 Cypress.Commands.add('logoutOpFab',()=>
 {
     cy.get('#opfab-navbar-drop_user_menu').click(); // Click top right dropdown menu
-    cy.get('#opfab-navbar-right-menu-logout').click({force: true}); // Click logout button
+    cy.get('#opfab-navbar-right-menu-logout').click(); // Click logout button
 
 })
 
@@ -91,6 +91,10 @@ Cypress.Commands.add('delete6TestCards', () => {
 
 Cypress.Commands.add('deleteCard', (cardId) => {
     cy.exec('cd ../resources/cards/ && ./deleteCard.sh '+ cardId + ' ' + Cypress.env('host'));
+})
+
+Cypress.Commands.add('sendAckForCard', (user, cardUid, entitiesAcks) => {
+    cy.exec('cd ../resources/cards/ && ./sendAckForCard.sh '+ user + ' ' + cardUid + ' ' + entitiesAcks);
 })
 
 Cypress.Commands.add('resetUIConfigurationFiles', () => {
@@ -152,7 +156,7 @@ Cypress.Commands.add('waitForOpfabToStart', () => {
 
 Cypress.Commands.add('openOpfabSettings', () => {
     cy.get('#opfab-navbar-drop_user_menu').click();
-    cy.get("#opfab-navbar-right-menu-settings").click({force: true});
+    cy.get("#opfab-navbar-right-menu-settings").click();
 })
 
   // Stub playSound method to catch when opfab send a sound 
@@ -181,8 +185,13 @@ Cypress.Commands.add('countAgGridTableRows', (table, rowsNum) => {
 })
 
 // Check ag-grid cell value
-Cypress.Commands.add('checkAgGridCellValue', (table, row, col, value) => {
-    cy.get(table).find('.ag-center-cols-container').find('.ag-row').eq(row).find('.ag-cell-value').eq(col).contains(value);
+Cypress.Commands.add('agGridCellShould', (table, row, col, operator, value) => {
+    cy.get(table).find('.ag-center-cols-container').find('.ag-row').eq(row).find('.ag-cell-value').eq(col).should(operator, value);
+})
+
+// Check ag-grid cell value
+Cypress.Commands.add('agGridCellElementShould', (table, row, col, element, operator, value) => {
+    cy.get(table).find('.ag-center-cols-container').find('.ag-row').eq(row).find('.ag-cell-value').eq(col).get(element).should(operator, value);
 })
 
 // Click on ag-grid cell
@@ -195,4 +204,25 @@ Cypress.Commands.add('clickAgGridCell', (table, row, col, tag) => {
 
     }
 
+})
+
+Cypress.Commands.add('usercardSelectService', (serviceName) => {
+    cy.get("of-usercard").should('exist');
+    cy.get("#of-usercard-service-selector").find('select').select(serviceName);
+    cy.get("#of-usercard-service-selector").find("option:selected").should("have.text", serviceName);
+})
+
+Cypress.Commands.add('usercardSelectProcess', (processName) => {
+    cy.get("#of-usercard-process-filter").find('select').select(processName);
+})
+
+Cypress.Commands.add('usercardSelectState', (stateName) => {
+    cy.get("#opfab-state-filter").find('select').select(stateName);
+})
+
+Cypress.Commands.add('usercardPrepareAndSendCard', () => {
+    cy.get('#opfab-usercard-btn-prepareCard').click();
+    cy.get("of-card-detail").should('exist');
+
+    cy.get('#opfab-usercard-btn-accept').click();
 })

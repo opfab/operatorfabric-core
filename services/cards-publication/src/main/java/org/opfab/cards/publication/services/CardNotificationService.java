@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -51,7 +51,7 @@ public class CardNotificationService {
 
     public void notifyOneCard(CardPublicationData card, CardOperationTypeEnum type) {
         CardOperationData.BuilderEncapsulator builderEncapsulator = CardOperationData.encapsulatedBuilder();
-        builderEncapsulator.builder().type(type).publishDate(card.getPublishDate());
+        builderEncapsulator.builder().type(type);
         switch (type) {
             case ADD:
             case UPDATE:
@@ -95,4 +95,18 @@ public class CardNotificationService {
         }
     }
 
+    public void pushAckOfCardInRabbit(String cardUid, List<String> entitiesAcks) {
+        CardOperationData.BuilderEncapsulator builderEncapsulator = CardOperationData.encapsulatedBuilder();
+        builderEncapsulator.builder().type(CardOperationTypeEnum.ACK);
+        builderEncapsulator.builder().cardUid(cardUid);
+        builderEncapsulator.builder().entitiesAcks(entitiesAcks);
+        CardOperationData cardOperation = builderEncapsulator.builder().build();
+
+        try {
+            rabbitTemplate.convertAndSend("ACK_EXCHANGE", "", mapper.writeValueAsString(cardOperation));
+            log.debug("Acknowledgement for cardUid={} with entitiesAcks={} sent to ACK_EXCHANGE", cardUid, entitiesAcks);
+        } catch (JsonProcessingException e) {
+            log.error("Unable to linearize card operation for acknowledgement to json on amqp notification");
+        }
+    }
 }

@@ -48,7 +48,7 @@ describe ('ActivityAreaPage',()=>{
 
         // We disconnect from ENTITY1_FR
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
-        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); //click confirm settings
+        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
         cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
 
         // We navigate to another page (archives for example)
@@ -64,49 +64,59 @@ describe ('ActivityAreaPage',()=>{
 
         // We reconnect to ENTITY1_FR
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
-        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); //click confirm settings
+        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
         cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
     })
 
     it('Connection of operator4_fr, disconnection from ENTITY1_FR, ENTITY2_FR and ENTITY3_FR and check of feed and archives pages', ()=> {
         cy.loginOpFab('operator4_fr', 'test');
 
-        // operator4_fr is connected to all his entities, he should receive 4 cards in the feed
-        cy.get('of-light-card').should('have.length', 4);
+        // operator4_fr is connected to all his entities, he should receive 5 cards in the feed
+        cy.get('of-light-card').should('have.length', 5);
         cy.get('of-light-card').eq(0).find('.card-title').should('have.text', "Electricity consumption forecast ");
-        cy.get('of-light-card').eq(1).find('.card-title').should('have.text', "Process state (calcul) ");
-        cy.get('of-light-card').eq(2).find('.card-title').should('have.text', "A Chart ");
-        cy.get('of-light-card').eq(3).find('.card-title').should('have.text', "Message ");
+        cy.get('of-light-card').eq(1).find('.card-title').should('have.text', "⚡ Planned Outage ");
+        cy.get('of-light-card').eq(2).find('.card-title').should('have.text', "Process state (calcul) ");
+        cy.get('of-light-card').eq(3).find('.card-title').should('have.text', "Data quality ");
+        cy.get('of-light-card').eq(4).find('.card-title').should('have.text', "Message ");
 
-        // operator4_fr should see 4 cards in archives page
+        // operator4_fr should see 5 cards in archives page
         cy.get('#opfab-navbar-menu-archives').click();
         cy.get('#opfab-archives-logging-btn-search').click();
-        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length',4);
+        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length', 5);
 
         // operator4_fr disconnect from ENTITY1_FR, ENTITY2_FR and ENTITY3_FR
         cy.get('#opfab-navbar-drop_user_menu').click();
         cy.get('#opfab-navbar-right-menu-activityarea').click();
+
+        // check every checkbox to let the time for the ui to set to true before we click 
+        cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
+        cy.get('.opfab-checkbox').eq(1).find('input').should('be.checked');
+        cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
+        cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
         cy.get('.opfab-checkbox').contains('Control Center FR East').click();
         cy.get('.opfab-checkbox').contains('Control Center FR South').click();
-        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); //click confirm settings
+        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
         cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
 
-        // now, operator4_fr should see only 3 cards in the feed
-        cy.get('#opfab-navbar-menu-feed').click({force: true});
-        cy.get('of-light-card').should('have.length', 3);
-        cy.get('of-light-card').eq(0).find('.card-title').should('have.text', "Process state (calcul) ");
-        cy.get('of-light-card').eq(1).find('.card-title').should('have.text', "A Chart ");
-        cy.get('of-light-card').eq(2).find('.card-title').should('have.text', "Message ");
+        // now, operator4_fr should see only 4 cards in the feed
+        cy.get('#opfab-navbar-menu-feed').click();
+        cy.waitDefaultTime();
+        cy.get('of-light-card').should('have.length', 4);
+        cy.get('of-light-card').eq(0).find('.card-title').should('have.text', "⚡ Planned Outage ");
+        cy.get('of-light-card').eq(1).find('.card-title').should('have.text', "Process state (calcul) ");
+        cy.get('of-light-card').eq(2).find('.card-title').should('have.text', "Data quality ");
+        cy.get('of-light-card').eq(3).find('.card-title').should('have.text', "Message ");
 
-        // and now operator4_fr should see only 3 cards in archives page
-        cy.get('#opfab-navbar-menu-archives').click();
+        // and now operator4_fr should see only 4 cards in archives page
+        cy.get('#opfab-navbar-menu-archives').click();// click confirm settings
         cy.get('#opfab-archives-logging-btn-search').click();
-        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length',3);
+        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length',4);
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').as('archives-table');
-        cy.get('@archives-table').eq(0).find('td').eq(4).should('have.text', 'Process state (calcul)');
-        cy.get('@archives-table').eq(1).find('td').eq(4).should('have.text', 'A Chart');
-        cy.get('@archives-table').eq(2).find('td').eq(4).should('have.text', 'Message');
+        cy.get('@archives-table').eq(0).find('td').eq(4).should('have.text', '⚡ Planned Outage');
+        cy.get('@archives-table').eq(1).find('td').eq(4).should('have.text', 'Process state (calcul)');
+        cy.get('@archives-table').eq(2).find('td').eq(4).should('have.text', 'Data quality');
+        cy.get('@archives-table').eq(3).find('td').eq(4).should('have.text', 'Message');
 
         // We reconnect to ENTITY1_FR, ENTITY2_FR and ENTITY3_FR
         cy.get('#opfab-navbar-drop_user_menu').click();
@@ -114,5 +124,7 @@ describe ('ActivityAreaPage',()=>{
         cy.get('.opfab-checkbox').contains('Control Center FR East').click();
         cy.get('.opfab-checkbox').contains('Control Center FR South').click();
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
+        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
+        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
     })
 })

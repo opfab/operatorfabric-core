@@ -1,0 +1,84 @@
+
+<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<div class="opfab-input">
+    <label> QUESTION </label>
+    <input id="question" name="question" style="width:100%" value="{{card.data.question}}">
+</div>
+<br/>
+ <p>YOUR RESPONSE:</p>
+<div style="width:100%;display:flex;flex-wrap:wrap">  
+    <div class="opfab-select" style="flex-basis:0;width:20%;position:relative;flex-grow:1;">
+        <label for="confirm"> CONFIRM </label>
+        <select id="confirm" name="confirm">
+            <option id="yes" value="YES" {{conditionalAttribute (bool card.data.confirm '==' 'YES') 'selected'}}>YES</option>
+            <option id="no" value="NO" {{conditionalAttribute (bool card.data.confirm '==' 'NO') 'selected'}}>NO</option>
+        </select>
+    </div>
+    <div class="opfab-input" style="flex-basis:0;width:100%;position:relative;flex-grow:1;margin-left:20px">
+        <label> COMMENT </label>
+        <input id="message" name="message" style="width:100%" value="{{card.data.message}}">
+    </div>
+</div>
+
+<script>
+
+    if (usercardTemplateGateway.getUserEntityChildCardFromCurrentCard()) {
+        if (usercardTemplateGateway.getUserEntityChildCardFromCurrentCard().data.confirm == 'YES') {
+            document.getElementById('yes').selected=true;
+            document.getElementById('no').selected=false;
+        } else {
+            document.getElementById('yes').selected=false;
+            document.getElementById('no').selected=true;
+        }
+        document.getElementById('message').value=usercardTemplateGateway.getUserEntityChildCardFromCurrentCard().data.message;
+    }
+
+    usercardTemplateGateway.getSpecificCardInformation = function () {
+        const question = document.getElementById('question').value;
+        if (question.length <1) return {
+            valid: false,
+            errorMsg : "You must provide a question"
+        }
+        
+        const confirm = document.getElementById('confirm').value;
+        
+
+        const message = document.getElementById('message').value;
+
+        const card = {
+            summary: { key: "confirmation.summary" },
+            title: { key: "confirmation.title" },
+            severity: "ACTION",
+            data: {
+                question: question,
+                confirm: confirm,
+                message: message
+            }
+        };
+
+        const childCard = {
+            summary: { key: "confirmation.summary" },
+            title: { key: "confirmation.title" },
+            data: {
+                question: question,
+                confirm: confirm,
+                message: message
+            }
+        };
+
+        return {
+            valid: true,
+            card: card,
+            childCard: childCard,
+            viewCardInAgenda: false
+        };
+
+    }
+</script>

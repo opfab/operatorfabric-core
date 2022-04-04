@@ -11,6 +11,11 @@ const usercardTemplateGateway = {
 
     editionMode: null,
     childCard: null,
+    currentState: null,
+    currentProcess: null,
+    startDate: null,
+    endDate: null,
+    lttd: null,
 
     setUserEntityChildCardFromCurrentCard : function(childCard){
         this.childCard = childCard;
@@ -25,9 +30,52 @@ const usercardTemplateGateway = {
         return this.childCard;
     },
 
+    getCurrentState() {
+        return this.currentState;
+    },
+
+    getCurrentProcess() {
+        return this.currentProcess;
+    },
+
+    getStartDate() {
+        return this.startDate;
+    },
+
+    getEndDate() {
+        return this.endDate;
+    },
+
+    getLttd() {
+        return this.lttd;
+    },
+
+    setInitialStartDate: function(start)  {
+        this.startDate = start;
+    },
+
+    setInitialEndDate: function(endDate)  {
+        this.endDate = endDate;
+    },
+
+    setInitialLttd: function(lttd)  {
+        this.lttd = lttd;
+    },
+
     initUsercardTemplateGateway() {
         this.editionMode=  null;
         this.childCard = null;
+        this.currentState = null;
+        this.currentProcess = null;
+        this.startDate = null;
+        this.endDate = null;
+        this.lttd = null;
+
+        // OpFab calls this function to inform the template on sender entity
+        this.setEntityUsedForSendingCard = function (senderEntity) {
+            // This function should be overridden in the template.
+        };
+
     }
 };
 

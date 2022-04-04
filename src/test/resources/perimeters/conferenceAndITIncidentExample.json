@@ -1,0 +1,14 @@
+{
+	"id" : "conferenceAndITIncidentExample",
+	"process" : "conferenceAndITIncidentExample",
+	"stateRights" : [
+	  {
+		"state" : "conferenceState",
+		"right" : "ReceiveAndWrite"
+	  },
+	  {
+		"state" : "incidentInProgressState",
+		"right" : "ReceiveAndWrite"
+	  }
+	]
+  }

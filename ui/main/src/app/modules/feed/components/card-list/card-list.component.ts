@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,6 +23,7 @@ import {AppService} from '@ofServices/app.service';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {UserService} from '@ofServices/user.service';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {EntitiesService} from '@ofServices/entities.service';
 
 
 
@@ -50,7 +51,8 @@ export class CardListComponent implements AfterViewChecked, OnInit {
                 private processesService: ProcessesService,
                 private acknowledgeService: AcknowledgeService,
                 private userService: UserService,
-                private _appService: AppService) {
+                private _appService: AppService,
+                private entitiesService: EntitiesService) {
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
     }
 
@@ -79,7 +81,13 @@ export class CardListComponent implements AfterViewChecked, OnInit {
             if (! lightCard.hasBeenAcknowledged && this.isCardPublishedBeforeAckDemand(lightCard)
                 && this.acknowledgeService.isAcknowledgmentAllowed(this.currentUserWithPerimeters, lightCard, processDefinition)) {
                 try {
-                    this.acknowledgeService.acknowledgeCard(lightCard);
+                    const entitiesAcks = [];
+                    const entities = this.entitiesService.getEntitiesFromIds(this.currentUserWithPerimeters.userData.entities);
+                    entities.forEach(entity => {
+                        if (entity.entityAllowedToSendCard) // this avoids to display entities used only for grouping
+                            entitiesAcks.push(entity.id);
+                    });
+                    this.acknowledgeService.acknowledgeCard(lightCard, entitiesAcks);
                 } catch (err) {
                     console.error(err);
                     this.displayMessage('response.error.ack', null, MessageLevel.ERROR);

@@ -85,7 +85,7 @@ Given url opfabUrl + 'cards/archives/' + cardUid
 And header Authorization = 'Bearer ' + authTokenTso1 
 When method get
 Then status 200
-And match response.data.message == 'a message for group Dispatcher'
+And match response.card.data.message == 'a message for group Dispatcher'
 
 
 #get card with user operator2_fr should not be possible
@@ -143,7 +143,7 @@ Given url opfabUrl + 'cards/archives/' + cardUid
 And header Authorization = 'Bearer ' + authTokenTso1 
 When method get
 Then status 200
-And match response.data.message == 'a message for groups Dispatcher and Planner'
+And match response.card.data.message == 'a message for groups Dispatcher and Planner'
 
 
 #get card with user operator2_fr should be possible
@@ -160,7 +160,7 @@ Given url opfabUrl + 'cards/archives/' + cardUid
 And header Authorization = 'Bearer ' + authTokenTso2 
 When method get
 Then status 200
-And match response.data.message == 'a message for groups Dispatcher and Planner'
+And match response.card.data.message == 'a message for groups Dispatcher and Planner'
 
 #delete perimeter created previously
   Given url opfabUrl + 'users/perimeters/perimeter'

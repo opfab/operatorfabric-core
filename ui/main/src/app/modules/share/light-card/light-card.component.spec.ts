@@ -19,14 +19,12 @@ import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {ProcessesService} from '@ofServices/processes.service';
-import {ServicesModule} from '@ofServices/services.module';
 import {Router} from '@angular/router';
 import 'moment/locale/fr';
 import {TimeService} from '@ofServices/time.service';
 import {I18nService} from '@ofServices/i18n.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountDownModule} from '../countdown/countdown.module';
-import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
 
 
@@ -34,11 +32,10 @@ describe('LightCardComponent', () => {
     let lightCardDetailsComp: LightCardComponent;
     let fixture: ComponentFixture<LightCardComponent>;
     let store: Store<AppState>;
-    let router: SpyObj<Router>;
     let injector: TestBed;
     let translateService: TranslateService;
     let i18nService: I18nService;
-    
+
 
     beforeEach(waitForAsync(() => {
         const routerSpy = createSpyObj('Router', ['navigate']);
@@ -47,7 +44,6 @@ describe('LightCardComponent', () => {
         TestBed.configureTestingModule({
             imports: [
                 HttpClientTestingModule,
-                ServicesModule,
                 StoreModule.forRoot(appReducer),
                 RouterTestingModule,
                 HttpClientTestingModule,
@@ -76,7 +72,6 @@ describe('LightCardComponent', () => {
         translateService = injector.get(TranslateService);
         translateService.addLangs(['en', 'fr']);
         translateService.setDefaultLang('en');
-        // translateService.use("en");
         i18nService = injector.get(I18nService);
         i18nService.changeLocale('en');
 
@@ -85,7 +80,7 @@ describe('LightCardComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(LightCardComponent);
         lightCardDetailsComp = fixture.debugElement.componentInstance;
-        router = injectedSpy(Router);
+        injectedSpy(Router);
     });
     it('should handle non existent timestamp with an empty string', () => {
         const expectedEmptyString = lightCardDetailsComp.handleDate(undefined);
@@ -94,28 +89,14 @@ describe('LightCardComponent', () => {
 
     it( 'should handle timestamp in English', () => {
         i18nService.changeLocale('en');
-        const date = new Date();
-        date.setFullYear(2019);
-        date.setMonth(5);
-        date.setDate(25);
-        date.setHours(10);
-        date.setMinutes(0);
-        date.setSeconds(0);
-        date.setUTCMilliseconds(0);
+        const date = new Date(2019, 5, 25, 10, 0, 0, 0);
         const TwentyFiveJune2019at10AMDateString = lightCardDetailsComp.handleDate(date.valueOf());
         expect(TwentyFiveJune2019at10AMDateString).toEqual('06/25/2019 10:00 AM');
         });
 
     it( 'should handle timestamp in French', () => {
         i18nService.changeLocale('fr');
-        const date = new Date();
-        date.setFullYear(2019);
-        date.setMonth(5);
-        date.setDate(25);
-        date.setHours(10);
-        date.setMinutes(0);
-        date.setSeconds(0);
-        date.setUTCMilliseconds(0);
+        const date = new Date(2019, 5, 25, 10, 0, 0, 0);
         const TwentyFiveJune2019at10AMDateString = lightCardDetailsComp.handleDate(date.valueOf());
         expect(TwentyFiveJune2019at10AMDateString).toEqual('25/06/2019 10:00');
         });

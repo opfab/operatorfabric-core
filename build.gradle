@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.node-gradle.node" version "3.2.0"
+    id "com.github.node-gradle.node" version "3.2.1"
     id "org.asciidoctor.jvm.convert" version "3.3.2"
     id "maven-publish"
     id "signing"
@@ -24,7 +24,6 @@ ext {
             starterWeb              : "org.springframework.boot:spring-boot-starter-web:$springBoot",
             starterWebflux          : "org.springframework.boot:spring-boot-starter-webflux:$springBoot",
             actuator                : "org.springframework.boot:spring-boot-starter-actuator:$springBoot",
-            starterAop              : "org.springframework.boot:spring-boot-starter-aop:$springBoot",
             starterJetty            : "org.springframework.boot:spring-boot-starter-jetty:$springBoot",
             starterRabbitmq         : "org.springframework.boot:spring-boot-starter-amqp:$springBoot",
             starterSecurity         : "org.springframework.boot:spring-boot-starter-security:$springBoot",
@@ -71,7 +70,7 @@ ext {
             feignMock      : "io.github.openfeign:feign-mock:$feign",
             feignJackson   : "io.github.openfeign:feign-jackson:$feign",
             feignCore      : "io.github.openfeign:feign-core:$feign",
-            guava          : "com.google.guava:guava:31.0.1-jre",
+            guava          : "com.google.guava:guava:31.1-jre",
             jacksonAnnotations   : "com.fasterxml.jackson.core:jackson-annotations:$jacksonAnnotations",
             collections4   : "org.apache.commons:commons-collections4:$apacheCommonsCollections4",
             commonsIO      : "commons-io:commons-io:$commonsIO",
@@ -106,7 +105,7 @@ sonarqube {
         property 'sonar.junit.reportPaths','build/test-results/test'
         property 'sonar.coverage.jacoco.xmlReportPaths','build/reports/jacoco/xml/report.xml'
         // **/src/tooling/** : one-time migration tools, not meant to evolve or be tested for regressions
-        property 'sonar.coverage.exclusions','**/config*/**/*,ui/**/*,**/controllers/**,**/src/tooling/**,src/test/**'
+        property 'sonar.coverage.exclusions','**/config*/**/*,**/ui/**/*,**/controllers/**,**/src/tooling/**,**/src/test/**'
         property 'sonar.exclusions','**/generated/**/*,**/src/docs/**/*,**/*Application.java,**/node_modules/**/*'
         // exclusions for analyse of duplicated code , test classes are excluded 
         property 'sonar.cpd.exclusions','**/model/**/*,**/src/test/**/*,**/*.spec.ts,src/test/**'

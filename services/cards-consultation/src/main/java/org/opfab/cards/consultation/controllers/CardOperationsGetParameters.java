@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,12 +13,9 @@ package org.opfab.cards.consultation.controllers;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Singular;
 import lombok.Value;
 import org.opfab.users.model.CurrentUserWithPerimeters;
-
 import java.time.Instant;
-import java.util.List;
 
 /** This class contains all the information necessary to define a feed
  */
@@ -53,10 +50,5 @@ public class CardOperationsGetParameters {
      * */
     private CurrentUserWithPerimeters currentUserWithPerimeters;
 
-    /**
-     * List of cards that should not be loaded
-     */
-    @Singular
-    private List<String> loadedCards;
 
 }

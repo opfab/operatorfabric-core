@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,7 @@
 
 package org.opfab.cards.publication.services;
 
+import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 /**
  * 
  * Responsible of Write of Cards in card and archiveCard mongo collection
@@ -63,6 +64,14 @@ public class CardRepositoryService {
     }
 
     public void saveCardToArchive(ArchivedCardPublicationData card) {
+        // Update deletionDate on previous version of this card in archives
+        Query query = new Query();
+        query.addCriteria(new Criteria().andOperator(
+            where("process").is(card.getProcess()),
+            where("processInstanceId").is(card.getProcessInstanceId()),
+            where("deletionDate").isNull())
+        );
+        template.updateFirst(query, Update.update("deletionDate", card.getPublishDate()), ArchivedCardPublicationData.class);
         this.template.insert(card);
     }
 
@@ -70,7 +79,9 @@ public class CardRepositoryService {
         this.template.remove(cardToDelete);
     }
 
-
+    public void updateArchivedCard(ArchivedCardPublicationData card) {
+        this.template.save(card);
+    }
 
     public CardPublicationData findCardById(String id) {
         /**
@@ -93,9 +104,16 @@ public class CardRepositoryService {
         return Optional.ofNullable(template.find(findCardByParentCardIdWithoutDataField, CardPublicationData.class));
     }
 
-	public UserBasedOperationResult addUserAck(User user, String cardUid) {
+	public UserBasedOperationResult addUserAck(User user, String cardUid, List<String> entitiesAcks) {
+        Update update = new Update().addToSet("usersAcks", user.getLogin());
+        update.addToSet(
+                "entitiesAcks",
+                BasicDBObjectBuilder.start("$each", entitiesAcks).get()
+        );
+
 		UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)), 
-				new Update().addToSet("usersAcks", user.getLogin()),CardPublicationData.class);
+                                                        update,
+                                                        CardPublicationData.class);
 		log.debug("added {} occurrence of {}'s userAcks in the card with uid: {}", updateFirst.getModifiedCount(),
 				cardUid);
 		return toUserBasedOperationResult(updateFirst);

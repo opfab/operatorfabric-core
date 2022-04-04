@@ -13,6 +13,7 @@ describe ('RealTimeUsersPage',()=>{
 
     before('Set up configuration', function () {
         cy.loadRealTimeScreensConf();
+        cy.deleteAllSettings();
     });
 
     it('Connection of admin and check of Real time users screen : no one should be connected', ()=> {

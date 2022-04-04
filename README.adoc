@@ -51,7 +51,7 @@ It aims to facilitate operational activities for utilities in two ways :
 ** Introduce pre-formatted question/response exchanges between control centers. This can be used to implement operational processes (with the notion of "last time to respond").  
 ** Share events in calendar (also allowing repeating events)
 
-In addition, the following features are available :  internationalization, time-zone management, light/dark mode for the UI,  authorization mechanism.
+In addition, the following features are available: internationalization, light/dark mode for the UI, realtime connected users supervision, authorization mechanism.
 
 Integration with existing IT systems is an overarching concern: support of Firefox and Chromium-based browsers, docker deployment, communication with business applications via REST API or Kafka, integration with external authentication systems (via OAuth2), monitoring via Prometheus endpoints.
 
@@ -105,10 +105,13 @@ link:https://opfab.github.io/documentation/current/getting_started/[Getting Star
 
 OperatorFabric is mostly written in Java and based on the Spring framework. This makes writing and integrating software for a simplified and better coordination very easy.
 
-image:https://img.shields.io/badge/Using-Java-%237473C0.svg?style=for-the-badge[Using Java,link=]
+image:https://img.shields.io/badge/Using-Java-%237473C0.svg?style=for-the-badge[Using Java,link=https://www.java.com]
 image:https://img.shields.io/badge/Using-Spring-%236db33f.svg?style=for-the-badge[Using Spring,link=https://spring.io/]
 image:https://img.shields.io/badge/Using-Angular-%237473C0.svg?style=for-the-badge[Using Angular,link=https://angular.io/]
+image:https://img.shields.io/badge/Using-MongoDB-%236db33f.svg?style=for-the-badge[Using Swagger,link=https://www.mongodb.com/community/]
 image:https://img.shields.io/badge/Using-Swagger-%237473C0.svg?style=for-the-badge[Using Swagger,link=https://swagger.io/]
+image:https://img.shields.io/badge/Using-RabbitMQ-%236db33f.svg?style=for-the-badge[Using Swagger,link=https://www.rabbitmq.com/]
+
 
 === Continuous Integration / Continuous Delivery
 

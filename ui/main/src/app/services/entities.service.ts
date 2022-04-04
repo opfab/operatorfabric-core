@@ -54,7 +54,7 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
         this._entities = this._entities.filter(entity => entity.id !== id);
   }
 
-  getAllEntities(): Observable<Entity[]> {
+  queryAllEntities(): Observable<Entity[]> {
     return this.httpClient.get<Entity[]>(`${this.entitiesUrl}`).pipe(
       catchError((error: Response) => this.handleError(error))
     );
@@ -77,7 +77,7 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
 
 
   getAll(): Observable<any[]> {
-    return this.getAllEntities();
+    return this.queryAllEntities();
   }
 
   update(data: any): Observable<any> {
@@ -85,7 +85,7 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
   }
 
   public loadAllEntitiesData(): Observable<any> {
-    return this.getAllEntities()
+    return this.queryAllEntities()
       .pipe(takeUntil(this.ngUnsubscribe$)
       , tap({
         next: (entities) => {

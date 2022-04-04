@@ -54,7 +54,7 @@ Metaspace
 ----
 
 .Possible causes & resolution
-Issue with the Gradle daemon. Stopping the daemon using `gradle --stop`
+Issue with the Gradle daemon. Stopping the daemon using `./gradlew --stop`
 and re-launching the build should solve this issue.
 
 +++ </div></details> +++

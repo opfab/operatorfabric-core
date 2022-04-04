@@ -55,12 +55,16 @@
     "endDateBeforeStartDate": "Einddatum moet na start datum liggen",
     "featureNotConfigured": "Functie niet geconfigureerd",
     "confirmSettings": "BEVESTIG INSTELLINGEN",
+    "cardEmitter": "EMITTER",
+    "entity": "ENTITEIT",
     "popup": {
       "title": "BEVESTIGING",
       "areYouSure": "U heeft enkele wijzigingen aangebracht. Weet u zeker dat u ze wilt opslaan?"
     },
     "error": {
-      "impossibleToSaveSettings": "Om technische redenen is het niet mogelijk om de instellingen op te slaan"
+      "impossibleToSaveSettings": "Om technische redenen is het niet mogelijk om de instellingen op te slaan",
+      "incorrectSubmission": "Onjuiste invoer",
+      "technicalError" : "Technische fout"
     }
   },
   "global":{
@@ -68,7 +72,8 @@
     "tryToReconnect":"Bezig met verbinden ...",
     "activateSoundText":"Geluid is niet geactiveerd, klik om te activeren",
     "activateSoundButton":"Activeer geluid",
-    "sessionExpiredText":"De sessie is verlopen"
+    "sessionExpiredText":"De sessie is verlopen",
+    "disconnectedByNewUser": "De verbinding met u is verbroken omdat een andere gebruiker met dit account heeft ingelogd."
   },
   "menu": {
     "feed": "Kaart Feed",
@@ -178,6 +183,7 @@
     "reset": "Opnieuw instellen",
     "login": "Gebruikersnaam",
     "password": "Wachtwoord",
+    "confirmationBecauseAccountIsAreadyUsed": "Dit account wordt al gebruikt door minstens één andere gebruiker. Wilt u zich nog steeds aanmelden ?\n\n Door op OK te klikken, verbreekt u de verbinding met iedereen die dit account gebruikt.",
     "submit": {
       "password": "Inloggen",
       "code": "Log in met {{name}}"
@@ -296,13 +302,16 @@
     "answers": "Antwoorden",
     "answered": "Beantwoord",
     "unanswered": "Nog niet beantwoord",
-    "status": "Proces Status"
+    "status": "Proces Status",
+    "chooseEntityForResponse": "Kies de entiteit waarvoor u reageert :",
+    "entityChoice": "Entiteit keuze"
   },
   "cardAcknowledgment": {
     "button": {
       "ack": "BEVESTIG EN SLUIT",
       "unack": "ANNULEER BEVESTIGING"
-    }
+    },
+    "acknowledged": "Bevestigd"
   },
   "admin": {
     "input": {
@@ -361,7 +370,8 @@
       "login": {
         "required": "Gebruikersnaam is vereist.",
         "minLength": "Gebruikersnaam moet minimaal 2 tekens bevatten.",
-        "pattern": "Gebruikersnaam mag alleen de volgende tekens bevatten: kleine letters, _, -, . of cijfers."
+        "pattern": "Gebruikersnaam mag alleen de volgende tekens bevatten: kleine letters, _, -, . of cijfers.",
+        "alreadyExisting": "Gebruikersnaam bestaat al."
       },
       "firstName": {
         "required": "Voornaam is vereist."
@@ -373,7 +383,8 @@
         "required": "Id is vereist.",
         "minLength": "Id moet minimaal 2 tekens bevatten.",
         "pattern": "Id mag alleen de volgende tekens bevatten: kleine letters, _, -, . of cijfers.",
-        "label":"Id"
+        "label":"Id",
+        "alreadyExisting": "Id bestaat al."
       },
       "name": {
         "required": "Naam is vereist.",
@@ -407,7 +418,9 @@
     "orCondition": "OF",
     "to": "tot",
     "of": "van",
-    "page": "Pagina"
+    "page": "Pagina",
+    "blank": "Leeg",
+    "notBlank": "Niet leeg"
   },
   "realTimeUsers": {
     "connected": "Verbonden",
@@ -429,5 +442,28 @@
     "externalDeviceId": "Apparaat",
     "edit": "Wijzigen",
     "delete": "Verwijderen"
+  },
+  "datePicker": {
+    "monday": "Ma",
+    "tuesday" : "Di",
+    "wednesday" : "Wo",
+    "thursday": "Do",
+    "friday": "Vr",
+    "saturday": "Za",
+    "sunday": "Zo",
+    "january": "Jan",
+    "february": "Feb",
+    "march": "Mar",
+    "april": "Apr",
+    "may": "Mei",
+    "june": "Jun",
+    "july": "Jul",
+    "august": "Aug",
+    "september": "Sep",
+    "october": "Okt",
+    "november": "Nov",
+    "december": "Dec",
+    "week": "Week",
+    "placeholder": "JJJJ-MM-DD"
   }
 }

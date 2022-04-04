@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,14 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {Injectable} from '@angular/core';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {AuthenticationService} from './authentication/authentication.service';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class TokenInjector implements HttpInterceptor {
     constructor(private authService: AuthenticationService) {
     }

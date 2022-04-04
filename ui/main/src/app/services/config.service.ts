@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,8 +15,9 @@ import {Observable, of, throwError} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {CoreMenuConfig, Locale, Menu, UIMenuFile} from '@ofModel/menu.model';
-
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class ConfigService {
     private configUrl: string;
     private config;

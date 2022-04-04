@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 3.5.0.RELEASE
+  version: 3.6.0.RELEASE
   title: Card Management API
   termsOfService: ''
   contact:
@@ -15,8 +15,6 @@ basePath: /cards
 tags:
   - name: cards
     description: Everything concerning cards
-  - name: actions
-    description: Everything concerning actions
   - name: read
     description: Everything concerning resource state
   - name: creation
@@ -32,10 +30,6 @@ definitions:
     type: object
     description: Number of milliseconds since Epoch (long integer)
     example: 1551868290379
-  LongInteger:
-    type: object
-    description: Number of items
-    example: 10
   CardOperationTypeEnum:
     type: string
     description: |-
@@ -88,15 +82,8 @@ definitions:
         FR: Mon Titre
   CardOperation:
     type: object
-    description: >-
-      This object holds an operation to be performed as well as a collection of
-      cards (published in the same second) so as to be able to perform the
-      operation on a batch of cards rather than on a single card.
+    description: 'Operation to do:  Add, Update or Delete a card'
     properties:
-      number:
-        $ref: '#/definitions/LongInteger'
-      publishDate:
-        $ref: '#/definitions/EpochDate'
       type:
         $ref: '#/definitions/CardOperationTypeEnum'
       cardId:
@@ -110,11 +97,8 @@ definitions:
           Card object to be added or updated. Only used for CardOperations of
           ADD or UPDATE type.
     example:
-      number: 3
-      publishDate: 1546300800000
       type: DELETE
-      cardId:
-        - 12345
+      cardId: 12345
   TimeSpan:
     type: object
     description: An object to define a business time span
@@ -287,6 +271,11 @@ definitions:
       hasBeenAcknowledged:
         type: boolean
         description: Is true if the card was acknowledged by current user
+      entitiesAcks:
+        type: array
+        items:
+          type: string
+        description: List of entities that acknowledged the card
       hasBeenRead:
         type: boolean
         description: Is true if the card was read by current user
@@ -328,32 +317,13 @@ definitions:
       tags:
         - MyService
         - MyProcess
-        - ACTION
-      actions:
-        - type: URL
-          lockAction: true
-          called: false
-          updateStateBeforeAction: false
-          hidden: true
-          buttonStyle: button.css
-          label:
-            key: myCard.myAction.label
-            parameters:
-              EN: My actions label
-              FR: Mon intitule d'actions
       title:
         key: myservice.myprocess.title
-        parameters:
-          EN: My process name
-          FR: Mon nom de processus
       summary:
         key: myservice.myprocess.title.summary
-        parameters:
-          EN: Summary of card content
-          FR: Resume du contenu de la carte
   CardCreationReport:
     type: object
-    description: Created card identifiers
+    description: Created card report
     properties:
       id:
         type: string
@@ -371,10 +341,6 @@ definitions:
       rangeEnd:
         $ref: '#/definitions/EpochDate'
         description: subscription range end time
-      loadedCards:
-        type: array
-        items:
-          type: string
   Connection:
     type: object
     description: Object representing a user connection (subscription)
@@ -386,10 +352,12 @@ definitions:
         type: array
         items:
           type: string
+        description: List of entities the user is attached to
       groups:
         type: array
         items:
           type: string
+        description: Groups of the user
   LightCard:
     type: object
     description: >-
@@ -905,6 +873,12 @@ paths:
         type: string
         required: true
         description: "The card uid"
+      - in: body
+        name: entitiesAcks
+        description: List of user entities for which the card will be acknowledged
+        type: array
+        items:
+          type: string
     post:
       operationId: postUserAcknowledgement
       tags:

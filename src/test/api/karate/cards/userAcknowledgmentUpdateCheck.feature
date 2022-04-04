@@ -53,6 +53,12 @@ Feature: CardsUserAcknowledgementUpdateCheck
 ]
 """
 
+      * def entityArray =
+"""
+[   "ENTITY1_FR"
+]
+"""
+
 #Create new perimeter
       Given url opfabUrl + 'users/perimeters'
       And header Authorization = 'Bearer ' + authTokenAdmin
@@ -84,7 +90,7 @@ Feature: CardsUserAcknowledgementUpdateCheck
 #make an acknowledgement to the card with operator1_fr
     Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken
-    And request ''
+    And request entityArray
     When method post
     Then status 201
 
@@ -95,14 +101,6 @@ Feature: CardsUserAcknowledgementUpdateCheck
     Then status 200
     And match response.card.hasBeenAcknowledged == true
     And match response.card.uid == uid
-
-#get card with user operator1_fr and check containing his ack
-      Given url opfabPublishCardUrl + 'cards/traces/ack/' + uid
-      And header Authorization = 'Bearer ' + authToken
-      When method get
-      Then status 200
-      And match response.userName == "operator1_fr"
-      And match response.action == "Acknowledgment"
 
 
     * def cardUpdated =

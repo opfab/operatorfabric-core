@@ -30,7 +30,6 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
     unsubscribe$: Subject<void> = new Subject<void>();
 
     endDateMin: {year: number, month: number, day: number} = null;
-    startDateMax: {year: number, month: number, day: number} = null;
 
     dateTimeFilterChange = new Subject();
 
@@ -56,17 +55,15 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
 
     private setInitialDateValues(): void {
         if (this.datesForm) {
+
             if (this.datesFormInputData.startDate.isVisible) {
-                const startDateValue = this.datesForm.get('endDate').value;
-                if (!startDateValue) this.datesForm.get('startDate').setValue(this.datesFormInputData.startDate.initialEpochDate != null ? getDateTimeNgbFromMoment(moment(this.datesFormInputData.startDate.initialEpochDate)) : '');
+                this.datesForm.get('startDate').setValue(this.datesFormInputData.startDate.initialEpochDate != null ? getDateTimeNgbFromMoment(moment(this.datesFormInputData.startDate.initialEpochDate)) : '');
             }
-            if (this.datesFormInputData.endDate.isVisible) {
-                const endDateValue = this.datesForm.get('endDate').value;
-                if (!endDateValue) this.datesForm.get('endDate').setValue(this.datesFormInputData.endDate.initialEpochDate != null ? getDateTimeNgbFromMoment(moment(this.datesFormInputData.endDate.initialEpochDate)) : '');
+            if (this.datesFormInputData.endDate.isVisible) { 
+                this.datesForm.get('endDate').setValue(this.datesFormInputData.endDate.initialEpochDate != null ? getDateTimeNgbFromMoment(moment(this.datesFormInputData.endDate.initialEpochDate)) : '');
             }
             if (this.datesFormInputData.lttd.isVisible) {
-                const lttdValue = this.datesForm.get('lttd').value;
-                if (!lttdValue) this.datesForm.get('lttd').setValue(this.datesFormInputData.lttd.initialEpochDate != null ? getDateTimeNgbFromMoment(moment(this.datesFormInputData.lttd.initialEpochDate)) : '');
+                this.datesForm.get('lttd').setValue(this.datesFormInputData.lttd.initialEpochDate != null ? getDateTimeNgbFromMoment(moment(this.datesFormInputData.lttd.initialEpochDate)) : '');
             }
         }
         this.setDateFilterBounds();
@@ -82,16 +79,8 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
                 };
             } else {
                 this.endDateMin = null;
-            }
-            if (this.datesFormInputData.endDate.isVisible) {
-                this.startDateMax = {
-                    year: this.datesForm.value.endDate.date.year,
-                    month: this.datesForm.value.endDate.date.month,
-                    day: this.datesForm.value.endDate.date.day
-                };
-            } else {
-                this.startDateMax = null;
-            }
+            }          
+            
         }
     }
 
@@ -113,6 +102,7 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
 
     ngOnChanges() {
         this.setInitialDateValues();
+        
     }
 
     ngOnDestroy() {

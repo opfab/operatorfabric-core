@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
 
 package org.opfab.cards.consultation.repositories;
 
-import lombok.extern.slf4j.Slf4j;
+
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
@@ -45,20 +45,12 @@ import static org.opfab.cards.consultation.TestUtilities.createSimpleCard;
 import static org.opfab.cards.consultation.TestUtilities.prepareCard;
 
 
-/**
- * <p></p>
- * Created on 24/07/18
- *
- *
- */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = IntegrationTestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles(profiles = {"native", "test"})
-//@Disabled
 @Tag("end-to-end")
 @Tag("mongo")
-@Slf4j
-public class CardRepositoryShould {
+class CardRepositoryShould {
 
     public static final String LOGIN = "admin";
     private static Instant now = Instant.now();
@@ -460,7 +452,7 @@ public class CardRepositoryShould {
         void getTwoCardsWithOneAcknowledge()
         {
             persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
-            persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,new String[] {"admin"},null));
+            persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,new String[] {"admin"},null, null));
     
             StepVerifier.create(repository.getCardOperations(null, now,nowPlusThree, adminUser)
                     .doOnNext(TestUtilities::logCardOperation))
@@ -482,8 +474,8 @@ public class CardRepositoryShould {
         @Test
         void getTwoCardsWithNoneAcknowledgeAsCardsHasNotBeenAcknowledgeByCurrentUser()
         {
-            persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null,new String[] {"user1","user2"},null));
-            persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,new String[] {"dummyuser"},null));
+            persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null,new String[] {"user1","user2"},null, null));
+            persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,new String[] {"dummyuser"},null, null));
     
             StepVerifier.create(repository.getCardOperations(null, now,nowPlusThree, adminUser)
                     .doOnNext(TestUtilities::logCardOperation))
@@ -506,7 +498,7 @@ public class CardRepositoryShould {
         void getTwoCardsWithOneRead()
         {
             persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
-            persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,null,new String[] {"admin"}));
+            persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,null,new String[] {"admin"}, null));
     
             StepVerifier.create(repository.getCardOperations(null, now,nowPlusThree, adminUser)
                     .doOnNext(TestUtilities::logCardOperation))
@@ -528,8 +520,8 @@ public class CardRepositoryShould {
         @Test
         void getTwoCardsWithNoneReadAsCardsHasNotBeenReadByCurrentUser()
         {
-            persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null,null,new String[] {"user1","user2"}));
-            persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,null,new String[] {"dummyuser"}));
+            persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null,null,new String[] {"user1","user2"}, null));
+            persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,null,new String[] {"dummyuser"}, null));
     
             StepVerifier.create(repository.getCardOperations(null, now,nowPlusThree, adminUser)
                     .doOnNext(TestUtilities::logCardOperation))

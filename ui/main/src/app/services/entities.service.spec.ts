@@ -33,14 +33,14 @@ describe('EntitiesService', () => {
     httpMock.verify();
   });
 
-  describe('#getAllEntities', () => {
+  describe('#queryAllEntities', () => {
     it('should return an Observable<Entity[]>', () => {
       const listEntities: Entity[] = [];
       const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', true, [], []);
       const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', true, [], []);
       listEntities.push(entity1);
       listEntities.push(entity2);
-      entitiesService.getAllEntities().subscribe(result => {
+      entitiesService.queryAllEntities().subscribe(result => {
         expect(result.length).toBe(2);
         expect(result[0].id).toBe('ENTITY1');
         expect(result[1].id).toBe('ENTITY2');

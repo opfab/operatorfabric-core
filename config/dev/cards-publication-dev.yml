@@ -40,6 +40,4 @@ externalRecipients-url: "{\
            connectionRefusedExternalRecipient: \"http://localhost:8091/test\" \
            }"
 
-# WARNING : If you set this parameter to false , all users have the rights to respond to all cards
-checkPerimeterForResponseCard: true
 checkAuthenticationForCardSending: true

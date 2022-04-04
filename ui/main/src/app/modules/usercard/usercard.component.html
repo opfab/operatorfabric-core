@@ -18,7 +18,7 @@
    
     <form [formGroup]="severityForm" class="opfab-form-lighter" >
  
-        <div class="row justify-content-center" *ngIf="severityVisible" id="opfab-usercard-severity-choice">
+        <div style="display:flex;align-items: center;justify-content: center;" *ngIf="severityVisible" id="opfab-usercard-severity-choice">
 
             <label class="opfab-radio-button opfab-usercard-radio-button"> <span class="label-sev-alarm" translate> shared.severity.alarm </span>
                 <input type="radio"  id="opfab-sev-alarm" name="severity" formControlName="severity" value="ALARM">
@@ -46,9 +46,15 @@
 
     <div class="opfab-form-lighter" [innerHtml]="userCardTemplate"></div>
 
-    <br/>   
+    <br/>
 
-    
+    <div *ngIf="userEntitiesAllowedToSendCardOptions.length > 1">
+        <of-usercard-select-card-emitter-form [userEntitiesAllowedToSendCardOptions]="userEntitiesAllowedToSendCardOptions"
+                                              [initialPublisher]="this.publisherForCreatingUsercard" #cardEmitterForm
+                                              (cardEmitterChange)="cardEmitterChanged($event)">
+        </of-usercard-select-card-emitter-form>
+    </div>
+
     <div *ngIf="recipientVisible">
         <of-usercard-recipients-form [userCardConfiguration]="userCardConfiguration" [initialSelectedRecipients]="initialSelectedRecipients" #recipientsForm> </of-usercard-recipients-form>
     </div>
@@ -70,7 +76,7 @@
             <div class="opfab-section-header">
                 <span translate>userCard.recipients</span>
             </div>
-            <div style="display: flex;flex-wrap: wrap;">
+            <div id="opfab-entity-recipients" style="display: flex;flex-wrap: wrap;">
                 <div *ngFor="let entityId of card.entityRecipients" style="padding-right: 10px">
                     <span>&nbsp; {{getEntityName(entityId)}} &nbsp; </span>
                 </div>

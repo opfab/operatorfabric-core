@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,9 @@ import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class ReminderService {
 
     private reminderList: ReminderList;
@@ -36,10 +38,9 @@ export class ReminderService {
     }
 
     private checkForCardToRemind() {
-        let cardsIdToRemind = this.reminderList.getCardIdsToRemindNow();
+        const cardsIdToRemind = this.reminderList.getCardIdsToRemindNow();
         cardsIdToRemind.forEach(cardId => this.remindCard(cardId));
         setTimeout(() => this.checkForCardToRemind(), 5000);
-        cardsIdToRemind = null;
     }
 
 
@@ -63,7 +64,7 @@ export class ReminderService {
             this.cardService.deleteUserCardRead(lightCard.uid).subscribe(resp => {
                 if (!(resp.status === 200 || resp.status === 204))
                     console.error(new Date().toISOString(),
-                        'Reminder : the remote acknowledgement endpoint returned an error status(%d)', resp.status);
+                        'Reminder : the remote read endpoint returned an error status(%d)', resp.status);
             }
             );
             this.lightCardsStoreService.setLightCardAcknowledgment(cardId,false);

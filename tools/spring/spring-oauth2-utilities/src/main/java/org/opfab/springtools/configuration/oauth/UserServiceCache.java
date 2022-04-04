@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,7 +37,7 @@ public class UserServiceCache {
     @Autowired
     private UserServiceProxy proxy;
 
-    public static Hashtable<String,String> tokens = new Hashtable<String,String>();
+    public static final Hashtable<String,String> tokens = new Hashtable<>();
 
     // The token is stored in the service as when the org.lfenergy.operatorfabric.cards.consultation.services.CardSubscription 
     // class call the cache , it does not have the user token 

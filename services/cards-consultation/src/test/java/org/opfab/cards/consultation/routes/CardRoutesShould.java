@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -43,7 +43,6 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 
-import lombok.extern.slf4j.Slf4j;
 import reactor.test.StepVerifier;
 
 @ExtendWith(SpringExtension.class)
@@ -52,8 +51,7 @@ import reactor.test.StepVerifier;
 @ActiveProfiles(profiles = {"native", "test"})
 @Tag("end-to-end")
 @Tag("mongo")
-@Slf4j
-public class CardRoutesShould {
+class CardRoutesShould {
 
     @Autowired
     private WebTestClient webTestClient;
@@ -69,7 +67,7 @@ public class CardRoutesShould {
 
     @Nested
     @WithMockOpFabUserReactive(login="userWithGroup", roles = {"SOME_GROUP"})
-    public class GivenUserWithGroupCardRoutesShould {
+    class GivenUserWithGroupCardRoutesShould {
 
         @Test
         void respondOkIfOptions() {
@@ -221,7 +219,7 @@ public class CardRoutesShould {
 
     @Nested
     @WithMockOpFabUserReactive(login="userWithNoGroup", roles = {})
-    public class GivenUserWithNoGroupCardRoutesShould {
+    class GivenUserWithNoGroupCardRoutesShould {
 
         @Test
         void findOutCard(){
@@ -240,7 +238,7 @@ public class CardRoutesShould {
 
     @Nested
     @WithMockOpFabUserReactive(login="userWithGroupAndEntity", roles={"SOME_GROUP"}, entities={"SOME_ENTITY"})
-    public class GivenUserWithGroupAndEntityCardRoutesShould {
+    class GivenUserWithGroupAndEntityCardRoutesShould {
 
         @Test
         void findOutCard(){
@@ -365,7 +363,7 @@ public class CardRoutesShould {
                     .expectBody(CardData.class).value(cardData ->
                         assertAll(
                                 () -> assertThat(cardData.getCard().getId()).isEqualTo(parentCard.getId()),
-                                () -> assertThat(cardData.getChildCards().size()).isEqualTo(2))
+                                () -> assertThat(cardData.getChildCards()).hasSize(2))
                         );
         }
 
@@ -389,7 +387,7 @@ public class CardRoutesShould {
                     .expectBody(CardData.class).value(cardData ->
                     assertAll(
                             () -> assertThat(cardData.getCard().getId()).isEqualTo(parentCard.getId()),
-                            () -> assertThat(cardData.getChildCards().size()).isEqualTo(0))
+                            () -> assertThat(cardData.getChildCards()).isEmpty())
             );
         }
     }

@@ -33,7 +33,9 @@ import {FilterService} from '@ofServices/lightcards/filter.service';
 import {LogOption, OpfabLoggerService} from './logs/opfab-logger.service';
 
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class CardService {
 
     private static TWO_MINUTES = 120000;
@@ -44,7 +46,7 @@ export class CardService {
     readonly cardsPubUrl: string;
     readonly userCardReadUrl: string;
     readonly userCardUrl: string;
-    private lastHeardBeatDate: number = 0;
+    private lastHeardBeatDate = 0;
     private firstSubscriptionInitDone = false;
     public initSubscription = new Subject<void>();
     private unsubscribe$: Subject<void> = new Subject<void>();
@@ -52,8 +54,11 @@ export class CardService {
     private startOfAlreadyLoadedPeriod: number;
     private endOfAlreadyLoadedPeriod: number;
 
+
     private selectedCardId: string = null;
 
+    private receivedAcksSubject = new Subject<{cardUid: string, entitiesAcks: string[]}>();
+    private receivedDisconnectedSubject = new Subject<boolean>()
 
     constructor(private httpClient: HttpClient,
         private guidService: GuidService,
@@ -98,12 +103,16 @@ export class CardService {
                             if (operation.card.id === this.selectedCardId) this.store.dispatch(new LoadCard({id: operation.card.id}));
                             break;
                         case CardOperationType.DELETE:
-                            console.log(new Date().toISOString(), `CardService - Receive card to delete id=`, operation.cardId);
+                            this.logger.info(`CardService - Receive card to delete id=` + operation.cardId, LogOption.LOCAL_AND_REMOTE);
                             this.lightCardsStoreService.removeLightCard(operation.cardId);
                             if (operation.cardId === this.selectedCardId) this.store.dispatch(new RemoveLightCard({card: operation.cardId}));
                             break;
+                        case CardOperationType.ACK:
+                            this.logger.info('CardService - Receive ack on card uid=' + operation.cardUid, LogOption.LOCAL_AND_REMOTE);
+                            this.receivedAcksSubject.next({cardUid: operation.cardUid, entitiesAcks: operation.entitiesAcks});
+                            break;
                         default:
-                            console.log(new Date().toISOString(), `CardService - Unknown operation`, operation.type , ` for card id=`, operation.cardId);
+                            this.logger.info(`CardService - Unknown operation ` + operation.type + ` for card id=` + operation.cardId, LogOption.LOCAL_AND_REMOTE);
                     }
                 },
                 error: (error) => {
@@ -125,7 +134,7 @@ export class CardService {
 
 
     public closeSubscription() {
-        this.logger.info('Closing subscription',LogOption.LOCAL_AND_REMOTE);
+        this.logger.info('Closing subscription', LogOption.LOCAL_AND_REMOTE);
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }
@@ -140,7 +149,7 @@ export class CardService {
             `${this.cardOperationsUrl}&notification=true`
             , {
                 headers: securityHeader,
-                // if necessary , we cans set here  heartbeatTimeout: xxx (in ms)
+                // if necessary, we can set here heartbeatTimeout: xxx (in ms)
             });
         return new Observable(observer => {
             try {
@@ -156,26 +165,30 @@ export class CardService {
                             if (this.firstSubscriptionInitDone) {
                                 this.recoverAnyLostCardWhenConnectionHasBeenReset();
                                 // process or user config may have change during connection loss
-                                // so reload both configuration 
+                                // so reload both configuration
                                 this.store.dispatch(new BusinessConfigChangeAction());
                                 this.store.dispatch(new UserConfigChangeAction());
-                            }
-                            else {
+                            } else {
                                 this.firstSubscriptionInitDone = true;
                                 this.lastHeardBeatDate = new Date().valueOf();
                             }
                             break;
                         case 'HEARTBEAT':
                             this.lastHeardBeatDate = new Date().valueOf();
-                            this.logger.info( `CardService - HEARTBEAT received - Connection alive `,LogOption.LOCAL);
+                            this.logger.info( `CardService - HEARTBEAT received - Connection alive `, LogOption.LOCAL);
                             break;
                         case 'BUSINESS_CONFIG_CHANGE':
                             this.store.dispatch(new BusinessConfigChangeAction());
-                            console.log(new Date().toISOString(), `CardService - BUSINESS_CONFIG_CHANGE received`);
+                            this.logger.info(`CardService - BUSINESS_CONFIG_CHANGE received`);
                             break;
                         case 'USER_CONFIG_CHANGE':
                             this.store.dispatch(new UserConfigChangeAction());
-                            console.log(new Date().toISOString(), `CardService - USER_CONFIG_CHANGE received`);
+                            this.logger.info(`CardService - USER_CONFIG_CHANGE received`);
+                            break;
+                        case 'DISCONNECT_USER_DUE_TO_NEW_CONNECTION':
+                            this.logger.info("CardService - Disconnecting user because a new connection is being opened for this account")
+                            this.closeSubscription();
+                            this.receivedDisconnectedSubject.next(true);
                             break;
                         default :
                             return observer.next(JSON.parse(message.data, CardOperation.convertTypeIntoEnum));
@@ -211,10 +224,9 @@ export class CardService {
             , 60000);
     }
 
-
     private recoverAnyLostCardWhenConnectionHasBeenReset() {
 
-        // Subtracts two minutes from the last heard beat to avoid loosing card due to latency, buffering and not synchronized clock
+        // Subtracts two minutes from the last heart beat to avoid loosing card due to latency, buffering and not synchronized clock
         const dateForRecovering = this.lastHeardBeatDate - CardService.TWO_MINUTES;
         this.logger.info( `CardService - Card subscription has been init again , recover any lost card from date `
             + new Date(dateForRecovering), LogOption.LOCAL_AND_REMOTE);
@@ -263,8 +275,8 @@ export class CardService {
 
     }
 
-    loadArchivedCard(id: string): Observable<Card> {
-        return this.httpClient.get<Card>(`${this.archivesUrl}/${id}`);
+    loadArchivedCard(id: string): Observable<CardData> {
+        return this.httpClient.get<CardData>(`${this.archivesUrl}/${id}`);
     }
 
     fetchArchivedCards(filters: Map<string, string[]>): Observable<Page<LightCard>> {
@@ -297,6 +309,14 @@ export class CardService {
     postTranslateCardField(processId: string, processVersion: string, i18nValue: I18n): any {
         const fieldToTranslate = {process: processId, processVersion: processVersion, i18nValue: i18nValue};
         return this.httpClient.post<any>(`${this.cardsPubUrl}/translateCardField`, fieldToTranslate, {observe: 'response'});
+    }
+
+    getReceivedAcks(): Observable<{cardUid: string, entitiesAcks: string[]}> {
+        return this.receivedAcksSubject.asObservable();
+    }
+
+    getReceivedDisconnectUser(): Observable<boolean> {
+        return this.receivedDisconnectedSubject.asObservable();
     }
 
 }

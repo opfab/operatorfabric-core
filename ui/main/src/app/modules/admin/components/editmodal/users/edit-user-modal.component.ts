@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {AsyncValidatorFn, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Component, Input, OnInit} from '@angular/core';
 import {User} from '@ofModel/user.model';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
@@ -16,6 +16,8 @@ import {UserService} from '@ofServices/user.service';
 import {GroupsService} from '@ofServices/groups.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {TranslateService} from '@ngx-translate/core';
+import {debounceTime, distinctUntilChanged, first, map, switchMap} from 'rxjs/operators';
+import {Observable, Subject} from 'rxjs';
 
 @Component({
   selector: 'of-edit-user-modal',
@@ -35,7 +37,6 @@ export class EditUserModalComponent implements OnInit {
 
   groupsDropdownSettings = {};
 
-
   @Input() row: User;
 
   constructor(
@@ -45,9 +46,18 @@ export class EditUserModalComponent implements OnInit {
       private groupsService: GroupsService,
       private entitiesService: EntitiesService) {
 
+  }
+
+  ngOnInit() {
+
+    const uniqueLoginValidator = [];
+    if (! this.row) // modal used for creating a new user
+      uniqueLoginValidator.push(this.uniqueLoginValidatorFn());
+
     this.userForm = new FormGroup({
       login: new FormControl(''
-          , [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-z\d\-_.]+$/)]),
+          , [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-z\d\-_.]+$/)]
+          , uniqueLoginValidator),
       firstName: new FormControl('', []),
       lastName: new FormControl('', []),
       groups: new FormControl([]),
@@ -55,9 +65,6 @@ export class EditUserModalComponent implements OnInit {
       authorizedIPAddresses: new FormControl('', [])
     });
 
-  }
-
-  ngOnInit() {
     if (this.row) { // If the modal is used for edition, initialize the modal with current data from this row
 
       // For 'simple' fields (where the value is directly displayed), we use the form's patching method
@@ -88,7 +95,7 @@ export class EditUserModalComponent implements OnInit {
             };
       });
 
-    
+
     // Initialize value lists for Entities and Groups inputs
     this.entitiesService.getEntities().forEach((entity) => {
       const id = entity.id;
@@ -126,40 +133,66 @@ export class EditUserModalComponent implements OnInit {
     });
   }
 
+  isUniqueLogin(login: string): Observable<boolean> {
+    const subject = new Subject<boolean>();
+
+    if (!! login) {
+      this.crudService.queryAllUsers().subscribe(users => {
+        if (users.filter(user => user.login === login).length)
+          subject.next(false);
+        else
+          subject.next(true);
+      });
+    } else
+        subject.next(true);
+
+    return subject.asObservable();
+  }
+
+  uniqueLoginValidatorFn(): AsyncValidatorFn {
+    return control => control.valueChanges
+        .pipe(
+            debounceTime(500),
+            distinctUntilChanged(),
+            switchMap(value => this.isUniqueLogin(value)),
+            map((unique: boolean) => (unique ? null : {'uniqueLoginViolation': true})),
+            first()); // important to make observable finite
+  }
+
   private cleanForm() {
     if (this.row) {
       this.userForm.value['login'] = this.row.login;
     }
     this.login.setValue((this.login.value as string).trim());
-    if (!!this.lastName.value) 
+    if (!!this.lastName.value)
       this.lastName.setValue((this.lastName.value as string).trim());
-    if (!!this.firstName.value) 
+    if (!!this.firstName.value)
       this.firstName.setValue((this.firstName.value as string).trim());
 
   }
 
   get login() {
-    return this.userForm.get('login') as FormControl;
+    return this.userForm.get('login');
   }
 
   get firstName() {
-    return this.userForm.get('firstName') as FormControl;
+    return this.userForm.get('firstName');
   }
 
   get lastName() {
-    return this.userForm.get('lastName') as FormControl;
+    return this.userForm.get('lastName');
   }
 
   get groups() {
-    return this.userForm.get('groups') as FormControl;
+    return this.userForm.get('groups');
   }
 
   get entities() {
-    return this.userForm.get('entities') as FormControl;
+    return this.userForm.get('entities');
   }
 
   get authorizedIPAddresses() {
-    return this.userForm.get('authorizedIPAddresses') as FormControl;
+    return this.userForm.get('authorizedIPAddresses');
   }
 
 

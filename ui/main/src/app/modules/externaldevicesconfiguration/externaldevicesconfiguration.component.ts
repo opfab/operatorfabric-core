@@ -86,8 +86,8 @@ export class ExternaldevicesconfigurationComponent {
         return translateService.instant('ag-grid.' + key);
         // Not this.translateService otherwise "undefined" error
       },
-
-    }
+      popupParent: document.querySelector('body')
+    };
    }
 
 
@@ -119,7 +119,7 @@ export class ExternaldevicesconfigurationComponent {
   }
 
   refreshData() {
-    this.externalDevicesService.getAllUserConfigurations().subscribe(configurations => {
+    this.externalDevicesService.queryAllUserConfigurations().subscribe(configurations => {
       this.userConfigurations = configurations;
     });
   }

@@ -96,30 +96,38 @@
 
         <div style="text-align: center;width:100% ; ">
 
-
           <div id='div-detail-btn'>
 
-
-              <div class="opfab-card-received-footer" style="max-width: 50%;text-align: left">
-                <span translate>feed.received</span>
-                {{formattedPublishDate}} <span translate> feed.at </span> {{formattedPublishTime}}
-              
-                <span *ngIf="fromEntityOrRepresentative">
-                  <span translate> feed.from</span>
-                  {{fromEntityOrRepresentative}}
-                </span>
-                
-                <span *ngIf="lastResponse">
-                  <span > --- </span>
-                  <span translate>feed.lastResponse</span>
-                  {{formatDate(lastResponse.publishDate)}} <span translate> feed.at </span> {{formatTime(lastResponse.publishDate)}}
-              
-                  <span>
-                    <span translate> feed.from</span>
-                    {{getResponsePublisher(lastResponse)}}
-                  </span>
-                </span>
+            <div style="text-align: left;margin-top: 5px" *ngIf="displayCardAcknowledgedFooter()" class="opfab-card-response-header">
+              <div class="flex-container" id="opfab-card-acknowledged-footer" style="width:100%;padding-left: 15px;flex-direction: row">
+                <span translate>cardAcknowledgment.acknowledged</span>&nbsp;:
+                <div>
+                <span *ngFor="let entity of listEntitiesToAck" style="display:inline-block;"
+                      [ngStyle]="{'color': entity.color}" [id]="'opfab-card-acknowledged-entity-'+entity.id">&nbsp; {{entity.name}} &nbsp;</span>
+                </div>
               </div>
+            </div>
+
+            <div class="opfab-card-received-footer" style="max-width: 50%;text-align: left">
+              <span translate>feed.received</span>
+              {{formattedPublishDate}} <span translate> feed.at </span> {{formattedPublishTime}}
+              
+              <span *ngIf="fromEntityOrRepresentative">
+                <span translate> feed.from</span>
+                {{fromEntityOrRepresentative}}
+              </span>
+                
+              <span *ngIf="lastResponse">
+                <span > --- </span>
+                <span translate>feed.lastResponse</span>
+                {{formatDate(lastResponse.publishDate)}} <span translate> feed.at </span> {{formatTime(lastResponse.publishDate)}}
+              
+                <span>
+                  <span translate> feed.from</span>
+                  {{getResponsePublisher(lastResponse)}}
+                </span>
+              </span>
+            </div>
 
             <div *ngIf="showButtons" style="text-align: right;">
               <button id="opfab-card-details-btn-response" class="opfab-btn"
@@ -171,3 +179,26 @@
       </div>
     </div>
   </ng-template>
+
+  <ng-template #chooseEntityForResponsePopup let-modal>
+    <div class="modal-header">
+      <div translate> response.entityChoice </div>
+      <div class="opfab-close-modal-icon" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </div>
+    </div>
+    <div class="modal-body text-center">
+      <br/><p translate>response.chooseEntityForResponse</p><br/>
+      <form [formGroup]="selectEntityForm" class="opfab-form-lighter">
+        <div class="row">
+            <of-single-filter id="opfab-card-details-entity-choice-selector" i18nRootLabelKey="shared." style="position: relative;"
+                              [parentForm]="selectEntityForm" filterPath="entity" [values]="userEntityOptionsDropdownList">
+            </of-single-filter>
+        </div>
+        <br/>
+      </form>
+      <button id="opfab-card-details-entity-choice-btn-cancel" type="button" class="opfab-btn-cancel" (click)="cancelEntityChoice()" translate>button.cancel</button>
+      <button id="opfab-card-details-entity-choice-btn-confirm" type="button" class="opfab-btn" (click)="submitEntityChoice()" translate>button.ok</button>
+    </div>
+  </ng-template>
+</div>

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -94,7 +94,7 @@ public class OAuth2UsersConfiguration {
                     user.setGroups(getGroupsList(jwt));
                 }
 
-                if (jwtProperties.gettingEntitiesFromToken) user.setEntities(getEntitiesFromToken(jwt));
+                if (jwtProperties.isGettingEntitiesFromToken()) user.setEntities(getEntitiesFromToken(jwt));
 
                 List<GrantedAuthority> authorities = computeAuthorities(user);
 

@@ -10,9 +10,6 @@
 
 package org.opfab.cards.publication.controllers;
 
-import lombok.extern.slf4j.Slf4j;
-import org.eclipse.jetty.util.ajax.JSON;
-import org.opfab.aop.process.mongo.models.UserActionTraceData;
 import org.opfab.cards.publication.model.CardCreationReportData;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.model.FieldToTranslateData;
@@ -20,8 +17,6 @@ import org.opfab.cards.publication.services.CardProcessingService;
 import org.opfab.cards.publication.services.CardTranslationService;
 import org.opfab.cards.publication.services.UserBasedOperationResult;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
-import org.opfab.springtools.error.model.ApiError;
-import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,15 +29,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-/**
- * Synchronous controller
- */
 @RestController
 @RequestMapping("/cards")
-@Slf4j
 
 public class CardController {
 
@@ -117,14 +109,16 @@ public class CardController {
      */
     @PostMapping("/userAcknowledgement/{cardUid}")
     public Void postUserAcknowledgement(Principal principal,
-                                              @PathVariable("cardUid") String cardUid, HttpServletResponse response) {
+                                        @PathVariable("cardUid") String cardUid,
+                                        HttpServletResponse response,
+                                        @RequestBody List<String> entitiesAcks) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
 
-        UserBasedOperationResult result=  cardProcessingService.processUserAcknowledgement(cardUid,user.getUserData());
+        UserBasedOperationResult result = cardProcessingService.processUserAcknowledgement(cardUid, user.getUserData(), entitiesAcks);
  
         if (!result.isCardFound()) response.setStatus(404);
-        else  {
+        else {
             if (Boolean.TRUE.equals(result.getOperationDone()))
                 response.setStatus(201);
             else
@@ -190,12 +184,6 @@ public class CardController {
         return null;
     }
 
-    @GetMapping("traces/ack/{cardUid}")
-    @ResponseStatus(HttpStatus.OK)
-    public @Valid UserActionTraceData searchTraces(Principal principal, @PathVariable String cardUid) {
-        return cardProcessingService.findTraceByCardUid(principal.getName(), cardUid);
-
-    }
 
         /** Takes string representing number of milliseconds since Epoch and returns corresponding Instant
      * */

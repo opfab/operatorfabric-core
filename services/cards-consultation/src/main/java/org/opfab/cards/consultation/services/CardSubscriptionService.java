@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,23 +10,26 @@
 package org.opfab.cards.consultation.services;
 
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
-
+import net.minidev.json.parser.ParseException;
 import org.opfab.springtools.configuration.oauth.UserServiceCache;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.ParseException;
 
 @Service
 @Slf4j
 public class CardSubscriptionService {
 
+    @Value("${checkIfUserIsAlreadyConnected:true}")
+    private boolean checkIfUserIsAlreadyConnected;
 
     private static final String ERROR_MESSAGE_PARSING = "ERROR during received message parsing";
     private final long heartbeatDelay;
@@ -69,18 +72,31 @@ public class CardSubscriptionService {
             log.debug("Send heartbeat to all subscription");
             cache.keySet().forEach(key -> {
                 CardSubscription sub = cache.get(key); 
-                if (sub!=null) // subscription can be null if it has been evict during the process of going throw the keys 
+                if (sub != null) // subscription can be null if it has been evicted during the process of going throw the keys
                 {
-                        log.debug("Send heartbeat to {}",key);
-                        sub.publishDataIntoSubscription("HEARTBEAT");
+                    log.debug("Send heartbeat to {}",key);
+                    sub.publishDataIntoSubscription("HEARTBEAT");
                 }
             });
 
         }
     }
 
- 
-    public CardSubscription subscribe( CurrentUserWithPerimeters currentUserWithPerimeters,String clientId) {
+    public boolean mustCheckIfUserIsAlreadyConnected() {
+        return checkIfUserIsAlreadyConnected;
+    }
+
+    public boolean willDisconnectAnExistingSubscriptionWhenLoggingIn(String userLogin) {
+        return mustCheckIfUserIsAlreadyConnected() && isUserAlreadyConnected(userLogin);
+    }
+
+
+    public CardSubscription subscribe(CurrentUserWithPerimeters currentUserWithPerimeters, String clientId) {
+
+        if (mustCheckIfUserIsAlreadyConnected()) {
+            String userLogin = currentUserWithPerimeters.getUserData().getLogin();
+            disconnectAllUsersWithSameLogin(userLogin);
+        }
 
         String subId = CardSubscription.computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin(),clientId);
         CardSubscription.CardSubscriptionBuilder cardSubscriptionBuilder = CardSubscription.builder()
@@ -88,17 +104,39 @@ public class CardSubscriptionService {
                 .clientId(clientId);
         CardSubscription cardSubscription;
         cardSubscription = cardSubscriptionBuilder.build();
+
         cardSubscription.initSubscription(() -> evictSubscription(subId));
         cache.put(subId, cardSubscription);
         log.info("Subscription created with id {} for user {} ", cardSubscription.getId(), cardSubscription.getUserLogin());
         cardSubscription.userServiceCache = this.userServiceCache;
+
         return cardSubscription;
+    }
+
+
+
+    private void disconnectAllUsersWithSameLogin(String userLogin) {
+        cache.keySet().forEach(key -> {
+            CardSubscription sub = cache.get(key);
+            boolean isSameLogin = sub != null && userLogin.equals(sub.getUserLogin());
+
+            if (isSameLogin)  {
+                log.info("Send disconnection request message to {}",key);
+                sub.publishDataIntoSubscription("DISCONNECT_USER_DUE_TO_NEW_CONNECTION");
+            }
+        });
+
+    }
+
+    private boolean isUserAlreadyConnected(String userLogin) {
+        Optional<CardSubscription> userSubscription = cache.values().stream().filter(sub -> sub.getUserLogin().equals(userLogin)).findFirst();
+        return userSubscription.isPresent();
     }
 
     public void evictSubscription(String subId) {
         
         CardSubscription sub = cache.get(subId);
-        if (sub==null) {
+        if (sub == null) {
             log.info("Subscription with id {} already evicted , as it is not existing anymore ", subId);
             return;
         }
@@ -114,9 +152,9 @@ public class CardSubscriptionService {
      * @return
      */
     public CardSubscription findSubscription(CurrentUserWithPerimeters currentUserWithPerimeters, String uiId) {
-        if(currentUserWithPerimeters == null)
+        if (currentUserWithPerimeters == null)
             throw new IllegalArgumentException("user is a mandatory parameter of CardSubscriptionService#findSubscription");
-        if(uiId == null)
+        if (uiId == null)
             throw new IllegalArgumentException("uiId is a mandatory parameter of CardSubscriptionService#findSubscription");
         String subId = CardSubscription.computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin(), uiId);
         return cache.get(subId);
@@ -134,9 +172,10 @@ public class CardSubscriptionService {
 
     public void onMessage(String queueName, String message) {
 
-        log.debug("receive from rabbit queue {} message {}",queueName,message);
+        log.debug("receive from rabbit queue {} message {}", queueName, message);
         switch (queueName) {
             case "process":
+            case "ack":
                 cache.values().forEach(subscription -> subscription.publishDataIntoSubscription(message));
                 break;
             case "user":
@@ -146,7 +185,7 @@ public class CardSubscriptionService {
                         });
                 break;
             case "card":
-                cache.values().forEach(subscription ->  processNewCard(message,subscription));
+                cache.values().forEach(subscription -> processNewCard(message, subscription));
                 break;
             default:
                 log.info("unrecognized queue {}" , queueName);

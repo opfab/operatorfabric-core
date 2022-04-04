@@ -1,0 +1,102 @@
+// Copyright (c) 2022 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 3.5.0 to release 3.6.0
+
+== Template rendering
+
+Bootstrap library has been migrate to v5.
+
+[IMPORTANT]
+If you use bootstrap css classes in your templates, it's strongly recommended to check your template rendering after migration.
+
+Charts library has been upgraded from version 3.2.1 to 3.7.1
+
+[IMPORTANT]
+If you use charts in your templates, it's strongly recommended to check your template rendering after migration.
+
+== Mongo data migration steps
+
+This section outlines the necessary steps to migrate existing data.
+
+[IMPORTANT]
+If you use response card feature, you need to perform these steps before starting up the OperatorFabric instance to avoid displaying wrong data in archives page.
+
+. Backup your existing Mongo data.
+
+. Run the following scripts in the mongo shell to update the value of the new field `deletionDate` for archived cards:
+
++
+[source, shell]
+----
+db.archivedCards.updateMany(
+{"deletionDate": {"$exists": false}},
+{"$set": {"deletionDate": new ISODate("1970-01-01T00:00:00Z")}} 
+)
+----
+
+== About screen
+
+You do not need anymore to precise opfab version in web-ui.json to see it on about screen. So you need to remove the corresponding line. For example : 
+....
+      "operatorfabric": {
+        "name": "OperatorFabric",
+        "rank": 0,
+        "version": "2.5.0.RELEASE"
+      }
+....
+
+
+== Deprecated feature 
+
+
+===  Method templateGateway.getSpecificInformation() 
+  
+Implementation of method templateGateway.getSpecificInformation() in usercard templates is now deprecated, replace it by usercardTemplateGateway.getSpecificInformation(). It is just a naming change, the behavior is the same.
+
+
+=== Restrict recipient dropdown list for user 
+
+Using "recipientList" in state definition (in config.json) is now deprecated 
+
+If you use  "recipientList" to restrict the list of recipients shown to user, replace it with code in template as in the following example : 
+
+....
+    usercardTemplateGateway.setDropdownEntityRecipientList([
+            {"id": "ENTITY_FR", "levels": [0,1]},
+            {"id": "IT_SUPERVISOR_ENTITY"}
+        ]);
+....
+
+=== Set the list of recipients  
+
+Using "recipientList" in state definition (in config.json) is now deprecated 
+
+If you use  "recipientList" to set the list of recipients, provide now the list of recipients when returning the card object in usercardTemplateGateway.getSpecificCardInformation() in the field entityRecipients.
+
+
+
+Example:
+....
+
+    usercardTemplateGateway.getSpecificCardInformation = function () {
+        const message = document.getElementById('message').value;
+        const card = {
+          summary : {key : "message.summary"},
+          title : {key : "message.title"},
+          entityRecipients: ["ENTITY_FR","IT_SUPERVISOR_ENTITY"],
+          data : {message: message}
+        };
+        if (message.length<1) return { valid:false , errorMsg:'You must provide a message'}
+        return {
+            valid: true,
+            card: card
+        };
+
+....
+
+

@@ -17,13 +17,13 @@
     <div class="d-flex  p-0 border-0">
         <div class="badge-border  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}}">
         </div>
-        <div class="p-1" style="width: 100%">
-            <div style="display: flex;">
+        <div  style="width: 100%">
+            <div style="display: grid;grid-template-columns: auto auto;margin-top:2px">
                 <p class="card-title ">
                     <span class="text-uppercase">{{lightCard.titleTranslated}} </span>
                 </p>
-                <div class="ml-auto align-self-center pr-2" style="margin-right:-5px; margin-top: -10px;">
-                    <div class="d-flex align-items-end flex-row">
+                <div style="text-align: right;padding-right: 5px;">
+                    <div>
                         <ng-template #tipHasAResponseFromYourEntity>
                             <span translate>feed.tips.hasAResponseFromYourEntity</span>
                         </ng-template>
@@ -43,14 +43,12 @@
                     </div>
                 </div>
             </div>
-            <div style="display: flex; width: 100%;margin-top: 5px;">
+            <div style="display: grid;grid-template-columns: auto auto;margin-top: 8px;">
 
                 <p *ngIf="this.dateToDisplay" id="opfab-lightcard-dates" class="card-subtitle">({{this.dateToDisplay}})</p>
 
-                <div class="ml-auto align-self-center pr-2">
-                    <div class="d-flex align-items-end flex-row" style="margin-top: -0.5rem" >
+                <div style="text-align: right;margin-top: -5px;margin-right: 5px ;padding-right: 5px; ">
                         <of-countdown  *ngIf="!!lightCard.lttd" [lttd]="lightCard.lttd" [showExpiredIcon]="showExpiredIcon" [showExpiredLabel]="showExpiredLabel" [expiredLabel]="expiredLabel"></of-countdown>
-                    </div>
                 </div>
             </div>
         </div>
@@ -59,7 +57,7 @@
     </div>
     <div class="d-flex p-0 border-0">
         <div class="badge-border  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}}"></div>
-        <div class="p-1" style="width: 100%">
+        <div class="p-1" style="width: 100%;margin-top:3px">
             <span *ngIf="open">
                 <span id="opfab-selected-card-summary">{{lightCard.summaryTranslated}}</span>
 

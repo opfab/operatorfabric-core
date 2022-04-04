@@ -12,8 +12,6 @@ package org.opfab.cards.publication.services;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.opfab.aop.process.AopTraceType;
-import org.opfab.aop.process.mongo.models.UserActionTraceData;
 import org.opfab.cards.model.CardOperationTypeEnum;
 import org.opfab.cards.publication.model.ArchivedCardPublicationData;
 import org.opfab.cards.publication.model.CardPublicationData;
@@ -62,8 +60,7 @@ public class CardProcessingService {
     private UserCardProcessor userCardProcessor;
     @Autowired
     private ExternalAppClientImpl externalAppClient;
-    @Autowired
-    private TraceRepository traceRepository;
+
 
     @Autowired
     private CardTranslationService cardTranslationService;
@@ -136,14 +133,14 @@ public class CardProcessingService {
             String idCard = card.getProcess() + "." + card.getProcessInstanceId();
             Optional<List<CardPublicationData>> childCard = cardRepositoryService.findChildCard(cardRepositoryService.findCardById(idCard));
             if (childCard.isPresent()) {
-                deleteCards(childCard.get());
+                deleteCards(childCard.get(), card.getPublishDate());
             }
         }
         return null;
     }
 
-    private void deleteCards(List<CardPublicationData> cardPublicationData) {
-        cardPublicationData.forEach(x->deleteCard(x.getId()));
+    private void deleteCards(List<CardPublicationData> cardPublicationData, Instant deletionDate) {
+        cardPublicationData.forEach(x->deleteCard(x.getId(), deletionDate));
     }
     
 
@@ -227,7 +224,7 @@ public class CardProcessingService {
                 if (c.getTimeSpans().get(i) != null) {
                     Instant endInstant = c.getTimeSpans().get(i).getEnd();
                     Instant startInstant = c.getTimeSpans().get(i).getStart();
-                    if ((endInstant != null) && (startInstant != null) && (endInstant.compareTo(startInstant) < 0))
+                    if ((endInstant != null) && (endInstant.compareTo(startInstant) < 0))
                         return false;
                 }
             }
@@ -248,6 +245,11 @@ public class CardProcessingService {
     public void deleteCard(String id) {
         CardPublicationData cardToDelete = cardRepositoryService.findCardById(id);
         deleteCard(cardToDelete);
+    }
+
+    public void deleteCard(String id, Instant deletionDate) {
+        CardPublicationData cardToDelete = cardRepositoryService.findCardById(id);
+        deleteCard(cardToDelete, deletionDate);
     }
 
     public void deleteCards(Instant endDateBefore) {
@@ -302,14 +304,23 @@ public class CardProcessingService {
     }
 
     private Optional<CardPublicationData> deleteCard(CardPublicationData cardToDelete) {
+        return deleteCard(cardToDelete, Instant.now());
+    }
+
+    private Optional<CardPublicationData> deleteCard(CardPublicationData cardToDelete, Instant deletionDate) {
         Optional<CardPublicationData> deletedCard = Optional.ofNullable(cardToDelete);
         if (null != cardToDelete) {
             cardNotificationService.notifyOneCard(cardToDelete, CardOperationTypeEnum.DELETE);
             cardRepositoryService.deleteCard(cardToDelete);
+            cardRepositoryService.findArchivedCardByUid(cardToDelete.getUid()).ifPresent(deleted -> {
+                deleted.setDeletionDate(deletionDate);
+                cardRepositoryService.updateArchivedCard(deleted);
+            });
+            
             externalAppClient.notifyExternalApplicationThatCardIsDeleted(cardToDelete);
             Optional<List<CardPublicationData>> childCard=cardRepositoryService.findChildCard(cardToDelete);
             if(childCard.isPresent()){
-                childCard.get().forEach(x->deleteCard(x.getId()));
+                childCard.get().forEach(x->deleteCard(x.getId(), deletionDate));
             }
         }
         return deletedCard;
@@ -335,8 +346,16 @@ public class CardProcessingService {
         return false;
     }
     
-	public UserBasedOperationResult processUserAcknowledgement(String cardUid, User user) {
-		return cardRepositoryService.addUserAck(user, cardUid);
+	public UserBasedOperationResult processUserAcknowledgement(String cardUid, User user, List<String> entitiesAcks) {
+        if (! user.getEntities().containsAll(entitiesAcks))
+            throw new ApiErrorException(ApiError.builder()
+                    .status(HttpStatus.FORBIDDEN)
+                    .message("Acknowledgement impossible : User is not member of all the entities given in the request")
+                    .build());
+
+        cardNotificationService.pushAckOfCardInRabbit(cardUid, entitiesAcks);
+
+        return cardRepositoryService.addUserAck(user, cardUid, entitiesAcks);
 	}
 
 
@@ -351,9 +370,5 @@ public class CardProcessingService {
 	public UserBasedOperationResult deleteUserAcknowledgement(String cardUid, String userName) {
 		return cardRepositoryService.deleteUserAck(userName, cardUid);
 	}
-
-    public UserActionTraceData findTraceByCardUid(String name, String cardUid) {
-        return traceRepository.findByCardUidAndActionAndUserName(cardUid, AopTraceType.ACK.getAction(),name);
-    }
 
 }

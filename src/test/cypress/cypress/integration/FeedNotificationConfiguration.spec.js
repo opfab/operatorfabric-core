@@ -16,6 +16,7 @@ describe ('Feed notification configuration tests',function () {
 
     before('Set up configuration', function () {
         cy.loadTestConf();
+        cy.deleteAllSettings();
     });
 
     it('Check feed notification configuration screen for operator1_fr', function () {
@@ -50,9 +51,9 @@ describe ('Feed notification configuration tests',function () {
 
         // We check the number of processes and their titles
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').should('have.length', 3);
-        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').first().should('have.text', 'Examples for new cards  ');
-        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').eq(1).should('have.text', 'Examples for new cards 2 ');
-        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').last().should('have.text', 'Examples for new cards 3 ');
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').first().should('have.text', 'Conference and IT incident  ');
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').eq(1).should('have.text', 'Message or question ');
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').last().should('have.text', 'Task ');
 
         // We check the number of states for each process
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').first().find('.row').should('have.length', 2);
@@ -104,9 +105,9 @@ describe ('Feed notification configuration tests',function () {
 
         // We check the number of processes and their titles
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').should('have.length', 3);
-        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').first().should('have.text', 'Examples for new cards  ');
-        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').eq(1).should('have.text', 'Examples for new cards 2 ');
-        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').last().should('have.text', 'Examples for new cards 3 ');
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').first().should('have.text', 'Conference and IT incident  ');
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').eq(1).should('have.text', 'Message or question ');
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').last().should('have.text', 'Task ');
 
         // We check the number of states for each process
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').first().find('.row').should('have.length', 2);
@@ -145,19 +146,19 @@ describe ('Feed notification configuration tests',function () {
         cy.get('.opfab-feedconfiguration-processlist').first().find('p').should('have.length', 6);
 
         // We check the title of each process
-        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(0).should('have.text', 'Examples for new cards  ');
-        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(1).should('have.text', 'Examples for new cards 2 ');
-        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(2).should('have.text', 'Examples for new cards 3 ');
-        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(3).should('have.text', 'IGCC ');
-        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(4).should('have.text', 'Process example  ');
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(0).should('have.text', 'Conference and IT incident  ');
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(1).should('have.text', 'IGCC ');
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(2).should('have.text', 'Message or question ');
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(3).should('have.text', 'Process example  ');
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(4).should('have.text', 'Task ');
         cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(5).should('have.text', 'Test process for cypress ');
 
         // We check the number of states for each process
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(0).find('.row').should('have.length', 2);
-        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(1).find('.row').should('have.length', 3);
-        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(2).find('.row').should('have.length', 1);
-        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(3).find('.row').should('have.length', 6);
-        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(4).find('.row').should('have.length', 7);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(1).find('.row').should('have.length', 6);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(2).find('.row').should('have.length', 3);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(3).find('.row').should('have.length', 7);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(4).find('.row').should('have.length', 1);
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(5).find('.row').should('have.length', 9);
 
         // We check state 'Planned outage date response' from 'Process example' is absent because property 'isOnlyAChildState' is set to true
@@ -176,31 +177,31 @@ describe ('Feed notification configuration tests',function () {
 
         // First process group (we check all processes are checked)
         cy.get('.opfab-feedconfiguration-processlist').first().find('p').as('firstGroupProcesses');
-        cy.get('@firstGroupProcesses').first().find('input').should('be.checked');//IGCC
-        cy.get('@firstGroupProcesses').last().find('input').should('be.checked'); //Process example
+        cy.get('@firstGroupProcesses').first().find('input').should('be.checked');
+        cy.get('@firstGroupProcesses').last().find('input').should('be.checked'); 
 
         // Second process group (we check all processes are checked)
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').as('secondGroupProcesses');
-        cy.get('@secondGroupProcesses').first().find('input').should('be.checked');  //Examples for new cards
-        cy.get('@secondGroupProcesses').eq(1).find('input').should('be.checked');//Examples for new cards 2
-        cy.get('@secondGroupProcesses').last().find('input').should('be.checked');   //Examples for new cards 3
+        cy.get('@secondGroupProcesses').first().find('input').should('be.checked');  
+        cy.get('@secondGroupProcesses').eq(1).find('input').should('be.checked');
+        cy.get('@secondGroupProcesses').last().find('input').should('be.checked');   
 
         // Processes without group (we check the process is checked)
-        cy.get('.opfab-feedconfiguration-processlist').last().find('p').find('input').should('be.checked'); //Test process for cypress
+        cy.get('.opfab-feedconfiguration-processlist').last().find('p').find('input').should('be.checked');
 
-        // We unselect 'Examples for new cards 2' process
+        // We unselect 'Message or question' process
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').eq(1).find('input').uncheck({force: true});
 
-        // We check 'Examples for new cards 2' process and all of its states are unchecked
+        // We check 'Message or question' process and all of its states are unchecked
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').eq(1).find('input').should('not.be.checked');
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').eq(1).find('.row').as('ExamplesForNewCards2States');
         cy.get('@ExamplesForNewCards2States').contains('Message').find('input').should('not.be.checked');
         cy.get('@ExamplesForNewCards2States').contains('Question').find('input').should('not.be.checked');
 
-        // We select 'Examples for new cards 2' process
+        // We select 'Message or question' process
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').eq(1).find('input').check({force: true});
 
-        // We check 'Examples for new cards 2' process and all of its states are checked
+        // We check 'Message or question' process and all of its states are checked
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').eq(1).find('input').should('be.checked');
         cy.get('@ExamplesForNewCards2States').contains('Message').find('input').should('be.checked');
         cy.get('@ExamplesForNewCards2States').contains('Question').find('input').should('be.checked');
@@ -230,10 +231,10 @@ describe ('Feed notification configuration tests',function () {
 
         // Unselect some notifications
         cy.get('#opfab-navbar-drop_user_menu').click(); // Click top right dropdown menu
-        cy.get('#opfab-navbar-right-menu-feedconfiguration').click({force:true}); // Click notification reception
+        cy.get('#opfab-navbar-right-menu-feedconfiguration').click(); // Click notification reception
 
         cardsToTest.forEach((c) => {
-            cy.get('.opfab-feedconfiguration-process').contains(c).click(); // Unselect card
+            cy.get('.opfab-feedconfiguration-process').contains(c).click({force:true}); // Unselect card
         })
 
         // Save
@@ -243,7 +244,7 @@ describe ('Feed notification configuration tests',function () {
 
 
         // Check feed
-        cy.get('#opfab-navbar-menu-feed').click({force:true}); // Open feed
+        cy.get('#opfab-navbar-menu-feed').click(); // Open feed
 
 
         // All cards minus the cards to check should be visible
@@ -272,7 +273,7 @@ describe ('Feed notification configuration tests',function () {
         cy.loginOpFab('operator1_fr', 'test')
 
         // Check feed
-        cy.get('#opfab-navbar-menu-feed').click({force: true}); // Open feed
+        cy.get('#opfab-navbar-menu-feed').click(); // Open feed
 
         // Cards should not be visible anymore in the card feed
         cardsToTest.forEach((c) => {
@@ -299,14 +300,14 @@ describe ('Feed notification configuration tests',function () {
         cy.get('#opfab-navbar-drop_user_menu').click(); // Click top right dropdown menu
         cy.get('#opfab-navbar-right-menu-feedconfiguration').click({force:true}); // Click notification reception
 
-        cy.get('.opfab-feedconfiguration-processlist').contains("Base Examples").click(); // Select all
+        cy.get('.opfab-feedconfiguration-processlist').contains("Base Examples").click({force:true}); // Select all
 
         cy.get('#opfab-feedconfiguration-btn-confirm').click(); // Save settings
         cy.get('#opfab-feedconfiguration-btn-yes').click(); // and confirm
         cy.get('#opfab-feedconfiguration-btn-yes').should('not.exist'); // wait for dialog to go away
 
         // Check feed
-        cy.get('#opfab-navbar-menu-feed').click({force: true}); // Open feed
+        cy.get('#opfab-navbar-menu-feed').click(); // Open feed
 
         // Cards should be visible in the card feed
         cardsToTest.forEach((c) => {

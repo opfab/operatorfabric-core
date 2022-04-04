@@ -41,5 +41,3 @@ externalRecipients-url: "{\
            connectionRefusedExternalRecipient: \"http://ext-app:8091/test\" \
            }"
 
-# WARNING : If you set this parameter to false , all users have the rights to respond to all cards
-checkPerimeterForResponseCard: true

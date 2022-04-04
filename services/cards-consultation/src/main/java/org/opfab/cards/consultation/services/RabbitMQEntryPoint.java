@@ -30,6 +30,7 @@ public class RabbitMQEntryPoint {
     private static final String CARD_QUEUE_NAME = "card";
     private static final String PROCESS_QUEUE_NAME = "process";
     private static final String USER_QUEUE_NAME = "user";
+    private static final String ACK_QUEUE_NAME = "ack";
 
     @Value("${operatorfabric.amqp.connectionRetries:30}")
     private int retries;
@@ -41,12 +42,14 @@ public class RabbitMQEntryPoint {
     private FanoutExchange cardExchange;
     private FanoutExchange processExchange;
     private FanoutExchange userExchange;
+    private FanoutExchange ackExchange;
     private ConnectionFactory connectionFactory;
     private CardSubscriptionService cardSubscriptionService;
 
     private SimpleMessageListenerContainer cardListener;
     private SimpleMessageListenerContainer userListener;
     private SimpleMessageListenerContainer processListener;
+    private SimpleMessageListenerContainer ackListener;
 
 
     @Autowired
@@ -54,12 +57,14 @@ public class RabbitMQEntryPoint {
             FanoutExchange cardExchange,
             FanoutExchange processExchange,
             FanoutExchange userExchange,
+            FanoutExchange ackExchange,
             ConnectionFactory connectionFactory,
             CardSubscriptionService cardSubscriptionService) {
         this.amqpAdmin = amqpAdmin;
         this.cardExchange = cardExchange;
         this.processExchange = processExchange;
         this.userExchange = userExchange;
+        this.ackExchange = ackExchange;
         this.connectionFactory = connectionFactory;
         this.cardSubscriptionService = cardSubscriptionService;
 
@@ -72,9 +77,11 @@ public class RabbitMQEntryPoint {
         AmqpUtils.createQueue(amqpAdmin, CARD_QUEUE_NAME, cardExchange, retries, retryInterval);
         AmqpUtils.createQueue(amqpAdmin, PROCESS_QUEUE_NAME, processExchange, retries, retryInterval);
         AmqpUtils.createQueue(amqpAdmin, USER_QUEUE_NAME, userExchange, retries, retryInterval);
+        AmqpUtils.createQueue(amqpAdmin, ACK_QUEUE_NAME, ackExchange, retries, retryInterval);
         cardListener = startListener(CARD_QUEUE_NAME);
         userListener = startListener(USER_QUEUE_NAME);
         processListener = startListener(PROCESS_QUEUE_NAME);
+        ackListener = startListener(ACK_QUEUE_NAME);
     }
 
     private SimpleMessageListenerContainer startListener(String queueName) {
@@ -93,6 +100,7 @@ public class RabbitMQEntryPoint {
         cardListener.stop();
         userListener.stop();
         processListener.stop();
+        ackListener.stop();
 
         // we just stop the listener but 
         // we do not delete queue via amqpAdmin.deleteQueue(...)
