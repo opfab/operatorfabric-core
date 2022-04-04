@@ -46,5 +46,12 @@ jobs:
     
       - name: Cypress tests 
         run: ./CICD/github/launch_cypress_tests.sh
+      
+      - name: Upload cypress screenshots
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+            name: cypress-screenshots
+            path: src/test/cypress/cypress/screenshots
 
 
