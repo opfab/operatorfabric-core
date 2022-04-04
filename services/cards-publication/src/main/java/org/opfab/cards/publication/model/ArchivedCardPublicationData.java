@@ -24,6 +24,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+
+import  org.opfab.utilities.ObjectUtils;
 
 /**
  * <p>Archived Card Model, documented at {@link Card}</p>
@@ -146,17 +149,15 @@ public class ArchivedCardPublicationData implements Card {
         this.tags = card.getTags() == null ? null : new ArrayList<>(card.getTags());
         this.severity = card.getSeverity();
         this.data = card.getData();
-        this.userRecipients = card.getUserRecipients() == null ? null : new ArrayList<>(card.getUserRecipients());
-        this.groupRecipients = card.getGroupRecipients() == null ? null : new ArrayList<>(card.getGroupRecipients());
-        this.entityRecipients = card.getEntityRecipients() == null ? null : new ArrayList<>(card.getEntityRecipients());
-        this.externalRecipients = card.getExternalRecipients() == null ? null
-                : new ArrayList<>(card.getExternalRecipients());
-        this.entitiesAllowedToRespond = card.getEntitiesAllowedToRespond() == null ? null
-                : new ArrayList<>(card.getEntitiesAllowedToRespond());
-        this.entitiesRequiredToRespond = card.getEntitiesRequiredToRespond() == null ? null
-                : new ArrayList<>(card.getEntitiesRequiredToRespond());
-        this.entitiesAllowedToEdit = card.getEntitiesAllowedToEdit() == null ? null
-                : new ArrayList<>(card.getEntitiesAllowedToEdit());
+
+        this.userRecipients = ObjectUtils.getNotNullOrDefault(card.getUserRecipients(), null, ArrayList::new);
+        this.groupRecipients = ObjectUtils.getNotNullOrDefault(card.getGroupRecipients(), null, ArrayList::new);
+        this.entityRecipients = ObjectUtils.getNotNullOrDefault(card.getEntityRecipients(), null, ArrayList::new);
+        this.externalRecipients = ObjectUtils.getNotNullOrDefault(card.getExternalRecipients(), null, ArrayList::new);
+        this.entitiesAllowedToRespond = ObjectUtils.getNotNullOrDefault(card.getEntitiesAllowedToRespond(), null, ArrayList::new);
+        this.entitiesRequiredToRespond = ObjectUtils.getNotNullOrDefault(card.getEntitiesRequiredToRespond(), null, ArrayList::new);
+        this.entitiesAllowedToEdit = ObjectUtils.getNotNullOrDefault(card.getEntitiesAllowedToEdit(), null, ArrayList::new);
+
         this.processStateKey = process + "." + state;
         this.publisherType = card.getPublisherType();
         this.representative = card.getRepresentative();
