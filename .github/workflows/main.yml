@@ -92,6 +92,12 @@ jobs:
         if: ${{ github.event.inputs.cypress  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
         run: ./CICD/github/launch_cypress_tests.sh ${{ github.event.inputs.cypressTestFiles }}
 
+      - name: Upload cypress screenshots
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+            name: cypress-screenshots
+            path: src/test/cypress/cypress/screenshots
 
   publish:
     runs-on: ubuntu-latest
@@ -140,6 +146,13 @@ jobs:
       - name: Cypress tests 
         if: ${{ github.event.inputs.cypress  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
         run: ./CICD/github/launch_cypress_tests.sh 
+
+      - name: Upload cypress screenshots
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+            name: cypress-screenshots
+            path: src/test/cypress/cypress/screenshots
 
       - name : Publish Documentation
         if : ${{ github.event.inputs.doc  == 'true' || github.event_name == 'schedule'}}
