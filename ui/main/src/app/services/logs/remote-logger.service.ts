@@ -55,10 +55,21 @@ export class RemoteLoggerService {
 
   public flush() {
     if (this.logs.length > 0) {
-      const logsToPush = this.logs;
+      const logsToPush = this.buildLogsToPush(this.logs);
       this.logs = [];
-      this.httpClient.post<string[]>(`${this.remoteLogsUrl}`, {logs: logsToPush}).subscribe();
+      this.httpClient.post<string[]>(`${this.remoteLogsUrl}`, logsToPush).subscribe();
     }
+  }
+
+  private buildLogsToPush(logs: any[]) {
+    let logsToPush = '';
+    let first = true;
+    logs.forEach(log => {
+      if (!first) logsToPush += '\n';
+      logsToPush += log;
+      first = false;
+    });
+    return logsToPush;
   }
 
 }
