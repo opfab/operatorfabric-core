@@ -10,7 +10,6 @@
 package org.opfab.cards.consultation.configuration.webflux;
 
 import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONObject;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,9 +17,6 @@ import org.springframework.web.reactive.function.server.*;
 import org.springframework.http.MediaType;
 
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 
 @Slf4j
 @Configuration
@@ -35,21 +31,8 @@ public class RemoteLogRoutesConfig implements UserExtractor {
     private HandlerFunction<ServerResponse> logPostRoute() {
         return request -> extractUserFromJwtToken(request)
                 .flatMap(currentUserWithPerimeters -> {
-                    request.bodyToMono(JSONObject.class).subscribe(bodyData -> {
-                        try {
-                            ArrayList<String> logs = (ArrayList<String>) bodyData.get("logs");
-                            Iterator<String> iterator = logs.iterator();
-                            while (iterator.hasNext()) {
-                                log.info(currentUserWithPerimeters.getUserData().getLogin() + " - "
-                                        + iterator.next());
-                            }
-                        } catch (ClassCastException exc) {
-                            log.info("Impossible to parse log ", exc);
-                        }
-
-                    });
-                    return ok()
-                            .contentType(MediaType.APPLICATION_JSON).build();
+                    request.bodyToFlux(String.class).subscribe(logLine -> log.info(currentUserWithPerimeters.getUserData().getLogin() + " - " + logLine));
+                    return ok().contentType(MediaType.APPLICATION_JSON).build();
                 });
     }
 
