@@ -3,7 +3,7 @@ plugins {
     id "org.asciidoctor.jvm.convert" version "3.3.2"
     id "maven-publish"
     id "signing"
-    id 'org.springframework.boot' version '2.5.4'
+    id 'org.springframework.boot' version "$springBoot"
     id 'org.sonarqube' version '3.3' apply false
 }
 
@@ -61,7 +61,7 @@ ext {
             avro                  : "org.apache.avro:avro:$avro",
             kafkaAvroSchemaRegistryClient    : "io.confluent:kafka-schema-registry-client:$kavroSchemaRegistryClient",
             kafkaAvroSerializer              : "io.confluent:kafka-avro-serializer:$kavroAvroSerializer",
-            springKafka           : "org.springframework.kafka:spring-kafka"
+            springKafka           : "org.springframework.kafka:spring-kafka:$springKafka",
 
 
     ]
