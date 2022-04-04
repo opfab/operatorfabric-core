@@ -54,9 +54,9 @@ You do not need anymore to precise opfab version in web-ui.json to see it on abo
 == Deprecated feature 
 
 
-===  Method templateGateway.getSpecificInformation() 
+===  Method templateGateway.getSpecificCardInformation() 
   
-Implementation of method templateGateway.getSpecificInformation() in usercard templates is now deprecated, replace it by usercardTemplateGateway.getSpecificInformation(). It is just a naming change, the behavior is the same.
+Implementation of method templateGateway.getSpecificCardInformation() in usercard templates is now deprecated, replace it by usercardTemplateGateway.getSpecificCardInformation(). It is just a naming change, the behavior is the same.
 
 
 === Restrict recipient dropdown list for user 
