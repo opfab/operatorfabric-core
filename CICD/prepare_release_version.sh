@@ -69,7 +69,7 @@ sed -i "s/\( *image *: *\"lfeoperatorfabric\/.*:\)\(.*\)\"/\1$newVersion\"/g" ./
 sed -i "s/\( *image *: *\"lfeoperatorfabric\/.*:\)\(.*\)\"/\1$newVersion\"/g" ./config/dev/docker-compose.yml;
 
 echo "Using $newVersion for About menu in web-ui.json files"
-jq --arg a "${newVersion}" '.version = $a' ./ui/main/package.json > "tmp" && mv "tmp" ./ui/main/package.json
+jq --arg a "${newVersion}" '.opfabVersion = $a' ./ui/main/package.json > "tmp" && mv "tmp" ./ui/main/package.json
 
 echo "The following files have been updated: "
 echo | git status --porcelain
