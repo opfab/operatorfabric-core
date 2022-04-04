@@ -39,6 +39,17 @@ db.archivedCards.updateMany(
 )
 ----
 
+== About screen
+
+You do not need anymore to precise opfab version in web-ui.json to see it on about screen. So you need to remove the corresponding line. For example : 
+....
+      "operatorfabric": {
+        "name": "OperatorFabric",
+        "rank": 0,
+        "version": "2.5.0.RELEASE"
+      }
+....
+
 
 == Deprecated feature 
 
