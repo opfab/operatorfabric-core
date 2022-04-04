@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+# Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,5 +13,5 @@ cp $JAVA_HOME/jre/lib/security/cacerts /tmp
 chmod u+w /tmp/cacerts
 ./add-certificates.sh /certificates_to_add /tmp/cacerts
 
-java -agentlib:jdwp=transport=dt_socket,address=5005,server=y,suspend=n -Djavax.net.ssl.trustStore=/tmp/cacerts -Djava.security.egd=file:/dev/./urandom $JAVA_OPTIONS -jar /app.jar
+java -agentlib:jdwp=transport=dt_socket,address=5005,server=y,suspend=n -Djavax.net.ssl.trustStore=/tmp/cacerts -Dspring.main.allow-circular-references=true -Djava.security.egd=file:/dev/./urandom $JAVA_OPTIONS -jar /app.jar
 

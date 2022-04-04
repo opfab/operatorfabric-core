@@ -2,3 +2,4 @@ spring:
   data:
     mongodb:
       database: operator-fabric
+spring.main.allow-circular-references: true

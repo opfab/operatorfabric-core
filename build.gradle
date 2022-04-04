@@ -57,7 +57,7 @@ ext {
 
     cloud = [
             dependencies          : "org.springframework.cloud:spring-cloud-dependencies:$springCloud",
-            starterFeign          : "org.springframework.cloud:spring-cloud-starter-openfeign",
+            starterFeign          : "org.springframework.cloud:spring-cloud-starter-openfeign:$springOpenFeign",
             avro                  : "org.apache.avro:avro:$avro",
             kafkaAvroSchemaRegistryClient    : "io.confluent:kafka-schema-registry-client:$kavroSchemaRegistryClient",
             kafkaAvroSerializer              : "io.confluent:kafka-avro-serializer:$kavroAvroSerializer",
