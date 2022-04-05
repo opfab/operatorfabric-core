@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,7 @@ export class LightCard {
         readonly uid: string,
         readonly id: string,
         readonly publisher: string,
-        readonly processVersion: string,    
+        readonly processVersion: string,
         readonly publishDate: number,
         readonly startDate: number,
         readonly endDate: number,
@@ -39,6 +39,8 @@ export class LightCard {
         readonly keepChildCards?: boolean,
         readonly representative?: string,
         readonly representativeType?: PublisherType | string,
+        readonly entitiesAcks?: string[],
+        readonly entityRecipients?: string[],
         readonly entitiesAllowedToRespond?: string[],
         readonly entitiesRequiredToRespond?: string[],
         readonly entitiesAllowedToEdit?: string[],

@@ -120,6 +120,11 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
       return idEntity;
   }
 
+  public isEntityAllowedToSendCard(idEntity: string): boolean {
+      const found = this._entities.find(entity => entity.id === idEntity);
+      return (found && found.entityAllowedToSendCard);
+  }
+
   private setEntityNamesInTemplateGateway(): void {
     const entityNames  = new Map();
     this._entities.forEach(entity =>  entityNames.set(entity.id, entity.name));
@@ -159,11 +164,11 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
   }
 
   /** This method returns the list of entities related to a given parent entity by a specified level of relationship **/
-  public resolveChildEntitiesByLevel(parentId: string, level: number) : Entity[] {
-    let resolved = new Set<Entity>();
-    const parent = this._entities.find(e => e.id === parentId)
+  public resolveChildEntitiesByLevel(parentId: string, level: number): Entity[] {
+    const resolved = new Set<Entity>();
+    const parent = this._entities.find(e => e.id === parentId);
     if (!!parent) {
-      if (level == 0) {
+      if (level === 0) {
         resolved.add(parent);
       } else if (level > 0) {
         this.findChildEntitiesByLevel(parent, 1, level).forEach(c => resolved.add(c));
@@ -173,14 +178,14 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
   }
 
   private findChildEntitiesByLevel(parent: Entity, currentLevel: number, level: number): Entity[] {
-    let resolved = new Set<Entity>();
-    const childs = this._entities.filter(child => child.parents.includes(parent.id));
+    const resolved = new Set<Entity>();
+    const children = this._entities.filter(child => child.parents.includes(parent.id));
 
-    if (currentLevel == level) {
-      childs.forEach(c => resolved.add(c));
+    if (currentLevel === level) {
+      children.forEach(c => resolved.add(c));
     } else if (currentLevel < level) {
-      childs.forEach(c => {
-        this.findChildEntitiesByLevel(c, currentLevel +1, level).forEach(n => resolved.add(n));
+      children.forEach(c => {
+        this.findChildEntitiesByLevel(c, currentLevel + 1, level).forEach(n => resolved.add(n));
       });
     }
     return Array.from(resolved);

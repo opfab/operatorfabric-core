@@ -20,7 +20,8 @@
       "templateName": "message",
       "styles": [],
       "acknowledgmentAllowed": "Always",
-      "type" : "INPROGRESS"
+      "type" : "INPROGRESS",
+      "consideredAcknowledgedForUserWhen" : "AllEntitiesOfUserHaveAcknowledged"
     },
     "questionState": {
       "name": "Question ",

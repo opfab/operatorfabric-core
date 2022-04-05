@@ -61,7 +61,8 @@ export class State {
         readonly isOnlyAChildState?: boolean,
         readonly validateAnswerButtonLabel?: string,
         readonly modifyAnswerButtonLabel?: string,
-        readonly automaticPinWhenAcknowledged?: boolean
+        readonly automaticPinWhenAcknowledged?: boolean,
+        readonly consideredAcknowledgedForUserWhen?: ConsideredAcknowledgedForUserWhenEnum
     ) {
     }
 }
@@ -110,5 +111,11 @@ export enum TypeOfStateEnum {
     INPROGRESS = 'INPROGRESS',
     FINISHED = 'FINISHED',
     CANCELED = 'CANCELED'
+}
+
+export enum ConsideredAcknowledgedForUserWhenEnum {
+    USER_HAS_ACKNOWLEDGED = 'UserHasAcknowledged',
+    ONE_ENTITY_OF_USER_HAS_ACKNOWLEDGED = 'OneEntityOfUserHasAcknowledged',
+    ALL_ENTITIES_OF_USER_HAVE_ACKNOWLEDGED = 'AllEntitiesOfUserHaveAcknowledged'
 }
 

@@ -105,20 +105,18 @@ export class LightCardsStoreService {
     }
 
 
-    // if the flow is more than 10 cards seconds 
-    // loading is consider in progress
+    // if the flow is more than 10 cards seconds
+    // loading is considered in progress
     private checkForLoadingInProgress() {
-        if (this.nbCardLoadedInHalfSecondInterval>=5) {
-            if (this.nbCardLoadedInPreviousHalfSecondInterval>=5) {   
+        if (this.nbCardLoadedInHalfSecondInterval >= 5) {
+            if (this.nbCardLoadedInPreviousHalfSecondInterval >= 5) {
                 this.loadingInProgress.next(true);
-            }
-            else {
+            } else {
                 this.nbCardLoadedInPreviousHalfSecondInterval = this.nbCardLoadedInHalfSecondInterval;
             }
             this.nbCardLoadedInHalfSecondInterval = 0;
-        }  
-        else {
-            if (this.nbCardLoadedInPreviousHalfSecondInterval<5) this.loadingInProgress.next(false);
+        } else {
+            if (this.nbCardLoadedInPreviousHalfSecondInterval < 5) this.loadingInProgress.next(false);
             this.nbCardLoadedInPreviousHalfSecondInterval = this.nbCardLoadedInHalfSecondInterval;
         }
         setTimeout(() => this.checkForLoadingInProgress(), 500);
@@ -141,7 +139,7 @@ export class LightCardsStoreService {
         return this.deletedLightChildCards;
     }
 
-    // for observable subscribe after the events are emit we use replaySubject 
+    // for observable subscribe after the events are emitted we use replaySubject
     public getLightCards(): Observable<any> {
         return this.lightCardsEventsWithLimitedUpdateRate.asObservable();
     }
@@ -156,10 +154,10 @@ export class LightCardsStoreService {
 
     public removeLightCard(cardId) {
         const card = this.lightCards.get(cardId);
-        if (!card) { //is a child card
+        if (!card) { // is a child card
             this.removeChildCard(cardId);
         } else {
-            this.childCards.delete(cardId)
+            this.childCards.delete(cardId);
             this.lightCards.delete(cardId);
         }
         this.lightCardsEvents.next(this.lightCards);
@@ -234,12 +232,12 @@ export class LightCardsStoreService {
 
                 this.deletedLightChildCards.next({'cardId': cardId, 'parentCardId': parentCardId });
 
-                if (this.isLightChildCardFromCurrentUserEntity(removed[0]) && this.getChildCardsFromCurrentUserEntity(childs).length == 0) {
+                if (this.isLightChildCardFromCurrentUserEntity(removed[0]) && this.getChildCardsFromCurrentUserEntity(childs).length === 0) {
                     const parentCard = this.lightCards.get(parentCardId);
                     parentCard.hasChildCardFromCurrentUserEntity = false;
                 }
             }
-        })
+        });
     }
 
     private getChildCardsFromCurrentUserEntity(childs: LightCard[]) {

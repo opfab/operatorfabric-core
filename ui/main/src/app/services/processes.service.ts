@@ -17,7 +17,7 @@ import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {Card} from '@ofModel/card.model';
 import {LightCardsStoreService} from './lightcards/lightcards-store.service';
-import {UserService} from "@ofServices/user.service";
+import {UserService} from '@ofServices/user.service';
 
 @Injectable({
     providedIn: 'root'
@@ -35,8 +35,8 @@ export class ProcessesService {
     private typeOfStatesPerProcessAndState: Map<string, TypeOfStateEnum>;
 
     constructor(
-        private httpClient: HttpClient, 
-        private translateService: TranslateService, 
+        private httpClient: HttpClient,
+        private translateService: TranslateService,
         private lightCardsStoreService: LightCardsStoreService,
         private userService: UserService
     ) {

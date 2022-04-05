@@ -26,6 +26,7 @@ import {I18nService} from '@ofServices/i18n.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountDownModule} from '../countdown/countdown.module';
 import createSpyObj = jasmine.createSpyObj;
+import {CardService} from '@ofServices/card.service';
 
 
 describe('LightCardComponent', () => {
@@ -39,8 +40,10 @@ describe('LightCardComponent', () => {
 
     beforeEach(waitForAsync(() => {
         const routerSpy = createSpyObj('Router', ['navigate']);
-        let myrout = {... routerSpy};
-        myrout.routerState = { snapshot : {url: "archives"}};
+        const myrout = {... routerSpy};
+        myrout.routerState = { snapshot : {url: 'archives'}};
+        const cardServiceSpy = createSpyObj('CardService'
+            , ['unsubscribeCardOperation']);
         TestBed.configureTestingModule({
             imports: [
                 HttpClientTestingModule,
@@ -63,7 +66,8 @@ describe('LightCardComponent', () => {
                 {provide: Router, useValue: myrout},
                 ProcessesService,
                 {provide: 'TimeEventSource', useValue: null},
-                TimeService, I18nService
+                TimeService, I18nService,
+                {provide: CardService, useValue: cardServiceSpy},
             ]}).compileComponents();
         store = TestBed.inject(Store);
         spyOn(store, 'dispatch').and.callThrough();

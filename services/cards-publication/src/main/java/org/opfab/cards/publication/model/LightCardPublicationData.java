@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -65,6 +65,8 @@ public class LightCardPublicationData implements LightCard {
     
     @Transient
     private Boolean hasBeenAcknowledged;
+    private List<String> entitiesAcks;
+    private List<String> entityRecipients;
     
     @Transient
     public Boolean hasBeenRead;
@@ -93,14 +95,14 @@ public class LightCardPublicationData implements LightCard {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Override
     public List<TimeSpan> getTimeSpans() {
-        if(this.timeSpansSet!=null)
+        if (this.timeSpansSet != null)
             return new ArrayList<>(this.timeSpansSet);
         return null;
     }
 
     @Override
     public void setTimeSpans(List<TimeSpan> timeSpans) {
-        if(timeSpans != null)
+        if (timeSpans != null)
             this.timeSpansSet = new HashSet<>(timeSpans);
 
     }
