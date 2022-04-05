@@ -11,7 +11,7 @@ Feature: get prometheus monitoring
     Then status 200
 
   Scenario: get monitoring for cards-publication
-    Given url opfabCardsPublicationUrl + 'actuator/prometheus'
+    Given url opfabPublishCardUrl + 'actuator/prometheus'
     When method get
     Then status 200
 

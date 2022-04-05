@@ -9,7 +9,7 @@ Feature: Log Level Access
 
     * def businessConfigLoggersUrl = opfabBusinessConfigUrl + 'actuator/loggers/org.opfab'
     * def userLoggersUrl = opfabUserUrl + 'actuator/loggers/org.opfab'
-    * def cardsPublicationLoggersUrl = opfabCardsPublicationUrl + 'actuator/loggers/org.opfab'
+    * def cardsPublicationLoggersUrl = opfabPublishCardUrl + 'actuator/loggers/org.opfab'
     * def cardsConsultationLoggersUrl = opfabCardsConsultationUrl + 'actuator/loggers/org.opfab'
     * def externalDevicesLoggersUrl = opfabExternalDevicesUrl + 'actuator/loggers/org.opfab'
     

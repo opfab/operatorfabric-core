@@ -10,8 +10,8 @@ Feature: Client ip control
     * def userServiceUrl = opfabUserUrl + 'users/user_test_api_1'
     * def businessConfigServiceUrl = opfabBusinessConfigUrl + 'businessconfig/processes/'
     * def cardsConsultationServiceUrl = opfabCardsConsultationUrl + 'cardSubscription' + '?notification=false&clientId=abc0123456789def'
-    * def userCardsPublicationServiceUrl = opfabCardsPublicationUrl + 'cards/userCard'
-    * def cardsPublicationServiceUrl = opfabCardsPublicationUrl + 'cards'
+    * def userCardsPublicationServiceUrl = opfabPublishCardUrl + 'cards/userCard'
+    * def cardsPublicationServiceUrl = opfabPublishCardUrl + 'cards'
 
     * def nginxUserServiceUrl = opfabUrl + 'users/users/user_test_api_1'
     * def nginxBusinessConfigServiceUrl = opfabUrl + 'businessconfig/processes/'
