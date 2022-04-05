@@ -47,8 +47,8 @@ export const AuthenticationImportHelperForSpecs = [AuthenticationService,
 
 
 export function getOneRandomMenu(): Menu {
-    const entries: MenuEntry[]=[];
-    const entryCount = getPositiveRandomNumberWithinRange(2,5);
+    const entries: MenuEntry[] = [];
+    const entryCount = getPositiveRandomNumberWithinRange(2, 5);
     for (let j = 0; j < entryCount; j++) {
         entries.push(new MenuEntry(
             getRandomAlphanumericValue(3, 10),
@@ -59,38 +59,38 @@ export function getOneRandomMenu(): Menu {
         );
     }
     return new Menu(
-        getRandomAlphanumericValue(3,10),
-        getRandomAlphanumericValue(3,10),
+        getRandomAlphanumericValue(3, 10),
+        getRandomAlphanumericValue(3, 10),
         entries);
 }
 
 export function getRandomMenus(): Menu[] {
     const result: Menu[] = [];
-    const menuCount = getPositiveRandomNumberWithinRange(2,4);
-    for (let i=0;i<menuCount;i++){
-        result.push(getOneRandomMenu())
+    const menuCount = getPositiveRandomNumberWithinRange(2, 4);
+    for (let i = 0; i < menuCount; i++) {
+        result.push(getOneRandomMenu());
     }
     return result;
 }
 
-export function getOneRandomProcess(processTemplate?:any): Process {
-    processTemplate=processTemplate?processTemplate:{};
+export function getOneRandomProcess(processTemplate?: any): Process {
+    processTemplate = processTemplate ? processTemplate : {};
     const states = new OfMap();
-    const stateCount = getPositiveRandomNumberWithinRange(1,3);
+    const stateCount = getPositiveRandomNumberWithinRange(1, 3);
 
-    for(let j=0; j<stateCount;j++){
+    for (let j = 0; j < stateCount; j++) {
         const templateName = 'template1';
-        states[getRandomAlphanumericValue(3,10)]=
-            new State(templateName, ['style1','style2']);
+        states[getRandomAlphanumericValue(3, 10)] =
+            new State(templateName, ['style1', 'style2']);
     }
 
 
     return new Process(
-        processTemplate.id?processTemplate.id:getRandomAlphanumericValue(3,10),
-        processTemplate.version?processTemplate.version:getRandomAlphanumericValue(3,10),
-        processTemplate.name?processTemplate.name:getRandomAlphanumericValue(3,10),
-        processTemplate.locales?processTemplate.locales:undefined,
-        processTemplate.states?processTemplate.states:states);
+        processTemplate.id ? processTemplate.id : getRandomAlphanumericValue(3, 10),
+        processTemplate.version ? processTemplate.version : getRandomAlphanumericValue(3, 10),
+        processTemplate.name ? processTemplate.name : getRandomAlphanumericValue(3, 10),
+        processTemplate.locales ? processTemplate.locales : undefined,
+        processTemplate.states ? processTemplate.states : states);
 
 }
 
@@ -118,10 +118,10 @@ export function pickARandomItemOfAnEnum<E>(currentEnum: E): E {
 }
 
 
-export function getRandomIndex<E>(array: E[]){
-    if(array && array.length >0){
-        return generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(0,array.length);
-    }else{
+export function getRandomIndex<E>(array: E[]) {
+    if (array && array.length > 0) {
+        return generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(0, array.length);
+    } else {
         return 0;
     }
 }
@@ -147,9 +147,9 @@ export function getOneRandomLightCard(lightCardTemplate?: any): LightCard {
         getRandomI18nData(),
         getRandomAlphanumericValue(3, 24),
         getRandomAlphanumericValue(3, 24),
-        lightCardTemplate.tags?lightCardTemplate.tags:null,
-        lightCardTemplate.timeSpans?lightCardTemplate.timeSpans:null,
-        lightCardTemplate.process?lightCardTemplate.process:'testProcess'
+        lightCardTemplate.tags ? lightCardTemplate.tags : null,
+        lightCardTemplate.timeSpans ? lightCardTemplate.timeSpans : null,
+        lightCardTemplate.process ? lightCardTemplate.process : 'testProcess'
     );
 }
 
@@ -164,7 +164,7 @@ export function getRandomPage(totalPages = 1, totalElements = 10): Page<LightCar
 }
 
 
-export function getOneRandomCard(cardTemplate?:any): Card {
+export function getOneRandomCard(cardTemplate?: any): Card {
     cardTemplate = cardTemplate ? cardTemplate : {};
     const today = new Date().getTime();
     const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
@@ -198,7 +198,7 @@ export function getOneRandomCard(cardTemplate?:any): Card {
     );
 }
 
-export function generateRandomArray<T>(func: () => T,min = 1, max = 2): Array<T> {
+export function generateRandomArray<T>(func: () => T, min = 1, max = 2): Array<T> {
     const size = generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(min, max);
     const array = [];
     for (let i = 0; i < size; ++i) {
@@ -239,7 +239,7 @@ export function getPositiveRandomNumberWithinRange(min = 1, max?: number): numbe
 
 }
 
-export function generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(min = 1, max = 1): number{
+export function generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(min = 1, max = 1): number {
     const minimum = forcePositiveAndOneMinimum(min);
     const maximum = handleMaxAgainstMin(minimum, max);
     return Math.floor(Math.random() * (maximum - minimum) + minimum);
@@ -287,7 +287,7 @@ export function shuffleArrayContentByFisherYatesLike<T>(array: Array<T>): Array<
     let currentLengthOfRemainingArrayToShuffle = array.length;
     let valueHolderForPermutation: T;
     let currentIndex: number;
-    // need a new array other wise the old one behave weirdly
+    // need a new array otherwise the old one behave weirdly
     const result = Array<T>(currentLengthOfRemainingArrayToShuffle);
     while (currentLengthOfRemainingArrayToShuffle) {
         currentIndex = Math.floor(Math.random() * currentLengthOfRemainingArrayToShuffle--);
@@ -302,7 +302,7 @@ export function generateBusinessconfigWithVersion(businessconfigName?: string, v
     const result = new Map<Set<string>>();
     const businessconfig = (businessconfigName) ? businessconfigName : getRandomAlphanumericValue(3, 5);
     function getSomeVersions() {return getRandomAlphanumericValue(3, 8); }
-    const versionValues = (versions) ? versions : new Set( generateRandomArray(getSomeVersions ,3 ,6 ));
+    const versionValues = (versions) ? versions : new Set( generateRandomArray(getSomeVersions, 3, 6));
     result[businessconfig] = versionValues;
     return result;
 }
@@ -322,7 +322,7 @@ export function BusinessconfigI18nLoaderFactory(): TranslateLoader {
 /** This function helps get around the fact that TestBed.inject() which replaces TestBed.get in Angular v9 is type-safe, so it returns the
  * type of the actual object, which often clashes with the expected type (mock or spy) of the variable. We can't use the "real" type on the
  * variable because we usually need to access methods from the spy or mock.
- * It generate errors such as "Type 'Store<any>' is not assignable to type 'SpyObj<Store<AppState>>'".
+ * It generates errors such as "Type 'Store<any>' is not assignable to type 'SpyObj<Store<AppState>>'".
  * See https://github.com/angular/angular/issues/35944
  * */
 export function injectedSpy<S>(service: Type<S>): SpyObj<S> {

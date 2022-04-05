@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -112,7 +112,7 @@ curl "http://localhost:2100/businessconfig/processes/BUNDLE_TEST/i18n?version=1"
 -H  "Authorization: Bearer ${token}"
 ----
 
-where `${token}` is a valid token for operatorfabric use.
+where `${token}` is a valid token for OperatorFabric use.
 
 The `businessconfig` service should answer with a 200 status associated with the following json:
 

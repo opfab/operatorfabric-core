@@ -95,16 +95,17 @@ public class CardNotificationService {
         }
     }
 
-    public void pushAckOfCardInRabbit(String cardUid, List<String> entitiesAcks) {
+    public void pushAckOfCardInRabbit(String cardUid, String cardId, List<String> entitiesAcks) {
         CardOperationData.BuilderEncapsulator builderEncapsulator = CardOperationData.encapsulatedBuilder();
         builderEncapsulator.builder().type(CardOperationTypeEnum.ACK);
         builderEncapsulator.builder().cardUid(cardUid);
+        builderEncapsulator.builder().cardId(cardId);
         builderEncapsulator.builder().entitiesAcks(entitiesAcks);
         CardOperationData cardOperation = builderEncapsulator.builder().build();
 
         try {
             rabbitTemplate.convertAndSend("ACK_EXCHANGE", "", mapper.writeValueAsString(cardOperation));
-            log.debug("Acknowledgement for cardUid={} with entitiesAcks={} sent to ACK_EXCHANGE", cardUid, entitiesAcks);
+            log.debug("Acknowledgement for cardUid={} and cardId={} with entitiesAcks={} sent to ACK_EXCHANGE", cardUid, cardId, entitiesAcks);
         } catch (JsonProcessingException e) {
             log.error("Unable to linearize card operation for acknowledgement to json on amqp notification");
         }

@@ -41,6 +41,18 @@
     {
       "state": "kitchenSink",
       "right": "ReceiveAndWrite"
+    },
+    {
+      "state": "stateWithUserHasAcknowledged",
+      "right": "ReceiveAndWrite"
+    },
+    {
+      "state": "stateWithOneEntityOfUserHasAcknowledged",
+      "right": "ReceiveAndWrite"
+    },
+    {
+      "state": "stateWithAllEntitiesOfUserHaveAcknowledged",
+      "right": "ReceiveAndWrite"
     }
   ]
 }

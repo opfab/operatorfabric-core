@@ -607,7 +607,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     private markAsReadIfNecessary() {
         if (this.card.hasBeenRead === false) {
-            // we do not set now the card as read in the store , as we want to keep
+            // we do not set now the card as read in the store, as we want to keep
             // the card as unread in the feed
             // we will set it read in the feed when
             //  - we close the card
@@ -615,8 +615,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             //  - we change card
 
             if (this.lastCardSetToReadButNotYetOnFeed) {
-                // if the user has change selected card in feed , set the previous read card as read in the feed
-                if (this.card.id != this.lastCardSetToReadButNotYetOnFeed.id) this.updateLastReadCardStatusOnFeedIfNeeded();
+                // if the user has changed selected card in feed, set the previous read card as read in the feed
+                if (this.card.id !== this.lastCardSetToReadButNotYetOnFeed.id) this.updateLastReadCardStatusOnFeedIfNeeded();
             }
             this.lastCardSetToReadButNotYetOnFeed = this.card;
             this.cardService.postUserCardRead(this.card.uid).subscribe();
@@ -625,7 +625,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     private updateLastReadCardStatusOnFeedIfNeeded() {
         if (this.lastCardSetToReadButNotYetOnFeed) {
-            this.lightCardsStoreService.setLightCardRead(this.lastCardSetToReadButNotYetOnFeed.id,true);
+            this.lightCardsStoreService.setLightCardRead(this.lastCardSetToReadButNotYetOnFeed.id, true);
             this.lastCardSetToReadButNotYetOnFeed = null;
         }
     }

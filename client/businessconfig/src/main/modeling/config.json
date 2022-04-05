@@ -13,6 +13,7 @@
   "singleContentTypes": false,
   "importMappings" : {
     "AcknowledgmentAllowedEnum": "org.opfab.businessconfig.model.AcknowledgmentAllowedEnum",
+    "ConsideredAcknowledgedForUserWhenEnum": "org.opfab.businessconfig.model.ConsideredAcknowledgedForUserWhenEnum",
     "LinkTypeEnum":         "org.opfab.businessconfig.model.LinkTypeEnum",
     "TypeOfStateEnum": "org.opfab.businessconfig.model.TypeOfStateEnum",
     "EpochDate": "java.time.Instant",

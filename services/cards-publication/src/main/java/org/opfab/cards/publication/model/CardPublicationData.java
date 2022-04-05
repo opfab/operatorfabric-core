@@ -170,7 +170,8 @@ public class CardPublicationData implements Card {
                 .publisherType(this.getPublisherType())
                 .representative(this.getRepresentative())
                 .representativeType(this.getRepresentativeType())
-                .secondsBeforeTimeSpanForReminder(this.secondsBeforeTimeSpanForReminder);
+                .secondsBeforeTimeSpanForReminder(this.secondsBeforeTimeSpanForReminder)
+                .entityRecipients(this.getEntityRecipients());
 
         if(this.getTimeSpans()!=null)
             result.timeSpansSet(new HashSet<>(this.getTimeSpans()));

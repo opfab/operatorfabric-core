@@ -13,11 +13,11 @@ import {environment} from '@env/environment';
 import {Observable, of} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {catchError, map, tap} from 'rxjs/operators';
-import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
+import {ConsideredAcknowledgedForUserWhenEnum, Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {Card} from '@ofModel/card.model';
-import {LightCardsStoreService} from './lightcards/lightcards-store.service';
-import {UserService} from "@ofServices/user.service";
+import {UserService} from '@ofServices/user.service';
+import {LightCard} from '@ofModel/light-card.model';
 
 @Injectable({
     providedIn: 'root'
@@ -35,11 +35,10 @@ export class ProcessesService {
     private typeOfStatesPerProcessAndState: Map<string, TypeOfStateEnum>;
 
     constructor(
-        private httpClient: HttpClient, 
-        private translateService: TranslateService, 
-        private lightCardsStoreService: LightCardsStoreService,
-        private userService: UserService
-    ) {
+        private httpClient: HttpClient,
+        private translateService: TranslateService,
+        private userService: UserService) {
+
         this.urlCleaner = new HttpUrlEncodingCodec();
         this.processesUrl = `${environment.urls.processes}`;
         this.processGroupsUrl = `${environment.urls.processGroups}`;
@@ -90,7 +89,7 @@ export class ProcessesService {
 
     private loadAllProcessesInCache() {
         this.processes.forEach(process => {
-            this.processCache.set(`${process.id}.${process.version}` , Object.setPrototypeOf(process, Process.prototype)); 
+            this.processCache.set(`${process.id}.${process.version}` , Object.setPrototypeOf(process, Process.prototype));
         });
     }
 
@@ -101,10 +100,10 @@ export class ProcessesService {
                         if (!!monitoringConfig) {
                             this.monitoringConfig = monitoringConfig;
                             console.log(new Date().toISOString(), 'Monitoring config loaded');
-                        }
-                        else  console.log(new Date().toISOString(), 'No monitoring config to load');
+                        } else
+                            console.log(new Date().toISOString(), 'No monitoring config to load');
                         return monitoringConfig;
-                    }), 
+                    }),
                     catchError(error => {
                         console.error(new Date().toISOString(), 'An error occurred when loading monitoringConfig', error);
                         return of(error);
@@ -328,5 +327,17 @@ export class ProcessesService {
                 statesListPerProcess.set(process.id, statesDropdownList);
         });
         return statesListPerProcess;
+    }
+
+    public getConsideredAcknowledgedForUserWhenForALightCard(lightCard: LightCard):
+        ConsideredAcknowledgedForUserWhenEnum {
+        let consideredAcknowledgedForUserWhen = ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED;
+
+        this.queryProcess(lightCard.process, lightCard.processVersion).subscribe(process => {
+            const state = process.extractState(lightCard);
+            if (!!state.consideredAcknowledgedForUserWhen)
+                consideredAcknowledgedForUserWhen = state.consideredAcknowledgedForUserWhen;
+        });
+        return consideredAcknowledgedForUserWhen;
     }
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -69,6 +69,9 @@ public class LightCardConsultationData implements LightCard {
     private List<String> usersAcks;
     @Transient
     private Boolean hasBeenAcknowledged;
+    private List<String> entitiesAcks;
+    private List<String> entityRecipients;
+
     @Transient
     private Boolean hasBeenRead;
 
@@ -130,16 +133,21 @@ public class LightCardConsultationData implements LightCard {
                 .publisherType(other.getPublisherType())
                 .representative(other.getRepresentative())
                 .representativeType(other.getRepresentativeType())
-                .secondsBeforeTimeSpanForReminder(other.getSecondsBeforeTimeSpanForReminder());    
+                .secondsBeforeTimeSpanForReminder(other.getSecondsBeforeTimeSpanForReminder());
 
-        if(other.getTags()!=null && ! other.getTags().isEmpty())
+        if (other.getTags() != null && ! other.getTags().isEmpty())
             builder.tags(other.getTags());
-        if(other.getTimeSpans()!=null && !other.getTimeSpans().isEmpty())
+        if (other.getTimeSpans() != null && !other.getTimeSpans().isEmpty())
             builder.timeSpansSet(new HashSet<>(other.getTimeSpans()));
-        if(other.getEntitiesAllowedToRespond()!=null && ! other.getEntitiesAllowedToRespond().isEmpty())
+        if (other.getEntitiesAllowedToRespond() != null && ! other.getEntitiesAllowedToRespond().isEmpty())
             builder.entitiesAllowedToRespond(other.getEntitiesAllowedToRespond());
-        if(other.getEntitiesRequiredToRespond()!=null && ! other.getEntitiesRequiredToRespond().isEmpty())
+        if (other.getEntitiesRequiredToRespond() != null && ! other.getEntitiesRequiredToRespond().isEmpty())
             builder.entitiesRequiredToRespond(other.getEntitiesRequiredToRespond());
+
+        if (other.getEntitiesAcks() != null && ! other.getEntitiesAcks().isEmpty())
+            builder.entitiesAcks(other.getEntitiesAcks());
+        if (other.getEntityRecipients() != null && ! other.getEntityRecipients().isEmpty())
+            builder.entityRecipients(other.getEntityRecipients());
         return builder.build();
 
     }

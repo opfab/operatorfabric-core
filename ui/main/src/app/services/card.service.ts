@@ -13,7 +13,7 @@ import {Observable, Subject} from 'rxjs';
 import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
 import {EventSourcePolyfill} from 'ng-event-source';
 import {AuthenticationService} from './authentication/authentication.service';
-import {Card, CardData, CardForPublishing} from '@ofModel/card.model';
+import {Card, CardData, CardForPublishing, fromCardToLightCard} from '@ofModel/card.model';
 import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {GuidService} from '@ofServices/guid.service';
@@ -22,7 +22,7 @@ import {Page} from '@ofModel/page.model';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {CardSubscriptionClosedAction, CardSubscriptionOpenAction, UIReloadRequestedAction} from '@ofActions/cards-subscription.actions';
-import {catchError, takeUntil} from 'rxjs/operators';
+import {catchError, map, takeUntil} from 'rxjs/operators';
 import {RemoveLightCard} from '@ofActions/light-card.actions';
 import {BusinessConfigChangeAction} from '@ofStore/actions/processes.actions';
 import {UserConfigChangeAction} from '@ofStore/actions/user.actions';
@@ -59,15 +59,15 @@ export class CardService {
     private selectedCardId: string = null;
 
     private receivedAcksSubject = new Subject<{cardUid: string, entitiesAcks: string[]}>();
-    private receivedDisconnectedSubject = new Subject<boolean>()
+    private receivedDisconnectedSubject = new Subject<boolean>();
 
     constructor(private httpClient: HttpClient,
-        private guidService: GuidService,
-        private store: Store<AppState>,
-        private authService: AuthenticationService,
-        private lightCardsStoreService: LightCardsStoreService,
-        private filterService: FilterService,
-        private logger: OpfabLoggerService) {
+                private guidService: GuidService,
+                private store: Store<AppState>,
+                private authService: AuthenticationService,
+                private lightCardsStoreService: LightCardsStoreService,
+                private filterService: FilterService,
+                private logger: OpfabLoggerService) {
         const clientId = this.guidService.getCurrentGuidString();
         this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}&version=${packageInfo.opfabVersion}`;
         this.cardsUrl = `${environment.urls.cards}/cards`;
@@ -79,7 +79,11 @@ export class CardService {
     }
 
     loadCard(id: string): Observable<CardData> {
-        return this.httpClient.get<CardData>(`${this.cardsUrl}/${id}`);
+        return this.httpClient.get<CardData>(`${this.cardsUrl}/${id}`).pipe(map(cardData => {
+            cardData.card.hasBeenAcknowledged =
+                this.lightCardsStoreService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(fromCardToLightCard(cardData.card));
+            return cardData;
+        }));
     }
 
     public setSelectedCard(cardId) {
@@ -109,7 +113,9 @@ export class CardService {
                             if (operation.cardId === this.selectedCardId) this.store.dispatch(new RemoveLightCard({card: operation.cardId}));
                             break;
                         case CardOperationType.ACK:
-                            this.logger.info('CardService - Receive ack on card uid=' + operation.cardUid, LogOption.LOCAL_AND_REMOTE);
+                            this.logger.info('CardService - Receive ack on card uid=' + operation.cardUid +
+                                ', id=' + operation.cardId, LogOption.LOCAL_AND_REMOTE);
+                            this.lightCardsStoreService.addEntitiesAcksForLightCard(operation.cardId, operation.entitiesAcks);
                             this.receivedAcksSubject.next({cardUid: operation.cardUid, entitiesAcks: operation.entitiesAcks});
                             break;
                         default:

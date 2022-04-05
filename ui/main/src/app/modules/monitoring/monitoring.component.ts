@@ -33,10 +33,10 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     filters: MonitoringFiltersComponent;
 
     monitoringFilters$ = new Subject<Filter[]>();
-    
+
     responseFilter$ = new Subject<Filter>();
     responseFilterValue = true;
-    
+
     monitoringResult$: Observable<LineOfMonitoringResult[]>;
     unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -69,7 +69,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.monitoringResult$ = 
+        this.monitoringResult$ =
             combineLatest([
                 this.monitoringFilters$.asObservable(),
                 this.responseFilter$.asObservable(),
@@ -78,20 +78,20 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             ).pipe(
                 debounceTime(0), // Add this to avoid ExpressionChangedAfterItHasBeenCheckedError so it waits for component init before processing
                 takeUntil(this.unsubscribe$),
-                // the filters are set   by the monitoring filter and by the time line 
-                // so it generates two events , we need to wait until every filter is set 
-                filter( results => this.areFiltersCorrectlySet(results[0])),  
+                // the filters are set   by the monitoring filter and by the time line
+                // so it generates two events , we need to wait until every filter is set
+                filter( results => this.areFiltersCorrectlySet(results[0])),
                 map(results => {
                         const activeFilters = results[0].concat(results[1]);
-                        const cards = results[2].filter(card => Filter.chainFilter(card,activeFilters));
+                        const cards = results[2].filter(card => Filter.chainFilter(card, activeFilters));
                         if (!!cards && cards.length <= 0) {
                             return null;
                         }
                         return cards.map(card => {
-                                return this.cardToResult(card)
+                                return this.cardToResult(card);
                             }
                         ).filter(elem => !!elem)
-                         .sort(( card1,card2) => (card2.creationDateTime.valueOf() - card1.creationDateTime.valueOf()));
+                         .sort(( card1, card2) => (card2.creationDateTime.valueOf() - card1.creationDateTime.valueOf()));
                     }
                 ),
                 catchError(err => of([]))
@@ -103,10 +103,9 @@ export class MonitoringComponent implements OnInit, OnDestroy {
         this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(false).size > 0;
     }
 
-    private areFiltersCorrectlySet(filters:Array<any>): boolean
-    {
-        let correctlySet:boolean = true;
-        filters.forEach( filter => {if (!filter) correctlySet =false;});
+    private areFiltersCorrectlySet(filters: Array<any>): boolean {
+        let correctlySet = true;
+        filters.forEach( filter => {if (!filter) correctlySet = false; });
         return correctlySet;
     }
 
@@ -128,7 +127,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
         this.monitoringFilters$.next(filters);
     }
 
-    private getEmitter(card: LightCard) : string {
+    private getEmitter(card: LightCard): string {
         const isThirdPartyPublisher = card.publisherType === 'EXTERNAL';
         const sender = (isThirdPartyPublisher) ? card.publisher : this.entitiesService.getEntityName(card.publisher);
 
@@ -149,7 +148,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             entityIdsAllowedOrRequiredToRespond = entityIdsAllowedOrRequiredToRespond.concat(card.entitiesRequiredToRespond);
 
         const entitiesAllowedOrRequiredToRespond = this.entitiesService.getEntitiesFromIds(entityIdsAllowedOrRequiredToRespond);
- 
+
         return this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedOrRequiredToRespond).map(entity => entity.id);
     }
 
@@ -162,12 +161,12 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     private cardToResult(card: LightCard) : LineOfMonitoringResult{
         let typeOfState: TypeOfStateEnum;
         const procId = card.process;
-        
+
         if (!!this.mapOfProcesses && this.mapOfProcesses.has(procId) && !card.parentCardId) {
             const currentProcess = this.mapOfProcesses.get(procId);
             /**
              * work around because Object.setPrototypeOf(currentProcess, Process.prototype);
-             * can't be apply to currentProcess, for some reason.
+             * can't be applied to currentProcess, for some reason.
              * and thus currentProcess.extractState(…) throws an error
              */
             const state = Process.prototype.extractState.call(currentProcess, card);
