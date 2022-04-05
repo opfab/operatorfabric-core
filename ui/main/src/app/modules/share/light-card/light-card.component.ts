@@ -22,6 +22,7 @@ import { AppService, PageType } from '@ofServices/app.service';
 import { EntitiesService } from '@ofServices/entities.service';
 import {ProcessesService} from '@ofServices/processes.service';
 import {TypeOfStateEnum} from '@ofModel/processes.model';
+import {DisplayContext} from '@ofModel/templateGateway.model';
 
 @Component({
     selector: 'of-light-card',
@@ -33,6 +34,8 @@ export class LightCardComponent implements OnInit, OnDestroy {
     @Input() public open = false;
     @Input() public lightCard: LightCard;
     @Input() public displayUnreadIcon = true;
+    @Input() displayContext: any = DisplayContext.REALTIME;
+    
     currentPath: any;
     protected _i18nPrefix: string;
     cardTitle: string;
@@ -115,7 +118,8 @@ export class LightCardComponent implements OnInit, OnDestroy {
     }
 
     public select() {
-        this.router.navigate(['/' + this.currentPath, 'cards', this.lightCard.id]);
+        if (this.displayContext != DisplayContext.PREVIEW)
+            this.router.navigate(['/' + this.currentPath, 'cards', this.lightCard.id]);
     }
 
     get i18nPrefix(): string {
