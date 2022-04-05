@@ -85,6 +85,36 @@
         "state": "dummyResponseState"
       },
       "automaticPinWhenAcknowledged" : true
+    },
+    "stateWithUserHasAcknowledged":
+    {
+      "name":"State to test UserHasAcknowledged",
+      "description": "State to test entities acks with consideredAcknowledgedForUserWhen=UserHasAcknowledged",
+      "consideredAcknowledgedForUserWhen": "UserHasAcknowledged",
+      "templateName" : "kitchenSink",
+      "response": {
+        "state": "dummyResponseState"
+      }
+    },
+    "stateWithOneEntityOfUserHasAcknowledged":
+    {
+      "name":"State to test OneEntityOfUserHasAcknowledged",
+      "description": "State to test entities acks with consideredAcknowledgedForUserWhen=OneEntityOfUserHasAcknowledged",
+      "consideredAcknowledgedForUserWhen": "OneEntityOfUserHasAcknowledged",
+      "templateName" : "kitchenSink",
+      "response": {
+        "state": "dummyResponseState"
+      }
+    },
+    "stateWithAllEntitiesOfUserHaveAcknowledged":
+    {
+      "name":"State to test AllEntitiesOfUserHaveAcknowledged",
+      "description": "State to test entities acks with consideredAcknowledgedForUserWhen=AllEntitiesOfUserHaveAcknowledged",
+      "consideredAcknowledgedForUserWhen": "AllEntitiesOfUserHaveAcknowledged",
+      "templateName" : "kitchenSink",
+      "response": {
+        "state": "dummyResponseState"
+      }
     }
   }
 }

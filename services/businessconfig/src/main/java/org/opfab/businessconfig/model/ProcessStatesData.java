@@ -21,6 +21,7 @@ import java.util.List;
 public class ProcessStatesData implements ProcessStates {
     private ResponseData responseData;
     private AcknowledgmentAllowedEnum acknowledgmentAllowed;
+    private ConsideredAcknowledgedForUserWhenEnum consideredAcknowledgedForUserWhen;
     private String color;
     private String name;
     private String description;
@@ -50,6 +51,14 @@ public class ProcessStatesData implements ProcessStates {
 
     @Override
     public void setAcknowledgmentAllowed(AcknowledgmentAllowedEnum acknowledgmentAllowed) { this.acknowledgmentAllowed = acknowledgmentAllowed; }
+
+    @Override
+    public ConsideredAcknowledgedForUserWhenEnum getConsideredAcknowledgedForUserWhen() { return this.consideredAcknowledgedForUserWhen; }
+
+    @Override
+    public void setConsideredAcknowledgedForUserWhen(ConsideredAcknowledgedForUserWhenEnum consideredAcknowledgedForUserWhen) {
+        this.consideredAcknowledgedForUserWhen = consideredAcknowledgedForUserWhen;
+    }
 
     @Override
     public TypeOfStateEnum getType() { return this.type; }

@@ -120,6 +120,11 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
       return idEntity;
   }
 
+  public isEntityAllowedToSendCard(idEntity: string): boolean {
+      const found = this._entities.find(entity => entity.id === idEntity);
+      return (found && found.entityAllowedToSendCard);
+  }
+
   private setEntityNamesInTemplateGateway(): void {
     const entityNames  = new Map();
     this._entities.forEach(entity =>  entityNames.set(entity.id, entity.name));

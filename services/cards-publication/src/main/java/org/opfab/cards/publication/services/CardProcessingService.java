@@ -356,7 +356,8 @@ public class CardProcessingService {
                     .message("Acknowledgement impossible : User is not member of all the entities given in the request")
                     .build());
 
-        cardNotificationService.pushAckOfCardInRabbit(cardUid, entitiesAcks);
+        cardRepositoryService.findByUid(cardUid).ifPresent(selectedCard ->
+            cardNotificationService.pushAckOfCardInRabbit(cardUid, selectedCard.getId(), entitiesAcks));
 
         return cardRepositoryService.addUserAck(user, cardUid, entitiesAcks);
 	}

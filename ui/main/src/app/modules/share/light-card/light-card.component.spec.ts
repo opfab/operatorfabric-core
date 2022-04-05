@@ -39,8 +39,8 @@ describe('LightCardComponent', () => {
 
     beforeEach(waitForAsync(() => {
         const routerSpy = createSpyObj('Router', ['navigate']);
-        let myrout = {... routerSpy};
-        myrout.routerState = { snapshot : {url: "archives"}};
+        const myrout = {... routerSpy};
+        myrout.routerState = { snapshot : {url: 'archives'}};
         TestBed.configureTestingModule({
             imports: [
                 HttpClientTestingModule,
