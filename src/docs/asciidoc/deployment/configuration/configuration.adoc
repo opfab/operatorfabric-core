@@ -131,7 +131,7 @@ The cards-consultation service has these specific properties :
 |===
 |name|default|mandatory?|Description
 
-|checkIfUserIsAlreadyConnected|true|false|If false, OperatorFabric will allow a user to have several sessions opened at the same time. However, it may cause synchronization problems between the sessions using the same login, so it is recommended to let it to true, its default value. 
+|checkIfUserIsAlreadyConnected|true|no|If false, OperatorFabric will allow a user to have several sessions opened at the same time. However, it may cause synchronization problems between the sessions using the same login, so it is recommended to let it to true, its default value. 
 |===
 
 include::web-ui_configuration.adoc[leveloffset=+1]
