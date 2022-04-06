@@ -359,6 +359,7 @@ describe('Acknowledgment  tests', function () {
         // We display again the card to check entities acknowledgements footer is not displayed anymore
         cy.get('#opfab-navbar-menu-feed').click(); // we go back to the feed
         cy.waitDefaultTime();
+        cy.get('of-light-card').should('have.length', 6);
         cy.get('of-light-card').eq(5).click();
         cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Test message for entities acks");
         cy.get('#opfab-card-acknowledged-footer').should('not.exist');
