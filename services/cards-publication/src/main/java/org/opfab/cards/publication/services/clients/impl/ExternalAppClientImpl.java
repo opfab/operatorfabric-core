@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,6 @@
 package org.opfab.cards.publication.services.clients.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.opfab.cards.publication.kafka.producer.ResponseCardProducer;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.services.clients.ExternalAppClient;
@@ -32,12 +31,9 @@ import org.springframework.web.client.RestTemplate;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -101,7 +97,7 @@ public class ExternalAppClientImpl implements ExternalAppClient {
         .filter(x -> x.getKey().contains(item))
         .map(Map.Entry::getValue)
         .findFirst()
-        .orElse(StringUtils.EMPTY);
+        .orElse("");
     }
 
     private void callExternalApplication(CardPublicationData card, String externalRecipientUrl) {
