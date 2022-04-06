@@ -11,6 +11,7 @@ package org.opfab.externalapp.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
+import org.opfab.cards.model.Card;
 import org.opfab.cards.model.CardCreationReport;
 import org.opfab.cards.model.I18n;
 import org.opfab.cards.model.SeverityEnum;
@@ -21,10 +22,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import org.opfab.cards.model.Card;
 
 @Service
 @Slf4j
@@ -45,29 +45,42 @@ public class ExternalAppServiceImpl implements ExternalAppService {
 	@Override
 	public void receiveCard(Optional<JsonNode> requestBody) {
 		log.info("card reception from Card Publication Service {} : \n\n", requestBody);
-		requestBody.ifPresent(card -> sendBackCard(card.path("processInstanceId").textValue(), card.path("id").textValue()));
+		ArrayList<String> entitiesRecipients = new ArrayList<>(List.of("IT_SUPERVISOR_ENTITY"));
+		ArrayList<String> groupRecipients = new ArrayList<>();
+		requestBody.ifPresent(card -> sendBackCard("defaultProcess", card.path("processInstanceId").textValue(), entitiesRecipients, groupRecipients, card.path("id").textValue()));
 	}
 
 	@Override
 	public void deleteCard(String id) {
 		log.info("Card suppression from Card Publication Service cardId = {} : \n\n", id);
+		ArrayList<String> entitiesRecipients = new ArrayList<>();
+		ArrayList<String> groupRecipients = new ArrayList<>(List.of("ReadOnly"));
+		sendBackCard("api_test", "process1_deleted", entitiesRecipients, groupRecipients, id);
 	}
 
 	public String welcomeMessage() {
 		return   "Welcome to External Application";
 	}
 
-	public void sendBackCard(String processInstanceIdReceived, String idReceived) {
+	public void sendBackCard(String processToSend, String processInstanceIdReceived, List<String> entitiesRecipients, List<String> groupRecipients, String idReceived) {
 
 		Card card = new Card();
 		card.setPublisher("operator1_fr");
 		card.setProcessVersion("1");
-		card.setProcess("defaultProcess");
+		card.setProcess(processToSend);
 		card.setProcessInstanceId(processInstanceIdReceived);
 		card.setState("messageState");
-		card.setEntityRecipients(List.of("IT_SUPERVISOR_ENTITY"));
 		card.setSeverity(SeverityEnum.INFORMATION);
 		card.setStartDate(Instant.now());
+
+		if (!groupRecipients.isEmpty()) {
+			card.setGroupRecipients(groupRecipients);
+		}
+
+		if (!entitiesRecipients.isEmpty()) {
+			card.setEntityRecipients(entitiesRecipients);
+		}
+
 
 		I18n summary = new I18n();
 		summary.setKey("message.summary");
