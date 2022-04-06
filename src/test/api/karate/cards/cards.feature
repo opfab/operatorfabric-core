@@ -175,7 +175,7 @@ Feature: Cards
     When method post
     Then status 201
 
-#get card with user operator1_fr and new attribute externalRecipients
+# Get card with user operator1_fr and new attribute externalRecipients
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
@@ -183,12 +183,26 @@ Feature: Cards
     And match response.card.externalRecipients[1] == "api_test165"
     And def cardUid = response.card.uid
 
-# Make sure externalRecipients are notified of card suppression
+# Delete the card
     Given url opfabPublishCardUrl + 'cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
 
+# Make sure externalRecipients are notified of card suppression
+* configure retry = { count: 3, interval: 3000 }
+    Given url opfabUrl + 'cards/cards/api_test.process1_deleted'
+    And header Authorization = 'Bearer ' + authToken
+    And retry until responseStatus == 200 
+    When method get
+    Then match response.card.data == "Card with id=api_test.process1 received by externalApp"
+
+
+# Delete the confirmation card to clean the test environnement
+    Given url opfabPublishCardUrl + 'cards/api_test.process1_deleted'
+    And header Authorization = 'Bearer ' + authToken
+    When method delete
+    Then status 200
 
 
 Scenario:  Post card with no recipient but entityRecipients
