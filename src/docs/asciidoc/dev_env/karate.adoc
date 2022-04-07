@@ -1,0 +1,35 @@
+// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+
+# API testing with Karate DSL 
+
+IMPORTANT: If your OperatorFabric instance is not running on localhost, you need to replace localhost with the address
+of your running instance within the `karate-config.js` file.
+
+All the scripts and test files are in src/test/api/karate. 
+
+## Run a feature
+
+To launch a specific test, launch in src/test/api/karate.
+
+....
+$OF_HOME/gradlew karate --args=myfeature.feature
+....
+
+The result will be available in the `target` repository.
+
+## Non regression tests
+
+You can launch operatorFabric non-regression tests via the script launchAll.sh in src/test/api/karate. 
+
+To have the test passed, you need to have a clean Mongo DB database. To do that, you can use the scripts : 
+
+* src/test/resources/deleteAllCards.sh
+* src/test/resources/deleteAllArchivedCards.sh
+
+
