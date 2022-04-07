@@ -152,6 +152,7 @@ describe ('Monitoring screen tests',function () {
 
         // Should have the correct number of cards (5 because one card is set not to be visible in monitoring)
         cy.countAgGridTableRows('#opfab-monitoring-table-grid', 5);
+        cy.waitDefaultTime();
 
         // Opens the first card, checks that its content is visible
         cy.clickAgGridCell('#opfab-monitoring-table-grid', 1, 1);
