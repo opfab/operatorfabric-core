@@ -10,13 +10,13 @@
 
 <div>
     
-    <div class="fixed-height-main-layout opfab_timeline_margin">
+    <div class="opfab_timeline_margin">
        <div [hidden]="!enoughSpaceForTimeLine()">
            <of-time-line></of-time-line> 
         </div> 
     </div>
 
-    <div id="opfab-parentFeedContent" class="row calc-height-main-layout" style="margin-left: 38px;margin-right:20px;display:flex">
+    <div id="opfab-parentFeedContent" class="row" style="margin-left: 38px;margin-right:20px;display:flex">
         <div style="padding-left: 0px;padding-right:0px"  [class.opfab-standard-screen]="enoughSpaceForCardDetail()" [class.opfab-small-screen]="!enoughSpaceForCardDetail()">
             <of-card-list [lightCards]="lightCards$|async" [selection]="selection$" [totalNumberOfLightsCards]="totalNumberOfLightsCards"></of-card-list>
         </div>
