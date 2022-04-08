@@ -16,6 +16,7 @@ import {Subject, takeUntil, timer} from "rxjs";
 import {LightCard} from "@ofModel/light-card.model";
 import {Router} from "@angular/router";
 import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
+import {Utilities} from "app/common/utilities";
 
 
 @Component({
@@ -24,9 +25,14 @@ import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
     styleUrls: ['./pinned-cards.component.scss']
 })
 export class PinnedCardsComponent implements OnInit, OnDestroy {
-    pinnedCards: LightCard[];
     currentPath: string;
     private ngUnsubscribe: Subject<void> = new Subject<void>();
+    pinnedCards: LightCard[];
+    visiblePinnedCards: LightCard[];
+    hiddenPinnedCards: LightCard[];
+
+    maxVisiblePinnedCards = 6;
+    maxHiddenPinnedCards = 20;
 
     constructor(private lightCardsStoreService: LightCardsStoreService,
                 private router: Router,
@@ -48,7 +54,7 @@ export class PinnedCardsComponent implements OnInit, OnDestroy {
         this.pinnedCards = [];
         
         this.lightCardsStoreService.getLightCards()
-            .subscribe( cards => this.pinnedCards = (!!cards && cards.length) > 0 ? this.getPinnedCards(cards) : []);
+            .subscribe( cards =>  this.setPinnedCards(cards));
 
         timer(10000, 10000)
             .pipe(takeUntil(this.ngUnsubscribe))
@@ -57,15 +63,39 @@ export class PinnedCardsComponent implements OnInit, OnDestroy {
             );
     }
 
+    private setPinnedCards(cards: LightCard[]) {
+        this.pinnedCards = [];
+
+        if (!!cards && cards.length > 0) {
+            this.pinnedCards = this.getPinnedCards(cards);
+        }
+        this.setVisiblePinnedCards();
+    }
+
+    private setVisiblePinnedCards() {
+        this.visiblePinnedCards = [];
+        this.hiddenPinnedCards = [];
+        if (this.pinnedCards.length > this.maxVisiblePinnedCards ) {
+            this.visiblePinnedCards = this.pinnedCards.slice(0, this.maxVisiblePinnedCards);
+            this.hiddenPinnedCards = this.pinnedCards.slice(this.maxVisiblePinnedCards);
+            if (this.hiddenPinnedCards.length > this.maxHiddenPinnedCards ) {
+                this.hiddenPinnedCards = this.hiddenPinnedCards.slice(0, this.maxHiddenPinnedCards);
+            }
+        } else
+            this.visiblePinnedCards = this.pinnedCards;
+    }
+
+
     private getPinnedCards(cards: LightCard[]) {
         return cards.filter(card => {
             const processDefinition = this.processesService.getProcess(card.process);
             return processDefinition.extractState(card).automaticPinWhenAcknowledged && card.hasBeenAcknowledged && (!card.endDate || card.endDate > Date.now());
-        });
+        }).sort((a,b) => Utilities.compareObj(a.publishDate, b.publishDate));
     }
 
     private checkPinnedCardsEndDate(): void {
         this.pinnedCards = this.pinnedCards.filter(card => !card.endDate || card.endDate > Date.now());
+        this.setVisiblePinnedCards();
     }
 
     public select(id) {
@@ -76,5 +106,6 @@ export class PinnedCardsComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
     }
+
 }
 

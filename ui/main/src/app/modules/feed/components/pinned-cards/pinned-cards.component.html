@@ -5,9 +5,23 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
+<div class="opfab-pinned-cards">
 
-<div id="of-pinned-cards" style="display: flex;float: right;">
-    <div class="opfab-pinned-card" *ngFor="let pinned of pinnedCards">
+    <div id="of-pinned-cards">
+        <div class="opfab-pinned-card" *ngFor="let pinned of visiblePinnedCards">
+            <span class="opfab-bg-sev-{{pinned.severity.toString()|lowercase}}" (click)="select(pinned.id)">{{pinned.titleTranslated}}</span>
+        </div>
+    </div>
+    <span id="of-pinned-cards-popover" *ngIf="pinnedCards.length >  maxVisiblePinnedCards" container="body" #p1="ngbPopover" [ngbPopover]="hiddenCardsTemplate" triggers="mouseenter:mouseleave" closeDelay="5000" popoverClass="opfab-popover">...</span>
+</div>
+<ng-template #hiddenCardsTemplate>
+    <div class="opfab-pinned-card opfab-hidden-pinned-card" *ngFor="let pinned of hiddenPinnedCards">
         <span class="opfab-bg-sev-{{pinned.severity.toString()|lowercase}}" (click)="select(pinned.id)">{{pinned.titleTranslated}}</span>
     </div>
-</div>
+    <div *ngIf="pinnedCards.length > (maxVisiblePinnedCards + maxHiddenPinnedCards)" style="text-align:right;font-weight: bold;margin-top:0px;margin-right:10px;">
+        ... {{pinnedCards.length - maxVisiblePinnedCards - maxHiddenPinnedCards}} <span translate> feed.moreCards </span>
+    </div>
+
+
+    
+</ng-template>
