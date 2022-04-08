@@ -9,6 +9,14 @@
 
  @import "~scss/_variables.scss";
 
+  .opfab-pinned-cards {
+      display: flex;
+      margin-left: 38px
+  }
+
+  #of-pinned-cards {
+      display: flex;
+  }
 
   .opfab-pinned-card {
     box-shadow: var(--opfab-card-shadow);
@@ -18,6 +26,10 @@
     padding-right: 5px;
     height: 20px;
   }
+
+  .opfab-hidden-pinned-card {
+      margin-top: 5px;
+    }
   
   .opfab-bg-sev-alarm:before {
         background-color: $sev-alarm;
@@ -36,6 +48,9 @@
         background-color: $sev-information;
   }
 
+  span {
+      white-space: nowrap;
+  }
 
   span:before {
     content: "";

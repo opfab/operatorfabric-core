@@ -584,4 +584,61 @@ describe('Acknowledgment  tests', function () {
         //There is no more pinned card after end date is passed
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
     });
+
+    it('Check when many pinned cards', function () {
+
+        cy.deleteAllCards();
+        // Send 6 card with automaticPinWhenAcknowledged = true
+        cy.sendCard('cypress/ack/pinned.json');
+        cy.sendCard('cypress/ack/pinned.json');
+        cy.sendCard('cypress/ack/pinned.json');
+        cy.sendCard('cypress/ack/pinned.json');
+        cy.sendCard('cypress/ack/pinned.json');
+        cy.sendCard('cypress/ack/pinned.json');
+
+
+        cy.loginOpFab('operator1_fr', 'test');
+
+        cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
+
+        // Click on Ack all cards
+        cy.get('#opfab-feed-ack-all-link').click();
+
+        // Confirm
+        cy.get('#opfab-ack-all-btn-confirm').click();
+        //There are 6 pinned cards
+        cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 6);
+
+        cy.sendCard('cypress/ack/pinned.json');
+
+        // Open and ack the new card
+        cy.get('of-light-card').eq(0).click()
+        .find('[id^=opfab-feed-light-card]')
+        .invoke('attr', 'data-urlId')
+        .then((urlId) => {
+            cy.waitDefaultTime();
+            cy.hash().should('eq', '#/feed/cards/' + urlId);
+            //Acknowledge card
+            cy.get('#opfab-card-details-btn-ack').click();
+            //The are still 6 pinned cards visible plus "..." popover
+            cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 6);
+
+            cy.get('#of-pinned-cards-popover').should('exist');
+            cy.get('#of-pinned-cards-popover').trigger('mouseenter');
+            cy.get('.opfab-hidden-pinned-card').should('have.length', 1);
+            
+            // Click on pinned card to open card detail
+            cy.get('.opfab-hidden-pinned-card').eq(0).click();
+            // Detail card is present  
+            cy.get('of-detail').should('exist');
+            // Unack the card 
+            cy.get('#opfab-card-details-btn-ack').click();
+            //There are 6 pinned cards with no popover "..."
+            cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 6);
+            cy.get('#of-pinned-cards-popover').should('not.exist');
+
+        });
+
+
+    });
 })
