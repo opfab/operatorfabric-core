@@ -11,7 +11,8 @@
 
   .opfab-pinned-cards {
       display: flex;
-      margin-left: 38px
+      margin-left: 38px;
+      justify-content: right;
   }
 
   #of-pinned-cards {
