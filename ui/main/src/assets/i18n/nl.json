@@ -125,8 +125,8 @@
       "time": {
         "titleIfFilterBasedOnPublishDate": "Ontvangstdatum",
         "titleIfFilterBasedOnBusinessDate": "Bedrijfsperiode",
-        "start.label": "Start",
-        "end.label": "Eind",
+        "start.label": "START",
+        "end.label": "EIND",
         "active.label": "Actief"
       },
       "type": {
@@ -208,7 +208,7 @@
     "description": "OMSCHRIJVING",
     "locale": "TAAL",
     "timeZone": "TIJDZONE",
-    "playSoundLabel": "Speel geluiden af voor kaarten met volgende ernst",
+    "playSoundLabel": "SPEEL GELUIDEN AF VOOR KAARTEN MET VOLGENDE ERNST",
     "playSoundForAlarm": "Alarm",
     "playSoundForAction": "Actie",
     "playSoundForCompliant": "Conform",
@@ -316,44 +316,44 @@
   "admin": {
     "input": {
       "group": {
-        "id": "Id",
-        "name": "Naam",
-        "description": "Omschrijving",
-        "perimeters" : "Perimeters",
+        "id": "ID",
+        "name": "NAAM",
+        "description": "OMSCHRIJVING",
+        "perimeters" : "PERIMETERS",
         "confirmDelete": "Wilt u de groep echt verwijderen?",
-        "add": "Nieuwe groep toevoegen"
+        "add": "NIEUWE GROEP TOEVOEGEN"
       },
       "entity": {
-        "id": "Id",
-        "name": "Naam",
-        "parents": "Hoofd Entiteiten",
-        "description": "Omschrijving",
-        "labels": "Labels",
-        "entityAllowedToSendCard": "Kaarten versturen toegestaan",
+        "id": "ID",
+        "name": "NAAM",
+        "parents": "HOOFD ENTITEITEN",
+        "description": "OMSCHRIJVING",
+        "labels": "LABELS",
+        "entityAllowedToSendCard": "KAARTEN VERSTUREN TOEGESTAAN",
         "confirmDelete": "Wilt u de entiteit echt verwijderen?",
-        "add": "Nieuwe entiteit toevoegen",
-        "true": "Ja",
-        "false": "Nee",
+        "add": "NIEUWE ENTITEIT TOEVOEGEN",
+        "true": "JA",
+        "false": "NEE",
         "addLabel": "Voeg label toe"
       },
       "perimeter": {
-        "id": "Id",
-        "process": "Proces",
-        "stateRights": "Status Rechten",
-        "state": "Status",
-        "right": "Recht",
+        "id": "ID",
+        "process": "PROCES",
+        "stateRights": "STATUS RECHTEN",
+        "state": "STATUS",
+        "right": "RECHT",
         "confirmDelete": "Wilt u de perimeter echt verwijderen?",
-        "add":"Nieuwe perimeter toevoegen"
+        "add":"NIEUWE PERIMETER TOEVOEGEN"
       },
       "user": {
-        "login": "Gebruikersnaam",
-        "lastName": "Achternaam",
-        "firstName": "Voornaam",
-        "groups": "Groepen",
-        "entities": "Entiteiten",
-        "authorizedIPAddresses": "Geauthorizeerde IP adressen",
+        "login": "GEBRUIKERSNAAM",
+        "lastName": "ACHTERNAAM",
+        "firstName": "VOORNAAM",
+        "groups": "GROEPEN",
+        "entities": "ENTITEITEN",
+        "authorizedIPAddresses": "GEAUTHORIZEERDE IP ADRESSEN",
         "confirmDelete": "Wilt u de gebruiker echt verwijderen?",
-        "add": "Nieuwe gebruiker toevoegen"
+        "add": "NIEUWE GEBRUIKER TOEVOEGEN"
       },
       "selectGroupText": "Selecteer een Groep",
       "selectEntityText": "Selecteen een Entiteit",
@@ -383,16 +383,15 @@
         "required": "Id is vereist.",
         "minLength": "Id moet minimaal 2 tekens bevatten.",
         "pattern": "Id mag alleen de volgende tekens bevatten: kleine letters, _, -, . of cijfers.",
-        "label":"Id",
+        "label":"ID",
         "alreadyExisting": "Id bestaat al."
       },
       "name": {
         "required": "Naam is vereist.",
-        "label":"Naam"
+        "label":"NAAM"
       },
-      "description": "Omschrijving",
-      "lines": "regels per pagina",
-      "entityAllowedToSendCard": "Kaarten versturen toegestaan"
+      "description": "OMSCHRIJVING",
+      "lines": "regels per pagina"
     },
     "tabs": {
       "users": "Gebruikers Beheer",
@@ -426,22 +425,22 @@
     "connected": "Verbonden",
     "disconnected": "Niet verbonden",
     "selectScreenText": "Selecteer een scherm",
-    "realTimeScreen": "Realtime scherm"
+    "realTimeScreen": "REALTIME SCHERM"
   },
   "externalDevicesConfiguration": {
     "input": {
       "selectUserText": "Selecteer gebruiker",
       "selectDeviceText": "Selecteer apparaat",
-      "add": "Nieuwe apparaatconfiguratie toevoegen",
-      "edit": "Apparaatconfiguratie wijzigen",
+      "add": "NIEUWE APPARAATCONFIGURATIE TOEVOEGEN",
+      "edit": "APPARAATCONFIGURATIE WIJZIGEN",
       "confirm": "Bevestig alstublieft",
       "confirmDelete": "Wilt u de apparaatconfiguratie echt verwijderen?",
       "allUsersConfigured": "Alle apparaten zijn al geconfigureerd"
     },
-    "userLogin": "Gebruikersnaam",
-    "externalDeviceId": "Apparaat",
-    "edit": "Wijzigen",
-    "delete": "Verwijderen"
+    "userLogin": "GEBRUIKERSNAAM",
+    "externalDeviceId": "APPARAAT",
+    "edit": "WIJZIGEN",
+    "delete": "VERWIJDEREN"
   },
   "datePicker": {
     "monday": "Ma",
