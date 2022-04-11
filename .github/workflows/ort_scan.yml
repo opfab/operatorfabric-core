@@ -1,0 +1,16 @@
+name: ORT_SCAN
+
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  tortellini:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: tortellini-tools/action@v3
+      - uses: actions/upload-artifact@v2
+        with:
+          name: tortellini-result
+          path: .tortellini/out
