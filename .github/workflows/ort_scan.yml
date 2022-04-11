@@ -3,6 +3,23 @@ name: ORT_SCAN
 on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      repositories:
+        required: false
+        description: 'A file containing list of GitHub repository urls'
+        default: ''
+      curations:
+        required: false
+        description: 'A file or URL containing curations correct invalid or missing package metadata and set the concluded license for packages. See https://github.com/oss-review-toolkit/ort/blob/master/docs/config-file-curations-yml.md'
+        default: ''
+      rules:
+        required: true
+        description: 'A file or URL containing ort rules to detect license violations. See https://github.com/oss-review-toolkit/ort/blob/master/docs/file-rules-kts.md'
+        default: https://raw.githubusercontent.com/eraviart/tortellini-action/main/hermine/rules.kts
+      classifications:
+        required: true
+        description: 'A file or URL containing classes for each license. See https://github.com/oss-review-toolkit/ort/blob/master/docs/config-file-license-classifications-yml.md'
+        default: https://raw.githubusercontent.com/eraviart/tortellini-action/main/hermine/license-classifications.yml
 
 jobs:
   tortellini:
