@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,7 +24,7 @@ export class EntitiesTableComponent extends AdminTableDirective implements OnIni
   fields = [new Field('id', 3),
             new Field('name', 3),
             new Field('description', 5),
-            new Field('entityAllowedToSendCard', 3, null, this.translateValue),
+            new Field('entityAllowedToSendCard', 4, null, this.translateValue),
             new Field('parents', 5, 'entityCellRenderer')];
   idField = 'id';
   editModalComponent = EditEntityModalComponent;

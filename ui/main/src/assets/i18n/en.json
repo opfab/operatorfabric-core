@@ -124,8 +124,8 @@
       "time": {
         "titleIfFilterBasedOnPublishDate": "Receipt date",
         "titleIfFilterBasedOnBusinessDate": "Business period",
-        "start.label": "Start",
-        "end.label": "End",
+        "start.label": "START",
+        "end.label": "END",
         "active.label": "Active"
       },
       "type": {
@@ -206,14 +206,14 @@
     "title": "SETTINGS",
     "description": "DESCRIPTION",
     "locale": "LANGUAGE",
-    "playSoundLabel": "Play sounds for cards with severity",
+    "playSoundLabel": "PLAY SOUNDS FOR CARDS WITH SEVERITY",
     "playSoundForAlarm": "Alarm",
     "playSoundForAction": "Action",
     "playSoundForCompliant": "Compliant",
     "playSoundForInformation": "Information",
     "replayEnabled": "Sound replay enabled",
     "playSoundOnExternalDevice": "Play sound on external device",
-    "replayInterval": "Interval between sound replays (seconds)",
+    "replayInterval": "INTERVAL BETWEEN SOUND REPLAYS (SECONDS)",
     "remoteLoggingEnabled": "Remote logging enabled"
   },
   "archive": {
@@ -314,44 +314,44 @@
   "admin": {
     "input": {
       "group": {
-        "id": "Id",
-        "name": "Name",
-        "description": "Description",
-        "perimeters" : "Perimeters",
+        "id": "ID",
+        "name": "NAME",
+        "description": "DESCRIPTION",
+        "perimeters" : "PERIMETERS",
         "confirmDelete": "Do you really want to delete group",
-        "add": "Add new group"
+        "add": "ADD NEW GROUP"
       },
       "entity": {
-        "id": "Id",
-        "name": "Name",
-        "parents": "Parent Entities",
-        "description": "Description",
-        "labels": "Labels",
-        "entityAllowedToSendCard": "Card sending allowed",
+        "id": "ID",
+        "name": "NAME",
+        "parents": "PARENT ENTITIES",
+        "description": "DESCRIPTION",
+        "labels": "LABELS",
+        "entityAllowedToSendCard": "CARD SENDING ALLOWED",
         "confirmDelete": "Do you really want to delete entity",
-        "add": "Add new entity",
-        "true": "Yes",
-        "false": "No",
+        "add": "ADD NEW ENTITY",
+        "true": "YES",
+        "false": "NO",
         "addLabel": "Add label"
       },
       "perimeter": {
-        "id": "Id",
-        "process": "Process",
-        "stateRights": "State Rights",
-        "state": "State",
-        "right": "Right",
+        "id": "ID",
+        "process": "PROCESS",
+        "stateRights": "STATE RIGHTS",
+        "state": "STATE",
+        "right": "RIGHT",
         "confirmDelete": "Do you really want to delete perimeter",
-        "add":"Add new perimeter"
+        "add":"ADD NEW PERIMETER"
       },
       "user": {
-        "login": "Login",
-        "lastName": "Last name",
-        "firstName": "First name",
-        "groups": "Groups",
-        "entities": "Entities",
-        "authorizedIPAddresses": "Authorized IP addresses",
+        "login": "LOGIN",
+        "lastName": "LAST NAME",
+        "firstName": "FIRST NAME",
+        "groups": "GROUPS",
+        "entities": "ENTITIES",
+        "authorizedIPAddresses": "AUTHORIZED IP ADDRESSES",
         "confirmDelete": "Do you really want to delete user",
-        "add": "Add new user"
+        "add": "ADD NEW USER"
       },
       "selectGroupText": "Select a Group",
       "selectEntityText": "Select an Entity",
@@ -381,16 +381,15 @@
         "required": "Id is required.",
         "minLength": "Id should be minimum 2 characters.",
         "pattern": "Id should only contain the following characters: letters, _, - or digits.",
-        "label":"Id",
+        "label":"ID",
         "alreadyExisting": "Id already existing."
       },
       "name": {
         "required": "Name is required.",
-        "label":"Name"
+        "label":"NAME"
       },
-      "description": "Description",
-      "lines": "lines per page",
-      "entityAllowedToSendCard": "Card sending allowed"
+      "description": "DESCRIPTION",
+      "lines": "lines per page"
     },
     "tabs": {
       "users": "Users Management",
@@ -424,22 +423,22 @@
     "connected": "Connected",
     "disconnected": "Disconnected",
     "selectScreenText": "Select a screen",
-    "realTimeScreen": "Real time screen"
+    "realTimeScreen": "REAL TIME SCREEN"
   },
   "externalDevicesConfiguration": {
     "input": {
       "selectUserText": "Select user",
       "selectDeviceText": "Select device",
-      "add": "Add new user device configuration",
-      "edit": "Edit user device configuration",
+      "add": "ADD NEW USER DEVICE CONFIGURATION",
+      "edit": "EDIT USER DEVICE CONFIGURATION",
       "confirm": "Please confirm",
       "confirmDelete": "Do you really want to delete device configuration for user",
       "allUsersConfigured": "All users devices are already configured"
     },
-    "userLogin": "User login",
-    "externalDeviceId": "Device",
-    "edit": "Edit",
-    "delete": "Delete"
+    "userLogin": "USER LOGIN",
+    "externalDeviceId": "DEVICE",
+    "edit": "EDIT",
+    "delete": "DELETE"
   },
   "datePicker": {
     "monday": "Mo",
