@@ -23,8 +23,24 @@ for more information)
    ** *token*: user jwt token
    ** *firstName*: user first name
    ** *lastName*: user last name
+   ** *groups* : user groups as an array of groups ID 
+   ** *entities* : user entities as an array of entities ID 
 
-WARNING: Please do not prefix `id` attributes of DOM elements of your templates with "opfab". Indeed, so that there is no confusion between the elements of OperatorFabric and those of your templates, we have prefixed all our `id` attributes with "opfab".
+
+To use these data in the template , you need to reference them inside double braces. For example if you want to display the user login:
+
+```
+Your login is : {{userContext.login}}
+```
+
+To display specific business data from the card, write for example:  
+
+```
+My data : {{card.data.mydataField}}
+```
+
+Have a look to  https://handlebarsjs.com/ for more information on the templating mechanism.
+
 
 In addition to Handlebars basic syntax and helpers, OperatorFabric defines the
 following helpers :
@@ -497,6 +513,14 @@ Verify if a JavaScript object contains the specified key. It returns true if it 
 {{objectContainsKey card.data.myObject 'myKey' }}
 ....
 
+
+
+== Naming convention  
+
+
+WARNING: Please do not prefix `id` attributes of DOM elements or css class names of your templates with "opfab". Indeed, so that there is no confusion between the elements of OperatorFabric and those of your templates, we have prefixed all our `id` attributes and css classes with "opfab".
+
+
 [[opfab_template_style]]
 == OperatorFabric css styles
 
@@ -598,3 +622,4 @@ OpFab calls this method when it has finished all tasks regarding rendering templ
 it is called after applyChildCard(), lockAnswer(), setLttdExpired() and setScreenSize()
 
 It can be used by a template to launch some processing when loading is complete
+
