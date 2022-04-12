@@ -86,6 +86,10 @@ describe ('Business nenu',()=>{
         cy.get('.text-link').eq(1).click();
 
         cy.get('iframe').invoke('attr', 'src').should('eq', 'https://opfab.github.io/?opfab_theme=DAY');
+        
+        // wait for dropdown menu to disappear and click again (to avoid falky test)
+        cy.get('.text-link').eq(1).should("not.be.visible");
+        cy.get('#opfab-navbar-menu-dropdown-menu2').click();
 
         // Select second dropdown menu
         cy.get('.text-link').eq(2).click();
