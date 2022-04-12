@@ -114,7 +114,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             context: {
                 componentParent: this
             },
-            frameworkComponents : {
+            components : {
                 answerCellRenderer: AnswerCellRendererComponent,
                 responsesCellRenderer: ResponsesCellRendererComponent
             },
@@ -176,7 +176,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             },
             ensureDomOrder : true, // rearrange row-index of rows when sorting cards (used for cypress)
             pagination : true,
-            suppressCellSelection: true,
+            suppressCellFocus: true,
             headerHeight: 70,
             suppressPaginationPanel: true,
             suppressHorizontalScroll: true,

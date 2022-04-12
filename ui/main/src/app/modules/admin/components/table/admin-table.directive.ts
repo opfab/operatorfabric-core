@@ -47,7 +47,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
       context: {
         componentParent: this
       },
-      frameworkComponents : {
+      components : {
         actionCellRenderer: ActionCellRendererComponent,
         groupCellRenderer: GroupCellRendererComponent,
         entityCellRenderer: EntityCellRendererComponent,
@@ -165,7 +165,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         // Not this.translateService otherwise "undefined" error
       },
       pagination : true,
-      suppressCellSelection: true,
+      suppressCellFocus: true,
       headerHeight: 70,
       suppressPaginationPanel: true,
       suppressHorizontalScroll: true,
@@ -399,7 +399,7 @@ export class Field {
 
   /**@param name: should match the property name in the underlying row data. Will be used as key to find i18n label for the column header.
    @param flex: Sets the column size relative to others
-   @param cellRendererName: needs to match one of the renderers defined under `frameworkComponents` in the `gridOptions` above.
+   @param cellRendererName: needs to match one of the renderers defined under `components` in the `gridOptions` above.
    * */
   constructor(name: string, flex?: number, cellRendererName?: string, valueFormatter?: any) {
     this.name = name;
