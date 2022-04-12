@@ -602,6 +602,7 @@ describe('Acknowledgment  tests', function () {
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
 
         // Click on Ack all cards
+        cy.get('of-light-card').should('have.length', 6);
         cy.get('#opfab-feed-ack-all-link').click();
 
         // Confirm
