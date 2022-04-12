@@ -857,6 +857,8 @@ html, body { height: 100%; }
   }
   .popover-body {
     color: var(--opfab-text-color);
+    margin-top: -10px;
+    margin-bottom: -10px;
   }
   .arrow::after{
     border-right-color: var(--opfab-popover-bgcolor);
