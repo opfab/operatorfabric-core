@@ -53,11 +53,11 @@ export class ExternaldevicesconfigurationComponent {
           headerValueGetter: this.localizeHeader.bind(this)
 
       },
-      frameworkComponents : {
+      components : {
         actionCellRenderer: ActionCellRendererComponent
       },
       pagination : true,
-      suppressCellSelection: true,
+      suppressCellFocus: true,
       headerHeight: 70,
       suppressPaginationPanel: true,
       suppressHorizontalScroll: true,
