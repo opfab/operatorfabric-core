@@ -1265,6 +1265,37 @@ class CardProcessServiceShould {
 
         Assertions.assertThatThrownBy(() -> cardProcessingService.processUserCard(card, currentUserWithPerimeters))
             .isInstanceOf(ApiErrorException.class).hasMessage("User is not part of entities allowed to edit card. Card is rejected");
+    }
 
+    @Test
+    void checkEditChangingPublisher() {
+        CardPublicationData card = CardPublicationData.builder().publisher("entity2").processVersion("O")
+        .processInstanceId("PROCESS_CARD_USER_2").severity(SeverityEnum.INFORMATION)
+        .process("PROCESS_CARD_USER")
+        .parentCardId(null)
+        .initialParentCardUid(null)
+        .state("STATE1")
+        .title(I18nPublicationData.builder().key("title").build())
+        .summary(I18nPublicationData.builder().key("summary").build())
+        .startDate(Instant.now())
+        .state("state1")
+        .build();
+
+
+        List<String> entitiesAllowedToEdit = new ArrayList();
+        entitiesAllowedToEdit.add("entityallowed");
+
+        card.setEntitiesAllowedToEdit(entitiesAllowedToEdit);
+
+        currentUserWithPerimeters.getUserData().setEntities(Arrays.asList("entity2", "newPublisherId"));
+
+        cardProcessingService.processUserCard(card, currentUserWithPerimeters);
+        Assertions.assertThat(checkCardCount(1)).isTrue();
+
+        card.setUid(null);
+        card.setPublisher("newPublisherId");
+
+        cardProcessingService.processUserCard(card, currentUserWithPerimeters);
+        Assertions.assertThat(checkCardCount(1)).isTrue();
     }
 }
