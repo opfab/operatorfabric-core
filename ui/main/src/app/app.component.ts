@@ -35,6 +35,7 @@ import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {AuthenticationActionTypes, TryToLogOut} from '@ofStore/actions/authentication.actions';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 import {RemoteLoggerService} from '@ofServices/logs/remote-logger.service';
+import {I18n} from '@ofModel/i18n.model';
 
 
 class Alert {
@@ -59,6 +60,7 @@ export class AppComponent implements OnInit {
   connectionLostForMoreThanTenSeconds = false;
   modalForSessionAlreadyInUseIsActive = false;
   alertMessage: Alert = {alert: undefined, className: undefined, display: false};
+  userAlreadyLoggedMessage: Message;
 
 
   private modalRef: NgbModalRef;
@@ -238,6 +240,9 @@ export class AppComponent implements OnInit {
           if (identifier) {
             console.log(new Date().toISOString(), `User ${identifier} logged`);
             this.isAuthenticated = true;
+
+            let params = {login: identifier};
+            this.userAlreadyLoggedMessage = new Message("", MessageLevel.ERROR, new I18n('login.confirmationBecauseAccountIsAreadyUsed', params));
 
             this.userService.willNewSubscriptionDisconnectAnExistingSubscription().subscribe(isUserAlreadyConnected => {
 

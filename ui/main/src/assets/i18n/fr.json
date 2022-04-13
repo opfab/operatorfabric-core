@@ -182,7 +182,7 @@
     "reset": "RaZ",
     "login": "Identifiant",
     "password": "Mot de passe",
-    "confirmationBecauseAccountIsAreadyUsed":"Ce compte est en cours d'utilisation par au moins un autre utilisateur. Voulez-vous tout de même vous connecter ?\n\n En cliquant sur OK, vous déconnecterez tous les utilsateurs actuellement connectés à ce compte.",
+    "confirmationBecauseAccountIsAreadyUsed":"Le compte {{login}} est en cours d'utilisation par au moins un autre utilisateur. Voulez-vous tout de même vous connecter ?\n\n En cliquant sur OK, vous déconnecterez tous les utilsateurs actuellement connectés à ce compte.",
     "submit": {
       "password": "Se connecter",
       "code": "Se connecter avec {{name}}"
