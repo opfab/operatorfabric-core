@@ -179,6 +179,8 @@ public class CardProcessingService {
     }
 
     private boolean isUserInEntityAllowedToEditCard(CardPublicationData card, CurrentUserWithPerimeters user) {
+        if (user.getUserData().getEntities().contains(card.getPublisher()))
+            return true;
         List<String> entitiesAllowed = card.getEntitiesAllowedToEdit();
         if (entitiesAllowed != null) {
             List<String> userEntitiesAllowed = user.getUserData().getEntities().stream().filter(entitiesAllowed::contains).collect(Collectors.toList());
