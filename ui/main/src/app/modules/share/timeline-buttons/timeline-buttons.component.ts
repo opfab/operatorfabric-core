@@ -14,6 +14,7 @@ import {FilterType} from '@ofModel/feed-filter.model';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {TimeService} from "@ofServices/time.service";
 import {FilterService} from '@ofServices/lightcards/filter.service';
+import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 
 @Component({
     selector: 'of-timeline-buttons',
@@ -48,7 +49,8 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     constructor(private time: TimeService,
                 private userPreferences : UserPreferencesService,
                 private configService: ConfigService,
-                private filterService: FilterService) {
+                private filterService: FilterService,
+                private opfabLogger: OpfabLoggerService) {
 
     }
 
@@ -127,6 +129,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
   
         if (conf.buttonTitle) {
             this.selectedButtonTitle = conf.buttonTitle;
+            this.opfabLogger.info("Set timeline domain to " + conf.domainId, LogOption.REMOTE);
         }
 
         this.selectZoomButton(conf.buttonTitle);
@@ -266,9 +269,11 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         this.followClockTick = false;
  
         if (moveForward) {
+            this.opfabLogger.info("Move domain forward",LogOption.REMOTE);
             startDomain = this.goForward(startDomain.add(this.overlap, "milliseconds"));
             endDomain = this.goForward(endDomain);
         } else {
+            this.opfabLogger.info("Move domain backward",LogOption.REMOTE);
             startDomain = this.goBackward(startDomain.add(this.overlap, "milliseconds"));
             endDomain = this.goBackward(endDomain);
         }
@@ -344,10 +349,13 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     }
 
     lockTimeline() : void {
+        this.opfabLogger.info('Lock timeline',LogOption.REMOTE);
         this.followClockTick = false;
+
     }
 
     unlockTimeline() : void {
+        this.opfabLogger.info('Unlock timeline',LogOption.REMOTE);
         this.followClockTick = true;
 
         // Restore default domain when the user unlocks the timeline
