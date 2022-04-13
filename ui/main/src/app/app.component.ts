@@ -333,6 +333,7 @@ export class AppComponent implements OnInit {
   private subscribeToSessionEnd() {
     this.actions$.pipe(
         ofType<Action>(AuthenticationActionTypes.SessionExpired)).subscribe(  () => {
+          this.logger.info('Session expire ', LogOption.REMOTE);
           this.soundNotificationService.handleSessionEnd();
           this.cardService.closeSubscription();
           this.modalRef = this.modalService.open(this.sessionEndPopupRef, {centered: true, backdrop: 'static'});
