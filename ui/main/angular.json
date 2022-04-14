@@ -38,8 +38,8 @@
               "node_modules/svg-pan-zoom/dist/svg-pan-zoom.js",
               "src/assets/js/templateGateway.js",
               "src/assets/js/usercardTemplateGateway.js",
-              "src/assets/js/chart.min.js",
-              "src/assets/js/chartjs-adapter-date-fns.bundle.min.js"
+              "node_modules/chart.js/dist/chart.min.js",
+              "node_modules/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"
             ],
             "allowedCommonJsDependencies": [
               "rxjs/internal/Subject",
