@@ -129,6 +129,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public btnValidateLabel = 'response.btnValidate';
     public btnUnlockLabel = 'response.btnUnlock';
     public listEntitiesToAck = [];
+    public lastResponse : Card;
 
     private lastCardSetToReadButNotYetOnFeed;
     private entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = [];
@@ -205,6 +206,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         } else this.isCardAQuestionCard = false;
 
         this.checkIfHasAlreadyResponded();
+        this.lastResponse = this.getLastResponse();
 
         this.listEntitiesToAck = [];
         if (this.isCardPublishedByUserEntity() && !! this.card.entityRecipients)
@@ -374,6 +376,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 templateGateway.childCards = this.childCards;
                 this.computeEntitiesForResponses();
                 templateGateway.applyChildCards();
+                this.checkIfHasAlreadyResponded();
+                if (this.isResponseLocked) 
+                    templateGateway.lockAnswer();
+
+                this.lastResponse = this.getLastResponse();
             }
         );
     }
@@ -383,9 +390,13 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.childCards = newChildArray;
         this.checkIfHasAlreadyResponded();
         templateGateway.isLocked = this.isResponseLocked;
+        if (!this.isResponseLocked) 
+            templateGateway.unlockAnswer();
         templateGateway.childCards = this.childCards;
         this.computeEntitiesForResponses();
         templateGateway.applyChildCards();
+
+        this.lastResponse = this.getLastResponse();
     }
 
     private computeEntitiesForResponses() {
@@ -553,6 +564,13 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         }
     }
 
+    private getLastResponse(): Card {
+        if (!!this.childCards && this.childCards.length > 0) {
+            return [...this.childCards].sort( (a, b) => a.publishDate < b.publishDate ? 1 : -1)[0];
+        }
+        return null;
+    }
+
     private setTemplateGatewayVariables() {
         templateGateway.childCards = this.childCards;
         templateGateway.isLocked = this.isResponseLocked;
@@ -636,16 +654,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     get btnAckText(): string {
         return this.card.hasBeenAcknowledged ? AckI18nKeys.BUTTON_TEXT_UNACK : AckI18nKeys.BUTTON_TEXT_ACK;
-    }
-
-    // This method will be called many time per second.
-    // In case of performances issues it could be optimized by defining a variable
-    // and evaluating it every time there is a change in childCards
-    get lastResponse(): Card {
-        if (!!this.childCards && this.childCards.length > 0) {
-            return [...this.childCards].sort( (a, b) => a.publishDate < b.publishDate ? 1 : -1)[0];
-        }
-        return null;
     }
 
     public getResponsePublisher(resp: Card) {
