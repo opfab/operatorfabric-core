@@ -75,7 +75,7 @@
 
 <ng-template #sessionAlreadyInUse let-modal>
   <div class="modal-body text-center" style="white-space: pre-wrap;">
-    <p translate> login.confirmationBecauseAccountIsAreadyUsed </p>
+    <p>{{'login.confirmationBecauseAccountIsAreadyUsed'|translate:{login:userLogin} }}</p>
     <button id="opfab-cancelLogIn" type="button" class="opfab-btn"
       (click)="logout()" translate> button.cancel</button>
     <button id="opfab-confirmLogIn" type="button" class="opfab-btn"

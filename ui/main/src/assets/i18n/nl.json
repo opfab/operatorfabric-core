@@ -183,7 +183,7 @@
     "reset": "Opnieuw instellen",
     "login": "Gebruikersnaam",
     "password": "Wachtwoord",
-    "confirmationBecauseAccountIsAreadyUsed": "Dit account wordt al gebruikt door minstens één andere gebruiker. Wilt u zich nog steeds aanmelden ?\n\n Door op OK te klikken, verbreekt u de verbinding met iedereen die dit account gebruikt.",
+    "confirmationBecauseAccountIsAreadyUsed": "De account {{login}} wordt al gebruikt door minstens één andere gebruiker. Wilt u zich nog steeds aanmelden ?\n\n Door op OK te klikken, verbreekt u de verbinding met iedereen die dit account gebruikt.",
     "submit": {
       "password": "Inloggen",
       "code": "Log in met {{name}}"
