@@ -59,6 +59,7 @@ export class AppComponent implements OnInit {
   connectionLostForMoreThanTenSeconds = false;
   modalForSessionAlreadyInUseIsActive = false;
   alertMessage: Alert = {alert: undefined, className: undefined, display: false};
+  userLogin: string;
 
 
   private modalRef: NgbModalRef;
@@ -238,6 +239,7 @@ export class AppComponent implements OnInit {
           if (identifier) {
             console.log(new Date().toISOString(), `User ${identifier} logged`);
             this.isAuthenticated = true;
+            this.userLogin = identifier;
 
             this.userService.willNewSubscriptionDisconnectAnExistingSubscription().subscribe(isUserAlreadyConnected => {
 
