@@ -304,7 +304,8 @@ export class AppComponent implements OnInit {
   private activateSoundIfNotActivated() {
 
     setTimeout(() => {
-      if (this.isNavigatorChromiumBased() && this.soundNotificationService.isAtLeastOneSoundActivated()) {
+      let playSoundOnExternalDevice = this.soundNotificationService.getPlaySoundOnExternalDevice();
+      if (this.isNavigatorChromiumBased() && !playSoundOnExternalDevice && this.soundNotificationService.isAtLeastOneSoundActivated()) {
         const context = new AudioContext();
         if (context.state !== 'running') {
           context.resume();

@@ -94,6 +94,10 @@ export class SoundNotificationService implements OnDestroy {
 
     }
 
+    public getPlaySoundOnExternalDevice(): boolean {
+        return this.configService.getConfigValue('externalDevicesEnabled') && this.playSoundOnExternalDevice;
+    }
+
     private setSoundForSessionEndWhenAtLeastOneSoundForASeverityIsActivated() {
         this.playSoundWhenSessionEnd = false;
         for (const soundEnabled of  this.soundEnabled.values()) {
