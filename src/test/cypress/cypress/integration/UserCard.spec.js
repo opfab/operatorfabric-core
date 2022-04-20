@@ -887,4 +887,31 @@ describe('User Card ', function () {
 
     });
   })
+
+  describe('Set timeSpans from template', function () {
+
+    it('Set timeSpans from template', () => {
+      cy.deleteAllCards();
+      cy.loginOpFab('operator1_fr', 'test');
+      cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+      cy.usercardSelectService('User card examples');
+      cy.usercardSelectProcess('Task');
+      cy.waitDefaultTime();
+      cy.get('#Monday').check({force: true});
+      cy.get('#Tuesday').check({force: true});
+      cy.get('#Wednesday').check({force: true});
+      cy.get('#Thursday').check({force: true});
+      cy.get('#Friday').check({force: true});
+      cy.get('#Saturday').check({force: true});
+      cy.get('#Sunday').check({force: true});
+      cy.get('#time').type('08:00');
+      cy.usercardPrepareAndSendCard();
+      
+      cy.waitDefaultTime();
+      cy.get('#opfab-timeline-link-period-7D').click();
+      cy.get('ellipse').should('have.length', 7);
+
+    })
+  })
+  
 })
