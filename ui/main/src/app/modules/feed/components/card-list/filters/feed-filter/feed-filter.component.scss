@@ -146,5 +146,6 @@
   .form-control:disabled 
   {
     background-color:var(--opfab-popover-bgcolor);
+    color: var(--opfab-text-color-stronger);
   }   
 }
