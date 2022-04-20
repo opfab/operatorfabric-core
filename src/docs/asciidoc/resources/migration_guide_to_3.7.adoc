@@ -1,0 +1,56 @@
+// Copyright (c) 2022 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 3.6.0 to release 3.7.0
+
+
+
+== Deprecated feature 
+
+
+=== Field recurrence 
+
+Using "recurrence" field returned by getSpecificCardInformation() method definition is now deprecated.
+
+If you are using the "viewCardInAgenda" and "recurrence" field, use the "timeSpans" field instead when returning the card object in usercardTemplateGateway.getSpecificCardInformation() to configure the visibility of the card in timeline and agenda. 
+
+Example:
+....
+
+    usercardTemplateGateway.getSpecificCardInformation = function () {
+        const message = document.getElementById('message').value;
+        const card = {
+          summary : {key : "message.summary"},
+          title : {key : "message.title"},
+          entityRecipients: ["ENTITY_FR","IT_SUPERVISOR_ENTITY"],
+          data : {message: message}
+        };
+
+        const recurrence = {
+            daysOfWeek : [1,2,3],
+            hoursAndMinutes : {hours:10,minutes:44},
+            durationInMinutes: 15
+        }
+
+        const mystartDate = new Date();
+        const timeSpans = [{
+            startDate: mystartDate.getTime(),
+            endDate: mystartDate.getTime() + 7 * 24 * 3600000,
+            recurrence: recurrence
+        }]
+
+        return {
+            valid: true,
+            card: card,
+            timeSpans: timeSpans
+        };
+
+....
+
+
+
+

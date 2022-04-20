@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2020-2021, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020-2022, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -74,6 +74,13 @@
 
 
 <script>
+    var mystartDate = new Date();
+    mystartDate.setTime(mystartDate.getTime());
+
+    usercardTemplateGateway.setInitialStartDate(mystartDate.getTime() + 3600000);
+
+    usercardTemplateGateway.setInitialEndDate(mystartDate.getTime() + 7 * 24 * 3600000);
+
     usercardTemplateGateway.getSpecificCardInformation = function () {
         const taskDescription = document.getElementById('taskDescription').value;
         
@@ -113,11 +120,18 @@
                 daysOfWeek: daysOfWeek
             }
         };
+
+        const timeSpans = [{
+            startDate: usercardTemplateGateway.getStartDate(),
+            endDate: usercardTemplateGateway.getEndDate(),
+            recurrence: recurrence
+        }]
+        
+
         return {
             valid: true,
             card: card,
-            viewCardInAgenda: true,
-            recurrence: recurrence
+            timeSpans: timeSpans
         };
 
     }
