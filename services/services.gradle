@@ -117,7 +117,7 @@ subprojects {
         labels (['project':"${project.group}"])
         files( "build/libs"
                 , "../../config/docker/common-docker.yml"
-                , "../../config/docker/${project.name.toLowerCase().replaceAll("-business-service","")}-docker.yml"
+                , "../../config/docker/${project.name.toLowerCase().replaceAll("-service","")}-docker.yml"
                 , '../../src/main/docker/java-config-docker-entrypoint.sh'
                 ,'../../src/main/docker/add-certificates.sh')
         buildArgs(['JAR_FILE'       : "${project.name.toLowerCase()}-${project.version.toUpperCase()}.jar",

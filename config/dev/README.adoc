@@ -21,10 +21,10 @@ containers to be started:
 * Keycloak
 * OperatorFabric Web-UI container
 
-Once these containers are running, the OperatorFabric business services (users, cards-publication, cards-consultation
-and business-config) should be started with the `bin\run_all.sh` to get a working OperatorFabric instance in `dev` mode.
+Once these containers are running, the OperatorFabric services (users, cards-publication, cards-consultation, 
+business-config and external-devices) should be started with the `bin\run_all.sh` to get a working OperatorFabric instance in `dev` mode.
 
-This mode makes development iterations easier, as business services are run as java processes that can be stopped,
+This mode makes development iterations easier, as services are run as java processes that can be stopped,
 recompiled and restarted individually to take changes into account.
 
 NOTE: It also starts the dummy `external-app` container as it is often useful when developing new features.

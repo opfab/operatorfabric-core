@@ -41,7 +41,7 @@ services:
 #    - "90:9990"
   users:
     container_name: users
-    image: "lfeoperatorfabric/of-users-business-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-users-service:SNAPSHOT"
     depends_on:
       - mongodb
       - rabbitmq
@@ -59,7 +59,7 @@ services:
     - ${CONFIG_PATH}:/external-config
   businessconfig:
     container_name: businessconfig
-    image: "lfeoperatorfabric/of-businessconfig-business-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-businessconfig-service:SNAPSHOT"
     depends_on:
       - mongodb
     user: ${USER_ID}:${USER_GID}
@@ -77,7 +77,7 @@ services:
      - ${CONFIG_PATH}:/external-config
   cards-publication:
     container_name: cards-publication
-    image: "lfeoperatorfabric/of-cards-publication-business-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-cards-publication-service:SNAPSHOT"
     depends_on:
       - mongodb
       - rabbitmq
@@ -95,7 +95,7 @@ services:
       - ${CONFIG_PATH}:/external-config
   cards-consultation:
     container_name: cards-consultation
-    image: "lfeoperatorfabric/of-cards-consultation-business-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-cards-consultation-service:SNAPSHOT"
     depends_on:
       - mongodb
       - rabbitmq
