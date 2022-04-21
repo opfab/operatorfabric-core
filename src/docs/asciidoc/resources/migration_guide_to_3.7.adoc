@@ -7,6 +7,24 @@
 
 = Migration Guide from release 3.6.0 to release 3.7.0
 
+== Docker images names changed
+From version 3.7.0 the docker names of the former "business services" are changed. Here are there old names and the new ones.
+
+|===
+|Old docker name|New docker name
+
+
+|lfeoperatorfabric/of-cards-consultation-business-service:3.6.0.RELEASE|lfeoperatorfabric/of-cards-consultation-service:3.7.0.RELEASE
+|lfeoperatorfabric/of-cards-publication-business-service:3.6.0.RELEASE|lfeoperatorfabric/of-cards-publication-service:3.7.0.RELEASE
+|lfeoperatorfabric/of-users-business-service:3.6.0.RELEASE|lfeoperatorfabric/of-users-service:3.7.0.RELEASE
+|lfeoperatorfabric/of-businessconfig-business-service:3.6.0.RELEASE|lfeoperatorfabric/of-businessconfig-service:3.7.0.RELEASE
+
+|===
+
+
+
+You must change your docker-compose files accordingly.
+
 
 
 == Deprecated feature 
