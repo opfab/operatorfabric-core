@@ -14,16 +14,16 @@ jobs:
       uses: actions/checkout@v3
     - name: Pull docker images 
       run: | 
-        docker pull lfeoperatorfabric/of-cards-consultation-business-service:SNAPSHOT
-        docker pull lfeoperatorfabric/of-cards-publication-business-service:SNAPSHOT
-        docker pull lfeoperatorfabric/of-users-business-service:SNAPSHOT
-        docker pull lfeoperatorfabric/of-businessconfig-business-service:SNAPSHOT
+        docker pull lfeoperatorfabric/of-cards-consultation-service:SNAPSHOT
+        docker pull lfeoperatorfabric/of-cards-publication-service:SNAPSHOT
+        docker pull lfeoperatorfabric/of-users-service:SNAPSHOT
+        docker pull lfeoperatorfabric/of-businessconfig-service:SNAPSHOT
         docker pull lfeoperatorfabric/of-external-devices-service:SNAPSHOT
         docker pull lfeoperatorfabric/of-web-ui:SNAPSHOT
     - name: Analyse card consultation 
       uses: anchore/scan-action@v3
       with:
-        image: "lfeoperatorfabric/of-cards-consultation-business-service:SNAPSHOT"
+        image: "lfeoperatorfabric/of-cards-consultation-service:SNAPSHOT"
         acs-report-enable: true
         fail-build: false
     - name: Upload Anchore Scan Report for cards-consultation
@@ -34,7 +34,7 @@ jobs:
     - name: Analyse card publication 
       uses: anchore/scan-action@v3
       with:
-        image: "lfeoperatorfabric/of-cards-publication-business-service:SNAPSHOT"
+        image: "lfeoperatorfabric/of-cards-publication-service:SNAPSHOT"
         acs-report-enable: true
         fail-build: false
     - name: Upload Anchore Scan Report for cards-publication
@@ -45,7 +45,7 @@ jobs:
     - name: Analyse users 
       uses: anchore/scan-action@v3
       with:
-        image: "lfeoperatorfabric/of-users-business-service:SNAPSHOT"
+        image: "lfeoperatorfabric/of-users-service:SNAPSHOT"
         acs-report-enable: true
         fail-build: false
     - name: Upload Anchore Scan Report for users
@@ -56,7 +56,7 @@ jobs:
     - name: Analyse businessConfig 
       uses: anchore/scan-action@v3
       with:
-        image: "lfeoperatorfabric/of-businessconfig-business-service:SNAPSHOT"
+        image: "lfeoperatorfabric/of-businessconfig-service:SNAPSHOT"
         acs-report-enable: true
         fail-build: false
     - name: Upload Anchore Scan Report for businessConfig

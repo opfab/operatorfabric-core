@@ -8,14 +8,14 @@
 # SPDX-License-Identifier: MPL-2.0
 # This file is part of the OperatorFabric project.
 
-businessServices=( "users" "cards-consultation" "cards-publication" "businessconfig")
+services=( "users" "cards-consultation" "cards-publication" "businessconfig")
 
 function display_usage() {
 	echo -e "\nThis script waits for the specified OpFab services to start, as well as Keycloak."
 	echo -e "Usage:"
 	echo -e "\twaitforOpfabToStart.sh [OPTIONS]\n"
 	echo -e "options:"
-	echo -e "\t-s, --services\t: list of comma separated services. Services for which to wait. Defaults to " $(join_by ","  "${businessServices[@]}")
+	echo -e "\t-s, --services\t: list of comma separated services. Services for which to wait. Defaults to " $(join_by ","  "${services[@]}")
 }
 
 
@@ -25,7 +25,7 @@ key="$1"
 case $key in
     -s|--services)
     stringServices=$2
-    businessServices=(${stringServices//,/ })
+    services=(${stringServices//,/ })
     shift # past argument
     shift # past value
     ;;
@@ -44,7 +44,7 @@ done
 
 waitService() {
     service=$1;
-    if [[ " ${businessServices[*]} " =~ " ${service} " || $service == "keycloak" ]];
+    if [[ " ${services[*]} " =~ " ${service} " || $service == "keycloak" ]];
     then
        echo "Waiting for $1"
        while true; do

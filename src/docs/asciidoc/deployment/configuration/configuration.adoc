@@ -49,9 +49,9 @@ SPRING_PROFILES_ACTIVE=docker,local
 This way the configuration file 'cards-publication-local.yml' can be provided in the same configuration directory and can be read by SpringBoot
 
 
-=== Shared business service configuration
+=== Shared service configuration
 
-The configuration shared by all business services is in a yaml file, you can find an example with the file
+The configuration shared by all services is in a yaml file, you can find an example with the file
 /config/docker/common-docker.yml.
 In this file you will find, among others, the parameters below :
 
@@ -63,9 +63,9 @@ In this file you will find, among others, the parameters below :
 
 |===
 
-=== Business service specific configurations
+=== Service specific configurations
 
-Each business service has a specific yaml configuration file. It should a least contain the name of the service:
+Each service has a specific yaml configuration file. It should a least contain the name of the service:
 
 [source, yaml]
 ----
@@ -74,7 +74,7 @@ spring:
     name: businessconfig
 ----
 
-Examples of configuration of each business service can be found either under config/docker or config/dev depending on
+Examples of configuration of each service can be found either under config/docker or config/dev depending on
 the type of deployment you're looking for.
 
 ==== Businessconfig service
