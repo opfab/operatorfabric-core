@@ -192,4 +192,51 @@ describe('EntitiesService', () => {
     });
   });
 
+  describe('#resolveChildEntities', () => {
+    it('should return all the child and sub child entities', () => {
+      const listEntities: Entity[] = [];
+      const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', true, [], []);
+      const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', true, [], []);
+      const entity2_1 = new Entity('ENTITY2.1', 'Control Room 2.1', 'Control Room 2.1', true, [], ['ENTITY2']);
+
+      const entity3 = new Entity('ENTITY3', 'Control Room 3', 'Control Room 3', false, [], []);
+      const entity3_1 = new Entity('ENTITY3.1', 'Control Room 3.1', 'Control Room 3.1', false, [], ['ENTITY3']);
+      const entity3_1_1 = new Entity('ENTITY3.1.1', 'Control Room 3.1.1', 'Control Room 3.1.1', false, [], ['ENTITY3.1']);
+      const entity3_1_2 = new Entity('ENTITY3.1.2', 'Control Room 3.1.2', 'Control Room 3.1.2', true, [], ['ENTITY3.1']);
+      const entity3_2 = new Entity('ENTITY3.2', 'Control Room 3.2', 'Control Room 3.2', true, [], ['ENTITY3']);
+
+      listEntities.push(entity1);
+      listEntities.push(entity2);
+      listEntities.push(entity2_1);
+      listEntities.push(entity3);
+      listEntities.push(entity3_1);
+      listEntities.push(entity3_1_1);
+      listEntities.push(entity3_1_2);
+      listEntities.push(entity3_2);
+
+      entitiesService.loadAllEntitiesData().subscribe(result => {
+        expect(result.length).toBe(8);
+        const allowedEntities = entitiesService.resolveChildEntities("ENTITY1");
+        expect(allowedEntities.length).toBe(0);
+
+        const allowedEntities2 = entitiesService.resolveChildEntities("ENTITY2");
+        expect(allowedEntities2.length).toBe(1);
+        expect(allowedEntities2[0].id).toBe('ENTITY2.1');
+
+        const allowedEntities3 = entitiesService.resolveChildEntities("ENTITY3");
+        expect(allowedEntities3.length).toBe(4);
+        expect(allowedEntities3[0].id).toBe('ENTITY3.1');
+        expect(allowedEntities3[1].id).toBe('ENTITY3.1.1');
+        expect(allowedEntities3[2].id).toBe('ENTITY3.1.2');
+        expect(allowedEntities3[3].id).toBe('ENTITY3.2');
+
+
+      });
+      const req = httpMock.expectOne(`${environment.urls.entities}`);
+      expect(req.request.method).toBe('GET');
+      req.flush(listEntities);
+
+    });
+  });
+
 })

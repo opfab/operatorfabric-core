@@ -237,7 +237,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private addAckFromSubscription(entitiesAcksToAdd: string[]) {
         if (!!this.listEntitiesToAck && this.listEntitiesToAck.length > 0) {
             entitiesAcksToAdd.forEach(entityAckToAdd => {
-                const indexToUpdate = this.card.entityRecipients.findIndex(entityId => entityId === entityAckToAdd);
+                const indexToUpdate = this.listEntitiesToAck.findIndex(entityToAck => entityToAck.id === entityAckToAdd);
                 if (indexToUpdate !== -1)
                     this.listEntitiesToAck[indexToUpdate].color = 'green';
             });
@@ -245,13 +245,21 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private computeListEntitiesToAck() {
+        let resolved = new Set<string>();
         this.card.entityRecipients.forEach(entityRecipient => {
-            this.listEntitiesToAck.push({
-                id: entityRecipient,
-                name: this.entitiesService.getEntityName(entityRecipient),
-                color: this.checkEntityAcknowledged(entityRecipient) ? 'green' : '#ff6600'
-            });
+            const entity = this.entitiesService.getEntitiesFromIds([entityRecipient])[0];
+            if (entity.entityAllowedToSendCard)
+                resolved.add(entityRecipient);
+
+            this.entitiesService.resolveChildEntities(entityRecipient).filter(c => c.entityAllowedToSendCard).forEach(c => resolved.add(c.id));
         });
+        
+        resolved.forEach(entityToAck => this.listEntitiesToAck.push({
+            id: entityToAck,
+            name: this.entitiesService.getEntityName(entityToAck),
+            color: this.checkEntityAcknowledged(entityToAck) ? 'green' : '#ff6600'
+        }));
+
     }
 
     private isCardPublishedByUserEntity(): boolean {

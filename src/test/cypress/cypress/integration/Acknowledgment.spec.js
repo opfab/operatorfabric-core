@@ -198,7 +198,7 @@ describe('Acknowledgment  tests', function () {
         cy.get('of-light-card').eq(0).click();
         cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Test message for entities acks");
         cy.get('#opfab-card-acknowledged-footer').should('exist');
-        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 14); // 13 entities + 1 for 'Acknowledged :' label
+        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 11); // 10 single entities (no group entities) + 1 for 'Acknowledged :' label
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR East \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
@@ -226,17 +226,9 @@ describe('Acknowledgment  tests', function () {
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(9).should("have.text", "\u00a0 Control Center NL South \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(10).should("have.text", "\u00a0 Dutch Control Centers \u00a0")
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(10).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(11).should("have.text", "\u00a0 French Control Centers \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
-
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(12).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
-
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(13).should("have.text", "\u00a0 Italian Control Centers \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
     });
 
     it('operator4_fr (member of 4 FR entities) acknowledges the previous card created by operator1_fr ', function () {
@@ -249,7 +241,7 @@ describe('Acknowledgment  tests', function () {
         cy.get('of-light-card').eq(0).click();
         cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Test message for entities acks");
         cy.get('#opfab-card-acknowledged-footer').should('exist');
-        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 14); // 13 entities + 1 for 'Acknowledged :' label
+        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 11); // 10 single entities (no group entities) + 1 for 'Acknowledged :' label
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR East \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
@@ -277,16 +269,7 @@ describe('Acknowledgment  tests', function () {
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(9).should("have.text", "\u00a0 Control Center NL South \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(10).should("have.text", "\u00a0 Dutch Control Centers \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
-
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(11).should("have.text", "\u00a0 French Control Centers \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
-
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(12).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
-
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(13).should("have.text", "\u00a0 Italian Control Centers \u00a0")
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(10).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
         // Set feed filter to see all card
@@ -303,7 +286,7 @@ describe('Acknowledgment  tests', function () {
         cy.get('#opfab-card-acknowledged-footer').should('exist');
 
         // We check we have ENTITY1_FR, ENTITY2_FR, ENTITY3_FR and ENTITY4_FR now displayed in green, all other entities in orange
-        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 14); // 13 entities + 1 for 'Acknowledged :' label
+        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 11); // 10 single entities (no group entities) + 1 for 'Acknowledged :' label
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR East \u00a0")
             .and('have.css', 'color', 'rgb(0, 128, 0)');
 
@@ -331,16 +314,7 @@ describe('Acknowledgment  tests', function () {
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(9).should("have.text", "\u00a0 Control Center NL South \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(10).should("have.text", "\u00a0 Dutch Control Centers \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
-
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(11).should("have.text", "\u00a0 French Control Centers \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
-
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(12).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
-
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(13).should("have.text", "\u00a0 Italian Control Centers \u00a0")
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(10).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
         // operator4_fr goes to activity area screen and disconnect from ENTITY1_FR
@@ -382,7 +356,7 @@ describe('Acknowledgment  tests', function () {
         cy.get('of-light-card').eq(4).click();
         cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Test message for entities acks");
         cy.get('#opfab-card-acknowledged-footer').should('exist');
-        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 14); // 13 entities + 1 for 'Acknowledged :' label
+        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 11); // 10 single entities (no group entities) + 1 for 'Acknowledged :' label
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR East \u00a0")
             .and('have.css', 'color', 'rgb(0, 128, 0)');
 
@@ -410,16 +384,7 @@ describe('Acknowledgment  tests', function () {
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(9).should("have.text", "\u00a0 Control Center NL South \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(10).should("have.text", "\u00a0 Dutch Control Centers \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
-
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(11).should("have.text", "\u00a0 French Control Centers \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
-
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(12).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
-
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(13).should("have.text", "\u00a0 Italian Control Centers \u00a0")
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(10).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
     });
 

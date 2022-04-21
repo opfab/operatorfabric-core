@@ -186,4 +186,24 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
     return Array.from(resolved);
   }
 
+    /** This method returns the list of descendant entities related to a given parent entity **/
+    public resolveChildEntities(parentId: string,) : Entity[] {
+      let resolved = new Set<Entity>();
+      const parent = this._entities.find(e => e.id === parentId)
+      if (!!parent) {       
+        this.findChildEntities(parent).forEach(cc => resolved.add(cc));
+      }
+      return Array.from(resolved);
+    }
+
+    private findChildEntities(parent: Entity): Entity[] {
+      let resolved = new Set<Entity>();
+      const childs = this._entities.filter(child => child.parents.includes(parent.id));
+      childs.forEach(c => {
+        resolved.add(c);
+        this.findChildEntities(c).forEach(cc => resolved.add(cc));
+      });
+      return Array.from(resolved);
+    }  
+
 }
