@@ -8,7 +8,7 @@
 # SPDX-License-Identifier: MPL-2.0
 # This file is part of the OperatorFabric project.
 
-services=( "users" "cards-consultation" "cards-publication" "businessconfig")
+services=( "users" "cards-consultation" "cards-publication" "businessconfig" "external-devices")
 
 function display_usage() {
 	echo -e "\nThis script waits for the specified OpFab services to start, as well as Keycloak."
