@@ -305,6 +305,7 @@ export class UserCardComponent implements OnInit {
     public prepareCard() {
         this.dealWithDeprecatedUseOfTemplateGateway();
         if (!this.isSpecificInformationValid()) return;
+        // First call to getSpecificCardInformation() to get card dates values
         this.specificInformation = usercardTemplateGateway.getSpecificCardInformation();
         const startDate = this.getStartDate();
         const endDate = this.getEndDate();
@@ -314,6 +315,8 @@ export class UserCardComponent implements OnInit {
         usercardTemplateGateway.startDate = startDate;
         usercardTemplateGateway.endDate = endDate;
         usercardTemplateGateway.lttd = lttd;
+        // Call again getSpecificCardInformation() after updating dates on usercardTemplateGateway
+        this.specificInformation = usercardTemplateGateway.getSpecificCardInformation();
 
         const title = (!!this.specificInformation.card.title) ? this.specificInformation.card.title : 'UNDEFINED';
         const selectedProcess = this.processesService.getProcess(this.selectedProcessId);
