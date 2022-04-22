@@ -344,7 +344,13 @@ export class AppComponent implements OnInit {
   }
 
   private subscribeToSessionClosedByNewUser() {
-    this.cardService.getReceivedDisconnectUser().subscribe(isDisconnected => this.isDisconnectedByNewUser = isDisconnected);
+    this.cardService.getReceivedDisconnectUser().subscribe(isDisconnected =>  {
+      this.isDisconnectedByNewUser = isDisconnected;
+
+      if (isDisconnected) {
+        this.soundNotificationService.clearOutstandingNotifications();
+      }
+    })
   }
 
 
