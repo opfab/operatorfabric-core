@@ -107,13 +107,15 @@ definitions:
     properties:
       userLogin:
         type: string
-      externalDeviceId:
-        type: string
+      externalDeviceIds:
+        type: array
+        items:
+          type: string
     required:
       - userLogin
     example:
       userLogin: operator1_fr
-      externalDeviceId: CDS_1
+      externalDeviceIds: CDS_1
 
 paths:
   '/notifications':

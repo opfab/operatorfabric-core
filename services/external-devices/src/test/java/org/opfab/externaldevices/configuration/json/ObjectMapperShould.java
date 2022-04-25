@@ -44,11 +44,13 @@ class ObjectMapperShould {
 
     @Test
     void readUserConfiguration() throws IOException {
-        String userConfigurationString = "{ \"userLogin\": \"jcleese\", \"externalDeviceId\": \"loudspeaker_1\" }";
+        String userConfigurationString = "{ \"userLogin\": \"jcleese\", \"externalDeviceIds\": [\"loudspeaker_1\", \"loudspeaker_2\"] }";
         UserConfiguration userConfiguration = mapper.readValue(userConfigurationString, UserConfiguration.class);
         assertThat(userConfiguration).isNotNull().isInstanceOf(UserConfigurationData.class);
         assertThat(userConfiguration.getUserLogin()).isEqualTo("jcleese");
-        assertThat(userConfiguration.getExternalDeviceId()).isEqualTo("loudspeaker_1");
+        assertThat(userConfiguration.getExternalDeviceIds().size()).isEqualTo(2);
+        assertThat(userConfiguration.getExternalDeviceIds().get(0)).isEqualTo("loudspeaker_1");
+        assertThat(userConfiguration.getExternalDeviceIds().get(1)).isEqualTo("loudspeaker_2");
     }
 
     @Test

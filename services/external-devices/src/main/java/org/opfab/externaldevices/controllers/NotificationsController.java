@@ -50,7 +50,7 @@ public class NotificationsController implements NotificationsApi, UserExtractor 
         log.debug(RECEIVED_NOTIFICATION, notification.toString(), user.getLogin());
 
         try {
-            devicesService.sendSignalForUser(notification.getOpfabSignalId(), user.getLogin());
+            devicesService.sendSignalToAllDevicesOfUser(notification.getOpfabSignalId(), user.getLogin());
         } catch (ExternalDeviceConfigurationException | ExternalDeviceDriverException e) {
             throw new ApiErrorException(ApiError.builder()
                     .status(HttpStatus.BAD_REQUEST)
