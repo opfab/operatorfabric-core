@@ -161,7 +161,8 @@
       "acknowledged": "Bevestigd",
       "lttd": "Resterende tijd om te beslissen",
       "hasAResponseFromYourEntity" : "Uw entiteit heeft al gereageerd",
-      "loadingInProgress": "Kaart wordt geladen"
+      "loadingInProgress": "Kaart wordt geladen",
+      "seeGroupedCards": "Open deze kaart om gegroepeerde kaarten te zien"
     },
     "acknowledgeAllCards": {
       "label": "Bevestig alle kaarten",
