@@ -75,17 +75,21 @@ public class DevicesService {
         }
     }
 
-    public void sendSignalForUser(String opFabSignalKey, String userLogin) throws ExternalDeviceConfigurationException, ExternalDeviceDriverException {
+    public void sendSignalToAllDevicesOfUser(String opFabSignalKey, String userLogin) throws ExternalDeviceConfigurationException, ExternalDeviceDriverException {
 
-        ResolvedConfiguration resolvedConfiguration = configService.getResolvedConfiguration(opFabSignalKey, userLogin);
+        List<ResolvedConfiguration> resolvedConfigurationList = configService.getResolvedConfigurationList(opFabSignalKey, userLogin);
+        for(ResolvedConfiguration resolvedConfiguration: resolvedConfigurationList) {
+            sendSignalToOneDevice(resolvedConfiguration);
+        }
+    }
 
+    private void sendSignalToOneDevice(ResolvedConfiguration resolvedConfiguration) throws ExternalDeviceDriverException, ExternalDeviceConfigurationException {
         ExternalDeviceDriver externalDeviceDriver = getDriverForDevice(resolvedConfiguration.getDeviceConfiguration());
         if(!externalDeviceDriver.isConnected()) {
             log.debug("External device {} was not connected. Connecting before send.",resolvedConfiguration.getDeviceConfiguration().getId());
             externalDeviceDriver.connect();
         }
         externalDeviceDriver.send(resolvedConfiguration.getSignalId());
-
     }
 
     @Scheduled(cron = "${operatorfabric.externaldevices.watchdog.cron:*/5 * * * * *}", zone = "UTC")

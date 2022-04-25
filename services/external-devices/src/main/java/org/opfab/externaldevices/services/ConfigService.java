@@ -11,12 +11,19 @@ package org.opfab.externaldevices.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
-import org.opfab.externaldevices.model.*;
+import org.opfab.externaldevices.model.DeviceConfiguration;
+import org.opfab.externaldevices.model.DeviceConfigurationData;
+import org.opfab.externaldevices.model.ResolvedConfiguration;
+import org.opfab.externaldevices.model.SignalMapping;
+import org.opfab.externaldevices.model.SignalMappingData;
+import org.opfab.externaldevices.model.UserConfiguration;
+import org.opfab.externaldevices.model.UserConfigurationData;
 import org.opfab.externaldevices.repositories.DeviceConfigurationRepository;
 import org.opfab.externaldevices.repositories.SignalMappingRepository;
 import org.opfab.externaldevices.repositories.UserConfigurationRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -76,12 +83,19 @@ public class ConfigService {
         return userConfigurationRepository.findAll().stream().collect(Collectors.toList());
     }
 
-    public ResolvedConfiguration getResolvedConfiguration(String opFabSignalKey, String userLogin) throws ExternalDeviceConfigurationException {
+    public List<ResolvedConfiguration> getResolvedConfigurationList(String opFabSignalKey, String userLogin) throws ExternalDeviceConfigurationException {
             UserConfiguration userConfiguration = retrieveUserConfiguration(userLogin);
-            DeviceConfiguration deviceConfiguration = retrieveDeviceConfiguration(userConfiguration.getExternalDeviceId());
-            SignalMapping signalMapping = retrieveSignalMapping(deviceConfiguration.getSignalMappingId());
-            int signalId = computeSignalId(signalMapping,opFabSignalKey);
-            return new ResolvedConfiguration(deviceConfiguration,signalId);
+            ArrayList<ResolvedConfiguration> resolvedConfigurations = new ArrayList<>();
+
+            for(String currentId : userConfiguration.getExternalDeviceIds()) {
+                DeviceConfiguration deviceConfiguration = retrieveDeviceConfiguration(currentId);
+                SignalMapping signalMapping = retrieveSignalMapping(deviceConfiguration.getSignalMappingId());
+                int signalId = computeSignalId(signalMapping,opFabSignalKey);
+                resolvedConfigurations.add(new ResolvedConfiguration(deviceConfiguration,signalId));
+            }
+
+            return resolvedConfigurations;
+
     }
 
     public DeviceConfiguration retrieveDeviceConfiguration(String deviceId) throws ExternalDeviceConfigurationException {
@@ -134,10 +148,10 @@ public class ConfigService {
         retrieveDeviceConfiguration(deviceId);
 
         // First we need to remove it from the userConfigurations that were using it
-        List<UserConfigurationData> foundUserConfigurations = userConfigurationRepository.findByExternalDeviceId(deviceId);
+        List<UserConfigurationData> foundUserConfigurations = userConfigurationRepository.findByExternalDeviceIds(deviceId);
         if (foundUserConfigurations != null) {
             for (UserConfigurationData userConfigurationData :  foundUserConfigurations) {
-                userConfigurationData.setExternalDeviceId(null);
+                userConfigurationData.setExternalDeviceIds(null);
                 log.warn(NULL_AFTER_DELETE, deviceId, DEVICE_CONFIG, "user", userConfigurationData.getUserLogin());
             }
             userConfigurationRepository.saveAll(foundUserConfigurations);

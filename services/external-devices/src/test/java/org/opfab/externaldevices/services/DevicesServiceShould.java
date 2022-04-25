@@ -26,10 +26,16 @@ import org.opfab.externaldevices.model.ResolvedConfiguration;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.clearInvocations;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class DevicesServiceShould {
@@ -75,19 +81,8 @@ class DevicesServiceShould {
     @Test
     void connectDeviceWhenConfigIsUpdated() throws ExternalDeviceConfigurationException, UnknownHostException, ExternalDeviceDriverException {
 
-        DeviceConfigurationData initialDeviceConfigurationData = DeviceConfigurationData.builder()
-                .id("testDeviceId")
-                .host("123.45.67.1")
-                .port(1234)
-                .signalMappingId("testSignalMapping")
-                .build();
-
-        DeviceConfigurationData updatedDeviceConfigurationData = DeviceConfigurationData.builder()
-                .id("testDeviceId")
-                .host("123.45.67.1")
-                .port(5678)
-                .signalMappingId("testSignalMapping")
-                .build();
+        DeviceConfigurationData initialDeviceConfigurationData = buildDeviceConfiguration(1234, "testDeviceId");
+        DeviceConfigurationData updatedDeviceConfigurationData = buildDeviceConfiguration(5678, "testDeviceId");
 
         ExternalDeviceDriver initialExternalDeviceDriver = mock(ExternalDeviceDriver.class);
         ExternalDeviceDriver updatedExternalDeviceDriver = mock(ExternalDeviceDriver.class);
@@ -116,12 +111,7 @@ class DevicesServiceShould {
     @Test
     void connectAndDisconnectDriverAssociatedWithDevice() throws ExternalDeviceConfigurationException, ExternalDeviceDriverException {
 
-        DeviceConfigurationData deviceConfigurationData = DeviceConfigurationData.builder()
-                .id("testDeviceId")
-                .host("123.45.67.1")
-                .port(1234)
-                .signalMappingId("testSignalMapping")
-                .build();
+        DeviceConfigurationData deviceConfigurationData = buildDeviceConfiguration(1234, "testDeviceId");
 
         ExternalDeviceDriver externalDeviceDriver = mock(ExternalDeviceDriver.class);
 
@@ -143,25 +133,24 @@ class DevicesServiceShould {
     @Test
     void sendAppropriateSignalIfCorrectConfiguration() throws ExternalDeviceConfigurationException, ExternalDeviceDriverException {
 
-        DeviceConfigurationData deviceConfigurationData = DeviceConfigurationData.builder()
-                .id("testDeviceId")
-                .host("123.45.67.1")
-                .port(1234)
-                .signalMappingId("testSignalMapping")
-                .build();
+        DeviceConfigurationData deviceConfigurationData1 = buildDeviceConfiguration(1234, "testDeviceId");
+        ResolvedConfiguration resolvedConfiguration1 = new ResolvedConfiguration(deviceConfigurationData1,3);
+        ExternalDeviceDriver externalDeviceDriver1 = mock(ExternalDeviceDriver.class);
 
-        ResolvedConfiguration resolvedConfiguration = new ResolvedConfiguration(deviceConfigurationData,3);
-
-        ExternalDeviceDriver externalDeviceDriver = mock(ExternalDeviceDriver.class);
+        DeviceConfigurationData deviceConfigurationData2 = buildDeviceConfiguration(5678, "testDeviceId2");
+        ResolvedConfiguration resolvedConfiguration2 = new ResolvedConfiguration(deviceConfigurationData2,4);
+        ExternalDeviceDriver externalDeviceDriver2 = mock(ExternalDeviceDriver.class);
 
         // Mock configuration
-        when(configService.getResolvedConfiguration("ALARM", "testUser")).thenReturn(resolvedConfiguration);
-        when(externalDeviceDriverFactory.create("123.45.67.1",1234)).thenReturn(externalDeviceDriver);
+        when(configService.getResolvedConfigurationList("ALARM", "testUser")).thenReturn(Arrays.asList(resolvedConfiguration1, resolvedConfiguration2));
+        when(externalDeviceDriverFactory.create("123.45.67.1",1234)).thenReturn(externalDeviceDriver1);
+        when(externalDeviceDriverFactory.create("123.45.67.1",5678)).thenReturn(externalDeviceDriver2);
 
-        devicesService.sendSignalForUser("ALARM", "testUser");
+        devicesService.sendSignalToAllDevicesOfUser("ALARM", "testUser");
 
-        verify(configService,times(1)).getResolvedConfiguration("ALARM", "testUser");
-        verify(externalDeviceDriver,times(1)).send(3);
+        verify(configService,times(1)).getResolvedConfigurationList("ALARM", "testUser");
+        verify(externalDeviceDriver1,times(1)).send(3);
+        verify(externalDeviceDriver2,times(1)).send(4);
     }
 
     @Test
@@ -169,12 +158,7 @@ class DevicesServiceShould {
 
         final int CUSTOM_SIGNAL_ID = 4;
 
-        DeviceConfigurationData deviceConfigurationData = DeviceConfigurationData.builder()
-                .id("testDeviceId")
-                .host("123.45.67.1")
-                .port(1234)
-                .signalMappingId("testSignalMapping")
-                .build();
+        DeviceConfigurationData deviceConfigurationData = buildDeviceConfiguration(1234, "testDeviceId");
 
         ExternalDeviceDriver externalDeviceDriver = mock(ExternalDeviceDriver.class);
 
@@ -202,12 +186,7 @@ class DevicesServiceShould {
     @Test
     void notSendWatchdogSignalToDevicesIfDisabled() throws ExternalDeviceConfigurationException, ExternalDeviceDriverException {
 
-        DeviceConfigurationData deviceConfigurationData = DeviceConfigurationData.builder()
-                .id("testDeviceId")
-                .host("123.45.67.1")
-                .port(1234)
-                .signalMappingId("testSignalMapping")
-                .build();
+        DeviceConfigurationData deviceConfigurationData = buildDeviceConfiguration(1234, "testDeviceId");
 
         ExternalDeviceDriver externalDeviceDriver = mock(ExternalDeviceDriver.class);
 
@@ -284,12 +263,7 @@ class DevicesServiceShould {
      * */
     private ExternalDeviceDriver sharedExternalDriverMockConfiguration() throws ExternalDeviceConfigurationException, UnknownHostException, ExternalDeviceDriverException {
 
-        DeviceConfigurationData deviceConfigurationData = DeviceConfigurationData.builder()
-                .id("testDeviceId")
-                .host("123.45.67.1")
-                .port(1234)
-                .signalMappingId("testSignalMapping")
-                .build();
+        DeviceConfigurationData deviceConfigurationData = buildDeviceConfiguration(1234, "testDeviceId");
 
         ExternalDeviceDriver externalDeviceDriver = mock(ExternalDeviceDriver.class);
 
@@ -301,5 +275,14 @@ class DevicesServiceShould {
 
         return externalDeviceDriver;
 
+    }
+
+    private DeviceConfigurationData buildDeviceConfiguration(int port, String deviceId) {
+        return DeviceConfigurationData.builder()
+                .id(deviceId)
+                .host("123.45.67.1")
+                .port(port)
+                .signalMappingId("testSignalMapping")
+                .build();
     }
 }
