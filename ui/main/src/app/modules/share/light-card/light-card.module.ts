@@ -13,10 +13,11 @@ import {TranslateModule} from '@ngx-translate/core';
 import {LightCardComponent} from './light-card.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountDownModule} from '../countdown/countdown.module';
+import {GroupedCardListComponent} from './grouped-card-list/grouped-card-list.component';
 
 
 @NgModule({
-    declarations: [LightCardComponent],
+    declarations: [LightCardComponent, GroupedCardListComponent],
     imports: [
         CommonModule,
         TranslateModule,

@@ -16,13 +16,15 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
 import { takeUntil } from 'rxjs/operators';
 import { TimeService } from '@ofServices/time.service';
-import { Subject } from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import { ConfigService } from '@ofServices/config.service';
 import { AppService, PageType } from '@ofServices/app.service';
 import { EntitiesService } from '@ofServices/entities.service';
 import {ProcessesService} from '@ofServices/processes.service';
 import {TypeOfStateEnum} from '@ofModel/processes.model';
+import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
+import {GroupedCardsService} from '@ofServices/grouped-cards.service';
 
 @Component({
     selector: 'of-light-card',
@@ -32,6 +34,8 @@ import {DisplayContext} from '@ofModel/templateGateway.model';
 export class LightCardComponent implements OnInit, OnDestroy {
 
     @Input() public open = false;
+    @Input() public groupedCardOpen = false;
+    @Input() public selection: Observable<string>;
     @Input() public lightCard: LightCard;
     @Input() public displayUnreadIcon = true;
     @Input() displayContext: any = DisplayContext.REALTIME;
@@ -44,6 +48,8 @@ export class LightCardComponent implements OnInit, OnDestroy {
     showExpiredIcon: boolean = true;
     showExpiredLabel: boolean = true;
     expiredLabel: string = 'feed.lttdFinished';
+    showGroupedCardsIcon: boolean = false;
+    groupedCardsVisible = true ;
 
     private ngUnsubscribe: Subject<void> = new Subject<void>();
 
@@ -56,6 +62,8 @@ export class LightCardComponent implements OnInit, OnDestroy {
         private _appService: AppService,
         private entitiesService: EntitiesService,
         private processesService: ProcessesService,
+        private userPreferencesService: UserPreferencesService,
+        private groupedCardsService: GroupedCardsService
     ) {
      }
 
@@ -73,6 +81,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
         this.computeFromEntity();
         this.computeDisplayedDate();
         this.computeLttdParams();
+        this.computeGroupedCardsIcon();
     }
 
     computeLttdParams() {
@@ -113,11 +122,25 @@ export class LightCardComponent implements OnInit, OnDestroy {
         }
     }
 
+    private computeGroupedCardsIcon() {
+        this.showGroupedCardsIcon = this.groupedCardsService.isParentGroupCard(this.lightCard);
+    }
+
+    getGroupedChildCards() {
+        return this.groupedCardsService.getChildCardsByTags(this.lightCard.tags);
+    }
+
     handleDate(timeStamp: number): string {
         return this.time.formatDateTime(timeStamp);
     }
 
-    public select() {
+    public select($event) {
+        $event.stopPropagation();
+        if (this.open && this.groupedCardsService.isParentGroupCard(this.lightCard)) {
+            this.groupedCardsVisible = ! this.groupedCardsVisible;
+        } else {
+            this.groupedCardsVisible = true;
+        }
         if (this.displayContext != DisplayContext.PREVIEW)
             this.router.navigate(['/' + this.currentPath, 'cards', this.lightCard.id]);
     }

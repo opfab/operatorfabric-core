@@ -160,7 +160,8 @@
       "acknowledged": "Acknowledged",
       "lttd": "Time remaining to decide",
       "hasAResponseFromYourEntity" : "Your entity has already responded",
-      "loadingInProgress": "Card loading in progress"
+      "loadingInProgress": "Card loading in progress",
+      "seeGroupedCards": "Open this card to see grouped cards"
     },
     "acknowledgeAllCards": {
       "label": "Acknowledge all cards",
