@@ -35,7 +35,7 @@
                         <ng-template #tipAcknowledged>
                             <span translate>feed.tips.acknowledged</span>
                         </ng-template>
-                        <span *ngIf="this.lightCard.hasBeenAcknowledged || displayAcknowledgedIcon" class="p-2"
+                        <span *ngIf="this.lightCard.hasBeenAcknowledged || this.lightCard.acknowledgedByEntity" class="p-2"
                             [ngbPopover]="tipAcknowledged" popoverClass="opfab-popover" container="body"
                             triggers="mouseenter:mouseleave">
                             <em style="color: #0082FF;" class="fa fa-check"></em>

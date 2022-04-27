@@ -16,7 +16,6 @@ import {catchError, map, tap} from 'rxjs/operators';
 import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {Card} from '@ofModel/card.model';
-import {LightCardsStoreService} from './lightcards/lightcards-store.service';
 import {UserService} from '@ofServices/user.service';
 
 @Injectable({
@@ -37,9 +36,8 @@ export class ProcessesService {
     constructor(
         private httpClient: HttpClient,
         private translateService: TranslateService,
-        private lightCardsStoreService: LightCardsStoreService,
-        private userService: UserService
-    ) {
+        private userService: UserService) {
+
         this.urlCleaner = new HttpUrlEncodingCodec();
         this.processesUrl = `${environment.urls.processes}`;
         this.processGroupsUrl = `${environment.urls.processGroups}`;
@@ -90,7 +88,7 @@ export class ProcessesService {
 
     private loadAllProcessesInCache() {
         this.processes.forEach(process => {
-            this.processCache.set(`${process.id}.${process.version}` , Object.setPrototypeOf(process, Process.prototype)); 
+            this.processCache.set(`${process.id}.${process.version}` , Object.setPrototypeOf(process, Process.prototype));
         });
     }
 
@@ -101,10 +99,10 @@ export class ProcessesService {
                         if (!!monitoringConfig) {
                             this.monitoringConfig = monitoringConfig;
                             console.log(new Date().toISOString(), 'Monitoring config loaded');
-                        }
-                        else  console.log(new Date().toISOString(), 'No monitoring config to load');
+                        } else
+                            console.log(new Date().toISOString(), 'No monitoring config to load');
                         return monitoringConfig;
-                    }), 
+                    }),
                     catchError(error => {
                         console.error(new Date().toISOString(), 'An error occurred when loading monitoringConfig', error);
                         return of(error);

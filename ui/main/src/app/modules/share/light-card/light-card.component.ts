@@ -22,10 +22,8 @@ import {AppService, PageType} from '@ofServices/app.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {ProcessesService} from '@ofServices/processes.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
-import {ConsideredAcknowledgedForUserWhenEnum, TypeOfStateEnum} from '@ofModel/processes.model';
+import {TypeOfStateEnum} from '@ofModel/processes.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {UserService} from '@ofServices/user.service';
-import {CardService} from '@ofServices/card.service';
 
 @Component({
     selector: 'of-light-card',
@@ -47,11 +45,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
     showExpiredIcon = true;
     showExpiredLabel = true;
     expiredLabel = 'feed.lttdFinished';
-    consideredAcknowledgedForUserWhen = ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED;
     currentUserWithPerimeters: UserWithPerimeters;
-    listEntitiesToAck: string[];
-    entitiesAcksForThisCard: string[];
-    displayAcknowledgedIcon = false;
 
     private ngUnsubscribe: Subject<void> = new Subject<void>();
 
@@ -63,11 +57,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
         private configService: ConfigService,
         private _appService: AppService,
         private entitiesService: EntitiesService,
-        private processesService: ProcessesService,
-        private userService: UserService,
-        private cardService: CardService) {
-        this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
-    }
+        private processesService: ProcessesService) {}
 
     ngOnInit() {
         this._i18nPrefix = `${this.lightCard.process}.${this.lightCard.processVersion}.`;
@@ -83,80 +73,6 @@ export class LightCardComponent implements OnInit, OnDestroy {
         this.computeFromEntity();
         this.computeDisplayedDate();
         this.computeLttdParams();
-
-        this.processesService.queryProcess(this.lightCard.process, this.lightCard.processVersion).subscribe( process => {
-            const state = process.extractState(this.lightCard);
-            if (!! state.consideredAcknowledgedForUserWhen)
-                this.consideredAcknowledgedForUserWhen = state.consideredAcknowledgedForUserWhen;
-        });
-
-        this.computeListEntitiesToAck();
-        this.entitiesAcksForThisCard = ((!! this.lightCard.entitiesAcks) ? this.lightCard.entitiesAcks : []);
-
-        this.cardService.getReceivedAcks().pipe(takeUntil(this.ngUnsubscribe)).subscribe(receivedAck => {
-            if (receivedAck.cardUid === this.lightCard.uid)
-                this.addAckFromSubscription(receivedAck.entitiesAcks);
-        });
-
-        this.doWeHaveToDisplayAcknowledgedIcon();
-    }
-
-    private computeListEntitiesToAck() {
-        this.listEntitiesToAck = [];
-
-        if (!! this.lightCard.entityRecipients) {
-            const listOfEntityRecipients = this.entitiesService.getEntitiesFromIds(this.lightCard.entityRecipients);
-            if (!! listOfEntityRecipients)
-                this.entitiesService.resolveEntitiesAllowedToSendCards(listOfEntityRecipients).forEach(entityToAdd =>
-                    this.listEntitiesToAck.push(entityToAdd.id)
-                );
-        }
-    }
-
-    private addAckFromSubscription(entitiesAcksToAdd: string[]) {
-        if (!!this.listEntitiesToAck && this.listEntitiesToAck.length > 0) {
-            entitiesAcksToAdd.forEach(entityAckToAdd => {
-                this.entitiesAcksForThisCard.push(entityAckToAdd);
-            });
-
-            this.doWeHaveToDisplayAcknowledgedIcon();
-        }
-    }
-
-    doWeHaveToDisplayAcknowledgedIcon(): void {
-
-        this.displayAcknowledgedIcon = false;
-        if (!! this.listEntitiesToAck)
-            this.displayAcknowledgedIcon = (this.checkDisplayAckForTheCaseOfOneEntitySufficesForAck()
-                                            || this.checkDisplayAckForTheCaseOfAllEntitiesMustAckTheCard());
-    }
-
-    checkDisplayAckForTheCaseOfOneEntitySufficesForAck(): boolean {
-
-        if ((this.consideredAcknowledgedForUserWhen === ConsideredAcknowledgedForUserWhenEnum.ONE_ENTITY_OF_USER_HAS_ACKNOWLEDGED)
-            && (!! this.entitiesAcksForThisCard)) {
-            return (this.entitiesAcksForThisCard.filter(entityId =>
-                this.currentUserWithPerimeters.userData.entities.includes(entityId)).length > 0);
-        } else
-            return false;
-    }
-
-    checkDisplayAckForTheCaseOfAllEntitiesMustAckTheCard(): boolean {
-
-        if ((this.consideredAcknowledgedForUserWhen === ConsideredAcknowledgedForUserWhenEnum.ALL_ENTITIES_OF_USER_HAVE_ACKNOWLEDGED)
-             && (!! this.entitiesAcksForThisCard)) {
-
-            // We compute the entities for which the ack is pending
-            const entitiesWaitedForAck = this.listEntitiesToAck.filter(entityId =>
-                this.entitiesAcksForThisCard.indexOf(entityId) < 0);
-
-            const entitiesOfUserAndWaitedForAck = entitiesWaitedForAck.filter(entityId => {
-                return this.entitiesService.isEntityAllowedToSendCard(entityId)
-                       && this.currentUserWithPerimeters.userData.entities.includes(entityId);
-            });
-            return (entitiesOfUserAndWaitedForAck.length === 0);
-        } else
-            return false;
     }
 
     computeLttdParams() {
@@ -173,8 +89,10 @@ export class LightCardComponent implements OnInit, OnDestroy {
     }
 
     computeFromEntity() {
-        if (this.lightCard.publisherType === 'ENTITY' )  this.fromEntity = this.entitiesService.getEntityName(this.lightCard.publisher);
-        else this.fromEntity = null;
+        if (this.lightCard.publisherType === 'ENTITY')
+            this.fromEntity = this.entitiesService.getEntityName(this.lightCard.publisher);
+        else
+            this.fromEntity = null;
     }
 
     computeDisplayedDate() {
@@ -201,7 +119,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
     }
 
     public select() {
-        if (this.displayContext != DisplayContext.PREVIEW)
+        if (this.displayContext !== DisplayContext.PREVIEW)
             this.router.navigate(['/' + this.currentPath, 'cards', this.lightCard.id]);
     }
 

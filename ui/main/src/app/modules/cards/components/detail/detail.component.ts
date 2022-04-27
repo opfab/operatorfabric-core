@@ -129,7 +129,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public btnValidateLabel = 'response.btnValidate';
     public btnUnlockLabel = 'response.btnUnlock';
     public listEntitiesToAck = [];
-    public lastResponse : Card;
+    public lastResponse: Card;
 
     private lastCardSetToReadButNotYetOnFeed;
     private entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = [];
@@ -245,7 +245,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private computeListEntitiesToAck() {
-        let resolved = new Set<string>();
+        const resolved = new Set<string>();
         this.card.entityRecipients.forEach(entityRecipient => {
             const entity = this.entitiesService.getEntitiesFromIds([entityRecipient])[0];
             if (entity.entityAllowedToSendCard)
@@ -253,7 +253,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
             this.entitiesService.resolveChildEntities(entityRecipient).filter(c => c.entityAllowedToSendCard).forEach(c => resolved.add(c.id));
         });
-        
+
         resolved.forEach(entityToAck => this.listEntitiesToAck.push({
             id: entityToAck,
             name: this.entitiesService.getEntityName(entityToAck),
@@ -385,7 +385,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 this.computeEntitiesForResponses();
                 templateGateway.applyChildCards();
                 this.checkIfHasAlreadyResponded();
-                if (this.isResponseLocked) 
+                if (this.isResponseLocked)
                     templateGateway.lockAnswer();
 
                 this.lastResponse = this.getLastResponse();
@@ -398,7 +398,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.childCards = newChildArray;
         this.checkIfHasAlreadyResponded();
         templateGateway.isLocked = this.isResponseLocked;
-        if (!this.isResponseLocked) 
+        if (!this.isResponseLocked)
             templateGateway.unlockAnswer();
         templateGateway.childCards = this.childCards;
         this.computeEntitiesForResponses();
@@ -605,7 +605,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     private markAsReadIfNecessary() {
         if (this.card.hasBeenRead === false) {
-            // we do not set now the card as read in the store , as we want to keep
+            // we do not set now the card as read in the store, as we want to keep
             // the card as unread in the feed
             // we will set it read in the feed when
             //  - we close the card
@@ -613,8 +613,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             //  - we change card
 
             if (this.lastCardSetToReadButNotYetOnFeed) {
-                // if the user has change selected card in feed , set the previous read card as read in the feed
-                if (this.card.id != this.lastCardSetToReadButNotYetOnFeed.id) this.updateLastReadCardStatusOnFeedIfNeeded();
+                // if the user has changed selected card in feed, set the previous read card as read in the feed
+                if (this.card.id !== this.lastCardSetToReadButNotYetOnFeed.id) this.updateLastReadCardStatusOnFeedIfNeeded();
             }
             this.lastCardSetToReadButNotYetOnFeed = this.card;
             this.cardService.postUserCardRead(this.card.uid).subscribe();
@@ -623,7 +623,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     private updateLastReadCardStatusOnFeedIfNeeded() {
         if (this.lastCardSetToReadButNotYetOnFeed) {
-            this.lightCardsStoreService.setLightCardRead(this.lastCardSetToReadButNotYetOnFeed.id,true);
+            this.lightCardsStoreService.setLightCardRead(this.lastCardSetToReadButNotYetOnFeed.id, true);
             this.lastCardSetToReadButNotYetOnFeed = null;
         }
     }

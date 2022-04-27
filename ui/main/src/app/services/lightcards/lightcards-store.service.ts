@@ -12,20 +12,23 @@ import {Injectable} from '@angular/core';
 import {LightCard} from '@ofModel/light-card.model';
 import {debounceTime, filter, interval, map, merge, Observable, ReplaySubject, sample, Subject, tap} from 'rxjs';
 import {UserService} from '../user.service';
+import {ProcessesService} from '@ofServices/processes.service';
+import {EntitiesService} from '@ofServices/entities.service';
+import {ConsideredAcknowledgedForUserWhenEnum} from '@ofModel/processes.model';
 
 /**
- * 
- * This class is used to store and provide lightCard to all other classes in "real time" (feed , monitoring , calendar ... )
- * 
- * It implements a feature to deliver the last array of lightCards with a limited rate of update : see method getLightCardsWithLimitedUpdateRate() 
- * 
+ *
+ * This class is used to store and provide lightCard to all other classes in "real time" (feed, monitoring, calendar... )
+ *
+ * It implements a feature to deliver the last array of lightCards with a limited rate of update : see method getLightCardsWithLimitedUpdateRate()
+ *
  * Child cards are not provided along with light card,s they can be retrieved as they are received via getNewLightChildCards()
- * 
- * The class provides as well an observable to get information if the loading is in progress, it is in progress when 
+ *
+ * The class provides as well an observable to get information if the loading is in progress, it is in progress when
  * there is a flow of lightCard coming from the subscription service.
- * 
- * This feature was préviously implemented with NGRX but i was not fast  enough, so it has been changed with a custom implementation
- * 
+ *
+ * This feature was previously implemented with NGRX, but it was not fast enough, so it has been changed with a custom implementation
+ *
  * This class does not hold the selected lightCard or the current loaded card, this is done via NGRX store.
  */
  @Injectable({
@@ -40,34 +43,35 @@ export class LightCardsStoreService {
     private newLightCards = new Subject<LightCard>();
     private newLightChildCards = new Subject<LightCard>();
     private deletedLightChildCards = new Subject<any>();
-    
 
     private orphanedLightChildCardsFromCurrentEntity: Set<string> = new Set();
 
-    private timeOfLastDebounce: number = 0;
-    private numberOfCardProcessedByPreviousDebounce: number = 0;
+    private timeOfLastDebounce = 0;
+    private numberOfCardProcessedByPreviousDebounce = 0;
 
     private nbCardLoadedInHalfSecondInterval = 0;
     private nbCardLoadedInPreviousHalfSecondInterval = 0;
     private loadingInProgress = new Subject();
 
 
-    constructor(private userService: UserService) {
+    constructor(private userService: UserService,
+                private processesService: ProcessesService,
+                private entitiesService: EntitiesService) {
         this.getLightCardsWithLimitedUpdateRate().subscribe();
         this.checkForLoadingInProgress();
     }
 
 
    // --------------------
-    // When an flow of card is coming, for performance reasons , we do not want to update the card list 
-    // every time  a card is arriving so we wait for the end of the flow of cards.
+    // When a flow of card is coming, for performance reasons, we do not want to update the card list
+    // every time a card is arriving, so we wait for the end of the flow of cards.
     //
-    // But if it takes too long, we want to show something . 
-    // So every second we make a rendering even if the flow is still continuing except  if  there is less than 20 new cards received in between 
-    // In this case it means the browser is slow so we wait 1 s more to avoid adding unnecessary load ot the browser 
-    // This situation can arise for example when the browser is busy rendering the monitoring screen with the previous list of card
-    // 
-    // To do that we combine a debounce waiting for the end of the flow and an interval to get the card list every second 
+    // But if it takes too long, we want to show something.
+    // So every second we make a rendering even if the flow is still continuing except if there is less than 20 new cards received in between
+    // In this case it means the browser is slow, so we wait 1s more to avoid adding unnecessary load of the browser
+    // This situation can arise for example when the browser is busy rendering the monitoring screen with the previous list of cards
+    //
+    // To do that we combine a debounce waiting for the end of the flow and an interval to get the cards list every second
 
     private getLightCardsWithLimitedUpdateRate(): Observable<any> {
         return merge(this.getLightCardsInterval(), this.getLightCardDebounce())
@@ -77,7 +81,7 @@ export class LightCardsStoreService {
                     cards.forEach((card, id) => {
                         array.push(card);
                     });
-                    return array
+                    return array;
                 }),
                 tap((cards) => this.lightCardsEventsWithLimitedUpdateRate.next(cards)));
 
@@ -87,8 +91,8 @@ export class LightCardsStoreService {
         return this.lightCardsEvents.pipe(
             sample(interval(1000)),
             filter((results: Map<any, any>) => ((
-                (new Date().valueOf()) - this.timeOfLastDebounce) > 1000)   // we only need to get cards if no debounce arise in 1 seconds 
-                && (results.size - this.numberOfCardProcessedByPreviousDebounce > 20)), //and if there is enough new card 
+                (new Date().valueOf()) - this.timeOfLastDebounce) > 1000)   // we only need to get cards if no debounce arise in 1 second
+                && (results.size - this.numberOfCardProcessedByPreviousDebounce > 20)), // and if there is enough new cards
 
             tap((results) => {
                 console.log(new Date().toISOString(), "Cards flow in progress : " + (results.size - this.numberOfCardProcessedByPreviousDebounce) + " new cards  ");
@@ -176,6 +180,79 @@ export class LightCardsStoreService {
         }
     }
 
+    private computeListEntitiesToAck(lightCard: LightCard): string[] {
+        const listEntitiesToAck = [];
+
+        if (!! lightCard.entityRecipients) {
+            const listOfEntityRecipients = this.entitiesService.getEntitiesFromIds(lightCard.entityRecipients);
+            if (!! listOfEntityRecipients)
+                this.entitiesService.resolveEntitiesAllowedToSendCards(listOfEntityRecipients).forEach(entityToAdd =>
+                    listEntitiesToAck.push(entityToAdd.id)
+                );
+        }
+        return listEntitiesToAck;
+    }
+
+    private checkIsAcknowledgedForTheCaseOfOneEntitySufficesForAck(consideredAcknowledgedForUserWhen: ConsideredAcknowledgedForUserWhenEnum,
+                                                                   lightCard: LightCard): boolean {
+
+        if ((consideredAcknowledgedForUserWhen === ConsideredAcknowledgedForUserWhenEnum.ONE_ENTITY_OF_USER_HAS_ACKNOWLEDGED)
+            && (!! lightCard.entitiesAcks)) {
+            return (lightCard.entitiesAcks.filter(entityId =>
+                this.userService.getCurrentUserWithPerimeters().userData.entities.includes(entityId)).length > 0);
+        } else
+            return false;
+    }
+
+    private checkIsAcknowledgedForTheCaseOfAllEntitiesMustAckTheCard(consideredAcknowledgedForUserWhen: ConsideredAcknowledgedForUserWhenEnum,
+                                                                     lightCard: LightCard,
+                                                                     listEntitiesToAck: string[]): boolean {
+
+        if ((consideredAcknowledgedForUserWhen === ConsideredAcknowledgedForUserWhenEnum.ALL_ENTITIES_OF_USER_HAVE_ACKNOWLEDGED)
+            && (!! lightCard.entitiesAcks)) {
+
+            // We compute the entities for which the ack is pending
+            const entitiesWaitedForAck = listEntitiesToAck.filter(entityId =>
+                lightCard.entitiesAcks.indexOf(entityId) < 0);
+
+            const entitiesOfUserAndWaitedForAck = entitiesWaitedForAck.filter(entityId => {
+                return this.entitiesService.isEntityAllowedToSendCard(entityId)
+                    && this.userService.getCurrentUserWithPerimeters().userData.entities.includes(entityId);
+            });
+            return (entitiesOfUserAndWaitedForAck.length === 0);
+        } else
+            return false;
+    }
+
+    public addEntitiesAcksForLightCard(cardId: string, entitiesAcksToAdd: string[]) {
+        const card = this.lightCards.get(cardId);
+
+        if (!!card && !!entitiesAcksToAdd) {
+            card.entitiesAcks = (!! card.entitiesAcks) ? [...new Set([...card.entitiesAcks , ...entitiesAcksToAdd])] : entitiesAcksToAdd;
+            card.acknowledgedByEntity = this.isLightCardAcknowledgedByEntity(card);
+            this.lightCardsEvents.next(this.lightCards);
+        }
+    }
+
+    private isLightCardAcknowledgedByEntity(lightCard: LightCard): boolean {
+        let consideredAcknowledgedForUserWhen = ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED; // default value
+
+        this.processesService.queryProcess(lightCard.process, lightCard.processVersion).subscribe( process => {
+            const state = process.extractState(lightCard);
+            if (!! state.consideredAcknowledgedForUserWhen)
+                consideredAcknowledgedForUserWhen = state.consideredAcknowledgedForUserWhen;
+        });
+
+        const listEntitiesToAck = this.computeListEntitiesToAck(lightCard);
+
+        if ((!! listEntitiesToAck) && (consideredAcknowledgedForUserWhen !== ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED)) {
+            return (this.checkIsAcknowledgedForTheCaseOfOneEntitySufficesForAck(consideredAcknowledgedForUserWhen, lightCard)
+                    || this.checkIsAcknowledgedForTheCaseOfAllEntitiesMustAckTheCard(consideredAcknowledgedForUserWhen, lightCard,
+                                                                                     listEntitiesToAck));
+        } else
+            return false;
+    }
+
     public setLightCardAcknowledgment(cardId: string, ack: boolean) {
         const card = this.lightCards.get(cardId);
         if (!!card) {
@@ -190,24 +267,23 @@ export class LightCardsStoreService {
             this.addChildCard(card);
             const isFromCurrentUser = this.isLightChildCardFromCurrentUserEntity(card);
             if (isFromCurrentUser) {
-                const parentCard = this.lightCards.get(card.parentCardId)
+                const parentCard = this.lightCards.get(card.parentCardId);
                 if (!parentCard) {
-                    // if parent does not exist yet keep in memory the information that the card with id=parentCardId has a child                    
+                    // if parent does not exist yet keep in memory the information that the card with id=parentCardId has a child
                     // and that this child is from current user entity
-                    // this can happen as the back doesn't order the cards before sending them 
+                    // this can happen as the back doesn't order the cards before sending them
                     // in the subscription (i.e a child can be received before its parent)
                     this.orphanedLightChildCardsFromCurrentEntity.add(card.parentCardId);
-                }
-                else {
+                } else {
                     parentCard.hasChildCardFromCurrentUserEntity = true;
                     this.addOrUpdateParentLightCard(parentCard);
                 }
             }
             this.newLightChildCards.next(card);
-        }
-        else {
+        } else {
             const oldCardVersion = this.lightCards.get(card.id);
             card.hasChildCardFromCurrentUserEntity = this.lightCardHasChildFromCurrentUserEntity(oldCardVersion, card);
+            card.acknowledgedByEntity = this.isLightCardAcknowledgedByEntity(card);
             this.addOrUpdateParentLightCard(card);
         }
     }
@@ -224,15 +300,15 @@ export class LightCardsStoreService {
     }
 
     private removeChildCard(cardId) {
-        this.childCards.forEach( (childs, parentCardId) => {
+        this.childCards.forEach( (children, parentCardId) => {
 
-            const childIdx = childs.findIndex(c => c.id === cardId);
-            if (childIdx >= 0){
-                const removed = childs.splice(childIdx, 1);
+            const childIdx = children.findIndex(c => c.id === cardId);
+            if (childIdx >= 0) {
+                const removed = children.splice(childIdx, 1);
 
                 this.deletedLightChildCards.next({'cardId': cardId, 'parentCardId': parentCardId });
 
-                if (this.isLightChildCardFromCurrentUserEntity(removed[0]) && this.getChildCardsFromCurrentUserEntity(childs).length === 0) {
+                if (this.isLightChildCardFromCurrentUserEntity(removed[0]) && this.getChildCardsFromCurrentUserEntity(children).length === 0) {
                     const parentCard = this.lightCards.get(parentCardId);
                     parentCard.hasChildCardFromCurrentUserEntity = false;
                 }
@@ -240,9 +316,9 @@ export class LightCardsStoreService {
         });
     }
 
-    private getChildCardsFromCurrentUserEntity(childs: LightCard[]) {
+    private getChildCardsFromCurrentUserEntity(children: LightCard[]) {
         const userEntities = this.userService.getCurrentUserWithPerimeters().userData.entities;
-        return childs.filter(c => userEntities.includes(c.publisher));
+        return children.filter(c => userEntities.includes(c.publisher));
     }
 
     private isLightChildCardFromCurrentUserEntity(childCard): boolean {
@@ -258,7 +334,7 @@ export class LightCardsStoreService {
     private lightCardHasChildFromCurrentUserEntity(oldCardVersion, newCard): boolean {
         if (oldCardVersion) return (newCard.keepChildCards && oldCardVersion.hasChildCardFromCurrentUserEntity);
         else {
-            // if a child card form the current user entity has been loaded in the UI before the parent card 
+            // if a child card form the current user entity has been loaded in the UI before the parent card
             if (this.orphanedLightChildCardsFromCurrentEntity.has(newCard.id)) {
                 this.orphanedLightChildCardsFromCurrentEntity.delete(newCard.id);
                 return true;
@@ -266,9 +342,4 @@ export class LightCardsStoreService {
             return false;
         }
     }
-
- 
-
-
-
 }

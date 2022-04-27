@@ -57,16 +57,16 @@ export class CardService {
 
     private selectedCardId: string = null;
 
-    private receivedAcksSubject = new Subject<{cardUid: string, entitiesAcks: string[]}>();
-    private receivedDisconnectedSubject = new Subject<boolean>()
+    private receivedAcksSubject = new Subject<{cardUid: string, cardId: string, entitiesAcks: string[]}>();
+    private receivedDisconnectedSubject = new Subject<boolean>();
 
     constructor(private httpClient: HttpClient,
-        private guidService: GuidService,
-        private store: Store<AppState>,
-        private authService: AuthenticationService,
-        private lightCardsStoreService: LightCardsStoreService,
-        private filterService: FilterService,
-        private logger: OpfabLoggerService) {
+                private guidService: GuidService,
+                private store: Store<AppState>,
+                private authService: AuthenticationService,
+                private lightCardsStoreService: LightCardsStoreService,
+                private filterService: FilterService,
+                private logger: OpfabLoggerService) {
         const clientId = this.guidService.getCurrentGuidString();
         this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}`;
         this.cardsUrl = `${environment.urls.cards}/cards`;
@@ -108,8 +108,10 @@ export class CardService {
                             if (operation.cardId === this.selectedCardId) this.store.dispatch(new RemoveLightCard({card: operation.cardId}));
                             break;
                         case CardOperationType.ACK:
-                            this.logger.info('CardService - Receive ack on card uid=' + operation.cardUid, LogOption.LOCAL_AND_REMOTE);
-                            this.receivedAcksSubject.next({cardUid: operation.cardUid, entitiesAcks: operation.entitiesAcks});
+                            this.logger.info('CardService - Receive ack on card uid=' + operation.cardUid +
+                                ', id=' + operation.cardId, LogOption.LOCAL_AND_REMOTE);
+                            this.lightCardsStoreService.addEntitiesAcksForLightCard(operation.cardId, operation.entitiesAcks);
+                            this.receivedAcksSubject.next({cardUid: operation.cardUid, cardId: operation.cardId, entitiesAcks: operation.entitiesAcks});
                             break;
                         default:
                             this.logger.info(`CardService - Unknown operation ` + operation.type + ` for card id=` + operation.cardId, LogOption.LOCAL_AND_REMOTE);
@@ -311,7 +313,7 @@ export class CardService {
         return this.httpClient.post<any>(`${this.cardsPubUrl}/translateCardField`, fieldToTranslate, {observe: 'response'});
     }
 
-    getReceivedAcks(): Observable<{cardUid: string, entitiesAcks: string[]}> {
+    getReceivedAcks(): Observable<{cardUid: string, cardId: string, entitiesAcks: string[]}> {
         return this.receivedAcksSubject.asObservable();
     }
 

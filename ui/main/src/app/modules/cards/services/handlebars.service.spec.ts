@@ -66,7 +66,7 @@ describe('Handlebars Services', () => {
         spyOn(store, 'dispatch').and.callThrough();
         httpMock = injector.get(HttpTestingController);
         handlebarsService = TestBed.inject(HandlebarsService);
-        translate = TestBed.inject(TranslateService)
+        translate = TestBed.inject(TranslateService);
     });
     afterEach(() => {
         httpMock.verify();
