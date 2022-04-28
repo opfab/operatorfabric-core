@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,7 @@
 import {Injectable} from '@angular/core';
 import {Filter, FilterType} from '@ofModel/feed-filter.model';
 import {LightCard, Severity} from '@ofModel/light-card.model';
-import {Observable, Subject,ReplaySubject} from 'rxjs';
+import {Observable, Subject, ReplaySubject} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -45,8 +45,7 @@ export class FilterService {
             this.businessDateFilter.active = active;
             this.businessDateFilter.status = status;
             this.newBusinessDateFilter.next(this.businessDateFilter);
-        }
-        else {
+        } else {
             const filterToUpdate = this.filters[filterType];
             if (!!filterToUpdate) {
                 filterToUpdate.active = active;
@@ -160,8 +159,8 @@ export class FilterService {
     private initAcknowledgementFilter(): Filter {
         return new Filter(
             (card: LightCard, status) => {
-                return status && card.hasBeenAcknowledged ||
-                    !status && !card.hasBeenAcknowledged;
+                return status && (card.hasBeenAcknowledged || card.acknowledgedByEntity) ||
+                    !status && (!card.hasBeenAcknowledged && !card.acknowledgedByEntity);
             },
             true,
             false
