@@ -1,0 +1,15 @@
+{
+  "publisher" : "ENTITY1_FR",
+  "publisherType" : "ENTITY",
+  "processVersion" : "1",
+  "process" : "cypress",
+  "processInstanceId" : "entitiesAcksMessage2",
+  "state": "stateWithUserHasAcknowledged",
+  "entityRecipients": ["ENTITY1_FR","ENTITY2_FR","ENTITY3_FR","ENTITY4_FR","ENTITY_FR","IT_SUPERVISOR_ENTITY","ENTITY_IT"],
+  "severity" : "INFORMATION",
+  "startDate" : ${current_date_in_milliseconds_from_epoch_plus_2hours},
+  "endDate" : ${current_date_in_milliseconds_from_epoch_plus_8hours} ,
+  "summary" : {"key" : "kitchenSink.title"},
+  "title" : {"key" : "kitchenSink.title"},
+  "data" : {"message":"test for entities acks for a state with consideredAcknowledgedForUserWhen=UserHasAcknowledged"}
+}

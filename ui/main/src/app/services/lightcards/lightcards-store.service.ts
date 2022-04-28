@@ -245,7 +245,8 @@ export class LightCardsStoreService {
 
         const listEntitiesToAck = this.computeListEntitiesToAck(lightCard);
 
-        if ((!! listEntitiesToAck) && (consideredAcknowledgedForUserWhen !== ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED)) {
+        if ((!! listEntitiesToAck) && (listEntitiesToAck.length > 0) &&
+            (consideredAcknowledgedForUserWhen !== ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED)) {
             return (this.checkIsAcknowledgedForTheCaseOfOneEntitySufficesForAck(consideredAcknowledgedForUserWhen, lightCard)
                     || this.checkIsAcknowledgedForTheCaseOfAllEntitiesMustAckTheCard(consideredAcknowledgedForUserWhen, lightCard,
                                                                                      listEntitiesToAck));
