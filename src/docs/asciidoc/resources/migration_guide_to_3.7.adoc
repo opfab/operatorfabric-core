@@ -25,6 +25,31 @@ From version 3.7.0 the docker names of the former "business services" are change
 
 You must change your docker-compose files accordingly.
 
+== Third parties configuration
+The configuration of the third parties applications as external recipents has changed. It is now possible to configure wether the user token shall be propagated to the third party or not by setting the "propagateUserToken" boolean property.
+
+If you have third parties configured in your 'cards-publication.yml' you should change the configuration as follows:
+
+From:
+
+....
+externalRecipients-url: "{\
+           third-party1: \"http://thirdparty1/test1\", \
+           third-party2: \"http://thirdparty2:8090/test2\", \
+           }"
+....
+
+To 
+
+....
+external-recipients:
+  recipients: 
+    - id: "third-party1"
+      url: "http://thirdparty1/test1"
+      propagateUserToken: true
+    - id: "third-party2"
+      url: "http://thirdparty2:8090/test2"
+      propagateUserToken: true
 
 
 == Deprecated feature 

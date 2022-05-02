@@ -15,3 +15,4 @@ logging:
     org.springframework.web: DEBUG
     org.springframework.controllers: DEBUG
     org.springframework.service: DEBUG
+    org.springframework.security: DEBUG
