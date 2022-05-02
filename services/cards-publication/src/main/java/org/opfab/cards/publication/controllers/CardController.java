@@ -20,6 +20,7 @@ import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,8 +51,12 @@ public class CardController {
         card.setUid(UUID.randomUUID().toString());
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = null ;
-        if (jwtPrincipal!=null) user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
-        cardProcessingService.processCard(card, Optional.ofNullable(user));
+        Jwt token = null;
+        if (jwtPrincipal!=null) {
+            user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
+            token = jwtPrincipal.getToken();
+        }
+        cardProcessingService.processCard(card, Optional.ofNullable(user), Optional.ofNullable(token));
         return CardCreationReportData.builder().id(card.getId()).uid(card.getUid()).build();
     }
 
@@ -67,7 +72,8 @@ public class CardController {
     public @Valid CardCreationReportData createUserCard(@Valid @RequestBody CardPublicationData card, Principal principal) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
-        cardProcessingService.processUserCard(card,user);
+        Jwt token = jwtPrincipal.getToken();
+        cardProcessingService.processUserCard(card, user, Optional.of(token));
         return CardCreationReportData.builder().id(card.getId()).uid(card.getUid()).build();
     }
 
@@ -77,7 +83,7 @@ public class CardController {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
         try {
-            Optional<CardPublicationData> deletedCard = cardProcessingService.deleteUserCard(id, user);
+            Optional<CardPublicationData> deletedCard = cardProcessingService.deleteUserCard(id, user, Optional.of(jwtPrincipal.getToken()));
             if (!deletedCard.isPresent()) {
                     response.setStatus(404);
                 }
@@ -93,9 +99,12 @@ public class CardController {
     public Void deleteCards(@PathVariable String id, HttpServletResponse response, Principal principal) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = null ;
-        if (jwtPrincipal!=null) user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
-
-        Optional<CardPublicationData> deletedCard = cardProcessingService.deleteCard(id, Optional.ofNullable(user));
+        Jwt token = null;
+        if (jwtPrincipal!=null) {
+            user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
+            token = jwtPrincipal.getToken();
+        }
+        Optional<CardPublicationData> deletedCard = cardProcessingService.deleteCard(id, Optional.ofNullable(user), Optional.ofNullable(token));
         if (!deletedCard.isPresent()) response.setStatus(404);
         else response.setStatus(200);
 

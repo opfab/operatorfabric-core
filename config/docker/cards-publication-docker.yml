@@ -30,14 +30,29 @@ opfab:
 # WARNING - If you are not working on linux, you should replace the host ip address 172.17.0.1
 # for mac see https://docs.docker.com/docker-for-mac/networking/#use-cases-and-workarounds
 # for windows see https://docs.docker.com/docker-for-windows/networking/#use-cases-and-workarounds
-externalRecipients-url: "{\
-           processAction: \"http://ext-app:8090/test\", \
-           api_test_externalRecipient1: \"http://ext-app:8090/test\", \
-           api_test_externalRecipient2: \"http://ext-app:8090/test\", \
-           externalRecipient1: \"http://ext-app:8090/test\", \
-           externalRecipient2: \"http://ext-app:8090/test\", \
-           notFoundExternalRecipient: \"http://ext-app:8090/wrongpath\", \
-           invalidUrlExternalRecipient: \"notaurl/test\", \
-           connectionRefusedExternalRecipient: \"http://ext-app:8091/test\" \
-           }"
-
+external-recipients:
+  recipients:
+    - id: "processAction"
+      url: "http://ext-app:8090/test"
+      propagateUserToken: true
+    - id: "api_test_externalRecipient1"
+      url: "http://ext-app:8090/test"
+      propagateUserToken: true
+    - id: "api_test_externalRecipient2"
+      url: "http://ext-app:8090/test"
+      propagateUserToken: true
+    - id: "externalRecipient1"
+      url: "http://ext-app:8090/test"
+      propagateUserToken: true
+    - id: "externalRecipient2"
+      url: "http://ext-app:8090/test"
+      propagateUserToken: true
+    - id: "notFoundExternalRecipient"
+      url: "http://ext-app:8090/wrongpath"
+      propagateUserToken: true
+    - id: "invalidUrlExternalRecipient"
+      url: "notaurl/test"
+      propagateUserToken: true
+    - id: "connectionRefusedExternalRecipient"
+      url: "http://ext-app:8091/test"
+      propagateUserToken: true

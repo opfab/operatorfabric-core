@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,9 +9,13 @@
  */
 package org.opfab.cards.publication.services.clients.impl;
 
+
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.cards.model.SeverityEnum;
+import org.opfab.cards.publication.configuration.ExternalRecipients;
 import org.opfab.cards.publication.kafka.producer.ResponseCardProducer;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.model.I18nPublicationData;
@@ -24,9 +28,12 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -34,6 +41,7 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles(profiles = {"native", "test"})
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ExternalAppClientImplShould {
 
     @Mock
@@ -47,26 +55,38 @@ class ExternalAppClientImplShould {
 
     private final String externalRecipientKafka = "kafka_recipient";
     private final String externalRecipientHttp = "http_recipient";
-    private final Map<String, String> externalRecipientsMapping = new HashMap<String, String>() {
-        {
-            put (externalRecipientKafka, "kafka:");
-            put (externalRecipientHttp, "http://");
-        }
-    };
+    private ExternalRecipients externalRecipients;
+
+    @BeforeAll
+    void setup() {
+        externalRecipients = new ExternalRecipients();
+        List<ExternalRecipients.ExternalRecipient> recipients = new ArrayList();
+        ExternalRecipients.ExternalRecipient kafka = new ExternalRecipients.ExternalRecipient();
+        kafka.setId(externalRecipientKafka);
+        kafka.setUrl("kafka:");
+
+        ExternalRecipients.ExternalRecipient http = new ExternalRecipients.ExternalRecipient();
+        http.setId(externalRecipientHttp);
+        http.setUrl("http://");
+
+        recipients.add(kafka);
+        recipients.add(http);
+        externalRecipients.setRecipients(recipients);
+    }
 
     @Test
     void sendCardToExternalApplicationKafka() {
         CardPublicationData card = createCardPublicationData(externalRecipientKafka);
-        ReflectionTestUtils.setField(cut, "externalRecipients", externalRecipientsMapping);
-        cut.sendCardToExternalApplication(card);
+        ReflectionTestUtils.setField(cut, "externalRecipients", externalRecipients);
+        cut.sendCardToExternalApplication(card, Optional.empty());
         verify (responseCardProducer).send(card);
     }
 
     @Test
     void sendCardToExternalApplicationHttp() {
         CardPublicationData card = createCardPublicationData(externalRecipientHttp);
-        ReflectionTestUtils.setField(cut, "externalRecipients", externalRecipientsMapping);
-        cut.sendCardToExternalApplication(card);
+        ReflectionTestUtils.setField(cut, "externalRecipients", externalRecipients);
+        cut.sendCardToExternalApplication(card, Optional.empty());
         verify (restTemplate).postForObject(anyString(), any(), any());
     }
 
