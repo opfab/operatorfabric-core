@@ -38,11 +38,14 @@ NOTE: To customize the sounds played by the browser, see `config/docker/custom-s
 
 When the user receives a new card, he can see it in the feed with a bold title and card resume. Once the card is opened, the text is not bold anymore and becomes grey.
 
-== Card acknowledgment 
+== Card acknowledgment
 
-The user can set a card as "acknowledged" so he will not see it anymore by default in the feed. It is as well possible to cancel it and set a card to "unacknowledged" (a filter permit to see acknowledged cards). 
+=== Acknowledgment done by the user
 
-To offer the possibility for the user to acknowledged card, it has to be configured in process definition. The configuration is done on a state by setting the acknowledgmentAllowed field. Allowed values are:
+The user can set a card as "acknowledged" so he will not see it anymore by default in the feed. It is as well possible to cancel it and set a card to "unacknowledged" (a filter permit to see acknowledged cards).
+
+To offer the possibility for the user to acknowledge card, it has to be configured in process definition.
+The configuration is done on a state by setting the `acknowledgmentAllowed` field. Allowed values are:
 
 - "Never": acknowledgement not allowed
 
@@ -53,8 +56,24 @@ the response is disabled for the user
 
 You can see examples in src/test/resources/bundles/defaultProcess_V1/config.json
 
+=== Acknowledgment done by entity(ies)
+
+A card can also be set as acknowledged if a member (or several) of the entity of the user has acknowledged it.
+A user can be member of several entities, so you can configure if acknowledgment done by only one entity
+(of the user) suffices for the card to appear as acknowledged or if all entities must acknowledge the card.
+
+To configure how a card is considered as acknowledged for the user, it has to be configured in process definition.
+The configuration is done on a state by setting the `consideredAcknowledgedForUserWhen` field. Allowed values are:
+
+- "UserHasAcknowledged": the card is set as acknowledged if the user acknowledges it
+
+- "OneEntityOfUserHasAcknowledged": the card is set as acknowledged if one (or more) entity(ies) of the user acknowledges it
+
+- "AllEntitiesOfUserHaveAcknowledged": the card is set as acknowledged if all the entities of the user acknowledge it
+
+
 == Pin cards
-It is possible to configure the state of a process so that cards are automatically "pinned" when aknowledged. Pinned cards are displayed in Feed page as small boxes with the title of the card just under the timeline Pinned cards are still visible even if the card is no more visible in the feed. A pinned card remains visible until card end date. If no end date, card will always be visible unless it is updated or deleted.
+It is possible to configure the state of a process so that cards are automatically "pinned" when acknowledged. Pinned cards are displayed in Feed page as small boxes with the title of the card just under the timeline Pinned cards are still visible even if the card is no more visible in the feed. A pinned card remains visible until card end date. If no end date, card will always be visible unless it is updated or deleted.
 
 To configure a process state to automatically pin cards set the `automaticPinWhenAcknowledged` property to true in state definition. 
 For example:
