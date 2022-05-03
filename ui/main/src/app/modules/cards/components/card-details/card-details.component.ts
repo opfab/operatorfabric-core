@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,6 +22,7 @@ import {AppService} from '@ofServices/app.service';
 import {State} from '@ofModel/processes.model';
 import {NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import {DisplayContext} from '@ofModel/templateGateway.model';
+import {cardInitialState, CardState} from '@ofStates/card.state';
 
 @Component({
     selector: 'of-card-details',
@@ -31,7 +32,7 @@ import {DisplayContext} from '@ofModel/templateGateway.model';
 export class CardDetailsComponent implements OnInit, OnDestroy {
 
     @Input() parentModalRef: NgbModalRef;
-    @Input() screenSize: string = 'md';
+    @Input() screenSize = 'md';
     @Input() displayContext: any = DisplayContext.REALTIME;
 
     card: Card;
@@ -53,41 +54,46 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.store.select(cardSelectors.selectCardStateSelectedWithChildCards)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(([card, childCards]: [Card, Card[]]) => {
-                if (!!card) {
-                    this.cardNotFound = false;
+            .subscribe(([card, childCards]: [Card, Card[]] | [CardState]) => {
+                if (card !== cardInitialState) {
+                    if (!!card) {
+                        this.cardNotFound = false;
+                        card = card as Card;
 
-                    this.businessconfigService.queryProcess(card.process, card.processVersion)
-                        .subscribe({
-                            next: businessconfig => {
-                                this.card = card;
-                                this.childCards = childCards;
-                                this.cardLoadingInProgress = false;
-                                if (!!businessconfig) {
-                                    this.cardState = businessconfig.extractState(card);
-                                    if (!this.cardState) {
-                                        console.log(new Date().toISOString(), `WARNING state ${card.state} does not exist for process ${card.process}`);
+                        this.businessconfigService.queryProcess(card.process, card.processVersion)
+                            .subscribe({
+                                next: businessconfig => {
+                                    card = card as Card;
+                                    this.card = card;
+                                    this.childCards = childCards;
+                                    this.cardLoadingInProgress = false;
+                                    if (!!businessconfig) {
+                                        this.cardState = businessconfig.extractState(card);
+                                        if (!this.cardState) {
+                                            console.log(new Date().toISOString(), `WARNING state ${card.state} does not exist for process ${card.process}`);
+                                            this.cardState = new State();
+                                        }
+                                    } else {
+                                        console.log(new Date().toISOString(), `WARNING process `
+                                            + ` ${card.process} with version ${card.processVersion} does not exist.`);
                                         this.cardState = new State();
                                     }
-                                } else {
+
+                                },
+                                error: () => {
+                                    card = card as Card;
                                     console.log(new Date().toISOString(), `WARNING process `
-                                        + ` ${card.process} with version ${card.processVersion} does not exist.`)
+                                        + ` ${card.process} with version ${card.processVersion} does not exist.`);
+                                    this.card = card;
+                                    this.childCards = childCards;
+                                    this.cardLoadingInProgress = false;
                                     this.cardState = new State();
                                 }
-
-                            },
-                            error: () => {
-                                console.log(new Date().toISOString(), `WARNING process `
-                                    + ` ${card.process} with version ${card.processVersion} does not exist.`);
-                                this.card = card;
-                                this.childCards = childCards;
-                                this.cardLoadingInProgress = false;
-                                this.cardState = new State();
-                            }
-                        });
-                } else {
-                    this.cardNotFound = true;
-                    console.log(new Date().toISOString(), 'WARNING card not found.');
+                            });
+                    } else {
+                        this.cardNotFound = true;
+                        console.log(new Date().toISOString(), 'WARNING card not found.');
+                    }
                 }
             });
         this.store.select(selectCurrentUrl)
@@ -103,7 +109,7 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
 
     }
 
-    // we show a spinner on screen if card loading take more than 1 second
+    // we show a spinner on screen if card loading takes more than 1 second
     checkForCardLoadingInProgressForMoreThanOneSecond() {
         this.store.select(feedSelectors.selectLightCardSelection)
             .pipe(takeUntil(this.unsubscribe$))
@@ -116,8 +122,10 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
                     }
                     // the selected card has not changed in between
                     if (this.currentSelectedCardId === cardId) {
-                        if (!this.card) this.cardLoadingInProgress = !!this.currentSelectedCardId;
-                        else this.cardLoadingInProgress = (this.card.id !== this.currentSelectedCardId);
+                        if (!this.card)
+                            this.cardLoadingInProgress = !!this.currentSelectedCardId;
+                        else
+                            this.cardLoadingInProgress = (this.card.id !== this.currentSelectedCardId);
                     }
                 }, 1000);
             });
