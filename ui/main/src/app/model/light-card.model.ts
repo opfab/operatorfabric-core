@@ -38,6 +38,8 @@ export class LightCard {
         readonly keepChildCards?: boolean,
         readonly representative?: string,
         readonly representativeType?: PublisherType | string,
+        readonly wktGeometry?: string,
+        readonly wktProjection?: string,
         readonly entitiesAcks?: string[],
         readonly entityRecipients?: string[],
         readonly entitiesAllowedToRespond?: string[],

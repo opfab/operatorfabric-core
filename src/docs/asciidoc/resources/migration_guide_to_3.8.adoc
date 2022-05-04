@@ -1,0 +1,17 @@
+// Copyright (c) 2022 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 3.7.0 to release 3.8.0
+
+== Kafka card format changes
+
+The Kafka message schema has been changed. Two new, optional fields are added:
+
+- `wktGeometry`
+- `wktProjection`
+
+Make sure your Kafka consumers and producers are updated and use the latest card and responseCard definitions.

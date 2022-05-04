@@ -87,6 +87,9 @@ public class LightCardPublicationData implements LightCard {
     private String representative;
     private PublisherTypeEnum representativeType;
 
+    private String wktGeometry;
+    private String wktProjection;
+
     private Integer  secondsBeforeTimeSpanForReminder;
 
     /**

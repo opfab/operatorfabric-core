@@ -138,6 +138,23 @@ Used in case of sending card as a representative of an entity or a publisher (un
 * EXTERNAL - The representative is an external service
 * ENTITY - The representative is an entity
 
+==== Geographical information (`wktGeometry` and `wktProjection`)
+
+NOTE: Geographical information  is an experimental feature
+
+You can add geographical location in  `wktGeometry` and the projection in `wktProjection`  fields.
+
+When `feed.enableGeoMapFeature` is enabled in the `web&#8288;-ui.json` configuration file and the card is visible in the line feed, a geographical map will be drawn with a circle at the point as specified by the wkt settings. Example:
+
+```
+"wktGeometry": "POINT (5.8946407 51.9848624)",
+"wktProjection": "EPSG:4326",
+```
+The specifications of the Well-known Text Representation of coordinate reference systems
+can be found at https://www.ogc.org/standards/wkt-crs[WKT Specification].
+
+NOTE: Only the POINT is supported at the moment. POLYGON and other figures are to be included later.
+
 === Business period 
 
 We define the business period as starting form startDate to endDate.  The card will be visible on the UI if the business period overlap the user chosen period (i.e the period selected on  the timeline). If endDate is not set, the card will be visible as soon as the startDate is between start and end date of the chosen period.

@@ -406,6 +406,8 @@ class CardProcessServiceShould {
                 .publisherType(PublisherTypeEnum.EXTERNAL)
                 .representative("ENTITY1")
                 .representativeType(PublisherTypeEnum.ENTITY)
+                .wktGeometry("POINT (6.530 53.221)")
+                .wktProjection("EPSG:4326")
                 .secondsBeforeTimeSpanForReminder(Integer.valueOf(1000))
                 .build();
         cardProcessingService.processCard(newCard);

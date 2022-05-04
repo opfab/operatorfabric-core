@@ -12,6 +12,7 @@ import {FeedComponent} from './feed.component';
 import {RouterModule, Routes} from '@angular/router';
 import {DetailComponent} from '../cards/components/detail/detail.component';
 import {CardDetailsComponent} from '../cards/components/card-details/card-details.component';
+import {MapComponent} from './components/map/map.component';
 
 const routes: Routes = [
     {
@@ -36,6 +37,10 @@ const routes: Routes = [
                         ]
                     }
                 ]
+            },
+            {
+                path: '',
+                component: MapComponent
             }
         ]
     }
