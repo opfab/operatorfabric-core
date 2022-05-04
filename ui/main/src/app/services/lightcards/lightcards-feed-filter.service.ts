@@ -9,7 +9,7 @@
 
 import {Injectable} from '@angular/core';
 import {debounceTime, map} from 'rxjs/operators';
-import {combineLatest, Observable, Subject} from 'rxjs';
+import {combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import {LightCardsStoreService} from './lightcards-store.service';
 import {FilterService} from './filter.service';
@@ -21,7 +21,7 @@ import {ConfigService} from '@ofServices/config.service';
     providedIn: 'root'
 })
 export class LightCardsFeedFilterService {
-    private filteredAndSortedLightCards = new Subject();
+    private filteredAndSortedLightCards = new ReplaySubject(1);
     private filteredLightCards = new Subject();
     private filteredLightCardsForTimeLine = new Subject();
     private onlyBusinessFilterForTimeLine = new Subject();

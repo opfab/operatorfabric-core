@@ -29,6 +29,8 @@ protocol CardProtocol {
 		union {null, array<string>} entitiesRequiredToRespond = null;
 		union {null, array<string>} entityRecipients = null;
 		union {null, array<string>} entitiesAllowedToEdit = null;
+		union {null, string} wktGeometry = null;
+		union {null, string} wktProjection = null;
 		union {null, string} data = null;
 		union {null, boolean} hasBeenAcknowledged = null;
 		union {null, boolean} hasBeenRead = null;

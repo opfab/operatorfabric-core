@@ -48,6 +48,9 @@
                               triggers="mouseenter:mouseleave">
                             <em style="color: #0082FF;" class="fa " [class.fa-angle-down]="open" [class.fa-angle-left]="!open || !groupedCardsVisible"></em>
                         </span>
+                        <span *ngIf="lightCardDisplayedInMapComponent" class="p-2" >
+                                <!-- Space for the close button on the popup of the geo-map -->
+                        </span>
                     </div>
                 </div>
             </div>

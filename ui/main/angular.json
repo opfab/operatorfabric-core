@@ -33,6 +33,7 @@
               "node_modules/@fullcalendar/bootstrap/main.css",
               "node_modules/virtual-select-plugin/dist/virtual-select.min.css",
               "node_modules/tooltip-plugin/dist/tooltip.min.css",
+              "node_modules/ol/ol.css",
               "src/assets/styles/style.css",
               "src/scss/styles.scss"
             ],

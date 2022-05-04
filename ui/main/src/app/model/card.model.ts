@@ -45,6 +45,8 @@ export class Card {
         readonly publisherType?: PublisherType | string,
         readonly representative?: string,
         readonly representativeType?: PublisherType | string,
+        readonly wktGeometry?: string,
+        readonly wktProjection?: string,
         public secondsBeforeTimeSpanForReminder?: number,
         public timeSpans?: TimeSpan[],
         readonly entitiesAcks?: string[]
@@ -78,6 +80,8 @@ export class CardForPublishing {
         readonly publisherType?: PublisherType | string,
         readonly representative?: string,
         readonly representativeType?: PublisherType | string,
+        readonly wktGeometry?: string,
+        readonly wktProjection?: string,
         readonly secondsBeforeTimeSpanForReminder?: number,
         readonly timeSpans?: TimeSpan[]
     ) {}
@@ -136,6 +140,8 @@ export function fromCardToLightCard(card: Card): LightCard {
         card.keepChildCards,
         card.representative,
         card.representativeType,
+        card.wktGeometry,
+        card.wktProjection,
         card.entitiesAcks,
         card.entityRecipients
     );
@@ -168,6 +174,8 @@ export function fromCardToCardForPublishing(card: Card): CardForPublishing {
         card.publisherType,
         card.representative,
         card.representativeType,
+        card.wktGeometry,
+        card.wktProjection,
         card.secondsBeforeTimeSpanForReminder,
         card.timeSpans
     );

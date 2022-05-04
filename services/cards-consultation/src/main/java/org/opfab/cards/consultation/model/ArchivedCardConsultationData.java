@@ -101,6 +101,8 @@ public class ArchivedCardConsultationData implements Card {
     private PublisherTypeEnum publisherType;
     private String  representative;
     private PublisherTypeEnum representativeType;
+    private String wktGeometry;
+    private String wktProjection;
     private Integer  secondsBeforeTimeSpanForReminder;
 
     private String processStateKey;

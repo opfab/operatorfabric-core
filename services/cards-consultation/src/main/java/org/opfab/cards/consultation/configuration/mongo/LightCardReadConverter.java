@@ -59,6 +59,8 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
                 .representative(source.getString("representative") == null ? null : source.getString("representative"))
                 .representativeType(source.getString("representativeType") == null ? null :
                         PublisherTypeEnum.valueOf(source.getString("representativeType")))
+                .wktGeometry(source.getString("wktGeometry") == null ? null : source.getString("wktGeometry") )
+                .wktProjection(source.getString("wktProjection") == null ? null : source.getString("wktProjection"))
                 .secondsBeforeTimeSpanForReminder(source.getInteger("secondsBeforeTimeSpanForReminder"));       
 
         Document titleDoc = (Document) source.get("title");

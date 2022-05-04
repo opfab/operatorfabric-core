@@ -87,6 +87,9 @@ public class LightCardConsultationData implements LightCard {
     private String representative;
     private PublisherTypeEnum representativeType;
 
+    private String wktGeometry;
+    private String wktProjection;
+
     private Integer  secondsBeforeTimeSpanForReminder;
 
     /**
@@ -133,6 +136,8 @@ public class LightCardConsultationData implements LightCard {
                 .publisherType(other.getPublisherType())
                 .representative(other.getRepresentative())
                 .representativeType(other.getRepresentativeType())
+                .wktGeometry(other.getWktGeometry())
+                .wktProjection(other.getWktProjection())
                 .secondsBeforeTimeSpanForReminder(other.getSecondsBeforeTimeSpanForReminder());
 
         if (other.getTags() != null && ! other.getTags().isEmpty())
