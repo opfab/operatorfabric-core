@@ -73,14 +73,8 @@ public class ExternalAppServiceImpl implements ExternalAppService {
 		card.setSeverity(SeverityEnum.INFORMATION);
 		card.setStartDate(Instant.now());
 
-		if (!groupRecipients.isEmpty()) {
-			card.setGroupRecipients(groupRecipients);
-		}
-
-		if (!entitiesRecipients.isEmpty()) {
-			card.setEntityRecipients(entitiesRecipients);
-		}
-
+		card.setGroupRecipients(groupRecipients);
+		card.setEntityRecipients(entitiesRecipients);
 
 		I18n summary = new I18n();
 		summary.setKey("message.summary");
