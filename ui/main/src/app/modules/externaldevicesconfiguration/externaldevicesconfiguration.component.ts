@@ -29,20 +29,21 @@ export class ExternaldevicesconfigurationComponent {
   userConfigurations: UserConfiguration[];
   gridOptions: GridOptions;
   public gridApi;
-  public pageSize:number = 10;
-  public page: number = 1;
+  public pageSize = 10;
+  public page = 1;
   private columnDefs: ColDef[] = [];
   editModalComponent = ExternaldevicesconfigurationModalComponent;
   modalOptions: NgbModalOptions = {
     backdrop: 'static', // Modal shouldn't close even if we click outside it
     size: 'lg'
   };
-  i18NPrefix: string = 'externalDevicesConfiguration.';
+  i18NPrefix = 'externalDevicesConfiguration.';
+  technicalError = false;
 
-  constructor(private externalDevicesService: ExternalDevicesService, 
-      protected confirmationDialogService: ConfirmationDialogService,
-      private translateService: TranslateService,
-      protected modalService: NgbModal) {
+  constructor(private externalDevicesService: ExternalDevicesService,
+              protected confirmationDialogService: ConfirmationDialogService,
+              private translateService: TranslateService,
+              protected modalService: NgbModal) {
     this.gridOptions = <GridOptions>{
       context: {
         componentParent: this
@@ -114,14 +115,21 @@ export class ExternaldevicesconfigurationComponent {
   }
 
   updateResultPage(currentPage): void {
-    this.gridApi.paginationGoToPage(currentPage-1);
+    this.gridApi.paginationGoToPage(currentPage - 1);
     this.page = currentPage;
   }
 
   refreshData() {
-    this.externalDevicesService.queryAllUserConfigurations().subscribe(configurations => {
-      this.userConfigurations = configurations;
-    });
+    this.externalDevicesService.queryAllUserConfigurations().subscribe(
+        {
+           next: (configurations) => {
+              this.technicalError = false;
+              this.userConfigurations = configurations;
+           },
+           error: () => {
+             this.technicalError = true;
+           }
+        });
   }
 
   createNewItem() {
@@ -140,13 +148,13 @@ export class ExternaldevicesconfigurationComponent {
   }
 
   openActionModal(params) {
-    // This method might be flagged as "unused" by IDEs but it's actually called through the ActionCellRendererComponent
+    // This method might be flagged as "unused" by IDEs, but it's actually called through the ActionCellRendererComponent
     const columnId = params.colDef.colId;
 
     if (columnId === 'edit') {
       const modalRef = this.modalService.open(this.editModalComponent, this.modalOptions);
       modalRef.componentInstance.row = params.data; // This passes the data from the edited row to the modal to initialize input values.
-      
+
       modalRef.result.then(
           () => { // If modal is closed
             this.refreshData(); // This refreshes the data when the modal is closed after a change
