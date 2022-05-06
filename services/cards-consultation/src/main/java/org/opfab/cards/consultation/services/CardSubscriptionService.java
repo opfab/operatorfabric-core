@@ -90,8 +90,11 @@ public class CardSubscriptionService {
         return mustCheckIfUserIsAlreadyConnected() && isUserAlreadyConnected(userLogin);
     }
 
-
     public CardSubscription subscribe(CurrentUserWithPerimeters currentUserWithPerimeters, String clientId) {
+        return this.subscribe(currentUserWithPerimeters, clientId, false);
+    }
+
+    public CardSubscription subscribe(CurrentUserWithPerimeters currentUserWithPerimeters, String clientId, boolean sendReload) {
 
         if (mustCheckIfUserIsAlreadyConnected()) {
             String userLogin = currentUserWithPerimeters.getUserData().getLogin();
@@ -105,7 +108,7 @@ public class CardSubscriptionService {
         CardSubscription cardSubscription;
         cardSubscription = cardSubscriptionBuilder.build();
 
-        cardSubscription.initSubscription(() -> evictSubscription(subId));
+        cardSubscription.initSubscription(sendReload, () -> evictSubscription(subId));
         cache.put(subId, cardSubscription);
         log.info("Subscription created with id {} for user {} ", cardSubscription.getId(), cardSubscription.getUserLogin());
         cardSubscription.userServiceCache = this.userServiceCache;

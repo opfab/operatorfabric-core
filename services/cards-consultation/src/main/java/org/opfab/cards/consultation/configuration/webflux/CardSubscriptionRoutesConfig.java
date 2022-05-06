@@ -104,6 +104,7 @@ public class CardSubscriptionRoutesConfig {
                     return CardOperationsGetParameters.builder()
                             .currentUserWithPerimeters((CurrentUserWithPerimeters)jwtPrincipal.getPrincipal())
                             .clientId(request.queryParam("clientId").orElse(null))
+                            .uiVersion(request.queryParam("version").orElse(null))
                             .rangeStart(parseAsInstant(request.queryParam("rangeStart").orElse(null)))
                             .rangeEnd(parseAsInstant(request.queryParam("rangeEnd").orElse(null)))
                             .publishFrom(parseAsInstant(request.queryParam("publishFrom").orElse(null)))

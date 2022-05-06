@@ -25,7 +25,7 @@ import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {ProcessesService} from '@ofServices/processes.service';
 import {ReminderService} from '@ofServices/reminder/reminder.service';
-import {selectSubscriptionOpen} from '@ofStore/selectors/cards-subscription.selectors';
+import {selectRelodRequested, selectSubscriptionOpen} from '@ofStore/selectors/cards-subscription.selectors';
 import {Actions, ofType} from '@ngrx/effects';
 import {AlertActions, AlertActionTypes} from '@ofStore/actions/alert.actions';
 import {Message, MessageLevel} from '@ofModel/message.model';
@@ -60,12 +60,14 @@ export class AppComponent implements OnInit {
   modalForSessionAlreadyInUseIsActive = false;
   alertMessage: Alert = {alert: undefined, className: undefined, display: false};
   userLogin: string;
+  reloadCanceled: boolean;
 
 
   private modalRef: NgbModalRef;
   @ViewChild('noSound') noSoundPopupRef: TemplateRef<any>;
   @ViewChild('sessionEnd') sessionEndPopupRef: TemplateRef<any>;
   @ViewChild('sessionAlreadyInUse') sessionAlreadyInUsePopupRef: TemplateRef<any>;
+  @ViewChild('reloadRequested') reloadRequestedPopupRef: TemplateRef<any>;
   
   /**
    * NB: I18nService is injected to trigger its constructor at application startup
@@ -92,7 +94,9 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.loadConfiguration();
     this.initApplicationWhenUserAuthenticated();
+
     this.detectConnectionLost();
+    this.detectReloadRequested();
     this.subscribeToAlerts();
   }
 
@@ -294,6 +298,30 @@ export class AppComponent implements OnInit {
     });
   }
 
+  private detectReloadRequested() {
+    this.store.select(selectRelodRequested).subscribe(reloadRequested => {
+      if (reloadRequested) {
+        this.logger.info('Application reload requested', LogOption.LOCAL_AND_REMOTE);
+        this.modalRef = this.modalService.open(this.reloadRequestedPopupRef, {centered: true, backdrop: 'static'});
+        setTimeout(() => {
+          if (!this.reloadCanceled)
+            this.reload();
+        }, 5000);
+        
+      }
+    });
+  }
+
+  public reload() {
+    location.reload();
+  }
+
+  public closeReloadModal() {
+    this.reloadCanceled = true;
+    this.logger.info('Cancel reload', LogOption.REMOTE);
+    this.modalRef.close();
+  }
+  
 
   // Due to auto-policy in chromium based browsers, if the user does not interact with the application
   // sound is not activated. This method open a modal and by clicking OK the user interacts with the application

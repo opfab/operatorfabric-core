@@ -21,7 +21,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
-import {CardSubscriptionClosed, CardSubscriptionOpen} from '@ofActions/cards-subscription.actions';
+import {CardSubscriptionClosedAction, CardSubscriptionOpenAction, UIReloadRequestedAction} from '@ofActions/cards-subscription.actions';
 import {catchError, takeUntil} from 'rxjs/operators';
 import {RemoveLightCard} from '@ofActions/light-card.actions';
 import {BusinessConfigChangeAction} from '@ofStore/actions/processes.actions';
@@ -31,6 +31,7 @@ import {LoadCard} from '@ofStore/actions/card.actions';
 import {I18n} from '@ofModel/i18n.model';
 import {FilterService} from '@ofServices/lightcards/filter.service';
 import {LogOption, OpfabLoggerService} from './logs/opfab-logger.service';
+import packageInfo from '../../../package.json';
 
 
 @Injectable({
@@ -68,7 +69,7 @@ export class CardService {
         private filterService: FilterService,
         private logger: OpfabLoggerService) {
         const clientId = this.guidService.getCurrentGuidString();
-        this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}`;
+        this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}&version=${packageInfo.opfabVersion}`;
         this.cardsUrl = `${environment.urls.cards}/cards`;
         this.archivesUrl = `${environment.urls.cards}/archives`;
         this.cardsPubUrl = `${environment.urls.cardspub}/cards`;
@@ -158,6 +159,11 @@ export class CardService {
                         return observer.error(message);
                     }
                     switch (message.data) {
+                        
+                        case 'RELOAD':
+                            this.logger.info(`CardService - RELOAD received`, LogOption.LOCAL_AND_REMOTE);
+                            this.store.dispatch(new UIReloadRequestedAction());
+                            break;
                         case 'INIT':
                             console.log(new Date().toISOString(), `CardService - Card subscription initialized`);
                             this.initSubscription.next();
@@ -195,11 +201,11 @@ export class CardService {
                     }
                 };
                 eventSource.onerror = error => {
-                    this.store.dispatch(new CardSubscriptionClosed());
+                    this.store.dispatch(new CardSubscriptionClosedAction());
                     console.error(new Date().toISOString(), 'CardService - Error event in card subscription:', error);
                 };
                 eventSource.onopen = open => {
-                    this.store.dispatch(new CardSubscriptionOpen());
+                    this.store.dispatch(new CardSubscriptionOpenAction());
                     console.log(new Date().toISOString(), `CardService- Open card subscription`);
                 };
 
