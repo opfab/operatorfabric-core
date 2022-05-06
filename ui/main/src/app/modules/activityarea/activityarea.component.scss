@@ -25,6 +25,13 @@
   padding: 10px 10%;
 }
 
+.opfab-activityarea-entitieslist-realtime-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0 12px;
+}
+
 .modal-body{
   background-color: var(--opfab-bgcolor);
   color: var(--opfab-textcolor);

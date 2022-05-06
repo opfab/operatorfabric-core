@@ -31,7 +31,7 @@ describe ('ActivityAreaPage',()=>{
         cy.get('.opfab-activityarea-title').should('have.text', ' ACTIVITY AREA\n');
 
         // We should have only one 'block'
-        cy.get('.opfab-activityarea-entitieslist').should('have.length', 1);
+        cy.get('.opfab-activityarea-entitieslist').should('have.length', 2);
 
         // We should have 4 checkboxes corresponding to the four entities of the user
         cy.get('.opfab-checkbox').should('have.length', 4);
