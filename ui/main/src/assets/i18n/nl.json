@@ -73,6 +73,7 @@
     "activateSoundText":"Geluid is niet geactiveerd, klik om te activeren",
     "activateSoundButton":"Activeer geluid",
     "sessionExpiredText":"De sessie is verlopen",
+    "reloadRequestedText": "Versie mismatch, applicatie herladen vereist",
     "disconnectedByNewUser": "De verbinding met u is verbroken omdat een andere gebruiker met dit account heeft ingelogd."
   },
   "menu": {

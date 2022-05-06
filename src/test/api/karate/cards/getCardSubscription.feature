@@ -9,7 +9,6 @@ Feature: get card Subscription
 
 
 
-
 * def getCard = 
     """
     function() {
@@ -70,12 +69,12 @@ Feature: get card Subscription
     When method patch
     Then status 200
 
-
-    Scenario: get card subscription
+    Scenario: get card subscription 
       Given url opfabUrl + 'cards/cardSubscription' +'?clientId=abc0123456789def'
       And header Authorization = 'Bearer ' + authToken
       When method get
       Then status 200
+      And match response == ''
 
     Scenario: Without authentication
       Given url opfabUrl + 'cards/cardSubscription'

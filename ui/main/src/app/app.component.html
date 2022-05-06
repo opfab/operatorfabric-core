@@ -72,6 +72,16 @@
   </div>
 </ng-template>
 
+<ng-template #reloadRequested let-modal>
+  <div class="modal-body text-center">
+    <p translate> global.reloadRequestedText </p>
+    <button id="opfab-reload-ok" type="button" class="opfab-btn"
+      (click)="reload()" translate> button.ok</button>
+    <button id="opfab-reload-cancel" type="button" class="opfab-btn"
+      (click)="closeReloadModal()" translate> button.cancel</button>
+  </div>
+</ng-template>
+
 
 <ng-template #sessionAlreadyInUse let-modal>
   <div class="modal-body text-center" style="white-space: pre-wrap;">

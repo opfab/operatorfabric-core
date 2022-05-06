@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -43,6 +43,8 @@ public class CardOperationsController {
 
     private final ObjectMapper mapper;
 
+    private final String version = getClass().getPackage().getImplementationVersion();
+
     @Autowired
     public CardOperationsController(CardSubscriptionService cardSubscriptionService, ObjectMapper mapper, CardRepository cardRepository) {
         this.cardSubscriptionService = cardSubscriptionService;
@@ -58,10 +60,18 @@ public class CardOperationsController {
     public Flux<String> registerSubscriptionAndPublish(Mono<CardOperationsGetParameters> input) {
         return input
                 .flatMapMany(t -> {
+
                     if (t.getClientId() != null) {
+                        log.debug("Check UI version {} match current version: {}", t.getUiVersion(), version);
+
                         CardSubscription subscription = null;
                         if (t.isNotification()) {
-                            subscription = cardSubscriptionService.subscribe(t.getCurrentUserWithPerimeters(), t.getClientId());
+                            boolean wrongUiVersion = false;
+                            if (version != null && (t.getUiVersion() == null || !t.getUiVersion().equals(version))) {
+                                log.warn("Wrong UI version : {}", t.getUiVersion());
+                                wrongUiVersion = true;
+                            }
+                            subscription = cardSubscriptionService.subscribe(t.getCurrentUserWithPerimeters(), t.getClientId(), wrongUiVersion);
                             return subscription.getPublisher();
                         } else {
                             return fetchOldCards(t);
