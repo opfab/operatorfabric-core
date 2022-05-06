@@ -35,6 +35,7 @@ Feature: Get Group details
     Then match response.id == group.id
     And match response.description == group.description
     And match response.name == group.name
+    And match response.realtime == null
     And status 200
 
 

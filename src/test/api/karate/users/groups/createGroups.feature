@@ -21,7 +21,8 @@ Feature: CreateGroups
 
   "id" : "groupKarate1",
   "name" : "groupKarate1 name",
-  "description" : "I Love Karate"
+  "description" : "I Love Karate",
+  "realtime" : false
 }
 """
     * def wrongGroup =
@@ -52,6 +53,7 @@ Feature: CreateGroups
     And match response.description == group.description
     And match response.name == group.name
     And match response.id == group.id
+    And match response.realtime == null
 
   Scenario: Update my group
 
@@ -64,21 +66,22 @@ Feature: CreateGroups
     And match response.description == groupUpdated.description
     And match response.name == groupUpdated.name
     And match response.id == groupUpdated.id
+    And match response.realtime == groupUpdated.realtime
 
   Scenario: create without admin role
-        #HForbiden without admin role, expected response 403
+#Forbidden without admin role, expected response 403
     Given url opfabUrl + 'users/groups'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And request group
     When method post
     Then status 403
 
-     Scenario: Update without authentication token
-     #Witout authentication
+  Scenario: Update without authentication token
+#Without authentication
     Given url opfabUrl + 'users/groups'
     And request group
     When method post
-   Then status 401
+    Then status 401
 
   Scenario: error 400
 
