@@ -25,11 +25,15 @@
   padding: 10px 10%;
 }
 
-.opfab-activityarea-entitieslist-realtime-table {
-  width: 100%;
+.opfab-activityarea-table {
   table-layout: fixed;
   border-collapse: separate;
-  border-spacing: 0 12px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.opfab-activityarea-badge {
+  margin-bottom: 12px;
 }
 
 .modal-body{

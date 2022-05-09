@@ -31,7 +31,7 @@ describe ('ActivityAreaPage',()=>{
         cy.get('.opfab-activityarea-title').should('have.text', ' ACTIVITY AREA\n');
 
         // We should have only one 'block'
-        cy.get('.opfab-activityarea-entitieslist').should('have.length', 2);
+        cy.get('.opfab-activityarea-entitieslist').should('have.length', 1);
 
         // We should have 4 checkboxes corresponding to the four entities of the user
         cy.get('.opfab-checkbox').should('have.length', 4);
@@ -88,7 +88,7 @@ describe ('ActivityAreaPage',()=>{
         cy.get('#opfab-navbar-drop_user_menu').click();
         cy.get('#opfab-navbar-right-menu-activityarea').click();
 
-        // check every checkbox to let the time for the ui to set to true before we click 
+        // check every checkbox to let the time for the ui to set to true before we click
         cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(1).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');

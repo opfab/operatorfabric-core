@@ -13,35 +13,29 @@
 
 <div *ngIf="userEntities.length">
     <form [formGroup]="activityAreaForm">
-        <div style="display: flex">
-            <div class="opfab-activityarea-entitieslist col">
-                <span *ngIf="userRealtimeGroupsIds.length"><br><br></span>
-                <p *ngFor="let userEntity of userEntities;" class="font-weight-bold">
-                    <label style="font-weight: bold" class="opfab-checkbox">{{userEntity.entityName}}
-                        <input type="checkbox" [formControlName]=userEntity.entityId [checked]="true">
-                        <span class="opfab-checkbox-checkmark"></span>
-                    </label>
-                </p>
-            </div>
-            <div *ngIf="userRealtimeGroupsIds.length" class="opfab-activityarea-entitieslist col">
-                <table aria-describedby="activity area real time table" class="opfab-activityarea-entitieslist-realtime-table">
-                    <tr>
-                        <th scope="col"></th>
-                        <th scope="col" *ngFor="let realtimeGroup of userRealtimeGroupsIds;">{{this.groupsService.getGroupName(realtimeGroup)}}</th>
-                    </tr>
-                    <tr *ngFor="let userEntity of userEntities;">
-                        <th scope="row">{{userEntity.entityName}}</th>
-                        <td *ngFor="let realtimeGroupId of userRealtimeGroupsIds;">
-                            <ng-template #connected>
-                                    <span class="badge rounded-pill bg-success">{{getNumberOfConnectedUsersInEntityAndGroup(userEntity.entityId + '.' + realtimeGroupId)}}
-                                    </span>&nbsp;({{labelForConnectedUsers(userEntity.entityId + '.' + realtimeGroupId)}})
-                            </ng-template>
-                            <ng-template #disconnected><span class="badge rounded-pill bg-danger">0</span></ng-template>
-                            <span *ngIf="getNumberOfConnectedUsersInEntityAndGroup(userEntity.entityId + '.' + realtimeGroupId);then connected else disconnected"></span>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+        <div class="opfab-activityarea-entitieslist">
+            <table aria-describedby="activity area table" class="opfab-activityarea-table">
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col" *ngFor="let realtimeGroupId of userRealtimeGroupsIds;" style="padding-left: 100px">{{this.groupsService.getGroupName(realtimeGroupId)}}</th>
+                </tr>
+                <tr *ngFor="let userEntity of userEntities;">
+                    <td>
+                        <label style="font-weight: bold" class="opfab-checkbox">{{userEntity.entityName}}
+                            <input type="checkbox" [formControlName]=userEntity.entityId [checked]="true">
+                            <span class="opfab-checkbox-checkmark"></span>
+                        </label>
+                    </td>
+                    <td *ngFor="let realtimeGroupId of userRealtimeGroupsIds;" style="padding-left: 100px">
+                        <ng-template #connected>
+                                <span class="badge rounded-pill bg-success opfab-activityarea-badge">{{getNumberOfConnectedUsersInEntityAndGroup(userEntity.entityId + '.' + realtimeGroupId)}}
+                                </span>&nbsp;({{labelForConnectedUsers(userEntity.entityId + '.' + realtimeGroupId)}})
+                        </ng-template>
+                        <ng-template #disconnected><span class="badge rounded-pill bg-danger opfab-activityarea-badge">0</span></ng-template>
+                        <span *ngIf="getNumberOfConnectedUsersInEntityAndGroup(userEntity.entityId + '.' + realtimeGroupId);then connected else disconnected"></span>
+                    </td>
+                </tr>
+            </table>
         </div>
         <br />
 
