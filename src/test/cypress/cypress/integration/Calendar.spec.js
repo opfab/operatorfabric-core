@@ -37,9 +37,12 @@ describe ('Calendar screen tests',function () {
         cy.get('.opfab-calendar-event').should("have.length", 1); // only one card should be present
         openAndCheckCardDataQuality();
 
-        // test week view
+        // test week view (in the week view, the card can be displayed with 1 or 2 events, depending if the business period
+        // is all in the current day or if it is on the current day + the following)
         cy.get('button').contains(/^week$/).should("be.visible").click();
-        cy.get('.opfab-calendar-event').should("have.length", 1); // only one card should be present
+        cy.get('.opfab-calendar-event').its("length").should("be.gte", 1);
+        cy.get('.opfab-calendar-event').its("length").should("be.lte", 2);
+        cy.get('.fc-event-title').each((event) => {cy.get(event).should("have.text", "Data quality")});
         openAndCheckCardDataQuality();
 
         // test day view
