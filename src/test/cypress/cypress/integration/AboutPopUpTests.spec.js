@@ -24,7 +24,7 @@ describe ('About pop up tests',function () {
 
       cy.loginOpFab(user,'test');
 
-      cy.get('#opfab-navbarContent').find('#opfab-navbar-drop_user_menu').click();
+      cy.get('#opfab-navbarContent').find('#opfab-navbar-drop-user-menu').click();
       cy.get("#opfab-navbar-right-menu-about").should('exist'); // Check that the corresponding element is present
 
       cy.get("#opfab-navbar-right-menu-about").click();
@@ -44,7 +44,7 @@ describe ('About pop up tests',function () {
 
       cy.loginOpFab(user,'test');
 
-      cy.get('#opfab-navbarContent').find('#opfab-navbar-drop_user_menu').click();
+      cy.get('#opfab-navbarContent').find('#opfab-navbar-drop-user-menu').click();
       cy.get("#opfab-navbar-right-menu-about").click();
 
       // Check that the pop-up is closed when clicking "OK" button
@@ -62,7 +62,7 @@ describe ('About pop up tests',function () {
 
       cy.loginOpFab(user,'test');
 
-      cy.get('#opfab-navbarContent').find('#opfab-navbar-drop_user_menu').click();
+      cy.get('#opfab-navbarContent').find('#opfab-navbar-drop-user-menu').click();
       cy.get("#opfab-navbar-right-menu-about").click();
 
       // Check that the pop-up is closed when clicking "X" button

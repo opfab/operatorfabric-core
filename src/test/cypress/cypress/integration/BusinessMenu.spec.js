@@ -63,7 +63,7 @@ describe ('Business nenu',()=>{
         cy.get('#opfab-navbar-menu-feed').click();
 
         // Open user dropdown menu
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
         // Switch to Day Mode
         cy.get('#opfab-navbar-right-menu-day-mode').click();
 

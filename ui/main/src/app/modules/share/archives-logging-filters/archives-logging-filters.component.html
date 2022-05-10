@@ -75,11 +75,11 @@
     <div class="opfab-vertical-bar"></div>
     <div class="opfab-publish-date" [formGroup]="this.parentForm">
         <div>
-            <of-datetime-filter filterPath="publishDateFrom" formControlName="publishDateFrom" [defaultDate]="defaultMinPublishDate" [defaultTime]="{ hour: 0, minute: 0}"
+            <of-datetime-filter id="opfab-publish-date-from" filterPath="publishDateFrom" formControlName="publishDateFrom" [defaultDate]="defaultMinPublishDate" [defaultTime]="{ hour: 0, minute: 0}"
             labelKey="shared.filters." [maxDate]="publishMaxDate" (change)="onDateTimeChange($event)"></of-datetime-filter>
         </div>
         <div>
-            <of-datetime-filter filterPath="publishDateTo" formControlName="publishDateTo"
+            <of-datetime-filter id="opfab-publish-date-to" filterPath="publishDateTo" formControlName="publishDateTo"
             labelKey="shared.filters." [minDate]="publishMinDate" (change)="onDateTimeChange($event)"></of-datetime-filter>
         </div>
     </div>
@@ -87,17 +87,17 @@
     <div class="opfab-vertical-bar"></div>
     <div style="margin-left:40px;width:230px;min-width: 230px;" [formGroup]="this.parentForm">
         <div>
-            <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom" labelKey="shared.filters." [maxDate]="activeMaxDate" (change)="onDateTimeChange($event)">
+            <of-datetime-filter id="opfab-active-from" filterPath="activeFrom" formControlName="activeFrom" labelKey="shared.filters." [maxDate]="activeMaxDate" (change)="onDateTimeChange($event)">
             </of-datetime-filter>
         </div>
         <div>
-            <of-datetime-filter filterPath="activeTo" formControlName="activeTo" labelKey="shared.filters." [minDate]="activeMinDate" (change)="onDateTimeChange($event)">
+            <of-datetime-filter id="opfab-active-to" filterPath="activeTo" formControlName="activeTo" labelKey="shared.filters." [minDate]="activeMinDate" (change)="onDateTimeChange($event)">
             </of-datetime-filter>
         </div>
     </div>
     <div  class="opfab-buttons">
-        <button id="opfab-archives-logging-btn-search" class="opfab-btn"  (click)='query()' translate> button.search</button>
-        <button id="opfab-archives-logging-btn-reset" class="opfab-btn-cancel" style="margin-top:50px" (click)='resetForm()' translate> button.reset</button>
+        <button id="opfab-archives-logging-btn-search" class="opfab-btn"  (click)='query()' translate>button.search</button>
+        <button id="opfab-archives-logging-btn-reset" class="opfab-btn-cancel" style="margin-top:50px" (click)='resetForm()' translate>button.reset</button>
 
     </div>
 </div>

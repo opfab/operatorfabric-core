@@ -23,7 +23,7 @@ describe ('Feed notification configuration tests',function () {
         cy.loginOpFab('operator1_fr', 'test');
 
         // We move to feed notification configuration screen
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-menu-icon-notification').click();
 
         cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION RECEPTION CONFIGURATION\n');
@@ -77,7 +77,7 @@ describe ('Feed notification configuration tests',function () {
         cy.loginOpFab('itsupervisor1', 'test');
 
         // We move to feed notification configuration screen
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-menu-icon-notification').click();
 
         cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION RECEPTION CONFIGURATION\n');
@@ -119,7 +119,7 @@ describe ('Feed notification configuration tests',function () {
         cy.loginOpFab('admin', 'test');
 
         // We move to feed notification configuration screen
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-menu-icon-notification').click();
 
         cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION RECEPTION CONFIGURATION\n');
@@ -136,7 +136,7 @@ describe ('Feed notification configuration tests',function () {
         cy.reload();
 
         // We move to feed notification configuration screen
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-menu-icon-notification').click();
 
         cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION RECEPTION CONFIGURATION\n');
@@ -172,7 +172,7 @@ describe ('Feed notification configuration tests',function () {
         cy.loginOpFab('operator1_fr', 'test');
 
         // We move to feed notification configuration screen
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-menu-icon-notification').click();
 
         // First process group (we check all processes are checked)
@@ -230,7 +230,7 @@ describe ('Feed notification configuration tests',function () {
         })
 
         // Unselect some notifications
-        cy.get('#opfab-navbar-drop_user_menu').click(); // Click top right dropdown menu
+        cy.get('#opfab-navbar-drop-user-menu').click(); // Click top right dropdown menu
         cy.get('#opfab-navbar-right-menu-feedconfiguration').click(); // Click notification reception
 
         cardsToTest.forEach((c) => {
@@ -297,7 +297,7 @@ describe ('Feed notification configuration tests',function () {
         cy.loginOpFab('operator1_fr', 'test')
 
         // Monitor all cards again
-        cy.get('#opfab-navbar-drop_user_menu').click(); // Click top right dropdown menu
+        cy.get('#opfab-navbar-drop-user-menu').click(); // Click top right dropdown menu
         cy.get('#opfab-navbar-right-menu-feedconfiguration').click({force:true}); // Click notification reception
 
         cy.get('.opfab-feedconfiguration-processlist').contains("Base Examples").click({force:true}); // Select all

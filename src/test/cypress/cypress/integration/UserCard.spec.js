@@ -670,7 +670,7 @@ describe('User Card ', function () {
       cy.get('of-light-card').should('have.length', 1);
 
       // operator4_fr disconnect from Control Center FR North (ENTITY1_FR)
-      cy.get('#opfab-navbar-drop_user_menu').click();
+      cy.get('#opfab-navbar-drop-user-menu').click();
       cy.get('#opfab-navbar-right-menu-activityarea').click();
       cy.get('.opfab-checkbox').contains('Control Center FR North').click();
       cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); //click confirm settings
@@ -701,7 +701,7 @@ describe('User Card ', function () {
         });
 
       // We reconnect to Control Center FR North (ENTITY1_FR)
-      cy.get('#opfab-navbar-drop_user_menu').click();
+      cy.get('#opfab-navbar-drop-user-menu').click();
       cy.get('#opfab-navbar-right-menu-activityarea').click();
       cy.get('.opfab-checkbox').contains('Control Center FR North').click();
     })

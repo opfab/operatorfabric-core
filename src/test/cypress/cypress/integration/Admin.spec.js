@@ -16,7 +16,7 @@ describe ('AdminPage',()=>{
         cy.loginOpFab('admin', 'test');
 
         //Click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
 
          //Click on "Administration"
         cy.get('#opfab-navbar-right-menu-admin').click();

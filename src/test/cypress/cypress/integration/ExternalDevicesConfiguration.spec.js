@@ -15,7 +15,7 @@ describe ('ExternalDevicesconfigurationPage',()=>{
         cy.loginOpFab('admin', 'test');
 
         //click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
 
          //click on "External devices configuration"
         cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
@@ -54,7 +54,7 @@ describe ('ExternalDevicesconfigurationPage',()=>{
         cy.reload();
 
         //click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
 
          //click on "External devices configuration"
         cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
@@ -73,7 +73,7 @@ describe ('ExternalDevicesconfigurationPage',()=>{
         cy.loginOpFab('admin', 'test');
 
         //click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
 
          //click on "External devices configuration"
         cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
@@ -115,7 +115,7 @@ describe ('ExternalDevicesconfigurationPage',()=>{
         cy.loginOpFab('admin', 'test');
 
         //click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
 
          //click on "External devices configuration"
         cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
