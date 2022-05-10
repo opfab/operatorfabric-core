@@ -50,6 +50,7 @@ import {DisplayContext} from '@ofModel/templateGateway.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {FormControl, FormGroup} from '@angular/forms';
 import {Utilities} from '../../../../common/utilities';
+import {CardDetailsComponent} from '../card-details/card-details.component';
 
 declare const templateGateway: any;
 
@@ -95,6 +96,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     @Input() parentModalRef: NgbModalRef;
     @Input() screenSize: string;
     @Input() displayContext: any = DisplayContext.REALTIME;
+    @Input() parentComponent: CardDetailsComponent;
 
     @ViewChild('cardDeletedWithNoErrorPopup') cardDeletedWithNoErrorPopupRef: TemplateRef<any>;
     @ViewChild('impossibleToDeleteCardPopup') impossibleToDeleteCardPopupRef: TemplateRef<any>;
@@ -129,7 +131,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public btnValidateLabel = 'response.btnValidate';
     public btnUnlockLabel = 'response.btnUnlock';
     public listEntitiesToAck = [];
-    public lastResponse : Card;
+    public lastResponse: Card;
 
     private lastCardSetToReadButNotYetOnFeed;
     private entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = [];
@@ -245,7 +247,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private computeListEntitiesToAck() {
-        let resolved = new Set<string>();
+        const resolved = new Set<string>();
         this.card.entityRecipients.forEach(entityRecipient => {
             const entity = this.entitiesService.getEntitiesFromIds([entityRecipient])[0];
             if (entity.entityAllowedToSendCard)
@@ -253,7 +255,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
             this.entitiesService.resolveChildEntities(entityRecipient).filter(c => c.entityAllowedToSendCard).forEach(c => resolved.add(c.id));
         });
-        
+
         resolved.forEach(entityToAck => this.listEntitiesToAck.push({
             id: entityToAck,
             name: this.entitiesService.getEntityName(entityToAck),
@@ -385,7 +387,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 this.computeEntitiesForResponses();
                 templateGateway.applyChildCards();
                 this.checkIfHasAlreadyResponded();
-                if (this.isResponseLocked) 
+                if (this.isResponseLocked)
                     templateGateway.lockAnswer();
 
                 this.lastResponse = this.getLastResponse();
@@ -398,7 +400,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.childCards = newChildArray;
         this.checkIfHasAlreadyResponded();
         templateGateway.isLocked = this.isResponseLocked;
-        if (!this.isResponseLocked) 
+        if (!this.isResponseLocked)
             templateGateway.unlockAnswer();
         templateGateway.childCards = this.childCards;
         this.computeEntitiesForResponses();
@@ -680,6 +682,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public setFullScreen(active) {
         this.fullscreen = active;
         templateGateway.setScreenSize(active ? 'lg' : 'md');
+        if (!! this.parentComponent)
+            this.parentComponent.screenSize = (active ? 'lg' : 'md');
     }
 
     public acknowledgeCard() {
