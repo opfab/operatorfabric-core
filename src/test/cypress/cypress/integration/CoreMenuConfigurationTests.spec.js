@@ -71,7 +71,7 @@ describe ('Core menu configuration tests',function () {
                     cy.get(item.selector).should('not.exist'); // Check that the corresponding element is not present
                 })
 
-                cy.get('#opfab-navbarContent').find('#opfab-navbar-drop_user_menu').click();
+                cy.get('#opfab-navbarContent').find('#opfab-navbar-drop-user-menu').click();
                 userMenuItems.forEach((item) => {
                     cy.get(item.selector).should('not.exist'); // Check that the corresponding element is not present
                 })
@@ -101,7 +101,7 @@ describe ('Core menu configuration tests',function () {
                     cy.get(item.selector).should('not.exist'); // Check that the corresponding element is not present
                 })
 
-                cy.get('#opfab-navbarContent').find('#opfab-navbar-drop_user_menu').click();
+                cy.get('#opfab-navbarContent').find('#opfab-navbar-drop-user-menu').click();
                 userMenuItems.forEach((item) => {
                     cy.get(item.selector).should('not.exist'); // Check that the corresponding element is not present
                 })
@@ -131,7 +131,7 @@ describe ('Core menu configuration tests',function () {
                     cy.get(item.selector).should('exist'); // Check that the corresponding element is present
                 })
 
-                cy.get('#opfab-navbarContent').find('#opfab-navbar-drop_user_menu').click();
+                cy.get('#opfab-navbarContent').find('#opfab-navbar-drop-user-menu').click();
                 userMenuItems.forEach((item) => {
                     cy.get(item.selector).should('exist'); // Check that the corresponding element is not present
                 })
@@ -159,7 +159,7 @@ describe ('Core menu configuration tests',function () {
                 cy.get(item.selector).should('exist');
             })
 
-            cy.get('#opfab-navbarContent').find('#opfab-navbar-drop_user_menu').click();
+            cy.get('#opfab-navbarContent').find('#opfab-navbar-drop-user-menu').click();
             userMenuItems.forEach((item) => {
                 cy.get(item.selector).should('exist'); // Check that the corresponding element is not present
             })
@@ -181,7 +181,7 @@ describe ('Core menu configuration tests',function () {
                 cy.get(item.selector).should('not.exist');
             })
 
-            cy.get('#opfab-navbarContent').find('#opfab-navbar-drop_user_menu').click();
+            cy.get('#opfab-navbarContent').find('#opfab-navbar-drop-user-menu').click();
             userMenuItems.forEach((item) => {
                 cy.get(item.selector).should('not.exist'); // Check that the corresponding element is not present
             })

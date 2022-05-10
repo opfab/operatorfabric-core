@@ -8,7 +8,7 @@
 
 <div class="opfab-menu-timeline">
     <div *ngIf='hideTimeLine || isMonitoringScreen' class="opfab-business-period">
-      <span translate>timeline.businessPeriod </span> : {{startDateForBusinessPeriodDisplay}} &#45;&#45; {{endDateForBusinessPeriodDisplay}}
+      <span translate>timeline.businessPeriod</span> : {{startDateForBusinessPeriodDisplay}} &#45;&#45; {{endDateForBusinessPeriodDisplay}}
     </div>
 
 
@@ -41,11 +41,11 @@
                 [ngbPopover]="tipUnlockedTimeline" popoverClass="opfab-popover" placement="left" container="body" triggers="mouseenter:mouseleave"></span>
 
           <ng-template #tipLockedTimeline>
-            <span translate>timeline.lockTooltip</span>
+            <span id="opfab-timeline-lock-popover" translate>timeline.lockTooltip</span>
           </ng-template>
 
           <ng-template #tipUnlockedTimeline>
-            <span translate>timeline.unlockTooltip</span>
+            <span id="opfab-timeline-unlock-popover" translate>timeline.unlockTooltip</span>
           </ng-template>
         </li>
 

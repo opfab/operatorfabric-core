@@ -48,7 +48,7 @@
       "requiredResponses": "REQUIRED ANSWERS"
     },
     "loadingInProgress": "Loading in progress",
-    "noResult": "Your search did not match any results.",
+    "noResult": "Your search did not match any result.",
     "exportToExcel": "Export data",
     "resultsNumber":"Results number",
     "noProcessStateAvailable": "No process/state available",

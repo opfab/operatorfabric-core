@@ -61,7 +61,7 @@
      </li>
 
       <li >
-        <a class="nav-link" id="opfab-navbar-drop_user_menu" 
+        <a class="nav-link" id="opfab-navbar-drop-user-menu" 
           [ngbPopover]="menuContent" container="body"  popoverClass="opfab-popover-left-menu" href="javascript:void(0)">
           <of-info></of-info>
         </a>
@@ -134,26 +134,26 @@
     <div class="opfab-right-menu-item" *ngIf="(displayAdmin)">
       <a id="opfab-navbar-right-menu-admin" class="opfab-right-menu-link"  routerLink="/admin" routerLinkActive #rla="routerLinkActive">
         <div class="opfab-menu-icon opfab-menu-icon-admin"></div>
-        <div translate> menu.admin </div>
+        <div translate>menu.admin</div>
       </a>
     </div>
     <div class="opfab-right-menu-item" *ngIf="(displayExternalDevicesConfiguration)">
       <a id="opfab-navbar-right-menu-externaldevicesconfiguration" class="opfab-right-menu-link"  routerLink="/externaldevicesconfiguration" routerLinkActive #rla="routerLinkActive">
         <div class="opfab-menu-icon opfab-menu-icon-admin"></div>
-        <div translate> menu.externalDevicesConfiguration </div>
+        <div translate>menu.externalDevicesConfiguration</div>
       </a>
     </div>
     <div class="opfab-right-menu-item" *ngIf="(displayRealTimeUsers)">
       <a id="opfab-navbar-right-menu-realtimeusers" class="opfab-right-menu-link"  routerLink="/realtimeusers" routerLinkActive #rla="routerLinkActive">
         <div class="opfab-menu-icon opfab-menu-icon-admin"></div>
-        <div translate> menu.realTimeUsers </div>
+        <div translate>menu.realTimeUsers</div>
       </a>
     </div>
 
     <div class="opfab-right-menu-item">
       <a id="opfab-navbar-right-menu-settings" *ngIf="(displaySettings)" class="opfab-right-menu-link" routerLink="/settings"  routerLinkActive #rla="routerLinkActive">
         <div class="opfab-menu-icon opfab-menu-icon-parameters"></div>
-        <div translate> menu.settings </div>
+        <div translate>menu.settings</div>
       </a>
     </div>
 
@@ -161,7 +161,7 @@
       <a  id="opfab-navbar-right-menu-activityarea" class="opfab-right-menu-link" routerLink="/activityarea"  routerLinkActive
           #rla="routerLinkActive">
         <em class="fas fa-user-cog" id="opfab-menu-icon-activityarea"></em>
-        <div translate> menu.activityArea</div>
+        <div translate>menu.activityArea</div>
       </a>
     </div>
 
@@ -169,25 +169,25 @@
       <a  id="opfab-navbar-right-menu-feedconfiguration" class="opfab-right-menu-link" routerLink="/feedconfiguration"  routerLinkActive
         #rla="routerLinkActive">
         <div class="opfab-menu-icon opfab-menu-icon-notification" id="opfab-menu-icon-notification"></div>
-        <div translate> menu.feedConfiguration</div>
+        <div translate>menu.feedConfiguration</div>
       </a>
     </div>
 
     <div class="opfab-right-menu-item">
       <a id="opfab-navbar-right-menu-about" *ngIf="(displayAbout)" class="opfab-right-menu-link" (click)="showAbout()"  href="javascript:void(0)">
         <div class="opfab-menu-icon opfab-menu-icon-about"></div>
-        <div translate> menu.about</div>
+        <div translate>menu.about</div>
       </a>
     </div>
 
     <div class="opfab-right-menu-item" *ngIf="(nightDayMode)">
       <a id="opfab-navbar-right-menu-night-mode" *ngIf="(!(getNightMode()|async))" class="opfab-right-menu-link" (click)='switchToNightMode()'>
         <div class="opfab-menu-icon opfab-menu-icon-dark-light"></div>
-        <div translate> menu.switchToNightMode</div>
+        <div translate>menu.switchToNightMode</div>
       </a>
       <a id="opfab-navbar-right-menu-day-mode"  *ngIf="(getNightMode()|async)" class="opfab-right-menu-link"  (click)='switchToDayMode()'>
         <div class="opfab-menu-icon opfab-menu-icon-dark-light"></div>
-        <div translate > menu.switchToDayMode</div>
+        <div translate>menu.switchToDayMode</div>
       </a>
     </div>
 
@@ -195,7 +195,7 @@
       <a  id="opfab-navbar-right-menu-change-password" *ngIf="(displayChangePassword)" class="opfab-right-menu-link"
           routerLink="/changepassword" routerLinkActive #rla="routerLinkActive">
         <div class="opfab-menu-icon opfab-menu-icon-change-password" id="opfab-menu-icon-change-password"></div>
-        <div translate> menu.changePassword</div>
+        <div translate>menu.changePassword</div>
       </a>
     </div>
     
@@ -203,7 +203,7 @@
       <form>
         <a id="opfab-navbar-right-menu-logout"  class="opfab-right-menu-link" (click)="logOut()" href="javascript:void(0)">
           <div class="opfab-menu-icon opfab-menu-icon-logout"></div>
-          <div translate> menu.logout</div>
+          <div translate>menu.logout</div>
         </a>
       </form>
     </div>

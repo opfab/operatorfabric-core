@@ -20,7 +20,7 @@ describe ('RealTimeUsersPage',()=>{
         cy.loginOpFab('admin', 'test');
 
         //click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
 
         //click on "Real time users"
         cy.get('#opfab-navbar-right-menu-realtimeusers').click();
@@ -35,7 +35,7 @@ describe ('RealTimeUsersPage',()=>{
         cy.loginOpFab('operator3_fr', 'test');
 
         //click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
 
         //click on "Real time users"
         cy.get('#opfab-navbar-right-menu-realtimeusers').click();
@@ -59,7 +59,7 @@ describe ('RealTimeUsersPage',()=>{
         cy.loginOpFab('operator2_fr', 'test');
 
         //click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
 
         //click on "Real time users"
         cy.get('#opfab-navbar-right-menu-realtimeusers').click();
@@ -84,7 +84,7 @@ describe ('RealTimeUsersPage',()=>{
         cy.loginOpFab('operator4_fr', 'test');
 
         //click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
 
         //click on "Real time users"
         cy.get('#opfab-navbar-right-menu-realtimeusers').click();
@@ -124,7 +124,7 @@ describe ('RealTimeUsersPage',()=>{
 
         // operator4_fr disconnect from ENTITY2_FR, ENTITY3_FR and ENTITY4_FR
         // click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
 
         // click on "Activity area"
         cy.get('#opfab-navbar-right-menu-activityarea').click();
@@ -135,7 +135,7 @@ describe ('RealTimeUsersPage',()=>{
         cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
 
         // we go back to the real time screen
-        cy.get('#opfab-navbar-drop_user_menu').should('exist').click();
+        cy.get('#opfab-navbar-drop-user-menu').should('exist').click();
         cy.get('#opfab-navbar-right-menu-realtimeusers').should('exist').click();
 
         // we are on the French control centers
@@ -164,7 +164,7 @@ describe ('RealTimeUsersPage',()=>{
 
         // operator4_fr reconnect to ENTITY2_FR, ENTITY3_FR and ENTITY4_FR
         // click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
 
         // click on "Activity area"
         cy.get('#opfab-navbar-right-menu-activityarea').click();
@@ -175,7 +175,7 @@ describe ('RealTimeUsersPage',()=>{
         cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
 
         // we go back to the real time screen
-        cy.get('#opfab-navbar-drop_user_menu').should('exist').click();
+        cy.get('#opfab-navbar-drop-user-menu').should('exist').click();
         cy.get('#opfab-navbar-right-menu-realtimeusers').should('exist').click();
 
         // we are on the French control centers
