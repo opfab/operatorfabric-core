@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -9,9 +9,9 @@
 
 The aim of this document is to present the OperatorFabric community, its code of conduct and to welcome contributors!
 
-First of all, thank you for your interest !
+First, thank you for your interest !
 
-We can't stress enough that feedback, discussions, questions and contributions on OperatorFabric are very much
+We can't stress enough that feedback, discussions, questions and contributions to OperatorFabric are very much
 appreciated.
 However, because the project is still in its early stages, we're not fully equipped for any of it yet, so please bear
 with us while the contribution process and tooling are sorted out.
@@ -80,10 +80,11 @@ to have to maintain these mentions (since this information is tracked by git any
 * Use `foreach` to iterate over an array (instead of `for(let i = ..`) . In some cases, foreach do not work and you can use it this way `Array.prototype.forEach.call(myArray, element => .... )` (see https://stackoverflow.com/questions/43743560/foreach-vs-array-prototype-foreach-call)
 * Do not use ngFor / ngIf  with methods with computing as angular will call these methods very regularly
 (around ten times per seconds), use instead variables and compute them only when necessary.
-* ngInit() :  ngInit is called when component is created, the creation is made by the parent component : be careful to check when initialization is done when calling method inside ngInit. When the context of the parent component change, it can lead to a new initialization or not.
+* ngOnInit() :  ngOnInit is called when component is created, the creation is made by the parent component : be careful to check when initialization is done when calling method inside ngOnInit. When the context of the parent component change, it can lead to a new initialization or not.
 * Do not store Moment objects in ngrx store (see for example : https://github.com/ngrx/platform/issues/2690)
 * Prefer using `*ngIf` over `hidden` property  to hide elements : https://stackoverflow.com/questions/51317666/when-should-i-use-ngif-over-hidden-property-and-vice-versa/51317774
-* Do not use console.log or console.error, use specific opfab service : OpfabLoggerService 
+* Do not use console.log or console.error, use specific opfab service : OpfabLoggerService
+* To give id to an HTML element, please use dashes between words and only lowercase letters. Example id="opfab-feed-filter-publish-date-to"
 
 ==== Back development 
 
