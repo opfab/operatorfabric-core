@@ -34,9 +34,11 @@
           </div>
 
           <div class="row">
-            <of-single-filter id="opfab-devicesDropdownList" *ngIf="devicesDropdownList.length > 0" i18nRootLabelKey="externalDevicesConfiguration." [parentForm]="userdeviceForm" filterPath="externalDeviceId"
-                              [values]="devicesDropdownList" [translateLabels]=false [prefixWithValue]=false style="position:relative"
-                              placeholderKey="externalDevicesConfiguration.input.selectDeviceText" sortValues=true></of-single-filter>
+            <of-multi-filter *ngIf="devicesDropdownList.length > 0" id="opfab-devicesDropdownList" i18nRootLabelKey="externalDevicesConfiguration." 
+                             [parentForm]="userdeviceForm" filterPath="externalDeviceIds" [values]="devicesDropdownList" 
+                             style="position:relative" [translateValues]="false" sortValues=true [selectedItems]="selectedDevices"
+                             [dropdownSettings]="devicesDropdownSettings">
+            </of-multi-filter>
           </div>
 
         </div>

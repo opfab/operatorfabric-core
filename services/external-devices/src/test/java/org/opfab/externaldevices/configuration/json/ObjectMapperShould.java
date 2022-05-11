@@ -48,7 +48,7 @@ class ObjectMapperShould {
         UserConfiguration userConfiguration = mapper.readValue(userConfigurationString, UserConfiguration.class);
         assertThat(userConfiguration).isNotNull().isInstanceOf(UserConfigurationData.class);
         assertThat(userConfiguration.getUserLogin()).isEqualTo("jcleese");
-        assertThat(userConfiguration.getExternalDeviceIds().size()).isEqualTo(2);
+        assertThat(userConfiguration.getExternalDeviceIds()).hasSize(2);
         assertThat(userConfiguration.getExternalDeviceIds().get(0)).isEqualTo("loudspeaker_1");
         assertThat(userConfiguration.getExternalDeviceIds().get(1)).isEqualTo("loudspeaker_2");
     }
