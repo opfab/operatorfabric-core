@@ -436,7 +436,7 @@
       "allUsersConfigured": "All users devices are already configured"
     },
     "userLogin": "USER LOGIN",
-    "externalDeviceId": "DEVICE",
+    "externalDeviceIds": "DEVICES",
     "edit": "EDIT",
     "delete": "DELETE"
   },

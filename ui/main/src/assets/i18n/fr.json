@@ -436,7 +436,7 @@
       "allUsersConfigured": "Tous les périphériques des utilisateurs sont déjà configurés"
     },
     "userLogin": "IDENTIFIANT UTILISATEUR",
-    "externalDeviceId": "PÉRIPHÉRIQUE",
+    "externalDeviceIds": "PÉRIPHÉRIQUES",
     "edit": "EDITER",
     "delete": "SUPPRIMER"
   },

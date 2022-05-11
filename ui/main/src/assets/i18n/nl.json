@@ -438,7 +438,7 @@
       "allUsersConfigured": "Alle apparaten zijn al geconfigureerd"
     },
     "userLogin": "GEBRUIKERSNAAM",
-    "externalDeviceId": "APPARAAT",
+    "externalDeviceIds": "APPARATEN",
     "edit": "WIJZIGEN",
     "delete": "VERWIJDEREN"
   },

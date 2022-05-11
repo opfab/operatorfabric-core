@@ -36,7 +36,7 @@ As a result, external devices support in OperatorFabric aims to allow sound noti
 sound systems. The sound system on which the sound will be played can depend on the user receiving the notification.
 For example, all operators working in control room A will have their sounds played on the control room's central sound
 system, while operators from control room B will use theirs.
-Only one external device can be configured for each user.
+Each user can have several external devices configured.
 
 So far, only sound systems using the Modbus protocol are supported, but we would like to be able to support other
 protocols (and ultimately allow people to supply their own drivers) in the future.
@@ -72,22 +72,22 @@ NGINX gateway, with the following payload:
 ----
 +
 . The NGINX server, acting as a gateway, forwards it to the `/notifications` endpoint on the External Devices service.
-. The External Devices service queries the configuration repositories to find out which external device is configured
-for operator1_fr, how to connect to it and what signal "ALARM" translates to on this particular device.
-. It then creates the appropriate connection if it doesn't exist yet, and sends the signal.
+. The External Devices service queries the configuration repositories to find out which external devices are configured
+for operator1_fr, how to connect to them and what signal "ALARM" translates to on these particular devices.
+. It then creates the appropriate connections if they don't exist yet, and sends the signal.
 
 === Configuration
 
 The following elements need to be configurable:
 
-. For each user, which device to use:
+. For each user, which devices to use:
 +
 .userConfiguration
 [source,json,]
 ----
 {
   "userLogin": "operator1_fr",
-  "externalDeviceId": "CDS_1"
+  "externalDeviceIds": ["CDS_1"]
 }
 ----
 +

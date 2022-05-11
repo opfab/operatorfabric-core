@@ -115,7 +115,7 @@ definitions:
       - userLogin
     example:
       userLogin: operator1_fr
-      externalDeviceIds: CDS_1
+      externalDeviceIds: [CDS_1, CDS_2]
 
 paths:
   '/notifications':

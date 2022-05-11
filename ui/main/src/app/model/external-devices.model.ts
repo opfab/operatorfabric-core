@@ -17,7 +17,7 @@ export class Notification {
 export class UserConfiguration {
     public constructor(
         readonly userLogin: string,
-        readonly externalDeviceId: string
+        readonly externalDeviceIds: string[]
     ) {}
 }
 

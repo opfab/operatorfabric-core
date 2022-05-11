@@ -104,7 +104,7 @@ export class ExternaldevicesconfigurationComponent {
 
         this.columnDefs = [
             {type: 'dataColumn', headerName: 'userLogin', field: 'userLogin',   headerClass: 'opfab-ag-header-with-no-padding'},
-            {type: 'dataColumn', headerName: 'externalDeviceId', field: 'externalDeviceId'},
+            {type: 'dataColumn', headerName: 'externalDeviceIds', field: 'externalDeviceIds'},
             {type: 'actionColumn', headerName: 'edit', colId: 'edit'},
             {type: 'actionColumn', headerName: 'delete', colId: 'delete'},
 

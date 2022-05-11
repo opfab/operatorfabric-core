@@ -66,7 +66,7 @@ export class SettingsComponent implements OnInit {
   }
 
   isExternalDeviceConfiguredForUser(): boolean {
-    return (!!this.userConfiguration && !!this.userConfiguration.externalDeviceId);
+    return (!!this.userConfiguration && !!this.userConfiguration.externalDeviceIds && this.userConfiguration.externalDeviceIds.length>0);
   }
 
 }

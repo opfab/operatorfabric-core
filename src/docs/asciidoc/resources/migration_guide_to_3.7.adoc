@@ -39,17 +39,75 @@ externalRecipients-url: "{\
            }"
 ....
 
-To 
+To
 
 ....
 external-recipients:
-  recipients: 
+  recipients:
     - id: "third-party1"
       url: "http://thirdparty1/test1"
       propagateUserToken: true
     - id: "third-party2"
       url: "http://thirdparty2:8090/test2"
       propagateUserToken: true
+....
+
+== Rename attribute externalDeviceId
+
+It is now possible to have several external device systems, therefore the attribute externalDeviceId is now renamed into externalDeviceIds and is now a list.
+
+=== In the configuration file
+
+In the configuration file, replace 
+....
+userConfigurations:
+        - userLogin: operator1_fr
+          externalDeviceId: CDS_1
+        - userLogin: operator2_fr
+          externalDeviceId: CDS_2
+        - userLogin: operator3_fr
+          externalDeviceId: CDS_3
+        - userLogin: operator4_fr
+          externalDeviceId: CDS_1
+....
+
+by
+
+....
+userConfigurations:
+        - userLogin: operator1_fr
+          externalDeviceIds: ["CDS_1"]
+        - userLogin: operator2_fr
+          externalDeviceIds: ["CDS_2"]
+        - userLogin: operator3_fr
+          externalDeviceIds: ["CDS_3"]
+        - userLogin: operator4_fr
+          externalDeviceIds: ["CDS_1"]
+....
+
+
+=== Changes in the Mongo data base
+
+==== Before the migration
+
+Before the migration to 3.7.0, one should save its current data base, then add the attribute "externalDeviceIds" based on the
+value of the existing attribute "externalDeviceId". To add this attribute, simply launch the commands :
+
+....
+var collection = db.getCollection("userConfigurations")
+collection.find().forEach(function(user) {collection.updateOne({_id: user._id}, {$set: {externalDeviceIds: [user.externalDeviceId]}})})
+....
+
+
+==== Once the migration is done
+
+Once the migration to 3.7.0 is done, the attribute "externalDeviceId" is not used anymore.
+You can remove it by launching :
+
+....
+var collection = db.getCollection("userConfigurations")
+collection.find().forEach(function(user) {collection.updateOne({_id: user._id}, {$unset: {"externalDeviceId": 1}})})
+....
 
 
 == Deprecated feature 
