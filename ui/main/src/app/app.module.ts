@@ -31,6 +31,7 @@ import {NavbarModule} from './modules/navbar/navbar.module';
 import {NgbModalModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TagInputModule} from 'ngx-chips';
 import {TokenInjector} from '@ofServices/interceptors.service';
+import {ActivityareaModule} from './modules/activityarea/activityarea.module';
 
 
 @NgModule({
@@ -53,8 +54,8 @@ import {TokenInjector} from '@ofServices/interceptors.service';
     AppRoutingModule,
     AdminModule,
     CalendarModule,
-    NavbarModule
-  ],
+    NavbarModule,
+    ActivityareaModule ],
   declarations: [AppComponent,
     LoginComponent
   ],

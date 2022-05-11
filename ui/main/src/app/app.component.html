@@ -83,6 +83,13 @@
 </ng-template>
 
 
+<ng-template #activityArea let-modal>
+  <div class="modal-body">
+    <of-activityarea [titleI18nKey]="'activityArea.titleOnLogin'" [askConfirmation]="false"  (confirm)="onActivityAreaConfirm()"></of-activityarea>
+  </div>
+</ng-template>
+
+
 <ng-template #sessionAlreadyInUse let-modal>
   <div class="modal-body text-center" style="white-space: pre-wrap;">
     <p>{{'login.confirmationBecauseAccountIsAreadyUsed'|translate:{login:userLogin} }}</p>

@@ -23,7 +23,8 @@ import {ActivityareaRoutingModule} from './activityarea-routing.module';
         ReactiveFormsModule,
         TranslateModule,
         ActivityareaRoutingModule
-    ]
+    ],
+    exports: [ActivityareaComponent]
 })
 export class ActivityareaModule {
 }

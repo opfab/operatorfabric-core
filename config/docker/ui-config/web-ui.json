@@ -3,6 +3,7 @@
   "environmentColor": "blue",
   "showUserEntitiesOnTopRightOfTheScreen": true,
   "externalDevicesEnabled": true,
+  "selectActivityAreaOnLogin" : false,
   "settings.replayInterval": 10,
   "settings.replayEnabled": true,
   "archive": {
