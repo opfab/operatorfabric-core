@@ -36,7 +36,6 @@ import {AuthenticationActionTypes, TryToLogOut} from '@ofStore/actions/authentic
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 import {RemoteLoggerService} from '@ofServices/logs/remote-logger.service';
 
-
 class Alert {
   alert: Message;
   display: boolean;
@@ -68,6 +67,7 @@ export class AppComponent implements OnInit {
   @ViewChild('sessionEnd') sessionEndPopupRef: TemplateRef<any>;
   @ViewChild('sessionAlreadyInUse') sessionAlreadyInUsePopupRef: TemplateRef<any>;
   @ViewChild('reloadRequested') reloadRequestedPopupRef: TemplateRef<any>;
+  @ViewChild('activityArea') activityAreaPopupRef: TemplateRef<any>;
   
   /**
    * NB: I18nService is injected to trigger its constructor at application startup
@@ -261,7 +261,6 @@ export class AppComponent implements OnInit {
   }
 
   private proceedLogin(identifier) {
-    this.cardService.initCardSubscription();
     merge(
       this.configService.loadCoreMenuConfigurations(),
       this.userService.loadUserWithPerimetersData(),
@@ -269,22 +268,44 @@ export class AppComponent implements OnInit {
       this.groupsService.loadAllGroupsData(),
       this.processesService.loadAllProcesses(),
       this.processesService.loadProcessGroups(),
-      this.processesService.loadMonitoringConfig(),
-      this.cardService.initSubscription)
-    .pipe(skip(7)) // Need to wait for all initialization to complete before loading main components of the application
+      this.processesService.loadMonitoringConfig())
+    .pipe(skip(6)) // Need to wait for all initialization to complete before loading main components of the application
     .subscribe({
       next: () => {
-        this.loaded = true;
         this.reminderService.startService(identifier);
-        this.activateSoundIfNotActivated();
         this.subscribeToSessionEnd();
         this.subscribeToSessionClosedByNewUser();
+        if (this.configService.getConfigValue('selectActivityAreaOnLogin', false)) this.confirmActivityArea(identifier);
+        else this.openSubscription();
       },
       error: catchError((err, caught) => {
         console.error('Error in application initialization', err);
         return caught; 
       })
     });
+  }
+
+  private openSubscription()
+  {
+    this.cardService.initCardSubscription();
+    this.activateSoundIfNotActivated();
+    this.cardService.initSubscription.subscribe( () => this.loaded = true);
+  }
+
+
+  private confirmActivityArea(login: string) {
+    this.userService.getUser(login).subscribe(currentUser => {
+        const entities = this.entitiesService.getEntitiesFromIds(currentUser.entities);
+        if (entities.filter(entity => entity.entityAllowedToSendCard).length > 1)
+          this.modalRef = this.modalService.open(this.activityAreaPopupRef, {centered: true, backdrop: 'static', size: 'xl'});      
+        else this.openSubscription();
+
+    });
+  }
+
+  onActivityAreaConfirm() {
+    this.modalRef.close();
+    this.openSubscription();
   }
 
   private detectConnectionLost() {

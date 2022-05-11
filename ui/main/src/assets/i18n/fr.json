@@ -246,7 +246,8 @@
     "search": "RECHERCHER"
   },
   "activityArea": {
-    "title": "ZONE D'ACTIVITE"
+    "title": "ZONE D'ACTIVITE",
+    "titleOnLogin": "SÉLECTIONNER VOTRE ZONE D'ACTIVITÉ"
   },
   "feedConfiguration": {
     "title": "CONFIGURATION DES NOTIFICATIONS"

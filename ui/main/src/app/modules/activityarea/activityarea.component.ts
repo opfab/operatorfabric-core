@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {UserService} from '@ofServices/user.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
@@ -26,7 +26,14 @@ import {GroupsService} from '@ofServices/groups.service';
     styleUrls: ['./activityarea.component.scss']
 })
 
+
+
 export class ActivityareaComponent implements OnInit, OnDestroy {
+
+    @Input() titleI18nKey = 'activityArea.title';
+    @Input() askConfirmation = true;
+    @Output() confirm = new EventEmitter();
+
     activityAreaForm: FormGroup;
     currentUserWithPerimeters: UserWithPerimeters;
     userEntities: {entityId: string, entityName: string, isDisconnected: boolean}[] = [];
@@ -167,11 +174,12 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
                         this.cardService.removeAllLightCardFromMemory();
                         this.userService.loadUserWithPerimetersData().subscribe();
                     }
-                    this.modalRef.close();
+                    if (!!this.modalRef) this.modalRef.close();
+                    this.confirm.emit();
                 },
                 error: err => {
                     console.error('Error when saving settings :', err);
-                    this.modalRef.close();
+                    if (!!this.modalRef) this.modalRef.close();
                     this.messageAfterSavingSettings = 'shared.error.impossibleToSaveSettings';
                     this.displaySendResultError = true;
                 }
@@ -189,7 +197,8 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     }
 
     openConfirmSaveSettingsModal(content) {
-        this.modalRef = this.modalService.open(content, {centered: true, backdrop: 'static'});
+        if (this.askConfirmation) this.modalRef = this.modalService.open(content, {centered: true, backdrop: 'static'});
+        else  this.confirmSaveSettings();
     }
 
     ngOnDestroy() {

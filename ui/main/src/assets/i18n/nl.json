@@ -248,7 +248,8 @@
     "search" : "ZOEK"
   },
   "activityArea": {
-    "title": "ACTIVITEITENGEBIED"
+    "title": "ACTIVITEITENGEBIED",
+    "titleOnLogin": "KIES UW ACTIVITEITENGEBIED"
   },
   "feedConfiguration": {
     "title": "NOTIFICATIE CONFIGURATIE"
