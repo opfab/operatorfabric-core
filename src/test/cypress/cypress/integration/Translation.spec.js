@@ -12,7 +12,11 @@ describe('Test translations', function () {
     const FRENCH = 'fr';
     const DUTCH = 'nl';
 
-    function changeLanguage(newLanguage) {
+    const ENGLISH_SETTINGS = 'SETTINGS';
+    const FRENCH_SETTINGS = 'PARAMETRES';
+    const DUTCH_SETTINGS = 'INSTELLINGEN';
+
+    function changeLanguage(newLanguage, useClock) {
         cy.get('#opfab-navbar-drop-user-menu').should('exist').click();
         
         // Wait for the menu to open
@@ -22,7 +26,17 @@ describe('Test translations', function () {
         cy.get('#opfab-setting-locale').select(newLanguage);
         
         // Wait for the language to be changed
-        cy.waitDefaultTime();
+        if (useClock) {
+            cy.tick(5000);
+        }
+        
+        if (newLanguage == ENGLISH) {
+            cy.get('.opfab-settings-title').should('have.text', ENGLISH_SETTINGS);
+        } else if (newLanguage == FRENCH) {
+            cy.get('.opfab-settings-title').should('have.text', FRENCH_SETTINGS);
+        } else if (newLanguage == DUTCH) {
+            cy.get('.opfab-settings-title').should('have.text', DUTCH_SETTINGS);
+        } 
     }
 
     function setNightMode() {
@@ -277,10 +291,10 @@ describe('Test translations', function () {
         const currentDate = new Date(2030, 11, 31, 23, 46);
         cy.loginWithClock(currentDate);
 
-        changeLanguage(ENGLISH);
+        changeLanguage(ENGLISH, true);
         cy.tick(1000);
         cy.get('#opfab-navbar-menu-feed').click();
-        cy.tick(1000);
+        cy.tick(5000);
         cy.get('#opfab-timeline-title').should('have.text', ' 31 December 2030 ');
         checkBusinessPeriodLinks('Real Time', 'Day', '7 Days', 'Week', 'Month', 'Year');
 
@@ -288,10 +302,10 @@ describe('Test translations', function () {
         cy.get('.opfab-business-period').should('have.text', 'Business period : 21:30 31/12/2030 -- 09:00 01/01/2031 ');
         
 
-        changeLanguage(FRENCH);
+        changeLanguage(FRENCH, true);
         cy.tick(1000);
         cy.get('#opfab-navbar-menu-feed').click();
-        cy.tick(1000);
+        cy.tick(5000);
         cy.get('#opfab-timeline-title').should('have.text', ' 31 décembre 2030 ');
         checkBusinessPeriodLinks('Temps réel', 'Jour', '7 Jours', 'Semaine', 'Mois', 'Année');
 
@@ -299,10 +313,10 @@ describe('Test translations', function () {
         cy.get('.opfab-business-period').should('have.text', 'Période métier : 21:30 31/12/2030 -- 09:00 01/01/2031 ');
 
 
-        changeLanguage(DUTCH);
+        changeLanguage(DUTCH, true);
         cy.tick(1000);
         cy.get('#opfab-navbar-menu-feed').click();
-        cy.tick(1000);
+        cy.tick(5000);
         cy.get('#opfab-timeline-title').should('have.text', ' 31 december 2030 ');
         checkBusinessPeriodLinks('Realtime', 'Dag', '7 Dagen', 'Week', 'Maand', 'Jaar');
 
