@@ -280,6 +280,7 @@ describe('Test translations', function () {
         changeLanguage(ENGLISH);
         cy.tick(1000);
         cy.get('#opfab-navbar-menu-feed').click();
+        cy.tick(1000);
         cy.get('#opfab-timeline-title').should('have.text', ' 31 December 2030 ');
         checkBusinessPeriodLinks('Real Time', 'Day', '7 Days', 'Week', 'Month', 'Year');
 
@@ -290,6 +291,7 @@ describe('Test translations', function () {
         changeLanguage(FRENCH);
         cy.tick(1000);
         cy.get('#opfab-navbar-menu-feed').click();
+        cy.tick(1000);
         cy.get('#opfab-timeline-title').should('have.text', ' 31 décembre 2030 ');
         checkBusinessPeriodLinks('Temps réel', 'Jour', '7 Jours', 'Semaine', 'Mois', 'Année');
 
@@ -300,6 +302,7 @@ describe('Test translations', function () {
         changeLanguage(DUTCH);
         cy.tick(1000);
         cy.get('#opfab-navbar-menu-feed').click();
+        cy.tick(1000);
         cy.get('#opfab-timeline-title').should('have.text', ' 31 december 2030 ');
         checkBusinessPeriodLinks('Realtime', 'Dag', '7 Dagen', 'Week', 'Maand', 'Jaar');
 
