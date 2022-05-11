@@ -49,7 +49,6 @@ operatorfabric.users.default:
     - id: ADMIN
       name: ADMINISTRATORS
       description: The admin group
-      realtime: false
     - id: RTE
       name: RTE France
       description: RTE TSO Group
