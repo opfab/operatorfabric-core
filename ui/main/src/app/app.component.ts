@@ -306,8 +306,7 @@ export class AppComponent implements OnInit {
         setTimeout(() => {
           if (!this.reloadCanceled)
             this.reload();
-        }, 5000);
-        
+        },5000 + Math.floor(Math.random() * 5000)); // use a random  part to avoid all UI to access at the same time the server
       }
     });
   }

@@ -73,7 +73,7 @@
     "activateSoundText":"Son non activé, cliquer pour activer",
     "activateSoundButton":"Activer le son",
     "sessionExpiredText":"Votre session a expiré",
-    "reloadRequestedText": "Incompatibilité de version, rechargement de l'application nécessaire",
+    "reloadRequestedText": "Rechargement de l'application nécessaire",
     "disconnectedByNewUser": "Vous avez été déconnecté car un autre utilisateur s'est connecté avec ce compte"
   },
   "menu": {
