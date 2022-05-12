@@ -83,6 +83,13 @@ End date of the active period of the card (process business time).
 
 Tags are intended as an additional way to filter cards in the feed of the GUI.
 
+NOTE: Grouping cards is an experimental feature
+
+Tags can also be used to group cards together in the card feed. When `feed.enableGroupedCards` is enabled in the `web&#8288;-ui.json` configuration file, cards that have the same tags are grouped together. In the feed window, only the top card will be visible and can be clicked to show  cards with the same tags.
+
+image:grouped-cards.png[Closed grouped cards]
+image:grouped-cards2.png[Open grouped cards]
+
 ==== EntityRecipients (`entityRecipients`)
 
 Used to send cards to entity : all users members of the listed entities who have the right for the process/state of the card will receive it. 
