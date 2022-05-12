@@ -13,7 +13,7 @@ import {environment} from '@env/environment';
 import {Observable, of} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {catchError, map, tap} from 'rxjs/operators';
-import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
+import {ConsideredAcknowledgedForUserWhenEnum, Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {Card} from '@ofModel/card.model';
 import {UserService} from '@ofServices/user.service';
@@ -326,5 +326,17 @@ export class ProcessesService {
                 statesListPerProcess.set(process.id, statesDropdownList);
         });
         return statesListPerProcess;
+    }
+
+    public getConsideredAcknowledgedForUserWhenForAProcess(processId: string, processVersion: string, stateId: string):
+        ConsideredAcknowledgedForUserWhenEnum {
+        let consideredAcknowledgedForUserWhen = ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED;
+
+        this.queryProcess(processId, processVersion).subscribe(process => {
+            const state = process.extractState(stateId);
+            if (!!state.consideredAcknowledgedForUserWhen)
+                consideredAcknowledgedForUserWhen = state.consideredAcknowledgedForUserWhen;
+        });
+        return consideredAcknowledgedForUserWhen;
     }
 }

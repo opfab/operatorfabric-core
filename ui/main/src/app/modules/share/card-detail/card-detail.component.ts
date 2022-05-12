@@ -24,7 +24,7 @@ import {Subject} from 'rxjs';
 import {UserService} from '@ofServices/user.service';
 import {User} from '@ofModel/user.model';
 import {EntitiesService} from '@ofServices/entities.service';
-import {AppService, PageType} from "@ofServices/app.service";
+import {AppService, PageType} from '@ofServices/app.service';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
 
 declare const templateGateway: any;
@@ -96,7 +96,7 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(businessconfig => {
                     if (!!businessconfig) {
-                        const state = businessconfig.extractState(this.card);
+                        const state = businessconfig.extractState(this.card.state);
                         if (!!state) {
                             // Take the first detail, new card preview only compatible with one detail per card
                             this.templateName = state.templateName;

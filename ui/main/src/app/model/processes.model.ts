@@ -24,9 +24,9 @@ export class Process {
     ) {
     }
 
-    public extractState(card: Card | LightCard): State {
-        if (!!this.states && !!card.state && this.states[card.state]) {
-            return this.states[card.state];
+    public extractState(state: string): State {
+        if (!!this.states && !!state && this.states[state]) {
+            return this.states[state];
         } else {
             return null;
         }

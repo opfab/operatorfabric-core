@@ -229,19 +229,14 @@ export class LightCardsStoreService {
 
         if (!!card && !!entitiesAcksToAdd) {
             card.entitiesAcks = (!! card.entitiesAcks) ? [...new Set([...card.entitiesAcks , ...entitiesAcksToAdd])] : entitiesAcksToAdd;
-            card.acknowledgedByEntity = this.isLightCardAcknowledgedByEntity(card);
+            card.hasBeenAcknowledgedByUserEntity = this.isLightCardHasBeenAcknowledgedByUserEntity(card);
             this.lightCardsEvents.next(this.lightCards);
         }
     }
 
-    private isLightCardAcknowledgedByEntity(lightCard: LightCard): boolean {
-        let consideredAcknowledgedForUserWhen = ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED; // default value
-
-        this.processesService.queryProcess(lightCard.process, lightCard.processVersion).subscribe( process => {
-            const state = process.extractState(lightCard);
-            if (!! state.consideredAcknowledgedForUserWhen)
-                consideredAcknowledgedForUserWhen = state.consideredAcknowledgedForUserWhen;
-        });
+    private isLightCardHasBeenAcknowledgedByUserEntity(lightCard: LightCard): boolean {
+        const consideredAcknowledgedForUserWhen = this.processesService.getConsideredAcknowledgedForUserWhenForAProcess(
+            lightCard.process, lightCard.processVersion, lightCard.state);
 
         const listEntitiesToAck = this.computeListEntitiesToAck(lightCard);
 
@@ -284,7 +279,7 @@ export class LightCardsStoreService {
         } else {
             const oldCardVersion = this.lightCards.get(card.id);
             card.hasChildCardFromCurrentUserEntity = this.lightCardHasChildFromCurrentUserEntity(oldCardVersion, card);
-            card.acknowledgedByEntity = this.isLightCardAcknowledgedByEntity(card);
+            card.hasBeenAcknowledgedByUserEntity = this.isLightCardHasBeenAcknowledgedByUserEntity(card);
             this.addOrUpdateParentLightCard(card);
         }
     }

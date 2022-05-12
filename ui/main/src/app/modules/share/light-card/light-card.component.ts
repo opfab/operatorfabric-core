@@ -22,8 +22,7 @@ import {AppService, PageType} from '@ofServices/app.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {ProcessesService} from '@ofServices/processes.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
-import {TypeOfStateEnum} from '@ofModel/processes.model';
-import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {ConsideredAcknowledgedForUserWhenEnum, TypeOfStateEnum} from '@ofModel/processes.model';
 
 @Component({
     selector: 'of-light-card',
@@ -45,7 +44,9 @@ export class LightCardComponent implements OnInit, OnDestroy {
     showExpiredIcon = true;
     showExpiredLabel = true;
     expiredLabel = 'feed.lttdFinished';
-    currentUserWithPerimeters: UserWithPerimeters;
+
+    private consideredAcknowledgedForUserWhen: ConsideredAcknowledgedForUserWhenEnum;
+    public isConsideredAcknowledgedForUserWhenEqualUserHasAcknowledgedOrEntityRecipientsNullOrEmpty: boolean;
 
     private ngUnsubscribe: Subject<void> = new Subject<void>();
 
@@ -73,11 +74,18 @@ export class LightCardComponent implements OnInit, OnDestroy {
         this.computeFromEntity();
         this.computeDisplayedDate();
         this.computeLttdParams();
+
+        this.consideredAcknowledgedForUserWhen = this.processesService.getConsideredAcknowledgedForUserWhenForAProcess(
+            this.lightCard.process, this.lightCard.processVersion, this.lightCard.state);
+
+        this.isConsideredAcknowledgedForUserWhenEqualUserHasAcknowledgedOrEntityRecipientsNullOrEmpty =
+            ((this.consideredAcknowledgedForUserWhen === ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED) ||
+             ((!this.lightCard.entityRecipients) || (!this.lightCard.entityRecipients.length)));
     }
 
     computeLttdParams() {
         this.processesService.queryProcess(this.lightCard.process, this.lightCard.processVersion).subscribe( process => {
-            const state = process.extractState(this.lightCard);
+            const state = process.extractState(this.lightCard.state);
             if (state.type === TypeOfStateEnum.FINISHED) {
                 this.showExpiredIcon = false;
                 this.showExpiredLabel = false;

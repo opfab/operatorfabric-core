@@ -8,7 +8,7 @@
  */
 
 import {I18n} from '@ofModel/i18n.model';
-import { TimeSpan } from './card.model';
+import {TimeSpan} from './card.model';
 
 export class LightCard {
     /* istanbul ignore next */
@@ -46,7 +46,7 @@ export class LightCard {
         readonly entitiesAllowedToEdit?: string[],
         readonly publisherType?: PublisherType | string,
         readonly secondsBeforeTimeSpanForReminder?: number,
-        public acknowledgedByEntity: boolean = false
+        public hasBeenAcknowledgedByUserEntity: boolean = false
     ) {
     }
 }

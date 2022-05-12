@@ -7,16 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {OnInit, Component, OnDestroy} from "@angular/core";
-import {ProcessesService} from "@ofServices/processes.service";
+import {OnInit, Component, OnDestroy} from '@angular/core';
+import {ProcessesService} from '@ofServices/processes.service';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {LightCardsStoreService} from "@ofServices/lightcards/lightcards-store.service";
-import {Subject, takeUntil, timer} from "rxjs";
-import {LightCard} from "@ofModel/light-card.model";
-import {Router} from "@angular/router";
-import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
-import {Utilities} from "app/common/utilities";
+import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
+import {Subject, takeUntil, timer} from 'rxjs';
+import {LightCard} from '@ofModel/light-card.model';
+import {Router} from '@angular/router';
+import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
+import {Utilities} from 'app/common/utilities';
 
 
 @Component({
@@ -89,8 +89,8 @@ export class PinnedCardsComponent implements OnInit, OnDestroy {
     private getPinnedCards(cards: LightCard[]) {
         return cards.filter(card => {
             const processDefinition = this.processesService.getProcess(card.process);
-            return processDefinition.extractState(card).automaticPinWhenAcknowledged && card.hasBeenAcknowledged && (!card.endDate || card.endDate > Date.now());
-        }).sort((a,b) => Utilities.compareObj(a.publishDate, b.publishDate));
+            return processDefinition.extractState(card.state).automaticPinWhenAcknowledged && card.hasBeenAcknowledged && (!card.endDate || card.endDate > Date.now());
+        }).sort((a, b) => Utilities.compareObj(a.publishDate, b.publishDate));
     }
 
     private checkPinnedCardsEndDate(): void {

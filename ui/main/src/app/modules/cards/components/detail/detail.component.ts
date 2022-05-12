@@ -517,7 +517,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     private computeLttdParams() {
         this.businessconfigService.queryProcess(this.card.process, this.card.processVersion).subscribe( process => {
-            const state = process.extractState(this.card);
+            const state = process.extractState(this.card.state);
             if (state.type === TypeOfStateEnum.FINISHED) {
                 this.showExpiredIcon = false;
                 this.showExpiredLabel = false;

@@ -64,7 +64,7 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
                                 this.childCards = childCards;
                                 this.cardLoadingInProgress = false;
                                 if (!!businessconfig) {
-                                    this.cardState = businessconfig.extractState(card);
+                                    this.cardState = businessconfig.extractState(card.state);
                                     if (!this.cardState) {
                                         console.log(new Date().toISOString(), `WARNING state ${card.state} does not exist for process ${card.process}`);
                                         this.cardState = new State();

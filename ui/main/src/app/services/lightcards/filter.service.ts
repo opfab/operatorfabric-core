@@ -159,8 +159,8 @@ export class FilterService {
     private initAcknowledgementFilter(): Filter {
         return new Filter(
             (card: LightCard, status) => {
-                return status && (card.hasBeenAcknowledged || card.acknowledgedByEntity) ||
-                    !status && (!card.hasBeenAcknowledged && !card.acknowledgedByEntity);
+                return status && (card.hasBeenAcknowledged || card.hasBeenAcknowledgedByUserEntity) ||
+                    !status && (!card.hasBeenAcknowledged && !card.hasBeenAcknowledgedByUserEntity);
             },
             true,
             false

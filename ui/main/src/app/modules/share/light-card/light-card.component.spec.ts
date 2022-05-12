@@ -66,8 +66,7 @@ describe('LightCardComponent', () => {
                 {provide: Router, useValue: myrout},
                 ProcessesService,
                 {provide: 'TimeEventSource', useValue: null},
-                TimeService, I18nService,
-                {provide: CardService, useValue: cardServiceSpy},
+                TimeService, I18nService
             ]}).compileComponents();
         store = TestBed.inject(Store);
         spyOn(store, 'dispatch').and.callThrough();
