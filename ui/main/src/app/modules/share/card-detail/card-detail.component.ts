@@ -96,7 +96,7 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(businessconfig => {
                     if (!!businessconfig) {
-                        const state = businessconfig.extractState(this.card.state);
+                        const state = businessconfig.extractState(this.card);
                         if (!!state) {
                             // Take the first detail, new card preview only compatible with one detail per card
                             this.templateName = state.templateName;

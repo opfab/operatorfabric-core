@@ -94,8 +94,8 @@ export class UserPermissionsService {
 
 
       let emittingEntityAllowedToRespond = false;
-      if (!!processDefinition.extractState(card.state).response)
-        emittingEntityAllowedToRespond = !!processDefinition.extractState(card.state).response.emittingEntityAllowedToRespond;
+      if (!!processDefinition.extractState(card).response)
+        emittingEntityAllowedToRespond = !!processDefinition.extractState(card).response.emittingEntityAllowedToRespond;
 
       const allowed = this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond)
         .map(entity => entity.id).filter(x => x !== card.publisher || emittingEntityAllowedToRespond);

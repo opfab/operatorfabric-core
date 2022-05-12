@@ -236,7 +236,7 @@ export class LightCardsStoreService {
 
     private isLightCardHasBeenAcknowledgedByUserEntity(lightCard: LightCard): boolean {
         const consideredAcknowledgedForUserWhen = this.processesService.getConsideredAcknowledgedForUserWhenForAProcess(
-            lightCard.process, lightCard.processVersion, lightCard.state);
+            lightCard.process, lightCard.processVersion, lightCard);
 
         const listEntitiesToAck = this.computeListEntitiesToAck(lightCard);
 

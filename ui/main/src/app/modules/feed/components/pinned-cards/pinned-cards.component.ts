@@ -89,7 +89,7 @@ export class PinnedCardsComponent implements OnInit, OnDestroy {
     private getPinnedCards(cards: LightCard[]) {
         return cards.filter(card => {
             const processDefinition = this.processesService.getProcess(card.process);
-            return processDefinition.extractState(card.state).automaticPinWhenAcknowledged && card.hasBeenAcknowledged && (!card.endDate || card.endDate > Date.now());
+            return processDefinition.extractState(card).automaticPinWhenAcknowledged && card.hasBeenAcknowledged && (!card.endDate || card.endDate > Date.now());
         }).sort((a, b) => Utilities.compareObj(a.publishDate, b.publishDate));
     }
 

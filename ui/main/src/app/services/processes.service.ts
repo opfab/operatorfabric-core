@@ -17,6 +17,7 @@ import {ConsideredAcknowledgedForUserWhenEnum, Process, TypeOfStateEnum} from '@
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {Card} from '@ofModel/card.model';
 import {UserService} from '@ofServices/user.service';
+import {LightCard} from "@ofModel/light-card.model";
 
 @Injectable({
     providedIn: 'root'
@@ -328,12 +329,12 @@ export class ProcessesService {
         return statesListPerProcess;
     }
 
-    public getConsideredAcknowledgedForUserWhenForAProcess(processId: string, processVersion: string, stateId: string):
+    public getConsideredAcknowledgedForUserWhenForAProcess(processId: string, processVersion: string, lightCard: LightCard):
         ConsideredAcknowledgedForUserWhenEnum {
         let consideredAcknowledgedForUserWhen = ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED;
 
         this.queryProcess(processId, processVersion).subscribe(process => {
-            const state = process.extractState(stateId);
+            const state = process.extractState(lightCard);
             if (!!state.consideredAcknowledgedForUserWhen)
                 consideredAcknowledgedForUserWhen = state.consideredAcknowledgedForUserWhen;
         });

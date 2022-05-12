@@ -76,7 +76,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
         this.computeLttdParams();
 
         this.consideredAcknowledgedForUserWhen = this.processesService.getConsideredAcknowledgedForUserWhenForAProcess(
-            this.lightCard.process, this.lightCard.processVersion, this.lightCard.state);
+            this.lightCard.process, this.lightCard.processVersion, this.lightCard);
 
         this.isConsideredAcknowledgedForUserWhenEqualUserHasAcknowledgedOrEntityRecipientsNullOrEmpty =
             ((this.consideredAcknowledgedForUserWhen === ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED) ||
@@ -85,7 +85,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     computeLttdParams() {
         this.processesService.queryProcess(this.lightCard.process, this.lightCard.processVersion).subscribe( process => {
-            const state = process.extractState(this.lightCard.state);
+            const state = process.extractState(this.lightCard);
             if (state.type === TypeOfStateEnum.FINISHED) {
                 this.showExpiredIcon = false;
                 this.showExpiredLabel = false;
