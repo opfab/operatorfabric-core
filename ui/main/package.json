@@ -72,7 +72,7 @@
     "jasmine-marbles": "0.9.2",
     "karma": "6.3.19",
     "karma-chrome-launcher": "3.1.1",
-    "karma-jasmine": "5.0.0",
+    "karma-jasmine": "5.0.1",
     "karma-jasmine-html-reporter": "1.7.0",
     "karma-junit-reporter": "2.0.1",
     "karma-mocha-reporter": "2.2.5",
