@@ -168,7 +168,10 @@ export class CardService {
                         
                         case 'RELOAD':
                             this.logger.info(`CardService - RELOAD received`, LogOption.LOCAL_AND_REMOTE);
-                            this.store.dispatch(new UIReloadRequestedAction());
+                            // Automatic reload mechanism not activated  (https://github.com/opfab/operatorfabric-core/issues/2696)
+                            // need more investigation regarding robustness , what happen if reload is made when all back services are not 
+                            // fully started ? 
+                            //this.store.dispatch(new UIReloadRequestedAction());
                             break;
                         case 'INIT':
                             console.log(new Date().toISOString(), `CardService - Card subscription initialized`);
