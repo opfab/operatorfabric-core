@@ -25,6 +25,7 @@ import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {GroupedCardsService} from '@ofServices/grouped-cards.service';
 import {TypeOfStateEnum} from '@ofModel/processes.model';
+import {SoundNotificationService} from '@ofServices/sound-notification.service';
 
 @Component({
     selector: 'of-light-card',
@@ -64,7 +65,8 @@ export class LightCardComponent implements OnInit, OnDestroy {
         private entitiesService: EntitiesService,
         private processesService: ProcessesService,
         private userPreferencesService: UserPreferencesService,
-        private groupedCardsService: GroupedCardsService
+        private groupedCardsService: GroupedCardsService,
+        private soundNotificationService: SoundNotificationService
     ) {
     }
 
@@ -138,6 +140,8 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     public select($event) {
         $event.stopPropagation();
+        // Fix for https://github.com/opfab/operatorfabric-core/issues/2994
+        this.soundNotificationService.clearOutstandingNotifications();
         if (this.open && this.groupedCardsService.isParentGroupCard(this.lightCard)) {
             this.groupedCardsVisible = ! this.groupedCardsVisible;
         } else {
