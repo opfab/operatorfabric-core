@@ -29,11 +29,15 @@ public class RemoteLogRoutesConfig implements UserExtractor {
     }
 
     private HandlerFunction<ServerResponse> logPostRoute() {
-        return request -> extractUserFromJwtToken(request)
-                .flatMap(currentUserWithPerimeters -> {
-                    request.bodyToFlux(String.class).subscribe(logLine -> log.info(currentUserWithPerimeters.getUserData().getLogin() + " - " + logLine));
-                    return ok().contentType(MediaType.APPLICATION_JSON).build();
-                });
+        return request -> request.bodyToFlux(String.class)
+                .collectList()
+                .zipWith(extractUserFromJwtToken(request))
+                .doOnNext(t2 -> t2.getT1().forEach(line -> logMessage( t2.getT2().getUserData().getLogin(), line)))
+                .then(ok().contentType(MediaType.APPLICATION_JSON).build());
+    }
+
+    private void logMessage(String login, String message) {
+        log.info(login + " - " + message);
     }
 
 }
