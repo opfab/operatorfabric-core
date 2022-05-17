@@ -174,19 +174,22 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
                     this.dateFilterToMap(key, element);
                 else {
                     if (element.length) {
-                        const ids = [];
                         if (key === 'state')
                             this.stateFilterToMap(element);
                         else if (key === 'processGroup')
                             this.processGroupFilterToMap(element);
-                        else {
-                            element.forEach(val => ids.push(val.id));
-                            this.filters.set(key, ids);
-                        }
+                        else
+                            this.otherFilterToMap(element, key);
                     }
                 }
             }
         });
+    }
+
+    otherFilterToMap(element: any, key: string) {
+        const ids = [];
+        element.forEach(val => ids.push(val.id));
+        this.filters.set(key, ids);
     }
 
     dateFilterToMap(key: string, element: any) {
@@ -199,9 +202,13 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     }
 
     stateFilterToMap(element: any) {
-        const ids = [];
-        element.forEach(val => ids.push(val.id.substring(val.id.indexOf('.') + 1)));
-        this.filters.set('state', ids);
+        const processStateKeys = [];
+
+        element.forEach(val => {
+            processStateKeys.push(val.id);
+        });
+
+        this.filters.set('processStateKey', processStateKeys);
     }
 
     processGroupFilterToMap(element: any) {
