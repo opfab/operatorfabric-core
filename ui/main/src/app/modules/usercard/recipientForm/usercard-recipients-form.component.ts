@@ -40,10 +40,10 @@ export class UserCardRecipientsFormComponent implements OnInit , OnChanges {
         private entitiesService: EntitiesService,
         private opfabLogger: OpfabLoggerService
     ) {
+        this.useDescriptionFieldForEntityList = this.configService.getConfigValue('usercard.useDescriptionFieldForEntityList', false);
     }
 
     ngOnInit() {
-        this.useDescriptionFieldForEntityList = this.configService.getConfigValue('usercard.useDescriptionFieldForEntityList', false);
         this.recipientForm = new FormGroup({
             recipients: new FormControl([])
         });
@@ -60,7 +60,7 @@ export class UserCardRecipientsFormComponent implements OnInit , OnChanges {
 
     private loadRecipientsOptions() {
         if (!!this.userCardConfiguration.recipientList) {
-            this.opfabLogger.info("User of restricted recipient list option in config.json is deprecated, use method usercardTemplateGateway.setDropdownEntityRecipientList in template ");
+            this.opfabLogger.info("Use of restricted recipient list option in config.json is deprecated, use method usercardTemplateGateway.setDropdownEntityRecipientList in template ");
             this.loadRestrictedRecipientList(this.userCardConfiguration.recipientList);
         } else {
             this.recipientsOptions = [];
