@@ -25,7 +25,7 @@ Feature: User Configuration Management (Fetch)
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then status 200
-    And match response == { userLogin: 'operator1_fr', externalDeviceId: 'CDS_1'}
+    And match response == { userLogin: 'operator1_fr', externalDeviceIds: ['CDS_1']}
 
   Scenario: Attempt to fetch userConfiguration that doesn't exist
 

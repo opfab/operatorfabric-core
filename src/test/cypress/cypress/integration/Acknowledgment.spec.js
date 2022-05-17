@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-describe('Acknowledgment  tests', function () {
+describe('Acknowledgment tests', function () {
 
     before('Set up configuration', function () {
 
@@ -54,7 +54,7 @@ describe('Acknowledgment  tests', function () {
         // Operator1 should see 6 cards in his feed
         cy.get('of-light-card').should('have.length', 6);
 
-        // Click on card messageNoAck and check is is not acknowledgeable
+        // Click on card messageNoAck and check it is not acknowledgeable
         cy.get('#opfab-feed-light-card-cypress-message4').click();
         cy.get('#opfab-card-details-btn-ack').should('not.exist');
 
@@ -80,13 +80,13 @@ describe('Acknowledgment  tests', function () {
         // Card is not anymore in the feed
         cy.get('#opfab-feed-light-card-cypress-message1').should('not.exist');
 
-        // Detail card it not present anymore
+        // Detail card is not present anymore
         cy.get('of-detail').should('not.exist');
 
         // Operator1 should see 5 cards in his feed
         cy.get('of-light-card').should('have.length', 5);
 
-        // Set feed filter to see all card and check message card is present
+        // Set feed filter to see all cards and check message card is present
         cy.get('#opfab-feed-filter-btn-filter').click();
         cy.get('#opfab-feed-filter-ack-all').click();
         cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
@@ -198,7 +198,7 @@ describe('Acknowledgment  tests', function () {
         cy.get('of-light-card').eq(0).click();
         cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Test message for entities acks");
         cy.get('#opfab-card-acknowledged-footer').should('exist');
-        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 14); // 13 entities + 1 for 'Acknowledged :' label
+        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 11); // 10 single entities (no group entities) + 1 for 'Acknowledged :' label
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR East \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
@@ -226,17 +226,9 @@ describe('Acknowledgment  tests', function () {
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(9).should("have.text", "\u00a0 Control Center NL South \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(10).should("have.text", "\u00a0 Dutch Control Centers \u00a0")
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(10).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(11).should("have.text", "\u00a0 French Control Centers \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
-
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(12).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
-
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(13).should("have.text", "\u00a0 Italian Control Centers \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
     });
 
     it('operator4_fr (member of 4 FR entities) acknowledges the previous card created by operator1_fr ', function () {
@@ -249,7 +241,7 @@ describe('Acknowledgment  tests', function () {
         cy.get('of-light-card').eq(0).click();
         cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Test message for entities acks");
         cy.get('#opfab-card-acknowledged-footer').should('exist');
-        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 14); // 13 entities + 1 for 'Acknowledged :' label
+        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 11); // 10 single entities (no group entities) + 1 for 'Acknowledged :' label
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR East \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
@@ -277,16 +269,7 @@ describe('Acknowledgment  tests', function () {
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(9).should("have.text", "\u00a0 Control Center NL South \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(10).should("have.text", "\u00a0 Dutch Control Centers \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
-
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(11).should("have.text", "\u00a0 French Control Centers \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
-
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(12).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
-
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(13).should("have.text", "\u00a0 Italian Control Centers \u00a0")
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(10).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
         // Set feed filter to see all card
@@ -303,7 +286,7 @@ describe('Acknowledgment  tests', function () {
         cy.get('#opfab-card-acknowledged-footer').should('exist');
 
         // We check we have ENTITY1_FR, ENTITY2_FR, ENTITY3_FR and ENTITY4_FR now displayed in green, all other entities in orange
-        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 14); // 13 entities + 1 for 'Acknowledged :' label
+        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 11); // 10 single entities (no group entities) + 1 for 'Acknowledged :' label
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR East \u00a0")
             .and('have.css', 'color', 'rgb(0, 128, 0)');
 
@@ -331,20 +314,11 @@ describe('Acknowledgment  tests', function () {
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(9).should("have.text", "\u00a0 Control Center NL South \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(10).should("have.text", "\u00a0 Dutch Control Centers \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
-
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(11).should("have.text", "\u00a0 French Control Centers \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
-
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(12).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
-
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(13).should("have.text", "\u00a0 Italian Control Centers \u00a0")
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(10).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
         // operator4_fr goes to activity area screen and disconnect from ENTITY1_FR
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-activityarea').click();
 
         // Check every checkbox to let the time for the ui to set to true before we click
@@ -359,12 +333,13 @@ describe('Acknowledgment  tests', function () {
         // We display again the card to check entities acknowledgements footer is not displayed anymore
         cy.get('#opfab-navbar-menu-feed').click(); // we go back to the feed
         cy.waitDefaultTime();
+        cy.get('of-light-card').should('have.length', 6);
         cy.get('of-light-card').eq(5).click();
         cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Test message for entities acks");
         cy.get('#opfab-card-acknowledged-footer').should('not.exist');
 
         // We reconnect operator4_fr to ENTITY1_FR
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-activityarea').click();
         cy.get('.opfab-checkbox').contains('Control Center FR North').click(); // we reconnect
         cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
@@ -381,7 +356,7 @@ describe('Acknowledgment  tests', function () {
         cy.get('of-light-card').eq(4).click();
         cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Test message for entities acks");
         cy.get('#opfab-card-acknowledged-footer').should('exist');
-        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 14); // 13 entities + 1 for 'Acknowledged :' label
+        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 11); // 10 single entities (no group entities) + 1 for 'Acknowledged :' label
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR East \u00a0")
             .and('have.css', 'color', 'rgb(0, 128, 0)');
 
@@ -409,16 +384,7 @@ describe('Acknowledgment  tests', function () {
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(9).should("have.text", "\u00a0 Control Center NL South \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(10).should("have.text", "\u00a0 Dutch Control Centers \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
-
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(11).should("have.text", "\u00a0 French Control Centers \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
-
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(12).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
-            .and('have.css', 'color', 'rgb(255, 102, 0)');
-
-        cy.get('#opfab-card-acknowledged-footer').find('span').eq(13).should("have.text", "\u00a0 Italian Control Centers \u00a0")
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(10).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
     });
 
@@ -441,7 +407,7 @@ describe('Acknowledgment  tests', function () {
         cy.get('#cardUid').then(($cardUidElement) => {
             const cardUid = $cardUidElement.text(); // We need the uid of the card to ack it
 
-            // operator1_fr acknowledges the card and then we check ENTITY1_FR is displayed green and ENTITY2_FR still orange
+            // operator1_fr acknowledges the card, and then we check ENTITY1_FR is displayed green and ENTITY2_FR still orange
             cy.sendAckForCard("operator1_fr", cardUid, '[\\"ENTITY1_FR\\"]');
 
             cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 3); // 2 entities + 1 for 'Acknowledged :' label
@@ -485,7 +451,7 @@ describe('Acknowledgment  tests', function () {
             cy.get('#opfab-card-details-btn-ack').click();
              //The card is pinned
             cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
-            // Detail card it not present anymore 
+            // Detail card is not present anymore
             cy.get('of-detail').should('not.exist');
         });
 
@@ -523,7 +489,7 @@ describe('Acknowledgment  tests', function () {
             cy.get('#opfab-card-details-btn-ack').click();
              //The card is pinned
             cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
-            // Detail card it not present anymore 
+            // Detail card is not present anymore
             cy.get('of-detail').should('not.exist');
         });
 
@@ -570,7 +536,7 @@ describe('Acknowledgment  tests', function () {
 
             //The card is pinned
             cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
-            // Detail card it not present anymore 
+            // Detail card is not present anymore
             cy.get('of-detail').should('not.exist');
         });
 
@@ -582,5 +548,63 @@ describe('Acknowledgment  tests', function () {
 
         //There is no more pinned card after end date is passed
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
+    });
+
+    it('Check when many pinned cards', function () {
+
+        cy.deleteAllCards();
+        // Send 6 card with automaticPinWhenAcknowledged = true
+        cy.sendCard('cypress/ack/pinned.json');
+        cy.sendCard('cypress/ack/pinned.json');
+        cy.sendCard('cypress/ack/pinned.json');
+        cy.sendCard('cypress/ack/pinned.json');
+        cy.sendCard('cypress/ack/pinned.json');
+        cy.sendCard('cypress/ack/pinned.json');
+
+
+        cy.loginOpFab('operator1_fr', 'test');
+
+        cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
+
+        // Click on Ack all cards
+        cy.get('of-light-card').should('have.length', 6);
+        cy.get('#opfab-feed-ack-all-link').click();
+
+        // Confirm
+        cy.get('#opfab-ack-all-btn-confirm').click();
+        //There are 6 pinned cards
+        cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 6);
+
+        cy.sendCard('cypress/ack/pinned.json');
+
+        // Open and ack the new card
+        cy.get('of-light-card').eq(0).click()
+        .find('[id^=opfab-feed-light-card]')
+        .invoke('attr', 'data-urlId')
+        .then((urlId) => {
+            cy.waitDefaultTime();
+            cy.hash().should('eq', '#/feed/cards/' + urlId);
+            //Acknowledge card
+            cy.get('#opfab-card-details-btn-ack').click();
+            //The are still 6 pinned cards visible plus "..." popover
+            cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 6);
+
+            cy.get('#of-pinned-cards-popover').should('exist');
+            cy.get('#of-pinned-cards-popover').trigger('mouseenter');
+            cy.get('.opfab-hidden-pinned-card').should('have.length', 1);
+            
+            // Click on pinned card to open card detail
+            cy.get('.opfab-hidden-pinned-card').eq(0).click();
+            // Detail card is present  
+            cy.get('of-detail').should('exist');
+            // Unack the card 
+            cy.get('#opfab-card-details-btn-ack').click();
+            //There are 6 pinned cards with no popover "..."
+            cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 6);
+            cy.get('#of-pinned-cards-popover').should('not.exist');
+
+        });
+
+
     });
 })

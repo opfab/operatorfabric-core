@@ -33,7 +33,11 @@ docker {
 	if (!project.version.equals("SNAPSHOT"))
 		tag "latest", "latest"
     labels (['project':"${project.group}"])
-	files( "build/libs")
+	    files( "build/libs"
+            , "../../../config/docker/common-docker.yml"
+            , "../../../config/docker/external-app-docker.yml"
+            , '../../main/docker/java-config-docker-entrypoint.sh'
+            ,'../../main/docker/add-certificates.sh')
 	dockerfile file('src/main/docker/Dockerfile')
 	buildArgs(['JAR_FILE'       : "externalApp-${project.version.toUpperCase()}.jar",
                        'http_proxy'     : apk.proxy.uri,
@@ -44,14 +48,20 @@ docker {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation "org.opfab:cards-client-data:${project.version}"
+	implementation boot.starterSecurity
+    implementation spring.securityOauthResource, spring.securityOauthJose
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-	implementation project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
+	implementation project(':tools:generic:utilities')
+	//implementation project(':tools:spring:spring-oauth2-utilities')
+	implementation project(':tools:spring:spring-utilities')
+
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 
 	implementation project(':client:cards-client-data')
 	}
+
 }
 
 test {

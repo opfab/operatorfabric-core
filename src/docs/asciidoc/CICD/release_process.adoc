@@ -45,7 +45,8 @@ explanations if need be.
 
 . Based on the content of this version and the rules listed above, make sure that the version number is appropriate.
 
-. Check if there is a migration guide for this version, if so include a link to it at the top of the release notes.
+. Check if there is a migration guide for this version, if so, check if the corresponding file has been included in
+src/docs/asciidoc/resources/index.adoc and include a link to it at the top of the release notes.
 
 === Creating a release branch and preparing the release
 

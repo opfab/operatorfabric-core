@@ -1,4 +1,4 @@
 {
 	"userLogin": "operator5",
-	"externalDeviceId": "CDS_1"
+	"externalDeviceIds": ["CDS_1"]
 }

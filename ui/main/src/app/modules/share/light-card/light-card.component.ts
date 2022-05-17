@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,20 +8,24 @@
  */
 
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { LightCard } from '@ofModel/light-card.model';
-import { Router } from '@angular/router';
-import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
-import { Store } from '@ngrx/store';
-import { AppState } from '@ofStore/index';
-import { takeUntil } from 'rxjs/operators';
-import { TimeService } from '@ofServices/time.service';
-import { Subject } from 'rxjs';
-import { ConfigService } from '@ofServices/config.service';
-import { AppService, PageType } from '@ofServices/app.service';
-import { EntitiesService } from '@ofServices/entities.service';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {LightCard} from '@ofModel/light-card.model';
+import {Router} from '@angular/router';
+import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {takeUntil} from 'rxjs/operators';
+import {TimeService} from '@ofServices/time.service';
+import {Observable, Subject} from 'rxjs';
+import {ConfigService} from '@ofServices/config.service';
+import {AppService, PageType} from '@ofServices/app.service';
+import {EntitiesService} from '@ofServices/entities.service';
 import {ProcessesService} from '@ofServices/processes.service';
+import {UserPreferencesService} from '@ofServices/user-preference.service';
+import {DisplayContext} from '@ofModel/templateGateway.model';
+import {GroupedCardsService} from '@ofServices/grouped-cards.service';
 import {TypeOfStateEnum} from '@ofModel/processes.model';
+import {SoundNotificationService} from '@ofServices/sound-notification.service';
 
 @Component({
     selector: 'of-light-card',
@@ -31,16 +35,23 @@ import {TypeOfStateEnum} from '@ofModel/processes.model';
 export class LightCardComponent implements OnInit, OnDestroy {
 
     @Input() public open = false;
+    @Input() public groupedCardOpen = false;
+    @Input() public selection: Observable<string>;
     @Input() public lightCard: LightCard;
     @Input() public displayUnreadIcon = true;
+    @Input() displayContext: any = DisplayContext.REALTIME;
+
     currentPath: any;
     protected _i18nPrefix: string;
     cardTitle: string;
     dateToDisplay: string;
     fromEntity = null;
-    showExpiredIcon: boolean = true;
-    showExpiredLabel: boolean = true;
-    expiredLabel: string = 'feed.lttdFinished';
+    showExpiredIcon = true;
+    showExpiredLabel = true;
+    expiredLabel = 'feed.lttdFinished';
+
+    showGroupedCardsIcon = false;
+    groupedCardsVisible = true ;
 
     private ngUnsubscribe: Subject<void> = new Subject<void>();
 
@@ -53,8 +64,11 @@ export class LightCardComponent implements OnInit, OnDestroy {
         private _appService: AppService,
         private entitiesService: EntitiesService,
         private processesService: ProcessesService,
+        private userPreferencesService: UserPreferencesService,
+        private groupedCardsService: GroupedCardsService,
+        private soundNotificationService: SoundNotificationService
     ) {
-     }
+    }
 
     ngOnInit() {
         this._i18nPrefix = `${this.lightCard.process}.${this.lightCard.processVersion}.`;
@@ -70,6 +84,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
         this.computeFromEntity();
         this.computeDisplayedDate();
         this.computeLttdParams();
+        this.computeGroupedCardsIcon();
     }
 
     computeLttdParams() {
@@ -82,13 +97,14 @@ export class LightCardComponent implements OnInit, OnDestroy {
                 this.showExpiredIcon = false;
                 this.expiredLabel = 'feed.responsesClosed';
             }
-        })
+        });
     }
 
-    computeFromEntity()
-    {
-        if (this.lightCard.publisherType === 'ENTITY' )  this.fromEntity = this.entitiesService.getEntityName(this.lightCard.publisher);
-        else this.fromEntity = null;
+    computeFromEntity() {
+        if (this.lightCard.publisherType === 'ENTITY')
+            this.fromEntity = this.entitiesService.getEntityName(this.lightCard.publisher);
+        else
+            this.fromEntity = null;
     }
 
     computeDisplayedDate() {
@@ -110,12 +126,29 @@ export class LightCardComponent implements OnInit, OnDestroy {
         }
     }
 
+    private computeGroupedCardsIcon() {
+        this.showGroupedCardsIcon = this.groupedCardsService.isParentGroupCard(this.lightCard);
+    }
+
+    getGroupedChildCards() {
+        return this.groupedCardsService.getChildCardsByTags(this.lightCard.tags);
+    }
+
     handleDate(timeStamp: number): string {
         return this.time.formatDateTime(timeStamp);
     }
 
-    public select() {
-        this.router.navigate(['/' + this.currentPath, 'cards', this.lightCard.id]);
+    public select($event) {
+        $event.stopPropagation();
+        // Fix for https://github.com/opfab/operatorfabric-core/issues/2994
+        this.soundNotificationService.clearOutstandingNotifications();
+        if (this.open && this.groupedCardsService.isParentGroupCard(this.lightCard)) {
+            this.groupedCardsVisible = ! this.groupedCardsVisible;
+        } else {
+            this.groupedCardsVisible = true;
+        }
+        if (this.displayContext != DisplayContext.PREVIEW)
+            this.router.navigate(['/' + this.currentPath, 'cards', this.lightCard.id]);
     }
 
     get i18nPrefix(): string {
@@ -123,7 +156,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
     }
 
     isArchivePageType(): boolean {
-        return this._appService.pageType == PageType.ARCHIVE;
+        return this._appService.pageType === PageType.ARCHIVE;
     }
 
     ngOnDestroy(): void {

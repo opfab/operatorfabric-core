@@ -20,15 +20,15 @@ code generation
 * link:https://github.com/opfab/operatorfabric-core/tree/master/services[services]: contains the microservices that make up
 OperatorFabric
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/services/cards-consultation[cards-consultation
-(cards-consultation-business-service)]: Card consultation service
+(cards-consultation-service)]: Card consultation service
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/services/cards-publication[cards-publication
-(cards-publication-business-service)]: Card publication service
+(cards-publication-service)]: Card publication service
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/services/external-devices[external-devices
 (external-devices-service)]: External Devices service
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/services/src[src]: contains swagger templates for services
-** link:https://github.com/opfab/operatorfabric-core/tree/master/services/businessconfig[businessconfig (businessconfig-business-service)]:
+** link:https://github.com/opfab/operatorfabric-core/tree/master/services/businessconfig[businessconfig (businessconfig-service)]:
 Businessconfig-party information management service
-** link:https://github.com/opfab/operatorfabric-core/tree/master/services/users[users (users-business-service)]: Users management
+** link:https://github.com/opfab/operatorfabric-core/tree/master/services/users[users (users-service)]: Users management
 service
 * link:https://github.com/opfab/operatorfabric-core/tree/master/web-ui[web-ui]: project based on Nginx server to serve
 the OperatorFabric UI

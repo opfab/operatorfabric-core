@@ -12,7 +12,7 @@ import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {TestBed} from '@angular/core/testing';
 import {AcknowledgmentAllowedEnum, Response, State} from '@ofModel/processes.model';
 import {Map as OfMap} from '@ofModel/map';
-import {getOneRandomCard, getOneRandomProcess} from '@tests/helpers';
+import {BusinessconfigI18nLoaderFactory, getOneRandomCard, getOneRandomProcess} from '@tests/helpers';
 import {Card} from '@ofModel/card.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {User} from '@ofModel/user.model';
@@ -24,6 +24,7 @@ import {ConfigService} from '@ofServices/config.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {EntitiesServiceMock} from '@tests/mocks/entities.service.mock';
 import {LightCardsStoreService} from './lightcards/lightcards-store.service';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 
 
 describe('AcknowledgeService testing ', () => {
@@ -38,14 +39,21 @@ describe('AcknowledgeService testing ', () => {
         statesList = new OfMap();
 
         TestBed.configureTestingModule({
-            providers: [ConfigService,LightCardsStoreService, {provide: EntitiesService, useClass: EntitiesServiceMock}],
+            providers: [ConfigService, LightCardsStoreService, {provide: EntitiesService, useClass: EntitiesServiceMock}],
             imports: [StoreModule.forRoot(appReducer),
-                      HttpClientTestingModule]
+                      HttpClientTestingModule,
+                      TranslateModule.forRoot({
+                          loader: {
+                              provide: TranslateLoader,
+                              useFactory: BusinessconfigI18nLoaderFactory
+                          },
+                          useDefaultLang: false
+                      })]
         });
         acknowledgeService = TestBed.inject(AcknowledgeService);
         entitiesService = TestBed.inject(EntitiesService);
 
-        entitiesService.loadAllEntitiesData().subscribe(); 
+        entitiesService.loadAllEntitiesData().subscribe();
 
         card = getOneRandomCard({process: 'testProcess', processVersion: '1', state: 'testState', entitiesAllowedToRespond: ['ENTITY1']});
         cardForEntityParent = getOneRandomCard({process: 'testProcess', processVersion: '1', state: 'testState', entitiesAllowedToRespond: ['ENTITY_FR']});

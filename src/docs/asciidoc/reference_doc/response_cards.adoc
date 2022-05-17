@@ -37,13 +37,16 @@ The response card is to be received by a third party application for business pr
 will receive the card as an HTTP POST request. The card is in json format (the same format as when we send a card).
 The field data in the json contains the user response.
 
-The url of the third party receiving the response card is to be set in the .yml of the publication service. Here is
-an example with two third parties configured.
+The url of the third party receiving the response card is to be set in the .yml of the publication service. It is also possible to configure wether he user token shall be propagated to the third party or not by setting the "propagateUserToken" boolean property. Here is an example with two third parties configured.
 ....
-externalRecipients-url: "{\
-           third-party1: \"http://thirdparty1/test1\", \
-           third-party2: \"http://thirdparty2:8090/test2\", \
-           }"
+external-recipients:
+  recipients: 
+    - id: "third-party1"
+      url: "http://thirdparty1/test1"
+      propagateUserToken: true
+    - id: "third-party2"
+      url: "http://thirdparty2:8090/test2"
+      propagateUserToken: false
 ....
 
 The name to use for the third-party is the publisherId of the parent card.
@@ -92,8 +95,8 @@ We define here a state name "questionState" with a response field. Now, if we se
 and state "questionState", the user will have the possibility to respond if he has the required privileges.
 
 - The field "state" in the response field is used to define the state to use for the response (the child card).
-- The field "externalRecipients" define the recipients of the response card. These recipients are keys referenced in
-the config file of cards-publication service, in "externalRecipients-url" element. This field is optional.
+- The field "externalRecipients" define the recipients of the response card. These recipients are the ids of the objects referenced in
+the config file of cards-publication service, in "external-recipients" element. This field is optional.
 - The field "emittingEntityAllowedToRespond" in the response field is used to allow the emitting entity to respond to a card. To be able to respond, however, the emitting entity has to be one of the recipients of the card. Default value is false.
 - The field "showDetailCardHeader" permits to display the card header or not. This header contains the list of entities
 that have already responded or not, and a countdown indicating the time remaining to respond, if necessary.

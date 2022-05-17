@@ -36,6 +36,7 @@ import org.opfab.cards.publication.services.CardTranslationService;
 import org.opfab.cards.publication.services.processors.impl.UserCardProcessorImpl;
 import org.opfab.cards.publication.configuration.json.JacksonConfig;
 import org.opfab.cards.publication.configuration.Common;
+import org.opfab.cards.publication.configuration.ExternalRecipients;
 import org.opfab.cards.publication.controllers.CardController;
 
 import org.springframework.context.annotation.Import;
@@ -47,7 +48,8 @@ import org.springframework.context.annotation.ImportResource;
 @Import({LocalMongoConfiguration.class, CardProcessingService.class, CardTranslationService.class, CardNotificationService.class,
     CardRepositoryService.class, UserCardProcessorImpl.class, ExternalAppClientImpl.class , ResponseCardProducer.class
 , CardCommandFactory.class, CardObjectMapper.class, TestCardReceiver.class , TestConsumerConfig.class, JacksonConfig.class
-, Common.class , CardController.class, WebSecurityConfigurationTest.class, I18nProcessesCache.class, I18nProcessesCacheTestApplication.class})
+, Common.class , CardController.class, WebSecurityConfigurationTest.class, I18nProcessesCache.class, I18nProcessesCacheTestApplication.class, 
+ExternalRecipients.class})
 @ImportResource({"classpath:/amqp.xml", "classpath:/security.xml"})
 
 public class UnitTestApplication {

@@ -20,7 +20,7 @@ export customEpochDate2=$4
 
 
 # MacOs doesn't have date, so check for that and use gdate instead.
-if [ $OSTYPE == 'darwin'* ]
+if [[ $OSTYPE == 'darwin'* ]]
 then
   if ! command -v gdate &> /dev/null
   then

@@ -282,7 +282,9 @@ body {
 
 // TIME INPUT IN DATE TIME PICKER 
 .ngb-tp-input-container .form-control {
-  padding: 0px
+  padding: 0px;
+  background-color: var(--opfab-bgcolor-darker);
+  color: var(--opfab-text-color-stronger);
 }
 
 .ngb-tp {
@@ -857,6 +859,8 @@ html, body { height: 100%; }
   }
   .popover-body {
     color: var(--opfab-text-color);
+    margin-top: -10px;
+    margin-bottom: -10px;
   }
   .arrow::after{
     border-right-color: var(--opfab-popover-bgcolor);

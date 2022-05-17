@@ -23,7 +23,7 @@ describe ('Feed notification configuration tests',function () {
         cy.loginOpFab('operator1_fr', 'test');
 
         // We move to feed notification configuration screen
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-menu-icon-notification').click();
 
         cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION RECEPTION CONFIGURATION\n');
@@ -67,7 +67,7 @@ describe ('Feed notification configuration tests',function () {
         cy.get('.opfab-feedconfiguration-processlist').last().find('p').should('have.text', 'Test process for cypress ');
 
         // We check the number of states for each process
-        cy.get('.opfab-feedconfiguration-processlist').last().find('.opfab-feedconfiguration-process').first().find('.row').should('have.length', 9);
+        cy.get('.opfab-feedconfiguration-processlist').last().find('.opfab-feedconfiguration-process').first().find('.row').should('have.length', 12);
 
         // We check the following state is absent because property 'isOnlyAChildState' is set to true
         cy.get('.opfab-feedconfiguration-processlist').last().find('.opfab-feedconfiguration-process').first().find('.row').contains('Dummy response state for tests').should('not.exist');
@@ -77,7 +77,7 @@ describe ('Feed notification configuration tests',function () {
         cy.loginOpFab('itsupervisor1', 'test');
 
         // We move to feed notification configuration screen
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-menu-icon-notification').click();
 
         cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION RECEPTION CONFIGURATION\n');
@@ -119,7 +119,7 @@ describe ('Feed notification configuration tests',function () {
         cy.loginOpFab('admin', 'test');
 
         // We move to feed notification configuration screen
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-menu-icon-notification').click();
 
         cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION RECEPTION CONFIGURATION\n');
@@ -136,7 +136,7 @@ describe ('Feed notification configuration tests',function () {
         cy.reload();
 
         // We move to feed notification configuration screen
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-menu-icon-notification').click();
 
         cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION RECEPTION CONFIGURATION\n');
@@ -159,7 +159,7 @@ describe ('Feed notification configuration tests',function () {
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(2).find('.row').should('have.length', 3);
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(3).find('.row').should('have.length', 7);
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(4).find('.row').should('have.length', 1);
-        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(5).find('.row').should('have.length', 9);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(5).find('.row').should('have.length', 12);
 
         // We check state 'Planned outage date response' from 'Process example' is absent because property 'isOnlyAChildState' is set to true
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(4).find('.row').contains('Planned outage date response', {matchCase: false}).should('not.exist');
@@ -172,7 +172,7 @@ describe ('Feed notification configuration tests',function () {
         cy.loginOpFab('operator1_fr', 'test');
 
         // We move to feed notification configuration screen
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-menu-icon-notification').click();
 
         // First process group (we check all processes are checked)
@@ -230,7 +230,7 @@ describe ('Feed notification configuration tests',function () {
         })
 
         // Unselect some notifications
-        cy.get('#opfab-navbar-drop_user_menu').click(); // Click top right dropdown menu
+        cy.get('#opfab-navbar-drop-user-menu').click(); // Click top right dropdown menu
         cy.get('#opfab-navbar-right-menu-feedconfiguration').click(); // Click notification reception
 
         cardsToTest.forEach((c) => {
@@ -297,7 +297,7 @@ describe ('Feed notification configuration tests',function () {
         cy.loginOpFab('operator1_fr', 'test')
 
         // Monitor all cards again
-        cy.get('#opfab-navbar-drop_user_menu').click(); // Click top right dropdown menu
+        cy.get('#opfab-navbar-drop-user-menu').click(); // Click top right dropdown menu
         cy.get('#opfab-navbar-right-menu-feedconfiguration').click({force:true}); // Click notification reception
 
         cy.get('.opfab-feedconfiguration-processlist').contains("Base Examples").click({force:true}); // Select all

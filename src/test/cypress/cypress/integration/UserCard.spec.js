@@ -670,7 +670,7 @@ describe('User Card ', function () {
       cy.get('of-light-card').should('have.length', 1);
 
       // operator4_fr disconnect from Control Center FR North (ENTITY1_FR)
-      cy.get('#opfab-navbar-drop_user_menu').click();
+      cy.get('#opfab-navbar-drop-user-menu').click();
       cy.get('#opfab-navbar-right-menu-activityarea').click();
       cy.get('.opfab-checkbox').contains('Control Center FR North').click();
       cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); //click confirm settings
@@ -701,7 +701,7 @@ describe('User Card ', function () {
         });
 
       // We reconnect to Control Center FR North (ENTITY1_FR)
-      cy.get('#opfab-navbar-drop_user_menu').click();
+      cy.get('#opfab-navbar-drop-user-menu').click();
       cy.get('#opfab-navbar-right-menu-activityarea').click();
       cy.get('.opfab-checkbox').contains('Control Center FR North').click();
     })
@@ -887,4 +887,31 @@ describe('User Card ', function () {
 
     });
   })
+
+  describe('Set timeSpans from template', function () {
+
+    it('Set timeSpans from template', () => {
+      cy.deleteAllCards();
+      cy.loginOpFab('operator1_fr', 'test');
+      cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+      cy.usercardSelectService('User card examples');
+      cy.usercardSelectProcess('Task');
+      cy.waitDefaultTime();
+      cy.get('#Monday').check({force: true});
+      cy.get('#Tuesday').check({force: true});
+      cy.get('#Wednesday').check({force: true});
+      cy.get('#Thursday').check({force: true});
+      cy.get('#Friday').check({force: true});
+      cy.get('#Saturday').check({force: true});
+      cy.get('#Sunday').check({force: true});
+      cy.get('#time').type('08:00');
+      cy.usercardPrepareAndSendCard();
+      
+      cy.waitDefaultTime();
+      cy.get('#opfab-timeline-link-period-7D').click();
+      cy.get('ellipse').should('have.length', 7);
+
+    })
+  })
+  
 })

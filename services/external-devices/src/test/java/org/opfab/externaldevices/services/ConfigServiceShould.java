@@ -20,7 +20,13 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.opfab.externaldevices.application.UnitTestApplication;
 import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
-import org.opfab.externaldevices.model.*;
+import org.opfab.externaldevices.model.DeviceConfiguration;
+import org.opfab.externaldevices.model.DeviceConfigurationData;
+import org.opfab.externaldevices.model.ResolvedConfiguration;
+import org.opfab.externaldevices.model.SignalMapping;
+import org.opfab.externaldevices.model.SignalMappingData;
+import org.opfab.externaldevices.model.UserConfiguration;
+import org.opfab.externaldevices.model.UserConfigurationData;
 import org.opfab.externaldevices.repositories.DeviceConfigurationRepository;
 import org.opfab.externaldevices.repositories.SignalMappingRepository;
 import org.opfab.externaldevices.repositories.UserConfigurationRepository;
@@ -30,6 +36,8 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -45,7 +53,7 @@ class ConfigServiceShould {
 
     private static final int INITIAL_NUMBER_OF_SIGNAL_MAPPINGS = 2;
     private static final int INITIAL_NUMBER_OF_DEVICE_CONFIGS = 3;
-    private static final int INITIAL_NUMBER_OF_USER_CONFIGS = 4;
+    private static final int INITIAL_NUMBER_OF_USER_CONFIGS = 5;
 
     @Autowired
     private ConfigService configService;
@@ -71,18 +79,18 @@ class ConfigServiceShould {
     @Test
     void insertDeviceConfigurationSuccessfullyIfUnique() {
 
-        DeviceConfigurationData deviceConfiguration4 = DeviceConfigurationData.builder()
-                .id("ESS4")
-                .host("host4")
+        DeviceConfigurationData deviceConfiguration5 = DeviceConfigurationData.builder()
+                .id("ESS5")
+                .host("host5")
                 .port(1234)
                 .signalMappingId("signalMapping4")
                 .build();
-        configService.insertDeviceConfiguration(deviceConfiguration4);
+        configService.insertDeviceConfiguration(deviceConfiguration5);
 
-        Optional<DeviceConfigurationData> retrievedConfiguration = deviceConfigurationRepository.findById("ESS4");
+        Optional<DeviceConfigurationData> retrievedConfiguration = deviceConfigurationRepository.findById("ESS5");
 
         Assertions.assertThat(retrievedConfiguration).isPresent();
-        Assertions.assertThat(retrievedConfiguration.get()).usingRecursiveComparison().isEqualTo(deviceConfiguration4);
+        Assertions.assertThat(retrievedConfiguration.get()).usingRecursiveComparison().isEqualTo(deviceConfiguration5);
 
     }
 
@@ -137,7 +145,7 @@ class ConfigServiceShould {
         Assertions.assertThat(retrievedConfiguration).isEmpty();
 
         // Check that it is no longer listed as device in any user configuration
-        Assertions.assertThat(userConfigurationRepository.findByExternalDeviceId("ESS1")).isEmpty();
+        Assertions.assertThat(userConfigurationRepository.findByExternalDeviceIds("ESS1")).isEmpty();
 
     }
 
@@ -240,19 +248,18 @@ class ConfigServiceShould {
 
     @Test
     void insertUserConfigurationSuccessfullyIfUnique() {
-
-        UserConfigurationData userConfiguration5 = UserConfigurationData.builder()
-                .userLogin("user5")
-                .externalDeviceId("ESS5")
+        UserConfigurationData userConfiguration6 = UserConfigurationData.builder()
+                .userLogin("user6")
+                .externalDeviceIds(Collections.singletonList("ESS6"))
                 .build();
 
-        configService.saveUserConfiguration(userConfiguration5);
+        configService.saveUserConfiguration(userConfiguration6);
 
 
         Assertions.assertThat(userConfigurationRepository.findAll()).hasSize(INITIAL_NUMBER_OF_USER_CONFIGS+1);
-        Optional<UserConfigurationData> retrievedConfiguration = userConfigurationRepository.findById("user5");
+        Optional<UserConfigurationData> retrievedConfiguration = userConfigurationRepository.findById("user6");
         Assertions.assertThat(retrievedConfiguration).isPresent();
-        Assertions.assertThat(retrievedConfiguration.get()).usingRecursiveComparison().isEqualTo(userConfiguration5);
+        Assertions.assertThat(retrievedConfiguration.get()).usingRecursiveComparison().isEqualTo(userConfiguration6);
 
     }
 
@@ -261,7 +268,7 @@ class ConfigServiceShould {
 
         UserConfigurationData userConfiguration_1_update = UserConfigurationData.builder()
                 .userLogin("user1")
-                .externalDeviceId("someOtherDevice")
+                .externalDeviceIds(Collections.singletonList("someOtherDevice"))
                 .build();
 
         configService.saveUserConfiguration(userConfiguration_1_update);
@@ -279,7 +286,7 @@ class ConfigServiceShould {
         List<UserConfiguration> userConfigurationList = configService.getUserConfigurations();
         Assertions.assertThat(userConfigurationList)
             .hasSize(INITIAL_NUMBER_OF_USER_CONFIGS)
-            .containsExactlyInAnyOrder(userConfiguration1,userConfiguration2,userConfiguration3,userConfiguration4);
+            .containsExactlyInAnyOrder(userConfiguration1,userConfiguration2,userConfiguration3,userConfiguration4, userConfiguration5);
     }
 
     @Test
@@ -307,15 +314,15 @@ class ConfigServiceShould {
 
     @ParameterizedTest
     @MethodSource("getResolvedConfigurationOKParams")
-    void getResolvedConfigurationSuccessfully(String userLogin, String opFabSignalKey, ResolvedConfiguration expected) throws ExternalDeviceConfigurationException {
-        Assertions.assertThat(configService.getResolvedConfiguration(opFabSignalKey, userLogin)).isEqualTo(expected);
+    void getResolvedConfigurationSuccessfully(String userLogin, String opFabSignalKey, List<ResolvedConfiguration> expected) throws ExternalDeviceConfigurationException {
+        Assertions.assertThat(configService.getResolvedConfigurationList(opFabSignalKey, userLogin)).isEqualTo(expected);
     }
 
     @ParameterizedTest
     @MethodSource("getResolvedConfigurationErrorParams")
     void throwErrorIfConfigurationCantBeResolved(String userLogin, String opFabSignalKey) {
         assertThrows(ExternalDeviceConfigurationException.class,
-                () -> configService.getResolvedConfiguration(opFabSignalKey, userLogin));
+                () -> configService.getResolvedConfigurationList(opFabSignalKey, userLogin));
     }
 
     @ParameterizedTest
@@ -385,22 +392,27 @@ class ConfigServiceShould {
 
     private static final UserConfigurationData userConfiguration1 = UserConfigurationData.builder()
             .userLogin("user1")
-            .externalDeviceId("ESS1")
+            .externalDeviceIds(Collections.singletonList("ESS1"))
             .build();
 
     private static final UserConfigurationData userConfiguration2 = UserConfigurationData.builder()
             .userLogin("user2")
-            .externalDeviceId("ESS2")
+            .externalDeviceIds(Collections.singletonList("ESS2"))
             .build();
 
     private static final UserConfigurationData userConfiguration3 = UserConfigurationData.builder()
             .userLogin("user3")
-            .externalDeviceId("ESS3")
+            .externalDeviceIds(Arrays.asList("ESS3"))
             .build();
 
     private static final UserConfigurationData userConfiguration4 = UserConfigurationData.builder()
             .userLogin("user4")
-            .externalDeviceId("device_that_doesnt_exist")
+            .externalDeviceIds(Collections.singletonList("device_that_doesnt_exist"))
+            .build();
+
+    private static final UserConfigurationData userConfiguration5 = UserConfigurationData.builder()
+            .userLogin("user5")
+            .externalDeviceIds(Arrays.asList("ESS1", "ESS2"))
             .build();
 
     private void initSignalMappingRepositoryData() {
@@ -422,14 +434,16 @@ class ConfigServiceShould {
         userConfigurationRepository.insert(userConfiguration2);
         userConfigurationRepository.insert(userConfiguration3);
         userConfigurationRepository.insert(userConfiguration4);
+        userConfigurationRepository.insert(userConfiguration5);
 
     }
 
     private static Stream<Arguments> getResolvedConfigurationOKParams() {
         return Stream.of(
-                Arguments.of("user1", "ACTION", new ResolvedConfiguration(deviceConfiguration1,2)),
-                Arguments.of("user1", "INFORMATION", new ResolvedConfiguration(deviceConfiguration1,4)),
-                Arguments.of("user2", "ALARM", new ResolvedConfiguration(deviceConfiguration2,5))
+                Arguments.of("user1", "ACTION", Collections.singletonList(new ResolvedConfiguration(deviceConfiguration1,2))),
+                Arguments.of("user1", "INFORMATION", Collections.singletonList(new ResolvedConfiguration(deviceConfiguration1,4))),
+                Arguments.of("user2", "ALARM", Collections.singletonList(new ResolvedConfiguration(deviceConfiguration2,5))),
+                Arguments.of("user5", "ACTION",Arrays.asList(new ResolvedConfiguration(deviceConfiguration1, 2), new ResolvedConfiguration(deviceConfiguration2, 6)))
         );
     }
 

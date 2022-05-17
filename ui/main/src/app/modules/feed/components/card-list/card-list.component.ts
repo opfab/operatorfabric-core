@@ -24,6 +24,7 @@ import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {UserService} from '@ofServices/user.service';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {EntitiesService} from '@ofServices/entities.service';
+import {GroupedCardsService} from '@ofServices/grouped-cards.service';
 
 
 
@@ -52,7 +53,8 @@ export class CardListComponent implements AfterViewChecked, OnInit {
                 private acknowledgeService: AcknowledgeService,
                 private userService: UserService,
                 private _appService: AppService,
-                private entitiesService: EntitiesService) {
+                private entitiesService: EntitiesService,
+                private groupedCardsService: GroupedCardsService) {
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
     }
 
@@ -74,26 +76,31 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     }
 
     acknowledgeAllVisibleCardsInTheFeed() {
-        this.lightCards.forEach(lightCard => {
+       this.lightCards.forEach(lightCard => {
+            this.acknowledgeVisibleCardInTheFeed(lightCard);
+            this.groupedCardsService.getChildCardsByTags(lightCard.tags).forEach(groupedCard =>
+                this.acknowledgeVisibleCardInTheFeed(groupedCard));
+       });
+    }
 
-            const processDefinition = this.processesService.getProcess(lightCard.process);
+    private acknowledgeVisibleCardInTheFeed(lightCard: LightCard): void {
+        const processDefinition = this.processesService.getProcess(lightCard.process);
 
-            if (! lightCard.hasBeenAcknowledged && this.isCardPublishedBeforeAckDemand(lightCard)
-                && this.acknowledgeService.isAcknowledgmentAllowed(this.currentUserWithPerimeters, lightCard, processDefinition)) {
-                try {
-                    const entitiesAcks = [];
-                    const entities = this.entitiesService.getEntitiesFromIds(this.currentUserWithPerimeters.userData.entities);
-                    entities.forEach(entity => {
-                        if (entity.entityAllowedToSendCard) // this avoids to display entities used only for grouping
-                            entitiesAcks.push(entity.id);
-                    });
-                    this.acknowledgeService.acknowledgeCard(lightCard, entitiesAcks);
-                } catch (err) {
-                    console.error(err);
-                    this.displayMessage('response.error.ack', null, MessageLevel.ERROR);
-                }
+        if (! lightCard.hasBeenAcknowledged && this.isCardPublishedBeforeAckDemand(lightCard)
+            && this.acknowledgeService.isAcknowledgmentAllowed(this.currentUserWithPerimeters, lightCard, processDefinition)) {
+            try {
+                const entitiesAcks = [];
+                const entities = this.entitiesService.getEntitiesFromIds(this.currentUserWithPerimeters.userData.entities);
+                entities.forEach(entity => {
+                    if (entity.entityAllowedToSendCard) // this avoids to display entities used only for grouping
+                        entitiesAcks.push(entity.id);
+                });
+                this.acknowledgeService.acknowledgeCard(lightCard, entitiesAcks);
+            } catch (err) {
+                console.error(err);
+                this.displayMessage('response.error.ack', null, MessageLevel.ERROR);
             }
-        });
+        }
     }
 
     isCardPublishedBeforeAckDemand(lightCard: LightCard): boolean {
@@ -117,5 +124,9 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     declineAckAllCards(): void {
         this.modalRef.dismiss();
+    }
+
+    isCardInGroup(selected: string, id: string) {
+        return this.groupedCardsService.isCardInGroup(selected, id);
     }
 }

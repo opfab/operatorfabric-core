@@ -61,7 +61,8 @@
         "M",
         "Y"
       ]
-    }
+    },
+    "enableGroupedCards": false
   },
   "i18n": {
     "supported": {

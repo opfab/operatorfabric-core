@@ -10,11 +10,14 @@
 
 package org.opfab.users.model;
 
+import java.util.*;
+import java.util.function.Function;
+
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.*;
+import  org.opfab.utilities.ObjectUtils;
 
 @Document(collection = "user_settings")
 @Data
@@ -88,29 +91,23 @@ public class UserSettingsData implements UserSettings {
     public UserSettingsData patch(UserSettings other) {
         UserSettingsData result = new UserSettingsData();
         result.login = this.login;
-        result.description = other.getDescription() != null ? other.getDescription() : this.getDescription();
-        result.locale = other.getLocale() != null ? other.getLocale() : this.getLocale();
-        result.playSoundForAlarm = other.getPlaySoundForAlarm() != null ? other.getPlaySoundForAlarm() : this.getPlaySoundForAlarm();
-        result.playSoundForAction = other.getPlaySoundForAction() != null ? other.getPlaySoundForAction() : this.getPlaySoundForAction();
-        result.playSoundForCompliant = other.getPlaySoundForCompliant() != null ? other.getPlaySoundForCompliant() : this.getPlaySoundForCompliant();
-        result.playSoundForInformation = other.getPlaySoundForInformation() != null ? other.getPlaySoundForInformation() : this.getPlaySoundForInformation();
-        result.playSoundOnExternalDevice = other.getPlaySoundOnExternalDevice() != null ? other.getPlaySoundOnExternalDevice() : this.getPlaySoundOnExternalDevice();
-        result.replayEnabled = other.getReplayEnabled() != null ? other.getReplayEnabled() : this.getReplayEnabled();
-        result.replayInterval = other.getReplayInterval() != null ? other.getReplayInterval() : this.getReplayInterval();
-        result.remoteLoggingEnabled = other.getRemoteLoggingEnabled() != null ? other.getRemoteLoggingEnabled() : this.getRemoteLoggingEnabled();
+        result.description = ObjectUtils.getNotNullOrDefault(other.getDescription(), this.getDescription());
+        result.locale = ObjectUtils.getNotNullOrDefault( other.getLocale(), this.getLocale());
 
-        result.processesStatesNotNotified = null;
-        if (other.getProcessesStatesNotNotified() != null)
-            result.processesStatesNotNotified = new HashMap<>(other.getProcessesStatesNotNotified());
-        else if (this.getProcessesStatesNotNotified() != null)
-            result.processesStatesNotNotified = new HashMap<>(this.getProcessesStatesNotNotified());
+        result.playSoundForAlarm = ObjectUtils.getNotNullOrDefault( other.getPlaySoundForAlarm(), this.getPlaySoundForAlarm());
+        result.playSoundForAction = ObjectUtils.getNotNullOrDefault( other.getPlaySoundForAction(), this.getPlaySoundForAction());
+        result.playSoundForCompliant = ObjectUtils.getNotNullOrDefault( other.getPlaySoundForCompliant(), this.getPlaySoundForCompliant());
+        result.playSoundForInformation = ObjectUtils.getNotNullOrDefault( other.getPlaySoundForInformation(), this.getPlaySoundForInformation());
 
-        result.entitiesDisconnected = null;
-        if (other.getEntitiesDisconnected() != null)
-            result.entitiesDisconnected = new ArrayList<>(other.getEntitiesDisconnected());
-        else if (this.getEntitiesDisconnected() != null)
-            result.entitiesDisconnected = new ArrayList<>(this.getEntitiesDisconnected());
+        result.playSoundOnExternalDevice = ObjectUtils.getNotNullOrDefault( other.getPlaySoundOnExternalDevice(), this.getPlaySoundOnExternalDevice());
+        result.replayEnabled = ObjectUtils.getNotNullOrDefault( other.getReplayEnabled(), this.getReplayEnabled());
+
+        result.replayInterval = ObjectUtils.getNotNullOrDefault( other.getReplayInterval(), this.getReplayInterval());
+        result.remoteLoggingEnabled = ObjectUtils.getNotNullOrDefault( other.getRemoteLoggingEnabled(), this.getRemoteLoggingEnabled());
+        result.processesStatesNotNotified = ObjectUtils.getNotNullOrDefault( other.getProcessesStatesNotNotified(), this.getProcessesStatesNotNotified(), HashMap::new);
+        result.entitiesDisconnected = ObjectUtils.getNotNullOrDefault( other.getEntitiesDisconnected(), this.getEntitiesDisconnected(), ArrayList::new);
 
         return result;
     }
+
 }

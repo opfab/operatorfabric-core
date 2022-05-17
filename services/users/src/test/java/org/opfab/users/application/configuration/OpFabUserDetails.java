@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * This class implements the OperatorFabric custom {@link User} and implements Spring Security's {@link UserDetails} to serve as a mock in tests (see {@link WithMockOpFabUser})
  * The behaviour is similar to the OpFabUserDetails class defined in the tools/spring/spring-test-utilities module used by the other services, which extends the User class from the client-data module.
- * This clashed with the User interface already present in the users-business-service module (same qualified name), so a separate class had to be created for the Users service, this time implementing the User interface.
+ * This clashed with the User interface already present in the users-service module (same qualified name), so a separate class had to be created for the Users service, this time implementing the User interface.
  *
  *
  */
@@ -40,7 +40,7 @@ public class OpFabUserDetails implements UserDetails, User {
     /**
      * Creates Authority list from user's groups (ROLE_[group name])
      * Similar to the method of the same name defined in OAuth2JwtProcessingUtilities,
-     * but using the User interface from the users-business-service module rather than the User class from client-data.
+     * but using the User interface from the users-service module rather than the User class from client-data.
      * @param user user model data
      * @return list of authority
      */

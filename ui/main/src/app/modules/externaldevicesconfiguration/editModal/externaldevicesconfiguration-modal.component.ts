@@ -14,6 +14,7 @@ import {User} from '@ofModel/user.model';
 import {UserService} from '@ofServices/user.service';
 import {ExternalDevicesService} from '@ofServices/external-devices.service';
 import {Device, UserConfiguration} from '@ofModel/external-devices.model';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'of-externaldevices-modal',
@@ -24,7 +25,7 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
 
   userdeviceForm = new FormGroup({
     userLogin: new FormControl('', [Validators.required]),
-    externalDeviceId: new FormControl('', [Validators.required])
+    externalDeviceIds: new FormControl([], [Validators.required])
   });
 
   @Input() row: any;
@@ -33,24 +34,36 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
 
   users: User[];
   usersDropdownList = [];
-  devices = [];
   devicesDropdownList = [];
+  selectedDevices = [];
+  devicesDropdownSettings = {};
 
   constructor(
     private activeModal: NgbActiveModal,
     private externalDevicesService: ExternalDevicesService,
     private userService: UserService,
+    private translate: TranslateService
   ) {
   }
 
   ngOnInit() {
     if (this.row) { // If the modal is used for edition, initialize the modal with current data from this row
       this.userdeviceForm.patchValue(this.row, { onlySelf: true });
+      this.selectedDevices = this.row.externalDeviceIds;
     }
 
     this.userService.queryAllUsers().subscribe(allUsers => this.setUsersList(allUsers));
-
     this.externalDevicesService.queryAllDevices().subscribe(allDevices => this.setDevicesList(allDevices));
+
+    this.translate.get('externalDevicesConfiguration.input.selectDeviceText')
+    .subscribe(translation => {
+        this.devicesDropdownSettings = {
+          text: translation,
+          badgeShowLimit: 6,
+          enableSearchFilter: true
+      };
+    });
+
   }
 
   setUsersList(allUsers: User[]) {
@@ -64,8 +77,7 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
   }
 
   setDevicesList(allDevices: Device[]) {
-    this.devices = allDevices;
-    this.devices.forEach(dev => {
+    allDevices.forEach(dev => {
       this.devicesDropdownList.push(dev.id)
     })
   }
@@ -84,7 +96,7 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
   formToUserConfig() {
     return {
       userLogin: this.userLogin.value as string,
-      externalDeviceId: this.externalDeviceId.value as string
+      externalDeviceIds: this.externalDeviceIds.value.map(entity => entity.id)
     }
   }
 
@@ -92,8 +104,8 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
     return this.userdeviceForm.get('userLogin');
   }
 
-  get externalDeviceId() {
-    return this.userdeviceForm.get('externalDeviceId');
+  get externalDeviceIds() {
+    return this.userdeviceForm.get('externalDeviceIds');
   }
 
   dismissModal(reason: string): void {

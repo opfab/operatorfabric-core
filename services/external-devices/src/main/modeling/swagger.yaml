@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 3.6.0.RELEASE
+  version: 3.7.0.RELEASE
   title: External Devices Management
   termsOfService: ''
   contact:
@@ -107,13 +107,15 @@ definitions:
     properties:
       userLogin:
         type: string
-      externalDeviceId:
-        type: string
+      externalDeviceIds:
+        type: array
+        items:
+          type: string
     required:
       - userLogin
     example:
       userLogin: operator1_fr
-      externalDeviceId: CDS_1
+      externalDeviceIds: [CDS_1, CDS_2]
 
 paths:
   '/notifications':

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UserService} from '@ofServices/user.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
@@ -17,6 +17,7 @@ import {SettingsService} from '@ofServices/settings.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {CardService} from '@ofServices/card.service';
 import {Utilities} from '../../common/utilities';
+import {GroupsService} from '@ofServices/groups.service';
 
 
 @Component({
@@ -25,7 +26,7 @@ import {Utilities} from '../../common/utilities';
     styleUrls: ['./activityarea.component.scss']
 })
 
-export class ActivityareaComponent implements OnInit {
+export class ActivityareaComponent implements OnInit, OnDestroy {
     activityAreaForm: FormGroup;
     currentUserWithPerimeters: UserWithPerimeters;
     userEntities: {entityId: string, entityName: string, isDisconnected: boolean}[] = [];
@@ -33,11 +34,16 @@ export class ActivityareaComponent implements OnInit {
     messageAfterSavingSettings: string;
     displaySendResultError = false;
 
+    connectedUsersPerEntityAndGroup: Map<string, Set<string>> = new Map<string, Set<string>>(); // We use a Set because we don't want duplicates
+    userRealtimeGroupsIds: string[] = [];
+    interval;
+
     modalRef: NgbModalRef;
 
     constructor(private formBuilder: FormBuilder,
                 private userService: UserService,
                 private entitiesService: EntitiesService,
+                private groupsService: GroupsService,
                 private modalService: NgbModal,
                 private settingsService: SettingsService,
                 private cardService: CardService) {}
@@ -73,7 +79,65 @@ export class ActivityareaComponent implements OnInit {
             });
             this.userEntities.sort((a, b) => Utilities.compareObj(a.entityName, b.entityName));
             this.initForm();
+
+            if (!! this.currentUserWithPerimeters.userData.groups)
+                this.userRealtimeGroupsIds = this.currentUserWithPerimeters.userData.groups.filter(groupId =>
+                    this.groupsService.isRealtimeGroup(groupId));
+
+            this.refresh();
+            this.interval = setInterval(() => {
+                this.refresh();
+            }, 2000);
         });
+    }
+
+    refresh() {
+        this.userService.loadConnectedUsers().subscribe(connectedUsers => {
+            this.connectedUsersPerEntityAndGroup.clear();
+
+            connectedUsers.sort((obj1, obj2) => Utilities.compareObj(obj1.login, obj2.login));
+
+            connectedUsers.forEach(connectedUser => {
+                if (connectedUser.login !== this.currentUserWithPerimeters.userData.login) {
+                    connectedUser.entitiesConnected.forEach(entityConnectedId => {
+                        if (this.userEntities.map(userEntity => userEntity.entityId).includes(entityConnectedId)) {
+                            connectedUser.groups.forEach(groupId => {
+
+                                if (this.groupsService.isRealtimeGroup(groupId) && (this.currentUserWithPerimeters.userData.groups.includes(groupId)))
+                                    this.addUserToConnectedUsersPerEntityAndGroup(connectedUser.login, entityConnectedId, groupId);
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    private addUserToConnectedUsersPerEntityAndGroup(login: string, entityId: string, groupId: string) {
+        let usersConnectedPerEntityAndGroup = this.connectedUsersPerEntityAndGroup.get(entityId + '.' + groupId);
+
+        if (!usersConnectedPerEntityAndGroup)
+            usersConnectedPerEntityAndGroup = new Set();
+
+        usersConnectedPerEntityAndGroup.add(login);
+        this.connectedUsersPerEntityAndGroup.set(entityId + '.' + groupId, usersConnectedPerEntityAndGroup);
+    }
+
+    getNumberOfConnectedUsersInEntityAndGroup(entityAndGroup: string): number {
+        const connectedUsers = this.connectedUsersPerEntityAndGroup.get(entityAndGroup);
+        if (!!connectedUsers)
+            return connectedUsers.size;
+        return 0;
+    }
+
+    labelForConnectedUsers(entityAndGroup: string): string {
+        let label = '';
+        const connectedUsers = this.connectedUsersPerEntityAndGroup.get(entityAndGroup);
+
+        if (!! connectedUsers)
+            label = (connectedUsers.size > 1) ? connectedUsers.values().next().value + ', ...' : connectedUsers.values().next().value;
+
+        return label;
     }
 
     confirmSaveSettings() {
@@ -126,5 +190,9 @@ export class ActivityareaComponent implements OnInit {
 
     openConfirmSaveSettingsModal(content) {
         this.modalRef = this.modalService.open(content, {centered: true, backdrop: 'static'});
+    }
+
+    ngOnDestroy() {
+        clearInterval(this.interval);
     }
 }

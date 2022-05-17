@@ -24,7 +24,7 @@ import {Subject} from 'rxjs';
 import {UserService} from '@ofServices/user.service';
 import {User} from '@ofModel/user.model';
 import {EntitiesService} from '@ofServices/entities.service';
-import {AppService, PageType} from "@ofServices/app.service";
+import {AppService, PageType} from '@ofServices/app.service';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
 
 declare const templateGateway: any;

@@ -34,7 +34,7 @@ import {UserCardRecipientsFormComponent} from './recipientForm/usercard-recipien
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {Utilities} from '../../common/utilities';
 import {UsercardSelectCardEmitterFormComponent} from './selectCardEmitterForm/usercard-select-card-emitter-form.component';
-import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 
 declare const templateGateway: any;
 declare const usercardTemplateGateway: any;
@@ -223,7 +223,6 @@ export class UserCardComponent implements OnInit {
     public stateChanged(event: any) {
         this.selectedStateId = event.state;
         this.selectedProcessId = event.selectedProcessId;
-
         usercardTemplateGateway.currentState = event.state;
         usercardTemplateGateway.currentProcess = event.selectedProcessId;
         usercardTemplateGateway.setInitialStartDate(null);
@@ -515,13 +514,19 @@ export class UserCardComponent implements OnInit {
 
     private getTimeSpans(specificInformation, startDate, endDate): TimeSpan[] {
         let timeSpans = [];
-        if (!!specificInformation.viewCardInAgenda) {
-            if (!!specificInformation.recurrence) timeSpans = [new TimeSpan(startDate, endDate, specificInformation.recurrence)];
-            else timeSpans = [new TimeSpan(startDate, endDate)];
+
+        if (!!specificInformation.recurrence) 
+            this.opfabLogger.warn("Using deprecated field 'specificInformation.recurrence'. Use 'specificInformation.timeSpan' field instead to configure timespans", LogOption.LOCAL);
+
+        if (!!specificInformation.timeSpans) {
+            specificInformation.timeSpans.forEach( ts => {
+                timeSpans.push(new TimeSpan(ts.startDate, ts.endDate, ts.recurrence));
+            });
+        } else if (!!specificInformation.viewCardInAgenda) {
+            timeSpans = !!specificInformation.recurrence? [new TimeSpan(startDate, endDate, specificInformation.recurrence)] : [new TimeSpan(startDate, endDate)];
         }
         return timeSpans;
     }
-
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
         this.store.dispatch(new AlertMessage({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}}));

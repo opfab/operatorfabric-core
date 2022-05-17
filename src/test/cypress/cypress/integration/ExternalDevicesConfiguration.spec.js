@@ -9,13 +9,24 @@
 
 /** Test for the OpFab external devices configuration page */
 
+
 describe ('ExternalDevicesconfigurationPage',()=>{
+
+    function clickOnNthDeviceInDropdown(index) {
+        cy.get('#opfab-devicesDropdownList').click();
+        cy.get('#opfab-devicesDropdownList').find('li').eq(index).click();
+        cy.get('#opfab-devicesDropdownList').click();
+    }
+
+    before('Set up configuration', function () {
+        cy.loadTestConf();
+    });    
 
     it('List, add, edit, delete user device configuration', ()=> {
         cy.loginOpFab('admin', 'test');
 
         //click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
 
          //click on "External devices configuration"
         cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
@@ -33,7 +44,7 @@ describe ('ExternalDevicesconfigurationPage',()=>{
 
         cy.get('#opfab-admin-edit-btn-add').should('be.disabled');
 
-        cy.get('#opfab-devicesDropdownList').find('select').select('CDS_1');
+        clickOnNthDeviceInDropdown(0);
 
         cy.get('#opfab-admin-edit-btn-add').should('not.be.disabled');
 
@@ -46,19 +57,26 @@ describe ('ExternalDevicesconfigurationPage',()=>{
 
         cy.get('of-externaldevices-modal').should('exist'); 
 
-        cy.get('#opfab-devicesDropdownList').find('select').select('CDS_2');
+        // Remove external sound devices and see if save button is disabled
+        clickOnNthDeviceInDropdown(0);
+        cy.get('#opfab-admin-user-btn-save').should('be.disabled');
 
-        cy.get('#opfab-admin-user-btn-save').click();
+        // Add two external sound devices
+        clickOnNthDeviceInDropdown(0);
+        clickOnNthDeviceInDropdown(1);
+
+        // Wait for the dropdown to disappear before clicking save button
+        cy.get('#opfab-admin-user-btn-save').should("be.visible").click();
 
         // Workaround to let ag-grid update the value in dom, otherwise it fails even if the right value is shown on screen
         cy.reload();
 
         //click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
 
          //click on "External devices configuration"
         cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
-        cy.agGridCellShould('#opfab-externaldevices-table-grid', 4, 1, 'have.text', 'CDS_2')
+        cy.agGridCellShould('#opfab-externaldevices-table-grid', 4, 1, 'have.text', 'CDS_1, CDS_2')
 
         // Delete previously created row
         cy.clickAgGridCell('#opfab-externaldevices-table-grid', 4, 3, 'of-action-cell-renderer');
@@ -73,7 +91,7 @@ describe ('ExternalDevicesconfigurationPage',()=>{
         cy.loginOpFab('admin', 'test');
 
         //click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
 
          //click on "External devices configuration"
         cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
@@ -88,9 +106,10 @@ describe ('ExternalDevicesconfigurationPage',()=>{
 
             cy.get('#opfab-usersDropdownList').find('select').select(1);
     
-            cy.get('#opfab-devicesDropdownList').find('select').select('CDS_1');
-        
-            cy.get('#opfab-admin-edit-btn-add').click();  
+            clickOnNthDeviceInDropdown(0);
+
+        // Wait for the dropdown to disappear before clicking add button
+            cy.get('#opfab-admin-edit-btn-add').should("be.visible").click();  
         }
 
         //First page is 10 rows
@@ -115,7 +134,7 @@ describe ('ExternalDevicesconfigurationPage',()=>{
         cy.loginOpFab('admin', 'test');
 
         //click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
 
          //click on "External devices configuration"
         cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();

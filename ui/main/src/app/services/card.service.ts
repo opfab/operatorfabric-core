@@ -13,7 +13,7 @@ import {Observable, Subject} from 'rxjs';
 import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
 import {EventSourcePolyfill} from 'ng-event-source';
 import {AuthenticationService} from './authentication/authentication.service';
-import {Card, CardData, CardForPublishing} from '@ofModel/card.model';
+import {Card, CardData, CardForPublishing, fromCardToLightCard} from '@ofModel/card.model';
 import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {GuidService} from '@ofServices/guid.service';
@@ -21,8 +21,8 @@ import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
-import {CardSubscriptionClosed, CardSubscriptionOpen} from '@ofActions/cards-subscription.actions';
-import {catchError, takeUntil} from 'rxjs/operators';
+import {CardSubscriptionClosedAction, CardSubscriptionOpenAction, UIReloadRequestedAction} from '@ofActions/cards-subscription.actions';
+import {catchError, map, takeUntil} from 'rxjs/operators';
 import {RemoveLightCard} from '@ofActions/light-card.actions';
 import {BusinessConfigChangeAction} from '@ofStore/actions/processes.actions';
 import {UserConfigChangeAction} from '@ofStore/actions/user.actions';
@@ -31,6 +31,7 @@ import {LoadCard} from '@ofStore/actions/card.actions';
 import {I18n} from '@ofModel/i18n.model';
 import {FilterService} from '@ofServices/lightcards/filter.service';
 import {LogOption, OpfabLoggerService} from './logs/opfab-logger.service';
+import packageInfo from '../../../package.json';
 
 
 @Injectable({
@@ -58,17 +59,17 @@ export class CardService {
     private selectedCardId: string = null;
 
     private receivedAcksSubject = new Subject<{cardUid: string, entitiesAcks: string[]}>();
-    private receivedDisconnectedSubject = new Subject<boolean>()
+    private receivedDisconnectedSubject = new Subject<boolean>();
 
     constructor(private httpClient: HttpClient,
-        private guidService: GuidService,
-        private store: Store<AppState>,
-        private authService: AuthenticationService,
-        private lightCardsStoreService: LightCardsStoreService,
-        private filterService: FilterService,
-        private logger: OpfabLoggerService) {
+                private guidService: GuidService,
+                private store: Store<AppState>,
+                private authService: AuthenticationService,
+                private lightCardsStoreService: LightCardsStoreService,
+                private filterService: FilterService,
+                private logger: OpfabLoggerService) {
         const clientId = this.guidService.getCurrentGuidString();
-        this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}`;
+        this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}&version=${packageInfo.opfabVersion}`;
         this.cardsUrl = `${environment.urls.cards}/cards`;
         this.archivesUrl = `${environment.urls.cards}/archives`;
         this.cardsPubUrl = `${environment.urls.cardspub}/cards`;
@@ -78,7 +79,11 @@ export class CardService {
     }
 
     loadCard(id: string): Observable<CardData> {
-        return this.httpClient.get<CardData>(`${this.cardsUrl}/${id}`);
+        return this.httpClient.get<CardData>(`${this.cardsUrl}/${id}`).pipe(map(cardData => {
+            cardData.card.hasBeenAcknowledged =
+                this.lightCardsStoreService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(fromCardToLightCard(cardData.card));
+            return cardData;
+        }));
     }
 
     public setSelectedCard(cardId) {
@@ -108,7 +113,9 @@ export class CardService {
                             if (operation.cardId === this.selectedCardId) this.store.dispatch(new RemoveLightCard({card: operation.cardId}));
                             break;
                         case CardOperationType.ACK:
-                            this.logger.info('CardService - Receive ack on card uid=' + operation.cardUid, LogOption.LOCAL_AND_REMOTE);
+                            this.logger.info('CardService - Receive ack on card uid=' + operation.cardUid +
+                                ', id=' + operation.cardId, LogOption.LOCAL_AND_REMOTE);
+                            this.lightCardsStoreService.addEntitiesAcksForLightCard(operation.cardId, operation.entitiesAcks);
                             this.receivedAcksSubject.next({cardUid: operation.cardUid, entitiesAcks: operation.entitiesAcks});
                             break;
                         default:
@@ -158,6 +165,14 @@ export class CardService {
                         return observer.error(message);
                     }
                     switch (message.data) {
+                        
+                        case 'RELOAD':
+                            this.logger.info(`CardService - RELOAD received`, LogOption.LOCAL_AND_REMOTE);
+                            // Automatic reload mechanism not activated  (https://github.com/opfab/operatorfabric-core/issues/2696)
+                            // need more investigation regarding robustness , what happen if reload is made when all back services are not 
+                            // fully started ? 
+                            //this.store.dispatch(new UIReloadRequestedAction());
+                            break;
                         case 'INIT':
                             console.log(new Date().toISOString(), `CardService - Card subscription initialized`);
                             this.initSubscription.next();
@@ -195,11 +210,11 @@ export class CardService {
                     }
                 };
                 eventSource.onerror = error => {
-                    this.store.dispatch(new CardSubscriptionClosed());
+                    this.store.dispatch(new CardSubscriptionClosedAction());
                     console.error(new Date().toISOString(), 'CardService - Error event in card subscription:', error);
                 };
                 eventSource.onopen = open => {
-                    this.store.dispatch(new CardSubscriptionOpen());
+                    this.store.dispatch(new CardSubscriptionOpenAction());
                     console.log(new Date().toISOString(), `CardService- Open card subscription`);
                 };
 

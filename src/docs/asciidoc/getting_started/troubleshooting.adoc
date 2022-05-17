@@ -97,6 +97,4 @@ the bundle.
 There are several possibilities:
 
 - the path of the data used in the template is incorrect;
-- number of pair of `{` and `}` has to follow those rules: 
-	** with no helper the good number is only 2 pairs;
-	** with OperatorFabric helpers it's 3 pairs of them.
+- number of pair of `{` and `}` must be 2 (example : `{{card.data.myValue}}`)

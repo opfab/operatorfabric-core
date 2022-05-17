@@ -52,21 +52,27 @@ operatorfabric.users.default:
     - id: RTE
       name: RTE France
       description: RTE TSO Group
+      realtime: false
     - id: Dispatcher
       name: Dispatcher
       description: Dispatcher Group
+      realtime: true
     - id: Planner
       name: Planner
       description: Planner Group
+      realtime: true
     - id: Supervisor
       name: Supervisor
       description: Supervisor Group
+      realtime: true
     - id: Manager
       name: Manager
       description: Manager Group
+      realtime: false
     - id: ReadOnly
       name: ReadOnly
       description: ReadOnly Group
+      realtime: false
   entities:
    - id: ENTITY1_FR
      name: Control Center FR North

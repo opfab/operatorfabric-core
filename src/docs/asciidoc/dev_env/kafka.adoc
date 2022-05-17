@@ -170,14 +170,18 @@ OperatorFabric
 ifdef::single-page-doc[<<response_cards, response cards>>]
 ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#response_cards, response cards>>]
 can be sent by REST of put on a Kafka topic. The Kafka response card configuration follows the
-convention to configure a REST endpoint. Instead of setting the 'http://host/api' URL, you set it to 'kafka:response-topic' in the `externalRecipients-url:`
+convention to configure a REST endpoint. Instead of setting the 'http://host/api' URL, you set it to 'kafka:response-topic' in the `external-recipients:`
 section from the cards-publication.yml file:
 [source, yaml]
 ----
-externalRecipients-url: "{\
-           processAction: \"http://localhost:8090/test\", \
-           mykafka: \"kafka:topicname\"
-           }"
+external-recipients:
+  recipents:
+    - id: "processAction"
+      url: "http://localhost:8090/test"
+      propagateUserToken: false
+    - id: "mykafka"
+      url: "kafka:topicname"
+      propagateUserToken: false
 ----
 
 Note that `topicname` is a placeholder for now. All response cards are returned via the same Kafka response topic, as specified in the `opfab.kafka.topics.response-card` field.

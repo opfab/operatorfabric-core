@@ -73,6 +73,7 @@
     "activateSoundText":"Son non activé, cliquer pour activer",
     "activateSoundButton":"Activer le son",
     "sessionExpiredText":"Votre session a expiré",
+    "reloadRequestedText": "Rechargement de l'application nécessaire",
     "disconnectedByNewUser": "Vous avez été déconnecté car un autre utilisateur s'est connecté avec ce compte"
   },
   "menu": {
@@ -124,8 +125,8 @@
       "time": {
         "titleIfFilterBasedOnPublishDate": "Date de réception",
         "titleIfFilterBasedOnBusinessDate": "Période métier",
-        "start.label": "Début",
-        "end.label": "Fin",
+        "start.label": "DÉBUT",
+        "end.label": "FIN",
         "active.label": "Actif"
       },
       "type": {
@@ -160,7 +161,8 @@
       "acknowledged": "Acquittée",
       "lttd": "Temps restant pour décider",
       "hasAResponseFromYourEntity" : "Votre entité a déjà répondu",
-      "loadingInProgress": "Chargement de cartes en cours"
+      "loadingInProgress": "Chargement de cartes en cours",
+      "seeGroupedCards": "Ouvrez cette carte pour voir les cartes groupées"
     },
     "acknowledgeAllCards": {
       "label": "Acquitter toutes les cartes",
@@ -182,7 +184,7 @@
     "reset": "RaZ",
     "login": "Identifiant",
     "password": "Mot de passe",
-    "confirmationBecauseAccountIsAreadyUsed":"Ce compte est en cours d'utilisation par au moins un autre utilisateur. Voulez-vous tout de même vous connecter ?\n\n En cliquant sur OK, vous déconnecterez tous les utilsateurs actuellement connectés à ce compte.",
+    "confirmationBecauseAccountIsAreadyUsed":"Le compte {{login}} est en cours d'utilisation par au moins un autre utilisateur. Voulez-vous tout de même vous connecter ?\n\n En cliquant sur OK, vous déconnecterez tous les utilsateurs actuellement connectés à ce compte.",
     "submit": {
       "password": "Se connecter",
       "code": "Se connecter avec {{name}}"
@@ -206,14 +208,14 @@
     "title": "PARAMETRES",
     "description": "DESCRIPTION",
     "locale": "LANGUE",
-    "playSoundLabel": "Jouer des sons pour les cartes de type",
+    "playSoundLabel": "JOUER DES SONS POUR LES CARTES DE TYPE",
     "playSoundForAlarm": "Alarme",
     "playSoundForAction": "Action",
     "playSoundForCompliant": "Conforme",
     "playSoundForInformation": "Information",
     "replayEnabled": "Répétition des sons activée",
     "playSoundOnExternalDevice": "Jouer le son sur un appareil externe",
-    "replayInterval": "Délai entre les répétitions (en secondes)",
+    "replayInterval": "DÉLAI ENTRE LES RÉPÉTITIONS (EN SECONDES)",
     "remoteLoggingEnabled": "Journalisation à distance activée"
   },
   "archive": {
@@ -314,51 +316,51 @@
   "admin": {
     "input": {
       "group": {
-        "id": "Id",
-        "name": "Nom",
-        "perimeters" : "Périmètres",
-        "description": "Description",
+        "id": "ID",
+        "name": "NOM",
+        "perimeters" : "PÉRIMÈTRES",
+        "description": "DESCRIPTION",
         "confirmDelete": "Voulez-vous vraiment supprimer le groupe",
-        "add":"Ajouter un nouveau groupe"
+        "add":"AJOUTER UN NOUVEAU GROUPE"
       },
       "entity": {
-        "id": "Id",
-        "name": "Nom",
-        "parents": "Entités parentes",
-        "description": "Description",
-        "labels": "Étiquettes",
-        "entityAllowedToSendCard": "Envoi de carte autorisé",
+        "id": "ID",
+        "name": "NOM",
+        "parents": "ENTITÉS PARENTES",
+        "description": "DESCRIPTION",
+        "labels": "ÉTIQUETTES",
+        "entityAllowedToSendCard": "ENVOI DE CARTE AUTORISÉ",
         "confirmDelete": "Voulez-vous vraiment supprimer l'entité",
-        "add":"Ajouter une nouvelle entité",
-        "true": "Oui",
-        "false": "Non",
+        "add":"AJOUTER UNE NOUVELLE ENTITÉ",
+        "true": "OUI",
+        "false": "NON",
         "addLabel": "Ajouter une étiquette"
       },
       "perimeter": {
-        "id": "Id",
-        "process": "Processus",
-        "stateRights": "Permissions sur les états",
-        "state": "Etat",
-        "right": "Permission",
+        "id": "ID",
+        "process": "PROCESSUS",
+        "stateRights": "PERMISSIONS SUR LES ÉTATS",
+        "state": "ETAT",
+        "right": "PERMISSION",
         "confirmDelete": "Voulez-vous vraiment supprimer le périmètre",
-        "add":"Ajouter un nouveau périmètre"
+        "add":"AJOUTER UN NOUVEAU PÉRIMÈTRE"
       },
       "user": {
-        "login": "Identifiant",
-        "lastName": "Nom",
-        "firstName": "Prénom",
-        "groups": "Groupes",
-        "entities": "Entités",
-        "authorizedIPAddresses": "Adresses IP autorisées",
+        "login": "IDENTIFIANT",
+        "lastName": "NOM",
+        "firstName": "PRÉNOM",
+        "groups": "GROUPES",
+        "entities": "ENTITÉS",
+        "authorizedIPAddresses": "ADRESSES IP AUTORISÉES",
         "confirmDelete": "Voulez-vous vraiment supprimer l'utilisateur",
-        "add":"Ajouter un nouvel utilisateur"
+        "add":"AJOUTER UN NOUVEL UTILISATEUR"
       },
       "selectGroupText": "Sélectionner un Groupe",
       "selectEntityText": "Sélectionner une Entité",
       "selectPerimeterText": "Sélectionner un Périmètre",
       "selectProcessText": "Sélectionner un Processus",
       "selectStateText": "Sélectionner un Etat",
-      "selectRightText": "Sélectionner un Permission",
+      "selectRightText": "Sélectionner une Permission",
       "edit": "Editer",
       "delete": "Supprimer",
       "save": "SAUVEGARDER LES CHANGEMENTS",
@@ -381,16 +383,15 @@
         "required": "L'identifiant est obligatoire.",
         "minLength": "L'identifiant doit avoir au moins 2 caractères.",
         "pattern": "L'identifiant ne peut contenir que les caractères suivants : lettres, _, - ou chiffres.",
-        "label":"Id",
+        "label":"ID",
         "alreadyExisting": "L'identifiant existe déjà."
       },
       "name": {
         "required": "Le nom est obligatoire.",
-        "label":"Nom"
+        "label":"NOM"
       },
-      "description": "Description",
-      "lines": "lignes par page",
-      "entityAllowedToSendCard": "Envoi de carte autorisé"
+      "description": "DESCRIPTION",
+      "lines": "lignes par page"
     },
     "tabs": {
       "users": "Gestion des utilisateurs",
@@ -424,22 +425,22 @@
     "connected": "Connecté",
     "disconnected": "Déconnecté",
     "selectScreenText": "Sélectionner un écran",
-    "realTimeScreen": "Ecran temps réel"
+    "realTimeScreen": "ECRAN TEMPS RÉEL"
   },
   "externalDevicesConfiguration": {
     "input": {
       "selectUserText": "Sélectionner un utilisateur",
       "selectDeviceText": "Sélectionner un périphérique",
-      "add": "Ajouter une nouvelle configuration",
-      "edit": "Modifier la configuration",
+      "add": "AJOUTER UNE NOUVELLE CONFIGURATION",
+      "edit": "MODIFIER LA CONFIGURATION",
       "confirm":"Confirmez...",
       "confirmDelete": "Voulez-vous vraiment supprimer la configuration pour l'utilisateur",
       "allUsersConfigured": "Tous les périphériques des utilisateurs sont déjà configurés"
     },
-    "userLogin": "Identifiant utilisateur",
-    "externalDeviceId": "Périphérique",
-    "edit": "Editer",
-    "delete": "Supprimer"
+    "userLogin": "IDENTIFIANT UTILISATEUR",
+    "externalDeviceIds": "PÉRIPHÉRIQUES",
+    "edit": "EDITER",
+    "delete": "SUPPRIMER"
   },
   "datePicker": {
     "monday": "Lu",

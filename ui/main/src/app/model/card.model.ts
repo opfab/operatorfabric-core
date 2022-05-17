@@ -133,7 +133,7 @@ export function fromCardToLightCard(card: Card): LightCard {
     return new LightCard(card.uid, card.id, card.publisher, card.processVersion, card.publishDate, card.startDate
         , card.endDate, card.severity, card.hasBeenAcknowledged, card.hasBeenRead, card.hasChildCardFromCurrentUserEntity, card.processInstanceId
         , card.lttd, card.title, card.summary, card.titleTranslated, card.summaryTranslated, null, [], card.process, card.state, card.parentCardId,
-        card.initialParentCardUid, card.keepChildCards, card.representative, card.representativeType);
+        card.initialParentCardUid, card.keepChildCards, card.representative, card.representativeType, card.entitiesAcks, card.entityRecipients);
 }
 
 export function fromCardToCardForPublishing(card: Card): CardForPublishing {

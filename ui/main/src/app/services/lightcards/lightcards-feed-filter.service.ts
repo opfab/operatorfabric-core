@@ -15,6 +15,8 @@ import {LightCard} from '@ofModel/light-card.model';
 import {LightCardsStoreService} from './lightcards-store.service';
 import {FilterService} from './filter.service';
 import {SortService} from './sort.service';
+import {GroupedCardsService} from '@ofServices/grouped-cards.service';
+import {ConfigService} from '@ofServices/config.service';
 
 
 @Injectable({
@@ -27,11 +29,12 @@ export class LightCardsFeedFilterService {
     private filteredLightCardsForTimeLine = new Subject();
     private onlyBusinessFilterForTimeLine = new Subject();
 
-
     constructor(
         private lightCardsStoreService: LightCardsStoreService,
         private filterService: FilterService,
-        private sortService: SortService) {
+        private sortService: SortService,
+        private groupedCardsService: GroupedCardsService,
+        private configService: ConfigService) {
         this.computeFilteredAndSortedLightCards();
         this.computeFilteredLightCards();
         this.onlyBusinessFilterForTimeLine.next(false);
@@ -44,10 +47,13 @@ export class LightCardsFeedFilterService {
         ]
         ).pipe(
             map(results => {
-
-                return results[1].sort(results[0]);
-            }
-            )
+                    results[1] = results[1].sort(results[0]);
+                    if (this.isGroupedCardsEnabled()) {
+                        this.groupedCardsService.computeGroupedCards(results[1]);
+                        results[1] = this.groupedCardsService.filterGroupedChilds(results[1]);
+                    }
+                    return results[1];
+            })
         ).subscribe((lightCards) => this.filteredAndSortedLightCards.next(lightCards));
     }
 
@@ -88,6 +94,9 @@ export class LightCardsFeedFilterService {
         ).subscribe((lightCards) => this.filteredLightCards.next(lightCards));
     }
 
+    private isGroupedCardsEnabled(): boolean {
+        return this.configService.getConfigValue('feed.enableGroupedCards', false);
+    }
 
     public isCardVisibleInFeed(card: LightCard) {
         return this.filterService.filterLightCards([card]).length > 0;

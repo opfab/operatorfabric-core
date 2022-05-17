@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -49,9 +49,9 @@ SPRING_PROFILES_ACTIVE=docker,local
 This way the configuration file 'cards-publication-local.yml' can be provided in the same configuration directory and can be read by SpringBoot
 
 
-=== Shared business service configuration
+=== Shared service configuration
 
-The configuration shared by all business services is in a yaml file, you can find an example with the file
+The configuration shared by all services is in a yaml file, you can find an example with the file
 /config/docker/common-docker.yml.
 In this file you will find, among others, the parameters below :
 
@@ -63,9 +63,9 @@ In this file you will find, among others, the parameters below :
 
 |===
 
-=== Business service specific configurations
+=== Service specific configurations
 
-Each business service has a specific yaml configuration file. It should a least contain the name of the service:
+Each service has a specific yaml configuration file. It should a least contain the name of the service:
 
 [source, yaml]
 ----
@@ -74,7 +74,7 @@ spring:
     name: businessconfig
 ----
 
-Examples of configuration of each business service can be found either under config/docker or config/dev depending on
+Examples of configuration of each service can be found either under config/docker or config/dev depending on
 the type of deployment you're looking for.
 
 ==== Businessconfig service
@@ -131,7 +131,7 @@ The cards-consultation service has these specific properties :
 |===
 |name|default|mandatory?|Description
 
-|checkIfUserIsAlreadyConnected|true|false|If false, OperatorFabric will allow a user to have several sessions opened at the same time. However, it may cause synchronization problems between the sessions using the same login, so it is recommended to let it to true, its default value. 
+|checkIfUserIsAlreadyConnected|true|no|If false, OperatorFabric will allow a user to have several sessions opened at the same time. However, it may cause synchronization problems between the sessions using the same login, so it is recommended to let it to true, its default value. 
 |===
 
 include::web-ui_configuration.adoc[leveloffset=+1]
@@ -198,14 +198,19 @@ See link:{spring_kafka_doc}[Spring for Apache Kafka] for more information on the
 With the default settings, the Kafka consumer expects a broker running on http//127.0.0.1:9092 and a schema registry on http://127.0.0.1:8081.
 
 Operator Fabric is also able to publish response cards to a Kafka topic. The default topic name  `opfab-response`. You can specify which response cards
-are to be returned via Kafka by setting the `externalRecipients-url` in the `cards-publication` yaml file. Instead of setting `http://` URL you should set it to `kafka:`
+are to be returned via Kafka by setting the `external-recipients` in the `cards-publication` yaml file. Instead of setting `http://` URL you should set it to `kafka:`
 
 [source, yaml]
 ----
-externalRecipients-url: "{\
-           processAction: \"http://localhost:8090/test\", \
-           mykafka: \"kafka:topicname\"
-           }"
+external-recipients:
+  recipients: 
+    - id: "processAction"
+      url: "http://localhost:8090/test"
+      propagateUserToken: true
+    - id: "mykafka"
+      url: "kafka:topicname"
+      propagateUserToken: false
+
 ----
 
 Note that `topicname` is a placeholder for now. All response cards are returned via the same Kafka response topic, as specified in the `opfab.kafka.topics.response-card` field.

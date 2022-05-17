@@ -66,7 +66,7 @@ describe('Handlebars Services', () => {
         spyOn(store, 'dispatch').and.callThrough();
         httpMock = injector.get(HttpTestingController);
         handlebarsService = TestBed.inject(HandlebarsService);
-        translate = TestBed.inject(TranslateService)
+        translate = TestBed.inject(TranslateService);
     });
     afterEach(() => {
         httpMock.verify();
@@ -135,68 +135,113 @@ describe('Handlebars Services', () => {
             });
         }
 
-        it('compile polyIf helper ==', (done) => {
-            expectIfCond(card, 'card.data.numbers.[0]', '==', 'card.data.numbers.[0]', 'true', done);
-            expectIfCond(card, 'card.data.numbers.[0]', '==', 'card.data.numbers.[1]', 'false', done);
-            expectIfCond(card, 'card.data.numbers.[0]', '==', 'card.data.numberStrings.[0]', 'true', done);
-        });
-        it('compile polyIf helper ===', (done) => {
-            expectIfCond(card, 'card.data.numbers.[0]', '===', 'card.data.numbers.[0]', 'true', done);
-            expectIfCond(card, 'card.data.numbers.[0]', '===', 'card.data.numberStrings.[0]', 'false', done);
-        });
-        it('compile polyIf helper <', (done) => {
-            expectIfCond(card, 'card.data.numbers.[0]', '<', 'card.data.numberStrings.[1]', 'true', done);
-            expectIfCond(card, 'card.data.numbers.[1]', '<', 'card.data.numbers.[0]', 'false', done);
-            expectIfCond(card, 'card.data.numbers.[1]', '<', 'card.data.numbers.[1]', 'false', done);
-        });
-        it('compile polyIf helper >', (done) => {
-            expectIfCond(card, 'card.data.numbers.[1]', '>', 'card.data.numbers.[0]', 'true', done);
-            expectIfCond(card, 'card.data.numbers.[1]', '>', 'card.data.numberStrings.[0]', 'true', done);
-            expectIfCond(card, 'card.data.numbers.[0]', '>', 'card.data.numbers.[1]', 'false', done);
-            expectIfCond(card, 'card.data.numbers.[1]', '>', 'card.data.numbers.[1]', 'false', done);
-        });
-        it('compile polyIf helper <=', (done) => {
-            expectIfCond(card, 'card.data.numbers.[0]', '<=', 'card.data.numbers.[1]', 'true', done);
-            expectIfCond(card, 'card.data.numbers.[0]', '<=', 'card.data.numberStrings.[1]', 'true', done);
-            expectIfCond(card, 'card.data.numbers.[1]', '<=', 'card.data.numbers.[0]', 'false', done);
-            expectIfCond(card, 'card.data.numbers.[1]', '<=', 'card.data.numbers.[1]', 'true', done);
-            expectIfCond(card, 'card.data.numbers.[1]', '<=', 'card.data.numberStrings.[1]', 'true', done);
-        });
-        it('compile polyIf helper >=', (done) => {
-            expectIfCond(card, 'card.data.numbers.[1]', '>=', 'card.data.numbers.[0]', 'true', done);
-            expectIfCond(card, 'card.data.numbers.[1]', '>=', 'card.data.numberStrings.[0]', 'true', done);
-            expectIfCond(card, 'card.data.numbers.[0]', '>=', 'card.data.numbers.[1]', 'false', done);
-            expectIfCond(card, 'card.data.numbers.[1]', '>=', 'card.data.numbers.[1]', 'true', done);
-            expectIfCond(card, 'card.data.numbers.[1]', '>=', 'card.data.numberStrings.[1]', 'true', done);
-        });
-        it('compile polyIf helper !=', (done) => {
-            expectIfCond(card, 'card.data.numbers.[0]', '!=', 'card.data.numbers.[0]', 'false', done);
-            expectIfCond(card, 'card.data.numbers.[0]', '!=', 'card.data.numbers.[1]', 'true', done);
-            expectIfCond(card, 'card.data.numbers.[0]', '!=', 'card.data.numberStrings.[0]', 'false', done);
-        });
-        it('compile polyIf helper !==', (done) => {
-            expectIfCond(card, 'card.data.numbers.[0]', '!==', 'card.data.numbers.[0]', 'false', done);
-            expectIfCond(card, 'card.data.numbers.[0]', '!==', 'card.data.numberStrings.[0]', 'true', done);
-        });
-        it('compile polyIf helper &&', (done) => {
-            expectIfCond(card, 'card.data.booleans.[0]', '&&', 'card.data.booleans.[0]', 'false', done);
-            expectIfCond(card, 'card.data.booleans.[0]', '&&', 'card.data.numbers.[0]', 'false', done);
-            expectIfCond(card, 'card.data.booleans.[0]', '&&', 'card.data.numberStrings.[0]', 'false', done);
-            expectIfCond(card, 'card.data.booleans.[0]', '&&', 'card.data.booleans.[1]', 'false', done);
-            expectIfCond(card, 'card.data.booleans.[1]', '&&', 'card.data.booleans.[1]', 'true', done);
-            expectIfCond(card, 'card.data.booleans.[1]', '&&', 'card.data.numbers.[2]', 'true', done);
-            expectIfCond(card, 'card.data.booleans.[1]', '&&', 'card.data.numberStrings.[3]', 'true', done);
-        });
-        it('compile polyIf helper ||', (done) => {
-            expectIfCond(card, 'card.data.booleans.[0]', '||', 'card.data.booleans.[0]', 'false', done);
-            expectIfCond(card, 'card.data.booleans.[0]', '||', 'card.data.numbers.[0]', 'false', done);
-            expectIfCond(card, 'card.data.booleans.[0]', '||', 'card.data.numberStrings.[0]', 'true', done);
-            expectIfCond(card, 'card.data.booleans.[0]', '||', 'card.data.booleans.[1]', 'true', done);
-            expectIfCond(card, 'card.data.booleans.[0]', '||', 'card.data.numberStrings.[1]', 'true', done);
-            expectIfCond(card, 'card.data.booleans.[1]', '||', 'card.data.booleans.[1]', 'true', done);
-            expectIfCond(card, 'card.data.booleans.[1]', '||', 'card.data.numbers.[2]', 'true', done);
-            expectIfCond(card, 'card.data.booleans.[1]', '||', 'card.data.numberStrings.[3]', 'true', done);
-        });
+        // == 
+        it('bool helper: 0 == 0  must return true', (done) => 
+            expectIfCond(card, 'card.data.numbers.[0]', '==', 'card.data.numbers.[0]', 'true', done));
+        it('bool helper: 0 == 1  must return false', (done) => 
+            expectIfCond(card, 'card.data.numbers.[0]', '==', 'card.data.numbers.[1]', 'false', done));
+        it('bool helper: 0 == \'0\' must return true ', (done) => 
+            expectIfCond(card, 'card.data.numbers.[0]', '==', 'card.data.numberStrings.[0]', 'true', done));
+
+        // ===
+        it('bool helper: 0 === 0  must return true', (done) => 
+            expectIfCond(card, 'card.data.numbers.[0]', '===', 'card.data.numbers.[0]', 'true', done));
+        it('bool helper: 0 === \'1\'  must return false', (done) => 
+            expectIfCond(card, 'card.data.numbers.[0]', '===', 'card.data.numbers.[1]', 'false', done));
+
+        // < 
+        it('bool helper: 0 < \'1\'   must return true', (done) => 
+            expectIfCond(card, 'card.data.numbers.[0]', '<', 'card.data.numberStrings.[1]', 'true', done));
+        it('bool helper: 1 < 0   must return false', (done) => 
+            expectIfCond(card, 'card.data.numbers.[1]', '<', 'card.data.numbers.[0]', 'false', done));
+        it('bool helper: 1 < 1   must return false', (done) => 
+            expectIfCond(card, 'card.data.numbers.[1]', '<', 'card.data.numbers.[1]', 'false', done));
+
+        // >
+        it('bool helper: 1 > 0   must return true', (done) => 
+            expectIfCond(card, 'card.data.numbers.[1]', '>', 'card.data.numbers.[0]', 'true', done));
+        it('bool helper: 1 > \'0\'   must return true', (done) => 
+            expectIfCond(card, 'card.data.numbers.[1]', '>', 'card.data.numberStrings.[0]', 'true', done));
+        it('bool helper: 0 > 1   must return false', (done) => 
+            expectIfCond(card, 'card.data.numbers.[0]', '>', 'card.data.numbers.[1]', 'false', done));     
+        it('bool helper: 1 > 1   must return false', (done) => 
+            expectIfCond(card, 'card.data.numbers.[1]', '>', 'card.data.numbers.[1]', 'false', done)); 
+
+        // <= 
+        it('bool helper: 0 <= 1   must return true', (done) => 
+            expectIfCond(card, 'card.data.numbers.[0]', '<=', 'card.data.numbers.[1]', 'true', done));
+        it('bool helper: 0 <= \'1\'   must return true', (done) => 
+            expectIfCond(card, 'card.data.numbers.[0]', '<=', 'card.data.numberStrings.[1]', 'true', done));
+        it('bool helper: 1 <= 0   must return false', (done) => 
+            expectIfCond(card, 'card.data.numbers.[1]', '<=', 'card.data.numbers.[0]', 'false', done));
+        it('bool helper: 1 <= 1   must return true', (done) => 
+            expectIfCond(card, 'card.data.numbers.[1]', '<=', 'card.data.numbers.[1]', 'true', done));
+        it('bool helper: 1 <= \'1\'   must return true', (done) => 
+            expectIfCond(card, 'card.data.numbers.[1]', '<=', 'card.data.numberStrings.[1]', 'true', done));
+
+
+        // >=   
+        it('bool helper: 1 >= 0   must return true', (done) => 
+            expectIfCond(card, 'card.data.numbers.[1]', '>=', 'card.data.numbers.[0]', 'true', done));
+        it('bool helper: 1 >= \'0\'   must return true', (done) => 
+            expectIfCond(card, 'card.data.numbers.[1]', '>=', 'card.data.numberStrings.[0]', 'true', done));
+        it('bool helper: 0 >= 1   must return false', (done) => 
+            expectIfCond(card, 'card.data.numbers.[0]', '>=', 'card.data.numbers.[1]', 'false', done));
+        it('bool helper: 1 >= 1   must return true', (done) => 
+            expectIfCond(card, 'card.data.numbers.[1]', '>=', 'card.data.numbers.[1]', 'true', done));
+        it('bool helper: 1 >= \'1\'   must return true', (done) => 
+            expectIfCond(card, 'card.data.numbers.[1]', '>=', 'card.data.numberStrings.[1]', 'true', done));
+       
+        // != 
+        it('bool helper: 0 != 0   must return false', (done) => 
+            expectIfCond(card, 'card.data.numbers.[0]', '!=', 'card.data.numbers.[0]', 'false', done));
+        it('bool helper: 0 != 1   must return true', (done) => 
+            expectIfCond(card, 'card.data.numbers.[0]', '!=', 'card.data.numbers.[1]', 'true', done));
+        it('bool helper: 0 != \'0\'   must return false', (done) => 
+            expectIfCond(card, 'card.data.numbers.[0]', '!=', 'card.data.numberStrings.[0]', 'false', done));
+        
+        // !== 
+        it('bool helper: 0 !== 0   must return false', (done) => 
+            expectIfCond(card, 'card.data.numbers.[0]', '!==', 'card.data.numbers.[0]', 'false', done));
+        it('bool helper: 0 !== 1   must return true', (done) => 
+            expectIfCond(card, 'card.data.numbers.[0]', '!==', 'card.data.numbers.[1]', 'true', done));
+        it('bool helper: 0 !== \'0\'   must return true', (done) => 
+            expectIfCond(card, 'card.data.numbers.[0]', '!==', 'card.data.numberStrings.[0]', 'true', done));
+
+        // && 
+        it('bool helper: false && false   must return false', (done) => 
+            expectIfCond(card, 'card.data.booleans.[0]', '&&', 'card.data.booleans.[0]', 'false', done));
+        it('bool helper: false && 0   must return false', (done) => 
+            expectIfCond(card, 'card.data.booleans.[0]', '&&', 'card.data.numbers.[0]', 'false', done));
+        it('bool helper: false && \'false\'   must return false', (done) => 
+            expectIfCond(card, 'card.data.booleans.[0]', '&&', 'card.data.numberStrings.[0]', 'false', done));
+        it('bool helper: false && true   must return false', (done) => 
+            expectIfCond(card, 'card.data.booleans.[0]', '&&', 'card.data.booleans.[1]', 'false', done));
+        it('bool helper: true && true   must return true', (done) => 
+            expectIfCond(card, 'card.data.booleans.[1]', '&&', 'card.data.booleans.[1]', 'true', done));
+        it('bool helper: true && 2   must return true', (done) => 
+            expectIfCond(card, 'card.data.booleans.[1]', '&&', 'card.data.numbers.[2]', 'true', done));
+        it('bool helper: true && \'2\'   must return true', (done) => 
+            expectIfCond(card, 'card.data.booleans.[1]', '&&', 'card.data.numberStrings.[3]', 'true', done));          
+
+        // ||
+        it('bool helper: false || false  must return false', (done) => 
+            expectIfCond(card, 'card.data.booleans.[0]', '||', 'card.data.booleans.[0]', 'false', done));
+        it('bool helper: false || 0  must return false', (done) => 
+            expectIfCond(card, 'card.data.booleans.[0]', '||', 'card.data.numbers.[0]', 'false', done));
+        it('bool helper: false || \'0\'  must return false', (done) => 
+            expectIfCond(card, 'card.data.booleans.[0]', '||', 'card.data.numberStrings.[0]', 'true', done));
+        it('bool helper: false || true  must return true', (done) => 
+            expectIfCond(card, 'card.data.booleans.[0]', '||', 'card.data.booleans.[1]', 'true', done));
+        it('bool helper: false || \'true\'  must return true', (done) => 
+            expectIfCond(card, 'card.data.booleans.[0]', '||', 'card.data.numberStrings.[1]', 'true', done));
+        it('bool helper: true || true  must return true', (done) => 
+            expectIfCond(card, 'card.data.booleans.[1]', '||', 'card.data.booleans.[1]', 'true', done));
+        it('bool helper: true || 2  must return true', (done) => 
+            expectIfCond(card, 'card.data.booleans.[1]', '||', 'card.data.numbers.[2]', 'true', done));
+        it('bool helper: true || \'3\'  must return true', (done) => 
+            expectIfCond(card, 'card.data.booleans.[1]', '||', 'card.data.numberStrings.[3]', 'true', done));
+
         it('compile arrayAtIndexLength', (done) => {
             const templateName = Guid.create().toString();
             handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
@@ -229,21 +274,24 @@ describe('Handlebars Services', () => {
             });
         }
 
-        it('compile conditionalAttribute', (done) => {
-            // The attribute will show up if the property exists and is truthy
-            expectConditionalAttribute(card, 'card.data.booleans.[0]', '\'someAttribute\'', '', done);
-            expectConditionalAttribute(card, 'card.data.booleans.[1]', '\'someAttribute\'', 'someAttribute', done);
-            expectConditionalAttribute(card, 'card.data.name', '\'someAttribute\'', 'someAttribute', done);
-            expectConditionalAttribute(card, 'card.data.some.property.that.doesnt.exist', '\'someAttribute\'', '', done);
-            expectConditionalAttribute(card, 'card.data.undefinedValue', '\'someAttribute\'', '', done);
-            expectConditionalAttribute(card, 'card.data.nullValue', '\'someAttribute\'', '', done);
-
+        // conditionalAttribute helper
+        it('compile conditionalAttribute : if false, the attribute is not displayed', (done) => 
+            expectConditionalAttribute(card, 'card.data.booleans.[0]', '\'someAttribute\'', '', done));
+        it('compile conditionalAttribute : if true, the attribute is displayed', (done) => 
+            expectConditionalAttribute(card, 'card.data.booleans.[1]', '\'someAttribute\'', 'someAttribute', done));
+        it('compile conditionalAttribute : if string equals value condition valid, the attribute is displayed', (done) => 
+            expectConditionalAttribute(card, 'card.data.name', '\'someAttribute\'', 'someAttribute', done));
+        it('compile conditionalAttribute : if property does not exist, the attribute is not displayed', (done) => 
+            expectConditionalAttribute(card, 'card.data.some.property.that.doesnt.exist', '\'someAttribute\'', '', done));
+        it('compile conditionalAttribute : if property is undefined, the attribute is not displayed', (done) => 
+            expectConditionalAttribute(card, 'card.data.undefinedValue', '\'someAttribute\'', '', done));
+        it('compile conditionalAttribute : if property is null, the attribute is not displayed', (done) => 
+            expectConditionalAttribute(card, 'card.data.nullValue', '\'someAttribute\'', '', done));
+        it('compile conditionalAttribute : if condition using helper === is meet, the attribute is  displayed', (done) => 
             // The condition can also be an expression using other helpers
-            expectConditionalAttribute(card, '(bool card.data.name "===" \'something\')', '\'someAttribute\'', 'someAttribute', done);
-
-            // The attribute itself can also come from the card data
-            expectConditionalAttribute(card, 'card.data.booleans.[1]', 'card.data.name', 'something', done);
-        });
+            expectConditionalAttribute(card, '(bool card.data.name "===" \'something\')', '\'someAttribute\'', 'someAttribute', done));
+        it('compile conditionalAttribute : attribute coming from the card data is displayed', (done) => 
+            expectConditionalAttribute(card, 'card.data.booleans.[1]', 'card.data.name', 'something', done));
 
         it('compile arrayAtIndexLength Alt', (done) => {
             const templateName = Guid.create().toString();

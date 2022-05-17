@@ -12,7 +12,7 @@ import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {AfterViewInit, Component, ElementRef,OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FullCalendarComponent} from '@fullcalendar/angular';
 import {EventInput} from '@fullcalendar/core';
 import allLocales from '@fullcalendar/core/locales-all';
@@ -57,7 +57,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
   calendarEvents: EventInput[] = [];
   modalRef: NgbModalRef;
 
-  // allDaySlot is now specific to timeGrid views (since v4), so it generate an error in build if we specify that the type of calendarOptions is
+  // allDaySlot is now specific to timeGrid views (since v4), so it generates an error in build if we specify that the type of calendarOptions is
   // CalendarOptions... Yet it seems to be the correct way to set this property since it works as intended.
   calendarOptions = {
     initialView: 'dayGridMonth',
@@ -162,18 +162,18 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
         size: 'fullscreen'
     };
     this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
-    
+
       // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
       // Closing event is already handled in card detail component
       this.modalRef.dismissed.subscribe(() => {
         this.store.dispatch(new ClearLightCardSelection());
-    })
+    });
   }
 
   datesRangeChange(dateInfo) {
     this.filterService.updateFilter(
-      FilterType.BUSINESSDATE_FILTER, 
-      true,{start: dateInfo.view.activeStart.getTime(),
+      FilterType.BUSINESSDATE_FILTER,
+      true, {start: dateInfo.view.activeStart.getTime(),
       end: dateInfo.view.activeEnd.getTime()}
       );
   }

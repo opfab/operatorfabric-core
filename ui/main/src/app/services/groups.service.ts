@@ -75,7 +75,7 @@ export class GroupsService extends CachedCrudService implements OnDestroy {
                     console.log(new Date().toISOString(), 'List of groups loaded');
                   }
                 },
-              error:(error) => console.error(new Date().toISOString(), 'an error occurred', error)
+              error: (error) => console.error(new Date().toISOString(), 'an error occurred', error)
             }));
   }
 
@@ -102,6 +102,11 @@ export class GroupsService extends CachedCrudService implements OnDestroy {
       return found.name;
 
     return idGroup;
+  }
+
+  public isRealtimeGroup(idGroup: string): boolean {
+    const found = this._groups.find(group => group.id === idGroup);
+    return (found && found.realtime);
   }
 
   getAll(): Observable<any[]> {

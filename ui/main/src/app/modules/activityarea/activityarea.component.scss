@@ -25,6 +25,17 @@
   padding: 10px 10%;
 }
 
+.opfab-activityarea-table {
+  table-layout: fixed;
+  border-collapse: separate;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.opfab-activityarea-badge {
+  margin-bottom: 12px;
+}
+
 .modal-body{
   background-color: var(--opfab-bgcolor);
   color: var(--opfab-textcolor);

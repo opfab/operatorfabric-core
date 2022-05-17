@@ -34,13 +34,13 @@ operatorfabric:
             INFORMATION: 8
       userConfigurations:
         - userLogin: operator1_fr
-          externalDeviceId: CDS_1
+          externalDeviceIds: ["CDS_1"]
         - userLogin: operator2_fr
-          externalDeviceId: CDS_2
+          externalDeviceIds: ["CDS_2"]
         - userLogin: operator3_fr
-          externalDeviceId: CDS_3
+          externalDeviceIds: ["CDS_3"]
         - userLogin: operator4_fr
-          externalDeviceId: CDS_1
+          externalDeviceIds: ["CDS_1"]
 logging.level.org.opfab: debug
 
 

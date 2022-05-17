@@ -60,7 +60,7 @@ describe('Time line moves', function () {
         cy.get("#opfab-timeline-time-cursor").should("have.text", text);
     }
 
-    function checkNoTimeCursor(text) {
+    function checkNoTimeCursor() {
         cy.get("#opfab-timeline-time-cursor").should("not.exist");
     }
 

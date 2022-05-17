@@ -22,7 +22,7 @@ OF_HOME=$(realpath $DIR/..)
 CURRENT_PATH=$(pwd)
 
 resetConfiguration=true
-businessServices=( "users" "cards-consultation" "cards-publication" "businessconfig")
+services=( "users" "cards-consultation" "cards-publication" "businessconfig" "external-devices")
 offline=false
 waitForOpfabToStart=false
 externalDevices=false
@@ -36,11 +36,10 @@ function display_usage() {
   echo -e "\tstop: soft kill of the processes"
   echo -e "\thardstop: hard kill of the processes (with kill -9) \n"
 	echo -e "options:"
-	echo -e "\t-s, --services\t: list of comma separated services. Business services to run. Defaults to " $(join_by ","  "${businessServices[@]}")
+	echo -e "\t-s, --services\t: list of comma separated services. Business services to run. Defaults to " $(join_by ","  "${services[@]}")
 	echo -e "\t-r, --reset\t: true or false. Resets service data. Defaults to $resetConfiguration."
 	echo -e "\t-o, --offline\t: true or false. When gradle is invoked, it will be invoked offline. Defaults to $offline.\n"
   echo -e "\t-w, --waitForOpfabToStart\t: true or false , if true the script exits only when opfab is up. Defaults to false.\n"
-  echo -e "\t-e, --externalDevices\t: true or false , if true the external devices service is started as well. Defaults to $externalDevices.\n"
 }
 
 while [[ $# -gt 0 ]]
@@ -54,7 +53,7 @@ case $key in
     ;;
     -s|--services)
     stringServices=$2
-    businessServices=(${stringServices//,/ })
+    services=(${stringServices//,/ })
     shift # past argument
     shift # past value
     ;;
@@ -65,10 +64,6 @@ case $key in
     ;;
     -w|--waitForOpfabToStart)
     waitForOpfabToStart=true
-    shift # past argument
-    ;;
-    -e|--externalDevices)
-    externalDevices=true
     shift # past argument
     ;;
     -h|--help)
@@ -89,27 +84,17 @@ GRADLE_OPTIONS=" "
 if [ "$offline" = true ]; then
     GRADLE_OPTIONS="$GRADLE_OPTIONS --offline"
 fi
-PRJ_STRC_FIELDS=5
+PRJ_STRC_FIELDS=3
 
 declare -a dependentProjects
 i=0
-for bservice in "${businessServices[@]}"; do
- dependentProjects[$i]="$bservice-business-service"
- dependentProjects[$i+1]="services/$bservice"
- dependentProjects[$i+2]=0
- dependentProjects[$i+3]=""
- dependentProjects[$i+4]=$bservice
+for service in "${services[@]}"; do
+ dependentProjects[$i]="$service-service"
+ dependentProjects[$i+1]="services/$service"
+ dependentProjects[$i+2]=$service
  i=$((i+$PRJ_STRC_FIELDS))
 done
 
-if [ "$externalDevices" = true ]; then
-  dependentProjects[$i]="external-devices-service"
-  dependentProjects[$i+1]="services/external-devices"
-  dependentProjects[$i+2]=0
-  dependentProjects[$i+3]=""
-  dependentProjects[$i+4]="external-devices"
-  i=$((i+$PRJ_STRC_FIELDS))
-fi
 
 debugPort=5005
 version=$OF_VERSION
@@ -160,7 +145,7 @@ startCommand() {
 
     for ((i=0; i<${#dependentProjects[*]}; ));
     do
-      startProject ${dependentProjects[i]} $debugPort ${dependentProjects[i+1]} ${dependentProjects[i+4]}
+      startProject ${dependentProjects[i]} $debugPort ${dependentProjects[i+1]} ${dependentProjects[i+2]}
       debugPort=$((debugPort+1))
       i=$((i+$PRJ_STRC_FIELDS))
     done

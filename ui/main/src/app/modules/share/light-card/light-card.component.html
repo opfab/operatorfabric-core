@@ -11,9 +11,9 @@
 <div id="opfab-feed-light-card-{{lightCard.process}}-{{lightCard.processInstanceId}}"
      attr.data-urlId="{{lightCard.process}}.{{lightCard.processInstanceId}}"
      class="card light-card-detail "
-    [class.light-card-detail-selected]="open" [class.light-card-detail-unselected]="!open"
-    [class.light-card-detail-unread]="displayUnreadIcon && !isArchivePageType() && !lightCard.hasBeenRead"
-    (click)="select()">
+     [class.light-card-detail-selected]="open || groupedCardOpen" [class.light-card-detail-unselected]="!open && !groupedCardOpen"
+     [class.light-card-detail-unread]="displayUnreadIcon && !isArchivePageType() && !lightCard.hasBeenRead"
+     (click)="select($event)">
     <div class="d-flex  p-0 border-0">
         <div class="badge-border  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}}">
         </div>
@@ -35,10 +35,18 @@
                         <ng-template #tipAcknowledged>
                             <span translate>feed.tips.acknowledged</span>
                         </ng-template>
-                        <span *ngIf="lightCard.hasBeenAcknowledged" class="p-2"
-                            [ngbPopover]="tipAcknowledged" popoverClass="opfab-popover" container="body"
-                            triggers="mouseenter:mouseleave">
+                        <span *ngIf="this.lightCard.hasBeenAcknowledged" class="p-2"
+                              [ngbPopover]="tipAcknowledged" popoverClass="opfab-popover" container="body"
+                              triggers="mouseenter:mouseleave">
                             <em style="color: #0082FF;" class="fa fa-check"></em>
+                        </span>
+                        <ng-template #tipTags>
+                            <span translate>feed.tips.seeGroupedCards</span>
+                        </ng-template>
+                        <span *ngIf="showGroupedCardsIcon" class="p-2"
+                              [ngbPopover]="tipTags" popoverClass="opfab-popover" container="body"
+                              triggers="mouseenter:mouseleave">
+                            <em style="color: #0082FF;" class="fa " [class.fa-angle-down]="open" [class.fa-angle-left]="!open || !groupedCardsVisible"></em>
                         </span>
                     </div>
                 </div>
@@ -68,6 +76,11 @@
             </span>
         </div>
     </div>
+
+    <div *ngIf="open && groupedCardsVisible">
+        <of-grouped-card-list [lightCards]="getGroupedChildCards()" [selection]="selection"> </of-grouped-card-list>
+    </div>
+
     <div class="badge-border  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}} "></div>
 
 

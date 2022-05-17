@@ -12,6 +12,7 @@ package org.opfab.cards.publication.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.api.OptionalAssert;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 import org.jetbrains.annotations.NotNull;
@@ -42,6 +43,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.client.ExpectedCount;
@@ -123,6 +125,7 @@ class CardProcessServiceShould {
 
         private User user;
         private CurrentUserWithPerimeters currentUserWithPerimeters;
+        private Optional<Jwt> token;
 
     public CardProcessServiceShould() {
 
@@ -157,6 +160,8 @@ class CardProcessServiceShould {
         list.add(c2);
         list.add(c3);
         currentUserWithPerimeters.setComputedPerimeters(list);
+
+        token = Optional.empty();
     }
 
     private List<CardPublicationData> generateCards() {
@@ -261,7 +266,7 @@ class CardProcessServiceShould {
                 .andRespond(withStatus(HttpStatus.ACCEPTED)
                 );
 
-        Assertions.assertThatCode(() -> cardProcessingService.processUserCard(card, currentUserWithPerimeters))
+        Assertions.assertThatCode(() -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
             .doesNotThrowAnyException();
         Assertions.assertThat(checkCardPublisherId(card)).isTrue();
 
@@ -283,7 +288,7 @@ class CardProcessServiceShould {
                 .state("state1")
                 .build();
 
-        Assertions.assertThatThrownBy(() -> cardProcessingService.processUserCard(card, currentUserWithPerimeters))
+        Assertions.assertThatThrownBy(() -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessageContaining("action not authorized, the card is rejected");
         Assertions.assertThat(checkCardCount(0)).isTrue();
@@ -333,7 +338,7 @@ class CardProcessServiceShould {
                 .andRespond(withStatus(HttpStatus.ACCEPTED)
                 );
 
-        Assertions.assertThatCode(() -> cardProcessingService.processUserCard(card, currentUserWithPerimeters))
+        Assertions.assertThatCode(() -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
                 .doesNotThrowAnyException();
         Assertions.assertThat(checkCardPublisherId(card)).isTrue();
 
@@ -342,7 +347,7 @@ class CardProcessServiceShould {
                         2, block)
                 .isEqualTo(2);
 
-        cardProcessingService.deleteCard(cards.get(0).getId());
+        cardProcessingService.deleteCard(cards.get(0).getId(), token);
 
         Assertions.assertThat(cardRepository.count())
                 .withFailMessage("The number of registered cards should be '%d' but is '%d' "
@@ -456,7 +461,7 @@ class CardProcessServiceShould {
 
         CardPublicationData firstCard = cards.get(0);
         String id = firstCard.getId();
-        cardProcessingService.deleteCard(id);
+        cardProcessingService.deleteCard(id, token);
 
         /* one card should be deleted(the first one) */
         int thereShouldBeOneCardLess = numberOfCards - 1;
@@ -616,7 +621,7 @@ class CardProcessServiceShould {
                 numberOfCards, block).isEqualTo(numberOfCards);
 
         final String id = generateIdNotInCardRepository();
-        cardProcessingService.deleteCard(id);
+        cardProcessingService.deleteCard(id, token);
 
         int expectedNumberOfCards = numberOfCards;/* no card should be deleted */
 
@@ -1177,20 +1182,20 @@ class CardProcessServiceShould {
 
         CardPublicationData card = generateOneCard(currentUserWithPerimeters.getUserData().getLogin());
         card.setPublisherType(PublisherTypeEnum.EXTERNAL);
-
-        Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card, Optional.of(wrongUser)))
+        Optional<CurrentUserWithPerimeters> optionalWrongUser = Optional.of(wrongUser);
+        Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card, optionalWrongUser, token))
         .isInstanceOf(ApiErrorException.class).hasMessage("Card publisher is set to dummyUser and account login is wrongUser, the card cannot be sent");
         Assertions.assertThat(checkCardCount(0)).isTrue();
 
 
-        cardProcessingService.processCard(card, Optional.of(currentUserWithPerimeters));
+        cardProcessingService.processCard(card, Optional.of(currentUserWithPerimeters), token);
         Assertions.assertThat(checkCardCount(1)).isTrue();
-
-        Assertions.assertThatThrownBy(() -> cardProcessingService.deleteCard(card.getId(), Optional.of(wrongUser)))
+        String cardId = card.getId();
+        Assertions.assertThatThrownBy(() -> cardProcessingService.deleteCard(cardId, optionalWrongUser, token))
             .isInstanceOf(ApiErrorException.class).hasMessage("Card publisher is set to dummyUser and account login is wrongUser, the card cannot be deleted");
         Assertions.assertThat(checkCardCount(1)).isTrue();
        
-        cardProcessingService.deleteCard(card.getId(), Optional.of(currentUserWithPerimeters));
+        cardProcessingService.deleteCard(card.getId(), Optional.of(currentUserWithPerimeters), token);
         Assertions.assertThat(checkCardCount(0)).isTrue();
     }
 
@@ -1208,20 +1213,20 @@ class CardProcessServiceShould {
         card.setPublisherType(PublisherTypeEnum.EXTERNAL);
         card.setRepresentativeType(PublisherTypeEnum.EXTERNAL);
         card.setRepresentative(currentUserWithPerimeters.getUserData().getLogin());
-
-        Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card, Optional.of(wrongUser)))
+        Optional<CurrentUserWithPerimeters> optionalWrongUser = Optional.of(wrongUser);
+        Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card, optionalWrongUser, token))
         .isInstanceOf(ApiErrorException.class).hasMessage("Card representative is set to dummyUser and account login is wrongUser, the card cannot be sent");
         Assertions.assertThat(checkCardCount(0)).isTrue();
 
 
-        cardProcessingService.processCard(card, Optional.of(currentUserWithPerimeters));
+        cardProcessingService.processCard(card, Optional.of(currentUserWithPerimeters), token);
         Assertions.assertThat(checkCardCount(1)).isTrue();
-
-        Assertions.assertThatThrownBy(() -> cardProcessingService.deleteCard(card.getId(),Optional.of(wrongUser)))
+        String cardId = card.getId();
+        Assertions.assertThatThrownBy(() -> cardProcessingService.deleteCard(cardId, optionalWrongUser, token))
             .isInstanceOf(ApiErrorException.class).hasMessage("Card representative is set to dummyUser and account login is wrongUser, the card cannot be deleted");
         Assertions.assertThat(checkCardCount(1)).isTrue();
        
-        cardProcessingService.deleteCard(card.getId(), Optional.of(currentUserWithPerimeters));
+        cardProcessingService.deleteCard(card.getId(), Optional.of(currentUserWithPerimeters), token);
         Assertions.assertThat(checkCardCount(0)).isTrue();
     }
 
@@ -1248,7 +1253,7 @@ class CardProcessServiceShould {
 
         card.setEntitiesAllowedToEdit(entitiesAllowedToEdit);
 
-        cardProcessingService.processUserCard(card, currentUserWithPerimeters);
+        cardProcessingService.processUserCard(card, currentUserWithPerimeters, token);
         Assertions.assertThat(checkCardCount(1)).isTrue();
 
 
@@ -1256,15 +1261,46 @@ class CardProcessServiceShould {
         card.setPublisher("entityallowed");
         currentUserWithPerimeters.getUserData().setEntities(Arrays.asList("entityallowed"));
 
-        Assertions.assertThatCode(() -> cardProcessingService.processUserCard(card, currentUserWithPerimeters))
+        Assertions.assertThatCode(() -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
         .doesNotThrowAnyException();
 
         card.setUid(null);
         card.setPublisher("notallowed");
         currentUserWithPerimeters.getUserData().setEntities(Arrays.asList("notallowed"));
 
-        Assertions.assertThatThrownBy(() -> cardProcessingService.processUserCard(card, currentUserWithPerimeters))
+        Assertions.assertThatThrownBy(() -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
             .isInstanceOf(ApiErrorException.class).hasMessage("User is not part of entities allowed to edit card. Card is rejected");
+    }
 
+    @Test
+    void checkEditChangingPublisher() {
+        CardPublicationData card = CardPublicationData.builder().publisher("entity2").processVersion("O")
+        .processInstanceId("PROCESS_CARD_USER_2").severity(SeverityEnum.INFORMATION)
+        .process("PROCESS_CARD_USER")
+        .parentCardId(null)
+        .initialParentCardUid(null)
+        .state("STATE1")
+        .title(I18nPublicationData.builder().key("title").build())
+        .summary(I18nPublicationData.builder().key("summary").build())
+        .startDate(Instant.now())
+        .state("state1")
+        .build();
+
+
+        List<String> entitiesAllowedToEdit = new ArrayList();
+        entitiesAllowedToEdit.add("entityallowed");
+
+        card.setEntitiesAllowedToEdit(entitiesAllowedToEdit);
+
+        currentUserWithPerimeters.getUserData().setEntities(Arrays.asList("entity2", "newPublisherId"));
+
+        cardProcessingService.processUserCard(card, currentUserWithPerimeters, token);
+        Assertions.assertThat(checkCardCount(1)).isTrue();
+
+        card.setUid(null);
+        card.setPublisher("newPublisherId");
+
+        cardProcessingService.processUserCard(card, currentUserWithPerimeters, token);
+        Assertions.assertThat(checkCardCount(1)).isTrue();
     }
 }

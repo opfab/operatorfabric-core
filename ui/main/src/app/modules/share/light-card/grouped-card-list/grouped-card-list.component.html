@@ -1,0 +1,7 @@
+<div class="row opfab-grouped-row" *ngFor="let currentLightCard of lightCards">
+    <div class="opfab-grouped-light-card-detail" style="width: 100%">
+        <of-light-card [lightCard]="currentLightCard"
+                       [groupedCardOpen]="(currentLightCard.id === (selection | async))">
+        </of-light-card>
+    </div>
+</div>

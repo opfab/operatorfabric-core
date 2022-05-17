@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,6 +33,9 @@ import {AppService} from "@ofServices/app.service";
 import {BusinessconfigI18nLoaderFactory} from '@tests/helpers';
 import {LightCardsServiceMock} from '@tests/mocks/lightcards.service.mock';
 import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
+import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {RemoteLoggerService} from '@ofServices/logs/remote-logger.service';
+import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
 
 
 describe('InitChartComponent', () => {
@@ -71,7 +74,10 @@ describe('InitChartComponent', () => {
         {provide: HttpHandler, useClass: HttpHandler},
         {provide: AppService, useClass: AppService},
         {provide: GlobalStyleService, useClass: GlobalStyleService},
-        {provide: LightCardsFeedFilterService, useClass: LightCardsServiceMock}],
+        {provide: LightCardsFeedFilterService, useClass: LightCardsServiceMock},
+        {provide: OpfabLoggerService, useClass: OpfabLoggerService},
+        {provide: RemoteLoggerService, useClass : RemoteLoggerServiceMock}
+      ],
       schemas: [ NO_ERRORS_SCHEMA ],
     })
     .compileComponents();

@@ -78,7 +78,7 @@ public class CardSubscription {
     }
 
 
-    public void initSubscription(Runnable doOnCancel) {
+    public void initSubscription(boolean sendReload, Runnable doOnCancel) {
         this.publisher = Flux.create(emitter -> {
             log.info("Create subscription for user {}", userLogin);
             this.messageSink = emitter;
@@ -88,6 +88,8 @@ public class CardSubscription {
                 doOnCancel.run();
             });
             emitter.next("INIT");
+            if (sendReload)
+                emitter.next("RELOAD");
         });
 
     }

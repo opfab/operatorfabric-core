@@ -1,0 +1,157 @@
+// Copyright (c) 2022 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 3.6.0 to release 3.7.0
+
+== Docker images names changed
+From version 3.7.0 the docker names of the former "business services" are changed. Here are there old names and the new ones.
+
+|===
+|Old docker name|New docker name
+
+
+|lfeoperatorfabric/of-cards-consultation-business-service:3.6.0.RELEASE|lfeoperatorfabric/of-cards-consultation-service:3.7.0.RELEASE
+|lfeoperatorfabric/of-cards-publication-business-service:3.6.0.RELEASE|lfeoperatorfabric/of-cards-publication-service:3.7.0.RELEASE
+|lfeoperatorfabric/of-users-business-service:3.6.0.RELEASE|lfeoperatorfabric/of-users-service:3.7.0.RELEASE
+|lfeoperatorfabric/of-businessconfig-business-service:3.6.0.RELEASE|lfeoperatorfabric/of-businessconfig-service:3.7.0.RELEASE
+
+|===
+
+
+
+You must change your docker-compose files accordingly.
+
+== Third parties configuration
+The configuration of the third parties applications as external recipents has changed. It is now possible to configure wether the user token shall be propagated to the third party or not by setting the "propagateUserToken" boolean property.
+
+If you have third parties configured in your 'cards-publication.yml' you should change the configuration as follows:
+
+From:
+
+....
+externalRecipients-url: "{\
+           third-party1: \"http://thirdparty1/test1\", \
+           third-party2: \"http://thirdparty2:8090/test2\", \
+           }"
+....
+
+To
+
+....
+external-recipients:
+  recipients:
+    - id: "third-party1"
+      url: "http://thirdparty1/test1"
+      propagateUserToken: true
+    - id: "third-party2"
+      url: "http://thirdparty2:8090/test2"
+      propagateUserToken: true
+....
+
+== Rename attribute externalDeviceId
+
+It is now possible to have several external device systems, therefore the attribute externalDeviceId is now renamed into externalDeviceIds and is now a list.
+
+=== In the configuration file
+
+In the configuration file, replace 
+....
+userConfigurations:
+        - userLogin: operator1_fr
+          externalDeviceId: CDS_1
+        - userLogin: operator2_fr
+          externalDeviceId: CDS_2
+        - userLogin: operator3_fr
+          externalDeviceId: CDS_3
+        - userLogin: operator4_fr
+          externalDeviceId: CDS_1
+....
+
+by
+
+....
+userConfigurations:
+        - userLogin: operator1_fr
+          externalDeviceIds: ["CDS_1"]
+        - userLogin: operator2_fr
+          externalDeviceIds: ["CDS_2"]
+        - userLogin: operator3_fr
+          externalDeviceIds: ["CDS_3"]
+        - userLogin: operator4_fr
+          externalDeviceIds: ["CDS_1"]
+....
+
+
+=== Changes in the Mongo data base
+
+==== Before the migration
+
+Before the migration to 3.7.0, one should save its current data base, then add the attribute "externalDeviceIds" based on the
+value of the existing attribute "externalDeviceId". To add this attribute, simply launch the commands :
+
+....
+var collection = db.getCollection("userConfigurations")
+collection.find().forEach(function(user) {collection.updateOne({_id: user._id}, {$set: {externalDeviceIds: [user.externalDeviceId]}})})
+....
+
+
+==== Once the migration is done
+
+Once the migration to 3.7.0 is done, the attribute "externalDeviceId" is not used anymore.
+You can remove it by launching :
+
+....
+var collection = db.getCollection("userConfigurations")
+collection.find().forEach(function(user) {collection.updateOne({_id: user._id}, {$unset: {"externalDeviceId": 1}})})
+....
+
+
+== Deprecated feature 
+
+
+=== Field recurrence 
+
+Using "recurrence" field returned by getSpecificCardInformation() method definition is now deprecated.
+
+If you are using the "viewCardInAgenda" and "recurrence" field, use the "timeSpans" field instead when returning the card object in usercardTemplateGateway.getSpecificCardInformation() to configure the visibility of the card in timeline and agenda. 
+
+Example:
+....
+
+    usercardTemplateGateway.getSpecificCardInformation = function () {
+        const message = document.getElementById('message').value;
+        const card = {
+          summary : {key : "message.summary"},
+          title : {key : "message.title"},
+          entityRecipients: ["ENTITY_FR","IT_SUPERVISOR_ENTITY"],
+          data : {message: message}
+        };
+
+        const recurrence = {
+            daysOfWeek : [1,2,3],
+            hoursAndMinutes : {hours:10,minutes:44},
+            durationInMinutes: 15
+        }
+
+        const mystartDate = new Date();
+        const timeSpans = [{
+            startDate: mystartDate.getTime(),
+            endDate: mystartDate.getTime() + 7 * 24 * 3600000,
+            recurrence: recurrence
+        }]
+
+        return {
+            valid: true,
+            card: card,
+            timeSpans: timeSpans
+        };
+
+....
+
+
+
+

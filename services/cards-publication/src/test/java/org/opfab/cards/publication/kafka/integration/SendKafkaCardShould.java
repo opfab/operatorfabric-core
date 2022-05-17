@@ -51,6 +51,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
@@ -192,7 +193,7 @@ class SendKafkaCardShould {
                 .externalRecipient("camunda1")
                 .build();
 
-        appClient.sendCardToExternalApplication(cardPublicationData);
+        appClient.sendCardToExternalApplication(cardPublicationData, Optional.empty());
 
         assertThat (latch.await(5, TimeUnit.SECONDS), is (true));
         assertThat(receiveCardCommandResultIsOK, is(true));

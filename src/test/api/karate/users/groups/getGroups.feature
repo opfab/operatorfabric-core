@@ -19,6 +19,7 @@ Feature: Get Groups
     And def groupName = response[0].name
     And def groupDescription = response[0].description
     And def groupPerimeters = response[0].perimeters
+    And def groupRealtime = response[0].realtime
 
 
     # Get the first group
@@ -30,6 +31,7 @@ Feature: Get Groups
     And match response.name == groupName
     And match response.description == groupDescription
     And match response.perimeters == groupPerimeters
+    And match response.realtime == groupRealtime
 
 
   Scenario: get groups without authentication

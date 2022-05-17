@@ -49,21 +49,21 @@
     </div>
     <div *ngIf="!(hideAckFilter)">
         <div class="row opfab-filter-header">
-            <span translate>feed.filters.ack.title</span>
+            <span id='opfab-filter-ack-title' translate>feed.filters.ack.title</span>
         </div>
         <form [formGroup]="ackFilterForm" id="opfab-ack-filter-form"  style="padding-left: 3px;">
 
-            <label class="opfab-radio-button"> <span  translate>feed.filters.ack.all.label</span>
+            <label class="opfab-radio-button" id="opfab-feed-filter-ack-all-label"> <span  translate>feed.filters.ack.all.label</span>
                 <input type="radio"  id="opfab-feed-filter-ack-all" formControlName="ackControl" value="all">
                 <span class="opfab-radio-button-checkmark"></span>
             </label>
 
-            <label class="opfab-radio-button"> <span  translate>feed.filters.ack.acknowledged.label</span>
+            <label class="opfab-radio-button" id="opfab-feed-filter-ack-ack-label"> <span  translate>feed.filters.ack.acknowledged.label</span>
                 <input type="radio"  id="opfab-feed-filter-ack-ack" formControlName="ackControl" value="ack">
                 <span class="opfab-radio-button-checkmark"></span>
             </label>
 
-            <label class="opfab-radio-button"> <span  translate>feed.filters.ack.notacknowledged.label</span>
+            <label class="opfab-radio-button" id="opfab-feed-filter-ack-notack-label"> <span  translate>feed.filters.ack.notacknowledged.label</span>
                 <input type="radio"  id="opfab-feed-filter-ack-notack" formControlName="ackControl" value="notack">
                 <span class="opfab-radio-button-checkmark"></span>
             </label>
@@ -74,7 +74,7 @@
     <div *ngIf="!(hideTimerTags)" style="width:300px;margin-top:-5px">
 
         <div class="row opfab-filter-header">
-            <span translate>feed.filters.time.titleIfFilterBasedOnPublishDate</span>
+            <span id='opfab-feed-filter-date-title' translate>feed.filters.time.titleIfFilterBasedOnPublishDate</span>
         </div>
 
         <form class="opfab-time-filter" [formGroup]="timeFilterForm" id="opfab-time-filter-form">
@@ -106,7 +106,7 @@
         </form>
     </div>
 
-    <div *ngIf="isFilterChanged()"><a class="opfab-link" (click)="reset()"><span translate>feed.filters.reset</span></a></div>
+    <div *ngIf="isFilterChanged()"><a id='opfab-feed-filter-reset' class="opfab-link" (click)="reset()"><span translate>feed.filters.reset</span></a></div>
 </ng-template>
 
 

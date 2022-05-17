@@ -24,6 +24,6 @@ import java.util.List;
 @Repository
 public interface UserConfigurationRepository extends MongoRepository<UserConfigurationData,String> {
 
-    List<UserConfigurationData> findByExternalDeviceId(String externalDeviceId);
+    List<UserConfigurationData> findByExternalDeviceIds(String externalDeviceId);
 
 }

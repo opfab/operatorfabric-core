@@ -230,7 +230,7 @@ describe ('Response card tests',function () {
 
         // operator4_fr disconnect from ENTITY_1_FR and ENTITY2_FR (the popup for entity choice must not be displayed)
         // because the only one entity allowed to respond for him is now ENTITY3_FR
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-activityarea').click();
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
         cy.get('.opfab-checkbox').contains('Control Center FR South').click();
@@ -256,7 +256,7 @@ describe ('Response card tests',function () {
                                            .next().should("have.text", ' NOK ');
 
         // We reconnect operator4_fr to ENTITY1_FR, ENTITY2_FR
-        cy.get('#opfab-navbar-drop_user_menu').click();
+        cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-activityarea').click();
         cy.get('.opfab-checkbox').contains('Control Center FR South').click();
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();

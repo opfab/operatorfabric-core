@@ -50,6 +50,7 @@
 		  "templateName": "incidentInProgress",
 		  "styles": [],
 		  "acknowledgmentAllowed": "Always",
+		  "consideredAcknowledgedForUserWhen": "AllEntitiesOfUserHaveAcknowledged",
 		  "type" : "FINISHED",
 		  "automaticPinWhenAcknowledged": true
 

@@ -29,7 +29,7 @@ cd ../../bin
 ./waitForOpfabToStart.sh
 cd ../
 # Set a more important timeout for CI/CD as it is usually slower than local computer 
-export CYPRESS_defaultCommandTimeout=10000
+export CYPRESS_defaultCommandTimeout=15000
 ./gradlew runSomeCypressTests -PspecFiles=$testFiles
 status_code=$?
 cd config/docker
