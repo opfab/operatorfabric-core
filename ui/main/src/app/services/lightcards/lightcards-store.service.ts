@@ -243,10 +243,19 @@ export class LightCardsStoreService {
             return this.isLightCardHasBeenAcknowledgedByUserEntity(lightCard, consideredAcknowledgedForUserWhen);
     }
 
+    private doEntityRecipientsIncludeAtLeastOneEntityOfUser(lightCard: LightCard): boolean {
+        const entitiesOfUserThatAreRecipients = lightCard.entityRecipients.filter(entityId => {
+            return this.entitiesService.isEntityAllowedToSendCard(entityId)
+                && this.userService.getCurrentUserWithPerimeters().userData.entities.includes(entityId);
+        });
+        return (entitiesOfUserThatAreRecipients.length > 0);
+    }
+
     private areWeInModeUserHasAcknowledged(lightCard: LightCard,
                                            consideredAcknowledgedForUserWhen: ConsideredAcknowledgedForUserWhenEnum): boolean {
         return ((consideredAcknowledgedForUserWhen === ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED) ||
-            ((!lightCard.entityRecipients) || (!lightCard.entityRecipients.length)));
+                ((!lightCard.entityRecipients) || (!lightCard.entityRecipients.length)) ||
+                !this.doEntityRecipientsIncludeAtLeastOneEntityOfUser(lightCard));
     }
 
     private isLightCardHasBeenAcknowledgedByUserEntity(lightCard: LightCard,
