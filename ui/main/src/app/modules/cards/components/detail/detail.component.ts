@@ -667,7 +667,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     public getResponsePublisher(resp: Card) {
-        return this.entitiesService.getEntityName(resp.publisher)
+        return this.entitiesService.getEntityName(resp.publisher);
     }
 
     public isSmallscreen() {
