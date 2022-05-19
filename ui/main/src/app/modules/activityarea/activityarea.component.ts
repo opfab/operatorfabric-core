@@ -151,7 +151,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
             if (! control.value) // not checked
                 disconnectedEntities.push(entityId);
         }
-
+        console.log(new Date().toISOString() + "Patch entities disconnected = " + disconnectedEntities);
         this.settingsService.patchUserSettings({login: this.currentUserWithPerimeters.userData.login,
             entitiesDisconnected: disconnectedEntities})
             .subscribe({
