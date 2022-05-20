@@ -1,0 +1,319 @@
+{
+	"publisher": "publisher_test",
+	"processVersion": "1",
+	"process": "defaultProcess",
+	"processInstanceId": "process2",
+	"state": "dataQualityState",
+	"tags": [
+		"tag2"
+	],
+	"groupRecipients": [
+		"Dispatcher"
+	],
+	"severity": "INFORMATION",
+	"startDate" : ${customEpochDate1},
+	"endDate" : ${customEpochDate2},
+	"summary": {
+		"key": "message.summary"
+	},
+	"title": {
+		"key": "chartDetail.title"
+	},
+	"data": {
+		"quality": [
+			{
+				"hour": "27/03 15:40",
+				"Qualite_P": 1,
+				"Qualite_R": 1
+			},
+			{
+				"hour": "27/03 15:45",
+				"Qualite_P": 1,
+				"Qualite_R": 1
+			},
+			{
+				"hour": "27/03 15:50",
+				"Qualite_P": 1,
+				"Qualite_R": 1
+			},
+			{
+				"hour": "27/03 15:55",
+				"Qualite_P": 1,
+				"Qualite_R": 1
+			},
+			{
+				"hour": "27/03 16:00",
+				"Qualite_P": 1,
+				"Qualite_R": 1
+			},
+			{
+				"hour": "27/03 16:05",
+				"Qualite_P": 1,
+				"Qualite_R": 1
+			},
+			{
+				"hour": "27/03 16:10",
+				"Qualite_P": 1,
+				"Qualite_R": 1
+			},
+			{
+				"hour": "27/03 16:15",
+				"Qualite_P": 1,
+				"Qualite_R": 1
+			},
+			{
+				"hour": "27/03 16:20",
+				"Qualite_P": 1,
+				"Qualite_R": 1
+			},
+			{
+				"hour": "27/03 16:25",
+				"Qualite_P": 1,
+				"Qualite_R": 1
+			},
+			{
+				"hour": "27/03 16:30",
+				"Qualite_P": 1,
+				"Qualite_R": 1
+			},
+			{
+				"hour": "27/03 16:35",
+				"Qualite_P": 1,
+				"Qualite_R": 1
+			},
+			{
+				"hour": "27/03 16:40",
+				"Qualite_P": 1,
+				"Qualite_R": 1
+			},
+			{
+				"hour": "27/03 16:45",
+				"Qualite_P": 1,
+				"Qualite_R": 1
+			},
+			{
+				"hour": "27/03 16:50",
+				"Qualite_P": 1,
+				"Qualite_R": 1
+			},
+			{
+				"hour": "27/03 16:55",
+				"Qualite_P": 1,
+				"Qualite_R": 1
+			},
+			{
+				"hour": "27/03 17:00",
+				"Qualite_P": 1,
+				"Qualite_R": 1
+			},
+			{
+				"hour": "27/03 17:05",
+				"Qualite_P": 1,
+				"Qualite_R": 1
+			},
+			{
+				"hour": "27/03 17:10",
+				"Qualite_P": 1,
+				"Qualite_R": 1
+			},
+			{
+				"hour": "27/03 17:15",
+				"Qualite_P": 1,
+				"Qualite_R": 1
+			},
+			{
+				"hour": "27/03 17:20",
+				"Qualite_P": 5,
+				"Qualite_R": 5
+			},
+			{
+				"hour": "27/03 17:25",
+				"Qualite_P": 1,
+				"Qualite_R": 1
+			},
+			{
+				"hour": "27/03 17:30",
+				"Qualite_P": 1,
+				"Qualite_R": 1
+			}
+		],
+		"indications": [
+			{
+				"titre": "Invalid measurement",
+				"information": "Invalidation of an abnormal voltage measurement (-127.0 kV) on the .ENTR 61 node",
+				"tooltip": "A measurement is invalidated upstream of the status estimation if it is outside the range 80% Unom -> 120% Unom.&#13&#13Check if the measurement is consistent or if there is a sensor and/or feedback problem."
+			}
+		],
+		"quality_chart_title": "Networks data quality for France North ",
+
+		"ecartsHN": [
+			{
+				"hour": "27/03 15:40",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 25,
+				"Nb_HN_R": 27
+			},
+			{
+				"hour": "27/03 15:45",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 20,
+				"Nb_HN_R": 24
+			},
+			{
+				"hour": "27/03 15:50",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 31,
+				"Nb_HN_R": 35
+			},
+			{
+				"hour": "27/03 15:55",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 21,
+				"Nb_HN_R": 25
+			},
+			{
+				"hour": "27/03 16:00",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 25,
+				"Nb_HN_R": 28
+			},
+			{
+				"hour": "27/03 16:05",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 22,
+				"Nb_HN_R": 24
+			},
+			{
+				"hour": "27/03 16:10",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 23,
+				"Nb_HN_R": 25
+			},
+			{
+				"hour": "27/03 16:15",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 25,
+				"Nb_HN_R": 27
+			},
+			{
+				"hour": "27/03 16:20",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 26,
+				"Nb_HN_R": 28
+			},
+			{
+				"hour": "27/03 16:25",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 20,
+				"Nb_HN_R": 23
+			},
+			{
+				"hour": "27/03 16:30",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 27,
+				"Nb_HN_R": 28
+			},
+			{
+				"hour": "27/03 16:35",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 23,
+				"Nb_HN_R": 26
+			},
+			{
+				"hour": "27/03 16:40",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 21,
+				"Nb_HN_R": 25
+			},
+			{
+				"hour": "27/03 16:45",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 28,
+				"Nb_HN_R": 29
+			},
+			{
+				"hour": "27/03 16:50",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 27,
+				"Nb_HN_R": 28
+			},
+			{
+				"hour": "27/03 16:55",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 24,
+				"Nb_HN_R": 26
+			},
+			{
+				"hour": "27/03 17:00",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 22,
+				"Nb_HN_R": 26
+			},
+			{
+				"hour": "27/03 17:05",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 24,
+				"Nb_HN_R": 28
+			},
+			{
+				"hour": "27/03 17:10",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 23,
+				"Nb_HN_R": 25
+			},
+			{
+				"hour": "27/03 17:15",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 28,
+				"Nb_HN_R": 30
+			},
+			{
+				"hour": "27/03 17:20",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 26,
+				"Nb_HN_R": 27
+			},
+			{
+				"hour": "27/03 17:25",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 22,
+				"Nb_HN_R": 26
+			},
+			{
+				"hour": "27/03 17:30",
+				"Seuil_P": 38,
+				"Seuil_R": 38,
+				"Nb_HN_P": 26,
+				"Nb_HN_R": 29
+			}
+		]
+	},
+	"timeSpans": [
+		{
+			"start" : ${customEpochDate1},
+			"end" : ${customEpochDate2}
+		}
+	]
+}
