@@ -8,7 +8,6 @@ npmInstall {
     inputs.file('package.json')
     inputs.file('package-lock.json')
     inputs.file('angular.json')
-    inputs.file('tslint.json')
 
     outputs.dir('build')
 
@@ -20,7 +19,6 @@ task runBuild(type: NpmTask) {
     inputs.file('package.json')
     inputs.file('package-lock.json')
     inputs.file('angular.json')
-    inputs.file('tslint.json')
 
     outputs.dir('build')
 
@@ -34,7 +32,6 @@ task runHeadlessTests(type: NpmTask) {
     inputs.file('package.json')
     inputs.file('package-lock.json')
     inputs.file('angular.json')
-    inputs.file('tslint.json')
 
     outputs.dir('reports')
 
