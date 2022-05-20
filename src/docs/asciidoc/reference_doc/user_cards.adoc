@@ -85,6 +85,11 @@ ifdef::single-page-doc[<<opfab_template_style, OperatorFabric Style >>]
 ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#opfab_template_style, OperatorFabric Style>>]
 for more information)
 
+[WARNING]
+Be aware that as we have a preview of the card, the application loads the html related to the usercard (build with the usercard template) and the html related to the card in preview (build with the card template) into the browser at the same time. This implies that you MUST NOT name the elements with the same names in both templates. This rule applies to HTML elements identifiers(id), global JavaScript variables and JavaScript function names.
+
+
+
 Once the card has been sent, users with the appropriate rights can edit it. If they choose to do so, they're presented
 with the same input form as for the card creation, but the fields are pre-filled with the current data of the card.
 This way, they can only change what they need without having to re-create the card from scratch.
@@ -281,3 +286,4 @@ https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bund
 == Misc
 
 When a user send a card, it is always sent to himself whatever he chooses in the recipient list.
+
