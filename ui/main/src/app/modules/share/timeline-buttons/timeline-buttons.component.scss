@@ -56,12 +56,14 @@
           color: var(--opfab-navbar-color-active);
           font-weight: bold;
           text-decoration: underline;
+          cursor: pointer;
         }
 
         .link-unselect {
           background-color: var(--opfab-bgcolor);
           color: var(--opfab-navbar-color);
           text-decoration: none;
+          cursor: pointer;
         }
 
         .circle-btn {
