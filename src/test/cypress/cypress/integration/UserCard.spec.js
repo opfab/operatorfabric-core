@@ -103,7 +103,7 @@ describe('User Card ', function () {
     })
 
 
-    it('Recipients dropdown should be restricted in message user card', () => {
+    it('Recipients dropdown should be restricted and initial recipients preselected in message user card', () => {
 
       cy.loginOpFab('operator1_fr', 'test');
       cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
@@ -120,6 +120,14 @@ describe('User Card ', function () {
       cy.get('#opfab-recipients').find('li').eq(4).find('label').contains("French Control Centers");
       cy.get('#opfab-recipients').find('li').eq(5).find('label').contains("IT SUPERVISION CENTER");
       cy.get('#opfab-recipients').find('li').eq(6).find('label').contains("Italian Control Centers");
+
+      cy.get('#opfab-recipients').find('li').eq(0).find('input').should('be.checked');
+      cy.get('#opfab-recipients').find('li').eq(1).find('input').should('be.checked');
+      cy.get('#opfab-recipients').find('li').eq(2).find('input').should('be.checked');
+      cy.get('#opfab-recipients').find('li').eq(3).find('input').should('not.be.checked');
+      cy.get('#opfab-recipients').find('li').eq(4).find('input').should('not.be.checked');
+      cy.get('#opfab-recipients').find('li').eq(5).find('input').should('not.be.checked');
+      cy.get('#opfab-recipients').find('li').eq(6).find('input').should('not.be.checked');
     })
 
   })

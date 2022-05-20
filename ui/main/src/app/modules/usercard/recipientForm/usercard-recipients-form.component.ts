@@ -48,12 +48,13 @@ export class UserCardRecipientsFormComponent implements OnInit , OnChanges {
             recipients: new FormControl([])
         });
         this.listenForDropdownRecipientList();
+        this.listenForInitialSelectedRecipientList();
     }
 
     ngOnChanges() {
         if (this.userCardConfiguration) this.loadRecipientsOptions();
-
     }
+
     public getSelectedRecipients() {
         return this.recipientForm.value['recipients'];
     }
@@ -103,5 +104,10 @@ export class UserCardRecipientsFormComponent implements OnInit , OnChanges {
         usercardTemplateGateway.setDropdownEntityRecipientList =  (recipients) =>  this.loadRestrictedRecipientList(recipients);
     }
 
+
+    private listenForInitialSelectedRecipientList() {
+        // Set initial recipient list from template only if not in edition mode
+        usercardTemplateGateway.setInitialSelectedRecipients =  (recipients) =>  { if (!this.initialSelectedRecipients || this.initialSelectedRecipients.length === 0 ) this.initialSelectedRecipients = recipients};
+    }
 
 }

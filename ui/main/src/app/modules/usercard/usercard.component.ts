@@ -232,6 +232,8 @@ export class UserCardComponent implements OnInit {
 
         this.userCardConfiguration = this.processesService.getProcess(this.selectedProcessId).states[this.selectedStateId].userCard;
         this.setFieldsVisibility();
+        if (!this.cardToEdit) this.initialSelectedRecipients = [];
+
         this.loadTemplate();
     }
 
@@ -531,6 +533,7 @@ export class UserCardComponent implements OnInit {
         }
         return severity;
     }
+
 
     private getValueOrNull(value) {
         return (value !== undefined) ? value : null;
