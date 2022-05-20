@@ -63,7 +63,8 @@ export class EditGroupModalComponent implements OnInit {
           , uniqueGroupIdValidator),
       name: new FormControl('', [Validators.required]),
       description: new FormControl(''),
-      perimeters: new FormControl([])
+      perimeters: new FormControl([]),
+      realtime: new FormControl(false)
     });
 
     this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.type);
@@ -71,8 +72,8 @@ export class EditGroupModalComponent implements OnInit {
     if (this.row) { // If the modal is used for edition, initialize the modal with current data from this row
 
       // For 'simple' fields (where the value is directly displayed), we use the form's patching method
-      const {id, name, description} = this.row;
-      this.groupForm.patchValue({id, name, description}, { onlySelf: false });
+      const {id, name, description, realtime} = this.row;
+      this.groupForm.patchValue({id, name, description, realtime}, { onlySelf: false });
 
       // Otherwise, we use the selectedItems property of the of-multiselect component
       this.selectedPerimeters = this.row.perimeters;
@@ -139,7 +140,7 @@ export class EditGroupModalComponent implements OnInit {
     this.id.setValue((this.id.value as string).trim());
     this.name.setValue((this.name.value as string).trim());
     this.description.setValue((this.description.value as string).trim());
-
+    this.realtime.setValue(this.realtime.value as boolean);
   }
 
   get id() {
@@ -156,6 +157,10 @@ export class EditGroupModalComponent implements OnInit {
 
   get perimeters() {
     return this.groupForm.get('perimeters');
+  }
+
+  get realtime() {
+    return this.groupForm.get('realtime');
   }
 
   dismissModal(reason: string): void {

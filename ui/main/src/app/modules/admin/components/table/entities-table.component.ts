@@ -18,7 +18,7 @@ import {AdminItemType} from '../../services/sharing.service';
   selector: 'of-entities-table'
 })
 export class EntitiesTableComponent extends AdminTableDirective implements OnInit {
-  
+
 
   tableType = AdminItemType.ENTITY;
   fields = [new Field('id', 3),

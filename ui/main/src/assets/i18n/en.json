@@ -320,6 +320,9 @@
         "name": "NAME",
         "description": "DESCRIPTION",
         "perimeters" : "PERIMETERS",
+        "realtime": "REAL TIME",
+        "true": "YES",
+        "false": "NO",
         "confirmDelete": "Do you really want to delete group",
         "add": "ADD NEW GROUP"
       },
