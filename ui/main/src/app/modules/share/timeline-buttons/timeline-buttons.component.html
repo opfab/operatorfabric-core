@@ -34,7 +34,7 @@
           </a>
         </li>
 
-        <li style="width:1.5em">
+        <li style="width:1.5em;cursor: pointer">
           <span *ngIf="isTimelineLocked()" id="opfab-timeline-unlock" class="fas fa-lock" (click)="unlockTimeline()"
                 [ngbPopover]="tipLockedTimeline" popoverClass="opfab-popover" placement="left" container="body" triggers="mouseenter:mouseleave"></span>
           <span *ngIf="!isTimelineLocked()" id="opfab-timeline-lock" class="fas fa-lock-open" (click)="lockTimeline()" 

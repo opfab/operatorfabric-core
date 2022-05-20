@@ -32,9 +32,10 @@
 .opfab-move-domain{
   padding-bottom: 12px;
 }
-.opfab-move-domain:hover{
+.opfab-move-domain a:hover{
   color: var(--opfab-navbar-color-active);
   font-weight: bold;
+  cursor: pointer;
 }
 
 
@@ -53,4 +54,5 @@
 .opfab-showhide-timeline a:hover {
   color: var(--opfab-navbar-color-active);
   font-weight: bold;
+  cursor: pointer;
 }
