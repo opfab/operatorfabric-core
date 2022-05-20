@@ -228,6 +228,7 @@ export class UserCardComponent implements OnInit {
         usercardTemplateGateway.setInitialStartDate(null);
         usercardTemplateGateway.setInitialEndDate(null);
         usercardTemplateGateway.setInitialLttd(null);
+        usercardTemplateGateway.setInitialSeverity(null);
 
         this.userCardConfiguration = this.processesService.getProcess(this.selectedProcessId).states[this.selectedStateId].userCard;
         this.setFieldsVisibility();
@@ -276,6 +277,7 @@ export class UserCardComponent implements OnInit {
                         setTimeout(() => { // wait for DOM rendering
                             this.reinsertScripts();
                             this.setInitialDateFormValues();
+                            if (this.severityVisible && !this.cardToEdit) this.setInitialSeverityValue();
                             usercardTemplateGateway.setEntityUsedForSendingCard(this.findPublisherForCreatingUsercard());
                         }, 10);
                     },
@@ -285,6 +287,28 @@ export class UserCardComponent implements OnInit {
                     }
                 });
         } else this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
+    }
+
+    setInitialSeverityValue() {
+        let initialSeverity;
+        
+        switch (usercardTemplateGateway.getInitialSeverity()) {
+            case 'ALARM':
+                initialSeverity = Severity.ALARM;
+                break;
+            case 'ACTION':
+                initialSeverity = Severity.ACTION;
+                break;
+            case 'INFORMATION':
+                initialSeverity = Severity.INFORMATION;
+                break;
+            case 'COMPLIANT':
+                initialSeverity = Severity.COMPLIANT;
+                break;      
+            default:
+                initialSeverity = Severity.ALARM;
+        }
+        this.severityForm.get('severity').setValue(initialSeverity);
     }
 
 

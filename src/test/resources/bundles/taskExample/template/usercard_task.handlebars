@@ -77,6 +77,8 @@
     var mystartDate = new Date();
     mystartDate.setTime(mystartDate.getTime());
 
+    usercardTemplateGateway.setInitialSeverity('ACTION');
+
     usercardTemplateGateway.setInitialStartDate(mystartDate.getTime() + 3600000);
 
     usercardTemplateGateway.setInitialEndDate(mystartDate.getTime() + 7 * 24 * 3600000);
