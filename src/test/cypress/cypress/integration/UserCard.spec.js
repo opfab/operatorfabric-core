@@ -920,5 +920,36 @@ describe('User Card ', function () {
 
     })
   })
+
+  describe('Set initial severity from template', function () {
+
+    it('Set initial severity from template', () => {
+      cy.deleteAllCards();
+      cy.loginOpFab('operator1_fr', 'test');
+      cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+      // Check default severity level value is 'Alarm'
+      cy.get('#opfab-sev-alarm').should('be.checked');
+
+      cy.usercardSelectService('User card examples');
+      cy.usercardSelectProcess('Task');
+      // Check initial severity level value is set to 'Action'
+      cy.get('#opfab-sev-action').should('be.checked');
+
+      // Change severity, send card, edit it and check severity is not modified on edition
+      cy.get('#opfab-sev-information').check();
+      cy.get('#opfab-sev-information').should('be.checked');
+      cy.usercardPrepareAndSendCard();
+      cy.get('of-light-card').eq(0).click()
+      .find('[id^=opfab-feed-light-card]')
+      .invoke('attr', 'data-urlId')
+      .then((urlId) => {
+        cy.waitDefaultTime();
+        cy.hash().should('eq', '#/feed/cards/' + urlId);
+        cy.get('#opfab-card-edit').click();
+        cy.get('#opfab-sev-information').should('be.checked');
+      })
+
+    })
+  })
   
 })

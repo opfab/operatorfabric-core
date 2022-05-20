@@ -215,6 +215,18 @@ It is also possible to get the values of  `startDate`, `endDate` and `lttd` by c
 * _usercardTemplateGateway.getEndDate()_
 * _usercardTemplateGateway.getLttd()_  
 
+== Setting initial card severity
+From the template it is possible to set the initial value for card severity choice by calling the following function: 
+
+* _usercardTemplateGateway.setInitialSeverity(severity)_ 
+
+Allowed severity values are:
+
+* 'ALARM'
+* 'ACTION'
+* 'INFORMATION'
+* 'COMPLIANT'
+
 == Card editing
 Once a user card has been sent it can be edited by a user member of the publisher entity.
 It is possible to allow other entities to edit the card by specifying the 'entitiesAllowedToEdit' card field.
