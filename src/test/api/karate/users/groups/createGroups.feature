@@ -53,7 +53,7 @@ Feature: CreateGroups
     And match response.description == group.description
     And match response.name == group.name
     And match response.id == group.id
-    And match response.realtime == null
+    And match response.realtime == false
 
   Scenario: Update my group
 

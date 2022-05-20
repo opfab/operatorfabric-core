@@ -156,6 +156,19 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
           wrapText: true,
           autoHeight: true,
           flex: 4
+        },
+        'realtimeColumn': {
+          sortable: true,
+          filter: 'agTextColumnFilter',
+          filterParams: {
+            valueGetter: params => {
+              return params.data.realtime ? this.translateService.instant('admin.input.group.true')
+                  : this.translateService.instant('admin.input.group.false');
+            }
+          },
+          wrapText: true,
+          autoHeight: true,
+          flex: 4,
         }
       },
       localeTextFunc : function (key) {
@@ -271,6 +284,9 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
 
       if ((this.tableType === AdminItemType.ENTITY) && (field.name === 'entityAllowedToSendCard'))
         columnDef.type = 'entityAllowedToSendCardColumn';
+
+      if ((this.tableType === AdminItemType.GROUP) && (field.name === 'realtime'))
+        columnDef.type = 'realtimeColumn';
 
       if ((this.tableType === AdminItemType.ENTITY) && (field.name === 'parents'))
         columnDef.type = 'parentsColumn';

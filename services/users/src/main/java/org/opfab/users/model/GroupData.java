@@ -39,7 +39,8 @@ public class GroupData implements Group {
     @Singular("perimeter")
     private Set<String> perimeters;
 
-    private Boolean realtime;
+    @Builder.Default
+    private Boolean realtime = false;
 
     @Override
     public List<String> getPerimeters() {

@@ -322,6 +322,9 @@
         "name": "NAAM",
         "description": "OMSCHRIJVING",
         "perimeters" : "PERIMETERS",
+        "realtime": "REAL TIME",
+        "true": "JA",
+        "false": "NEE",
         "confirmDelete": "Wilt u de groep echt verwijderen?",
         "add": "NIEUWE GROEP TOEVOEGEN"
       },
