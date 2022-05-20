@@ -71,12 +71,10 @@ export class HandlebarsService {
         Handlebars.registerHelper('bool', function (v1, operator, v2) {
             switch (operator) {
                 case '==':
-                    // tslint:disable-next-line:triple-equals
                     return (v1 == v2);
                 case '===':
                     return (v1 === v2);
                 case '!=':
-                    // tslint:disable-next-line:triple-equals
                     return (v1 != v2);
                 case '!==':
                     return (v1 !== v2);
