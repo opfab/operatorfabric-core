@@ -67,6 +67,9 @@ export class UserCardComponent implements OnInit {
     private startDateVisible = true;
     private endDateVisible = true;
     private lttdVisible = true;
+    private currentStartDate = new Date().valueOf() + 60000;
+    private currentEndDate = new Date().valueOf() + 60000 * 60 * 24;
+    private currentLttd = this.defaultEndDate - 60000;
 
     private userEntitiesAllowedToSendCardOptions = [];
 
@@ -186,6 +189,10 @@ export class UserCardComponent implements OnInit {
             }
 
             this.datesFormValue = this.datesFromCardToEdit ? this.setDatesFromCardToEdit(startDate, endDate, lttd) : new DatesForm(startDate, endDate, lttd);
+
+            this.currentStartDate  =this.datesFormValue.startDate.initialEpochDate;
+            this.currentEndDate  = this.datesFormValue.endDate.initialEpochDate;
+            this.currentLttd  = this.datesFormValue.lttd.initialEpochDate;
     }
 
     private setDatesFromCardToEdit(startDate : DateField, endDate : DateField, lttd : DateField) : DatesForm {
@@ -195,6 +202,8 @@ export class UserCardComponent implements OnInit {
         this.datesFromCardToEdit = false;
         return new DatesForm(startDate, endDate, lttd);
     }
+
+
 
     private findUserEntitiesAllowedToSendCard(): Array<any> {
         const entitiesList = [];
@@ -219,6 +228,26 @@ export class UserCardComponent implements OnInit {
     public setEmptyProcessList(): void {
         this.emptyProcessList = true;
     }
+
+
+    public onStartDateChange() {
+        const startDate = this.datesForm.getStartDateAsEpoch();
+        this.currentStartDate = startDate;
+        usercardTemplateGateway.startDate = startDate;
+    }
+
+    public onEndDateChange() {
+        const endDate = this.datesForm.getEndDateAsEpoch();
+        this.currentEndDate = endDate;
+        usercardTemplateGateway.endDate = endDate;
+    }
+
+    public onLttdChange() {
+        const lttd = this.datesForm.getLttdAsEpoch();
+        this.currentLttd = lttd;
+        usercardTemplateGateway.lttd = lttd;
+    }
+
 
     public stateChanged(event: any) {
         this.selectedStateId = event.state;
@@ -433,7 +462,7 @@ export class UserCardComponent implements OnInit {
     private getStartDate(): number {
         let startDate = this.defaultStartDate;
         if (this.startDateVisible) {
-            startDate = this.datesForm.getStartDateAsEpoch();
+            startDate = this.currentStartDate;
         } else if (this.specificInformation && this.specificInformation.card.startDate) {
             startDate = this.specificInformation.card.startDate;
         }
@@ -442,7 +471,7 @@ export class UserCardComponent implements OnInit {
 
     private getEndDate(): number {
         let endDate = null;
-        if (this.endDateVisible) endDate = this.datesForm.getEndDateAsEpoch();
+        if (this.endDateVisible) endDate = this.currentEndDate;
         else {
             if (this.specificInformation && this.specificInformation.card.endDate) endDate = this.specificInformation.card.endDate;
         }
@@ -451,7 +480,7 @@ export class UserCardComponent implements OnInit {
 
     private getLttd(): number {
         let lttd = null;
-        if (this.lttdVisible) lttd = this.datesForm.getLttdAsEpoch();
+        if (this.lttdVisible) lttd = this.currentLttd;
         else {
             if (this.specificInformation && this.specificInformation.card.lttd) lttd = this.specificInformation.card.lttd;
         }
