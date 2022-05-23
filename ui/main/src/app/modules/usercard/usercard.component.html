@@ -42,7 +42,11 @@
         </div>
 
     </form>
-    <of-usercard-dates-form [datesFormInputData]="datesFormValue" #datesForm> </of-usercard-dates-form>
+    <of-usercard-dates-form [datesFormInputData]="datesFormValue" 
+                (startDateFilterChange)="onStartDateChange()"
+                (endDateFilterChange)="onEndDateChange()"
+                (lttdFilterChange)="onLttdChange()"
+                #datesForm> </of-usercard-dates-form>
 
     <div class="opfab-form-lighter" [innerHtml]="userCardTemplate"></div>
 

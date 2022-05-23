@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {TimeService} from '@ofServices/time.service';
@@ -26,12 +26,15 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
 
     @Input() public datesFormInputData: DatesForm;
 
+    @Output() public startDateFilterChange = new Subject();
+    @Output() public endDateFilterChange = new Subject();
+    @Output() public lttdFilterChange = new Subject();
+
     datesForm: FormGroup;
     unsubscribe$: Subject<void> = new Subject<void>();
 
     endDateMin: {year: number, month: number, day: number} = null;
 
-    dateTimeFilterChange = new Subject();
 
     constructor(
         private timeService: TimeService
@@ -39,7 +42,6 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
     }
 
     ngOnInit() {
-
         this.datesForm = new FormGroup({
             startDate: new FormControl(''),
             endDate: new FormControl(''),
@@ -47,7 +49,7 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
 
         });
         this.setInitialDateValues();
-        this.dateTimeFilterChange.pipe(
+        this.startDateFilterChange.pipe(
             takeUntil(this.unsubscribe$),
             debounceTime(1000),
         ).subscribe(() => this.setDateFilterBounds());
@@ -96,8 +98,20 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
         return this.createTimestampFromValue(this.datesForm.get('lttd').value);
     }
 
-    onDateTimeChange() {
-        this.dateTimeFilterChange.next(null);
+
+    // Hack : The three following method use setTimeout to let the component update the date internally
+    // otherwise when we get the date we obtain the old one 
+    // refactoring of the date component may be needed to solve this problem 
+    onStartDateChange() {
+        setTimeout( () => this.startDateFilterChange.next(null),0);
+    }
+
+    onEndDateChange() {
+        setTimeout( () => this.endDateFilterChange.next(null),0);
+    }
+
+    onLttdChange() {
+        setTimeout( () => this.lttdFilterChange.next(null),0);
     }
 
     ngOnChanges() {
