@@ -127,16 +127,17 @@ public class UsersController implements UsersApi, UserExtractor {
     public List<User> fetchUsers(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return userRepository.findAll().stream().map( User.class::cast).collect(Collectors.toList());
     }
-
     @Override
     public UserSettings patchUserSettings(HttpServletRequest request, HttpServletResponse response, String login, UserSettings userSettings) throws Exception {
         UserSettingsData settings = userSettingsRepository.findById(login)
                 .orElse(UserSettingsData.builder().login(login).build());
 
+        UserSettings newUserSettings = userSettingsRepository.save(settings.patch(userSettings));
+
         if ((userSettings.getProcessesStatesNotNotified() != null) || (userSettings.getEntitiesDisconnected() != null))
             userService.publishUpdatedUserMessage(login);
 
-        return userSettingsRepository.save(settings.patch(userSettings));
+        return newUserSettings;
     }
 
     @Override
@@ -199,8 +200,8 @@ public class UsersController implements UsersApi, UserExtractor {
         ));
 
         if (foundUser != null) {
-            userService.publishUpdatedUserMessage(foundUser.getLogin());
             userRepository.delete(foundUser);
+            userService.publishUpdatedUserMessage(foundUser.getLogin());
         }
         return null;
     }
