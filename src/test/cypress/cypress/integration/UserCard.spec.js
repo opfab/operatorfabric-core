@@ -19,7 +19,6 @@ describe('User Card ', function () {
   });
 
 
-
   describe('Check edition mode', function () {
 
     it('Label change in edition mode for Question user card', () => {
@@ -93,13 +92,13 @@ describe('User Card ', function () {
       cy.usercardSelectState('Process example');
       cy.get('#opfab-recipients').should("exist");
       cy.get('#opfab-recipients').click();
-      cy.get('#opfab-recipients').find('li').should('have.length', 6);
-      cy.get('#opfab-recipients').find('li').eq(0).find('label').contains("Control Center FR East");
-      cy.get('#opfab-recipients').find('li').eq(1).find('label').contains("Control Center FR North");
-      cy.get('#opfab-recipients').find('li').eq(2).find('label').contains("Control Center FR South");
-      cy.get('#opfab-recipients').find('li').eq(3).find('label').contains("Control Center FR West");
-      cy.get('#opfab-recipients').find('li').eq(4).find('label').contains("French Control Centers");
-      cy.get('#opfab-recipients').find('li').eq(5).find('label').contains("IT SUPERVISION CENTER");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').should('have.length', 6);
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(0).contains("Control Center FR East");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(1).contains("Control Center FR North");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(2).contains("Control Center FR South");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(3).contains("Control Center FR West");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(4).contains("French Control Centers");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(5).contains("IT SUPERVISION CENTER");
     })
 
 
@@ -112,22 +111,23 @@ describe('User Card ', function () {
       cy.usercardSelectState('Message');
       cy.get('#opfab-recipients').should("exist");
       cy.get('#opfab-recipients').click();
-      cy.get('#opfab-recipients').find('li').should('have.length', 7);
-      cy.get('#opfab-recipients').find('li').eq(0).find('label').contains("Control Center FR East");
-      cy.get('#opfab-recipients').find('li').eq(1).find('label').contains("Control Center FR North");
-      cy.get('#opfab-recipients').find('li').eq(2).find('label').contains("Control Center FR South");
-      cy.get('#opfab-recipients').find('li').eq(3).find('label').contains("Control Center FR West");
-      cy.get('#opfab-recipients').find('li').eq(4).find('label').contains("French Control Centers");
-      cy.get('#opfab-recipients').find('li').eq(5).find('label').contains("IT SUPERVISION CENTER");
-      cy.get('#opfab-recipients').find('li').eq(6).find('label').contains("Italian Control Centers");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').should('have.length', 7);
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(0).contains("Control Center FR East");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(1).contains("Control Center FR North");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(2).contains("Control Center FR South");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(3).contains("Control Center FR West");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(4).contains("French Control Centers");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(5).contains("IT SUPERVISION CENTER");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(6).contains("Italian Control Centers");
 
-      cy.get('#opfab-recipients').find('li').eq(0).find('input').should('be.checked');
-      cy.get('#opfab-recipients').find('li').eq(1).find('input').should('be.checked');
-      cy.get('#opfab-recipients').find('li').eq(2).find('input').should('be.checked');
-      cy.get('#opfab-recipients').find('li').eq(3).find('input').should('not.be.checked');
-      cy.get('#opfab-recipients').find('li').eq(4).find('input').should('not.be.checked');
-      cy.get('#opfab-recipients').find('li').eq(5).find('input').should('not.be.checked');
-      cy.get('#opfab-recipients').find('li').eq(6).find('input').should('not.be.checked');
+      cy.get('#opfab-recipients').find('.vscomp-value').contains("Control Center FR East");
+      cy.get('#opfab-recipients').find('.vscomp-value').contains("Control Center FR North");
+      cy.get('#opfab-recipients').find('.vscomp-value').contains("Control Center FR South");
+      cy.get('#opfab-recipients').find('.vscomp-value').contains("Control Center FR West").should('not.exist');
+      cy.get('#opfab-recipients').find('.vscomp-value').contains("French Control Centers").should('not.exist');
+      cy.get('#opfab-recipients').find('.vscomp-value').contains("IT SUPERVISION CENTER").should('not.exist');
+      cy.get('#opfab-recipients').find('.vscomp-value').contains("Italian Control Centers").should('not.exist');
+
     })
 
   })
@@ -213,7 +213,7 @@ describe('User Card ', function () {
       cy.usercardSelectState('Confirmation');
       cy.get('#opfab-recipients').click();
       // Select recipent entity not in user entities
-      cy.get('#opfab-recipients').find('li').eq(0).click();
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(0).click({ force: true });
       
       cy.get('#opfab-recipients').click();
       cy.get('#question').type('Confirm YES or NO');
@@ -229,7 +229,7 @@ describe('User Card ', function () {
       cy.get('#opfab-recipients').click();
       // Select also one of user entities as recipent
       cy.waitDefaultTime(); // avoid detach dom error
-      cy.get('#opfab-recipients').find('li').eq(1).click();
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(1).click({ force: true });
       cy.get('#opfab-recipients').click();
 
       cy.get('#opfab-usercard-btn-prepareCard').click();
@@ -293,7 +293,7 @@ describe('User Card ', function () {
       cy.setFormDateTime('startDate','2020','Jan',20,8,0);
       cy.setFormDateTime('endDate','2029','Jun',25,11,10);
       cy.get('#opfab-recipients').click();
-      cy.get('#opfab-recipients').find('li').eq(2).click();
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(2).click({ force: true });
       cy.get('#opfab-recipients').click();
 
       cy.usercardPrepareAndSendCard();
@@ -429,6 +429,7 @@ describe('User Card ', function () {
     })
 
     it('Cannot edit card from not allowed entity', () => {
+      cy.sendCard('cypress/userCard/process.json');
       cy.loginOpFab('operator2_fr', 'test');
       cy.get('of-light-card').should('have.length', 1);
       cy.get('of-light-card').eq(0).click()
@@ -451,7 +452,7 @@ describe('User Card ', function () {
       cy.get("of-usercard").should('exist');
       cy.get('#message').type('Hello')
       cy.get('#opfab-recipients').click();
-      cy.get('#opfab-recipients').find('li').eq(2).click();
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(2).click({ force: true });
       cy.get('#opfab-recipients').click();
       cy.usercardPrepareAndSendCard();
       // Check that the message indicating successful sending appears
@@ -605,7 +606,7 @@ describe('User Card ', function () {
       cy.setFormDateTime('startDate', '2020', 'Jan', 20, 8, 0);
       cy.setFormDateTime('endDate', '2029', 'Jun', 25, 11, 10);
       cy.get('#opfab-recipients').click();
-      cy.get('#opfab-recipients').find('li').eq(2).click();
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(2).click({ force: true });
       cy.get('#opfab-recipients').click();
       cy.get('#opfab-usercard-btn-prepareCard').click();
 

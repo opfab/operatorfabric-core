@@ -8,12 +8,13 @@
  */
 
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
 import {ConfigService} from '@ofServices/config.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {Recipient} from '@ofModel/processes.model';
 import {Entity} from '@ofModel/entity.model';
 import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {FormControl, FormGroup} from '@angular/forms';
+import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 
 declare const usercardTemplateGateway: any;
 @Component({
@@ -25,15 +26,14 @@ export class UserCardRecipientsFormComponent implements OnInit , OnChanges {
 
     @Input() public userCardConfiguration;
     @Input() public initialSelectedRecipients;
-
     public  recipientForm: FormGroup;
     private useDescriptionFieldForEntityList = false;
-    public recipientsOptions = [];
-    public dropdownSettings = {
-        text: '',
-        badgeShowLimit: 30,
-        enableSearchFilter: true
-    };
+    public recipientsOptions: Array<MultiSelectOption> = [];
+    public selectedRecipients: Array<string> =[];
+    public multiSelectConfig : MultiSelectConfig = {
+        labelKey : "userCard.filters.recipients", 
+        sortOptions: true
+    }
 
     constructor(
         private configService: ConfigService,
@@ -45,7 +45,7 @@ export class UserCardRecipientsFormComponent implements OnInit , OnChanges {
 
     ngOnInit() {
         this.recipientForm = new FormGroup({
-            recipients: new FormControl([])
+            userCardRecipients: new FormControl([])
         });
         this.listenForDropdownRecipientList();
         this.listenForInitialSelectedRecipientList();
@@ -56,7 +56,7 @@ export class UserCardRecipientsFormComponent implements OnInit , OnChanges {
     }
 
     public getSelectedRecipients() {
-        return this.recipientForm.value['recipients'];
+        return this.recipientForm.value['userCardRecipients'];
     }
 
     private loadRecipientsOptions() {
@@ -66,8 +66,7 @@ export class UserCardRecipientsFormComponent implements OnInit , OnChanges {
         } else {
             this.recipientsOptions = [];
             this.entitiesService.getEntities().forEach(entity =>
-                this.recipientsOptions.push({id: entity.id, itemName: this.getEntityLabel(entity)}));
-            this.recipientsOptions.sort((a, b) => a.itemName.localeCompare(b.itemName));
+                this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity))));
         }
     }
 
@@ -77,23 +76,22 @@ export class UserCardRecipientsFormComponent implements OnInit , OnChanges {
             if (!!r.levels) {
                 r.levels.forEach(l => {
                     this.entitiesService.resolveChildEntitiesByLevel(r.id, l).forEach(entity => {
-                        if (!this.recipientsOptions.find(o => o.id === entity.id)) {
-                            this.recipientsOptions.push({id: entity.id, itemName: this.getEntityLabel(entity)});
+                        if (!this.recipientsOptions.find(o => o.value === entity.id)) {
+                            this.recipientsOptions.push(new MultiSelectOption(entity.id,this.getEntityLabel(entity)));
                         }
                     });
                 });
             } else {
-                if (!this.recipientsOptions.find(o => o.id === r.id)) {
+                if (!this.recipientsOptions.find(o => o.value === r.id)) {
                     const entity = this.entitiesService.getEntities().find(e => e.id === r.id);
                     if (!!entity)
-                        this.recipientsOptions.push({id: entity.id, itemName: this.getEntityLabel(entity)});
+                        this.recipientsOptions.push(new MultiSelectOption(entity.id,this.getEntityLabel(entity)));
                     else
                         this.opfabLogger.info('Recipient entity not found : ' + r.id);
                 }
             }
         });
 
-        this.recipientsOptions.sort((a, b) => a.itemName.localeCompare(b.itemName));
     }
 
     private getEntityLabel(entity: Entity) {
@@ -110,4 +108,7 @@ export class UserCardRecipientsFormComponent implements OnInit , OnChanges {
         usercardTemplateGateway.setInitialSelectedRecipients =  (recipients) =>  { if (!this.initialSelectedRecipients || this.initialSelectedRecipients.length === 0 ) this.initialSelectedRecipients = recipients};
     }
 
+    public recipientChoiceChanged(selected: any) {
+        this.selectedRecipients = selected;
+    }
 }

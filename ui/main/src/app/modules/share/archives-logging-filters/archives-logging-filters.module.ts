@@ -12,7 +12,7 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {MultiFilterModule} from 'app/modules/share/multi-filter/multi-filter.module';
+import {MultiSelectModule} from '../multi-select/multi-select.module';
 import {ArchivesLoggingFiltersComponent} from "./archives-logging-filters.component";
 import {DatetimeFilterModule} from '../datetime-filter/datetime-filter.module';
 
@@ -26,7 +26,7 @@ import {DatetimeFilterModule} from '../datetime-filter/datetime-filter.module';
         ReactiveFormsModule,
         TranslateModule,
         NgbModule,
-        MultiFilterModule,
+        MultiSelectModule,
         DatetimeFilterModule
 
     ],

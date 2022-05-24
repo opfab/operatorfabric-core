@@ -15,9 +15,9 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {UserService} from '@ofServices/user.service';
 import {GroupsService} from '@ofServices/groups.service';
 import {EntitiesService} from '@ofServices/entities.service';
-import {TranslateService} from '@ngx-translate/core';
 import {debounceTime, distinctUntilChanged, first, map, switchMap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
+import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 
 @Component({
   selector: 'of-edit-user-modal',
@@ -28,19 +28,25 @@ export class EditUserModalComponent implements OnInit {
 
   userForm: FormGroup;
 
-  entitiesDropdownList = [];
+  entitiesMultiSelectOptions: Array<MultiSelectOption> = [];
   selectedEntities = [];
-  entitiesDropdownSettings = {};
+  entitiesMultiSelectConfig : MultiSelectConfig = {
+    labelKey : "admin.input.user.entities", 
+    placeholderKey : "admin.input.selectEntityText", 
+    sortOptions: true
+  };
 
-  groupsDropdownList = [];
+  groupsMultiSelectOptions: Array<MultiSelectOption> = [];
   selectedGroups = [];
-
-  groupsDropdownSettings = {};
+  groupsMultiSelectConfig : MultiSelectConfig= {
+    labelKey : "admin.input.user.groups", 
+    placeholderKey : "admin.input.selectGroupText", 
+    sortOptions: true
+}
 
   @Input() row: User;
 
   constructor(
-      private translate: TranslateService,
       private activeModal: NgbActiveModal,
       private crudService: UserService,
       private groupsService: GroupsService,
@@ -80,22 +86,6 @@ export class EditUserModalComponent implements OnInit {
 
     }
 
-
-      this.translate.get(['admin.input.selectGroupText', 'admin.input.selectEntityText'])
-          .subscribe(translations => {
-              this.groupsDropdownSettings = {
-                  text: translations['admin.input.selectGroupText'],
-                  badgeShowLimit: 6,
-                  enableSearchFilter: true
-              };
-              this.entitiesDropdownSettings = {
-                text: translations['admin.input.selectEntityText'],
-                badgeShowLimit: 6,
-                enableSearchFilter: true
-            };
-      });
-
-
     // Initialize value lists for Entities and Groups inputs
     this.entitiesService.getEntities().forEach((entity) => {
       const id = entity.id;
@@ -103,7 +93,7 @@ export class EditUserModalComponent implements OnInit {
       if (!itemName) {
         itemName = id;
       }
-      this.entitiesDropdownList.push({ id: id, itemName: itemName });
+      this.entitiesMultiSelectOptions.push(new MultiSelectOption(id,itemName ));
     });
 
     this.groupsService.getGroups().forEach((group) => {
@@ -112,7 +102,7 @@ export class EditUserModalComponent implements OnInit {
       if (!itemName) {
         itemName = id;
       }
-      this.groupsDropdownList.push({ id: id, itemName: itemName });
+      this.groupsMultiSelectOptions.push(new MultiSelectOption(id,itemName ));
     });
 
 
@@ -120,8 +110,6 @@ export class EditUserModalComponent implements OnInit {
 
   update() {
     this.cleanForm();
-    this.groups.setValue(this.groups.value.map(group => group.id));
-    this.entities.setValue(this.entities.value.map(entity => entity.id));
     const ipList = this.authorizedIPAddresses.value.trim().length > 0 ? this.authorizedIPAddresses.value.split(',') : [];
     this.authorizedIPAddresses.setValue(ipList.map(str => str.trim()));
     this.crudService.update(this.userForm.value).subscribe(() => {

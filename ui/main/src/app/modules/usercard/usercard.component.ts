@@ -515,7 +515,7 @@ export class UserCardComponent implements OnInit {
     private getRecipients(): string[] {
         let  recipients = [];
         if (this.recipientVisible) {
-            this.recipientsForm.getSelectedRecipients().forEach(entity => recipients.push(entity.id));
+            this.recipientsForm.getSelectedRecipients().forEach(entity => recipients.push(entity));
         } else {
             if (this.specificInformation.card.entityRecipients) {
                 recipients = this.specificInformation.card.entityRecipients;

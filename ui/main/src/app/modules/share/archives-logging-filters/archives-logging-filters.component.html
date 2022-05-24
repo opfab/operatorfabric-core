@@ -11,63 +11,60 @@
     <!--First column-->
     <div *ngIf="displayProcessGroupFilter() || tags" style="margin-right:40px">
         <div  style="min-width:300px;max-width:400px;margin-top: 28px;margin-bottom: 54px;">
-            <of-multi-filter *ngIf="displayProcessGroupFilter()" filterPath="processGroup" id="opfab-processGroup" [parentForm]="this.parentForm"
-                             [values]="processGroupDropdownList" [translateValues]="true" [dropdownSettings]="processGroupDropdownSettings" [selectedItems]="[]"
-                             i18nRootLabelKey="shared.filters." [sortValues]="true">
-            </of-multi-filter>
-            <of-multi-filter *ngIf="! displayProcessGroupFilter() && tags" filterPath="tags" id="opfab-tags" [parentForm]="this.parentForm"
-                             [values]="tagsDropdownList" [translateValues]="true" [dropdownSettings]="tagsDropdownSettings" [selectedItems]="[]"
-                             i18nRootLabelKey="shared.filters.">
-            </of-multi-filter>
+            <of-multi-select *ngIf="displayProcessGroupFilter()" id="opfab-processGroup" multiSelectId="processGroup" [parentForm]="this.parentForm" [config]="processGroupMultiSelectConfig"
+            [options]="processGroupMultiSelectOptions" [selectedOptions]="processGroupSelected">
+            </of-multi-select>
+            <of-multi-select *ngIf="! displayProcessGroupFilter() && tags" id="opfab-tags" multiSelectId="tags" [parentForm]="this.parentForm" [config]="tagsMultiSelectConfig"
+            [options]="tagsMultiSelectOptions" [selectedOptions]="tagSelected">
+            </of-multi-select>
         </div>
         <div *ngIf="displayProcessGroupFilter() && tags" style="min-width:300px;max-width:400px;">
-            <of-multi-filter filterPath="tags" id="opfab-tags" [parentForm]="this.parentForm" [values]="tagsDropdownList" [translateValues]="true"
-                             [dropdownSettings]="tagsDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="shared.filters.">
-            </of-multi-filter>
+            <of-multi-select id="opfab-tags" multiSelectId="tags" [parentForm]="this.parentForm" [config]="tagsMultiSelectConfig"
+            [options]="tagsMultiSelectOptions" [selectedOptions]="tagSelected">
+            </of-multi-select>
         </div>
     </div>
 
     <!--Second column-->
     <div *ngIf="displayProcessGroupFilter() || tags" style="margin-right:40px">
         <div style="min-width:300px;max-width:400px;margin-top:28px;margin-bottom: 54px;">
-            <of-multi-filter *ngIf="! isThereProcessGroup()" filterPath="process" id="opfab-process" [parentForm]="this.parentForm"
-                             [values]="processDropdownList" [dropdownSettings]="processDropdownSettings" [selectedItems]="[]"
-                             i18nRootLabelKey="shared.filters." [sortValues]="true">
-            </of-multi-filter>
-            <of-multi-filter *ngIf="isThereProcessGroup() && displayProcessGroupFilter()" filterPath="process" id="opfab-process" [parentForm]="this.parentForm"
-                             [values]="processDropdownListWhenSelectedProcessGroup" [dropdownSettings]="processDropdownSettings" [selectedItems]="[]"
-                             i18nRootLabelKey="shared.filters." [sortValues]="true">
-            </of-multi-filter>
-            <of-multi-filter *ngIf="isThereProcessGroup() && !displayProcessGroupFilter() && isThereOnlyOneProcessGroupInDropdownList()" filterPath="process" id="opfab-process" [parentForm]="this.parentForm"
-                             [values]="processesDropdownListPerProcessGroups.get(processGroupDropdownList[0].id)"
-                             [dropdownSettings]="processDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="shared.filters." [sortValues]="true">
-            </of-multi-filter>
+            <of-multi-select *ngIf="!isThereProcessGroup()"  id="opfab-process" multiSelectId="process" [parentForm]="this.parentForm" 
+            [config]="processMultiSelectConfig" [options]="processMultiSelectOptions" [selectedOptions]="processSelected">
+            </of-multi-select>
+            <of-multi-select *ngIf="isThereProcessGroup() && displayProcessGroupFilter()"  id="opfab-process" multiSelectId="process" [parentForm]="this.parentForm" [config]="processMultiSelectConfig"
+            [options]="processMultiSelectOptionsWhenSelectedProcessGroup" [selectedOptions]="processSelected">
+            </of-multi-select>
+            <of-multi-select *ngIf="isThereProcessGroup() && !displayProcessGroupFilter() && isThereOnlyOneProcessGroupInDropdownList()"  
+            id="opfab-process" multiSelectId="process" [parentForm]="this.parentForm" 
+            [config]="processMultiSelectConfig" [options]="processMultiSelectOptionsPerProcessGroups.get(processGroupMultiSelectOptions[0].value)" 
+            [selectedOptions]="processSelected">
+            </of-multi-select>
         </div>
         <div style="min-width:300px;max-width:400px;">
-            <of-multi-filter filterPath="state" id="opfab-state" [parentForm]="this.parentForm"
-                             [values]="stateDropdownListWhenSelectedProcess" [dropdownSettings]="stateDropdownSettings" [selectedItems]="[]"
-                             i18nRootLabelKey="shared.filters." [sortValues]="true">
-            </of-multi-filter>
+            <of-multi-select id="opfab-state" multiSelectId="state" [parentForm]="this.parentForm" 
+            [config]="stateMultiSelectConfig" [options]="stateMultiSelectOptions" 
+            [selectedOptions]="stateSelected">
+            </of-multi-select>
         </div>
     </div>
 
     <!--Only one column in this case-->
     <div *ngIf="! displayProcessGroupFilter() && ! tags" style="margin-right:40px">
         <div style="min-width:300px;max-width:400px;margin-top:28px;margin-bottom: 54px;">
-            <of-multi-filter *ngIf="!isThereProcessGroup()" filterPath="process" id="opfab-process" [parentForm]="this.parentForm"
-                             [values]="processDropdownList" [dropdownSettings]="processDropdownSettings" [selectedItems]="[]"
-                             i18nRootLabelKey="shared.filters." [sortValues]="true">
-            </of-multi-filter>
-            <of-multi-filter *ngIf="isThereProcessGroup()&&isThereOnlyOneProcessGroupInDropdownList()" filterPath="process" id="opfab-process" [parentForm]="this.parentForm"
-                             [values]="processesDropdownListPerProcessGroups.get(processGroupDropdownList[0].id)"
-                             [dropdownSettings]="processDropdownSettings" [selectedItems]="[]" i18nRootLabelKey="shared.filters." [sortValues]="true">
-            </of-multi-filter>
+            <of-multi-select *ngIf="!isThereProcessGroup()"  id="opfab-process" multiSelectId="process" [parentForm]="this.parentForm" 
+            [config]="processMultiSelectConfig" [options]="processMultiSelectOptions" [selectedOptions]="processSelected">
+            </of-multi-select>
+            <of-multi-select *ngIf="isThereProcessGroup() && isThereOnlyOneProcessGroupInDropdownList()"  
+            id="opfab-process" multiSelectId="process" [parentForm]="this.parentForm" 
+            [config]="processMultiSelectConfig" [options]="processMultiSelectOptionsPerProcessGroups.get(processGroupMultiSelectOptions[0].value)" 
+            [selectedOptions]="processSelected">
+            </of-multi-select>
         </div>
         <div style="min-width:300px;max-width:400px;">
-            <of-multi-filter filterPath="state" id="opfab-state" [parentForm]="this.parentForm"
-                             [values]="stateDropdownListWhenSelectedProcess" [dropdownSettings]="stateDropdownSettings" [selectedItems]="[]"
-                             i18nRootLabelKey="shared.filters." [sortValues]="true">
-            </of-multi-filter>
+            <of-multi-select id="opfab-state" multiSelectId="state" [parentForm]="this.parentForm" 
+            [config]="stateMultiSelectConfig" [options]="stateMultiSelectOptions" 
+            [selectedOptions]="stateSelected">
+            </of-multi-select>
         </div>
     </div>
 
@@ -76,22 +73,22 @@
     <div class="opfab-publish-date" [formGroup]="this.parentForm">
         <div>
             <of-datetime-filter id="opfab-publish-date-from" filterPath="publishDateFrom" formControlName="publishDateFrom" [defaultDate]="defaultMinPublishDate" [defaultTime]="{ hour: 0, minute: 0}"
-            labelKey="shared.filters." [maxDate]="publishMaxDate" (change)="onDateTimeChange($event)"></of-datetime-filter>
+            labelKey="shared.filters." [maxDate]="publishMaxDate" (change)="onDateTimeChange()"></of-datetime-filter>
         </div>
         <div>
             <of-datetime-filter id="opfab-publish-date-to" filterPath="publishDateTo" formControlName="publishDateTo"
-            labelKey="shared.filters." [minDate]="publishMinDate" (change)="onDateTimeChange($event)"></of-datetime-filter>
+            labelKey="shared.filters." [minDate]="publishMinDate" (change)="onDateTimeChange()"></of-datetime-filter>
         </div>
     </div>
 
     <div class="opfab-vertical-bar"></div>
     <div style="margin-left:40px;width:230px;min-width: 230px;" [formGroup]="this.parentForm">
         <div>
-            <of-datetime-filter id="opfab-active-from" filterPath="activeFrom" formControlName="activeFrom" labelKey="shared.filters." [maxDate]="activeMaxDate" (change)="onDateTimeChange($event)">
+            <of-datetime-filter id="opfab-active-from" filterPath="activeFrom" formControlName="activeFrom" labelKey="shared.filters." [maxDate]="activeMaxDate" (change)="onDateTimeChange()">
             </of-datetime-filter>
         </div>
         <div>
-            <of-datetime-filter id="opfab-active-to" filterPath="activeTo" formControlName="activeTo" labelKey="shared.filters." [minDate]="activeMinDate" (change)="onDateTimeChange($event)">
+            <of-datetime-filter id="opfab-active-to" filterPath="activeTo" formControlName="activeTo" labelKey="shared.filters." [minDate]="activeMinDate" (change)="onDateTimeChange()">
             </of-datetime-filter>
         </div>
     </div>

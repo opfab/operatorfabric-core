@@ -118,6 +118,12 @@
     "filterUnSelectAllText": "UnSelect all filtered results",
     "noDataLabel": "No Data Available"
   },
+  "multiSelect": {
+    "searchPlaceholderText": "Search..." ,
+    "clearButtonText" : "Clear",
+    "noSearchResultsText" : "No results",
+    "noOptionsText" :""
+  },
   "feed": {
     "filters": {
       "title": "Filters",

@@ -15,7 +15,7 @@
       <span aria-hidden="true">&times;</span>
     </div>
   </div>
-  <div class="modal-body scrollable">
+  <div class="modal-body">
     <form [formGroup]="entityForm" class="opfab-form-lighter">
       <div class="container">
         <div>
@@ -51,10 +51,14 @@
             </label>
           </div>
           <div class="opfab-edit-row">
-            <of-multi-filter filterPath="parents" id="opfab-parents" [parentForm]="entityForm" [values]="entitiesDropdownList"
-                             [translateValues]="false" [dropdownSettings]="entitiesDropdownSettings" [selectedItems]="selectedEntities"
-                             sortValues=true i18nRootLabelKey="admin.input.entity.">
-            </of-multi-filter>
+            <of-multi-select 
+            id="opfab-parents"
+            multiSelectId="parents"
+            [parentForm]="entityForm"
+            [config] = "entitiesMultiSelectConfig"
+            [options]="entitiesMultiSelectOptions"
+            [selectedOptions]="selectedEntities">    
+            </of-multi-select>
           </div>
           <div class="opfab-input opfab-edit-row" style="height: auto;">
             <label for="opfab-labels" translate>admin.input.entity.labels</label>

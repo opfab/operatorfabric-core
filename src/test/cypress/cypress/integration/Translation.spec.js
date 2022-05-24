@@ -198,13 +198,13 @@ describe('Test translations', function () {
     }
 
     function checkPlaceholderText(selectId, placeholderText) {
-        cy.get(selectId).find('.selected-list').find('span').should('have.text', placeholderText);
+        cy.get(selectId).find('.vscomp-value').should('have.text', placeholderText);
     }
 
     before('Set up configuration and cards', function () {
         cy.loadTestConf();
     });
-
+ 
     it('Check translations for menu titles', function () {
         cy.loginOpFab('operator1_fr','test');
 
@@ -300,7 +300,8 @@ describe('Test translations', function () {
 
         cy.get('#opfab-navbar-menu-monitoring').should('exist').click();        
         cy.get('.opfab-business-period').should('have.text', 'Business period : 21:30 31/12/2030 -- 09:00 01/01/2031 ');
-        
+        cy.tick(1000);
+
 
         changeLanguage(FRENCH, true);
         cy.tick(1000);
@@ -311,7 +312,7 @@ describe('Test translations', function () {
 
         cy.get('#opfab-navbar-menu-monitoring').should('exist').click();        
         cy.get('.opfab-business-period').should('have.text', 'Période métier : 21:30 31/12/2030 -- 09:00 01/01/2031 ');
-
+        cy.tick(1000);
 
         changeLanguage(DUTCH, true);
         cy.tick(1000);

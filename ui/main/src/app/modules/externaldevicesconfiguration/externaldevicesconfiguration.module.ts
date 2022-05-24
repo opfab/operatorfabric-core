@@ -16,10 +16,10 @@ import {AgGridModule} from 'ag-grid-angular';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {ActionCellRendererComponent} from '../admin/components/cell-renderers/action-cell-renderer.component';
 import {SingleFilterModule} from '../share/single-filter/single-filter.module';
-import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
 import {ExternaldevicesconfigurationModalComponent} from './editModal/externaldevicesconfiguration-modal.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ExternaldevicesconfigurationRoutingModule} from './externaldevicesconfiguration-routing.module';
+import {MultiSelectModule} from '../share/multi-select/multi-select.module';
 
 
 @NgModule({
@@ -34,7 +34,7 @@ import {ExternaldevicesconfigurationRoutingModule} from './externaldevicesconfig
     TranslateModule,
     ExternaldevicesconfigurationRoutingModule,
     SingleFilterModule,
-    MultiFilterModule,
+    MultiSelectModule,
     NgbModule,
     AgGridModule.withComponents([[
       ActionCellRendererComponent]])

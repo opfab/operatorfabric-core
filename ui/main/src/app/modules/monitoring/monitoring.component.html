@@ -12,7 +12,7 @@
 <div *ngIf="isThereProcessStateToDisplay; else noProcessStateToDisplay">
 <div>
         <of-monitoring-filters #filters
-        [visibleProcesses]="processValueForFilter" (filters)="applyCardsFilters($event)"
+       (eventForPublishingFilters)="applyCardsFilters($event)"
         ></of-monitoring-filters>
 </div>
 

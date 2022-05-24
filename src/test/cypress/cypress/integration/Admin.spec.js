@@ -44,12 +44,12 @@ describe ('AdminPage',()=>{
         cy.get('#opfab-lastName').type('surname');
 
         cy.get('#opfab-groups').click();
-        cy.get('#opfab-groups').find('li').eq(1).click();
+        cy.get('#opfab-groups').find('.vscomp-option-text').eq(1).click({ force: true });
         cy.get('#opfab-groups').click();
 
 
         cy.get('#opfab-entities').click();
-        cy.get('#opfab-entities').find('li').eq(1).click();
+        cy.get('#opfab-entities').find('.vscomp-option-text').eq(1).click({ force: true });
         cy.get('#opfab-entities').click();
 
         cy.get('#opfab-admin-user-btn-add').click();
@@ -82,17 +82,17 @@ describe ('AdminPage',()=>{
 
         cy.get('#opfab-groups').click();
         // Deselect old group
-        cy.get('#opfab-groups').find('li').eq(1).click();
+        cy.get('#opfab-groups').find('.vscomp-option-text').eq(1).click({ force: true });
         // Select new group
-        cy.get('#opfab-groups').find('li').eq(2).click();
+        cy.get('#opfab-groups').find('.vscomp-option-text').eq(2).click({ force: true });
         cy.get('#opfab-groups').click();
 
 
         cy.get('#opfab-entities').click();
         // Deselect old entity
-        cy.get('#opfab-entities').find('li').eq(1).click();
+        cy.get('#opfab-entities').find('.vscomp-option-text').eq(1).click({ force: true });
         // Select new entity
-        cy.get('#opfab-entities').find('li').eq(2).click();
+        cy.get('#opfab-entities').find('.vscomp-option-text').eq(2).click({ force: true });
         cy.get('#opfab-entities').click();
 
         cy.get('#opfab-admin-user-btn-save').click();
