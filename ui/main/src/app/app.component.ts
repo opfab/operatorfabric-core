@@ -180,6 +180,7 @@ export class AppComponent implements OnInit {
         this.logger.info('opfab translation loaded for locales: ' + this.translateService.getLangs(), LogOption.LOCAL_AND_REMOTE);
 
         this.loadTranslationForMenu();
+        this.i18nService.setTranslationForMultiSelectUsedInTemplates();
         this.launchAuthenticationProcess();
       });
     }

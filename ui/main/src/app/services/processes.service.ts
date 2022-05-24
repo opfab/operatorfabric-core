@@ -120,6 +120,12 @@ export class ProcessesService {
         return this.processGroups;
     }
 
+    public getProcessGroupName(id:string) {
+        const processGroup = this.processGroups.get(id);
+        if (!!processGroup) return processGroup.name;
+        return "";
+    }
+
     public getMonitoringConfig(): any {
         return this.monitoringConfig;
     }
@@ -266,8 +272,8 @@ export class ProcessesService {
                 if (!! processGroup) {
                     const processes = (!!processesPerProcessGroups.get(processGroup.id) ? processesPerProcessGroups.get(processGroup.id) : []);
                     processes.push({
-                        id: process.id,
-                        itemName: process.name
+                        value : process.id,
+                        label: process.name
                     });
                     processesPerProcessGroups.set(processGroup.id, processes);
                 }
@@ -276,14 +282,15 @@ export class ProcessesService {
         return processesPerProcessGroups;
     }
 
-    public getProcessesWithoutProcessGroup(processesFilter?: string[]): any[] {
+
+    public getProcessesWithoutProcessGroup(processesFilter?: string[]): Process[] {
         const processesWithoutProcessGroup = [];
 
         this.getAllProcesses().forEach(process => {
             if ((! processesFilter) || processesFilter.includes(process.id)) {
                 const processGroup = this.findProcessGroupForProcess(process.id);
                 if (!processGroup)
-                    processesWithoutProcessGroup.push({id: process.id, itemName: process.name});
+                    processesWithoutProcessGroup.push(process);
             }
         });
         return processesWithoutProcessGroup;

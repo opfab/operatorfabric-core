@@ -17,7 +17,6 @@ import {I18n} from '@ofModel/i18n.model';
 import {MonitoringFiltersComponent} from './components/monitoring-filters/monitoring-filters.component';
 import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {ProcessesService} from '@ofServices/processes.service';
-import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
 import {Filter} from '@ofModel/feed-filter.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {EntitiesService} from '@ofServices/entities.service';
@@ -41,7 +40,6 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     unsubscribe$: Subject<void> = new Subject<void>();
 
     mapOfProcesses = new Map<string, Process>();
-    processValueForFilter = new Array();
 
     result: LineOfMonitoringResult[];
 
@@ -50,7 +48,6 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     isThereProcessStateToDisplay: boolean;
 
     constructor(private processesService: ProcessesService
-                , private lightCardsService: LightCardsFeedFilterService
                 , private lightCardsStoreService: LightCardsStoreService
                 , private entitiesService: EntitiesService
     ) {
@@ -59,10 +56,6 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             const id = process.id;
             if (!!process.uiVisibility && !!process.uiVisibility.monitoring) {
                 this.mapOfProcesses.set(id, process);
-                let itemName = process.name;
-                if (!itemName)
-                    itemName = id;
-                this.processValueForFilter.push({id: id, itemName: itemName, i18nPrefix: `${process.id}.${process.version}` });
             }
          });
 

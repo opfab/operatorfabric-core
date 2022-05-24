@@ -13,7 +13,7 @@ describe('Acknowledgment tests', function () {
 
         // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
         cy.resetUIConfigurationFiles();
-
+        cy.deleteAllSettings();
         cy.loadTestConf();
 
         // Clean up existing cards
@@ -213,7 +213,7 @@ describe('Acknowledgment tests', function () {
         cy.usercardSelectState('Message');
         cy.get('#message').type('Test message for entities acks');
         cy.get('#opfab-recipients').click();
-        cy.get('#opfab-recipients').contains('Select All').click();
+        cy.get('.vscomp-toggle-all-checkbox').click();
         cy.get('#opfab-recipients').click();
 
         cy.usercardPrepareAndSendCard();

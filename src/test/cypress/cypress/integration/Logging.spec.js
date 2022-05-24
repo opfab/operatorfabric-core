@@ -21,7 +21,7 @@ describe ('Logging screen tests',function () {
 
         // We check we have 4 items in process multi-filter, even without choosing a process group
         cy.get('#opfab-process').click();
-        cy.get('#opfab-process').find('li').should('have.length', 4);
+        cy.get('#opfab-process').find('.vscomp-option-text').should('have.length', 4);
         cy.get('#opfab-process').contains('Conference and IT incident').should('exist');
         cy.get('#opfab-process').contains('Message or question').should('exist');
         cy.get('#opfab-process').contains('IGCC').should('exist');
@@ -29,35 +29,36 @@ describe ('Logging screen tests',function () {
 
         // We check we have 2 items in process groups multi-filter
         cy.get('#opfab-processGroup').click();
-        cy.get('#opfab-processGroup').find('li').should('have.length', 2);
+        cy.get('#opfab-processGroup').find('.vscomp-option-text').should('have.length', 2);
         cy.get('#opfab-processGroup').contains('Base Examples').should('exist');
         cy.get('#opfab-processGroup').contains('User card examples').should('exist');
         // We select all process groups
-        cy.get('#opfab-processGroup').contains('Select All').click();
+        cy.get('#opfab-processGroup').find('.vscomp-toggle-all-button').click();
 
         // We check we have 4 items in process multi-filter
         cy.get('#opfab-process').click();
-        cy.get('#opfab-process').find('li').should('have.length', 4);
+        cy.get('#opfab-process').find('.vscomp-option-text').should('have.length', 4);
         cy.get('#opfab-process').contains('Conference and IT incident').should('exist');
         cy.get('#opfab-process').contains('Message or question').should('exist');
         cy.get('#opfab-process').contains('IGCC').should('exist');
         cy.get('#opfab-process').contains('Process example').should('exist');
 
         // We select all processes
-        cy.get('#opfab-process').contains('Select All').click();
+        cy.get('#opfab-process').find('.vscomp-toggle-all-button').click();
         cy.get('#opfab-process').click();
 
-        // We check we have 19 states (and 4 items for their process)
+        // We check we have 19 states 
         cy.get('#opfab-state').click();
-        cy.get('#opfab-state').find('li').should('have.length', 23);
+        cy.get('#opfab-state').find('.vscomp-toggle-all-button').click();
+        cy.get('#opfab-state').find('.vscomp-value').contains('+ 18 more').should('exist');
 
         // We unselect all processes then we select 'Process example' process and we check there are 8 states for this process
         cy.get('#opfab-process').click();
-        cy.get('#opfab-process').contains('UnSelect All').click();
+        cy.get('#opfab-process').find('.vscomp-toggle-all-button').click();
         cy.get('#opfab-process').contains('Process example').click();
         cy.get('#opfab-process').click();
         cy.get('#opfab-state').click();
-        cy.get('#opfab-state').find('li').should('have.length', 9);
+        cy.get('#opfab-state').find('.vscomp-option-text').should('have.length', 9);
         // We check this state is present because it is only a child state but that kind of state must be visible in logging screen
         cy.get('#opfab-state').contains('Planned outage date response').should('exist');
     })
@@ -70,7 +71,7 @@ describe ('Logging screen tests',function () {
 
         // We check we have 4 items in process multi-filter, even without choosing a process group
         cy.get('#opfab-process').click();
-        cy.get('#opfab-process').find('li').should('have.length', 4);
+        cy.get('#opfab-process').find('.vscomp-option-text').should('have.length', 4);
         cy.get('#opfab-process').contains('Conference and IT incident').should('exist');
         cy.get('#opfab-process').contains('Message or question').should('exist');
         cy.get('#opfab-process').contains('IGCC').should('exist');
@@ -78,35 +79,36 @@ describe ('Logging screen tests',function () {
 
         // We check we have 2 items in process groups multi-filter
         cy.get('#opfab-processGroup').click();
-        cy.get('#opfab-processGroup').find('li').should('have.length', 2);
+        cy.get('#opfab-processGroup').find('.vscomp-option-text').should('have.length', 2);
         cy.get('#opfab-processGroup').contains('Base Examples').should('exist');
         cy.get('#opfab-processGroup').contains('User card examples').should('exist');
         // We select all process groups
-        cy.get('#opfab-processGroup').contains('Select All').click();
+        cy.get('#opfab-processGroup').find('.vscomp-toggle-all-button').click();
 
         // We check we have 4 items in process multi-filter
         cy.get('#opfab-process').click();
-        cy.get('#opfab-process').find('li').should('have.length', 4);
+        cy.get('#opfab-process').find('.vscomp-option-text').should('have.length', 4);
         cy.get('#opfab-process').contains('Conference and IT incident').should('exist');
         cy.get('#opfab-process').contains('Message or question').should('exist');
         cy.get('#opfab-process').contains('IGCC').should('exist');
         cy.get('#opfab-process').contains('Process example').should('exist');
 
         // We select all processes
-        cy.get('#opfab-process').contains('Select All').click();
+        cy.get('#opfab-process').find('.vscomp-toggle-all-button').click();
         cy.get('#opfab-process').click();
 
         // We check we have 12 states (and 4 items for their process)
         cy.get('#opfab-state').click();
-        cy.get('#opfab-state').find('li').should('have.length', 16);
+        cy.get('#opfab-state').find('.vscomp-toggle-all-button').click();
+        cy.get('#opfab-state').find('.vscomp-value').contains('+ 11 more').should('exist');
 
         // We unselect all processes then we select 'Process example' process and we check there is only 1 state for this process
         cy.get('#opfab-process').click();
-        cy.get('#opfab-process').contains('UnSelect All').click();
+        cy.get('#opfab-process').find('.vscomp-toggle-all-button').click();
         cy.get('#opfab-process').contains('Process example').click();
         cy.get('#opfab-process').click();
         cy.get('#opfab-state').click();
-        cy.get('#opfab-state').find('li').should('have.length', 2);
+        cy.get('#opfab-state').find('.vscomp-option-text').should('have.length', 2);
         cy.get('#opfab-state').contains('Action Required', {matchCase: false}).should('exist');
     })
 
@@ -139,27 +141,29 @@ describe ('Logging screen tests',function () {
 
         // We check we have 4 items in process multi-filter
         cy.get('#opfab-process').click();
-        cy.get('#opfab-process').find('li').should('have.length', 4);
+        cy.get('#opfab-process').find('.vscomp-option-text').should('have.length', 4);
         cy.get('#opfab-process').contains('Conference and IT incident').should('exist');
         cy.get('#opfab-process').contains('Message or question').should('exist');
         cy.get('#opfab-process').contains('IGCC').should('exist');
         cy.get('#opfab-process').contains('Process example').should('exist');
 
         // We select all processes
-        cy.get('#opfab-process').contains('Select All').click();
+        cy.get('#opfab-process').find('.vscomp-toggle-all-button').click();
         cy.get('#opfab-process').click();
 
         // We check we have 19 states (and 4 items for their process)
         cy.get('#opfab-state').click();
-        cy.get('#opfab-state').find('li').should('have.length', 23);
+        cy.get('#opfab-state').find('.vscomp-toggle-all-button').click();
+        cy.get('#opfab-state').find('.vscomp-value').contains('+ 18 more').should('exist');
 
         // We unselect all processes then we select 'Process example' process and we check there are 8 states for this process
         cy.get('#opfab-process').click();
-        cy.get('#opfab-process').contains('UnSelect All').click();
+        cy.get('#opfab-process').find('.vscomp-toggle-all-button').click();
         cy.get('#opfab-process').contains('Process example').click();
         cy.get('#opfab-process').click();
         cy.get('#opfab-state').click();
-        cy.get('#opfab-state').find('li').should('have.length', 9);
+        cy.get('#opfab-state').find('.vscomp-toggle-all-button').click();
+        cy.get('#opfab-state').find('.vscomp-value').contains('+ 7 more').should('exist');
         // We check this state is present because it is only a child state but that kind of state must be visible in logging screen
         cy.get('#opfab-state').contains('Planned outage date response').should('exist');
 

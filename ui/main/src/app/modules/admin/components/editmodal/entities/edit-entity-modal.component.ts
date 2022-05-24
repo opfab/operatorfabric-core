@@ -18,6 +18,7 @@ import {EntitiesService} from '@ofServices/entities.service';
 import {Entity} from '@ofModel/entity.model';
 import {TranslateService} from '@ngx-translate/core';
 import {debounceTime, distinctUntilChanged, first, map, switchMap} from 'rxjs/operators';
+import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 
 @Component({
   selector: 'of-edit-entity-modal',
@@ -32,9 +33,13 @@ export class EditEntityModalComponent implements OnInit {
   @Input() type: AdminItemType;
 
   entities: Entity[];
-  entitiesDropdownList = [];
+  entitiesMultiSelectOptions:Array<MultiSelectOption> = [];
   selectedEntities = [];
-  entitiesDropdownSettings = {};
+  entitiesMultiSelectConfig : MultiSelectConfig = {
+    labelKey : "admin.input.entity.parents", 
+    placeholderKey : "admin.input.selectEntityText", 
+    sortOptions: true
+}
   labelsPlaceholder: string;
 
   private crudService: CrudService;
@@ -71,15 +76,6 @@ export class EditEntityModalComponent implements OnInit {
     }
 
 
-    this.translate.get('admin.input.selectEntityText')
-        .subscribe(translation => {
-            this.entitiesDropdownSettings = {
-              text: translation,
-              badgeShowLimit: 6,
-              enableSearchFilter: true
-          };
-    });
-
     this.translate.get('admin.input.entity.addLabel')
         .subscribe(translation => {
           this.labelsPlaceholder = translation;
@@ -95,14 +91,14 @@ export class EditEntityModalComponent implements OnInit {
         if (!itemName) {
           itemName = id;
         }
-        this.entitiesDropdownList.push({ id: id, itemName: itemName });
+        this.entitiesMultiSelectOptions.push(new MultiSelectOption(id,itemName));
       }
     });
   }
 
   update() {
     this.cleanForm();
-    this.parents.setValue(this.parents.value.map(entity => entity.id));
+
     // We call the activeModal "close" method and not "dismiss" to indicate that the modal was closed because the
     // user chose to perform an action (here, update the selected item).
     // This is important as code in the corresponding table components relies on the resolution of the

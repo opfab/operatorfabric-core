@@ -49,6 +49,9 @@ body {
 .opfab-typeOfState-FINISHED {color: green;}
 .opfab-typeOfState-CANCELED {color: red;}
 
+
+
+
 // CUSTOM SCROLLBAR STYLE
 // for chromium based browser 
 
@@ -539,30 +542,11 @@ type-ahead > .badge-primary {
 // end type-ahead  conf
 
 
-// Multiselect specific conf 
+// VIRTUAL MULTI SELECT 
 
-.opfab-multiselect  {
-  color:var(--opfab-input-text-color);
-  box-sizing: border-box;
-  padding-right: 10px;
-  border: 1px solid var(--opfab-form-border-color);
-  border-radius: 3px;
-  font-size: 13px;
-  outline: none;
+.opfab-multiselect {
+  position: relative;
 }
-
-
-
-.opfab-multiselect  .c-btn {
-  background-color:var(--opfab-bgcolor-darker);
-  color:var(--opfab-text-color);
-  margin: 5px;
-  font-size: 13px;
-  border: none;
-  outline: none;
-  -webkit-appearance: none;
-}
-
 
 .opfab-multiselect > label {
   margin-left: 10px;
@@ -574,19 +558,64 @@ type-ahead > .badge-primary {
   left:10;
   color: var(--opfab-form-label-text-color);
   background-color: var(--opfab-bgcolor-darker);
+  z-index: 1;
 }
 
-.opfab-multiselect .c-remove {
-  width:10px;
-  position: absolute;
-  top: 17px;
-  svg {
-      fill:var(--opfab-text-color);
-  }
+// Border and background select field
+.vscomp-toggle-button {
+  background-color: var(--opfab-bgcolor-darker);
+  border: 1px solid var(--opfab-form-border-color);
+  min-height: 48px;
+  color: var(--opfab-text-color-stronger);  
+} 
+
+.vscomp-option-text {
+  font-family: $opfab-font-family;
+  font-size: 13px;
+}
+
+// Select width
+// Necessary while https://github.com/sa-si-dev/virtual-select/issues/127 is not solved  
+.vscomp-ele {
+  max-width: 2000px;  
 
 }
 
-.opfab-multiselect::after {
+// Tags 
+.vscomp-wrapper.show-value-as-tags .vscomp-value-tag  {
+  border: 0px solid var(--opfab-form-border-color);
+  border-radius: 2px;
+  color: white;
+  background-color: #2784FF; 
+  z-index: 1;
+  font-family: $opfab-font-family;
+  font-size: 13px;
+}
+
+//Cross to remove tag
+.vscomp-value-tag-clear-button > .vscomp-clear-icon::before,
+.vscomp-value-tag-clear-button > .vscomp-clear-icon::after {
+   background-color: white;
+}
+
+//Cross to remove all tags 
+.vscomp-clear-button > .vscomp-clear-icon::before, .vscomp-clear-button > .vscomp-clear-icon::after {
+  background-color: var(--opfab-text-color);
+}
+.vscomp-wrapper.show-value-as-tags.has-value .vscomp-clear-button {
+  right: 28px;
+  top: 10px;
+}
+// Avoid tags to override the cross
+.vscomp-value {
+  padding-right: 25px;
+  font-family: $opfab-font-family;
+  font-size: 13px;
+}
+
+
+ // Right arrow when nothing selected 
+ .opfab-multiselect::after {
   content: "V";
   transform: scaleY(0.5);
   position: absolute;
@@ -600,17 +629,24 @@ type-ahead > .badge-primary {
   pointer-events: none;
 }
 
-// Remove default arrow by setting the up/down arrow color to the background color
-.opfab-multiselect .selected-list .c-angle-down svg, .opfab-multiselect .selected-list .c-angle-up svg{
-  fill: var(--opfab-bgcolor-darker);
+
+// Hide existing arrow 
+
+.vscomp-arrow::after {
+ color:  var(--opfab-bgcolor);
+ border-right-color: var(--opfab-color);
+ border-bottom-color: var(--opfab-color); 
 }
 
-.opfab-multiselect .selected-list .c-list {
-  width: calc(100% - 25px); // to avoid the cross to overlap with selected values as with default value 20px 
+// Check icon in dropdown 
+.vscomp-wrapper .checkbox-icon.checked::after,  // select all 
+.vscomp-wrapper.multiple .vscomp-option.selected .checkbox-icon::after // select option
+{
+  border-right-color: #2784FF;
+  border-bottom-color: #2784FF;
 }
 
-// end multiselect specific conf 
-
+// END VIRTUAL MULTI SELECT 
 
 // Table 
 
@@ -693,13 +729,12 @@ type-ahead > .badge-primary {
   .opfab-textarea label ,
   .form-control ,
   .form-control:disabled ,
-  .opfab-multiselect,
-  .opfab-multiselect > label,
-  .opfab-multiselect  .c-btn,
   .opfab-select,
   .opfab-select > select,
   .opfab-select > select option,
   .opfab-select > label,
+  .opfab-multiselect > label,
+  .vscomp-toggle-button,
   .opfab-border-box > label,
   .opfab-input-type-ahead,
   .opfab-input-type-ahead > input,
@@ -710,11 +745,6 @@ type-ahead > .badge-primary {
   type-ahead > .badge-primary {
     background-color: var(--opfab-bgcolor-darker);
   }
-  // Remove default arrow by setting the up/down arrow color to the background color
-  .opfab-multiselect .selected-list .c-angle-down svg, .opfab-multiselect .selected-list .c-angle-up svg{
-    fill: var(--opfab-bgcolor);
-  }
-
 }
 
 
@@ -1038,3 +1068,8 @@ tag-input {
     }
   }
 }
+
+
+
+
+

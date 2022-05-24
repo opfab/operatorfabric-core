@@ -15,7 +15,7 @@
       <span aria-hidden="true">&times;</span>
     </div>
   </div>
-  <div class="modal-body scrollable">
+  <div class="modal-body">
     <form [formGroup]="userForm" class="opfab-form-lighter">
       <div class="container">
         <div class="col">
@@ -46,16 +46,24 @@
             <div *ngIf="lastName.errors.required" translate>admin.input.lastName.required</div>
           </div>
           <div class="opfab-edit-row">
-            <of-multi-filter filterPath="groups" id="opfab-groups" [parentForm]="userForm" [values]="groupsDropdownList"
-                             [translateValues]="false" [dropdownSettings]="groupsDropdownSettings" [selectedItems]="selectedGroups"
-                             sortValues=true i18nRootLabelKey="admin.input.user.">
-            </of-multi-filter>
+            <of-multi-select 
+            id="opfab-groups"
+            multiSelectId="groups"
+            [parentForm]="userForm"
+            [config] = "groupsMultiSelectConfig"
+            [options]="groupsMultiSelectOptions"
+            [selectedOptions]="selectedGroups">    
+            </of-multi-select>
           </div>
           <div class="opfab-edit-row">
-            <of-multi-filter filterPath="entities" id="opfab-entities" [parentForm]="userForm" [values]="entitiesDropdownList"
-                             [translateValues]="false" [dropdownSettings]="entitiesDropdownSettings" [selectedItems]="selectedEntities"
-                             sortValues=true i18nRootLabelKey="admin.input.user.">
-            </of-multi-filter>
+            <of-multi-select 
+            id="opfab-entities"
+            multiSelectId="entities"
+            [parentForm]="userForm"
+            [config] = "entitiesMultiSelectConfig"
+            [options]="entitiesMultiSelectOptions"
+            [selectedOptions]="selectedEntities">    
+            </of-multi-select>
           </div>
           <div class="opfab-input opfab-edit-row">
             <label for="opfab-authorizedIPAddresses" translate>admin.input.user.authorizedIPAddresses</label>

@@ -17,6 +17,10 @@ operatorfabric:
           host: localhost
           port: 4030
           signalMappingId: broken_CDS_mapping
+        - id: CDS_3
+          host: localhost
+          port: 4030
+          signalMappingId:  default_CDS_mapping
       signalMappings:
         - id: default_CDS_mapping
           supportedSignals:

@@ -15,7 +15,7 @@
       <span aria-hidden="true">&times;</span>
     </div>
   </div>
-  <div class="modal-body scrollable">
+  <div class="modal-body">
     <form [formGroup]="groupForm" class="opfab-form-lighter">
       <div class="container">
         <div class="col">
@@ -45,10 +45,14 @@
           </div>
 
           <div class="opfab-edit-row">
-            <of-multi-filter filterPath="perimeters" id="opfab-perimeters" [parentForm]="groupForm" [values]="perimetersDropdownList"
-                             [translateValues]="false" [dropdownSettings]="perimetersDropdownSettings" [selectedItems]="selectedPerimeters"
-                             sortValues=true i18nRootLabelKey="admin.input.group.">
-            </of-multi-filter>
+            <of-multi-select 
+            id="opfab-perimeters"
+            multiSelectId="perimeters"
+            [parentForm]="groupForm"
+            [config] = "perimetersMultiSelectConfig"
+            [options]="perimetersMultiSelectOptions"
+            [selectedOptions]="selectedPerimeters">    
+            </of-multi-select>
           </div>
           <div class="opfab-edit-row">
             <label for="opfab-realtime" class="opfab-checkbox "> <span class="" translate>admin.input.group.realtime</span>

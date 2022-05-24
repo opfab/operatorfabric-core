@@ -97,8 +97,8 @@ export class LoggingComponent implements OnDestroy, OnInit {
 
                 this.listOfProcessesForRequest.push(process.id);
                 this.listOfProcessesForFilter.push({
-                    id: process.id,
-                    itemName: itemName,
+                    value: process.id,
+                    label: itemName,
                     i18nPrefix: `${process.id}.${process.version}`
                 });
             }
@@ -148,7 +148,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
         this.checkIfLoadingIsTakingMoreThanOneSecond();
 
         const { value } = this.loggingForm;
-        this.filtersTemplate.filtersToMap(value);
+        this.filtersTemplate.transformFiltersListToMap(value);
         this.filtersTemplate.filters.set('size', [this.size.toString()]);
         this.filtersTemplate.filters.set('page', [page_number]);
         this.filtersTemplate.filters.set('childCards', ['true']);

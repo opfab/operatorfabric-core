@@ -20,20 +20,19 @@ import {Observable} from 'rxjs';
 import {environment} from '@env/environment';
 import { tap } from 'rxjs/operators';
 
+declare const opfab: any;
+
 @Injectable({
     providedIn: 'root'
 })
 export class I18nService {
 
-
     private static localUrl = '/assets/i18n/';
     private _locale: string;
-
 
     constructor(private httpClient: HttpClient, private translate: TranslateService, private store: Store<AppState>) {
         I18nService.localUrl = `${environment.paths.i18n}`;
         this.store.select(buildSettingsOrConfigSelector('locale')).subscribe((locale) => this.changeLocale(locale));
-
     }
 
     public changeLocale(locale: string) {
@@ -45,12 +44,27 @@ export class I18nService {
         }
         moment.locale(this._locale);
         this.translate.use(this._locale);
+        this.setTranslationForMultiSelectUsedInTemplates();     
+    }
+
+    public setTranslationForMultiSelectUsedInTemplates() {
+        this.translate
+            .get('multiSelect.searchPlaceholderText')
+            .subscribe((translated) => (opfab.multiSelect.searchPlaceholderText = translated));
+        this.translate
+            .get('multiSelect.clearButtonText')
+            .subscribe((translated) => (opfab.multiSelect.clearButtonText = translated));
+        this.translate
+            .get('multiSelect.noOptionsText')
+            .subscribe((translated) => (opfab.multiSelect.noOptionsText = translated));
+        this.translate
+            .get('multiSelect.noSearchResultsText')
+            .subscribe((translated) => (opfab.multiSelect.noSearchResultsText = translated));
     }
 
     public get locale() {
         return this._locale;
     }
-
 
     public loadLocale(locale: string): Observable<any> {
         return this.httpClient.get(`${I18nService.localUrl}${locale}.json`).pipe( tap({
@@ -58,6 +72,4 @@ export class I18nService {
             error: error => console.log(new Date().toISOString(),`Error : impossible to load locale ${I18nService.localUrl}${locale}.json`)
         }));
     }
-
-
 }

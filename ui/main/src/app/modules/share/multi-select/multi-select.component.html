@@ -6,14 +6,9 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div class="opfab-form-lighter"> 
-    <of-multi-select 
-            id="opfab-recipients"
-            multiSelectId="userCardRecipients"
-            [parentForm]="recipientForm"
-            [config] = "multiSelectConfig"
-            [options]="recipientsOptions"
-            [selectedOptions]="initialSelectedRecipients"
-            (selectionChange)="recipientChoiceChanged($event)">    
-    </of-multi-select>
-</div>
+
+    <div class="opfab-multiselect">
+        <label translate>{{config.labelKey}}</label>
+        <div id="{{multiSelectId}}"></div>
+  </div>
+

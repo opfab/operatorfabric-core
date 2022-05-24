@@ -100,8 +100,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             if (!itemName)
                 itemName = process.id;
             this.listOfProcesses.push({
-                id: process.id,
-                itemName: itemName,
+                value: process.id,
+                label: itemName,
                 i18nPrefix: `${process.id}.${process.version}`
             });
         });
@@ -158,7 +158,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.loadingInProgress = true;
         this.checkForArchiveLoadingInProgressForMoreThanOneSecond();
         const {value} = this.archiveForm;
-        this.filtersTemplate.filtersToMap(value);
+        this.filtersTemplate.transformFiltersListToMap(value);
         this.filtersTemplate.filters.set('size', [this.size.toString()]);
         this.filtersTemplate.filters.set('page', [page_number]);
         this.filtersTemplate.filters.set('latestUpdateOnly', [String(this.isCollapsibleUpdatesActivated)]);

@@ -118,6 +118,12 @@
     "filterUnSelectAllText": "Desélectionner tous les résultats filtrés",
     "noDataLabel": "Pas de données disponibles"
   },
+  "multiSelect": {
+    "searchPlaceholderText": "Rechercher..." ,
+    "clearButtonText" : "Effacer" ,
+    "noSearchResultsText" : "Pas de résultats",
+    "noOptionsText" :""
+  },
   "feed": {
     "filters": {
       "title": "Filtres",

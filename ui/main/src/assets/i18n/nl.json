@@ -119,6 +119,12 @@
     "filterUnSelectAllText": "Deselecteer alle gefilterde resultaten",
     "noDataLabel": "Geen Data Beschikbaar"
   },
+  "multiSelect": {
+    "searchPlaceholderText": "Zoeken..." ,
+    "clearButtonText" : "Clear",
+    "noSearchResultsText" : "Geen resultaten",
+    "noOptionsText" :""     
+  },
   "feed": {
     "filters": {
       "title": "Filters",

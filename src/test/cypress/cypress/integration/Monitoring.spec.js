@@ -24,7 +24,7 @@ describe ('Monitoring screen tests',function () {
 
         // We check we have 4 items in process multi-filter, even without choosing a process group
         cy.get('#opfab-process').click();
-        cy.get('#opfab-process').find('li').should('have.length', 4);
+        cy.get('#opfab-process').find('.vscomp-option-text').should('have.length', 4);
         cy.get('#opfab-process').contains('Conference and IT incident').should('exist');
         cy.get('#opfab-process').contains('Message or question').should('exist');
         cy.get('#opfab-process').contains('IGCC').should('exist');
@@ -32,22 +32,22 @@ describe ('Monitoring screen tests',function () {
 
         // We check we have 2 items in process groups multi-filter
         cy.get('#opfab-processGroup').click();
-        cy.get('#opfab-processGroup').find('li').should('have.length', 2);
+        cy.get('#opfab-processGroup').find('.vscomp-option-text').should('have.length', 2);
         cy.get('#opfab-processGroup').contains('Base Examples').should('exist');
         cy.get('#opfab-processGroup').contains('User card examples').should('exist');
         // We select all process groups
-        cy.get('#opfab-processGroup').contains('Select All').click();
+        cy.get('#opfab-processGroup').find('.vscomp-toggle-all-button').click();
 
         // We check we have 4 items in process multi-filter
         cy.get('#opfab-process').click();
-        cy.get('#opfab-process').find('li').should('have.length', 4);
+        cy.get('#opfab-process').find('.vscomp-option-text').should('have.length', 4);
         cy.get('#opfab-process').contains('Conference and IT incident').should('exist');
         cy.get('#opfab-process').contains('Message or question').should('exist');
         cy.get('#opfab-process').contains('IGCC').should('exist');
         cy.get('#opfab-process').contains('Process example').should('exist');
 
         cy.get('#opfab-typeOfState').click();
-        cy.get('#opfab-typeOfState').find('li').should('have.length', 3);
+        cy.get('#opfab-typeOfState').find('.vscomp-option-text').should('have.length', 3);
         cy.get('#opfab-typeOfState').contains('IN PROGRESS').should('exist');
         cy.get('#opfab-typeOfState').contains('FINISHED').should('exist');
         cy.get('#opfab-typeOfState').contains('CANCELED').should('exist');
@@ -61,7 +61,7 @@ describe ('Monitoring screen tests',function () {
 
         // We check we have 4 items in process multi-filter, even without choosing a process group
         cy.get('#opfab-process').click();
-        cy.get('#opfab-process').find('li').should('have.length', 4);
+        cy.get('#opfab-process').find('.vscomp-option-text').should('have.length', 4);
         cy.get('#opfab-process').contains('Conference and IT incident').should('exist');
         cy.get('#opfab-process').contains('Message or question').should('exist');
         cy.get('#opfab-process').contains('IGCC').should('exist');
@@ -69,22 +69,22 @@ describe ('Monitoring screen tests',function () {
 
         // We check we have 2 items in process groups multi-filter
         cy.get('#opfab-processGroup').click();
-        cy.get('#opfab-processGroup').find('li').should('have.length', 2);
+        cy.get('#opfab-processGroup').find('.vscomp-option-text').should('have.length', 2);
         cy.get('#opfab-processGroup').contains('Base Examples').should('exist');
         cy.get('#opfab-processGroup').contains('User card examples').should('exist');
         // We select all process groups
-        cy.get('#opfab-processGroup').contains('Select All').click();
+        cy.get('#opfab-processGroup').find('.vscomp-toggle-all-button').click();
 
         // We check we have 4 items in process multi-filter
         cy.get('#opfab-process').click();
-        cy.get('#opfab-process').find('li').should('have.length', 4);
+        cy.get('#opfab-process').find('.vscomp-option-text').should('have.length', 4);
         cy.get('#opfab-process').contains('Conference and IT incident').should('exist');
         cy.get('#opfab-process').contains('Message or question').should('exist');
         cy.get('#opfab-process').contains('IGCC').should('exist');
         cy.get('#opfab-process').contains('Process example').should('exist');
 
         cy.get('#opfab-typeOfState').click();
-        cy.get('#opfab-typeOfState').find('li').should('have.length', 3);
+        cy.get('#opfab-typeOfState').find('.vscomp-option-text').should('have.length', 3);
         cy.get('#opfab-typeOfState').contains('IN PROGRESS').should('exist');
         cy.get('#opfab-typeOfState').contains('FINISHED').should('exist');
         cy.get('#opfab-typeOfState').contains('CANCELED').should('exist');
@@ -119,14 +119,14 @@ describe ('Monitoring screen tests',function () {
 
         // We check we have 4 items in process multi-filter
         cy.get('#opfab-process').click();
-        cy.get('#opfab-process').find('li').should('have.length', 4);
+        cy.get('#opfab-process').find('.vscomp-option-text').should('have.length', 4);
         cy.get('#opfab-process').contains('Conference and IT incident').should('exist');
         cy.get('#opfab-process').contains('Message or question').should('exist');
         cy.get('#opfab-process').contains('IGCC').should('exist');
         cy.get('#opfab-process').contains('Process example').should('exist');
 
         cy.get('#opfab-typeOfState').click();
-        cy.get('#opfab-typeOfState').find('li').should('have.length', 3);
+        cy.get('#opfab-typeOfState').find('.vscomp-option-text').should('have.length', 3);
         cy.get('#opfab-typeOfState').contains('IN PROGRESS').should('exist');
         cy.get('#opfab-typeOfState').contains('FINISHED').should('exist');
         cy.get('#opfab-typeOfState').contains('CANCELED').should('exist');
@@ -177,7 +177,7 @@ describe ('Monitoring screen tests',function () {
         // Filter on IN PROGRESS cards
         cy.get('#opfab-typeOfState').click();
         cy.get('#opfab-typeOfState').contains('IN PROGRESS').should('exist');
-        cy.get('#opfab-typeOfState').find('li').first().click();
+        cy.get('#opfab-typeOfState').find('.vscomp-option-text').eq(2).click();
 
         // Press search button to apply the filter
         cy.get('#opfab-monitoring-btn-search').click();
@@ -203,7 +203,7 @@ describe ('Monitoring screen tests',function () {
         // Use a filter that will not return any card
         cy.get('#opfab-processGroup').click();
         cy.get('#opfab-processGroup').contains('User card examples').should('exist');
-        cy.get('#opfab-processGroup').find('.lazyContainer > li').eq(1).click();
+        cy.get('#opfab-processGroup').find('.vscomp-option-text').eq(1).click();
 
         // Press search button to apply the filter
         cy.get('#opfab-monitoring-btn-search').click();

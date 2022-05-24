@@ -14,7 +14,7 @@ import {User} from '@ofModel/user.model';
 import {UserService} from '@ofServices/user.service';
 import {ExternalDevicesService} from '@ofServices/external-devices.service';
 import {Device, UserConfiguration} from '@ofModel/external-devices.model';
-import {TranslateService} from '@ngx-translate/core';
+import {MultiSelectConfig} from '@ofModel/multiselect.model';
 
 @Component({
   selector: 'of-externaldevices-modal',
@@ -34,15 +34,19 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
 
   users: User[];
   usersDropdownList = [];
-  devicesDropdownList = [];
+  devicesMultiSelectOptions = [];
   selectedDevices = [];
-  devicesDropdownSettings = {};
+  devicesMultiSelectConfig : MultiSelectConfig = {
+    labelKey : "externalDevicesConfiguration.externalDeviceIds", 
+    placeholderKey: 'externalDevicesConfiguration.input.selectDeviceText',
+    sortOptions: true,
+    nbOfDisplayValues: 6
+};
 
   constructor(
     private activeModal: NgbActiveModal,
     private externalDevicesService: ExternalDevicesService,
-    private userService: UserService,
-    private translate: TranslateService
+    private userService: UserService
   ) {
   }
 
@@ -53,16 +57,7 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
     }
 
     this.userService.queryAllUsers().subscribe(allUsers => this.setUsersList(allUsers));
-    this.externalDevicesService.queryAllDevices().subscribe(allDevices => this.setDevicesList(allDevices));
-
-    this.translate.get('externalDevicesConfiguration.input.selectDeviceText')
-    .subscribe(translation => {
-        this.devicesDropdownSettings = {
-          text: translation,
-          badgeShowLimit: 6,
-          enableSearchFilter: true
-      };
-    });
+    this.externalDevicesService.queryAllDevices().subscribe(allDevices => this.setDevicesList(allDevices))
 
   }
 
@@ -78,7 +73,7 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
 
   setDevicesList(allDevices: Device[]) {
     allDevices.forEach(dev => {
-      this.devicesDropdownList.push(dev.id)
+      this.devicesMultiSelectOptions.push({"value":dev.id, "label":dev.id})
     })
   }
 
@@ -96,7 +91,7 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
   formToUserConfig() {
     return {
       userLogin: this.userLogin.value as string,
-      externalDeviceIds: this.externalDeviceIds.value.map(entity => entity.id)
+      externalDeviceIds: this.externalDeviceIds.value
     }
   }
 

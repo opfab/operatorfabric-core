@@ -15,13 +15,13 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from '@ofServices/crud-service';
 import {PerimetersService} from '@ofServices/perimeters.service';
-import {TranslateService} from '@ngx-translate/core';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {MessageLevel} from '@ofModel/message.model';
 import {GroupsService} from '@ofServices/groups.service';
 import {debounceTime, distinctUntilChanged, first, map, switchMap} from 'rxjs/operators';
+import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 
 @Component({
   selector: 'of-edit-group-modal',
@@ -32,9 +32,14 @@ export class EditGroupModalComponent implements OnInit {
 
   groupForm: FormGroup;
 
-  perimetersDropdownList = [];
+  perimetersMultiSelectOptions: Array<MultiSelectOption> = [];
   selectedPerimeters = [];
-  perimetersDropdownSettings = {};
+ 
+  perimetersMultiSelectConfig : MultiSelectConfig = {
+    labelKey : "admin.input.group.perimeters", 
+    placeholderKey : "admin.input.selectPerimeterText", 
+    sortOptions: true
+}
 
   @Input() row: any;
   @Input() type: AdminItemType;
@@ -43,7 +48,6 @@ export class EditGroupModalComponent implements OnInit {
 
   constructor(
     private store: Store<AppState>,
-    private translate: TranslateService,
     private activeModal: NgbActiveModal,
     private dataHandlingService: SharingService,
     private perimetersService: PerimetersService,
@@ -79,24 +83,13 @@ export class EditGroupModalComponent implements OnInit {
       this.selectedPerimeters = this.row.perimeters;
     }
 
-
-    this.translate.get('admin.input.selectPerimeterText')
-        .subscribe(translation => {
-            this.perimetersDropdownSettings = {
-              text: translation,
-              badgeShowLimit: 6,
-              enableSearchFilter: true
-          };
-    });
-
     this.perimetersService.getPerimeters().forEach((perimeter) => {
-      this.perimetersDropdownList.push({ id: perimeter.id });
+      this.perimetersMultiSelectOptions.push(new MultiSelectOption(perimeter.id , perimeter.id ));
     });
   }
 
   update() {
     this.cleanForm();
-    this.perimeters.setValue(this.perimeters.value.map(entity => entity.id));
     // We call the activeModal "close" method and not "dismiss" to indicate that the modal was closed because the
     // user chose to perform an action (here, update the selected item).
     // This is important as code in the corresponding table components relies on the resolution of the

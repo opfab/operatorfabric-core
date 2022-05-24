@@ -20,7 +20,6 @@ import {EditUserModalComponent} from './components/editmodal/users/edit-user-mod
 import {EntitiesTableComponent} from './components/table/entities-table.component';
 import {GroupsTableComponent} from './components/table/groups-table.component';
 import {AgGridModule} from 'ag-grid-angular';
-import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
 import {ArrayCellRendererComponent} from './components/cell-renderers/array-cell-renderer.component';
 import {ActionCellRendererComponent} from './components/cell-renderers/action-cell-renderer.component';
 import {GroupCellRendererComponent} from './components/cell-renderers/group-cell-renderer.component';
@@ -35,6 +34,7 @@ import {SingleFilterModule} from '../share/single-filter/single-filter.module';
 import {ProcessCellRendererComponent} from './components/cell-renderers/process-cell-renderer.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TagInputModule} from 'ngx-chips';
+import {MultiSelectModule} from '../share/multi-select/multi-select.module';
 
 @NgModule({
   declarations: [
@@ -63,7 +63,7 @@ import {TagInputModule} from 'ngx-chips';
     , TagInputModule
     , AdminRoutingModule
     , CommonModule
-    , MultiFilterModule
+    , MultiSelectModule
     , TranslateModule
     , NgbModule
     , AgGridModule.withComponents([[
