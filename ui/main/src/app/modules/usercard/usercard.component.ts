@@ -154,6 +154,10 @@ export class UserCardComponent implements OnInit {
             this.initialSelectedRecipients = this.cardToEdit.card.entityRecipients;
             this.pageLoading = false;
             this.datesFromCardToEdit = true;
+            usercardTemplateGateway.startDate = this.cardToEdit.card.startDate;
+            usercardTemplateGateway.endDate = this.cardToEdit.card.endDate;
+            usercardTemplateGateway.lttd = this.cardToEdit.card.lttd;
+
 
             this.setPublisherForCreatingUsercardForCardToEdit();
 

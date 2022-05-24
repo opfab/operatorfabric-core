@@ -56,15 +56,15 @@ const usercardTemplateGateway = {
     },
 
     setInitialStartDate: function(start)  {
-        this.startDate = start;
+        if (this.editionMode === 'CREATE') this.startDate = start;
     },
 
     setInitialEndDate: function(endDate)  {
-        this.endDate = endDate;
+        if (this.editionMode === 'CREATE') this.endDate = endDate;
     },
 
     setInitialLttd: function(lttd)  {
-        this.lttd = lttd;
+        if (this.editionMode === 'CREATE') this.lttd = lttd;
     },
 
     setInitialSeverity: function(initialSeverity)  {
