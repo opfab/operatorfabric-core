@@ -74,7 +74,9 @@
     "activateSoundButton":"Activer le son",
     "sessionExpiredText":"Votre session a expiré",
     "reloadRequestedText": "Rechargement de l'application nécessaire",
-    "disconnectedByNewUser": "Vous avez été déconnecté car un autre utilisateur s'est connecté avec ce compte"
+    "disconnected": "Vous êtes déconnecté.",
+    "disconnectedByNewUser": "Vous avez été déconnecté car un autre utilisateur s'est connecté avec ce compte",
+    "disconnectedByUserWithSameUrl": "Vous avez été déconnecté car un autre onglet de ce navigateur a été utilisé pour se connecter à cette URL."
   },
   "menu": {
     "feed": "Flux de cartes",
@@ -191,6 +193,7 @@
     "login": "Identifiant",
     "password": "Mot de passe",
     "confirmationBecauseAccountIsAreadyUsed":"Le compte {{login}} est en cours d'utilisation par au moins un autre utilisateur. Voulez-vous tout de même vous connecter ?\n\n En cliquant sur OK, vous déconnecterez tous les utilsateurs actuellement connectés à ce compte.",
+    "confirmationBecauseUrlIsAreadyUsed":"L'URL {{url}} est déjà en cours d'utilisation dans ce navigateur. Voulez-vous tout de même vous connecter ?\n\n  En cliquant sur OK, vous déconnecterez tous les autres onglets de ce navigateur utilisant cette URL.",
     "submit": {
       "password": "Se connecter",
       "code": "Se connecter avec {{name}}"

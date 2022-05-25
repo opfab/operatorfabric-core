@@ -11,8 +11,16 @@ Cypress.Commands.add('waitDefaultTime', () => {
     cy.wait(Cypress.env('defaultWaitTime'))
 })
 
+
+Cypress.Commands.add('hackUrlCurrentlyUsedMechanism', () => {
+    localStorage.setItem('isOpfabUrlCurrentlyUsed','false');
+    expect(localStorage.getItem('isOpfabUrlCurrentlyUsed')).to.eq('false');
+    cy.wait(100);
+});
+
 Cypress.Commands.add('loginOpFab',(username, password)=>
 {   //go to login page
+    cy.hackUrlCurrentlyUsedMechanism();
     cy.visit('')
 
     //type login
@@ -34,6 +42,7 @@ Cypress.Commands.add('loginOpFab',(username, password)=>
 Cypress.Commands.add('loginWithClock', (dateToUse = new Date()) =>{
   // Do not use the generic login feature as we 
   // need to launch cy.clock after cy.visit('')
+    cy.hackUrlCurrentlyUsedMechanism();
     cy.visit('')
     cy.clock(dateToUse);
     cy.get('#opfab-login').type('operator1_fr')
@@ -48,7 +57,10 @@ Cypress.Commands.add('loginWithClock', (dateToUse = new Date()) =>{
 
 
 Cypress.Commands.overwrite('reload',()=>
-{   //go to login page
+{   
+    cy.hackUrlCurrentlyUsedMechanism();
+    
+    //go to login page
     cy.visit('');
 
     //Wait for the app to finish initializing

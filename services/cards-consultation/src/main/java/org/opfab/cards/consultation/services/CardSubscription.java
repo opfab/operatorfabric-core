@@ -41,8 +41,7 @@ public class CardSubscription {
      */
     @Builder
     public CardSubscription(CurrentUserWithPerimeters currentUserWithPerimeters,
-                            String clientId
-                            ) {
+                            String clientId) {
         userLogin = currentUserWithPerimeters.getUserData().getLogin();
         this.id = computeSubscriptionId(userLogin, clientId);
         this.currentUserWithPerimeters = currentUserWithPerimeters;
