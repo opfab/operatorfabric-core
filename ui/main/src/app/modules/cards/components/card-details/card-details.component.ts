@@ -92,6 +92,7 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
                             });
                     } else {
                         this.cardNotFound = true;
+                        this.cardLoadingInProgress = false;
                         console.log(new Date().toISOString(), 'WARNING card not found.');
                     }
                 }
