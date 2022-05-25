@@ -13,7 +13,7 @@
     <router-outlet *ngIf="loaded" ></router-outlet>
     <of-login *ngIf="!isAuthenticated && !useCodeOrImplicitFlow"></of-login>
     
-    <div class="opfab-connecting" *ngIf="!loaded && useCodeOrImplicitFlow && !modalForSessionAlreadyInUseIsActive">
+    <div class="opfab-connecting" *ngIf="!loaded && useCodeOrImplicitFlow && !modalForSessionAlreadyInUseIsActive && !modalForUrlAlreadyInUseIsActive && !isDisconnected">
         <div class="opfab-connecting-spinner">
             <em  class="fas fa-spinner fa-spin opfab-slow-spinner" ></em>
             </div>
@@ -35,9 +35,21 @@
         </div>
     </div>
 
-    <div class="opfab-disconnectedDueToNewUser" *ngIf="isDisconnectedByNewUser">
+    <div class="opfab-disconnected-message" *ngIf="isDisconnectedByNewUser">
       <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>
           global.disconnectedByNewUser
+      </div>
+    </div>
+
+    <div class="opfab-disconnected-message" *ngIf="isDisconnectedByUserWithSameUrl">
+      <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>
+          global.disconnectedByUserWithSameUrl
+      </div>
+    </div>
+
+    <div class="opfab-disconnected-message" *ngIf="isDisconnected && !isDisconnectedByUserWithSameUrl && !isDisconnectedByNewUser">
+      <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>
+          global.disconnected
       </div>
     </div>
 
@@ -93,10 +105,17 @@
 <ng-template #sessionAlreadyInUse let-modal>
   <div class="modal-body text-center" style="white-space: pre-wrap;">
     <p>{{'login.confirmationBecauseAccountIsAreadyUsed'|translate:{login:userLogin} }}</p>
-    <button id="opfab-cancelLogIn" type="button" class="opfab-btn"
-      (click)="logout()" translate> button.cancel</button>
-    <button id="opfab-confirmLogIn" type="button" class="opfab-btn"
-      (click)="login()" translate> button.ok</button>
+    <button type="button" class="opfab-btn" (click)="logout()" translate> button.cancel</button>
+    <button type="button" class="opfab-btn" (click)="login()" translate> button.ok</button>
+
+  </div>
+</ng-template>
+
+<ng-template #urlAlreadyInUse let-modal>
+  <div class="modal-body text-center" style="white-space: pre-wrap;">
+    <p>{{'login.confirmationBecauseUrlIsAreadyUsed'|translate:{url:opfabUrl} }}</p>
+    <button type="button" class="opfab-btn" (click)="cancelApplicationLoading()" translate> button.cancel</button>
+    <button type="button" class="opfab-btn" (click)="forceConnectionEvenIfTheUrlIsAlreadyUsed()" translate> button.ok</button>
 
   </div>
 </ng-template>

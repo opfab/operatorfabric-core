@@ -182,7 +182,8 @@ describe ('ActivityAreaPage',()=>{
 
         cy.logoutOpFab();
 
-        cy.visit('')
+        cy.hackUrlCurrentlyUsedMechanism();
+        cy.visit('');
 
         //type login
         cy.get('#opfab-login').should('be.visible')

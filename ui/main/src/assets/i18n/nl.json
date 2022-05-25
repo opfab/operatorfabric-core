@@ -75,7 +75,9 @@
     "activateSoundButton":"Activeer geluid",
     "sessionExpiredText":"De sessie is verlopen",
     "reloadRequestedText": "Applicatie herladen vereist",
-    "disconnectedByNewUser": "De verbinding met u is verbroken omdat een andere gebruiker met dit account heeft ingelogd."
+    "disconnected": "Je bent losgekoppeld.",
+    "disconnectedByNewUser": "De verbinding met u is verbroken omdat een andere gebruiker met dit account heeft ingelogd.",
+    "disconnectedByUserWithSameUrl": "De verbinding is verbroken omdat een ander tabblad van deze browser werd gebruikt om in te loggen met deze URL"
   },
   "menu": {
     "feed": "Kaart Feed",
@@ -192,6 +194,7 @@
     "login": "Gebruikersnaam",
     "password": "Wachtwoord",
     "confirmationBecauseAccountIsAreadyUsed": "De account {{login}} wordt al gebruikt door minstens één andere gebruiker. Wilt u zich nog steeds aanmelden ?\n\n Door op OK te klikken, verbreekt u de verbinding met iedereen die dit account gebruikt.",
+    "confirmationBecauseUrlIsAreadyUsed": "De URL {{url}} wordt al gebruikt in deze browser, wilt u nog steeds inloggen ?\n\n Door op OK te klikken, verbreekt u de verbinding met de andere tabbladen van deze browser die deze URL gebruiken.",
     "submit": {
       "password": "Inloggen",
       "code": "Log in met {{name}}"
