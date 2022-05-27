@@ -171,10 +171,10 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
           flex: 4,
         }
       },
-      localeTextFunc : function (key) {
+      getLocaleText : function (params) {
         // To avoid clashing with opfab assets, all keys defined by ag-grid are prefixed with "ag-grid."
         // e.g. key "to" defined by ag-grid for use with pagination can be found under "ag-grid.to" in assets
-        return translateService.instant('ag-grid.' + key);
+        return translateService.instant('ag-grid.' + params.key);
         // Not this.translateService otherwise "undefined" error
       },
       pagination : true,
