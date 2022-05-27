@@ -22,6 +22,9 @@ public class ProcessStatesData implements ProcessStates {
     private ResponseData responseData;
     private AcknowledgmentAllowedEnum acknowledgmentAllowed;
     private ConsideredAcknowledgedForUserWhenEnum consideredAcknowledgedForUserWhen;
+
+    @Builder.Default
+    private Boolean cancelAcknowledgmentAllowed = true;
     private String color;
     private String name;
     private String description;
@@ -75,4 +78,13 @@ public class ProcessStatesData implements ProcessStates {
     public void setAutomaticPinWhenAcknowledged(Boolean automaticPinWhenAcknowledged) {
         this.automaticPinWhenAcknowledged = automaticPinWhenAcknowledged;
     }
+    @Override
+    public Boolean getCancelAcknowledgmentAllowed() {
+        return cancelAcknowledgmentAllowed;
+    }
+    @Override
+    public void setCancelAcknowledgmentAllowed(Boolean cancelAcknowledgmentAllowed) {
+        this.cancelAcknowledgmentAllowed = cancelAcknowledgmentAllowed;
+    }
+
 }

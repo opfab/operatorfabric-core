@@ -24,6 +24,7 @@ Feature: Bundle
     And match response.states.questionState.type == 'INPROGRESS'
     And match response.states.questionState.validateAnswerButtonLabel == 'Send impact'
     And match response.states.questionState.modifyAnswerButtonLabel == 'Modify impact'
+    And match response.states.questionState.cancelAcknowledgmentAllowed == true
     And match response.states.messageState.type == 'CANCELED'
     And match response.states.incidentInProgressState.userCard.template == 'usercard_incidentInProgress'
     And match response.states.incidentInProgressState.userCard.severityVisible == true
@@ -36,6 +37,7 @@ Feature: Bundle
     And match response.states.incidentInProgressState.userCard.recipientList[0].levels.[1] == 1
     And match response.states.incidentInProgressState.userCard.recipientList[1].id == 'IT_SUPERVISOR_ENTITY'
     And match response.states.incidentInProgressState.acknowledgmentAllowed == 'Always'
+    And match response.states.incidentInProgressState.cancelAcknowledgmentAllowed == false
     And match response.states.incidentInProgressState.consideredAcknowledgedForUserWhen == 'AllEntitiesOfUserHaveAcknowledged'
     And match response.states.incidentInProgressState.type == 'FINISHED'
     And match response.states.incidentInProgressState.automaticPinWhenAcknowledged == true
