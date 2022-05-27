@@ -52,6 +52,7 @@ export class State {
         readonly styles?: string[],
         readonly response?: Response,
         readonly acknowledgmentAllowed?: AcknowledgmentAllowedEnum,
+        readonly cancelAcknowledgmentAllowed?: boolean,
         readonly name?: string,
         readonly color?: string,
         readonly userCard?: UserCard,

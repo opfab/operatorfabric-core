@@ -42,6 +42,7 @@
         "style"
       ],
       "acknowledgmentAllowed": "Always",
+      "cancelAcknowledgmentAllowed": false,
       "type" : "CANCELED"
     },
     "processState": {

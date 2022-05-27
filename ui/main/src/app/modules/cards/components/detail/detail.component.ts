@@ -556,7 +556,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private isAcknowledgmentAllowed(): boolean {
-        // default value is true
+        if (this.card.hasBeenAcknowledged && !this.cardState.cancelAcknowledgmentAllowed ) return false;
+        // default is true
         if (!this.cardState.acknowledgmentAllowed) return true;
 
         return (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS ||

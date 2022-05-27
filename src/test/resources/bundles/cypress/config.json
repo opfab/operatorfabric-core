@@ -13,6 +13,7 @@
       "description": "Message state",
       "templateName": "template",
       "acknowledgmentAllowed": "Always",
+      "cancelAcknowledgmentAllowed": false,
       "type" : "INPROGRESS"
     },
     "messageStateWithNoAck": {
