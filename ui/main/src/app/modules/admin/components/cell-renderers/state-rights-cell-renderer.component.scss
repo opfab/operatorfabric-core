@@ -7,15 +7,21 @@
  * This file is part of the OperatorFabric project.
  */
 
-@import "~scss/_variables.scss";
+@import '~scss/_variables.scss';
 
 /* import bootstrap*/
 @import '../../../../../../node_modules/bootstrap/scss/bootstrap.scss';
 
-.opfab-bg-right-receive {background-color: $gray-500;}
-.opfab-bg-right-receiveandwrite {background-color: $blue;}
-.opfab-bg-right-write {background-color: lighten($blue,30);}
+.opfab-bg-right-receive {
+    background-color: $gray-500;
+}
+.opfab-bg-right-receiveandwrite {
+    background-color: $blue;
+}
+.opfab-bg-right-write {
+    background-color: lighten($blue, 30);
+}
 
 .badge {
-  color: $dark;
+    color: $dark;
 }

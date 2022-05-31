@@ -7,8 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
- 
- 
 .ngx-charts {
     /*
       Block text selection
@@ -28,26 +26,25 @@
     .gridline-path {
         stroke-width: 0.5;
         fill: none;
-        stroke:var(--opfab-timeline-grid-color);
+        stroke: var(--opfab-timeline-grid-color);
     }
-
-
 }
-
 
 .btn-cardlink {
-  color: var(--opfab-timeline-cardlink);
-  background-color: var(--opfab-popover-bgcolor);
-  border-color:var(--opfab-popover-bgcolor);
+    color: var(--opfab-timeline-cardlink);
+    background-color: var(--opfab-popover-bgcolor);
+    border-color: var(--opfab-popover-bgcolor);
 }
 
-.btn-cardlink:hover, .btn-cardlink:focus, .btn-cardlink.focus {
-  color: var(--opfab-timeline-cardlink);
-  background-color:  var(--opfab-timeline-cardlink-bgcolor-hover);
-  border-color: var(--opfab-timeline-cardlink-bordercolor-hover);
-  box-shadow: 0 0 0 0rem ;
+.btn-cardlink:hover,
+.btn-cardlink:focus,
+.btn-cardlink.focus {
+    color: var(--opfab-timeline-cardlink);
+    background-color: var(--opfab-timeline-cardlink-bgcolor-hover);
+    border-color: var(--opfab-timeline-cardlink-bordercolor-hover);
+    box-shadow: 0 0 0 0rem;
 }
 
 .popover {
-  max-width: 800px;
+    max-width: 800px;
 }

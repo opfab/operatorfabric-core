@@ -7,84 +7,81 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
-
 .opfab-navbar {
     padding-left: 20px;
-    background-color: var(--opfab-bgcolor) ;
+    background-color: var(--opfab-bgcolor);
     font-size: 16px;
     top: 5px;
 
     .navbar-nav {
-      .nav-link {
-        color:var(--opfab-navbar-color);
-        margin-left: 10px;
-        margin-right: 10px;
-        line-height: 18px;
-        white-space: nowrap;
-  
-        &:hover,
-        &:focus {
-          color:var( --opfab-navbar-color-hover);
+        .nav-link {
+            color: var(--opfab-navbar-color);
+            margin-left: 10px;
+            margin-right: 10px;
+            line-height: 18px;
+            white-space: nowrap;
+
+            &:hover,
+            &:focus {
+                color: var(--opfab-navbar-color-hover);
+            }
         }
-      }
-  
-      .show > .nav-link,
-      .active > .nav-link,
-      .nav-link.show,
-      .nav-link.active {
-        color:var(--opfab-navbar-color-active);
-        font-weight: bold;
-        padding-bottom: 3px;
-        padding-left: 3px;
-        padding-right: 3px;
-        border-bottom-width: 2px;
-        border-bottom-style: solid;
-      }
+
+        .show > .nav-link,
+        .active > .nav-link,
+        .nav-link.show,
+        .nav-link.active {
+            color: var(--opfab-navbar-color-active);
+            font-weight: bold;
+            padding-bottom: 3px;
+            padding-left: 3px;
+            padding-right: 3px;
+            border-bottom-width: 2px;
+            border-bottom-style: solid;
+        }
     }
 
-
     .navbar-toggler {
-      color: var(--opfab-navbar-color);
-      border-color: var(--opfab-navbar-toggler-border-color);
+        color: var(--opfab-navbar-color);
+        border-color: var(--opfab-navbar-toggler-border-color);
     }
 
     .navbar-toggler-icon {
-        background-image : var(--opfab-navbar-toggler-icon);
+        background-image: var(--opfab-navbar-toggler-icon);
     }
 
     .dropdown-menu {
-      background-color:var(--opfab-bgcolor);
-      color:var(--opfab-navbar-color);
+        background-color: var(--opfab-bgcolor);
+        color: var(--opfab-navbar-color);
     }
 
-    .dropdown-item:hover, .dropdown-item:focus {
-      color:var( --opfab-navbar-color-hover);
-      background-color:var( --opfab-bgcolor);
-    }
-    
-    .dropdown-item.active, .dropdown-item:active {
-      color:var(--opfab-navbar-color-active);
-      background-color:var( --opfab-bgcolor);
+    .dropdown-item:hover,
+    .dropdown-item:focus {
+        color: var(--opfab-navbar-color-hover);
+        background-color: var(--opfab-bgcolor);
     }
 
-  }
-  
-  .opfab-right-menu {
-    background-color:var(--opfab-navbar-right-menu-bgcolor);
-    color:var(--opfab-navbar-color);
-    border-top: 2px solid var(--opfab-navbar-color); 
+    .dropdown-item.active,
+    .dropdown-item:active {
+        color: var(--opfab-navbar-color-active);
+        background-color: var(--opfab-bgcolor);
+    }
+}
+
+.opfab-right-menu {
+    background-color: var(--opfab-navbar-right-menu-bgcolor);
+    color: var(--opfab-navbar-color);
+    border-top: 2px solid var(--opfab-navbar-color);
     margin-top: -16px;
     margin-left: -12px;
     margin-right: -12px;
     margin-bottom: -10px;
     padding-top: 10px;
     letter-spacing: normal;
-  }
+}
 
-  .opfab-right-menu-item {
-    color:var(--opfab-navbar-color);
+.opfab-right-menu-item {
+    color: var(--opfab-navbar-color);
     margin-left: 20px;
     margin-right: 20px;
     font-size: 16px;
@@ -94,135 +91,132 @@
 
     &:hover,
     &:focus {
-      color:var( --opfab-navbar-color-hover);
+        color: var(--opfab-navbar-color-hover);
     }
-  }
+}
 
-  .opfab-right-menu-link {
+.opfab-right-menu-link {
     display: grid;
     grid-template-columns: 30px auto;
-    color:var(--opfab-navbar-color);
+    color: var(--opfab-navbar-color);
     align-items: center;
     text-decoration: none;
     font-size: 16px;
 
     &:hover,
     &:focus {
-      color:var( --opfab-navbar-color-hover);
+        color: var(--opfab-navbar-color-hover);
     }
 }
 
 .opfab-menu-icon {
-  display: inline-block;
-  height: 18px;
-  width: 18px;
-  margin-right: 5px;
-  background: var( --opfab-navbar-color-hover); 
-  mask-size: cover;
+    display: inline-block;
+    height: 18px;
+    width: 18px;
+    margin-right: 5px;
+    background: var(--opfab-navbar-color-hover);
+    mask-size: cover;
 }
 
 .opfab-menu-icon-parameters {
-  mask: url(../../../assets/images/icons/parameters.svg);
+    mask: url(../../../assets/images/icons/parameters.svg);
 }
 
 .opfab-menu-icon-notification {
-  mask: url(../../../assets/images/icons/notification.svg);
+    mask: url(../../../assets/images/icons/notification.svg);
 }
 
 .opfab-menu-icon-about {
-  mask: url(../../../assets/images/icons/about.svg);
+    mask: url(../../../assets/images/icons/about.svg);
 }
 
 .opfab-menu-icon-change-password {
-  mask: url(../../../assets/images/icons/change-password.svg);
+    mask: url(../../../assets/images/icons/change-password.svg);
 }
 
 .opfab-menu-icon-logout {
-  mask: url(../../../assets/images/icons/logout.svg);
+    mask: url(../../../assets/images/icons/logout.svg);
 }
 
 .opfab-menu-icon-admin {
-  mask: url(../../../assets/images/icons/administration.svg);
+    mask: url(../../../assets/images/icons/administration.svg);
 }
 
 .opfab-menu-icon-dark-light {
-  mask: url(../../../assets/images/icons/dark-light.svg);
+    mask: url(../../../assets/images/icons/dark-light.svg);
 }
 
 .opfab-menu-icon-newcard {
-  display: inline-block;
-  height: 28px;
-  width: 28px;
-  margin-right: 10px;
-  margin-top: -5px;
-  background: var( --opfab-text-color); 
-  mask: url(../../../assets/images/icons/newcard.svg);
+    display: inline-block;
+    height: 28px;
+    width: 28px;
+    margin-right: 10px;
+    margin-top: -5px;
+    background: var(--opfab-text-color);
+    mask: url(../../../assets/images/icons/newcard.svg);
 }
 
-
 .opfab-menu-icon-calendar {
-  display: inline-block;
-  height: 28px;
-  width: 28px;
-  margin-right: 10px;
-  margin-top: -5px;
-  background: var( --opfab-text-color); 
-  mask: url(../../../assets/images/icons/calendar.svg);
+    display: inline-block;
+    height: 28px;
+    width: 28px;
+    margin-right: 10px;
+    margin-top: -5px;
+    background: var(--opfab-text-color);
+    mask: url(../../../assets/images/icons/calendar.svg);
 }
 
 .opfab-menu-icon-calendar.active {
-  background: var(--opfab-navbar-color-active);
+    background: var(--opfab-navbar-color-active);
 }
 
-.opfab-menu-icon-newcard:hover, .opfab-menu-icon-calendar:hover{
-  background: var( --opfab-navbar-color-hover); 
+.opfab-menu-icon-newcard:hover,
+.opfab-menu-icon-calendar:hover {
+    background: var(--opfab-navbar-color-hover);
 }
 
-
-.popover{
-  max-width: 100%; /* Max Width of the popover (depending on the container!) */
+.popover {
+    max-width: 100%; /* Max Width of the popover (depending on the container!) */
 }
 
 .opfab-about-brand {
-  display: inline-block;
-  padding-top: 0.3125rem;
-  padding-bottom: 0.3125rem;
-  font-size: 1.25rem;
-  line-height: inherit;
-  white-space: nowrap;
+    display: inline-block;
+    padding-top: 0.3125rem;
+    padding-bottom: 0.3125rem;
+    font-size: 1.25rem;
+    line-height: inherit;
+    white-space: nowrap;
 }
 
 .opfab-about-title {
-  color:  var(--opfab-text-color-stronger);
+    color: var(--opfab-text-color-stronger);
 }
 
-@media all and (max-width: 400px)  {
-  .navbar-brand {
-   margin-right:5px;
-  }
-
-  .navbar-toggler {
-    padding-left: 0px;
-    padding-right: 0px;
-  }
-
-  .opfab-navbar {
-    .navbar-nav {
-      .nav-link {
-        margin-left: 4px;
-        margin-right: 4px;
-      }
+@media all and (max-width: 400px) {
+    .navbar-brand {
+        margin-right: 5px;
     }
-  }
 
+    .navbar-toggler {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
 
-} 
+    .opfab-navbar {
+        .navbar-nav {
+            .nav-link {
+                margin-left: 4px;
+                margin-right: 4px;
+            }
+        }
+    }
+}
 
 .opfab-sticky-menu {
-  position: absolute;
-  top: 3px;
-  right: 0;
-  padding-right: 30px;
-  padding-left: 15px;
-  background: var( --opfab-bgcolor);
+    position: absolute;
+    top: 3px;
+    right: 0;
+    padding-right: 30px;
+    padding-left: 15px;
+    background: var(--opfab-bgcolor);
 }

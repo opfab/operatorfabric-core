@@ -7,42 +7,38 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 .sort-header {
-  margin-left: 2px;
-  margin-right: 2px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid var(--opfab-text-color);
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--opfab-text-color);
 }
 
-
-
-
 .opfab-icon-sort {
-  display: inline-block;
-  height: 32px;
-  width: 32px;
-  margin-top:5px;
-  margin-right: 5px;
-  border-width: 0px;
-  background: var( --opfab-navbar-color-hover);
-  mask: url(../../../../../../../assets/images/icons/sort.svg);
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+    margin-top: 5px;
+    margin-right: 5px;
+    border-width: 0px;
+    background: var(--opfab-navbar-color-hover);
+    mask: url(../../../../../../../assets/images/icons/sort.svg);
 }
 
 .opfab-icon-sort:hover {
-  background: var(--opfab-feedbar-icon-hover-color);
+    background: var(--opfab-feedbar-icon-hover-color);
 }
 
 .opfab-icon-bg-color {
-  margin:0px; 
-  border-radius: 3px;
-  padding: 5px;
+    margin: 0px;
+    border-radius: 3px;
+    padding: 5px;
 }
 
 .opfab-icon-bg-color:hover {
-  background-color: var(--opfab-feedbar-icon-hover-bgcolor);
+    background-color: var(--opfab-feedbar-icon-hover-bgcolor);
 }
 
 .opfab-filters-popover {
-  background-color:var(--opfab-popover-bgcolor);
+    background-color: var(--opfab-popover-bgcolor);
 }

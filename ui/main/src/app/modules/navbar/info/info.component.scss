@@ -7,31 +7,27 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 .navbar-info-block {
-  display: inline-block;
-  color: var(--opfab-color);
-  
+    display: inline-block;
+    color: var(--opfab-color);
 
-  > .time {
-    font-size: 11px;
-    margin-left: auto;
-    margin-right: auto;
-    
-  }
+    > .time {
+        font-size: 11px;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
-  > .user-entities {
-    font-size: 13px;
-  }
-
+    > .user-entities {
+        font-size: 13px;
+    }
 }
 
 .opfab-menu-icon-profile {
-  display: block;
-  height: 28px;
-  width: 28px;
-  margin-left: auto;
-  margin-right: auto;
-  background: var( --opfab-text-color); 
-  mask: url(../../../../assets/images/icons/profile.svg);
+    display: block;
+    height: 28px;
+    width: 28px;
+    margin-left: auto;
+    margin-right: auto;
+    background: var(--opfab-text-color);
+    mask: url(../../../../assets/images/icons/profile.svg);
 }

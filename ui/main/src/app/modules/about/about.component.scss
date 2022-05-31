@@ -7,16 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-.about-application-list{
-  margin-top: 5%;
-  list-style-type: none;
-  text-align: center;
-  font-size: 13px;
-  color:  var(--opfab-text-color-stronger);
+.about-application-list {
+    margin-top: 5%;
+    list-style-type: none;
+    text-align: center;
+    font-size: 13px;
+    color: var(--opfab-text-color-stronger);
 }
-.about-application-list li{
-  line-height: 1.5;
+.about-application-list li {
+    line-height: 1.5;
 }
 .about-application-name {
-  font-weight: bold;
+    font-weight: bold;
 }

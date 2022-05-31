@@ -30,12 +30,11 @@
 }
 
 // if screen too small use only one column
-@media all and (max-width: 1400px)  {
+@media all and (max-width: 1400px) {
     .opfab-settings {
-        grid-template-columns: 1fr
-
+        grid-template-columns: 1fr;
     }
-} 
+}
 
 .opfab-settings-item {
     margin-top: 20px;
@@ -50,15 +49,13 @@
 }
 
 // if screen too small use only one column
-@media all and (max-width: 700px)  {
+@media all and (max-width: 700px) {
     .opfab-settings-sounds {
         grid-template-columns: 1fr;
-
     }
 
-    .opfab-sound-checkbox-label
-    {
+    .opfab-sound-checkbox-label {
         margin-top: 0px;
         margin-bottom: 20px;
     }
-} 
+}

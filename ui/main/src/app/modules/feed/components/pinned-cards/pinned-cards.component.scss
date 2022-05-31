@@ -7,19 +7,19 @@
  * This file is part of the OperatorFabric project.
  */
 
- @import "~scss/_variables.scss";
+@import '~scss/_variables.scss';
 
-  .opfab-pinned-cards {
-      display: flex;
-      margin-left: 38px;
-      justify-content: right;
-  }
+.opfab-pinned-cards {
+    display: flex;
+    margin-left: 38px;
+    justify-content: right;
+}
 
-  #of-pinned-cards {
-      display: flex;
-  }
+#of-pinned-cards {
+    display: flex;
+}
 
-  .opfab-pinned-card {
+.opfab-pinned-card {
     box-shadow: var(--opfab-card-shadow);
     color: var(--opfab-lightcard-detail-textcolor);
     background-color: var(--opfab-lightcard-detail-bgcolor);
@@ -27,41 +27,38 @@
     padding-right: 5px;
     height: 20px;
     cursor: pointer;
-  }
+}
 
-  .opfab-hidden-pinned-card {
-      margin-top: 5px;
-    }
-  
-  .opfab-bg-sev-alarm:before {
-        background-color: $sev-alarm;
-  }
+.opfab-hidden-pinned-card {
+    margin-top: 5px;
+}
 
-  .opfab-bg-sev-action:before{
-        background-color: $sev-action;
-  }
+.opfab-bg-sev-alarm:before {
+    background-color: $sev-alarm;
+}
 
+.opfab-bg-sev-action:before {
+    background-color: $sev-action;
+}
 
-  .opfab-bg-sev-compliant:before{
-        background-color: $sev-compliant;
-  }
+.opfab-bg-sev-compliant:before {
+    background-color: $sev-compliant;
+}
 
-  .opfab-bg-sev-information:before {
-        background-color: $sev-information;
-  }
+.opfab-bg-sev-information:before {
+    background-color: $sev-information;
+}
 
-  span {
-      white-space: nowrap;
-  }
+span {
+    white-space: nowrap;
+}
 
-  span:before {
-    content: "";
+span:before {
+    content: '';
     display: inline-flex;
     width: 5px;
     height: 20px;
     margin-bottom: 1.5px;
     margin-right: 4px;
     vertical-align: top;
-
-  }
-  
+}
