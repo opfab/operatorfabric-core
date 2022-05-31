@@ -27,5 +27,5 @@ export class MultiSelect {
     public id: string;
     public config: MultiSelectConfig;
     public options: Array<MultiSelectOption>;
-    public selectedOptions : Array<string>;
+    public selectedOptions: Array<string>;
 }

@@ -26,7 +26,7 @@ export class ProcessStatesMultiSelectOptionsService {
     ) {}
 
     getStatesMultiSelectOptionsPerProcess(hideChildStates: boolean): any[] {
-        const statesMultiSelectOptionsPerProcess : Array<MultiSelectOption> = [];
+        const statesMultiSelectOptionsPerProcess: Array<MultiSelectOption> = [];
         this.processesService.getAllProcesses().forEach((process) => {
             const stateOptions = new MultiSelectOption(process.id, process.name);
             stateOptions.options = [];
@@ -48,14 +48,10 @@ export class ProcessStatesMultiSelectOptionsService {
     getProcessesWithoutProcessGroupMultiSelectOptions(processesFilter?: string[]): any[] {
         const processesWithoutProcessGroupMultiSelectOptions: Array<MultiSelectOption> = [];
 
-        this.processesService
-            .getProcessesWithoutProcessGroup(processesFilter)
-            .forEach((process) => {
-                if (this.userService.isReceiveRightsForProcess(process.id))
-                    processesWithoutProcessGroupMultiSelectOptions.push(
-                        new MultiSelectOption(process.id, process.name)
-                    );
-            });
+        this.processesService.getProcessesWithoutProcessGroup(processesFilter).forEach((process) => {
+            if (this.userService.isReceiveRightsForProcess(process.id))
+                processesWithoutProcessGroupMultiSelectOptions.push(new MultiSelectOption(process.id, process.name));
+        });
         return processesWithoutProcessGroupMultiSelectOptions;
     }
 
@@ -70,10 +66,10 @@ export class ProcessStatesMultiSelectOptionsService {
             if (!processList.length) processMultiSelectOptionsPerProcessGroups.delete(processGroupId);
             else {
                 const options: Array<MultiSelectOption> = [];
-                processList.forEach( process => options.push(new MultiSelectOption(process.value,process.label)));
+                processList.forEach((process) => options.push(new MultiSelectOption(process.value, process.label)));
                 processMultiSelectOptionsPerProcessGroups.set(processGroupId, options);
-                }
-            });
+            }
+        });
         return processMultiSelectOptionsPerProcessGroups;
     }
 

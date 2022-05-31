@@ -7,27 +7,25 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {IframeDisplayComponent} from "./iframedisplay.component";
+import {IframeDisplayComponent} from './iframedisplay.component';
 
 const routes: Routes = [
     {
-      path: ':menu_id/:menu_entry_id',
-      component: IframeDisplayComponent,
-      children: [
-        {
-          path: "**",
-          component: IframeDisplayComponent
-        }
-      ]
+        path: ':menu_id/:menu_entry_id',
+        component: IframeDisplayComponent,
+        children: [
+            {
+                path: '**',
+                component: IframeDisplayComponent
+            }
+        ]
     }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule]
 })
-export class BusinessconfigpartyRoutingModule { }
+export class BusinessconfigpartyRoutingModule {}

@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Injectable} from '@angular/core';
 import {Guid} from 'guid-typescript';
 
@@ -15,7 +14,6 @@ import {Guid} from 'guid-typescript';
     providedIn: 'root'
 })
 export class GuidService {
-
     private readonly guid: Guid;
 
     constructor() {

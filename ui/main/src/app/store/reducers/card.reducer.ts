@@ -7,14 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {cardInitialState, CardState} from '@ofStates/card.state';
 import {CardActions, CardActionTypes} from '@ofActions/card.actions';
 
-export function reducer(
-    state = cardInitialState,
-    action: CardActions
-): CardState {
+export function reducer(state = cardInitialState, action: CardActions): CardState {
     switch (action.type) {
         case CardActionTypes.ClearCard: {
             return cardInitialState;
@@ -37,4 +33,3 @@ export function reducer(
         }
     }
 }
-

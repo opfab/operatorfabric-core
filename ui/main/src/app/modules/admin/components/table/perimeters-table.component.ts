@@ -14,15 +14,13 @@ import {AdminItemType} from '../../services/sharing.service';
 import {EditPerimeterModalComponent} from '../editmodal/perimeters/edit-perimeter-modal.component';
 
 @Component({
-  templateUrl: 'admin-table.directive.html',
-  selector: 'of-perimeters-table'
+    templateUrl: 'admin-table.directive.html',
+    selector: 'of-perimeters-table'
 })
 export class PerimetersTableComponent extends AdminTableDirective implements OnInit {
-
-  tableType = AdminItemType.PERIMETER;
-  fields = [new Field('id'), new Field('process'), new Field('stateRights', 7, 'stateRightsCellRenderer')];
-  idField = 'id';
-  editModalComponent = EditPerimeterModalComponent;
-  modalOptions = {...AdminTableDirective.defaultModalOptions, size: 'xl'};
-
+    tableType = AdminItemType.PERIMETER;
+    fields = [new Field('id'), new Field('process'), new Field('stateRights', 7, 'stateRightsCellRenderer')];
+    idField = 'id';
+    editModalComponent = EditPerimeterModalComponent;
+    modalOptions = {...AdminTableDirective.defaultModalOptions, size: 'xl'};
 }

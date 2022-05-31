@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -17,7 +16,6 @@ import {GlobalStyleUpdate} from '@ofActions/global-style.actions';
     providedIn: 'root'
 })
 export class GlobalStyleService {
-
     private static style: string;
     private static rootStyleSheet;
     private static rootRulesNumber;
@@ -145,7 +143,6 @@ export class GlobalStyleService {
                                         --opfab-pagination-disabled-link: #606060
                                     }`;
 
-
     constructor(private store: Store<AppState>) {
         const len = document.styleSheets.length;
         for (let n = 0; n < len; n++) {
@@ -181,7 +178,9 @@ export class GlobalStyleService {
         if (GlobalStyleService.rootRulesNumber) {
             GlobalStyleService.rootStyleSheet.deleteRule(GlobalStyleService.rootRulesNumber);
         }
-        GlobalStyleService.rootRulesNumber = GlobalStyleService.rootStyleSheet.insertRule(cssRule,
-            GlobalStyleService.rootStyleSheet.cssRules.length);
+        GlobalStyleService.rootRulesNumber = GlobalStyleService.rootStyleSheet.insertRule(
+            cssRule,
+            GlobalStyleService.rootStyleSheet.cssRules.length
+        );
     }
 }

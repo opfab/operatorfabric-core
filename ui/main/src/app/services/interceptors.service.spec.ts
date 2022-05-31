@@ -15,74 +15,60 @@ import {getRandomAlphanumericValue, injectedSpy} from '@tests/helpers';
 import createSpyObj = jasmine.createSpyObj;
 
 describe('Interceptor', () => {
-
-
     beforeEach(() => {
         const authenticationServiceSpy = createSpyObj(['getSecurityHeader', 'isAuthModeNone']);
         TestBed.configureTestingModule({
-            providers: [TokenInjector,
-                {provide: AuthenticationService, useValue: authenticationServiceSpy},
-            ]
+            providers: [TokenInjector, {provide: AuthenticationService, useValue: authenticationServiceSpy}]
         });
         injectedSpy(AuthenticationService);
-        authenticationServiceSpy.getSecurityHeader.and.returnValue({'Authorization': `Bearer dummyToken`});
+        authenticationServiceSpy.getSecurityHeader.and.returnValue({Authorization: `Bearer dummyToken`});
         authenticationServiceSpy.isAuthModeNone.and.returnValue(false);
     });
 
-    it('should leave headers untouched for the "token checking" end-point'
-        , inject([TokenInjector]
-            , (service: TokenInjector) => {
-                const request = new HttpRequest<any>('GET', 'http://www.test.com/auth/check_token');
-                expect(request).toBeTruthy();
-                service.addAuthHeadersIfNecessary(request);
-                expect(request.headers.get('Authorization')).toBeNull();
+    it('should leave headers untouched for the "token checking" end-point', inject(
+        [TokenInjector],
+        (service: TokenInjector) => {
+            const request = new HttpRequest<any>('GET', 'http://www.test.com/auth/check_token');
+            expect(request).toBeTruthy();
+            service.addAuthHeadersIfNecessary(request);
+            expect(request.headers.get('Authorization')).toBeNull();
+        }
+    ));
 
-            }));
+    it('should leave headers untouched for the "token asking" end-point', inject(
+        [TokenInjector],
+        (service: TokenInjector) => {
+            const request = new HttpRequest<any>('GET', 'http://www.test.com/auth/token');
+            expect(request).toBeTruthy();
+            service.addAuthHeadersIfNecessary(request);
+            expect(request.headers.get('Authorization')).toBeNull();
+        }
+    ));
 
-    it('should leave headers untouched for the "token asking" end-point'
-        , inject([TokenInjector]
-            , (service: TokenInjector) => {
-                const request = new HttpRequest<any>('GET', 'http://www.test.com/auth/token');
-                expect(request).toBeTruthy();
-                service.addAuthHeadersIfNecessary(request);
-                expect(request.headers.get('Authorization')).toBeNull();
-            }));
-
-    it('should add authentication headers for random end-point'
-        , inject([TokenInjector]
-            , (service: TokenInjector) => {
-                const request = new HttpRequest<any>('GET',
-                    'http://www.test.com/' + getRandomAlphanumericValue(13));
-                expect(request).toBeTruthy();
-                const nuRequest = service.addAuthHeadersIfNecessary(request);
-                expect(nuRequest.headers.get('Authorization')).not.toBeNull();
-                expect(nuRequest.headers.get('Authorization')).not.toBe('');
-            }));
+    it('should add authentication headers for random end-point', inject([TokenInjector], (service: TokenInjector) => {
+        const request = new HttpRequest<any>('GET', 'http://www.test.com/' + getRandomAlphanumericValue(13));
+        expect(request).toBeTruthy();
+        const nuRequest = service.addAuthHeadersIfNecessary(request);
+        expect(nuRequest.headers.get('Authorization')).not.toBeNull();
+        expect(nuRequest.headers.get('Authorization')).not.toBe('');
+    }));
 });
 
 describe('Interceptor with Auth-flow NONE', () => {
-
-
-
     beforeEach(() => {
         const authenticationServiceSpy = createSpyObj(['getSecurityHeader', 'isAuthModeNone']);
         TestBed.configureTestingModule({
-            providers: [TokenInjector,
-                {provide: AuthenticationService, useValue: authenticationServiceSpy},
-            ]
+            providers: [TokenInjector, {provide: AuthenticationService, useValue: authenticationServiceSpy}]
         });
         injectedSpy(AuthenticationService);
-        authenticationServiceSpy.getSecurityHeader.and.returnValue({'Authorization': `Bearer dummyToken`});
+        authenticationServiceSpy.getSecurityHeader.and.returnValue({Authorization: `Bearer dummyToken`});
         authenticationServiceSpy.isAuthModeNone.and.returnValue(true);
     });
 
-    it('should leave headers untouched for all/random end-point'
-        , inject([TokenInjector]
-            , (service: TokenInjector) => {
-                const request = new HttpRequest<any>('GET',
-                    'http://www.test.com/' + getRandomAlphanumericValue(13));
-                expect(request).toBeTruthy();
-                const nuRequest = service.addAuthHeadersIfNecessary(request);
-                expect(nuRequest.headers.get('Authorization')).toBeNull();
-            }));
+    it('should leave headers untouched for all/random end-point', inject([TokenInjector], (service: TokenInjector) => {
+        const request = new HttpRequest<any>('GET', 'http://www.test.com/' + getRandomAlphanumericValue(13));
+        expect(request).toBeTruthy();
+        const nuRequest = service.addAuthHeadersIfNecessary(request);
+        expect(nuRequest.headers.get('Authorization')).toBeNull();
+    }));
 });

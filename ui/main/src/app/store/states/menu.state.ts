@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Menu} from '@ofModel/menu.model';
 
 export interface MenuState {

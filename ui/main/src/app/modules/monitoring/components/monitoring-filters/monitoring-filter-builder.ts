@@ -46,8 +46,7 @@ export class MonitoringFilterBuilder {
 
     public setTypeOfStates(typeOfStates: any) {
         if (typeOfStates.length > 0) {
-            const typeOfStatesPerProcessAndState =
-                this.processesService.getTypeOfStatesPerProcessAndState();
+            const typeOfStatesPerProcessAndState = this.processesService.getTypeOfStatesPerProcessAndState();
             this.typeOfStatesFilter = this.getTypeOfStateFilter(true, {
                 typeOfStates: typeOfStates,
                 mapOfTypeOfStates: typeOfStatesPerProcessAndState
@@ -62,9 +61,7 @@ export class MonitoringFilterBuilder {
             (card: LightCard, status) => {
                 const typeOfStatesList = status.typeOfStates;
                 if (!!typeOfStatesList) {
-                    const typeOfStateOfTheCard = status.mapOfTypeOfStates.get(
-                        card.process + '.' + card.state
-                    );
+                    const typeOfStateOfTheCard = status.mapOfTypeOfStates.get(card.process + '.' + card.state);
                     return typeOfStatesList.includes(typeOfStateOfTheCard);
                 }
                 return true;

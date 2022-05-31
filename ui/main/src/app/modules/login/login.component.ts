@@ -7,17 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {TryToLogIn} from '@ofActions/authentication.actions';
 import {AppState} from '@ofStore/index';
-import {filter} from "rxjs/operators";
-import {selectMessage} from "@ofSelectors/authentication.selectors";
-import {Message, MessageLevel} from "@ofModel/message.model";
-
+import {filter} from 'rxjs/operators';
+import {selectMessage} from '@ofSelectors/authentication.selectors';
+import {Message, MessageLevel} from '@ofModel/message.model';
 
 @Component({
     selector: 'of-login',
@@ -25,22 +22,21 @@ import {Message, MessageLevel} from "@ofModel/message.model";
     styles: ['.btn-primary {margin-right: 8px;}']
 })
 export class LoginComponent implements OnInit {
-
     userForm: FormGroup;
     loginMessage: Message;
 
     /* istanbul ignore next */
-    constructor(private store: Store<AppState>) {
-    }
+    constructor(private store: Store<AppState>) {}
 
     ngOnInit() {
-        this.store.select(selectMessage).pipe(filter(m => m != null && m.level === MessageLevel.ERROR))
-            .subscribe(m => this.loginMessage = m);
+        this.store
+            .select(selectMessage)
+            .pipe(filter((m) => m != null && m.level === MessageLevel.ERROR))
+            .subscribe((m) => (this.loginMessage = m));
         this.userForm = new FormGroup({
-                identifier: new FormControl(''),
-                password: new FormControl('')
-            }
-        );
+            identifier: new FormControl(''),
+            password: new FormControl('')
+        });
     }
 
     onSubmit(): void {
@@ -54,5 +50,4 @@ export class LoginComponent implements OnInit {
     resetForm(): void {
         this.userForm.reset();
     }
-
 }

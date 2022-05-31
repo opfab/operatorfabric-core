@@ -7,10 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {Guid} from 'guid-typescript';
-import {Message} from "@ofModel/message.model";
+import {Message} from '@ofModel/message.model';
 
 export interface AuthState {
     code: string;

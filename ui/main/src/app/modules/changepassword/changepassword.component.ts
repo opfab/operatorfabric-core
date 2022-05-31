@@ -8,23 +8,22 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
-import {ConfigService} from "@ofServices/config.service";
-
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import {ConfigService} from '@ofServices/config.service';
 
 @Component({
     selector: 'of-changepassword',
     templateUrl: './changepassword.component.html',
     styleUrls: ['./changepassword.component.scss']
 })
-
 export class ChangepasswordComponent implements OnInit {
     public changePasswordUrl: SafeUrl;
 
-    constructor(private configService: ConfigService,
-                private sanitizer: DomSanitizer) {}
+    constructor(private configService: ConfigService, private sanitizer: DomSanitizer) {}
 
     ngOnInit() {
-        this.changePasswordUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.configService.getConfigValue('security.changePasswordUrl'));
+        this.changePasswordUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+            this.configService.getConfigValue('security.changePasswordUrl')
+        );
     }
 }

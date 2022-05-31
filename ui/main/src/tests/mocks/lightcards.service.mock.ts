@@ -7,15 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Observable, of} from 'rxjs';
 import {Injectable} from '@angular/core';
 
 @Injectable()
-export class LightCardsServiceMock{
-
+export class LightCardsServiceMock {
     public getFilteredLightCardsForTimeLine(): Observable<any> {
         return of([]);
     }
-
 }

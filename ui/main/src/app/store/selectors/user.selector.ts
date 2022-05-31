@@ -11,8 +11,6 @@ import {AppState} from '@ofStore/index';
 import {createSelector} from '@ngrx/store';
 import {UserState} from '@ofStates/user.state';
 
-
 export const selectUserSlice = (state: AppState) => state.user;
 
-export const selectAllEntities = createSelector(selectUserSlice,
-    (userState: UserState) => userState.allEntities);
+export const selectAllEntities = createSelector(selectUserSlice, (userState: UserState) => userState.allEntities);

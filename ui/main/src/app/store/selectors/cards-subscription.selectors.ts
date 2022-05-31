@@ -7,15 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {createSelector} from '@ngrx/store';
-import {AppState} from "@ofStore/index";
+import {AppState} from '@ofStore/index';
 
 export const selectCardsSubscriptionState = (state: AppState) => state.cardsSubscription;
 
-export const selectSubscriptionOpen = createSelector(selectCardsSubscriptionState,
-    state => state.subscriptionOpen);
+export const selectSubscriptionOpen = createSelector(selectCardsSubscriptionState, (state) => state.subscriptionOpen);
 
-export const selectRelodRequested = createSelector(selectCardsSubscriptionState,
-    state => state.reloadRequested);
+export const selectRelodRequested = createSelector(selectCardsSubscriptionState, (state) => state.reloadRequested);

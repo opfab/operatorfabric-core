@@ -15,8 +15,7 @@ import {ErrorService} from '@ofServices/error-service';
     providedIn: 'root'
 })
 export abstract class CrudService extends ErrorService {
-  abstract getAll(): Observable<Array<any>>;
-  abstract update(data: any): Observable<any>;
-  abstract deleteById(id: string): Observable<any>;
-
+    abstract getAll(): Observable<Array<any>>;
+    abstract update(data: any): Observable<any>;
+    abstract deleteById(id: string): Observable<any>;
 }

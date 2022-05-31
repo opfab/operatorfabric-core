@@ -12,14 +12,9 @@ import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {CardDetailComponent} from './card-detail.component';
 
-
 @NgModule({
     declarations: [CardDetailComponent],
-    imports: [
-        CommonModule,
-        TranslateModule,
-    ],
+    imports: [CommonModule, TranslateModule],
     exports: [CardDetailComponent]
 })
-export class CardDetailModule {
-}
+export class CardDetailModule {}

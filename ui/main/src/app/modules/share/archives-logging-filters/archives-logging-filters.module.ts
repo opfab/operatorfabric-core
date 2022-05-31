@@ -13,10 +13,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {MultiSelectModule} from '../multi-select/multi-select.module';
-import {ArchivesLoggingFiltersComponent} from "./archives-logging-filters.component";
+import {ArchivesLoggingFiltersComponent} from './archives-logging-filters.component';
 import {DatetimeFilterModule} from '../datetime-filter/datetime-filter.module';
-
-
 
 @NgModule({
     declarations: [ArchivesLoggingFiltersComponent],
@@ -28,8 +26,7 @@ import {DatetimeFilterModule} from '../datetime-filter/datetime-filter.module';
         NgbModule,
         MultiSelectModule,
         DatetimeFilterModule
-
     ],
     exports: [ArchivesLoggingFiltersComponent]
 })
-export class ArchivesLoggingFiltersModule { }
+export class ArchivesLoggingFiltersModule {}

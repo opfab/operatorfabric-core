@@ -29,7 +29,7 @@ export class ProcessesService {
     private urlCleaner: HttpUrlEncodingCodec;
     private processCache = new Map();
     private processes: Process[];
-    private processGroups = new Map<string, {name: string, processes: string[]}>();
+    private processGroups = new Map<string, {name: string; processes: string[]}>();
     private monitoringConfig: MonitoringConfig;
 
     private typeOfStatesPerProcessAndState: Map<string, TypeOfStateEnum>;
@@ -37,131 +37,132 @@ export class ProcessesService {
     constructor(
         private httpClient: HttpClient,
         private translateService: TranslateService,
-        private userService: UserService) {
-
+        private userService: UserService
+    ) {
         this.urlCleaner = new HttpUrlEncodingCodec();
         this.processesUrl = `${environment.urls.processes}`;
         this.processGroupsUrl = `${environment.urls.processGroups}`;
         this.monitoringConfigUrl = `${environment.urls.monitoringConfig}`;
     }
 
-
     public loadAllProcesses(): Observable<any> {
-        return this.queryAllProcesses()
-            .pipe(
-                map(processesLoaded => {
-                    if (!!processesLoaded) {
-                        this.processes = processesLoaded;
-                        if (this.processes.length === 0) {
-                            console.log(new Date().toISOString(), 'WARNING : no processes configured');
-                        } else {
-                            this.loadAllProcessesInCache();
-                            console.log(new Date().toISOString(), 'List of processes loaded');
-                        }
+        return this.queryAllProcesses().pipe(
+            map((processesLoaded) => {
+                if (!!processesLoaded) {
+                    this.processes = processesLoaded;
+                    if (this.processes.length === 0) {
+                        console.log(new Date().toISOString(), 'WARNING : no processes configured');
+                    } else {
+                        this.loadAllProcessesInCache();
+                        console.log(new Date().toISOString(), 'List of processes loaded');
                     }
-                }),
-                    catchError(error => {
-                        console.error(new Date().toISOString(), 'An error occurred when loading all processes', error);
-                        return of(error);
-                    })
-                );
+                }
+            }),
+            catchError((error) => {
+                console.error(new Date().toISOString(), 'An error occurred when loading all processes', error);
+                return of(error);
+            })
+        );
     }
 
     public loadProcessGroups(): Observable<any> {
-        return this.queryProcessGroups()
-            .pipe(
-                map(processGroupsFile => {
-                        if (!!processGroupsFile) {
-                            const processGroupsList = processGroupsFile.groups;
-                            if (!! processGroupsList)
-                                processGroupsList.forEach(processGroup => {
-                                    this.processGroups.set(processGroup.id, {name: processGroup.name, processes: processGroup.processes});
-                                });
-                            console.log(new Date().toISOString(), 'List of process groups loaded');
-                        }
-                }),
-                    catchError(error => {
-                        console.error(new Date().toISOString(), 'An error occurred when loading processGroups', error);
-                        return of(error);
-                    })
-                );
+        return this.queryProcessGroups().pipe(
+            map((processGroupsFile) => {
+                if (!!processGroupsFile) {
+                    const processGroupsList = processGroupsFile.groups;
+                    if (!!processGroupsList)
+                        processGroupsList.forEach((processGroup) => {
+                            this.processGroups.set(processGroup.id, {
+                                name: processGroup.name,
+                                processes: processGroup.processes
+                            });
+                        });
+                    console.log(new Date().toISOString(), 'List of process groups loaded');
+                }
+            }),
+            catchError((error) => {
+                console.error(new Date().toISOString(), 'An error occurred when loading processGroups', error);
+                return of(error);
+            })
+        );
     }
 
     private loadAllProcessesInCache() {
-        this.processes.forEach(process => {
-            this.processCache.set(`${process.id}.${process.version}` , Object.setPrototypeOf(process, Process.prototype));
+        this.processes.forEach((process) => {
+            this.processCache.set(
+                `${process.id}.${process.version}`,
+                Object.setPrototypeOf(process, Process.prototype)
+            );
         });
     }
 
     public loadMonitoringConfig(): Observable<MonitoringConfig> {
-        return this.httpClient.get<MonitoringConfig>(this.monitoringConfigUrl)
-            .pipe(
-                map(monitoringConfig => {
-                        if (!!monitoringConfig) {
-                            this.monitoringConfig = monitoringConfig;
-                            console.log(new Date().toISOString(), 'Monitoring config loaded');
-                        } else
-                            console.log(new Date().toISOString(), 'No monitoring config to load');
-                        return monitoringConfig;
-                    }),
-                    catchError(error => {
-                        console.error(new Date().toISOString(), 'An error occurred when loading monitoringConfig', error);
-                        return of(error);
-                    }
-                ));
+        return this.httpClient.get<MonitoringConfig>(this.monitoringConfigUrl).pipe(
+            map((monitoringConfig) => {
+                if (!!monitoringConfig) {
+                    this.monitoringConfig = monitoringConfig;
+                    console.log(new Date().toISOString(), 'Monitoring config loaded');
+                } else console.log(new Date().toISOString(), 'No monitoring config to load');
+                return monitoringConfig;
+            }),
+            catchError((error) => {
+                console.error(new Date().toISOString(), 'An error occurred when loading monitoringConfig', error);
+                return of(error);
+            })
+        );
     }
-
 
     public getAllProcesses(): Process[] {
         return this.processes;
     }
 
-    public getProcessGroups(): Map<string, {name: string, processes: string[]}> {
+    public getProcessGroups(): Map<string, {name: string; processes: string[]}> {
         return this.processGroups;
     }
 
-    public getProcessGroupName(id:string) {
+    public getProcessGroupName(id: string) {
         const processGroup = this.processGroups.get(id);
         if (!!processGroup) return processGroup.name;
-        return "";
+        return '';
     }
 
     public getMonitoringConfig(): any {
         return this.monitoringConfig;
     }
 
-
     public getProcess(processId: string): Process {
-        return this.processes.find(process => processId === process.id);
+        return this.processes.find((process) => processId === process.id);
     }
 
-    public getProcessGroupsAndLabels(): { groupId: string,
-                                          groupLabel: string,
-                                          processes:
-                                              {
-                                                 processId: string,
-                                                 processLabel: string
-                                              } []
-                                        } [] {
-
+    public getProcessGroupsAndLabels(): {
+        groupId: string;
+        groupLabel: string;
+        processes: {
+            processId: string;
+            processLabel: string;
+        }[];
+    }[] {
         const processGroupsAndLabels = [];
 
         this.getProcessGroups().forEach((group, groupId) => {
             const processIdAndLabels = [];
 
-            group.processes.forEach(processId => {
+            group.processes.forEach((processId) => {
                 const processDefinition = this.getProcess(processId);
 
                 if (processDefinition)
-                    processIdAndLabels.push({processId: processId, processLabel: ((!!processDefinition.name) ? processDefinition.name : processDefinition.id)});
-                else
-                    processIdAndLabels.push({processId: processId, processLabel: ''});
+                    processIdAndLabels.push({
+                        processId: processId,
+                        processLabel: !!processDefinition.name ? processDefinition.name : processDefinition.id
+                    });
+                else processIdAndLabels.push({processId: processId, processLabel: ''});
             });
 
-            processGroupsAndLabels.push({ groupId: groupId,
-                                          groupLabel: !! group.name ? group.name : groupId,
-                                          processes: processIdAndLabels
-                                        });
+            processGroupsAndLabels.push({
+                groupId: groupId,
+                groupLabel: !!group.name ? group.name : groupId,
+                processes: processIdAndLabels
+            });
         });
         return processGroupsAndLabels;
     }
@@ -184,32 +185,29 @@ export class ProcessesService {
         if (process) {
             return of(process);
         }
-        return this.fetchProcess(id, version)
-            .pipe(
-                tap(t => {
-                    if (t) {
-                        Object.setPrototypeOf(t, Process.prototype);
-                    }
-                }),
-                tap(t => {
-                    if (t) {
-                        this.processCache.set(key, t);
-                    }
-                })
-            );
+        return this.fetchProcess(id, version).pipe(
+            tap((t) => {
+                if (t) {
+                    Object.setPrototypeOf(t, Process.prototype);
+                }
+            }),
+            tap((t) => {
+                if (t) {
+                    this.processCache.set(key, t);
+                }
+            })
+        );
     }
 
     private fetchProcess(id: string, version: string): Observable<Process> {
-        const params = new HttpParams()
-            .set('version', version);
+        const params = new HttpParams().set('version', version);
         return this.httpClient.get<Process>(`${this.processesUrl}/${id}/`, {
             params
         });
     }
 
     fetchHbsTemplate(process: string, version: string, name: string): Observable<string> {
-        const params = new HttpParams()
-            .set('version', version);
+        const params = new HttpParams().set('version', version);
         return this.httpClient.get(`${this.processesUrl}/${process}/templates/${name}`, {
             params,
             responseType: 'text'
@@ -223,7 +221,6 @@ export class ProcessesService {
         return `${resourceUrl}?${versionParam.toString()}`;
     }
 
-
     askForI18nJson(process: string, locale: string, version?: string): Observable<any> {
         let params = new HttpParams().set('locale', locale);
         if (version) {
@@ -234,19 +231,20 @@ export class ProcessesService {
              */
             params = params.set('version', version);
         }
-        return this.httpClient.get(`${this.processesUrl}/${process}/i18n`, {params})
-            .pipe(
-                map(this.convertJsonToI18NObject(process, version))
-                , catchError(error => {
-                    console.error(new Date().toISOString(),
-                    `error trying fetch i18n of '${process}' version:'${version}' for locale: '${locale}'`);
-                    return of(error);
-                })
-            );
+        return this.httpClient.get(`${this.processesUrl}/${process}/i18n`, {params}).pipe(
+            map(this.convertJsonToI18NObject(process, version)),
+            catchError((error) => {
+                console.error(
+                    new Date().toISOString(),
+                    `error trying fetch i18n of '${process}' version:'${version}' for locale: '${locale}'`
+                );
+                return of(error);
+            })
+        );
     }
 
     private convertJsonToI18NObject(process: string, version: string) {
-        return r => {
+        return (r) => {
             const object = {};
             object[process] = {};
             object[process][version] = r;
@@ -256,7 +254,7 @@ export class ProcessesService {
 
     public findProcessGroupForProcess(processId: string) {
         for (let [groupId, group] of this.processGroups) {
-            if (group.processes.find(process => process === processId))
+            if (group.processes.find((process) => process === processId))
                 return {id: groupId, name: group.name, processes: group.processes};
         }
         return null;
@@ -265,14 +263,15 @@ export class ProcessesService {
     public getProcessesPerProcessGroups(processesFilter?: string[]): Map<any, any> {
         const processesPerProcessGroups = new Map();
 
-        this.getAllProcesses().forEach(process => {
-
-            if ((! processesFilter) || processesFilter.includes(process.id)) {
+        this.getAllProcesses().forEach((process) => {
+            if (!processesFilter || processesFilter.includes(process.id)) {
                 const processGroup = this.findProcessGroupForProcess(process.id);
-                if (!! processGroup) {
-                    const processes = (!!processesPerProcessGroups.get(processGroup.id) ? processesPerProcessGroups.get(processGroup.id) : []);
+                if (!!processGroup) {
+                    const processes = !!processesPerProcessGroups.get(processGroup.id)
+                        ? processesPerProcessGroups.get(processGroup.id)
+                        : [];
                     processes.push({
-                        value : process.id,
+                        value: process.id,
                         label: process.name
                     });
                     processesPerProcessGroups.set(processGroup.id, processes);
@@ -282,15 +281,13 @@ export class ProcessesService {
         return processesPerProcessGroups;
     }
 
-
     public getProcessesWithoutProcessGroup(processesFilter?: string[]): Process[] {
         const processesWithoutProcessGroup = [];
 
-        this.getAllProcesses().forEach(process => {
-            if ((! processesFilter) || processesFilter.includes(process.id)) {
+        this.getAllProcesses().forEach((process) => {
+            if (!processesFilter || processesFilter.includes(process.id)) {
                 const processGroup = this.findProcessGroupForProcess(process.id);
-                if (!processGroup)
-                    processesWithoutProcessGroup.push(process);
+                if (!processGroup) processesWithoutProcessGroup.push(process);
             }
         });
         return processesWithoutProcessGroup;
@@ -298,7 +295,7 @@ export class ProcessesService {
 
     public findProcessGroupLabelForProcess(processId: string): string {
         const processGroup = this.findProcessGroupForProcess(processId);
-        return (!! processGroup) ? processGroup.name : 'processGroup.defaultLabel';
+        return !!processGroup ? processGroup.name : 'processGroup.defaultLabel';
     }
 
     private loadTypeOfStatesPerProcessAndState() {
@@ -311,36 +308,36 @@ export class ProcessesService {
     }
 
     public getTypeOfStatesPerProcessAndState(): Map<string, TypeOfStateEnum> {
-        if (! this.typeOfStatesPerProcessAndState)
-            this.loadTypeOfStatesPerProcessAndState();
+        if (!this.typeOfStatesPerProcessAndState) this.loadTypeOfStatesPerProcessAndState();
         return this.typeOfStatesPerProcessAndState;
     }
 
     public getStatesListPerProcess(hideChildStates: boolean): Map<string, any[]> {
         const statesListPerProcess = new Map();
 
-        this.getAllProcesses().forEach(process => {
+        this.getAllProcesses().forEach((process) => {
             const statesDropdownList = [];
             for (const state in process.states) {
-
-                if (!(hideChildStates && process.states[state].isOnlyAChildState) &&
-                    this.userService.isReceiveRightsForProcessAndState(process.id, state)) {
+                if (
+                    !(hideChildStates && process.states[state].isOnlyAChildState) &&
+                    this.userService.isReceiveRightsForProcessAndState(process.id, state)
+                ) {
                     statesDropdownList.push({
-                        id: process.id + '.' + state,
+                        id: process.id + '.' + state
                     });
                 }
             }
-            if (statesDropdownList.length)
-                statesListPerProcess.set(process.id, statesDropdownList);
+            if (statesDropdownList.length) statesListPerProcess.set(process.id, statesDropdownList);
         });
         return statesListPerProcess;
     }
 
-    public getConsideredAcknowledgedForUserWhenForALightCard(lightCard: LightCard):
-        ConsideredAcknowledgedForUserWhenEnum {
+    public getConsideredAcknowledgedForUserWhenForALightCard(
+        lightCard: LightCard
+    ): ConsideredAcknowledgedForUserWhenEnum {
         let consideredAcknowledgedForUserWhen = ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED;
 
-        this.queryProcess(lightCard.process, lightCard.processVersion).subscribe(process => {
+        this.queryProcess(lightCard.process, lightCard.processVersion).subscribe((process) => {
             const state = process.extractState(lightCard);
             if (!!state.consideredAcknowledgedForUserWhen)
                 consideredAcknowledgedForUserWhen = state.consideredAcknowledgedForUserWhen;

@@ -7,9 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ExternaldevicesconfigurationComponent } from './externaldevicesconfiguration.component';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ExternaldevicesconfigurationComponent} from './externaldevicesconfiguration.component';
 
 import {TranslateModule} from '@ngx-translate/core';
 import {AgGridModule} from 'ag-grid-angular';
@@ -21,23 +21,18 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ExternaldevicesconfigurationRoutingModule} from './externaldevicesconfiguration-routing.module';
 import {MultiSelectModule} from '../share/multi-select/multi-select.module';
 
-
 @NgModule({
-  declarations: [
-    ExternaldevicesconfigurationComponent,
-    ExternaldevicesconfigurationModalComponent
-  ],
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    CommonModule,
-    TranslateModule,
-    ExternaldevicesconfigurationRoutingModule,
-    SingleFilterModule,
-    MultiSelectModule,
-    NgbModule,
-    AgGridModule.withComponents([[
-      ActionCellRendererComponent]])
-  ]
+    declarations: [ExternaldevicesconfigurationComponent, ExternaldevicesconfigurationModalComponent],
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        CommonModule,
+        TranslateModule,
+        ExternaldevicesconfigurationRoutingModule,
+        SingleFilterModule,
+        MultiSelectModule,
+        NgbModule,
+        AgGridModule.withComponents([[ActionCellRendererComponent]])
+    ]
 })
-export class ExternaldevicesModule { }
+export class ExternaldevicesModule {}

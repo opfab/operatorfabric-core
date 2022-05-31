@@ -37,47 +37,46 @@ import {TagInputModule} from 'ngx-chips';
 import {MultiSelectModule} from '../share/multi-select/multi-select.module';
 
 @NgModule({
-  declarations: [
-    AdminComponent,
-    UsersTableComponent,
-    EntitiesTableComponent,
-    GroupsTableComponent,
-    PerimetersTableComponent,
-    EditUserModalComponent,
-    ConfirmationDialogComponent,
-    EditEntityModalComponent,
-    EditGroupModalComponent,
-    EditPerimeterModalComponent,
-    ActionCellRendererComponent,
-    ArrayCellRendererComponent,
-    GroupCellRendererComponent,
-    EntityCellRendererComponent,
-    ProcessCellRendererComponent,
-    StateRightsCellRendererComponent
-  ],
+    declarations: [
+        AdminComponent,
+        UsersTableComponent,
+        EntitiesTableComponent,
+        GroupsTableComponent,
+        PerimetersTableComponent,
+        EditUserModalComponent,
+        ConfirmationDialogComponent,
+        EditEntityModalComponent,
+        EditGroupModalComponent,
+        EditPerimeterModalComponent,
+        ActionCellRendererComponent,
+        ArrayCellRendererComponent,
+        GroupCellRendererComponent,
+        EntityCellRendererComponent,
+        ProcessCellRendererComponent,
+        StateRightsCellRendererComponent
+    ],
 
-
-  imports: [
-    FormsModule
-    , ReactiveFormsModule
-    , TagInputModule
-    , AdminRoutingModule
-    , CommonModule
-    , MultiSelectModule
-    , TranslateModule
-    , NgbModule
-    , AgGridModule.withComponents([[
-      ActionCellRendererComponent,
-      ArrayCellRendererComponent,
-      GroupCellRendererComponent,
-      EntityCellRendererComponent,
-      ProcessCellRendererComponent,
-      StateRightsCellRendererComponent
-    ]]), SingleFilterModule
-  ],
-  providers: [
-    { provide: SharingService, useClass: SharingService}
-  ]
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        TagInputModule,
+        AdminRoutingModule,
+        CommonModule,
+        MultiSelectModule,
+        TranslateModule,
+        NgbModule,
+        AgGridModule.withComponents([
+            [
+                ActionCellRendererComponent,
+                ArrayCellRendererComponent,
+                GroupCellRendererComponent,
+                EntityCellRendererComponent,
+                ProcessCellRendererComponent,
+                StateRightsCellRendererComponent
+            ]
+        ]),
+        SingleFilterModule
+    ],
+    providers: [{provide: SharingService, useClass: SharingService}]
 })
-export class AdminModule { }
-
+export class AdminModule {}

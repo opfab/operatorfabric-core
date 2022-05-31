@@ -7,15 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {Card} from '@ofModel/card.model';
 import {UserContext} from '@ofModel/user-context.model';
-import { Response } from './processes.model';
+import {Response} from './processes.model';
 
 export class DetailContext {
-    constructor(
-        readonly card: Card,
-        readonly userContext: UserContext,
-        readonly responseData: Response) {}
+    constructor(readonly card: Card, readonly userContext: UserContext, readonly responseData: Response) {}
 }

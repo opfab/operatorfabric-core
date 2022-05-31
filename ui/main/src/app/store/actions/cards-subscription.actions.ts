@@ -7,14 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {Action} from '@ngrx/store';
 
 export enum CardsSubscriptionActionTypes {
     CardSubscriptionOpen = '[Card] Subscription open',
     CardSubscriptionClosed = '[Card] Subscription closed',
-    UIReloadRequested = '[UI] Reload requested',
+    UIReloadRequested = '[UI] Reload requested'
 }
 
 export class CardSubscriptionOpenAction implements Action {
@@ -25,13 +23,11 @@ export class CardSubscriptionClosedAction implements Action {
     readonly type = CardsSubscriptionActionTypes.CardSubscriptionClosed;
 }
 
-
 export class UIReloadRequestedAction implements Action {
     readonly type = CardsSubscriptionActionTypes.UIReloadRequested;
 }
 
-
-export type CardSubscriptionActions = CardSubscriptionOpenAction
-    | CardSubscriptionClosedAction 
+export type CardSubscriptionActions =
+    | CardSubscriptionOpenAction
+    | CardSubscriptionClosedAction
     | UIReloadRequestedAction;
-

@@ -11,30 +11,24 @@ import {Process} from '@ofModel/processes.model';
 import {TranslateService} from '@ngx-translate/core';
 
 export abstract class Utilities {
-
     private static readonly _stringPrefixToAddForTranslation: string = 'shared.severity.';
 
-
-    public static getI18nPrefixFromProcess (process: Process): string {
+    public static getI18nPrefixFromProcess(process: Process): string {
         return process.id + '.' + process.version + '.';
     }
 
+    public static translateSeverity(translateService: TranslateService, severity: string): string {
+        let severityTranslated: string;
+        const rawSeverityString: string = Utilities._stringPrefixToAddForTranslation + severity.toLowerCase();
 
-    public static translateSeverity(translateService: TranslateService, severity: string) : string {
-      let severityTranslated: string;
-      const rawSeverityString: string = Utilities._stringPrefixToAddForTranslation + severity.toLowerCase();
+        severityTranslated = translateService.instant(rawSeverityString);
 
-      severityTranslated = translateService.instant(rawSeverityString);
-
-      return severityTranslated;
+        return severityTranslated;
     }
 
     public static compareObj(obj1, obj2) {
-        if (obj1 > obj2)
-            return 1;
-        if (obj1 < obj2)
-            return -1;
+        if (obj1 > obj2) return 1;
+        if (obj1 < obj2) return -1;
         return 0;
     }
 }
-

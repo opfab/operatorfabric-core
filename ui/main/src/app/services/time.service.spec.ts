@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {TestBed} from '@angular/core/testing';
 
 import {TimeService} from './time.service';
@@ -19,28 +18,24 @@ import {appReducer} from '@ofStore/index';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 
 describe('TimeService', () => {
-
     let service: TimeService;
     let httpMock: HttpTestingController;
-    beforeAll(()=>{
-       moment.locale('fr-FR');
+    beforeAll(() => {
+        moment.locale('fr-FR');
     });
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [TimeService],
-            imports: [  HttpClientTestingModule,
-                        RouterTestingModule,
-                        StoreModule.forRoot(appReducer)
-                    ],
+            imports: [HttpClientTestingModule, RouterTestingModule, StoreModule.forRoot(appReducer)]
         });
 
         httpMock = TestBed.inject(HttpTestingController);
         service = TestBed.inject(TimeService);
     });
 
-    afterEach(()=>{
+    afterEach(() => {
         httpMock.verify();
-    })
+    });
     it('should parse', () => {
         expect(service).toBeTruthy();
         const date = new Date(2019, 4, 24, 10, 25, 0, 0);

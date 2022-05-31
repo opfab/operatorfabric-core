@@ -12,6 +12,4 @@ import {AppState} from '@ofStore/index';
 
 export const selectLightCardsState = (state: AppState) => state.feed;
 
-export const selectLightCardSelection = createSelector(
-    selectLightCardsState,
-    state => state.selectedCardId);
+export const selectLightCardSelection = createSelector(selectLightCardsState, (state) => state.selectedCardId);

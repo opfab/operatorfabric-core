@@ -19,28 +19,29 @@ import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 declare const usercardTemplateGateway: any;
 @Component({
     selector: 'of-usercard-recipients-form',
-    templateUrl: './usercard-recipients-form.component.html',
-
+    templateUrl: './usercard-recipients-form.component.html'
 })
-export class UserCardRecipientsFormComponent implements OnInit , OnChanges {
-
+export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     @Input() public userCardConfiguration;
     @Input() public initialSelectedRecipients;
-    public  recipientForm: FormGroup;
+    public recipientForm: FormGroup;
     private useDescriptionFieldForEntityList = false;
     public recipientsOptions: Array<MultiSelectOption> = [];
-    public selectedRecipients: Array<string> =[];
-    public multiSelectConfig : MultiSelectConfig = {
-        labelKey : "userCard.filters.recipients", 
+    public selectedRecipients: Array<string> = [];
+    public multiSelectConfig: MultiSelectConfig = {
+        labelKey: 'userCard.filters.recipients',
         sortOptions: true
-    }
+    };
 
     constructor(
         private configService: ConfigService,
         private entitiesService: EntitiesService,
         private opfabLogger: OpfabLoggerService
     ) {
-        this.useDescriptionFieldForEntityList = this.configService.getConfigValue('usercard.useDescriptionFieldForEntityList', false);
+        this.useDescriptionFieldForEntityList = this.configService.getConfigValue(
+            'usercard.useDescriptionFieldForEntityList',
+            false
+        );
     }
 
     ngOnInit() {
@@ -61,37 +62,40 @@ export class UserCardRecipientsFormComponent implements OnInit , OnChanges {
 
     private loadRecipientsOptions() {
         if (!!this.userCardConfiguration.recipientList) {
-            this.opfabLogger.info("Use of restricted recipient list option in config.json is deprecated, use method usercardTemplateGateway.setDropdownEntityRecipientList in template ");
+            this.opfabLogger.info(
+                'Use of restricted recipient list option in config.json is deprecated, use method usercardTemplateGateway.setDropdownEntityRecipientList in template '
+            );
             this.loadRestrictedRecipientList(this.userCardConfiguration.recipientList);
         } else {
             this.recipientsOptions = [];
-            this.entitiesService.getEntities().forEach(entity =>
-                this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity))));
+            this.entitiesService
+                .getEntities()
+                .forEach((entity) =>
+                    this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))
+                );
         }
     }
 
     private loadRestrictedRecipientList(recipients: Recipient[]): void {
         this.recipientsOptions = [];
-        Array.prototype.forEach.call(recipients, r => {
+        Array.prototype.forEach.call(recipients, (r) => {
             if (!!r.levels) {
-                r.levels.forEach(l => {
-                    this.entitiesService.resolveChildEntitiesByLevel(r.id, l).forEach(entity => {
-                        if (!this.recipientsOptions.find(o => o.value === entity.id)) {
-                            this.recipientsOptions.push(new MultiSelectOption(entity.id,this.getEntityLabel(entity)));
+                r.levels.forEach((l) => {
+                    this.entitiesService.resolveChildEntitiesByLevel(r.id, l).forEach((entity) => {
+                        if (!this.recipientsOptions.find((o) => o.value === entity.id)) {
+                            this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)));
                         }
                     });
                 });
             } else {
-                if (!this.recipientsOptions.find(o => o.value === r.id)) {
-                    const entity = this.entitiesService.getEntities().find(e => e.id === r.id);
+                if (!this.recipientsOptions.find((o) => o.value === r.id)) {
+                    const entity = this.entitiesService.getEntities().find((e) => e.id === r.id);
                     if (!!entity)
-                        this.recipientsOptions.push(new MultiSelectOption(entity.id,this.getEntityLabel(entity)));
-                    else
-                        this.opfabLogger.info('Recipient entity not found : ' + r.id);
+                        this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)));
+                    else this.opfabLogger.info('Recipient entity not found : ' + r.id);
                 }
             }
         });
-
     }
 
     private getEntityLabel(entity: Entity) {
@@ -99,13 +103,16 @@ export class UserCardRecipientsFormComponent implements OnInit , OnChanges {
     }
 
     private listenForDropdownRecipientList() {
-        usercardTemplateGateway.setDropdownEntityRecipientList =  (recipients) =>  this.loadRestrictedRecipientList(recipients);
+        usercardTemplateGateway.setDropdownEntityRecipientList = (recipients) =>
+            this.loadRestrictedRecipientList(recipients);
     }
-
 
     private listenForInitialSelectedRecipientList() {
         // Set initial recipient list from template only if not in edition mode
-        usercardTemplateGateway.setInitialSelectedRecipients =  (recipients) =>  { if (!this.initialSelectedRecipients || this.initialSelectedRecipients.length === 0 ) this.initialSelectedRecipients = recipients};
+        usercardTemplateGateway.setInitialSelectedRecipients = (recipients) => {
+            if (!this.initialSelectedRecipients || this.initialSelectedRecipients.length === 0)
+                this.initialSelectedRecipients = recipients;
+        };
     }
 
     public recipientChoiceChanged(selected: any) {

@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Action} from '@ngrx/store';
 
 export enum LightCardActionTypes {
@@ -18,8 +17,7 @@ export enum LightCardActionTypes {
 
 export class SelectLightCard implements Action {
     readonly type = LightCardActionTypes.SelectLightCard;
-    constructor(public payload: { selectedCardId: string }) {
-    }
+    constructor(public payload: {selectedCardId: string}) {}
 }
 
 export class ClearLightCardSelection implements Action {
@@ -28,13 +26,7 @@ export class ClearLightCardSelection implements Action {
 
 export class RemoveLightCard implements Action {
     readonly type = LightCardActionTypes.RemoveLightCard;
-    constructor(public  payload: { card: string }) {
-    }
+    constructor(public payload: {card: string}) {}
 }
 
-export type LightCardActions =
-    SelectLightCard
-    | ClearLightCardSelection
-    | RemoveLightCard;
-
-
+export type LightCardActions = SelectLightCard | ClearLightCardSelection | RemoveLightCard;

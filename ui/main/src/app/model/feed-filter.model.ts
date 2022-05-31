@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {LightCard} from '@ofModel/light-card.model';
 /**
  * A Filter gather both the feed filtering behaviour and the filter status for
@@ -32,18 +31,10 @@ export class Filter {
     }
 
     /* istanbul ignore next */
-    constructor(
-        readonly funktion: (LightCard, any) => boolean,
-        public active: boolean,
-        public status: any
-    ) {
-    }
+    constructor(readonly funktion: (LightCard, any) => boolean, public active: boolean, public status: any) {}
 
     clone(): Filter {
-        return new Filter(
-            this.funktion,
-            this.active,
-            this.status);
+        return new Filter(this.funktion, this.active, this.status);
     }
 
     /**
@@ -69,14 +60,10 @@ export class Filter {
         }
         return false;
     }
-
 }
 
 export class FilterStatus {
-    constructor(
-        public name: FilterType, public active: boolean, status: any
-    ) {
-    }
+    constructor(public name: FilterType, public active: boolean, status: any) {}
 }
 
 export enum FilterType {
@@ -84,5 +71,5 @@ export enum FilterType {
     PUBLISHDATE_FILTER,
     ACKNOWLEDGEMENT_FILTER,
     RESPONSE_FILTER,
-    BUSINESSDATE_FILTER,
+    BUSINESSDATE_FILTER
 }

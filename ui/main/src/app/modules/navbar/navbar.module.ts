@@ -11,31 +11,25 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {NavbarComponent} from './navbar.component';
-import { CustomLogoComponent } from './custom-logo/custom-logo.component';
-import { IconComponent } from './icon/icon.component';
-import { InfoComponent } from './info/info.component';
-import { MenuLinkComponent } from './menus/menu-link/menu-link.component';
-import { AppRoutingModule } from 'app/app-routing.module';
-import { UserCardModule} from '../usercard/usercard.module';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AboutComponent } from '../about/about.component';
-
+import {CustomLogoComponent} from './custom-logo/custom-logo.component';
+import {IconComponent} from './icon/icon.component';
+import {InfoComponent} from './info/info.component';
+import {MenuLinkComponent} from './menus/menu-link/menu-link.component';
+import {AppRoutingModule} from 'app/app-routing.module';
+import {UserCardModule} from '../usercard/usercard.module';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {AboutComponent} from '../about/about.component';
 
 @NgModule({
-    declarations: [NavbarComponent,
+    declarations: [
+        NavbarComponent,
         CustomLogoComponent,
         IconComponent,
         InfoComponent,
         AboutComponent,
-        MenuLinkComponent],
-    imports: [
-        CommonModule,
-        TranslateModule,
-        AppRoutingModule,
-        UserCardModule,
-        NgbModule
+        MenuLinkComponent
     ],
+    imports: [CommonModule, TranslateModule, AppRoutingModule, UserCardModule, NgbModule],
     exports: [NavbarComponent]
 })
-export class NavbarModule {
-}
+export class NavbarModule {}

@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {NgModule} from '@angular/core';
 import {FeedComponent} from './feed.component';
 import {RouterModule, Routes} from '@angular/router';
@@ -24,7 +23,7 @@ const routes: Routes = [
                 children: [
                     {
                         path: '',
-                        component: CardDetailsComponent,
+                        component: CardDetailsComponent
                     },
                     {
                         path: ':cid',
@@ -35,7 +34,8 @@ const routes: Routes = [
                                 component: DetailComponent
                             }
                         ]
-                    }]
+                    }
+                ]
             }
         ]
     }
@@ -45,5 +45,4 @@ const routes: Routes = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-export class FeedRoutingModule {
-}
+export class FeedRoutingModule {}

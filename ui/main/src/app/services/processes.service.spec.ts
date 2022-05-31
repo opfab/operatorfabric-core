@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {getTestBed, TestBed} from '@angular/core/testing';
 
 import {ProcessesService} from './processes.service';
@@ -25,7 +24,6 @@ import {Process} from '@ofModel/processes.model';
 import {EffectsModule} from '@ngrx/effects';
 import {MenuEffects} from '@ofEffects/menu.effects';
 import {LightCardsStoreService} from './lightcards/lightcards-store.service';
-
 
 describe('Processes Services', () => {
     let injector: TestBed;
@@ -46,7 +44,8 @@ describe('Processes Services', () => {
                         useFactory: BusinessconfigI18nLoaderFactory
                     },
                     useDefaultLang: false
-                })],
+                })
+            ],
             providers: [
                 {provide: store, useClass: Store},
                 ProcessesService,
@@ -72,11 +71,12 @@ describe('Processes Services', () => {
         httpMock.verify();
     });
 
-
     it('should compute url with encoding special characters', () => {
-        const urlFromPublishWithSpaces = processesService.computeBusinessconfigCssUrl('publisher with spaces'
-            , getRandomAlphanumericValue(3, 12)
-            , getRandomAlphanumericValue(2.5));
+        const urlFromPublishWithSpaces = processesService.computeBusinessconfigCssUrl(
+            'publisher with spaces',
+            getRandomAlphanumericValue(3, 12),
+            getRandomAlphanumericValue(2.5)
+        );
         expect(urlFromPublishWithSpaces.includes(' ')).toEqual(false);
         const dico = new Map();
         dico.set('À', '%C3%80');
@@ -97,37 +97,43 @@ describe('Processes Services', () => {
         for (const char of dico.keys()) {
             stringToTest += char;
         }
-        const urlFromPublishWithAccentuatedChar = processesService.computeBusinessconfigCssUrl(`publisherWith${stringToTest}`
-            , getRandomAlphanumericValue(3, 12)
-            , getRandomAlphanumericValue(3, 4));
+        const urlFromPublishWithAccentuatedChar = processesService.computeBusinessconfigCssUrl(
+            `publisherWith${stringToTest}`,
+            getRandomAlphanumericValue(3, 12),
+            getRandomAlphanumericValue(3, 4)
+        );
         dico.forEach((value, key) => {
             expect(urlFromPublishWithAccentuatedChar.includes(key)).toEqual(false);
             // `should normally contain '${value}'`
             expect(urlFromPublishWithAccentuatedChar.includes(value)).toEqual(true);
         });
-        const urlWithSpacesInVersion = processesService.computeBusinessconfigCssUrl(getRandomAlphanumericValue(5, 12)
-            , getRandomAlphanumericValue(5.12),
-            'some spaces in version');
+        const urlWithSpacesInVersion = processesService.computeBusinessconfigCssUrl(
+            getRandomAlphanumericValue(5, 12),
+            getRandomAlphanumericValue(5.12),
+            'some spaces in version'
+        );
         expect(urlWithSpacesInVersion.includes(' ')).toEqual(false);
 
-        const urlWithAccentuatedCharsInVersion = processesService.computeBusinessconfigCssUrl(getRandomAlphanumericValue(5, 12)
-            , getRandomAlphanumericValue(5.12)
-            , `${stringToTest}InVersion`);
+        const urlWithAccentuatedCharsInVersion = processesService.computeBusinessconfigCssUrl(
+            getRandomAlphanumericValue(5, 12),
+            getRandomAlphanumericValue(5.12),
+            `${stringToTest}InVersion`
+        );
         dico.forEach((value, key) => {
             expect(urlWithAccentuatedCharsInVersion.includes(key)).toEqual(false);
             // `should normally contain '${value}'`
             expect(urlWithAccentuatedCharsInVersion.includes(value)).toEqual(true);
         });
-
     });
     describe('#queryProcess', () => {
         const businessconfig = new Process('testPublisher', '0', 'businessconfig.label');
         it('should load businessconfig from remote server', () => {
-            processesService.queryProcess('testPublisher', '0')
+            processesService
+                .queryProcess('testPublisher', '0')
                 .subscribe((result) => expect(result).toEqual(businessconfig));
-            const calls = httpMock.match(req => req.url === `${environment.urls.processes}/testPublisher/`);
+            const calls = httpMock.match((req) => req.url === `${environment.urls.processes}/testPublisher/`);
             expect(calls.length).toEqual(1);
-            calls.forEach(call => {
+            calls.forEach((call) => {
                 expect(call.request.method).toBe('GET');
                 call.flush(businessconfig);
             });
@@ -136,22 +142,18 @@ describe('Processes Services', () => {
     describe('#queryProcess', () => {
         const businessconfig = new Process('testPublisher', '0', 'businessconfig.label');
         it('should load and cache businessconfig from remote server', () => {
-            processesService.queryProcess('testPublisher', '0')
-                .subscribe((result) => {
-                    expect(result).toEqual(businessconfig);
-                    processesService.queryProcess('testPublisher', '0')
-                        .subscribe((extracted) => expect(extracted).toEqual(businessconfig));
-                });
-            const calls = httpMock.match(req => req.url === `${environment.urls.processes}/testPublisher/`);
+            processesService.queryProcess('testPublisher', '0').subscribe((result) => {
+                expect(result).toEqual(businessconfig);
+                processesService
+                    .queryProcess('testPublisher', '0')
+                    .subscribe((extracted) => expect(extracted).toEqual(businessconfig));
+            });
+            const calls = httpMock.match((req) => req.url === `${environment.urls.processes}/testPublisher/`);
             expect(calls.length).toEqual(1);
-            calls.forEach(call => {
+            calls.forEach((call) => {
                 expect(call.request.method).toBe('GET');
                 call.flush(businessconfig);
             });
         });
     });
-
-})
-;
-
-
+});

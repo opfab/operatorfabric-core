@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -18,24 +17,20 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {DatetimeFilterModule} from '../share/datetime-filter/datetime-filter.module';
 import {CardDetailModule} from 'app/modules/share/card-detail/card-detail.module';
 import {ArchivesEntryPointComponent} from './archives-entry-point.component';
-import {ArchivesLoggingFiltersModule} from "../share/archives-logging-filters/archives-logging-filters.module";
+import {ArchivesLoggingFiltersModule} from '../share/archives-logging-filters/archives-logging-filters.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CardsModule,
-    TranslateModule,
-    NgbModule,
-    DatetimeFilterModule,
-    CardDetailModule,
-    ArchivesLoggingFiltersModule
-
-  ],
-  declarations: [
-    ArchivesComponent,
-    ArchivesEntryPointComponent
-  ]
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        CardsModule,
+        TranslateModule,
+        NgbModule,
+        DatetimeFilterModule,
+        CardDetailModule,
+        ArchivesLoggingFiltersModule
+    ],
+    declarations: [ArchivesComponent, ArchivesEntryPointComponent]
 })
-export class ArchivesModule { }
+export class ArchivesModule {}

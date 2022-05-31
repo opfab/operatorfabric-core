@@ -7,23 +7,20 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {User} from '@ofModel/user.model';
 import {Action} from '@ngrx/store';
 import {Entity} from '@ofModel/entity.model';
 
 export enum UserActionsTypes {
-
-    UserApplicationRegistered =         '[User] User application registered',
-    QueryAllEntities =                  '[User] Ask to fetch all entities',
-    LoadAllEntities =                   '[User] Load all entities',
-    UserConfigChange =                  '[User] User config changed'
+    UserApplicationRegistered = '[User] User application registered',
+    QueryAllEntities = '[User] Ask to fetch all entities',
+    LoadAllEntities = '[User] Load all entities',
+    UserConfigChange = '[User] User config changed'
 }
 
 export class UserApplicationRegistered implements Action {
     readonly type = UserActionsTypes.UserApplicationRegistered;
-    constructor(public payload: { user: User }) {
-    }
+    constructor(public payload: {user: User}) {}
 }
 
 export class QueryAllEntities implements Action {
@@ -32,16 +29,11 @@ export class QueryAllEntities implements Action {
 
 export class LoadAllEntities implements Action {
     readonly type = UserActionsTypes.LoadAllEntities;
-    constructor(public payload: { entities: Entity[] }) {
-    }
+    constructor(public payload: {entities: Entity[]}) {}
 }
 
 export class UserConfigChangeAction implements Action {
     readonly type = UserActionsTypes.UserConfigChange;
 }
 
-export type UserActions = UserApplicationRegistered
-    | QueryAllEntities
-    | LoadAllEntities
-    | UserConfigChangeAction;
-
+export type UserActions = UserApplicationRegistered | QueryAllEntities | LoadAllEntities | UserConfigChangeAction;

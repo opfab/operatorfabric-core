@@ -32,7 +32,11 @@ export enum FilterDateTypes {
 
 export const checkElement = (enumeration: typeof FilterDateTypes, value: string): boolean => {
     let result = false;
-    if (Object.values(enumeration).map(enumValue => enumValue.toString()).includes(value)) {
+    if (
+        Object.values(enumeration)
+            .map((enumValue) => enumValue.toString())
+            .includes(value)
+    ) {
         result = true;
     }
     return result;
@@ -48,7 +52,6 @@ export const transformToTimestamp = (date: NgbDateStruct, time: NgbTimeStruct): 
     styleUrls: ['./archives-logging-filters.component.scss']
 })
 export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
-
     @Input() public card: Card | LightCard;
     @Input() parentForm: FormGroup;
     @Input() visibleProcesses: any[];
@@ -64,32 +67,31 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     // Filter values
     processMultiSelectOptionsPerProcessGroups = new Map();
     processesWithoutProcessGroupMultiSelectOptions: Array<MultiSelectOption> = [];
-    processGroupMultiSelectOptions:Array<MultiSelectOption> = [];
-    processGroupSelected:Array<string> = [];
+    processGroupMultiSelectOptions: Array<MultiSelectOption> = [];
+    processGroupSelected: Array<string> = [];
     processGroupMultiSelectConfig = {
-        labelKey : "shared.filters.processGroup", 
-        placeholderKey : "shared.filters.selectProcessGroupText", 
+        labelKey: 'shared.filters.processGroup',
+        placeholderKey: 'shared.filters.selectProcessGroupText',
         sortOptions: true,
         nbOfDisplayValues: 1
-
     };
-  
-    processMultiSelectOptions:Array<MultiSelectOption> = [];
+
+    processMultiSelectOptions: Array<MultiSelectOption> = [];
     processMultiSelectOptionsWhenSelectedProcessGroup: Array<MultiSelectOption> = [];
     processSelected: Array<string> = [];
     visibleProcessesId: Array<string> = [];
     processMultiSelectConfig = {
-        labelKey : "shared.filters.process", 
+        labelKey: 'shared.filters.process',
         placeholderKey: 'shared.filters.selectProcessText',
         sortOptions: true,
         nbOfDisplayValues: 1
     };
 
-    stateMultiSelectOptions:Array<MultiSelectOption> = [];
+    stateMultiSelectOptions: Array<MultiSelectOption> = [];
     stateSelected: Array<string> = [];
     stateMultiSelectConfig = {
-        labelKey : "shared.filters.state", 
-        placeholderKey : "shared.filters.selectStateText", 
+        labelKey: 'shared.filters.state',
+        placeholderKey: 'shared.filters.selectStateText',
         sortOptions: true,
         nbOfDisplayValues: 1
     };
@@ -97,104 +99,108 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     tagsMultiSelectOptions: Array<MultiSelectOption> = [];
     tagsSelected: Array<string> = [];
     tagsMultiSelectConfig = {
-        labelKey : "shared.filters.tags", 
-        placeholderKey : "shared.filters.selectTagText", 
+        labelKey: 'shared.filters.tags',
+        placeholderKey: 'shared.filters.selectTagText',
         sortOptions: true,
         nbOfDisplayValues: 1
     };
 
     statesMultiSelectOptionsPerProcesses: Array<MultiSelectOption> = [];
-    processesGroups: Map<string, {name: string, processes: string[]}>;
+    processesGroups: Map<string, {name: string; processes: string[]}>;
 
     dateTimeFilterChange = new Subject();
 
-    publishMinDate: {year: number, month: number, day: number} = null;
-    publishMaxDate: {year: number, month: number, day: number} = null;
-    activeMinDate: {year: number, month: number, day: number} = null;
-    activeMaxDate: {year: number, month: number, day: number} = null;
+    publishMinDate: {year: number; month: number; day: number} = null;
+    publishMaxDate: {year: number; month: number; day: number} = null;
+    activeMinDate: {year: number; month: number; day: number} = null;
+    activeMaxDate: {year: number; month: number; day: number} = null;
 
     defaultMinPublishDate: NgbDateStruct;
 
-    constructor(private configService: ConfigService,
-                private timeService: TimeService,
-                private processesService: ProcessesService,
-                private processStatesDropdownListService: ProcessStatesMultiSelectOptionsService) {
-    }
+    constructor(
+        private configService: ConfigService,
+        private timeService: TimeService,
+        private processesService: ProcessesService,
+        private processStatesDropdownListService: ProcessStatesMultiSelectOptionsService
+    ) {}
 
     ngOnInit() {
         this.processesGroups = this.processesService.getProcessGroups();
         this.processMultiSelectOptionsWhenSelectedProcessGroup = [];
-        this.visibleProcessesId = this.visibleProcesses.map(element => element.value);
+        this.visibleProcessesId = this.visibleProcesses.map((element) => element.value);
 
         this.loadValuesForFilters();
         this.changeProcessesWhenSelectProcessGroup();
         this.changeStatesWhenSelectProcess();
-       
 
-        this.dateTimeFilterChange.pipe(
-            takeUntil(this.unsubscribe$),
-            debounceTime(1000),
-        ).subscribe(() => this.setDateFilterBounds());
+        this.dateTimeFilterChange
+            .pipe(takeUntil(this.unsubscribe$), debounceTime(1000))
+            .subscribe(() => this.setDateFilterBounds());
     }
 
     loadValuesForFilters() {
-        this.statesMultiSelectOptionsPerProcesses = this.processStatesDropdownListService.getStatesMultiSelectOptionsPerProcess(this.hideChildStates);
-        this.processesWithoutProcessGroupMultiSelectOptions = this.processStatesDropdownListService.getProcessesWithoutProcessGroupMultiSelectOptions(this.visibleProcessesId);
-        this.processMultiSelectOptionsPerProcessGroups = this.processStatesDropdownListService.getProcessesMultiSelectOptionsPerProcessGroup(this.visibleProcessesId);
-        this.processGroupMultiSelectOptions = this.processStatesDropdownListService.getProcessGroupsMultiSelectOptions(this.processesWithoutProcessGroupMultiSelectOptions,
-                                                                                                   this.processMultiSelectOptionsPerProcessGroups);
+        this.statesMultiSelectOptionsPerProcesses =
+            this.processStatesDropdownListService.getStatesMultiSelectOptionsPerProcess(this.hideChildStates);
+        this.processesWithoutProcessGroupMultiSelectOptions =
+            this.processStatesDropdownListService.getProcessesWithoutProcessGroupMultiSelectOptions(
+                this.visibleProcessesId
+            );
+        this.processMultiSelectOptionsPerProcessGroups =
+            this.processStatesDropdownListService.getProcessesMultiSelectOptionsPerProcessGroup(
+                this.visibleProcessesId
+            );
+        this.processGroupMultiSelectOptions = this.processStatesDropdownListService.getProcessGroupsMultiSelectOptions(
+            this.processesWithoutProcessGroupMultiSelectOptions,
+            this.processMultiSelectOptionsPerProcessGroups
+        );
         // we must filter visibleProcesses to keep only the processes in the perimeter of the user
         const processesIds = [];
-        this.statesMultiSelectOptionsPerProcesses.forEach ( (process) => processesIds.push(process.value));
-        this.processMultiSelectOptions = this.visibleProcesses.filter(visibleProcess => processesIds.includes(visibleProcess.value));
+        this.statesMultiSelectOptionsPerProcesses.forEach((process) => processesIds.push(process.value));
+        this.processMultiSelectOptions = this.visibleProcesses.filter((visibleProcess) =>
+            processesIds.includes(visibleProcess.value)
+        );
 
         if (!!this.tags) {
-            this.tags.forEach(tag => this.tagsMultiSelectOptions.push(new MultiSelectOption(tag.value,tag.label)));
+            this.tags.forEach((tag) => this.tagsMultiSelectOptions.push(new MultiSelectOption(tag.value, tag.label)));
         }
         this.setDefaultPublishDateFilter();
     }
 
-
     transformFiltersListToMap = (filters: any): void => {
         this.filters = new Map();
-        Object.keys(filters).forEach(key => {
+        Object.keys(filters).forEach((key) => {
             const element = filters[key];
             // if the form element is date
             if (element) {
-                if (checkElement(FilterDateTypes, key))
-                    this.dateFilterToMap(key, element);
+                if (checkElement(FilterDateTypes, key)) this.dateFilterToMap(key, element);
                 else {
                     if (element.length) {
-                        if (key === 'state')
-                            this.stateFilterToMap(element);
-                        else if (key === 'processGroup')
-                            this.processGroupFilterToMap(element);
-                        else
-                            this.otherFilterToMap(element, key);
+                        if (key === 'state') this.stateFilterToMap(element);
+                        else if (key === 'processGroup') this.processGroupFilterToMap(element);
+                        else this.otherFilterToMap(element, key);
                     }
                 }
             }
         });
-    }
+    };
 
     otherFilterToMap(element: any, key: string) {
         const ids = [];
-        element.forEach(val => ids.push(val));
+        element.forEach((val) => ids.push(val));
         this.filters.set(key, ids);
     }
 
     dateFilterToMap(key: string, element: any) {
-        const { date, time } = element;
+        const {date, time} = element;
         if (date) {
             const timeStamp = this.timeService.toNgBTimestamp(transformToTimestamp(date, time));
-            if (timeStamp !== 'NaN')
-                this.filters.set(key, [timeStamp]);
+            if (timeStamp !== 'NaN') this.filters.set(key, [timeStamp]);
         }
     }
 
     stateFilterToMap(element: any) {
         const processStateKeys = [];
-        element.forEach(val => {
+        element.forEach((val) => {
             processStateKeys.push(val);
         });
         this.filters.set('processStateKey', processStateKeys);
@@ -203,56 +209,53 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     processGroupFilterToMap(element: any) {
         const ids = [];
 
-        element.forEach(processGroup => {
+        element.forEach((processGroup) => {
             if (processGroup === '--')
-                this.processesWithoutProcessGroupMultiSelectOptions.forEach(process => ids.push(process.value));
+                this.processesWithoutProcessGroupMultiSelectOptions.forEach((process) => ids.push(process.value));
             else
-                this.processMultiSelectOptionsPerProcessGroups.get(processGroup).forEach(process => ids.push(process.value));
+                this.processMultiSelectOptionsPerProcessGroups
+                    .get(processGroup)
+                    .forEach((process) => ids.push(process.value));
         });
-        if (!this.filters.get('process'))
-            this.filters.set('process', ids);
+        if (!this.filters.get('process')) this.filters.set('process', ids);
     }
 
     addProcessesDropdownList(processesDropdownList: any[]): void {
-        processesDropdownList.forEach( processMultiSelectOptions =>
-            this.processMultiSelectOptionsWhenSelectedProcessGroup.push(processMultiSelectOptions) );
+        processesDropdownList.forEach((processMultiSelectOptions) =>
+            this.processMultiSelectOptionsWhenSelectedProcessGroup.push(processMultiSelectOptions)
+        );
     }
-
 
     changeProcessesWhenSelectProcessGroup(): void {
         this.parentForm.get('processGroup').valueChanges.subscribe((selectedProcessGroups) => {
-            if (!! selectedProcessGroups && selectedProcessGroups.length > 0) {
+            if (!!selectedProcessGroups && selectedProcessGroups.length > 0) {
                 this.processMultiSelectOptionsWhenSelectedProcessGroup = [];
-                selectedProcessGroups.forEach(processGroup => {
-
+                selectedProcessGroups.forEach((processGroup) => {
                     if (processGroup === '--')
                         this.addProcessesDropdownList(this.processesWithoutProcessGroupMultiSelectOptions);
                     else
                         this.addProcessesDropdownList(this.processMultiSelectOptionsPerProcessGroups.get(processGroup));
                 });
-            } else
-                this.processMultiSelectOptionsWhenSelectedProcessGroup = this.processMultiSelectOptions;
+            } else this.processMultiSelectOptionsWhenSelectedProcessGroup = this.processMultiSelectOptions;
         });
     }
-
 
     changeStatesWhenSelectProcess(): void {
         this.parentForm.get('process').valueChanges.subscribe((selectedProcesses) => {
             this.stateSelected = [];
             this.stateMultiSelectOptions = [];
-            if (!! selectedProcesses && selectedProcesses.length > 0) {
-                this.statesMultiSelectOptionsPerProcesses.forEach ((processStates) => {
-                     if (selectedProcesses.includes(processStates.value)) {
-                         this.stateMultiSelectOptions.push(processStates)
-                     }
+            if (!!selectedProcesses && selectedProcesses.length > 0) {
+                this.statesMultiSelectOptionsPerProcesses.forEach((processStates) => {
+                    if (selectedProcesses.includes(processStates.value)) {
+                        this.stateMultiSelectOptions.push(processStates);
                     }
-                )
+                });
             }
         });
     }
 
     displayProcessGroupFilter() {
-        return !!this.processGroupMultiSelectOptions && this.processGroupMultiSelectOptions.length > 1 ;
+        return !!this.processGroupMultiSelectOptions && this.processGroupMultiSelectOptions.length > 1;
     }
 
     isThereProcessGroup(): boolean {
@@ -267,30 +270,48 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
         return !!this.statesMultiSelectOptionsPerProcesses && this.statesMultiSelectOptionsPerProcesses.length > 0;
     }
 
-
     setDefaultPublishDateFilter() {
         const defaultPublishDateInterval = this.configService.getConfigValue('archive.filters.publishDate.days', 10);
 
         const min = moment(Date.now());
         min.subtract(defaultPublishDateInterval, 'day');
         const minDate = min.toDate();
-        this.defaultMinPublishDate = { day: minDate.getDate(), month: minDate.getMonth() + 1, year: minDate.getFullYear()};
+        this.defaultMinPublishDate = {
+            day: minDate.getDate(),
+            month: minDate.getMonth() + 1,
+            year: minDate.getFullYear()
+        };
     }
 
     setDateFilterBounds(): void {
-
         if (this.parentForm.value.publishDateFrom?.date) {
-            this.publishMinDate = {year: this.parentForm.value.publishDateFrom.date.year, month: this.parentForm.value.publishDateFrom.date.month, day: this.parentForm.value.publishDateFrom.date.day};
+            this.publishMinDate = {
+                year: this.parentForm.value.publishDateFrom.date.year,
+                month: this.parentForm.value.publishDateFrom.date.month,
+                day: this.parentForm.value.publishDateFrom.date.day
+            };
         }
         if (this.parentForm.value.publishDateTo?.date) {
-            this.publishMaxDate = {year: this.parentForm.value.publishDateTo.date.year, month: this.parentForm.value.publishDateTo.date.month, day: this.parentForm.value.publishDateTo.date.day};
+            this.publishMaxDate = {
+                year: this.parentForm.value.publishDateTo.date.year,
+                month: this.parentForm.value.publishDateTo.date.month,
+                day: this.parentForm.value.publishDateTo.date.day
+            };
         }
 
         if (this.parentForm.value.activeFrom?.date) {
-            this.activeMinDate = {year: this.parentForm.value.activeFrom.date.year, month: this.parentForm.value.activeFrom.date.month, day: this.parentForm.value.activeFrom.date.day};
+            this.activeMinDate = {
+                year: this.parentForm.value.activeFrom.date.year,
+                month: this.parentForm.value.activeFrom.date.month,
+                day: this.parentForm.value.activeFrom.date.day
+            };
         }
         if (this.parentForm.value.activeTo?.date) {
-            this.activeMaxDate = {year: this.parentForm.value.activeTo.date.year, month: this.parentForm.value.activeTo.date.month, day: this.parentForm.value.activeTo.date.day};
+            this.activeMaxDate = {
+                year: this.parentForm.value.activeTo.date.year,
+                month: this.parentForm.value.activeTo.date.month,
+                day: this.parentForm.value.activeTo.date.day
+            };
         }
     }
 

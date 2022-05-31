@@ -14,20 +14,18 @@ import {EditEntityModalComponent} from '../editmodal/entities/edit-entity-modal.
 import {AdminItemType} from '../../services/sharing.service';
 
 @Component({
-  templateUrl: 'admin-table.directive.html',
-  selector: 'of-entities-table'
+    templateUrl: 'admin-table.directive.html',
+    selector: 'of-entities-table'
 })
 export class EntitiesTableComponent extends AdminTableDirective implements OnInit {
-
-
-  tableType = AdminItemType.ENTITY;
-  fields = [new Field('id', 3),
-            new Field('name', 3),
-            new Field('description', 5),
-            new Field('entityAllowedToSendCard', 4, null, this.translateValue),
-            new Field('parents', 5, 'entityCellRenderer')];
-  idField = 'id';
-  editModalComponent = EditEntityModalComponent;
-
+    tableType = AdminItemType.ENTITY;
+    fields = [
+        new Field('id', 3),
+        new Field('name', 3),
+        new Field('description', 5),
+        new Field('entityAllowedToSendCard', 4, null, this.translateValue),
+        new Field('parents', 5, 'entityCellRenderer')
+    ];
+    idField = 'id';
+    editModalComponent = EditEntityModalComponent;
 }
-

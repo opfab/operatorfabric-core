@@ -7,12 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Component, OnInit} from '@angular/core';
 import _ from 'lodash-es';
 import {ConfigService} from '@ofServices/config.service';
 import packageInfo from '../../../../package.json';
-
 
 /**
  * extracts configured application names along with their version, and sort them using their rank if declared
@@ -32,24 +30,14 @@ export function extractNameWithVersionAndSortByRank(applicationReferences) {
     templateUrl: './about.component.html'
 })
 export class AboutComponent implements OnInit {
-
     aboutElements = [];
 
-    constructor(private  configService: ConfigService) {
-    }
+    constructor(private configService: ConfigService) {}
 
     ngOnInit(): void {
         const aboutConfig = this.configService.getConfigValue('settings.about');
-        this.aboutElements.push({name: 'OperatorFabric',
-                                 rank: '0',
-                                 version: packageInfo.opfabVersion});
+        this.aboutElements.push({name: 'OperatorFabric', rank: '0', version: packageInfo.opfabVersion});
         if (aboutConfig)
             this.aboutElements = this.aboutElements.concat(extractNameWithVersionAndSortByRank(aboutConfig));
     }
-
-
 }
-
-
-
-

@@ -8,7 +8,14 @@
  */
 
 import {Component, EventEmitter, forwardRef, Injectable, Input, OnInit, OnDestroy, Output} from '@angular/core';
-import {AbstractControl, ControlContainer, ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {
+    AbstractControl,
+    ControlContainer,
+    ControlValueAccessor,
+    FormControl,
+    FormGroup,
+    NG_VALUE_ACCESSOR
+} from '@angular/forms';
 import {NgbDatepickerI18n, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
@@ -17,51 +24,73 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {buildSettingsOrConfigSelector} from '@ofStore/selectors/settings.x.config.selectors';
 
+const i18nPrefix = 'datePicker.';
 
-  const i18nPrefix = "datePicker.";
-  
-  const I18N_KEYS = {
-      weekdays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
-      months: ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'],
-      weekLabel: 'week'
-  };
+const I18N_KEYS = {
+    weekdays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
+    months: [
+        'january',
+        'february',
+        'march',
+        'april',
+        'may',
+        'june',
+        'july',
+        'august',
+        'september',
+        'october',
+        'november',
+        'december'
+    ],
+    weekLabel: 'week'
+};
 
-  
-  // Define custom service providing the months and weekdays translations
-  @Injectable()
-  export class CustomDatepickerI18n extends NgbDatepickerI18n {
-    constructor(private translateService: TranslateService) { super(); }
-  
-    getWeekdayLabel(weekday: number): string { return this.translateService.instant(i18nPrefix + I18N_KEYS.weekdays[weekday - 1]); }
-    getWeekLabel(): string { return this.translateService.instant(i18nPrefix + I18N_KEYS.weekLabel); }
-    getMonthShortName(month: number): string { return this.translateService.instant(i18nPrefix + I18N_KEYS.months[month - 1]); }
-    getMonthFullName(month: number): string { return this.getMonthShortName(month); }
-    getDayAriaLabel(date: NgbDateStruct): string { return `${this.getMonthFullName(date.month)}, ${date.day}, ${date.year}`; }
-  }
+// Define custom service providing the months and weekdays translations
+@Injectable()
+export class CustomDatepickerI18n extends NgbDatepickerI18n {
+    constructor(private translateService: TranslateService) {
+        super();
+    }
 
+    getWeekdayLabel(weekday: number): string {
+        return this.translateService.instant(i18nPrefix + I18N_KEYS.weekdays[weekday - 1]);
+    }
+    getWeekLabel(): string {
+        return this.translateService.instant(i18nPrefix + I18N_KEYS.weekLabel);
+    }
+    getMonthShortName(month: number): string {
+        return this.translateService.instant(i18nPrefix + I18N_KEYS.months[month - 1]);
+    }
+    getMonthFullName(month: number): string {
+        return this.getMonthShortName(month);
+    }
+    getDayAriaLabel(date: NgbDateStruct): string {
+        return `${this.getMonthFullName(date.month)}, ${date.day}, ${date.year}`;
+    }
+}
 
 @Component({
     selector: 'of-datetime-filter',
     templateUrl: './datetime-filter.component.html',
     styleUrls: ['./datetime-filter.component.css'],
-    providers: [{
-        provide: NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => DatetimeFilterComponent),
-        multi: true
-    }, {provide: NgbDatepickerI18n, useClass: CustomDatepickerI18n}
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => DatetimeFilterComponent),
+            multi: true
+        },
+        {provide: NgbDatepickerI18n, useClass: CustomDatepickerI18n}
     ]
 })
-
-export class DatetimeFilterComponent implements ControlValueAccessor,OnInit, OnDestroy {
-
+export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, OnDestroy {
     private ngUnsubscribe$ = new Subject<void>();
     @Input() labelKey: string;
     @Input() filterPath: string;
     @Input() defaultDate: NgbDateStruct;
-    @Input() defaultTime: { hour: number, minute: number };
+    @Input() defaultTime: {hour: number; minute: number};
     @Output() change = new EventEmitter();
-    @Input() minDate: {year: number, month: number, day: number};
-    @Input() maxDate: {year: number, month: number, day: number};
+    @Input() minDate: {year: number; month: number; day: number};
+    @Input() maxDate: {year: number; month: number; day: number};
 
     placeholder: string;
 
@@ -78,44 +107,44 @@ export class DatetimeFilterComponent implements ControlValueAccessor,OnInit, OnD
     });
     private control: AbstractControl;
 
-    constructor(private store: Store<AppState>, private translateService: TranslateService,
-    private controlContainer: ControlContainer) {
+    constructor(
+        private store: Store<AppState>,
+        private translateService: TranslateService,
+        private controlContainer: ControlContainer
+    ) {
         this.onChanges();
         this.resetDateAndTime();
     }
 
     ngOnInit(): void {
-        this.getLocale().pipe(takeUntil(this.ngUnsubscribe$)).subscribe(locale => {
-            this.translateService.use(locale);
-            this.placeholder = this.translateService.instant(i18nPrefix + "placeholder");
-
-        });
+        this.getLocale()
+            .pipe(takeUntil(this.ngUnsubscribe$))
+            .subscribe((locale) => {
+                this.translateService.use(locale);
+                this.placeholder = this.translateService.instant(i18nPrefix + 'placeholder');
+            });
         if (!!this.controlContainer && !!this.filterPath) {
             this.control = this.controlContainer.control.get(this.filterPath);
-          }
+        }
     }
 
     protected getLocale(): Observable<string> {
         return this.store.select(buildSettingsOrConfigSelector('locale'));
     }
 
-
     ngOnDestroy() {
         this.ngUnsubscribe$.next();
         this.ngUnsubscribe$.complete();
     }
 
- 
-    public onTouched: () => void = () => {
-    }
+    public onTouched: () => void = () => {};
 
     // Method call when archive-filter.component.ts set value to null
     writeValue(val: any): void {
         this.disabled = true;
         if (!val) {
             this.resetDateAndTime();
-        }
-        else if (!!val.date) {
+        } else if (!!val.date) {
             this.disabled = false;
             this.datetimeForm.setValue(val, {emitEvent: false});
         }
@@ -133,23 +162,21 @@ export class DatetimeFilterComponent implements ControlValueAccessor,OnInit, OnD
         isDisabled ? this.datetimeForm.disable() : this.datetimeForm.enable();
     }
 
-
     // Set time to enable when a date has been set
     onChanges(): void {
-        this.dateInput.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(val => {
+        this.dateInput.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((val) => {
             if (val) {
                 this.disabled = false;
             }
             // we check date value really change
-            // because when we change minDate or maxDate it emit a "valueChange" 
-            // this was causing an infinite loop in usercard-dates-form.component.ts 
-            if (val!==this.previousDateValue) 
-                {
+            // because when we change minDate or maxDate it emit a "valueChange"
+            // this was causing an infinite loop in usercard-dates-form.component.ts
+            if (val !== this.previousDateValue) {
                 this.previousDateValue = val;
                 this.change.emit();
-                }
+            }
         });
-        this.timeInput.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(val => {
+        this.timeInput.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((val) => {
             if (val) {
                 this.disabled = false;
             }
@@ -184,26 +211,22 @@ export class DatetimeFilterComponent implements ControlValueAccessor,OnInit, OnD
         if (this.control) {
             this.control.setValue(this.datetimeForm.value);
         }
-
     }
 
     computeLabelKey(): string {
         return this.labelKey + this.filterPath;
     }
-
 }
 
 export class DateTimeFilterValue {
-
-    date : {
-        year : number;
-        month : number;
-        day : number;
+    date: {
+        year: number;
+        month: number;
+        day: number;
     };
 
-    time : {
-        hour : number;
-        minute : number;
-    }
-
+    time: {
+        hour: number;
+        minute: number;
+    };
 }

@@ -8,25 +8,18 @@
  */
 
 export class MonitoringConfig {
-    export : ExportConfig
+    export: ExportConfig;
     public constructor(
-        readonly exportConfig: ExportConfig  // cannot use variable name export as it is a reserved word in this case 
+        readonly exportConfig: ExportConfig // cannot use variable name export as it is a reserved word in this case
     ) {
         this.export = exportConfig;
     }
 }
 
 export class ExportConfig {
-    constructor(
-        readonly fields: Array<Field>,
-    ) {
-    }
+    constructor(readonly fields: Array<Field>) {}
 }
 
 export class Field {
-    constructor(
-        readonly columnName: string ,
-        readonly jsonField: string
-    ) {
-    }
+    constructor(readonly columnName: string, readonly jsonField: string) {}
 }

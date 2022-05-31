@@ -22,4 +22,4 @@ const routes: Routes = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-export class RealtimeusersRoutingModule { }
+export class RealtimeusersRoutingModule {}

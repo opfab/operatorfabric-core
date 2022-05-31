@@ -85,11 +85,8 @@ export class MonitoringProcessList {
     public getProcessesIdForProcessGroups(processGroupIds: string[]): string[] {
         const processesId = [];
         processGroupIds.forEach((processGroupId) => {
-            this.processByProcessGroup
-                .get(processGroupId)
-                .forEach((process) => processesId.push(process.id));
+            this.processByProcessGroup.get(processGroupId).forEach((process) => processesId.push(process.id));
         });
         return processesId;
     }
-
 }

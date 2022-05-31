@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Component, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -25,44 +24,43 @@ import {ConfigService} from '@ofServices/config.service';
     styleUrls: ['./feed.component.scss']
 })
 export class FeedComponent implements OnInit {
-
     lightCards$: Observable<LightCard[]>;
     selection$: Observable<string>;
     totalNumberOfLightsCards = 0;
     maxNbOfCardsToDisplay = 100;
 
-
-    constructor(private store: Store<AppState>,
-                private lightCardsFeedFilterService: LightCardsFeedFilterService,
-                private configService: ConfigService ) {
-          this.maxNbOfCardsToDisplay = this.configService.getConfigValue('feed.card.maxNbOfCardsToDisplay', 100);
+    constructor(
+        private store: Store<AppState>,
+        private lightCardsFeedFilterService: LightCardsFeedFilterService,
+        private configService: ConfigService
+    ) {
+        this.maxNbOfCardsToDisplay = this.configService.getConfigValue('feed.card.maxNbOfCardsToDisplay', 100);
     }
 
     ngOnInit() {
-
         this.selection$ = this.store.select(feedSelectors.selectLightCardSelection);
 
-        moment.updateLocale('en', { week: {
-            dow: 6, // First day of week is Saturday
-            doy: 12 // First week of year must contain 1 January (7 + 6 - 1)
-        }});
-
+        moment.updateLocale('en', {
+            week: {
+                dow: 6, // First day of week is Saturday
+                doy: 12 // First week of year must contain 1 January (7 + 6 - 1)
+            }
+        });
 
         this.lightCards$ = this.lightCardsFeedFilterService.getFilteredAndSortedLightCards().pipe(
             delay(0), // Solve error: 'Expression has changed after it was checked' --> See https://blog.angular-university.io/angular-debugging/
-            map(cards => {
+            map((cards) => {
                 this.totalNumberOfLightsCards = cards.length;
                 return cards.slice(0, this.maxNbOfCardsToDisplay);
-            }
-            ));
+            })
+        );
     }
 
-
     public enoughSpaceForTimeLine() {
-      return (window.innerWidth > 1000 && window.innerHeight > 700 );
+        return window.innerWidth > 1000 && window.innerHeight > 700;
     }
 
     public enoughSpaceForCardDetail() {
-      return (window.innerWidth > 1000);
+        return window.innerWidth > 1000;
     }
 }

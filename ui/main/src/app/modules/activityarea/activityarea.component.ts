@@ -19,24 +19,19 @@ import {CardService} from '@ofServices/card.service';
 import {Utilities} from '../../common/utilities';
 import {GroupsService} from '@ofServices/groups.service';
 
-
 @Component({
     selector: 'of-activityarea',
     templateUrl: './activityarea.component.html',
     styleUrls: ['./activityarea.component.scss']
 })
-
-
-
 export class ActivityareaComponent implements OnInit, OnDestroy {
-
     @Input() titleI18nKey = 'activityArea.title';
     @Input() askConfirmation = true;
     @Output() confirm = new EventEmitter();
 
     activityAreaForm: FormGroup;
     currentUserWithPerimeters: UserWithPerimeters;
-    userEntities: {entityId: string, entityName: string, isDisconnected: boolean}[] = [];
+    userEntities: {entityId: string; entityName: string; isDisconnected: boolean}[] = [];
     saveSettingsInProgress = false;
     messageAfterSavingSettings: string;
     displaySendResultError = false;
@@ -47,21 +42,21 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
 
     modalRef: NgbModalRef;
 
-    constructor(private formBuilder: FormBuilder,
-                private userService: UserService,
-                private entitiesService: EntitiesService,
-                private groupsService: GroupsService,
-                private modalService: NgbModal,
-                private settingsService: SettingsService,
-                private cardService: CardService) {}
+    constructor(
+        private formBuilder: FormBuilder,
+        private userService: UserService,
+        private entitiesService: EntitiesService,
+        private groupsService: GroupsService,
+        private modalService: NgbModal,
+        private settingsService: SettingsService,
+        private cardService: CardService
+    ) {}
 
     private initForm() {
         const group = {};
-        this.userEntities.forEach(userEntity => {
-            if (userEntity.isDisconnected)
-                group[userEntity.entityId] = new FormControl('');
-            else
-                group[userEntity.entityId] = new FormControl('true');
+        this.userEntities.forEach((userEntity) => {
+            if (userEntity.isDisconnected) group[userEntity.entityId] = new FormControl('');
+            else group[userEntity.entityId] = new FormControl('true');
         });
         this.activityAreaForm = new FormGroup(group);
     }
@@ -70,26 +65,26 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
 
         // we retrieve all the entities to which the user can connect
-        this.userService.getUser(this.currentUserWithPerimeters.userData.login).subscribe(currentUser => {
-
+        this.userService.getUser(this.currentUserWithPerimeters.userData.login).subscribe((currentUser) => {
             const entities = this.entitiesService.getEntitiesFromIds(currentUser.entities);
-            entities.forEach(entity => {
-                if (entity.entityAllowedToSendCard) { // this avoids to display entities used only for grouping
+            entities.forEach((entity) => {
+                if (entity.entityAllowedToSendCard) {
+                    // this avoids to display entities used only for grouping
                     const isDisconnected = !this.currentUserWithPerimeters.userData.entities.includes(entity.id);
-                    this.userEntities.push(
-                        {
-                            entityId: entity.id,
-                            entityName: entity.name,
-                            isDisconnected: isDisconnected
-                        });
+                    this.userEntities.push({
+                        entityId: entity.id,
+                        entityName: entity.name,
+                        isDisconnected: isDisconnected
+                    });
                 }
             });
             this.userEntities.sort((a, b) => Utilities.compareObj(a.entityName, b.entityName));
             this.initForm();
 
-            if (!! this.currentUserWithPerimeters.userData.groups)
-                this.userRealtimeGroupsIds = this.currentUserWithPerimeters.userData.groups.filter(groupId =>
-                    this.groupsService.isRealtimeGroup(groupId));
+            if (!!this.currentUserWithPerimeters.userData.groups)
+                this.userRealtimeGroupsIds = this.currentUserWithPerimeters.userData.groups.filter((groupId) =>
+                    this.groupsService.isRealtimeGroup(groupId)
+                );
 
             this.refresh();
             this.interval = setInterval(() => {
@@ -99,19 +94,25 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     }
 
     refresh() {
-        this.userService.loadConnectedUsers().subscribe(connectedUsers => {
+        this.userService.loadConnectedUsers().subscribe((connectedUsers) => {
             this.connectedUsersPerEntityAndGroup.clear();
 
             connectedUsers.sort((obj1, obj2) => Utilities.compareObj(obj1.login, obj2.login));
 
-            connectedUsers.forEach(connectedUser => {
+            connectedUsers.forEach((connectedUser) => {
                 if (connectedUser.login !== this.currentUserWithPerimeters.userData.login) {
-                    connectedUser.entitiesConnected.forEach(entityConnectedId => {
-                        if (this.userEntities.map(userEntity => userEntity.entityId).includes(entityConnectedId)) {
-                            connectedUser.groups.forEach(groupId => {
-
-                                if (this.groupsService.isRealtimeGroup(groupId) && (this.currentUserWithPerimeters.userData.groups.includes(groupId)))
-                                    this.addUserToConnectedUsersPerEntityAndGroup(connectedUser.login, entityConnectedId, groupId);
+                    connectedUser.entitiesConnected.forEach((entityConnectedId) => {
+                        if (this.userEntities.map((userEntity) => userEntity.entityId).includes(entityConnectedId)) {
+                            connectedUser.groups.forEach((groupId) => {
+                                if (
+                                    this.groupsService.isRealtimeGroup(groupId) &&
+                                    this.currentUserWithPerimeters.userData.groups.includes(groupId)
+                                )
+                                    this.addUserToConnectedUsersPerEntityAndGroup(
+                                        connectedUser.login,
+                                        entityConnectedId,
+                                        groupId
+                                    );
                             });
                         }
                     });
@@ -123,8 +124,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     private addUserToConnectedUsersPerEntityAndGroup(login: string, entityId: string, groupId: string) {
         let usersConnectedPerEntityAndGroup = this.connectedUsersPerEntityAndGroup.get(entityId + '.' + groupId);
 
-        if (!usersConnectedPerEntityAndGroup)
-            usersConnectedPerEntityAndGroup = new Set();
+        if (!usersConnectedPerEntityAndGroup) usersConnectedPerEntityAndGroup = new Set();
 
         usersConnectedPerEntityAndGroup.add(login);
         this.connectedUsersPerEntityAndGroup.set(entityId + '.' + groupId, usersConnectedPerEntityAndGroup);
@@ -132,8 +132,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
 
     getNumberOfConnectedUsersInEntityAndGroup(entityAndGroup: string): number {
         const connectedUsers = this.connectedUsersPerEntityAndGroup.get(entityAndGroup);
-        if (!!connectedUsers)
-            return connectedUsers.size;
+        if (!!connectedUsers) return connectedUsers.size;
         return 0;
     }
 
@@ -141,28 +140,34 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
         let label = '';
         const connectedUsers = this.connectedUsersPerEntityAndGroup.get(entityAndGroup);
 
-        if (!! connectedUsers)
-            label = (connectedUsers.size > 1) ? connectedUsers.values().next().value + ', ...' : connectedUsers.values().next().value;
+        if (!!connectedUsers)
+            label =
+                connectedUsers.size > 1
+                    ? connectedUsers.values().next().value + ', ...'
+                    : connectedUsers.values().next().value;
 
         return label;
     }
 
     confirmSaveSettings() {
-
         if (this.saveSettingsInProgress) return; // avoid multiple clicks
         this.saveSettingsInProgress = true;
         const disconnectedEntities = [];
 
         for (const entityId of Object.keys(this.activityAreaForm.controls)) {
             const control = this.activityAreaForm.get(entityId); // 'control' is a FormControl
-            if (! control.value) // not checked
+            if (!control.value)
+                // not checked
                 disconnectedEntities.push(entityId);
         }
-        console.log(new Date().toISOString() + "Patch entities disconnected = " + disconnectedEntities);
-        this.settingsService.patchUserSettings({login: this.currentUserWithPerimeters.userData.login,
-            entitiesDisconnected: disconnectedEntities})
+        console.log(new Date().toISOString() + 'Patch entities disconnected = ' + disconnectedEntities);
+        this.settingsService
+            .patchUserSettings({
+                login: this.currentUserWithPerimeters.userData.login,
+                entitiesDisconnected: disconnectedEntities
+            })
             .subscribe({
-                next: resp => {
+                next: (resp) => {
                     this.saveSettingsInProgress = false;
                     this.messageAfterSavingSettings = '';
                     const msg = resp.message;
@@ -177,7 +182,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
                     if (!!this.modalRef) this.modalRef.close();
                     this.confirm.emit();
                 },
-                error: err => {
+                error: (err) => {
                     console.error('Error when saving settings :', err);
                     if (!!this.modalRef) this.modalRef.close();
                     this.messageAfterSavingSettings = 'shared.error.impossibleToSaveSettings';
@@ -192,13 +197,12 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
         // it ends up with nothing in the feed
         // This happens because method this.cardService.removeAllLightCardFromMemory()
         // is called too late (in method confirmSaveSettings)
-        if (!this.saveSettingsInProgress)
-            this.modalRef.close();
+        if (!this.saveSettingsInProgress) this.modalRef.close();
     }
 
     openConfirmSaveSettingsModal(content) {
         if (this.askConfirmation) this.modalRef = this.modalService.open(content, {centered: true, backdrop: 'static'});
-        else  this.confirmSaveSettings();
+        else this.confirmSaveSettings();
     }
 
     ngOnDestroy() {

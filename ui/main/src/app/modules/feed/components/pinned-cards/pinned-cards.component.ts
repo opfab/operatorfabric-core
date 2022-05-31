@@ -18,7 +18,6 @@ import {Router} from '@angular/router';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {Utilities} from 'app/common/utilities';
 
-
 @Component({
     selector: 'of-pinned-cards',
     templateUrl: './pinned-cards.component.html',
@@ -34,33 +33,31 @@ export class PinnedCardsComponent implements OnInit, OnDestroy {
     maxVisiblePinnedCards = 6;
     maxHiddenPinnedCards = 20;
 
-    constructor(private lightCardsStoreService: LightCardsStoreService,
-                private router: Router,
-                private store: Store<AppState>,
-                private processesService: ProcessesService) {
-    }
+    constructor(
+        private lightCardsStoreService: LightCardsStoreService,
+        private router: Router,
+        private store: Store<AppState>,
+        private processesService: ProcessesService
+    ) {}
 
     ngOnInit(): void {
         this.store
-        .select(selectCurrentUrl)
-        .pipe(takeUntil(this.ngUnsubscribe))
-        .subscribe((url) => {
-            if (url) {
-                const urlParts = url.split('/');
-                this.currentPath = urlParts[1];
-            }
-        });
+            .select(selectCurrentUrl)
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe((url) => {
+                if (url) {
+                    const urlParts = url.split('/');
+                    this.currentPath = urlParts[1];
+                }
+            });
 
         this.pinnedCards = [];
-        
-        this.lightCardsStoreService.getLightCards()
-            .subscribe( cards =>  this.setPinnedCards(cards));
+
+        this.lightCardsStoreService.getLightCards().subscribe((cards) => this.setPinnedCards(cards));
 
         timer(10000, 10000)
             .pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe(t =>
-                this.checkPinnedCardsEndDate()
-            );
+            .subscribe((t) => this.checkPinnedCardsEndDate());
     }
 
     private setPinnedCards(cards: LightCard[]) {
@@ -75,26 +72,30 @@ export class PinnedCardsComponent implements OnInit, OnDestroy {
     private setVisiblePinnedCards() {
         this.visiblePinnedCards = [];
         this.hiddenPinnedCards = [];
-        if (this.pinnedCards.length > this.maxVisiblePinnedCards ) {
+        if (this.pinnedCards.length > this.maxVisiblePinnedCards) {
             this.visiblePinnedCards = this.pinnedCards.slice(0, this.maxVisiblePinnedCards);
             this.hiddenPinnedCards = this.pinnedCards.slice(this.maxVisiblePinnedCards);
-            if (this.hiddenPinnedCards.length > this.maxHiddenPinnedCards ) {
+            if (this.hiddenPinnedCards.length > this.maxHiddenPinnedCards) {
                 this.hiddenPinnedCards = this.hiddenPinnedCards.slice(0, this.maxHiddenPinnedCards);
             }
-        } else
-            this.visiblePinnedCards = this.pinnedCards;
+        } else this.visiblePinnedCards = this.pinnedCards;
     }
 
-
     private getPinnedCards(cards: LightCard[]) {
-        return cards.filter(card => {
-            const processDefinition = this.processesService.getProcess(card.process);
-            return processDefinition.extractState(card).automaticPinWhenAcknowledged && card.hasBeenAcknowledged && (!card.endDate || card.endDate > Date.now());
-        }).sort((a, b) => Utilities.compareObj(a.publishDate, b.publishDate));
+        return cards
+            .filter((card) => {
+                const processDefinition = this.processesService.getProcess(card.process);
+                return (
+                    processDefinition.extractState(card).automaticPinWhenAcknowledged &&
+                    card.hasBeenAcknowledged &&
+                    (!card.endDate || card.endDate > Date.now())
+                );
+            })
+            .sort((a, b) => Utilities.compareObj(a.publishDate, b.publishDate));
     }
 
     private checkPinnedCardsEndDate(): void {
-        this.pinnedCards = this.pinnedCards.filter(card => !card.endDate || card.endDate > Date.now());
+        this.pinnedCards = this.pinnedCards.filter((card) => !card.endDate || card.endDate > Date.now());
         this.setVisiblePinnedCards();
     }
 
@@ -106,6 +107,4 @@ export class PinnedCardsComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
     }
-
 }
-

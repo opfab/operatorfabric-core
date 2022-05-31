@@ -14,16 +14,8 @@ import {FeedconfigurationComponent} from './feedconfiguration.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 
-
 @NgModule({
     declarations: [FeedconfigurationComponent],
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        TranslateModule,
-        FeedconfigurationRoutingModule
-    ]
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, FeedconfigurationRoutingModule]
 })
-export class FeedconfigurationModule {
-}
+export class FeedconfigurationModule {}

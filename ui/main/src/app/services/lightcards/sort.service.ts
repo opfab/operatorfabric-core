@@ -9,13 +9,12 @@
 
 import {Injectable} from '@angular/core';
 import {LightCard, Severity} from '@ofModel/light-card.model';
-import {Subject,Observable} from 'rxjs';
+import {Subject, Observable} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class SortService {
-
     private sortChanges = new Subject();
     private sortBy = 'unread';
 
@@ -94,4 +93,3 @@ export function compareByReadPublishDate(card1: LightCard, card2: LightCard) {
     }
     return result;
 }
-

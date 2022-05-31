@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {AuthState} from '@ofStates/authentication.state';
 import * as _ from 'lodash-es';

@@ -7,15 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 export class Group {
-
     public constructor(
-    readonly id: string,
-    readonly name: string,
-    readonly description: string,
-    readonly realtime?: boolean
-) {}
-
+        readonly id: string,
+        readonly name: string,
+        readonly description: string,
+        readonly realtime?: boolean
+    ) {}
 }

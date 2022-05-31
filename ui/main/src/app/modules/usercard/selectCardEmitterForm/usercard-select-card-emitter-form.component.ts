@@ -11,18 +11,15 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {takeUntil, debounceTime, Subject} from 'rxjs';
 
-
 @Component({
     selector: 'of-usercard-select-card-emitter-form',
     templateUrl: './usercard-select-card-emitter-form.component.html'
 })
 export class UsercardSelectCardEmitterFormComponent implements OnInit {
-
     @Input() public userEntitiesAllowedToSendCardOptions;
     @Input() public initialPublisher;
 
     @Output() public cardEmitterChange: EventEmitter<any> = new EventEmitter<any>();
-
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -46,22 +43,17 @@ export class UsercardSelectCardEmitterFormComponent implements OnInit {
     }
 
     private listenForEmitterChange() {
-        this.selectCardEmitterForm.get('cardEmitter').valueChanges
-            .pipe(
-                takeUntil(this.unsubscribe$),
-                debounceTime(10) 
-            )
+        this.selectCardEmitterForm
+            .get('cardEmitter')
+            .valueChanges.pipe(takeUntil(this.unsubscribe$), debounceTime(10))
             .subscribe((state) => {
                 if (!!state) {
-                    this.cardEmitterChange.emit(
-                        {
-                            'emitter': this.selectCardEmitterForm.get('cardEmitter').value
-                        });
-
+                    this.cardEmitterChange.emit({
+                        emitter: this.selectCardEmitterForm.get('cardEmitter').value
+                    });
                 }
             });
     }
-
 
     ngOnDestroy() {
         this.unsubscribe$.next();

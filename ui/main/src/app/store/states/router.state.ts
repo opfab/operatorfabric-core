@@ -7,15 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
-
 /*
-* following configuration initialize the state of router in order to enable the currentUrl in app.component.ts
-* source: https://github.com/ngrx/platform/issues/835
-*/
-import {RouterStateSerializer} from "@ngrx/router-store";
-import {ActivatedRouteSnapshot, Params, RouterStateSnapshot} from "@angular/router";
+ * following configuration initialize the state of router in order to enable the currentUrl in app.component.ts
+ * source: https://github.com/ngrx/platform/issues/835
+ */
+import {RouterStateSerializer} from '@ngrx/router-store';
+import {ActivatedRouteSnapshot, Params, RouterStateSnapshot} from '@angular/router';
 
 export const initialState = {
     state: {
@@ -24,7 +21,7 @@ export const initialState = {
         queryParams: {}
     },
     navigationId: 0
-}
+};
 
 /**
  * The RouterStateSerializer takes the current RouterStateSnapshot
@@ -40,15 +37,10 @@ export const initialState = {
 
 export class RouterStateUrl {
     /* istanbul ignore next */
-    constructor(
-        readonly url: string,
-        readonly params: Params,
-        readonly queryParams: Params) {
-    }
+    constructor(readonly url: string, readonly params: Params, readonly queryParams: Params) {}
 }
 
-export class CustomRouterStateSerializer
-    implements RouterStateSerializer<RouterStateUrl> {
+export class CustomRouterStateSerializer implements RouterStateSerializer<RouterStateUrl> {
     serialize(routerState: RouterStateSnapshot): RouterStateUrl {
         const {url} = routerState;
         const params = this.extractParams(routerState.root);
@@ -59,7 +51,7 @@ export class CustomRouterStateSerializer
     private extractParams(state: ActivatedRouteSnapshot): Params {
         let params: Params = {...state.params};
         for (let child of state.children) {
-            params = {...params, ...this.extractParams(child)}
+            params = {...params, ...this.extractParams(child)};
         }
         return params;
     }

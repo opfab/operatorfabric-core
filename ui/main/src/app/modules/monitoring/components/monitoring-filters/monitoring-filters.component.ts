@@ -61,9 +61,7 @@ export class MonitoringFiltersComponent implements OnInit {
             selectedOptions: []
         };
         this.monitoringProcessList.getProcessGroups().forEach((processGroup) => {
-            this.processGroupMultiSelect.options.push(
-                new MultiSelectOption(processGroup.id, processGroup.name)
-            );
+            this.processGroupMultiSelect.options.push(new MultiSelectOption(processGroup.id, processGroup.name));
         });
     }
 
@@ -83,8 +81,6 @@ export class MonitoringFiltersComponent implements OnInit {
         this.changeProcessOptionsWhenSelectProcessGroups();
     }
 
-
-
     private putAllProcessesInProcessMultiSelect() {
         this.monitoringProcessList.getProcesses().forEach((process) => {
             this.processMultiSelect.options.push(new MultiSelectOption(process.id, process.name));
@@ -92,15 +88,11 @@ export class MonitoringFiltersComponent implements OnInit {
     }
 
     private changeProcessOptionsWhenSelectProcessGroups(): void {
-        this.monitoringForm
-            .get(this.processGroupMultiSelect.id)
-            .valueChanges.subscribe((selectedProcessGroups) => {
-                this.processMultiSelect.options = [];
-                if (selectedProcessGroups.length === 0 )  this.putAllProcessesInProcessMultiSelect();
-                else selectedProcessGroups.forEach((processGroup) =>
-                    this.addProcessOptionsFromProcessGroup(processGroup)
-                );
-            });
+        this.monitoringForm.get(this.processGroupMultiSelect.id).valueChanges.subscribe((selectedProcessGroups) => {
+            this.processMultiSelect.options = [];
+            if (selectedProcessGroups.length === 0) this.putAllProcessesInProcessMultiSelect();
+            else selectedProcessGroups.forEach((processGroup) => this.addProcessOptionsFromProcessGroup(processGroup));
+        });
     }
 
     private addProcessOptionsFromProcessGroup(processGroup: string): void {
@@ -118,14 +110,8 @@ export class MonitoringFiltersComponent implements OnInit {
                     TypeOfStateEnum.INPROGRESS,
                     this.translate.instant('shared.typeOfState.INPROGRESS')
                 ),
-                new MultiSelectOption(
-                    TypeOfStateEnum.FINISHED,
-                    this.translate.instant('shared.typeOfState.FINISHED')
-                ),
-                new MultiSelectOption(
-                    TypeOfStateEnum.CANCELED,
-                    this.translate.instant('shared.typeOfState.CANCELED')
-                )
+                new MultiSelectOption(TypeOfStateEnum.FINISHED, this.translate.instant('shared.typeOfState.FINISHED')),
+                new MultiSelectOption(TypeOfStateEnum.CANCELED, this.translate.instant('shared.typeOfState.CANCELED'))
             ],
             config: {
                 labelKey: 'shared.typeOfState.typeOfState',
@@ -145,7 +131,6 @@ export class MonitoringFiltersComponent implements OnInit {
         this.sendFiltersToParentComponent();
     }
 
-
     private getSelectedTypeOfStates() {
         return this.monitoringForm.get(this.typeOfStateMultiSelect.id).value;
     }
@@ -153,13 +138,8 @@ export class MonitoringFiltersComponent implements OnInit {
     private getSelectedProcessesForQuery(): Array<string> {
         const selectedProcessGroups = this.getSelectedProcessGroups();
         let selectedProcesses = this.getSelectedProcesses();
-        if (
-            !!selectedProcessGroups &&
-            selectedProcessGroups.length > 0 &&
-            selectedProcesses.length === 0
-        )
-            selectedProcesses =
-                this.monitoringProcessList.getProcessesIdForProcessGroups(selectedProcessGroups);
+        if (!!selectedProcessGroups && selectedProcessGroups.length > 0 && selectedProcesses.length === 0)
+            selectedProcesses = this.monitoringProcessList.getProcessesIdForProcessGroups(selectedProcessGroups);
         return selectedProcesses;
     }
 

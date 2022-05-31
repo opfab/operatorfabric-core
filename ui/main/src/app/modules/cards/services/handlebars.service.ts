@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Injectable} from '@angular/core';
 import * as Handlebars from 'handlebars/dist/handlebars.js';
 import {TranslateService} from '@ngx-translate/core';
@@ -26,11 +25,11 @@ import {buildSettingsOrConfigSelector} from '@ofSelectors/settings.x.config.sele
     providedIn: 'root'
 })
 export class HandlebarsService {
-
     constructor(
-                private translate: TranslateService,
-                private businessconfig: ProcessesService,
-                private store: Store<AppState>) {
+        private translate: TranslateService,
+        private businessconfig: ProcessesService,
+        private store: Store<AppState>
+    ) {
         HandlebarsService.registerPreserveSpace();
         this.registerNumberFormat();
         this.registerDateFormat();
@@ -55,7 +54,7 @@ export class HandlebarsService {
         HandlebarsService.registerConditionalAttribute();
         HandlebarsService.registerReplace();
         HandlebarsService.registerObjectContainsKey();
-        this.store.select(buildSettingsOrConfigSelector('locale')).subscribe(locale => this.changeLocale(locale));
+        this.store.select(buildSettingsOrConfigSelector('locale')).subscribe((locale) => this.changeLocale(locale));
     }
 
     private templateCache: Map<Function> = new Map();
@@ -71,25 +70,25 @@ export class HandlebarsService {
         Handlebars.registerHelper('bool', function (v1, operator, v2) {
             switch (operator) {
                 case '==':
-                    return (v1 == v2);
+                    return v1 == v2;
                 case '===':
-                    return (v1 === v2);
+                    return v1 === v2;
                 case '!=':
-                    return (v1 != v2);
+                    return v1 != v2;
                 case '!==':
-                    return (v1 !== v2);
+                    return v1 !== v2;
                 case '<':
-                    return (v1 < v2);
+                    return v1 < v2;
                 case '<=':
-                    return (v1 <= v2);
+                    return v1 <= v2;
                 case '>':
-                    return (v1 > v2);
+                    return v1 > v2;
                 case '>=':
-                    return (v1 >= v2);
+                    return v1 >= v2;
                 case '&&':
-                    return (v1 && v2);
+                    return v1 && v2;
                 case '||':
-                    return (v1 || v2);
+                    return v1 || v2;
                 default:
                     return true;
             }
@@ -104,22 +103,30 @@ export class HandlebarsService {
 
     private static registerSplit() {
         Handlebars.registerHelper('split', function (...args: any[]) {
-            if (args.length === 3)
-                return args[0].split(args[1]);
-            if (args.length === 4)
-                return args[0].split(args[1])[args[2]];
+            if (args.length === 3) return args[0].split(args[1]);
+            if (args.length === 4) return args[0].split(args[1])[args[2]];
         });
     }
 
     private static registerMath() {
-        Handlebars.registerHelper('math', function(lvalue, operator, rvalue) {
+        Handlebars.registerHelper('math', function (lvalue, operator, rvalue) {
             let result;
             switch (operator) {
-                case '+': result = lvalue + rvalue; break;
-                case '-': result = lvalue - rvalue; break;
-                case '*': result = lvalue * rvalue; break;
-                case '/': result = lvalue / rvalue; break;
-                case '%': result = lvalue % rvalue; break;
+                case '+':
+                    result = lvalue + rvalue;
+                    break;
+                case '-':
+                    result = lvalue - rvalue;
+                    break;
+                case '*':
+                    result = lvalue * rvalue;
+                    break;
+                case '/':
+                    result = lvalue / rvalue;
+                    break;
+                case '%':
+                    result = lvalue % rvalue;
+                    break;
             }
             return result;
         });
@@ -133,7 +140,7 @@ export class HandlebarsService {
 
     private static registerObjectContainsKey() {
         Handlebars.registerHelper('objectContainsKey', function (obj, key) {
-            return (key in obj);
+            return key in obj;
         });
     }
 
@@ -154,7 +161,6 @@ export class HandlebarsService {
         });
     }
 
-
     private static registerPreserveSpace() {
         Handlebars.registerHelper('preserveSpace', function (value) {
             return value.replace(/ /g, '\u00A0');
@@ -162,22 +168,21 @@ export class HandlebarsService {
     }
 
     private static registerArrayContains() {
-        Handlebars.registerHelper('arrayContains', function(arr, value) {
+        Handlebars.registerHelper('arrayContains', function (arr, value) {
             return !!arr && arr.includes(value);
         });
     }
 
     private static registerArrayContainsOneOf() {
-        Handlebars.registerHelper('arrayContainsOneOf', function(arr1, arr2) {
-            return arr1.some( ai => arr2.includes(ai) );
+        Handlebars.registerHelper('arrayContainsOneOf', function (arr1, arr2) {
+            return arr1.some((ai) => arr2.includes(ai));
         });
     }
 
     private static registerTimes() {
-        Handlebars.registerHelper('times', function(n, block) {
+        Handlebars.registerHelper('times', function (n, block) {
             let accum = '';
-            for (let i = 0; i < n; ++i)
-                accum += block.fn(i);
+            for (let i = 0; i < n; ++i) accum += block.fn(i);
             return accum;
         });
     }
@@ -199,20 +204,21 @@ export class HandlebarsService {
     private static registerKeyValue() {
         Handlebars.registerHelper('keyValue', function (obj, options) {
             if (Object.keys(obj).length === 0) {
-              return options.fn({value: false});
+                return options.fn({value: false});
             }
-            let buffer, key , index ;
+            let buffer, key, index;
             buffer = '';
             index = 0;
             for (key in obj) {
                 if (!Object.hasOwnProperty.call(obj, key)) {
                     continue;
                 }
-                buffer += options.fn({
-                    key: key,
-                    value: obj[key],
-                    index: index
-                }) || '';
+                buffer +=
+                    options.fn({
+                        key: key,
+                        value: obj[key],
+                        index: index
+                    }) || '';
                 index++;
             }
             return buffer;
@@ -221,29 +227,28 @@ export class HandlebarsService {
 
     private static registerKeepSpacesAndEndOfLine() {
         Handlebars.registerHelper('keepSpacesAndEndOfLine', function (value) {
-            let  result =  Handlebars.escapeExpression(value);
+            let result = Handlebars.escapeExpression(value);
             result = result.replace(/\n/g, '<br/>');
             result = result.replace(/\s\s/g, '&nbsp;&nbsp;');
             return new Handlebars.SafeString(result);
         });
-
     }
 
     private static registerMergeArrays() {
-      Handlebars.registerHelper('mergeArrays', function (arr1, arr2) {
-        return arr1.concat(arr2);
-      });
+        Handlebars.registerHelper('mergeArrays', function (arr1, arr2) {
+            return arr1.concat(arr2);
+        });
     }
 
     private static registerReplace() {
-	  Handlebars.registerHelper('replace', function( find, replace, string) {
-	    return string.replaceAll( find, replace );
-	  });
-	}
+        Handlebars.registerHelper('replace', function (find, replace, string) {
+            return string.replaceAll(find, replace);
+        });
+    }
 
     private static registerConditionalAttribute() {
         Handlebars.registerHelper('conditionalAttribute', function (condition, attribute) {
-            return (condition) ? attribute : '';
+            return condition ? attribute : '';
         });
     }
 
@@ -257,18 +262,19 @@ export class HandlebarsService {
 
     public executeTemplate(templateName: string, context: DetailContext): Observable<string> {
         return this.queryTemplate(context.card.process, context.card.processVersion, templateName).pipe(
-            map(t => t(context)));
+            map((t) => t(context))
+        );
     }
 
-    public  queryTemplate(process: string, version: string, name: string): Observable<Function> {
+    public queryTemplate(process: string, version: string, name: string): Observable<Function> {
         const key = `${process}.${version}.${name}`;
         const template = this.templateCache[key];
         if (template) {
-           return of(template);
+            return of(template);
         }
         return this.businessconfig.fetchHbsTemplate(process, version, name).pipe(
-            map(s => Handlebars.compile(s)),
-            tap(t => this.templateCache[key] = t)
+            map((s) => Handlebars.compile(s)),
+            tap((t) => (this.templateCache[key] = t))
         );
     }
 
@@ -289,7 +295,7 @@ export class HandlebarsService {
             if (typeof context === 'object') {
                 if (context.length !== undefined && context.length !== null) {
                     arrayToSort = context;
-                    isObject = (typeof arrayToSort[0] === 'object');
+                    isObject = typeof arrayToSort[0] === 'object';
                 } else {
                     isObject = true;
                     arrayToSort = [];
@@ -333,8 +339,7 @@ export class HandlebarsService {
             } else {
                 i18nKey = '';
                 for (let i = 0; i < args.length; i++) {
-                    if (i18nKey)
-                        i18nKey += '.';
+                    if (i18nKey) i18nKey += '.';
                     i18nKey += args[i];
                 }
                 i18nParams = options.hash;
@@ -364,8 +369,8 @@ export class HandlebarsService {
 
     private registerDateFormat() {
         Handlebars.registerHelper('dateFormat', (value, options) => {
-            if ( (typeof value) == 'string' ) {
-              value = parseInt(value);
+            if (typeof value == 'string') {
+                value = parseInt(value);
             }
             const m = moment(new Date(value));
             m.locale(this._locale);
@@ -388,14 +393,12 @@ export class HandlebarsService {
 }
 
 function sortOnKey(key) {
-    return function(a, b) {
-        if (typeof  a[key] === 'string' && typeof b[key] === 'string') {
-            if (a[key] < b[key])
-                return -1;
-            else if (a[key] > b[key])
-                return 1;
+    return function (a, b) {
+        if (typeof a[key] === 'string' && typeof b[key] === 'string') {
+            if (a[key] < b[key]) return -1;
+            else if (a[key] > b[key]) return 1;
             return 0;
-        } else if (typeof  a[key] === 'number' && typeof b[key] === 'number') {
+        } else if (typeof a[key] === 'number' && typeof b[key] === 'number') {
             return a[key] - b[key];
         }
         return 0;

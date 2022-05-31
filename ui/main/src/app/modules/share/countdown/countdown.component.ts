@@ -9,44 +9,43 @@
 
 import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
-import {ConfigService} from "@ofServices/config.service";
-import { CountDown} from './countdown';
+import {ConfigService} from '@ofServices/config.service';
+import {CountDown} from './countdown';
 
 @Component({
     selector: 'of-countdown',
     templateUrl: './countdown.component.html',
     styleUrls: ['./countdown.component.scss']
 })
-export class CountDownComponent implements OnInit, OnDestroy , OnChanges {
-
+export class CountDownComponent implements OnInit, OnDestroy, OnChanges {
     @Input() public lttd: number;
     @Input() public expiredLabel: string;
     @Input() public showExpiredLabel: boolean = true;
     @Input() public showExpiredIcon: boolean = true;
 
     public countDown;
-    public translatedExpiredLabel : string;
+    public translatedExpiredLabel: string;
     secondsBeforeLttdForClockDisplay: number;
 
-    constructor(private configService: ConfigService,  private translate: TranslateService,) {
-    }
+    constructor(private configService: ConfigService, private translate: TranslateService) {}
 
     ngOnInit() {
-        this.secondsBeforeLttdForClockDisplay = this.configService.getConfigValue('feed.card.secondsBeforeLttdForClockDisplay', false);
-        this.countDown = new CountDown(this.lttd,this.secondsBeforeLttdForClockDisplay);
+        this.secondsBeforeLttdForClockDisplay = this.configService.getConfigValue(
+            'feed.card.secondsBeforeLttdForClockDisplay',
+            false
+        );
+        this.countDown = new CountDown(this.lttd, this.secondsBeforeLttdForClockDisplay);
     }
 
-    ngOnChanges()
-    {
+    ngOnChanges() {
         this.translatedExpiredLabel = this.translate.instant(this.expiredLabel);
 
-        if (this.countDown)  {
+        if (this.countDown) {
             this.countDown.stopCountDown();
-            this.countDown = new CountDown(this.lttd,this.secondsBeforeLttdForClockDisplay);
+            this.countDown = new CountDown(this.lttd, this.secondsBeforeLttdForClockDisplay);
         }
     }
     ngOnDestroy(): void {
         this.countDown.stopCountDown();
     }
-
 }

@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {NgbDate, NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 
@@ -28,13 +27,14 @@ export function isNumber(value: any): value is number {
 }
 
 export function getDateTimeNgbFromMoment(date: moment.Moment): DateTimeNgb {
-    return new DateTimeNgb(new NgbDate(date.year(), date.month() + 1, date.date())
-        , {hour: date.hour(), minute: date.minute(), second: date.second()});
+    return new DateTimeNgb(new NgbDate(date.year(), date.month() + 1, date.date()), {
+        hour: date.hour(),
+        minute: date.minute(),
+        second: date.second()
+    });
 }
 
-
 export class DateTimeNgb {
-
     /* istanbul ignore next */
     constructor(readonly date?: NgbDateStruct, readonly time: NgbTimeStruct = {hour: 0, minute: 0, second: 0}) {
         // in case time is explicitly set to null/undefined set to default one
@@ -43,7 +43,6 @@ export class DateTimeNgb {
         }
     }
 
-
     parse(value: string): NgbDateStruct {
         if (value) {
             const dateParts = value.trim().split('-').reverse();
@@ -51,7 +50,12 @@ export class DateTimeNgb {
                 return {day: toInteger(dateParts[0]), month: null, year: null};
             } else if (dateParts.length === 2 && isNumber(dateParts[0]) && isNumber(dateParts[1])) {
                 return {day: toInteger(dateParts[0]), month: toInteger(dateParts[1]), year: null};
-            } else if (dateParts.length === 3 && isNumber(dateParts[0]) && isNumber(dateParts[1]) && isNumber(dateParts[2])) {
+            } else if (
+                dateParts.length === 3 &&
+                isNumber(dateParts[0]) &&
+                isNumber(dateParts[1]) &&
+                isNumber(dateParts[2])
+            ) {
                 return {day: toInteger(dateParts[0]), month: toInteger(dateParts[1]), year: toInteger(dateParts[2])};
             }
         }
@@ -60,16 +64,21 @@ export class DateTimeNgb {
 
     format(): string {
         const {date} = this;
-        return date ?
-            `${date.year}-${isNumber(date.month) ? padNumber(date.month) : ''}-${isNumber(date.day) ? padNumber(date.day) : ''}` :
-            '';
+        return date
+            ? `${date.year}-${isNumber(date.month) ? padNumber(date.month) : ''}-${
+                  isNumber(date.day) ? padNumber(date.day) : ''
+              }`
+            : '';
     }
 
     // a function that transform timestruct to string
     formatTime(): string {
         const {time} = this;
-        return time ?
-            `${isNumber(time.hour) ? padNumber(time.hour) : ''}:${isNumber(time.minute) ? padNumber(time.minute) : ''}` : '';
+        return time
+            ? `${isNumber(time.hour) ? padNumber(time.hour) : ''}:${
+                  isNumber(time.minute) ? padNumber(time.minute) : ''
+              }`
+            : '';
     }
 
     formatDateTime() {
@@ -105,5 +114,4 @@ export class DateTimeNgb {
         }
         return null;
     }
-
 }

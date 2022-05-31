@@ -22,7 +22,7 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
     @Input() public parentForm: FormGroup;
     @Input() public multiSelectId: string;
     @Input() public config: MultiSelectConfig;
-    @Input() public options:Array<MultiSelectOption>;
+    @Input() public options: Array<MultiSelectOption>;
     @Input() public selectedOptions: [];
 
     private ngAfterViewInitHasBeenDone = false;
@@ -43,8 +43,7 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
     private createVirtualSelectComponent() {
         let placeholder = '';
         let nbOfDisplayValues = 50;
-        if (this.config.placeholderKey)
-            placeholder = this.translateService.instant(this.config.placeholderKey);
+        if (this.config.placeholderKey) placeholder = this.translateService.instant(this.config.placeholderKey);
         if (this.config.nbOfDisplayValues) nbOfDisplayValues = this.config.nbOfDisplayValues;
         VirtualSelect.init({
             ele: '#' + this.multiSelectId,
@@ -55,9 +54,7 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
             noOfDisplayValues: nbOfDisplayValues,
             selectAllOnlyVisible: true,
             optionsCount: 8,
-            searchPlaceholderText: this.translateService.instant(
-                'multiSelect.searchPlaceholderText'
-            ),
+            searchPlaceholderText: this.translateService.instant('multiSelect.searchPlaceholderText'),
             clearButtonText: this.translateService.instant('multiSelect.clearButtonText'),
             noOptionsText: this.translateService.instant('multiSelect.noOptionsText'),
             noSearchResultsText: this.translateService.instant('multiSelect.noSearchResultsText')

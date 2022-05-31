@@ -7,13 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 export interface SettingsState {
-    settings: any,
-    loaded: boolean
+    settings: any;
+    loaded: boolean;
 }
 
 export const settingsInitialState: SettingsState = {
     settings: {},
     loaded: false
-}
+};

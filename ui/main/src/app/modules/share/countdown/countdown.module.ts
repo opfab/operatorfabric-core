@@ -12,18 +12,11 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {CountDownComponent} from "./countdown.component";
-
+import {CountDownComponent} from './countdown.component';
 
 @NgModule({
     declarations: [CountDownComponent],
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        TranslateModule,
-        NgbModule
-    ],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, NgbModule],
     exports: [CountDownComponent]
 })
-export class CountDownModule { }
+export class CountDownModule {}

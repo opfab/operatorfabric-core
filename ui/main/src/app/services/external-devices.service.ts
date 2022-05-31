@@ -11,7 +11,7 @@ import {environment} from '@env/environment';
 import {HttpClient} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
-import {Device, Notification, UserConfiguration} from "@ofModel/external-devices.model";
+import {Device, Notification, UserConfiguration} from '@ofModel/external-devices.model';
 import {Injectable} from '@angular/core';
 import {ErrorService} from '@ofServices/error-service';
 
@@ -19,7 +19,6 @@ import {ErrorService} from '@ofServices/error-service';
     providedIn: 'root'
 })
 export class ExternalDevicesService extends ErrorService {
-
     readonly externalDevicesUrl: string;
     readonly notificationsUrl: string;
     readonly configurationsUrl: string;
@@ -36,9 +35,9 @@ export class ExternalDevicesService extends ErrorService {
     }
 
     sendNotification(notification: Notification): Observable<any> {
-        return this.httpClient.post<Notification>(`${this.notificationsUrl}`, notification).pipe(
-            catchError((error: Response) => this.handleError(error))
-        );
+        return this.httpClient
+            .post<Notification>(`${this.notificationsUrl}`, notification)
+            .pipe(catchError((error: Response) => this.handleError(error)));
     }
 
     fetchUserConfiguration(login: string): Observable<UserConfiguration> {
@@ -54,15 +53,13 @@ export class ExternalDevicesService extends ErrorService {
     }
 
     updateUserConfiguration(userconfigData: UserConfiguration): Observable<UserConfiguration> {
-        return this.httpClient.post<UserConfiguration>(`${this.configurationsUrl}/users`, userconfigData).pipe(
-          catchError((error: Response) => this.handleError(error))
-        );
+        return this.httpClient
+            .post<UserConfiguration>(`${this.configurationsUrl}/users`, userconfigData)
+            .pipe(catchError((error: Response) => this.handleError(error)));
     }
 
     deleteByUserLogin(login: string) {
         const url = `${this.configurationsUrl}/users/${login}`;
-    return this.httpClient.delete(url).pipe(
-      catchError((error: Response) => this.handleError(error))
-    );
+        return this.httpClient.delete(url).pipe(catchError((error: Response) => this.handleError(error)));
     }
 }

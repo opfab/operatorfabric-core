@@ -9,23 +9,19 @@
 
 import {Injectable} from '@angular/core';
 
-
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class UserPreferencesService {
+    setPreference(key, value) {
+        localStorage.setItem(key, value);
+    }
 
+    getPreference(key) {
+        return localStorage.getItem(key);
+    }
 
-  setPreference(key, value) {
-    localStorage.setItem(key, value);
-  }
-
-  getPreference(key) {
-    return localStorage.getItem(key);
-  }
-
-  removePreference(key) {
-    localStorage.removeItem(key);
-  }
-
+    removePreference(key) {
+        localStorage.removeItem(key);
+    }
 }

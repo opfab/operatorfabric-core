@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
@@ -21,29 +20,39 @@ import {ProcessesService} from '@ofServices/processes.service';
     styleUrls: ['./state-rights-cell-renderer.component.scss']
 })
 export class StateRightsCellRendererComponent implements ICellRendererAngularComp {
-
     // For explanations regarding ag-grid CellRenderers see
     // https://www.ag-grid.com/documentation/angular/component-cell-renderer/#example-rendering-using-angular-components
-    _stateRightsValues: {stateName: string, stateRight: StateRight}[] = [];
+    _stateRightsValues: {stateName: string; stateRight: StateRight}[] = [];
     processesDefinition: Process[];
 
-    constructor(private processesService: ProcessesService,) {
+    constructor(private processesService: ProcessesService) {
         this.processesDefinition = this.processesService.getAllProcesses();
     }
 
     agInit(params: any): void {
         const stateRightsValues = params.getValue();
 
-        const currentProcessDef = this.processesDefinition.filter(processDef => processDef.id === params.data.process)[0];
+        const currentProcessDef = this.processesDefinition.filter(
+            (processDef) => processDef.id === params.data.process
+        )[0];
         if (!!currentProcessDef) {
-            stateRightsValues.forEach(stateRight => {
+            stateRightsValues.forEach((stateRight) => {
                 if (!!currentProcessDef.states[stateRight.state])
-                    this._stateRightsValues.push({stateName: currentProcessDef.states[stateRight.state].name, stateRight: stateRight});
+                    this._stateRightsValues.push({
+                        stateName: currentProcessDef.states[stateRight.state].name,
+                        stateRight: stateRight
+                    });
                 else
-                    console.log(new Date().toISOString(), 'The state ' + stateRight.state + ' of process ' + currentProcessDef.id + ' does not exist anymore');
+                    console.log(
+                        new Date().toISOString(),
+                        'The state ' +
+                            stateRight.state +
+                            ' of process ' +
+                            currentProcessDef.id +
+                            ' does not exist anymore'
+                    );
             });
-        } else
-            console.log(new Date().toISOString(), 'The process ' + params.data.process + ' does not exist anymore');
+        } else console.log(new Date().toISOString(), 'The process ' + params.data.process + ' does not exist anymore');
     }
 
     /** This method returns true to signal to the grid that this renderer doesn't need to be recreated if the underlying data changes
@@ -53,8 +62,7 @@ export class StateRightsCellRendererComponent implements ICellRendererAngularCom
         return true;
     }
 
-    get stateRightsValues(): {stateName: string, stateRight: StateRight}[] {
+    get stateRightsValues(): {stateName: string; stateRight: StateRight}[] {
         return this._stateRightsValues;
     }
-
 }

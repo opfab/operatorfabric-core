@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Injectable} from '@angular/core';
 import {Filter, FilterType} from '@ofModel/feed-filter.model';
 import {LightCard, Severity} from '@ofModel/light-card.model';
@@ -17,7 +16,6 @@ import {Observable, Subject, ReplaySubject} from 'rxjs';
     providedIn: 'root'
 })
 export class FilterService {
-
     private static TWO_HOURS_IN_MILLIS = 2 * 60 * 60 * 1000;
     private static TWO_DAYS_IN_MILLIS = 48 * 60 * 60 * 1000;
 
@@ -38,9 +36,7 @@ export class FilterService {
         this.businessDateFilter = this.initBusinessDateFilter();
     }
 
-
     public updateFilter(filterType: FilterType, active: boolean, status: any) {
-
         if (filterType === FilterType.BUSINESSDATE_FILTER) {
             this.businessDateFilter.active = active;
             this.businessDateFilter.status = status;
@@ -56,15 +52,15 @@ export class FilterService {
     }
 
     public filterLightCards(cards: LightCard[]) {
-        return cards.filter(card => Filter.chainFilter(card, [this.businessDateFilter, ...this.filters]));
+        return cards.filter((card) => Filter.chainFilter(card, [this.businessDateFilter, ...this.filters]));
     }
 
     public filterLightCardsOnlyByBusinessDate(cards: LightCard[]) {
-        return cards.filter(card => Filter.chainFilter(card, [this.businessDateFilter]));
+        return cards.filter((card) => Filter.chainFilter(card, [this.businessDateFilter]));
     }
 
     public filterLightCardsWithoutBusinessDate(cards: LightCard[]) {
-        return cards.filter(card => Filter.chainFilter(card, this.filters));
+        return cards.filter((card) => Filter.chainFilter(card, this.filters));
     }
 
     public getFilters(): Array<any> {
@@ -83,7 +79,6 @@ export class FilterService {
         return this.newBusinessDateFilter.asObservable();
     }
 
-
     private initTypeFilter(): Filter {
         const alarm = Severity.ALARM;
         const action = Severity.ACTION;
@@ -91,10 +86,12 @@ export class FilterService {
         const information = Severity.INFORMATION;
         return new Filter(
             (card, status) => {
-                return status.alarm && card.severity === alarm ||
-                    status.action && card.severity === action ||
-                    status.compliant && card.severity === compliant ||
-                    status.information && card.severity === information;
+                return (
+                    (status.alarm && card.severity === alarm) ||
+                    (status.action && card.severity === action) ||
+                    (status.compliant && card.severity === compliant) ||
+                    (status.information && card.severity === information)
+                );
             },
             true,
             {
@@ -112,7 +109,11 @@ export class FilterService {
                 if (!!status.start && !!status.end) {
                     return this.chechCardVisibilityinRange(card, status.start, status.end);
                 } else if (!!status.start) {
-                    return card.publishDate >= status.start || (!card.endDate && card.startDate >= status.start) || (!!card.endDate && status.start <= card.endDate);
+                    return (
+                        card.publishDate >= status.start ||
+                        (!card.endDate && card.startDate >= status.start) ||
+                        (!!card.endDate && status.start <= card.endDate)
+                    );
                 } else if (!!status.end) {
                     return card.publishDate <= status.end || card.startDate <= status.end;
                 }
@@ -123,28 +124,29 @@ export class FilterService {
             {
                 start: new Date().valueOf() - FilterService.TWO_HOURS_IN_MILLIS,
                 end: new Date().valueOf() + FilterService.TWO_DAYS_IN_MILLIS
-            });
+            }
+        );
     }
 
-    private chechCardVisibilityinRange(card: LightCard, start, end ) {
+    private chechCardVisibilityinRange(card: LightCard, start, end) {
         if (start <= card.publishDate && card.publishDate <= end) {
             return true;
         }
         if (!card.endDate) {
             return start <= card.startDate && card.startDate <= end;
         }
-        return start <= card.startDate && card.startDate <= end
-            || start <= card.endDate && card.endDate <= end
-            || card.startDate <= start && end <= card.endDate;
+        return (
+            (start <= card.startDate && card.startDate <= end) ||
+            (start <= card.endDate && card.endDate <= end) ||
+            (card.startDate <= start && end <= card.endDate)
+        );
     }
-
 
     private initPublishDateFilter(): Filter {
         return new Filter(
             (card: LightCard, status) => {
                 if (!!status.start && !!status.end) {
                     return status.start <= card.publishDate && card.publishDate <= status.end;
-
                 } else if (!!status.start) {
                     return status.start <= card.publishDate;
                 } else if (!!status.end) {
@@ -153,14 +155,14 @@ export class FilterService {
                 return true;
             },
             false,
-            {start: null, end: null});
+            {start: null, end: null}
+        );
     }
 
     private initAcknowledgementFilter(): Filter {
         return new Filter(
             (card: LightCard, status) => {
-                return status && card.hasBeenAcknowledged ||
-                    !status && !card.hasBeenAcknowledged;
+                return (status && card.hasBeenAcknowledged) || (!status && !card.hasBeenAcknowledged);
             },
             true,
             false
@@ -170,13 +172,10 @@ export class FilterService {
     private initResponseFilter(): Filter {
         return new Filter(
             (card: LightCard, status) => {
-                return status ||
-                    (!status && !card.hasChildCardFromCurrentUserEntity);
+                return status || (!status && !card.hasChildCardFromCurrentUserEntity);
             },
             false,
             true
         );
     }
-
 }
-

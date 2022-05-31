@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Observable, of} from 'rxjs';
@@ -29,25 +28,23 @@ import {selectCode} from '@ofSelectors/authentication.selectors';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {I18n} from '@ofModel/i18n.model';
 import {Map} from '@ofModel/map';
-import {ConfigService} from "@ofServices/config.service";
-import {redirectToCurrentLocation} from "../../app-routing.module";
+import {ConfigService} from '@ofServices/config.service';
+import {redirectToCurrentLocation} from '../../app-routing.module';
 import {CardService} from '@ofServices/card.service';
-
 
 /**
  * Management of the authentication of the current user
  */
 @Injectable()
 export class AuthenticationEffects {
-
-
-    constructor(private store: Store<AppState>,
-                private actions$: Actions,
-                private authService: AuthenticationService,
-                private router: Router,
-                private configService: ConfigService,
-                private cardService: CardService) {
-    }
+    constructor(
+        private store: Store<AppState>,
+        private actions$: Actions,
+        private authService: AuthenticationService,
+        private router: Router,
+        private configService: ConfigService,
+        private cardService: CardService
+    ) {}
 
     /**
      * This {Observable} of {AuthenticationActions} listen {AuthenticationActionTypes.TryToLogIn} type and uses
@@ -63,26 +60,24 @@ export class AuthenticationEffects {
      * @name TryToLogIn
      * @typedef {Observable<AuthenticationActions>}
      */
-    
+
     TryToLogIn: Observable<AuthenticationActions> = createEffect(() =>
-        this.actions$
-            .pipe(
-                ofType(AuthenticationActionTypes.TryToLogIn),
-                switchMap((action: TryToLogIn) => {
-                    const payload = action.payload;
-                    return this.authService.askTokenFromPassword(payload.username, payload.password).pipe(
-                        map(authenticationInfo => {
-                            this.authService.regularCheckTokenValidity();
-                            return new AcceptLogIn(authenticationInfo)}
-                            ),
-                        catchError(errorResponse => {
-                                return this.handleErrorOnTokenGeneration(errorResponse, 'authenticate');
-                            }
-                        ));
-                })
-            ));
-
-
+        this.actions$.pipe(
+            ofType(AuthenticationActionTypes.TryToLogIn),
+            switchMap((action: TryToLogIn) => {
+                const payload = action.payload;
+                return this.authService.askTokenFromPassword(payload.username, payload.password).pipe(
+                    map((authenticationInfo) => {
+                        this.authService.regularCheckTokenValidity();
+                        return new AcceptLogIn(authenticationInfo);
+                    }),
+                    catchError((errorResponse) => {
+                        return this.handleErrorOnTokenGeneration(errorResponse, 'authenticate');
+                    })
+                );
+            })
+        )
+    );
 
     /**
      * This {Observable} of {AuthenticationActions} listens for {AuthenticationActionTypes.TryToLogOut} type.
@@ -95,7 +90,7 @@ export class AuthenticationEffects {
      * @name TryToLogOut
      * @typedef {Observable<AuthenticationActions>}
      */
-    
+
     TryToLogOut: Observable<Action> = createEffect(() =>
         this.actions$.pipe(
             ofType(AuthenticationActionTypes.TryToLogOut),
@@ -103,7 +98,8 @@ export class AuthenticationEffects {
                 this.resetState();
                 return of(new AcceptLogOut());
             })
-        ));
+        )
+    );
 
     /**
      * This {Observable} of {AuthenticationActions} listens for {AuthenticationActionTypes.AcceptLogOut} type.
@@ -116,7 +112,7 @@ export class AuthenticationEffects {
      * @typedef {Observable<AuthenticationActions>}
      *
      */
-    
+
     AcceptLogOut: Observable<AuthenticationActions> = createEffect(() =>
         this.actions$.pipe(
             ofType(AuthenticationActionTypes.AcceptLogOut),
@@ -124,7 +120,8 @@ export class AuthenticationEffects {
                 this.router.navigate(['/login']);
                 return new AcceptLogOutSuccess();
             })
-        ));
+        )
+    );
     /**
      * This {Observable} of {AuthenticationActions} listens for {AuthenticationActionTypes.RejectLogIn} type.
      * It tells the {AuthenticationService} to clear authentication information from the system
@@ -135,13 +132,16 @@ export class AuthenticationEffects {
      * @name RejectLogInAttempt
      * @typedef {Observable<AuthenticationActions>}
      */
-    
+
     RejectLogInAttempt: Observable<AuthenticationActions> = createEffect(() =>
-        this.actions$.pipe(ofType(AuthenticationActionTypes.RejectLogIn),
+        this.actions$.pipe(
+            ofType(AuthenticationActionTypes.RejectLogIn),
             tap(() => {
                 this.authService.clearAuthenticationInformation();
             }),
-            map(() => new AcceptLogOut())));
+            map(() => new AcceptLogOut())
+        )
+    );
 
     /**
      * This {Observable} of {AuthenticationActions} listens for {AuthenticationActionTypes.CheckAuthenticationStatus} type.
@@ -161,68 +161,78 @@ export class AuthenticationEffects {
      */
 
     CheckAuthentication: Observable<AuthenticationActions> = createEffect(() =>
-        this.actions$
-            .pipe(
-                ofType(AuthenticationActionTypes.CheckAuthenticationStatus),
-                switchMap(() => {
-                    return this.authService.checkAuthentication(this.authService.extractToken())
-                        .pipe(catchError(() => of(null)));
-
-                }),
-                withLatestFrom(this.store.select(selectCode)),
-                switchMap(([payload, code]) => {
-                    // no token stored or token invalid
-                    if (!payload) {
-                        if (this.authService.isAuthModeCodeOrImplicitFlow()) {
-                            if (!!code) {
-                                return this.authService.askTokenFromCode(code).pipe(
-                                    tap(() => {
-                                        redirectToCurrentLocation(this.router);
-                                    }),
-                                    map(authenticationInfo => {
-                                        this.authService.regularCheckTokenValidity();
-                                        return new AcceptLogIn(authenticationInfo)
-                                    }),
-                                    catchError(errorResponse => {
-                                        return this.handleErrorOnTokenGeneration(errorResponse, 'code');
-                                    }
-                                    ));
-                            }
-                            this.authService.moveToCodeFlowLoginPage();
-                            return of(this.handleRejectedLogin(new Message('The stored token is invalid',
-                                MessageLevel.ERROR,
-                                new I18n('login.error.token.invalid'))));
+        this.actions$.pipe(
+            ofType(AuthenticationActionTypes.CheckAuthenticationStatus),
+            switchMap(() => {
+                return this.authService
+                    .checkAuthentication(this.authService.extractToken())
+                    .pipe(catchError(() => of(null)));
+            }),
+            withLatestFrom(this.store.select(selectCode)),
+            switchMap(([payload, code]) => {
+                // no token stored or token invalid
+                if (!payload) {
+                    if (this.authService.isAuthModeCodeOrImplicitFlow()) {
+                        if (!!code) {
+                            return this.authService.askTokenFromCode(code).pipe(
+                                tap(() => {
+                                    redirectToCurrentLocation(this.router);
+                                }),
+                                map((authenticationInfo) => {
+                                    this.authService.regularCheckTokenValidity();
+                                    return new AcceptLogIn(authenticationInfo);
+                                }),
+                                catchError((errorResponse) => {
+                                    return this.handleErrorOnTokenGeneration(errorResponse, 'code');
+                                })
+                            );
                         }
-                        return of(this.handleRejectedLogin(new Message('No token (password mode)')));
-                    } else {
-                        if (!this.authService.isExpirationDateOver()) {
-                            const authInfo = this.authService.extractIdentificationInformation();
-                            this.authService.regularCheckTokenValidity();
-                            return this.authService.loadUserData(authInfo)
-                                .pipe(
-                                    map(auth => {
-                                        redirectToCurrentLocation(this.router);
-                                        return new AcceptLogIn(auth);
-                                    })
-                                );
-                        }
-                        return of(this.handleRejectedLogin(new Message('The stored token has expired',
-                            MessageLevel.ERROR,
-                            new I18n('login.error.token.expiration'))));
+                        this.authService.moveToCodeFlowLoginPage();
+                        return of(
+                            this.handleRejectedLogin(
+                                new Message(
+                                    'The stored token is invalid',
+                                    MessageLevel.ERROR,
+                                    new I18n('login.error.token.invalid')
+                                )
+                            )
+                        );
                     }
+                    return of(this.handleRejectedLogin(new Message('No token (password mode)')));
+                } else {
+                    if (!this.authService.isExpirationDateOver()) {
+                        const authInfo = this.authService.extractIdentificationInformation();
+                        this.authService.regularCheckTokenValidity();
+                        return this.authService.loadUserData(authInfo).pipe(
+                            map((auth) => {
+                                redirectToCurrentLocation(this.router);
+                                return new AcceptLogIn(auth);
+                            })
+                        );
+                    }
+                    return of(
+                        this.handleRejectedLogin(
+                            new Message(
+                                'The stored token has expired',
+                                MessageLevel.ERROR,
+                                new I18n('login.error.token.expiration')
+                            )
+                        )
+                    );
                 }
-                ),
-                catchError(err => {
-                    console.error(new Date().toISOString(),err);
-                    const parameters = new Map<string>();
-                    parameters['message'] = err;
-                    return of(this.handleRejectedLogin(new Message(err,
-                        MessageLevel.ERROR,
-                        new I18n('login.error.unexpected', parameters)
-                    )));
-                })
-            ));
-
+            }),
+            catchError((err) => {
+                console.error(new Date().toISOString(), err);
+                const parameters = new Map<string>();
+                parameters['message'] = err;
+                return of(
+                    this.handleRejectedLogin(
+                        new Message(err, MessageLevel.ERROR, new I18n('login.error.unexpected', parameters))
+                    )
+                );
+            })
+        )
+    );
 
     handleErrorOnTokenGeneration(errorResponse, category: string) {
         let message, key;
@@ -254,7 +264,6 @@ export class AuthenticationEffects {
     private resetState() {
         this.authService.clearAuthenticationInformation();
         this.cardService.closeSubscription();
-        window.location.href = this.configService.getConfigValue('security.logout-url','https://opfab.github.io');
+        window.location.href = this.configService.getConfigValue('security.logout-url', 'https://opfab.github.io');
     }
-
 }

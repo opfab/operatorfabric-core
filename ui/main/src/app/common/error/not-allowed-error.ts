@@ -10,6 +10,4 @@
 
 import {AppError} from './app-error';
 
-export class NotAllowedError extends AppError {
-
-}
+export class NotAllowedError extends AppError {}

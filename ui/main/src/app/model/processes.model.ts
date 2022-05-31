@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Card} from '@ofModel/card.model';
 import {Map as OfMap} from '@ofModel/map';
 import {LightCard} from '@ofModel/light-card.model';
@@ -21,8 +20,7 @@ export class Process {
         readonly locales?: string[],
         readonly states?: OfMap<State>,
         readonly uiVisibility?: UiVisibility
-    ) {
-    }
+    ) {}
 
     public extractState(card: Card | LightCard): State {
         if (!!this.states && !!card.state && this.states[card.state]) {
@@ -31,18 +29,11 @@ export class Process {
             return null;
         }
     }
-
 }
 
 export class UiVisibility {
-
     /* istanbul ignore next */
-    constructor(
-        readonly monitoring: boolean,
-        readonly logging: boolean,
-        readonly calendar: boolean
-    ) {
-    }
+    constructor(readonly monitoring: boolean, readonly logging: boolean, readonly calendar: boolean) {}
 }
 
 export class State {
@@ -64,8 +55,7 @@ export class State {
         readonly modifyAnswerButtonLabel?: string,
         readonly automaticPinWhenAcknowledged?: boolean,
         readonly consideredAcknowledgedForUserWhen?: ConsideredAcknowledgedForUserWhenEnum
-    ) {
-    }
+    ) {}
 }
 
 export class UserCard {
@@ -77,16 +67,11 @@ export class UserCard {
         readonly lttdVisible?: boolean,
         readonly recipientVisible?: boolean,
         readonly recipientList?: Recipient[]
-    ) {
-    }
+    ) {}
 }
 
 export class Recipient {
-    constructor(
-        readonly id: string,
-        readonly levels?: number[]
-    ) {
-    }
+    constructor(readonly id: string, readonly levels?: number[]) {}
 }
 
 export class Response {
@@ -96,11 +81,8 @@ export class Response {
         readonly state?: string,
         readonly externalRecipients?: string[],
         readonly emittingEntityAllowedToRespond?: boolean
-    ) {
-    }
+    ) {}
 }
-
-
 
 export enum AcknowledgmentAllowedEnum {
     ALWAYS = 'Always',
@@ -119,4 +101,3 @@ export enum ConsideredAcknowledgedForUserWhenEnum {
     ONE_ENTITY_OF_USER_HAS_ACKNOWLEDGED = 'OneEntityOfUserHasAcknowledged',
     ALL_ENTITIES_OF_USER_HAVE_ACKNOWLEDGED = 'AllEntitiesOfUserHaveAcknowledged'
 }
-

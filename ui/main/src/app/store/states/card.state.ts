@@ -7,8 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {Card} from '@ofModel/card.model';
 
 export interface CardState {

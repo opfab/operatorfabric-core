@@ -16,106 +16,104 @@ import {CachedCrudService} from '@ofServices/cached-crud-service';
 import {Perimeter} from '@ofModel/perimeter.model';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class PerimetersService extends CachedCrudService implements OnDestroy {
+    readonly perimetersUrl: string;
+    private _perimeters: Perimeter[];
 
-  readonly perimetersUrl: string;
-  private _perimeters: Perimeter[];
+    private ngUnsubscribe$ = new Subject<void>();
 
-  private ngUnsubscribe$ = new Subject<void>();
+    /**
+     * @constructor
+     * @param httpClient - Angular build-in
+     */
+    constructor(private httpClient: HttpClient) {
+        super();
+        this.perimetersUrl = `${environment.urls.perimeters}`;
+    }
 
-  /**
-   * @constructor
-   * @param httpClient - Angular build-in
-   */
-  constructor(private httpClient: HttpClient) {
-    super();
-    this.perimetersUrl = `${environment.urls.perimeters}`;
-  }
+    ngOnDestroy() {
+        this.ngUnsubscribe$.next();
+        this.ngUnsubscribe$.complete();
+    }
 
-  ngOnDestroy() {
-    this.ngUnsubscribe$.next();
-    this.ngUnsubscribe$.complete();
-  }
+    deleteById(id: string) {
+        const url = `${this.perimetersUrl}/${id}`;
+        return this.httpClient.delete(url).pipe(
+            catchError((error: Response) => this.handleError(error)),
+            tap(() => {
+                this.deleteFromCachedPerimeters(id);
+            })
+        );
+    }
 
-  deleteById(id: string) {
-    const url = `${this.perimetersUrl}/${id}`;
-    return this.httpClient.delete(url).pipe(
-      catchError((error: Response) => this.handleError(error)),
-      tap(() => {
-        this.deleteFromCachedPerimeters(id);
-      })
-    );
-  }
+    private deleteFromCachedPerimeters(id: string): void {
+        this._perimeters = this._perimeters.filter((perimeter) => perimeter.id !== id);
+    }
 
-  private deleteFromCachedPerimeters(id: string): void {
-    this._perimeters = this._perimeters.filter(perimeter => perimeter.id !== id);
-  }
+    private updateCachedPerimeters(perimeterData: Perimeter): void {
+        const updatedPerimeters = this._perimeters.filter((perimeter) => perimeter.id !== perimeterData.id);
+        updatedPerimeters.push(perimeterData);
+        this._perimeters = updatedPerimeters;
+    }
 
-  private updateCachedPerimeters(perimeterData: Perimeter): void {
-    const updatedPerimeters = this._perimeters.filter(perimeter => perimeter.id !== perimeterData.id);
-    updatedPerimeters.push(perimeterData);
-    this._perimeters = updatedPerimeters;
-  }
+    private queryAllPerimeters(): Observable<Perimeter[]> {
+        return this.httpClient
+            .get<Perimeter[]>(`${this.perimetersUrl}`)
+            .pipe(catchError((error: Response) => this.handleError(error)));
+    }
 
-  private queryAllPerimeters(): Observable<Perimeter[]> {
-    return this.httpClient.get<Perimeter[]>(`${this.perimetersUrl}`).pipe(
-      catchError((error: Response) => this.handleError(error))
-    );
-  }
-
-  public loadAllPerimetersData(): Observable<any> {
-    return this.queryAllPerimeters()
-        .pipe(takeUntil(this.ngUnsubscribe$)
-            , tap({
+    public loadAllPerimetersData(): Observable<any> {
+        return this.queryAllPerimeters().pipe(
+            takeUntil(this.ngUnsubscribe$),
+            tap({
                 next: (perimeters) => {
-                  if (!!perimeters) {
-                    this._perimeters = perimeters;
-                    console.log(new Date().toISOString(), 'List of perimeters loaded');
-                  }
+                    if (!!perimeters) {
+                        this._perimeters = perimeters;
+                        console.log(new Date().toISOString(), 'List of perimeters loaded');
+                    }
                 },
-              error: (error) => console.error(new Date().toISOString(), 'an error occurred', error)
-            }));
-  }
+                error: (error) => console.error(new Date().toISOString(), 'an error occurred', error)
+            })
+        );
+    }
 
-  public getPerimeters(): Perimeter[] {
-    return this._perimeters;
-  }
+    public getPerimeters(): Perimeter[] {
+        return this._perimeters;
+    }
 
-  public getCachedValues(): Array<Perimeter> {
-    return this.getPerimeters();
-  }
+    public getCachedValues(): Array<Perimeter> {
+        return this.getPerimeters();
+    }
 
-  createPerimeter(perimeterData: Perimeter): Observable<Perimeter> {
-    return this.httpClient.post<Perimeter>(`${this.perimetersUrl}`, perimeterData).pipe(
-      catchError((error: Response) => this.handleError(error)),
-        tap(() => {
-          this.updateCachedPerimeters(perimeterData);
-        })
-    );
-  }
+    createPerimeter(perimeterData: Perimeter): Observable<Perimeter> {
+        return this.httpClient.post<Perimeter>(`${this.perimetersUrl}`, perimeterData).pipe(
+            catchError((error: Response) => this.handleError(error)),
+            tap(() => {
+                this.updateCachedPerimeters(perimeterData);
+            })
+        );
+    }
 
-  updatePerimeter(perimeterData: Perimeter): Observable<Perimeter> {
-    return this.httpClient.put<Perimeter>(`${this.perimetersUrl}` + '/' + perimeterData.id, perimeterData).pipe(
-        catchError((error: Response) => this.handleError(error)),
-        tap(() => {
-          this.updateCachedPerimeters(perimeterData);
-        })
-    );
-  }
+    updatePerimeter(perimeterData: Perimeter): Observable<Perimeter> {
+        return this.httpClient.put<Perimeter>(`${this.perimetersUrl}` + '/' + perimeterData.id, perimeterData).pipe(
+            catchError((error: Response) => this.handleError(error)),
+            tap(() => {
+                this.updateCachedPerimeters(perimeterData);
+            })
+        );
+    }
 
+    getAll(): Observable<any[]> {
+        return this.queryAllPerimeters();
+    }
 
-  getAll(): Observable<any[]> {
-    return this.queryAllPerimeters();
-  }
+    create(data: any): Observable<any> {
+        return this.createPerimeter(data);
+    }
 
-  create(data: any): Observable<any> {
-    return this.createPerimeter(data);
-  }
-
-  update(data: any): Observable<any> {
-    return this.updatePerimeter(data);
-  }
-
+    update(data: any): Observable<any> {
+        return this.updatePerimeter(data);
+    }
 }

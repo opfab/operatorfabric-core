@@ -9,17 +9,11 @@
 
 import {I18n} from './i18n.model';
 
-
 export class Menu {
-    constructor(
-        readonly id: string,
-        readonly label: string,
-        readonly entries: MenuEntry[]) {
-    }
+    constructor(readonly id: string, readonly label: string, readonly entries: MenuEntry[]) {}
 }
 
 export class MenuEntry {
-
     linkType: MenuEntryLinkTypeEnum = MenuEntryLinkTypeEnum.BOTH;
     showOnlyForGroups: string[];
 
@@ -29,8 +23,7 @@ export class MenuEntry {
         readonly url: string,
         linkType?: MenuEntryLinkTypeEnum,
         showOnlyForGroups?: string[]
-    ) {
-    }
+    ) {}
 }
 
 export enum MenuEntryLinkTypeEnum {
@@ -40,26 +33,17 @@ export enum MenuEntryLinkTypeEnum {
 }
 
 export class Locale {
-    constructor(
-        readonly language: string,
-        readonly i18n: I18n) {
-
-        }
+    constructor(readonly language: string, readonly i18n: I18n) {}
 }
-    
+
 export class UIMenuFile {
     constructor(
         readonly menus: Menu[],
         readonly locales: Locale[],
-        readonly coreMenusConfiguration: CoreMenuConfig[]) {
-        }
+        readonly coreMenusConfiguration: CoreMenuConfig[]
+    ) {}
 }
 
 export class CoreMenuConfig {
-    constructor(
-        readonly id: string,
-        readonly visible?: boolean,
-        readonly showOnlyForGroups?: string[]
-    ) {
-    }
+    constructor(readonly id: string, readonly visible?: boolean, readonly showOnlyForGroups?: string[]) {}
 }

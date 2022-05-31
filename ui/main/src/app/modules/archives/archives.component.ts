@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subject} from 'rxjs';
 import {AppState} from '@ofStore/index';
@@ -24,10 +23,10 @@ import {Page} from '@ofModel/page.model';
 import {ExportService} from '@ofServices/export.service';
 import {TranslateService} from '@ngx-translate/core';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
-import { Utilities } from 'app/common/utilities';
+import {Utilities} from 'app/common/utilities';
 import {Card, CardData} from '@ofModel/card.model';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
-import { EntitiesService } from '@ofServices/entities.service';
+import {EntitiesService} from '@ofServices/entities.service';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessage} from '@ofStore/actions/alert.actions';
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
@@ -39,7 +38,6 @@ import {DisplayContext} from '@ofModel/templateGateway.model';
     styleUrls: ['./archives.component.scss']
 })
 export class ArchivesComponent implements OnDestroy, OnInit {
-
     unsubscribe$: Subject<void> = new Subject<void>();
 
     tags: any[];
@@ -48,7 +46,12 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     archiveForm: FormGroup;
 
     results: LightCard[];
-    updatesByCardId: {mostRecent: LightCard, cardHistories: LightCard[], displayHistory: boolean, tooManyRows: boolean}[];
+    updatesByCardId: {
+        mostRecent: LightCard;
+        cardHistories: LightCard[];
+        displayHistory: boolean;
+        tooManyRows: boolean;
+    }[];
     currentPage = 0;
     resultsNumber = 0;
     hasResult = false;
@@ -73,17 +76,17 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     isThereProcessStateToDisplay: boolean;
 
-    constructor(private store: Store<AppState>,
-                private processesService: ProcessesService,
-                private configService: ConfigService,
-                private timeService: TimeService,
-                private cardService: CardService,
-                private translate: TranslateService,
-                private userPreferences: UserPreferencesService,
-                private modalService: NgbModal,
-                private entitiesService: EntitiesService
+    constructor(
+        private store: Store<AppState>,
+        private processesService: ProcessesService,
+        private configService: ConfigService,
+        private timeService: TimeService,
+        private cardService: CardService,
+        private translate: TranslateService,
+        private userPreferences: UserPreferencesService,
+        private modalService: NgbModal,
+        private entitiesService: EntitiesService
     ) {
-
         this.archiveForm = new FormGroup({
             tags: new FormControl([]),
             state: new FormControl([]),
@@ -92,13 +95,12 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             publishDateFrom: new FormControl(),
             publishDateTo: new FormControl(''),
             activeFrom: new FormControl(''),
-            activeTo: new FormControl(''),
+            activeTo: new FormControl('')
         });
 
-        processesService.getAllProcesses().forEach( (process) => {
+        processesService.getAllProcesses().forEach((process) => {
             let itemName = process.name;
-            if (!itemName)
-                itemName = process.id;
+            if (!itemName) itemName = process.id;
             this.listOfProcesses.push({
                 value: process.id,
                 label: itemName,
@@ -108,21 +110,26 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     ngOnInit() {
-        const isCollapsibleUpdatesActivatedInStorage = this.userPreferences.getPreference('opfab.archives.isCollapsibleUpdatesActivated');
-        this.isCollapsibleUpdatesActivated = (isCollapsibleUpdatesActivatedInStorage === 'true');
+        const isCollapsibleUpdatesActivatedInStorage = this.userPreferences.getPreference(
+            'opfab.archives.isCollapsibleUpdatesActivated'
+        );
+        this.isCollapsibleUpdatesActivated = isCollapsibleUpdatesActivatedInStorage === 'true';
 
         this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
         this.historySize = parseInt(this.configService.getConfigValue('archive.history.size', 100));
         this.tags = this.configService.getConfigValue('archive.filters.tags.list');
         this.results = [];
         this.updatesByCardId = [];
-        
+
         this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(true).size > 0;
     }
 
     toggleCollapsibleUpdates() {
         this.isCollapsibleUpdatesActivated = !this.isCollapsibleUpdatesActivated;
-        this.userPreferences.setPreference('opfab.archives.isCollapsibleUpdatesActivated', String(this.isCollapsibleUpdatesActivated));
+        this.userPreferences.setPreference(
+            'opfab.archives.isCollapsibleUpdatesActivated',
+            String(this.isCollapsibleUpdatesActivated)
+        );
         this.sendQuery(0);
     }
 
@@ -142,7 +149,13 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         const publishStart = this.extractTime(this.archiveForm.get('publishDateFrom'));
         const publishEnd = this.extractTime(this.archiveForm.get('publishDateTo'));
 
-        if (publishStart != null && !isNaN(publishStart) && publishEnd != null && !isNaN(publishEnd) && publishStart > publishEnd) {
+        if (
+            publishStart != null &&
+            !isNaN(publishStart) &&
+            publishEnd != null &&
+            !isNaN(publishEnd) &&
+            publishStart > publishEnd
+        ) {
             this.displayMessage('shared.filters.publishEndDateBeforeStartDate', '', MessageLevel.ERROR);
             return;
         }
@@ -150,7 +163,13 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         const activeStart = this.extractTime(this.archiveForm.get('activeFrom'));
         const activeEnd = this.extractTime(this.archiveForm.get('activeTo'));
 
-        if (activeStart != null && !isNaN(activeStart) && activeEnd != null && !isNaN(activeEnd) && activeStart > activeEnd) {
+        if (
+            activeStart != null &&
+            !isNaN(activeStart) &&
+            activeEnd != null &&
+            !isNaN(activeEnd) &&
+            activeStart > activeEnd
+        ) {
             this.displayMessage('shared.filters.activeEndDateBeforeStartDate', '', MessageLevel.ERROR);
             return;
         }
@@ -162,7 +181,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.filtersTemplate.filters.set('size', [this.size.toString()]);
         this.filtersTemplate.filters.set('page', [page_number]);
         this.filtersTemplate.filters.set('latestUpdateOnly', [String(this.isCollapsibleUpdatesActivated)]);
-        this.cardService.fetchArchivedCards(this.filtersTemplate.filters)
+        this.cardService
+            .fetchArchivedCards(this.filtersTemplate.filters)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe({
                 next: (page: Page<LightCard>) => {
@@ -174,8 +194,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                     this.hasResult = page.content.length > 0;
                     this.results = page.content;
 
-
-
                     if (this.isCollapsibleUpdatesActivated) {
                         const requestID = new Date().valueOf();
                         this.lastRequestID = requestID;
@@ -183,11 +201,16 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                     } else {
                         this.updatesByCardId = [];
                         this.results.forEach((lightCard) => {
-                            this.updatesByCardId.push({mostRecent: lightCard, cardHistories: [], displayHistory: false, tooManyRows: false});
+                            this.updatesByCardId.push({
+                                mostRecent: lightCard,
+                                cardHistories: [],
+                                displayHistory: false,
+                                tooManyRows: false
+                            });
                         });
                     }
                 },
-                error: () =>  {
+                error: () => {
                     this.firstQueryHasBeenDone = false;
                     this.loadingInProgress = false;
                     this.technicalError = true;
@@ -195,48 +218,59 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             });
     }
 
-
-        // we show a spinner on screen if archives loading takes more than 1 second
-        private checkForArchiveLoadingInProgressForMoreThanOneSecond() {
-            setTimeout(() => {
-                this.loadingIsTakingMoreThanOneSecond = this.loadingInProgress;
-            }, 1000);
-        }
+    // we show a spinner on screen if archives loading takes more than 1 second
+    private checkForArchiveLoadingInProgressForMoreThanOneSecond() {
+        setTimeout(() => {
+            this.loadingIsTakingMoreThanOneSecond = this.loadingInProgress;
+        }, 1000);
+    }
 
     loadUpdatesByCardId(requestID: number) {
         this.updatesByCardId = [];
-        this.results.forEach((lightCard, index) => {this.updatesByCardId.splice(index, 0, {mostRecent: lightCard, cardHistories: [], displayHistory: false, tooManyRows: false})});
+        this.results.forEach((lightCard, index) => {
+            this.updatesByCardId.splice(index, 0, {
+                mostRecent: lightCard,
+                cardHistories: [],
+                displayHistory: false,
+                tooManyRows: false
+            });
+        });
 
         this.results.forEach((lightCard, index) => {
-            const filters: Map<string,  string[]> = new Map();
+            const filters: Map<string, string[]> = new Map();
             filters.set('process', [lightCard.process]);
             filters.set('processInstanceId', [lightCard.processInstanceId]);
-            filters.set('size', [(1 + this.historySize).toString() ]);
+            filters.set('size', [(1 + this.historySize).toString()]);
             filters.set('page', ['0']);
-            this.cardService.fetchArchivedCards(filters)
+            this.cardService
+                .fetchArchivedCards(filters)
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe((page: Page<LightCard>) => {
                     this.removeMostRecentCardFromHistories(lightCard.id, page.content);
 
                     // since we are in asynchronous mode, we test requestId to avoid that the requests "overlap" and that the results appear in a wrong order
                     if (requestID === this.lastRequestID)
-                        this.updatesByCardId.splice(index, 1, {mostRecent: lightCard, cardHistories: page.content, displayHistory: false, tooManyRows: page.totalPages > 1});
+                        this.updatesByCardId.splice(index, 1, {
+                            mostRecent: lightCard,
+                            cardHistories: page.content,
+                            displayHistory: false,
+                            tooManyRows: page.totalPages > 1
+                        });
                 });
         });
     }
 
     removeMostRecentCardFromHistories(mostRecentId: string, histories: LightCard[]) {
         histories.forEach((lightCard, index) => {
-            if (lightCard.id === mostRecentId)
-                histories.splice(index, 1);
+            if (lightCard.id === mostRecentId) histories.splice(index, 1);
         });
     }
 
-    displayHistoryOfACard(card: {mostRecent: LightCard, cardHistories: LightCard[], displayHistory: boolean}) {
+    displayHistoryOfACard(card: {mostRecent: LightCard; cardHistories: LightCard[]; displayHistory: boolean}) {
         card.displayHistory = true;
     }
 
-    hideHistoryOfACard(card: {mostRecent: LightCard, cardHistories: LightCard[], displayHistory: boolean}) {
+    hideHistoryOfACard(card: {mostRecent: LightCard; cardHistories: LightCard[]; displayHistory: boolean}) {
         card.displayHistory = false;
     }
 
@@ -251,7 +285,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     private extractTime(form: AbstractControl) {
         const val = form.value;
-        if (!val || val == '')  {
+        if (!val || val == '') {
             return null;
         }
 
@@ -269,7 +303,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         return converter.convertToNumber();
     }
 
-
     // EXPORT TO EXCEL
     initExportArchiveData(): void {
         const exportArchiveData = [];
@@ -278,7 +311,9 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.filtersTemplate.filters.delete('page');
         this.filtersTemplate.filters.delete('latestUpdateOnly');
 
-        this.cardService.fetchArchivedCards(this.filtersTemplate.filters).pipe(takeUntil(this.unsubscribe$))
+        this.cardService
+            .fetchArchivedCards(this.filtersTemplate.filters)
+            .pipe(takeUntil(this.unsubscribe$))
             .subscribe((page: Page<LightCard>) => {
                 const lines = page.content;
 
@@ -296,16 +331,20 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                             exportArchiveData.push({
                                 [severityColumnName]: Utilities.translateSeverity(this.translate, card.severity),
                                 [publishDateColumnName]: this.timeService.formatDateTime(card.publishDate),
-                                [businessDateColumnName]: this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
+                                [businessDateColumnName]:
+                                    this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
                                 [titleColumnName]: card.titleTranslated,
                                 [summaryColumnName]: card.summaryTranslated,
-                                [processGroupColumnName]: this.translateColumn(this.processesService.findProcessGroupLabelForProcess(card.process))
+                                [processGroupColumnName]: this.translateColumn(
+                                    this.processesService.findProcessGroupLabelForProcess(card.process)
+                                )
                             });
                         else
                             exportArchiveData.push({
                                 [severityColumnName]: Utilities.translateSeverity(this.translate, card.severity),
                                 [publishDateColumnName]: this.timeService.formatDateTime(card.publishDate),
-                                [businessDateColumnName]: this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
+                                [businessDateColumnName]:
+                                    this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
                                 [titleColumnName]: card.titleTranslated,
                                 [summaryColumnName]: card.summaryTranslated
                             });
@@ -322,49 +361,53 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     translateColumn(key: string | Array<string>, interpolateParams?: Object): any {
         let translatedColumn: number;
 
-        this.translate.get(key, interpolateParams)
+        this.translate
+            .get(key, interpolateParams)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((translate) => { translatedColumn = translate; });
+            .subscribe((translate) => {
+                translatedColumn = translate;
+            });
 
         return translatedColumn;
     }
 
     openCard(cardId) {
         this.cardService.loadArchivedCard(cardId).subscribe((card: CardData) => {
-                this.selectedCard = card.card;
-                this.selectedChildCards = card.childCards;
-                const options: NgbModalOptions = {
-                    size: 'fullscreen'
-                };
-                this.computeFromEntity();
-                this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
-            }
-        );
+            this.selectedCard = card.card;
+            this.selectedChildCards = card.childCards;
+            const options: NgbModalOptions = {
+                size: 'fullscreen'
+            };
+            this.computeFromEntity();
+            this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
+        });
     }
 
     private computeFromEntity() {
         if (this.selectedCard.publisherType === 'ENTITY') {
-            this.fromEntityOrRepresentativeSelectedCard = this.entitiesService.getEntityName(this.selectedCard.publisher);
+            this.fromEntityOrRepresentativeSelectedCard = this.entitiesService.getEntityName(
+                this.selectedCard.publisher
+            );
 
             if (!!this.selectedCard.representativeType && !!this.selectedCard.representative) {
-                const representative = this.selectedCard.representativeType === 'ENTITY' ?
-                    this.entitiesService.getEntityName(this.selectedCard.representative) : this.selectedCard.representative;
+                const representative =
+                    this.selectedCard.representativeType === 'ENTITY'
+                        ? this.entitiesService.getEntityName(this.selectedCard.representative)
+                        : this.selectedCard.representative;
 
                 this.fromEntityOrRepresentativeSelectedCard += ' (' + representative + ')';
             }
-        } else
-            this.fromEntityOrRepresentativeSelectedCard = null;
+        } else this.fromEntityOrRepresentativeSelectedCard = null;
     }
 
     getFormattedPublishDate(): any {
-        return this.timeService.formatDate(this.selectedCard.publishDate)
+        return this.timeService.formatDate(this.selectedCard.publishDate);
     }
 
     getFormattedPublishTime(): any {
-        return this.timeService.formatTime(this.selectedCard.publishDate)
+        return this.timeService.formatTime(this.selectedCard.publishDate);
     }
     ngOnDestroy() {
-
         if (!!this.modalRef) {
             this.modalRef.close();
         }

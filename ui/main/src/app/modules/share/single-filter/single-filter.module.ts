@@ -14,16 +14,9 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
-
 @NgModule({
     declarations: [SingleFilterComponent],
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        TranslateModule,
-        NgbModule
-    ],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, NgbModule],
     exports: [SingleFilterComponent]
 })
-export class SingleFilterModule { }
+export class SingleFilterModule {}

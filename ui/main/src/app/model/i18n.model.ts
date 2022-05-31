@@ -7,14 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
-import {Map} from "@ofModel/map";
+import {Map} from '@ofModel/map';
 
 export class I18n {
     /* istanbul ignore next */
-    constructor(
-        readonly key: string,
-        readonly parameters?: Map<string>) {
-    }
+    constructor(readonly key: string, readonly parameters?: Map<string>) {}
 }

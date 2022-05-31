@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Action} from '@ngrx/store';
 import {Menu} from '@ofModel/menu.model';
 
@@ -22,10 +21,7 @@ export class LoadMenu implements Action {
 
 export class LoadMenuSuccess implements Action {
     readonly type = MenuActionTypes.LoadMenuSuccess;
-    constructor(public payload: { menu: Menu[] }) {
-    }
+    constructor(public payload: {menu: Menu[]}) {}
 }
 
-export type MenuActions =
-    LoadMenu
-    | LoadMenuSuccess;
+export type MenuActions = LoadMenu | LoadMenuSuccess;

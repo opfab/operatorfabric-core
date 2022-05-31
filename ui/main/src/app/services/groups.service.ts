@@ -16,105 +16,103 @@ import {Injectable, OnDestroy} from '@angular/core';
 import {CachedCrudService} from '@ofServices/cached-crud-service';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class GroupsService extends CachedCrudService implements OnDestroy {
+    readonly groupsUrl: string;
+    private _groups: Group[];
 
-  readonly groupsUrl: string;
-  private _groups: Group[];
+    private ngUnsubscribe$ = new Subject<void>();
 
-  private ngUnsubscribe$ = new Subject<void>();
+    /**
+     * @constructor
+     * @param httpClient - Angular build-in
+     */
+    constructor(private httpClient: HttpClient) {
+        super();
+        this.groupsUrl = `${environment.urls.groups}`;
+    }
 
-  /**
-   * @constructor
-   * @param httpClient - Angular build-in
-   */
-  constructor(private httpClient: HttpClient) {
-    super();
-    this.groupsUrl = `${environment.urls.groups}`;
-  }
+    ngOnDestroy() {
+        this.ngUnsubscribe$.next();
+        this.ngUnsubscribe$.complete();
+    }
 
-  ngOnDestroy() {
-    this.ngUnsubscribe$.next();
-    this.ngUnsubscribe$.complete();
-  }
+    deleteById(id: string) {
+        const url = `${this.groupsUrl}/${id}`;
+        return this.httpClient.delete(url).pipe(
+            catchError((error: Response) => this.handleError(error)),
+            tap(() => {
+                this.deleteFromCachedGroups(id);
+            })
+        );
+    }
 
-  deleteById(id: string) {
-    const url = `${this.groupsUrl}/${id}`;
-    return this.httpClient.delete(url).pipe(
-      catchError((error: Response) => this.handleError(error)),
-        tap(() => {
-          this.deleteFromCachedGroups(id);
-        })
-    );
-  }
+    private deleteFromCachedGroups(id: string): void {
+        this._groups = this._groups.filter((group) => group.id !== id);
+    }
 
-  private deleteFromCachedGroups(id: string): void {
-    this._groups = this._groups.filter(group => group.id !== id);
-  }
+    private updateCachedGroups(groupData: Group): void {
+        const updatedGroups = this._groups.filter((group) => group.id !== groupData.id);
+        updatedGroups.push(groupData);
+        this._groups = updatedGroups;
+    }
 
-  private updateCachedGroups(groupData: Group): void {
-    const updatedGroups = this._groups.filter(group => group.id !== groupData.id);
-    updatedGroups.push(groupData);
-    this._groups = updatedGroups;
-  }
+    private queryAllGroups(): Observable<Group[]> {
+        return this.httpClient
+            .get<Group[]>(`${this.groupsUrl}`)
+            .pipe(catchError((error: Response) => this.handleError(error)));
+    }
 
-  private queryAllGroups(): Observable<Group[]> {
-    return this.httpClient.get<Group[]>(`${this.groupsUrl}`).pipe(
-      catchError((error: Response) => this.handleError(error))
-    );
-  }
-
-  public loadAllGroupsData(): Observable<any> {
-    return this.queryAllGroups()
-        .pipe(takeUntil(this.ngUnsubscribe$)
-            , tap({
+    public loadAllGroupsData(): Observable<any> {
+        return this.queryAllGroups().pipe(
+            takeUntil(this.ngUnsubscribe$),
+            tap({
                 next: (groups) => {
-                  if (!!groups) {
-                    this._groups = groups;
-                    console.log(new Date().toISOString(), 'List of groups loaded');
-                  }
+                    if (!!groups) {
+                        this._groups = groups;
+                        console.log(new Date().toISOString(), 'List of groups loaded');
+                    }
                 },
-              error: (error) => console.error(new Date().toISOString(), 'an error occurred', error)
-            }));
-  }
+                error: (error) => console.error(new Date().toISOString(), 'an error occurred', error)
+            })
+        );
+    }
 
-  public getGroups(): Group[] {
-    return this._groups;
-  }
+    public getGroups(): Group[] {
+        return this._groups;
+    }
 
-  public getCachedValues(): Array<Group> {
-    return this.getGroups();
-  }
+    public getCachedValues(): Array<Group> {
+        return this.getGroups();
+    }
 
-  updateGroup(groupData: Group): Observable<Group> {
-    return this.httpClient.post<Group>(`${this.groupsUrl}`, groupData).pipe(
-      catchError((error: Response) => this.handleError(error)),
-        tap(() => {
-          this.updateCachedGroups(groupData);
-        })
-    );
-  }
+    updateGroup(groupData: Group): Observable<Group> {
+        return this.httpClient.post<Group>(`${this.groupsUrl}`, groupData).pipe(
+            catchError((error: Response) => this.handleError(error)),
+            tap(() => {
+                this.updateCachedGroups(groupData);
+            })
+        );
+    }
 
-  public getGroupName(idGroup: string): string {
-    const found = this._groups.find(group => group.id === idGroup);
-    if (found && found.name)
-      return found.name;
+    public getGroupName(idGroup: string): string {
+        const found = this._groups.find((group) => group.id === idGroup);
+        if (found && found.name) return found.name;
 
-    return idGroup;
-  }
+        return idGroup;
+    }
 
-  public isRealtimeGroup(idGroup: string): boolean {
-    const found = this._groups.find(group => group.id === idGroup);
-    return (found && found.realtime);
-  }
+    public isRealtimeGroup(idGroup: string): boolean {
+        const found = this._groups.find((group) => group.id === idGroup);
+        return found && found.realtime;
+    }
 
-  getAll(): Observable<any[]> {
-    return this.queryAllGroups();
-  }
+    getAll(): Observable<any[]> {
+        return this.queryAllGroups();
+    }
 
-  update(data: any): Observable<any> {
-    return this.updateGroup(data);
-  }
-
+    update(data: any): Observable<any> {
+        return this.updateGroup(data);
+    }
 }
