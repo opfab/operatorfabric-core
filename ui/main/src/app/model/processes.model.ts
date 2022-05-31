@@ -12,7 +12,6 @@ import {Map as OfMap} from '@ofModel/map';
 import {LightCard} from '@ofModel/light-card.model';
 
 export class Process {
-    /* istanbul ignore next */
     constructor(
         readonly id: string,
         readonly version: string,
@@ -32,12 +31,10 @@ export class Process {
 }
 
 export class UiVisibility {
-    /* istanbul ignore next */
     constructor(readonly monitoring: boolean, readonly logging: boolean, readonly calendar: boolean) {}
 }
 
 export class State {
-    /* istanbul ignore next */
     constructor(
         readonly templateName?: string,
         readonly styles?: string[],
@@ -75,7 +72,6 @@ export class Recipient {
 }
 
 export class Response {
-    /* istanbul ignore next */
     constructor(
         readonly lock?: boolean,
         readonly state?: string,

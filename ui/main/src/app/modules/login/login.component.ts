@@ -25,7 +25,6 @@ export class LoginComponent implements OnInit {
     userForm: FormGroup;
     loginMessage: Message;
 
-    /* istanbul ignore next */
     constructor(private store: Store<AppState>) {}
 
     ngOnInit() {

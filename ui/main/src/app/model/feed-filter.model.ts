@@ -30,7 +30,6 @@ export class Filter {
         return !next || next.length === 0 || next[0].chainFilter(card, next.slice(1));
     }
 
-    /* istanbul ignore next */
     constructor(readonly funktion: (LightCard, any) => boolean, public active: boolean, public status: any) {}
 
     clone(): Filter {
