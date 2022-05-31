@@ -72,3 +72,9 @@
     background: var(--opfab-navbar-color-hover);
     mask: url(../../../assets/images/icons/minus.svg);
 }
+
+.opfab-archives-detail-modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

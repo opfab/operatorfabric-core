@@ -47,6 +47,7 @@
       "entitiesResponses": "ANSWERS",
       "requiredResponses": "REQUIRED ANSWERS"
     },
+    "exportInProgress": "Export in progress",
     "loadingInProgress": "Loading in progress",
     "noResult": "Your search did not match any result.",
     "exportToExcel": "Export data",
@@ -226,6 +227,7 @@
   },
   "archive": {
     "loadingInProgress": "Loading archived cards",
+    "cardLoadingInProgress":"Loading card  ...",
     "tooManyRows": "Too many cards , not all cards visible",
     "collapsibleUpdates": "Collapsible updates"
   },
@@ -239,8 +241,7 @@
         "selectTypeOfStateText" : "Select a Process status"
       }
     },
-    "seeDetails": "SEE DETAILS",
-    "ExportInProgress": "Export in progress"
+    "seeDetails": "SEE DETAILS"
   },
   "button": {
     "ok": "OK",
