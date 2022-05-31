@@ -18,7 +18,6 @@ import {AuthenticationService} from './authentication/authentication.service';
 export class TokenInjector implements HttpInterceptor {
     constructor(private authService: AuthenticationService) {}
 
-    /* istanbul ignore next */
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(this.addAuthHeadersIfNecessary(request));
     }

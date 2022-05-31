@@ -35,7 +35,6 @@ export function getDateTimeNgbFromMoment(date: moment.Moment): DateTimeNgb {
 }
 
 export class DateTimeNgb {
-    /* istanbul ignore next */
     constructor(readonly date?: NgbDateStruct, readonly time: NgbTimeStruct = {hour: 0, minute: 0, second: 0}) {
         // in case time is explicitly set to null/undefined set to default one
         if (!time) {

@@ -11,7 +11,6 @@ import {LightCard, PublisherType, Severity} from '@ofModel/light-card.model';
 import {I18n} from '@ofModel/i18n.model';
 
 export class Card {
-    /* istanbul ignore next */
     constructor(
         readonly uid: string,
         readonly id: string,

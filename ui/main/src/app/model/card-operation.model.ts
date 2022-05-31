@@ -10,7 +10,6 @@
 import {LightCard} from './light-card.model';
 
 export class CardOperation implements CardOperation {
-    /* istanbul ignore next */
     constructor(
         readonly number: number,
         readonly publicationDate: number,

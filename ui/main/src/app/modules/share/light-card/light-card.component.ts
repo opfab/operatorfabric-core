@@ -53,7 +53,6 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-    /* istanbul ignore next */
     constructor(
         private router: Router,
         private store: Store<AppState>,

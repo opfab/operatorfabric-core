@@ -11,7 +11,6 @@ import {I18n} from '@ofModel/i18n.model';
 import {TimeSpan} from './card.model';
 
 export class LightCard {
-    /* istanbul ignore next */
     constructor(
         readonly uid: string,
         readonly id: string,
