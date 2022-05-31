@@ -7,22 +7,21 @@
  * This file is part of the OperatorFabric project.
  */
 
-const opfab = {} ;
+const opfab = {};
 
 opfab.multiSelect = {
-
-    // these value is to be provide at startup by opfab angular application 
+    // these value is to be provide at startup by opfab angular application
     // it is done in i18n.service.ts
-    searchPlaceholderText: "",
-    clearButtonText: "test",
-    noOptionsText: "",
-    noSearchResultsText: "",
+    searchPlaceholderText: '',
+    clearButtonText: 'test',
+    noOptionsText: '',
+    noSearchResultsText: '',
 
-    init: function(id,options)  {
-        const multiSelect = { 
-            id : this.id,
+    init: function (id, options) {
+        const multiSelect = {
+            id: this.id,
             getSelectedValues() {
-                return document.querySelector('#'+id).value;
+                return document.querySelector('#' + id).value;
             }
         };
         VirtualSelect.init({
@@ -31,14 +30,13 @@ opfab.multiSelect = {
             optionsCount: 8,
             multiple: true,
             showValueAsTags: true,
-            placeholder: "",
+            placeholder: '',
             selectAllOnlyVisible: true,
             searchPlaceholderText: this.searchPlaceholderText,
             clearButtonText: this.clearButtonText,
             noOptionsText: this.noOptionsText,
             noSearchResultsText: this.noSearchResultsText
-            });
-        return  multiSelect;
-    },
+        });
+        return multiSelect;
+    }
 };
-

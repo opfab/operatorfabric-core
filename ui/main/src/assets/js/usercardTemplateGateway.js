@@ -8,7 +8,6 @@
  */
 
 const usercardTemplateGateway = {
-
     editionMode: null,
     childCard: null,
     currentState: null,
@@ -18,10 +17,10 @@ const usercardTemplateGateway = {
     lttd: null,
     initialSeverity: null,
 
-    setUserEntityChildCardFromCurrentCard : function(childCard){
+    setUserEntityChildCardFromCurrentCard: function (childCard) {
         this.childCard = childCard;
     },
-    
+
     // The template calls this method to get the editon mode (CREATE/EDITION)
     getEditionMode() {
         return this.editionMode;
@@ -55,24 +54,24 @@ const usercardTemplateGateway = {
         return this.initialSeverity;
     },
 
-    setInitialStartDate: function(start)  {
+    setInitialStartDate: function (start) {
         if (this.editionMode === 'CREATE') this.startDate = start;
     },
 
-    setInitialEndDate: function(endDate)  {
+    setInitialEndDate: function (endDate) {
         if (this.editionMode === 'CREATE') this.endDate = endDate;
     },
 
-    setInitialLttd: function(lttd)  {
+    setInitialLttd: function (lttd) {
         if (this.editionMode === 'CREATE') this.lttd = lttd;
     },
 
-    setInitialSeverity: function(initialSeverity)  {
+    setInitialSeverity: function (initialSeverity) {
         this.initialSeverity = initialSeverity;
     },
 
     initUsercardTemplateGateway() {
-        this.editionMode=  null;
+        this.editionMode = null;
         this.childCard = null;
         this.currentState = null;
         this.currentProcess = null;
@@ -85,7 +84,5 @@ const usercardTemplateGateway = {
         this.setEntityUsedForSendingCard = function (senderEntity) {
             // This function should be overridden in the template.
         };
-
     }
 };
-
