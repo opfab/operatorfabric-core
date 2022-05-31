@@ -7,25 +7,21 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 .text-link {
-    color:var(--opfab-navbar-color);
+    color: var(--opfab-navbar-color);
     text-decoration: none;
     &:hover,
     &:focus {
-      color:var( --opfab-navbar-color-hover);
+        color: var(--opfab-navbar-color-hover);
     }
-
 }
 
 .icon-link {
-    color:var(--opfab-navbar-color);
+    color: var(--opfab-navbar-color);
     text-decoration: none;
     padding-left: 0.5rem;
     &:hover,
     &:focus {
-        color:var( --opfab-navbar-color-hover);
+        color: var(--opfab-navbar-color-hover);
     }
-
 }

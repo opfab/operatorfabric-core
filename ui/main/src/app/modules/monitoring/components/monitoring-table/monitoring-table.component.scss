@@ -7,15 +7,14 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
- @import "~scss/_variables.scss";
-
+@import '~scss/_variables.scss';
 
 .opfab-monitoring-export-div {
-  width:50%;
-  text-align:right;
-  padding-right:8px;
+    width: 50%;
+    text-align: right;
+    padding-right: 8px;
 }
 .opfab-monitoring-export-btn {
-  float: right;
-  margin-right: 10px;
+    float: right;
+    margin-right: 10px;
 }

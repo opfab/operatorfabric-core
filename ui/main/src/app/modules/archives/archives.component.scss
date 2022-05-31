@@ -7,68 +7,68 @@
  * This file is part of the OperatorFabric project.
  */
 
-
- @import "~scss/_variables.scss";
+@import '~scss/_variables.scss';
 
 .opfab-archive-sev {
-  width: 15px;
+    width: 15px;
 }
 
+.opfab-archive-sev-alarm {
+    background-color: $sev-alarm;
+}
+.opfab-archive-sev-action {
+    background-color: $sev-action;
+}
+.opfab-archive-sev-compliant {
+    background-color: $sev-compliant;
+}
+.opfab-archive-sev-information {
+    background-color: $sev-information;
+}
 
-.opfab-archive-sev-alarm {background-color: $sev-alarm;}
-.opfab-archive-sev-action {background-color: $sev-action;}
-.opfab-archive-sev-compliant {background-color: $sev-compliant;}
-.opfab-archive-sev-information {background-color: $sev-information;}
-
-
-  .opfab-archives {
+.opfab-archives {
     background-color: var(--opfab-bgcolor-darker);
     padding-left: 5%;
-  
-  }
-  
+}
 
+// ADAPT MARGINS TO SCREEN SIZE
 
-
- // ADAPT MARGINS TO SCREEN SIZE 
-
-  @media all and (max-width: 1700px)  {
+@media all and (max-width: 1700px) {
     .opfab-archives {
-      padding-left : 2%;
+        padding-left: 2%;
     }
-  } 
+}
 
- // AND - ADAPT MARGINS TO SCREEN SIZE 
+// AND - ADAPT MARGINS TO SCREEN SIZE
 
-
-  .opfab-card-received-footer {
+.opfab-card-received-footer {
     float: left;
     font-size: 14px;
     font-weight: 600;
     margin: 10px;
     padding: 10px;
-  }
+}
 
-  .opfab-archives-table-line:hover {
-    border: 2px solid #2268FF;
-  }
+.opfab-archives-table-line:hover {
+    border: 2px solid #2268ff;
+}
 
-  .opfab-archives-icon-plus {
+.opfab-archives-icon-plus {
     display: inline-block;
     height: 32px;
     width: 32px;
-    margin-top:5px;
+    margin-top: 5px;
     margin-left: 10px;
-    background: var( --opfab-navbar-color-hover);
+    background: var(--opfab-navbar-color-hover);
     mask: url(../../../assets/images/icons/plus.svg);
-  }
+}
 
 .opfab-archives-icon-minus {
-  display: inline-block;
-  height: 32px;
-  width: 32px;
-  margin-top:5px;
-  margin-left: 10px;
-  background: var( --opfab-navbar-color-hover);
-  mask: url(../../../assets/images/icons/minus.svg);
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+    margin-top: 5px;
+    margin-left: 10px;
+    background: var(--opfab-navbar-color-hover);
+    mask: url(../../../assets/images/icons/minus.svg);
 }

@@ -7,90 +7,83 @@
  * This file is part of the OperatorFabric project.
  */
 
- @import "~scss/_variables.scss";
+@import '~scss/_variables.scss';
 
 .opfab-menu-timeline {
-
-  position: relative;
-  max-height: 40px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-
-
-  
-
-  #opfab-menu-timeline-links {
-    position: absolute;
-    flex-grow: 1;
-    font-size: 13px;
-    color: var(--opfab-navbar-color);
-    background-color: var(--opfab-bgcolor);
-    text-decoration: none;
-    border-radius: 5px;
+    position: relative;
+    max-height: 40px;
+    padding-top: 5px;
     padding-bottom: 5px;
-    margin-top: -10px;
-    height: 2em;
-   
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
 
-    ul {
-      margin: 0;
-      list-style: none;
-      display: flex;
-      justify-content: flex-end;
+    #opfab-menu-timeline-links {
+        position: absolute;
+        flex-grow: 1;
+        font-size: 13px;
+        color: var(--opfab-navbar-color);
+        background-color: var(--opfab-bgcolor);
+        text-decoration: none;
+        border-radius: 5px;
+        padding-bottom: 5px;
+        margin-top: -10px;
+        height: 2em;
 
+        ul {
+            margin: 0;
+            list-style: none;
+            display: flex;
+            justify-content: flex-end;
 
-      li {
+            li {
+                padding-left: 0px;
+                padding-right: 25px;
+                // The following 3 lines avoid having the text go an a new line
+                // Arise only on chrome (OC-1563)
+                text-overflow: clip;
+                white-space: nowrap;
+                overflow: hidden;
 
-        padding-left: 0px;
-        padding-right: 25px;
-        // The following 3 lines avoid having the text go an a new line 
-        // Arise only on chrome (OC-1563)
-        text-overflow: clip;
-        white-space: nowrap;
-        overflow: hidden;
+                .link-selected {
+                    color: var(--opfab-navbar-color-active);
+                    font-weight: bold;
+                    text-decoration: underline;
+                    cursor: pointer;
+                }
 
-        .link-selected {
-          color: var(--opfab-navbar-color-active);
-          font-weight: bold;
-          text-decoration: underline;
-          cursor: pointer;
+                .link-unselect {
+                    background-color: var(--opfab-bgcolor);
+                    color: var(--opfab-navbar-color);
+                    text-decoration: none;
+                    cursor: pointer;
+                }
+
+                .circle-btn {
+                    border-radius: 50%;
+                    border: none;
+                }
+            }
+
+            li:hover {
+                color: var(--opfab-navbar-color-active);
+                font-weight: bold;
+            }
         }
-
-        .link-unselect {
-          background-color: var(--opfab-bgcolor);
-          color: var(--opfab-navbar-color);
-          text-decoration: none;
-          cursor: pointer;
-        }
-
-        .circle-btn {
-          border-radius: 50%;
-          border: none;
-        }
-      }
-
-      li:hover {
-        color: var(--opfab-navbar-color-active);
-        font-weight: bold;
-      }
     }
-  }
 }
 
 .opfab-business-period {
-  font-size : 15px;
-  width: 100%;
-  background-color: var(--opfab-timeline-bgcolor);
-  text-align: center;
+    font-size: 15px;
+    width: 100%;
+    background-color: var(--opfab-timeline-bgcolor);
+    text-align: center;
 }
 
 .paddingTop {
-  padding-top: .15em;
+    padding-top: 0.15em;
 }
 
 .fa-lock {
-  color: red;
+    color: red;
 }

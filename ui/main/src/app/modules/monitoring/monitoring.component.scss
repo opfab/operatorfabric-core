@@ -8,26 +8,26 @@
  */
 
 .alert-info {
-  color: var(--opfab-text-color);
+    color: var(--opfab-text-color);
 }
 
-.opfab-loading-spinner{
-  float: right;
-  margin-right: 5%;
-  font-size: 30px;
-  border: solid 1px var(--opfab-bgcolor);
-  text-align: center;
-  background-color: var(--opfab-bgcolor);
-  color: #aaaaaa;
+.opfab-loading-spinner {
+    float: right;
+    margin-right: 5%;
+    font-size: 30px;
+    border: solid 1px var(--opfab-bgcolor);
+    text-align: center;
+    background-color: var(--opfab-bgcolor);
+    color: #aaaaaa;
 }
 
-.opfab-response-checkbox{
-  float: left;
-  margin-left: 5%;
-  margin-top: 20px;
-  font-size: 30px;
-  border: solid 1px var(--opfab-bgcolor);
-  text-align: center;
-  background-color: var(--opfab-bgcolor);
-  color: var(--opfab-text-color);
+.opfab-response-checkbox {
+    float: left;
+    margin-left: 5%;
+    margin-top: 20px;
+    font-size: 30px;
+    border: solid 1px var(--opfab-bgcolor);
+    text-align: center;
+    background-color: var(--opfab-bgcolor);
+    color: var(--opfab-text-color);
 }
