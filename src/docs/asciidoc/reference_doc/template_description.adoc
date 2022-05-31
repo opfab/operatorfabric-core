@@ -609,6 +609,39 @@ Some styles for text standard colors, for example:
   <span class="opfab-color-danger"> my text in color </span>
 ....
 
+
+== Multi Select
+
+OperatorFabric provides a multiselect component based on https://sa-si-dev.github.io/virtual-select/#/[Virtual Select]. To use it, one must use the OperatorFabric style and provide javascript to initialize the component: 
+
+....
+
+  <div class="opfab-multiselect">
+        <label>  MY MULTI SELECT   </label>
+        <div id="my-multiselect"></div>
+  </div>
+
+ <script>
+  myMultiSelect = opfab.multiSelect.init("my-multiselect",[
+                { label: 'Choice A', value: 'A' },
+                { label: 'Choice B', value: 'B' },
+                { label: 'Choice C', value: 'C' }
+                { label: 'Choice D', value: 'D' },
+                { label: 'Choice E', value: 'E' },
+                { label: 'Choice F', value: 'F' }
+            ]);
+  
+
+  usercardTemplateGateway.getSpecificCardInformation = function () {
+
+        const selectedValues = myMultiSelect.getSelectedValues(); 
+
+      ....
+....
+
+WARNING: It strongly advice to NOT use directly virtual select (always use OperatorFabric js object and css) otherwise you will not be guaranteed compatibility when upgrading.
+
+
 == Charts
 
 The library https://www.chartjs.org/[charts.js] is integrated in OperatorFabric, it means it's possible to show charts in cards, you can find a bundle example in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/resources/bundles/defaultProcess_V1[src/test/resources/bundle/defaultProcess_V1]).
