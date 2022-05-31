@@ -58,12 +58,16 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     firstQueryHasBeenDone = false;
     loadingInProgress = false;
     loadingIsTakingMoreThanOneSecond = false;
+    cardLoadingInProgress = false;
+    cardLoadingIsTakingMoreThanOneSecond = false;
     isCollapsibleUpdatesActivated = false;
     technicalError = false;
 
     // View card
     modalRef: NgbModalRef;
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
+    @ViewChild('cardLoadingInProgress') cardLoadingTemplate: ElementRef;
+    @ViewChild('exportInProgress') exportTemplate: ElementRef;
     @ViewChild('filters') filtersTemplate: ArchivesLoggingFiltersComponent;
     selectedCard: Card;
     selectedChildCards: Card[];
@@ -225,6 +229,21 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         }, 1000);
     }
 
+    // we show a spinner on screen if archives loading takes more than 1 second
+    private checkForCardLoadingInProgressForMoreThanOneSecond() {
+        setTimeout(() => {
+            this.cardLoadingIsTakingMoreThanOneSecond = this.cardLoadingInProgress;
+            if (this.cardLoadingIsTakingMoreThanOneSecond) {
+                const modalOptions: NgbModalOptions = {
+                    centered: true,
+                    backdrop: 'static', // Modal shouldn't close even if we click outside it
+                    size: 'sm'
+                  };
+                this.modalRef = this.modalService.open(this.cardLoadingTemplate, modalOptions);
+            }
+        }, 1000);
+    }
+
     loadUpdatesByCardId(requestID: number) {
         this.updatesByCardId = [];
         this.results.forEach((lightCard, index) => {
@@ -311,6 +330,13 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.filtersTemplate.filters.delete('page');
         this.filtersTemplate.filters.delete('latestUpdateOnly');
 
+
+        const modalOptions: NgbModalOptions = {
+            centered: true,
+            backdrop: 'static', // Modal shouldn't close even if we click outside it
+            size: 'sm'
+        };
+        this.modalRef = this.modalService.open(this.exportTemplate, modalOptions);
         this.cardService
             .fetchArchivedCards(this.filtersTemplate.filters)
             .pipe(takeUntil(this.unsubscribe$))
@@ -351,6 +377,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                     }
                 });
                 ExportService.exportJsonToExcelFile(exportArchiveData, 'Archive');
+                this.modalRef.close();
             });
     }
 
@@ -372,14 +399,20 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     openCard(cardId) {
+        this.cardLoadingInProgress = true;
+        this.checkForCardLoadingInProgressForMoreThanOneSecond();
+
         this.cardService.loadArchivedCard(cardId).subscribe((card: CardData) => {
             this.selectedCard = card.card;
             this.selectedChildCards = card.childCards;
+            this.computeFromEntity();
             const options: NgbModalOptions = {
                 size: 'fullscreen'
             };
-            this.computeFromEntity();
+            if (!!this.modalRef) this.modalRef.close();
             this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
+            this.cardLoadingInProgress = false;
+            this.cardLoadingIsTakingMoreThanOneSecond = false;
         });
     }
 

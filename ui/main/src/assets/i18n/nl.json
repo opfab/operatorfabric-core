@@ -47,6 +47,7 @@
       "entitiesResponses": "ANTWOORDEN",
       "requiredResponses": "VEREISTE ANTWOORDEN"
     },
+    "exportInProgress": "Bezig met exporteren",
     "loadingInProgress": "Bezig met laden",
     "noResult": "Uw zoekopdracht leverde geen resultaten op.",
     "exportToExcel": "Exporteer data",
@@ -226,6 +227,7 @@
   },
   "archive": {
     "loadingInProgress": "Gearchiveerde kaarten laden",
+    "cardLoadingInProgress":"Bezig met laden van de kaart  ...",
     "tooManyRows": "Te veel kaarten gevonden, niet alle kaarten worden getoond",
     "collapsibleUpdates": "Opvouwbare updates"
   },
@@ -239,8 +241,7 @@
         "selectTypeOfStateText" : "Selecteer een Proces status"
       }
     },
-    "seeDetails": "DETAILS BEKIJKEN",
-    "ExportInProgress": "Bezig met exporteren"
+    "seeDetails": "DETAILS BEKIJKEN"
   },
   "button": {
     "ok": "OK",

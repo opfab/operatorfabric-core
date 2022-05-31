@@ -7,7 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subject} from 'rxjs';
 
 import {ProcessesService} from '@ofServices/processes.service';
@@ -28,6 +29,9 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import {Utilities} from 'app/common/utilities';
+import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+
+
 
 @Component({
     selector: 'of-logging',
@@ -56,19 +60,23 @@ export class LoggingComponent implements OnDestroy, OnInit {
     stateColors = new Map();
 
     @ViewChild('filters') filtersTemplate: ArchivesLoggingFiltersComponent;
+
+    modalRef: NgbModalRef;
+    @ViewChild('exportInProgress') exportTemplate: ElementRef;
+
     listOfProcessesForFilter = [];
     listOfProcessesForRequest = [];
 
     isThereProcessStateToDisplay: boolean;
 
-    constructor(
-        private store: Store<AppState>,
+    constructor(private store: Store<AppState>,
         private processesService: ProcessesService,
         private configService: ConfigService,
         private timeService: TimeService,
         private cardService: CardService,
         private translate: TranslateService,
-        private entitiesService: EntitiesService
+        private entitiesService: EntitiesService,
+        private modalService: NgbModal
     ) {
         this.loggingForm = new FormGroup({
             tags: new FormControl([]),
@@ -246,6 +254,13 @@ export class LoggingComponent implements OnDestroy, OnInit {
         this.filtersTemplate.filters.set('size', [this.resultsNumber.toString()]);
         this.filtersTemplate.filters.set('page', [0]);
 
+        const modalOptions: NgbModalOptions = {
+            centered: true,
+            backdrop: 'static', // Modal shouldn't close even if we click outside it
+            size: 'sm'
+          };
+        this.modalRef = this.modalService.open(this.exportTemplate, modalOptions);
+
         this.cardService
             .fetchArchivedCards(this.filtersTemplate.filters)
             .pipe(takeUntil(this.unsubscribe$))
@@ -295,6 +310,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
                         });
                 });
                 ExportService.exportJsonToExcelFile(exportArchiveData, 'Logging');
+                this.modalRef.close();
             });
     }
 
@@ -313,6 +329,9 @@ export class LoggingComponent implements OnDestroy, OnInit {
     }
 
     ngOnDestroy() {
+        if (!!this.modalRef) {
+            this.modalRef.close();
+        }
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }
