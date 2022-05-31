@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
 import {Card} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
@@ -35,7 +34,6 @@ declare const templateGateway: any;
     styleUrls: ['./card-detail.component.scss']
 })
 export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked {
-
     @Input() card: Card;
     @Input() screenSize: string = 'md';
     @Input() displayContext: any;
@@ -51,16 +49,20 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
     private user: User;
     private userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;
 
-
-    constructor(private element: ElementRef, private businessconfigService: ProcessesService,
-                private handlebars: HandlebarsService, private sanitizer: DomSanitizer,
-                private store: Store<AppState>,private userService: UserService, private entitiesService: EntitiesService,
-                private userPermissionsService: UserPermissionsService,
-                private _appService: AppService) {
-
+    constructor(
+        private element: ElementRef,
+        private businessconfigService: ProcessesService,
+        private handlebars: HandlebarsService,
+        private sanitizer: DomSanitizer,
+        private store: Store<AppState>,
+        private userService: UserService,
+        private entitiesService: EntitiesService,
+        private userPermissionsService: UserPermissionsService,
+        private _appService: AppService
+    ) {
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
-        this.store.select(selectAuthenticationState).subscribe(authState => {
+        this.store.select(selectAuthenticationState).subscribe((authState) => {
             this._userContext = new UserContext(
                 authState.identifier,
                 authState.token,
@@ -79,22 +81,27 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
     }
 
     private computeEntitiesForResponses() {
-
         let entityIdsRequiredToRespondAndAllowedToSendCards = this.getEntityIdsRequiredToRespondAndAllowedToSendCards();
-        const userEntitiesRequiredToRespondAndAllowedToSendCards = entityIdsRequiredToRespondAndAllowedToSendCards.filter(entityId => this.user.entities.includes(entityId));
-        this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = userEntitiesRequiredToRespondAndAllowedToSendCards.length > 0;
+        const userEntitiesRequiredToRespondAndAllowedToSendCards =
+            entityIdsRequiredToRespondAndAllowedToSendCards.filter((entityId) => this.user.entities.includes(entityId));
+        this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards =
+            userEntitiesRequiredToRespondAndAllowedToSendCards.length > 0;
     }
 
     private getEntityIdsRequiredToRespondAndAllowedToSendCards() {
         if (!this.card.entitiesRequiredToRespond) return [];
         const entitiesAllowedToRespond = this.entitiesService.getEntitiesFromIds(this.card.entitiesRequiredToRespond);
-        return this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond).map(entity => entity.id);
+        return this.entitiesService
+            .resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond)
+            .map((entity) => entity.id);
     }
 
     private getTemplateAndStyle() {
-        this.businessconfigService.queryProcess(this.card.process, this.card.processVersion)
+        this.businessconfigService
+            .queryProcess(this.card.process, this.card.processVersion)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(businessconfig => {
+            .subscribe(
+                (businessconfig) => {
                     if (!!businessconfig) {
                         const state = businessconfig.extractState(this.card);
                         if (!!state) {
@@ -106,17 +113,21 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
                         this.initializeHandlebarsTemplates();
                     }
                 },
-                error => console.log(`something went wrong while trying to fetch process for ${this.card.process}`
-                    + ` with ${this.card.processVersion} version.`)
+                (error) =>
+                    console.log(
+                        `something went wrong while trying to fetch process for ${this.card.process}` +
+                            ` with ${this.card.processVersion} version.`
+                    )
             );
     }
 
     // for certain types of template, we need to reload it to take into account
     // the new css style (for example with chart done with chart.js)
     private reloadTemplateWhenGlobalStyleChange() {
-        this.store.select(selectGlobalStyleState)
+        this.store
+            .select(selectGlobalStyleState)
             .pipe(takeUntil(this.unsubscribe$), skip(1))
-            .subscribe(style => this.initializeHandlebarsTemplates());
+            .subscribe((style) => this.initializeHandlebarsTemplates());
     }
 
     private initializeHrefsOfCssLink() {
@@ -124,7 +135,7 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
             const process = this.card.process;
             const processVersion = this.card.processVersion;
             this.hrefsOfCssLink = new Array<SafeResourceUrl>();
-            this.styles.forEach(style => {
+            this.styles.forEach((style) => {
                 const cssUrl = this.businessconfigService.computeBusinessconfigCssUrl(process, style, processVersion);
                 // needed to instantiate href of link for css in component rendering
                 const safeCssUrl = this.sanitizer.bypassSecurityTrustResourceUrl(cssUrl);
@@ -133,26 +144,31 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
         }
     }
 
-
     private initializeHandlebarsTemplates() {
         templateGateway.initTemplateGateway();
 
-        templateGateway.displayContext =  this.displayContext;
-        templateGateway.userMemberOfAnEntityRequiredToRespond = this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
+        templateGateway.displayContext = this.displayContext;
+        templateGateway.userMemberOfAnEntityRequiredToRespond =
+            this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
 
         templateGateway.childCards = this.childCards;
 
-        this.businessconfigService.queryProcessFromCard(this.card).pipe(
-            takeUntil(this.unsubscribe$),
-            switchMap(process => {
-                return this.handlebars.executeTemplate(this.templateName,
-                    new DetailContext(this.card, this._userContext, null));
-            })
-        )
+        this.businessconfigService
+            .queryProcessFromCard(this.card)
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                switchMap((process) => {
+                    return this.handlebars.executeTemplate(
+                        this.templateName,
+                        new DetailContext(this.card, this._userContext, null)
+                    );
+                })
+            )
             .subscribe({
                 next: (html) => {
                     this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
-                    setTimeout(() => { // wait for DOM rendering
+                    setTimeout(() => {
+                        // wait for DOM rendering
                         this.reinsertScripts();
                         templateGateway.setScreenSize(this.screenSize);
                         templateGateway.applyChildCards();
@@ -161,7 +177,13 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
                     }, 10);
                 },
                 error: (error) => {
-                    console.log(new Date().toISOString(), 'WARNING impossible to process template ', this.templateName, ":  ", error);
+                    console.log(
+                        new Date().toISOString(),
+                        'WARNING impossible to process template ',
+                        this.templateName,
+                        ':  ',
+                        error
+                    );
                     this._htmlContent = this.sanitizer.bypassSecurityTrustHtml('');
                 }
             });
@@ -173,7 +195,8 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
 
     reinsertScripts(): void {
         const scripts = <HTMLScriptElement[]>this.element.nativeElement.getElementsByTagName('script');
-        Array.prototype.forEach.call(scripts, script => { // scripts.foreach does not work...
+        Array.prototype.forEach.call(scripts, (script) => {
+            // scripts.foreach does not work...
             const scriptCopy = document.createElement('script');
             scriptCopy.type = !!script.type ? script.type : 'text/javascript';
             if (!!script.innerHTML) scriptCopy.innerHTML = script.innerHTML;

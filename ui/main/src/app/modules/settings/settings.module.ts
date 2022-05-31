@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {SettingsRoutingModule} from './settings-routing.module';
@@ -20,18 +19,13 @@ import {MultiSettingsComponent} from './components/settings/multi-settings/multi
 import {CheckboxSettingComponent} from './components/settings/checkbox-setting/checkbox-setting.component';
 
 @NgModule({
-    declarations: [SettingsComponent
-        , TextSettingComponent
-        , ListSettingComponent
-        , MultiSettingsComponent
-        , CheckboxSettingComponent],
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        SettingsRoutingModule,
-        TranslateModule,
-    ]
+    declarations: [
+        SettingsComponent,
+        TextSettingComponent,
+        ListSettingComponent,
+        MultiSettingsComponent,
+        CheckboxSettingComponent
+    ],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, SettingsRoutingModule, TranslateModule]
 })
-export class SettingsModule {
-}
+export class SettingsModule {}

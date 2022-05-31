@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-export interface ConfigState{
+export interface ConfigState {
     config: any;
 }
 

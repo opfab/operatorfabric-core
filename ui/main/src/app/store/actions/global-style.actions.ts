@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Action} from '@ngrx/store';
 
 export enum GlobalStyleActionTypes {
@@ -16,8 +15,7 @@ export enum GlobalStyleActionTypes {
 
 export class GlobalStyleUpdate implements Action {
     readonly type = GlobalStyleActionTypes.GlobalStyleUpdate;
-    constructor(public payload : {style : string}) {}
+    constructor(public payload: {style: string}) {}
 }
-
 
 export type GlobalStyleActions = GlobalStyleUpdate;

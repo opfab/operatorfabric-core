@@ -22,10 +22,9 @@ export class SettingsService {
     readonly usersUrl: string;
     private userId: string;
 
-    constructor(private httpClient: HttpClient,
-                private store: Store<AppState>) {
+    constructor(private httpClient: HttpClient, private store: Store<AppState>) {
         this.usersUrl = `${environment.urls.users}`;
-        this.store.select(selectIdentifier).subscribe(id => this.userId = id);
+        this.store.select(selectIdentifier).subscribe((id) => (this.userId = id));
     }
 
     fetchUserSettings(): Observable<any> {

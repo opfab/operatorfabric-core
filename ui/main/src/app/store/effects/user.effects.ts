@@ -7,35 +7,27 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {UserService} from '@ofServices/user.service';
 import {Observable, timer} from 'rxjs';
-import {
-    LoadAllEntities,
-    UserActions,
-    UserActionsTypes,
-    UserApplicationRegistered
-} from '@ofStore/actions/user.actions';
+import {LoadAllEntities, UserActions, UserActionsTypes, UserApplicationRegistered} from '@ofStore/actions/user.actions';
 import {AcceptLogIn, AuthenticationActionTypes} from '@ofStore/actions/authentication.actions';
 import {catchError, debounce, map, switchMap} from 'rxjs/operators';
 import {User} from '@ofModel/user.model';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 import {Entity} from '@ofModel/entity.model';
 
-
 @Injectable()
 export class UserEffects {
-
-    constructor(private store: Store<AppState>,
-                private actions$: Actions,
-                private userService: UserService,
-                private authService: AuthenticationService
-    ) {
-    }
+    constructor(
+        private store: Store<AppState>,
+        private actions$: Actions,
+        private userService: UserService,
+        private authService: AuthenticationService
+    ) {}
 
     /**
      * after that the user is authenticated through the token,
@@ -44,12 +36,11 @@ export class UserEffects {
      * and raise the UserApplicationRegistered action.
      */
 
-    checkUserApplication: Observable<UserActions> = createEffect(() => this.actions$
-        .pipe(
+    checkUserApplication: Observable<UserActions> = createEffect(() =>
+        this.actions$.pipe(
             ofType(AuthenticationActionTypes.AcceptLogIn),
             switchMap((action: AcceptLogIn) => {
-                return this.userService.synchronizeWithToken()
-                .pipe(
+                return this.userService.synchronizeWithToken().pipe(
                     map((user: User) => new UserApplicationRegistered({user})),
                     catchError((error, caught) => {
                         console.log('Error in synchronizeWithToken');
@@ -58,28 +49,34 @@ export class UserEffects {
                     })
                 );
             })
-        ));
+        )
+    );
 
     /**
      * Query all existing entities from the Users service
      */
-    
-    loadAllEntities: Observable<UserActions> = createEffect(() => this.actions$.pipe(
-        ofType(UserActionsTypes.QueryAllEntities),
-        switchMap(() => this.userService.queryAllEntities()),
-        map((allEntities: Entity[]) => new LoadAllEntities({entities: allEntities}))
-    ));
 
-    updateUserConfig: Observable<any> = createEffect(() => this.actions$
-    .pipe(
-        ofType(UserActionsTypes.UserConfigChange),
-        debounce(() => timer(5000 + Math.floor(Math.random() * 5000))), // use a random  part to avoid all UI to access at the same time the server
-        map(() => {
-            this.userService.loadUserWithPerimetersData().subscribe();
-        }),
-        catchError((error, caught) => {
-            console.error('UserEffects - Error in update user config ', error);
-            return caught;
-        })
-    ), { dispatch: false });
+    loadAllEntities: Observable<UserActions> = createEffect(() =>
+        this.actions$.pipe(
+            ofType(UserActionsTypes.QueryAllEntities),
+            switchMap(() => this.userService.queryAllEntities()),
+            map((allEntities: Entity[]) => new LoadAllEntities({entities: allEntities}))
+        )
+    );
+
+    updateUserConfig: Observable<any> = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(UserActionsTypes.UserConfigChange),
+                debounce(() => timer(5000 + Math.floor(Math.random() * 5000))), // use a random  part to avoid all UI to access at the same time the server
+                map(() => {
+                    this.userService.loadUserWithPerimetersData().subscribe();
+                }),
+                catchError((error, caught) => {
+                    console.error('UserEffects - Error in update user config ', error);
+                    return caught;
+                })
+            ),
+        {dispatch: false}
+    );
 }

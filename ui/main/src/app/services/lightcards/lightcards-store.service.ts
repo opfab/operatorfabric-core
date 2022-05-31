@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Injectable} from '@angular/core';
 import {LightCard} from '@ofModel/light-card.model';
 import {debounceTime, filter, interval, map, merge, Observable, ReplaySubject, sample, Subject, tap} from 'rxjs';
@@ -31,11 +30,10 @@ import {ConsideredAcknowledgedForUserWhenEnum} from '@ofModel/processes.model';
  *
  * This class does not hold the selected lightCard or the current loaded card, this is done via NGRX store.
  */
- @Injectable({
+@Injectable({
     providedIn: 'root'
 })
 export class LightCardsStoreService {
-
     private lightCards = new Map();
     private childCards = new Map();
     private lightCardsEvents = new Subject<Map<any, any>>();
@@ -53,16 +51,16 @@ export class LightCardsStoreService {
     private nbCardLoadedInPreviousHalfSecondInterval = 0;
     private loadingInProgress = new Subject();
 
-
-    constructor(private userService: UserService,
-                private processesService: ProcessesService,
-                private entitiesService: EntitiesService) {
+    constructor(
+        private userService: UserService,
+        private processesService: ProcessesService,
+        private entitiesService: EntitiesService
+    ) {
         this.getLightCardsWithLimitedUpdateRate().subscribe();
         this.checkForLoadingInProgress();
     }
 
-
-   // --------------------
+    // --------------------
     // When a flow of card is coming, for performance reasons, we do not want to update the card list
     // every time a card is arriving, so we wait for the end of the flow of cards.
     //
@@ -74,40 +72,45 @@ export class LightCardsStoreService {
     // To do that we combine a debounce waiting for the end of the flow and an interval to get the cards list every second
 
     private getLightCardsWithLimitedUpdateRate(): Observable<any> {
-        return merge(this.getLightCardsInterval(), this.getLightCardDebounce())
-            .pipe(
-                map((cards) => {
-                    const array = new Array();
-                    cards.forEach((card, id) => {
-                        array.push(card);
-                    });
-                    return array;
-                }),
-                tap((cards) => this.lightCardsEventsWithLimitedUpdateRate.next(cards)));
-
+        return merge(this.getLightCardsInterval(), this.getLightCardDebounce()).pipe(
+            map((cards) => {
+                const array = new Array();
+                cards.forEach((card, id) => {
+                    array.push(card);
+                });
+                return array;
+            }),
+            tap((cards) => this.lightCardsEventsWithLimitedUpdateRate.next(cards))
+        );
     }
 
     private getLightCardsInterval(): Observable<any> {
         return this.lightCardsEvents.pipe(
             sample(interval(1000)),
-            filter((results: Map<any, any>) => ((
-                (new Date().valueOf()) - this.timeOfLastDebounce) > 1000)   // we only need to get cards if no debounce arise in 1 second
-                && (results.size - this.numberOfCardProcessedByPreviousDebounce > 20)), // and if there is enough new cards
+            filter(
+                (results: Map<any, any>) =>
+                    new Date().valueOf() - this.timeOfLastDebounce > 1000 && // we only need to get cards if no debounce arise in 1 second
+                    results.size - this.numberOfCardProcessedByPreviousDebounce > 20
+            ), // and if there is enough new cards
 
             tap((results) => {
-                console.log(new Date().toISOString(), "Cards flow in progress : " + (results.size - this.numberOfCardProcessedByPreviousDebounce) + " new cards  ");
+                console.log(
+                    new Date().toISOString(),
+                    'Cards flow in progress : ' +
+                        (results.size - this.numberOfCardProcessedByPreviousDebounce) +
+                        ' new cards  '
+                );
                 this.numberOfCardProcessedByPreviousDebounce = results.size;
-            }),
+            })
         );
     }
 
     private getLightCardDebounce(): Observable<any> {
         return this.lightCardsEvents.pipe(
             debounceTime(200),
-            tap(() => this.timeOfLastDebounce = (new Date()).valueOf())
+            tap(() => (this.timeOfLastDebounce = new Date().valueOf()))
         );
     }
-
 
     // if the flow is more than 10 cards seconds
     // loading is considered in progress
@@ -125,7 +128,6 @@ export class LightCardsStoreService {
         }
         setTimeout(() => this.checkForLoadingInProgress(), 500);
     }
-
 
     public getLightCard(cardId: string) {
         return this.lightCards.get(cardId);
@@ -158,7 +160,8 @@ export class LightCardsStoreService {
 
     public removeLightCard(cardId) {
         const card = this.lightCards.get(cardId);
-        if (!card) { // is a child card
+        if (!card) {
+            // is a child card
             this.removeChildCard(cardId);
         } else {
             this.childCards.delete(cardId);
@@ -183,92 +186,124 @@ export class LightCardsStoreService {
     private computeListEntitiesToAck(lightCard: LightCard): string[] {
         const listEntitiesToAck = [];
 
-        if (!! lightCard.entityRecipients) {
+        if (!!lightCard.entityRecipients) {
             const listOfEntityRecipients = this.entitiesService.getEntitiesFromIds(lightCard.entityRecipients);
-            if (!! listOfEntityRecipients)
-                this.entitiesService.resolveEntitiesAllowedToSendCards(listOfEntityRecipients).forEach(entityToAdd =>
-                    listEntitiesToAck.push(entityToAdd.id)
-                );
+            if (!!listOfEntityRecipients)
+                this.entitiesService
+                    .resolveEntitiesAllowedToSendCards(listOfEntityRecipients)
+                    .forEach((entityToAdd) => listEntitiesToAck.push(entityToAdd.id));
         }
         return listEntitiesToAck;
     }
 
-    private checkIsAcknowledgedForTheCaseOfOneEntitySufficesForAck(consideredAcknowledgedForUserWhen: ConsideredAcknowledgedForUserWhenEnum,
-                                                                   lightCard: LightCard): boolean {
-
-        if ((consideredAcknowledgedForUserWhen === ConsideredAcknowledgedForUserWhenEnum.ONE_ENTITY_OF_USER_HAS_ACKNOWLEDGED)
-            && (!! lightCard.entitiesAcks)) {
-            return (lightCard.entitiesAcks.filter(entityId =>
-                this.userService.getCurrentUserWithPerimeters().userData.entities.includes(entityId)).length > 0);
-        } else
-            return false;
+    private checkIsAcknowledgedForTheCaseOfOneEntitySufficesForAck(
+        consideredAcknowledgedForUserWhen: ConsideredAcknowledgedForUserWhenEnum,
+        lightCard: LightCard
+    ): boolean {
+        if (
+            consideredAcknowledgedForUserWhen ===
+                ConsideredAcknowledgedForUserWhenEnum.ONE_ENTITY_OF_USER_HAS_ACKNOWLEDGED &&
+            !!lightCard.entitiesAcks
+        ) {
+            return (
+                lightCard.entitiesAcks.filter((entityId) =>
+                    this.userService.getCurrentUserWithPerimeters().userData.entities.includes(entityId)
+                ).length > 0
+            );
+        } else return false;
     }
 
-    private checkIsAcknowledgedForTheCaseOfAllEntitiesMustAckTheCard(consideredAcknowledgedForUserWhen: ConsideredAcknowledgedForUserWhenEnum,
-                                                                     lightCard: LightCard,
-                                                                     listEntitiesToAck: string[]): boolean {
-
-        if ((consideredAcknowledgedForUserWhen === ConsideredAcknowledgedForUserWhenEnum.ALL_ENTITIES_OF_USER_HAVE_ACKNOWLEDGED)
-            && (!! lightCard.entitiesAcks)) {
-
+    private checkIsAcknowledgedForTheCaseOfAllEntitiesMustAckTheCard(
+        consideredAcknowledgedForUserWhen: ConsideredAcknowledgedForUserWhenEnum,
+        lightCard: LightCard,
+        listEntitiesToAck: string[]
+    ): boolean {
+        if (
+            consideredAcknowledgedForUserWhen ===
+                ConsideredAcknowledgedForUserWhenEnum.ALL_ENTITIES_OF_USER_HAVE_ACKNOWLEDGED &&
+            !!lightCard.entitiesAcks
+        ) {
             // We compute the entities for which the ack is pending
-            const entitiesWaitedForAck = listEntitiesToAck.filter(entityId =>
-                lightCard.entitiesAcks.indexOf(entityId) < 0);
+            const entitiesWaitedForAck = listEntitiesToAck.filter(
+                (entityId) => lightCard.entitiesAcks.indexOf(entityId) < 0
+            );
 
-            const entitiesOfUserAndWaitedForAck = entitiesWaitedForAck.filter(entityId => {
-                return this.entitiesService.isEntityAllowedToSendCard(entityId)
-                    && this.userService.getCurrentUserWithPerimeters().userData.entities.includes(entityId);
+            const entitiesOfUserAndWaitedForAck = entitiesWaitedForAck.filter((entityId) => {
+                return (
+                    this.entitiesService.isEntityAllowedToSendCard(entityId) &&
+                    this.userService.getCurrentUserWithPerimeters().userData.entities.includes(entityId)
+                );
             });
-            return (entitiesOfUserAndWaitedForAck.length === 0);
-        } else
-            return false;
+            return entitiesOfUserAndWaitedForAck.length === 0;
+        } else return false;
     }
 
     public addEntitiesAcksForLightCard(cardId: string, entitiesAcksToAdd: string[]) {
         const card = this.lightCards.get(cardId);
 
         if (!!card && !!entitiesAcksToAdd) {
-            card.entitiesAcks = (!! card.entitiesAcks) ? [...new Set([...card.entitiesAcks , ...entitiesAcksToAdd])] : entitiesAcksToAdd;
+            card.entitiesAcks = !!card.entitiesAcks
+                ? [...new Set([...card.entitiesAcks, ...entitiesAcksToAdd])]
+                : entitiesAcksToAdd;
             card.hasBeenAcknowledged = this.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
             this.lightCardsEvents.next(this.lightCards);
         }
     }
 
     public isLightCardHasBeenAcknowledgedByUserOrByUserEntity(lightCard: LightCard): boolean {
-        const consideredAcknowledgedForUserWhen = this.processesService.getConsideredAcknowledgedForUserWhenForALightCard(lightCard);
+        const consideredAcknowledgedForUserWhen =
+            this.processesService.getConsideredAcknowledgedForUserWhenForALightCard(lightCard);
 
         if (this.areWeInModeUserHasAcknowledged(lightCard, consideredAcknowledgedForUserWhen))
             return lightCard.hasBeenAcknowledged;
-        else
-            return this.isLightCardHasBeenAcknowledgedByUserEntity(lightCard, consideredAcknowledgedForUserWhen);
+        else return this.isLightCardHasBeenAcknowledgedByUserEntity(lightCard, consideredAcknowledgedForUserWhen);
     }
 
     private doEntityRecipientsIncludeAtLeastOneEntityOfUser(lightCard: LightCard): boolean {
-        const entitiesOfUserThatAreRecipients = lightCard.entityRecipients.filter(entityId => {
-            return this.entitiesService.isEntityAllowedToSendCard(entityId)
-                && this.userService.getCurrentUserWithPerimeters().userData.entities.includes(entityId);
+        const entitiesOfUserThatAreRecipients = lightCard.entityRecipients.filter((entityId) => {
+            return (
+                this.entitiesService.isEntityAllowedToSendCard(entityId) &&
+                this.userService.getCurrentUserWithPerimeters().userData.entities.includes(entityId)
+            );
         });
-        return (entitiesOfUserThatAreRecipients.length > 0);
+        return entitiesOfUserThatAreRecipients.length > 0;
     }
 
-    private areWeInModeUserHasAcknowledged(lightCard: LightCard,
-                                           consideredAcknowledgedForUserWhen: ConsideredAcknowledgedForUserWhenEnum): boolean {
-        return ((consideredAcknowledgedForUserWhen === ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED) ||
-                ((!lightCard.entityRecipients) || (!lightCard.entityRecipients.length)) ||
-                !this.doEntityRecipientsIncludeAtLeastOneEntityOfUser(lightCard));
+    private areWeInModeUserHasAcknowledged(
+        lightCard: LightCard,
+        consideredAcknowledgedForUserWhen: ConsideredAcknowledgedForUserWhenEnum
+    ): boolean {
+        return (
+            consideredAcknowledgedForUserWhen === ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED ||
+            !lightCard.entityRecipients ||
+            !lightCard.entityRecipients.length ||
+            !this.doEntityRecipientsIncludeAtLeastOneEntityOfUser(lightCard)
+        );
     }
 
-    private isLightCardHasBeenAcknowledgedByUserEntity(lightCard: LightCard,
-                                                       consideredAcknowledgedForUserWhen: ConsideredAcknowledgedForUserWhenEnum): boolean {
+    private isLightCardHasBeenAcknowledgedByUserEntity(
+        lightCard: LightCard,
+        consideredAcknowledgedForUserWhen: ConsideredAcknowledgedForUserWhenEnum
+    ): boolean {
         const listEntitiesToAck = this.computeListEntitiesToAck(lightCard);
 
-        if ((!! listEntitiesToAck) && (listEntitiesToAck.length > 0) &&
-            (consideredAcknowledgedForUserWhen !== ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED)) {
-            return (this.checkIsAcknowledgedForTheCaseOfOneEntitySufficesForAck(consideredAcknowledgedForUserWhen, lightCard)
-                    || this.checkIsAcknowledgedForTheCaseOfAllEntitiesMustAckTheCard(consideredAcknowledgedForUserWhen, lightCard,
-                                                                                     listEntitiesToAck));
-        } else
-            return false;
+        if (
+            !!listEntitiesToAck &&
+            listEntitiesToAck.length > 0 &&
+            consideredAcknowledgedForUserWhen !== ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED
+        ) {
+            return (
+                this.checkIsAcknowledgedForTheCaseOfOneEntitySufficesForAck(
+                    consideredAcknowledgedForUserWhen,
+                    lightCard
+                ) ||
+                this.checkIsAcknowledgedForTheCaseOfAllEntitiesMustAckTheCard(
+                    consideredAcknowledgedForUserWhen,
+                    lightCard,
+                    listEntitiesToAck
+                )
+            );
+        } else return false;
     }
 
     public setLightCardAcknowledgment(cardId: string, ack: boolean) {
@@ -321,15 +356,17 @@ export class LightCardsStoreService {
     }
 
     private removeChildCard(cardId) {
-        this.childCards.forEach( (children, parentCardId) => {
-
-            const childIdx = children.findIndex(c => c.id === cardId);
+        this.childCards.forEach((children, parentCardId) => {
+            const childIdx = children.findIndex((c) => c.id === cardId);
             if (childIdx >= 0) {
                 const removed = children.splice(childIdx, 1);
 
-                this.deletedLightChildCards.next({'cardId': cardId, 'parentCardId': parentCardId });
+                this.deletedLightChildCards.next({cardId: cardId, parentCardId: parentCardId});
 
-                if (this.isLightChildCardFromCurrentUserEntity(removed[0]) && this.getChildCardsFromCurrentUserEntity(children).length === 0) {
+                if (
+                    this.isLightChildCardFromCurrentUserEntity(removed[0]) &&
+                    this.getChildCardsFromCurrentUserEntity(children).length === 0
+                ) {
                     const parentCard = this.lightCards.get(parentCardId);
                     parentCard.hasChildCardFromCurrentUserEntity = false;
                 }
@@ -339,11 +376,13 @@ export class LightCardsStoreService {
 
     private getChildCardsFromCurrentUserEntity(children: LightCard[]) {
         const userEntities = this.userService.getCurrentUserWithPerimeters().userData.entities;
-        return children.filter(c => userEntities.includes(c.publisher));
+        return children.filter((c) => userEntities.includes(c.publisher));
     }
 
     private isLightChildCardFromCurrentUserEntity(childCard): boolean {
-        return this.userService.getCurrentUserWithPerimeters().userData.entities.some((entity) => entity === childCard.publisher);
+        return this.userService
+            .getCurrentUserWithPerimeters()
+            .userData.entities.some((entity) => entity === childCard.publisher);
     }
 
     private addOrUpdateParentLightCard(card) {
@@ -353,7 +392,7 @@ export class LightCardsStoreService {
     }
 
     private lightCardHasChildFromCurrentUserEntity(oldCardVersion, newCard): boolean {
-        if (oldCardVersion) return (newCard.keepChildCards && oldCardVersion.hasChildCardFromCurrentUserEntity);
+        if (oldCardVersion) return newCard.keepChildCards && oldCardVersion.hasChildCardFromCurrentUserEntity;
         else {
             // if a child card form the current user entity has been loaded in the UI before the parent card
             if (this.orphanedLightChildCardsFromCurrentEntity.has(newCard.id)) {

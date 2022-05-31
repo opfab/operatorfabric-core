@@ -7,10 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 export class Map<T> {
     [key: string]: T;
 }
-
-

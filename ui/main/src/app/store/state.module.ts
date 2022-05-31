@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {ModuleWithProviders, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {StoreModule} from '@ngrx/store';
@@ -27,7 +26,7 @@ import {CustomRouterStateSerializer} from '@ofStore/states/router.state';
             serializer: CustomRouterStateSerializer
         }),
         EffectsModule.forRoot(appEffects),
-        !environment.production ? StoreDevtoolsModule.instrument() : [],
+        !environment.production ? StoreDevtoolsModule.instrument() : []
     ],
     declarations: [],
     providers: [{provide: 'configRetryDelay', useValue: 5000}]
@@ -35,8 +34,7 @@ import {CustomRouterStateSerializer} from '@ofStore/states/router.state';
 export class StateModule {
     static forRoot(): ModuleWithProviders<StateModule> {
         return {
-            ngModule: StateModule
-            ,
+            ngModule: StateModule,
             providers: [
                 /**
                  * The `RouterStateSnapshot` provided by the `Router` is a large complex structure.

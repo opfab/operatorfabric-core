@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Directive, EventEmitter, HostListener, Output} from '@angular/core';
 
 /**
@@ -15,44 +14,43 @@ import {Directive, EventEmitter, HostListener, Output} from '@angular/core';
  * https://github.com/SodhanaLibrary/angular2-examples/blob/master/app/mouseWheelDirective/mousewheel.directive.ts
  * @export
  */
-@Directive({ selector: '[appMouseWheel]' })
+@Directive({selector: '[appMouseWheel]'})
 export class MouseWheelDirective {
-  @Output()
-  mouseWheelUp = new EventEmitter();
-  @Output()
-  mouseWheelDown = new EventEmitter();
+    @Output()
+    mouseWheelUp = new EventEmitter();
+    @Output()
+    mouseWheelDown = new EventEmitter();
 
-  @HostListener('mousewheel', ['$event'])
-  onMouseWheelChrome(event: any): void {
-    this.mouseWheelFunc(event);
-  }
-
-  @HostListener('DOMMouseScroll', ['$event'])
-  onMouseWheelFirefox(event: any): void {
-    this.mouseWheelFunc(event);
-  }
-
-  @HostListener('onmousewheel', ['$event'])
-  onMouseWheelIE(event: any): void {
-    this.mouseWheelFunc(event);
-  }
-
-  /**
-   * emit mouse wheel up or down event
-   * @param event
-   */
-  mouseWheelFunc(event: any): void {
-
-    let delta = Math.max(-1, Math.min(1, event.wheelDelta || -event.detail));
-    if (delta > 0) {
-      this.mouseWheelUp.emit(event);
-    } else if (delta < 0) {
-      this.mouseWheelDown.emit(event);
+    @HostListener('mousewheel', ['$event'])
+    onMouseWheelChrome(event: any): void {
+        this.mouseWheelFunc(event);
     }
 
-    // for Chrome and Firefox
-    if (event.preventDefault) {
-      event.preventDefault();
+    @HostListener('DOMMouseScroll', ['$event'])
+    onMouseWheelFirefox(event: any): void {
+        this.mouseWheelFunc(event);
     }
-  }
+
+    @HostListener('onmousewheel', ['$event'])
+    onMouseWheelIE(event: any): void {
+        this.mouseWheelFunc(event);
+    }
+
+    /**
+     * emit mouse wheel up or down event
+     * @param event
+     */
+    mouseWheelFunc(event: any): void {
+        let delta = Math.max(-1, Math.min(1, event.wheelDelta || -event.detail));
+        if (delta > 0) {
+            this.mouseWheelUp.emit(event);
+        } else if (delta < 0) {
+            this.mouseWheelDown.emit(event);
+        }
+
+        // for Chrome and Firefox
+        if (event.preventDefault) {
+            event.preventDefault();
+        }
+    }
 }

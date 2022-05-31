@@ -7,9 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {ComponentFixture, getTestBed, TestBed, waitForAsync} from '@angular/core/testing';
-
 
 import {LightCardComponent} from './light-card.component';
 import {BusinessconfigI18nLoaderFactory, injectedSpy} from '@tests/helpers';
@@ -27,7 +25,6 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountDownModule} from '../countdown/countdown.module';
 import createSpyObj = jasmine.createSpyObj;
 
-
 describe('LightCardComponent', () => {
     let lightCardDetailsComp: LightCardComponent;
     let fixture: ComponentFixture<LightCardComponent>;
@@ -36,11 +33,10 @@ describe('LightCardComponent', () => {
     let translateService: TranslateService;
     let i18nService: I18nService;
 
-
     beforeEach(waitForAsync(() => {
         const routerSpy = createSpyObj('Router', ['navigate']);
-        const myrout = {... routerSpy};
-        myrout.routerState = { snapshot : {url: 'archives'}};
+        const myrout = {...routerSpy};
+        myrout.routerState = {snapshot: {url: 'archives'}};
         TestBed.configureTestingModule({
             imports: [
                 HttpClientTestingModule,
@@ -63,8 +59,10 @@ describe('LightCardComponent', () => {
                 {provide: Router, useValue: myrout},
                 ProcessesService,
                 {provide: 'TimeEventSource', useValue: null},
-                TimeService, I18nService
-            ]}).compileComponents();
+                TimeService,
+                I18nService
+            ]
+        }).compileComponents();
         store = TestBed.inject(Store);
         spyOn(store, 'dispatch').and.callThrough();
         // avoid exceptions during construction and init of the component
@@ -74,7 +72,6 @@ describe('LightCardComponent', () => {
         translateService.setDefaultLang('en');
         i18nService = injector.get(I18nService);
         i18nService.changeLocale('en');
-
     }));
 
     beforeEach(() => {
@@ -87,19 +84,17 @@ describe('LightCardComponent', () => {
         expect(expectedEmptyString).toEqual('');
     });
 
-    it( 'should handle timestamp in English', () => {
+    it('should handle timestamp in English', () => {
         i18nService.changeLocale('en');
         const date = new Date(2019, 5, 25, 10, 0, 0, 0);
         const TwentyFiveJune2019at10AMDateString = lightCardDetailsComp.handleDate(date.valueOf());
         expect(TwentyFiveJune2019at10AMDateString).toEqual('06/25/2019 10:00 AM');
-        });
+    });
 
-    it( 'should handle timestamp in French', () => {
+    it('should handle timestamp in French', () => {
         i18nService.changeLocale('fr');
         const date = new Date(2019, 5, 25, 10, 0, 0, 0);
         const TwentyFiveJune2019at10AMDateString = lightCardDetailsComp.handleDate(date.valueOf());
         expect(TwentyFiveJune2019at10AMDateString).toEqual('25/06/2019 10:00');
-        });
-
-
+    });
 });

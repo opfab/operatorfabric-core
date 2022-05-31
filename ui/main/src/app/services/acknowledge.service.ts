@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Injectable} from '@angular/core';
 import {AcknowledgmentAllowedEnum, Process} from '@ofModel/processes.model';
 import {Card} from '@ofModel/card.model';
@@ -23,12 +22,13 @@ import {LightCardsStoreService} from './lightcards/lightcards-store.service';
     providedIn: 'root'
 })
 export class AcknowledgeService {
-
     readonly userAckUrl: string;
 
-    constructor(private userPermissionsService: UserPermissionsService,
-                private httpClient: HttpClient,
-                private lightCardsStoreService: LightCardsStoreService) {
+    constructor(
+        private userPermissionsService: UserPermissionsService,
+        private httpClient: HttpClient,
+        private lightCardsStoreService: LightCardsStoreService
+    ) {
         this.userAckUrl = `${environment.urls.cardspub}/cards/userAcknowledgement`;
     }
 
@@ -41,7 +41,7 @@ export class AcknowledgeService {
     }
 
     acknowledgeCard(lightCard: LightCard, entitiesAcks: string[]) {
-        this.postUserAcknowledgement(lightCard.uid, entitiesAcks).subscribe(resp => {
+        this.postUserAcknowledgement(lightCard.uid, entitiesAcks).subscribe((resp) => {
             if (resp.status === 201 || resp.status === 200) {
                 this.updateAcknowledgementOnLightCard(lightCard.id, true);
             } else {
@@ -51,11 +51,10 @@ export class AcknowledgeService {
     }
 
     updateAcknowledgementOnLightCard(lightCardId: string, hasBeenAcknowledged: boolean) {
-       this.lightCardsStoreService.setLightCardAcknowledgment(lightCardId, hasBeenAcknowledged);
+        this.lightCardsStoreService.setLightCardAcknowledgment(lightCardId, hasBeenAcknowledged);
     }
 
     isAcknowledgmentAllowed(user: UserWithPerimeters, card: Card | LightCard, processDefinition: Process): boolean {
-
         if (!processDefinition) return true;
         const state = Process.prototype.extractState.call(processDefinition, card);
 

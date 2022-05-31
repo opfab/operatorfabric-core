@@ -7,38 +7,38 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Action} from '@ngrx/store';
 import {Guid} from 'guid-typescript';
 import {Message} from '@ofModel/message.model';
 
 export enum AuthenticationActionTypes {
-    InitAuthStatus = '[Authentication] Init Authentication Status'
-    , CheckAuthenticationStatus = '[Authentication] Check Authentication Status'
-    , AcceptLogIn = '[Authentication] Accept the user log in attempt'
-    , RejectLogIn = '[Authentication] Reject the user log in attempt'
-    , TryToLogIn = '[Authentication] Try to log the user in'
-    , TryToLogOut = '[Authentication] Try to log the user out'
-    , AcceptLogOut = '[Authentication] Accept the user log out attempt'
-    , AcceptLogOutSuccess = '[Authentication] Success Accept the user log out attempt'
-    , CheckImplicitFlowAuthenticationStatus = '[Authentication] Check Authentication Status specifically for the Implicit Flow'
-    , UselessAuthAction = '[Authentication] Test purpose action'
-    , ImplicitlyAuthenticated = '[Authentication] User is authentication using Implicit Flow'
-    , UnAuthenticationFromImplicitFlow = '[Authentication] User is log out by implicit Flow internal management'
-    , SessionExpired = '[Authentication] The token can not be refresh or is expired'
+    InitAuthStatus = '[Authentication] Init Authentication Status',
+    CheckAuthenticationStatus = '[Authentication] Check Authentication Status',
+    AcceptLogIn = '[Authentication] Accept the user log in attempt',
+    RejectLogIn = '[Authentication] Reject the user log in attempt',
+    TryToLogIn = '[Authentication] Try to log the user in',
+    TryToLogOut = '[Authentication] Try to log the user out',
+    AcceptLogOut = '[Authentication] Accept the user log out attempt',
+    AcceptLogOutSuccess = '[Authentication] Success Accept the user log out attempt',
+    CheckImplicitFlowAuthenticationStatus = '[Authentication] Check Authentication Status specifically for the Implicit Flow',
+    UselessAuthAction = '[Authentication] Test purpose action',
+    ImplicitlyAuthenticated = '[Authentication] User is authentication using Implicit Flow',
+    UnAuthenticationFromImplicitFlow = '[Authentication] User is log out by implicit Flow internal management',
+    SessionExpired = '[Authentication] The token can not be refresh or is expired'
 }
 
 /**
  * Authentication success payload
  */
 export class PayloadForSuccessfulAuthentication {
-    constructor(public identifier: string,
-                public clientId: Guid,
-                public token: string,
-                public expirationDate: Date,
-                public firstName?: string,
-                public lastName?: string) {
-    }
+    constructor(
+        public identifier: string,
+        public clientId: Guid,
+        public token: string,
+        public expirationDate: Date,
+        public firstName?: string,
+        public lastName?: string
+    ) {}
 }
 
 /**
@@ -82,7 +82,7 @@ export class TryToLogIn implements Action {
     readonly type = AuthenticationActionTypes.TryToLogIn;
 
     /* istanbul ignore next */
-    constructor(public payload: {username: string, password: string}) {}
+    constructor(public payload: {username: string; password: string}) {}
 }
 
 /**
@@ -102,7 +102,7 @@ export class RejectLogIn implements Action {
     readonly type = AuthenticationActionTypes.RejectLogIn;
 
     /* istanbul ignore next */
-    constructor(public payload: { error: Message }) {}
+    constructor(public payload: {error: Message}) {}
 }
 
 /**
@@ -127,10 +127,9 @@ export class CheckImplicitFlowAuthenticationStatus implements Action {
     readonly type = AuthenticationActionTypes.CheckImplicitFlowAuthenticationStatus;
 }
 
-export class UselessAuthAction implements  Action {
+export class UselessAuthAction implements Action {
     /* istanbul ignore next */
     readonly type = AuthenticationActionTypes.UselessAuthAction;
-
 }
 
 export class ImplicitlyAuthenticated implements Action {
@@ -146,11 +145,10 @@ export class UnAuthenticationFromImplicitFlow implements Action {
 export class SessionExpired implements Action {
     /* istanbul ignore next */
     readonly type = AuthenticationActionTypes.SessionExpired;
-
 }
 
 export type AuthenticationActions =
-    InitAuthStatus
+    | InitAuthStatus
     | AcceptLogIn
     | RejectLogIn
     | TryToLogIn

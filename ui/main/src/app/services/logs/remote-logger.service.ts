@@ -14,62 +14,57 @@ import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {buildSettingsOrConfigSelector} from '@ofStore/selectors/settings.x.config.selectors';
 
-
-
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
-
 export class RemoteLoggerService {
+    private remoteLogsUrl;
+    private isActive = false;
+    private logs = [];
 
-  private remoteLogsUrl;
-  private isActive = false;
-  private logs = [];
-
-  constructor(private httpClient: HttpClient, private store: Store<AppState>) {
-
-    this.remoteLogsUrl = `${environment.urls.remoteLogs}`;
-    this.store.select(buildSettingsOrConfigSelector('remoteLoggingEnabled')).subscribe(
-      remoteLoggingEnabled => this.setRemoteLoggerActive(remoteLoggingEnabled));
-    this.regularlyFlush();
-  }
-
-  private regularlyFlush() {
-    this.flush();
-    setTimeout(() => this.regularlyFlush(), 5000);
-  }
-
-  public setRemoteLoggerActive(active: boolean) {
-    if (active) {
-      this.isActive = true;
-      this.postLog('Remote log activated - ' + window.navigator.userAgent);
-    } else {
-      this.postLog('Remote log deactivated ');
-      this.isActive = false;
+    constructor(private httpClient: HttpClient, private store: Store<AppState>) {
+        this.remoteLogsUrl = `${environment.urls.remoteLogs}`;
+        this.store
+            .select(buildSettingsOrConfigSelector('remoteLoggingEnabled'))
+            .subscribe((remoteLoggingEnabled) => this.setRemoteLoggerActive(remoteLoggingEnabled));
+        this.regularlyFlush();
     }
-  }
 
-  public postLog(logLine: string) {
-    if (this.isActive) this.logs.push(logLine);
-  }
-
-  public flush() {
-    if (this.logs.length > 0) {
-      const logsToPush = this.buildLogsToPush(this.logs);
-      this.logs = [];
-      this.httpClient.post<string[]>(`${this.remoteLogsUrl}`, logsToPush).subscribe();
+    private regularlyFlush() {
+        this.flush();
+        setTimeout(() => this.regularlyFlush(), 5000);
     }
-  }
 
-  private buildLogsToPush(logs: any[]) {
-    let logsToPush = '';
-    let first = true;
-    logs.forEach(log => {
-      if (!first) logsToPush += '\n';
-      logsToPush += log;
-      first = false;
-    });
-    return logsToPush;
-  }
+    public setRemoteLoggerActive(active: boolean) {
+        if (active) {
+            this.isActive = true;
+            this.postLog('Remote log activated - ' + window.navigator.userAgent);
+        } else {
+            this.postLog('Remote log deactivated ');
+            this.isActive = false;
+        }
+    }
 
+    public postLog(logLine: string) {
+        if (this.isActive) this.logs.push(logLine);
+    }
+
+    public flush() {
+        if (this.logs.length > 0) {
+            const logsToPush = this.buildLogsToPush(this.logs);
+            this.logs = [];
+            this.httpClient.post<string[]>(`${this.remoteLogsUrl}`, logsToPush).subscribe();
+        }
+    }
+
+    private buildLogsToPush(logs: any[]) {
+        let logsToPush = '';
+        let first = true;
+        logs.forEach((log) => {
+            if (!first) logsToPush += '\n';
+            logsToPush += log;
+            first = false;
+        });
+        return logsToPush;
+    }
 }

@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Injectable} from '@angular/core';
 import {CardService} from '@ofServices/card.service';
 import {ReminderList} from './reminderList';
@@ -19,16 +18,14 @@ import {SoundNotificationService} from '@ofServices/sound-notification.service';
     providedIn: 'root'
 })
 export class ReminderService {
-
     private reminderList: ReminderList;
 
     constructor(
-                private cardService: CardService,
-                private acknowledgeService: AcknowledgeService,
-                private lightCardsStoreService: LightCardsStoreService,
-                private soundNotificationService : SoundNotificationService ) {
-    }
-
+        private cardService: CardService,
+        private acknowledgeService: AcknowledgeService,
+        private lightCardsStoreService: LightCardsStoreService,
+        private soundNotificationService: SoundNotificationService
+    ) {}
 
     public startService(userLogin: string) {
         console.log(new Date().toISOString(), ' Reminder : starting service');
@@ -39,15 +36,15 @@ export class ReminderService {
 
     private checkForCardToRemind() {
         const cardsIdToRemind = this.reminderList.getCardIdsToRemindNow();
-        cardsIdToRemind.forEach(cardId => this.remindCard(cardId));
+        cardsIdToRemind.forEach((cardId) => this.remindCard(cardId));
         setTimeout(() => this.checkForCardToRemind(), 5000);
     }
 
-
     private listenForCardsToAddInReminder() {
-        this.lightCardsStoreService.getNewLightCards().subscribe(card => {if (!!card) this.reminderList.addAReminder(card)});
+        this.lightCardsStoreService.getNewLightCards().subscribe((card) => {
+            if (!!card) this.reminderList.addAReminder(card);
+        });
     }
-
 
     private remindCard(cardId) {
         console.log(new Date().toISOString(), ' Reminder : will remind card = ', cardId);
@@ -55,26 +52,28 @@ export class ReminderService {
 
         if (!!lightCard) {
             this.reminderList.setCardHasBeenRemind(lightCard);
-            this.acknowledgeService.deleteUserAcknowledgement(lightCard.uid).subscribe(resp => {
+            this.acknowledgeService.deleteUserAcknowledgement(lightCard.uid).subscribe((resp) => {
                 if (!(resp.status === 200 || resp.status === 204))
-                    console.error(new Date().toISOString(),
-                        'Reminder : the remote acknowledgement endpoint returned an error status(%d)', resp.status);
-            }
-            );
-            this.cardService.deleteUserCardRead(lightCard.uid).subscribe(resp => {
+                    console.error(
+                        new Date().toISOString(),
+                        'Reminder : the remote acknowledgement endpoint returned an error status(%d)',
+                        resp.status
+                    );
+            });
+            this.cardService.deleteUserCardRead(lightCard.uid).subscribe((resp) => {
                 if (!(resp.status === 200 || resp.status === 204))
-                    console.error(new Date().toISOString(),
-                        'Reminder : the remote read endpoint returned an error status(%d)', resp.status);
-            }
-            );
-            this.lightCardsStoreService.setLightCardAcknowledgment(cardId,false);
-            this.lightCardsStoreService.setLightCardRead(cardId,false);
+                    console.error(
+                        new Date().toISOString(),
+                        'Reminder : the remote read endpoint returned an error status(%d)',
+                        resp.status
+                    );
+            });
+            this.lightCardsStoreService.setLightCardAcknowledgment(cardId, false);
+            this.lightCardsStoreService.setLightCardRead(cardId, false);
             this.soundNotificationService.handleRemindCard(lightCard);
-        } else { // the card has been deleted in this case
+        } else {
+            // the card has been deleted in this case
             this.reminderList.removeAReminder(cardId);
         }
     }
-
-
 }
-

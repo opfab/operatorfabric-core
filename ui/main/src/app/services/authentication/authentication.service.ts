@@ -8,7 +8,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable, of, throwError} from 'rxjs';
@@ -25,7 +24,7 @@ import {
 } from '@ofActions/authentication.actions';
 import {environment} from '@env/environment';
 import {GuidService} from '@ofServices/guid.service';
-import { UserService } from '@ofServices/user.service';
+import {UserService} from '@ofServices/user.service';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {ConfigService} from '@ofServices/config.service';
@@ -36,9 +35,8 @@ import {EventType as OAuthType, JwksValidationHandler, OAuthEvent, OAuthService}
 import {implicitAuthenticationConfigFallback} from '@ofServices/authentication/auth-implicit-flow.config';
 import {redirectToCurrentLocation} from '../../app-routing.module';
 import {Router} from '@angular/router';
-import { Message, MessageLevel } from '@ofModel/message.model';
-import { I18n } from '@ofModel/i18n.model';
-
+import {Message, MessageLevel} from '@ofModel/message.model';
+import {I18n} from '@ofModel/i18n.model';
 
 export enum LocalStorageAuthContent {
     token = 'token',
@@ -53,7 +51,6 @@ export const MILLIS_TO_WAIT_BETWEEN_TOKEN_EXPIRATION_DATE_CONTROLS = 5000;
     providedIn: 'root'
 })
 export class AuthenticationService {
-
     /** url to check authentication token (jwt) */
     private checkTokenUrl = `${environment.urls.auth}/check_token`;
     /** url to ask for an authentication token (jwt) */
@@ -82,18 +79,18 @@ export class AuthenticationService {
      * @param configService - operator fabric loading web-ui.json from back-end
 
      */
-    constructor(private httpClient: HttpClient
-        , private guidService: GuidService
-        , private userService: UserService
-        , private store: Store<AppState>
-        , private oauthService: OAuthService
-        , private router: Router
-        , private configService: ConfigService
+    constructor(
+        private httpClient: HttpClient,
+        private guidService: GuidService,
+        private userService: UserService,
+        private store: Store<AppState>,
+        private oauthService: OAuthService,
+        private router: Router,
+        private configService: ConfigService
     ) {
         this.assignConfigurationProperties(this.configService.getConfigValue('security'));
         this.authModeHandler = this.instantiateAuthModeHandler(this.mode);
     }
-
 
     /**
      * extract Oauth 2.0 configuration from settings and store it in the service
@@ -110,7 +107,6 @@ export class AuthenticationService {
         this.secondsToCloseSession = this.configService.getConfigValue('secondsToCloseSession', 60);
     }
 
-
     /**
      * Choose to handle the OAuth 2.0 using implicit workflow
      * if mode equals to 'implicit' other manage password grand
@@ -118,40 +114,41 @@ export class AuthenticationService {
      * @param mode - extracted from config web-service settings
      */
     instantiateAuthModeHandler(mode: string): AuthenticationModeHandler {
-        if (mode.toLowerCase() === 'none') { 
-            return new NoAuthenticationHandler(this.store,this.router,this.userService,this.guidService);
+        if (mode.toLowerCase() === 'none') {
+            return new NoAuthenticationHandler(this.store, this.router, this.userService, this.guidService);
         }
         if (mode.toLowerCase() === 'implicit') {
             this.implicitConf = {
-                ...this.implicitConf
-                , issuer: this.delegateUrl
-                , clientId: this.clientId
-                , clearHashAfterLogin: false
-                , requireHttps: false
+                ...this.implicitConf,
+                issuer: this.delegateUrl,
+                clientId: this.clientId,
+                clearHashAfterLogin: false,
+                requireHttps: false
             };
-            return new ImplicitAuthenticationHandler(this
-                , this.store
-                , sessionStorage
-                , this.oauthService
-                , this.guidService
-                , this.router
-                , this.implicitConf
-                , this.givenNameClaim
-                , this.familyNameClaim);
+            return new ImplicitAuthenticationHandler(
+                this,
+                this.store,
+                sessionStorage,
+                this.oauthService,
+                this.guidService,
+                this.router,
+                this.implicitConf,
+                this.givenNameClaim,
+                this.familyNameClaim
+            );
         }
         return new PasswordOrCodeAuthenticationHandler(this, this.store);
     }
-
 
     regularCheckTokenValidity() {
         if (this.verifyExpirationDate()) {
             setTimeout(() => {
                 this.regularCheckTokenValidity();
             }, MILLIS_TO_WAIT_BETWEEN_TOKEN_EXPIRATION_DATE_CONTROLS);
-        } else {// Will send Logout if token is expired
+        } else {
+            // Will send Logout if token is expired
             this.store.dispatch(new SessionExpired());
         }
-
     }
 
     /**
@@ -161,7 +158,7 @@ export class AuthenticationService {
         // + to convert the stored number as a string back to number
         const expirationDate = +localStorage.getItem(LocalStorageAuthContent.expirationDate);
         const isNotANumber = isNaN(expirationDate);
-        const stillValid = ((expirationDate - (this.secondsToCloseSession * 1000)) > Date.now());
+        const stillValid = expirationDate - this.secondsToCloseSession * 1000 > Date.now();
         return !isNotANumber && stillValid;
     }
 
@@ -185,13 +182,15 @@ export class AuthenticationService {
             const postData = new URLSearchParams();
             postData.append('token', token);
             const headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
-            return this.httpClient.post<CheckTokenResponse>(this.checkTokenUrl, postData.toString(), {headers: headers}).pipe(
-                map(check => check),
-                catchError(function (error: any) {
-                    console.error(new Date().toISOString(), error);
-                    return throwError(error);
-                })
-            );
+            return this.httpClient
+                .post<CheckTokenResponse>(this.checkTokenUrl, postData.toString(), {headers: headers})
+                .pipe(
+                    map((check) => check),
+                    catchError(function (error: any) {
+                        console.error(new Date().toISOString(), error);
+                        return throwError(error);
+                    })
+                );
         }
         return of(null);
     }
@@ -201,8 +200,7 @@ export class AuthenticationService {
      * a registered one.
      * @param code OIDC code from code flow
      */
-    askTokenFromCode(code: string):
-        Observable<PayloadForSuccessfulAuthentication> {
+    askTokenFromCode(code: string): Observable<PayloadForSuccessfulAuthentication> {
         if (!this.clientId || !this.loginClaim) {
             return throwError(() => 'The authentication service is no correctly initialized');
         }
@@ -214,9 +212,9 @@ export class AuthenticationService {
         params.append('redirect_uri', this.computeRedirectUri());
 
         const headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
-        return this.handleNewToken(this.httpClient.post<AuthObject>(this.askTokenUrl
-            , params.toString()
-            , {headers: headers}));
+        return this.handleNewToken(
+            this.httpClient.post<AuthObject>(this.askTokenUrl, params.toString(), {headers: headers})
+        );
     }
 
     /**
@@ -236,14 +234,14 @@ export class AuthenticationService {
         // beware clientId for access_token is an oauth parameters
         params.append('clientId', this.clientId);
         const headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
-        return this.handleNewToken(this.httpClient.post<AuthObject>(this.askTokenUrl
-            , params.toString()
-            , {headers: headers}));
+        return this.handleNewToken(
+            this.httpClient.post<AuthObject>(this.askTokenUrl, params.toString(), {headers: headers})
+        );
     }
 
     private handleNewToken(call: Observable<AuthObject>): Observable<PayloadForSuccessfulAuthentication> {
         return call.pipe(
-            map(data => {
+            map((data) => {
                 return {...data, clientId: this.guidService.getCurrentGuid()};
             }),
             map((auth: AuthObject) => this.convert(auth)),
@@ -257,15 +255,14 @@ export class AuthenticationService {
     }
 
     public loadUserData(auth: PayloadForSuccessfulAuthentication): Observable<PayloadForSuccessfulAuthentication> {
-        return this.httpClient.get<User>(`${this.userDataUrl}/${auth.identifier}`)
-            .pipe(
-                map(u => {
-                    auth.firstName = u.firstName;
-                    auth.lastName = u.lastName;
-                    return auth;
-                }),
-                catchError(() => of(auth))
-            );
+        return this.httpClient.get<User>(`${this.userDataUrl}/${auth.identifier}`).pipe(
+            map((u) => {
+                auth.firstName = u.firstName;
+                auth.lastName = u.lastName;
+                return auth;
+            }),
+            catchError(() => of(auth))
+        );
     }
 
     /**
@@ -274,7 +271,6 @@ export class AuthenticationService {
     public extractToken(): string {
         return this.authModeHandler.extractToken();
     }
-
 
     /**
      * clear the `localstorage` from all its content.
@@ -311,18 +307,15 @@ export class AuthenticationService {
             Guid.parse(localStorage.getItem(LocalStorageAuthContent.clientId)),
             localStorage.getItem(LocalStorageAuthContent.token),
             // as getItem return a string, `+` is used to convert the string into number
-            new Date(+localStorage.getItem(LocalStorageAuthContent.expirationDate)),
+            new Date(+localStorage.getItem(LocalStorageAuthContent.expirationDate))
         );
     }
-
 
     /**
      * helper method to convert an {AuthObject} instance into a {PayloadForSuccessfulAuthentication} instance.
      * @param payload
      */
-    public convert(payload: AuthObject):
-        PayloadForSuccessfulAuthentication {
-
+    public convert(payload: AuthObject): PayloadForSuccessfulAuthentication {
         let expirationDate;
         const jwt = this.decodeToken(payload.access_token);
         if (!!payload.expires_in) {
@@ -332,7 +325,8 @@ export class AuthenticationService {
         } else {
             expirationDate = 0;
         }
-        return new PayloadForSuccessfulAuthentication(jwt[this.loginClaim],
+        return new PayloadForSuccessfulAuthentication(
+            jwt[this.loginClaim],
             payload.clientId,
             payload.access_token,
             new Date(expirationDate),
@@ -345,7 +339,7 @@ export class AuthenticationService {
      * helper method to put the jwt token into an appropriate string usable as an http header
      */
     public getSecurityHeader() {
-        return {'Authorization': `Bearer ${this.extractToken()}`};
+        return {Authorization: `Bearer ${this.extractToken()}`};
     }
 
     public moveToCodeFlowLoginPage() {
@@ -359,10 +353,9 @@ export class AuthenticationService {
         }
     }
 
-
     computeRedirectUri() {
         const uriBase = location.origin;
-        const pathEnd = (location.pathname.length > 1) ? location.pathname : '';
+        const pathEnd = location.pathname.length > 1 ? location.pathname : '';
         return `${uriBase}${pathEnd}`;
     }
 
@@ -373,7 +366,6 @@ export class AuthenticationService {
             return null;
         }
     }
-
 
     public getAuthenticationMode(): string {
         return this.mode;
@@ -396,33 +388,23 @@ export class AuthenticationService {
     }
 }
 
-
 /**
  * class used to login using the authentication web service.
  */
 export class AuthObject {
-
     constructor(
         public access_token: string,
-        public expires_in: number,    // token_received,
+        public expires_in: number, // token_received,
         public clientId: Guid,
         public identifier?: string
-    ) {
-    }
-
-}    // token_received,
-
+    ) {}
+} // token_received,
 
 /**
  * class corresponding to the response of the web service checking jwt token when this token is a valid one.
  */
 export class CheckTokenResponse {
-    constructor(
-        public sub?: string,
-        public exp?: number,
-        public clientId?: string,
-    ) {
-    }
+    constructor(public sub?: string, public exp?: number, public clientId?: string) {}
 }
 
 /**
@@ -432,7 +414,6 @@ export interface AuthenticationModeHandler {
     initializeAuthentication(currentHrefLocation: string): void;
 
     extractToken(): string;
-
 }
 
 /**
@@ -441,26 +422,22 @@ export interface AuthenticationModeHandler {
  * OAuth 2.0 password grant or code flow mode
  */
 export class PasswordOrCodeAuthenticationHandler implements AuthenticationModeHandler {
-
-    constructor(private authenticationService: AuthenticationService,
-                private store: Store<AppState>) {
-    }
+    constructor(private authenticationService: AuthenticationService, private store: Store<AppState>) {}
 
     initializeAuthentication(currentLocationHref: string) {
         const searchCodeString = 'code=';
         const foundIndex = currentLocationHref.indexOf(searchCodeString);
         if (foundIndex !== -1) {
             this.store.dispatch(
-                new InitAuthStatus({code: currentLocationHref.substring(foundIndex + searchCodeString.length)}));
+                new InitAuthStatus({code: currentLocationHref.substring(foundIndex + searchCodeString.length)})
+            );
         }
-        this.store.dispatch(
-            new CheckAuthenticationStatus());
+        this.store.dispatch(new CheckAuthenticationStatus());
     }
 
     public extractToken(): string {
         return localStorage.getItem(LocalStorageAuthContent.token);
     }
-
 }
 
 /**
@@ -468,50 +445,45 @@ export class PasswordOrCodeAuthenticationHandler implements AuthenticationModeHa
  * use the Oidc Connect library to manage OAuth 2.0 implicit authentication mode
  */
 export class ImplicitAuthenticationHandler implements AuthenticationModeHandler {
-    constructor(private authenticationService: AuthenticationService
-        , private store: Store<AppState>
-        , private storage: Storage
-        , private oauthService: OAuthService
-        , private guidService: GuidService
-        , private router: Router
-        , private implicitConf
-        , private givenNameClaim
-        , private familyNameClaim) {
-    }
+    constructor(
+        private authenticationService: AuthenticationService,
+        private store: Store<AppState>,
+        private storage: Storage,
+        private oauthService: OAuthService,
+        private guidService: GuidService,
+        private router: Router,
+        private implicitConf,
+        private givenNameClaim,
+        private familyNameClaim
+    ) {}
 
     initializeAuthentication(currentLocationHref: string) {
         this.initFlow();
     }
 
-
     public async initFlow() {
         this.oauthService.configure(this.implicitConf);
         this.oauthService.setupAutomaticSilentRefresh();
         this.oauthService.tokenValidationHandler = new JwksValidationHandler();
-        await this.oauthService.loadDiscoveryDocument()
-            .then(() => {
-                    this.tryToLogin();
-                }
-            );
-        this.oauthService.events.subscribe(e => {
+        await this.oauthService.loadDiscoveryDocument().then(() => {
+            this.tryToLogin();
+        });
+        this.oauthService.events.subscribe((e) => {
             this.dispatchAppStateActionFromOAuth2Events(e);
         });
     }
 
     public async tryToLogin() {
-        await this.oauthService.tryLogin()
-            .then(() => {
-                if (this.oauthService.hasValidAccessToken()) {
-                    this.store.dispatch(new AcceptLogIn(this.providePayloadForSuccessfulAuthentication()));
-                    redirectToCurrentLocation(this.router);
-                } else {
-                    sessionStorage.setItem('flow', 'implicit');
-                    this.oauthService.initImplicitFlow();
-                }
-
-            });
+        await this.oauthService.tryLogin().then(() => {
+            if (this.oauthService.hasValidAccessToken()) {
+                this.store.dispatch(new AcceptLogIn(this.providePayloadForSuccessfulAuthentication()));
+                redirectToCurrentLocation(this.router);
+            } else {
+                sessionStorage.setItem('flow', 'implicit');
+                this.oauthService.initImplicitFlow();
+            }
+        });
     }
-
 
     public providePayloadForSuccessfulAuthentication(): PayloadForSuccessfulAuthentication {
         const identityClaims = this.oauthService.getIdentityClaims();
@@ -521,20 +493,26 @@ export class ImplicitAuthenticationHandler implements AuthenticationModeHandler 
         const clientId = this.guidService.getCurrentGuid();
         const token = this.oauthService.getAccessToken();
         const expirationDate = new Date(this.oauthService.getAccessTokenExpiration());
-        return new PayloadForSuccessfulAuthentication(identifier, clientId, token, expirationDate, givenName, familyName);
+        return new PayloadForSuccessfulAuthentication(
+            identifier,
+            clientId,
+            token,
+            expirationDate,
+            givenName,
+            familyName
+        );
     }
-
 
     dispatchAppStateActionFromOAuth2Events(event: OAuthEvent): void {
         const eventType: OAuthType = event.type;
         switch (eventType) {
             // We can have a token_error or token_refresh_error when it is not possible to refresh token
             // This case arise for example when using a SSO and the session is not valid anymore (session timeout)
-            case ('token_error'):
-            case('token_refresh_error'):
+            case 'token_error':
+            case 'token_refresh_error':
                 this.store.dispatch(new SessionExpired());
                 break;
-            case('logout'): {
+            case 'logout': {
                 this.store.dispatch(new UnAuthenticationFromImplicitFlow());
                 break;
             }
@@ -544,32 +522,53 @@ export class ImplicitAuthenticationHandler implements AuthenticationModeHandler 
     public extractToken(): string {
         return this.storage.getItem('access_token');
     }
-
 }
 
-// Use in case we have no authentication process via opfab 
+// Use in case we have no authentication process via opfab
 // The token is provide by an intermediate between the browser and the web-ui (Specific SSO implementation)
 // We get the user information by calling endpoint /currentUserWithPerimeters
 export class NoAuthenticationHandler implements AuthenticationModeHandler {
-    constructor( private store: Store<AppState>,private router: Router, private userService: UserService, private guidService: GuidService) {
-    }
+    constructor(
+        private store: Store<AppState>,
+        private router: Router,
+        private userService: UserService,
+        private guidService: GuidService
+    ) {}
 
     initializeAuthentication(currentLocationHref: string) {
         const currentUser = this.userService.currentUserWithPerimeters();
-        currentUser.subscribe(foundUser => {
+        currentUser.subscribe((foundUser) => {
             if (foundUser != null) {
-                console.log(new Date().toISOString(), 'User ('+ foundUser.userData.login +') found');
+                console.log(new Date().toISOString(), 'User (' + foundUser.userData.login + ') found');
                 const clientId = this.guidService.getCurrentGuid();
-                this.store.dispatch(new AcceptLogIn(new PayloadForSuccessfulAuthentication(foundUser.userData.login,clientId,null,null, foundUser.userData.firstName, foundUser.userData.lastName)));
+                this.store.dispatch(
+                    new AcceptLogIn(
+                        new PayloadForSuccessfulAuthentication(
+                            foundUser.userData.login,
+                            clientId,
+                            null,
+                            null,
+                            foundUser.userData.firstName,
+                            foundUser.userData.lastName
+                        )
+                    )
+                );
                 redirectToCurrentLocation(this.router);
             } else {
-                this.store.dispatch(new RejectLogIn({error: new Message('Unable to authenticate the user', MessageLevel.ERROR, new I18n('login.error.authenticate', null))}));
+                this.store.dispatch(
+                    new RejectLogIn({
+                        error: new Message(
+                            'Unable to authenticate the user',
+                            MessageLevel.ERROR,
+                            new I18n('login.error.authenticate', null)
+                        )
+                    })
+                );
             }
         });
     }
 
     public extractToken(): string {
-        return "";
+        return '';
     }
-
 }

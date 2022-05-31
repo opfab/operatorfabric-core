@@ -7,8 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {Action} from '@ngrx/store';
 import {Card} from '@ofModel/card.model';
 
@@ -24,20 +22,16 @@ export class ClearCard implements Action {
 }
 export class LoadCard implements Action {
     readonly type = CardActionTypes.LoadCard;
-    constructor(public payload: { id: string }) {}
+    constructor(public payload: {id: string}) {}
 }
 export class LoadCardFailure implements Action {
     readonly type = CardActionTypes.LoadCardFailure;
-    constructor(public payload: { error: Error }) {}
+    constructor(public payload: {error: Error}) {}
 }
 
 export class LoadCardSuccess implements Action {
     readonly type = CardActionTypes.LoadCardSuccess;
-    constructor(public payload: { card: Card, childCards: Card[] }) {}
+    constructor(public payload: {card: Card; childCards: Card[]}) {}
 }
 
-
-export type CardActions = ClearCard
-    | LoadCard
-    | LoadCardSuccess
-    | LoadCardFailure;
+export type CardActions = ClearCard | LoadCard | LoadCardSuccess | LoadCardFailure;

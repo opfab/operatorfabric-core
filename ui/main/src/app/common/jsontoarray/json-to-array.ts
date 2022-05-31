@@ -15,16 +15,15 @@ export class FieldDescription {
     public type: string;
     public isNested: boolean;
 
-    constructor(jsonField: string, type: string, columnNumber: number,  isNested: boolean) {
+    constructor(jsonField: string, type: string, columnNumber: number, isNested: boolean) {
         this.jsonField = jsonField;
-        this.type= type;
+        this.type = type;
         this.columnNumber = columnNumber;
         this.isNested = isNested;
     }
 }
 
 export class JsonToArray {
-
     private jsonAsArray: string[][] = [[]];
     private fieldDescriptions: FieldDescription[] = [];
     private columnIndexes = new Map();
@@ -32,22 +31,24 @@ export class JsonToArray {
     private fieldsProcessOnlyIfPreviousArraysAreEmpty = new Set();
 
     constructor(rules: any) {
-        rules.forEach(rule => this.processRule(rule, false));
+        rules.forEach((rule) => this.processRule(rule, false));
     }
-
 
     private processRule(rule, innerRule: boolean) {
         if (!rule.jsonField) return;
         if (!!rule.fields) {
-            this.fieldDescriptions.push(new FieldDescription(rule.jsonField, rule.type ,-1 , true));
-            if (rule.processOnlyIfPreviousArraysAreEmpty) this.fieldsProcessOnlyIfPreviousArraysAreEmpty.add(rule.jsonField);
-            rule.fields.forEach(field => this.processRule(field, true));
+            this.fieldDescriptions.push(new FieldDescription(rule.jsonField, rule.type, -1, true));
+            if (rule.processOnlyIfPreviousArraysAreEmpty)
+                this.fieldsProcessOnlyIfPreviousArraysAreEmpty.add(rule.jsonField);
+            rule.fields.forEach((field) => this.processRule(field, true));
             this.nestedJsonToArrays.set(rule.jsonField, new JsonToArray(rule.fields));
-        }
-        else {
+        } else {
             if (rule.columnName) {
-                this.addColumn(rule.columnName)
-                if (!innerRule) this.fieldDescriptions.push(new FieldDescription(rule.jsonField, rule.type ,this.columnIndexes.get(rule.columnName), false));
+                this.addColumn(rule.columnName);
+                if (!innerRule)
+                    this.fieldDescriptions.push(
+                        new FieldDescription(rule.jsonField, rule.type, this.columnIndexes.get(rule.columnName), false)
+                    );
             }
         }
     }
@@ -59,25 +60,25 @@ export class JsonToArray {
         }
     }
 
-
     public add(jsonObject: any) {
         const linesToAppend: string[][] = new Array();
         linesToAppend.push(new Array(this.jsonAsArray[0].length));
         this.fillArrayWithEmptyStrings(linesToAppend[0]);
         this.addFieldsToAppend(jsonObject, linesToAppend);
         this.addNestedArrayToAppend(jsonObject, linesToAppend);
-        linesToAppend.forEach(line => this.jsonAsArray.push(line));
+        linesToAppend.forEach((line) => this.jsonAsArray.push(line));
     }
 
     private fillArrayWithEmptyStrings(array: string[]): void {
-        for (let index = 0; index < array.length; index++) array[index] = "";
+        for (let index = 0; index < array.length; index++) array[index] = '';
     }
 
     private addFieldsToAppend(jsonObject, linesToAppend) {
-        this.fieldDescriptions.forEach(fieldDescription => {
+        this.fieldDescriptions.forEach((fieldDescription) => {
             let fieldValue = _.get(jsonObject, fieldDescription.jsonField);
             if (!!fieldValue) {
-                if (!!fieldDescription.type && fieldDescription.type==="EPOCHDATE" && !isNaN(fieldValue)) fieldValue= new Date(fieldValue);
+                if (!!fieldDescription.type && fieldDescription.type === 'EPOCHDATE' && !isNaN(fieldValue))
+                    fieldValue = new Date(fieldValue);
                 linesToAppend[0][fieldDescription.columnNumber] = fieldValue;
             }
         });
@@ -89,8 +90,11 @@ export class JsonToArray {
         let startIndexForAppending = 0;
         for (let [jsonField, nestedJsonToArray] of this.nestedJsonToArrays) {
             const nestedJsonObjects = _.get(jsonObject, jsonField);
-            if ((!!nestedJsonObjects) && (noArrayProcessedYet || !this.fieldsProcessOnlyIfPreviousArraysAreEmpty.has(jsonField))) {
-                nestedJsonObjects.forEach(nestedObject => {
+            if (
+                !!nestedJsonObjects &&
+                (noArrayProcessedYet || !this.fieldsProcessOnlyIfPreviousArraysAreEmpty.has(jsonField))
+            ) {
+                nestedJsonObjects.forEach((nestedObject) => {
                     nestedJsonToArray.add(nestedObject);
                 });
                 let nestedArray = nestedJsonToArray.getJsonAsArray();
@@ -106,9 +110,13 @@ export class JsonToArray {
 
     private addLinesFromNestedArray(nestedArray, linesToAppend, lineToDuplicate, startIndexForAppending) {
         for (let nestedArrayRowIndex = 0; nestedArrayRowIndex < nestedArray.length - 1; nestedArrayRowIndex++) {
-            // If not the first line in the table prepare new line 
+            // If not the first line in the table prepare new line
             if (nestedArrayRowIndex + startIndexForAppending > 0) linesToAppend.push(Array.from(lineToDuplicate));
-            for (let nestedArrayColumnIndex = 0; nestedArrayColumnIndex < nestedArray[0].length; nestedArrayColumnIndex++) {
+            for (
+                let nestedArrayColumnIndex = 0;
+                nestedArrayColumnIndex < nestedArray[0].length;
+                nestedArrayColumnIndex++
+            ) {
                 const col = nestedArray[0][nestedArrayColumnIndex];
                 const value = nestedArray[nestedArrayRowIndex + 1][nestedArrayColumnIndex];
                 const columnIndex = this.columnIndexes.get(col);
@@ -122,11 +130,8 @@ export class JsonToArray {
     }
 
     public cleanJsonAsArray() {
-        const firstLine = this.jsonAsArray[0]
+        const firstLine = this.jsonAsArray[0];
         this.jsonAsArray = [[]];
         this.jsonAsArray[0] = Array.from(firstLine);
-
     }
-
-
 }

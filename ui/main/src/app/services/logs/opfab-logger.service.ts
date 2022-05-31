@@ -10,52 +10,47 @@
 import {Injectable} from '@angular/core';
 import {RemoteLoggerService} from './remote-logger.service';
 
-
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class OpfabLoggerService {
+    constructor(private remoteLogger: RemoteLoggerService) {}
 
-  constructor(private remoteLogger: RemoteLoggerService) {
-  }
-
-  private log(log: string, logLevel: string, logOption: LogOption) {
-    const logLine = new Date().toISOString() + ' ' + logLevel + ' ' + log;
-    switch (logOption) {
-      case LogOption.LOCAL:
-        console.log(logLine);
-        break;
-      case LogOption.REMOTE:
-        this.remoteLogger.postLog(logLine);
-        break;
-      case LogOption.LOCAL_AND_REMOTE:
-        console.log(logLine);
-        this.remoteLogger.postLog(logLine);
-        break;
+    private log(log: string, logLevel: string, logOption: LogOption) {
+        const logLine = new Date().toISOString() + ' ' + logLevel + ' ' + log;
+        switch (logOption) {
+            case LogOption.LOCAL:
+                console.log(logLine);
+                break;
+            case LogOption.REMOTE:
+                this.remoteLogger.postLog(logLine);
+                break;
+            case LogOption.LOCAL_AND_REMOTE:
+                console.log(logLine);
+                this.remoteLogger.postLog(logLine);
+                break;
+        }
     }
-  }
 
-  debug(log: string, logOption: LogOption = LogOption.LOCAL) {
-    this.log(log, 'DEBUG', logOption);
-  }
+    debug(log: string, logOption: LogOption = LogOption.LOCAL) {
+        this.log(log, 'DEBUG', logOption);
+    }
 
-  info(log: string, logOption: LogOption = LogOption.LOCAL) {
-    this.log(log, 'INFO', logOption);
-  }
+    info(log: string, logOption: LogOption = LogOption.LOCAL) {
+        this.log(log, 'INFO', logOption);
+    }
 
-  warn(log: string, logOption: LogOption = LogOption.LOCAL) {
-    this.log(log, 'WARNING', logOption);
-  }
+    warn(log: string, logOption: LogOption = LogOption.LOCAL) {
+        this.log(log, 'WARNING', logOption);
+    }
 
-
-  error(log: string, logOption: LogOption = LogOption.LOCAL) {
-    this.log(log, 'ERROR', logOption);
-  }
-
-
+    error(log: string, logOption: LogOption = LogOption.LOCAL) {
+        this.log(log, 'ERROR', logOption);
+    }
 }
 
 export enum LogOption {
-  LOCAL, REMOTE, LOCAL_AND_REMOTE
+    LOCAL,
+    REMOTE,
+    LOCAL_AND_REMOTE
 }
-

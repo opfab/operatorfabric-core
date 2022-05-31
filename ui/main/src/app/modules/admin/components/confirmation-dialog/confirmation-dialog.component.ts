@@ -12,28 +12,26 @@ import {Component, Input} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'of-confirmation-dialog',
-  templateUrl: './confirmation-dialog.component.html'
+    selector: 'of-confirmation-dialog',
+    templateUrl: './confirmation-dialog.component.html'
 })
 export class ConfirmationDialogComponent {
+    @Input() title: string;
+    @Input() message: string;
+    @Input() btnOkText: string;
+    @Input() btnCancelText: string;
 
-  @Input() title: string;
-  @Input() message: string;
-  @Input() btnOkText: string;
-  @Input() btnCancelText: string;
+    constructor(private activeModal: NgbActiveModal) {}
 
-  constructor(private activeModal: NgbActiveModal) { }
+    public decline() {
+        this.activeModal.close(false);
+    }
 
-  public decline() {
-    this.activeModal.close(false);
-  }
+    public accept() {
+        this.activeModal.close(true);
+    }
 
-  public accept() {
-    this.activeModal.close(true);
-  }
-
-  public dismiss() {
-    this.activeModal.dismiss();
-  }
-
+    public dismiss() {
+        this.activeModal.dismiss();
+    }
 }

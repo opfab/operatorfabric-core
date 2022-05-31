@@ -7,22 +7,19 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 export class CountDown {
-
     private counting = false;
     private ended = false;
     private stop = false;
     private endTime: number;
     private milliSecondsBeforeEndTimeForStartingCount: number;
-    private countDown = "";
+    private countDown = '';
 
     constructor(endTime: number, secondsBeforeEndTimeForStartingCount: number) {
         this.endTime = endTime;
         this.milliSecondsBeforeEndTimeForStartingCount = secondsBeforeEndTimeForStartingCount * 1000;
         this.computeCountDown();
     }
-
 
     private computeCountDown() {
         if (this.stop) return;
@@ -31,9 +28,8 @@ export class CountDown {
             this.counting = false;
             this.ended = true;
             return;
-        } 
+        }
         if (remindingTime < this.milliSecondsBeforeEndTimeForStartingCount) {
-
             this.counting = true;
             const remindingTimeInSeconds = Math.round(remindingTime / 1000);
 
@@ -56,7 +52,6 @@ export class CountDown {
         return numberToConvert.toString();
     }
 
-
     public isCounting(): boolean {
         return this.counting;
     }
@@ -72,5 +67,4 @@ export class CountDown {
     public stopCountDown(): void {
         this.stop = true;
     }
-
 }

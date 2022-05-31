@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Injectable, OnDestroy} from '@angular/core';
 import {EntitiesService} from '@ofServices/entities.service';
 import {GroupsService} from '@ofServices/groups.service';
@@ -26,15 +25,15 @@ import {PerimetersService} from '@ofServices/perimeters.service';
 
 @Injectable()
 export class SharingService implements OnDestroy {
-
     private readonly _paginationPageSize$: ReplaySubject<number>;
     private unsubscribe$: Subject<void> = new Subject<void>();
 
-    constructor(private entitiesService: EntitiesService,
-                private groupsService: GroupsService,
-                private userService: UserService,
-                private perimetersService: PerimetersService) {
-
+    constructor(
+        private entitiesService: EntitiesService,
+        private groupsService: GroupsService,
+        private userService: UserService,
+        private perimetersService: PerimetersService
+    ) {
         this._paginationPageSize$ = new ReplaySubject<number>();
 
         // Initialization necessary for perimeters selection dropdown in modals and to display names instead of codes
@@ -46,11 +45,16 @@ export class SharingService implements OnDestroy {
      * */
     public resolveCrudServiceDependingOnType(adminItemType: AdminItemType): CrudService {
         switch (adminItemType) {
-            case AdminItemType.ENTITY: return this.entitiesService;
-            case AdminItemType.GROUP: return this.groupsService;
-            case AdminItemType.USER: return this.userService;
-            case AdminItemType.PERIMETER: return this.perimetersService;
-            default: throw Error('No CrudService associated with ' + adminItemType);
+            case AdminItemType.ENTITY:
+                return this.entitiesService;
+            case AdminItemType.GROUP:
+                return this.groupsService;
+            case AdminItemType.USER:
+                return this.userService;
+            case AdminItemType.PERIMETER:
+                return this.perimetersService;
+            default:
+                throw Error('No CrudService associated with ' + adminItemType);
         }
     }
 
@@ -58,10 +62,14 @@ export class SharingService implements OnDestroy {
      * */
     public resolveCachedCrudServiceDependingOnType(adminItemType: AdminItemType): CachedCrudService {
         switch (adminItemType) {
-            case AdminItemType.ENTITY: return this.entitiesService;
-            case AdminItemType.GROUP: return this.groupsService;
-            case AdminItemType.PERIMETER: return this.perimetersService;
-            default: throw Error('No CachedCrudService associated with ' + adminItemType);
+            case AdminItemType.ENTITY:
+                return this.entitiesService;
+            case AdminItemType.GROUP:
+                return this.groupsService;
+            case AdminItemType.PERIMETER:
+                return this.perimetersService;
+            default:
+                throw Error('No CachedCrudService associated with ' + adminItemType);
         }
     }
 

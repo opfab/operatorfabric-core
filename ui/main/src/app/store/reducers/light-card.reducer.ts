@@ -7,22 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {LightCardActions, LightCardActionTypes} from '@ofActions/light-card.actions';
 import {CardFeedState, feedInitialState} from '@ofStates/feed.state';
 
-
-export function reducer(
-    state: CardFeedState = feedInitialState,
-    action: LightCardActions
-): CardFeedState {
-
+export function reducer(state: CardFeedState = feedInitialState, action: LightCardActions): CardFeedState {
     switch (action.type) {
-
         case LightCardActionTypes.SelectLightCard: {
             return {
                 ...state,
-                selectedCardId: action.payload.selectedCardId,
+                selectedCardId: action.payload.selectedCardId
             };
         }
 
@@ -36,9 +29,5 @@ export function reducer(
         default: {
             return state;
         }
-
     }
 }
-
-
-

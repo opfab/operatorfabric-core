@@ -10,26 +10,17 @@
 import {User} from '@ofModel/user.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
 
-
 export class UserWithPerimeters {
-
     public constructor(
         readonly userData: User,
         readonly computedPerimeters?: Array<ComputedPerimeter>,
         readonly processesStatesNotNotified?: Map<string, Array<string>>
-    ) { }
-
+    ) {}
 }
 
 export class ComputedPerimeter {
-    public constructor(
-        readonly process: string,
-        readonly state: string,
-        readonly rights: RightsEnum
-    ) { }
-
+    public constructor(readonly process: string, readonly state: string, readonly rights: RightsEnum) {}
 }
-
 
 export function userRight(rights: RightsEnum) {
     let result;

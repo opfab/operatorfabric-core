@@ -7,16 +7,21 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {AppState} from '@ofStore/index';
 import {createSelector} from '@ngrx/store';
 import {SettingsState} from '@ofStates/settings.state';
 import * as _ from 'lodash-es';
 
 export const selectSettings = (state: AppState) => state.settings;
-export const selectSettingsLoaded = createSelector(selectSettings, (settingsState: SettingsState) => settingsState.loaded);
+export const selectSettingsLoaded = createSelector(
+    selectSettings,
+    (settingsState: SettingsState) => settingsState.loaded
+);
 
-export const selectSettingsData = createSelector(selectSettings, (settingsState: SettingsState) => settingsState.settings);
+export const selectSettingsData = createSelector(
+    selectSettings,
+    (settingsState: SettingsState) => settingsState.settings
+);
 
 export function buildSettingsSelector(path: string, fallback: any = null) {
     return createSelector(selectSettingsData, (settings) => {

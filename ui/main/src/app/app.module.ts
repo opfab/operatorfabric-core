@@ -8,7 +8,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {BrowserModule} from '@angular/platform-browser';
 import {ErrorHandler, NgModule} from '@angular/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -33,44 +32,40 @@ import {TagInputModule} from 'ngx-chips';
 import {TokenInjector} from '@ofServices/interceptors.service';
 import {ActivityareaModule} from './modules/activityarea/activityarea.module';
 
-
 @NgModule({
-  imports: [
-    CommonModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
-    TagInputModule,
-    OAuthModule.forRoot(),
-    HttpClientModule,
-    StateModule.forRoot(),
-    NgbModule,
-    TranslateModule.forRoot(),
-    ArchivesModule,
-    LoggingModule,
-    MonitoringModule,
-    NgbModalModule,
-    AppRoutingModule,
-    AdminModule,
-    CalendarModule,
-    NavbarModule,
-    ActivityareaModule ],
-  declarations: [AppComponent,
-    LoginComponent
-  ],
+    imports: [
+        CommonModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        TagInputModule,
+        OAuthModule.forRoot(),
+        HttpClientModule,
+        StateModule.forRoot(),
+        NgbModule,
+        TranslateModule.forRoot(),
+        ArchivesModule,
+        LoggingModule,
+        MonitoringModule,
+        NgbModalModule,
+        AppRoutingModule,
+        AdminModule,
+        CalendarModule,
+        NavbarModule,
+        ActivityareaModule
+    ],
+    declarations: [AppComponent, LoginComponent],
 
-
-  providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy },
-  { provide: ErrorHandler, useClass: AppErrorHandler },
-  {
-    provide: HTTP_INTERCEPTORS,
-    useClass: TokenInjector,
-    multi: true
-}
-  ],
-  bootstrap: [AppComponent]
+    providers: [
+        {provide: LocationStrategy, useClass: HashLocationStrategy},
+        {provide: ErrorHandler, useClass: AppErrorHandler},
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: TokenInjector,
+            multi: true
+        }
+    ],
+    bootstrap: [AppComponent]
 })
-export class AppModule {
-
-}
+export class AppModule {}

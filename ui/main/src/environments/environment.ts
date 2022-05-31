@@ -7,8 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build ---prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
@@ -33,7 +31,6 @@ export const environment = {
         menuConfig: 'http://localhost:2002/config/ui-menu.json',
         externalDevices: 'http://localhost:2002/externaldevices',
         remoteLogs: 'http://localhost:2002/cards/logs'
-
     },
     paths: {
         i18n: '/assets/i18n/'

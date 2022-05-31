@@ -7,8 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {Injectable} from '@angular/core';
 import * as moment from 'moment';
 import {TranslateService} from '@ngx-translate/core';
@@ -18,7 +16,7 @@ import {AppState} from '@ofStore/index';
 import {buildSettingsOrConfigSelector} from '@ofSelectors/settings.x.config.selectors';
 import {Observable} from 'rxjs';
 import {environment} from '@env/environment';
-import { tap } from 'rxjs/operators';
+import {tap} from 'rxjs/operators';
 
 declare const opfab: any;
 
@@ -26,7 +24,6 @@ declare const opfab: any;
     providedIn: 'root'
 })
 export class I18nService {
-
     private static localUrl = '/assets/i18n/';
     private _locale: string;
 
@@ -36,7 +33,6 @@ export class I18nService {
     }
 
     public changeLocale(locale: string) {
-
         if (locale) {
             this._locale = locale;
         } else {
@@ -44,7 +40,7 @@ export class I18nService {
         }
         moment.locale(this._locale);
         this.translate.use(this._locale);
-        this.setTranslationForMultiSelectUsedInTemplates();     
+        this.setTranslationForMultiSelectUsedInTemplates();
     }
 
     public setTranslationForMultiSelectUsedInTemplates() {
@@ -67,9 +63,15 @@ export class I18nService {
     }
 
     public loadLocale(locale: string): Observable<any> {
-        return this.httpClient.get(`${I18nService.localUrl}${locale}.json`).pipe( tap({
-            next: translation => this.translate.setTranslation(locale, translation, true),
-            error: error => console.log(new Date().toISOString(),`Error : impossible to load locale ${I18nService.localUrl}${locale}.json`)
-        }));
+        return this.httpClient.get(`${I18nService.localUrl}${locale}.json`).pipe(
+            tap({
+                next: (translation) => this.translate.setTranslation(locale, translation, true),
+                error: (error) =>
+                    console.log(
+                        new Date().toISOString(),
+                        `Error : impossible to load locale ${I18nService.localUrl}${locale}.json`
+                    )
+            })
+        );
     }
 }

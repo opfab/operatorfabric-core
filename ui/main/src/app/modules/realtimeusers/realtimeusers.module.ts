@@ -7,25 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RealtimeusersComponent } from './realtimeusers.component';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {RealtimeusersComponent} from './realtimeusers.component';
 import {RealtimeusersRoutingModule} from './realtimeusers-routing.module';
 import {TranslateModule} from '@ngx-translate/core';
-import {SingleFilterModule} from "../share/single-filter/single-filter.module";
-import {ReactiveFormsModule} from "@angular/forms";
-
+import {SingleFilterModule} from '../share/single-filter/single-filter.module';
+import {ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    RealtimeusersComponent
-  ],
-    imports: [
-        CommonModule,
-        TranslateModule,
-        RealtimeusersRoutingModule,
-        SingleFilterModule,
-        ReactiveFormsModule
-    ]
+    declarations: [RealtimeusersComponent],
+    imports: [CommonModule, TranslateModule, RealtimeusersRoutingModule, SingleFilterModule, ReactiveFormsModule]
 })
-export class RealtimeusersModule { }
+export class RealtimeusersModule {}

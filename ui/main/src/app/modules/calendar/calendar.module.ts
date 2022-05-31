@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {CalendarComponent} from './calendar.component';
@@ -19,20 +18,10 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
 
-FullCalendarModule.registerPlugins([
-  dayGridPlugin,
-  timeGridPlugin,
-  interactionPlugin,
-  bootstrapPlugin
-]);
+FullCalendarModule.registerPlugins([dayGridPlugin, timeGridPlugin, interactionPlugin, bootstrapPlugin]);
 
 @NgModule({
-  declarations: [CalendarComponent],
-  imports: [
-    CommonModule,
-    FullCalendarModule,
-    CardsModule,
-    NgbModule
-  ]
+    declarations: [CalendarComponent],
+    imports: [CommonModule, FullCalendarModule, CardsModule, NgbModule]
 })
-export class CalendarModule { }
+export class CalendarModule {}

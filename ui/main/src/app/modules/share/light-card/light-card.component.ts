@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {LightCard} from '@ofModel/light-card.model';
 import {Router} from '@angular/router';
@@ -33,7 +32,6 @@ import {SoundNotificationService} from '@ofServices/sound-notification.service';
     styleUrls: ['./light-card.component.scss']
 })
 export class LightCardComponent implements OnInit, OnDestroy {
-
     @Input() public open = false;
     @Input() public groupedCardOpen = false;
     @Input() public selection: Observable<string>;
@@ -51,7 +49,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
     expiredLabel = 'feed.lttdFinished';
 
     showGroupedCardsIcon = false;
-    groupedCardsVisible = true ;
+    groupedCardsVisible = true;
 
     private ngUnsubscribe: Subject<void> = new Subject<void>();
 
@@ -67,8 +65,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
         private userPreferencesService: UserPreferencesService,
         private groupedCardsService: GroupedCardsService,
         private soundNotificationService: SoundNotificationService
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this._i18nPrefix = `${this.lightCard.process}.${this.lightCard.processVersion}.`;
@@ -88,23 +85,24 @@ export class LightCardComponent implements OnInit, OnDestroy {
     }
 
     computeLttdParams() {
-        this.processesService.queryProcess(this.lightCard.process, this.lightCard.processVersion).subscribe( process => {
-            const state = process.extractState(this.lightCard);
-            if (state.type === TypeOfStateEnum.FINISHED) {
-                this.showExpiredIcon = false;
-                this.showExpiredLabel = false;
-            } else if (!!state.response) {
-                this.showExpiredIcon = false;
-                this.expiredLabel = 'feed.responsesClosed';
-            }
-        });
+        this.processesService
+            .queryProcess(this.lightCard.process, this.lightCard.processVersion)
+            .subscribe((process) => {
+                const state = process.extractState(this.lightCard);
+                if (state.type === TypeOfStateEnum.FINISHED) {
+                    this.showExpiredIcon = false;
+                    this.showExpiredLabel = false;
+                } else if (!!state.response) {
+                    this.showExpiredIcon = false;
+                    this.expiredLabel = 'feed.responsesClosed';
+                }
+            });
     }
 
     computeFromEntity() {
         if (this.lightCard.publisherType === 'ENTITY')
             this.fromEntity = this.entitiesService.getEntityName(this.lightCard.publisher);
-        else
-            this.fromEntity = null;
+        else this.fromEntity = null;
     }
 
     computeDisplayedDate() {
@@ -122,7 +120,9 @@ export class LightCardComponent implements OnInit, OnDestroy {
                 this.dateToDisplay = this.handleDate(this.lightCard.startDate);
                 break;
             default:
-                this.dateToDisplay = `${this.handleDate(this.lightCard.startDate)} - ${this.handleDate(this.lightCard.endDate)}`;
+                this.dateToDisplay = `${this.handleDate(this.lightCard.startDate)} - ${this.handleDate(
+                    this.lightCard.endDate
+                )}`;
         }
     }
 
@@ -143,7 +143,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
         // Fix for https://github.com/opfab/operatorfabric-core/issues/2994
         this.soundNotificationService.clearOutstandingNotifications();
         if (this.open && this.groupedCardsService.isParentGroupCard(this.lightCard)) {
-            this.groupedCardsVisible = ! this.groupedCardsVisible;
+            this.groupedCardsVisible = !this.groupedCardsVisible;
         } else {
             this.groupedCardsVisible = true;
         }

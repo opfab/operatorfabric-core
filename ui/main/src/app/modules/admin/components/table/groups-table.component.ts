@@ -14,18 +14,18 @@ import {AdminItemType} from '../../services/sharing.service';
 import {EditGroupModalComponent} from '../editmodal/groups/edit-group-modal.component';
 
 @Component({
-  templateUrl: 'admin-table.directive.html',
-  selector: 'of-groups-table'
+    templateUrl: 'admin-table.directive.html',
+    selector: 'of-groups-table'
 })
 export class GroupsTableComponent extends AdminTableDirective implements OnInit {
-
-  tableType = AdminItemType.GROUP;
-  fields = [new Field('id', 3),
-            new Field('name', 3),
-            new Field('description', 4),
-            new Field('perimeters', 6),
-            new Field('realtime', 4, null, this.translateValue)];
-  idField = 'id';
-  editModalComponent = EditGroupModalComponent;
-
+    tableType = AdminItemType.GROUP;
+    fields = [
+        new Field('id', 3),
+        new Field('name', 3),
+        new Field('description', 4),
+        new Field('perimeters', 6),
+        new Field('realtime', 4, null, this.translateValue)
+    ];
+    idField = 'id';
+    editModalComponent = EditGroupModalComponent;
 }

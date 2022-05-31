@@ -7,8 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {getExpirationTime, reducer} from './authentication.reducer';
 import {authInitialState, AuthState} from '@ofStates/authentication.state';
 import {
@@ -17,30 +15,25 @@ import {
     InitAuthStatus,
     PayloadForSuccessfulAuthentication,
     RejectLogIn
-} from "@ofActions/authentication.actions";
-import {Guid} from "guid-typescript";
-import {getRandomAlphanumericValue} from "@tests/helpers";
-import {Message} from "@ofModel/message.model";
+} from '@ofActions/authentication.actions';
+import {Guid} from 'guid-typescript';
+import {getRandomAlphanumericValue} from '@tests/helpers';
+import {Message} from '@ofModel/message.model';
 
 const previousGuid = Guid.create();
 const previousState: AuthState = {
-    identifier: getRandomAlphanumericValue(5,15),
+    identifier: getRandomAlphanumericValue(5, 15),
     clientId: previousGuid,
-    token: getRandomAlphanumericValue(100,150),
+    token: getRandomAlphanumericValue(100, 150),
     expirationDate: new Date(2000, 1, 1),
     message: null,
     code: null,
     firstName: 'john',
     lastName: 'doe',
     isImplicitlyAuthenticated: false
-
 };
 
-
 describe('Authentication Reducer', () => {
-
-
-
     describe('unknown action', () => {
         it('should return the initial state on intial state', () => {
             const action = {} as any;
@@ -56,15 +49,13 @@ describe('Authentication Reducer', () => {
             const result = reducer(previousState, action);
             expect(result).toBe(previousState);
             expect(result).not.toBe(authInitialState);
-        })
-
+        });
     });
 
     describe('InitAuthStatus Action', () => {
-
         it('should return a new state with information corresponding to used payload on an Initial State', () => {
             produceMockPayLoadForSucessfulAuthintication();
-            const initAction = new InitAuthStatus({code:'123'});
+            const initAction = new InitAuthStatus({code: '123'});
             const result = reducer(authInitialState, initAction);
             expect(result).not.toBe(authInitialState);
             expect(result.code).toEqual('123');
@@ -76,7 +67,6 @@ describe('Authentication Reducer', () => {
     });
 
     describe('AcceptLogin Action', () => {
-
         it('should return a new state with information corresponding to used payload on an Initial State', () => {
             const myPayload = produceMockPayLoadForSucessfulAuthintication();
             const acceptLoginAction = new AcceptLogIn(myPayload);
@@ -93,7 +83,6 @@ describe('Authentication Reducer', () => {
     });
 
     describe('AcceptLogOut Action', () => {
-
         it('should leave an empty state on authInitial State', () => {
             const logoutAction = new AcceptLogOut();
             const result = reducer(authInitialState, logoutAction);
@@ -107,17 +96,14 @@ describe('Authentication Reducer', () => {
         });
 
         it('shuold leave an empty state on a logged state', () => {
-
             const result = reducer(previousState, new AcceptLogOut());
             expect(result).not.toBe(previousState);
             expect(result).not.toBe(authInitialState);
             expect(result).toEqual(authInitialState);
-
         });
     });
 
     describe('RejectLogIn Action', () => {
-
         it('should leave an empty state but with message on an initial state', () => {
             const denialReason = new Message(getRandomAlphanumericValue(5, 15));
             const result = reducer(authInitialState, new RejectLogIn({error: denialReason}));
@@ -127,7 +113,6 @@ describe('Authentication Reducer', () => {
             expect(result.token).toBeNull();
             expect(result.identifier).toBeNull();
             expect(result.expirationDate).toEqual(new Date(0));
-
         });
 
         it('should leave an empty state but with message on a living state', () => {
@@ -140,42 +125,36 @@ describe('Authentication Reducer', () => {
             expect(result.token).toBeNull();
             expect(result.identifier).toBeNull();
             expect(result.expirationDate).toEqual(new Date(0));
-
         });
-
-    })
-
+    });
 });
 
 describe('getExpirationTime', () => {
-
     it('should return UTC zero date if no token and expirationDate are stored', () => {
         expect(getExpirationTime(authInitialState)).toEqual(0);
     });
 
     it('should return UTC zero date if no token is stored', () => {
-       const nullTokenState: AuthState = {...previousState,
-           token: null,
-       };
-       expect(getExpirationTime(nullTokenState)).toEqual(0);
+        const nullTokenState: AuthState = {...previousState, token: null};
+        expect(getExpirationTime(nullTokenState)).toEqual(0);
     });
 
     it('should return UTC zero date if no expiration date is stored', () => {
-        const nullExpirationDateState: AuthState = {...previousState,
-            expirationDate: null,
-        };
+        const nullExpirationDateState: AuthState = {...previousState, expirationDate: null};
         expect(getExpirationTime(nullExpirationDateState)).toEqual(0);
     });
 
-    it('should return stored expiration time if token and expiration date are stored', () =>{
+    it('should return stored expiration time if token and expiration date are stored', () => {
         expect(getExpirationTime(previousState)).toEqual(previousState.expirationDate.getTime());
     });
-
 });
 
-
-
-function produceMockPayLoadForSucessfulAuthintication(id?: string, clientId?: Guid, token?: string, expiration?: Date): PayloadForSuccessfulAuthentication {
+function produceMockPayLoadForSucessfulAuthintication(
+    id?: string,
+    clientId?: Guid,
+    token?: string,
+    expiration?: Date
+): PayloadForSuccessfulAuthentication {
     if (!id) {
         id = getRandomAlphanumericValue(12);
     }
@@ -188,5 +167,5 @@ function produceMockPayLoadForSucessfulAuthintication(id?: string, clientId?: Gu
     if (!expiration) {
         expiration = new Date();
     }
-    return new PayloadForSuccessfulAuthentication(id, clientId, token, expiration,'john','doe');
+    return new PayloadForSuccessfulAuthentication(id, clientId, token, expiration, 'john', 'doe');
 }

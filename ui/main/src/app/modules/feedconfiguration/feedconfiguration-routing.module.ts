@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {FeedconfigurationComponent} from './feedconfiguration.component';
@@ -23,4 +22,4 @@ const routes: Routes = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-export class FeedconfigurationRoutingModule { }
+export class FeedconfigurationRoutingModule {}

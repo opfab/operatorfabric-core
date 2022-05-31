@@ -7,11 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 export interface CardFeedState {
     selectedCardId: string;
 }
 
 export const feedInitialState: CardFeedState = {
-    selectedCardId: null,
+    selectedCardId: null
 };

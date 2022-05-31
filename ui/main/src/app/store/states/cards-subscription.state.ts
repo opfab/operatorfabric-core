@@ -7,15 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 export interface CardsSubscriptionState {
-    subscriptionOpen : boolean;
+    subscriptionOpen: boolean;
     reloadRequested: boolean;
 }
 
 export const cardsSubscriptionInitialState: CardsSubscriptionState = {
-    subscriptionOpen : true,
+    subscriptionOpen: true,
     reloadRequested: false
 };
-

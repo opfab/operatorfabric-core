@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Directive, Injectable, Input, OnDestroy, OnInit} from '@angular/core';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
@@ -22,7 +21,6 @@ import {selectIdentifier} from '@ofSelectors/authentication.selectors';
 @Directive()
 @Injectable()
 export abstract class BaseSettingDirective implements OnInit, OnDestroy {
-
     @Input() public settingPath: string;
     @Input() public messagePlaceholder: string;
     @Input() public requiredField: boolean;
@@ -31,39 +29,35 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
     form: FormGroup;
     private baseSettings = {};
 
-    protected constructor(protected store: Store<AppState>) {
-
-    }
+    protected constructor(protected store: Store<AppState>) {}
 
     ngOnInit() {
         this.form = this.initFormGroup();
         if (!this.form) {
             throw new Error('Trying to instantiate component without form');
         }
-        this.setting$ = this.store.select(buildSettingsSelector(this.settingPath))
-            .pipe(takeUntil(this.ngUnsubscribe$));
-        this.setting$.subscribe(next => this.updateValue(next));
-        this.setting$
-            .pipe(first())
-            .subscribe(() =>
-                this.form.valueChanges
-                    .pipe(
-                        takeUntil(this.ngUnsubscribe$),
-                        filter(() => this.form.valid),
-                        distinctUntilChanged((formA, formB) => this.isEqual(formA, formB)),
-                        debounce(() => timer(500))
-                    )
-                    .subscribe(next => this.dispatch(this.convert(next)))
-            );
+        this.setting$ = this.store.select(buildSettingsSelector(this.settingPath)).pipe(takeUntil(this.ngUnsubscribe$));
+        this.setting$.subscribe((next) => this.updateValue(next));
+        this.setting$.pipe(first()).subscribe(() =>
+            this.form.valueChanges
+                .pipe(
+                    takeUntil(this.ngUnsubscribe$),
+                    filter(() => this.form.valid),
+                    distinctUntilChanged((formA, formB) => this.isEqual(formA, formB)),
+                    debounce(() => timer(500))
+                )
+                .subscribe((next) => this.dispatch(this.convert(next)))
+        );
 
-        this.store.select(selectIdentifier)
+        this.store
+            .select(selectIdentifier)
             .pipe(
                 takeUntil(this.ngUnsubscribe$),
-                map(id => {
+                map((id) => {
                     return {login: id};
-                }))
-            .subscribe(next => this.baseSettings = next);
-
+                })
+            )
+            .subscribe((next) => (this.baseSettings = next));
     }
 
     ngOnDestroy() {
@@ -81,7 +75,6 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
         return value;
     }
 
-
     private dispatch(value: any) {
         const settings = {...this.baseSettings};
         settings[this.settingPath] = value.setting;
@@ -91,5 +84,4 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
     protected isEqual(formA, formB): boolean {
         return _.isEqual(formA, formB);
     }
-
 }

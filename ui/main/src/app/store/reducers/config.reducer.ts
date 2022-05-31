@@ -7,15 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {configInitialState, ConfigState} from '@ofStates/config.state';
+import {ConfigActions, ConfigActionTypes} from '@ofActions/config.actions';
 
-
-import {configInitialState, ConfigState} from "@ofStates/config.state";
-import {ConfigActions, ConfigActionTypes} from "@ofActions/config.actions";
-
-export function reducer(
-    state = configInitialState,
-    action: ConfigActions
-): ConfigState {
+export function reducer(state = configInitialState, action: ConfigActions): ConfigState {
     switch (action.type) {
         case ConfigActionTypes.LoadConfigSuccess: {
             return {

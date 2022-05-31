@@ -7,8 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {Action} from '@ngrx/store';
 
 export enum ConfigActionTypes {
@@ -17,8 +15,7 @@ export enum ConfigActionTypes {
 
 export class LoadConfigSuccess implements Action {
     readonly type = ConfigActionTypes.LoadConfigSuccess;
-    constructor(public payload: { config: any }) {
-    }
+    constructor(public payload: {config: any}) {}
 }
 
 export type ConfigActions = LoadConfigSuccess;

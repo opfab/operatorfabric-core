@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {AuthConfig} from 'angular-oauth2-oidc';
 import {environment} from '@env/environment';
 
@@ -21,7 +20,6 @@ export const implicitAuthenticationConfigFallback: AuthConfig = {
     sessionChecksEnabled: false
 };
 
-function getPathEnd()
-{
- return  (location.pathname.length > 1) ? location.pathname : '';
+function getPathEnd() {
+    return location.pathname.length > 1 ? location.pathname : '';
 }

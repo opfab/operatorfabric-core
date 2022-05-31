@@ -7,19 +7,18 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { Card, Recurrence, HourAndMinutes, TimeSpan } from '@ofModel/card.model';
+import {Card, Recurrence, HourAndMinutes, TimeSpan} from '@ofModel/card.model';
 import moment from 'moment-timezone';
 
-
-const MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS =  60000 * 15; // 15 minutes
+const MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS = 60000 * 15; // 15 minutes
 
 export function getNextTimeForRepeating(card: Card, startingDate?: number) {
     if (!!card.timeSpans) {
         let nextTime = -1;
-        card.timeSpans.forEach( timeSpan => {
+        card.timeSpans.forEach((timeSpan) => {
             const timeForRepeating = getNextTimeForRepeatingFromTimeSpan(timeSpan, startingDate);
             if (timeForRepeating !== -1) {
-                if ((nextTime === -1)  || (timeForRepeating < nextTime)) nextTime = timeForRepeating;
+                if (nextTime === -1 || timeForRepeating < nextTime) nextTime = timeForRepeating;
             }
         });
         return nextTime;
@@ -27,7 +26,7 @@ export function getNextTimeForRepeating(card: Card, startingDate?: number) {
     return -1;
 }
 
-function getNextTimeForRepeatingFromTimeSpan(timeSpan: TimeSpan, startingDate?: number){
+function getNextTimeForRepeatingFromTimeSpan(timeSpan: TimeSpan, startingDate?: number) {
     if (!!timeSpan) {
         if (!startingDate) startingDate = new Date().valueOf();
         if (!timeSpan.recurrence) {
@@ -52,8 +51,7 @@ function getNextTimeFromRecurrence(StartingDate: number, recurrence: Recurrence)
                 nb_add++;
                 if (nb_add > 7) return -1; // in case we have an invalid recurrence daysOfWeek array
                 date.add(1, 'day');
-            }
-            while (!recurrence.daysOfWeek.includes(date.isoWeekday()));
+            } while (!recurrence.daysOfWeek.includes(date.isoWeekday()));
             date.set('hours', recurrence.hoursAndMinutes.hours);
             date.set('minutes', recurrence.hoursAndMinutes.minutes);
             date.set('seconds', 0);
@@ -64,20 +62,17 @@ function getNextTimeFromRecurrence(StartingDate: number, recurrence: Recurrence)
 
     const startingHoursMinutes = new HourAndMinutes(date.hours(), date.minutes());
     if (!isFirstHoursMinutesSuperiorToSecondOne(recurrence.hoursAndMinutes, startingHoursMinutes)) {
-            date.add(1, 'day');
-            if (isDaysOfWeekFieldSet(recurrence)) {
-                while (!recurrence.daysOfWeek.includes(date.isoWeekday()))  date.add(1, 'day');
-            }
-
+        date.add(1, 'day');
+        if (isDaysOfWeekFieldSet(recurrence)) {
+            while (!recurrence.daysOfWeek.includes(date.isoWeekday())) date.add(1, 'day');
         }
+    }
     date.set('hours', recurrence.hoursAndMinutes.hours);
     date.set('minutes', recurrence.hoursAndMinutes.minutes);
     date.set('seconds', 0);
     date.set('milliseconds', 0);
     return date.valueOf();
 }
-
-
 
 function isFirstHoursMinutesSuperiorToSecondOne(hm1: HourAndMinutes, hm2: HourAndMinutes): boolean {
     if (hm1.hours > hm2.hours) return true;
@@ -86,6 +81,5 @@ function isFirstHoursMinutesSuperiorToSecondOne(hm1: HourAndMinutes, hm2: HourAn
 }
 
 function isDaysOfWeekFieldSet(recurrence: Recurrence): boolean {
-    return !!recurrence.daysOfWeek && (recurrence.daysOfWeek.length > 0) ;
+    return !!recurrence.daysOfWeek && recurrence.daysOfWeek.length > 0;
 }
-

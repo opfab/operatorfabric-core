@@ -16,7 +16,7 @@ export interface UserState {
 }
 
 export const userInitialState: UserState = {
-    registered : false,
-    group : null,
+    registered: false,
+    group: null,
     allEntities: null
 };

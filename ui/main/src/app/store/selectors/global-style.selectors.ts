@@ -7,12 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {AppState} from '@ofStore/index';
+import {createSelector} from '@ngrx/store';
+import {GlobalStyleState} from '@ofStore/states/global-style.state';
 
-
-import {AppState} from "@ofStore/index";
-import {createSelector} from "@ngrx/store";
-import {GlobalStyleState} from "@ofStore/states/global-style.state";
-
-export const selectGlobalStyleState = (state:AppState) => state.globalStyle;
-export const selectGlobalStyleStateStyle =  createSelector(selectGlobalStyleState, (globalStyleState:GlobalStyleState)=> globalStyleState.style);
-
+export const selectGlobalStyleState = (state: AppState) => state.globalStyle;
+export const selectGlobalStyleStateStyle = createSelector(
+    selectGlobalStyleState,
+    (globalStyleState: GlobalStyleState) => globalStyleState.style
+);

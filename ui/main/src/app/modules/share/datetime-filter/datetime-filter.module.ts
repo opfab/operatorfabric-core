@@ -14,17 +14,9 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
-
 @NgModule({
     declarations: [DatetimeFilterComponent],
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        TranslateModule,
-        NgbModule
-    ],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, NgbModule],
     exports: [DatetimeFilterComponent]
 })
-export class DatetimeFilterModule {
-}
+export class DatetimeFilterModule {}

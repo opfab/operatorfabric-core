@@ -46,16 +46,19 @@ export class LightCard {
         readonly entitiesAllowedToEdit?: string[],
         readonly publisherType?: PublisherType | string,
         readonly secondsBeforeTimeSpanForReminder?: number
-    ) {
-    }
+    ) {}
 }
 
 export enum Severity {
-    ALARM = 'ALARM', ACTION = 'ACTION', COMPLIANT = 'COMPLIANT', INFORMATION = 'INFORMATION'
+    ALARM = 'ALARM',
+    ACTION = 'ACTION',
+    COMPLIANT = 'COMPLIANT',
+    INFORMATION = 'INFORMATION'
 }
 
 export enum Sound {
-    INFORMATION, COMPLIANT
+    INFORMATION,
+    COMPLIANT
 }
 
 export enum PublisherType {

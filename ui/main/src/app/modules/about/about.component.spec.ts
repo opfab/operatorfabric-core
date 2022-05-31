@@ -10,7 +10,6 @@
 import {extractNameWithVersionAndSortByRank} from './about.component';
 
 describe('extractNamesWithVersionAndSortByRank', () => {
-
     it('should order applications by rank if they are all declared without duplicate', () => {
         const first = {name: 'first', version: 'first version', rank: 0};
         const second = {name: 'second', version: 'second version', rank: 1};
@@ -24,7 +23,7 @@ describe('extractNamesWithVersionAndSortByRank', () => {
         const first = {name: 'aaaa', version: 'v1', rank: 0};
         const second = {name: 'bbbb', version: 'v2', rank: 0};
         const businessconfig = {name: 'ccc', version: 'v3', rank: 0};
-        const applications = {  first: first, second: second, businessconfig: businessconfig};
+        const applications = {first: first, second: second, businessconfig: businessconfig};
 
         const sortedApplications = extractNameWithVersionAndSortByRank(applications);
         expect(sortedApplications).toEqual([first, second, businessconfig]);
@@ -56,7 +55,14 @@ describe('extractNamesWithVersionAndSortByRank', () => {
         const forth = {name: 'eeee', version: 'v', rank: 2};
         const fifth = {name: 'fff', version: '3'};
         const sixth = {name: 'jjj', version: '7'};
-        const applications = {businessconfig: businessconfig, second: second, forth: forth, fifth: fifth, sixth: sixth, first: first};
+        const applications = {
+            businessconfig: businessconfig,
+            second: second,
+            forth: forth,
+            fifth: fifth,
+            sixth: sixth,
+            first: first
+        };
 
         const sortedApplications = extractNameWithVersionAndSortByRank(applications);
         expect(sortedApplications).toEqual([first, second, businessconfig, forth, fifth, sixth]);

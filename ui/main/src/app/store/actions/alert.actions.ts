@@ -8,7 +8,7 @@
  */
 
 import {Action} from '@ngrx/store';
-import { Message } from '@ofModel/message.model';
+import {Message} from '@ofModel/message.model';
 
 export enum AlertActionTypes {
     AlertMessage = 'Alert message'
@@ -17,8 +17,7 @@ export enum AlertActionTypes {
 export class AlertMessage implements Action {
     readonly type = AlertActionTypes.AlertMessage;
 
-    constructor(public payload: { alertMessage: Message }) {
-    }
+    constructor(public payload: {alertMessage: Message}) {}
 }
 
 export type AlertActions = AlertMessage;

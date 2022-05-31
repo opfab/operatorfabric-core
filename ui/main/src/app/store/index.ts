@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import * as fromRouter from '@ngrx/router-store';
 import {RouterReducerState} from '@ngrx/router-store';
 import {RouterStateUrl} from '@ofStore/states/router.state';
@@ -38,12 +37,10 @@ import {reducer as userReducer} from '@ofStore/reducers/user.reducer';
 import {UserState} from '@ofStates/user.state';
 import {UserEffects} from '@ofEffects/user.effects';
 
-
 import {CardsSubscriptionState} from '@ofStates/cards-subscription.state';
 import {cardsSubscriptionReducer} from '@ofStore/reducers/cards-subscription.reducer';
 import {GlobalStyleState} from './states/global-style.state';
 import {ProcessesEffects} from './effects/processes.effects';
-
 
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;
@@ -80,12 +77,9 @@ export const appReducer: ActionReducerMap<AppState> = {
     user: userReducer,
     cardsSubscription: cardsSubscriptionReducer,
     globalStyle: globalStyleReducer
-
 };
 
-export const appMetaReducers: MetaReducer<AppState>[] = !environment.production
-    ? [storeFreeze]
-    : [];
+export const appMetaReducers: MetaReducer<AppState>[] = !environment.production ? [storeFreeze] : [];
 
 export const storeConfig = {
     metaReducers: appMetaReducers

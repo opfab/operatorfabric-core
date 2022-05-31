@@ -8,32 +8,17 @@
  */
 
 export class RealTimeScreens {
-    public constructor(
-        readonly realTimeScreens: Array<RealTimeScreen>,
-    ) {
-    }
+    public constructor(readonly realTimeScreens: Array<RealTimeScreen>) {}
 }
 
 export class RealTimeScreen {
-    constructor(
-        readonly screenName: string,
-        readonly screenColumns: Array<ScreenColumn>
-    ) {
-    }
+    constructor(readonly screenName: string, readonly screenColumns: Array<ScreenColumn>) {}
 }
 
 export class ScreenColumn {
-    constructor(
-        readonly entitiesGroups: Array<EntitiesGroups>
-    ) {
-    }
+    constructor(readonly entitiesGroups: Array<EntitiesGroups>) {}
 }
 
 export class EntitiesGroups {
-    constructor(
-        readonly name: string,
-        readonly entities: Array<string>,
-        readonly groups: Array<string>
-    ) {
-    }
+    constructor(readonly name: string, readonly entities: Array<string>, readonly groups: Array<string>) {}
 }

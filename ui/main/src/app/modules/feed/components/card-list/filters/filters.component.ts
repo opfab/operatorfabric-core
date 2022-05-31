@@ -7,41 +7,45 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {Component, OnInit} from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '@ofStore/index';
-import { ConfigService} from "@ofServices/config.service";
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {ConfigService} from '@ofServices/config.service';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 
 @Component({
-  selector: 'of-filters',
-  templateUrl: './filters.component.html',
-  styleUrls: ['./filters.component.scss']
+    selector: 'of-filters',
+    templateUrl: './filters.component.html',
+    styleUrls: ['./filters.component.scss']
 })
 export class FiltersComponent implements OnInit {
+    hideAckFilter: boolean;
+    hideResponseFilter: boolean;
+    hideTimerTags: boolean;
+    hideReadSort: boolean;
+    hideSeveritySort: boolean;
+    hideApplyFiltersToTimeLineChoice: boolean;
 
-  hideAckFilter: boolean;
-  hideResponseFilter: boolean;
-  hideTimerTags: boolean;
-  hideReadSort: boolean;
-  hideSeveritySort: boolean;
-  hideApplyFiltersToTimeLineChoice: boolean;
-  
-  loadingInProgress = false;
+    loadingInProgress = false;
 
-  constructor(private store: Store<AppState>, private configService: ConfigService, private lightCardsStoreService: LightCardsStoreService) { }
+    constructor(
+        private store: Store<AppState>,
+        private configService: ConfigService,
+        private lightCardsStoreService: LightCardsStoreService
+    ) {}
 
-  ngOnInit() {
-    this.hideTimerTags = this.configService.getConfigValue('feed.card.hideTimeFilter',false);
-    this.hideAckFilter = this.configService.getConfigValue('feed.card.hideAckFilter',false);
-    this.hideResponseFilter = this.configService.getConfigValue('feed.card.hideResponseFilter',false);
-    this.hideReadSort = this.configService.getConfigValue('feed.card.hideReadSort',false);
-    this.hideSeveritySort = this.configService.getConfigValue('feed.card.hideSeveritySort',false);
-    this.hideApplyFiltersToTimeLineChoice= this.configService.getConfigValue('feed.card.hideApplyFiltersToTimeLineChoice',false);
-    this.lightCardsStoreService.getLoadingInProgress().subscribe( (inProgress: boolean ) => this .loadingInProgress = inProgress)
-  }
-
-
+    ngOnInit() {
+        this.hideTimerTags = this.configService.getConfigValue('feed.card.hideTimeFilter', false);
+        this.hideAckFilter = this.configService.getConfigValue('feed.card.hideAckFilter', false);
+        this.hideResponseFilter = this.configService.getConfigValue('feed.card.hideResponseFilter', false);
+        this.hideReadSort = this.configService.getConfigValue('feed.card.hideReadSort', false);
+        this.hideSeveritySort = this.configService.getConfigValue('feed.card.hideSeveritySort', false);
+        this.hideApplyFiltersToTimeLineChoice = this.configService.getConfigValue(
+            'feed.card.hideApplyFiltersToTimeLineChoice',
+            false
+        );
+        this.lightCardsStoreService
+            .getLoadingInProgress()
+            .subscribe((inProgress: boolean) => (this.loadingInProgress = inProgress));
+    }
 }

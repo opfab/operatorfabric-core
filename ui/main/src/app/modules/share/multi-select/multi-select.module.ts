@@ -14,10 +14,7 @@ import {TranslateModule} from '@ngx-translate/core';
 
 @NgModule({
     declarations: [MultiSelectComponent],
-    imports: [
-        CommonModule,
-        TranslateModule
-    ],
+    imports: [CommonModule, TranslateModule],
     exports: [MultiSelectComponent]
 })
-export class MultiSelectModule { }
+export class MultiSelectModule {}

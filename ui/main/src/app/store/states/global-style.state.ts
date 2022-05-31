@@ -7,8 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 export interface GlobalStyleState {
     style: string;
 }

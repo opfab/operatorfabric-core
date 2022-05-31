@@ -7,29 +7,26 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {Component, OnInit, OnDestroy} from '@angular/core';
-import { Subscription } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { AppState } from '@ofStore/index';
-import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
+import {Subscription} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {buildSettingsOrConfigSelector} from '@ofStore/selectors/settings.x.config.selectors';
 import * as moment from 'moment';
 
 @Component({
     selector: 'of-time-line',
-    templateUrl: './time-line.component.html',
+    templateUrl: './time-line.component.html'
 })
 export class TimeLineComponent implements OnInit, OnDestroy {
-
     localSubscription: Subscription;
 
-    constructor(private store: Store<AppState>) { }
+    constructor(private store: Store<AppState>) {}
 
     ngOnInit() {
-        this.localSubscription = this.store.select(buildSettingsOrConfigSelector('locale')).subscribe(
-            l => moment.locale(l)
-        )
+        this.localSubscription = this.store
+            .select(buildSettingsOrConfigSelector('locale'))
+            .subscribe((l) => moment.locale(l));
     }
 
     ngOnDestroy() {

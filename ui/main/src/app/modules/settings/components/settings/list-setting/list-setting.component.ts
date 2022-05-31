@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
 import {AppState} from '@ofStore/index';
@@ -22,9 +21,8 @@ import {Observable, of} from 'rxjs';
     templateUrl: './list-setting.component.html'
 })
 export class ListSettingComponent extends BaseSettingDirective implements OnInit, OnDestroy {
-
-    @Input() values: ({ value: string, label: (I18n | string) } | string)[];
-    preparedList: { value: string, label: Observable<string> }[];
+    @Input() values: ({value: string; label: I18n | string} | string)[];
+    preparedList: {value: string; label: Observable<string>}[];
 
     constructor(protected store: Store<AppState>, private translateService: TranslateService) {
         super(store);
@@ -52,9 +50,12 @@ export class ListSettingComponent extends BaseSettingDirective implements OnInit
     initFormGroup() {
         const validators = this.computeListValidators();
         validators.push(this.valueInListValidator());
-        return new FormGroup({
-            setting: new FormControl('', validators)
-        }, {updateOn: 'change'});
+        return new FormGroup(
+            {
+                setting: new FormControl('', validators)
+            },
+            {updateOn: 'change'}
+        );
     }
 
     protected computeListValidators() {
@@ -75,11 +76,10 @@ export class ListSettingComponent extends BaseSettingDirective implements OnInit
 
     private valueInListValidator() {
         return (control: AbstractControl) => {
-            if (!!control.value && this.preparedList.map(e => e.value).indexOf(control.value) < 0) {
+            if (!!control.value && this.preparedList.map((e) => e.value).indexOf(control.value) < 0) {
                 return {valueInList: {valid: false}};
             }
             return null;
         };
     }
-
 }
