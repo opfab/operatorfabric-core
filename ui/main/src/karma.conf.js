@@ -21,7 +21,7 @@ module.exports = function (config) {
             outputFile: 'junit.xml', // if included, results will be saved as $outputDir/$browserName/$outputFile
             useBrowserName: false // add browser name to report and classes names
         },
-        // add converage-istanbul for migration to angular 13  , see  
+        // add converage-istanbul for migration to angular 13  , see
         // https://stackoverflow.com/questions/70045859/after-upgrading-to-angular-13-the-tests-with-code-coverage-is-failing/70046050
         reporters: ['mocha', 'kjhtml', 'junit'],
         port: 9876,
@@ -44,8 +44,8 @@ module.exports = function (config) {
                     // Without a remote debugging port, Google Chrome exits immediately.
                     '--remote-debugging-port=9222',
                     // avoid prompt for local password on start
-                    '--password-store=basic',
-                ],
+                    '--password-store=basic'
+                ]
             },
             ChromeTest: {
                 base: 'Chrome',
@@ -53,7 +53,8 @@ module.exports = function (config) {
                     // avoid prompt for local password on start
                     '--password-store=basic',
                     // Without a remote debugging port, Google Chrome exits immediately.
-                    '--remote-debugging-port=92222',],
+                    '--remote-debugging-port=92222'
+                ]
             }
         }
     });

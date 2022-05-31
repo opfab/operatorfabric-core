@@ -8,34 +8,33 @@
  */
 
 const templateGateway = {
-    opfabEntityNames : null,
-    opfabEntities : null,
+    opfabEntityNames: null,
+    opfabEntities: null,
     childCards: [],
-    userAllowedToRespond : false,
-    userMemberOfAnEntityRequiredToRespond : false,
+    userAllowedToRespond: false,
+    userMemberOfAnEntityRequiredToRespond: false,
     entitiesAllowedToRespond: [],
     entityUsedForUserResponse: null,
     displayContext: '',
     isLocked: false,
 
-    setEntityNames: function(entityNames){
+    setEntityNames: function (entityNames) {
         this.opfabEntityNames = entityNames;
-       },
+    },
 
-    setEntities: function(entities){
+    setEntities: function (entities) {
         this.opfabEntities = entities;
     },
 
-       
-    // UTILITIES FOR TEMPLATE 
+    // UTILITIES FOR TEMPLATE
 
-    getEntityName: function(entityId) {
+    getEntityName: function (entityId) {
         if (!this.opfabEntityNames) {
-            console.log(new Date().toISOString() , ` Template.js : no entities information loaded`);
+            console.log(new Date().toISOString(), ` Template.js : no entities information loaded`);
             return entityId;
         }
         if (!this.opfabEntityNames.has(entityId)) {
-            console.log(new Date().toISOString() , ` Template.js : entityId ${entityId} is unknown`);
+            console.log(new Date().toISOString(), ` Template.js : entityId ${entityId} is unknown`);
             return entityId;
         }
         return this.opfabEntityNames.get(entityId);
@@ -43,39 +42,39 @@ const templateGateway = {
 
     getEntity: function (entityId) {
         if (!this.opfabEntities) {
-            console.log(new Date().toISOString() , ` Template.js : no entities information loaded`);
+            console.log(new Date().toISOString(), ` Template.js : no entities information loaded`);
             return entityId;
         }
         if (!this.opfabEntities.has(entityId)) {
-            console.log(new Date().toISOString() , ` Template.js : entityId ${entityId} is unknown`);
+            console.log(new Date().toISOString(), ` Template.js : entityId ${entityId} is unknown`);
             return entityId;
         }
         return this.opfabEntities.get(entityId);
     },
 
-    getAllEntities: function() {
+    getAllEntities: function () {
         return Array.from(this.opfabEntities.values());
     },
 
-    redirectToBusinessMenu: function(menuId,menuItemId,urlExtension){
+    redirectToBusinessMenu: function (menuId, menuItemId, urlExtension) {
         const urlSplit = document.location.href.split('#');
-        var  newUrl =  urlSplit[0] + '#/businessconfigparty/' + menuId + '/' + menuItemId ;
+        var newUrl = urlSplit[0] + '#/businessconfigparty/' + menuId + '/' + menuItemId;
         if (!!urlExtension) newUrl += urlExtension;
         document.location.href = newUrl;
     },
 
     // True if user is allowed to respond to the current card :
-    //  - his entity is allowed to respond 
-    //  - he is member of a group having a perimeter permitting the response 
-    isUserAllowedToRespond  : function() {
+    //  - his entity is allowed to respond
+    //  - he is member of a group having a perimeter permitting the response
+    isUserAllowedToRespond: function () {
         return this.userAllowedToRespond;
     },
 
     // True if user is member of an entity required to respond to the current card
-    isUserMemberOfAnEntityRequiredToRespond: function() {
+    isUserMemberOfAnEntityRequiredToRespond: function () {
         return this.userMemberOfAnEntityRequiredToRespond;
     },
-    
+
     // Returns an array containing the ids of the entities allowed to respond
     getEntitiesAllowedToRespond() {
         return this.entitiesAllowedToRespond;
@@ -90,12 +89,11 @@ const templateGateway = {
     },
 
     //
-    // FUNCTIONS TO OVERRIDE BY TEMPLATES 
+    // FUNCTIONS TO OVERRIDE BY TEMPLATES
     //
 
     initTemplateGateway: function () {
-
-        this.childCards =  [];
+        this.childCards = [];
         this.userAllowedToRespond = false;
         this.userMemberOfAnEntityRequiredToRespond = false;
         this.entitiesAllowedToRespond = [];
@@ -114,35 +112,35 @@ const templateGateway = {
         };
 
         // OpFab calls this function to inform that the template has to apply child cards (called after template rendering and after change in child cards)
-        this.applyChildCards =  function () {
+        this.applyChildCards = function () {
             // This function should be overridden in the template.
         };
 
         // OpFab calls this function when lttd expire with expired set to true
-        this.setLttdExpired =  function (expired) {
+        this.setLttdExpired = function (expired) {
             // This function should be overridden in the template.
         };
 
         // OpFab calls this method to inform the template of the size of the screen dedicated to the card
-        // size = 'md' for standard size 
+        // size = 'md' for standard size
         // size = 'lg' for large size , i.e when the card is in full screen mode
-        this.setScreenSize =  function (size) {
+        this.setScreenSize = function (size) {
             // This function should be overridden in the template.
         };
 
         // OpFab calls this method to get the form result when the user wants to send a response
-        this.getUserResponse =  function () {
-            console.log(new Date().toISOString(), ` Template.js : no getUserResponse method defined in template , valid set to false`);
-            return {valid:false,errorMsg:"Impossible to respond due to a technical error in the template"};
-        }
+        this.getUserResponse = function () {
+            console.log(
+                new Date().toISOString(),
+                ` Template.js : no getUserResponse method defined in template , valid set to false`
+            );
+            return {valid: false, errorMsg: 'Impossible to respond due to a technical error in the template'};
+        };
 
         // OpFab calls this method when it has finished all tasks regarding rendering template :
         // it is called after applyChildCard(), lockAnswer(), setLttdExpired() and setScreenSize()
         this.onTemplateRenderingComplete = function () {
-             // This function may be overridden in the template.
-        }
-}
-
-
+            // This function may be overridden in the template.
+        };
+    }
 };
-
