@@ -15,7 +15,7 @@ import {AppState} from '@ofStore/index';
 import {of} from 'rxjs';
 import {settingsInitialState} from '@ofStates/settings.state';
 import {map} from 'rxjs/operators';
-import {PatchSettings} from '@ofActions/settings.actions';
+import {PatchSettingsAction} from '@ofActions/settings.actions';
 import {emptyAppState4Test, injectedSpy} from '@tests/helpers';
 import {authInitialState} from '@ofStates/authentication.state';
 import {configInitialState} from '@ofStates/config.state';
@@ -82,7 +82,7 @@ describe('TextSettingComponent', () => {
             expect(mockStore.dispatch).toHaveBeenCalledTimes(1);
             const settings = {login: 'test'};
             settings[component.settingPath] = 'new-value';
-            expect(mockStore.dispatch).toHaveBeenCalledWith(new PatchSettings({settings: settings}));
+            expect(mockStore.dispatch).toHaveBeenCalledWith(new PatchSettingsAction({settings: settings}));
             done();
         }, 1000);
     });
@@ -121,7 +121,7 @@ describe('TextSettingComponent', () => {
             expect(mockStore.dispatch).toHaveBeenCalledTimes(1);
             const settings = {login: 'test'};
             settings[component.settingPath] = 'fr';
-            expect(mockStore.dispatch).toHaveBeenCalledWith(new PatchSettings({settings: settings}));
+            expect(mockStore.dispatch).toHaveBeenCalledWith(new PatchSettingsAction({settings: settings}));
             done();
         }, 1000);
     });

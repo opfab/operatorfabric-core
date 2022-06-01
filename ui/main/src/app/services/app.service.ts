@@ -11,7 +11,7 @@ import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {ClearLightCardSelection} from '@ofStore/actions/light-card.actions';
+import {ClearLightCardSelectionAction} from '@ofStore/actions/light-card.actions';
 import {selectCurrentUrl} from '@ofSelectors/router.selectors';
 
 export enum PageType {
@@ -62,7 +62,7 @@ export class AppService {
     }
 
     closeDetails() {
-        this.store.dispatch(new ClearLightCardSelection());
+        this.store.dispatch(new ClearLightCardSelectionAction());
         this._router.navigate(['/' + this._currentPath]);
     }
 

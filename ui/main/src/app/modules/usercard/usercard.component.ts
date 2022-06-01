@@ -24,7 +24,7 @@ import {HandlebarsService} from '../cards/services/handlebars.service';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {map} from 'rxjs/operators';
 import {MessageLevel} from '@ofModel/message.model';
-import {AlertMessage} from '@ofStore/actions/alert.actions';
+import {AlertMessageAction} from '@ofStore/actions/alert.actions';
 import {ConfigService} from '@ofServices/config.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
@@ -654,7 +654,9 @@ export class UserCardComponent implements OnInit {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(new AlertMessage({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}}));
+        this.store.dispatch(
+            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
+        );
     }
 
     public getEntityName(id: string): string {

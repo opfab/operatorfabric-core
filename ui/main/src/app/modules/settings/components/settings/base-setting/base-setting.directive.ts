@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 import {Directive, Injectable, Input, OnDestroy, OnInit} from '@angular/core';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
-import {PatchSettings} from '@ofActions/settings.actions';
+import {PatchSettingsAction} from '@ofActions/settings.actions';
 import {buildSettingsSelector} from '@ofSelectors/settings.selectors';
 import {Subject, timer} from 'rxjs';
 import {debounce, distinctUntilChanged, filter, first, map, takeUntil} from 'rxjs/operators';
@@ -78,7 +78,7 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
     private dispatch(value: any) {
         const settings = {...this.baseSettings};
         settings[this.settingPath] = value.setting;
-        this.store.dispatch(new PatchSettings({settings: settings}));
+        this.store.dispatch(new PatchSettingsAction({settings: settings}));
     }
 
     protected isEqual(formA, formB): boolean {

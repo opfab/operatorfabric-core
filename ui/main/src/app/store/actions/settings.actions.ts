@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,22 +16,27 @@ export enum SettingsActionTypes {
     PatchSettingsSuccess = '[Settings] Patch Settings Success'
 }
 
-export class LoadSettings implements Action {
+export class LoadSettingsAction implements Action {
     readonly type = SettingsActionTypes.LoadSettings;
 }
-export class LoadSettingsSuccess implements Action {
+
+export class LoadSettingsSuccessAction implements Action {
     readonly type = SettingsActionTypes.LoadSettingsSuccess;
     constructor(public payload: {settings: any}) {}
 }
 
-export class PatchSettings implements Action {
+export class PatchSettingsAction implements Action {
     readonly type = SettingsActionTypes.PatchSettings;
     constructor(public payload: {settings: any}) {}
 }
-export class PatchSettingsSuccess implements Action {
-    readonly type = SettingsActionTypes.PatchSettingsSuccess;
 
+export class PatchSettingsSuccessAction implements Action {
+    readonly type = SettingsActionTypes.PatchSettingsSuccess;
     constructor(public payload: {settings: any}) {}
 }
 
-export type SettingsActions = LoadSettings | LoadSettingsSuccess | PatchSettings | PatchSettingsSuccess;
+export type SettingsActions =
+    | LoadSettingsAction
+    | LoadSettingsSuccessAction
+    | PatchSettingsAction
+    | PatchSettingsSuccessAction;

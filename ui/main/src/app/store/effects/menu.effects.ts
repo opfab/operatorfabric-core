@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,7 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
-import {LoadMenu, LoadMenuSuccess, MenuActionTypes} from '@ofActions/menu.actions';
+import {LoadMenuAction, LoadMenuSuccessAction, MenuActionTypes} from '@ofActions/menu.actions';
 import {ConfigService} from '@ofServices/config.service';
 
 @Injectable()
@@ -21,9 +21,9 @@ export class MenuEffects {
 
     load: Observable<Action> = createEffect(() =>
         this.actions$.pipe(
-            ofType<LoadMenu>(MenuActionTypes.LoadMenu),
+            ofType<LoadMenuAction>(MenuActionTypes.LoadMenu),
             switchMap((action) => this.service.computeMenu()),
-            map((menu) => new LoadMenuSuccess({menu: menu})),
+            map((menu) => new LoadMenuSuccessAction({menu: menu})),
             catchError((err, caught) => {
                 console.error(new Date().toISOString(), err);
                 return caught;

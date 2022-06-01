@@ -20,17 +20,13 @@ import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
-import {
-    CardSubscriptionClosedAction,
-    CardSubscriptionOpenAction,
-    UIReloadRequestedAction
-} from '@ofActions/cards-subscription.actions';
+import {CardSubscriptionClosedAction, CardSubscriptionOpenAction} from '@ofActions/cards-subscription.actions';
 import {catchError, map, takeUntil} from 'rxjs/operators';
-import {RemoveLightCard} from '@ofActions/light-card.actions';
+import {RemoveLightCardAction} from '@ofActions/light-card.actions';
 import {BusinessConfigChangeAction} from '@ofStore/actions/processes.actions';
 import {UserConfigChangeAction} from '@ofStore/actions/user.actions';
 import {LightCardsStoreService} from './lightcards/lightcards-store.service';
-import {LoadCard} from '@ofStore/actions/card.actions';
+import {LoadCardAction} from '@ofStore/actions/card.actions';
 import {I18n} from '@ofModel/i18n.model';
 import {FilterService} from '@ofServices/lightcards/filter.service';
 import {LogOption, OpfabLoggerService} from './logs/opfab-logger.service';
@@ -112,7 +108,7 @@ export class CardService {
                             );
                             this.lightCardsStoreService.addOrUpdateLightCard(operation.card);
                             if (operation.card.id === this.selectedCardId)
-                                this.store.dispatch(new LoadCard({id: operation.card.id}));
+                                this.store.dispatch(new LoadCardAction({id: operation.card.id}));
                             break;
                         case CardOperationType.DELETE:
                             this.logger.info(
@@ -121,7 +117,7 @@ export class CardService {
                             );
                             this.lightCardsStoreService.removeLightCard(operation.cardId);
                             if (operation.cardId === this.selectedCardId)
-                                this.store.dispatch(new RemoveLightCard({card: operation.cardId}));
+                                this.store.dispatch(new RemoveLightCardAction({card: operation.cardId}));
                             break;
                         case CardOperationType.ACK:
                             this.logger.info(

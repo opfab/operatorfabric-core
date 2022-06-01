@@ -18,7 +18,7 @@ import {LoginComponent} from './login.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {RejectLogIn, TryToLogIn} from '@ofActions/authentication.actions';
+import {RejectLogInAction, TryToLogInAction} from '@ofActions/authentication.actions';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {I18n} from '@ofModel/i18n.model';
 import {By} from '@angular/platform-browser';
@@ -74,7 +74,9 @@ describe('LoginComponent', () => {
         expect(component).toBeTruthy();
     });
     it('should display error message', () => {
-        store.dispatch(new RejectLogIn({error: new Message('message', MessageLevel.ERROR, new I18n('message.key'))}));
+        store.dispatch(
+            new RejectLogInAction({error: new Message('message', MessageLevel.ERROR, new I18n('message.key'))})
+        );
         component.ngOnInit();
         fixture.detectChanges();
         expect(component).toBeTruthy();
@@ -87,7 +89,7 @@ describe('LoginComponent', () => {
         component.userForm.get('identifier').setValue('id');
         component.userForm.get('password').setValue('pwd');
         component.onSubmit();
-        expect(store.dispatch).toHaveBeenCalledWith(new TryToLogIn({username: 'id', password: 'pwd'}));
+        expect(store.dispatch).toHaveBeenCalledWith(new TryToLogInAction({username: 'id', password: 'pwd'}));
     });
     it('should reset', () => {
         spyOn(store, 'dispatch').and.callThrough();

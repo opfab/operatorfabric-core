@@ -14,15 +14,15 @@ import {Observable} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {AppState} from '@ofStore/index';
 import {
-    LoadSettings,
-    LoadSettingsSuccess,
-    PatchSettings,
-    PatchSettingsSuccess,
+    LoadSettingsAction,
+    LoadSettingsSuccessAction,
+    PatchSettingsAction,
+    PatchSettingsSuccessAction,
     SettingsActionTypes
 } from '@ofActions/settings.actions';
 import {SettingsService} from '@ofServices/settings.service';
 import {UserActionsTypes} from '@ofStore/actions/user.actions';
-import {AcceptLogIn} from '@ofStore/actions/authentication.actions';
+import {AcceptLogInAction} from '@ofStore/actions/authentication.actions';
 
 @Injectable()
 export class SettingsEffects {
@@ -30,10 +30,10 @@ export class SettingsEffects {
 
     loadSettings: Observable<Action> = createEffect(() =>
         this.actions$.pipe(
-            ofType<LoadSettings>(SettingsActionTypes.LoadSettings),
+            ofType<LoadSettingsAction>(SettingsActionTypes.LoadSettings),
             switchMap((action) => this.service.fetchUserSettings()),
             map((settings: any) => {
-                return new LoadSettingsSuccess({settings: settings});
+                return new LoadSettingsSuccessAction({settings: settings});
             }),
             catchError((err, caught) => {
                 if (err.status === 404) console.log(new Date().toISOString(), 'No settings for user');
@@ -45,16 +45,16 @@ export class SettingsEffects {
 
     loadSettingsOnLogin: Observable<Action> = createEffect(() =>
         this.actions$.pipe(
-            ofType<AcceptLogIn>(UserActionsTypes.UserApplicationRegistered),
-            map((a) => new LoadSettings())
+            ofType<AcceptLogInAction>(UserActionsTypes.UserApplicationRegistered),
+            map((a) => new LoadSettingsAction())
         )
     );
 
     patchSettings: Observable<Action> = createEffect(() =>
         this.actions$.pipe(
             ofType(SettingsActionTypes.PatchSettings),
-            switchMap((action: PatchSettings) => this.service.patchUserSettings(action.payload.settings)),
-            map((settings) => new PatchSettingsSuccess({settings: settings})),
+            switchMap((action: PatchSettingsAction) => this.service.patchUserSettings(action.payload.settings)),
+            map((settings) => new PatchSettingsSuccessAction({settings: settings})),
             catchError((err, caught) => {
                 console.error(new Date().toISOString(), 'Error when patching settings', err);
                 return caught;

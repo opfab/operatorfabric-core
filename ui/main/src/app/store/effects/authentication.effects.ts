@@ -12,13 +12,13 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Observable, of} from 'rxjs';
 import {Action, Store} from '@ngrx/store';
 import {
-    AcceptLogIn,
-    AcceptLogOut,
-    AcceptLogOutSuccess,
+    AcceptLogInAction,
+    AcceptLogOutAction,
+    AcceptLogOutSuccessAction,
     AuthenticationActions,
     AuthenticationActionTypes,
-    RejectLogIn,
-    TryToLogIn
+    RejectLogInAction,
+    TryToLogInAction
 } from '@ofActions/authentication.actions';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 import {catchError, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
@@ -64,12 +64,12 @@ export class AuthenticationEffects {
     TryToLogIn: Observable<AuthenticationActions> = createEffect(() =>
         this.actions$.pipe(
             ofType(AuthenticationActionTypes.TryToLogIn),
-            switchMap((action: TryToLogIn) => {
+            switchMap((action: TryToLogInAction) => {
                 const payload = action.payload;
                 return this.authService.askTokenFromPassword(payload.username, payload.password).pipe(
                     map((authenticationInfo) => {
                         this.authService.regularCheckTokenValidity();
-                        return new AcceptLogIn(authenticationInfo);
+                        return new AcceptLogInAction(authenticationInfo);
                     }),
                     catchError((errorResponse) => {
                         return this.handleErrorOnTokenGeneration(errorResponse, 'authenticate');
@@ -96,7 +96,7 @@ export class AuthenticationEffects {
             ofType(AuthenticationActionTypes.TryToLogOut),
             switchMap(() => {
                 this.resetState();
-                return of(new AcceptLogOut());
+                return of(new AcceptLogOutAction());
             })
         )
     );
@@ -118,7 +118,7 @@ export class AuthenticationEffects {
             ofType(AuthenticationActionTypes.AcceptLogOut),
             map(() => {
                 this.router.navigate(['/login']);
-                return new AcceptLogOutSuccess();
+                return new AcceptLogOutSuccessAction();
             })
         )
     );
@@ -139,7 +139,7 @@ export class AuthenticationEffects {
             tap(() => {
                 this.authService.clearAuthenticationInformation();
             }),
-            map(() => new AcceptLogOut())
+            map(() => new AcceptLogOutAction())
         )
     );
 
@@ -180,7 +180,7 @@ export class AuthenticationEffects {
                                 }),
                                 map((authenticationInfo) => {
                                     this.authService.regularCheckTokenValidity();
-                                    return new AcceptLogIn(authenticationInfo);
+                                    return new AcceptLogInAction(authenticationInfo);
                                 }),
                                 catchError((errorResponse) => {
                                     return this.handleErrorOnTokenGeneration(errorResponse, 'code');
@@ -206,7 +206,7 @@ export class AuthenticationEffects {
                         return this.authService.loadUserData(authInfo).pipe(
                             map((auth) => {
                                 redirectToCurrentLocation(this.router);
-                                return new AcceptLogIn(auth);
+                                return new AcceptLogInAction(auth);
                             })
                         );
                     }
@@ -253,12 +253,12 @@ export class AuthenticationEffects {
                 params['error'] = errorResponse.message;
         }
         console.error(message, errorResponse);
-        return of(new RejectLogIn({error: new Message(message, MessageLevel.ERROR, new I18n(key, params))}));
+        return of(new RejectLogInAction({error: new Message(message, MessageLevel.ERROR, new I18n(key, params))}));
     }
 
     handleRejectedLogin(errorMsg: Message): AuthenticationActions {
         this.authService.clearAuthenticationInformation();
-        return new RejectLogIn({error: errorMsg});
+        return new RejectLogInAction({error: errorMsg});
     }
 
     private resetState() {

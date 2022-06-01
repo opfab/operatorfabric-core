@@ -14,13 +14,13 @@ import {Observable, of, throwError} from 'rxjs';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {Guid} from 'guid-typescript';
 import {
-    AcceptLogIn,
-    CheckAuthenticationStatus,
-    InitAuthStatus,
+    AcceptLogInAction,
+    CheckAuthenticationStatusAction,
+    InitAuthStatusAction,
     PayloadForSuccessfulAuthentication,
-    RejectLogIn,
-    SessionExpired,
-    UnAuthenticationFromImplicitFlow
+    RejectLogInAction,
+    SessionExpiredAction,
+    UnAuthenticationFromImplicitFlowAction
 } from '@ofActions/authentication.actions';
 import {environment} from '@env/environment';
 import {GuidService} from '@ofServices/guid.service';
@@ -147,7 +147,7 @@ export class AuthenticationService {
             }, MILLIS_TO_WAIT_BETWEEN_TOKEN_EXPIRATION_DATE_CONTROLS);
         } else {
             // Will send Logout if token is expired
-            this.store.dispatch(new SessionExpired());
+            this.store.dispatch(new SessionExpiredAction());
         }
     }
 
@@ -429,10 +429,10 @@ export class PasswordOrCodeAuthenticationHandler implements AuthenticationModeHa
         const foundIndex = currentLocationHref.indexOf(searchCodeString);
         if (foundIndex !== -1) {
             this.store.dispatch(
-                new InitAuthStatus({code: currentLocationHref.substring(foundIndex + searchCodeString.length)})
+                new InitAuthStatusAction({code: currentLocationHref.substring(foundIndex + searchCodeString.length)})
             );
         }
-        this.store.dispatch(new CheckAuthenticationStatus());
+        this.store.dispatch(new CheckAuthenticationStatusAction());
     }
 
     public extractToken(): string {
@@ -476,7 +476,7 @@ export class ImplicitAuthenticationHandler implements AuthenticationModeHandler 
     public async tryToLogin() {
         await this.oauthService.tryLogin().then(() => {
             if (this.oauthService.hasValidAccessToken()) {
-                this.store.dispatch(new AcceptLogIn(this.providePayloadForSuccessfulAuthentication()));
+                this.store.dispatch(new AcceptLogInAction(this.providePayloadForSuccessfulAuthentication()));
                 redirectToCurrentLocation(this.router);
             } else {
                 sessionStorage.setItem('flow', 'implicit');
@@ -510,10 +510,10 @@ export class ImplicitAuthenticationHandler implements AuthenticationModeHandler 
             // This case arise for example when using a SSO and the session is not valid anymore (session timeout)
             case 'token_error':
             case 'token_refresh_error':
-                this.store.dispatch(new SessionExpired());
+                this.store.dispatch(new SessionExpiredAction());
                 break;
             case 'logout': {
-                this.store.dispatch(new UnAuthenticationFromImplicitFlow());
+                this.store.dispatch(new UnAuthenticationFromImplicitFlowAction());
                 break;
             }
         }
@@ -542,7 +542,7 @@ export class NoAuthenticationHandler implements AuthenticationModeHandler {
                 console.log(new Date().toISOString(), 'User (' + foundUser.userData.login + ') found');
                 const clientId = this.guidService.getCurrentGuid();
                 this.store.dispatch(
-                    new AcceptLogIn(
+                    new AcceptLogInAction(
                         new PayloadForSuccessfulAuthentication(
                             foundUser.userData.login,
                             clientId,
@@ -556,7 +556,7 @@ export class NoAuthenticationHandler implements AuthenticationModeHandler {
                 redirectToCurrentLocation(this.router);
             } else {
                 this.store.dispatch(
-                    new RejectLogIn({
+                    new RejectLogInAction({
                         error: new Message(
                             'Unable to authenticate the user',
                             MessageLevel.ERROR,

@@ -16,7 +16,7 @@ import {AppState} from '@ofStore/index';
 import {of, zip} from 'rxjs';
 import {settingsInitialState} from '@ofStates/settings.state';
 import {map} from 'rxjs/operators';
-import {PatchSettings} from '@ofActions/settings.actions';
+import {PatchSettingsAction} from '@ofActions/settings.actions';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {I18n} from '@ofModel/i18n.model';
 import {emptyAppState4Test, injectedSpy} from '@tests/helpers';
@@ -136,7 +136,7 @@ describe('ListSettingComponent', () => {
             expect(mockStore.dispatch).toHaveBeenCalledTimes(1);
             const settings = {login: 'test'};
             settings[component.settingPath] = 'new-value';
-            expect(mockStore.dispatch).toHaveBeenCalledWith(new PatchSettings({settings: settings}));
+            expect(mockStore.dispatch).toHaveBeenCalledWith(new PatchSettingsAction({settings: settings}));
             done();
         }, 1000);
     });

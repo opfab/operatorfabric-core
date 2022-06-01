@@ -14,7 +14,7 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from '@ofServices/crud-service';
 import {PerimetersService} from '@ofServices/perimeters.service';
-import {AlertMessage} from '@ofStore/actions/alert.actions';
+import {AlertMessageAction} from '@ofStore/actions/alert.actions';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {MessageLevel} from '@ofModel/message.model';
@@ -127,7 +127,7 @@ export class EditGroupModalComponent implements OnInit {
             })
         );
         this.store.dispatch(
-            new AlertMessage({alertMessage: {message: res.originalError.error.message, level: MessageLevel.ERROR}})
+            new AlertMessageAction({alertMessage: {message: res.originalError.error.message, level: MessageLevel.ERROR}})
         );
     }
 

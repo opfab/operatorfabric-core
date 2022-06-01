@@ -8,13 +8,16 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {UserService} from '@ofServices/user.service';
 import {Observable, timer} from 'rxjs';
-import {LoadAllEntities, UserActions, UserActionsTypes, UserApplicationRegistered} from '@ofStore/actions/user.actions';
-import {AcceptLogIn, AuthenticationActionTypes} from '@ofStore/actions/authentication.actions';
+import {
+    LoadAllEntitiesAction,
+    UserActions,
+    UserActionsTypes,
+    UserApplicationRegisteredAction
+} from '@ofStore/actions/user.actions';
+import {AuthenticationActionTypes} from '@ofStore/actions/authentication.actions';
 import {catchError, debounce, map, switchMap} from 'rxjs/operators';
 import {User} from '@ofModel/user.model';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
@@ -23,7 +26,6 @@ import {Entity} from '@ofModel/entity.model';
 @Injectable()
 export class UserEffects {
     constructor(
-        private store: Store<AppState>,
         private actions$: Actions,
         private userService: UserService,
         private authService: AuthenticationService
@@ -39,10 +41,10 @@ export class UserEffects {
     checkUserApplication: Observable<UserActions> = createEffect(() =>
         this.actions$.pipe(
             ofType(AuthenticationActionTypes.AcceptLogIn),
-            switchMap((action: AcceptLogIn) => {
+            switchMap(() => {
                 return this.userService.synchronizeWithToken().pipe(
-                    map((user: User) => new UserApplicationRegistered({user})),
-                    catchError((error, caught) => {
+                    map((user: User) => new UserApplicationRegisteredAction({user})),
+                    catchError((_error, caught) => {
                         console.log('Error in synchronizeWithToken');
                         this.authService.clearAuthenticationInformation();
                         return caught;
@@ -60,7 +62,7 @@ export class UserEffects {
         this.actions$.pipe(
             ofType(UserActionsTypes.QueryAllEntities),
             switchMap(() => this.userService.queryAllEntities()),
-            map((allEntities: Entity[]) => new LoadAllEntities({entities: allEntities}))
+            map((allEntities: Entity[]) => new LoadAllEntitiesAction({entities: allEntities}))
         )
     );
 
