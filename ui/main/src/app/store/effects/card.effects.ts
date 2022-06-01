@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,8 +14,14 @@ import {Observable} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {CardService} from '@ofServices/card.service';
 import {AppState} from '@ofStore/index';
-import {CardActionTypes, ClearCard, LoadCard, LoadCardFailure, LoadCardSuccess} from '@ofActions/card.actions';
-import {ClearLightCardSelection, LightCardActionTypes} from '@ofStore/actions/light-card.actions';
+import {
+    CardActionTypes,
+    ClearCardAction,
+    LoadCardAction,
+    LoadCardFailureAction,
+    LoadCardSuccessAction
+} from '@ofActions/card.actions';
+import {ClearLightCardSelectionAction, LightCardActionTypes} from '@ofStore/actions/light-card.actions';
 
 @Injectable()
 export class CardEffects {
@@ -23,11 +29,11 @@ export class CardEffects {
 
     loadById: Observable<Action> = createEffect(() =>
         this.actions$.pipe(
-            ofType<LoadCard>(CardActionTypes.LoadCard),
+            ofType<LoadCardAction>(CardActionTypes.LoadCard),
             switchMap((action) => this.service.loadCard(action.payload.id)),
-            map((cardData) => new LoadCardSuccess({card: cardData.card, childCards: cardData.childCards})),
+            map((cardData) => new LoadCardSuccessAction({card: cardData.card, childCards: cardData.childCards})),
             catchError((err, caught) => {
-                this.store.dispatch(new LoadCardFailure(err));
+                this.store.dispatch(new LoadCardFailureAction(err));
                 return caught;
             })
         )
@@ -35,10 +41,10 @@ export class CardEffects {
 
     clearCardSelection: Observable<Action> = createEffect(() =>
         this.actions$.pipe(
-            ofType<ClearLightCardSelection>(LightCardActionTypes.ClearLightCardSelection),
+            ofType<ClearLightCardSelectionAction>(LightCardActionTypes.ClearLightCardSelection),
             map(() => {
                 this.service.setSelectedCard(null);
-                return new ClearCard();
+                return new ClearCardAction();
             })
         )
     );

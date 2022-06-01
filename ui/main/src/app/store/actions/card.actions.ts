@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,21 +17,23 @@ export enum CardActionTypes {
     LoadCardFailure = '[Card] Load Card Fail'
 }
 
-export class ClearCard implements Action {
+export class ClearCardAction implements Action {
     readonly type = CardActionTypes.ClearCard;
 }
-export class LoadCard implements Action {
+
+export class LoadCardAction implements Action {
     readonly type = CardActionTypes.LoadCard;
     constructor(public payload: {id: string}) {}
 }
-export class LoadCardFailure implements Action {
+
+export class LoadCardFailureAction implements Action {
     readonly type = CardActionTypes.LoadCardFailure;
     constructor(public payload: {error: Error}) {}
 }
 
-export class LoadCardSuccess implements Action {
+export class LoadCardSuccessAction implements Action {
     readonly type = CardActionTypes.LoadCardSuccess;
     constructor(public payload: {card: Card; childCards: Card[]}) {}
 }
 
-export type CardActions = ClearCard | LoadCard | LoadCardSuccess | LoadCardFailure;
+export type CardActions = ClearCardAction | LoadCardAction | LoadCardSuccessAction | LoadCardFailureAction;

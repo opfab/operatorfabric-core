@@ -10,11 +10,11 @@
 import {getExpirationTime, reducer} from './authentication.reducer';
 import {authInitialState, AuthState} from '@ofStates/authentication.state';
 import {
-    AcceptLogIn,
-    AcceptLogOut,
-    InitAuthStatus,
+    AcceptLogInAction,
+    AcceptLogOutAction,
+    InitAuthStatusAction,
     PayloadForSuccessfulAuthentication,
-    RejectLogIn
+    RejectLogInAction
 } from '@ofActions/authentication.actions';
 import {Guid} from 'guid-typescript';
 import {getRandomAlphanumericValue} from '@tests/helpers';
@@ -55,7 +55,7 @@ describe('Authentication Reducer', () => {
     describe('InitAuthStatus Action', () => {
         it('should return a new state with information corresponding to used payload on an Initial State', () => {
             produceMockPayLoadForSucessfulAuthintication();
-            const initAction = new InitAuthStatus({code: '123'});
+            const initAction = new InitAuthStatusAction({code: '123'});
             const result = reducer(authInitialState, initAction);
             expect(result).not.toBe(authInitialState);
             expect(result.code).toEqual('123');
@@ -69,7 +69,7 @@ describe('Authentication Reducer', () => {
     describe('AcceptLogin Action', () => {
         it('should return a new state with information corresponding to used payload on an Initial State', () => {
             const myPayload = produceMockPayLoadForSucessfulAuthintication();
-            const acceptLoginAction = new AcceptLogIn(myPayload);
+            const acceptLoginAction = new AcceptLogInAction(myPayload);
             const result = reducer(authInitialState, acceptLoginAction);
             expect(result).not.toBe(authInitialState);
             expect(result.clientId).toBe(myPayload.clientId);
@@ -84,7 +84,7 @@ describe('Authentication Reducer', () => {
 
     describe('AcceptLogOut Action', () => {
         it('should leave an empty state on authInitial State', () => {
-            const logoutAction = new AcceptLogOut();
+            const logoutAction = new AcceptLogOutAction();
             const result = reducer(authInitialState, logoutAction);
             expect(result.clientId).toBeNull();
             expect(result.token).toBeNull();
@@ -96,7 +96,7 @@ describe('Authentication Reducer', () => {
         });
 
         it('shuold leave an empty state on a logged state', () => {
-            const result = reducer(previousState, new AcceptLogOut());
+            const result = reducer(previousState, new AcceptLogOutAction());
             expect(result).not.toBe(previousState);
             expect(result).not.toBe(authInitialState);
             expect(result).toEqual(authInitialState);
@@ -106,7 +106,7 @@ describe('Authentication Reducer', () => {
     describe('RejectLogIn Action', () => {
         it('should leave an empty state but with message on an initial state', () => {
             const denialReason = new Message(getRandomAlphanumericValue(5, 15));
-            const result = reducer(authInitialState, new RejectLogIn({error: denialReason}));
+            const result = reducer(authInitialState, new RejectLogInAction({error: denialReason}));
             expect(result).not.toBe(authInitialState);
             expect(result.message).toBe(denialReason);
             expect(result.clientId).toBeNull();
@@ -117,7 +117,7 @@ describe('Authentication Reducer', () => {
 
         it('should leave an empty state but with message on a living state', () => {
             const denialReason = new Message(getRandomAlphanumericValue(5, 15));
-            const result = reducer(previousState, new RejectLogIn({error: denialReason}));
+            const result = reducer(previousState, new RejectLogInAction({error: denialReason}));
             expect(result).not.toBe(authInitialState);
             expect(result).not.toBe(previousState);
             expect(result.message).toBe(denialReason);

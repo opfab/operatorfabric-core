@@ -37,12 +37,12 @@ import {Subject} from 'rxjs';
 import {Severity} from '@ofModel/light-card.model';
 import {AppService, PageType} from '@ofServices/app.service';
 import {User} from '@ofModel/user.model';
-import {ClearLightCardSelection} from '@ofStore/actions/light-card.actions';
+import {ClearLightCardSelectionAction} from '@ofStore/actions/light-card.actions';
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {TimeService} from '@ofServices/time.service';
-import {AlertMessage} from '@ofStore/actions/alert.actions';
+import {AlertMessageAction} from '@ofStore/actions/alert.actions';
 import {MessageLevel} from '@ofModel/message.model';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
@@ -711,7 +711,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(new AlertMessage({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}}));
+        this.store.dispatch(
+            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
+        );
     }
 
     public formatDate(date: number) {
@@ -786,7 +788,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.updateLastReadCardStatusOnFeedIfNeeded();
         if (this.parentModalRef) {
             this.parentModalRef.close();
-            this.store.dispatch(new ClearLightCardSelection());
+            this.store.dispatch(new ClearLightCardSelectionAction());
         } else this._appService.closeDetails();
     }
 

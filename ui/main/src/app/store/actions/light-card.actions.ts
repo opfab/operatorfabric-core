@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,18 +15,18 @@ export enum LightCardActionTypes {
     RemoveLightCard = '[LCard] Remove a card'
 }
 
-export class SelectLightCard implements Action {
+export class SelectLightCardAction implements Action {
     readonly type = LightCardActionTypes.SelectLightCard;
     constructor(public payload: {selectedCardId: string}) {}
 }
 
-export class ClearLightCardSelection implements Action {
+export class ClearLightCardSelectionAction implements Action {
     readonly type = LightCardActionTypes.ClearLightCardSelection;
 }
 
-export class RemoveLightCard implements Action {
+export class RemoveLightCardAction implements Action {
     readonly type = LightCardActionTypes.RemoveLightCard;
     constructor(public payload: {card: string}) {}
 }
 
-export type LightCardActions = SelectLightCard | ClearLightCardSelection | RemoveLightCard;
+export type LightCardActions = SelectLightCardAction | ClearLightCardSelectionAction | RemoveLightCardAction;

@@ -14,7 +14,7 @@ import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ConfigService} from '@ofServices/config.service';
 import {MessageLevel} from '@ofModel/message.model';
-import {AlertMessage} from '@ofActions/alert.actions';
+import {AlertMessageAction} from '@ofActions/alert.actions';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {ProcessesService} from '@ofServices/processes.service';
@@ -116,7 +116,9 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(new AlertMessage({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}}));
+        this.store.dispatch(
+            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
+        );
     }
 
     open(content) {

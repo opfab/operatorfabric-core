@@ -18,7 +18,7 @@ import {Process} from '@ofModel/processes.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {AlertMessage} from '@ofStore/actions/alert.actions';
+import {AlertMessageAction} from '@ofStore/actions/alert.actions';
 
 @Component({
     selector: 'of-edit-user-modal',
@@ -150,7 +150,9 @@ export class EditPerimeterModalComponent implements OnInit {
 
     onSaveError(res) {
         this.store.dispatch(
-            new AlertMessage({alertMessage: {message: res.originalError.error.message, level: MessageLevel.ERROR}})
+            new AlertMessageAction({
+                alertMessage: {message: res.originalError.error.message, level: MessageLevel.ERROR}
+            })
         );
     }
 

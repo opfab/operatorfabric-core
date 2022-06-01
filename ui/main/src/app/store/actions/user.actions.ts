@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,17 +17,16 @@ export enum UserActionsTypes {
     LoadAllEntities = '[User] Load all entities',
     UserConfigChange = '[User] User config changed'
 }
-
-export class UserApplicationRegistered implements Action {
+export class UserApplicationRegisteredAction implements Action {
     readonly type = UserActionsTypes.UserApplicationRegistered;
     constructor(public payload: {user: User}) {}
 }
 
-export class QueryAllEntities implements Action {
+export class QueryAllEntitiesAction implements Action {
     readonly type = UserActionsTypes.QueryAllEntities;
 }
 
-export class LoadAllEntities implements Action {
+export class LoadAllEntitiesAction implements Action {
     readonly type = UserActionsTypes.LoadAllEntities;
     constructor(public payload: {entities: Entity[]}) {}
 }
@@ -36,4 +35,8 @@ export class UserConfigChangeAction implements Action {
     readonly type = UserActionsTypes.UserConfigChange;
 }
 
-export type UserActions = UserApplicationRegistered | QueryAllEntities | LoadAllEntities | UserConfigChangeAction;
+export type UserActions =
+    | UserApplicationRegisteredAction
+    | QueryAllEntitiesAction
+    | LoadAllEntitiesAction
+    | UserConfigChangeAction;

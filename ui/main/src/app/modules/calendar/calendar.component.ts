@@ -16,8 +16,8 @@ import {FullCalendarComponent} from '@fullcalendar/angular';
 import {EventInput} from '@fullcalendar/core';
 import allLocales from '@fullcalendar/core/locales-all';
 import {TranslateService} from '@ngx-translate/core';
-import {ClearLightCardSelection, SelectLightCard} from '@ofActions/light-card.actions';
-import {LoadCard} from '@ofActions/card.actions';
+import {ClearLightCardSelectionAction, SelectLightCardAction} from '@ofActions/light-card.actions';
+import {LoadCardAction} from '@ofActions/card.actions';
 import {buildSettingsOrConfigSelector} from '@ofStore/selectors/settings.x.config.selectors';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {FilterType} from '@ofModel/feed-filter.model';
@@ -177,8 +177,8 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     selectCard(info) {
-        this.store.dispatch(new SelectLightCard({selectedCardId: info.event.id}));
-        this.store.dispatch(new LoadCard({id: info.event.id}));
+        this.store.dispatch(new SelectLightCardAction({selectedCardId: info.event.id}));
+        this.store.dispatch(new LoadCardAction({id: info.event.id}));
         const options: NgbModalOptions = {
             size: 'fullscreen'
         };
@@ -187,7 +187,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
         // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
         // Closing event is already handled in card detail component
         this.modalRef.dismissed.subscribe(() => {
-            this.store.dispatch(new ClearLightCardSelection());
+            this.store.dispatch(new ClearLightCardSelectionAction());
         });
     }
 

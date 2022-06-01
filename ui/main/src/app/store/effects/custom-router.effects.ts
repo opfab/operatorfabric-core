@@ -13,8 +13,8 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {EMPTY, Observable} from 'rxjs';
 import {ROUTER_NAVIGATION, ROUTER_REQUEST, RouterNavigationAction, RouterRequestAction} from '@ngrx/router-store';
 import {filter, map, switchMap} from 'rxjs/operators';
-import {LoadCard} from '@ofActions/card.actions';
-import {ClearLightCardSelection, SelectLightCard} from '@ofActions/light-card.actions';
+import {LoadCardAction} from '@ofActions/card.actions';
+import {ClearLightCardSelectionAction, SelectLightCardAction} from '@ofActions/light-card.actions';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 
 @Injectable()
@@ -30,8 +30,8 @@ export class CustomRouterEffects {
             switchMap((action) => {
                 const routerState: any = action.payload.routerState;
                 return [
-                    new LoadCard({id: routerState.params['cid']}),
-                    new SelectLightCard({selectedCardId: routerState.params['cid']})
+                    new LoadCardAction({id: routerState.params['cid']}),
+                    new SelectLightCardAction({selectedCardId: routerState.params['cid']})
                 ];
             })
         )
@@ -46,7 +46,7 @@ export class CustomRouterEffects {
                     action.payload.event.url.indexOf('/feed/') < 0
                 ); //If navigating from /feed/cards/ to somewhere else
             }),
-            map(() => new ClearLightCardSelection())
+            map(() => new ClearLightCardSelectionAction())
         )
     );
 

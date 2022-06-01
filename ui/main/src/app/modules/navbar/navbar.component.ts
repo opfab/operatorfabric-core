@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,10 +10,10 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {navigationRoutes} from '../../app-routing.module';
 import {Store} from '@ngrx/store';
-import {TryToLogOut} from '@ofActions/authentication.actions';
+import {TryToLogOutAction} from '@ofActions/authentication.actions';
 import {AppState} from '@ofStore/index';
 import {selectCurrentUrl} from '@ofSelectors/router.selectors';
-import {LoadMenu} from '@ofActions/menu.actions';
+import {LoadMenuAction} from '@ofActions/menu.actions';
 import {selectMenuStateMenu} from '@ofSelectors/menu.selectors';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {CoreMenuConfig, Menu} from '@ofModel/menu.model';
@@ -23,7 +23,7 @@ import {GlobalStyleService} from '@ofServices/global-style.service';
 import {Route} from '@angular/router';
 import {ConfigService} from '@ofServices/config.service';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
-import {QueryAllEntities} from '@ofActions/user.actions';
+import {QueryAllEntitiesAction} from '@ofActions/user.actions';
 import {UserService} from '@ofServices/user.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {AppService} from '@ofServices/app.service';
@@ -92,8 +92,8 @@ export class NavbarComponent implements OnInit {
                 _.fill(this.expandedMenu, false);
             })
         );
-        this.store.dispatch(new LoadMenu());
-        this.store.dispatch(new QueryAllEntities());
+        this.store.dispatch(new LoadMenuAction());
+        this.store.dispatch(new QueryAllEntitiesAction());
 
         const logo = this.configService.getConfigValue('logo.base64');
         if (!!logo) {
@@ -176,7 +176,7 @@ export class NavbarComponent implements OnInit {
     }
 
     logOut() {
-        this.store.dispatch(new TryToLogOut());
+        this.store.dispatch(new TryToLogOutAction());
     }
 
     get businessconfigMenus() {

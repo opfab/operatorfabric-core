@@ -10,7 +10,7 @@
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {GlobalStyleUpdate} from '@ofActions/global-style.actions';
+import {GlobalStyleUpdateAction} from '@ofActions/global-style.actions';
 
 @Injectable({
     providedIn: 'root'
@@ -171,7 +171,7 @@ export class GlobalStyleService {
             default:
                 this.setCss(GlobalStyleService.DAY_STYLE);
         }
-        this.store.dispatch(new GlobalStyleUpdate({style: style}));
+        this.store.dispatch(new GlobalStyleUpdateAction({style: style}));
     }
 
     private setCss(cssRule: string) {

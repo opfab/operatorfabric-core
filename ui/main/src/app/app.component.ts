@@ -12,7 +12,7 @@ import {Title} from '@angular/platform-browser';
 import {Action, Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
-import {LoadConfigSuccess} from '@ofActions/config.actions';
+import {LoadConfigSuccessAction} from '@ofActions/config.actions';
 import {selectIdentifier} from '@ofSelectors/authentication.selectors';
 import {ConfigService} from '@ofServices/config.service';
 import {TranslateService} from '@ngx-translate/core';
@@ -34,7 +34,7 @@ import {Message, MessageLevel} from '@ofModel/message.model';
 import {GroupsService} from '@ofServices/groups.service';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {AuthenticationActionTypes, TryToLogOut} from '@ofStore/actions/authentication.actions';
+import {AuthenticationActionTypes, TryToLogOutAction} from '@ofStore/actions/authentication.actions';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 import {RemoteLoggerService} from '@ofServices/logs/remote-logger.service';
 import {UrlCheckerService} from '@ofServices/url-checker.service';
@@ -168,7 +168,7 @@ export class AppComponent implements OnInit {
             //This configuration needs to be loaded first as it defines the authentication mode
             next: (config) => {
                 console.log(new Date().toISOString(), `Configuration loaded (web-ui.json)`);
-                this.store.dispatch(new LoadConfigSuccess({config: config}));
+                this.store.dispatch(new LoadConfigSuccessAction({ config: config}));
                 this.setTitle();
 
                 this.loadTranslationAndLaunchAuthenticationProcess(config);
@@ -504,7 +504,7 @@ export class AppComponent implements OnInit {
     public logout() {
         this.logger.info('Logout ', LogOption.REMOTE);
         this.modalRef.close();
-        this.store.dispatch(new TryToLogOut());
+        this.store.dispatch(new TryToLogOutAction());
     }
 
     private displayAlert(message: Message) {
