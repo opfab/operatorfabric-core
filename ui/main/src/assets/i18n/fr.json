@@ -445,7 +445,8 @@
       "edit": "MODIFIER LA CONFIGURATION",
       "confirm":"Confirmez...",
       "confirmDelete": "Voulez-vous vraiment supprimer la configuration pour l'utilisateur",
-      "allUsersConfigured": "Tous les périphériques des utilisateurs sont déjà configurés"
+      "allUsersConfigured": "Tous les périphériques des utilisateurs sont déjà configurés",
+      "loadingExternalDevices": "Chargement des périphériques externes..."
     },
     "userLogin": "IDENTIFIANT UTILISATEUR",
     "externalDeviceIds": "PÉRIPHÉRIQUES",
@@ -475,5 +476,4 @@
     "week": "sem",
     "placeholder": "AAAA-MM-JJ"
   }
-
 }

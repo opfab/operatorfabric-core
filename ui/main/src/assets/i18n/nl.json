@@ -109,7 +109,6 @@
     },
     "lockTooltip": "Het zichtbaarheidsdomein is momenteel vergrendeld: het zal niet bewegen naarmate de tijd verstrijkt",
     "unlockTooltip": "Het zichtbaarheidsdomein is momenteel ontgrendeld: het zal in de loop van de tijd verschuiven"
-
   },
   "multiFilter": {
     "searchPlaceholderText": "Zoeken",
@@ -215,7 +214,6 @@
     "title": "INSTELLINGEN",
     "description": "OMSCHRIJVING",
     "locale": "TAAL",
-    "timeZone": "TIJDZONE",
     "playSoundLabel": "SPEEL GELUIDEN AF VOOR KAARTEN MET VOLGENDE ERNST",
     "playSoundForAlarm": "Alarm",
     "playSoundForAction": "Actie",
@@ -447,7 +445,8 @@
       "edit": "APPARAATCONFIGURATIE WIJZIGEN",
       "confirm": "Bevestig alstublieft",
       "confirmDelete": "Wilt u de apparaatconfiguratie echt verwijderen?",
-      "allUsersConfigured": "Alle apparaten zijn al geconfigureerd"
+      "allUsersConfigured": "Alle apparaten zijn al geconfigureerd",
+      "loadingExternalDevices": "Extern apparaat laden..."
     },
     "userLogin": "GEBRUIKERSNAAM",
     "externalDeviceIds": "APPARATEN",
