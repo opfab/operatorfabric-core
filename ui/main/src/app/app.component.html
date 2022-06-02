@@ -8,114 +8,32 @@
 
 
 
-<div class="app-content opfab-bgcolor"  >
-    <of-navbar *ngIf="loaded"></of-navbar>
-    <router-outlet *ngIf="loaded" ></router-outlet>
-    <of-login *ngIf="!isAuthenticated && !useCodeOrImplicitFlow"></of-login>
-    
-    <div class="opfab-connecting" *ngIf="!loaded && useCodeOrImplicitFlow && !modalForSessionAlreadyInUseIsActive && !modalForUrlAlreadyInUseIsActive && !isDisconnected">
-        <div class="opfab-connecting-spinner">
-            <em  class="fas fa-spinner fa-spin opfab-slow-spinner" ></em>
-            </div>
-            <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px">
-                 Application is loading ...
-            </div>
-    </div>
+<div class="app-content opfab-bgcolor">
 
+  <of-application-loading (applicationLoadedDone)=" onApplicationLoaded()"> </of-application-loading>
 
-    <div class="opfab-reconnecting" *ngIf="connectionLostForMoreThanTenSeconds&& loaded">
-        <div id="opfab-connecting-spinner" class="opfab-connecting-spinner">
-        <em  class="fas fa-spinner fa-spin opfab-slow-spinner" ></em>
-        </div>
-        <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>
-            global.connectionLost
-        </div>
-        <div style="text-align: center;font:16px;font-weight: bold;" translate>
-            global.tryToReconnect
-        </div>
-    </div>
+  <of-alert *ngIf="applicationLoaded"> </of-alert>
 
-    <div class="opfab-disconnected-message" *ngIf="isDisconnectedByNewUser">
-      <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>
-          global.disconnectedByNewUser
-      </div>
-    </div>
+  <of-navbar *ngIf="applicationLoaded"></of-navbar>
 
-    <div class="opfab-disconnected-message" *ngIf="isDisconnectedByUserWithSameUrl">
-      <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>
-          global.disconnectedByUserWithSameUrl
-      </div>
-    </div>
+  <router-outlet *ngIf="applicationLoaded"></router-outlet>
 
-    <div class="opfab-disconnected-message" *ngIf="isDisconnected && !isDisconnectedByUserWithSameUrl && !isDisconnectedByNewUser">
-      <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>
-          global.disconnected
-      </div>
-    </div>
+  <of-connection-lost *ngIf="applicationLoaded"> </of-connection-lost>
 
-    <div id='div-detail-msg' class="opfab-info-message {{alertMessage.className}}" *ngIf='alertMessage && alertMessage.display'>
-      <span *ngIf="alertMessage.alert.i18n" translate>{{alertMessage.alert.i18n.key}}</span>
-      <span *ngIf="alertMessage.alert.message">&nbsp; {{alertMessage.alert.message}}</span>
-      <div id="opfab-usercard-close" class="opfab-alert-close" aria-label="Close" (click)="alertMessage.display = false">
-        <span aria-hidden="true">&times;</span>
-      </div>
-    </div>
+  <of-session-end> </of-session-end>
+
 </div>
+
 <!-- This element is used by Cypress tests to make sure actual tests are not launched until the application has
  finished loading -->
-<div id="opfab-cypress-loaded-check" hidden>{{loaded}}</div>
+<div id="opfab-cypress-loaded-check" hidden>{{applicationLoaded}}</div>
 
-<ng-template #noSound let-modal>
-  <div class="modal-body text-center">
-    <p translate> global.activateSoundText </p>
-    <button id="opfab-actviate-sound" type="button" class="opfab-btn"
-      (click)="closeModal()" translate> global.activateSoundButton</button>
-
-  </div>
-</ng-template>
-
-
-<ng-template #sessionEnd let-modal>
-  <div class="modal-body text-center">
-    <p translate> global.sessionExpiredText </p>
-    <button id="opfab-sessionEnd" type="button" class="opfab-btn"
-      (click)="logout()" translate> button.ok</button>
-
-  </div>
-</ng-template>
 
 <ng-template #reloadRequested let-modal>
   <div class="modal-body text-center">
     <p translate> global.reloadRequestedText </p>
-    <button id="opfab-reload-ok" type="button" class="opfab-btn"
-      (click)="reload()" translate> button.ok</button>
-    <button id="opfab-reload-cancel" type="button" class="opfab-btn"
-      (click)="closeReloadModal()" translate> button.cancel</button>
-  </div>
-</ng-template>
-
-
-<ng-template #activityArea let-modal>
-  <div class="modal-body">
-    <of-activityarea [titleI18nKey]="'activityArea.titleOnLogin'" [askConfirmation]="false"  (confirm)="onActivityAreaConfirm()"></of-activityarea>
-  </div>
-</ng-template>
-
-
-<ng-template #sessionAlreadyInUse let-modal>
-  <div class="modal-body text-center" style="white-space: pre-wrap;">
-    <p>{{'login.confirmationBecauseAccountIsAreadyUsed'|translate:{login:userLogin} }}</p>
-    <button type="button" class="opfab-btn" (click)="logout()" translate> button.cancel</button>
-    <button type="button" class="opfab-btn" (click)="login()" translate> button.ok</button>
-
-  </div>
-</ng-template>
-
-<ng-template #urlAlreadyInUse let-modal>
-  <div class="modal-body text-center" style="white-space: pre-wrap;">
-    <p>{{'login.confirmationBecauseUrlIsAreadyUsed'|translate:{url:opfabUrl} }}</p>
-    <button type="button" class="opfab-btn" (click)="cancelApplicationLoading()" translate> button.cancel</button>
-    <button type="button" class="opfab-btn" (click)="forceConnectionEvenIfTheUrlIsAlreadyUsed()" translate> button.ok</button>
-
+    <button id="opfab-reload-ok" type="button" class="opfab-btn" (click)="reload()" translate> button.ok</button>
+    <button id="opfab-reload-cancel" type="button" class="opfab-btn" (click)="closeReloadModal()" translate>
+      button.cancel</button>
   </div>
 </ng-template>

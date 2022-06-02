@@ -77,7 +77,7 @@
     "reloadRequestedText": "Application reload required",
     "disconnected": "You are disconnected.",
     "disconnectedByNewUser": "You have been disconnected because another user logged in using this account.",
-    "disconnectedByUserWithSameUrl": "You have been disconnected because another tab of this browser was used to log in using this URL."
+    "disconnectByAppLoadedInAnotherTab": "You have been disconnected because another tab of this browser was used to log in using this URL."
   },
   "menu": {
     "feed": "Card Feed",
@@ -194,7 +194,7 @@
     "login": "Login",
     "password": "Password",
     "confirmationBecauseAccountIsAreadyUsed":"The account {{login}} is already being used by at least another user. Do you still want to log in ? \n\n By clicking OK, you will disconnect anyone using this account.",
-    "confirmationBecauseUrlIsAreadyUsed":"The URL {{url}} is already being used in this browser, do you still want to log in ?\n\n By clicking OK, you will disconnect the other tabs of this browser using this URL.",
+    "confirmationBecauseAppAlreadyLoadedInAnotherTab":"The URL {{url}} is already being used in this browser, do you still want to log in ?\n\n By clicking OK, you will disconnect the other tabs of this browser using this URL.",
     "submit": {
       "password": "Sign In",
       "code": "Sign in using {{name}}"
