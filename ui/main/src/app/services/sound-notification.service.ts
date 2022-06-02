@@ -7,6 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
+
 import {Injectable, OnDestroy} from '@angular/core';
 import {PlatformLocation} from '@angular/common';
 import {LightCard, Severity} from '@ofModel/light-card.model';
@@ -107,6 +108,8 @@ export class SoundNotificationService implements OnDestroy {
 
         this.listenForCardUpdate();
     }
+
+
 
     public getPlaySoundOnExternalDevice(): boolean {
         return this.configService.getConfigValue('externalDevicesEnabled') && this.playSoundOnExternalDevice;

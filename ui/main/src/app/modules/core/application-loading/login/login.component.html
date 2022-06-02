@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -24,5 +24,5 @@
             </div>
         </div>
     </form>
-    <div class="alert alert-danger" *ngIf="loginMessage" style="margin:auto;margin-top:50px;width:600px;text-align: center;">
+    <div id="opfab-login-msg" class="alert alert-danger" *ngIf="loginMessage" style="margin:auto;margin-top:50px;width:600px;text-align: center;">
         {{loginMessage.i18n.key|translate:loginMessage.i18n.parameters}}</div>

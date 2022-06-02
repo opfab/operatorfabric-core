@@ -13,32 +13,25 @@ import {Injectable} from '@angular/core';
     providedIn: 'root'
 })
 
-/** This service checks if the url of opfab is already in use
- *  in the browser (there should not be several accounts connected
- *  at the same time using several tabs in the same browser because it would overwrite
- *  the localStorage and disconnect previous user without any warning)
- *  For more details see https://github.com/opfab/operatorfabric-core/issues/2804
- */
-export class UrlCheckerService {
+
+export class UrlLockService {
     private readonly IS_OPFAB_URL_CURRENTLY_USED_KEY = 'isOpfabUrlCurrentlyUsed';
     private readonly DISCONNECTED_BY_NEW_USER_USING_SAME_URL = 'disconnectedByNewUserUsingSameUrl';
     private readonly store = localStorage;
     private disconnectSignalListener:Function ; 
 
-    public setCurrentUrlAsCurrentlyUsed(): void {
+    public lockUrl(): void {
         this.store.setItem(this.IS_OPFAB_URL_CURRENTLY_USED_KEY, 'true');
     }
 
-    public setCurrentUrlAsNotUsed(): void {
+    public unlockUrl(): void {
         this.store.setItem(this.IS_OPFAB_URL_CURRENTLY_USED_KEY, 'false');
     }
 
-    public isCurrentUrlAlreadyUsedInBrowser(): boolean {
-        let rawState = this.store.getItem(this.IS_OPFAB_URL_CURRENTLY_USED_KEY);
-        let isConnectedState = !!rawState ? JSON.parse(rawState) : false;
-        return isConnectedState;
+    public isUrlLocked(): boolean {
+        const urlLock = this.store.getItem(this.IS_OPFAB_URL_CURRENTLY_USED_KEY);
+        return  !!urlLock ? JSON.parse(urlLock) : false;
     }
-
 
     public disconnectOtherUsers() : void {
         this.store.setItem(this.DISCONNECTED_BY_NEW_USER_USING_SAME_URL, JSON.stringify(new Date().getTime()));
@@ -47,7 +40,6 @@ export class UrlCheckerService {
     public setDisconnectSignalListener(listener: Function) : void {
         this.disconnectSignalListener = listener;
         window.addEventListener('storage', this.listenForDisconnectSignal.bind(this), false);
-
     }
 
     private listenForDisconnectSignal(event) : void {
