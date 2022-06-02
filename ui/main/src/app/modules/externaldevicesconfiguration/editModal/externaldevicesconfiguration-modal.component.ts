@@ -30,6 +30,8 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
     @Input() row: any;
     @Input() configurations: UserConfiguration[] = [];
 
+    isLoadingExternalDevices = false;
+    isLoadingUsers = false;
     users: User[];
     usersDropdownList = [];
     devicesMultiSelectOptions = [];
@@ -54,7 +56,11 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
             this.selectedDevices = this.row.externalDeviceIds;
         }
 
-        this.userService.queryAllUsers().subscribe((allUsers) => this.setUsersList(allUsers));
+        if (!this.row) {
+            this.isLoadingUsers = true;
+            this.userService.queryAllUsers().subscribe((allUsers) => this.setUsersList(allUsers));
+        }
+        this.isLoadingExternalDevices = true;
         this.externalDevicesService.queryAllDevices().subscribe((allDevices) => this.setDevicesList(allDevices));
     }
 
@@ -66,12 +72,14 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
                 this.usersDropdownList.push(usr.login);
             }
         });
+        this.isLoadingUsers = false;
     }
 
     setDevicesList(allDevices: Device[]) {
         allDevices.forEach((dev) => {
             this.devicesMultiSelectOptions.push({value: dev.id, label: dev.id});
         });
+        this.isLoadingExternalDevices = false;
     }
 
     update() {
@@ -102,5 +110,9 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
 
     dismissModal(reason: string): void {
         this.activeModal.dismiss(reason);
+    }
+
+    isLoading(): boolean {
+        return this.isLoadingUsers || this.isLoadingExternalDevices;
     }
 }

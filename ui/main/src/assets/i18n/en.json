@@ -445,7 +445,8 @@
       "edit": "EDIT USER DEVICE CONFIGURATION",
       "confirm": "Please confirm",
       "confirmDelete": "Do you really want to delete device configuration for user",
-      "allUsersConfigured": "All users devices are already configured"
+      "allUsersConfigured": "All users devices are already configured",
+      "loadingExternalDevices": "Loading external devices..."
     },
     "userLogin": "USER LOGIN",
     "externalDeviceIds": "DEVICES",
