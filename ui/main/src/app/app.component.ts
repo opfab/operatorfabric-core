@@ -90,6 +90,8 @@ export class AppComponent implements OnInit {
 
     /** TO be refactored in issue https://github.com/opfab/operatorfabric-core/issues/3104 */
 
+    /** TO be refactored in issue https://github.com/opfab/operatorfabric-core/issues/3104 */
+
     private detectReloadRequested() {
         this.store.select(selectRelodRequested).subscribe((reloadRequested) => {
             if (reloadRequested) {
