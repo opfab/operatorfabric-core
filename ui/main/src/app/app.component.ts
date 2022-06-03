@@ -69,7 +69,6 @@ export class AppComponent implements OnInit {
     public onPageClickClearSoundNotification() {
         this.soundNotificationService.clearOutstandingNotifications();
     }
-
     constructor(
         private store: Store<AppState>,
         private cardService: CardService,

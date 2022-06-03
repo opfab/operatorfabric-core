@@ -24,6 +24,7 @@ import {SoundNotificationService} from '@ofServices/sound-notification.service';
     templateUrl: './sound-activation.component.html'
 })
 export class SoundActivationComponent implements OnInit {
+    
     @ViewChild('noSound') noSoundPopupRef: TemplateRef<any>;
     private modalRef: NgbModalRef;
 
