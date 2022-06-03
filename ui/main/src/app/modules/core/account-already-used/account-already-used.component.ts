@@ -21,11 +21,13 @@ import {Subject} from 'rxjs';
 })
 export class AccountAlreadyUsedComponent implements OnInit {
     @Input() public userLogin: string;
-    @Output() public accountAlreadyUsedCheckDone = new Subject();
+    @Output() public checkAccountAlreadyUsedDone = new Subject();
 
     @ViewChild('sessionAlreadyInUse') sessionAlreadyInUsePopupRef: TemplateRef<any>;
 
     private questionModal: NgbModalRef;
+
+    public isDisconnectedByUserWithSameUrl = false;
 
     constructor(
         private store: Store,
@@ -40,13 +42,15 @@ export class AccountAlreadyUsedComponent implements OnInit {
 
     private checkIfUserIsAlreadyConnected() {
         this.userService.willNewSubscriptionDisconnectAnExistingSubscription().subscribe((isUserAlreadyConnected) => {
-            this.logger.info('Login ' + this.userLogin + ' is already connected', LogOption.REMOTE);
             if (isUserAlreadyConnected) {
+                this.logger.info('Login ' + this.userLogin + ' is already connected', LogOption.LOCAL_AND_REMOTE);
                 this.questionModal = this.modalService.open(this.sessionAlreadyInUsePopupRef, {
                     centered: true,
                     backdrop: 'static'
                 });
             } else {
+                this.logger.info('Login ' + this.userLogin + ' is not already used ', LogOption.LOCAL_AND_REMOTE);
+                this.isDisconnectedByUserWithSameUrl = true;
                 this.sendEventAccountAlreadyInUseCheckDone();
             }
         });
@@ -65,7 +69,7 @@ export class AccountAlreadyUsedComponent implements OnInit {
     }
 
     private sendEventAccountAlreadyInUseCheckDone() {
-        this.accountAlreadyUsedCheckDone.next(true);
-        this.accountAlreadyUsedCheckDone.complete();
+        this.checkAccountAlreadyUsedDone.next(true);
+        this.checkAccountAlreadyUsedDone.complete();
     }
 }
