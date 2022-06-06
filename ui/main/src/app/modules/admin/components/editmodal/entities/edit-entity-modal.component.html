@@ -45,8 +45,8 @@
           </div>
 
           <div class="opfab-edit-row">
-            <label for="opfab-entityAllowedToSendCard" class="opfab-checkbox "> <span class="" translate> admin.input.entity.entityAllowedToSendCard </span>
-              <input formControlName="entityAllowedToSendCard" name="entityAllowedToSendCard" id="opfab-entityAllowedToSendCard" type="checkbox">
+            <label for="opfab-entity-allowed-to-send-card" class="opfab-checkbox "> <span class="" translate> admin.input.entity.entityAllowedToSendCard </span>
+              <input formControlName="entityAllowedToSendCard" name="entityAllowedToSendCard" id="opfab-entity-allowed-to-send-card" type="checkbox">
               <span class="opfab-checkbox-checkmark"></span>
             </label>
           </div>
@@ -72,7 +72,7 @@
               translate>admin.input.close</button>
       <button id="opfab-admin-edit-btn-add" [disabled]="!entityForm.valid" *ngIf="!row" (click)="update()" class="opfab-btn"
               translate>admin.input.{{type}}.add</button>
-      <button id="opfab-admin-user-btn-save" [disabled]="!entityForm.valid" *ngIf="row" (click)="update()" class="opfab-btn"
+      <button id="opfab-admin-entity-btn-save" [disabled]="!entityForm.valid" *ngIf="row" (click)="update()" class="opfab-btn"
               translate>admin.input.save</button>
     </div>
   </div>
