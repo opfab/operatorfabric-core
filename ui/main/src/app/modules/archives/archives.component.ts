@@ -8,11 +8,11 @@
  */
 
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {AppState} from '@ofStore/index';
 import {ProcessesService} from '@ofServices/processes.service';
 import {Store} from '@ngrx/store';
-import {takeUntil} from 'rxjs/operators';
+import {takeUntil, tap} from 'rxjs/operators';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {ConfigService} from '@ofServices/config.service';
 import {TimeService} from '@ofServices/time.service';
@@ -193,10 +193,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             .subscribe({
                 next: (page: Page<LightCard>) => {
                     this.resultsNumber = page.totalElements;
-                    this.currentPage = page_number + 1; // page on ngb-pagination component start at 1 , and page on backend start at 0
+                    this.currentPage = page_number + 1; // page on ngb-pagination component starts at 1 , and page on backend starts at 0
                     this.firstQueryHasBeenDone = true;
-                    this.loadingInProgress = false;
-                    this.loadingIsTakingMoreThanOneSecond = false;
                     this.hasResult = page.content.length > 0;
                     this.results = page.content;
 
@@ -205,6 +203,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                         this.lastRequestID = requestID;
                         this.loadUpdatesByCardId(requestID);
                     } else {
+                        this.loadingInProgress = false;
+                        this.loadingIsTakingMoreThanOneSecond = false;
                         this.updatesByCardId = [];
                         this.results.forEach((lightCard) => {
                             this.updatesByCardId.push({
@@ -240,7 +240,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                     centered: true,
                     backdrop: 'static', // Modal shouldn't close even if we click outside it
                     size: 'sm'
-                  };
+                };
                 this.modalRef = this.modalService.open(this.cardLoadingTemplate, modalOptions);
             }
         }, 1000);
@@ -257,16 +257,27 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             });
         });
 
+        const updatesRequests$ = [];
         this.results.forEach((lightCard, index) => {
-            const filters: Map<string, string[]> = new Map();
-            filters.set('process', [lightCard.process]);
-            filters.set('processInstanceId', [lightCard.processInstanceId]);
-            filters.set('size', [(1 + this.historySize).toString()]);
-            filters.set('page', ['0']);
-            this.cardService
-                .fetchArchivedCards(filters)
-                .pipe(takeUntil(this.unsubscribe$))
-                .subscribe((page: Page<LightCard>) => {
+            updatesRequests$.push(this.fetchUpdatesByCardId(lightCard, index, requestID));
+        });
+
+        Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(updatesRequests$).subscribe(() => {
+            this.loadingInProgress = false;
+            this.loadingIsTakingMoreThanOneSecond = false;
+        });
+    }
+
+    private fetchUpdatesByCardId(lightCard: LightCard, index: number, requestID: number): Observable<Page<LightCard>> {
+        const filters: Map<string, string[]> = new Map();
+        filters.set('process', [lightCard.process]);
+        filters.set('processInstanceId', [lightCard.processInstanceId]);
+        filters.set('size', [(1 + this.historySize).toString()]);
+        filters.set('page', ['0']);
+        return this.cardService.fetchArchivedCards(filters).pipe(
+            takeUntil(this.unsubscribe$),
+            tap({
+                next: (page: Page<LightCard>) => {
                     this.removeMostRecentCardFromHistories(lightCard.id, page.content);
 
                     // since we are in asynchronous mode, we test requestId to avoid that the requests "overlap" and that the results appear in a wrong order
@@ -277,8 +288,9 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                             displayHistory: false,
                             tooManyRows: page.totalPages > 1
                         });
-                });
-        });
+                }
+            })
+        );
     }
 
     removeMostRecentCardFromHistories(mostRecentId: string, histories: LightCard[]) {
@@ -332,7 +344,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.filtersTemplate.filters.delete('page');
         this.filtersTemplate.filters.delete('latestUpdateOnly');
 
-
         const modalOptions: NgbModalOptions = {
             centered: true,
             backdrop: 'static', // Modal shouldn't close even if we click outside it
@@ -354,7 +365,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
                 lines.forEach((card: LightCard) => {
                     if (typeof card !== undefined) {
-                        // TO DO translation for old process should be done  , but loading local arrive to late , solution to find
+                        // TO DO translation for old process should be done, but loading local arrives too late, solution to find
                         if (this.filtersTemplate.displayProcessGroupFilter())
                             exportArchiveData.push({
                                 [severityColumnName]: Utilities.translateSeverity(this.translate, card.severity),
@@ -442,6 +453,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     getFormattedPublishTime(): any {
         return this.timeService.formatTime(this.selectedCard.publishDate);
     }
+
     ngOnDestroy() {
         if (!!this.modalRef) {
             this.modalRef.close();
