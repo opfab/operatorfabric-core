@@ -12,7 +12,6 @@ import {TranslateService} from '@ngx-translate/core';
 import {Observable, Subject} from 'rxjs';
 
 export class Utilities {
-
     private static readonly _stringPrefixToAddForTranslation: string = 'shared.severity.';
 
     public static getI18nPrefixFromProcess(process: Process): string {
@@ -20,12 +19,8 @@ export class Utilities {
     }
 
     public static translateSeverity(translateService: TranslateService, severity: string): string {
-        let severityTranslated: string;
         const rawSeverityString: string = Utilities._stringPrefixToAddForTranslation + severity.toLowerCase();
-
-        severityTranslated = translateService.instant(rawSeverityString);
-
-        return severityTranslated;
+        return translateService.instant(rawSeverityString);
     }
 
     public static compareObj(obj1, obj2) {
@@ -34,8 +29,8 @@ export class Utilities {
         return 0;
     }
 
-     // Returns an observable that provides an array. Each item of the array represents either first value of Observable, or its error
-     public static subscribeAndWaitForAllObservablesToEmitAnEvent(observables: Observable<any>[]): Observable<any[]> {
+    // Returns an observable that provides an array. Each item of the array represents either first value of Observable, or its error
+    public static subscribeAndWaitForAllObservablesToEmitAnEvent(observables: Observable<any>[]): Observable<any[]> {
         const final = new Subject<any[]>();
         const flags = new Array(observables.length);
         const result = new Array(observables.length);
