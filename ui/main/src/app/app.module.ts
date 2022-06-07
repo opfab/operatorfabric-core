@@ -39,6 +39,8 @@ import {ActivityAreaChoiceAfterLoginComponent} from './modules/core/application-
 import {AccountAlreadyUsedComponent} from './modules/core/application-loading/account-already-used/account-already-used.component';
 import {AppLoadedInAnotherTabComponent} from './modules/core/application-loading/app-loaded-in-another-tab/app-loaded-in-another-tab.component';
 import {ApplicationLoadingComponent} from './modules/core/application-loading/application-loading.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
     imports: [
@@ -61,7 +63,13 @@ import {ApplicationLoadingComponent} from './modules/core/application-loading/ap
         AdminModule,
         CalendarModule,
         NavbarModule,
-        ActivityareaModule
+        ActivityareaModule,
+        ServiceWorkerModule.register('ngsw-worker.js', {
+          enabled: environment.production,
+          // Register the ServiceWorker as soon as the application is stable
+          // or after 30 seconds (whichever comes first).
+          registrationStrategy: 'registerWhenStable:30000'
+        })
     ],
     declarations: [
         AppComponent,
