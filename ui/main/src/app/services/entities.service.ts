@@ -152,7 +152,7 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
                 allowed.add(entity);
             } else {
                 let children: Entity[];
-                children = this._entities.filter((child) => child.parents.includes(entity.id));
+                children = this._entities.filter((child) => !!child.parents && child.parents.includes(entity.id));
                 const childrenAllowed = this.resolveEntitiesAllowedToSendCards(children);
                 childrenAllowed.forEach((c) => allowed.add(c));
             }
@@ -177,7 +177,7 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
 
     private findChildEntitiesByLevel(parent: Entity, currentLevel: number, level: number): Entity[] {
         const resolved = new Set<Entity>();
-        const children = this._entities.filter((child) => child.parents.includes(parent.id));
+        const children = this._entities.filter((child) => !!child.parents &&  child.parents.includes(parent.id));
 
         if (currentLevel === level) {
             children.forEach((c) => resolved.add(c));
@@ -201,7 +201,7 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
 
     private findChildEntities(parent: Entity): Entity[] {
         const resolved = new Set<Entity>();
-        const children = this._entities.filter((child) => child.parents.includes(parent.id));
+        const children = this._entities.filter((child) => !!child.parents && child.parents.includes(parent.id));
         children.forEach((c) => {
             resolved.add(c);
             this.findChildEntities(c).forEach((cc) => resolved.add(cc));

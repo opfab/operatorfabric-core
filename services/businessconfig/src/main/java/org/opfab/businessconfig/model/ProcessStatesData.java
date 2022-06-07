@@ -10,6 +10,7 @@
 
 package org.opfab.businessconfig.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ProcessStatesData implements ProcessStates {
     private ResponseData responseData;
     private AcknowledgmentAllowedEnum acknowledgmentAllowed;

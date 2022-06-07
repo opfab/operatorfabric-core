@@ -13,6 +13,7 @@ package org.opfab.users.model;
 import java.util.*;
 import java.util.function.Function;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -24,6 +25,7 @@ import  org.opfab.utilities.ObjectUtils;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class UserSettingsData implements UserSettings {
 
     @Id
