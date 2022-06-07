@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,23 +33,25 @@ export class ArrayCellRendererComponent implements ICellRendererAngularComp {
         this.mapping = this.cachedCrudService.getCachedValues();
         // Look up code in values returned by the corresponding service, if it exists return corresponding name, otherwise return code
         if (!!this.mapping) {
-            this._nameValues = params
-                .getValue()
-                .map((code) => {
-                    // This entails that the items that need to be rendered have an `id` and a `name` property.
-                    // I tried defining an interface to enforce that, but it made the code very cumbersome, so it didn't look worth the effort
-                    // for now.
-                    const lookedUpName = this.mapping
-                        .filter((cachedItem) => code === cachedItem['id'])
-                        .map((cachedItem) => cachedItem['name']);
-                    if (lookedUpName.length !== 0) {
-                        return lookedUpName[0] ? lookedUpName[0] : code;
-                    } else {
-                        return code;
-                    }
-                })
-                .sort()
-                .join(', ');
+            const value = params.getValue();
+            if (!!value) {
+                this._nameValues = value
+                    .map((code) => {
+                        // This entails that the items that need to be rendered have an `id` and a `name` property.
+                        // I tried defining an interface to enforce that, but it made the code very cumbersome, so it didn't look worth the effort
+                        // for now.
+                        const lookedUpName = this.mapping
+                            .filter((cachedItem) => code === cachedItem['id'])
+                            .map((cachedItem) => cachedItem['name']);
+                        if (lookedUpName.length !== 0) {
+                            return lookedUpName[0] ? lookedUpName[0] : code;
+                        } else {
+                            return code;
+                        }
+                    })
+                    .sort()
+                    .join(', ');
+            }
         } else {
             console.log('Admin table: id/name mapping was undefined for ' + this.itemType);
             this._nameValues = params.getValue();

@@ -224,7 +224,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.markAsReadIfNecessary();
         this.setButtonsVisibility();
         this.showDetailCardHeader =
-            this.cardState.showDetailCardHeader === null || this.cardState.showDetailCardHeader === true;
+            !this.cardState.showDetailCardHeader || this.cardState.showDetailCardHeader === true;
         this.computeFromEntityOrRepresentative();
         this.formattedPublishDate = this.formatDate(this.card.publishDate);
         this.formattedPublishTime = this.formatTime(this.card.publishDate);
