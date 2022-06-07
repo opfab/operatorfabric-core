@@ -40,6 +40,8 @@ import {AccountAlreadyUsedComponent} from './modules/core/application-loading/ac
 import {AppLoadedInAnotherTabComponent} from './modules/core/application-loading/app-loaded-in-another-tab/app-loaded-in-another-tab.component';
 import {ApplicationLoadingComponent} from './modules/core/application-loading/application-loading.component';
 import {ReloadRequiredComponent} from './modules/core/reload-required/reload-required.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
     imports: [
@@ -62,7 +64,13 @@ import {ReloadRequiredComponent} from './modules/core/reload-required/reload-req
         AdminModule,
         CalendarModule,
         NavbarModule,
-        ActivityareaModule
+        ActivityareaModule,
+        ServiceWorkerModule.register('ngsw-worker.js', {
+          enabled: environment.production,
+          // Register the ServiceWorker as soon as the application is stable
+          // or after 30 seconds (whichever comes first).
+          registrationStrategy: 'registerWhenStable:30000'
+        })
     ],
     declarations: [
         AppComponent,
