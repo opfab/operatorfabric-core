@@ -187,7 +187,8 @@
     "from" : "van",
     "moreCards": "kaarten over",
     "lastResponse": "Laatste reactie ontvangen op",
-    "cardLoadingInProgress":"Bezig met laden van de kaart  ..."
+    "cardLoadingInProgress":"Bezig met laden van de kaart  ...",
+    "cardNotFound": "De kaart die u zoekt werd niet gevonden"
   },
   "login": {
     "reset": "Opnieuw instellen",

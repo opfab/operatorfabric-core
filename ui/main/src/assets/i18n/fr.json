@@ -187,7 +187,8 @@
     "from": "de",
     "moreCards": "cartes supplémentaires",
     "lastResponse": "Dernière réponse reçue le",
-    "cardLoadingInProgress":"Chargement de la carte ..."
+    "cardLoadingInProgress":"Chargement de la carte ...",
+    "cardNotFound": "La carte que vous cherchez n'a pas été trouvée"
   },
   "login": {
     "reset": "RaZ",
