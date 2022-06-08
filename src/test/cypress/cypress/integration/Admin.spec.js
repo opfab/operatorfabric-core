@@ -9,16 +9,18 @@
 
 /** Test for the OpFab users administration page */
 
-describe ('AdminPage',()=>{
+describe('AdminPage', () => {
+    before('Set up configuration', function () {
+        cy.loadTestConf();
+    });
 
-    it('List, add, edit, delete users', ()=> {
-
+    it('List, add, edit, delete users', () => {
         cy.loginOpFab('admin', 'test');
 
-        //Click on user menu (top right of the screen)
+        // Click on user menu (top right of the screen)
         cy.get('#opfab-navbar-drop-user-menu').click();
 
-         //Click on "Administration"
+        // Click on "Administration"
         cy.get('#opfab-navbar-right-menu-admin').click();
 
         // Check first page has 10 rows
@@ -44,12 +46,11 @@ describe ('AdminPage',()=>{
         cy.get('#opfab-lastName').type('surname');
 
         cy.get('#opfab-groups').click();
-        cy.get('#opfab-groups').find('.vscomp-option-text').eq(1).click({ force: true });
+        cy.get('#opfab-groups').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('#opfab-groups').click();
 
-
         cy.get('#opfab-entities').click();
-        cy.get('#opfab-entities').find('.vscomp-option-text').eq(1).click({ force: true });
+        cy.get('#opfab-entities').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('#opfab-entities').click();
 
         cy.get('#opfab-admin-user-btn-add').click();
@@ -60,7 +61,7 @@ describe ('AdminPage',()=>{
 
         cy.countAgGridTableRows('ag-grid-angular', 3);
 
-        cy.agGridCellShould('ag-grid-angular', 2, 0, 'have.text', 'testuser')
+        cy.agGridCellShould('ag-grid-angular', 2, 0, 'have.text', 'testuser');
 
         // Edit previously created user
         cy.clickAgGridCell('ag-grid-angular', 2, 5, 'of-action-cell-renderer');
@@ -75,24 +76,22 @@ describe ('AdminPage',()=>{
         cy.agGridCellShould('ag-grid-angular', 2, 3, 'have.text', 'Dispatcher');
         cy.agGridCellShould('ag-grid-angular', 2, 4, 'have.text', 'Control Center FR North');
 
-
         cy.get('#opfab-firstName').type(' updated');
 
         cy.get('#opfab-lastName').type(' updated');
 
         cy.get('#opfab-groups').click();
         // Deselect old group
-        cy.get('#opfab-groups').find('.vscomp-option-text').eq(1).click({ force: true });
+        cy.get('#opfab-groups').find('.vscomp-option-text').eq(1).click({force: true});
         // Select new group
-        cy.get('#opfab-groups').find('.vscomp-option-text').eq(2).click({ force: true });
+        cy.get('#opfab-groups').find('.vscomp-option-text').eq(2).click({force: true});
         cy.get('#opfab-groups').click();
-
 
         cy.get('#opfab-entities').click();
         // Deselect old entity
-        cy.get('#opfab-entities').find('.vscomp-option-text').eq(1).click({ force: true });
+        cy.get('#opfab-entities').find('.vscomp-option-text').eq(1).click({force: true});
         // Select new entity
-        cy.get('#opfab-entities').find('.vscomp-option-text').eq(2).click({ force: true });
+        cy.get('#opfab-entities').find('.vscomp-option-text').eq(2).click({force: true});
         cy.get('#opfab-entities').click();
 
         cy.get('#opfab-admin-user-btn-save').click();
@@ -124,15 +123,14 @@ describe ('AdminPage',()=>{
 
         cy.countAgGridTableRows('ag-grid-angular', 2);
     });
- 
-    it('List, add, edit, delete entites', ()=> {
 
+    it('List, add, edit, delete entites', () => {
         cy.loginOpFab('admin', 'test');
 
         //Click on user menu (top right of the screen)
         cy.get('#opfab-navbar-drop-user-menu').click();
 
-         //Click on "Administration"
+        //Click on "Administration"
         cy.get('#opfab-navbar-right-menu-admin').click();
 
         //Click on tab "Entities"
@@ -165,9 +163,8 @@ describe ('AdminPage',()=>{
         cy.get('#opfab-entity-allowed-to-send-card').check({force: true});
 
         cy.get('#opfab-parents').click();
-        cy.get('#opfab-parents').find('.vscomp-option-text').eq(1).click({ force: true });
+        cy.get('#opfab-parents').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('#opfab-parents').click();
-
 
         cy.get('tag-input').find('[aria-label="Add label"]').eq(0).type('Label1');
 
@@ -194,8 +191,6 @@ describe ('AdminPage',()=>{
 
         cy.get('.modal-title').should('contain.text', 'entityId');
 
-
-
         cy.get('#opfab-name').type(' updated');
 
         cy.get('#opfab-description').type(' updated');
@@ -205,9 +200,9 @@ describe ('AdminPage',()=>{
 
         cy.get('#opfab-parents').click();
         // Deselect old parents
-        cy.get('#opfab-parents').find('.vscomp-option-text').eq(1).click({ force: true });
+        cy.get('#opfab-parents').find('.vscomp-option-text').eq(1).click({force: true});
         // Select new parent
-        cy.get('#opfab-parents').find('.vscomp-option-text').eq(2).click({ force: true });
+        cy.get('#opfab-parents').find('.vscomp-option-text').eq(2).click({force: true});
         cy.get('#opfab-parents').click();
 
         cy.get('tag-input').find('[aria-label="Label1"]').should('exist');
@@ -215,9 +210,9 @@ describe ('AdminPage',()=>{
         cy.get('tag-input').find('[aria-label="Add label"]').eq(0).type('Label2');
 
         // Remove Label1
-         cy.get('tag-input').find('[aria-label="Remove tag"]').eq(0).click();
-         cy.get('tag-input').find('[aria-label="Label1"]').should('not.exist');
-         cy.get('tag-input').find('[aria-label="Label2"]').should('exist');
+        cy.get('tag-input').find('[aria-label="Remove tag"]').eq(0).click();
+        cy.get('tag-input').find('[aria-label="Label1"]').should('not.exist');
+        cy.get('tag-input').find('[aria-label="Label2"]').should('exist');
 
         cy.get('#opfab-admin-entity-btn-save').click();
 
@@ -247,6 +242,111 @@ describe ('AdminPage',()=>{
         cy.get('.opfab-pagination').should('contain.text', ' Results number  : 13');
 
         cy.countAgGridTableRows('ag-grid-angular', 3);
-
     });
-})
+
+    it('List, add, edit, delete groups', () => {
+        cy.loginOpFab('admin', 'test');
+
+        //Click on user menu (top right of the screen)
+        cy.get('#opfab-navbar-drop-user-menu').click();
+
+        //Click on "Administration"
+        cy.get('#opfab-navbar-right-menu-admin').click();
+
+        //Click on "Groups Management"
+        cy.get('#opfab-admin-groups-tab').click();
+
+        // Check the page has 7 rows
+        cy.countAgGridTableRows('ag-grid-angular', 7);
+
+        // Pagination should display ' Results number  : 7 '
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 7');
+
+        // Add new group
+        cy.get('#add-item').click();
+
+        cy.get('of-edit-group-modal').should('exist');
+
+        // Check id and name are mandatory
+        cy.get('#opfab-admin-edit-btn-add').should('be.disabled');
+
+        cy.get('#opfab-id').type('testgroup');
+
+        cy.get('#opfab-admin-edit-btn-add').should('be.disabled');
+
+        cy.get('#opfab-name').type('group name');
+
+        cy.get('#opfab-admin-edit-btn-add').should('not.be.disabled');
+
+        cy.get('#opfab-description').type('group description');
+
+        cy.get('#opfab-perimeters').click();
+        cy.get('#opfab-perimeters').find('.vscomp-option-text').eq(1).click({force: true});
+        cy.get('#opfab-perimeters').click();
+
+        cy.get('#opfab-realtime').check({force: true});
+
+        cy.get('#opfab-admin-edit-btn-add').click();
+
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 8');
+
+        cy.countAgGridTableRows('ag-grid-angular', 8);
+
+        cy.agGridCellShould('ag-grid-angular', 7, 0, 'have.text', 'testgroup');
+
+        // Edit previously created group
+        cy.clickAgGridCell('ag-grid-angular', 7, 5, 'of-action-cell-renderer');
+
+        cy.get('of-edit-group-modal').should('exist');
+
+        cy.get('#opfab-id').should('not.exist');
+
+        cy.get('.modal-title').should('contain.text', 'testgroup');
+        cy.agGridCellShould('ag-grid-angular', 7, 1, 'have.text', 'group name');
+        cy.agGridCellShould('ag-grid-angular', 7, 2, 'have.text', 'group description');
+        cy.agGridCellShould('ag-grid-angular', 7, 3, 'have.text', 'cypress');
+        cy.agGridCellShould('ag-grid-angular', 7, 4, 'have.text', 'YES');
+
+        cy.get('#opfab-name').type(' updated');
+
+        cy.get('#opfab-description').type(' updated');
+
+        cy.get('#opfab-perimeters').click();
+        // Deselect old perimeter
+        cy.get('#opfab-perimeters').find('.vscomp-option-text').eq(1).click({force: true});
+        // Select new perimeter
+        cy.get('#opfab-perimeters').find('.vscomp-option-text').eq(2).click({force: true});
+        cy.get('#opfab-perimeters').click();
+        // Deselect realtime parameter
+        cy.get('#opfab-realtime').uncheck({force: true});
+
+        cy.get('#opfab-admin-user-btn-save').click();
+
+        cy.waitDefaultTime();
+
+        // Check group is updated
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 8');
+
+        cy.countAgGridTableRows('ag-grid-angular', 8);
+
+        cy.agGridCellShould('ag-grid-angular', 7, 0, 'have.text', 'testgroup');
+        cy.agGridCellShould('ag-grid-angular', 7, 1, 'have.text', 'group name updated');
+        cy.agGridCellShould('ag-grid-angular', 7, 2, 'have.text', 'group description updated');
+        cy.agGridCellShould('ag-grid-angular', 7, 3, 'have.text', 'defaultProcess');
+        cy.agGridCellShould('ag-grid-angular', 7, 4, 'have.text', 'NO');
+
+        // Delete previously created group
+        cy.clickAgGridCell('ag-grid-angular', 7, 6, 'of-action-cell-renderer');
+
+        cy.get('of-confirmation-dialog').should('exist');
+
+        cy.get('#opfab-admin-confirmation-btn-ok').click();
+
+        cy.waitDefaultTime();
+
+        //Check group was deleted
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 7');
+
+        cy.countAgGridTableRows('ag-grid-angular', 7);
+    });
+});
