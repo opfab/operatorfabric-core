@@ -21,7 +21,7 @@ import {AppState} from '@ofStore/index';
 import {AlertMessageAction} from '@ofStore/actions/alert.actions';
 
 @Component({
-    selector: 'of-edit-user-modal',
+    selector: 'of-edit-perimeter-modal',
     templateUrl: './edit-perimeter-modal.component.html',
     styleUrls: ['./edit-perimeter-modal.component.scss']
 })

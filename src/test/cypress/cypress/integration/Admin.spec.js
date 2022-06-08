@@ -124,7 +124,7 @@ describe('AdminPage', () => {
         cy.countAgGridTableRows('ag-grid-angular', 2);
     });
 
-    it('List, add, edit, delete entites', () => {
+    it('List, add, edit, delete entities', () => {
         cy.loginOpFab('admin', 'test');
 
         //Click on user menu (top right of the screen)
@@ -348,5 +348,120 @@ describe('AdminPage', () => {
         cy.get('.opfab-pagination').should('contain.text', ' Results number  : 7');
 
         cy.countAgGridTableRows('ag-grid-angular', 7);
+    });
+
+    it('List, add, edit, delete perimeters', () => {
+        cy.loginOpFab('admin', 'test');
+
+        //Click on user menu (top right of the screen)
+        cy.get('#opfab-navbar-drop-user-menu').click();
+
+        //Click on "Administration"
+        cy.get('#opfab-navbar-right-menu-admin').click();
+
+        //Click on "Perimeters Management"
+        cy.get('#opfab-admin-perimeters-tab').click();
+
+        // Check first page has 8 rows
+        cy.countAgGridTableRows('ag-grid-angular', 8);
+
+        // Pagination should display ' Results number  : 8 '
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 8');
+
+        // Add new perimeter
+        cy.get('#add-item').click();
+
+        cy.get('of-edit-perimeter-modal').should('exist');
+
+        // Check at least one process/state is mandatory
+        cy.get('#opfab-admin-perimeter-btn-add').should('be.disabled');
+
+        cy.get('#opfab-id').type('testperimeter');
+
+        cy.get('#opfab-admin-perimeter-btn-add').should('be.disabled');
+
+        cy.get('#opfab-admin-perimeter-process-filter').find('select').select('cypress - Test process for cypress');
+
+        cy.get('#opfab-admin-perimeter-btn-add').should('be.disabled');
+
+        cy.get('#opfab-admin-perimeter-state-filter').find('select').select('Message');
+
+        cy.get('#opfab-admin-perimeter-btn-add').should('be.disabled');
+
+        cy.get('#opfab-admin-perimeter-right-filter').find('select').select('Write');
+
+        cy.get('#opfab-admin-perimeter-btn-add').should('not.be.disabled');
+
+        cy.get('#opfab-admin-perimeter-btn-add').click();
+
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 9');
+
+        cy.countAgGridTableRows('ag-grid-angular', 9);
+
+        cy.agGridCellShould('ag-grid-angular', 8, 0, 'have.text', 'testperimeter');
+        cy.agGridCellShould('ag-grid-angular', 8, 1, 'have.text', 'cypress');
+        cy.agGridCellShould('ag-grid-angular', 8, 2, 'have.text', 'Message');
+        // We check the right for Message is Write (the badge must be from class opfab-bg-right-write)
+        cy.get('ag-grid-angular')
+            .find('.ag-center-cols-container')
+            .find('.ag-row')
+            .eq(8)
+            .find('.ag-cell-value')
+            .find('.opfab-bg-right-write')
+            .eq(0)
+            .should('exist');
+
+        // Edit previously created perimeter
+        cy.clickAgGridCell('ag-grid-angular', 8, 3, 'of-action-cell-renderer');
+
+        cy.get('of-edit-perimeter-modal').should('exist');
+
+        cy.get('#opfab-id').should('not.exist');
+
+        cy.get('.modal-title').should('contain.text', 'testperimeter');
+
+        // We modify the state
+        cy.get('#opfab-admin-perimeter-state-filter').find('select').select('Message with no ack');
+
+        // We modify the right
+        cy.get('#opfab-admin-perimeter-right-filter').find('select').select('ReceiveAndWrite');
+
+        // We save changes
+        cy.get('#opfab-admin-perimeter-btn-save').click();
+
+        cy.waitDefaultTime();
+
+        // We still have 9 rows
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 9');
+
+        cy.countAgGridTableRows('ag-grid-angular', 9);
+
+        // We check the perimeter is updated
+        cy.agGridCellShould('ag-grid-angular', 8, 0, 'have.text', 'testperimeter');
+        cy.agGridCellShould('ag-grid-angular', 8, 1, 'have.text', 'cypress');
+        cy.agGridCellShould('ag-grid-angular', 8, 2, 'have.text', 'Message with no ack');
+        // We check the right for Message is ReceiveAndWrite (the badge must be from class opfab-bg-right-receiveandwrite)
+        cy.get('ag-grid-angular')
+            .find('.ag-center-cols-container')
+            .find('.ag-row')
+            .eq(8)
+            .find('.ag-cell-value')
+            .find('.opfab-bg-right-receiveandwrite')
+            .eq(0)
+            .should('exist');
+
+        // Delete previously created perimeter
+        cy.clickAgGridCell('ag-grid-angular', 8, 4, 'of-action-cell-renderer');
+
+        cy.get('of-confirmation-dialog').should('exist');
+
+        cy.get('#opfab-admin-confirmation-btn-ok').click();
+
+        cy.waitDefaultTime();
+
+        //Check perimeter was deleted
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 8');
+
+        cy.countAgGridTableRows('ag-grid-angular', 8);
     });
 });
