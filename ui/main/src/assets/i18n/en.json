@@ -187,7 +187,8 @@
     "from" : "from",
     "moreCards": "cards more",
     "lastResponse": "Last response received on",
-    "cardLoadingInProgress":"Loading card  ..."
+    "cardLoadingInProgress":"Loading card  ...",
+    "cardNotFound": "The card you are looking for was not found"
   },
   "login": {
     "reset": "Reset",

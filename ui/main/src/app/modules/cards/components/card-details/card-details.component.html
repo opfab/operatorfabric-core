@@ -6,12 +6,13 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div *ngIf="card && cardState" style="font-size:13px;" [hidden] = "cardLoadingInProgress" >
+<div *ngIf="card && cardState;" style="font-size:13px;" [hidden] = "cardLoadingInProgress || cardNotFound" >
   <of-detail   [cardState]="cardState" [card]="card" [childCards]="childCards"
                [currentPath]="_currentPath" [parentModalRef]="parentModalRef" [screenSize]="screenSize" [displayContext]="displayContext"
                [parentComponent]=this>
   </of-detail>
 </div>
+
 
 <div *ngIf="cardLoadingInProgress" [class.opfab-card-loading]="!isSmallscreen()"  [class.opfab-card-loading-small-screen]="isSmallscreen()">
 
@@ -25,3 +26,5 @@
   <br/>
   <br/>
 </div>
+
+<div *ngIf="cardNotFound" id="opfab-feed-card-not-found" style="font-size:1.5em; text-align:center; padding-top: 3em;" translate>feed.cardNotFound</div>
