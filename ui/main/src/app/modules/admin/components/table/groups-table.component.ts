@@ -23,7 +23,7 @@ export class GroupsTableComponent extends AdminTableDirective implements OnInit 
         new Field('id', 3),
         new Field('name', 3),
         new Field('description', 4),
-        new Field('perimeters', 6),
+        new Field('perimeters', 6, 'perimetersCellRenderer'),
         new Field('realtime', 4, null, this.translateValue)
     ];
     idField = 'id';

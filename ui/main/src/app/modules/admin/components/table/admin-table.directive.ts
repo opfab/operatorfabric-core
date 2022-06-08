@@ -28,6 +28,7 @@ import {GroupsService} from '@ofServices/groups.service';
 import {Group} from '@ofModel/group.model';
 import {Entity} from '@ofModel/entity.model';
 import {EntitiesService} from '@ofServices/entities.service';
+import {PerimetersCellRendererComponent} from '../cell-renderers/perimeters-cell-renderer.component';
 
 @Directive()
 @Injectable()
@@ -50,6 +51,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
                 actionCellRenderer: ActionCellRendererComponent,
                 groupCellRenderer: GroupCellRendererComponent,
                 entityCellRenderer: EntityCellRendererComponent,
+                perimetersCellRenderer: PerimetersCellRendererComponent,
                 stateRightsCellRenderer: StateRightsCellRendererComponent
             },
             domLayout: 'autoHeight',
@@ -334,7 +336,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     }
 
     openActionModal(params) {
-        // This method might be flagged as "unused" by IDEs but it's actually called through the ActionCellRendererComponent
+        // This method might be flagged as "unused" by IDEs, but it's actually called through the ActionCellRendererComponent
         const columnId = params.colDef.colId;
         if (columnId === 'edit') {
             const modalRef = this.modalService.open(this.editModalComponent, this.modalOptions);
