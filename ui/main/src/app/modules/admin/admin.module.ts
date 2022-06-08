@@ -24,6 +24,7 @@ import {ArrayCellRendererComponent} from './components/cell-renderers/array-cell
 import {ActionCellRendererComponent} from './components/cell-renderers/action-cell-renderer.component';
 import {GroupCellRendererComponent} from './components/cell-renderers/group-cell-renderer.component';
 import {EntityCellRendererComponent} from './components/cell-renderers/entity-cell-renderer.component';
+import {PerimetersCellRendererComponent} from './components/cell-renderers/perimeters-cell-renderer.component';
 import {SharingService} from './services/sharing.service';
 import {PerimetersTableComponent} from './components/table/perimeters-table.component';
 import {StateRightsCellRendererComponent} from './components/cell-renderers/state-rights-cell-renderer.component';
@@ -52,6 +53,7 @@ import {MultiSelectModule} from '../share/multi-select/multi-select.module';
         ArrayCellRendererComponent,
         GroupCellRendererComponent,
         EntityCellRendererComponent,
+        PerimetersCellRendererComponent,
         ProcessCellRendererComponent,
         StateRightsCellRendererComponent
     ],
@@ -71,6 +73,7 @@ import {MultiSelectModule} from '../share/multi-select/multi-select.module';
                 ArrayCellRendererComponent,
                 GroupCellRendererComponent,
                 EntityCellRendererComponent,
+                PerimetersCellRendererComponent,
                 ProcessCellRendererComponent,
                 StateRightsCellRendererComponent
             ]

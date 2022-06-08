@@ -37,7 +37,7 @@ export class ArrayCellRendererComponent implements ICellRendererAngularComp {
                 .getValue()
                 .map((code) => {
                     // This entails that the items that need to be rendered have an `id` and a `name` property.
-                    // I tried defining an interface to enforce that but it made the code very cumbersome so it didn't look worth the effort
+                    // I tried defining an interface to enforce that, but it made the code very cumbersome, so it didn't look worth the effort
                     // for now.
                     const lookedUpName = this.mapping
                         .filter((cachedItem) => code === cachedItem['id'])
@@ -48,6 +48,7 @@ export class ArrayCellRendererComponent implements ICellRendererAngularComp {
                         return code;
                     }
                 })
+                .sort()
                 .join(', ');
         } else {
             console.log('Admin table: id/name mapping was undefined for ' + this.itemType);

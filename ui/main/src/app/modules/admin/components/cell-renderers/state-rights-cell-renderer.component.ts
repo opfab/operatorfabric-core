@@ -13,6 +13,7 @@ import {ICellRendererParams} from 'ag-grid-community';
 import {StateRight} from '@ofModel/perimeter.model';
 import {Process} from '@ofModel/processes.model';
 import {ProcessesService} from '@ofServices/processes.service';
+import {Utilities} from '../../../../common/utilities';
 
 @Component({
     selector: 'of-state-rights-cell-renderer',
@@ -52,6 +53,7 @@ export class StateRightsCellRendererComponent implements ICellRendererAngularCom
                             ' does not exist anymore'
                     );
             });
+            this._stateRightsValues.sort((a, b) => Utilities.compareObj(a.stateName, b.stateName));
         } else console.log(new Date().toISOString(), 'The process ' + params.data.process + ' does not exist anymore');
     }
 
