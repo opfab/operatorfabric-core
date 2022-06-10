@@ -22,18 +22,10 @@
 
   <of-session-end> </of-session-end>
 
+  <of-reload-required *ngIf="applicationLoaded"></of-reload-required>
+
 </div>
 
 <!-- This element is used by Cypress tests to make sure actual tests are not launched until the application has
  finished loading -->
 <div id="opfab-cypress-loaded-check" hidden>{{applicationLoaded}}</div>
-
-
-<ng-template #reloadRequested let-modal>
-  <div class="modal-body text-center">
-    <p translate> global.reloadRequestedText </p>
-    <button id="opfab-reload-ok" type="button" class="opfab-btn" (click)="reload()" translate> button.ok</button>
-    <button id="opfab-reload-cancel" type="button" class="opfab-btn" (click)="closeReloadModal()" translate>
-      button.cancel</button>
-  </div>
-</ng-template>

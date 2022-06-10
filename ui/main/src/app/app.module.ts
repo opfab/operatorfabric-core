@@ -39,6 +39,7 @@ import {ActivityAreaChoiceAfterLoginComponent} from './modules/core/application-
 import {AccountAlreadyUsedComponent} from './modules/core/application-loading/account-already-used/account-already-used.component';
 import {AppLoadedInAnotherTabComponent} from './modules/core/application-loading/app-loaded-in-another-tab/app-loaded-in-another-tab.component';
 import {ApplicationLoadingComponent} from './modules/core/application-loading/application-loading.component';
+import {ReloadRequiredComponent} from './modules/core/reload-required/reload-required.component';
 
 @NgModule({
     imports: [
@@ -73,7 +74,8 @@ import {ApplicationLoadingComponent} from './modules/core/application-loading/ap
         ActivityAreaChoiceAfterLoginComponent,
         AccountAlreadyUsedComponent,
         AppLoadedInAnotherTabComponent,
-        ApplicationLoadingComponent
+        ApplicationLoadingComponent,
+        ReloadRequiredComponent
     ],
 
     providers: [

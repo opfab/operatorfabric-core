@@ -74,7 +74,6 @@
     "activateSoundText":"Sound not activated, click to activate",
     "activateSoundButton":"Activate sound",
     "sessionExpiredText":"Your session has expired",
-    "reloadRequestedText": "Application reload required",
     "disconnected": "You are disconnected.",
     "disconnectedByNewUser": "You have been disconnected because another user logged in using this account.",
     "disconnectByAppLoadedInAnotherTab": "You have been disconnected because another tab of this browser was used to log in using this URL."
@@ -480,5 +479,9 @@
     "december": "Dec",
     "week": "Week",
     "placeholder": "YYYY-MM-DD"
+  },
+  "reloadRequired" : {
+    "message": "Application reload required. To reload please click ",
+    "linkText": "here"
   }
 }
