@@ -74,7 +74,6 @@
     "activateSoundText":"Son non activé, cliquer pour activer",
     "activateSoundButton":"Activer le son",
     "sessionExpiredText":"Votre session a expiré",
-    "reloadRequestedText": "Rechargement de l'application nécessaire",
     "disconnected": "Vous êtes déconnecté.",
     "disconnectedByNewUser": "Vous avez été déconnecté car un autre utilisateur s'est connecté avec ce compte",
     "disconnectByAppLoadedInAnotherTab": "Vous avez été déconnecté car un autre onglet de ce navigateur a été utilisé pour se connecter à cette URL."
@@ -480,5 +479,9 @@
     "december": "Déc",
     "week": "sem",
     "placeholder": "AAAA-MM-JJ"
+  },
+  "reloadRequired" : {
+    "message": "Rechargement de l'application nécessaire. Pour recharger veuillez cliquer ",
+    "linkText": "ici"
   }
 }

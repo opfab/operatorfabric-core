@@ -7,10 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, HostListener, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, HostListener, TemplateRef, ViewChild} from '@angular/core';
 import {AppState} from '@ofStore/index';
 import {CardService} from '@ofServices/card.service';
-import {selectRelodRequested} from '@ofStore/selectors/cards-subscription.selectors';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 import {RemoteLoggerService} from '@ofServices/logs/remote-logger.service';
@@ -22,10 +21,10 @@ import {SoundNotificationService} from '@ofServices/sound-notification.service';
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
-    
+export class AppComponent {
+
     reloadCanceled: boolean;
-   
+
     public applicationLoaded = false;
 
     private modalRef: NgbModalRef;
@@ -79,41 +78,8 @@ export class AppComponent implements OnInit {
         private remoteLogger: RemoteLoggerService
     ) {}
 
-    ngOnInit() {
-        this.detectReloadRequested();
-    }
-
     onApplicationLoaded() {
         this.applicationLoaded = true;
 
     }
-
-    /** TO be refactored in issue https://github.com/opfab/operatorfabric-core/issues/3104 */
-
-    private detectReloadRequested() {
-        this.store.select(selectRelodRequested).subscribe((reloadRequested) => {
-            if (reloadRequested) {
-                this.logger.info('Application reload requested', LogOption.LOCAL_AND_REMOTE);
-                this.modalRef = this.modalService.open(this.reloadRequestedPopupRef, {
-                    centered: true,
-                    backdrop: 'static'
-                });
-                setTimeout(() => {
-                    if (!this.reloadCanceled) this.reload();
-                }, 5000 + Math.floor(Math.random() * 5000)); // use a random  part to avoid all UI to access at the same time the server
-            }
-        });
-    }
-
-    public reload() {
-        location.reload();
-    }
-
-    public closeReloadModal() {
-        this.reloadCanceled = true;
-        this.logger.info('Cancel reload', LogOption.REMOTE);
-        this.modalRef.close();
-    }
-
-    /** End to be refactored  */
 }

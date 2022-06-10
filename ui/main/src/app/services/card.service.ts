@@ -20,7 +20,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
-import {CardSubscriptionClosedAction, CardSubscriptionOpenAction} from '@ofActions/cards-subscription.actions';
+import {CardSubscriptionClosedAction, CardSubscriptionOpenAction, UIReloadRequestedAction} from '@ofActions/cards-subscription.actions';
 import {catchError, map, takeUntil} from 'rxjs/operators';
 import {RemoveLightCardAction} from '@ofActions/light-card.actions';
 import {BusinessConfigChangeAction} from '@ofStore/actions/processes.actions';
@@ -188,10 +188,7 @@ export class CardService {
                     switch (message.data) {
                         case 'RELOAD':
                             this.logger.info(`CardService - RELOAD received`, LogOption.LOCAL_AND_REMOTE);
-                            // Automatic reload mechanism not activated  (https://github.com/opfab/operatorfabric-core/issues/2696)
-                            // need more investigation regarding robustness , what happen if reload is made when all back services are not
-                            // fully started ?
-                            //this.store.dispatch(new UIReloadRequestedAction());
+                            this.store.dispatch(new UIReloadRequestedAction());
                             break;
                         case 'INIT':
                             console.log(new Date().toISOString(), `CardService - Card subscription initialized`);
