@@ -140,6 +140,13 @@ public class CardOperationsController {
         return oldCards.map(this::writeValueAsString);
     }
 
+    public Mono<String> deleteSubscription(Mono<CardOperationsGetParameters> parameters) {
+        return parameters.map(p -> {
+            cardSubscriptionService.deleteSubscription(p.getCurrentUserWithPerimeters().getUserData().getLogin(), p.getClientId());
+            return p.getClientId();
+        });
+    }
+
     private String writeValueAsString(CardOperation cardOperation) {
         try {
             return mapper.writeValueAsString(cardOperation);

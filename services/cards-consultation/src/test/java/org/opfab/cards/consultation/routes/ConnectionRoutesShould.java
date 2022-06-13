@@ -83,8 +83,22 @@ class ConnectionRoutesShould {
                         webTestClient.get().uri("/connections").exchange().expectStatus().isOk()
                                         .expectBody()
                                         .jsonPath("$[0]").doesNotExist();
-                } 
+                }
 
+                @Test
+                void respondWithNoUSerConnectedIsEmptyAfterDeleteSubscription() {
+                        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, "test");
+                        subscription.getPublisher().subscribe(log::info);
+                        webTestClient.get().uri("/connections").exchange().expectStatus().isOk()
+                                .expectBody()
+                                .jsonPath("$[0].login").isEqualTo(USER_LOGIN);
+
+                        service.deleteSubscription(USER_LOGIN, "test");
+
+                        webTestClient.get().uri("/connections").exchange().expectStatus().isOk()
+                                .expectBody()
+                                .jsonPath("$[0]").doesNotExist();
+                }
 
                 @Test
                 void respondWithOneUserConnected() {
