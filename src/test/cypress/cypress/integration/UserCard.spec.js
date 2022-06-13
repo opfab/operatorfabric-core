@@ -18,7 +18,6 @@ describe('User Card ', function () {
     cy.deleteAllSettings();
   });
 
-
   describe('Check edition mode', function () {
 
     it('Label change in edition mode for Question user card', () => {
@@ -961,4 +960,60 @@ describe('User Card ', function () {
     })
   })
   
+  describe('Check search feature in dropdown select', function () {
+    
+    it('Search feature should be enabled on services dropdown for "IT incident" user card', () => {
+      cy.loginOpFab('operator1_fr', 'test');
+      cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+      cy.usercardSelectService('User card examples');
+      cy.usercardSelectProcess('Conference and IT incident');
+      cy.usercardSelectState('IT Incident');
+      // check search is enabled for service select
+      cy.get('#service-select').should("exist");
+      cy.get('#service-select').click();
+      cy.get('#service-select').find('.vscomp-search-input').should("exist");
+      cy.get('#service-select').find('.vscomp-search-input').eq(0).invoke('attr', 'placeholder').should('eq', 'Search...');
+      cy.get('#service-select').find('.vscomp-option-text').should('have.length', 8);
+      cy.get('#service-select').find('.vscomp-option-text').eq(0).contains("Group 1");
+      cy.get('#service-select').find('.vscomp-option-text').eq(1).contains("Service A");
+      cy.get('#service-select').find('.vscomp-option-text').eq(2).contains("Service B");
+      cy.get('#service-select').find('.vscomp-option-text').eq(3).contains("Service C");
+      cy.get('#service-select').find('.vscomp-option-text').eq(4).contains("Group 2");
+      cy.get('#service-select').find('.vscomp-option-text').eq(5).contains("Service D");
+      cy.get('#service-select').find('.vscomp-option-text').eq(6).contains("Service E");
+      cy.get('#service-select').find('.vscomp-option-text').eq(7).contains("Service F");
+      cy.get('#service-select').find('.vscomp-search-input').eq(0).type('D');
+      cy.get('#service-select').find('.vscomp-option-text').should('have.length', 2);
+      cy.get('#service-select').find('.vscomp-option-text').eq(0).contains("Group 2");
+      cy.get('#service-select').find('.vscomp-option-text').eq(1).contains("Service D");
+    })
+    
+    
+    it('Search feature should be enabled on states dropdown for "Process example" user card', () => {
+      cy.loginOpFab('operator1_fr', 'test');
+      cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+      cy.usercardSelectProcess('Process example');
+      cy.usercardSelectState('Process example');
+
+      // check search is enabled for state select
+      cy.get('#state-select').should("exist");
+      cy.get('#state-select').click();
+      cy.get('#state-select').find('.vscomp-search-input').should("exist");
+      cy.get('#state-select').find('.vscomp-search-input').eq(0).invoke('attr', 'placeholder').should('eq', 'Search...');
+      cy.get('#state-select').find('.vscomp-option-text').should('have.length', 4);
+      cy.get('#state-select').find('.vscomp-option-text').eq(0).contains("Start");
+      cy.get('#state-select').find('.vscomp-option-text').eq(1).contains("Calculation 1 done");
+      cy.get('#state-select').find('.vscomp-option-text').eq(2).contains("Calculation 2 done");
+      cy.get('#state-select').find('.vscomp-option-text').eq(3).contains("Calculation 3 done");
+      cy.get('#state-select').find('.vscomp-search-input').eq(0).type('sta');
+      cy.get('#state-select').find('.vscomp-option-text').should('have.length', 1);
+      cy.get('#state-select').find('.vscomp-option-text').eq(0).contains("Start");
+
+      // check search is not enabled for status select
+      cy.get('#status-select').should("exist");
+      cy.get('#status-select').click();
+      cy.get('#status-select').find('.vscomp-search-input').should("not.exist");
+    })
+  })
+
 })

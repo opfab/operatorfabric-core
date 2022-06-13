@@ -17,25 +17,26 @@ opfab.multiSelect = {
     noOptionsText: '',
     noSearchResultsText: '',
 
-    init: function (id, options) {
+    init: function (config) {
         const multiSelect = {
-            id: this.id,
+            id: config.id,
             getSelectedValues() {
-                return document.querySelector('#' + id).value;
+                return document.querySelector('#' + config.id).value;
             }
         };
         VirtualSelect.init({
-            ele: '#' + id,
-            options: options,
+            ele: '#' + config.id,
+            options: config.options,
             optionsCount: 8,
-            multiple: true,
+            multiple: config.multiple,
             showValueAsTags: true,
             placeholder: '',
             selectAllOnlyVisible: true,
             searchPlaceholderText: this.searchPlaceholderText,
             clearButtonText: this.clearButtonText,
             noOptionsText: this.noOptionsText,
-            noSearchResultsText: this.noSearchResultsText
+            noSearchResultsText: this.noSearchResultsText,
+            search: config.search
         });
         return multiSelect;
     }

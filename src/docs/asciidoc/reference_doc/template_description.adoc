@@ -622,14 +622,19 @@ OperatorFabric provides a multiselect component based on https://sa-si-dev.githu
   </div>
 
  <script>
-  myMultiSelect = opfab.multiSelect.init("my-multiselect",[
+  myMultiSelect = opfab.multiSelect.init({
+                id: "my-multiselect",
+                options: [
                 { label: 'Choice A', value: 'A' },
                 { label: 'Choice B', value: 'B' },
                 { label: 'Choice C', value: 'C' }
                 { label: 'Choice D', value: 'D' },
                 { label: 'Choice E', value: 'E' },
                 { label: 'Choice F', value: 'F' }
-            ]);
+                ],
+                multiple: true,
+                search: true
+            });
   
 
   usercardTemplateGateway.getSpecificCardInformation = function () {
@@ -640,6 +645,40 @@ OperatorFabric provides a multiselect component based on https://sa-si-dev.githu
 ....
 
 WARNING: It strongly advice to NOT use directly virtual select (always use OperatorFabric js object and css) otherwise you will not be guaranteed compatibility when upgrading.
+
+
+It is possible to use the component also as single value select. The advantage over a standard select is the possibility to benefit of the serching feature. To use the component as single select, initialize it with the `multiple` property set to false:  
+
+....
+
+  <div class="opfab-multiselect">
+        <label>  MY SINGLE SELECT   </label>
+        <div id="my-singleselect">
+        </div>
+  </div>
+
+ <script>
+  mySingleSelect = opfab.multiSelect.init({
+                id: "my-singleselect",
+                options: [
+                { label: 'Choice A', value: 'A' },
+                { label: 'Choice B', value: 'B' },
+                { label: 'Choice C', value: 'C' }
+                { label: 'Choice D', value: 'D' },
+                { label: 'Choice E', value: 'E' },
+                { label: 'Choice F', value: 'F' }
+                ],
+                multiple: false,
+                search: true
+            });
+  
+
+  usercardTemplateGateway.getSpecificCardInformation = function () {
+
+        const selectedValues = document.getElementById('my-singleselect').value; 
+
+      ....
+....
 
 
 == Charts
