@@ -35,6 +35,7 @@ public class CardSubscriptionRoutesConfig {
     public static final String FALSE = "false";
     public static final String TRUE = "true";
     public static final String CARD_SUBSCRIPTION_PATH = "/cardSubscription";
+    public static final String CLIENT_ID = "clientId";
 
     private final CardOperationsController cardOperationsController;
 
@@ -52,13 +53,10 @@ public class CardSubscriptionRoutesConfig {
         return RouterFunctions
                 .route(RequestPredicates.GET(CARD_SUBSCRIPTION_PATH), cardSubscriptionGetRoute())
                 .andRoute(RequestPredicates.POST(CARD_SUBSCRIPTION_PATH),cardSubscriptionPostRoute())
-                .andRoute(RequestPredicates.OPTIONS(CARD_SUBSCRIPTION_PATH), cardSubscriptionOptionsRoute());
+                .andRoute(RequestPredicates.OPTIONS(CARD_SUBSCRIPTION_PATH), cardSubscriptionOptionsRoute())
+                .andRoute(RequestPredicates.DELETE(CARD_SUBSCRIPTION_PATH), cardSubscriptionDeleteRoute());
     }
 
-    /**
-     * Card Operation POST route
-     * @return
-     */
     private HandlerFunction<ServerResponse> cardSubscriptionPostRoute() {
         return request -> {
             ServerResponse.BodyBuilder builder = ok()
@@ -69,10 +67,6 @@ public class CardSubscriptionRoutesConfig {
         };
     }
 
-    /**
-     * Card Operation GET route
-     * @return
-     */
     private HandlerFunction<ServerResponse> cardSubscriptionGetRoute() {
         return request -> {
             ServerResponse.BodyBuilder builder = ok()
@@ -84,12 +78,16 @@ public class CardSubscriptionRoutesConfig {
         };
     }
 
-    /**
-     * CardOperation OPTION route
-     * @return
-     */
     private HandlerFunction<ServerResponse> cardSubscriptionOptionsRoute() {
         return request -> ok().build();
+    }
+
+    private HandlerFunction<ServerResponse> cardSubscriptionDeleteRoute() {
+        return request -> {
+            ServerResponse.BodyBuilder builder = ok()
+                    .contentType(MediaType.APPLICATION_JSON);
+            return builder.body(cardOperationsController.deleteSubscription(extractCardSubscriptionInfoOnDelete(request)), String.class);
+        };
     }
 
     /**
@@ -103,13 +101,29 @@ public class CardSubscriptionRoutesConfig {
                     OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
                     return CardOperationsGetParameters.builder()
                             .currentUserWithPerimeters((CurrentUserWithPerimeters)jwtPrincipal.getPrincipal())
-                            .clientId(request.queryParam("clientId").orElse(null))
+                            .clientId(request.queryParam(CLIENT_ID).orElse(null))
                             .uiVersion(request.queryParam("version").orElse(null))
                             .rangeStart(parseAsInstant(request.queryParam("rangeStart").orElse(null)))
                             .rangeEnd(parseAsInstant(request.queryParam("rangeEnd").orElse(null)))
                             .publishFrom(parseAsInstant(request.queryParam("publishFrom").orElse(null)))
                             .test(request.queryParam("test").orElse(FALSE).equals(TRUE))
                             .notification(request.queryParam("notification").orElse(FALSE).equals(TRUE))
+                            .build();
+                });
+    }
+
+    /**
+     * Extracts card operation parameters from Authentication and Query parameters DELETE context
+     * @param request the http request
+     * @return a parameter aggregation DTO
+     */
+    private Mono<CardOperationsGetParameters> extractCardSubscriptionInfoOnDelete(ServerRequest request){
+        return request.principal()
+                .map(principal->{
+                    OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
+                    return CardOperationsGetParameters.builder()
+                            .currentUserWithPerimeters((CurrentUserWithPerimeters)jwtPrincipal.getPrincipal())
+                            .clientId(request.queryParam(CLIENT_ID).orElse(null))
                             .build();
                 });
     }
@@ -126,7 +140,7 @@ public class CardSubscriptionRoutesConfig {
                     OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) t.getT1();
                     CardOperationsGetParameters.CardOperationsGetParametersBuilder builder = CardOperationsGetParameters.builder()
                             .currentUserWithPerimeters((CurrentUserWithPerimeters)jwtPrincipal.getPrincipal())
-                            .clientId(request.queryParam("clientId").orElse(null))
+                            .clientId(request.queryParam(CLIENT_ID).orElse(null))
                             .rangeStart(t.getT2().getRangeStart())
                             .rangeEnd(t.getT2().getRangeEnd())
                             .publishFrom(t.getT2().getPublishFrom())

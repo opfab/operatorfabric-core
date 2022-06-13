@@ -39,6 +39,7 @@ export class CardService {
     private static TWO_MINUTES = 120000;
 
     readonly cardOperationsUrl: string;
+    readonly deleteCardSubscriptionUrl: string;
     readonly cardsUrl: string;
     readonly archivesUrl: string;
     readonly cardsPubUrl: string;
@@ -68,6 +69,7 @@ export class CardService {
     ) {
         const clientId = this.guidService.getCurrentGuidString();
         this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}&version=${packageInfo.opfabVersion}`;
+        this.deleteCardSubscriptionUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}`;
         this.cardsUrl = `${environment.urls.cards}/cards`;
         this.archivesUrl = `${environment.urls.cards}/archives`;
         this.cardsPubUrl = `${environment.urls.cardspub}/cards`;
@@ -165,8 +167,15 @@ export class CardService {
 
     public closeSubscription() {
         this.logger.info('Closing subscription', LogOption.LOCAL_AND_REMOTE);
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
+
+        this.deleteCardSubscription().subscribe(() => {
+            this.unsubscribe$.next();
+            this.unsubscribe$.complete();
+        });
+    }
+
+    private deleteCardSubscription(): Observable<HttpResponse<void>> {
+        return this.httpClient.delete<any>(`${this.deleteCardSubscriptionUrl}`, {observe: 'response'});
     }
 
     private getCardSubscription(): Observable<CardOperation> {
