@@ -102,6 +102,7 @@ export class ApplicationLoadingComponent implements OnInit {
                     LogOption.LOCAL_AND_REMOTE
                 );
                 this.i18nService.loadTranslationForMenu();
+                this.i18nService.setTranslationForMultiSelectUsedInTemplates();
                 this.checkIfAppLoadedInAnotherTab();
             });
         } else this.logger.error('No locales define (value i18.supported.locales not present in web-ui.json)');

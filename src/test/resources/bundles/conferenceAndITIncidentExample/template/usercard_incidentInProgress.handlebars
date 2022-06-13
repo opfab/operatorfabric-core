@@ -50,9 +50,11 @@
     document.getElementById("hidden_state").value = usercardTemplateGateway.getCurrentState();
 
 
-    serviceSelect = opfab.multiSelect.init("service-select",[
+    serviceSelect = opfab.multiSelect.init({
+        id: "service-select",
+        options: [
         {
-            label: 'Groupe 1',
+            label: 'Group 1',
             options : [
                 { label: 'Service A', value: 'SA' },
                 { label: 'Service B', value: 'SB' },
@@ -60,14 +62,17 @@
             ]
         },
         {
-            label: 'Groupe 2',
+            label: 'Group 2',
             options: [
                 { label: 'Service D', value: 'SD' },
                 { label: 'Service E', value: 'SE' },
                 { label: 'Service F', value: 'SF' }
             ]
         }
-    ]);
+        ],
+        multiple: true,
+        search: true
+    });
 
 
 
