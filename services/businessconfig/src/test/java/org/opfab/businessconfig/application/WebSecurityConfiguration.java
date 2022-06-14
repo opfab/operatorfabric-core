@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,9 +12,10 @@
 package org.opfab.businessconfig.application;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
 
 
 /**
@@ -27,7 +28,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  */
 @Configuration
 @Slf4j
-public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfiguration {
 
     private static final String[] AUTH_WHITELIST = {
 
@@ -39,11 +40,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/webjars/**"
     };
 
-    @Override
-    public void configure(final HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         org.opfab.businessconfig.configuration.oauth2.WebSecurityConfiguration.configureCommon(http);
         http.csrf().disable();
+        return http.build();
     }
-
 
 }

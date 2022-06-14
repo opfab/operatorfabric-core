@@ -12,16 +12,17 @@
 package org.opfab.users.configuration.oauth2;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * OAuth 2 http authentication configuration and access rules
@@ -30,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Configuration
 @Slf4j
-public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfiguration {
 
     public static final String PROMETHEUS_PATH ="/actuator/prometheus**";
     public static final String LOGGERS_PATH ="/actuator/loggers/**";
@@ -56,18 +57,17 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     WebSecurityChecks webSecurityChecks;
-
-    @Autowired
-    private Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter;
-
-    @Override
-    public void configure(final HttpSecurity http) throws Exception {
+    
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter) throws Exception {
         configureCommon(http);
         http
                 .oauth2ResourceServer()
                 .jwt()
                 .jwtAuthenticationConverter(opfabJwtConverter);
 
+        return http.build();
     }
 
     /**This method handles the configuration to be shared with the test WebSecurityConfiguration class (access rules to be tested)

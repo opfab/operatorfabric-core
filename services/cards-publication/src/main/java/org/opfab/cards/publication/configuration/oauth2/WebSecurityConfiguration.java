@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,14 +17,15 @@ import org.opfab.springtools.configuration.oauth.WebSecurityChecks;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * OAuth 2 http authentication configuration and access rules
@@ -34,7 +35,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 @Configuration
 @Slf4j
 @Profile(value = {"!test"})
-public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfiguration {
 
     public static final String PROMETHEUS_PATH ="/actuator/prometheus**";
     public static final String LOGGERS_PATH ="/actuator/loggers/**";
@@ -47,20 +48,19 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     WebSecurityChecks webSecurityChecks;
 
-    @Autowired
-    private Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter;
-
-
     @Value("${checkAuthenticationForCardSending:true}")
     private boolean checkAuthenticationForCardSending;
-    
-    @Override
-    public void configure(final HttpSecurity http) throws Exception {
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter) throws Exception {
         configureCommon(http, checkAuthenticationForCardSending);
-        http.csrf().disable();  
+        http.csrf().disable();
         http
                 .oauth2ResourceServer()
                 .jwt().jwtAuthenticationConverter(opfabJwtConverter);
+
+        return http.build();
     }
 
     public static void configureCommon(final HttpSecurity http, boolean checkAuthenticationForCardSending) throws Exception {
@@ -81,10 +81,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/cards/translateCardField").access(AUTH_AND_IP_ALLOWED)
             .antMatchers("/**").permitAll();
         }
-
-                
     }
-
-    
 
 }
