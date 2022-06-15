@@ -38,6 +38,7 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 	private static final String START_DATE_FIELD = "startDate";
 	private static final String END_DATE_FIELD = "endDate";
 
+	private static final String LAST_ACK_DATE_FIELD = "lastAckDate";
     private final ReactiveMongoTemplate template;
 
 
@@ -142,6 +143,9 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 	}
 
 	private Criteria publishDateCriteria(Instant publishFrom) {
-		return where(PUBLISH_DATE_FIELD).gte(publishFrom);
+		Criteria publishCriteria = new Criteria();
+		publishCriteria.orOperator(where(PUBLISH_DATE_FIELD).gte(publishFrom),
+				where(LAST_ACK_DATE_FIELD).gte(publishFrom));
+		return publishCriteria;
 	}
 }

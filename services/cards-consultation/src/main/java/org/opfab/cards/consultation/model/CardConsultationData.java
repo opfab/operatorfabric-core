@@ -111,4 +111,6 @@ public class CardConsultationData implements Card {
     private String processStateKey;
 
     private Boolean toNotify;
+
+    private Instant lastAckDate;
 }
