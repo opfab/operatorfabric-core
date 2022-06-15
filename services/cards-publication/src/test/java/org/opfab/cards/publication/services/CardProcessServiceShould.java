@@ -718,7 +718,7 @@ class CardProcessServiceShould {
         user.setLogin("aaa");
         user.setEntities(Arrays.asList("newPublisherId", "entity2"));
         res = cardProcessingService.processUserAcknowledgement(cardUid, user, user.getEntities());
-        Assertions.assertThat(res.isCardFound() && !res.getOperationDone()).as("Expecting no addition because already done").isTrue();
+        Assertions.assertThat(res.isCardFound() && res.getOperationDone()).as("Expecting update to lastAckDate is done").isTrue();
         
         cardReloaded = cardRepository.findByUid(cardUid).get();
         Assertions.assertThat(cardReloaded.getUsersAcks()).as("Expecting  Card after ack processing contains exactly two acks by users aaa(only once) and bbb").containsExactly("aaa","bbb");

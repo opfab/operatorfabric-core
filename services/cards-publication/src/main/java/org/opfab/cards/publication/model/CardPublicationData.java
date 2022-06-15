@@ -134,6 +134,9 @@ public class CardPublicationData implements Card {
 
     private Boolean toNotify;
 
+    @Indexed
+    private Instant lastAckDate;
+
     public void prepare(Instant publishDate) {
         this.publishDate = publishDate;
         this.id = process + "." + processInstanceId;
