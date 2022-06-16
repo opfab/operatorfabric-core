@@ -12,25 +12,27 @@
 
 display_usage() {
 	echo "This script changes the security property in the web-ui.json to "
-	echo "Usage : setSecurityAuthFlow.sh environment flow\n"
-	echo "environment : (dev, docker)\n"
+	echo "Usage : setSecurityAuthFlow.sh flow"
 	echo "flow : (CODE, IMPLICIT, PASSWORD)"
-	echo "Example : setSecurityAuthFlow.sh dev CODE sets the authorization flow to CODE in the web-ui.json used in dev mode.\n"
-	echo "Warning : The docker configuration is version-controlled, so make sure not to commit the changes."
+	echo "Example : setSecurityAuthFlow.sh CODE sets the authorization flow to CODE in the web-ui.json."
+	echo "Warning : The configuration is version-controlled, so make sure not to commit the changes."
 }
 
-environment=$1
-flow=$2
-if [ -z "$environment" ] || [ -z "$flow" ]
+flow=$1
+if [ "$#" -ne 1 ] || [ -z "$flow" ]
 then
     display_usage
 else
 	(
-	  [[ $environment == 'dev' || $environment == 'docker' ]] || { echo "Unrecognized environment $environment. No changes made."; exit 1; }
 	  [[ $flow == 'CODE' || $flow == 'IMPLICIT' || $flow == 'PASSWORD' ]] || { echo "Unrecognized flow $flow. No changes made."; exit 1; }
 
-    pathToConfigFile="../../../../config/$environment/ui-config/web-ui.json"
+    pathToConfigFile="../../../../config/docker/ui-config/web-ui.json"
     pathToSnippetFile="./security-$flow-flow.json"
     ./updatePropertyInJsonWithSnippet.sh $pathToConfigFile security $pathToSnippetFile
+
+    pathToScriptUpdatingDevEnv="../../../../config/dev/"
+    cd $pathToScriptUpdatingDevEnv
+    ./generateUIConfigForDev.sh
+    cd -
 	)
 fi
