@@ -18,11 +18,16 @@ Cypress.Commands.add('hackUrlCurrentlyUsedMechanism', () => {
     cy.wait(100);
 });
 
-Cypress.Commands.add('loginOpFab',(username, password)=>
-{   //go to login page
+Cypress.Commands.add('loginOpFab',(username, password)=> {   
     cy.hackUrlCurrentlyUsedMechanism();
+    
+    //go to login page
     cy.visit('')
 
+   cy.loginOpFabWithoutHack(username, password);
+})
+
+Cypress.Commands.add('loginOpFabWithoutHack',(username, password)=> {   
     //type login
     cy.get('#opfab-login').should('be.visible')
     cy.get('#opfab-login').type(username)
@@ -38,6 +43,7 @@ Cypress.Commands.add('loginOpFab',(username, password)=>
     //Wait for the app to finish initializing
     cy.get('#opfab-cypress-loaded-check', {timeout: 20000}).should('have.text', 'true');
 })
+
 
 Cypress.Commands.add('loginWithClock', (dateToUse = new Date()) =>{
   // Do not use the generic login feature as we 
