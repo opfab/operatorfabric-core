@@ -646,6 +646,11 @@ type-ahead > .badge-primary {
         border-top: 1px solid var(--opfab-table-border-color);
         border-bottom: 1px solid var(--opfab-table-border-color);
     }
+
+    // #2588 : Logging screen : summary column extends without limit if the message contains no space character
+    td {
+        overflow: hidden;
+    }
 }
 
 .opfab-pagination {
