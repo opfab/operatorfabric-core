@@ -396,12 +396,13 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         card.card.title = card.card.titleTranslated;
         card.card.summary = card.card.summaryTranslated;
         card.card.severity = Utilities.translateSeverity(this.translate, card.card.severity);
-
-        card.childCards.forEach((childCard) => {
-            if (childCard.publisherType === 'ENTITY')
-                childCard.publisherName = this.entitiesService.getEntityName(childCard.publisher);
-            else childCard.publisherName = childCard.publisher;
-        });
+        if (!!card.childCards) {
+            card.childCards.forEach((childCard) => {
+                if (childCard.publisherType === 'ENTITY')
+                    childCard.publisherName = this.entitiesService.getEntityName(childCard.publisher);
+                else childCard.publisherName = childCard.publisher;
+            });
+        }
         return card;
     }
 
