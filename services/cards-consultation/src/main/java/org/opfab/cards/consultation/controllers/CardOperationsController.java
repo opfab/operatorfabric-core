@@ -145,7 +145,7 @@ public class CardOperationsController {
     public Mono<String> deleteSubscription(Mono<CardOperationsGetParameters> parameters) {
         return parameters.map(p -> {
             cardSubscriptionService.deleteSubscription(p.getCurrentUserWithPerimeters().getUserData().getLogin(), p.getClientId());
-            return p.getClientId();
+            return "";
         });
     }
 

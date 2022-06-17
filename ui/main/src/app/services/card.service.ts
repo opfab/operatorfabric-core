@@ -20,7 +20,11 @@ import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
-import {CardSubscriptionClosedAction, CardSubscriptionOpenAction, UIReloadRequestedAction} from '@ofActions/cards-subscription.actions';
+import {
+    CardSubscriptionClosedAction,
+    CardSubscriptionOpenAction,
+    UIReloadRequestedAction
+} from '@ofActions/cards-subscription.actions';
 import {catchError, map, takeUntil} from 'rxjs/operators';
 import {RemoveLightCardAction} from '@ofActions/light-card.actions';
 import {BusinessConfigChangeAction} from '@ofStore/actions/processes.actions';
@@ -168,10 +172,9 @@ export class CardService {
     public closeSubscription() {
         this.logger.info('Closing subscription', LogOption.LOCAL_AND_REMOTE);
 
-        this.deleteCardSubscription().subscribe(() => {
-            this.unsubscribe$.next();
-            this.unsubscribe$.complete();
-        });
+        this.deleteCardSubscription().subscribe();
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     private deleteCardSubscription(): Observable<HttpResponse<void>> {
