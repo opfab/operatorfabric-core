@@ -162,10 +162,12 @@ export class UserCardComponent implements OnInit {
 
             this.setPublisherForCreatingUsercardForCardToEdit();
 
-            const userResponse = this.cardToEdit.childCards.find(
-                (child) => child.publisher === this.publisherForCreatingUsercard
-            );
-            usercardTemplateGateway.setUserEntityChildCardFromCurrentCard(userResponse);
+            if (!!this.cardToEdit.childCards) {
+                const userResponse = this.cardToEdit.childCards.find(
+                    (child) => child.publisher === this.publisherForCreatingUsercard
+                );
+                usercardTemplateGateway.setUserEntityChildCardFromCurrentCard(userResponse);
+            }
         });
     }
 
