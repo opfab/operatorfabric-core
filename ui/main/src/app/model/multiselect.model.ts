@@ -22,6 +22,8 @@ export class MultiSelectConfig {
     public placeholderKey?: string;
     public sortOptions?: boolean;
     public nbOfDisplayValues?: number;
+    public multiple?: boolean;
+    public search?: boolean;
 }
 export class MultiSelect {
     public id: string;

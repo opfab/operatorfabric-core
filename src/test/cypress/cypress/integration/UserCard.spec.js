@@ -191,8 +191,8 @@ describe('User Card ', function () {
         cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
         cy.usercardSelectService('Base Examples');
         cy.get('#of-usercard-process-filter').should("exist");
-        cy.get('#of-usercard-process-filter').find('option').should("have.length", 1);
-        cy.get('#of-usercard-process-filter').find('option').eq(0).should("have.text", "Process example ");
+        cy.get("#of-usercard-process-filter").find('.vscomp-option-text').should("have.length", 1);
+        cy.get("#of-usercard-process-filter").find('.vscomp-option-text').eq(0).should("contain", "Process example ");
     })
   })
 
@@ -350,7 +350,9 @@ describe('User Card ', function () {
           cy.get('#opfab-card-edit').click();
           cy.get("of-usercard").should('exist');
           cy.get('#of-usercard-card-emitter-selector').should("not.exist");
-          cy.get('#message').should('be.visible').type(' (updated)')
+          cy.get('#message').should('be.visible');
+          cy.waitDefaultTime();
+          cy.get('#message').type(' (updated)');
           cy.usercardPrepareAndSendCard();
           // Check that the message indicating successful sending appears
           cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");

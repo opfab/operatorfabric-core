@@ -226,16 +226,18 @@ Cypress.Commands.add('clickAgGridCell', (table, row, col, tag) => {
 
 Cypress.Commands.add('usercardSelectService', (serviceName) => {
     cy.get("of-usercard").should('exist');
-    cy.get("#of-usercard-service-selector").find('select').select(serviceName);
-    cy.get("#of-usercard-service-selector").find("option:selected").should("have.text", serviceName);
+    cy.get("#of-usercard-service-selector").click();
+    cy.get("#of-usercard-service-selector").find('.vscomp-option-text').contains(serviceName).eq(0).click({ force: true });
 })
 
 Cypress.Commands.add('usercardSelectProcess', (processName) => {
-    cy.get("#of-usercard-process-filter").find('select').select(processName);
+    cy.get("#of-usercard-process-filter").click();
+    cy.get("#of-usercard-process-filter").find('.vscomp-option-text').contains(processName).eq(0).click({ force: true });
 })
 
 Cypress.Commands.add('usercardSelectState', (stateName) => {
-    cy.get("#opfab-state-filter").find('select').select(stateName);
+    cy.get("#of-state-filter").click();
+    cy.get("#of-state-filter").find('.vscomp-option-text').contains(stateName).eq(0).click({ force: true });
 })
 
 Cypress.Commands.add('usercardPrepareAndSendCard', () => {

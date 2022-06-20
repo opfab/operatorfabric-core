@@ -36,7 +36,8 @@ opfab.multiSelect = {
             clearButtonText: this.clearButtonText,
             noOptionsText: this.noOptionsText,
             noSearchResultsText: this.noSearchResultsText,
-            search: config.search
+            search: config.search,
+            hideClearButton: config.multiple !== undefined ? !config.multiple : false
         });
         return multiSelect;
     }
