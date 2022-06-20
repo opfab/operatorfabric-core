@@ -7,14 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
+import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {Process} from '@ofModel/processes.model';
 import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {UserService} from '@ofServices/user.service';
 import {Utilities} from 'app/common/utilities';
+import {MultiSelectComponent} from 'app/modules/share/multi-select/multi-select.component';
 import {Subject} from 'rxjs';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 
@@ -30,6 +32,14 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     @Output() public stateChange: EventEmitter<any> = new EventEmitter<any>();
     @Output() public emptyProcessList: EventEmitter<any> = new EventEmitter<any>();
 
+    @ViewChild('processGroupSelect') set processGroup(processGroupSelect: MultiSelectComponent) {
+        if (processGroupSelect && this.cardIdToEdit) processGroupSelect.disable();
+     }
+
+    @ViewChild('processSelect') set process(processSelect: MultiSelectComponent) {
+        if (processSelect && this.cardIdToEdit) processSelect.disable();
+     }
+
     processesDefinition: Process[];
     currentUserWithPerimeters: UserWithPerimeters;
     statesPerProcesses = new Map();
@@ -39,23 +49,43 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     processesWithoutProcessGroup = [];
 
     selectStateForm: FormGroup;
-    processOptions = [];
+    processOptions : Array<MultiSelectOption> = [];
     processOptionsWhenSelectedProcessGroup = [];
-    processGroupOptions = [];
+    processGroupOptions : Array<MultiSelectOption> = [];
+    selectedProcessGroupOption : any;
     stateOptions: any[];
 
-    selectedProcess: Process;
+    selectedProcess: string;
     selectedState: string;
 
     unsubscribe$: Subject<void> = new Subject<void>();
+
+    public multiSelectConfig: MultiSelectConfig = {
+        labelKey: 'shared.filters.processGroup',
+        multiple: false,
+        search: true
+    };
+
+    public processMultiSelectConfig: MultiSelectConfig = {
+        labelKey: 'shared.filters.process',
+        multiple: false,
+        search: true
+    };
+
+    public stateMultiSelectConfig: MultiSelectConfig = {
+        labelKey: 'shared.filters.state',
+        sortOptions: true,
+        multiple: false,
+        search: true
+    };
 
     constructor(private processesService: ProcessesService, private userService: UserService) {}
 
     ngOnInit() {
         this.selectStateForm = new FormGroup({
-            processGroup: new FormControl(''),
-            process: new FormControl(''),
-            state: new FormControl('')
+            usercardProcessGroup: new FormControl(''),
+            usercardProcess: new FormControl(''),
+            usercardState: new FormControl('')
         });
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         this.processGroups = this.processesService.getProcessGroups();
@@ -66,15 +96,16 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
 
         if (!this.cardIdToEdit && this.processGroupOptions.length === 0 && this.processOptions.length > 0) {
             this.selectedProcess = this.processOptions[0].value;
-            this.selectStateForm.get('process').setValue(this.selectedProcess);
         }
-
-        this.InitProcessState();
+        if (!this.cardIdToEdit && this.processGroupOptions.length > 0) {
+            this.selectedProcessGroupOption = this.processGroupOptions[0].value;
+        }
+        this.initProcessState();
         this.listenForStateChange();
         if (!this.processOptions || this.processOptions.length < 1) this.emptyProcessList.emit(true);
     }
 
-    displayProcessGroupFilter() {
+    isProcessGroupFilterVisible() : boolean {
         return !!this.processGroupOptions && this.processGroupOptions.length > 1;
     }
 
@@ -82,13 +113,13 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
         this.processesDefinition = this.processesService.getAllProcesses();
         const processesInPerimeter: Set<string> = new Set();
         this.currentUserWithPerimeters.computedPerimeters.forEach((perimeter) => {
-            if (this.userCanSendCard(perimeter)) processesInPerimeter.add(perimeter.process);
+            if (this.isUserAllowedToSendCard(perimeter)) processesInPerimeter.add(perimeter.process);
         });
 
         this.processesDefinition.forEach((process) => {
             if (processesInPerimeter.has(process.id)) {
                 const label = process.name ? process.name : process.id;
-                const processToShow = {value: process.id, label: label};
+                const processToShow = new MultiSelectOption(process.id, label);
 
                 this.loadStatesForProcess(process);
                 // Add process option only if there is at least one state
@@ -98,14 +129,14 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
         this.processOptions.sort((a, b) => Utilities.compareObj(a.label, b.label));
     }
 
-    private userCanSendCard(perimeter: ComputedPerimeter): boolean {
+    private isUserAllowedToSendCard(perimeter: ComputedPerimeter): boolean {
         return perimeter.rights === RightsEnum.ReceiveAndWrite || perimeter.rights === RightsEnum.Write;
     }
 
     private loadStatesForProcess(process: Process): void {
         const statesList = [];
         this.currentUserWithPerimeters.computedPerimeters.forEach((perimeter) => {
-            if (perimeter.process === process.id && this.userCanSendCard(perimeter)) {
+            if (perimeter.process === process.id && this.isUserAllowedToSendCard(perimeter)) {
                 const state = this.getStateFromProcessDefinition(process, perimeter.state);
                 if (!!state) statesList.push(state);
             }
@@ -113,7 +144,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
         this.statesPerProcesses.set(process.id, statesList);
     }
 
-    getStateFromProcessDefinition(process: Process, stateId: string) {
+    getStateFromProcessDefinition(process: Process, stateId: string) : {value: string, label: string}{
         const stateFromProcessDefinition = process.states[stateId];
         if (!!stateFromProcessDefinition) {
             if (!!stateFromProcessDefinition.userCard) {
@@ -149,18 +180,16 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
         });
 
         for (const processGroupId of this.processesPerProcessGroups.keys())
-            this.processGroupOptions.push({value: processGroupId, label: this.processGroups.get(processGroupId).name});
+            this.processGroupOptions.push(new MultiSelectOption(processGroupId, this.processGroups.get(processGroupId).name));
 
         this.processGroupOptions.sort((a, b) => Utilities.compareObj(a.label, b.label));
 
         if (this.processOptions.length > numberOfProcessesAttachedToAProcessGroup) {
             this.loadProcessesWithoutProcessGroup();
-            this.processGroupOptions.unshift({value: '--', label: 'processGroup.defaultLabel'});
+            this.processGroupOptions.unshift(new MultiSelectOption( '--', 'processGroup.defaultLabel'));
         }
 
-        if (!this.cardIdToEdit && this.processGroupOptions.length > 0) {
-            this.selectStateForm.get('processGroup').setValue(this.processGroupOptions[0].value);
-        }
+        if (!this.cardIdToEdit && this.processGroupOptions.length > 0) this.selectedProcessGroupOption = this.processGroupOptions[0].value;
     }
 
     private isProcessInProcessesGroup(idProcess: string, processesGroup: {name: string; processes: string[]}): boolean {
@@ -175,42 +204,42 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     }
 
     changeProcessesWhenSelectProcessGroup(): void {
-        this.selectStateForm.get('processGroup').valueChanges.subscribe((processGroup) => {
+        this.selectStateForm.get('usercardProcessGroup').valueChanges.subscribe((processGroup) => {
             if (!!processGroup) {
                 if (processGroup === '--')
                     this.processOptionsWhenSelectedProcessGroup = this.processesWithoutProcessGroup;
                 else this.processOptionsWhenSelectedProcessGroup = this.processesPerProcessGroups.get(processGroup);
                 this.processOptionsWhenSelectedProcessGroup.sort((a, b) => Utilities.compareObj(a.label, b.label));
-                this.selectedProcess = this.processOptionsWhenSelectedProcessGroup[0].value;
-                this.selectStateForm.get('process').setValue(this.selectedProcess);
+                if (!this.cardIdToEdit) {
+                    this.selectedProcess = this.processOptionsWhenSelectedProcessGroup[0].value;
+                }
             }
         });
     }
 
     changeStatesWhenSelectProcess(): void {
-        this.selectStateForm.get('process').valueChanges.subscribe((process) => {
-            if (!!process) {
+        this.selectStateForm.get('usercardProcess').valueChanges.subscribe((process) => {
+            if (!!process ) {
                 this.stateOptions = this.statesPerProcesses.get(process);
-                this.selectedState = this.stateOptions[0].value;
-                this.selectedProcess = this.processesDefinition.find((processDefinition) => {
-                    return processDefinition.id === process;
-                });
-                this.selectStateForm.get('state').setValue(this.selectedState);
+                if (!this.cardIdToEdit) {
+                    this.selectedProcess = process;
+                    this.selectedState = this.stateOptions[0].value;
+                }
             }
         });
     }
 
-    private InitProcessState() {
+    private initProcessState() {
         if (this.cardIdToEdit) {
             const processGroupForCardToEdit = this.processGroupPerProcesses.get(this.initialProcess);
-            if (processGroupForCardToEdit) this.selectStateForm.get('processGroup').setValue(processGroupForCardToEdit);
-            else this.selectStateForm.get('processGroup').setValue('--');
 
-            this.selectStateForm.get('processGroup').disable();
+            if (processGroupForCardToEdit) this.selectedProcessGroupOption = processGroupForCardToEdit;
+            else this.selectedProcessGroupOption = '--';
 
-            this.selectStateForm.get('process').setValue(this.initialProcess);
-            this.selectStateForm.get('process').disable();
-            this.selectStateForm.get('state').setValue(this.initialState);
+            this.selectedProcess = this.initialProcess;
+
+            this.selectedState = this.initialState;
+
             this.stateChange.emit({
                 selectedProcessId: this.initialProcess,
                 state: this.initialState
@@ -220,7 +249,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
 
     private listenForStateChange() {
         this.selectStateForm
-            .get('state')
+            .get('usercardState')
             .valueChanges.pipe(
                 takeUntil(this.unsubscribe$),
                 debounceTime(10) //See #1891 Cypress usercard test was flaky without this debounce
@@ -228,8 +257,8 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
             .subscribe((state) => {
                 if (!!state) {
                     this.stateChange.emit({
-                        selectedProcessId: this.selectStateForm.get('process').value,
-                        state: this.selectStateForm.get('state').value
+                        selectedProcessId: this.selectStateForm.get('usercardProcess').value,
+                        state: this.selectStateForm.get('usercardState').value
                     });
                 }
             });
